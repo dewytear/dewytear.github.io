@@ -13,19 +13,19 @@ var Body = {
     setColor:function (color){
         document.querySelector('body').style.color = color;
     },
-    setBGColor:function (color){
+    setBG_Color:function (color){
         document.querySelector('body').style.backgroundColor = color;
     }
 }
 
 function nightDayHandler(slef){
     if(slef.value === 'night'){
-        Body.setBGColor('black');
+        Body.setBG_Color('black');
         Body.setColor('white');
         slef.value = 'day';
         Links.setColor('powderblue');
     } else {
-        Body.setBGColor('white');
+        Body.setBG_Color('white');
         Body.setColor('black');
         slef.value = 'night';
         Links.setColor('tomato');
