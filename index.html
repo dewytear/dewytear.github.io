@@ -4,41 +4,13 @@
     <title>Dewytear - Welcome</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css">
-    <script>
-        function nightDayHandler(slef){
-            var target = document.querySelector('body');
-            var vlist = document.querySelectorAll('a');
-            var i=0;
-
-            if(self.value === 'night'){
-                target.style.backgroundColor = 'black';
-                target.style.color = 'white';
-                self.value='day';
-
-                while(i < vlist.length){
-                    vlist[i].style.color='powderblue';
-                    i++;
-                }//while()
-            } else {
-                target.style.backgroundColor = 'white';
-                target.style.color = 'black';
-                self.value='night';
-                
-                while(i < vlist.length){
-                    vlist[i].style.color='tomato';
-                    i++;
-                }//while()
-            }//if()
-        }//nightDayHandler()
-    </script>
+    <script src="colors.js"></script>
     </head>
 
 <body>
-    <div style="text-align:left;">
-    <input type="button" style="width:110pt;float:center;" value="night" onclick="
+    <input type="button" style="width:110pt" value="night" onclick="
         nightDayHandler(this);
     ">
-    </div>
     <h1><a href="index.html">JAVA (programming language)</a></h1>
     <div id="grid">
         <ol>
