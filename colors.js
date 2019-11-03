@@ -1,11 +1,15 @@
 var Links = {
     setColor:function(color){
-        var vlist = document.querySelectorAll('a');
-        var i=0;
-        while(i < vlist.length){
-                vlist[i].style.color = color;
-                i++;
-        }//while()
+        //1. javaScript
+        // var vlist = document.querySelectorAll('a');
+        // var i=0;
+        // while(i < vlist.length){
+        //         vlist[i].style.color = color;
+        //         i++;
+        // }//while()
+
+        //2. jQuery
+        $('a').css('color', color);
     }
 }
 
