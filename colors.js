@@ -15,10 +15,18 @@ var Links = {
 
 var Body = {
     setColor:function (color){
-        document.querySelector('body').style.color = color;
+        //1. javaScript
+        // document.querySelector('body').style.color = color;
+
+        //2. jQuery
+        $('body').css('color', color);
     },
     setBG_Color:function (color){
-        document.querySelector('body').style.backgroundColor = color;
+        //1. javaScript
+        // document.querySelector('body').style.backgroundColor = color;
+        
+        //2. jQuery
+        $('body').css('backgroundColor', color);
     }
 }
 
