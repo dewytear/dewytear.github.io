@@ -4,34 +4,39 @@
     <title>Dewytear - Welcome</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css">
+    <script>
+        function nightDayHandler(slef){
+            var target = document.querySelector('body');
+            var vlist = document.querySelectorAll('a');
+            var i=0;
+
+            if(this.value === 'night'){
+                target.style.backgroundColor = 'black';
+                target.style.color = 'white';
+                this.value='day';
+
+                while(i<vlist.length){
+                    i++;
+                    vlist[i].style.color='powderblue';
+                }
+            } else {
+                target.style.backgroundColor = 'white';
+                target.style.color = 'black';
+                this.value='night';
+                
+                while(i<vlist.length){
+                    i++;
+                    vlist[i].style.color='tomato';
+                }
+            }
+        }
+    </script>
     </head>
 
 <body>
     <div style="text-align:left;">
     <input type="button" style="width:110pt;float:center;" value="night" onclick="
-        var target = document.querySelector('body');
-        var vlist = document.querySelectorAll('a');
-        var i=0;
-
-        if(this.value === 'night'){
-            target.style.backgroundColor = 'black';
-            target.style.color = 'white';
-            this.value='day';
-
-            while(i<vlist.length){
-                i++;
-                vlist[i].style.color='powderblue';
-            }
-        } else {
-            target.style.backgroundColor = 'white';
-            target.style.color = 'black';
-            this.value='night';
-            
-            while(i<vlist.length){
-                i++;
-                vlist[i].style.color='tomato';
-            }
-        }
+        nightDayHandler(this);
     ">
     </div>
     <h1><a href="index.html">JAVA (programming language)</a></h1>
