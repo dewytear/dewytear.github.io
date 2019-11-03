@@ -10,13 +10,14 @@
     <h1><a href="index.html">JAVA (programming language)</a></h1>
     <input type="button" value="night" onclick="
         var target = document.querySelector('body');
+        var vlist = document.querySelectorAll('a');
+        var i=0;
+
         if(this.value === 'night'){
             target.style.backgroundColor = 'black';
             target.style.color = 'white';
             this.value='day';
 
-            var vlist = document.querySelectorAll('a');
-            var i=0;
             while(i<vlist.length){
                 i++;
                 vlist[i].style.color='powderblue';
@@ -26,11 +27,9 @@
             target.style.color = 'black';
             this.value='night';
             
-            var vlist = document.querySelectorAll('a');
-            var i=0;
             while(i<vlist.length){
                 i++;
-                vlist[i].style.color='blue';
+                vlist[i].style.color='toamto';
             }
         }
     ">
