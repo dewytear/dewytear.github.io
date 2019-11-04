@@ -1,10 +1,14 @@
 <!doctype html>
 <html>
     <body>
+        <article>
+
+        </article>
         <input type="button" value="fetch" onclick="
             fetch('test').then(function(reponse){
                 response.text().then(function(text){
                     alert(text);
+                    document.querySelector('article').innerHTML = text;
                 })
             })
         ">
