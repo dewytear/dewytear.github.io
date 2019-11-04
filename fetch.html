@@ -9,6 +9,7 @@
                 fetch('test') : 웹브라우져야 'test' 파일을 서버에게 응답해줘
                 then : 응답이 끝날때까지 기다려줘 그리고 function을 실행해줘
                 Asynchronous : 비동기적인 실행
+
             */
 
             /*
@@ -19,11 +20,10 @@
                 })
             })
             */
-            
-            function callbackme(){
-                console.log('response end');
-            }
-            fetch('test').then(callbackme);
+
+            fetch('test').then(function(response){
+                console.log(response);
+            });
             console.log(1);
             console.log(2);
         ">
