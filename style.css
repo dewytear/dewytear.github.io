@@ -38,8 +38,22 @@
 
         /* ---- Masthead ---- */
         #masthead{
+            position: relative;
             text-align: center;
             padding: 24px 20px 18px;
+        }
+        #nav-toggle{
+            display: none;
+            position: absolute;
+            left: 16px;
+            top: 20px;
+            padding: 4px 8px;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
         }
         #masthead h1{
             margin: 0;
@@ -202,9 +216,17 @@
             #grid{
                 display: block;
             }
+            #nav-toggle{
+                display: block;
+            }
+            /* Collapse the sidebar behind the hamburger on small screens. */
             #navigation{
+                display: none;
                 border-right: none;
                 border-bottom: 1px solid var(--border);
+            }
+            body.nav-open #navigation{
+                display: block;
             }
             #masthead h1{
                 font-size: 24px;
