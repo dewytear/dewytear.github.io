@@ -6,6 +6,9 @@
             color:black;
             text-decoration: none;
         }
+        a:hover{
+            text-decoration: underline;
+        }
         h1{
             font-size: 45px;
             text-align: left;
@@ -15,25 +18,53 @@
         }
         #grid{
             display: grid;
-            grid-template-columns: 150px 1fr;
+            grid-template-columns: 200px 1fr;
         }
-        #grid ol{
-            padding-left: 33px;
+        #navigation{
             border-right: 1px solid gray;
-            margin: 0;
             padding: 20px;
-            padding-left: 40px;
+        }
+        #navigation ul{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        #navigation ul ul{
+            padding-left: 14px;
+        }
+        #navigation li{
+            margin: 4px 0;
+        }
+        #navigation .nav-title{
+            display: block;
+            margin: 14px 0 6px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: gray;
         }
         #grid #article{
             padding-left: 25px;
             padding-right: 25px;
         }
+        #footer{
+            border-top: 1px solid gray;
+            padding: 15px 20px;
+            text-align: center;
+        }
+        #footer input{
+            width: 110pt;
+            padding: 6px;
+            cursor: pointer;
+        }
         @media(max-width: 800px){
             #grid{
                 display: block;
             }
-            ol{
-                border-right:none;
+            #navigation{
+                border-right: none;
+                border-bottom: 1px solid gray;
             }
             h1{
                 border-bottom: none;
