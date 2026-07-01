@@ -30,16 +30,16 @@ var Body = {
     }
 }
 
-function nightDayHandler(slef){
-    if(slef.value === 'night'){
+function nightDayHandler(self){
+    if(self.value === 'night'){
         Body.setBG_Color('black');
         Body.setColor('white');
-        slef.value = 'day';
+        self.value = 'day';
         Links.setColor('powderblue');
     } else {
         Body.setBG_Color('white');
         Body.setColor('black');
-        slef.value = 'night';
+        self.value = 'night';
         Links.setColor('tomato');
     }//if()
 }
