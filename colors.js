@@ -1,45 +1,13 @@
-var Links = {
-    setColor:function(color){
-        //1. javaScript
-        // var vlist = document.querySelectorAll('a');
-        // var i=0;
-        // while(i < vlist.length){
-        //         vlist[i].style.color = color;
-        //         i++;
-        // }//while()
-
-        //2. jQuery
-        $('a').css('color', color);
-    }
-}
-
-var Body = {
-    setColor:function (color){
-        //1. javaScript
-        // document.querySelector('body').style.color = color;
-
-        //2. jQuery
-        $('body').css('color', color);
-    },
-    setBG_Color:function (color){
-        //1. javaScript
-        // document.querySelector('body').style.backgroundColor = color;
-        
-        //2. jQuery
-        $('body').css('backgroundColor', color);
-    }
-}
-
-function nightDayHandler(self){
-    if(self.value === 'night'){
-        Body.setBG_Color('black');
-        Body.setColor('white');
-        self.value = 'day';
-        Links.setColor('powderblue');
+// Theme toggle.
+// The dark theme is the default (defined in style.css). Clicking the footer
+// button toggles a `day` class on <body>, which switches to the light theme.
+function nightDayHandler(target){
+    var body = document.querySelector('body');
+    if(target.value === 'day'){
+        body.classList.add('day');
+        target.value = 'night';
     } else {
-        Body.setBG_Color('white');
-        Body.setColor('black');
-        self.value = 'night';
-        Links.setColor('tomato');
-    }//if()
+        body.classList.remove('day');
+        target.value = 'day';
+    }
 }

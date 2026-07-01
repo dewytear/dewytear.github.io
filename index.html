@@ -3,13 +3,16 @@
     <head>
     <title>Claude Code Wiki</title>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="colors.js"></script>
     </head>
 
 <body>
-    <h1><a href="index.html">Claude Code Wiki</a></h1>
+    <header id="masthead">
+        <h1><a href="index.html">Claude Code Wiki</a></h1>
+        <p id="tagline">: A guide to Anthropic's Claude Code.</p>
+    </header>
     <div id="grid">
         <nav id="navigation"></nav>
         <div id="article">
@@ -17,8 +20,9 @@
             </article>
         </div>
     </div>
+    <section id="more"></section>
     <footer id="footer">
-        <input type="button" id="theme-toggle" value="night" onclick="
+        <input type="button" id="theme-toggle" value="day" onclick="
             nightDayHandler(this);
         ">
     </footer>
@@ -59,9 +63,38 @@
             return html;
         }
 
+        // Flatten the tree to its leaf docs, tagging each with its section
+        // title, then render a "popular posts"-style index module.
+        function renderMore(tree){
+            var items = [];
+            (function walk(nodes, section){
+                nodes.forEach(function(node){
+                    if(node.children && node.children.length){
+                        walk(node.children, node.title || node.label || section);
+                    } else if(node.name){
+                        items.push({
+                            name: node.name,
+                            label: node.label || node.name,
+                            section: section || ''
+                        });
+                    }
+                });
+            })(tree, '');
+
+            var html = '<h3 class="more-title">이 위키의 문서</h3><ul class="more-list">';
+            items.forEach(function(it){
+                html += '<li><a href="#!' + it.name + '" onclick="fetchPage(\'' + it.name + '\')">'
+                     +  '<span class="more-name">' + it.label + '</span>'
+                     +  '<span class="more-meta">' + it.section + '</span></a></li>';
+            });
+            html += '</ul>';
+            return html;
+        }
+
         fetch('list').then(function(response){
             response.json().then(function(tree){
                 document.querySelector('#navigation').innerHTML = renderNodes(tree);
+                document.querySelector('#more').innerHTML = renderMore(tree);
             })
         })
     </script>

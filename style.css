@@ -1,28 +1,77 @@
 
+        /* ---- Theme tokens ---- */
+        /* Dark theme is the default (inspired by the Blogger "Notable" dark theme). */
+        :root{
+            --bg: #1b2230;
+            --bg-alt: #212a3a;
+            --text: #e6e8eb;
+            --muted: #9aa4b2;
+            --accent: #4db6ac;
+            --border: #3a4353;
+        }
+        body.day{
+            --bg: #ffffff;
+            --bg-alt: #f5f6f8;
+            --text: #202124;
+            --muted: #5f6368;
+            --accent: #00897b;
+            --border: #dadce0;
+        }
+
+        *{
+            box-sizing: border-box;
+        }
         body{
-            margin: 0px;
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Roboto', 'Helvetica Neue', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            line-height: 1.7;
         }
         a{
-            color:black;
+            color: var(--accent);
             text-decoration: none;
         }
         a:hover{
             text-decoration: underline;
         }
-        h1{
-            font-size: 45px;
-            text-align: left;
-            border-bottom: 1px solid gray;
-            margin: 0;
-            padding: 20px;
+
+        /* ---- Masthead ---- */
+        #masthead{
+            text-align: center;
+            padding: 40px 20px 24px;
         }
+        #masthead h1{
+            margin: 0;
+            font-size: 40px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        #masthead h1 a{
+            color: var(--text);
+        }
+        #masthead h1 a:hover{
+            text-decoration: none;
+        }
+        #tagline{
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 17px;
+        }
+
+        /* ---- Layout ---- */
         #grid{
             display: grid;
-            grid-template-columns: 200px 1fr;
+            grid-template-columns: 240px 1fr;
+            max-width: 1100px;
+            margin: 0 auto;
+            border-top: 1px solid var(--border);
         }
+
+        /* ---- Navigation tree ---- */
         #navigation{
-            border-right: 1px solid gray;
-            padding: 20px;
+            padding: 24px 20px;
+            border-right: 1px solid var(--border);
         }
         #navigation ul{
             list-style: none;
@@ -30,46 +79,140 @@
             padding: 0;
         }
         #navigation ul ul{
-            padding-left: 14px;
+            padding-left: 12px;
         }
         #navigation li{
-            margin: 4px 0;
+            margin: 8px 0;
+        }
+        #navigation li a{
+            color: var(--text);
+        }
+        #navigation li a:hover{
+            color: var(--accent);
+            text-decoration: none;
         }
         #navigation .nav-title{
             display: block;
-            margin: 14px 0 6px;
-            font-size: 12px;
-            font-weight: bold;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            color: gray;
+            margin: 22px 0 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border);
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: var(--text);
         }
-        #grid #article{
-            padding-left: 25px;
-            padding-right: 25px;
+
+        /* ---- Article ---- */
+        #article{
+            padding: 24px 32px 60px;
         }
+        article h2{
+            margin: 0 0 20px;
+            padding-left: 14px;
+            border-left: 4px solid var(--accent);
+            font-size: 26px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+        article p{
+            margin: 0 0 16px;
+        }
+        article ul{
+            padding-left: 22px;
+        }
+        article li{
+            margin: 6px 0;
+        }
+        article code{
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1px 6px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+            font-size: 0.9em;
+        }
+
+        /* ---- "This wiki's docs" module (popular-posts style) ---- */
+        #more{
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 32px;
+            border-top: 1px solid var(--border);
+        }
+        .more-title{
+            margin: 0 0 6px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .more-list{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .more-list li{
+            border-bottom: 1px solid var(--border);
+        }
+        .more-list li a{
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+            padding: 14px 2px;
+            color: var(--text);
+        }
+        .more-list li a:hover{
+            text-decoration: none;
+        }
+        .more-list li a:hover .more-name{
+            color: var(--accent);
+        }
+        .more-name{
+            font-size: 17px;
+            font-weight: 700;
+        }
+        .more-meta{
+            color: var(--accent);
+            font-style: italic;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        /* ---- Footer ---- */
         #footer{
-            border-top: 1px solid gray;
-            padding: 15px 20px;
+            border-top: 1px solid var(--border);
+            padding: 20px;
             text-align: center;
         }
-        #footer input{
-            width: 110pt;
-            padding: 6px;
+        #theme-toggle{
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 8px 24px;
+            font-size: 14px;
             cursor: pointer;
         }
+        #theme-toggle:hover{
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ---- Responsive ---- */
         @media(max-width: 800px){
             #grid{
                 display: block;
             }
             #navigation{
                 border-right: none;
-                border-bottom: 1px solid gray;
+                border-bottom: 1px solid var(--border);
             }
-            h1{
-                border-bottom: none;
+            #masthead h1{
+                font-size: 32px;
             }
             #article{
-                border-right:none;
+                padding: 20px;
+            }
+            #more{
+                padding: 20px;
             }
         }
