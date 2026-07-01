@@ -1,62 +1,100 @@
 <!doctype html>
 <html>
     <head>
-    <title>Dewytear - Welcome</title>
+    <title>Claude Code Wiki</title>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="colors.js"></script>
     </head>
 
 <body>
-    <input type="button" style="width:110pt" value="night" onclick="
-        nightDayHandler(this);
-    ">
-    <h1><a href="index.html">JAVA (programming language)</a></h1>
+    <header id="masthead">
+        <h1><a href="index.html">Claude Code Wiki</a></h1>
+        <p id="tagline">: A guide to Anthropic's Claude Code.</p>
+    </header>
     <div id="grid">
-        <ol id="navigation">
-            <!-- <li><a href="#!history" onclick="fetchPage('history')">history</a></li>
-            <li><a href="#!principles" onclick="fetchPage('principles')">principles</a></li>
-            <li><a href="#!versions" onclick="fetchPage('versions')">versions</a></li> -->
-        </ol>
+        <nav id="navigation"></nav>
         <div id="article">
             <article>
             </article>
         </div>
     </div>
+    <section id="more"></section>
+    <footer id="footer">
+        <input type="button" id="theme-toggle" value="day" onclick="
+            nightDayHandler(this);
+        ">
+    </footer>
     <script>
 
         function fetchPage(filename){
             fetch(filename).then(function(response){
                 response.text().then(function(text){
-                    //alert(text);
                     document.querySelector('article').innerHTML = text;
                 })
             })
         }
-        
+
         if(location.hash){
             fetchPage(location.hash.substr(2))
         } else {
             fetchPage('welcome');
         }
 
-        fetch('list').then(function(response){
-            response.text().then(function(text){
-                //<li><a href="#!history" onclick="fetchPage('history')">history</a></li>
-                var items = text.split('|');     //text에 있는 문자열을 '|'로 쪼개어 배열에 담는다
-                console.log(items);
-
-                var i = 0;
-                var tags = '';
-                while(i < items.length){
-                    var item = items[i];
-                    item = item.trim();
-                    var tag = '<li><a href="#!' + item + '" onclick="fetchPage(\'' + item + '\')">'+ item + '</a></li>'
-                    tags = tags + tag;
-                    i++;
+        // Render an arbitrarily nested navigation tree.
+        // Each node may have: label/title (display text), name (doc to fetch),
+        // and children (an array of sub-nodes). A node with children becomes a
+        // section header; a node with a name becomes a link.
+        function renderNodes(nodes){
+            var html = '<ul>';
+            nodes.forEach(function(node){
+                var label = node.label || node.title || node.name;
+                if(node.children && node.children.length){
+                    html += '<li class="nav-branch"><span class="nav-title">' + label + '</span>';
+                    html += renderNodes(node.children);
+                    html += '</li>';
+                } else {
+                    var name = node.name;
+                    html += '<li><a href="#!' + name + '" onclick="fetchPage(\'' + name + '\')">' + label + '</a></li>';
                 }
-                document.querySelector('#navigation').innerHTML = tags;
+            });
+            html += '</ul>';
+            return html;
+        }
+
+        // Flatten the tree to its leaf docs, tagging each with its section
+        // title, then render a "popular posts"-style index module.
+        function renderMore(tree){
+            var items = [];
+            (function walk(nodes, section){
+                nodes.forEach(function(node){
+                    if(node.children && node.children.length){
+                        walk(node.children, node.title || node.label || section);
+                    } else if(node.name){
+                        items.push({
+                            name: node.name,
+                            label: node.label || node.name,
+                            section: section || ''
+                        });
+                    }
+                });
+            })(tree, '');
+
+            var html = '<h3 class="more-title">이 위키의 문서</h3><ul class="more-list">';
+            items.forEach(function(it){
+                html += '<li><a href="#!' + it.name + '" onclick="fetchPage(\'' + it.name + '\')">'
+                     +  '<span class="more-name">' + it.label + '</span>'
+                     +  '<span class="more-meta">' + it.section + '</span></a></li>';
+            });
+            html += '</ul>';
+            return html;
+        }
+
+        fetch('list').then(function(response){
+            response.json().then(function(tree){
+                document.querySelector('#navigation').innerHTML = renderNodes(tree);
+                document.querySelector('#more').innerHTML = renderMore(tree);
             })
         })
     </script>

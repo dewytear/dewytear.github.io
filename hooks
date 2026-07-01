@@ -1,0 +1,14 @@
+            <h2>Hooks</h2>
+            <p>
+
+                Hooks are user-defined shell commands that Claude Code runs automatically at specific points in its lifecycle. They let you enforce rules and automate behavior deterministically &mdash; the harness executes them, so they happen every time, not just when Claude remembers to.
+                Hooks are configured in your <code>settings.json</code> and are attached to events such as:
+                <ul>
+                    <li><strong>PreToolUse</strong> &mdash; before Claude runs a tool (e.g. block edits to protected files).</li>
+                    <li><strong>PostToolUse</strong> &mdash; after a tool runs (e.g. auto-format or lint a file that was just edited).</li>
+                    <li><strong>SessionStart</strong> &mdash; when a session begins (e.g. install dependencies so tests can run).</li>
+                    <li><strong>Stop</strong> &mdash; when Claude finishes responding (e.g. send a notification).</li>
+                </ul>
+                Typical uses include running a formatter after every edit, running the test suite before a commit, protecting sensitive paths, or sending a desktop notification when a long task completes. Because hooks are just shell commands, you can wire Claude Code into whatever tooling your project already uses.
+
+            </p>
