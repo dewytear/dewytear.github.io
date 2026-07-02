@@ -302,15 +302,22 @@
         }
         #navigation .nav-caret{
             display: inline-block;
-            font-size: 10px;
-            transition: transform 0.15s ease;
+            width: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1;
+            text-align: center;
         }
-        /* Collapsed section: hide its children and rotate the caret. */
+        /* Expanded shows a minus, collapsed shows a plus. */
+        #navigation .nav-branch > .nav-title .nav-caret::before{
+            content: "\2212";   /* − */
+        }
+        #navigation .nav-branch.collapsed > .nav-title .nav-caret::before{
+            content: "+";
+        }
+        /* Collapsed section: hide its children. */
         #navigation .nav-branch.collapsed > ul{
             display: none;
-        }
-        #navigation .nav-branch.collapsed > .nav-title .nav-caret{
-            transform: rotate(-90deg);
         }
         /* Level-0 category titles: prominent */
         #navigation > ul > li.nav-branch > .nav-title{

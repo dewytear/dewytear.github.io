@@ -83,7 +83,7 @@
                 if(node.children && node.children.length){
                     html += '<li class="nav-branch">'
                          +  '<button type="button" class="nav-title" onclick="toggleBranch(this)">'
-                         +  '<span class="nav-caret">&#9662;</span>' + label + '</button>';
+                         +  '<span class="nav-caret" aria-hidden="true"></span>' + label + '</button>';
                     html += renderNodes(node.children);
                     html += '</li>';
                 } else {
