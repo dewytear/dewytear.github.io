@@ -22,6 +22,7 @@ GitHub Pages로 배포됩니다: https://dewytear.github.io
 | `index.html` | 메인 페이지. `fetch()`로 문서를 동적 로딩하는 SPA |
 | `colors.js` | 낮/밤 테마 토글 로직 (jQuery 사용) |
 | `style.css` | 그리드 레이아웃 및 반응형 스타일 |
+| `profile.svg` | 좌측 상단에 표시되는 프로필 이미지 (원하는 이미지로 교체) |
 | `list` | 네비게이션 메뉴 트리 정의 (JSON) |
 | `welcome` | 메인에 처음 표시되는 Claude Code 소개 |
 | `install` | 설치 및 시작하기 |
@@ -35,6 +36,12 @@ GitHub Pages로 배포됩니다: https://dewytear.github.io
 1. 새 문서 파일을 만듭니다 (예: `settings`). 내용은 `<h2>...</h2><p>...</p>` 형태의 HTML 조각으로 작성합니다.
 2. `list`(JSON) 트리에 노드를 추가합니다. 링크 노드는 `{ "name": "settings", "label": "Settings", "tags": ["config", "settings"] }`, 섹션은 `{ "title": "...", "children": [ ... ] }` 형태이며 `children`으로 얼마든지 중첩할 수 있습니다. `tags`는 선택 사항이며, 지정하면 문서 하단과 태그 인덱스에 자동으로 반영됩니다.
 3. 커밋하면 사이드바 트리에 자동으로 나타납니다.
+
+## 프로필 이미지 바꾸기
+
+좌측 상단 이미지는 `profile.svg`(플레이스홀더)입니다. 원하는 이미지로 바꾸려면
+`profile.svg`를 교체하거나, `index.html`의 `#profile-img` 태그 `src`를 원하는 파일
+경로(예: `profile.jpg`)로 수정하면 됩니다.
 
 ## 로컬 실행
 
