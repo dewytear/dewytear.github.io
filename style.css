@@ -147,6 +147,109 @@
             border: 1px solid var(--border);
         }
 
+        /* ---- Sidebar footer: settings entry ---- */
+        #sidebar-foot{
+            padding: 14px 18px;
+            border-top: 1px solid var(--border);
+        }
+        #settings-link{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        #settings-link:hover{
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .settings-ico{
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        /* ---- Settings screen ---- */
+        .settings-note{
+            color: var(--muted);
+            font-size: 14px;
+            margin-top: -6px;
+        }
+        .settings-field{
+            margin: 18px 0;
+            max-width: 420px;
+        }
+        .settings-field > label{
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .settings-field input[type="text"],
+        .settings-field input[type="password"]{
+            width: 100%;
+            padding: 10px 13px;
+            background: var(--bg-alt);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+        .settings-field input[type="text"]:focus,
+        .settings-field input[type="password"]:focus{
+            border-color: var(--accent);
+        }
+        .settings-photo{
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        #settings-preview{
+            width: 72px;
+            height: 72px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+            background: var(--bg-alt);
+            flex: none;
+        }
+        .settings-actions{
+            display: flex;
+            gap: 10px;
+            margin-top: 24px;
+        }
+        .settings-save,
+        .settings-reset{
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--bg-alt);
+            color: var(--text);
+        }
+        .settings-save{
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--bg);
+            font-weight: 700;
+        }
+        .settings-save:hover{
+            filter: brightness(1.08);
+        }
+        .settings-reset:hover{
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .settings-msg{
+            margin-top: 14px;
+            color: var(--accent);
+            font-size: 14px;
+        }
+        .settings-msg.error{
+            color: #e57373;
+        }
+
         /* ---- Navigation tree ---- */
         #navigation{
             padding: 20px;
