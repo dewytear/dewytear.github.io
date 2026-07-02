@@ -31,9 +31,41 @@
         a{
             color: var(--accent);
             text-decoration: none;
+            transition: color 0.2s ease;
         }
         a:hover{
             text-decoration: underline;
+        }
+
+        /* ---- Motion: modern, calm transitions ---- */
+        @keyframes fadeUp{
+            from{ opacity: 0; transform: translateY(10px); }
+            to{ opacity: 1; transform: translateY(0); }
+        }
+        article.fade-in{
+            animation: fadeUp 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        #masthead,
+        #sidebar{
+            animation: fadeUp 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        #navigation li a,
+        .tag,
+        .more-list li a,
+        .nav-title,
+        #theme-toggle{
+            transition: color 0.2s ease, border-color 0.2s ease,
+                        background 0.2s ease;
+        }
+        /* Respect users who prefer reduced motion. */
+        @media (prefers-reduced-motion: reduce){
+            *,
+            article.fade-in,
+            #masthead,
+            #sidebar{
+                animation: none !important;
+                transition: none !important;
+            }
         }
 
         /* ---- Masthead (sits above the content column only) ---- */

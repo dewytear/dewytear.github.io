@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-    <title>Claude Code Wiki</title>
+    <title>dewytear's claude wiki</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
@@ -20,7 +20,7 @@
         <main id="content">
             <header id="masthead">
                 <button id="nav-toggle" onclick="toggleNav();" aria-label="Toggle navigation">&#9776;</button>
-                <h1><a href="index.html">Claude Code Wiki</a></h1>
+                <h1><a href="index.html">dewytear's claude wiki</a></h1>
                 <p id="tagline">: A guide to Anthropic's Claude Code.</p>
             </header>
             <div id="article">
@@ -103,8 +103,13 @@
 
         // ---- Article helpers ----
         function setArticle(html){
-            document.querySelector('article').innerHTML = html;
+            var art = document.querySelector('article');
+            art.innerHTML = html;
             window.scrollTo(0, 0);
+            // Re-trigger the gentle fade-up animation on each navigation.
+            art.classList.remove('fade-in');
+            void art.offsetWidth;   // force reflow so the animation restarts
+            art.classList.add('fade-in');
         }
 
         function renderDocTags(tags){
