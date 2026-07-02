@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-    <title>Claude Code Wiki</title>
+    <title>dewytear's claude wiki</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="style.css">
@@ -9,17 +9,25 @@
     </head>
 
 <body>
-    <header id="masthead">
-        <button id="nav-toggle" onclick="toggleNav();" aria-label="Toggle navigation">&#9776;</button>
-        <h1><a href="index.html">Claude Code Wiki</a></h1>
-        <p id="tagline">: A guide to Anthropic's Claude Code.</p>
-    </header>
+    <div id="nav-backdrop" onclick="toggleNav();"></div>
     <div id="grid">
-        <nav id="navigation"></nav>
-        <div id="article">
-            <article>
-            </article>
-        </div>
+        <aside id="sidebar">
+            <div id="profile">
+                <img id="profile-img" src="profile.svg" alt="Profile">
+            </div>
+            <nav id="navigation"></nav>
+        </aside>
+        <main id="content">
+            <header id="masthead">
+                <button id="nav-toggle" onclick="toggleNav();" aria-label="Toggle navigation">&#9776;</button>
+                <h1><a href="index.html">dewytear's claude wiki</a></h1>
+                <p id="tagline">: A guide to Anthropic's Claude Code.</p>
+            </header>
+            <div id="article">
+                <article>
+                </article>
+            </div>
+        </main>
     </div>
     <section id="more"></section>
     <footer id="footer">
@@ -29,79 +37,213 @@
     </footer>
     <script>
 
-        function toggleNav(){
-            document.body.classList.toggle('nav-open');
+        // ---- Global indexes (built once the list loads) ----
+        var DOCS = [];         // real docs: {name, label, section, tags:[]}
+        var TAG_INDEX = {};    // tag -> [doc, ...]
+        var DOC_BY_NAME = {};  // name -> doc
+
+        function buildIndexes(tree){
+            (function walk(nodes, path){
+                nodes.forEach(function(node){
+                    if(node.children && node.children.length){
+                        walk(node.children, node.title ? path.concat(node.title) : path);
+                    } else if(node.name && !node.route){
+                        var doc = {
+                            name: node.name,
+                            label: node.label || node.name,
+                            section: path.join(' · '),
+                            tags: node.tags || []
+                        };
+                        DOCS.push(doc);
+                        DOC_BY_NAME[doc.name] = doc;
+                        doc.tags.forEach(function(t){
+                            (TAG_INDEX[t] = TAG_INDEX[t] || []).push(doc);
+                        });
+                    }
+                });
+            })(tree, []);
         }
 
-        function fetchPage(filename){
-            // Close the mobile menu whenever we navigate to a page.
-            document.body.classList.remove('nav-open');
-            fetch(filename).then(function(response){
-                response.text().then(function(text){
-                    document.querySelector('article').innerHTML = text;
-                })
-            })
+        function escapeHtml(s){
+            return String(s).replace(/[&<>"]/g, function(c){
+                return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+            });
         }
 
-        if(location.hash){
-            fetchPage(location.hash.substr(2))
-        } else {
-            fetchPage('welcome');
-        }
-
-        // Render an arbitrarily nested navigation tree.
-        // Each node may have: label/title (display text), name (doc to fetch),
-        // and children (an array of sub-nodes). A node with children becomes a
-        // section header; a node with a name becomes a link.
+        // ---- Navigation tree ----
         function renderNodes(nodes){
             var html = '<ul>';
             nodes.forEach(function(node){
                 var label = node.label || node.title || node.name;
                 if(node.children && node.children.length){
-                    html += '<li class="nav-branch"><span class="nav-title">' + label + '</span>';
+                    html += '<li class="nav-branch">'
+                         +  '<button type="button" class="nav-title" onclick="toggleBranch(this)">'
+                         +  '<span class="nav-caret">&#9662;</span>' + label + '</button>';
                     html += renderNodes(node.children);
                     html += '</li>';
                 } else {
-                    var name = node.name;
-                    html += '<li><a href="#!' + name + '" onclick="fetchPage(\'' + name + '\')">' + label + '</a></li>';
+                    var target = node.route ? node.route : node.name;
+                    html += '<li><a href="#!' + target + '">' + label + '</a></li>';
                 }
             });
             html += '</ul>';
             return html;
         }
 
-        // Flatten the tree to its leaf docs, tagging each with its section
-        // title, then render a "popular posts"-style index module.
-        function renderMore(tree){
-            var items = [];
-            (function walk(nodes, section){
-                nodes.forEach(function(node){
-                    if(node.children && node.children.length){
-                        walk(node.children, node.title || node.label || section);
-                    } else if(node.name){
-                        items.push({
-                            name: node.name,
-                            label: node.label || node.name,
-                            section: section || ''
-                        });
-                    }
-                });
-            })(tree, '');
-
-            var html = '<h3 class="more-title">이 위키의 문서</h3><ul class="more-list">';
-            items.forEach(function(it){
-                html += '<li><a href="#!' + it.name + '" onclick="fetchPage(\'' + it.name + '\')">'
-                     +  '<span class="more-name">' + it.label + '</span>'
-                     +  '<span class="more-meta">' + it.section + '</span></a></li>';
-            });
-            html += '</ul>';
+        // ---- Evernote-style tag chip ----
+        function tagChip(tag, count){
+            var html = '<a class="tag" href="#!tag:' + encodeURIComponent(tag) + '">'
+                     + '<span class="tag-ico">&#127991;</span>' + escapeHtml(tag);
+            if(count != null){
+                html += '<span class="tag-count">' + count + '</span>';
+            }
+            html += '</a>';
             return html;
         }
 
+        // ---- Article helpers ----
+        function setArticle(html){
+            var art = document.querySelector('article');
+            art.innerHTML = html;
+            window.scrollTo(0, 0);
+            // Re-trigger the gentle fade-up animation on each navigation.
+            art.classList.remove('fade-in');
+            void art.offsetWidth;   // force reflow so the animation restarts
+            art.classList.add('fade-in');
+        }
+
+        function renderDocTags(tags){
+            var html = '<div class="doc-tags"><span class="doc-tags-label">Tags</span>';
+            tags.forEach(function(t){ html += tagChip(t, null); });
+            html += '</div>';
+            return html;
+        }
+
+        function fetchPage(filename){
+            fetch(filename).then(function(response){
+                response.text().then(function(text){
+                    var doc = DOC_BY_NAME[filename];
+                    if(doc && doc.tags.length){
+                        text += renderDocTags(doc.tags);
+                    }
+                    setArticle(text);
+                })
+            })
+        }
+
+        // ---- Tag index (all tags) with instant search ----
+        function showTagIndex(){
+            var html = '<h2>Tags</h2>'
+                     + '<input id="tag-search" type="search" placeholder="Search tags..."'
+                     + ' oninput="filterTags(this.value)" autocomplete="off">'
+                     + '<div id="tag-cloud"></div>';
+            setArticle(html);
+            filterTags('');
+            var box = document.getElementById('tag-search');
+            if(box){ box.focus(); }
+        }
+
+        function filterTags(query){
+            var q = query.trim().toLowerCase();
+            var tags = Object.keys(TAG_INDEX).sort();
+            var html = '';
+            tags.forEach(function(t){
+                if(q && t.toLowerCase().indexOf(q) === -1){ return; }
+                html += tagChip(t, TAG_INDEX[t].length);
+            });
+            if(!html){ html = '<p class="empty">No matching tags.</p>'; }
+            var cloud = document.getElementById('tag-cloud');
+            if(cloud){ cloud.innerHTML = html; }
+        }
+
+        // ---- Docs for a single tag ----
+        function showTag(tag){
+            var docs = TAG_INDEX[tag] || [];
+            var html = '<h2><span class="tag-ico">&#127991;</span>' + escapeHtml(tag) + '</h2>'
+                     + '<p class="tag-back"><a href="#!tags">&larr; All tags</a></p>'
+                     + '<ul class="more-list">';
+            docs.forEach(function(d){
+                html += '<li><a href="#!' + d.name + '">'
+                     +  '<span class="more-name">' + escapeHtml(d.label) + '</span>'
+                     +  '<span class="more-meta">' + escapeHtml(d.section) + '</span></a></li>';
+            });
+            html += '</ul>';
+            setArticle(html);
+        }
+
+        // ---- "Recent docs" module: top 5 + collapse ----
+        var MORE_LIMIT = 5;
+        function renderMore(){
+            var html = '<h3 class="more-title">최근 문서</h3><ul class="more-list" id="more-list">';
+            DOCS.forEach(function(d, i){
+                var extra = i >= MORE_LIMIT ? ' class="more-extra" hidden' : '';
+                html += '<li' + extra + '><a href="#!' + d.name + '">'
+                     +  '<span class="more-name">' + escapeHtml(d.label) + '</span>'
+                     +  '<span class="more-meta">' + escapeHtml(d.section) + '</span></a></li>';
+            });
+            html += '</ul>';
+            if(DOCS.length > MORE_LIMIT){
+                html += '<button id="more-toggle" data-expanded="0" onclick="toggleMore()">'
+                     +  '더 보기 (' + (DOCS.length - MORE_LIMIT) + ')</button>';
+            }
+            return html;
+        }
+
+        function toggleMore(){
+            var btn = document.getElementById('more-toggle');
+            var extras = document.querySelectorAll('#more-list .more-extra');
+            var expanded = btn.getAttribute('data-expanded') === '1';
+            extras.forEach(function(li){ li.hidden = expanded; });
+            if(expanded){
+                btn.setAttribute('data-expanded', '0');
+                btn.textContent = '더 보기 (' + extras.length + ')';
+            } else {
+                btn.setAttribute('data-expanded', '1');
+                btn.textContent = '접기';
+            }
+        }
+
+        // ---- Router ----
+        function route(){
+            document.body.classList.remove('nav-open');   // close mobile drawer
+            var h = location.hash;
+            if(!h){ fetchPage('welcome'); return; }
+            var path = h.substr(2);                        // strip "#!"
+            if(path === 'tags'){ showTagIndex(); }
+            else if(path.indexOf('tag:') === 0){ showTag(decodeURIComponent(path.substr(4))); }
+            else { fetchPage(path); }
+        }
+
+        function toggleNav(){
+            document.body.classList.toggle('nav-open');
+        }
+
+        function toggleBranch(btn){
+            btn.parentNode.classList.toggle('collapsed');
+        }
+
+        function setAllBranches(collapsed){
+            document.querySelectorAll('#navigation .nav-branch').forEach(function(li){
+                li.classList.toggle('collapsed', collapsed);
+            });
+        }
+        function expandAll(){ setAllBranches(false); }
+        function collapseAll(){ setAllBranches(true); }
+
+        // ---- Boot ----
+        window.addEventListener('hashchange', route);
+
         fetch('list').then(function(response){
             response.json().then(function(tree){
-                document.querySelector('#navigation').innerHTML = renderNodes(tree);
-                document.querySelector('#more').innerHTML = renderMore(tree);
+                buildIndexes(tree);
+                document.querySelector('#navigation').innerHTML =
+                    '<div class="nav-tools">'
+                  + '<button type="button" class="nav-tool" onclick="expandAll()">모두 펼치기</button>'
+                  + '<button type="button" class="nav-tool" onclick="collapseAll()">모두 접기</button>'
+                  + '</div>'
+                  + renderNodes(tree);
+                document.querySelector('#more').innerHTML = renderMore();
+                route();   // render the initial page once indexes exist
             })
         })
     </script>
