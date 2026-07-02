@@ -373,8 +373,10 @@
         function route(){
             document.body.classList.remove('nav-open');   // close mobile drawer
             var h = location.hash;
+            var path = h ? h.substr(2) : '';               // strip "#!"
+            // Hide the "recent docs" module while on the settings screen.
+            document.body.classList.toggle('settings-view', path === 'settings');
             if(!h){ fetchPage('welcome'); return; }
-            var path = h.substr(2);                        // strip "#!"
             if(path === 'tags'){ showTagIndex(); }
             else if(path.indexOf('tag:') === 0){ showTag(decodeURIComponent(path.substr(4))); }
             else if(path === 'settings'){ openSettings(); }
