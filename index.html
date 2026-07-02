@@ -241,6 +241,33 @@
             }
         }
 
+        // Global config lives in the repo (same-origin, no API key needed).
+        // The profile image points at a public Google Drive file by id.
+        function driveImageUrl(id){
+            return 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(id) + '&sz=w512';
+        }
+        function applyRepoConfig(){
+            return fetch('config.json', { cache: 'no-store' }).then(function(r){
+                return r.ok ? r.json() : null;
+            }).then(function(cfg){
+                if(!cfg){ return; }
+                if(cfg.title){
+                    var h = document.querySelector('#masthead h1 a');
+                    if(h){ h.textContent = cfg.title; }
+                    document.title = cfg.title;
+                }
+                if(cfg.tagline != null){
+                    var t = document.getElementById('tagline');
+                    if(t){ t.textContent = cfg.tagline; }
+                }
+                var src = cfg.imageId ? driveImageUrl(cfg.imageId) : (cfg.image || '');
+                if(src){
+                    var img = document.getElementById('profile-img');
+                    if(img){ img.src = src; }
+                }
+            }).catch(function(){ /* offline / missing config: keep defaults */ });
+        }
+
         function openSettings(){
             if(SETTINGS_UNLOCKED){ showSettings(); }
             else { showSettingsLock(); }
@@ -401,7 +428,8 @@
 
         // ---- Boot ----
         window.addEventListener('hashchange', route);
-        applySettings();
+        // Repo config is the global source; local (localStorage) tweaks win on top.
+        applyRepoConfig().then(applySettings);
 
         fetch('list').then(function(response){
             response.json().then(function(tree){
