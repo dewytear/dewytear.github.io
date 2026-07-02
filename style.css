@@ -110,14 +110,37 @@
             text-decoration: none;
         }
         #navigation .nav-title{
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
             margin: 22px 0 10px;
-            padding-bottom: 8px;
+            padding: 0 0 8px;
+            background: transparent;
+            border: none;
             border-bottom: 1px dashed var(--border);
+            font-family: inherit;
             font-size: 15px;
             font-weight: 700;
             letter-spacing: 0.02em;
             color: var(--text);
+            text-align: left;
+            cursor: pointer;
+        }
+        #navigation .nav-title:hover{
+            color: var(--accent);
+        }
+        #navigation .nav-caret{
+            display: inline-block;
+            font-size: 10px;
+            transition: transform 0.15s ease;
+        }
+        /* Collapsed section: hide its children and rotate the caret. */
+        #navigation .nav-branch.collapsed > ul{
+            display: none;
+        }
+        #navigation .nav-branch.collapsed > .nav-title .nav-caret{
+            transform: rotate(-90deg);
         }
 
         /* ---- Article ---- */
