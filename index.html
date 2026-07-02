@@ -43,15 +43,15 @@
         var DOC_BY_NAME = {};  // name -> doc
 
         function buildIndexes(tree){
-            (function walk(nodes, section){
+            (function walk(nodes, path){
                 nodes.forEach(function(node){
                     if(node.children && node.children.length){
-                        walk(node.children, node.title || node.label || section);
+                        walk(node.children, node.title ? path.concat(node.title) : path);
                     } else if(node.name && !node.route){
                         var doc = {
                             name: node.name,
                             label: node.label || node.name,
-                            section: section || '',
+                            section: path.join(' · '),
                             tags: node.tags || []
                         };
                         DOCS.push(doc);
@@ -61,7 +61,7 @@
                         });
                     }
                 });
-            })(tree, '');
+            })(tree, []);
         }
 
         function escapeHtml(s){
@@ -222,13 +222,26 @@
             btn.parentNode.classList.toggle('collapsed');
         }
 
+        function setAllBranches(collapsed){
+            document.querySelectorAll('#navigation .nav-branch').forEach(function(li){
+                li.classList.toggle('collapsed', collapsed);
+            });
+        }
+        function expandAll(){ setAllBranches(false); }
+        function collapseAll(){ setAllBranches(true); }
+
         // ---- Boot ----
         window.addEventListener('hashchange', route);
 
         fetch('list').then(function(response){
             response.json().then(function(tree){
                 buildIndexes(tree);
-                document.querySelector('#navigation').innerHTML = renderNodes(tree);
+                document.querySelector('#navigation').innerHTML =
+                    '<div class="nav-tools">'
+                  + '<button type="button" class="nav-tool" onclick="expandAll()">모두 펼치기</button>'
+                  + '<button type="button" class="nav-tool" onclick="collapseAll()">모두 접기</button>'
+                  + '</div>'
+                  + renderNodes(tree);
                 document.querySelector('#more').innerHTML = renderMore();
                 route();   // render the initial page once indexes exist
             })

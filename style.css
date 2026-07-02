@@ -190,6 +190,39 @@
         #navigation .nav-branch.collapsed > .nav-title .nav-caret{
             transform: rotate(-90deg);
         }
+        /* Level-0 category titles: prominent */
+        #navigation > ul > li.nav-branch > .nav-title{
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        /* Level-1 subcategory titles: lighter and tighter */
+        #navigation > ul > li > ul > li.nav-branch > .nav-title{
+            margin: 12px 0 6px;
+            border-bottom: none;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0;
+            text-transform: none;
+            color: var(--muted);
+        }
+        /* Expand / collapse-all controls */
+        .nav-tools{
+            display: flex;
+            gap: 14px;
+            margin-bottom: 4px;
+        }
+        .nav-tool{
+            padding: 0;
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .nav-tool:hover{
+            color: var(--accent);
+        }
 
         /* ---- Article ---- */
         #article{
