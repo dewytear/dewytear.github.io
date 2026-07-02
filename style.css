@@ -87,6 +87,10 @@
             padding: 24px 20px;
             border-right: 1px solid var(--border);
         }
+        /* Backdrop behind the mobile drawer (only shown on small screens). */
+        #nav-backdrop{
+            display: none;
+        }
         #navigation ul{
             list-style: none;
             margin: 0;
@@ -219,14 +223,35 @@
             #nav-toggle{
                 display: block;
             }
-            /* Collapse the sidebar behind the hamburger on small screens. */
+            /* Slide the sidebar in from the left as an off-canvas drawer. */
             #navigation{
-                display: none;
-                border-right: none;
-                border-bottom: 1px solid var(--border);
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 260px;
+                max-width: 80%;
+                padding: 24px 20px;
+                background: var(--bg);
+                border-right: 1px solid var(--border);
+                overflow-y: auto;
+                transform: translateX(-100%);
+                transition: transform 0.25s ease;
+                z-index: 1000;
             }
             body.nav-open #navigation{
+                transform: translateX(0);
+                box-shadow: 0 0 24px rgba(0, 0, 0, 0.4);
+            }
+            body.nav-open #nav-backdrop{
                 display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 900;
             }
             #masthead h1{
                 font-size: 24px;
