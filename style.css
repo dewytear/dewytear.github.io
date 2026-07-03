@@ -8,9 +8,11 @@
             --muted: #9aa4b2;
             --accent: #4db6ac;
             --border: #3a4353;
-            /* Medal colors for the top-3 tags (tuned for the dark bg) */
+            /* Medal colors for the top-3 tags (tuned for the dark bg).
+               Silver is brightened a touch so the neutral tone doesn't
+               recede next to the warm gold/bronze. */
             --gold: #ffd166;
-            --silver: #b9cbe0;
+            --silver: #c6d6ea;
             --bronze: #e8a87c;
         }
         body.day{
@@ -20,9 +22,11 @@
             --muted: #5f6368;
             --accent: #00897b;
             --border: #dadce0;
-            /* Medal colors re-tuned for the light bg */
+            /* Medal colors re-tuned for the light bg. Silver is deepened
+               so the neutral cool tone carries as much weight as the
+               warm gold/bronze on white. */
             --gold: #b8860b;
-            --silver: #5f7288;
+            --silver: #4d6178;
             --bronze: #a95f33;
         }
 
@@ -863,10 +867,23 @@
             color: var(--accent);
             text-decoration: none;
         }
-        /* Top-3 wear their theme-aware medal colors. */
-        .idx-top-item.top-1{ border-color: var(--gold);   color: var(--gold); }
-        .idx-top-item.top-2{ border-color: var(--silver); color: var(--silver); }
-        .idx-top-item.top-3{ border-color: var(--bronze); color: var(--bronze); }
+        /* Top-3 wear their theme-aware medal colors, each on a soft tint of
+           the same colour so all three chips carry equal visual weight —
+           without a fill the neutral silver recedes next to warm gold/bronze.
+           Silver gets a slightly stronger tint since it is the least saturated. */
+        .idx-top-item.top-1{ border-color: var(--gold);   color: var(--gold);
+            background: color-mix(in srgb, var(--gold) 13%, var(--bg)); }
+        .idx-top-item.top-2{ border-color: var(--silver); color: var(--silver);
+            background: color-mix(in srgb, var(--silver) 17%, var(--bg)); }
+        .idx-top-item.top-3{ border-color: var(--bronze); color: var(--bronze);
+            background: color-mix(in srgb, var(--bronze) 13%, var(--bg)); }
+        .idx-top-item.top-1:hover,
+        .idx-top-item.top-2:hover,
+        .idx-top-item.top-3:hover{
+            border-color: var(--accent);
+            color: var(--accent);
+            background: color-mix(in srgb, var(--accent) 12%, var(--bg));
+        }
 
         /* Dictionary-style index: alphabetical groups flowing into columns
            that reflow with the viewport, so it stays legible on any width. */
