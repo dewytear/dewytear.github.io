@@ -977,7 +977,12 @@
             #nav-toggle{
                 display: block;
             }
+            /* Keep the hamburger + title pinned to the top while scrolling. */
             #masthead{
+                position: sticky;
+                top: 0;
+                z-index: 800;
+                background: var(--bg);
                 padding-left: 56px;   /* room for the hamburger */
             }
             /* Slide the whole sidebar (image + nav) in from the left. */
