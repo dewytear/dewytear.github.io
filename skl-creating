@@ -1,0 +1,31 @@
+<h2>스킬 만들기 (스킬 엔지니어링)</h2>
+<p>잘 써 봤다면 자연스럽게 "직접 만들고 싶다"는 생각이 듭니다. 스킬을 <strong>만드는 것을 스킬 엔지니어링</strong> 이라 부르며, 이를 돕는 <strong>스킬 만들기 스킬(skill-creator)</strong> 이 기본 탑재되어 있습니다.</p>
+
+<h3>skill-creator — 메타 스킬</h3>
+<p>스킬을 만드는 스킬로, 다음 흐름과 서브에이전트를 갖춥니다.</p>
+<ul>
+    <li><strong>create → evaluate → improve → benchmark</strong> 루프.</li>
+    <li>내부에 <strong>evaluator · grader · 비교 · 분석</strong> 서브에이전트 탑재.</li>
+    <li>스크립트를 넣고 "이걸 스킬로 만들어줘" 하면, <strong>자체 루프와 테스트(A/B)</strong> 를 거쳐 탄탄하게 만들어 줍니다.</li>
+</ul>
+
+<h3>두 가지 카테고리</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>구분</th><th>내용</th><th>모델 발전 시</th></tr></thead>
+        <tbody>
+            <tr><td><strong>능력 향상 스킬</strong></td><td>PDF 조작·문서 생성·복잡한 파일 변환 등. 스크립트로 만들어 <strong>결정론적·안정적</strong>으로 사용.</td><td>모델이 잘하게 되면 <strong>불필요해질 수도</strong></td></tr>
+            <tr><td><strong>조직 내재화 스킬</strong></td><td>조직의 책임·업무 흐름·담당자 등. 에이전트가 모르는 <strong>우리 내부 지식</strong>.</td><td>아무리 발전해도 <strong>대체 불가</strong> — 계속 만들어야 함</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">강조 — 조직 내재화 스킬을 계속 만들자</span>
+    능력 향상 스킬은 지금 잘 활용하되 "평생 갈 것"이라 생각하지 말고, 모델이 발전하면 걷어낼 수 있게 봅니다. 반면 <strong>조직 내재화 스킬</strong>은 LLM이 아무리 발전해도 우리 조직의 책임·흐름·담당자를 대신할 수 없으므로, <strong>지속적으로 구축</strong>해 가는 것이 에이전트 거버넌스의 핵심입니다.
+</div>
+
+<div class="note">
+    <span class="nh">배포가 쉽다</span>
+    스킬의 가장 큰 장점 중 하나는 <strong>배포</strong>입니다. 공유 저장소/서버/커뮤니티에 등록해 두면 버전 관리·공유가 쉽고, "Get this skill" 복사 → "설치해줘" 한 번으로 조직 전체에 퍼집니다. 현장에서 파일을 수정해 재배포하는 것도 즉시 가능합니다.
+</div>
