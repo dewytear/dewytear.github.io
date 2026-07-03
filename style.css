@@ -770,6 +770,83 @@
         #tag-search:focus{
             border-color: var(--accent);
         }
+        /* "Most used" band — surfaces the top-10 / top-3 ranking above the
+           alphabetical index; top-3 wear their theme-aware medal colors. */
+        #tag-top{
+            margin: 2px 0 26px;
+            padding: 16px 18px 18px;
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+        #tag-top:empty{
+            display: none !important;
+        }
+        .idx-top-title{
+            margin: 0 0 12px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .idx-top-list{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .idx-top-item{
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 15px 7px 7px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            color: var(--text);
+            font-size: 14.5px;
+            font-weight: 700;
+        }
+        .idx-top-item:hover{
+            border-color: var(--accent);
+            text-decoration: none;
+        }
+        .idx-rank{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--border);
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+        }
+        .idx-top-count{
+            color: var(--muted);
+            font-size: 12.5px;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+        .idx-top-item:hover .idx-top-count{
+            color: var(--accent);
+        }
+        /* Top-3 medals (badge fill uses the theme bg for legible contrast) */
+        .idx-top-item.top-1{ border-color: var(--gold); }
+        .idx-top-item.top-2{ border-color: var(--silver); }
+        .idx-top-item.top-3{ border-color: var(--bronze); }
+        .idx-top-item.top-1 .idx-top-term{ color: var(--gold); }
+        .idx-top-item.top-2 .idx-top-term{ color: var(--silver); }
+        .idx-top-item.top-3 .idx-top-term{ color: var(--bronze); }
+        .idx-top-item.top-1 .idx-rank{ background: var(--gold); color: var(--bg); }
+        .idx-top-item.top-2 .idx-rank{ background: var(--silver); color: var(--bg); }
+        .idx-top-item.top-3 .idx-rank{ background: var(--bronze); color: var(--bg); }
+
         /* Dictionary-style index: alphabetical groups flowing into columns
            that reflow with the viewport, so it stays legible on any width. */
         #tag-cloud{
