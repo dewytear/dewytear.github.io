@@ -1,0 +1,102 @@
+<h2>첫 하네스 실행 — 영업·수주 커스터마이징</h2>
+<p>실제로 한 번 돌려 봅니다. 예제는 <strong>더존 ERP 영업·수주 모듈</strong>에 고객사 요청(CR)을 반영하는 상황입니다. 핵심은 딱 하나 — <strong>"명령"이 아니라 "의도"를 준다</strong>는 것입니다.</p>
+
+<div class="note">
+    <span class="nh">오늘의 예제 (CR)</span>
+    고객사 요청: <strong>"거래처 신용등급별 여신한도(신용한도)를 넘는 주문은 자동으로 보류(hold)하고, 영업 담당자에게 알림을 보내 달라."</strong> 표준 패키지를 건드리는 커스터마이징이라 <strong>영향도 분석과 회귀 테스트</strong>가 꼭 필요합니다.
+</div>
+
+<h3>실행 라이프사이클 — 무엇이 순서대로 일어나나</h3>
+<div class="diagram">
+<svg viewBox="0 0 620 330" role="img" aria-label="하네스 실행 라이프사이클: 의도 입력 → 도메인 분석 → 팀 제안 → 진행시켜 승인 → 병렬 실행 → 검증된 산출물">
+    <rect class="d-box accent" x="150" y="8" width="320" height="40" rx="9"/>
+    <text class="d-label" x="310" y="26" text-anchor="middle">① /harness 로 의도 입력</text>
+    <text class="d-sub" x="310" y="41" text-anchor="middle">"~커스터마이징하고자 합니다"</text>
+
+    <rect class="d-box" x="150" y="62" width="320" height="40" rx="9"/>
+    <text class="d-label" x="310" y="80" text-anchor="middle">② 도메인 분석</text>
+    <text class="d-sub" x="310" y="95" text-anchor="middle">요구사항 · 표준소스 · 영향 범위 파악</text>
+
+    <rect class="d-box" x="150" y="116" width="320" height="40" rx="9"/>
+    <text class="d-label" x="310" y="134" text-anchor="middle">③ 에이전트 팀 제안</text>
+    <text class="d-sub" x="310" y="149" text-anchor="middle">분석 · 개발 · 회귀 QA 구성</text>
+
+    <rect class="d-box accent" x="150" y="170" width="320" height="40" rx="9"/>
+    <text class="d-label" x="310" y="188" text-anchor="middle">④ "진행시켜" 로 승인</text>
+    <text class="d-sub" x="310" y="203" text-anchor="middle">사람이 팀을 검토한 뒤 한마디</text>
+
+    <rect class="d-box" x="150" y="224" width="320" height="40" rx="9"/>
+    <text class="d-label" x="310" y="242" text-anchor="middle">⑤ 병렬 자율 실행</text>
+    <text class="d-sub" x="310" y="257" text-anchor="middle">개발 ↔ QA 재작업 루프 반복</text>
+
+    <rect class="d-box accent" x="150" y="278" width="320" height="44" rx="9"/>
+    <text class="d-label" x="310" y="298" text-anchor="middle">⑥ 검증된 산출물</text>
+    <text class="d-sub" x="310" y="313" text-anchor="middle">_workspace: 명세 · 영향도 · 테스트 · 이관가이드</text>
+
+    <!-- arrows -->
+    <g>
+        <line class="d-edge" x1="310" y1="48" x2="310" y2="61"/><polygon class="d-arrow" points="305,60 315,60 310,66"/>
+        <line class="d-edge" x1="310" y1="102" x2="310" y2="115"/><polygon class="d-arrow" points="305,114 315,114 310,120"/>
+        <line class="d-edge" x1="310" y1="156" x2="310" y2="169"/><polygon class="d-arrow" points="305,168 315,168 310,174"/>
+        <line class="d-edge accent" x1="310" y1="210" x2="310" y2="223"/><polygon class="d-arrow accent" points="305,222 315,222 310,228"/>
+        <line class="d-edge" x1="310" y1="264" x2="310" y2="277"/><polygon class="d-arrow" points="305,276 315,276 310,282"/>
+    </g>
+    <!-- human gate marker -->
+    <text class="d-accent" x="484" y="193" font-size="11">← 사람 검토</text>
+</svg>
+<div class="d-cap">사람이 개입하는 지점은 <strong>①의도</strong>와 <strong>④승인</strong> 둘뿐입니다.</div>
+</div>
+
+<h3>1단계 — 의도 문장 쓰기</h3>
+<p>가장 중요한 습관입니다. <strong>"~해줘"(명령)</strong>가 아니라 <strong>"~하고자 합니다"(의도)</strong>로 씁니다. 그래야 하네스가 스스로 팀을 설계할 여지를 갖습니다. <code>/harness</code> 입력 후 <span class="kbd">Tab</span> 으로 자동완성한 뒤 요청을 이어 붙입니다.</p>
+<pre><code>/harness 더존 ERP 영업·수주 모듈에서, 거래처 신용등급별 여신한도를
+초과하는 주문을 자동으로 보류 처리하고 영업 담당자에게 알림을 보내는
+고객사 커스터마이징을 진행하고자 합니다. 표준 소스 영향도 분석과
+회귀 테스트까지 포함해 주세요.</code></pre>
+
+<div class="note">
+    <span class="nh">의도를 잘 주는 요령 (초급 필수)</span>
+    ① <strong>목표</strong>(무엇을) · ② <strong>대상 모듈</strong>(어디를) · ③ <strong>제약</strong>(표준 훼손 최소화·업그레이드 호환) · ④ <strong>원하는 산출물</strong>(영향도·테스트) 을 한 문장에 담으면 팀 구성이 정확해집니다. 자세한 배경은 <a href="#!hnp-agents-skills">에이전트·스킬 설계</a> 참고.
+</div>
+
+<h3>2~3단계 — 도메인 분석 &amp; 팀 제안</h3>
+<p>엔터를 누르면 하네스가 <strong>도메인을 분석</strong>하고, 중간에 <strong>"하네스 풀 구축 / 하네스만 구축"</strong> 같은 선택을 물어봅니다. 참고할 표준 명세나 요구사항 문서가 있으면 이때 넣어 줄 수 있습니다(수백 페이지 PDF도 처리). 곧이어 <strong>에이전트 팀 초안</strong>을 제안합니다. 예:</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>제안된 에이전트</th><th>역할</th></tr></thead>
+        <tbody>
+            <tr><td>영업 표준소스 분석가</td><td>여신·주문 흐름과 커스텀 영향 범위 파악</td></tr>
+            <tr><td>커스터마이징 설계자</td><td>표준을 직접 고치지 않는 확장 방식(예: 애드온) 설계</td></tr>
+            <tr><td>개발 에이전트</td><td>보류 처리·알림 로직 구현</td></tr>
+            <tr><td>회귀 QA 에이전트</td><td>표준 주문·여신 기능이 깨지지 않았는지 검증</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>4단계 — 검토하고 "진행시켜"</h3>
+<p>여기서 <strong>사람이 개입</strong>합니다. 제안된 팀이 적절한지 보고, 부족하면 수정을 요청합니다. 괜찮으면 한마디로 승인합니다.</p>
+<pre><code>진행시켜</code></pre>
+<p>이 순간부터 작업은 <strong>사람의 손을 떠나</strong> 오케스트레이터가 계획한 순서대로 진행됩니다.</p>
+
+<h3>5단계 — 병렬 자율 실행 (관찰)</h3>
+<ul>
+    <li>에이전트들이 <strong>병렬로</strong> 일합니다. <span class="kbd">Shift + 방향키</span> 로 각 에이전트가 무엇을 하는지 들여다볼 수 있습니다(작업 중인 에이전트는 색으로 표시).</li>
+    <li>다른 작업을 동시에 돌리고 싶으면 <strong>새 터미널 창</strong>을 하나 더 열어 별도 하네스를 실행합니다.</li>
+    <li>개발 → QA → (문제 발견 시) 재작업의 <strong>루프</strong>가 자동으로 돕니다.</li>
+</ul>
+
+<h3>6단계 — 산출물 확인</h3>
+<p>끝나면 프로젝트에 <code>_workspace</code> 폴더가 생기고, 아래 같은 문서들이 쌓입니다(이름은 이해를 돕기 위한 예시이며, 실제로는 하네스가 계획대로 명명합니다).</p>
+<ul>
+    <li><strong>요구사항 정리</strong> — CR을 개발 가능한 명세로 정리</li>
+    <li><strong>표준소스 영향도</strong> — 어떤 표준 기능·화면에 영향이 가는지</li>
+    <li><strong>커스터마이징 설계</strong> — 표준을 직접 고치지 않는 확장 방식, 업그레이드 호환 고려</li>
+    <li><strong>구현 변경 목록</strong> — 무엇을 어떻게 바꿨는지</li>
+    <li><strong>회귀 테스트 결과</strong> — 크리티컬 / 메이저 / 마이너로 분류</li>
+    <li><strong>이관 가이드</strong> — 운영 반영 절차·주의사항</li>
+</ul>
+
+<div class="note">
+    <span class="nh">기억하세요 — 초안입니다</span>
+    하네스 결과는 <strong>완성품이 아니라 잘 준비된 초안</strong>입니다. 특히 ERP 커스텀은 <strong>표준 영향도와 회귀 결과를 사람이 반드시 검토</strong>한 뒤 반영해야 합니다. 검증을 더 탄탄히 하는 방법은 <a href="#!hnp-verify">검증·품질</a>에서 다룹니다. 안에서 무슨 일이 일어났는지는 <a href="#!hnp-architecture">동작 구조</a>에서 확인하세요.
+</div>

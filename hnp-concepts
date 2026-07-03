@@ -1,0 +1,85 @@
+<h2>핵심 개념 쉽게</h2>
+<p>하네스는 다섯 가지 요소로 이뤄집니다. 어렵게 느껴지지만, <strong>회사에서 일하는 팀</strong>에 그대로 대응됩니다 — PM 한 명, 담당자 여러 명, 각자의 매뉴얼, 검수, 그리고 공용 작업 폴더.</p>
+
+<div class="note">
+    <span class="nh">이름의 유래 — 마차의 마구(馬具)</span>
+    "하네스(harness)"는 원래 <strong>말에 채우는 마구</strong>를 뜻합니다. 말(=AI 모델)이 아무리 좋아도 <strong>어떻게 매어 부리느냐</strong>에 따라 잘 달리기도, 헛돌기도 합니다. 하네스 엔지니어링은 바로 그 <strong>"부리는 판"</strong>을 설계하는 일입니다.
+</div>
+
+<h3>구성도 — 요소들이 어떻게 맞물리나</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 288" role="img" aria-label="하네스 구성도: 오케스트레이터가 분석·개발·검증 에이전트를 조율하고, 모두 _workspace에 산출물을 남긴다">
+    <!-- orchestrator -->
+    <rect class="d-box accent" x="240" y="8" width="220" height="48" rx="10"/>
+    <text class="d-label" x="350" y="30" text-anchor="middle">오케스트레이터 (PM)</text>
+    <text class="d-sub" x="350" y="47" text-anchor="middle">워크플로우 계획 · 조율</text>
+
+    <!-- bus from orchestrator to agents -->
+    <line class="d-edge" x1="350" y1="56" x2="350" y2="80"/>
+    <line class="d-edge" x1="115" y1="80" x2="585" y2="80"/>
+    <line class="d-edge" x1="115" y1="80" x2="115" y2="96"/>
+    <polygon class="d-arrow" points="110,95 120,95 115,102"/>
+    <line class="d-edge" x1="350" y1="80" x2="350" y2="96"/>
+    <polygon class="d-arrow" points="345,95 355,95 350,102"/>
+    <line class="d-edge" x1="585" y1="80" x2="585" y2="96"/>
+    <polygon class="d-arrow" points="580,95 590,95 585,102"/>
+
+    <!-- agents -->
+    <rect class="d-box" x="15" y="102" width="200" height="58" rx="10"/>
+    <text class="d-label" x="115" y="128" text-anchor="middle">분석 에이전트</text>
+    <text class="d-sub" x="115" y="146" text-anchor="middle">표준소스 · 영향도</text>
+
+    <rect class="d-box" x="250" y="102" width="200" height="58" rx="10"/>
+    <text class="d-label" x="350" y="128" text-anchor="middle">개발 에이전트</text>
+    <text class="d-sub" x="350" y="146" text-anchor="middle">커스텀 구현</text>
+
+    <rect class="d-box" x="485" y="102" width="200" height="58" rx="10"/>
+    <text class="d-label" x="585" y="128" text-anchor="middle">검증 에이전트 (QA)</text>
+    <text class="d-sub" x="585" y="146" text-anchor="middle">회귀 · 정합성</text>
+
+    <!-- agents to workspace -->
+    <line class="d-edge dash" x1="115" y1="160" x2="115" y2="204"/>
+    <polygon class="d-arrow" points="110,203 120,203 115,210"/>
+    <line class="d-edge dash" x1="350" y1="160" x2="350" y2="204"/>
+    <polygon class="d-arrow" points="345,203 355,203 350,210"/>
+    <line class="d-edge dash" x1="585" y1="160" x2="585" y2="204"/>
+    <polygon class="d-arrow" points="580,203 590,203 585,210"/>
+
+    <!-- workspace -->
+    <rect class="d-box soft" x="15" y="210" width="670" height="52" rx="10"/>
+    <text class="d-label sm" x="350" y="233" text-anchor="middle">아티팩트 · 메모리 &#160;(&#160;_workspace 폴더&#160;)</text>
+    <text class="d-sub" x="350" y="251" text-anchor="middle">중간 산출물 · 근거 출처 · QA 리포트가 쌓입니다</text>
+
+    <!-- skills note -->
+    <text class="d-sub" x="350" y="282" text-anchor="middle">각 에이전트는 필요한 &lt;스킬 · 도구&gt;를 꺼내 사용합니다</text>
+</svg>
+<div class="d-cap">오케스트레이터가 팀을 조율하고, 모든 산출물은 공용 <code>_workspace</code>에 남습니다.</div>
+</div>
+
+<h3>다섯 가지 요소</h3>
+<ul>
+    <li><strong>에이전트(Agent)</strong> — 특정 역할을 맡은 AI 작업자. <strong>코드가 아니라 자연어로 쓴 "직무기술서"</strong>입니다(역할·원칙·입출력·협업 방법·에러 시 행동). <em>예: "영업 표준소스 분석가"</em></li>
+    <li><strong>스킬(Skill)</strong> — 반복 작업을 담은 <strong>매뉴얼</strong>. <code>이름 + 설명 + 절차·체크리스트</code>로 이뤄집니다. <em>예: "여신한도 검증 절차" 스킬</em></li>
+    <li><strong>오케스트레이터(Orchestrator)</strong> — 팀을 조율하는 <strong>PM</strong>. 항상 한 명이며, 시작 전에 <strong>작업 순서(워크플로우)를 미리 계획</strong>합니다. (Claude Code의 플랜 모드와 비슷)</li>
+    <li><strong>평가 · 테스트</strong> — 결과를 믿을 수 있게 하는 <strong>검수</strong>. 오탈자가 아니라 <strong>주장–근거 정합성, 수치 일관성, 표준 기능 회귀</strong>를 교차 확인합니다.</li>
+    <li><strong>아티팩트 · 메모리</strong> — 실행 시 만들어지는 <strong>공용 작업 폴더 <code>_workspace</code></strong>. 중간 산출물과 <strong>근거 출처</strong>가 함께 남아, 나중에 "왜 이렇게 했는지" 추적할 수 있고 할루시네이션(그럴듯한 거짓)도 줄어듭니다.</li>
+</ul>
+
+<h3>회사 팀에 빗대면</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>하네스 요소</th><th>회사 비유</th><th>더존 ERP 커스텀 예</th></tr></thead>
+        <tbody>
+            <tr><td>오케스트레이터</td><td>PM / 팀장</td><td>CR 처리 순서를 짜는 리더</td></tr>
+            <tr><td>에이전트</td><td>담당 실무자</td><td>표준소스 분석가 · 개발자 · 회귀 QA</td></tr>
+            <tr><td>스킬</td><td>업무 매뉴얼</td><td>"영향도 분석 절차", "회귀 테스트 체크리스트"</td></tr>
+            <tr><td>평가·테스트</td><td>검수 담당</td><td>표준 기능 깨짐·수치 정합성 확인</td></tr>
+            <tr><td>아티팩트·메모리</td><td>공용 드라이브</td><td><code>_workspace</code>: 명세·영향도·테스트·이관가이드</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">최소 구성은 3가지</span>
+    처음에는 <strong>에이전트 · 스킬 · 오케스트레이터</strong> 세 가지만 이해하면 충분합니다. 평가·테스트와 아티팩트·메모리는 하네스 플러그인이 <strong>알아서 붙여 줍니다</strong>. 다음 문서에서 <a href="#!hnp-install">설치</a>하고 <a href="#!hnp-first-run">직접 실행</a>해 봅니다.
+</div>

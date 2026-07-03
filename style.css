@@ -1187,3 +1187,91 @@
             #music-btn.playing .music-eq i,
             #music-btn.playing::before{ animation: none; }
         }
+
+        /* ==== Harness plugin docs: scenario board + SVG diagrams ==== */
+
+        /* Scenario board — a responsive card grid (게시판). */
+        article .scn-board{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 14px;
+            margin: 18px 0 22px;
+        }
+        article .scn-card{
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 14px 16px 16px;
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+        }
+        article .scn-card:hover{
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        }
+        article .scn-card h4{
+            margin: 0;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .scn-meta{ display: flex; flex-wrap: wrap; gap: 6px; }
+        .scn-pill{
+            display: inline-block;
+            padding: 2px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            background: var(--bg);
+        }
+        .scn-pill.mod{ color: var(--accent);
+            border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+        .scn-pill.lv1{ color: #3a9d78; border-color: color-mix(in srgb, #3a9d78 50%, transparent); }
+        .scn-pill.lv2{ color: #c0902a; border-color: color-mix(in srgb, #c0902a 50%, transparent); }
+        .scn-pill.lv3{ color: #d0574a; border-color: color-mix(in srgb, #d0574a 50%, transparent); }
+        article .scn-card .scn-body{ margin: 0; font-size: 13px; color: var(--text); line-height: 1.6; }
+        .scn-card .scn-sub{ font-size: 12px; color: var(--muted); font-weight: 700; }
+        .scn-team{ display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+        .scn-team span{
+            font-size: 11px; color: var(--muted);
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 6px; padding: 1px 7px;
+        }
+
+        /* Inline-SVG flow / architecture diagrams — coloured via theme tokens
+           by putting classes on the SVG elements (fill/stroke read the vars). */
+        article .diagram{ margin: 18px 0 20px; overflow-x: auto; }
+        article .diagram svg{ display: block; max-width: 100%; height: auto; margin: 0 auto; }
+        .diagram .d-box{ fill: var(--bg-alt); stroke: var(--border); stroke-width: 1.5; }
+        .diagram .d-box.accent{ fill: color-mix(in srgb, var(--accent) 13%, var(--bg));
+            stroke: var(--accent); }
+        .diagram .d-box.soft{ fill: var(--bg); stroke: var(--border); }
+        .diagram .d-label{ fill: var(--text); font-family: inherit; font-size: 13px; font-weight: 600; }
+        .diagram .d-label.sm{ font-size: 11.5px; font-weight: 500; }
+        .diagram .d-sub{ fill: var(--muted); font-family: inherit; font-size: 11px; }
+        .diagram .d-accent{ fill: var(--accent); font-weight: 700; }
+        .diagram .d-edge{ stroke: var(--muted); stroke-width: 1.6; fill: none; }
+        .diagram .d-edge.accent{ stroke: var(--accent); }
+        .diagram .d-edge.dash{ stroke-dasharray: 5 4; }
+        .diagram .d-arrow{ fill: var(--muted); stroke: none; }
+        .diagram .d-arrow.accent{ fill: var(--accent); }
+        .diagram .d-cap{ text-align: center; color: var(--muted); font-size: 12px; margin-top: 6px; }
+
+        /* Keyboard-key chip (e.g. Shift + 방향키). */
+        .kbd{
+            display: inline-block;
+            padding: 1px 7px;
+            font-size: 12px;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-bottom-width: 2px;
+            border-radius: 6px;
+            white-space: nowrap;
+        }

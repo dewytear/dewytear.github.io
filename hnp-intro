@@ -1,0 +1,85 @@
+<h2>Harness 플러그인 — 소개</h2>
+<p><strong>하네스(Harness) 플러그인</strong>은 <strong>"목표(의도)만 주면, 여러 AI가 팀을 이뤄 스스로 오래 일하도록 판을 깔아 주는"</strong> Claude Code 플러그인입니다. 내가 프롬프트를 하나하나 던지는 대신, <em>"무엇을 원하는지"</em>만 말하면 플러그인이 <strong>에이전트 팀 · 스킬 · 오케스트레이터</strong>를 대신 구성해 실행합니다.</p>
+
+<div class="note">
+    <span class="nh">이 문서는 누구를 위한 것인가</span>
+    <strong>초급 개발자</strong>도 따라올 수 있도록, 용어를 최대한 풀어서 설명합니다. 예제는 <strong>더존(Douzone) ERP 표준 패키지를 고객사에 맞게 수정·커스터마이징</strong>하는 실무 상황으로 구성했습니다. (신규 ERP를 처음부터 만드는 이야기가 아닙니다.)
+</div>
+
+<h3>한 장으로 보는 큰 그림</h3>
+<p>하네스 플러그인이 하는 일은 결국 아래 흐름입니다. 사람은 <strong>맨 앞(의도)</strong>과 <strong>맨 뒤(검토·의사결정)</strong>에만 개입하고, 가운데의 반복 작업은 AI 팀이 맡습니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 132" role="img" aria-label="하네스 동작 흐름: 의도 입력 → 팀 구성 → 병렬 자율 실행 → 검증된 산출물">
+    <!-- boxes -->
+    <rect class="d-box accent" x="5" y="30" width="150" height="66" rx="10"/>
+    <text class="d-label" x="80" y="58" text-anchor="middle">① 의도 입력</text>
+    <text class="d-sub" x="80" y="78" text-anchor="middle">"~하고자 합니다"</text>
+
+    <rect class="d-box" x="185" y="30" width="150" height="66" rx="10"/>
+    <text class="d-label" x="260" y="58" text-anchor="middle">② 팀 구성</text>
+    <text class="d-sub" x="260" y="78" text-anchor="middle">에이전트·스킬 설계</text>
+
+    <rect class="d-box" x="365" y="30" width="150" height="66" rx="10"/>
+    <text class="d-label" x="440" y="58" text-anchor="middle">③ 자율 실행</text>
+    <text class="d-sub" x="440" y="78" text-anchor="middle">병렬 · 오래</text>
+
+    <rect class="d-box accent" x="545" y="30" width="150" height="66" rx="10"/>
+    <text class="d-label" x="620" y="58" text-anchor="middle">④ 검증된 산출물</text>
+    <text class="d-sub" x="620" y="78" text-anchor="middle">출처·QA 포함</text>
+
+    <!-- arrows -->
+    <line class="d-edge" x1="157" y1="63" x2="178" y2="63"/>
+    <polygon class="d-arrow" points="178,58 186,63 178,68"/>
+    <line class="d-edge" x1="337" y1="63" x2="358" y2="63"/>
+    <polygon class="d-arrow" points="358,58 366,63 358,68"/>
+    <line class="d-edge" x1="517" y1="63" x2="538" y2="63"/>
+    <polygon class="d-arrow" points="538,58 546,63 538,68"/>
+
+    <!-- human involvement labels -->
+    <text class="d-accent" x="80" y="118" text-anchor="middle" font-size="11">사람: 지시</text>
+    <text class="d-accent" x="620" y="118" text-anchor="middle" font-size="11">사람: 검토·결정</text>
+</svg>
+<div class="d-cap">사람은 앞(의도)과 뒤(검토)만, 가운데 반복 작업은 AI 팀이 맡습니다.</div>
+</div>
+
+<h3>왜 "하네스"인가 — 프롬프트에서 하네스로</h3>
+<p>AI를 다루는 방식은 아래처럼 발전해 왔습니다. 하네스는 <strong>모델 하나가 아니라 "모델을 둘러싼 환경 전체"</strong>를 설계하는 단계입니다. 같은 모델이라도 <strong>어떤 판(하네스)에 올려놓느냐</strong>에 따라 결과물의 품질이 크게 달라집니다.</p>
+
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>단계</th><th>핵심</th><th>비유</th></tr></thead>
+        <tbody>
+            <tr><td><strong>프롬프트 엔지니어링</strong></td><td>질문을 잘 던지기</td><td>말 한마디 잘하기</td></tr>
+            <tr><td><strong>컨텍스트 엔지니어링</strong></td><td>필요한 자료·맥락을 잘 넣기</td><td>자료를 손에 쥐여 주기</td></tr>
+            <tr><td><strong>하네스 엔지니어링</strong></td><td>AI가 일하는 <strong>시스템 전체</strong>를 설계</td><td>말(馬)에 <strong>마구(하네스)</strong>를 채워 오래 잘 달리게</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>더존 ERP 커스터마이징에 왜 잘 맞나</h3>
+<p>고객사 커스터마이징 업무는 보통 <strong>여러 단계가 순서대로</strong> 이어집니다 — 요구사항(CR) 분석 → 표준 소스·영향도 파악 → 설계 → 개발 → 회귀 검증. 이건 <strong>혼자 순서대로 하면 오래 걸리지만, 역할을 나눠 병렬로 하면 훨씬 빠른</strong> 대표적인 일입니다. 하네스는 이 단계들을 <strong>각각 담당 에이전트</strong>에게 맡기고 오케스트레이터가 조율합니다.</p>
+<ul>
+    <li><strong>표준 훼손 최소화</strong> — "이 커스텀이 표준 패키지의 어디에 영향 주는지"를 분석 에이전트가 먼저 짚어 줍니다.</li>
+    <li><strong>회귀 검증 자동화</strong> — 개발 후 QA 에이전트가 표준 기능이 깨지지 않았는지 교차 확인합니다.</li>
+    <li><strong>산출물 표준화</strong> — 명세·영향도·테스트·이관 가이드가 <code>_workspace</code>에 함께 남습니다.</li>
+</ul>
+<p class="scn-sub">※ 구체 예제(영업·수주 여신한도 커스텀)는 <a href="#!hnp-first-run">첫 하네스 실행</a>에서 단계별로 따라 해 봅니다.</p>
+
+<h3>이 교육자료의 구성</h3>
+<ol>
+    <li><a href="#!hnp-concepts">핵심 개념 쉽게</a> — 에이전트·스킬·오케스트레이터가 뭔지</li>
+    <li><a href="#!hnp-install">설치와 준비</a> — 마켓플레이스에서 설치</li>
+    <li><a href="#!hnp-first-run">첫 하네스 실행 (영업·수주 커스텀)</a> — 손으로 따라 하기</li>
+    <li><a href="#!hnp-architecture">동작 구조와 6단계</a> — 안에서 무슨 일이 벌어지나</li>
+    <li><a href="#!hnp-agents-skills">에이전트·스킬 설계</a> — 팀을 어떻게 짜나</li>
+    <li><a href="#!hnp-verify">검증·품질과 _workspace</a> — 결과를 믿을 수 있게</li>
+    <li><a href="#!hnp-scenarios">시나리오 게시판</a> — 다양한 더존 ERP 커스텀 사례</li>
+    <li><a href="#!hnp-hundred">하네스100·성능</a> — 미리 만든 사례 모음과 효과</li>
+    <li><a href="#!hnp-commands">명령어·빠른 참조</a> — 치트시트</li>
+</ol>
+
+<div class="note">
+    <span class="nh">출처와 범위</span>
+    본 세트는 <strong>"하네스 엔지니어링 / 황민호"</strong> 강의(<a href="https://www.youtube.com/live/iqoPgoYBVaM" target="_blank" rel="noopener">youtube.com/live/iqoPgoYBVaM</a>)의 개념을 초급자용으로 재구성하고, <strong>더존 ERP 커스터마이징</strong> 상황에 맞춰 예제를 붙인 것입니다. ERP 예제는 이해를 돕기 위한 <strong>일반화된 상황</strong>이며, 실제 제품 내부 구현·명령과는 다를 수 있습니다.
+</div>

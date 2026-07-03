@@ -1,0 +1,65 @@
+<h2>명령어 · 빠른 참조</h2>
+<p>하네스를 쓰며 자주 찾게 되는 명령·조작·설정을 한자리에 모았습니다.</p>
+
+<h3>핵심 명령어</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>명령</th><th>하는 일</th></tr></thead>
+        <tbody>
+            <tr><td><code>/plugin marketplace add &lt;repo&gt;</code></td><td>하네스 마켓플레이스 등록 (예: <code>lev-factory/harness</code>)</td></tr>
+            <tr><td><code>/plugin install harness</code></td><td>하네스 플러그인 설치</td></tr>
+            <tr><td><code>/reload</code></td><td>설치한 플러그인을 현재 세션에 반영</td></tr>
+            <tr><td><code>/harness &lt;의도&gt;</code></td><td>의도를 주고 하네스 실행 (팀 구성 시작)</td></tr>
+            <tr><td><code>진행시켜</code></td><td>제안된 팀을 검토한 뒤 실행 승인</td></tr>
+            <tr><td><code>/agents</code></td><td>생성된 에이전트 목록 확인</td></tr>
+            <tr><td><code>/exit</code></td><td>세션 종료(에이전트 안 보일 때 재진입용)</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>조작 · 단축키</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>조작</th><th>하는 일</th></tr></thead>
+        <tbody>
+            <tr><td><span class="kbd">Tab</span></td><td><code>/harness</code> 입력 후 자동완성</td></tr>
+            <tr><td><span class="kbd">Shift + 방향키</span></td><td>실행 중인 각 에이전트의 작업 들여다보기</td></tr>
+            <tr><td><span class="kbd">Shift + Tab</span></td><td>모드 전환 (auto / accept / plan)</td></tr>
+            <tr><td>새 터미널 창</td><td>또 다른 하네스를 동시에 실행(병렬 작업)</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>설정 · 산출물 위치</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>항목</th><th>내용</th></tr></thead>
+        <tbody>
+            <tr><td>에이전트 팀 켜기</td><td><code>~/.claude/settings.json</code> 의 <code>env</code> 에 <code>"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"</code></td></tr>
+            <tr><td>산출물 폴더</td><td><code>_workspace</code> — 분석·설계·구현·QA 리포트·근거 출처</td></tr>
+            <tr><td>에이전트·스킬 정의</td><td><code>.claude</code> 아래 (Git으로 공유 가능)</td></tr>
+            <tr><td>구성 변경 이력</td><td><code>CLAUDE.md</code></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>상황별 치트시트</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>상황</th><th>이렇게</th></tr></thead>
+        <tbody>
+            <tr><td>처음 설치</td><td><code>/plugin marketplace add …</code> → <code>/plugin install harness</code> → <code>/reload</code> → <code>/harness</code> 확인</td></tr>
+            <tr><td>첫 실행</td><td><code>/harness</code> + <strong>"~하고자 합니다"</strong> 의도 → 팀 검토 → <code>진행시켜</code></td></tr>
+            <tr><td>진행 관찰</td><td><span class="kbd">Shift + 방향키</span> 로 에이전트 확인</td></tr>
+            <tr><td>검증 강화</td><td><code>/harness QA 에이전트는 Codex CLI 로 교차 검증하도록 수정</code></td></tr>
+            <tr><td>팀 수정</td><td><code>/harness &lt;에이전트&gt; 는 &lt;조건&gt; 도 검증/처리하도록 수정</code></td></tr>
+            <tr><td>에이전트 안 보임</td><td><code>/exit</code> 후 재진입 → <code>/agents</code> 확인</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">의도 문장 템플릿 (복사해서 쓰기)</span>
+    <code>/harness 더존 ERP &lt;모듈&gt; 에서 &lt;무엇을&gt; 하는 고객사 커스터마이징을 진행하고자 합니다. 표준 소스 영향도 분석과 회귀 테스트까지 포함해 주세요.</code>
+    <br>다양한 <a href="#!hnp-scenarios">시나리오</a>에 이 템플릿의 <strong>&lt;모듈&gt;·&lt;무엇을&gt;</strong> 만 바꿔 넣으면 됩니다.
+</div>

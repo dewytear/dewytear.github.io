@@ -1,0 +1,124 @@
+<h2>시나리오 게시판</h2>
+<p>더존 ERP 고객사 커스터마이징에서 <strong>하네스를 붙일 만한 상황</strong>을 모듈별로 모았습니다. 각 카드는 <strong>모듈 · 난이도 · 상황 · 추천 팀 구성 · 기대효과</strong> 순으로 읽으면 됩니다. 비슷한 상황을 골라 <a href="#!hnp-first-run">의도 문장</a>만 바꿔 실행해 보세요.</p>
+
+<div class="note">
+    <span class="nh">난이도 표시</span>
+    <span class="scn-pill lv1">초급</span> 단독·소규모 커스텀 · <span class="scn-pill lv2">중급</span> 표준 영향 있음 · <span class="scn-pill lv3">고급</span> 다중 모듈·데이터·정합성 위험. 난이도가 높을수록 <strong>회귀 검증과 사람 검토</strong>의 비중을 키우세요.
+</div>
+
+<div class="scn-board">
+
+    <div class="scn-card">
+        <h4>여신한도 초과 주문 자동 보류</h4>
+        <div class="scn-meta"><span class="scn-pill mod">영업·수주</span><span class="scn-pill lv2">중급</span></div>
+        <p class="scn-body">신용등급별 여신한도를 넘는 주문을 자동 보류하고 담당자에게 알림. 표준 여신·주문 로직 영향도 분석이 필수.</p>
+        <div class="scn-sub">추천 팀</div>
+        <div class="scn-team"><span>영향도 분석가</span><span>커스텀 설계자</span><span>개발</span><span>회귀 QA</span></div>
+        <p class="scn-body"><strong>효과</strong> — 한도 초과 실수 차단 · 승인 흐름 표준화</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>물류센터 로케이션(Bin) 관리 애드온</h4>
+        <div class="scn-meta"><span class="scn-pill mod">재고·물류</span><span class="scn-pill lv2">중급</span></div>
+        <p class="scn-body">고객사 창고의 셀·로케이션 단위 입출고를 표준 재고에 얹는 애드온. 재고 수불 정합성이 관건.</p>
+        <div class="scn-sub">추천 팀</div>
+        <div class="scn-team"><span>재고 흐름 분석가</span><span>데이터 설계자</span><span>개발</span><span>수불 정합 QA</span></div>
+        <p class="scn-body"><strong>효과</strong> — 로케이션별 실재고 가시화 · 오출고 감소</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>고객사 특수 수당·공제 규칙</h4>
+        <div class="scn-meta"><span class="scn-pill mod">급여·인사</span><span class="scn-pill lv2">중급</span></div>
+        <p class="scn-body">고객사 취업규칙에 맞춘 수당·공제 계산식을 급여 계산에 반영. 4대보험·연말정산 영향 확인 필요.</p>
+        <div class="scn-sub">추천 팀</div>
+        <div class="scn-team"><span>급여 규칙 분석가</span><span>계산식 설계자</span><span>개발</span><span>명세서 정합 QA</span></div>
+        <p class="scn-body"><strong>효과</strong> — 규칙 반영 정확도↑ · 급여 오류 문의 감소</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>계정과목 매핑·자동 분개 커스텀</h4>
+        <div class="scn-meta"><span class="scn-pill mod">회계·마감</span><span class="scn-pill lv3">고급</span></div>
+        <p class="scn-body">고객사 계정체계에 맞춰 전표 자동분개 규칙을 커스텀. 마감·재무제표 정합성 위험이 큼.</p>
+        <div class="scn-sub">추천 팀</div>
+        <div class="scn-team"><span>계정체계 분석가</span><span>분개규칙 설계자</span><span>개발</span><span>대차·마감 QA</span></div>
+        <p class="scn-body"><strong>효과</strong> — 수기 분개 감소 · 마감 리드타임 단축</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>BOM·공정 라우팅 커스텀</h4>
+        <div class="scn-meta"><span class="scn-pill mod">생산</span><span class="scn-pill lv3">고급</span></div>
+        <p class="scn-body">고객사 생산 방식에 맞춘 BOM 전개·공정 라우팅 커스텀. 소요량·원가 계산 연쇄 영향 분석 필요.</p>
+        <div class="scn-sub">추천 팀</div>
+        <div class="scn-team"><span>생산 흐름 분석가</span><span>BOM 설계자</span><span>개발</span><span>원가·소요량 QA</span></div>
+        <p class="scn-body"><strong>효과</strong> — 실제 공정 반영 · 계획-실적 오차 감소</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>발주 승인 전자결재 단계 추가</h4>
+        <div class="scn-meta"><span class="scn-pill mod">구매·발주</span><span class="scn-pill lv1">초급</span></div>
+        <p class="scn-body">금액 구간별 결재 단계를 표준 발주 흐름에 추가. 비교적 국소적인 커스텀.</p>
+        <div class="scn-sub">추천 팀</div>
+        <div class="scn-team"><span>결재 흐름 분석가</span><span>개발</span><span>회귀 QA</span></div>
+        <p class="scn-body"><strong>효과</strong> — 승인 통제 강화 · 규정 준수</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>맞춤 경영보고서 양식 개발</h4>
+        <div class="scn-meta"><span class="scn-pill mod">리포트</span><span class="scn-pill lv1">초급</span></div>
+        <p class="scn-body">고객사가 원하는 지표·레이아웃의 경영보고서를 표준 데이터로 산출. 표준 데이터 조회라 위험이 낮음.</p>
+        <div class="scn-sub">추천 팀</div>
+        <div class="scn-team"><span>지표 정의 분석가</span><span>리포트 개발</span><span>수치 정합 QA</span></div>
+        <p class="scn-body"><strong>효과</strong> — 보고서 작성 시간 단축 · 지표 일관성</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>레거시 → 더존 ERP 초기 이관</h4>
+        <div class="scn-meta"><span class="scn-pill mod">데이터 이관</span><span class="scn-pill lv3">고급</span></div>
+        <p class="scn-body">구 시스템의 마스터·잔액을 더존 ERP로 이관. 매핑·정합성·검증 대량 반복 작업이라 팀 분담 효과가 큼.</p>
+        <div class="scn-sub">추천 팀</div>
+        <div class="scn-team"><span>매핑 분석가</span><span>변환 개발</span><span>정합성 검증</span><span>이관 QA</span></div>
+        <p class="scn-body"><strong>효과</strong> — 이관 오류 사전 검출 · 대사 자동화</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>표준 패키지 버그 분석·패치</h4>
+        <div class="scn-meta"><span class="scn-pill mod">유지보수</span><span class="scn-pill lv2">중급</span></div>
+        <p class="scn-body">재현 경로가 애매한 표준 결함을 로그·소스로 원인 규명하고 최소 패치 제안. 영향 범위 파악이 핵심.</p>
+        <div class="scn-sub">추천 팀</div>
+        <div class="scn-team"><span>재현·원인 분석가</span><span>패치 설계</span><span>개발</span><span>회귀 QA</span></div>
+        <p class="scn-body"><strong>효과</strong> — 원인 규명 시간 단축 · 재발 방지</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>외부 시스템 인터페이스 개발</h4>
+        <div class="scn-meta"><span class="scn-pill mod">연계·I/F</span><span class="scn-pill lv3">고급</span></div>
+        <p class="scn-body">은행·물류·그룹사 시스템과의 연동(전문/API) 개발. 예외·재처리·정합성 설계 부담이 큼.</p>
+        <div class="scn-sub">추천 팀</div>
+        <div class="scn-team"><span>연계 규격 분석가</span><span>I/F 설계자</span><span>개발</span><span>예외·재처리 QA</span></div>
+        <p class="scn-body"><strong>효과</strong> — 수작업 연계 제거 · 오류 재처리 자동화</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>회귀 테스트 시나리오 자동 생성</h4>
+        <div class="scn-meta"><span class="scn-pill mod">품질·QA</span><span class="scn-pill lv1">초급</span></div>
+        <p class="scn-body">커스텀 반영 후 점검할 표준·커스텀 시나리오를 자동 도출해 체크리스트로 정리.</p>
+        <div class="scn-sub">추천 팀</div>
+        <div class="scn-team"><span>영향 범위 분석가</span><span>시나리오 작성</span><span>검증</span></div>
+        <p class="scn-body"><strong>효과</strong> — 검증 누락 방지 · QA 준비 시간 단축</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>CR 영향도·공수 산정</h4>
+        <div class="scn-meta"><span class="scn-pill mod">분석·기획</span><span class="scn-pill lv1">초급</span></div>
+        <p class="scn-body">고객 변경요청(CR)이 표준·기존 커스텀에 미치는 영향과 예상 공수를 사전 산정해 견적·일정에 반영.</p>
+        <div class="scn-sub">추천 팀</div>
+        <div class="scn-team"><span>요구 분석가</span><span>영향도 분석가</span><span>공수 산정</span></div>
+        <p class="scn-body"><strong>효과</strong> — 과소·과대 견적 방지 · 리스크 조기 식별</p>
+    </div>
+
+</div>
+
+<div class="note">
+    <span class="nh">비슷한 구성을 빠르게 찾으려면</span>
+    이런 사례들을 미리 100가지로 묶어 둔 <strong>하네스100</strong>에서 유사 구성을 찾아 <strong>커스터마이징</strong>하면 더 빠릅니다 → <a href="#!hnp-hundred">하네스100·성능</a>. 실행에 쓰는 명령은 <a href="#!hnp-commands">명령어·빠른 참조</a>에 정리돼 있습니다.
+</div>
