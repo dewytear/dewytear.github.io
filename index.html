@@ -22,19 +22,17 @@
             </div>
             <nav id="navigation"></nav>
             <div id="sidebar-foot">
-                <div class="foot-row">
-                    <a id="tags-link" href="#!tags">
-                        <span class="settings-ico">&#127991;</span>Tags
-                    </a>
-                    <label id="theme-switch" title="Day / Night 전환">
-                        <span class="theme-ico moon">&#9790;</span>
-                        <input type="checkbox" id="theme-toggle" onchange="nightDayHandler(this);">
-                        <span class="switch-track"><span class="switch-thumb"></span></span>
-                        <span class="theme-ico sun">&#9728;</span>
-                    </label>
-                </div>
-                <a id="settings-link" href="#!settings">
-                    <span class="settings-ico">&#9881;</span>설정
+                <a id="tags-link" href="#!tags">
+                    <span class="settings-ico">&#127991;</span>Tags
+                </a>
+                <label id="theme-switch" title="Day / Night 전환">
+                    <span class="theme-ico moon">&#9790;</span>
+                    <input type="checkbox" id="theme-toggle" onchange="nightDayHandler(this);">
+                    <span class="switch-track"><span class="switch-thumb"></span></span>
+                    <span class="theme-ico sun">&#9728;</span>
+                </label>
+                <a id="settings-link" href="#!settings" title="설정" aria-label="설정">
+                    <span class="settings-ico">&#9881;</span>
                 </a>
             </div>
         </aside>
@@ -68,7 +66,7 @@
         var DOCS = [];         // real docs: {name, label, section, tags:[]}
         var TAG_INDEX = {};    // tag -> [doc, ...]
         var DOC_BY_NAME = {};  // name -> doc
-        var DOC_MODEL = '✍ Claude Fable 5';   // default authoring-model badge
+        var DOC_MODEL = 'Claude Fable 5';   // default authoring-model badge (no icon)
 
         function buildIndexes(tree){
             (function walk(nodes, path){
@@ -219,14 +217,14 @@
                         text += renderDocTags(doc.tags);
                     }
                     setArticle(text);
-                    // Stamp the authoring-model badge at the right end of the title.
-                    var h2 = document.querySelector('article h2');
+                    // Pin the authoring-model badge to the content pane's right edge.
+                    var art = document.getElementById('article');
                     var label = (doc && doc.model) || DOC_MODEL;
-                    if(h2 && label){
+                    if(art && label){
                         var span = document.createElement('span');
                         span.className = 'doc-model';
                         span.textContent = label;
-                        h2.appendChild(span);
+                        art.appendChild(span);
                     }
                 })
             })
