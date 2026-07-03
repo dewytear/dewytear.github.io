@@ -730,10 +730,6 @@
             color: var(--accent);
             text-decoration: none;
         }
-        .tag .tag-ico{
-            font-size: 11px;
-            opacity: 0.8;
-        }
         .tag .tag-count{
             padding-left: 4px;
             color: var(--muted);
@@ -741,11 +737,6 @@
         }
         .tag:hover .tag-count{
             color: var(--accent);
-        }
-        article h2 .tag-ico{
-            margin-right: 6px;
-            font-size: 20px;
-            vertical-align: middle;
         }
 
         /* Tags at the bottom of an article */
@@ -779,45 +770,82 @@
         #tag-search:focus{
             border-color: var(--accent);
         }
+        /* Dictionary-style index: alphabetical groups flowing into columns
+           that reflow with the viewport, so it stays legible on any width. */
         #tag-cloud{
+            margin-top: 4px;
+            column-width: 230px;
+            column-gap: 44px;
+        }
+        .idx-group{
+            break-inside: avoid;   /* keep a letter and its entries together */
+            margin: 0 0 24px;
+        }
+        .idx-letter{
+            margin: 0 0 4px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--accent);
+            color: var(--accent);
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+        .idx-entry{
             display: flex;
-            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 4px;
+            padding: 4px 2px;
+            color: var(--text);
+            font-size: 14.5px;
+            line-height: 1.5;
         }
-        #tag-cloud .tag{
-            margin: 0 8px 8px 0;
-            padding: 6px 13px;
-            font-size: 14px;
+        .idx-entry:hover{
+            text-decoration: none;
         }
-        /* Top-10 tags by usage: bolder and larger as the rank climbs. */
-        #tag-cloud .tag.top-1{  font-size: 22px;   font-weight: 800; }
-        #tag-cloud .tag.top-2{  font-size: 21px;   font-weight: 800; }
-        #tag-cloud .tag.top-3{  font-size: 20px;   font-weight: 800; }
-        #tag-cloud .tag.top-4{  font-size: 19px;   font-weight: 700; }
-        #tag-cloud .tag.top-5{  font-size: 18px;   font-weight: 700; }
-        #tag-cloud .tag.top-6{  font-size: 17px;   font-weight: 700; }
-        #tag-cloud .tag.top-7{  font-size: 16px;   font-weight: 600; }
-        #tag-cloud .tag.top-8{  font-size: 15.5px; font-weight: 600; }
-        #tag-cloud .tag.top-9{  font-size: 15px;   font-weight: 600; }
-        #tag-cloud .tag.top-10{ font-size: 14.5px; font-weight: 600; }
-        /* Top 3 get medal colors that switch with the theme */
-        #tag-cloud .tag.top-1{
-            color: var(--gold);
-            border-color: var(--gold);
-            background: color-mix(in srgb, var(--gold) 14%, transparent);
+        .idx-entry:hover .idx-term{
+            color: var(--accent);
         }
-        #tag-cloud .tag.top-2{
-            color: var(--silver);
-            border-color: var(--silver);
-            background: color-mix(in srgb, var(--silver) 14%, transparent);
+        .idx-term{
+            flex: 0 1 auto;
+            overflow-wrap: anywhere;
         }
-        #tag-cloud .tag.top-3{
-            color: var(--bronze);
-            border-color: var(--bronze);
-            background: color-mix(in srgb, var(--bronze) 14%, transparent);
+        /* Classic dotted leader running from the term to its count. */
+        .idx-dots{
+            flex: 1 1 auto;
+            align-self: center;
+            height: 0;
+            margin: 0 3px;
+            border-bottom: 1px dotted var(--border);
+            opacity: 0.8;
         }
-        #tag-cloud .tag.top-1 .tag-count{ color: var(--gold); }
-        #tag-cloud .tag.top-2 .tag-count{ color: var(--silver); }
-        #tag-cloud .tag.top-3 .tag-count{ color: var(--bronze); }
+        .idx-count{
+            flex: 0 0 auto;
+            color: var(--muted);
+            font-size: 12.5px;
+            font-variant-numeric: tabular-nums;
+        }
+        .idx-entry:hover .idx-count{
+            color: var(--accent);
+        }
+        /* Top-10 tags by usage stay emphasized within the index; the top-3
+           keep their theme-aware medal colors. */
+        .idx-entry.top-1 .idx-term,
+        .idx-entry.top-2 .idx-term,
+        .idx-entry.top-3 .idx-term{ font-size: 15.5px; font-weight: 800; }
+        .idx-entry.top-4 .idx-term,
+        .idx-entry.top-5 .idx-term,
+        .idx-entry.top-6 .idx-term,
+        .idx-entry.top-7 .idx-term,
+        .idx-entry.top-8 .idx-term,
+        .idx-entry.top-9 .idx-term,
+        .idx-entry.top-10 .idx-term{ font-weight: 700; }
+        .idx-entry.top-1 .idx-term,
+        .idx-entry.top-1 .idx-count{ color: var(--gold); }
+        .idx-entry.top-2 .idx-term,
+        .idx-entry.top-2 .idx-count{ color: var(--silver); }
+        .idx-entry.top-3 .idx-term,
+        .idx-entry.top-3 .idx-count{ color: var(--bronze); }
         .tag-back{
             margin: -6px 0 18px;
         }

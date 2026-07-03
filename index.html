@@ -106,16 +106,25 @@
             return html;
         }
 
-        // ---- Evernote-style tag chip ----
-        function tagChip(tag, count, rank){
-            var cls = 'tag' + (rank ? ' top-' + rank : '');
-            var html = '<a class="' + cls + '" href="#!tag:' + encodeURIComponent(tag) + '">'
-                     + '<span class="tag-ico">&#127991;</span>' + escapeHtml(tag);
+        // ---- Tag chip (no icon; used for the tags listed under a doc) ----
+        function tagChip(tag, count){
+            var html = '<a class="tag" href="#!tag:' + encodeURIComponent(tag) + '">'
+                     + escapeHtml(tag);
             if(count != null){
                 html += '<span class="tag-count">' + count + '</span>';
             }
             html += '</a>';
             return html;
+        }
+
+        // ---- Dictionary-index entry: term, dot leader, usage count ----
+        function tagIndexEntry(tag, count, rank){
+            var cls = 'idx-entry' + (rank ? ' top-' + rank : '');
+            return '<a class="' + cls + '" href="#!tag:' + encodeURIComponent(tag) + '">'
+                 + '<span class="idx-term">' + escapeHtml(tag) + '</span>'
+                 + '<span class="idx-dots"></span>'
+                 + '<span class="idx-count">' + count + '</span>'
+                 + '</a>';
         }
 
         // Top 10 tags by usage count. Ties are allowed only at the very top:
@@ -213,14 +222,31 @@
             if(box){ box.focus(); }
         }
 
+        // Group the (optionally filtered) tags by first letter and lay them
+        // out like the index at the back of a dictionary. The top-10 / top-3
+        // usage ranks still drive the emphasis on each entry.
         function filterTags(query){
             var q = query.trim().toLowerCase();
             var tags = Object.keys(TAG_INDEX).sort();
             var ranks = topTagRanks();
-            var html = '';
+            var groups = {}, letters = [];
             tags.forEach(function(t){
                 if(q && t.toLowerCase().indexOf(q) === -1){ return; }
-                html += tagChip(t, TAG_INDEX[t].length, ranks[t]);
+                var k = t.charAt(0).toUpperCase();
+                if(!/[A-Z]/.test(k)){ k = '#'; }   // digits/symbols share one bucket
+                if(!groups[k]){ groups[k] = []; letters.push(k); }
+                groups[k].push(t);
+            });
+            letters.sort();
+            var html = '';
+            letters.forEach(function(k){
+                html += '<section class="idx-group">'
+                     +  '<h3 class="idx-letter">' + escapeHtml(k) + '</h3>'
+                     +  '<div class="idx-list">';
+                groups[k].forEach(function(t){
+                    html += tagIndexEntry(t, TAG_INDEX[t].length, ranks[t]);
+                });
+                html += '</div></section>';
             });
             if(!html){ html = '<p class="empty">No matching tags.</p>'; }
             var cloud = document.getElementById('tag-cloud');
@@ -230,7 +256,7 @@
         // ---- Docs for a single tag ----
         function showTag(tag){
             var docs = TAG_INDEX[tag] || [];
-            var html = '<h2><span class="tag-ico">&#127991;</span>' + escapeHtml(tag) + '</h2>'
+            var html = '<h2>' + escapeHtml(tag) + '</h2>'
                      + '<p class="tag-back"><a href="#!tags">&larr; All tags</a></p>'
                      + '<ul class="more-list">';
             docs.forEach(function(d){
