@@ -414,21 +414,30 @@
         #navigation li a:hover .doc-num{
             color: var(--accent);
         }
+        /* The doc currently shown in the content pane: colored and bold. */
+        #navigation li a.nav-active{
+            color: var(--accent);
+            font-weight: 700;
+        }
+        #navigation li a.nav-active .doc-num{
+            color: var(--accent);
+        }
+        /* Base title = every level below 0. They all share one font size;
+           only the top-level category (level 0) is larger. */
         #navigation .nav-title{
             display: flex;
             align-items: center;
             gap: 6px;
             width: 100%;
-            margin: 22px 0 10px;
-            padding: 0 0 8px;
+            margin: 12px 0 6px;
+            padding: 0;
             background: transparent;
             border: none;
-            border-bottom: 1px dashed var(--border);
             font-family: inherit;
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-            color: var(--text);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0;
+            color: var(--muted);
             text-align: left;
             cursor: pointer;
         }
@@ -447,31 +456,16 @@
         #navigation .nav-branch.collapsed > .nav-title .nav-caret{
             transform: rotate(-90deg);
         }
-        /* Level-0 category titles: prominent */
+        /* Level-0 category titles: the only prominent tier. */
         #navigation > ul > li.nav-branch > .nav-title{
-            text-transform: uppercase;
+            margin: 22px 0 10px;
+            padding: 0 0 8px;
+            border-bottom: 1px dashed var(--border);
+            font-size: 15px;
+            font-weight: 700;
             letter-spacing: 0.05em;
-        }
-        /* Level-1 subcategory titles: lighter and tighter */
-        #navigation > ul > li > ul > li.nav-branch > .nav-title{
-            margin: 12px 0 6px;
-            border-bottom: none;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0;
-            text-transform: none;
-            color: var(--muted);
-        }
-        /* Level-2 sub-subcategory titles: smallest, tertiary */
-        #navigation > ul > li > ul > li > ul > li.nav-branch > .nav-title{
-            margin: 8px 0 4px;
-            border-bottom: none;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0;
-            text-transform: none;
-            color: var(--muted);
-            opacity: 0.85;
+            text-transform: uppercase;
+            color: var(--text);
         }
         /* Expand / collapse-all controls */
         .nav-tools{
