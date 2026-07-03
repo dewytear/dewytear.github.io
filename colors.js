@@ -1,6 +1,13 @@
 // Theme toggle.
-// The dark theme is the default (defined in style.css). The switch in the
-// sidebar footer toggles a `day` class on <body>: checked = day (light).
+// The light (day) theme is the default. The switch in the sidebar footer
+// toggles a `day` class on <body>: checked = day (light), unchecked = dark.
+// The choice is remembered in the same localStorage settings blob.
 function nightDayHandler(target){
-    document.body.classList.toggle('day', target.checked);
+    var isDay = target.checked;
+    document.body.classList.toggle('day', isDay);
+    try{
+        var s = JSON.parse(localStorage.getItem('wikiSettings')) || {};
+        s.theme = isDay ? 'day' : 'night';
+        localStorage.setItem('wikiSettings', JSON.stringify(s));
+    }catch(e){}
 }

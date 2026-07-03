@@ -49,6 +49,15 @@
     </div>
     <script>
 
+        // Apply the theme as early as possible (light is the default) so the
+        // page doesn't flash the dark theme before settings load.
+        (function(){
+            try{
+                var s = JSON.parse(localStorage.getItem('wikiSettings')) || {};
+                if((s.theme || 'day') === 'day'){ document.body.classList.add('day'); }
+            }catch(e){ document.body.classList.add('day'); }
+        })();
+
         // ---- Global indexes (built once the list loads) ----
         var DOCS = [];         // real docs: {name, label, section, tags:[]}
         var TAG_INDEX = {};    // tag -> [doc, ...]
@@ -88,8 +97,8 @@
             var docSeq = 0;   // numbers the docs within this branch, per folder
             nodes.forEach(function(node){
                 var label = node.label || node.title || node.name;
-                if(node.children){    // a branch, even before any docs are added
-                    html += '<li class="nav-branch">'
+                if(node.children){    // a branch, collapsed by default
+                    html += '<li class="nav-branch collapsed">'
                          +  '<button type="button" class="nav-title" onclick="toggleBranch(this)">'
                          +  '<span class="nav-caret">&#9662;</span>' + label + '</button>';
                     html += renderNodes(node.children);
@@ -455,6 +464,11 @@
                 var t = document.getElementById('tagline');
                 if(t){ t.textContent = s.tagline; }
             }
+            // Light (day) theme is the default; a saved choice wins.
+            var isDay = (s.theme || 'day') === 'day';
+            document.body.classList.toggle('day', isDay);
+            var toggle = document.getElementById('theme-toggle');
+            if(toggle){ toggle.checked = isDay; }
         }
 
         // Global config lives in the repo (same-origin, no API key needed).
