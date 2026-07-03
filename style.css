@@ -122,11 +122,12 @@
         }
 
         /* ---- Layout ---- */
+        /* Full-width: the content column stretches to the viewport, while the
+           fixed-width sidebar hugs the left edge with a small breathing gap. */
         #grid{
             display: grid;
-            grid-template-columns: 240px 1fr;
-            max-width: 1100px;
-            margin: 0 auto;
+            grid-template-columns: 240px minmax(0, 1fr);
+            padding-left: 24px;
         }
         #content{
             min-width: 0;   /* let long content shrink instead of overflowing */
@@ -581,6 +582,7 @@
         @media(max-width: 800px){
             #grid{
                 display: block;
+                padding-left: 0;   /* the sidebar becomes a drawer; no edge gap needed */
             }
             #nav-toggle{
                 display: block;
