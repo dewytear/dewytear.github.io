@@ -127,25 +127,21 @@
                  + '</a>';
         }
 
-        // Top 10 tags by usage count. Ties are allowed only at the very top:
-        // the highest-count group shares rank 1 even when tied, while below
-        // it a count must be unique to earn a rank. At most ten tags total.
+        // The ten most-used tags, each given a distinct rank 1..10 so the
+        // index can grade its emphasis by rank. Sorted by usage count, with
+        // ties broken by name so the ordering is stable and reproducible.
         function topTagRanks(){
-            var byCount = {};   // count value -> [tags]
-            Object.keys(TAG_INDEX).forEach(function(t){
-                var n = TAG_INDEX[t].length;
-                (byCount[n] = byCount[n] || []).push(t);
+            var arr = Object.keys(TAG_INDEX).map(function(t){
+                return { tag: t, n: TAG_INDEX[t].length };
             });
-            var counts = Object.keys(byCount).map(Number)
-                .sort(function(a, b){ return b - a; });
-            var ranks = {}, rank = 0, total = 0;
-            counts.forEach(function(n, i){
-                var group = byCount[n];
-                if(i > 0 && group.length > 1){ return; }   // lower ties stay out
-                if(total + group.length > 10){ return; }   // strictly ten tags
-                rank++;
-                group.forEach(function(t){ ranks[t] = rank; total++; });
+            arr.sort(function(a, b){
+                if(b.n !== a.n){ return b.n - a.n; }
+                return a.tag.toLowerCase().localeCompare(b.tag.toLowerCase(), 'ko');
             });
+            var ranks = {};
+            for(var i = 0; i < arr.length && i < 10; i++){
+                ranks[arr[i].tag] = i + 1;
+            }
             return ranks;
         }
 
@@ -224,51 +220,70 @@
             if(box){ box.focus(); }
         }
 
-        // Highlighted band of the most-used tags, driven by the same
-        // top-10 / top-3 ranking. Sits above the alphabetical index so the
-        // ranking is obvious at a glance; top-3 keep their medal colors.
+        // Highlighted band of the most-used tags, ordered by the top-10
+        // ranking and showing only the tag words. Top-3 keep medal colors.
         function renderTopTags(){
             var ranks = topTagRanks();
             var ranked = Object.keys(ranks);
             var el = document.getElementById('tag-top');
             if(!el){ return; }
             if(!ranked.length){ el.innerHTML = ''; return; }
-            ranked.sort(function(a, b){
-                if(ranks[a] !== ranks[b]){ return ranks[a] - ranks[b]; }
-                var ca = TAG_INDEX[a].length, cb = TAG_INDEX[b].length;
-                if(ca !== cb){ return cb - ca; }   // heavier tag first within a tie
-                return a < b ? -1 : 1;
-            });
+            ranked.sort(function(a, b){ return ranks[a] - ranks[b]; });
             var html = '<h3 class="idx-top-title">많이 쓰인 태그</h3>'
                      + '<ol class="idx-top-list">';
             ranked.forEach(function(t){
                 html += '<li><a class="idx-top-item top-' + ranks[t] + '"'
                      +  ' href="#!tag:' + encodeURIComponent(t) + '">'
-                     +  '<span class="idx-rank">' + ranks[t] + '</span>'
-                     +  '<span class="idx-top-term">' + escapeHtml(t) + '</span>'
-                     +  '<span class="idx-top-count">' + TAG_INDEX[t].length + '</span>'
+                     +  escapeHtml(t)
                      +  '</a></li>';
             });
             html += '</ol>';
             el.innerHTML = html;
         }
 
-        // Group the (optionally filtered) tags by first letter and lay them
-        // out like the index at the back of a dictionary. The top-10 / top-3
-        // usage ranks still drive the emphasis on each entry.
+        // Initial-letter buckets for the index. English tags group under
+        // A-Z; Korean tags group under their leading consonant (초성), with
+        // the doubled consonants folded onto their base (ㄲ→ㄱ, ㅃ→ㅂ, ...).
+        var HANGUL_CHO = ['ㄱ','ㄱ','ㄴ','ㄷ','ㄷ','ㄹ','ㅁ','ㅂ','ㅂ','ㅅ',
+                          'ㅅ','ㅇ','ㅈ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+        var CHO_ORDER = ['ㄱ','ㄴ','ㄷ','ㄹ','ㅁ','ㅂ','ㅅ','ㅇ','ㅈ',
+                         'ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+        function tagInitial(tag){
+            var ch = tag.charAt(0);
+            var code = ch.charCodeAt(0);
+            if(code >= 0xAC00 && code <= 0xD7A3){   // a composed Hangul syllable
+                return HANGUL_CHO[Math.floor((code - 0xAC00) / 588)];
+            }
+            var up = ch.toUpperCase();
+            return (up >= 'A' && up <= 'Z') ? up : '#';
+        }
+        // Order buckets as A-Z first, then the Korean consonants, then '#'.
+        function initialRank(k){
+            if(k >= 'A' && k <= 'Z'){ return [0, k.charCodeAt(0)]; }
+            var ci = CHO_ORDER.indexOf(k);
+            return ci >= 0 ? [1, ci] : [2, 0];
+        }
+
+        // Group the (optionally filtered) tags by initial and lay them out
+        // like the index at the back of a dictionary. The top-10 usage ranks
+        // still drive the emphasis on each entry.
         function filterTags(query){
             var q = query.trim().toLowerCase();
-            var tags = Object.keys(TAG_INDEX).sort();
+            var tags = Object.keys(TAG_INDEX).sort(function(a, b){
+                return a.toLowerCase().localeCompare(b.toLowerCase(), 'ko');
+            });
             var ranks = topTagRanks();
             var groups = {}, letters = [];
             tags.forEach(function(t){
                 if(q && t.toLowerCase().indexOf(q) === -1){ return; }
-                var k = t.charAt(0).toUpperCase();
-                if(!/[A-Z]/.test(k)){ k = '#'; }   // digits/symbols share one bucket
+                var k = tagInitial(t);
                 if(!groups[k]){ groups[k] = []; letters.push(k); }
                 groups[k].push(t);
             });
-            letters.sort();
+            letters.sort(function(a, b){
+                var ra = initialRank(a), rb = initialRank(b);
+                return ra[0] - rb[0] || ra[1] - rb[1];
+            });
             var html = '';
             letters.forEach(function(k){
                 html += '<section class="idx-group">'
