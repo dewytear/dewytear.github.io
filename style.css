@@ -400,15 +400,16 @@
             margin: 0;
             padding: 0;
         }
-        /* Faint dotted guide rails make each nesting level distinct (tree-view style). */
+        /* Faint long-dashed guide rails, uniform across every nesting level. */
         #navigation ul ul{
             margin-left: 6px;
-            padding-left: 11px;
-            border-left: 1px dotted color-mix(in srgb, var(--border) 60%, transparent);
-        }
-        /* Light up the rails along the currently-open doc's folder path. */
-        #navigation .nav-branch.on-path > ul{
-            border-left-color: var(--accent);
+            padding-left: 12px;
+            background-image: linear-gradient(to bottom,
+                color-mix(in srgb, var(--border) 65%, transparent) 0 55%,
+                transparent 55% 100%);
+            background-repeat: repeat-y;
+            background-size: 1px 14px;   /* ~8px dash, ~6px gap */
+            background-position: left top;
         }
         #navigation li{
             margin: 8px 0;
