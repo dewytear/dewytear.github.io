@@ -51,6 +51,14 @@
             </div>
         </main>
     </div>
+
+    <!-- Floating background-music control -->
+    <button id="music-btn" type="button" class="idle" onclick="toggleMusic();"
+            aria-label="배경음악 재생" title="배경음악">
+        <span class="music-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+    </button>
+    <div id="yt-music" aria-hidden="true"></div>
+
     <script>
 
         // Apply the theme as early as possible (light is the default) so the
@@ -710,6 +718,43 @@
                 route();   // render the initial page once indexes exist
             })
         })
+
+        // ---- Floating background music (YouTube IFrame API) ----
+        (function(){
+            var VIDEO_ID = '08A9n8QyE3k';
+            var player, ready = false, playing = false;
+            var btn = document.getElementById('music-btn');
+
+            var tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            document.head.appendChild(tag);
+
+            window.onYouTubeIframeAPIReady = function(){
+                player = new YT.Player('yt-music', {
+                    height: '0', width: '0', videoId: VIDEO_ID,
+                    playerVars: { autoplay: 0, controls: 0, loop: 1,
+                                  playlist: VIDEO_ID, playsinline: 1 },
+                    events: {
+                        onReady: function(){ ready = true; try{ player.setVolume(35); }catch(e){} },
+                        onStateChange: function(e){
+                            playing = (e.data === YT.PlayerState.PLAYING);
+                            render();
+                        }
+                    }
+                });
+            };
+            function render(){
+                if(!btn){ return; }
+                btn.classList.toggle('playing', playing);
+                btn.classList.toggle('idle', !playing);
+                btn.setAttribute('aria-label', playing ? '배경음악 정지' : '배경음악 재생');
+                btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
+            }
+            window.toggleMusic = function(){
+                if(!ready){ return; }
+                if(playing){ player.pauseVideo(); } else { player.playVideo(); }
+            };
+        })();
     </script>
 </body>
 </html>
