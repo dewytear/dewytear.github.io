@@ -1,0 +1,28 @@
+<h2>세 가지 핵심 동작 — Ingest · Query · Lint</h2>
+<p>LLM 위키의 중요한 세 가지 동작입니다. (Karpathy가 제시한 개념)</p>
+
+<h3>1) Ingest — 소화·흡수</h3>
+<p>하나의 아티클/개념을 <strong>청크로 나눠</strong>, 인공지능도 사람도 읽기 좋은 <strong>카드</strong>로 만드는 작업입니다. 로우 자료를 넘기면 <strong>출처 기반</strong>의 위키 카드가 생성됩니다.</p>
+<pre><code>/ingest        <span class="c"># 로우 소스를 위키 카드로</span></code></pre>
+
+<h3>2) Query — 꺼내 쓰기</h3>
+<p>모아 놓기만 하면 소용없으니, 쿼리로 꺼내 씁니다. 일반 에이전트는 <strong>정규표현식(단어 빈도·매칭)</strong> 으로만 검색하지만, 여기서는 <strong>QMD(마크다운 쿼리) MCP</strong> 로 세 가지 검색을 단계적으로 씁니다.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>방식</th><th>언제</th></tr></thead>
+        <tbody>
+            <tr><td><strong>BM25</strong> (렉시콘)</td><td>사용자가 명확한 단어를 명시할 때 — 빈도 높은 단어로 검색.</td></tr>
+            <tr><td><strong>벡터 서치</strong></td><td>애매할 때 — 유사 개념까지 가져옴("물 마시고 싶어" → 물컵).</td></tr>
+            <tr><td><strong>가설 검증(hypothetical)</strong></td><td>사용자 수준이 지식 수준보다 낮을 때 — LLM이 질문을 재해석해 키워드를 만들어 재검색.</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>뒤로 갈수록 시간이 더 걸립니다. 파일을 정확히 아는 상황이면 그 주소를 직접 주는 것이 가장 빠릅니다. 결과는 <strong>query 폴더</strong>에 정리되며, 어떤 목적으로 만든 문서인지 다시 꺼내 쓸 수 있게 <strong>출처 기반</strong>으로 남습니다.</p>
+
+<h3>3) Lint — 유지보수</h3>
+<p>메인터넌스 작업입니다. 새 인제스트 때 기존 노트(예: A 개념)가 새 노트(A′)와 연관돼 <strong>낡았으면 함께 업데이트</strong>합니다. <code>/lint</code> 로 전반적인 유지보수를 돌려, 언제든 인용 가능한 <strong>최신성</strong>을 유지합니다. (감사 <code>audit</code>·검증 <code>verify</code> 스킬도 함께)</p>
+
+<div class="note">
+    <span class="nh">요약</span>
+    <strong>Ingest</strong>(로우 자료 → 카드) · <strong>Query</strong>(BM25·벡터·가설검증으로 꺼내 쓰기) · <strong>Lint</strong>(최신성 유지) — 이 세 축으로 살아 있는 지식 베이스를 굴립니다.
+</div>
