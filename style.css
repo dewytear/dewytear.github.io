@@ -8,6 +8,10 @@
             --muted: #9aa4b2;
             --accent: #4db6ac;
             --border: #3a4353;
+            /* Medal colors for the top-3 tags (tuned for the dark bg) */
+            --gold: #ffd166;
+            --silver: #b9cbe0;
+            --bronze: #e8a87c;
         }
         body.day{
             --bg: #ffffff;
@@ -16,6 +20,10 @@
             --muted: #5f6368;
             --accent: #00897b;
             --border: #dadce0;
+            /* Medal colors re-tuned for the light bg */
+            --gold: #b8860b;
+            --silver: #5f7288;
+            --bronze: #a95f33;
         }
 
         *{
@@ -733,12 +741,25 @@
         #tag-cloud .tag.top-8{  font-size: 15.5px; font-weight: 600; }
         #tag-cloud .tag.top-9{  font-size: 15px;   font-weight: 600; }
         #tag-cloud .tag.top-10{ font-size: 14.5px; font-weight: 600; }
-        #tag-cloud .tag.top-1,
-        #tag-cloud .tag.top-2,
-        #tag-cloud .tag.top-3{
-            color: var(--accent);
-            border-color: var(--accent);
+        /* Top 3 get medal colors that switch with the theme */
+        #tag-cloud .tag.top-1{
+            color: var(--gold);
+            border-color: var(--gold);
+            background: color-mix(in srgb, var(--gold) 14%, transparent);
         }
+        #tag-cloud .tag.top-2{
+            color: var(--silver);
+            border-color: var(--silver);
+            background: color-mix(in srgb, var(--silver) 14%, transparent);
+        }
+        #tag-cloud .tag.top-3{
+            color: var(--bronze);
+            border-color: var(--bronze);
+            background: color-mix(in srgb, var(--bronze) 14%, transparent);
+        }
+        #tag-cloud .tag.top-1 .tag-count{ color: var(--gold); }
+        #tag-cloud .tag.top-2 .tag-count{ color: var(--silver); }
+        #tag-cloud .tag.top-3 .tag-count{ color: var(--bronze); }
         .tag-back{
             margin: -6px 0 18px;
         }
