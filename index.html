@@ -725,7 +725,7 @@
         // ---- Floating background music (YouTube IFrame API) ----
         (function(){
             var VIDEO_ID = '08A9n8QyE3k';
-            var player, ready = false, playing = false;
+            var player, ready = false, playing = false, wantPlay = false;
             var btn = document.getElementById('music-btn');
 
             var tag = document.createElement('script');
@@ -734,11 +734,19 @@
 
             window.onYouTubeIframeAPIReady = function(){
                 player = new YT.Player('yt-music', {
-                    height: '0', width: '0', videoId: VIDEO_ID,
+                    // Real (off-screen) size — Safari refuses playback on a
+                    // zero-size/hidden media element even after a user tap.
+                    height: '200', width: '200', videoId: VIDEO_ID,
                     playerVars: { autoplay: 0, controls: 0, loop: 1,
-                                  playlist: VIDEO_ID, playsinline: 1 },
+                                  playlist: VIDEO_ID, playsinline: 1,
+                                  origin: location.origin },
                     events: {
-                        onReady: function(){ ready = true; try{ player.setVolume(35); }catch(e){} },
+                        onReady: function(){
+                            ready = true;
+                            try{ player.setVolume(35); }catch(e){}
+                            // Honour a tap that happened before the API loaded.
+                            if(wantPlay){ start(); }
+                        },
                         onStateChange: function(e){
                             playing = (e.data === YT.PlayerState.PLAYING);
                             render();
@@ -746,6 +754,9 @@
                     }
                 });
             };
+            function start(){
+                try{ player.playVideo(); player.setVolume(35); }catch(e){}
+            }
             function render(){
                 if(!btn){ return; }
                 btn.classList.toggle('playing', playing);
@@ -754,8 +765,15 @@
                 btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
             }
             window.toggleMusic = function(){
-                if(!ready){ return; }
-                if(playing){ player.pauseVideo(); } else { player.playVideo(); }
+                if(!ready){
+                    // API still loading — remember the intent so it starts as
+                    // soon as the player is ready (button gives feedback now).
+                    wantPlay = true;
+                    if(btn){ btn.classList.add('playing'); btn.classList.remove('idle'); }
+                    return;
+                }
+                if(playing){ player.pauseVideo(); wantPlay = false; }
+                else{ start(); }
             };
         })();
     </script>
