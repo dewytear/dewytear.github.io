@@ -612,6 +612,16 @@
             location.reload();
         }
 
+        // Mark the nav link for the doc on screen (null clears every mark).
+        function markActiveNav(name){
+            var nav = document.getElementById('navigation');
+            if(!nav){ return; }
+            var want = name ? '#!' + name : null;
+            nav.querySelectorAll('a').forEach(function(a){
+                a.classList.toggle('nav-active', a.getAttribute('href') === want);
+            });
+        }
+
         // ---- Router ----
         function route(){
             document.body.classList.remove('nav-open');   // close mobile drawer
@@ -620,11 +630,11 @@
             // Hide the "recent docs" module on the settings and tags screens.
             document.body.classList.toggle('settings-view', path === 'settings');
             document.body.classList.toggle('tags-view', path === 'tags');
-            if(!h){ fetchPage('welcome'); return; }
-            if(path === 'tags'){ showTagIndex(); }
-            else if(path.indexOf('tag:') === 0){ showTag(decodeURIComponent(path.substr(4))); }
-            else if(path === 'settings'){ openSettings(); }
-            else { fetchPage(path); }
+            if(!h){ fetchPage('welcome'); markActiveNav('welcome'); return; }
+            if(path === 'tags'){ showTagIndex(); markActiveNav(null); }
+            else if(path.indexOf('tag:') === 0){ showTag(decodeURIComponent(path.substr(4))); markActiveNav(null); }
+            else if(path === 'settings'){ openSettings(); markActiveNav(null); }
+            else { fetchPage(path); markActiveNav(path); }
         }
 
         function toggleNav(){
