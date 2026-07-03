@@ -516,8 +516,9 @@
             document.body.classList.remove('nav-open');   // close mobile drawer
             var h = location.hash;
             var path = h ? h.substr(2) : '';               // strip "#!"
-            // Hide the "recent docs" module while on the settings screen.
+            // Hide the "recent docs" module on the settings and tags screens.
             document.body.classList.toggle('settings-view', path === 'settings');
+            document.body.classList.toggle('tags-view', path === 'tags');
             if(!h){ fetchPage('welcome'); return; }
             if(path === 'tags'){ showTagIndex(); }
             else if(path.indexOf('tag:') === 0){ showTag(decodeURIComponent(path.substr(4))); }
