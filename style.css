@@ -1093,6 +1093,18 @@
             }
         }
 
+        /* Hidden YouTube player — rendered off-screen at a real size rather
+           than 0×0 or display:none, so Safari's media policy still allows
+           user-initiated playback (a zero-size/hidden iframe is refused). */
+        #yt-music{
+            position: fixed;
+            left: -9999px;
+            top: 0;
+            width: 200px;
+            height: 200px;
+            pointer-events: none;
+        }
+
         /* ---- Floating background-music button ---- */
         #music-btn{
             position: fixed;
