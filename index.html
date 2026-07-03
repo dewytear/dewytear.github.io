@@ -83,6 +83,7 @@
         // ---- Navigation tree ----
         function renderNodes(nodes){
             var html = '<ul>';
+            var docSeq = 0;   // numbers the docs within this branch, per folder
             nodes.forEach(function(node){
                 var label = node.label || node.title || node.name;
                 if(node.children){    // a branch, even before any docs are added
@@ -93,7 +94,10 @@
                     html += '</li>';
                 } else {
                     var target = node.route ? node.route : node.name;
-                    html += '<li><a href="#!' + target + '">' + label + '</a></li>';
+                    docSeq++;
+                    var num = (docSeq < 10 ? '0' : '') + docSeq;
+                    html += '<li><a href="#!' + target + '">'
+                         +  '<span class="doc-num">' + num + '.</span> ' + label + '</a></li>';
                 }
             });
             html += '</ul>';
