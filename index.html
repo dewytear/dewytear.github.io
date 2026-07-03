@@ -215,11 +215,42 @@
             var html = '<h2>Tags</h2>'
                      + '<input id="tag-search" type="search" placeholder="Search tags..."'
                      + ' oninput="filterTags(this.value)" autocomplete="off">'
+                     + '<div id="tag-top"></div>'
                      + '<div id="tag-cloud"></div>';
             setArticle(html);
+            renderTopTags();
             filterTags('');
             var box = document.getElementById('tag-search');
             if(box){ box.focus(); }
+        }
+
+        // Highlighted band of the most-used tags, driven by the same
+        // top-10 / top-3 ranking. Sits above the alphabetical index so the
+        // ranking is obvious at a glance; top-3 keep their medal colors.
+        function renderTopTags(){
+            var ranks = topTagRanks();
+            var ranked = Object.keys(ranks);
+            var el = document.getElementById('tag-top');
+            if(!el){ return; }
+            if(!ranked.length){ el.innerHTML = ''; return; }
+            ranked.sort(function(a, b){
+                if(ranks[a] !== ranks[b]){ return ranks[a] - ranks[b]; }
+                var ca = TAG_INDEX[a].length, cb = TAG_INDEX[b].length;
+                if(ca !== cb){ return cb - ca; }   // heavier tag first within a tie
+                return a < b ? -1 : 1;
+            });
+            var html = '<h3 class="idx-top-title">많이 쓰인 태그</h3>'
+                     + '<ol class="idx-top-list">';
+            ranked.forEach(function(t){
+                html += '<li><a class="idx-top-item top-' + ranks[t] + '"'
+                     +  ' href="#!tag:' + encodeURIComponent(t) + '">'
+                     +  '<span class="idx-rank">' + ranks[t] + '</span>'
+                     +  '<span class="idx-top-term">' + escapeHtml(t) + '</span>'
+                     +  '<span class="idx-top-count">' + TAG_INDEX[t].length + '</span>'
+                     +  '</a></li>';
+            });
+            html += '</ol>';
+            el.innerHTML = html;
         }
 
         // Group the (optionally filtered) tags by first letter and lay them
@@ -251,6 +282,9 @@
             if(!html){ html = '<p class="empty">No matching tags.</p>'; }
             var cloud = document.getElementById('tag-cloud');
             if(cloud){ cloud.innerHTML = html; }
+            // The "most used" band belongs to the full index, not a search.
+            var top = document.getElementById('tag-top');
+            if(top){ top.style.display = q ? 'none' : ''; }
         }
 
         // ---- Docs for a single tag ----
