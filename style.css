@@ -326,6 +326,7 @@
         }
         #navigation li a{
             color: var(--text);
+            font-size: 13px;   /* match the folder (subcategory) title size */
         }
         #navigation li a:hover{
             color: var(--accent);
@@ -412,6 +413,7 @@
         /* ---- Article ---- */
         #article{
             padding: 24px 32px 60px;
+            font-size: 15px;   /* Korean glyphs read larger than Latin; keep body calm */
         }
         article h2{
             margin: 0 0 20px;
@@ -512,6 +514,75 @@
         }
         article .note.warn .nh{
             color: #e0a04f;
+        }
+        /* ---- Carousel: horizontal board with one panel at a time ---- */
+        article .carousel{
+            margin: 0 0 20px;
+            padding: 18px 20px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+        article .carousel .scn{
+            display: none;
+        }
+        article .carousel .scn.active{
+            display: block;
+            animation: fadeUp 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        article .carousel .scn > :first-child{
+            margin-top: 0;
+        }
+        article .carousel-dots{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px dashed var(--border);
+        }
+        article .carousel-dots button{
+            padding: 4px 12px;
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        article .carousel-dots button:hover{
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        article .carousel-dots button.active{
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--bg);
+            font-weight: 700;
+        }
+        article .carousel-nav{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        article .carousel-nav .arrow-btn{
+            padding: 5px 14px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        article .carousel-nav .arrow-btn:hover{
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        article .carousel-nav .cn-label{
+            color: var(--muted);
+            font-size: 13px;
         }
 
         /* ---- "This wiki's docs" module (popular-posts style) ---- */

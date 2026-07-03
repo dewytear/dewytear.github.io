@@ -120,6 +120,32 @@
             art.classList.remove('fade-in');
             void art.offsetWidth;   // force reflow so the animation restarts
             art.classList.add('fade-in');
+            initCarousels(art);
+        }
+
+        // Carousels arrive via innerHTML, so their wiring lives here.
+        function initCarousels(root){
+            root.querySelectorAll('.carousel').forEach(function(car){
+                var scns = Array.prototype.slice.call(car.querySelectorAll('.scn'));
+                var dots = Array.prototype.slice.call(car.querySelectorAll('.carousel-dots button'));
+                var label = car.querySelector('.carousel-nav .cn-label');
+                var prev = car.querySelector('.carousel-nav .prev');
+                var next = car.querySelector('.carousel-nav .next');
+                if(!scns.length){ return; }
+                var idx = 0;
+                function show(i){
+                    idx = (i + scns.length) % scns.length;
+                    scns.forEach(function(s, k){ s.classList.toggle('active', k === idx); });
+                    dots.forEach(function(d, k){ d.classList.toggle('active', k === idx); });
+                    if(label){ label.textContent = (idx + 1) + ' / ' + scns.length; }
+                }
+                dots.forEach(function(d, k){
+                    d.addEventListener('click', function(){ show(k); });
+                });
+                if(prev){ prev.addEventListener('click', function(){ show(idx - 1); }); }
+                if(next){ next.addEventListener('click', function(){ show(idx + 1); }); }
+                show(0);
+            });
         }
 
         function renderDocTags(tags){
