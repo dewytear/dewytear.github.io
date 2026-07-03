@@ -1,0 +1,46 @@
+<h2>Hook · 메모리</h2>
+<p>OMC는 Claude Code의 Hook 이벤트를 활용해 키워드 감지, 스킬 주입, 상태 복구, 완료 검증을 처리합니다. 최신 Reference 기준으로 Hook 이벤트는 더 세분화되어 있습니다.</p>
+
+<h3>알아둘 점</h3>
+<ul>
+    <li><strong>autopilot · ralph · ultrawork · ultraqa 는 Hook이 아니라 스킬</strong>입니다. keyword-detector가 이들을 활성화하고, persistent-mode Hook이 지속 실행을 보조합니다.</li>
+    <li>Hook을 전부 끄려면 <code>DISABLE_OMC</code>, 특정 Hook만 제외하려면 <code>OMC_SKIP_HOOKS</code> 를 사용합니다.</li>
+    <li>Windows Native Hook은 v4.14.4 이후 개선됐지만, 공식 Reference는 여전히 WSL2를 권장합니다.</li>
+</ul>
+<pre><code><span class="c"># OMC의 모든 Hook을 한 번에 비활성화</span>
+export DISABLE_OMC=1
+<span class="c"># 지정한 Hook만 제외 (나머지는 정상 동작)</span>
+export OMC_SKIP_HOOKS=PreToolUse,PostToolUse</code></pre>
+
+<h3>Hook이 실행되는 시점</h3>
+<p>Hook은 Claude Code의 특정 이벤트마다 자동으로 끼어들어 실행되는 동작입니다. OMC는 이를 통해 컨텍스트를 주입하고 스킬을 자동으로 켭니다. 주요 타이밍은 네 가지입니다.</p>
+<ul>
+    <li><strong>SessionStart</strong> — 세션이 시작될 때. OMC 초기화, notepad·project-memory 로드, 직전 실행 모드 상태 복구.</li>
+    <li><strong>UserPromptSubmit</strong> — 프롬프트를 보낼 때. 매직 키워드 감지, 알맞은 스킬 자동 연결, 컨텍스트 주입.</li>
+    <li><strong>PreToolUse</strong> — 도구를 쓰기 직전. 병렬 읽기 권장 힌트, 관련 파일 사전 로드 제안.</li>
+    <li><strong>PostToolUse</strong> — 도구를 쓴 직후. 결과 검증, 후속 조치 제안, 에러 감지 시 자동 수정 제안.</li>
+</ul>
+
+<h3>대화 중 보이는 메시지 해석</h3>
+<p>작업 중 <code>system-reminder</code> 형태의 메시지가 보일 수 있습니다. 당황하지 말고 아래처럼 이해하면 됩니다.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>메시지</th><th>의미</th></tr></thead>
+        <tbody>
+            <tr><td><code>hook success: Success</code></td><td>정상 작동 중이라는 표시입니다. 그대로 진행하면 됩니다.</td></tr>
+            <tr><td><code>hook additional context: ...</code></td><td>유용한 힌트입니다. 참고해서 적용하면 좋습니다.</td></tr>
+            <tr><td><code>[MAGIC KEYWORD: ralph detected]</code></td><td>해당 모드(여기선 ralph)가 자동으로 켜졌다는 알림입니다.</td></tr>
+            <tr><td><code>The boulder never stops rolling</code></td><td>ralph·ultrawork가 계속 실행 중이라는 표시입니다.</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>메모리와 프로젝트 문서화</h3>
+<p>OMC는 작업 맥락을 세션이 바뀌어도 유지하기 위해 세 가지 장치를 제공합니다. 각각 저장 위치와 역할이 다릅니다.</p>
+<ul>
+    <li><strong>deepinit</strong> — 코드베이스 전체를 훑어 디렉토리마다 <code>AGENTS.md</code> 문서를 만들어 줍니다. 각 폴더가 무엇을 담는지, 파일 간 관계, 작업 시 주의점, 의존성을 정리해 두어, AI가 매번 처음부터 구조를 탐색하지 않아도 되게 합니다. 대규모 프로젝트의 사전 정리 작업에 유용합니다.</li>
+    <li><strong>notepad</strong> — <code>.omc/notepad.md</code> 에 저장되는 작업 메모입니다. 대화가 길어져 맥락이 정리(압축)되어도 살아남습니다. 절대 잃으면 안 되는 정보(priority), 현재 진행 중인 작업 상태(working), 수동으로 기록하는 메모(manual)의 세 단계로 나뉘며, 오래된 항목 정리는 notepad_prune 도구로 처리합니다.</li>
+    <li><strong>project memory</strong> — <code>.omc/project-memory.json</code> 에 저장되며, 프로젝트의 기술 스택·코딩 컨벤션·아키텍처 지침을 기억합니다. 기본값은 <code>omc-setup</code> 으로 설정합니다.</li>
+</ul>
+<pre><code><span class="c"># 코드베이스를 분석해 디렉토리별 AGENTS.md 문서를 생성 ([path] 생략 시 현재 경로)</span>
+/oh-my-claudecode:deepinit [path]</code></pre>

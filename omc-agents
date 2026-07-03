@@ -1,0 +1,48 @@
+<h2>에이전트 · 스킬</h2>
+<p>OMC의 핵심은 <strong>위임(delegation)</strong>입니다. 메인 Claude가 지휘자 역할을 맡고, 역할이 정해진 전문 에이전트들에게 작업을 나눠 맡깁니다. 각 에이전트는 작업 난이도에 맞는 모델로 자동 배정되어(설계·분석엔 고성능 모델, 단순 조회엔 경량 모델), 한 명이 전부 처리할 때보다 정확하고 빠릅니다.</p>
+<p>에이전트는 역할에 따라 크게 네 그룹으로 나뉩니다. 아래는 그룹별 주요 에이전트와 각각이 하는 일입니다.</p>
+
+<h3>탐색 · 분석</h3>
+<ul>
+    <li><strong>explore</strong> — 코드베이스를 훑어 작업과 관련된 파일과 구조를 찾아냅니다.</li>
+    <li><strong>analyst</strong> — 코드나 요구사항을 분석해 핵심과 쟁점을 정리합니다.</li>
+    <li><strong>architect</strong> — 전체 구조와 설계 방향을 잡고, 결과가 설계에 맞는지 검증합니다.</li>
+    <li><strong>planner</strong> — 작업을 실행 가능한 단계로 나눠 계획을 세웁니다.</li>
+    <li><strong>critic</strong> — 계획이나 결과를 비판적으로 검토해 빠진 부분과 위험을 찾습니다.</li>
+    <li><strong>tracer</strong> — 버그나 장애의 원인을 코드 흐름을 따라가며 추적합니다.</li>
+</ul>
+
+<h3>구현 · 수정</h3>
+<ul>
+    <li><strong>executor</strong> — 계획에 따라 실제 코드를 작성·수정합니다. 작업 난이도에 따라 경량·표준·고성능 단계로 나뉩니다.</li>
+    <li><strong>debugger</strong> — 버그의 원인을 찾아 고칩니다.</li>
+    <li><strong>code-simplifier</strong> — 복잡하게 얽힌 코드를 더 단순하고 읽기 좋게 정리합니다(리팩토링).</li>
+</ul>
+
+<h3>검증 · 품질</h3>
+<ul>
+    <li><strong>qa-tester</strong> — 기능이 의도대로 동작하는지 테스트하고 완료 근거를 모읍니다.</li>
+    <li><strong>test-engineer</strong> — 자동 테스트 코드를 작성하고 구성합니다.</li>
+    <li><strong>code-reviewer</strong> — 코드 품질과 스타일을 검토합니다.</li>
+    <li><strong>security-reviewer</strong> — 보안 취약점을 점검합니다.</li>
+</ul>
+
+<h3>문서 · 디자인 · 데이터</h3>
+<ul>
+    <li><strong>writer</strong> — 문서와 설명 글을 작성합니다.</li>
+    <li><strong>document-specialist</strong> — 외부 라이브러리·API 문서를 찾아 확인하고 정리합니다.</li>
+    <li><strong>designer</strong> — 화면 UI/UX 디자인을 다룹니다.</li>
+    <li><strong>vision</strong> — 화면 캡처나 다이어그램 같은 이미지를 분석합니다.</li>
+    <li><strong>scientist</strong> — 데이터를 분석합니다.</li>
+    <li><strong>git-master</strong> — 브랜치·커밋·머지 등 Git 작업을 처리합니다.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">한 줄 정리</span>
+    직접 에이전트를 고를 필요는 없습니다. autopilot 같은 모드가 작업 의도를 파악해 필요한 에이전트를 알아서 배치하므로, 보통은 "무엇을 할지"만 말하면 됩니다.
+</div>
+
+<h3>skillify — 반복 작업을 스킬로 만들기</h3>
+<p><code>/oh-my-claudecode:skillify</code> 는 한 세션에서 효과적이었던 작업 패턴을 재사용 가능한 스킬로 추출하는 명령입니다. 자주 반복하는 흐름을 한 번 정리해 두면 다음 작업에서 바로 불러 쓸 수 있습니다. 과거 명칭인 <code>learner</code> 는 deprecated(지원 중단 예정) 호환 별칭이므로 새 문서·교육에서는 skillify를 사용하세요.</p>
+<pre><code><span class="c"># 세션에서 효과적이었던 패턴을 재사용 스킬로 추출</span>
+/oh-my-claudecode:skillify</code></pre>
