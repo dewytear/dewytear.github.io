@@ -1,13 +1,6 @@
 // Theme toggle.
-// The dark theme is the default (defined in style.css). Clicking the footer
-// button toggles a `day` class on <body>, which switches to the light theme.
+// The dark theme is the default (defined in style.css). The switch in the
+// sidebar footer toggles a `day` class on <body>: checked = day (light).
 function nightDayHandler(target){
-    var body = document.querySelector('body');
-    if(target.value === 'day'){
-        body.classList.add('day');
-        target.value = 'night';
-    } else {
-        body.classList.remove('day');
-        target.value = 'day';
-    }
+    document.body.classList.toggle('day', target.checked);
 }
