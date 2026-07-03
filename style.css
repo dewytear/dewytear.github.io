@@ -489,6 +489,16 @@
             text-transform: uppercase;
             color: var(--text);
         }
+        /* Monochrome intensity ramp — folder titles fade as they nest deeper,
+           so each level reads clearly (size stays uniform; L3+ uses the base). */
+        #navigation > ul > li > ul > li.nav-branch > .nav-title{            /* L1 */
+            color: var(--text);
+            font-weight: 700;
+        }
+        #navigation > ul > li > ul > li > ul > li.nav-branch > .nav-title{  /* L2 */
+            color: color-mix(in srgb, var(--text) 58%, var(--muted));
+            font-weight: 700;
+        }
         /* Expand / collapse-all controls */
         .nav-tools{
             display: flex;
