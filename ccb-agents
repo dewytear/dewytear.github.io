@@ -1,0 +1,34 @@
+<h2>에이전트(Agent) 만들기</h2>
+<p><strong>에이전트</strong>는 특정 역할을 맡은 전문 작업자입니다. 스킬 만들기만큼 쉽습니다 — 아이디어만 있으면 나머지는 AI가 작성해 줍니다. 여기서는 <strong>논문 분석 에이전트</strong>를 만들어 다운로드한 PDF를 분석합니다.</p>
+
+<h3>1) PDF 준비</h3>
+<pre><code><span class="c"># 논문 상세 페이지 URL을 주고</span>
+https://arxiv.org/abs/....  이 논문의 PDF 파일을 다운로드해줘.</code></pre>
+<p>Claude Code가 arXiv에서 PDF 링크를 찾아 현재 폴더에 내려받습니다. (PDF 읽기는 앞서 설치한 document-skills 가 담당합니다.)</p>
+
+<h3>2) 에이전트 생성</h3>
+<p>이 프로젝트 한정으로 만들려면 <code>.claude/</code> 하위에 만들도록 지정합니다.</p>
+<pre><code>.claude 하위에 논문을 분석하는 에이전트를 추가해줘.</code></pre>
+<p>생성된 에이전트에는 다음과 같은 <strong>메타 정보</strong>가 들어갑니다.</p>
+<ul>
+    <li><strong>이름 · 설명(description)</strong> — 이 에이전트가 어떤 일을 하는지.</li>
+    <li><strong>사용 도구 권한</strong> — 파일 읽기, Bash 명령 실행 등.</li>
+    <li><strong>모델 지정</strong> — 에이전트별로 사용할 모델 선택(예: 가장 좋은 <code>opus</code>).</li>
+    <li><strong>페르소나 · 원칙</strong> — 예: "학술 논문 분석 전문가", "5분 안에 핵심을 파악하는 리포트 생성".</li>
+</ul>
+<p>분석 방식(초록 중심 / 한계점 중심 / 검증 강화 등)은 추가 요청으로 <strong>고도화</strong>할 수 있습니다.</p>
+
+<h3>3) 목록 확인 · 실행</h3>
+<p>에이전트는 만든 직후 바로 로딩되지 않을 수 있습니다. <code>/agents</code> 로 현재 폴더에서 쓸 수 있는 에이전트를 확인하고, 안 보이면 <code>/exit</code> 후 재시작합니다.</p>
+<pre><code><span class="c"># PDF를 참조로 걸고, 만든 에이전트로 분석</span>
+@paper.pdf  paper-analyzer 에이전트를 이용해서 이 논문을 분석해줘.</code></pre>
+
+<h3>4) 병렬 분석 — Claude Code의 진가</h3>
+<p>링크를 알고 있는 <strong>나머지 논문들도 한꺼번에</strong> 분석할 수 있습니다.</p>
+<pre><code>나머지 논문들도 분석해서 파일로 저장해줘.</code></pre>
+<p>Claude Code는 에이전트를 <strong>여러 개 병렬로 스폰</strong>해(예: 12개 논문을 5~6개 에이전트로) 동시에 분석합니다. <strong>이것은 웹 채팅에서는 안 되는 일</strong>입니다. 분석 결과는 앞서 만든 논문 소개 사이트의 <strong>상세 페이지</strong>로 만들어 연결할 수도 있습니다.</p>
+
+<div class="note">
+    <span class="nh">에이전트를 쓰는 또 다른 이유 — 컨텍스트 절약</span>
+    에이전트는 메인 세션과 <strong>별도의 컨텍스트 윈도우</strong>를 씁니다. 무거운 분석은 에이전트에게 맡기고 결과만 받으면, 메인 세션의 컨텍스트를 거의 쓰지 않아 품질을 오래 유지할 수 있습니다. (다음 문서 참고)
+</div>

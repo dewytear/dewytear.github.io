@@ -1,0 +1,38 @@
+<h2>사용량 · 컨텍스트 · 세션 관리</h2>
+<p>Claude Code를 잘 쓰려면 <strong>사용량(토큰)</strong> 과 <strong>컨텍스트</strong>, 그리고 <strong>세션(맥락)</strong> 을 관리할 줄 알아야 합니다. 토큰이 아주 중요한 시대가 되었습니다.</p>
+
+<h3>사용량 — /usage</h3>
+<ul>
+    <li><code>/usage</code> — 현재 세션과 이번 주 사용량을 보여줍니다.</li>
+    <li><strong>세션 한도</strong>: 최초 실행 시점부터 <strong>5시간</strong> 단위로 책정됩니다. 5시간 안에 100%를 다 쓰면, 그 5시간이 끝날 때까지 기다려야 합니다.</li>
+    <li><strong>주간 리밋</strong>도 있습니다. 개발자들이 가장 고통스러워하는 한도이니 <strong>알뜰하게</strong> 쓰는 것이 핵심입니다.</li>
+</ul>
+
+<h3>컨텍스트 — /context</h3>
+<p><code>/context</code> 는 지금 Claude Code에 어떤 내용이 실려 가는지 시각화해 보여 줍니다. Claude Code의 <strong>컨텍스트 윈도우는 100만 토큰</strong>입니다.</p>
+<ul>
+    <li>시스템 프롬프트·도구 정의 등이 일부를 차지하고, 일을 시킬 때마다 조금씩 찹니다.</li>
+    <li>어느 정도 차면 <strong>콤팩트(compact)</strong> 가 일어나 내용이 압축·축소됩니다.</li>
+    <li>콤팩트가 일어나면 <strong>일부 데이터 손실</strong>이 생겨 성능이 조금 떨어질 수 있습니다.</li>
+    <li>그래서 다 찰 때까지 기다리지 말고, 적정 시점에 <code>/compact</code> 로 <strong>수동 압축</strong>하는 것이 권장됩니다.</li>
+</ul>
+<p>에이전트를 활용하면 메인 컨텍스트를 아끼면서 품질을 유지할 수 있습니다.</p>
+
+<h3>세션(맥락) 관리</h3>
+<p>웹 채팅과 달리 Claude Code는 <code>/exit</code> 로 나가면 맥락이 끊깁니다. 다시 이어가려면 다음 명령을 씁니다.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>명령</th><th>하는 일</th></tr></thead>
+        <tbody>
+            <tr><td><code>claude --continue</code></td><td>가장 최근 세션을 그대로 이어서 시작</td></tr>
+            <tr><td><code>claude --resume</code></td><td>과거 세션 목록에서 골라 그 맥락으로 복귀</td></tr>
+            <tr><td><code>/clear</code></td><td>나가지 않고도 맥락을 비워 새 세션 시작</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>세션 기록은 <strong>사용자 폴더 하위 <code>~/.claude/projects/</code></strong> 에 프로젝트별·세션별로 저장됩니다. 즉 오래전 작업도 <code>--resume</code> 으로 되살릴 수 있습니다. 단, 이 기록은 <strong>로컬에만</strong> 저장되므로 다른 PC에는 없습니다.</p>
+
+<div class="note warn">
+    <span class="nh">캐싱 주의</span>
+    AI에는 캐싱이 있어, 이어서 요청하면 새 요청분에만 과금됩니다. 하지만 캐싱에는 <strong>유효 시간</strong>이 있어, 시간이 지난 뒤 <code>--resume</code> 으로 다시 요청하면 쌓아둔 내용을 전부 다시 실어 보내 캐싱 이점을 못 받습니다. 이럴 때는 <strong>새 세션</strong>을 여는 편이 유리할 수도 있습니다.
+</div>

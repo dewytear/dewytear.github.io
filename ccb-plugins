@@ -1,0 +1,20 @@
+<h2>플러그인 · 마켓플레이스</h2>
+<p>여러 스킬을 묶어 <strong>플러그인</strong> 형태로 배포할 수 있습니다. 논문은 대부분 PDF이므로, PDF를 잘 읽는 스킬이 든 <strong>공식 문서 스킬(document-skills)</strong> 플러그인을 설치해 봅니다.</p>
+
+<h3>1) 마켓플레이스 추가</h3>
+<p>Claude Code에서 <code>/plugin</code> 을 입력하고 Enter를 누르면 플러그인 화면이 나옵니다. 화살표 키로 <strong>마켓플레이스</strong> 를 선택 → <strong>Add Marketplace</strong> 로 Anthropic 공식 마켓플레이스를 추가합니다.</p>
+<pre><code><span class="c"># GitHub 접속이 막히거나 UI가 어려우면, 명령으로 직접 실행</span>
+/plugin marketplace add anthropics/skills</code></pre>
+
+<h3>2) document-skills 설치</h3>
+<p>추가된 마켓플레이스(anthropic 공식)에는 플러그인이 몇 개 있는데, 그중 <strong>document-skills</strong> 만 설치합니다. 목록에서 <strong>Space</strong> 로 선택하고 <strong>Enter</strong> 로 설치합니다. 명령으로도 됩니다.</p>
+<pre><code>/plugin install document-skills</code></pre>
+<p>이 스킬은 <strong>PDF · PPT(pptx) · 엑셀</strong> 같은 문서를 Claude Code에서 읽을 수 있게 해 줍니다.</p>
+
+<h3>3) 재시작 후 확인</h3>
+<p>설치 후 반영이 잘 안 되면, <code>/exit</code> 로 Claude Code를 나갔다가 다시 실행합니다. 그런 다음 <code>/pdf</code> 또는 <code>/pptx</code> 를 입력했을 때 명령이 뜨면 <strong>설치 성공</strong>입니다. 안 뜨면 마켓플레이스 추가·설치를 다시 시도합니다.</p>
+
+<div class="note">
+    <span class="nh">설치가 막힐 때 (GitHub 오류 등)</span>
+    구글에서 <strong>"anthropic skills github"</strong> 를 검색해 공식 저장소로 들어가면, README 중간에 설치 명령이 있습니다. <code>plugin marketplace add ...</code> 한 줄과 <code>plugin install document-skills</code> 한 줄을 각각 복사해 Claude Code에 붙여 넣어 실행하면 됩니다.
+</div>

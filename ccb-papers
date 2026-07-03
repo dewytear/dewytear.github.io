@@ -1,0 +1,22 @@
+<h2>웹 자료 정리 — 허깅페이스 논문</h2>
+<p>URL 하나만 주면 Claude Code가 그 페이지의 내용을 가져와 정리해 줍니다. 실습에서는 <strong>허깅페이스 데일리 페이퍼</strong>(그날 추천을 많이 받은 논문 목록)를 정리합니다.</p>
+
+<h3>요청 방법</h3>
+<pre><code><span class="c"># huggingface.co 의 데일리 페이퍼 URL을 붙여넣고</span>
+https://huggingface.co/papers
+<span class="c"># 이어서</span>
+오늘자 논문들을 정리해줘.</code></pre>
+
+<h3>목록 페이지만으로 끝나지 않는다</h3>
+<p>데일리 페이퍼 목록 페이지에는 각 논문의 상세 내용이 담겨 있지 않습니다. 그래서 Claude Code는</p>
+<ul>
+    <li>목록에서 각 논문의 <strong>개별 페이지를 탐색(WebFetch)</strong> 하고,</li>
+    <li>각 페이지의 <strong>초록(abstract)</strong> 을 가져와,</li>
+    <li>전체를 <strong>분류별로 정리</strong>해 파일로 저장합니다.</li>
+</ul>
+<p>실습 당시 총 16건의 논문이 분류별로, 각 논문 내용과 함께 하나의 파일로 정리되었습니다.</p>
+
+<div class="note">
+    <span class="nh">활용</span>
+    논문을 하나씩 열어 보는 대신, 관련 논문을 통째로 가져와 AI에게 <strong>1차 분석</strong>을 시킨 뒤 그 결과로 훑어보면 훨씬 빠릅니다. 이 정리 파일은 이후 "논문 소개 사이트"와 "논문 분석 에이전트"의 입력으로 이어집니다.
+</div>
