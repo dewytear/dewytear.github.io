@@ -85,7 +85,7 @@
             var html = '<ul>';
             nodes.forEach(function(node){
                 var label = node.label || node.title || node.name;
-                if(node.children && node.children.length){
+                if(node.children){    // a branch, even before any docs are added
                     html += '<li class="nav-branch">'
                          +  '<button type="button" class="nav-title" onclick="toggleBranch(this)">'
                          +  '<span class="nav-caret">&#9662;</span>' + label + '</button>';
