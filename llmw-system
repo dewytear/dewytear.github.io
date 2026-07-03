@@ -1,0 +1,20 @@
+<h2>시스템 파일과 rules</h2>
+<p>볼트에는 노트뿐 아니라 <strong>AI의 동작을 규정하는 시스템 파일</strong>이 함께 들어갑니다. 강사가 공들여 깎아 둔 이 파일들은 한 번 정독해 볼 가치가 있습니다.</p>
+
+<h3>저자와 모델 명시</h3>
+<ul>
+    <li>메인 볼트의 주 저자는 <strong>사람(나)</strong> 입니다.</li>
+    <li>LLM 위키에는 내 이름과 함께 <strong>어떤 모델이 작성했는지</strong>도 명시합니다. 예: "Opus 4.8 · effort X-high", "Fable", "Codex Fugu · Ultra" 등.</li>
+    <li>어떤 모델이 만든 위키인지 기록해 <strong>품질을 비교·최적화</strong>합니다. 인제스트는 토큰·시간을 많이 쓰므로, <strong>정말 중요한 자료만</strong> 모으는 것이 좋습니다.</li>
+</ul>
+
+<h3>메인 볼트의 시스템 파일</h3>
+<p>클로드가 읽을 문서, 다른 에이전트가 읽을 문서, CMDS(컨텍스트) 관련 내용, 볼트 규칙, 작성·포매팅 규칙, 연구 주제, 페르소나(brain dump) 등이 들어갑니다.</p>
+
+<h3>LLM 위키의 core-context</h3>
+<p>LLM 위키는 <strong>어떤 목적으로 위키를 쓰려는지</strong>를 담는 컨텍스트 파일을 씁니다. 온보딩을 시작하면 <code>core-context.md</code> 를 수정하며 이름·소속·부서·취미·취향 등을 채웁니다. 여기서도 모든 걸 한 파일에 쓰지 않고 <strong>"취향은 취향.md, 전문 페르소나는 여기"</strong> 처럼 주소를 명시해 컨텍스트를 최적화합니다.</p>
+
+<div class="note">
+    <span class="nh">.claude/rules — 헌법처럼 읽는 규칙</span>
+    <code>.claude</code> 폴더 안 <strong><code>rules</code></strong> 폴더의 마크다운 파일은, Claude Code가 <strong>세션 시작 즉시 먼저 읽습니다(헌법처럼 엄밀히 준수)</strong>. 반면 <code>CLAUDE.md</code> 는 가이드처럼 참고합니다. 그래서 편집 규칙·취향·중요한 강제 규칙은 <code>rules</code> 에 담아 두면 좋습니다.
+</div>
