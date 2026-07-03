@@ -63,10 +63,12 @@
         #sidebar{
             animation: fadeUp 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
-        /* Title: a slow, quiet sheen drifting across the letters. */
+        /* Title: a narrow specular glint sweeps across once, then rests —
+           like light catching foil. Refined, periodic, not a constant sweep. */
         @keyframes titleSheen{
-            0%,   100%{ background-position: 200% 50%; }
-            50%{        background-position: 0% 50%; }
+            0%{   background-position: 120% 50%; }
+            14%{  background-position: -20% 50%; }   /* glint crosses in the first ~1s */
+            100%{ background-position: -20% 50%; }   /* then holds on solid --text */
         }
         #navigation li a,
         .tag,
@@ -116,16 +118,21 @@
         #masthead h1 a{
             color: var(--text);
             background: linear-gradient(
-                100deg,
-                var(--text) 35%,
-                var(--accent) 50%,
-                var(--text) 65%
+                105deg,
+                var(--text) 0%,
+                var(--text) 43%,
+                var(--accent) 48%,
+                color-mix(in srgb, var(--accent) 45%, #fff) 50%,
+                var(--accent) 52%,
+                var(--text) 57%,
+                var(--text) 100%
             );
-            background-size: 220% 100%;
+            background-size: 300% 100%;
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: titleSheen 9s ease-in-out infinite;
+            will-change: background-position;
+            animation: titleSheen 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
         #masthead h1 a:hover{
             text-decoration: none;
