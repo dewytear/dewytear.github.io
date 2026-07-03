@@ -167,6 +167,36 @@
                 overflow-y: auto;
             }
         }
+        /* Sidebar scrolls without showing a scrollbar */
+        #sidebar{
+            scrollbar-width: none;          /* Firefox */
+        }
+        #sidebar::-webkit-scrollbar{
+            display: none;                  /* Chrome / Edge / Safari */
+        }
+        /* Content pane: slim scrollbar in theme colors */
+        #content-scroll,
+        article .carousel-stage{
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+        #content-scroll::-webkit-scrollbar,
+        article .carousel-stage::-webkit-scrollbar{
+            width: 6px;
+        }
+        #content-scroll::-webkit-scrollbar-track,
+        article .carousel-stage::-webkit-scrollbar-track{
+            background: transparent;
+        }
+        #content-scroll::-webkit-scrollbar-thumb,
+        article .carousel-stage::-webkit-scrollbar-thumb{
+            background: var(--border);
+            border-radius: 99px;
+        }
+        #content-scroll::-webkit-scrollbar-thumb:hover,
+        article .carousel-stage::-webkit-scrollbar-thumb:hover{
+            background: var(--accent);
+        }
 
         /* ---- Sidebar (left column: profile image + nav) ---- */
         #sidebar{

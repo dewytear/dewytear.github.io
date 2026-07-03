@@ -118,17 +118,19 @@
             return html;
         }
 
-        // Top 10 tags by usage count. Strictly ten: ties that would push
-        // the list past ten are left unranked.
+        // Top 10 tags by usage count. Only tags whose count is unique get a
+        // rank — any tag sharing its count with another is excluded entirely.
         function topTagRanks(){
+            var countFreq = {};   // count value -> how many tags have it
             var entries = Object.keys(TAG_INDEX).map(function(t){
-                return { tag: t, n: TAG_INDEX[t].length };
+                var n = TAG_INDEX[t].length;
+                countFreq[n] = (countFreq[n] || 0) + 1;
+                return { tag: t, n: n };
             });
-            entries.sort(function(a, b){
-                return b.n - a.n || a.tag.localeCompare(b.tag);
-            });
+            var unique = entries.filter(function(e){ return countFreq[e.n] === 1; });
+            unique.sort(function(a, b){ return b.n - a.n; });
             var ranks = {};
-            entries.slice(0, 10).forEach(function(e, i){ ranks[e.tag] = i + 1; });
+            unique.slice(0, 10).forEach(function(e, i){ ranks[e.tag] = i + 1; });
             return ranks;
         }
 
