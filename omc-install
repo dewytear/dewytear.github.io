@@ -1,0 +1,33 @@
+<h2>설치</h2>
+<p>설치 방법은 두 가지입니다. <strong>일반 사용자는 플러그인 마켓플레이스 방식</strong>을 우선 적용하면 됩니다.</p>
+
+<h3>1) 권장 — 플러그인 마켓플레이스</h3>
+<p>Claude Code 안에서 마켓플레이스를 추가한 뒤 OMC 플러그인을 설치합니다. 입력창에 아래 두 줄을 차례로 실행합니다. <strong>두 줄을 한 번에 붙여넣으면 실패하므로 반드시 한 줄씩 실행</strong>해야 합니다(공식 README 명시).</p>
+<pre><code><span class="c"># 1단계: 플러그인 저장소(마켓플레이스)를 등록</span>
+/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
+<span class="c"># 2단계: 등록한 저장소에서 OMC 플러그인을 설치</span>
+/plugin install oh-my-claudecode</code></pre>
+
+<h3>2) 프로젝트 설정 (--local 권장)</h3>
+<p>설치 후에는 프로젝트 단위 설정을 권장합니다. <code>--local</code> 을 붙이면 기존 전역 <code>CLAUDE.md</code> 를 덮어쓰지 않아 안전합니다.</p>
+<pre><code><span class="c"># 현재 프로젝트에만 OMC 설정 적용 — 전역 설정은 그대로 보존</span>
+/oh-my-claudecode:omc-setup --local</code></pre>
+<p>전역 설정이 꼭 필요할 때만 아래 명령을 사용합니다. 단, 기존 <code>~/.claude/CLAUDE.md</code> 에 영향을 주는지 미리 확인해야 합니다.</p>
+<pre><code><span class="c"># 모든 프로젝트에 공통 적용 — 기존 전역 CLAUDE.md 영향 여부 확인 필요</span>
+/oh-my-claudecode:omc-setup</code></pre>
+
+<div class="note">
+    <span class="nh">회사 개발 PC · 공용 프로젝트 권고</span>
+    전역 설정보다 프로젝트 로컬 설정(<code>--local</code>)을 우선 권장합니다. 프로젝트마다 규칙이 다를 때 전역 <code>CLAUDE.md</code> 가 섞이는 것을 막을 수 있습니다.
+</div>
+
+<h3>3) npm 설치 — CLI/runtime 용도의 공식 대안 경로</h3>
+<p>일반 사용자는 위의 플러그인 방식을 쓰면 충분하지만, <strong>npm 설치도 공식 지원되는 별도 경로</strong>입니다. 단, 용도가 다릅니다. 플러그인 설치는 Claude Code 세션 안에서 슬래시 명령(<code>/autopilot</code> 등)을 쓰기 위한 것이고, npm 설치는 터미널에서 <code>omc</code> CLI 명령(<code>omc doctor</code>, <code>omc team</code>, <code>omc ask</code> 등)을 쓰기 위한 것입니다.</p>
+<pre><code><span class="c"># 터미널 CLI(omc 명령)가 필요할 때만 — npm 패키지명은 oh-my-claude-sisyphus</span>
+npm i -g oh-my-claude-sisyphus@latest</code></pre>
+<p>주의할 점은 <strong>npm 패키지명이 저장소 이름과 다르다</strong>는 것입니다. 프로젝트 브랜드는 oh-my-claudecode지만, npm에 게시된 패키지명은 <code>oh-my-claude-sisyphus</code>입니다. 설치하면 <code>oh-my-claudecode</code>와 <code>omc</code> 두 명령이 함께 등록됩니다. 설치 중 <code>deprecated prebuild-install</code> 경고가 보일 수 있으나 상위 의존성에서 비롯된 알려진 경고로, 설치 실패를 의미하지 않습니다. curl 스크립트 방식 설치는 공식 문서에 없으므로 사용하지 않습니다.</p>
+
+<div class="note warn">
+    <span class="nh">설치 · 업데이트</span>
+    플러그인 방식 사용 시 설치와 업데이트는 Claude Code의 플러그인 관리 기능으로 처리합니다. 마켓플레이스 자동 업데이트가 꺼져 있으면 <code>/plugin marketplace update omc</code> 로 먼저 최신 버전을 동기화한 뒤, <code>/oh-my-claudecode:omc-setup</code> 을 다시 실행해 최신 설정을 적용하세요.
+</div>

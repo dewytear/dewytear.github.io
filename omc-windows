@@ -1,0 +1,16 @@
+<h2>Windows 주의</h2>
+<p>Windows PowerShell 환경에서는 별도 주의가 필요합니다. 핵심은 <strong>WSL2 권장, Native Windows는 실험적(experimental)</strong> 이라는 점입니다.</p>
+
+<ul>
+    <li>v4.14.4에서 Native Windows Hook manifest 관련 수정이 있었지만, 공식 Reference는 여전히 <strong>WSL2를 권장</strong>합니다.</li>
+    <li><code>tmux</code> 가 필요한 기능(<code>/omc-teams</code>, 일부 외부 AI 워커 병렬 실행)은 Native Windows PowerShell만으로는 제약이 있을 수 있습니다. 공식 README는 Windows용 네이티브 tmux 호환 도구인 <strong>psmux</strong>(<code>winget install psmux</code>)를 WSL 없이 쓸 수 있는 대안으로 안내합니다.</li>
+    <li>단순 플러그인 설치·setup·doctor·세션 내 스킬 사용은 Native Windows에서도 가능할 수 있으나, 문제가 반복되면 WSL2로 전환하는 것이 안정적입니다.</li>
+    <li>PowerShell에서 <code>npm view</code>·<code>npm ping</code> 이 정상이어도, Claude Code 플러그인 설치 흐름과 npm CLI 설치 흐름은 별개입니다.</li>
+</ul>
+
+<div class="note warn">
+    <span class="nh">사전 확인 사항</span>
+    1. 실제 사용 환경이 Windows Native PowerShell인지 WSL2인지<br>
+    2. OMC를 Claude Code 플러그인으로 쓸지, npm CLI/runtime으로 쓸지<br>
+    3. <code>/omc-teams</code> 처럼 tmux가 필요한 멀티 AI 기능까지 사용할 계획인지
+</div>
