@@ -118,19 +118,25 @@
             return html;
         }
 
-        // Top 10 tags by usage count. Only tags whose count is unique get a
-        // rank — any tag sharing its count with another is excluded entirely.
+        // Top 10 tags by usage count. Ties are allowed only at the very top:
+        // the highest-count group shares rank 1 even when tied, while below
+        // it a count must be unique to earn a rank. At most ten tags total.
         function topTagRanks(){
-            var countFreq = {};   // count value -> how many tags have it
-            var entries = Object.keys(TAG_INDEX).map(function(t){
+            var byCount = {};   // count value -> [tags]
+            Object.keys(TAG_INDEX).forEach(function(t){
                 var n = TAG_INDEX[t].length;
-                countFreq[n] = (countFreq[n] || 0) + 1;
-                return { tag: t, n: n };
+                (byCount[n] = byCount[n] || []).push(t);
             });
-            var unique = entries.filter(function(e){ return countFreq[e.n] === 1; });
-            unique.sort(function(a, b){ return b.n - a.n; });
-            var ranks = {};
-            unique.slice(0, 10).forEach(function(e, i){ ranks[e.tag] = i + 1; });
+            var counts = Object.keys(byCount).map(Number)
+                .sort(function(a, b){ return b - a; });
+            var ranks = {}, rank = 0, total = 0;
+            counts.forEach(function(n, i){
+                var group = byCount[n];
+                if(i > 0 && group.length > 1){ return; }   // lower ties stay out
+                if(total + group.length > 10){ return; }   // strictly ten tags
+                rank++;
+                group.forEach(function(t){ ranks[t] = rank; total++; });
+            });
             return ranks;
         }
 
@@ -237,14 +243,20 @@
         }
 
         // ---- "Recent docs" module: top 5 + collapse ----
+        // Ordered by each doc's last commit date, fetched from the GitHub
+        // API (cached for an hour). Until dates arrive, list order shows.
         var MORE_LIMIT = 5;
+        var REPO_API = 'https://api.github.com/repos/dewytear/dewytear.github.io';
+        var DOC_DATES_KEY = 'wikiDocDates.v1';
+
         function renderMore(){
             var html = '<h3 class="more-title">최근 문서</h3><ul class="more-list" id="more-list">';
             DOCS.forEach(function(d, i){
                 var extra = i >= MORE_LIMIT ? ' class="more-extra" hidden' : '';
+                var meta = d.section + (d.date ? ' · ' + d.date.slice(0, 10) : '');
                 html += '<li' + extra + '><a href="#!' + d.name + '">'
                      +  '<span class="more-name">' + escapeHtml(d.label) + '</span>'
-                     +  '<span class="more-meta">' + escapeHtml(d.section) + '</span></a></li>';
+                     +  '<span class="more-meta">' + escapeHtml(meta) + '</span></a></li>';
             });
             html += '</ul>';
             if(DOCS.length > MORE_LIMIT){
@@ -252,6 +264,49 @@
                      +  '더 보기 (' + (DOCS.length - MORE_LIMIT) + ')</button>';
             }
             return html;
+        }
+
+        function loadCachedDocDates(){
+            try{
+                var s = JSON.parse(localStorage.getItem(DOC_DATES_KEY));
+                if(s && Date.now() - s.at < 3600000){ return s.dates; }
+            }catch(e){}
+            return null;
+        }
+
+        function fetchDocDates(){
+            var dates = {};
+            return Promise.all(DOCS.map(function(d){
+                var url = REPO_API + '/commits?path=' + encodeURIComponent(d.name) + '&per_page=1';
+                return fetch(url).then(function(r){
+                    return r.ok ? r.json() : null;
+                }).then(function(j){
+                    if(j && j[0]){ dates[d.name] = j[0].commit.committer.date; }
+                }).catch(function(){});
+            })).then(function(){
+                if(Object.keys(dates).length){
+                    try{
+                        localStorage.setItem(DOC_DATES_KEY,
+                            JSON.stringify({ at: Date.now(), dates: dates }));
+                    }catch(e){}
+                }
+                return dates;
+            });
+        }
+
+        function applyDocDates(dates){
+            if(!dates || !Object.keys(dates).length){ return; }
+            DOCS.forEach(function(d){ d.date = dates[d.name] || ''; });
+            DOCS.sort(function(a, b){
+                return a.date < b.date ? 1 : a.date > b.date ? -1 : 0;
+            });
+            document.querySelector('#more').innerHTML = renderMore();
+        }
+
+        function refreshRecentDocs(){
+            var cached = loadCachedDocDates();
+            if(cached){ applyDocDates(cached); }
+            else { fetchDocDates().then(applyDocDates); }
         }
 
         function toggleMore(){
@@ -501,6 +556,7 @@
                   + '</div>'
                   + renderNodes(tree);
                 document.querySelector('#more').innerHTML = renderMore();
+                refreshRecentDocs();   // reorder by last-modified once dates load
                 route();   // render the initial page once indexes exist
             })
         })
