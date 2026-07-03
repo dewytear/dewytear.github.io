@@ -101,14 +101,29 @@
         }
 
         // ---- Evernote-style tag chip ----
-        function tagChip(tag, count){
-            var html = '<a class="tag" href="#!tag:' + encodeURIComponent(tag) + '">'
+        function tagChip(tag, count, rank){
+            var cls = 'tag' + (rank ? ' top-' + rank : '');
+            var html = '<a class="' + cls + '" href="#!tag:' + encodeURIComponent(tag) + '">'
                      + '<span class="tag-ico">&#127991;</span>' + escapeHtml(tag);
             if(count != null){
                 html += '<span class="tag-count">' + count + '</span>';
             }
             html += '</a>';
             return html;
+        }
+
+        // Top 10 tags by usage count. Strictly ten: ties that would push
+        // the list past ten are left unranked.
+        function topTagRanks(){
+            var entries = Object.keys(TAG_INDEX).map(function(t){
+                return { tag: t, n: TAG_INDEX[t].length };
+            });
+            entries.sort(function(a, b){
+                return b.n - a.n || a.tag.localeCompare(b.tag);
+            });
+            var ranks = {};
+            entries.slice(0, 10).forEach(function(e, i){ ranks[e.tag] = i + 1; });
+            return ranks;
         }
 
         // ---- Article helpers ----
@@ -184,10 +199,11 @@
         function filterTags(query){
             var q = query.trim().toLowerCase();
             var tags = Object.keys(TAG_INDEX).sort();
+            var ranks = topTagRanks();
             var html = '';
             tags.forEach(function(t){
                 if(q && t.toLowerCase().indexOf(q) === -1){ return; }
-                html += tagChip(t, TAG_INDEX[t].length);
+                html += tagChip(t, TAG_INDEX[t].length, ranks[t]);
             });
             if(!html){ html = '<p class="empty">No matching tags.</p>'; }
             var cloud = document.getElementById('tag-cloud');
