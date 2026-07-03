@@ -213,8 +213,11 @@
             border: 1px solid var(--border);
         }
 
-        /* ---- Sidebar footer: settings entry ---- */
+        /* ---- Sidebar footer: Tags, 설정, and the theme toggle on one row ---- */
         #sidebar-foot{
+            display: flex;
+            align-items: center;
+            gap: 12px;
             padding: 14px 18px;
             border-top: 1px solid var(--border);
         }
@@ -222,12 +225,9 @@
         #settings-link{
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             color: var(--muted);
             font-size: 14px;
-        }
-        #tags-link{
-            margin-bottom: 10px;
         }
         #tags-link:hover,
         #settings-link:hover{
@@ -239,18 +239,25 @@
             line-height: 1;
         }
 
-        /* ---- Day/Night toggle switch (below the settings link) ---- */
+        /* ---- Day/Night toggle switch (sits at the end of the footer row) ---- */
         #theme-switch{
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-top: 12px;
+            gap: 6px;
+            margin-left: auto;   /* push the toggle to the right edge */
             color: var(--muted);
             font-size: 15px;
             line-height: 1;
             cursor: pointer;
             user-select: none;
         }
+        /* Colored celestial icons flanking the switch. */
+        .theme-ico{
+            font-size: 15px;
+            line-height: 1;
+        }
+        .theme-ico.moon{ color: #f4d35e; }   /* moonlit gold */
+        .theme-ico.sun{  color: #f39c3d; }   /* warm sun orange */
         #theme-switch input{
             display: none;
         }
