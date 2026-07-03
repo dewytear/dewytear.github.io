@@ -22,18 +22,20 @@
             </div>
             <nav id="navigation"></nav>
             <div id="sidebar-foot">
-                <a id="tags-link" href="#!tags">
-                    <span class="settings-ico">&#127991;</span>Tags
-                </a>
+                <div class="foot-row">
+                    <a id="tags-link" href="#!tags">
+                        <span class="settings-ico">&#127991;</span>Tags
+                    </a>
+                    <label id="theme-switch" title="Day / Night 전환">
+                        <span class="theme-ico moon">&#9790;</span>
+                        <input type="checkbox" id="theme-toggle" onchange="nightDayHandler(this);">
+                        <span class="switch-track"><span class="switch-thumb"></span></span>
+                        <span class="theme-ico sun">&#9728;</span>
+                    </label>
+                </div>
                 <a id="settings-link" href="#!settings">
                     <span class="settings-ico">&#9881;</span>설정
                 </a>
-                <label id="theme-switch" title="Day / Night 전환">
-                    <span class="theme-ico moon">&#9790;</span>
-                    <input type="checkbox" id="theme-toggle" onchange="nightDayHandler(this);">
-                    <span class="switch-track"><span class="switch-thumb"></span></span>
-                    <span class="theme-ico sun">&#9728;</span>
-                </label>
             </div>
         </aside>
         <main id="content">
@@ -66,6 +68,7 @@
         var DOCS = [];         // real docs: {name, label, section, tags:[]}
         var TAG_INDEX = {};    // tag -> [doc, ...]
         var DOC_BY_NAME = {};  // name -> doc
+        var DOC_MODEL = '✍ Claude Fable 5';   // default authoring-model badge
 
         function buildIndexes(tree){
             (function walk(nodes, path){
@@ -77,7 +80,8 @@
                             name: node.name,
                             label: node.label || node.name,
                             section: path.join(' · '),
-                            tags: node.tags || []
+                            tags: node.tags || [],
+                            model: node.model || ''   // optional per-doc override
                         };
                         DOCS.push(doc);
                         DOC_BY_NAME[doc.name] = doc;
@@ -215,6 +219,15 @@
                         text += renderDocTags(doc.tags);
                     }
                     setArticle(text);
+                    // Stamp the authoring-model badge at the right end of the title.
+                    var h2 = document.querySelector('article h2');
+                    var label = (doc && doc.model) || DOC_MODEL;
+                    if(h2 && label){
+                        var span = document.createElement('span');
+                        span.className = 'doc-model';
+                        span.textContent = label;
+                        h2.appendChild(span);
+                    }
                 })
             })
         }
@@ -635,8 +648,17 @@
             var nav = document.getElementById('navigation');
             if(!nav){ return; }
             var want = name ? '#!' + name : null;
+            nav.querySelectorAll('.nav-branch.on-path').forEach(function(li){
+                li.classList.remove('on-path');
+            });
             nav.querySelectorAll('a').forEach(function(a){
-                a.classList.toggle('nav-active', a.getAttribute('href') === want);
+                var active = a.getAttribute('href') === want;
+                a.classList.toggle('nav-active', active);
+                if(active){
+                    // Light up the guide rails along the active doc's ancestry.
+                    var li = a.closest('.nav-branch');
+                    while(li){ li.classList.add('on-path'); li = li.parentNode.closest('.nav-branch'); }
+                }
             });
         }
 
