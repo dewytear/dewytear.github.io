@@ -1,0 +1,102 @@
+<h2>동작 구조와 6단계</h2>
+<p>내가 <code>진행시켜</code> 를 누른 뒤, 하네스 <strong>내부에서</strong> 벌어지는 일을 들여다봅니다. 크게 <strong>6단계로 팀을 짜고</strong>, 그다음 <strong>운영 루프</strong>를 돌립니다.</p>
+
+<h3>플러그인의 6단계 — 팀을 만드는 과정</h3>
+<div class="diagram">
+<svg viewBox="0 0 660 188" role="img" aria-label="하네스 6단계: 요청 분석 → 에이전트 팀 설계 → 에이전트 생성 → 스킬 생성 → 오케스트레이터·워크플로우 → 구성 검증">
+    <rect class="d-box" x="8" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="42" text-anchor="middle">① 요청 분석</text>
+    <text class="d-sub" x="108" y="59" text-anchor="middle">무엇을 원하는지 파악</text>
+
+    <rect class="d-box" x="223" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="42" text-anchor="middle">② 에이전트 팀 설계</text>
+    <text class="d-sub" x="323" y="59" text-anchor="middle">필요한 역할 정의</text>
+
+    <rect class="d-box" x="438" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="42" text-anchor="middle">③ 에이전트 생성</text>
+    <text class="d-sub" x="538" y="59" text-anchor="middle">자연어 직무기술서</text>
+
+    <rect class="d-box" x="8" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="134" text-anchor="middle">④ 스킬 생성</text>
+    <text class="d-sub" x="108" y="151" text-anchor="middle">반복 절차 · 체크리스트</text>
+
+    <rect class="d-box" x="223" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label sm" x="323" y="134" text-anchor="middle">⑤ 오케스트레이터·워크플로우</text>
+    <text class="d-sub" x="323" y="151" text-anchor="middle">실행 순서 수립</text>
+
+    <rect class="d-box accent" x="438" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="134" text-anchor="middle">⑥ 구성 검증</text>
+    <text class="d-sub" x="538" y="151" text-anchor="middle">팀이 제대로 짜였는지</text>
+
+    <!-- row1 arrows -->
+    <line class="d-edge" x1="208" y1="46" x2="221" y2="46"/><polygon class="d-arrow" points="221,41 229,46 221,51"/>
+    <line class="d-edge" x1="423" y1="46" x2="436" y2="46"/><polygon class="d-arrow" points="436,41 444,46 436,51"/>
+    <!-- snake connector ③ -> ④ -->
+    <path class="d-edge" d="M538 72 V92 H108 V110"/><polygon class="d-arrow" points="103,109 113,109 108,115"/>
+    <!-- row2 arrows -->
+    <line class="d-edge" x1="208" y1="138" x2="221" y2="138"/><polygon class="d-arrow" points="221,133 229,138 221,143"/>
+    <line class="d-edge" x1="423" y1="138" x2="436" y2="138"/><polygon class="d-arrow" points="436,133 444,138 436,143"/>
+</svg>
+<div class="d-cap">여기까지가 "팀 짜기". ⑥ 검증을 통과하면 실제 작업(운영 루프)이 시작됩니다.</div>
+</div>
+
+<h3>운영 루프 — 팀이 일하는 방식</h3>
+<p>팀이 만들어지면 오케스트레이터가 아래 루프를 돌립니다. 핵심은 <strong>"나눠서 병렬로 하고, 테스트로 검증하고, 틀리면 다시"</strong>입니다.</p>
+<ol>
+    <li><strong>분해</strong> — 목표를 작업 단위로 쪼갭니다. <em>예: 영향도 분석 · 보류 로직 · 알림 · 회귀 테스트</em></li>
+    <li><strong>분담 &amp; 병렬 실행</strong> — 각 에이전트가 동시에 담당 작업을 처리.</li>
+    <li><strong>검증</strong> — QA가 결과를 교차 확인(표준 기능 회귀, 수치 정합성).</li>
+    <li><strong>피드백 루프</strong> — 문제가 있으면 담당 에이전트에게 되돌려 다시. 통과할 때까지 반복.</li>
+</ol>
+
+<h3>에이전트 팀 vs 격리 서브에이전트</h3>
+<p>Claude Code의 기본 <strong>서브에이전트</strong>는 서로 <strong>격리</strong>되어 대화하지 못합니다. <strong>에이전트 팀</strong>은 서로 <strong>통신</strong>합니다 — 예를 들어 분석가가 "표준소스 정보가 부족하다"는 걸 발견하면 <strong>분석 에이전트를 다시 깨워</strong> 추가 조사를 시킬 수 있습니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 172" role="img" aria-label="격리 서브에이전트(서로 대화 불가) vs 에이전트 팀(서로 통신) 비교">
+    <!-- divider -->
+    <line class="d-edge dash" x1="350" y1="6" x2="350" y2="150"/>
+
+    <!-- LEFT: isolated -->
+    <rect class="d-box" x="110" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="170" y="31" text-anchor="middle">오케스트레이터</text>
+    <rect class="d-box soft" x="40" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="95" y="104" text-anchor="middle">에이전트 A</text>
+    <rect class="d-box soft" x="190" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="245" y="104" text-anchor="middle">에이전트 B</text>
+    <line class="d-edge" x1="140" y1="44" x2="100" y2="78"/><polygon class="d-arrow" points="96,72 104,80 90,80"/>
+    <line class="d-edge" x1="200" y1="44" x2="240" y2="78"/><polygon class="d-arrow" points="244,72 250,80 236,80"/>
+    <text class="d-sub" x="170" y="105" text-anchor="middle">✕</text>
+    <text class="d-sub" x="170" y="140" text-anchor="middle">서로 대화 불가</text>
+    <text class="d-label sm" x="170" y="162" text-anchor="middle">격리 서브에이전트</text>
+
+    <!-- RIGHT: team -->
+    <rect class="d-box accent" x="470" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="530" y="31" text-anchor="middle">오케스트레이터</text>
+    <rect class="d-box" x="400" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="455" y="104" text-anchor="middle">에이전트 C</text>
+    <rect class="d-box" x="550" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="605" y="104" text-anchor="middle">에이전트 D</text>
+    <line class="d-edge" x1="500" y1="44" x2="460" y2="78"/><polygon class="d-arrow" points="456,72 464,80 450,80"/>
+    <line class="d-edge" x1="560" y1="44" x2="600" y2="78"/><polygon class="d-arrow" points="604,72 610,80 596,80"/>
+    <line class="d-edge accent" x1="512" y1="100" x2="548" y2="100"/>
+    <polygon class="d-arrow accent" points="548,95 556,100 548,105"/>
+    <polygon class="d-arrow accent" points="512,95 504,100 512,105"/>
+    <text class="d-accent" x="530" y="140" text-anchor="middle" font-size="11">↔ 서로 통신</text>
+    <text class="d-label sm" x="530" y="162" text-anchor="middle">에이전트 팀</text>
+</svg>
+</div>
+
+<div class="note warn">
+    <span class="nh">실험 기능 — 켜는 법</span>
+    에이전트 팀은 <strong>실험 기능</strong>입니다. <code>~/.claude/settings.json</code> 의 환경변수로 켭니다:
+    <pre><code>"env": {
+  "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+}</code></pre>
+    동적 로딩에 실패하면 격리 서브에이전트로 뜨는 버그가 있으니, 에이전트가 안 보이면 <code>/exit</code> 후 다시 들어와 <code>/agents</code> 로 확인하세요.
+</div>
+
+<div class="note">
+    <span class="nh">파일은 어디에 생기나</span>
+    생성된 에이전트·스킬 정의는 프로젝트의 <code>.claude</code> 아래에 남아 <strong>Git으로 팀과 공유</strong>할 수 있습니다. 단, <strong>플러그인 자체는 머신마다 각각 설치</strong>해야 합니다. 구성 변경 이력은 <code>CLAUDE.md</code> 에 기록됩니다. 팀 설계 자체를 더 깊이 다루는 <a href="#!hnp-agents-skills">에이전트·스킬 설계</a>로 이어집니다.
+</div>

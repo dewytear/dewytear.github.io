@@ -1,0 +1,60 @@
+<h2>설치와 준비</h2>
+<p>하네스는 <strong>Claude Code 플러그인</strong> 형태로 배포됩니다. 마켓플레이스를 한 번 등록하고 설치하면 <code>/harness</code> 명령을 쓸 수 있습니다.</p>
+
+<div class="note">
+    <span class="nh">먼저 필요한 것</span>
+    <strong>Claude Code가 설치</strong>되어 있어야 합니다(<a href="#!install">Install &amp; Start</a> 참고). 터미널에서 작업할 프로젝트 폴더로 이동해 <code>claude</code> 를 실행한 상태에서 아래 슬래시 명령을 입력합니다.
+</div>
+
+<h3>설치 3단계</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="설치 흐름: 마켓플레이스 추가 → 플러그인 설치 → 리로드·확인">
+    <rect class="d-box" x="10" y="24" width="196" height="48" rx="10"/>
+    <text class="d-label" x="108" y="46" text-anchor="middle">① 마켓플레이스 추가</text>
+    <text class="d-sub" x="108" y="63" text-anchor="middle">marketplace add</text>
+
+    <rect class="d-box" x="252" y="24" width="196" height="48" rx="10"/>
+    <text class="d-label" x="350" y="46" text-anchor="middle">② 플러그인 설치</text>
+    <text class="d-sub" x="350" y="63" text-anchor="middle">install harness</text>
+
+    <rect class="d-box accent" x="494" y="24" width="196" height="48" rx="10"/>
+    <text class="d-label" x="592" y="46" text-anchor="middle">③ 리로드 · 확인</text>
+    <text class="d-sub" x="592" y="63" text-anchor="middle">/reload → /harness</text>
+
+    <line class="d-edge" x1="208" y1="48" x2="248" y2="48"/>
+    <polygon class="d-arrow" points="248,43 256,48 248,53"/>
+    <line class="d-edge" x1="450" y1="48" x2="490" y2="48"/>
+    <polygon class="d-arrow" points="490,43 498,48 490,53"/>
+</svg>
+</div>
+
+<h3>방법 1 — 명령어 두 줄 (권장)</h3>
+<pre><code><span class="c"># 1) 하네스 마켓플레이스 추가</span>
+/plugin marketplace add lev-factory/harness
+<span class="c"># 2) 하네스 플러그인 설치</span>
+/plugin install harness</code></pre>
+<p>설치 화면이 뜨면 <strong>User 스코프</strong>로 설치합니다(내 계정 전체에서 사용). 특정 프로젝트에서만 쓰려면 프로젝트 스코프를 선택합니다.</p>
+
+<h3>방법 2 — /plugin 화면에서</h3>
+<ol>
+    <li><code>/plugin</code> 입력 → <strong>방향키 오른쪽</strong>으로 <strong>Marketplace</strong> 탭 이동.</li>
+    <li><strong>Add Marketplace</strong> 에 <code>lev-factory/harness</code> 입력 → Enter.</li>
+    <li>목록에서 <strong>harness</strong> 선택 → 설치 화면에서 Enter → <strong>User 스코프</strong>로 설치.</li>
+</ol>
+
+<h3>설치 후 — 리로드하고 확인</h3>
+<pre><code><span class="c"># 플러그인을 현재 세션에 반영</span>
+/reload
+<span class="c"># 아래가 자동완성/실행되면 설치 성공</span>
+/harness</code></pre>
+<p><code>/harness</code> 를 입력했을 때 자동완성이 뜨면 준비 완료입니다. 이제 <a href="#!hnp-first-run">첫 하네스 실행</a>으로 넘어갑니다.</p>
+
+<div class="note warn">
+    <span class="nh">주의 — 마켓플레이스 주소 확인</span>
+    위의 <code>lev-factory/harness</code> 는 <strong>강의에서 언급된 예시 값</strong>입니다. 실제 설치 시에는 배포자의 <strong>GitHub 저장소 경로</strong>를 확인해서 넣으세요(검색어: <strong>"하네스 100"</strong>). 설치가 안 되면 <strong>명령어 방식 ↔ /plugin 화면 방식</strong>을 번갈아 시도해 보세요.
+</div>
+
+<div class="note">
+    <span class="nh">사내 환경 팁</span>
+    더존 개발 환경(사내망·프록시)에서는 GitHub 접근이 제한될 수 있습니다. 마켓플레이스 추가가 실패하면 <strong>네트워크/프록시 정책</strong>과 <strong>Git 접근 권한</strong>을 먼저 확인하세요. 플러그인은 <strong>머신마다 각각 설치</strong>해야 합니다(에이전트 정의는 Git으로 공유 가능하지만, 플러그인 자체는 개인 설치).
+</div>

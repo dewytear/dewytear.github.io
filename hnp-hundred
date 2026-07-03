@@ -1,0 +1,76 @@
+<h2>하네스100 · 성능</h2>
+<p><strong>하네스100</strong>은 자주 쓰이는 <strong>100가지 사례의 하네스를 미리 구성</strong>해 공개한 모음입니다. 매번 팀을 처음부터 짜는 대신, <strong>비슷한 구성을 찾아 커스터마이징</strong>하면 훨씬 빠릅니다.</p>
+
+<h3>어떤 사례가 있나</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>영역</th><th>예시</th></tr></thead>
+        <tbody>
+            <tr><td>콘텐츠 제작</td><td>유튜브 · 팟캐스트 · 뉴스레터 · 온라인 강의</td></tr>
+            <tr><td>소프트웨어 개발</td><td>기능 개발 · 리팩터링 · 버그 수정 · 테스트</td></tr>
+            <tr><td>데이터 분석</td><td>수집 · 정제 · 분석 · 리포트</td></tr>
+            <tr><td>비즈니스 전략</td><td>스타트업 검증~피칭 · <strong>정부 지원 사업계획서</strong></td></tr>
+            <tr><td>교육 · 학습</td><td>커리큘럼 · 강의안 · 문제 출제</td></tr>
+            <tr><td>법률 · 운영 · 전문 도메인</td><td>위험 평가 · 운영 프로세스 · 도메인별 전문 구성</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>예를 들어 <strong>정부 지원 사업계획서</strong> 구성에는 <em>공고문 분석 전문가 · 사업성 파트 작성자 · 예산 편성 도우미</em> 같은 에이전트가 미리 들어 있습니다.</p>
+
+<h3>더존 ERP 커스텀에 맞게 바꾸는 법</h3>
+<p>가장 가까운 구성을 고른 뒤, <strong>역할을 ERP 커스텀 흐름으로 치환</strong>하면 됩니다.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>하네스100 원본 역할</th><th>→ ERP 커스텀으로 치환</th></tr></thead>
+        <tbody>
+            <tr><td>자료 조사·분석 전문가</td><td>표준소스 · 영향도 분석가</td></tr>
+            <tr><td>본문 작성자</td><td>커스텀 설계자 · 개발 에이전트</td></tr>
+            <tr><td>검수·팩트체크</td><td>회귀 QA · 수치 정합 검증</td></tr>
+        </tbody>
+    </table>
+</div>
+<p class="scn-sub">※ 실행은 <code>/harness</code> 에 의도를 주고, 제안된 팀을 위 표대로 수정 요청하면 됩니다.</p>
+
+<h3>성능 — 얼마나 좋아지나</h3>
+<p>개발 과제 <strong>15개</strong>(기초·중급·고급)를 <strong>하네스 없이</strong> vs <strong>하네스로</strong> 풀게 하고, 최종 결과물을 <strong>LLM 심판(judge)</strong>이 채점했습니다. 결과는 평균 <strong>약 60% 성능 향상</strong>, 하네스 구성 시 <strong>승률 100%</strong>. 특히 <strong>과제가 어려울수록</strong> 단일 도구 점수는 크게 떨어지는 반면 하네스는 <strong>품질이 유지</strong>됐습니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 620 214" role="img" aria-label="개념도: 난이도가 오를수록 단일 도구는 품질이 떨어지고 하네스는 유지된다">
+    <!-- baseline -->
+    <line class="d-edge" x1="40" y1="180" x2="600" y2="180"/>
+    <!-- legend -->
+    <rect class="d-box soft" x="360" y="14" width="16" height="12" rx="2"/>
+    <text class="d-sub" x="382" y="24">하네스 없음</text>
+    <rect class="d-box accent" x="470" y="14" width="16" height="12" rx="2"/>
+    <text class="d-sub" x="492" y="24">하네스 있음</text>
+
+    <!-- group 기초 (cx=150) -->
+    <rect class="d-box soft" x="108" y="61" width="38" height="119" rx="4"/>
+    <rect class="d-box accent" x="154" y="51" width="38" height="129" rx="4"/>
+    <text class="d-sub" x="150" y="196" text-anchor="middle">기초</text>
+
+    <!-- group 중급 (cx=320) -->
+    <rect class="d-box soft" x="278" y="96" width="38" height="84" rx="4"/>
+    <rect class="d-box accent" x="324" y="57" width="38" height="123" rx="4"/>
+    <text class="d-sub" x="320" y="196" text-anchor="middle">중급</text>
+
+    <!-- group 고급 (cx=490) -->
+    <rect class="d-box soft" x="448" y="131" width="38" height="49" rx="4"/>
+    <rect class="d-box accent" x="494" y="61" width="38" height="119" rx="4"/>
+    <text class="d-sub" x="490" y="196" text-anchor="middle">고급</text>
+
+    <!-- y hint -->
+    <text class="d-sub" x="40" y="46" text-anchor="start">품질 점수(개념)</text>
+</svg>
+<div class="d-cap">개념도 — 실제 값이 아닌 <strong>경향</strong>입니다. 어려운 과제일수록 격차가 커집니다.</div>
+</div>
+
+<div class="note warn">
+    <span class="nh">주의</span>
+    위 그래프는 <strong>경향을 보여 주는 개념도</strong>이며, 정확한 수치는 배포된 벤치마크 자료를 확인하세요. ERP 커스텀은 도메인 특성상 <strong>표준 영향도·회귀</strong>가 품질을 좌우하므로, 벤치마크 수치보다 <strong>자기 현장 기준의 검증</strong>이 더 중요합니다.
+</div>
+
+<div class="note">
+    <span class="nh">어디서 찾나</span>
+    검색어 <strong>"하네스 100"</strong> (한국어 버전)으로 사례 모음을 찾을 수 있습니다. 마켓플레이스 주소와 함께 <a href="#!hnp-install">설치</a> 문서의 주의사항을 참고하세요.
+</div>

@@ -1,0 +1,74 @@
+<h2>검증·품질과 _workspace</h2>
+<p>하네스의 진짜 가치는 <strong>"믿을 수 있는 결과"</strong>에 있습니다. 특히 ERP 커스텀은 <strong>표준 기능을 깨뜨리면 안 되므로</strong> 검증이 생명입니다. 하네스는 <strong>QA 에이전트</strong>와 <strong>근거 기록</strong>으로 이를 뒷받침합니다.</p>
+
+<h3>QA는 무엇을 확인하나</h3>
+<p>오탈자 검사가 아니라, <strong>내용의 정합성</strong>을 봅니다.</p>
+<ul>
+    <li><strong>주장 ↔ 근거</strong> 정합성 — 결론이 실제 자료·소스에 근거하는지.</li>
+    <li><strong>수치 일관성</strong> — 주문금액·여신한도·정산 금액이 앞뒤로 맞는지.</li>
+    <li><strong>표준 회귀</strong> — 커스텀 때문에 표준 주문·여신 기능이 깨지지 않았는지.</li>
+</ul>
+<p>발견한 문제는 <strong>크리티컬 / 메이저 / 마이너</strong> 로 분류해 리포트합니다.</p>
+
+<h3>검증 루프 — 통과할 때까지</h3>
+<div class="diagram">
+<svg viewBox="0 0 680 150" role="img" aria-label="검증 루프: 개발 산출물 → QA 검사 → 결함 있으면 재작업 후 다시 QA, 없으면 (선택)2차 검증 후 사람 승인">
+    <rect class="d-box" x="6" y="70" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="66" y="98" text-anchor="middle">개발 산출물</text>
+
+    <rect class="d-box" x="158" y="70" width="104" height="48" rx="10"/>
+    <text class="d-label sm" x="210" y="98" text-anchor="middle">QA 검사</text>
+
+    <!-- decision diamond -->
+    <polygon class="d-box" points="352,66 398,94 352,122 306,94"/>
+    <text class="d-label sm" x="352" y="98" text-anchor="middle">결함?</text>
+
+    <!-- rework box (top) -->
+    <rect class="d-box" x="150" y="8" width="120" height="38" rx="9"/>
+    <text class="d-label sm" x="210" y="31" text-anchor="middle">재작업 (개발)</text>
+
+    <!-- optional 2nd check -->
+    <rect class="d-box soft" x="430" y="70" width="112" height="48" rx="10"/>
+    <text class="d-label sm" x="486" y="92" text-anchor="middle">(선택) 2차 검증</text>
+    <text class="d-sub" x="486" y="107" text-anchor="middle">Codex 교차</text>
+
+    <rect class="d-box accent" x="558" y="70" width="116" height="48" rx="10"/>
+    <text class="d-label sm" x="616" y="98" text-anchor="middle">사람 승인·반영</text>
+
+    <!-- arrows -->
+    <line class="d-edge" x1="126" y1="94" x2="156" y2="94"/><polygon class="d-arrow" points="156,89 164,94 156,99"/>
+    <line class="d-edge" x1="262" y1="94" x2="304" y2="94"/><polygon class="d-arrow" points="304,89 312,94 304,99"/>
+    <!-- diamond up -> rework -->
+    <path class="d-edge" d="M352 66 V27 H272"/><polygon class="d-arrow" points="272,22 272,32 264,27"/>
+    <text class="d-sub" x="330" y="58" text-anchor="middle">있음</text>
+    <!-- rework -> QA (loop) -->
+    <path class="d-edge" d="M150 27 H210 V68"/><polygon class="d-arrow" points="205,68 215,68 210,74"/>
+    <!-- diamond right -> 2nd check -->
+    <line class="d-edge" x1="398" y1="94" x2="428" y2="94"/><polygon class="d-arrow" points="428,89 436,94 428,99"/>
+    <text class="d-sub" x="414" y="84" text-anchor="middle">없음</text>
+    <!-- 2nd -> 승인 -->
+    <line class="d-edge" x1="542" y1="94" x2="556" y2="94"/><polygon class="d-arrow" points="556,89 564,94 556,99"/>
+</svg>
+<div class="d-cap">결함이 없을 때까지 개발↔QA를 돌고, 필요하면 다른 도구로 2차 검증합니다.</div>
+</div>
+
+<h3>왜 덜 틀리나 — 근거 기록</h3>
+<ul>
+    <li><strong>출처 기반</strong> — <code>_workspace</code> 에 <strong>근거 출처</strong>가 함께 남습니다. "그럴듯한 거짓(할루시네이션)"이 줄고, 나중에 "왜 이렇게 했는지" 추적됩니다.</li>
+    <li><strong>이력 기록</strong> — 구성 변경 이력이 <code>CLAUDE.md</code> 에 쌓여, 다음 사람이 맥락을 이어받습니다.</li>
+    <li><strong>중간 산출물 축적</strong> — 1차 분석 → 설계 → 구현 → QA 리포트가 단계별로 남아, 어느 단계가 틀렸는지 짚기 쉽습니다.</li>
+</ul>
+
+<h3>이중 검증 — 다른 도구로 교차</h3>
+<p>한 도구만으로 검증하면 편향될 수 있습니다. QA 에이전트가 <strong>다른 CLI(예: Codex CLI)</strong> 로 한 번 더 확인하게 만들 수 있습니다.</p>
+<pre><code>/harness QA 에이전트는 Codex CLI 를 이용해 회귀 결과를 교차 검증하도록 수정</code></pre>
+
+<div class="note warn">
+    <span class="nh">토큰 비용 — 알고 쓰기</span>
+    멀티 에이전트는 편리한 만큼 <strong>토큰을 더 씁니다</strong>. 특히 <strong>에이전트들끼리 대화</strong>할 때 약 <strong>30% 정도 더</strong> 소모되는 경우도 있습니다. 간단한 커스텀까지 무겁게 돌릴 필요는 없습니다 — 난이도에 맞게 팀 규모를 정하세요.
+</div>
+
+<div class="note">
+    <span class="nh">주방 비유 — 결과는 "초안"</span>
+    1인 셰프(단일 도구)는 빠르지만 병목이 있고, 멀티 에이전트(주방 팀)는 역할을 나눠 <strong>품질을 유지하며 오래</strong> 일합니다. 다만 <strong>한 번에 완성품이 나오지는 않습니다</strong> — 잘 준비된 <strong>초안</strong>으로 보고, ERP 반영 전에는 <strong>표준 영향도·회귀 결과를 사람이 반드시 확인</strong>하세요. 다양한 적용 사례는 <a href="#!hnp-scenarios">시나리오 게시판</a>에서 봅니다.
+</div>
