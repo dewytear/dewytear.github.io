@@ -1,0 +1,27 @@
+<h2>정리 — 엔지니어링 계층과 Q&A</h2>
+
+<h3>엔지니어링의 계층</h3>
+<p>지금까지 배운 것들을 목적에 따라 구분하면, "다 엔지니어링이네"가 아니라 각각의 결이 보입니다.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>엔지니어링</th><th>목적</th></tr></thead>
+        <tbody>
+            <tr><td>프롬프트 엔지니어링</td><td>LLM을 <strong>똑똑하게</strong> 만들기</td></tr>
+            <tr><td>컨텍스트 엔지니어링</td><td>맥락의 <strong>기회를 높이기</strong></td></tr>
+            <tr><td>에이전틱 엔지니어링</td><td>AI가 <strong>일을 잘하게</strong> 하기</td></tr>
+            <tr><td>하네스 엔지니어링</td><td><strong>믿고 맡기게</strong> 하기</td></tr>
+        </tbody>
+    </table>
+</div>
+<p><a href="#!hns-overview">하네스</a> 는 <strong>스킬 + 서브에이전트가 탑재된 메타 스킬</strong> 로 볼 수 있습니다. 스킬 개념을 잡아두면 하네스가 겉으로는 쉬워 보여도 내부가 복잡하다는 것을 이해하며 볼 수 있습니다.</p>
+
+<h3>MCP vs 스킬</h3>
+<p>MCP는 <strong>프로토콜</strong>입니다 — 외부 툴과 에이전트를 연결하기 위한 규약이라, 로딩·사용 방식이 스킬과 다릅니다. <strong>경쟁 관계가 아닙니다</strong>: 스킬 안에서 외부 연결이 필요하면 MCP를 쓸 수 있어, 스킬 안에 MCP가 있을 수도 있습니다. 다만 스킬이 워낙 강력해 <strong>MCP 대신 스킬로 대체</strong>하는 경우도 늘고 있습니다.</p>
+
+<div class="note">
+    <span class="nh">Q&amp;A 요점</span>
+    · <strong>개방형 스킬</strong> 을 함부로 받으면 안전하지 않음 — 검증된 것만.<br>
+    · <strong>같은 이름의 MCP 함수와 스킬</strong> 이 있으면 상황에 따라 다르므로, "이 스킬을 이용해라"처럼 <strong>명시</strong>하거나 네임스페이스로 구분.<br>
+    · <strong>스킬 성능 평가</strong> — 트리거가 잘 되는가/결과가 유용한가 등 지표를 먼저 정하고 LLM judge·육안으로 확인.<br>
+    · <strong>토큰</strong> — 일반 클로드보다 Claude Code가 더 많이 쓰지만, 원하는 결과를 한 번에 얻으면 더 유용할 수 있음. 토큰만 보지 말고 종합적으로 선택.
+</div>

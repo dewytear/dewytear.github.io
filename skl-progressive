@@ -1,0 +1,28 @@
+<h2>점진적 로딩 (스킬의 핵심 원리)</h2>
+<p>스킬의 가장 핵심적인 원리는 <strong>점진적 로딩(progressive disclosure)</strong> 입니다. 스킬 전체를 컨텍스트에 올리는 게 아니라, <strong>메타데이터만</strong> 먼저 올려 두고 필요할 때 나머지를 꺼냅니다.</p>
+
+<h3>도서관 책 표지 비유</h3>
+<p>컨텍스트에는 등록된 스킬의 <strong>메타데이터(이름 + 설명, 3~4줄, 100토큰 미만)</strong> 만 들어갑니다. 도서관에 책이 쭉 꽂혀 있고, 우리는 <strong>책 표지(제목·간단 설명)</strong> 만 훑다가 필요할 때 꺼내 읽는 것과 같습니다. 메타데이터가 워낙 작아 <strong>100개 이상</strong> 넣어도 컨텍스트를 거의 차지하지 않습니다. (JSON 도구는 30개 정도가 한계였던 것과 대조적)</p>
+
+<h3>3단계 로딩</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>레벨</th><th>내용</th><th>로딩 시점</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td><strong>메타데이터</strong> (SKILL.md의 이름·description)</td><td><strong>항상</strong> 로딩 (100토큰 미만)</td></tr>
+            <tr><td>2</td><td><strong>지침</strong> (SKILL.md 본문, 마크다운 사용법)</td><td>그 스킬이 <strong>호출될 때</strong></td></tr>
+            <tr><td>3</td><td><strong>리소스 · 스크립트 · 템플릿</strong> (번들 파일)</td><td><strong>필요할 때만</strong> (스크립트는 로딩 없이 실행만)</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>번들 파일은 필수가 아닙니다. 말(마크다운)로만 충분하면 파일 없이도 되고, 실행 스크립트·템플릿이 필요하면 포함합니다. 파일이 있을수록 더 <strong>결정론적인 결과</strong>를 얻습니다.</p>
+
+<div class="note">
+    <span class="nh">매뉴얼 비유 (조립 제품 · 매트릭스 헬기)</span>
+    쿠팡에서 조립 제품을 사면 매뉴얼을 안 보고 완성 사진만 보고 조립하다가, <strong>나사가 빠지는 순간</strong> 매뉴얼을 꺼내 봅니다. 스킬의 지침도 <strong>발동될 때 딱 꺼내</strong> 읽고 평소엔 꺼내지 않습니다. 영화 매트릭스에서 헬기 앞에서 <strong>매뉴얼을 순식간에 로딩</strong>해 조종하는 장면과 같은 느낌입니다.
+</div>
+
+<div class="note">
+    <span class="nh">확인 팁</span>
+    Claude Code에서 <code>/context</code> 를 치면 시스템 프롬프트·커스텀 툴·스킬 등이 각각 몇 %를 차지하는지 보입니다. 탑재된 스킬이 많아도 토큰을 거의 안 쓰는 걸 확인할 수 있습니다.
+</div>
