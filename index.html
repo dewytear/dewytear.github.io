@@ -38,11 +38,13 @@
                 <h1><a href="index.html">dewytear's claude wiki</a></h1>
                 <p id="tagline">: A guide to Anthropic's Claude Code.</p>
             </header>
-            <div id="article">
-                <article>
-                </article>
+            <div id="content-scroll">
+                <div id="article">
+                    <article>
+                    </article>
+                </div>
+                <section id="more"></section>
             </div>
-            <section id="more"></section>
         </main>
     </div>
     <script>
@@ -134,7 +136,10 @@
         function setArticle(html){
             var art = document.querySelector('article');
             art.innerHTML = html;
-            window.scrollTo(0, 0);
+            // Only the content pane resets; the sidebar and masthead stay put.
+            var scroller = document.getElementById('content-scroll');
+            if(scroller){ scroller.scrollTop = 0; }
+            window.scrollTo(0, 0);   // mobile still scrolls the page itself
             // Re-trigger the gentle fade-up animation on each navigation.
             art.classList.remove('fade-in');
             void art.offsetWidth;   // force reflow so the animation restarts
