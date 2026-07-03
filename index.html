@@ -763,6 +763,7 @@
                 btn.classList.toggle('idle', !playing);
                 btn.setAttribute('aria-label', playing ? '배경음악 정지' : '배경음악 재생');
                 btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
+                btn.title = playing ? '배경음악 정지' : '배경음악 재생';
             }
             window.toggleMusic = function(){
                 if(!ready){
