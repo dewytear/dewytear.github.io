@@ -140,6 +140,33 @@
         #content{
             min-width: 0;   /* let long content shrink instead of overflowing */
         }
+        /* Desktop: sidebar and masthead stay fixed; only the content pane
+           scrolls, so picking a doc refreshes just the article area. */
+        @media(min-width: 801px){
+            body{
+                overflow: hidden;
+            }
+            #grid{
+                height: 100vh;
+            }
+            #sidebar{
+                height: 100vh;
+                overflow-y: auto;
+            }
+            #content{
+                display: flex;
+                flex-direction: column;
+                height: 100vh;
+            }
+            #masthead{
+                flex: none;
+            }
+            #content-scroll{
+                flex: 1;
+                min-height: 0;
+                overflow-y: auto;
+            }
+        }
 
         /* ---- Sidebar (left column: profile image + nav) ---- */
         #sidebar{
