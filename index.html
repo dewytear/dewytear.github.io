@@ -20,6 +20,12 @@
                 <a id="settings-link" href="#!settings">
                     <span class="settings-ico">&#9881;</span>설정
                 </a>
+                <label id="theme-switch" title="Day / Night 전환">
+                    <span class="theme-ico">&#9790;</span>
+                    <input type="checkbox" id="theme-toggle" onchange="nightDayHandler(this);">
+                    <span class="switch-track"><span class="switch-thumb"></span></span>
+                    <span class="theme-ico">&#9728;</span>
+                </label>
             </div>
         </aside>
         <main id="content">
@@ -35,11 +41,6 @@
             <section id="more"></section>
         </main>
     </div>
-    <footer id="footer">
-        <input type="button" id="theme-toggle" value="day" onclick="
-            nightDayHandler(this);
-        ">
-    </footer>
     <script>
 
         // ---- Global indexes (built once the list loads) ----
