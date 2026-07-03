@@ -673,10 +673,16 @@
             padding: 24px 32px 40px;
             border-top: 1px solid var(--border);
         }
+        /* Section label, clearly set apart from the doc titles beneath it. */
         .more-title{
-            margin: 0 0 6px;
-            font-size: 18px;
+            margin: 0 0 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
+            color: var(--muted);
+            font-size: 13px;
             font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
         .more-list{
             list-style: none;
@@ -701,7 +707,7 @@
             color: var(--accent);
         }
         .more-name{
-            font-size: 17px;
+            font-size: 15px;   /* match the body text size */
             font-weight: 700;
         }
         .more-meta{
@@ -930,30 +936,51 @@
             color: var(--muted);
         }
 
-        /* "Recent docs" board pagination */
+        /* "Recent docs" board pagination — numbered pager, ten per block */
         .more-nav{
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-top: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 18px;
         }
-        .more-arrow{
-            padding: 5px 14px;
+        .more-pages{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+        }
+        .more-arrow,
+        .more-page{
+            min-width: 32px;
+            height: 32px;
+            padding: 0 8px;
             background: transparent;
             border: 1px solid var(--border);
             border-radius: 8px;
             color: var(--text);
             font-family: inherit;
             font-size: 13px;
+            line-height: 1;
             cursor: pointer;
+            transition: color 0.2s ease, border-color 0.2s ease,
+                        background 0.2s ease;
         }
-        .more-arrow:hover{
+        .more-arrow:hover:not(:disabled),
+        .more-page:hover{
             border-color: var(--accent);
             color: var(--accent);
         }
-        .more-page{
-            color: var(--muted);
-            font-size: 13px;
+        .more-page.active{
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+            font-weight: 700;
+        }
+        .more-arrow:disabled{
+            opacity: 0.35;
+            cursor: default;
         }
 
         /* ---- Responsive ---- */
