@@ -285,8 +285,9 @@
             background: #fff;
         }
 
-        /* ---- Settings screen ---- */
-        body.settings-view #more{
+        /* ---- Screens without the "recent docs" module ---- */
+        body.settings-view #more,
+        body.tags-view #more{
             display: none;
         }
         .settings-note{
@@ -824,20 +825,30 @@
             color: var(--muted);
         }
 
-        /* "Recent docs" collapse toggle */
-        #more-toggle{
-            display: block;
-            margin: 16px auto 0;
-            padding: 0;
+        /* "Recent docs" board pagination */
+        .more-nav{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 14px;
+        }
+        .more-arrow{
+            padding: 5px 14px;
             background: transparent;
-            border: none;
-            color: var(--accent);
-            font-size: 14px;
-            font-weight: 700;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 13px;
             cursor: pointer;
         }
-        #more-toggle:hover{
-            text-decoration: underline;
+        .more-arrow:hover{
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .more-page{
+            color: var(--muted);
+            font-size: 13px;
         }
 
         /* ---- Responsive ---- */

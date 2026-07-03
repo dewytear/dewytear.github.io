@@ -242,28 +242,44 @@
             setArticle(html);
         }
 
-        // ---- "Recent docs" module: top 5 + collapse ----
+        // ---- "Recent docs" module: paginated board ----
         // Ordered by each doc's last commit date, fetched from the GitHub
         // API (cached for an hour). Until dates arrive, list order shows.
-        var MORE_LIMIT = 5;
+        var MORE_PAGE_SIZE = 5;
+        var morePage = 0;
         var REPO_API = 'https://api.github.com/repos/dewytear/dewytear.github.io';
         var DOC_DATES_KEY = 'wikiDocDates.v1';
 
+        function morePageCount(){
+            return Math.max(1, Math.ceil(DOCS.length / MORE_PAGE_SIZE));
+        }
+
         function renderMore(){
-            var html = '<h3 class="more-title">최근 문서</h3><ul class="more-list" id="more-list">';
-            DOCS.forEach(function(d, i){
-                var extra = i >= MORE_LIMIT ? ' class="more-extra" hidden' : '';
+            var pages = morePageCount();
+            if(morePage >= pages){ morePage = pages - 1; }
+            var start = morePage * MORE_PAGE_SIZE;
+            var html = '<h3 class="more-title">최근 문서</h3><ul class="more-list">';
+            DOCS.slice(start, start + MORE_PAGE_SIZE).forEach(function(d){
                 var meta = d.section + (d.date ? ' · ' + d.date.slice(0, 10) : '');
-                html += '<li' + extra + '><a href="#!' + d.name + '">'
+                html += '<li><a href="#!' + d.name + '">'
                      +  '<span class="more-name">' + escapeHtml(d.label) + '</span>'
                      +  '<span class="more-meta">' + escapeHtml(meta) + '</span></a></li>';
             });
             html += '</ul>';
-            if(DOCS.length > MORE_LIMIT){
-                html += '<button id="more-toggle" data-expanded="0" onclick="toggleMore()">'
-                     +  '더 보기 (' + (DOCS.length - MORE_LIMIT) + ')</button>';
+            if(pages > 1){
+                html += '<div class="more-nav">'
+                     +  '<button class="more-arrow" onclick="moreGo(-1)">&larr; 이전</button>'
+                     +  '<span class="more-page">' + (morePage + 1) + ' / ' + pages + '</span>'
+                     +  '<button class="more-arrow" onclick="moreGo(1)">다음 &rarr;</button>'
+                     +  '</div>';
             }
             return html;
+        }
+
+        function moreGo(dir){
+            var pages = morePageCount();
+            morePage = (morePage + dir + pages) % pages;
+            document.querySelector('#more').innerHTML = renderMore();
         }
 
         function loadCachedDocDates(){
@@ -300,6 +316,7 @@
             DOCS.sort(function(a, b){
                 return a.date < b.date ? 1 : a.date > b.date ? -1 : 0;
             });
+            morePage = 0;   // reordering restarts the board at page one
             document.querySelector('#more').innerHTML = renderMore();
         }
 
@@ -307,20 +324,6 @@
             var cached = loadCachedDocDates();
             if(cached){ applyDocDates(cached); }
             else { fetchDocDates().then(applyDocDates); }
-        }
-
-        function toggleMore(){
-            var btn = document.getElementById('more-toggle');
-            var extras = document.querySelectorAll('#more-list .more-extra');
-            var expanded = btn.getAttribute('data-expanded') === '1';
-            extras.forEach(function(li){ li.hidden = expanded; });
-            if(expanded){
-                btn.setAttribute('data-expanded', '0');
-                btn.textContent = '더 보기 (' + extras.length + ')';
-            } else {
-                btn.setAttribute('data-expanded', '1');
-                btn.textContent = '접기';
-            }
         }
 
         // ---- Settings (client-side, password-gated) ----
@@ -516,8 +519,9 @@
             document.body.classList.remove('nav-open');   // close mobile drawer
             var h = location.hash;
             var path = h ? h.substr(2) : '';               // strip "#!"
-            // Hide the "recent docs" module while on the settings screen.
+            // Hide the "recent docs" module on the settings and tags screens.
             document.body.classList.toggle('settings-view', path === 'settings');
+            document.body.classList.toggle('tags-view', path === 'tags');
             if(!h){ fetchPage('welcome'); return; }
             if(path === 'tags'){ showTagIndex(); }
             else if(path.indexOf('tag:') === 0){ showTag(decodeURIComponent(path.substr(4))); }
