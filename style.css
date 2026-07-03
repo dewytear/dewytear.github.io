@@ -67,7 +67,7 @@
            like light catching foil. Refined, periodic, not a constant sweep. */
         @keyframes titleSheen{
             0%{   background-position: 120% 50%; }
-            14%{  background-position: -20% 50%; }   /* glint crosses in the first ~1s */
+            36%{  background-position: -20% 50%; }   /* glint crosses over ~1.8s */
             100%{ background-position: -20% 50%; }   /* then holds on solid --text */
         }
         #navigation li a,
@@ -120,11 +120,11 @@
             background: linear-gradient(
                 105deg,
                 var(--text) 0%,
-                var(--text) 43%,
-                var(--accent) 48%,
-                color-mix(in srgb, var(--accent) 45%, #fff) 50%,
-                var(--accent) 52%,
-                var(--text) 57%,
+                var(--text) 40%,
+                color-mix(in srgb, var(--accent) 60%, var(--text)) 46%,
+                var(--accent) 50%,
+                color-mix(in srgb, var(--accent) 60%, var(--text)) 54%,
+                var(--text) 60%,
                 var(--text) 100%
             );
             background-size: 300% 100%;
@@ -132,7 +132,7 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
             will-change: background-position;
-            animation: titleSheen 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            animation: titleSheen 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
         #masthead h1 a:hover{
             text-decoration: none;
