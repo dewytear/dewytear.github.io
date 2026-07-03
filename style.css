@@ -522,6 +522,13 @@
             border: 1px solid var(--border);
             border-radius: 10px;
         }
+        /* Fixed-size board: the stage keeps one height across panels and
+           scrolls internally when a panel is taller. */
+        article .carousel-stage{
+            height: 480px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
         article .carousel .scn{
             display: none;
         }
@@ -778,5 +785,8 @@
             }
             #more{
                 padding: 20px;
+            }
+            article .carousel-stage{
+                height: 400px;
             }
         }
