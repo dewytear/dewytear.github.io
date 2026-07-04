@@ -276,8 +276,41 @@
                         span.textContent = label;
                         art.appendChild(span);
                     }
+                    // AI 연관 문서 추천 (knowledge-index.json). May arrive after
+                    // this render, so injectRelated re-runs when the index loads.
+                    CURRENT_DOC = filename;
+                    injectRelated();
                 })
             })
+        }
+
+        // ---- AI knowledge index (structural embedding) ----
+        var KNOWLEDGE = null;   // name -> {summary, concepts, related:[...]}
+        var CURRENT_DOC = null; // the doc currently in the content pane, or null
+        function renderRelatedHTML(rel){
+            var items = rel.map(function(r){
+                var why = (r.shared && r.shared.length)
+                        ? r.shared.map(escapeHtml).join(' · ')
+                        : '같은 폴더';
+                return '<li><a href="#!' + encodeURIComponent(r.name) + '">'
+                     + escapeHtml(r.title) + '</a>'
+                     + '<span class="rel-why">' + why + '</span></li>';
+            }).join('');
+            return '<nav class="related" aria-label="연관 문서">'
+                 + '<h3 class="related-title">연관 문서</h3>'
+                 + '<ul class="related-list">' + items + '</ul></nav>';
+        }
+        function injectRelated(){
+            if(!KNOWLEDGE || !CURRENT_DOC){ return; }
+            var art = document.getElementById('article');
+            if(!art || art.querySelector('.related')){ return; }
+            var info = KNOWLEDGE[CURRENT_DOC];
+            if(!info || !info.related || !info.related.length){ return; }
+            var wrap = document.createElement('div');
+            wrap.innerHTML = renderRelatedHTML(info.related);
+            var node = wrap.firstChild;
+            var badge = art.querySelector('.doc-model');
+            if(badge){ art.insertBefore(node, badge); } else { art.appendChild(node); }
         }
 
         // ---- Tag index (all tags) with instant search ----
@@ -1172,6 +1205,7 @@
             var isSearch = !h || path === 'search';
             document.body.classList.toggle('search-view', isSearch);
             document.body.classList.toggle('folder-view', path.indexOf('folder:') === 0);
+            CURRENT_DOC = null;   // cleared here; fetchPage sets it for real docs
             if(isSearch){ showSearch(); markActiveNav(null); return; }
             if(path === 'tags'){ showTagIndex(); markActiveNav(null); }
             else if(path.indexOf('tag:') === 0){ showTag(decodeURIComponent(path.substr(4))); markActiveNav(null); }
@@ -1216,6 +1250,14 @@
                 route();   // render the initial page once indexes exist
             })
         })
+
+        // Load the AI knowledge index (summaries·concepts·related). Non-blocking:
+        // if a doc is already shown when it arrives, inject its related block.
+        fetch('knowledge-index.json').then(function(r){ return r.json(); }).then(function(idx){
+            KNOWLEDGE = {};
+            (idx.docs || []).forEach(function(d){ KNOWLEDGE[d.name] = d; });
+            injectRelated();
+        }).catch(function(){ KNOWLEDGE = {}; });
 
         // Accept a YouTube URL (watch / youtu.be / embed / shorts) or a raw
         // 11-char video id; return the id, or '' if it doesn't look like one.

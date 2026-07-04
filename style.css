@@ -1212,6 +1212,57 @@
             text-transform: uppercase;
         }
 
+        /* AI "연관 문서" — recommendations from knowledge-index.json, shown at
+           the foot of a doc. Cards echo the tag-index "most used" band. */
+        .related{
+            margin-top: 30px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        .related-title{
+            margin: 0 0 12px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .related-list{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 10px;
+        }
+        .related-list li{
+            margin: 0;
+            padding: 10px 13px;
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            transition: border-color 0.2s ease;
+        }
+        .related-list li:hover{
+            border-color: var(--accent);
+        }
+        .related-list li a{
+            display: block;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--accent-ink);
+        }
+        .related-list li a:hover{
+            text-decoration: underline;
+        }
+        .rel-why{
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
         /* Tag index page */
         #tag-search{
             width: 100%;
