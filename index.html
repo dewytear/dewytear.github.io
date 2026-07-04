@@ -837,6 +837,7 @@
         // ---- Settings (client-side, password-gated) ----
         var SETTINGS_KEY = 'wikiSettings';
         var SETTINGS_UNLOCKED = false;
+        var SETTINGS_CATS = null;   // category transfer-list working state
 
         function loadSettings(){
             try{ return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; }
@@ -969,12 +970,9 @@
             var cats = [].map.call(
                 document.querySelectorAll('#navigation > ul > li.nav-branch[data-cat]'),
                 function(li){ return li.getAttribute('data-cat'); });
-            var catChecks = cats.map(function(c){
-                var on = hiddenCats.indexOf(c) === -1;
-                return '<label class="settings-check"><input type="checkbox" class="settings-cat"'
-                     + ' data-cat="' + escapeHtml(c) + '"' + (on ? ' checked' : '') + '> '
-                     + escapeHtml(c) + '</label>';
-            }).join('');
+            // Working state for the category transfer list (left=전체, right=노출).
+            SETTINGS_CATS = { all: cats,
+                              exposed: cats.filter(function(c){ return hiddenCats.indexOf(c) === -1; }) };
             var html =
                 '<h2>설정</h2>'
               + '<p class="settings-note">변경 내용은 이 브라우저에만 저장됩니다. 프로필 사진은 서버 설정에서 관리합니다.</p>'
@@ -1018,8 +1016,21 @@
               +     (s.hideRecent ? ' checked' : '') + '> 최근 문서 영역 숨기기</label>'
               + '</div>'
               + '<div class="settings-field">'
-              +   '<label>대분류 표시 (체크한 항목만 노출)</label>'
-              +   '<div class="settings-cats">' + catChecks + '</div>'
+              +   '<label>대분류 노출 (전체 → 노출로 옮긴 항목만 표시)</label>'
+              +   '<div class="cat-transfer">'
+              +     '<div class="cat-pane">'
+              +       '<div class="cat-pane-h">전체 목록</div>'
+              +       '<ul id="cat-left" class="cat-list"></ul>'
+              +     '</div>'
+              +     '<div class="cat-arrows">'
+              +       '<button type="button" class="cat-arrow" onclick="catMove(1)" aria-label="노출에 추가" title="노출에 추가">&#8594;</button>'
+              +       '<button type="button" class="cat-arrow" onclick="catMove(-1)" aria-label="노출에서 빼기" title="노출에서 빼기">&#8592;</button>'
+              +     '</div>'
+              +     '<div class="cat-pane">'
+              +       '<div class="cat-pane-h">노출 목록</div>'
+              +       '<ul id="cat-right" class="cat-list"></ul>'
+              +     '</div>'
+              +   '</div>'
               + '</div>'
               + '<div class="settings-field">'
               +   '<label for="settings-newpass">새 암호 (변경 시에만 입력)</label>'
@@ -1031,6 +1042,53 @@
               + '</div>'
               + '<p id="settings-msg" class="settings-msg" hidden></p>';
             setArticle(html);
+            renderCatTransfer();
+        }
+
+        // ---- Category transfer list (전체 ↔ 노출) ----
+        function catSelect(li){ li.classList.toggle('sel'); }
+        function renderCatTransfer(){
+            var L = document.getElementById('cat-left'), R = document.getElementById('cat-right');
+            if(!L || !R || !SETTINGS_CATS){ return; }
+            L.innerHTML = SETTINGS_CATS.all.map(function(c){
+                var on = SETTINGS_CATS.exposed.indexOf(c) !== -1;   // already exposed
+                return '<li class="cat-item' + (on ? ' on' : '') + '" data-cat="'
+                     + escapeHtml(c) + '" onclick="catSelect(this)">' + escapeHtml(c) + '</li>';
+            }).join('');
+            R.innerHTML = SETTINGS_CATS.exposed.map(function(c){
+                return '<li class="cat-item" data-cat="' + escapeHtml(c)
+                     + '" onclick="catSelect(this)">' + escapeHtml(c) + '</li>';
+            }).join('');
+        }
+        function catMove(dir){
+            if(!SETTINGS_CATS){ return; }
+            var side = dir > 0 ? 'cat-left' : 'cat-right';
+            var sel = [].map.call(document.querySelectorAll('#' + side + ' .cat-item.sel'),
+                                  function(li){ return li.getAttribute('data-cat'); });
+            if(dir > 0){
+                sel.forEach(function(c){
+                    if(SETTINGS_CATS.exposed.indexOf(c) === -1){ SETTINGS_CATS.exposed.push(c); }
+                });
+                // keep exposed in the original category order
+                SETTINGS_CATS.exposed = SETTINGS_CATS.all.filter(function(c){
+                    return SETTINGS_CATS.exposed.indexOf(c) !== -1;
+                });
+            } else {
+                SETTINGS_CATS.exposed = SETTINGS_CATS.exposed.filter(function(c){
+                    return sel.indexOf(c) === -1;
+                });
+            }
+            renderCatTransfer();
+            persistCats();   // apply + save live
+        }
+        function persistCats(){
+            if(!SETTINGS_CATS){ return; }
+            var s = loadSettings();
+            s.hiddenCats = SETTINGS_CATS.all.filter(function(c){
+                return SETTINGS_CATS.exposed.indexOf(c) === -1;
+            });
+            saveSettings(s);
+            applyCategoryVisibility(s.hiddenCats);
         }
 
         function settingsMsg(text, isError){
@@ -1050,10 +1108,11 @@
             s.navLineStyle = document.getElementById('settings-navstyle').value;
             s.navLineWidth = document.getElementById('settings-navwidth').value;
             s.hideRecent = document.getElementById('settings-hiderecent').checked;
-            s.hiddenCats = [].filter.call(
-                document.querySelectorAll('.settings-cat'),
-                function(cb){ return !cb.checked; }
-            ).map(function(cb){ return cb.getAttribute('data-cat'); });
+            if(SETTINGS_CATS){
+                s.hiddenCats = SETTINGS_CATS.all.filter(function(c){
+                    return SETTINGS_CATS.exposed.indexOf(c) === -1;
+                });
+            }
             var np = document.getElementById('settings-newpass').value;
             if(np){ s.password = np; }
             try{

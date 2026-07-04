@@ -677,11 +677,57 @@
             accent-color: var(--accent);
             cursor: pointer;
         }
-        .settings-cats{
+        /* Category transfer list: 전체 목록 ↔ 노출 목록 with center arrows. */
+        .cat-transfer{
+            display: flex;
+            align-items: stretch;
+            gap: 8px;
+        }
+        .cat-pane{ flex: 1 1 0; min-width: 0; }
+        .cat-pane-h{
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+        .cat-list{
+            list-style: none;
+            margin: 0;
+            padding: 6px;
+            min-height: 104px;
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+        .cat-item{
+            padding: 6px 9px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .cat-item:hover{ background: var(--bg); }
+        .cat-item.sel{
+            background: color-mix(in srgb, var(--accent) 22%, transparent);
+            color: var(--accent-ink);
+        }
+        .cat-item.on{ color: var(--muted); }   /* left pane: already exposed */
+        .cat-arrows{
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            justify-content: center;
+            gap: 6px;
         }
+        .cat-arrow{
+            width: 36px;
+            height: 30px;
+            border: 1px solid var(--border);
+            background: var(--bg-alt);
+            color: var(--text);
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        .cat-arrow:hover{ border-color: var(--accent); color: var(--accent); }
         .settings-actions{
             display: flex;
             gap: 10px;
