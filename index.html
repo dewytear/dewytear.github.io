@@ -520,18 +520,71 @@
             buildTextIndex();
         }
 
-        // Matches every whitespace-separated term against a doc's label, its
-        // section path, tags, AND its full body text (once indexed).
+        // Concept-aware ranked search. Every term must still match somewhere
+        // (label / section / tags / AI concepts / AI summary / body), but hits
+        // are SCORED and ranked so meaning-level matches (the knowledge index's
+        // concepts) rise above incidental body mentions. Returns
+        // [{d, score, concepts:[matched concept names]}], best first.
+        // Field weights: concept 5 (exact 8) > label 4 > tag 3 > summary/section 2 > body 1.
         function searchDocs(query){
             var q = query.trim().toLowerCase();
             if(!q){ return []; }
             var terms = q.split(/\s+/);
-            return DOCS.filter(function(d){
-                if(!isSearchableDoc(d)){ return false; }
-                var hay = (d.label + ' ' + d.section + ' ' + d.tags.join(' ')).toLowerCase()
-                        + ' ' + (DOC_TEXT[d.name] || '');
-                return terms.every(function(t){ return hay.indexOf(t) !== -1; });
+            var out = [];
+            DOCS.forEach(function(d){
+                if(!isSearchableDoc(d)){ return; }
+                var info = KNOWLEDGE ? KNOWLEDGE[d.name] : null;
+                var concepts = (info && info.concepts) || [];
+                var conceptsLow = concepts.map(function(c){ return c.toLowerCase(); });
+                var label = d.label.toLowerCase();
+                var section = d.section.toLowerCase();
+                var tagsLow = d.tags.join(' ').toLowerCase();
+                var summaryLow = ((info && info.summary) || '').toLowerCase();
+                var body = DOC_TEXT[d.name] || '';
+                var score = 0, matched = [], ok = true;
+                terms.forEach(function(t){
+                    var s = 0;
+                    for(var i = 0; i < conceptsLow.length; i++){
+                        if(conceptsLow[i].indexOf(t) !== -1){
+                            s = Math.max(s, conceptsLow[i] === t ? 8 : 5);
+                            if(matched.indexOf(concepts[i]) === -1){ matched.push(concepts[i]); }
+                        }
+                    }
+                    if(label.indexOf(t) !== -1){ s = Math.max(s, 4); }
+                    if(tagsLow.indexOf(t) !== -1){ s = Math.max(s, 3); }
+                    if(summaryLow.indexOf(t) !== -1){ s = Math.max(s, 2); }
+                    if(section.indexOf(t) !== -1){ s = Math.max(s, 2); }
+                    if(body.indexOf(t) !== -1){ s = Math.max(s, 1); }
+                    if(s === 0){ ok = false; }
+                    score += s;
+                });
+                if(ok && score > 0){ out.push({ d: d, score: score, concepts: matched }); }
             });
+            out.sort(function(a, b){ return b.score - a.score; });
+            return out;
+        }
+
+        // Concept names containing the query — offered as one-tap pivots so a
+        // user can search by meaning (the wiki's shared vocabulary).
+        var ALL_CONCEPTS = [];
+        function buildConceptIndex(){
+            var set = {};
+            Object.keys(KNOWLEDGE || {}).forEach(function(n){
+                ((KNOWLEDGE[n] && KNOWLEDGE[n].concepts) || []).forEach(function(c){ set[c] = true; });
+            });
+            ALL_CONCEPTS = Object.keys(set).sort(function(a, b){ return a.localeCompare(b, 'ko'); });
+        }
+        function conceptSuggestions(query){
+            var q = query.trim().toLowerCase();
+            if(!q || !ALL_CONCEPTS.length){ return []; }
+            return ALL_CONCEPTS.filter(function(c){
+                var cl = c.toLowerCase();
+                return cl.indexOf(q) !== -1 && cl !== q;   // skip the exact-typed one
+            }).slice(0, 6);
+        }
+        function pickConcept(el){
+            var box = document.getElementById('search-input');
+            if(box){ box.value = el.getAttribute('data-c'); box.focus(); renderSearchResults(box.value); }
         }
 
         // Wrap each search term in <mark>, matching against the RAW text (so
@@ -586,22 +639,52 @@
             var q = query.trim();
             if(!q){ box.innerHTML = ''; box.classList.remove('open'); return; }
             var terms = q.toLowerCase().split(/\s+/);
-            var docs = searchDocs(query);
+            var hits = searchDocs(query);
             var indexing = !TEXT_INDEX_READY
-                         ? '<p class="search-indexing">본문 색인을 불러오는 중… (제목·태그 우선)</p>' : '';
-            if(!docs.length){
-                box.innerHTML = '<p class="search-empty">&ldquo;' + escapeHtml(q)
+                         ? '<p class="search-indexing">본문 색인을 불러오는 중… (제목·태그·개념 우선)</p>' : '';
+            // Meaning-level pivots: concepts the query partially names.
+            var suggests = conceptSuggestions(query);
+            var suggestHtml = '';
+            if(suggests.length){
+                suggestHtml = '<div class="sh-suggests"><span class="sh-suggests-label">관련 개념</span>';
+                suggests.forEach(function(c){
+                    suggestHtml += '<button type="button" class="sh-suggest" data-c="'
+                                +  escapeHtml(c) + '" onclick="pickConcept(this)">'
+                                +  escapeHtml(c) + '</button>';
+                });
+                suggestHtml += '</div>';
+            }
+            if(!hits.length){
+                box.innerHTML = suggestHtml
+                              + '<p class="search-empty">&ldquo;' + escapeHtml(q)
                               + '&rdquo;에 대한 결과가 없습니다.</p>' + indexing;
                 box.classList.add('open');
                 return;
             }
-            var html = '';
-            docs.slice(0, SEARCH_LIMIT).forEach(function(d){
+            var html = suggestHtml;
+            hits.slice(0, SEARCH_LIMIT).forEach(function(h){
+                var d = h.d;
                 html += '<a class="search-hit" href="#!' + d.name + '">'
                      +  '<span class="sh-label">' + escapeHtml(d.label) + '</span>'
                      +  '<span class="sh-meta">' + escapeHtml(d.section) + '</span>';
+                // Which concept(s) matched — the "semantic" signal.
+                if(h.concepts.length){
+                    html += '<span class="sh-concepts">';
+                    h.concepts.slice(0, 3).forEach(function(c){
+                        html += '<span class="sh-concept">' + escapeHtml(c) + '</span>';
+                    });
+                    html += '</span>';
+                }
+                // Body snippet around the match; else fall back to the AI summary.
                 var snip = makeSnippet(d.name, terms);
-                if(snip){ html += '<span class="sh-snippet">' + snip + '</span>'; }
+                if(snip){
+                    html += '<span class="sh-snippet">' + snip + '</span>';
+                } else {
+                    var info = KNOWLEDGE && KNOWLEDGE[d.name];
+                    if(info && info.summary){
+                        html += '<span class="sh-summary">' + escapeHtml(info.summary) + '</span>';
+                    }
+                }
                 if(d.tags.length){
                     html += '<span class="sh-tags">';
                     d.tags.slice(0, 4).forEach(function(t){
@@ -611,8 +694,8 @@
                 }
                 html += '</a>';
             });
-            if(docs.length > SEARCH_LIMIT){
-                html += '<p class="search-more">외 ' + (docs.length - SEARCH_LIMIT) + '개 더…</p>';
+            if(hits.length > SEARCH_LIMIT){
+                html += '<p class="search-more">외 ' + (hits.length - SEARCH_LIMIT) + '개 더…</p>';
             }
             box.innerHTML = html + indexing;
             box.classList.add('open');
@@ -632,7 +715,7 @@
               +     '<div class="search-field">'
               +       '<span class="search-ico" aria-hidden="true">&#128269;</span>'
               +       '<input id="search-input" type="search" autocomplete="off"'
-              +         ' placeholder="제목 · 태그 · 본문을 검색…"'
+              +         ' placeholder="제목 · 태그 · 개념 · 본문을 검색…"'
               +         ' oninput="renderSearchResults(this.value)">'
               +     '</div>'
               +     '<div id="search-results"></div>'
@@ -1256,7 +1339,11 @@
         fetch('knowledge-index.json').then(function(r){ return r.json(); }).then(function(idx){
             KNOWLEDGE = {};
             (idx.docs || []).forEach(function(d){ KNOWLEDGE[d.name] = d; });
+            buildConceptIndex();
             injectRelated();
+            // Concepts now available — re-rank any in-progress search.
+            var box = document.getElementById('search-input');
+            if(box && box.value.trim()){ renderSearchResults(box.value); }
         }).catch(function(){ KNOWLEDGE = {}; });
 
         // Accept a YouTube URL (watch / youtu.be / embed / shorts) or a raw
