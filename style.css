@@ -236,6 +236,33 @@
             border-radius: 10px;
             border: 1px solid var(--border);
         }
+        /* Playful line under the photo, with an arrow that keeps flying up-right. */
+        #profile-tagline{
+            margin: 11px 2px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 13px;
+            font-style: italic;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            color: var(--accent-ink);
+        }
+        #profile-tagline .pf-arrow{
+            font-style: normal;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--accent);
+            animation: fly 2.6s ease-in-out infinite;
+        }
+        @keyframes fly{
+            0%, 100%{ transform: translate(0, 0); }
+            50%{ transform: translate(3px, -3px); }
+        }
+        @media (prefers-reduced-motion: reduce){
+            #profile-tagline .pf-arrow{ animation: none; }
+        }
 
         /* ---- Sidebar footer: Tags, theme toggle, settings on one row, pinned to the bottom ---- */
         #sidebar-foot{
