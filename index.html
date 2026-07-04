@@ -422,12 +422,11 @@
             })).then(function(texts){
                 var html = '';
                 docs.forEach(function(d, i){
+                    // Each doc already opens with its own heading, so no extra
+                    // numbered title here (it would duplicate). The section id
+                    // still anchors the table-of-contents jump.
                     html += '<section class="folder-doc" id="folder-doc-' + i + '">'
-                         +  '<h3 class="folder-doc-head">'
-                         +    '<span class="folder-doc-num">' + (i + 1) + '</span>'
-                         +    escapeHtml(d.label)
-                         +  '</h3>'
-                         +  '<div class="folder-doc-body">' + texts[i] + '</div>'
+                         +  texts[i]
                          +  '</section>';
                 });
                 var body = document.querySelector('.folder-body');
