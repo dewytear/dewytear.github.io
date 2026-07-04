@@ -272,9 +272,6 @@
             0%, 100%{ transform: translate(0, 0); }
             50%{ transform: translate(3px, -3px); }
         }
-        @media (prefers-reduced-motion: reduce){
-            #profile-tagline .pf-arrow{ animation: none; }
-        }
 
         /* ---- Sidebar footer: Tags, theme toggle, settings on one row, pinned to the bottom ---- */
         #sidebar-foot{
@@ -450,7 +447,7 @@
             animation: blob-d 42s ease-in-out infinite;
         }
         /* Light theme: pale orange on white is faint, so give the blobs more
-           mass so the heartbeat has something visible to pulse. */
+           mass so the breathing pulse has something visible to work with. */
         body.day .search-bg .b1{ opacity: 0.72; }
         body.day .search-bg .b2{ opacity: 0.58; }
         body.day .search-bg .b3{ opacity: 0.5; }
@@ -481,10 +478,6 @@
             32%{ transform: translate(-9vmin,-4vmin) scale(1.1); }
             62%{ transform: translate(-15vmin,3vmin) scale(1.16); }
             84%{ transform: translate(-6vmin,6vmin) scale(1.05); }
-        }
-        @media (prefers-reduced-motion: reduce){
-            .search-bg,
-            .search-bg .blob{ animation: none; }
         }
         .search-core{
             position: relative;
@@ -666,7 +659,7 @@
             cursor: pointer;
         }
         .settings-field select:focus{ border-color: var(--accent); }
-        /* Checkbox rows (recent-docs toggle, category visibility). */
+        /* Checkbox rows (the recent-docs toggle). */
         .settings-check{
             display: flex;
             align-items: center;
@@ -942,9 +935,11 @@
             font-weight: 700;
             line-height: 1.3;
         }
-        /* The folder digest carries no model badge, so titles reclaim that
-           reserved right-hand space instead of leaving an empty gap. */
-        body.folder-view article h2{
+        /* Screens with no model badge (folder digest, tags index, settings)
+           reclaim the reserved right-hand space instead of leaving a gap. */
+        body.folder-view article h2,
+        body.tags-view article h2,
+        body.settings-view article h2{
             padding-right: 0;
         }
         /* Small authoring-model badge — always pinned to the content's top-right. */
@@ -1247,7 +1242,7 @@
             border-radius: 12px;
         }
         #tag-top:empty{
-            display: none !important;
+            display: none;
         }
         .idx-top-title{
             margin: 0 0 12px;
@@ -1666,8 +1661,9 @@
         #music-note b{ color: var(--accent-ink); }
 
         @media (prefers-reduced-motion: reduce){
-            .music-eq i{ animation: none; height: 12px; }
-            #music-btn.playing::before{ animation: none; }
+            /* The global rule already stops animation; keep a defined static
+               bar height so the frozen equalizer still reads well. */
+            .music-eq i{ height: 12px; }
         }
 
         /* ==== Harness plugin docs: scenario board + SVG diagrams ==== */
@@ -1718,6 +1714,14 @@
         .scn-pill.lv3{ color: #d0574a; border-color: color-mix(in srgb, #d0574a 50%, transparent); }
         .scn-pill.lv4{ color: #7b61c9; border-color: color-mix(in srgb, #7b61c9 50%, transparent); }
         .scn-pill.lv5{ color: #3f7cc9; border-color: color-mix(in srgb, #3f7cc9 50%, transparent); }
+        /* Light theme: these hardcoded status/level colors are tuned for the
+           dark board; deepen them so they hold contrast on white. */
+        body.day article .note.warn{ border-left-color: #c07d1f; }
+        body.day article .note.warn .nh{ color: #a35a00; }
+        body.day .settings-msg.error{ color: #c0392b; }
+        body.day .scn-pill.lv1{ color: #2f8560; }
+        body.day .scn-pill.lv2{ color: #916812; }
+        body.day .scn-pill.lv3{ color: #c0392b; }
         article .scn-card .scn-body{ margin: 0; font-size: 13px; color: var(--text); line-height: 1.6; }
         .scn-card .scn-sub{ font-size: 12px; color: var(--muted); font-weight: 700; }
         .scn-team{ display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }

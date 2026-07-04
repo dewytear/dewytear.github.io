@@ -174,14 +174,9 @@
         }
 
         // ---- Tag chip (no icon; used for the tags listed under a doc) ----
-        function tagChip(tag, count){
-            var html = '<a class="tag" href="#!tag:' + encodeURIComponent(tag) + '">'
-                     + escapeHtml(tag);
-            if(count != null){
-                html += '<span class="tag-count">' + count + '</span>';
-            }
-            html += '</a>';
-            return html;
+        function tagChip(tag){
+            return '<a class="tag" href="#!tag:' + encodeURIComponent(tag) + '">'
+                 + escapeHtml(tag) + '</a>';
         }
 
         // ---- Dictionary-index entry: term, dot leader, usage count ----
@@ -259,7 +254,7 @@
 
         function renderDocTags(tags){
             var html = '<div class="doc-tags"><span class="doc-tags-label">Tags</span>';
-            tags.forEach(function(t){ html += tagChip(t, null); });
+            tags.forEach(function(t){ html += tagChip(t); });
             html += '</div>';
             return html;
         }
@@ -506,15 +501,32 @@
             });
         }
 
-        // Escape HTML, then wrap each search term in <mark> (case-insensitive).
+        // Wrap each search term in <mark>, matching against the RAW text (so
+        // terms like "amp"/"lt" don't hit HTML entities), then escape each
+        // segment. Case-insensitive; overlapping matches merged.
         function highlightTerms(text, terms){
-            var out = escapeHtml(text);
+            var lower = text.toLowerCase(), ranges = [];
             terms.forEach(function(t){
                 if(!t){ return; }
-                var esc = escapeHtml(t).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                out = out.replace(new RegExp('(' + esc + ')', 'gi'), '<mark>$1</mark>');
+                t = t.toLowerCase();
+                var i = 0, p;
+                while((p = lower.indexOf(t, i)) !== -1){ ranges.push([p, p + t.length]); i = p + t.length; }
             });
-            return out;
+            if(!ranges.length){ return escapeHtml(text); }
+            ranges.sort(function(a, b){ return a[0] - b[0]; });
+            var merged = [];
+            ranges.forEach(function(r){
+                var last = merged[merged.length - 1];
+                if(last && r[0] <= last[1]){ last[1] = Math.max(last[1], r[1]); }
+                else { merged.push(r.slice()); }
+            });
+            var out = '', pos = 0;
+            merged.forEach(function(r){
+                out += escapeHtml(text.slice(pos, r[0]))
+                     + '<mark>' + escapeHtml(text.slice(r[0], r[1])) + '</mark>';
+                pos = r[1];
+            });
+            return out + escapeHtml(text.slice(pos));
         }
 
         // A short body excerpt around the first matching term, highlighted.
@@ -1102,7 +1114,10 @@
 
         function saveSettingsForm(){
             var s = loadSettings();
-            s.title = document.getElementById('settings-title').value.trim();
+            // Empty title = no override → fall back to config/default (so the
+            // shown value matches the applied value on reopen).
+            var titleVal = document.getElementById('settings-title').value.trim();
+            if(titleVal){ s.title = titleVal; } else { delete s.title; }
             s.tagline = document.getElementById('settings-tagline').value;
             s.photoLine = document.getElementById('settings-photoline').value;
             s.music = document.getElementById('settings-music').value.trim();
