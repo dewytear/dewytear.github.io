@@ -357,7 +357,7 @@
         // Ordered by each doc's last commit date, fetched from the GitHub
         // API (cached for an hour). Until dates arrive, list order shows.
         var MORE_PAGE_SIZE = 5;
-        var MORE_BLOCK = 10;   // page numbers shown per pager block
+        var MORE_BLOCK = 7;    // page numbers shown per pager block (fits mobile width)
         var morePage = 0;
         var REPO_API = 'https://api.github.com/repos/dewytear/dewytear.github.io';
         var DOC_DATES_KEY = 'wikiDocDates.v1';
@@ -379,14 +379,14 @@
             });
             html += '</ul>';
             if(pages > 1){
-                // Numbered pager: ten pages per block, with side arrows that
-                // jump a whole ten-page block at a time.
+                // Numbered pager: seven pages per block, with side arrows that
+                // jump a whole seven-page block at a time.
                 var block = Math.floor(morePage / MORE_BLOCK);
                 var first = block * MORE_BLOCK;
                 var last = Math.min(first + MORE_BLOCK, pages);
                 html += '<div class="more-nav">'
                      +  '<button class="more-arrow" onclick="moreBlock(-1)"'
-                     +      (block === 0 ? ' disabled' : '') + ' aria-label="이전 10페이지">&laquo;</button>'
+                     +      (block === 0 ? ' disabled' : '') + ' aria-label="이전 7페이지">&laquo;</button>'
                      +  '<span class="more-pages">';
                 for(var i = first; i < last; i++){
                     html += '<button class="more-page' + (i === morePage ? ' active' : '') + '"'
@@ -394,7 +394,7 @@
                 }
                 html += '</span>'
                      +  '<button class="more-arrow" onclick="moreBlock(1)"'
-                     +      (last >= pages ? ' disabled' : '') + ' aria-label="다음 10페이지">&raquo;</button>'
+                     +      (last >= pages ? ' disabled' : '') + ' aria-label="다음 7페이지">&raquo;</button>'
                      +  '</div>';
             }
             return html;
@@ -406,7 +406,7 @@
             document.querySelector('#more').innerHTML = renderMore();
         }
 
-        // Jump forward/back a full ten-page block, landing on its first page.
+        // Jump forward/back a full seven-page block, landing on its first page.
         function moreBlock(dir){
             var pages = morePageCount();
             var maxBlock = Math.floor((pages - 1) / MORE_BLOCK);
