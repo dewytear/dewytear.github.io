@@ -719,6 +719,25 @@
             font-size: 10px;
             transition: transform 0.15s ease;
         }
+        /* Folder title text takes the row; ellipsises when long. */
+        #navigation .nav-title-text{
+            flex: 1 1 auto;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        /* 📜 "read this folder on one page" icon, pinned to the row's right. */
+        #navigation .folder-digest{
+            flex: 0 0 auto;
+            margin-left: 6px;
+            font-size: 12px;
+            line-height: 1;
+            opacity: 0.45;
+            transition: opacity 0.15s ease, transform 0.15s ease;
+        }
+        #navigation .nav-title:hover .folder-digest{ opacity: 0.75; }
+        #navigation .folder-digest:hover{ opacity: 1; transform: scale(1.18); }
         /* Collapsed section: hide its children and rotate the caret. */
         #navigation .nav-branch.collapsed > ul{
             display: none;
@@ -1227,6 +1246,64 @@
         }
         .empty{
             color: var(--muted);
+        }
+
+        /* ---- Folder digest: all of a folder's docs on one page ---- */
+        .folder-head{
+            margin-bottom: 26px;
+            padding-bottom: 18px;
+            border-bottom: 1px dashed var(--border);
+        }
+        .folder-sub{
+            margin: 2px 0 14px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+        .folder-toc{
+            margin: 0;
+            padding-left: 20px;
+        }
+        .folder-toc li{
+            margin: 3px 0;
+        }
+        .folder-toc-link{
+            padding: 0;
+            background: transparent;
+            border: none;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--accent-ink);
+            cursor: pointer;
+            text-align: left;
+        }
+        .folder-toc-link:hover{
+            text-decoration: underline;
+        }
+        /* Each embedded doc, separated by a soft rule. */
+        .folder-doc + .folder-doc{
+            margin-top: 20px;
+            padding-top: 26px;
+            border-top: 1px solid var(--border);
+        }
+        .folder-doc-head{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0 14px;
+            font-size: 20px;
+        }
+        .folder-doc-num{
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
         }
 
         /* "Recent docs" board pagination — numbered pager, ten per block */
