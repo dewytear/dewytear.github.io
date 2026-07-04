@@ -351,6 +351,16 @@
             inset: 0;
             z-index: 0;
             pointer-events: none;
+            /* Heartbeat: the whole gradient field throbs with a lub-dub beat.
+               Composes with each blob's own slow drift transform. */
+            transform-origin: center;
+            animation: heartbeat 2.4s ease-in-out infinite;
+        }
+        @keyframes heartbeat{
+            0%, 45%, 100%{ transform: scale(1); }
+            12%{ transform: scale(1.05); }    /* lub */
+            24%{ transform: scale(1.008); }
+            33%{ transform: scale(1.055); }   /* dub */
         }
         .search-bg .blob{
             position: absolute;
@@ -403,6 +413,7 @@
             50%{ transform: translate(-6vmin,-4vmin) scale(1.15); }
         }
         @media (prefers-reduced-motion: reduce){
+            .search-bg,
             .search-bg .blob{ animation: none; }
         }
         .search-core{
@@ -552,20 +563,6 @@
         .settings-field input[type="password"]:focus{
             border-color: var(--accent);
         }
-        .settings-photo{
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        #settings-preview{
-            width: 72px;
-            height: 72px;
-            border-radius: 12px;
-            object-fit: cover;
-            border: 1px solid var(--border);
-            background: var(--bg-alt);
-            flex: none;
-        }
         .settings-actions{
             display: flex;
             gap: 10px;
@@ -647,6 +644,12 @@
         }
         #navigation li a:hover .doc-num{
             color: var(--accent);
+        }
+        /* A symbol marker (e.g. a guide) instead of a sequence number. */
+        #navigation .doc-mark{
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
         }
         /* The doc currently shown in the content pane: colored and bold. */
         #navigation li a.nav-active{
@@ -1372,26 +1375,26 @@
             height: 6px;
             border-radius: 2px;
             background: currentColor;
+            /* The bars always dance; playing vs stopped is shown by the fill. */
+            animation: music-bounce 900ms ease-in-out infinite;
         }
-        /* Idle — a gentle static staircase so it still reads as music */
-        #music-btn.idle .music-eq{ opacity: .85; }
-        #music-btn.idle .music-eq i:nth-child(1){ height: 7px; }
-        #music-btn.idle .music-eq i:nth-child(2){ height: 13px; }
-        #music-btn.idle .music-eq i:nth-child(3){ height: 9px; }
-        #music-btn.idle .music-eq i:nth-child(4){ height: 15px; }
-        /* Playing — the bars dance */
-        #music-btn.playing .music-eq i{ animation: music-bounce 900ms ease-in-out infinite; }
-        #music-btn.playing .music-eq i:nth-child(1){ animation-delay: -600ms; }
-        #music-btn.playing .music-eq i:nth-child(2){ animation-delay: -200ms; }
-        #music-btn.playing .music-eq i:nth-child(3){ animation-delay: -450ms; }
-        #music-btn.playing .music-eq i:nth-child(4){ animation-delay: -100ms; }
+        .music-eq i:nth-child(1){ animation-delay: -600ms; }
+        .music-eq i:nth-child(2){ animation-delay: -200ms; }
+        .music-eq i:nth-child(3){ animation-delay: -450ms; }
+        .music-eq i:nth-child(4){ animation-delay: -100ms; }
         @keyframes music-bounce{
             0%, 100%{ height: 5px; }
             50%{ height: 20px; }
         }
+        /* Stopped = translucent glass outline; playing = filled with accent. */
+        #music-btn.playing{
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
 
         @media (prefers-reduced-motion: reduce){
-            #music-btn.playing .music-eq i,
+            .music-eq i{ animation: none; height: 12px; }
             #music-btn.playing::before{ animation: none; }
         }
 
