@@ -413,28 +413,28 @@
             width: 42vmin; height: 42vmin;
             left: 8%; top: 12%;
             background: var(--accent);
-            animation: blob-a 19s ease-in-out infinite;
+            animation: blob-a 38s ease-in-out infinite;
         }
         .search-bg .b2{
             width: 34vmin; height: 34vmin;
             right: 10%; top: 18%;
             background: var(--accent-ink);
             opacity: 0.4;
-            animation: blob-b 23s ease-in-out infinite;
+            animation: blob-b 46s ease-in-out infinite;
         }
         .search-bg .b3{
             width: 48vmin; height: 48vmin;
             left: 22%; bottom: 4%;
             background: var(--accent);
             opacity: 0.32;
-            animation: blob-c 27s ease-in-out infinite;
+            animation: blob-c 52s ease-in-out infinite;
         }
         .search-bg .b4{
             width: 30vmin; height: 30vmin;
             right: 16%; bottom: 10%;
             background: var(--accent-ink);
             opacity: 0.3;
-            animation: blob-d 21s ease-in-out infinite;
+            animation: blob-d 42s ease-in-out infinite;
         }
         /* Light theme: pale orange on white is faint, so give the blobs more
            mass so the heartbeat has something visible to pulse. */
@@ -442,21 +442,32 @@
         body.day .search-bg .b2{ opacity: 0.58; }
         body.day .search-bg .b3{ opacity: 0.5; }
         body.day .search-bg .b4{ opacity: 0.46; }
+        /* Cloud drift: each blob wanders a wide, horizontal-biased loop with a
+           gentle vertical bob, over a long, slow cycle — like clouds floating
+           across the sky. Composes with the container's breathing. */
         @keyframes blob-a{
             0%,100%{ transform: translate(0,0) scale(1); }
-            50%{ transform: translate(6vmin,4vmin) scale(1.12); }
+            25%{ transform: translate(9vmin,-3vmin) scale(1.06); }
+            55%{ transform: translate(15vmin,4vmin) scale(1.12); }
+            80%{ transform: translate(6vmin,6vmin) scale(1.04); }
         }
         @keyframes blob-b{
             0%,100%{ transform: translate(0,0) scale(1); }
-            50%{ transform: translate(-5vmin,6vmin) scale(1.08); }
+            30%{ transform: translate(-8vmin,4vmin) scale(1.05); }
+            60%{ transform: translate(-14vmin,-3vmin) scale(1.1); }
+            82%{ transform: translate(-5vmin,-6vmin) scale(1.03); }
         }
         @keyframes blob-c{
             0%,100%{ transform: translate(0,0) scale(1); }
-            50%{ transform: translate(4vmin,-5vmin) scale(0.9); }
+            28%{ transform: translate(8vmin,-4vmin) scale(0.95); }
+            58%{ transform: translate(14vmin,-1vmin) scale(0.9); }
+            80%{ transform: translate(5vmin,4vmin) scale(0.97); }
         }
         @keyframes blob-d{
             0%,100%{ transform: translate(0,0) scale(1); }
-            50%{ transform: translate(-6vmin,-4vmin) scale(1.15); }
+            32%{ transform: translate(-9vmin,-4vmin) scale(1.1); }
+            62%{ transform: translate(-15vmin,3vmin) scale(1.16); }
+            84%{ transform: translate(-6vmin,6vmin) scale(1.05); }
         }
         @media (prefers-reduced-motion: reduce){
             .search-bg,
