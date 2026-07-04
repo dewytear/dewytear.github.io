@@ -1280,6 +1280,10 @@
             text-decoration: underline;
         }
         /* Each embedded doc, separated by a soft rule. */
+        .folder-doc{
+            /* TOC jumps land here; leave a little gap below the scroll top. */
+            scroll-margin-top: 14px;
+        }
         .folder-doc + .folder-doc{
             margin-top: 20px;
             padding-top: 26px;
@@ -1349,6 +1353,11 @@
                 z-index: 800;
                 background: var(--bg);
                 padding-left: 56px;   /* room for the hamburger */
+            }
+            /* The window scrolls here and the masthead (86px) is sticky, so
+               TOC jumps must clear it or the doc's title hides underneath. */
+            .folder-doc{
+                scroll-margin-top: 96px;
             }
             /* Slide the whole sidebar (image + nav) in from the left. */
             #sidebar{
