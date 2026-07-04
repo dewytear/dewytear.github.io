@@ -884,6 +884,7 @@
             // and the destination of the masthead title link (#!search).
             var isSearch = !h || path === 'search';
             document.body.classList.toggle('search-view', isSearch);
+            document.body.classList.toggle('folder-view', path.indexOf('folder:') === 0);
             if(isSearch){ showSearch(); markActiveNav(null); return; }
             if(path === 'tags'){ showTagIndex(); markActiveNav(null); }
             else if(path.indexOf('tag:') === 0){ showTag(decodeURIComponent(path.substr(4))); markActiveNav(null); }
