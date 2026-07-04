@@ -127,7 +127,8 @@
             return '<span class="folder-digest" role="button" tabindex="0"'
                  + ' title="이 폴더 문서 모아보기" aria-label="이 폴더 문서 모아보기"'
                  + ' data-section="' + escapeHtml(sectionKey) + '"'
-                 + ' onclick="openFolderDigest(event, this)">&#128220;</span>';
+                 + ' onclick="openFolderDigest(event, this)"'
+                 + ' onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openFolderDigest(event,this);}">&#128220;</span>';
         }
         function openFolderDigest(ev, el){
             ev.stopPropagation();   // don't toggle the branch
@@ -147,7 +148,7 @@
                     html += '<li class="nav-branch collapsed"' + catAttr + '>'
                          +  '<button type="button" class="nav-title" onclick="toggleBranch(this)">'
                          +  '<span class="nav-caret">&#9662;</span>'
-                         +  '<span class="nav-title-text">' + label + '</span>'
+                         +  '<span class="nav-title-text">' + escapeHtml(label) + '</span>'
                          +  folderDigestSpan(childPath.join(' · '))
                          +  '</button>';
                     html += renderNodes(node.children, childPath);
@@ -158,14 +159,14 @@
                     if(node.mark){
                         // A marked doc (e.g. a guide) shows a symbol, not a
                         // sequence number, and doesn't consume the count.
-                        numHtml = '<span class="doc-num doc-mark">' + node.mark + '</span>';
+                        numHtml = '<span class="doc-num doc-mark">' + escapeHtml(node.mark) + '</span>';
                     } else {
                         docSeq++;
                         var num = (docSeq < 10 ? '0' : '') + docSeq;
                         numHtml = '<span class="doc-num">' + num + '.</span>';
                     }
                     html += '<li><a href="#!' + target + '">'
-                         +  numHtml + ' ' + label + '</a></li>';
+                         +  numHtml + ' ' + escapeHtml(label) + '</a></li>';
                 }
             });
             html += '</ul>';
