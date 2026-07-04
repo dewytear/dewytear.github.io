@@ -7,6 +7,10 @@
             --text: #e6e8eb;
             --muted: #9aa4b2;
             --accent: #4db6ac;
+            /* Text-weight accent (links, small inline accents). In dark theme
+               it equals --accent; in light theme it is a deeper orange so
+               small text keeps enough contrast on white. */
+            --accent-ink: #4db6ac;
             --border: #3a4353;
             /* Medal colors for the top-3 tags (tuned for the dark bg).
                Silver is brightened a touch so the neutral tone doesn't
@@ -20,7 +24,11 @@
             --bg-alt: #f5f6f8;
             --text: #202124;
             --muted: #5f6368;
-            --accent: #00897b;
+            /* Point color = Hanwha Eagles signature orange (light theme only).
+               Used for borders, fills, buttons and headings. */
+            --accent: #ff6600;
+            /* Deeper orange for link / small-text so contrast on white holds. */
+            --accent-ink: #c8501e;
             --border: #dadce0;
             /* Medal colors re-tuned for the light bg. Silver is deepened
                so the neutral cool tone carries as much weight as the
@@ -43,7 +51,7 @@
             line-height: 1.7;
         }
         a{
-            color: var(--accent);
+            color: var(--accent-ink);
             text-decoration: none;
             transition: color 0.2s ease;
         }
@@ -618,6 +626,8 @@
             border: 1px solid var(--border);
             text-align: left;
             vertical-align: top;
+            /* Break Korean at word boundaries, not mid-word (avoids 상/시/성). */
+            word-break: keep-all;
         }
         article th{
             background: var(--bg-alt);
@@ -1234,6 +1244,8 @@
         .scn-pill.lv1{ color: #3a9d78; border-color: color-mix(in srgb, #3a9d78 50%, transparent); }
         .scn-pill.lv2{ color: #c0902a; border-color: color-mix(in srgb, #c0902a 50%, transparent); }
         .scn-pill.lv3{ color: #d0574a; border-color: color-mix(in srgb, #d0574a 50%, transparent); }
+        .scn-pill.lv4{ color: #7b61c9; border-color: color-mix(in srgb, #7b61c9 50%, transparent); }
+        .scn-pill.lv5{ color: #3f7cc9; border-color: color-mix(in srgb, #3f7cc9 50%, transparent); }
         article .scn-card .scn-body{ margin: 0; font-size: 13px; color: var(--text); line-height: 1.6; }
         .scn-card .scn-sub{ font-size: 12px; color: var(--muted); font-weight: 700; }
         .scn-team{ display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
@@ -1267,15 +1279,31 @@
 
         /* Light theme */
         body.day .diagram .d-box{ fill: #f5f6f8; stroke: #d3d8e0; }
-        body.day .diagram .d-box.accent{ fill: #e2f1ef; stroke: #00897b; }
+        body.day .diagram .d-box.accent{ fill: #ffe9d6; stroke: #ff6600; }
         body.day .diagram .d-box.soft{ fill: #ffffff; stroke: #d3d8e0; }
         body.day .diagram .d-label{ fill: #202124; }
         body.day .diagram .d-sub{ fill: #5f6368; }
-        body.day .diagram .d-accent{ fill: #00897b; }
+        body.day .diagram .d-accent{ fill: #c8501e; }
         body.day .diagram .d-edge{ stroke: #6b7078; }
-        body.day .diagram .d-edge.accent{ stroke: #00897b; }
+        body.day .diagram .d-edge.accent{ stroke: #ff6600; }
         body.day .diagram .d-arrow{ fill: #6b7078; }
-        body.day .diagram .d-arrow.accent{ fill: #00897b; }
+        body.day .diagram .d-arrow.accent{ fill: #ff6600; }
+
+        /* Illustration nodes for concept graphs / vector clusters.
+           Explicit per-theme hex (no var()/color-mix inside SVG). The
+           accent node follows the theme point colour (teal → orange). */
+        .diagram .d-node{ fill: #4db6ac; stroke: none; }
+        .diagram .d-node.b{ fill: #e0a34a; }
+        .diagram .d-node.c{ fill: #c77dff; }
+        .diagram .d-node.d{ fill: #6ea8fe; }
+        .diagram .d-node.dim{ fill: #3a4353; }
+        .diagram .d-node.ring{ fill: none; stroke: #3a4353; stroke-width: 1.2; }
+        body.day .diagram .d-node{ fill: #ff6600; }
+        body.day .diagram .d-node.b{ fill: #d98a1f; }
+        body.day .diagram .d-node.c{ fill: #9b4dca; }
+        body.day .diagram .d-node.d{ fill: #3f7cc9; }
+        body.day .diagram .d-node.dim{ fill: #d3d8e0; }
+        body.day .diagram .d-node.ring{ stroke: #cdd3db; }
 
         /* Keyboard-key chip (e.g. Shift + 방향키). */
         .kbd{

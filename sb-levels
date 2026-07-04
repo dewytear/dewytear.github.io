@@ -1,0 +1,82 @@
+<h2>5단계 한눈에 보기</h2>
+<p>세컨드 브레인은 <strong>"얼마나 잘 찾고 회상하느냐"</strong>에 따라 다섯 단계로 나뉩니다. 각 단계는 <strong>서로 다른 질문</strong>에 답합니다. 아래 사다리는 <strong>위로 갈수록 더 똑똑한 검색</strong>을 뜻하지만, 동시에 <strong>더 복잡·고비용</strong>이라는 뜻이기도 합니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 300" role="img" aria-label="세컨드 브레인 5단계 사다리: 레벨1 정확검색 → 레벨2 주제묶기 → 레벨3 의미검색 → 레벨4 관계잇기 → 레벨5 자율 브레인">
+    <!-- connecting up arrows -->
+    <line class="d-edge accent" x1="130" y1="214" x2="150" y2="196"/><polygon class="d-arrow accent" points="150,201 156,192 145,193"/>
+    <line class="d-edge accent" x1="258" y1="178" x2="278" y2="160"/><polygon class="d-arrow accent" points="278,165 284,156 273,157"/>
+    <line class="d-edge accent" x1="386" y1="142" x2="406" y2="124"/><polygon class="d-arrow accent" points="406,129 412,120 401,121"/>
+    <line class="d-edge accent" x1="514" y1="106" x2="534" y2="88"/><polygon class="d-arrow accent" points="534,93 540,84 529,85"/>
+
+    <!-- L1 -->
+    <rect class="d-box" x="12" y="214" width="124" height="46" rx="9"/>
+    <text class="d-label sm" x="74" y="234" text-anchor="middle">레벨 1 · 정확 검색</text>
+    <text class="d-sub" x="74" y="250" text-anchor="middle">단어·파일명</text>
+    <!-- L2 -->
+    <rect class="d-box" x="140" y="178" width="124" height="46" rx="9"/>
+    <text class="d-label sm" x="202" y="198" text-anchor="middle">레벨 2 · 주제 묶기</text>
+    <text class="d-sub" x="202" y="214" text-anchor="middle">위키·메모리</text>
+    <!-- L3 -->
+    <rect class="d-box" x="268" y="142" width="124" height="46" rx="9"/>
+    <text class="d-label sm" x="330" y="162" text-anchor="middle">레벨 3 · 의미 검색</text>
+    <text class="d-sub" x="330" y="178" text-anchor="middle">벡터·임베딩</text>
+    <!-- L4 -->
+    <rect class="d-box" x="396" y="106" width="124" height="46" rx="9"/>
+    <text class="d-label sm" x="458" y="126" text-anchor="middle">레벨 4 · 관계 잇기</text>
+    <text class="d-sub" x="458" y="142" text-anchor="middle">지식 그래프</text>
+    <!-- L5 -->
+    <rect class="d-box accent" x="524" y="70" width="150" height="46" rx="9"/>
+    <text class="d-label sm" x="599" y="90" text-anchor="middle">레벨 5 · 자율 브레인</text>
+    <text class="d-sub" x="599" y="106" text-anchor="middle">항상 켜짐(always-on)</text>
+
+    <!-- axis hints -->
+    <text class="d-sub" x="12" y="30" text-anchor="start">↑ 더 똑똑함 · 더 복잡 · 더 고비용</text>
+    <text class="d-sub" x="12" y="286" text-anchor="start">↓ 더 단순 · 더 싸고 빠름</text>
+</svg>
+<div class="d-cap">위로 갈수록 강력하지만, "강력함"이 곧 "필요함"은 아닙니다.</div>
+</div>
+
+<h3>각 단계가 답하는 질문</h3>
+<div class="scn-board">
+    <div class="scn-card">
+        <h4>정확히 찾기</h4>
+        <div class="scn-meta"><span class="scn-pill lv1">레벨 1</span><span class="scn-pill">파일·라우팅</span></div>
+        <p class="scn-body"><strong>"내가 쓴 그 단어·파일, 어디 있지?"</strong> — 라우터 역할의 <code>CLAUDE.md</code>와 폴더 구조로 정확히 짚습니다.</p>
+        <p class="scn-sub">언제 — 재설명이 잦고, 정확한 이름으로 찾을 때</p>
+    </div>
+    <div class="scn-card">
+        <h4>주제로 묶기</h4>
+        <div class="scn-meta"><span class="scn-pill lv2">레벨 2</span><span class="scn-pill">위키·메모리</span></div>
+        <p class="scn-body"><strong>"이 주제에 관한 걸 전부 모아 줘."</strong> — LLM 위키의 인덱스를 따라 내려가며 관련 노트를 엮습니다.</p>
+        <p class="scn-sub">언제 — 노트 30개+, 뭐가 있었는지 자꾸 잊을 때</p>
+    </div>
+    <div class="scn-card">
+        <h4>의미로 찾기</h4>
+        <div class="scn-meta"><span class="scn-pill lv3">레벨 3</span><span class="scn-pill">벡터·임베딩</span></div>
+        <p class="scn-body"><strong>"쓴 단어와 달라도 뜻이 비슷한 걸 찾아 줘."</strong> — 시맨틱 검색(벡터DB)으로 의미 기준 유사도를 봅니다.</p>
+        <p class="scn-sub">언제 — 존재하는 노트를 단어 불일치로 놓칠 때</p>
+    </div>
+    <div class="scn-card">
+        <h4>관계로 잇기</h4>
+        <div class="scn-meta"><span class="scn-pill lv4">레벨 4</span><span class="scn-pill">지식 그래프</span></div>
+        <p class="scn-body"><strong>"X에서 시작해 A까지 연결을 따라가 줘."</strong> — 엔티티와 관계로 이어진 지식 그래프로 관계 사슬을 추적합니다.</p>
+        <p class="scn-sub">언제 — "누가 무엇과 어떻게 엮였나"가 중요할 때</p>
+    </div>
+    <div class="scn-card">
+        <h4>자율 브레인 OS</h4>
+        <div class="scn-meta"><span class="scn-pill lv5">레벨 5</span><span class="scn-pill">always-on</span></div>
+        <p class="scn-body"><strong>"신경 안 써도 알아서 갱신돼 있어라."</strong> — 자동(cron)으로 회의·메일·메모를 계속 흡수하는 상시 브레인.</p>
+        <p class="scn-sub">언제 — 오프라인 에이전트·대량 데이터를 상시 동기화할 때</p>
+    </div>
+</div>
+
+<div class="note warn">
+    <span class="nh">가장 중요한 원칙</span>
+    <strong>내 통증(pain)에 맞는 가장 낮은 레벨</strong>을 고르세요. 지금 불편함이 없다면 위로 올라갈 이유가 없습니다. 그리고 <strong>한 프로젝트 안에서도 폴더마다 레벨이 달라도</strong> 됩니다 — 회의록 폴더는 레벨 3, 프로젝트 폴더는 레벨 1처럼요.
+</div>
+
+<div class="note">
+    <span class="nh">다음</span>
+    이제 각 레벨을 하나씩 자세히 봅니다. <a href="#!sb-level1">레벨 1 — 정확히 찾기</a>부터 시작하세요. 내 상황에 맞는 레벨 고르기는 <a href="#!sb-choose">내 레벨 찾기</a>에서 정리합니다.
+</div>
