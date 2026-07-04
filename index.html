@@ -372,6 +372,12 @@
         var TEXT_INDEX_READY = false;
         var textIndexStarted = false;
 
+        // Work Log entries are dev journal, not reference content — keep them
+        // out of the unified search (results and the body index alike).
+        function isSearchableDoc(d){
+            return d.section.indexOf('Work Log') !== 0;
+        }
+
         // Turn a doc's HTML into searchable plain text. Bodies carry only
         // inline SVG (no external <img>), so a detached element is safe and
         // its textContent also captures diagram labels.
@@ -382,7 +388,7 @@
         }
 
         function buildTextIndex(){
-            return Promise.all(DOCS.map(function(d){
+            return Promise.all(DOCS.filter(isSearchableDoc).map(function(d){
                 return fetch(d.name).then(function(r){
                     return r.ok ? r.text() : '';
                 }).then(function(t){
@@ -411,6 +417,7 @@
             if(!q){ return []; }
             var terms = q.split(/\s+/);
             return DOCS.filter(function(d){
+                if(!isSearchableDoc(d)){ return false; }
                 var hay = (d.label + ' ' + d.section + ' ' + d.tags.join(' ')).toLowerCase()
                         + ' ' + (DOC_TEXT[d.name] || '');
                 return terms.every(function(t){ return hay.indexOf(t) !== -1; });
