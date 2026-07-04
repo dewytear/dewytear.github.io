@@ -1543,6 +1543,33 @@
             border-color: var(--accent);
             color: #fff;
         }
+        /* Blocked (tracker prevention): muted, and a tap opens YouTube instead. */
+        #music-btn.blocked{
+            color: var(--muted);
+            border-color: color-mix(in srgb, var(--muted) 55%, var(--border));
+        }
+        /* One-time note above the button explaining the block + fallback. */
+        #music-note{
+            position: fixed;
+            right: 22px;
+            bottom: 86px;
+            z-index: 851;
+            max-width: 246px;
+            padding: 10px 13px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--text);
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            pointer-events: none;
+        }
+        #music-note.show{ opacity: 1; transform: translateY(0); }
+        #music-note b{ color: var(--accent-ink); }
 
         @media (prefers-reduced-motion: reduce){
             .music-eq i{ animation: none; height: 12px; }
