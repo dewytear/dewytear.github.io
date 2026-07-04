@@ -365,16 +365,84 @@
         }
 
         // ---- Unified search screen (landing page & title click) ----
-        // Matches every whitespace-separated term against a doc's label,
-        // its section path, and its tags, so "hooks 자동화" narrows as typed.
+        // Full-text index over the doc bodies, built lazily in the background
+        // the first time the search screen opens.
+        var DOC_TEXT = {};        // name -> lowercased plain-text body (matching)
+        var DOC_TEXT_RAW = {};    // name -> plain-text body, original case (snippets)
+        var TEXT_INDEX_READY = false;
+        var textIndexStarted = false;
+
+        // Turn a doc's HTML into searchable plain text. Bodies carry only
+        // inline SVG (no external <img>), so a detached element is safe and
+        // its textContent also captures diagram labels.
+        function stripHtml(html){
+            var d = document.createElement('div');
+            d.innerHTML = html;
+            return (d.textContent || '').replace(/\s+/g, ' ').trim();
+        }
+
+        function buildTextIndex(){
+            return Promise.all(DOCS.map(function(d){
+                return fetch(d.name).then(function(r){
+                    return r.ok ? r.text() : '';
+                }).then(function(t){
+                    var txt = stripHtml(t);
+                    DOC_TEXT_RAW[d.name] = txt;
+                    DOC_TEXT[d.name] = txt.toLowerCase();
+                }).catch(function(){});
+            })).then(function(){
+                TEXT_INDEX_READY = true;
+                // Re-run the current query now that bodies are searchable.
+                var box = document.getElementById('search-input');
+                if(box && box.value.trim()){ renderSearchResults(box.value); }
+            });
+        }
+
+        function ensureTextIndex(){
+            if(textIndexStarted){ return; }
+            textIndexStarted = true;
+            buildTextIndex();
+        }
+
+        // Matches every whitespace-separated term against a doc's label, its
+        // section path, tags, AND its full body text (once indexed).
         function searchDocs(query){
             var q = query.trim().toLowerCase();
             if(!q){ return []; }
             var terms = q.split(/\s+/);
             return DOCS.filter(function(d){
-                var hay = (d.label + ' ' + d.section + ' ' + d.tags.join(' ')).toLowerCase();
+                var hay = (d.label + ' ' + d.section + ' ' + d.tags.join(' ')).toLowerCase()
+                        + ' ' + (DOC_TEXT[d.name] || '');
                 return terms.every(function(t){ return hay.indexOf(t) !== -1; });
             });
+        }
+
+        // Escape HTML, then wrap each search term in <mark> (case-insensitive).
+        function highlightTerms(text, terms){
+            var out = escapeHtml(text);
+            terms.forEach(function(t){
+                if(!t){ return; }
+                var esc = escapeHtml(t).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                out = out.replace(new RegExp('(' + esc + ')', 'gi'), '<mark>$1</mark>');
+            });
+            return out;
+        }
+
+        // A short body excerpt around the first matching term, highlighted.
+        // Empty when the match was only in the label/section/tags.
+        function makeSnippet(name, terms){
+            var low = DOC_TEXT[name], raw = DOC_TEXT_RAW[name];
+            if(!low || !raw){ return ''; }
+            var pos = -1;
+            terms.forEach(function(t){
+                var p = t ? low.indexOf(t) : -1;
+                if(p !== -1 && (pos === -1 || p < pos)){ pos = p; }
+            });
+            if(pos === -1){ return ''; }
+            var start = Math.max(0, pos - 40);
+            var end = Math.min(raw.length, pos + 80);
+            return (start > 0 ? '…' : '') + highlightTerms(raw.slice(start, end), terms)
+                 + (end < raw.length ? '…' : '');
         }
 
         var SEARCH_LIMIT = 8;
@@ -383,10 +451,13 @@
             if(!box){ return; }
             var q = query.trim();
             if(!q){ box.innerHTML = ''; box.classList.remove('open'); return; }
+            var terms = q.toLowerCase().split(/\s+/);
             var docs = searchDocs(query);
+            var indexing = !TEXT_INDEX_READY
+                         ? '<p class="search-indexing">본문 색인을 불러오는 중… (제목·태그 우선)</p>' : '';
             if(!docs.length){
                 box.innerHTML = '<p class="search-empty">&ldquo;' + escapeHtml(q)
-                              + '&rdquo;에 대한 결과가 없습니다.</p>';
+                              + '&rdquo;에 대한 결과가 없습니다.</p>' + indexing;
                 box.classList.add('open');
                 return;
             }
@@ -395,6 +466,8 @@
                 html += '<a class="search-hit" href="#!' + d.name + '">'
                      +  '<span class="sh-label">' + escapeHtml(d.label) + '</span>'
                      +  '<span class="sh-meta">' + escapeHtml(d.section) + '</span>';
+                var snip = makeSnippet(d.name, terms);
+                if(snip){ html += '<span class="sh-snippet">' + snip + '</span>'; }
                 if(d.tags.length){
                     html += '<span class="sh-tags">';
                     d.tags.slice(0, 4).forEach(function(t){
@@ -407,7 +480,7 @@
             if(docs.length > SEARCH_LIMIT){
                 html += '<p class="search-more">외 ' + (docs.length - SEARCH_LIMIT) + '개 더…</p>';
             }
-            box.innerHTML = html;
+            box.innerHTML = html + indexing;
             box.classList.add('open');
         }
 
@@ -424,13 +497,14 @@
               +     '<div class="search-field">'
               +       '<span class="search-ico" aria-hidden="true">&#128269;</span>'
               +       '<input id="search-input" type="search" autocomplete="off"'
-              +         ' placeholder="문서 · 태그 · 주제를 검색…"'
+              +         ' placeholder="제목 · 태그 · 본문을 검색…"'
               +         ' oninput="renderSearchResults(this.value)">'
               +     '</div>'
               +     '<div id="search-results"></div>'
               +   '</div>'
               + '</div>';
             setArticle(html);
+            ensureTextIndex();   // start fetching doc bodies in the background
             var box = document.getElementById('search-input');
             if(box){ box.focus(); }
         }
