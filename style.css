@@ -12,6 +12,10 @@
                small text keeps enough contrast on white. */
             --accent-ink: #4db6ac;
             --border: #3a4353;
+            /* Navigation list separator/rail lines — style & thickness are
+               adjustable from Settings (defaults: thin dashed). */
+            --nav-line-style: dashed;
+            --nav-line-width: 1px;
             /* Medal colors for the top-3 tags (tuned for the dark bg).
                Silver is brightened a touch so the neutral tone doesn't
                recede next to the warm gold/bronze. */
@@ -350,7 +354,8 @@
         /* ---- Screens without the "recent docs" module ---- */
         body.settings-view #more,
         body.tags-view #more,
-        body.search-view #more{
+        body.search-view #more,
+        body.hide-recent #more{
             display: none;
         }
 
@@ -643,6 +648,40 @@
         .settings-field input[type="password"]:focus{
             border-color: var(--accent);
         }
+        .settings-field select{
+            width: 100%;
+            padding: 10px 13px;
+            background: var(--bg-alt);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
+        }
+        .settings-field select:focus{ border-color: var(--accent); }
+        /* Checkbox rows (recent-docs toggle, category visibility). */
+        .settings-check{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 0 8px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .settings-check input[type="checkbox"]{
+            width: 16px;
+            height: 16px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+        .settings-cats{
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
         .settings-actions{
             display: flex;
             gap: 10px;
@@ -697,8 +736,8 @@
         #navigation ul ul{
             margin-left: 6px;
             padding-left: 12px;
-            /* Same dashed pattern (size/length) as the horizontal 1px dashed borders. */
-            border-left: 1px dashed color-mix(in srgb, var(--border) 65%, transparent);
+            /* Style & thickness follow the Settings-controlled nav-line vars. */
+            border-left: var(--nav-line-width) var(--nav-line-style) color-mix(in srgb, var(--border) 65%, transparent);
         }
         #navigation li{
             margin: 8px 0;
@@ -796,7 +835,7 @@
         #navigation > ul > li.nav-branch > .nav-title{
             margin: 22px 0 10px;
             padding: 0 0 8px;
-            border-bottom: 1px dashed var(--border);
+            border-bottom: var(--nav-line-width) var(--nav-line-style) var(--border);
             font-size: 15px;
             font-weight: 700;
             letter-spacing: 0.05em;

@@ -23,7 +23,7 @@
             <div id="profile">
                 <img id="profile-img" src="profile.jpg" alt="Profile"
                      onerror="if(this.src.indexOf('profile.svg') === -1){ this.src = 'profile.svg'; }">
-                <p id="profile-tagline">Wanna fly with me <span class="pf-arrow" aria-hidden="true">&#8599;</span></p>
+                <p id="profile-tagline"><span class="ptl-text">Wanna fly with me</span> <span class="pf-arrow" aria-hidden="true">&#8599;</span></p>
             </div>
             <nav id="navigation"></nav>
             <div id="sidebar-foot">
@@ -141,7 +141,10 @@
                 var label = node.label || node.title || node.name;
                 if(node.children){    // a branch, collapsed by default
                     var childPath = node.title ? path.concat(node.title) : path;
-                    html += '<li class="nav-branch collapsed">'
+                    // Tag top-level categories so Settings can show/hide them.
+                    var catAttr = (path.length === 0 && node.title)
+                                ? ' data-cat="' + escapeHtml(node.title) + '"' : '';
+                    html += '<li class="nav-branch collapsed"' + catAttr + '>'
                          +  '<button type="button" class="nav-title" onclick="toggleBranch(this)">'
                          +  '<span class="nav-caret">&#9662;</span>'
                          +  '<span class="nav-title-text">' + label + '</span>'
@@ -846,6 +849,14 @@
             var s = loadSettings();
             return s.password || '1111';   // default password
         }
+        // Show/hide top-level nav categories by title (hidden = list of titles).
+        function applyCategoryVisibility(hidden){
+            hidden = hidden || [];
+            document.querySelectorAll('#navigation > ul > li.nav-branch[data-cat]').forEach(function(li){
+                var off = hidden.indexOf(li.getAttribute('data-cat')) !== -1;
+                li.style.display = off ? 'none' : '';
+            });
+        }
         function applySettings(){
             var s = loadSettings();
             if(s.title){
@@ -857,6 +868,22 @@
                 var t = document.getElementById('tagline');
                 if(t){ t.textContent = s.tagline; }
             }
+            if(s.photoLine != null){
+                var pl = document.getElementById('profile-tagline');
+                var plt = pl && pl.querySelector('.ptl-text');
+                if(pl && plt){
+                    if(s.photoLine.trim()){ plt.textContent = s.photoLine; pl.style.display = ''; }
+                    else { pl.style.display = 'none'; }   // cleared → hide the line
+                }
+            }
+            // Navigation list line style / thickness.
+            var root = document.documentElement;
+            root.style.setProperty('--nav-line-style', s.navLineStyle || 'dashed');
+            root.style.setProperty('--nav-line-width', s.navLineWidth || '1px');
+            // "Recent docs" module visibility.
+            document.body.classList.toggle('hide-recent', !!s.hideRecent);
+            // Top-level category visibility.
+            applyCategoryVisibility(s.hiddenCats);
             // Light (day) theme is the default; a saved choice wins.
             var isDay = (s.theme || 'day') === 'day';
             document.body.classList.toggle('day', isDay);
@@ -931,6 +958,23 @@
             var curTagline = s.tagline != null ? s.tagline
                            : document.getElementById('tagline').textContent;
             var curMusic = s.music || '';
+            var curPhotoLine = s.photoLine != null ? s.photoLine
+                             : ((document.querySelector('#profile-tagline .ptl-text') || {}).textContent || '');
+            var curNavStyle = s.navLineStyle || 'dashed';
+            var curNavWidth = s.navLineWidth || '1px';
+            var hiddenCats = s.hiddenCats || [];
+            function opt(val, label, cur){
+                return '<option value="' + val + '"' + (val === cur ? ' selected' : '') + '>' + label + '</option>';
+            }
+            var cats = [].map.call(
+                document.querySelectorAll('#navigation > ul > li.nav-branch[data-cat]'),
+                function(li){ return li.getAttribute('data-cat'); });
+            var catChecks = cats.map(function(c){
+                var on = hiddenCats.indexOf(c) === -1;
+                return '<label class="settings-check"><input type="checkbox" class="settings-cat"'
+                     + ' data-cat="' + escapeHtml(c) + '"' + (on ? ' checked' : '') + '> '
+                     + escapeHtml(c) + '</label>';
+            }).join('');
             var html =
                 '<h2>설정</h2>'
               + '<p class="settings-note">변경 내용은 이 브라우저에만 저장됩니다. 프로필 사진은 서버 설정에서 관리합니다.</p>'
@@ -943,9 +987,39 @@
               +   '<input id="settings-tagline" type="text" value="' + escapeHtml(curTagline) + '">'
               + '</div>'
               + '<div class="settings-field">'
+              +   '<label for="settings-photoline">사진 아래 문구</label>'
+              +   '<input id="settings-photoline" type="text" value="' + escapeHtml(curPhotoLine) + '"'
+              +     ' placeholder="비우면 문구를 숨깁니다">'
+              + '</div>'
+              + '<div class="settings-field">'
               +   '<label for="settings-music">배경음악 (YouTube 링크 또는 영상 ID)</label>'
               +   '<input id="settings-music" type="text" value="' + escapeHtml(curMusic) + '"'
               +     ' placeholder="예: https://youtu.be/08A9n8QyE3k · 비우면 기본 트랙">'
+              + '</div>'
+              + '<div class="settings-field">'
+              +   '<label for="settings-navstyle">목록 구분선 모양</label>'
+              +   '<select id="settings-navstyle">'
+              +     opt('dashed', '파선 (기본)', curNavStyle)
+              +     opt('dotted', '점선', curNavStyle)
+              +     opt('solid', '실선', curNavStyle)
+              +   '</select>'
+              + '</div>'
+              + '<div class="settings-field">'
+              +   '<label for="settings-navwidth">목록 구분선 두께</label>'
+              +   '<select id="settings-navwidth">'
+              +     opt('1px', '얇게 (기본)', curNavWidth)
+              +     opt('2px', '보통', curNavWidth)
+              +     opt('3px', '굵게', curNavWidth)
+              +   '</select>'
+              + '</div>'
+              + '<div class="settings-field">'
+              +   '<label>표시 옵션</label>'
+              +   '<label class="settings-check"><input type="checkbox" id="settings-hiderecent"'
+              +     (s.hideRecent ? ' checked' : '') + '> 최근 문서 영역 숨기기</label>'
+              + '</div>'
+              + '<div class="settings-field">'
+              +   '<label>대분류 표시 (체크한 항목만 노출)</label>'
+              +   '<div class="settings-cats">' + catChecks + '</div>'
               + '</div>'
               + '<div class="settings-field">'
               +   '<label for="settings-newpass">새 암호 (변경 시에만 입력)</label>'
@@ -971,7 +1045,15 @@
             var s = loadSettings();
             s.title = document.getElementById('settings-title').value.trim();
             s.tagline = document.getElementById('settings-tagline').value;
+            s.photoLine = document.getElementById('settings-photoline').value;
             s.music = document.getElementById('settings-music').value.trim();
+            s.navLineStyle = document.getElementById('settings-navstyle').value;
+            s.navLineWidth = document.getElementById('settings-navwidth').value;
+            s.hideRecent = document.getElementById('settings-hiderecent').checked;
+            s.hiddenCats = [].filter.call(
+                document.querySelectorAll('.settings-cat'),
+                function(cb){ return !cb.checked; }
+            ).map(function(cb){ return cb.getAttribute('data-cat'); });
             var np = document.getElementById('settings-newpass').value;
             if(np){ s.password = np; }
             try{
@@ -1062,6 +1144,7 @@
                   + '<button type="button" class="nav-tool" onclick="collapseAll()">모두 접기</button>'
                   + '</div>'
                   + renderNodes(tree, []);
+                applyCategoryVisibility(loadSettings().hiddenCats);   // nav now exists
                 document.querySelector('#more').innerHTML = renderMore();
                 refreshRecentDocs();   // reorder by last-modified once dates load
                 route();   // render the initial page once indexes exist
