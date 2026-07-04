@@ -626,6 +626,8 @@
             border: 1px solid var(--border);
             text-align: left;
             vertical-align: top;
+            /* Break Korean at word boundaries, not mid-word (avoids 상/시/성). */
+            word-break: keep-all;
         }
         article th{
             background: var(--bg-alt);
@@ -1242,6 +1244,8 @@
         .scn-pill.lv1{ color: #3a9d78; border-color: color-mix(in srgb, #3a9d78 50%, transparent); }
         .scn-pill.lv2{ color: #c0902a; border-color: color-mix(in srgb, #c0902a 50%, transparent); }
         .scn-pill.lv3{ color: #d0574a; border-color: color-mix(in srgb, #d0574a 50%, transparent); }
+        .scn-pill.lv4{ color: #7b61c9; border-color: color-mix(in srgb, #7b61c9 50%, transparent); }
+        .scn-pill.lv5{ color: #3f7cc9; border-color: color-mix(in srgb, #3f7cc9 50%, transparent); }
         article .scn-card .scn-body{ margin: 0; font-size: 13px; color: var(--text); line-height: 1.6; }
         .scn-card .scn-sub{ font-size: 12px; color: var(--muted); font-weight: 700; }
         .scn-team{ display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
@@ -1284,6 +1288,22 @@
         body.day .diagram .d-edge.accent{ stroke: #ff6600; }
         body.day .diagram .d-arrow{ fill: #6b7078; }
         body.day .diagram .d-arrow.accent{ fill: #ff6600; }
+
+        /* Illustration nodes for concept graphs / vector clusters.
+           Explicit per-theme hex (no var()/color-mix inside SVG). The
+           accent node follows the theme point colour (teal → orange). */
+        .diagram .d-node{ fill: #4db6ac; stroke: none; }
+        .diagram .d-node.b{ fill: #e0a34a; }
+        .diagram .d-node.c{ fill: #c77dff; }
+        .diagram .d-node.d{ fill: #6ea8fe; }
+        .diagram .d-node.dim{ fill: #3a4353; }
+        .diagram .d-node.ring{ fill: none; stroke: #3a4353; stroke-width: 1.2; }
+        body.day .diagram .d-node{ fill: #ff6600; }
+        body.day .diagram .d-node.b{ fill: #d98a1f; }
+        body.day .diagram .d-node.c{ fill: #9b4dca; }
+        body.day .diagram .d-node.d{ fill: #3f7cc9; }
+        body.day .diagram .d-node.dim{ fill: #d3d8e0; }
+        body.day .diagram .d-node.ring{ stroke: #cdd3db; }
 
         /* Keyboard-key chip (e.g. Shift + 방향키). */
         .kbd{

@@ -1,0 +1,132 @@
+<h2>레벨 3 · 의미로 찾기 (시맨틱 검색·벡터DB)</h2>
+<p>레벨 1·2는 대체로 <strong>단어가 일치</strong>해야 찾습니다. 하지만 우리는 <strong>기억한 단어와 다른 단어</strong>로 검색하곤 하죠. 그래서 레벨 3은 <strong>의미(뜻)로 찾습니다.</strong> 이게 <strong>시맨틱 검색(semantic search)</strong>이고, 그 엔진이 <strong>벡터 데이터베이스</strong>입니다.</p>
+
+<h3>키워드 검색 vs 시맨틱 검색</h3>
+<p>가장 큰 차이는 <strong>"똑같은 단어냐(=)"</strong> 대 <strong>"뜻이 비슷하냐(≈)"</strong>입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 210" role="img" aria-label="키워드 검색은 정확히 일치하는 단어만, 시맨틱 검색은 뜻이 비슷한 것까지 찾는다">
+    <!-- left: keyword -->
+    <rect class="d-box soft" x="20" y="16" width="300" height="176" rx="12"/>
+    <text class="d-label" x="170" y="44" text-anchor="middle">키워드 검색  ·  X = X</text>
+    <rect class="d-box" x="130" y="66" width="80" height="34" rx="7"/>
+    <text class="d-label sm" x="170" y="88" text-anchor="middle">"피드백"</text>
+    <rect class="d-box accent" x="130" y="130" width="80" height="34" rx="7"/>
+    <text class="d-label sm" x="170" y="152" text-anchor="middle">"피드백"</text>
+    <line class="d-edge" x1="170" y1="100" x2="170" y2="128"/><polygon class="d-arrow" points="165,128 170,136 175,128"/>
+    <text class="d-sub" x="170" y="182" text-anchor="middle">글자 그대로 있는 곳만</text>
+
+    <!-- right: semantic -->
+    <rect class="d-box soft" x="360" y="16" width="300" height="176" rx="12"/>
+    <text class="d-label" x="510" y="44" text-anchor="middle">시맨틱 검색  ·  X ≈ X,Y,Z</text>
+    <rect class="d-box" x="470" y="60" width="80" height="30" rx="7"/>
+    <text class="d-label sm" x="510" y="80" text-anchor="middle">"피드백"</text>
+    <rect class="d-box accent" x="386" y="120" width="98" height="30" rx="7"/>
+    <text class="d-label sm" x="435" y="140" text-anchor="middle">라이브 테스트 결과</text>
+    <rect class="d-box accent" x="500" y="120" width="70" height="30" rx="7"/>
+    <text class="d-label sm" x="535" y="140" text-anchor="middle">평가·리뷰</text>
+    <rect class="d-box accent" x="584" y="120" width="60" height="30" rx="7"/>
+    <text class="d-label sm" x="614" y="140" text-anchor="middle">개선점</text>
+    <line class="d-edge accent" x1="510" y1="90" x2="435" y2="118"/><polygon class="d-arrow accent" points="431,112 434,122 440,114"/>
+    <line class="d-edge accent" x1="510" y1="90" x2="535" y2="118"/><polygon class="d-arrow accent" points="530,114 537,122 540,113"/>
+    <line class="d-edge accent" x1="510" y1="90" x2="614" y2="118"/><polygon class="d-arrow accent" points="608,114 615,122 618,113"/>
+    <text class="d-sub" x="510" y="182" text-anchor="middle">단어가 달라도 "뜻이 비슷"하면 잡힘</text>
+</svg>
+<div class="d-cap">키워드는 <strong>X와 똑같은 X</strong>만, 시맨틱은 <strong>X와 뜻이 가까운 Y·Z</strong>까지 찾습니다.</div>
+</div>
+
+<h3>어떻게 "뜻"으로 찾나 — 임베딩과 청킹</h3>
+<p>원리는 이렇습니다. 문서를 <strong>작은 조각(청크, chunk)</strong>으로 나누고, 각 조각을 <strong>임베딩 모델</strong>에 넣습니다. 임베딩 모델은 그 조각을 <strong>"의미 공간"의 좌표(벡터)</strong>로 바꿔 놓습니다. <strong>뜻이 비슷한 조각끼리 가까이</strong> 모입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 180" role="img" aria-label="벡터화 파이프라인: 문서를 청크로 나눠 임베딩 모델에 넣으면 의미 공간의 벡터가 되고 비슷한 것끼리 모인다">
+    <rect class="d-box" x="16" y="62" width="96" height="52" rx="9"/>
+    <text class="d-label sm" x="64" y="86" text-anchor="middle">문서</text>
+    <text class="d-sub" x="64" y="101" text-anchor="middle">자막·회의록</text>
+
+    <g>
+    <rect class="d-box soft" x="156" y="50" width="86" height="24" rx="5"/>
+    <rect class="d-box soft" x="156" y="78" width="86" height="24" rx="5"/>
+    <rect class="d-box soft" x="156" y="106" width="86" height="24" rx="5"/>
+    <text class="d-sub" x="199" y="66" text-anchor="middle">청크 1</text>
+    <text class="d-sub" x="199" y="94" text-anchor="middle">청크 2</text>
+    <text class="d-sub" x="199" y="122" text-anchor="middle">청크 3</text>
+    </g>
+
+    <rect class="d-box" x="286" y="62" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="346" y="86" text-anchor="middle">임베딩 모델</text>
+    <text class="d-sub" x="346" y="101" text-anchor="middle">의미 → 좌표</text>
+
+    <rect class="d-box accent" x="452" y="24" width="212" height="130" rx="12"/>
+    <text class="d-sub" x="558" y="44" text-anchor="middle">의미 공간 (벡터)</text>
+    <circle class="d-node" cx="500" cy="72" r="6"/>
+    <circle class="d-node" cx="518" cy="86" r="6"/>
+    <circle class="d-node" cx="486" cy="92" r="6"/>
+    <circle class="d-node b" cx="600" cy="70" r="6"/>
+    <circle class="d-node b" cx="616" cy="86" r="6"/>
+    <circle class="d-node c" cx="560" cy="128" r="6"/>
+    <circle class="d-node c" cx="578" cy="134" r="6"/>
+    <text class="d-sub" x="500" y="118" text-anchor="middle">비슷한 뜻끼리</text>
+
+    <line class="d-edge" x1="112" y1="88" x2="154" y2="88"/><polygon class="d-arrow" points="154,83 162,88 154,93"/>
+    <line class="d-edge" x1="242" y1="88" x2="284" y2="88"/><polygon class="d-arrow" points="284,83 292,88 284,93"/>
+    <line class="d-edge accent" x1="406" y1="88" x2="450" y2="88"/><polygon class="d-arrow accent" points="450,83 458,88 450,93"/>
+</svg>
+<div class="d-cap">회사 얘기 조각은 이쪽, 재무 얘기 조각은 저쪽 — 뜻에 따라 <strong>자리</strong>가 정해집니다. 이 좌표 뭉치를 시각화한 게 <strong>Qdrant</strong> 같은 도구의 클러스터 뷰입니다.</div>
+</div>
+
+<div class="note">
+    <span class="nh">용어 메모 — Qdrant</span>
+    벡터를 저장·검색하는 대표적 <strong>벡터 DB</strong>가 <strong>Qdrant(큐드런트)</strong>입니다. 이미지·텍스트를 <strong>의미 유사도</strong>로 묶어 클러스터로 보여 줍니다("비슷한 그림끼리 뭉치는" 그 데모). 이 외에 <strong>Pinecone·Supabase</strong> 등으로도 시맨틱 검색을 구현합니다.
+</div>
+
+<h3>결정적 한계 — 청크는 "전체 맥락"을 못 본다</h3>
+<p>사람들은 벡터DB를 <strong>"뭐든 정확히 꺼내 주는 마법"</strong>으로 오해합니다. <strong>사실이 아닙니다.</strong> 검색은 <strong>비슷한 청크 몇 개</strong>만 끌어오기 때문에, <strong>전체를 봐야 하는 질문</strong>에 약합니다.</p>
+
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>상황</th><th>벡터 검색이 하는 일</th><th>왜 틀리나</th></tr></thead>
+        <tbody>
+            <tr><td>"3월 5일 회의 <strong>요약</strong>해 줘"</td><td>"3월 5일 회의 요약"과 비슷한 <strong>청크 5개</strong>만 회수</td><td>회의가 20개 청크로 쪼개졌다면, 나머지 15개를 못 봐 <strong>핵심 누락</strong></td></tr>
+            <tr><td>"매출 <strong>가장 높은 주</strong>는?"</td><td>일부 청크(예: 6주 차)만 보고 "6주가 최고"라 답</td><td>실제론 14주·19주가 더 높았는데 그 청크를 <strong>안 봄</strong></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 680 150" role="img" aria-label="벡터 검색이 일부 구간만 보고 6주 차를 최고로 착각하지만 실제로는 14주 19주가 더 높다">
+    <line class="d-edge" x1="30" y1="120" x2="660" y2="120"/>
+    <!-- bars -->
+    <rect class="d-box soft" x="40" y="92" width="24" height="28" rx="2"/>
+    <rect class="d-box soft" x="80" y="80" width="24" height="40" rx="2"/>
+    <!-- highlighted (looked-at) chunk -->
+    <rect class="d-box accent" x="120" y="60" width="24" height="60" rx="2"/>
+    <rect class="d-box accent" x="160" y="66" width="24" height="54" rx="2"/>
+    <rect class="d-box accent" x="200" y="72" width="24" height="48" rx="2"/>
+    <text class="d-sub" x="172" y="52" text-anchor="middle">↑ 검색이 본 구간 → "6주가 최고"라 착각</text>
+    <rect class="d-box soft" x="300" y="86" width="24" height="34" rx="2"/>
+    <!-- true max -->
+    <rect class="d-node" x="470" y="30" width="24" height="90" rx="2"/>
+    <rect class="d-node" x="600" y="42" width="24" height="78" rx="2"/>
+    <text class="d-sub" x="482" y="22" text-anchor="middle">14주</text>
+    <text class="d-sub" x="612" y="34" text-anchor="middle">19주 (실제 최고)</text>
+</svg>
+<div class="d-cap">전체가 필요한 질문엔, 차라리 <strong>해당 마크다운을 통째로 읽고</strong> 답하는 편이 정확합니다.</div>
+</div>
+
+<div class="note warn">
+    <span class="nh">그럼 언제 벡터가 빛나나</span>
+    <strong>방대한 텍스트에서 아주 구체적인 스니펫</strong>을 뽑을 때입니다. 예: 규칙이 1,000개인데 <strong>"17번 규칙 뭐였지?"</strong> — 전체를 다 읽을 필요 없이 17번 근처 청크만 집어 주면 됩니다. 정확도를 더 높이려면 <strong>메타데이터</strong>를 붙이거나, 아래의 <strong>하이브리드 검색</strong>을 씁니다.
+</div>
+
+<h3>정확도 올리기 — 하이브리드 · 재순위화 (한 걸음 더)</h3>
+<ul>
+    <li><strong>하이브리드 검색</strong> — 시맨틱(의미) + <strong>BM25</strong>(키워드) 점수를 합쳐 장단점을 보완. (BM25는 <a href="#!llmw-ingest-query-lint">LLM Wiki의 Query</a>에서도 다룹니다.)</li>
+    <li><strong>재순위화(reranking)</strong> — 후보를 뽑은 뒤 더 정밀한 모델로 <strong>순서를 다시</strong> 매김.</li>
+    <li><strong>청킹 전략</strong> — 얼마나 잘게 나누고 겹치게 할지가 결과 품질을 좌우.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">전부 벡터일 필요는 없다</span>
+    세컨드 브레인 <strong>전체</strong>를 벡터로 만들 필요는 없습니다. 예컨대 <strong>유튜브 자막 폴더만</strong> 벡터DB로 두고, <code>context/</code>·<code>projects/</code>·<code>decisions.md</code>는 그대로 마크다운으로 둘 수 있습니다. <strong>데이터 종류와 쓰임에 따라 폴더마다 다른 방식</strong>을 골라 쓰세요. 다음은 <a href="#!sb-level4">레벨 4 — 관계로 잇기</a>.
+</div>

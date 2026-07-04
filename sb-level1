@@ -1,0 +1,94 @@
+<h2>레벨 1 · 정확히 찾기 (라우터로서의 CLAUDE.md)</h2>
+<p>모든 세컨드 브레인은 <strong>여기서 시작</strong>합니다. 준비물은 딱 두 가지 — <strong><code>CLAUDE.md</code> 한 장</strong>과 <strong>몇 개의 폴더·파일</strong>입니다. 이 단계의 질문은 단순합니다. <strong>"내가 쓴 그 단어·파일, 어디 있지?"</strong></p>
+
+<div class="note">
+    <span class="nh">CLAUDE.md 란</span>
+    프로젝트 폴더를 열 때 <strong>자동으로 읽히는 파일</strong>입니다. 그 세션의 <strong>시스템 프롬프트</strong>처럼 작동하죠(자세히는 <a href="#!ccb-claudemd">CLAUDE.md 지침</a> 참고). 여기서 핵심은 이 파일을 <strong>"라우터(길 안내판)"</strong>로 쓰는 것입니다.
+</div>
+
+<h3>CLAUDE.md = 역할 소개 + 라우팅 규칙</h3>
+<p><code>CLAUDE.md</code>에는 "너는 누구고, 무엇이 중요한지"뿐 아니라 <strong>"어떤 정보는 어느 폴더에 있는지"</strong>를 적습니다. 이게 <strong>라우팅 규칙</strong>입니다.</p>
+<pre><code><span class="c"># CLAUDE.md — 라우팅 규칙(길 안내) 예시</span>
+- 나에 대한 개인 정보가 필요하면  → context/about-me.md 를 봐라
+- 기술 스택·환경이 궁금하면        → context/stack.md 를 봐라
+- 올해 1분기 우선순위는            → projects/2026-q1.md 에 있다
+- 큰 결정과 그 이유는             → context/decisions.md (결정 로그)</code></pre>
+
+<div class="diagram">
+<svg viewBox="0 0 680 250" role="img" aria-label="라우터 CLAUDE.md가 요청을 종류에 따라 알맞은 폴더로 안내하는 구조">
+    <rect class="d-box accent" x="250" y="14" width="180" height="52" rx="10"/>
+    <text class="d-label" x="340" y="36" text-anchor="middle">CLAUDE.md</text>
+    <text class="d-sub" x="340" y="54" text-anchor="middle">라우터 · 자동 로딩</text>
+
+    <!-- targets -->
+    <rect class="d-box soft" x="20" y="150" width="150" height="60" rx="9"/>
+    <text class="d-label sm" x="95" y="176" text-anchor="middle">context/</text>
+    <text class="d-sub" x="95" y="194" text-anchor="middle">about-me · stack</text>
+
+    <rect class="d-box soft" x="190" y="150" width="150" height="60" rx="9"/>
+    <text class="d-label sm" x="265" y="176" text-anchor="middle">projects/</text>
+    <text class="d-sub" x="265" y="194" text-anchor="middle">진행 중 프로젝트</text>
+
+    <rect class="d-box soft" x="360" y="150" width="150" height="60" rx="9"/>
+    <text class="d-label sm" x="435" y="176" text-anchor="middle">decisions.md</text>
+    <text class="d-sub" x="435" y="194" text-anchor="middle">결정 로그(날짜별)</text>
+
+    <rect class="d-box soft" x="530" y="150" width="130" height="60" rx="9"/>
+    <text class="d-label sm" x="595" y="176" text-anchor="middle">clients/</text>
+    <text class="d-sub" x="595" y="194" text-anchor="middle">고객사별</text>
+
+    <!-- routing edges -->
+    <path class="d-edge accent" d="M300 66 C260 110, 130 110, 95 148"/><polygon class="d-arrow accent" points="90,143 96,152 99,141"/>
+    <path class="d-edge accent" d="M330 66 C300 110, 270 118, 265 148"/><polygon class="d-arrow accent" points="260,142 266,151 270,141"/>
+    <path class="d-edge accent" d="M350 66 C390 110, 420 118, 433 148"/><polygon class="d-arrow accent" points="428,141 436,150 439,140"/>
+    <path class="d-edge accent" d="M380 66 C440 108, 560 112, 595 148"/><polygon class="d-arrow accent" points="590,141 598,150 601,140"/>
+
+    <text class="d-sub" x="340" y="118" text-anchor="middle">요청 종류에 따라 알맞은 곳으로 안내</text>
+</svg>
+<div class="d-cap">라우팅이 잡혀 있으면 AI가 "무슨 말인지 모르겠어요"라고 되묻지 않고 <strong>바로 해당 폴더</strong>로 갑니다.</div>
+</div>
+
+<h3>왜 라우팅이 필요한가 — AI는 위치를 모르면 못 찾는다</h3>
+<p>프로젝트에 파일이 분명히 있는데도 AI가 <strong>"정보를 더 주세요"</strong>라고 되물었던 경험, 있으실 겁니다. 그건 대개 <strong>거기 있다는 걸 알려 주지 않아서</strong>입니다.</p>
+<div class="note warn">
+    <span class="nh">오해 — "알아서 다 뒤지겠지"</span>
+    AI는 <strong>코드베이스 전체를 자동으로 뒤지지 않습니다</strong>(그렇게 하면 시간·토큰만 낭비). 어딘가 있다는 걸 <strong>모르면 못 찾습니다.</strong> 라우팅이 제대로면 <strong>같은 설명을 반복할 필요가 사라집니다</strong> — 말만 하면 어디를 볼지 알거든요.
+</div>
+
+<h3>폴더는 내가 이해하는 방식으로</h3>
+<p>정답 폴더 구조는 <strong>아직 정해진 표준이 없습니다.</strong> 남이 하는 방식이 유일한 정답이 아닙니다. 기준은 하나 — <strong>나에게 말이 되고, 내 AI에게도 말이 되는가.</strong></p>
+<pre><code><span class="c"># 폴더 예시 (날짜로도 조직 가능)</span>
+context/
+  about-me.md          <span class="c"># 나·업무 방식(항상 참인 배경)</span>
+  stack.md
+  decisions.md         <span class="c"># 결정 로그 — 큰 변경 시 날짜와 함께 추가</span>
+projects/
+  youtube/2026-05-30-top50.md
+  clients/acme.md</code></pre>
+
+<h3>드릴다운 예시 — AI 없이도 내가 찾을 수 있어야 한다</h3>
+<p>좋은 구조는 <strong>사람도 손으로 따라 내려갈 수 있습니다.</strong> "5월 30일 영상용 슬라이드 덱"을 찾는다면:</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 92" role="img" aria-label="드릴다운 경로: projects에서 youtube, 날짜, 슬라이드 덱까지 단계적으로 좁혀 찾는다">
+    <rect class="d-box" x="8" y="26" width="120" height="44" rx="9"/>
+    <text class="d-label sm" x="68" y="52" text-anchor="middle">projects/</text>
+    <rect class="d-box" x="166" y="26" width="120" height="44" rx="9"/>
+    <text class="d-label sm" x="226" y="52" text-anchor="middle">youtube/</text>
+    <rect class="d-box" x="324" y="26" width="140" height="44" rx="9"/>
+    <text class="d-label sm" x="394" y="48" text-anchor="middle">2026-05-30</text>
+    <text class="d-sub" x="394" y="63" text-anchor="middle">그날 영상</text>
+    <rect class="d-box accent" x="502" y="26" width="160" height="44" rx="9"/>
+    <text class="d-label sm" x="582" y="52" text-anchor="middle">tier-list-deck.html</text>
+
+    <line class="d-edge" x1="128" y1="48" x2="164" y2="48"/><polygon class="d-arrow" points="164,43 172,48 164,53"/>
+    <line class="d-edge" x1="286" y1="48" x2="322" y2="48"/><polygon class="d-arrow" points="322,43 330,48 322,53"/>
+    <line class="d-edge" x1="464" y1="48" x2="500" y2="48"/><polygon class="d-arrow" points="500,43 508,48 500,53"/>
+</svg>
+<div class="d-cap">내가 규칙을 이해하니 손으로도 찾고, 같은 규칙을 아는 <strong>에이전트도</strong> 찾습니다.</div>
+</div>
+
+<div class="note">
+    <span class="nh">한계와 다음 단계</span>
+    레벨 1은 대개 <strong>정확한 단어·이름</strong> 기준입니다. 파일이 많아지면 어수선해지고 놓치기 쉬워집니다. 그때 <strong>주제로 묶는</strong> <a href="#!sb-level2">레벨 2 — LLM 위키와 메모리</a>로 넘어갑니다. (참고: <code>CLAUDE.md</code>를 Codex용 <code>AGENTS.md</code>로 복사하면 도구를 바꿔도 그대로 쓸 수 있는데, 이 <strong>도구 무관성</strong>은 레벨 2에서 다룹니다.)
+</div>

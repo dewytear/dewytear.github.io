@@ -1,0 +1,130 @@
+<h2>세컨드 브레인이란 무엇인가</h2>
+<p><strong>세컨드 브레인(Second Brain)</strong>은 내 머릿속 지식·경험·자료를 <strong>바깥의 시스템에 옮겨 담아</strong>, 나중에 <strong>AI가 정확히 다시 꺼내 쓰도록</strong> 정리해 둔 개인 지식 창고입니다. 거창한 소프트웨어가 아니라, <strong>내가 이해하는 규칙으로 정리된 마크다운 파일과 폴더</strong>가 전부입니다. 그리고 그 규칙을 <strong>AI 에이전트도 똑같이 이해</strong>하도록 만드는 것이 핵심입니다.</p>
+
+<div class="note">
+    <span class="nh">한 문장 정의</span>
+    노트·회의록·대화 스레드를 저장해 두고, 나중에 <strong>"그거 다시 찾아 줘"</strong> 했을 때 AI가 <strong>헤매지 않고</strong> 정확히 찾아 오는 시스템 — 그게 세컨드 브레인입니다.
+</div>
+
+<h3>왜 지금 세컨드 브레인인가 — 데이터가 곧 해자(moat)</h3>
+<p>같은 AI 모델을 써도 결과가 다른 이유는 <strong>모델에게 쥐여 준 데이터</strong>가 다르기 때문입니다. 내 업무 맥락, 내 고객, 내 의사결정 히스토리 — 이건 남이 못 가진 <strong>나만의 자산(IP)</strong>이고, 경쟁에서의 <strong>해자</strong>입니다. 문제는 이걸 <strong>어떻게 정리해 두느냐</strong>입니다. 정리가 엉망이면 AI는 <strong>할루시네이션(그럴듯한 거짓)</strong>을 내거나, 자료를 뒤지느라 <strong>시간과 토큰</strong>을 낭비합니다.</p>
+
+<h3>데이터는 이렇게 자란다</h3>
+<p>정보를 시스템에 쌓아 갈수록 데이터의 <strong>모양</strong>이 바뀝니다. 처음엔 흩어진 조각이지만, 관계가 붙기 시작하면 <strong>군집</strong>이 되고, 마침내 서로 <strong>어떻게 연결되는지</strong>가 보이는 <strong>관계망</strong>이 됩니다. 이 진화가 곧 뒤에서 설명할 <strong>5단계</strong>의 밑그림입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 210" role="img" aria-label="데이터 진화 3단계: 흩어진 정보 → 군집 형성 → 관계 매핑">
+    <!-- panel dividers -->
+    <line class="d-edge dash" x1="230" y1="20" x2="230" y2="165"/>
+    <line class="d-edge dash" x1="455" y1="20" x2="455" y2="165"/>
+
+    <!-- Panel A: scattered -->
+    <line class="d-edge" x1="70" y1="120" x2="120" y2="92"/>
+    <circle class="d-node dim" cx="60" cy="60" r="6"/>
+    <circle class="d-node dim" cx="150" cy="52" r="6"/>
+    <circle class="d-node dim" cx="70" cy="120" r="6"/>
+    <circle class="d-node dim" cx="175" cy="128" r="6"/>
+    <circle class="d-node" cx="120" cy="92" r="7"/>
+    <text class="d-label sm" x="120" y="188" text-anchor="middle">① 흩어진 정보</text>
+    <text class="d-sub" x="120" y="204" text-anchor="middle">조각난 파일들</text>
+
+    <!-- Panel B: clusters -->
+    <!-- cluster 1 (accent/teal-orange) -->
+    <line class="d-edge" x1="290" y1="58" x2="320" y2="52"/>
+    <line class="d-edge" x1="290" y1="58" x2="305" y2="82"/>
+    <circle class="d-node" cx="290" cy="58" r="6"/>
+    <circle class="d-node" cx="320" cy="52" r="6"/>
+    <circle class="d-node" cx="305" cy="82" r="6"/>
+    <!-- cluster 2 (amber) -->
+    <line class="d-edge" x1="400" y1="60" x2="425" y2="72"/>
+    <line class="d-edge" x1="400" y1="60" x2="415" y2="46"/>
+    <circle class="d-node b" cx="400" cy="60" r="6"/>
+    <circle class="d-node b" cx="425" cy="72" r="6"/>
+    <circle class="d-node b" cx="415" cy="46" r="6"/>
+    <!-- cluster 3 (violet) -->
+    <line class="d-edge" x1="330" y1="122" x2="352" y2="132"/>
+    <line class="d-edge" x1="330" y1="122" x2="345" y2="105"/>
+    <circle class="d-node c" cx="330" cy="122" r="6"/>
+    <circle class="d-node c" cx="352" cy="132" r="6"/>
+    <circle class="d-node c" cx="345" cy="105" r="6"/>
+    <text class="d-label sm" x="345" y="188" text-anchor="middle">② 군집 형성</text>
+    <text class="d-sub" x="345" y="204" text-anchor="middle">주제별로 뭉침</text>
+
+    <!-- Panel C: relationship map -->
+    <line class="d-edge" x1="505" y1="60" x2="550" y2="48"/>
+    <line class="d-edge" x1="550" y1="48" x2="600" y2="62"/>
+    <line class="d-edge" x1="600" y1="62" x2="638" y2="52"/>
+    <line class="d-edge accent" x1="525" y1="98" x2="575" y2="105"/>
+    <line class="d-edge" x1="575" y1="105" x2="620" y2="96"/>
+    <line class="d-edge" x1="550" y1="48" x2="575" y2="105"/>
+    <line class="d-edge accent" x1="600" y1="62" x2="620" y2="96"/>
+    <line class="d-edge" x1="525" y1="98" x2="555" y2="142"/>
+    <line class="d-edge" x1="575" y1="105" x2="605" y2="140"/>
+    <circle class="d-node d" cx="505" cy="60" r="6"/>
+    <circle class="d-node" cx="550" cy="48" r="7"/>
+    <circle class="d-node b" cx="600" cy="62" r="6"/>
+    <circle class="d-node d" cx="638" cy="52" r="6"/>
+    <circle class="d-node c" cx="525" cy="98" r="6"/>
+    <circle class="d-node" cx="575" cy="105" r="7"/>
+    <circle class="d-node b" cx="620" cy="96" r="6"/>
+    <circle class="d-node c" cx="555" cy="142" r="6"/>
+    <circle class="d-node d" cx="605" cy="140" r="6"/>
+    <text class="d-label sm" x="575" y="188" text-anchor="middle">③ 관계 매핑</text>
+    <text class="d-sub" x="575" y="204" text-anchor="middle">서로 어떻게 이어지나</text>
+</svg>
+<div class="d-cap">단순히 파일이 서로 링크된 게 아니라, <strong>무엇이 무엇과 어떻게 연결되는지</strong>가 드러나는 단계로 발전합니다.</div>
+</div>
+
+<h3>가장 중요한 질문 — "다시 찾을 수 있는가?"</h3>
+<p>세컨드 브레인이 잘 됐는지 판단하는 기준은 딱 하나입니다.</p>
+<div class="note">
+    <span class="nh">핵심 판정 기준</span>
+    <strong>"내 에이전트가 그걸 다시 찾을 수 있는가? 그리고 나도 찾을 수 있는가?"</strong> — 답이 "아니오"라면, 내용이 부족한 게 아니라 <strong>정리(라우팅)·폴더 구조</strong>가 잘못된 것입니다.
+</div>
+
+<h3>거꾸로 설계하라 — 농구 골대와 공</h3>
+<p>정리를 시작하기 전에 <strong>"이 데이터를 나중에 어떻게 꺼내 쓸 것인가"</strong>부터 정하세요. 꺼내는 방식이 <strong>담는 방식</strong>을 결정하기 때문입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 520 150" role="img" aria-label="역설계 비유: 골대(질문의 모양)에 맞춰 공(데이터)의 모양을 정한다">
+    <!-- hoop -->
+    <ellipse class="d-box accent" cx="150" cy="66" rx="46" ry="15"/>
+    <text class="d-label sm" x="150" y="112" text-anchor="middle">질문의 모양 (골대)</text>
+    <!-- round ball fits -->
+    <circle class="d-node" cx="150" cy="66" r="11"/>
+    <text class="d-sub" x="150" y="40" text-anchor="middle">둥근 공 → 통과 ✓</text>
+
+    <!-- square ball doesn't -->
+    <ellipse class="d-box" cx="380" cy="66" rx="46" ry="15"/>
+    <rect class="d-node dim" x="368" y="54" width="24" height="24" rx="3"/>
+    <text class="d-sub" x="380" y="40" text-anchor="middle">네모 공 → 안 들어감 ✕</text>
+    <text class="d-label sm" x="380" y="112" text-anchor="middle">엉뚱하게 담으면</text>
+    <text class="d-sub" x="380" y="130" text-anchor="middle">꺼낼 때 안 맞는다</text>
+</svg>
+<div class="d-cap">골대(꺼낼 질문)를 먼저 보고 공(데이터를 담는 방식)을 정합니다. 순서가 반대면 나중에 고생합니다.</div>
+</div>
+
+<h3>5단계 — 가장 낮은 단계가 정답일 수 있다</h3>
+<p>세컨드 브레인은 <strong>검색·회상 능력</strong>에 따라 5단계로 나뉩니다. 먼저 <strong>큰 그림</strong>만 보고 갑니다(자세한 건 <a href="#!sb-levels">5단계 한눈에 보기</a>).</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>단계</th><th>한 줄 요약</th><th>답하는 질문</th></tr></thead>
+        <tbody>
+            <tr><td><strong>레벨 1</strong></td><td>정확한 단어·파일명으로 찾기 (라우터 <code>CLAUDE.md</code>)</td><td>"그 파일 어디 있지?"</td></tr>
+            <tr><td><strong>레벨 2</strong></td><td>주제로 묶기 (LLM 위키 + 메모리)</td><td>"이 주제 전부 모아 줘"</td></tr>
+            <tr><td><strong>레벨 3</strong></td><td>의미로 찾기 (시맨틱 검색·벡터DB)</td><td>"쓴 단어와 달라도 뜻이 비슷한 걸"</td></tr>
+            <tr><td><strong>레벨 4</strong></td><td>관계로 잇기 (지식 그래프)</td><td>"X에서 A까지 연결을 따라가 줘"</td></tr>
+            <tr><td><strong>레벨 5</strong></td><td>항상 켜진 자율 브레인 OS</td><td>"알아서 계속 갱신돼 있어라"</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note warn">
+    <span class="nh">오해 금지 — 높을수록 좋은 게 아니다</span>
+    레벨 5가 "최고"가 아닙니다. <strong>지금 겪는 통증(pain)에 맞는 가장 낮은 단계</strong>가 정답입니다. 불편함이 없다면 굳이 복잡한 구조로 올라갈 이유가 없습니다 — <strong>고통이 없으면 더 만들지 마세요.</strong> 한 프로젝트 안에서도 <strong>폴더마다 레벨이 달라도</strong> 됩니다.
+</div>
+
+<div class="note">
+    <span class="nh">이 자료의 흐름</span>
+    <a href="#!sb-levels">5단계 개요</a> → 각 레벨(<a href="#!sb-level1">1</a>·<a href="#!sb-level2">2</a>·<a href="#!sb-level3">3</a>·<a href="#!sb-level4">4</a>·<a href="#!sb-level5">5</a>) → <a href="#!sb-context-connections">무엇을 넣고 무엇을 둘까</a> → <a href="#!sb-choose">내 레벨 찾기·팀 확장</a> 순서로 이어집니다. 참고로 <strong>레벨 2</strong>는 이 위키에서 이미 다룬 <a href="#!llmw-overview">LLM Wiki</a>와 바로 이어집니다.
+</div>

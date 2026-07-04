@@ -1,0 +1,88 @@
+<h2>내 레벨 찾기 · 팀 세컨드 브레인</h2>
+<p>정리하겠습니다. <strong>내 프로젝트 전체가 한 레벨일 필요는 없습니다.</strong> 어떤 폴더는 레벨 2, 어떤 폴더는 레벨 4일 수 있죠. 고르는 방법은 딱 하나 — <strong>지금 겪는 통증(pain)에서 거꾸로</strong> 짚어 가는 것입니다.</p>
+
+<h3>통증 → 레벨 결정 트리</h3>
+<div class="diagram">
+<svg viewBox="0 0 680 330" role="img" aria-label="통증 신호에 따라 레벨 1부터 5까지 고르는 결정 트리">
+    <rect class="d-box accent" x="250" y="12" width="180" height="44" rx="10"/>
+    <text class="d-label sm" x="340" y="32" text-anchor="middle">지금 무엇이 불편한가?</text>
+    <text class="d-sub" x="340" y="48" text-anchor="middle">아래에서 가장 가까운 것</text>
+
+    <!-- rows -->
+    <rect class="d-box" x="40" y="86" width="380" height="38" rx="8"/>
+    <text class="d-label sm" x="60" y="110" text-anchor="start">재설명이 잦고, 정확한 단어·파일로 찾는다</text>
+    <rect class="d-box soft" x="440" y="86" width="200" height="38" rx="8"/>
+    <text class="d-label sm" x="540" y="110" text-anchor="middle"><tspan class="d-accent">레벨 1</tspan> · 라우터 CLAUDE.md</text>
+
+    <rect class="d-box" x="40" y="134" width="380" height="38" rx="8"/>
+    <text class="d-label sm" x="60" y="158" text-anchor="start">노트가 30개+, 뭐가 있었는지 자꾸 잊는다</text>
+    <rect class="d-box soft" x="440" y="134" width="200" height="38" rx="8"/>
+    <text class="d-label sm" x="540" y="158" text-anchor="middle"><tspan class="d-accent">레벨 2</tspan> · 위키 + 메모리</text>
+
+    <rect class="d-box" x="40" y="182" width="380" height="38" rx="8"/>
+    <text class="d-label sm" x="60" y="206" text-anchor="start">존재하는 노트를 단어 불일치로 놓친다</text>
+    <rect class="d-box soft" x="440" y="182" width="200" height="38" rx="8"/>
+    <text class="d-label sm" x="540" y="206" text-anchor="middle"><tspan class="d-accent">레벨 3</tspan> · 시맨틱 검색</text>
+
+    <rect class="d-box" x="40" y="230" width="380" height="38" rx="8"/>
+    <text class="d-label sm" x="60" y="254" text-anchor="start">관계 사슬을 따라 질문을 이어가고 싶다</text>
+    <rect class="d-box soft" x="440" y="230" width="200" height="38" rx="8"/>
+    <text class="d-label sm" x="540" y="254" text-anchor="middle"><tspan class="d-accent">레벨 4</tspan> · 지식 그래프</text>
+
+    <rect class="d-box" x="40" y="278" width="380" height="38" rx="8"/>
+    <text class="d-label sm" x="60" y="302" text-anchor="start">오프라인 에이전트·대량 데이터를 상시 동기화</text>
+    <rect class="d-box soft" x="440" y="278" width="200" height="38" rx="8"/>
+    <text class="d-label sm" x="540" y="302" text-anchor="middle"><tspan class="d-accent">레벨 5</tspan> · 항상 켜진 OS</text>
+
+    <line class="d-edge" x1="420" y1="105" x2="438" y2="105"/><polygon class="d-arrow" points="438,100 446,105 438,110"/>
+    <line class="d-edge" x1="420" y1="153" x2="438" y2="153"/><polygon class="d-arrow" points="438,148 446,153 438,158"/>
+    <line class="d-edge" x1="420" y1="201" x2="438" y2="201"/><polygon class="d-arrow" points="438,196 446,201 438,206"/>
+    <line class="d-edge" x1="420" y1="249" x2="438" y2="249"/><polygon class="d-arrow" points="438,244 446,249 438,254"/>
+    <line class="d-edge" x1="420" y1="297" x2="438" y2="297"/><polygon class="d-arrow" points="438,292 446,297 438,302"/>
+</svg>
+<div class="d-cap">통증이 없다면? 지금 단계에 머무르세요 — <strong>고통이 없으면 더 만들지 않는 게</strong> 정답입니다.</div>
+</div>
+
+<div class="note warn">
+    <span class="nh">체크리스트로 다시</span>
+    <ul>
+        <li>같은 설명을 반복하고, 이름으로 찾는다 → <a href="#!sb-level1">레벨 1</a></li>
+        <li>노트 30개+가 뒤엉킨다 → <a href="#!sb-level2">레벨 2</a></li>
+        <li>있는 걸 못 찾고 라우팅이 안 먹는다 → <a href="#!sb-level3">레벨 3</a></li>
+        <li>관계·연결의 사슬이 필요하다 → <a href="#!sb-level4">레벨 4</a></li>
+        <li>상시 자동 동기화·다중 에이전트 → <a href="#!sb-level5">레벨 5</a></li>
+    </ul>
+</div>
+
+<h3>팀 세컨드 브레인 — 진짜 문제는 도구가 아니다</h3>
+<p>나만의 브레인이 익숙해지면 다음 질문이 옵니다. <strong>"팀원들 것과 어떻게 합치지?"</strong> 흔히 <em>"Google Drive냐 Notion이냐 GitHub냐"</em>를 고민하지만, 진짜 난제는 <strong>도구가 아니라 습관·변화관리</strong>입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 660 150" role="img" aria-label="팀 세컨드 브레인의 핵심은 도구 선택이 아니라 습관 전환과 변화관리다">
+    <rect class="d-box soft" x="30" y="52" width="180" height="48" rx="10"/>
+    <text class="d-label sm" x="120" y="74" text-anchor="middle">도구 선택</text>
+    <text class="d-sub" x="120" y="90" text-anchor="middle">Drive·Notion·GitHub…</text>
+
+    <polygon class="d-box" points="300,52 340,76 300,100 260,76"/>
+    <text class="d-sub" x="300" y="80" text-anchor="middle">핵심?</text>
+
+    <rect class="d-box accent" x="400" y="30" width="240" height="42" rx="10"/>
+    <text class="d-label sm" x="520" y="56" text-anchor="middle">습관 전환 · 변화관리 (핵심)</text>
+    <rect class="d-box soft" x="400" y="86" width="240" height="42" rx="10"/>
+    <text class="d-sub" x="520" y="105" text-anchor="middle">오너가 문서를 갱신·동기화하는가</text>
+    <text class="d-sub" x="520" y="120" text-anchor="middle">서로 물어보기 전에 브레인을 먼저 보는가</text>
+
+    <line class="d-edge" x1="210" y1="76" x2="258" y2="76"/><polygon class="d-arrow" points="258,71 266,76 258,81"/>
+    <line class="d-edge accent" x1="340" y1="70" x2="398" y2="55"/><polygon class="d-arrow accent" points="393,49 400,58 402,48"/>
+    <line class="d-edge dash" x1="340" y1="82" x2="398" y2="100"/>
+</svg>
+<div class="d-cap">"누가 문서를 최신으로 유지하고, 다들 그걸 먼저 참고하는가" — 이 <strong>습관</strong>이 성패를 가릅니다.</div>
+</div>
+
+<h3>마무리 — 내 것부터 매일</h3>
+<p>팀 문제는 <strong>내 것이 매일 잘 돌아간 다음</strong>에야 풀립니다. 먼저 스스로 <strong>어떻게 라우팅하고, 데이터를 어디에 둘지</strong> 결정하는 감을 익히세요. 그게 첫 관문입니다.</p>
+
+<div class="note">
+    <span class="nh">한 문장으로</span>
+    좋은 세컨드 브레인의 조건은 결국 이겁니다 — <strong>"내 데이터가 어디 사는지 알고, 어떤 순서로 볼지 알아서, 정확한 답을 준다."</strong> 처음으로 돌아가 <a href="#!sb-intro">세컨드 브레인이란</a>을 다시 보면, 왜 "다시 찾을 수 있는가?"가 전부였는지 이해될 겁니다.
+</div>

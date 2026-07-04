@@ -1,0 +1,88 @@
+<h2>레벨 4 · 관계로 잇기 (지식 그래프)</h2>
+<p>레벨 3이 <strong>"뜻이 비슷한 것"</strong>을 찾았다면, 레벨 4는 <strong>"무엇이 무엇과 어떻게 엮였는지"</strong>를 따라갑니다. 이게 <strong>지식 그래프(knowledge graph)</strong>입니다. 질문의 모양은 <strong>"X에서 시작해 A까지 연결을 추적해 줘"</strong>. 보통 가장 <strong>강력하지만 가장 복잡·고비용</strong>인 단계입니다.</p>
+
+<h3>엔티티 + 관계 = 그래프</h3>
+<p>지식 그래프는 두 가지로 이뤄집니다. <strong>엔티티(개체: 사람·회사·제품)</strong>와, 그들 사이의 <strong>이름 붙은 관계(누가 어디서 일한다, 무엇을 보증한다)</strong>입니다. 위키 링크와 달리 <strong>관계에 의미(타입)</strong>가 있습니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 250" role="img" aria-label="지식 그래프 예시: Jordan은 Acme에서 일하고 Acme는 Postpilot이 보증하며 Postpilot은 Cadently의 경쟁사다">
+    <!-- nodes -->
+    <circle class="d-node" cx="110" cy="80" r="12"/>
+    <text class="d-label sm" x="110" y="52" text-anchor="middle">Jordan</text>
+    <text class="d-sub" x="110" y="112" text-anchor="middle">사람</text>
+
+    <circle class="d-node d" cx="330" cy="70" r="14"/>
+    <text class="d-label sm" x="330" y="42" text-anchor="middle">Acme</text>
+    <text class="d-sub" x="330" y="102" text-anchor="middle">회사</text>
+
+    <circle class="d-node b" cx="540" cy="120" r="13"/>
+    <text class="d-label sm" x="540" y="92" text-anchor="middle">Postpilot</text>
+    <text class="d-sub" x="540" y="152" text-anchor="middle">회사</text>
+
+    <circle class="d-node c" cx="330" cy="200" r="13"/>
+    <text class="d-label sm" x="330" y="230" text-anchor="middle">Cadently</text>
+
+    <!-- typed edges -->
+    <line class="d-edge accent" x1="123" y1="76" x2="316" y2="71"/>
+    <text class="d-accent" x="215" y="62" text-anchor="middle" font-size="11">근무(works_at)</text>
+    <line class="d-edge accent" x1="343" y1="79" x2="527" y2="112"/>
+    <text class="d-accent" x="440" y="86" text-anchor="middle" font-size="11">보증(endorsed_by)</text>
+    <line class="d-edge dash" x1="527" y1="130" x2="343" y2="193"/>
+    <text class="d-sub" x="450" y="176" text-anchor="middle">경쟁(competitor_of)</text>
+    <line class="d-edge" x1="330" y1="84" x2="330" y2="187"/>
+</svg>
+<div class="d-cap">"Jordan → Acme → Postpilot → Cadently"처럼 <strong>관계 사슬</strong>을 따라가며 답을 조립합니다.</div>
+</div>
+
+<div class="note">
+    <span class="nh">위키보다 가벼울 수 있다</span>
+    위키는 관련 페이지를 <strong>통째로 읽어야</strong> 합니다("11Labs만 알면 되는데 AI 영상 제작 문서 전체를 읽는" 식). 그래프는 <strong>필요한 엣지(관계)만</strong> 짚으면 되므로, 이런 경우 <strong>오히려 가볍습니다.</strong>
+</div>
+
+<h3>도구 — LightRAG · Graphiti · GraphRAG</h3>
+<p>대개 <strong>소프트웨어가 엔티티·관계를 자동 추출</strong>해 그래프를 만들어 줍니다. 대표적으로:</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>도구</th><th>특징</th></tr></thead>
+        <tbody>
+            <tr><td><strong>LightRAG</strong></td><td>그래프 + 벡터를 결합한 경량 RAG. 증분 업데이트에 강함(오픈소스).</td></tr>
+            <tr><td><strong>Graphiti</strong></td><td>시간(변화)까지 담는 지식 그래프 프레임워크.</td></tr>
+            <tr><td><strong>GraphRAG</strong> (Microsoft)</td><td>문서 뭉치에서 엔티티·관계·요약을 구축하는 방식.</td></tr>
+        </tbody>
+    </table>
+</div>
+<p class="scn-sub">※ 강의의 "그래파이파이어"는 <strong>Graphiti</strong>, "쿼드런트"는 <a href="#!sb-level3">레벨 3</a>의 <strong>Qdrant</strong>를 가리키는 것으로 보입니다.</p>
+
+<h3>진짜 관건은 검색이 아니라 "머릿속 꺼내기"</h3>
+<p>지식 그래프의 품질은 결국 <strong>넣은 데이터의 양과 질</strong>이 좌우합니다. 그런데 많은 사람의 진짜 병목은 <strong>시스템이 못 찾는 것</strong>이 아니라, <strong>머릿속 지식이 아직 시스템에 안 들어온 것</strong>입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 620 130" role="img" aria-label="인터뷰 스킬이 나를 집요하게 질문해 브레인스토밍 파일을 만들고 그것이 지식 그래프의 재료가 된다">
+    <rect class="d-box" x="20" y="42" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="80" y="70" text-anchor="middle">나 (머릿속)</text>
+    <rect class="d-box accent" x="200" y="42" width="150" height="48" rx="10"/>
+    <text class="d-label sm" x="275" y="64" text-anchor="middle">인터뷰 스킬</text>
+    <text class="d-sub" x="275" y="80" text-anchor="middle">집요하게 질문(grill)</text>
+    <rect class="d-box" x="410" y="42" width="180" height="48" rx="10"/>
+    <text class="d-label sm" x="500" y="64" text-anchor="middle">브레인스토밍 파일</text>
+    <text class="d-sub" x="500" y="80" text-anchor="middle">→ 그래프의 재료</text>
+
+    <line class="d-edge accent" x1="140" y1="66" x2="198" y2="66"/><polygon class="d-arrow accent" points="198,61 206,66 198,71"/>
+    <line class="d-edge accent" x1="350" y1="66" x2="408" y2="66"/><polygon class="d-arrow accent" points="408,61 416,66 408,71"/>
+    <path class="d-edge dash" d="M275 90 V112 H80 V92"/><polygon class="d-arrow" points="75,92 85,92 80,86"/>
+    <text class="d-sub" x="180" y="106" text-anchor="middle">모를 때까지 되묻는다</text>
+</svg>
+<div class="d-cap">"나를 인터뷰해 줘(grill me)" 식 스킬로 고객·사업을 <strong>캐물어</strong> 파일로 만들면, 그게 곧 그래프·위키의 재료가 됩니다.</div>
+</div>
+
+<p>그래서 시스템을 탓하기 전에 먼저 물어보세요. <strong>"내 폴더가 정말 내 머릿속만큼 <em>총체적(holistic)</em>인가?"</strong> 자료·계약서·자막을 넣어 가며 <strong>브레인스토밍</strong>으로 살을 붙이는 습관이 핵심입니다.</p>
+
+<div class="note warn">
+    <span class="nh">프라이버시 — 어디로 가는 데이터인가</span>
+    내 데이터를 Claude(클로드) 모델로 처리하면 그 내용은 <strong>Anthropic으로 전송</strong>됩니다. 본인 업무 자료라면 감수할 수 있지만, <strong>고객 데이터·민감 정보</strong>라면 얘기가 다릅니다. 그런 경우 <strong>오픈소스·로컬 모델</strong>로 돌리고, 모든 걸 담는 세컨드 브레인은 <strong>클라우드가 아닌 로컬</strong>에 두는 선택을 고려하세요. 무엇을 어디서 처리하는지 <strong>스스로 인지</strong>하는 게 먼저입니다.
+</div>
+
+<div class="note">
+    <span class="nh">다음</span>
+    관계까지 필요 없다면 굳이 그래프를 쓰지 않아도 됩니다. 이 모든 걸 <strong>자동·상시</strong>로 돌리는 마지막 단계는 <a href="#!sb-level5">레벨 5 — 항상 켜진 브레인 OS</a>입니다.
+</div>
