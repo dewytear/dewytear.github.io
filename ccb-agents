@@ -24,6 +24,46 @@ https://arxiv.org/abs/....  이 논문의 PDF 파일을 다운로드해줘.</cod
 @paper.pdf  paper-analyzer 에이전트를 이용해서 이 논문을 분석해줘.</code></pre>
 
 <h3>4) 병렬 분석 — Claude Code의 진가</h3>
+<div class="diagram">
+<svg viewBox="0 0 680 214" role="img" aria-label="병렬 스폰 fan-out: PDF 준비 → 에이전트 생성(오케스트레이터)에서 여러 에이전트로 갈라져 병렬 분석 후 취합으로 모임">
+    <rect class="d-box" x="12" y="83" width="108" height="44" rx="10"/>
+    <text class="d-label sm" x="66" y="105" text-anchor="middle">PDF 준비</text>
+    <text class="d-sub" x="66" y="120" text-anchor="middle">다운로드</text>
+
+    <rect class="d-box accent" x="148" y="83" width="132" height="44" rx="10"/>
+    <text class="d-label sm" x="214" y="105" text-anchor="middle">에이전트 생성</text>
+    <text class="d-sub" x="214" y="120" text-anchor="middle">오케스트레이터</text>
+
+    <rect class="d-box soft" x="330" y="8" width="150" height="38" rx="10"/>
+    <text class="d-label sm" x="405" y="32" text-anchor="middle">에이전트 1</text>
+    <rect class="d-box soft" x="330" y="60" width="150" height="38" rx="10"/>
+    <text class="d-label sm" x="405" y="84" text-anchor="middle">에이전트 2</text>
+    <rect class="d-box soft" x="330" y="112" width="150" height="38" rx="10"/>
+    <text class="d-label sm" x="405" y="136" text-anchor="middle">에이전트 3</text>
+    <rect class="d-box soft" x="330" y="164" width="150" height="38" rx="10"/>
+    <text class="d-label sm" x="405" y="188" text-anchor="middle">에이전트 4</text>
+
+    <rect class="d-box" x="540" y="83" width="120" height="44" rx="10"/>
+    <text class="d-label sm" x="600" y="105" text-anchor="middle">취합</text>
+    <text class="d-sub" x="600" y="120" text-anchor="middle">결과 통합</text>
+
+    <line class="d-edge" x1="120" y1="105" x2="144" y2="105"/><polygon class="d-arrow" points="144,100 152,105 144,110"/>
+
+    <path class="d-edge accent" d="M280 105 C305 105 308 27 328 27"/><polygon class="d-arrow accent" points="328,22 336,27 328,32"/>
+    <path class="d-edge accent" d="M280 105 C305 105 308 79 328 79"/><polygon class="d-arrow accent" points="328,74 336,79 328,84"/>
+    <path class="d-edge accent" d="M280 105 C305 105 308 131 328 131"/><polygon class="d-arrow accent" points="328,126 336,131 328,136"/>
+    <path class="d-edge accent" d="M280 105 C305 105 308 183 328 183"/><polygon class="d-arrow accent" points="328,178 336,183 328,188"/>
+
+    <path class="d-edge" d="M480 27 C512 27 512 105 536 105"/>
+    <path class="d-edge" d="M480 79 C512 79 512 105 536 105"/>
+    <path class="d-edge" d="M480 131 C512 131 512 105 536 105"/>
+    <path class="d-edge" d="M480 183 C512 183 512 105 536 105"/>
+    <polygon class="d-arrow" points="536,100 544,105 536,110"/>
+
+    <text class="d-accent" x="405" y="211" text-anchor="middle" font-size="11">여러 에이전트 병렬 스폰</text>
+</svg>
+<div class="d-cap">하나의 오케스트레이터가 에이전트 여러 개를 병렬로 띄워 동시에 분석한 뒤 취합합니다.</div>
+</div>
 <p>링크를 알고 있는 <strong>나머지 논문들도 한꺼번에</strong> 분석할 수 있습니다.</p>
 <pre><code>나머지 논문들도 분석해서 파일로 저장해줘.</code></pre>
 <p>Claude Code는 에이전트를 <strong>여러 개 병렬로 스폰</strong>해(예: 12개 논문을 5~6개 에이전트로) 동시에 분석합니다. <strong>이것은 웹 채팅에서는 안 되는 일</strong>입니다. 분석 결과는 앞서 만든 논문 소개 사이트의 <strong>상세 페이지</strong>로 만들어 연결할 수도 있습니다.</p>

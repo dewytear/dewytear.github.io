@@ -4,6 +4,43 @@
 <h3>주소 하나로 연결된 지식을 함께 읽는다</h3>
 <p>"BM25" 노트의 주소값만 인공지능에게 넘겨 주면, 그와 <strong>연결된 나머지 노트들도 소시지처럼</strong> 이어서 읽습니다. 다만 이 자동 연결은 <strong>같은 볼트 안에서만</strong> 가능합니다.</p>
 
+<div class="diagram">
+<svg viewBox="0 0 640 250" role="img" aria-label="노트들이 링크로 이어진 지식 그래프. 파란 선은 볼트를 넘는 연결이다">
+    <rect class="d-box soft" x="20" y="30" width="300" height="200" rx="12"/>
+    <text class="d-sub" x="170" y="50" text-anchor="middle">위키 볼트 (위성)</text>
+    <rect class="d-box soft" x="340" y="30" width="280" height="200" rx="12"/>
+    <text class="d-sub" x="480" y="50" text-anchor="middle">메인 볼트 (모선)</text>
+
+    <line class="d-edge" x1="170" y1="130" x2="80" y2="72"/>
+    <line class="d-edge" x1="170" y1="130" x2="92" y2="188"/>
+    <line class="d-edge" x1="170" y1="130" x2="250" y2="82"/>
+    <line class="d-edge" x1="170" y1="130" x2="250" y2="184"/>
+    <line class="d-edge accent" x1="170" y1="130" x2="430" y2="82"/>
+    <line class="d-edge accent" x1="170" y1="130" x2="470" y2="186"/>
+
+    <circle class="d-node b" cx="170" cy="130" r="8"/>
+    <text class="d-sub" x="170" y="118" text-anchor="middle">BM25</text>
+    <circle class="d-node" cx="80" cy="72" r="7"/>
+    <text class="d-sub" x="80" y="66" text-anchor="middle">MOC</text>
+    <circle class="d-node" cx="92" cy="188" r="7"/>
+    <text class="d-sub" x="92" y="206" text-anchor="middle">하네스</text>
+    <circle class="d-node" cx="250" cy="82" r="7"/>
+    <text class="d-sub" x="250" y="76" text-anchor="middle">로그</text>
+    <circle class="d-node" cx="250" cy="184" r="7"/>
+    <text class="d-sub" x="250" y="202" text-anchor="middle">개념 A</text>
+
+    <circle class="d-node c" cx="430" cy="82" r="7"/>
+    <text class="d-sub" x="430" y="76" text-anchor="middle">관련 글</text>
+    <circle class="d-node c" cx="540" cy="120" r="7"/>
+    <text class="d-sub" x="540" y="114" text-anchor="middle">관련 글</text>
+    <circle class="d-node c" cx="470" cy="186" r="7"/>
+    <text class="d-sub" x="470" y="204" text-anchor="middle">관련 글</text>
+    <line class="d-edge" x1="430" y1="82" x2="540" y2="120"/>
+    <line class="d-edge" x1="540" y1="120" x2="470" y2="186"/>
+</svg>
+<div class="d-cap">노트끼리 링크로 이어진 작은 <strong>지식 그래프</strong> — 파란 선(accent)은 <strong>볼트를 넘는 연결</strong>입니다.</div>
+</div>
+
 <h3>볼트 간 연결 — 마크다운 링크</h3>
 <p>외부 볼트에 대한 연결은 <strong>마크다운 링크 방식</strong>(<code>[[...]]</code> 또는 <code>[텍스트](주소)</code>)으로 해야 합니다. 강사는 이 볼트 간 링크도 자동으로 작성되도록 시스템 파일에 세팅해 두었습니다.</p>
 <ul>

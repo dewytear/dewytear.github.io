@@ -5,6 +5,32 @@
 <p>컨텍스트에는 등록된 스킬의 <strong>메타데이터(이름 + 설명, 3~4줄, 100토큰 미만)</strong> 만 들어갑니다. 도서관에 책이 쭉 꽂혀 있고, 우리는 <strong>책 표지(제목·간단 설명)</strong> 만 훑다가 필요할 때 꺼내 읽는 것과 같습니다. 메타데이터가 워낙 작아 <strong>100개 이상</strong> 넣어도 컨텍스트를 거의 차지하지 않습니다. (JSON 도구는 30개 정도가 한계였던 것과 대조적)</p>
 
 <h3>3단계 로딩</h3>
+<div class="diagram">
+<svg viewBox="0 0 640 252" role="img" aria-label="스킬 3단계 점진적 로딩: 메타데이터는 항상, 지침 본문은 호출될 때, 리소스·스크립트는 필요할 때만 로드">
+    <rect class="d-box accent" x="20" y="12" width="300" height="60" rx="10"/>
+    <text class="d-label" x="170" y="38" text-anchor="middle">① 메타데이터</text>
+    <text class="d-sub" x="170" y="56" text-anchor="middle">이름 + 설명 · 100토큰 미만</text>
+
+    <rect class="d-box" x="20" y="96" width="300" height="60" rx="10"/>
+    <text class="d-label" x="170" y="122" text-anchor="middle">② 지침 본문</text>
+    <text class="d-sub" x="170" y="140" text-anchor="middle">SKILL.md 본문</text>
+
+    <rect class="d-box soft" x="20" y="180" width="300" height="60" rx="10"/>
+    <text class="d-label" x="170" y="206" text-anchor="middle">③ 리소스 · 스크립트</text>
+    <text class="d-sub" x="170" y="224" text-anchor="middle">번들 파일 · 템플릿</text>
+
+    <line class="d-edge" x1="170" y1="72" x2="170" y2="94"/><polygon class="d-arrow" points="165,94 175,94 170,100"/>
+    <line class="d-edge" x1="170" y1="156" x2="170" y2="178"/><polygon class="d-arrow" points="165,178 175,178 170,184"/>
+
+    <line class="d-edge dash" x1="320" y1="42" x2="356" y2="42"/>
+    <text class="d-accent" x="364" y="46" text-anchor="start">항상 로드</text>
+    <line class="d-edge dash" x1="320" y1="126" x2="356" y2="126"/>
+    <text class="d-accent" x="364" y="130" text-anchor="start">호출될 때 로드</text>
+    <line class="d-edge dash" x1="320" y1="210" x2="356" y2="210"/>
+    <text class="d-accent" x="364" y="214" text-anchor="start">필요할 때만 로드</text>
+</svg>
+<div class="d-cap">위로 갈수록 항상, 아래로 갈수록 필요할 때만 — 로드 시점이 단계별로 늦어집니다.</div>
+</div>
 <div class="tbl-wrap">
     <table>
         <thead><tr><th>레벨</th><th>내용</th><th>로딩 시점</th></tr></thead>

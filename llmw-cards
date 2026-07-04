@@ -4,6 +4,40 @@
 <h3>로우 소스 → 위키 카드</h3>
 <p>아티클·기사·논문·<strong>유튜브 전사본</strong> 등을 볼트에 넣으면, LLM이 읽고 추출해 <strong>위키 카드</strong>로 만듭니다. 아티클 하나에서 배울 게 다섯 개면 다섯 개의 카드가 나올 수 있고, 여러 소스(아티클 3개 + 유튜브 2편)를 <strong>한 번에 인제스트</strong>해 AI가 알아서 컴파일링하게 할 수도 있습니다.</p>
 
+<div class="diagram">
+<svg viewBox="0 0 660 200" role="img" aria-label="인제스트 파이프라인: 로우 소스를 LLM이 추출해 위키 카드로 만들고, 카드는 개념·엔티티·가이드·맵으로 나뉜다">
+    <rect class="d-box" x="20" y="34" width="150" height="60" rx="11"/>
+    <text class="d-label sm" x="95" y="60" text-anchor="middle">로우 소스</text>
+    <text class="d-sub" x="95" y="78" text-anchor="middle">자막·기사·논문</text>
+
+    <rect class="d-box accent" x="255" y="34" width="150" height="60" rx="11"/>
+    <text class="d-label sm" x="330" y="60" text-anchor="middle">LLM 추출</text>
+    <text class="d-sub" x="330" y="78" text-anchor="middle">읽고 카드화</text>
+
+    <rect class="d-box" x="490" y="34" width="150" height="60" rx="11"/>
+    <text class="d-label sm" x="565" y="60" text-anchor="middle">위키 카드</text>
+    <text class="d-sub" x="565" y="78" text-anchor="middle">출처 기반</text>
+
+    <line class="d-edge" x1="170" y1="64" x2="253" y2="64"/>
+    <polygon class="d-arrow" points="253,59 261,64 253,69"/>
+    <line class="d-edge accent" x1="405" y1="64" x2="488" y2="64"/>
+    <polygon class="d-arrow accent" points="488,59 496,64 488,69"/>
+
+    <line class="d-edge" x1="565" y1="94" x2="565" y2="116"/>
+    <polygon class="d-arrow" points="560,116 565,124 570,116"/>
+
+    <rect class="d-box soft" x="482" y="126" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="520" y="143" text-anchor="middle">개념</text>
+    <rect class="d-box soft" x="566" y="126" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="604" y="143" text-anchor="middle">엔티티</text>
+    <rect class="d-box soft" x="482" y="158" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="520" y="175" text-anchor="middle">가이드</text>
+    <rect class="d-box soft" x="566" y="158" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="604" y="175" text-anchor="middle">맵</text>
+</svg>
+<div class="d-cap">로우 소스를 <strong>LLM이 읽어</strong> 출처 기반 <strong>위키 카드</strong>로 — 개념·엔티티·가이드·맵으로 나뉩니다.</div>
+</div>
+
 <h3>카드의 종류</h3>
 <div class="tbl-wrap">
     <table>

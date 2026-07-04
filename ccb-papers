@@ -8,6 +8,35 @@ https://huggingface.co/papers
 오늘자 논문들을 정리해줘.</code></pre>
 
 <h3>목록 페이지만으로 끝나지 않는다</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="파이프라인: 논문 목록 → 개별 페이지 WebFetch → 초록 추출 → 분류별 정리 → 파일 저장">
+    <rect class="d-box" x="10" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="70" y="46" text-anchor="middle">① 논문 목록</text>
+    <text class="d-sub" x="70" y="63" text-anchor="middle">데일리 페이퍼</text>
+
+    <rect class="d-box" x="148" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="208" y="46" text-anchor="middle">② 개별 페이지</text>
+    <text class="d-sub" x="208" y="63" text-anchor="middle">WebFetch</text>
+
+    <rect class="d-box" x="286" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="346" y="46" text-anchor="middle">③ 초록 추출</text>
+    <text class="d-sub" x="346" y="63" text-anchor="middle">abstract</text>
+
+    <rect class="d-box" x="424" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="484" y="46" text-anchor="middle">④ 분류별 정리</text>
+    <text class="d-sub" x="484" y="63" text-anchor="middle">카테고리화</text>
+
+    <rect class="d-box accent" x="562" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="622" y="46" text-anchor="middle">⑤ 파일 저장</text>
+    <text class="d-sub" x="622" y="63" text-anchor="middle">한 파일로</text>
+
+    <line class="d-edge" x1="130" y1="48" x2="146" y2="48"/><polygon class="d-arrow" points="146,43 154,48 146,53"/>
+    <line class="d-edge" x1="268" y1="48" x2="284" y2="48"/><polygon class="d-arrow" points="284,43 292,48 284,53"/>
+    <line class="d-edge" x1="406" y1="48" x2="422" y2="48"/><polygon class="d-arrow" points="422,43 430,48 422,53"/>
+    <line class="d-edge" x1="544" y1="48" x2="560" y2="48"/><polygon class="d-arrow" points="560,43 568,48 560,53"/>
+</svg>
+<div class="d-cap">목록에서 각 논문 페이지를 열어 초록을 모으고, 분류해 한 파일로 정리합니다.</div>
+</div>
 <p>데일리 페이퍼 목록 페이지에는 각 논문의 상세 내용이 담겨 있지 않습니다. 그래서 Claude Code는</p>
 <ul>
     <li>목록에서 각 논문의 <strong>개별 페이지를 탐색(WebFetch)</strong> 하고,</li>

@@ -17,6 +17,30 @@
 <p>터미널 환경에 조금만 익숙해지면, 평소 AI 채팅을 쓰듯이 훨씬 자유롭게 사용할 수 있습니다.</p>
 
 <h3>시연 — 회의록 세 개를 한 보고서로</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="시연 흐름: 폴더 탐색 → 파일 읽기 → 분석 → 보고서 작성">
+    <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="85" y="46" text-anchor="middle">① 폴더 탐색</text>
+    <text class="d-sub" x="85" y="63" text-anchor="middle">search</text>
+
+    <rect class="d-box" x="180" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="255" y="46" text-anchor="middle">② 파일 읽기</text>
+    <text class="d-sub" x="255" y="63" text-anchor="middle">하나하나 읽기</text>
+
+    <rect class="d-box" x="350" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="425" y="46" text-anchor="middle">③ 분석</text>
+    <text class="d-sub" x="425" y="63" text-anchor="middle">내용 파악</text>
+
+    <rect class="d-box accent" x="520" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="595" y="46" text-anchor="middle">④ 보고서 작성</text>
+    <text class="d-sub" x="595" y="63" text-anchor="middle">결과물 생성</text>
+
+    <line class="d-edge" x1="160" y1="48" x2="176" y2="48"/><polygon class="d-arrow" points="176,43 184,48 176,53"/>
+    <line class="d-edge" x1="330" y1="48" x2="346" y2="48"/><polygon class="d-arrow" points="346,43 354,48 346,53"/>
+    <line class="d-edge" x1="500" y1="48" x2="516" y2="48"/><polygon class="d-arrow" points="516,43 524,48 516,53"/>
+</svg>
+<div class="d-cap">파일 목록을 알려 주지 않아도 스스로 탐색·읽기·분석해 보고서를 만듭니다.</div>
+</div>
 <p>회의록 파일 3개가 든 폴더에서 Claude Code를 실행하고 이렇게 요청합니다.</p>
 <pre><code>이 회의록 세 개를 합쳐서 한 개의 보고서로 요약해줘. 한국어로.</code></pre>
 <p>여기서 핵심은 <strong>어떤 파일이 있는지 알려 주지 않았다</strong>는 점입니다. 웹 채팅이라면 파일을 직접 업로드해야 하지만, Claude Code는</p>

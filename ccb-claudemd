@@ -2,6 +2,34 @@
 <p>Claude Code는 항상 참조하는 파일로 <code>CLAUDE.md</code> 라는 마크다운 파일을 사용합니다. <strong>AI에게 어떤 명령을 하든 항상 함께 포함되는 파일</strong>이라고 생각하면 됩니다. 그래서 <strong>너무 길지 않게, 중요한 내용을 명료하게</strong> 담아야 합니다.</p>
 
 <h3>네 가지 레이어</h3>
+<div class="diagram">
+<svg viewBox="0 0 680 236" role="img" aria-label="CLAUDE.md 적용범위 4계층: 회사 → 유저 전역 → 프로젝트 → 프로젝트 로컬, 아래로 갈수록 우선순위 높음">
+    <rect class="d-box" x="52" y="8" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="30" text-anchor="middle">회사 (엔터프라이즈)</text>
+    <text class="d-sub" x="262" y="46" text-anchor="middle">조직 전체 멤버에 적용</text>
+
+    <rect class="d-box" x="52" y="64" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="86" text-anchor="middle">유저 전역</text>
+    <text class="d-sub" x="262" y="102" text-anchor="middle">~/.claude · 내 모든 프로젝트</text>
+
+    <rect class="d-box" x="52" y="120" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="142" text-anchor="middle">프로젝트</text>
+    <text class="d-sub" x="262" y="158" text-anchor="middle">CLAUDE.md · 동료와 공유</text>
+
+    <rect class="d-box accent" x="52" y="176" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="198" text-anchor="middle">프로젝트 로컬</text>
+    <text class="d-sub" x="262" y="214" text-anchor="middle">공유 안 함 · 내 PC 전용</text>
+
+    <line class="d-edge" x1="262" y1="52" x2="262" y2="62"/><polygon class="d-arrow" points="257,62 267,62 262,68"/>
+    <line class="d-edge" x1="262" y1="108" x2="262" y2="118"/><polygon class="d-arrow" points="257,118 267,118 262,124"/>
+    <line class="d-edge" x1="262" y1="164" x2="262" y2="174"/><polygon class="d-arrow" points="257,174 267,174 262,180"/>
+
+    <text class="d-sub" x="588" y="20" text-anchor="middle">우선순위 낮음</text>
+    <line class="d-edge accent" x1="588" y1="30" x2="588" y2="204"/><polygon class="d-arrow accent" points="583,204 593,204 588,212"/>
+    <text class="d-accent" x="588" y="230" text-anchor="middle" font-size="11">우선순위 높음</text>
+</svg>
+<div class="d-cap">같은 CLAUDE.md라도 위치에 따라 적용 범위가 다르며, 아래 계층일수록 우선합니다.</div>
+</div>
 <p>같은 <code>CLAUDE.md</code> 라도 어디에 두느냐에 따라 적용 범위가 달라집니다.</p>
 <ul>
     <li><strong>회사(매니지드)</strong> — 회사 안의 모든 멤버에게 적용.</li>

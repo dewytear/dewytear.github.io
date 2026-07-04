@@ -1,6 +1,35 @@
 <h2>설치</h2>
 <p>설치 방법은 두 가지입니다. <strong>일반 사용자는 플러그인 마켓플레이스 방식</strong>을 우선 적용하면 됩니다.</p>
 
+<div class="diagram">
+<svg viewBox="0 0 680 218" role="img" aria-label="설치 결정 트리: 어떻게 설치할지에 따라 플러그인 마켓플레이스, --local, npm CLI 세 갈래로 나뉜다">
+    <polygon class="d-box" points="340,14 412,54 340,94 268,54"/>
+    <text class="d-label sm" x="340" y="58" text-anchor="middle">어떻게 설치?</text>
+
+    <line class="d-edge" x1="340" y1="84" x2="103" y2="140"/>
+    <polygon class="d-arrow" points="103,140 110.9,134 112.7,141.8"/>
+    <line class="d-edge" x1="340" y1="94" x2="338" y2="140"/>
+    <polygon class="d-arrow" points="338,140 333,132 343,132"/>
+    <line class="d-edge" x1="340" y1="84" x2="573" y2="140"/>
+    <polygon class="d-arrow" points="573,140 563.4,141.8 565.2,134"/>
+
+    <text class="d-accent" x="195" y="112" text-anchor="middle" font-size="11">권장</text>
+    <text class="d-sub" x="352" y="122" text-anchor="middle">프로젝트</text>
+    <text class="d-sub" x="500" y="112" text-anchor="middle">터미널</text>
+
+    <rect class="d-box accent" x="8" y="140" width="190" height="62" rx="11"/>
+    <text class="d-label sm" x="103" y="166" text-anchor="middle">플러그인 마켓플레이스</text>
+    <text class="d-sub" x="103" y="184" text-anchor="middle">일반 사용자 · 슬래시 명령</text>
+    <rect class="d-box" x="243" y="140" width="190" height="62" rx="11"/>
+    <text class="d-label sm" x="338" y="166" text-anchor="middle">--local</text>
+    <text class="d-sub" x="338" y="184" text-anchor="middle">프로젝트 설정 · 전역 보존</text>
+    <rect class="d-box" x="478" y="140" width="190" height="62" rx="11"/>
+    <text class="d-label sm" x="573" y="166" text-anchor="middle">npm CLI</text>
+    <text class="d-sub" x="573" y="184" text-anchor="middle">터미널 omc 명령</text>
+</svg>
+<div class="d-cap">"어떻게 설치?"에서 <strong>플러그인 마켓플레이스(권장)</strong> · <code>--local</code> · <code>npm CLI</code> 세 갈래로 갈립니다.</div>
+</div>
+
 <h3>1) 권장 — 플러그인 마켓플레이스</h3>
 <p>Claude Code 안에서 마켓플레이스를 추가한 뒤 OMC 플러그인을 설치합니다. 입력창에 아래 두 줄을 차례로 실행합니다. <strong>두 줄을 한 번에 붙여넣으면 실패하므로 반드시 한 줄씩 실행</strong>해야 합니다(공식 README 명시).</p>
 <pre><code><span class="c"># 1단계: 플러그인 저장소(마켓플레이스)를 등록</span>
