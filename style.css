@@ -1243,24 +1243,39 @@
             border-radius: 6px; padding: 1px 7px;
         }
 
-        /* Inline-SVG flow / architecture diagrams — coloured via theme tokens
-           by putting classes on the SVG elements (fill/stroke read the vars). */
+        /* Inline-SVG flow / architecture diagrams. SVG fill/stroke use EXPLICIT
+           per-theme colours (not var()/color-mix) — some browsers (older Safari)
+           don't resolve CSS variables inside SVG presentation and fall back to
+           black, which made the diagrams unreadable. */
         article .diagram{ margin: 18px 0 20px; overflow-x: auto; }
         article .diagram svg{ display: block; max-width: 100%; height: auto; margin: 0 auto; }
-        .diagram .d-box{ fill: var(--bg-alt); stroke: var(--border); stroke-width: 1.5; }
-        .diagram .d-box.accent{ fill: color-mix(in srgb, var(--accent) 13%, var(--bg));
-            stroke: var(--accent); }
-        .diagram .d-box.soft{ fill: var(--bg); stroke: var(--border); }
-        .diagram .d-label{ fill: var(--text); font-family: inherit; font-size: 13px; font-weight: 600; }
+
+        /* Dark theme (default) */
+        .diagram .d-box{ fill: #212a3a; stroke: #3a4353; stroke-width: 1.5; }
+        .diagram .d-box.accent{ fill: #223540; stroke: #4db6ac; }
+        .diagram .d-box.soft{ fill: #1b2230; stroke: #3a4353; }
+        .diagram .d-label{ fill: #e6e8eb; font-family: inherit; font-size: 13px; font-weight: 600; }
         .diagram .d-label.sm{ font-size: 11.5px; font-weight: 500; }
-        .diagram .d-sub{ fill: var(--muted); font-family: inherit; font-size: 11px; }
-        .diagram .d-accent{ fill: var(--accent); font-weight: 700; }
-        .diagram .d-edge{ stroke: var(--muted); stroke-width: 1.6; fill: none; }
-        .diagram .d-edge.accent{ stroke: var(--accent); }
+        .diagram .d-sub{ fill: #9aa4b2; font-family: inherit; font-size: 11px; }
+        .diagram .d-accent{ fill: #4db6ac; font-weight: 700; }
+        .diagram .d-edge{ stroke: #9aa4b2; stroke-width: 1.6; fill: none; }
+        .diagram .d-edge.accent{ stroke: #4db6ac; }
         .diagram .d-edge.dash{ stroke-dasharray: 5 4; }
-        .diagram .d-arrow{ fill: var(--muted); stroke: none; }
-        .diagram .d-arrow.accent{ fill: var(--accent); }
+        .diagram .d-arrow{ fill: #9aa4b2; stroke: none; }
+        .diagram .d-arrow.accent{ fill: #4db6ac; }
         .diagram .d-cap{ text-align: center; color: var(--muted); font-size: 12px; margin-top: 6px; }
+
+        /* Light theme */
+        body.day .diagram .d-box{ fill: #f5f6f8; stroke: #d3d8e0; }
+        body.day .diagram .d-box.accent{ fill: #e2f1ef; stroke: #00897b; }
+        body.day .diagram .d-box.soft{ fill: #ffffff; stroke: #d3d8e0; }
+        body.day .diagram .d-label{ fill: #202124; }
+        body.day .diagram .d-sub{ fill: #5f6368; }
+        body.day .diagram .d-accent{ fill: #00897b; }
+        body.day .diagram .d-edge{ stroke: #6b7078; }
+        body.day .diagram .d-edge.accent{ stroke: #00897b; }
+        body.day .diagram .d-arrow{ fill: #6b7078; }
+        body.day .diagram .d-arrow.accent{ fill: #00897b; }
 
         /* Keyboard-key chip (e.g. Shift + 방향키). */
         .kbd{
