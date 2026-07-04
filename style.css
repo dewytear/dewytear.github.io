@@ -356,11 +356,15 @@
             transform-origin: center;
             animation: heartbeat 2.4s ease-in-out infinite;
         }
+        /* The beat pulses both size AND colour intensity (saturate/contrast)
+           so it reads on a white background too — scaling faint pale blobs
+           alone is invisible in the light theme. Brightness is avoided since
+           it washes the pale orange toward white. */
         @keyframes heartbeat{
-            0%, 45%, 100%{ transform: scale(1); }
-            12%{ transform: scale(1.05); }    /* lub */
-            24%{ transform: scale(1.008); }
-            33%{ transform: scale(1.055); }   /* dub */
+            0%, 45%, 100%{ transform: scale(1);     filter: saturate(1)    contrast(1); }
+            12%{ transform: scale(1.07);            filter: saturate(1.5)  contrast(1.08); }  /* lub */
+            24%{ transform: scale(1.02);            filter: saturate(1.15) contrast(1.02); }
+            33%{ transform: scale(1.075);           filter: saturate(1.6)  contrast(1.1); }   /* dub */
         }
         .search-bg .blob{
             position: absolute;
@@ -396,6 +400,12 @@
             opacity: 0.3;
             animation: blob-d 21s ease-in-out infinite;
         }
+        /* Light theme: pale orange on white is faint, so give the blobs more
+           mass so the heartbeat has something visible to pulse. */
+        body.day .search-bg .b1{ opacity: 0.72; }
+        body.day .search-bg .b2{ opacity: 0.58; }
+        body.day .search-bg .b3{ opacity: 0.5; }
+        body.day .search-bg .b4{ opacity: 0.46; }
         @keyframes blob-a{
             0%,100%{ transform: translate(0,0) scale(1); }
             50%{ transform: translate(6vmin,4vmin) scale(1.12); }
