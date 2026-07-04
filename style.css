@@ -357,6 +357,15 @@
             transform-origin: center;
             animation: breathe 5s ease-in-out infinite;
         }
+        /* Breakout layer: a ball drifting behind the field, breaking bricks.
+           Sits above the blobs, below the search card; never breathes so its
+           coordinate space stays stable. */
+        .search-game{
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
         /* A single symmetric swell (peak at 50%) with ease-in-out gives a
            smooth, steady in-and-out with no jerk or pause. It pulses size AND
            colour intensity (saturate/contrast) so the breath reads on a white

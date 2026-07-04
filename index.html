@@ -575,6 +575,7 @@
               +     '<span class="blob b1"></span><span class="blob b2"></span>'
               +     '<span class="blob b3"></span><span class="blob b4"></span>'
               +   '</div>'
+              +   '<canvas class="search-game" aria-hidden="true"></canvas>'
               +   '<div class="search-core">'
               +     '<h2 class="search-head">무엇을 찾으세요?</h2>'
               +     '<p class="search-sub">Claude Code · 플러그인 · 하네스 · 세컨드 브레인</p>'
@@ -589,8 +590,137 @@
               + '</div>';
             setArticle(html);
             ensureTextIndex();   // start fetching doc bodies in the background
+            startSearchGame();   // Breakout-style ball drifting behind the field
             var box = document.getElementById('search-input');
             if(box){ box.focus(); }
+        }
+
+        // A calm, decorative Breakout: a ball ricochets off the walls and the
+        // search box (the "paddle"), knocking out faint bricks that respawn
+        // when cleared. Self-terminates once its canvas leaves the DOM (i.e.
+        // when you navigate away), so no loop leaks. Skipped for reduced motion.
+        function startSearchGame(){
+            if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ return; }
+            var canvas = document.querySelector('.search-game');
+            if(!canvas || !canvas.getContext){ return; }
+            var ctx = canvas.getContext('2d');
+            var dpr = Math.min(window.devicePixelRatio || 1, 2);
+            var W = 0, H = 0, bricks = [], ball, trail = [];
+
+            function accent(){
+                return (getComputedStyle(document.body).getPropertyValue('--accent') || '#ff6600').trim();
+            }
+            function layoutBricks(){
+                bricks = [];
+                var cols = Math.max(6, Math.floor(W / 96));
+                var rows = 3, pad = 12;
+                var bw = (W - pad * (cols + 1)) / cols, bh = 15;
+                var top = Math.max(46, H * 0.13);
+                for(var r = 0; r < rows; r++){
+                    for(var c = 0; c < cols; c++){
+                        bricks.push({ x: pad + c * (bw + pad), y: top + r * (bh + pad),
+                                      w: bw, h: bh, alive: true, flash: 0 });
+                    }
+                }
+            }
+            function resetBall(){
+                var sp = Math.max(2.4, W / 520);
+                var dir = Math.random() < 0.5 ? -1 : 1;
+                ball = { x: W / 2, y: H * 0.62, vx: sp * 0.8 * dir, vy: -sp, r: Math.max(5, W / 240) };
+            }
+            function resize(){
+                var rect = canvas.parentNode.getBoundingClientRect();
+                W = rect.width; H = rect.height;
+                canvas.width = W * dpr; canvas.height = H * dpr;
+                canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                layoutBricks();
+                if(!ball || ball.x > W || ball.y > H){ resetBall(); }
+            }
+            // Reflect the ball out of an axis-aligned rect; returns true on hit.
+            function bounce(rx, ry, rw, rh){
+                if(ball.x + ball.r < rx || ball.x - ball.r > rx + rw ||
+                   ball.y + ball.r < ry || ball.y - ball.r > ry + rh){ return false; }
+                var overL = (ball.x + ball.r) - rx, overR = (rx + rw) - (ball.x - ball.r);
+                var overT = (ball.y + ball.r) - ry, overB = (ry + rh) - (ball.y - ball.r);
+                var minX = Math.min(overL, overR), minY = Math.min(overT, overB);
+                if(minX < minY){
+                    ball.vx = overL < overR ? -Math.abs(ball.vx) : Math.abs(ball.vx);
+                } else {
+                    ball.vy = overT < overB ? -Math.abs(ball.vy) : Math.abs(ball.vy);
+                }
+                return true;
+            }
+            resize();
+            resetBall();
+            window.addEventListener('resize', resize);
+
+            function frame(){
+                if(!canvas.isConnected){ window.removeEventListener('resize', resize); return; }
+                ctx.clearRect(0, 0, W, H);
+                var col = accent();
+
+                ball.x += ball.vx; ball.y += ball.vy;
+                if(ball.x - ball.r < 0){ ball.x = ball.r; ball.vx = Math.abs(ball.vx); }
+                if(ball.x + ball.r > W){ ball.x = W - ball.r; ball.vx = -Math.abs(ball.vx); }
+                if(ball.y - ball.r < 0){ ball.y = ball.r; ball.vy = Math.abs(ball.vy); }
+                if(ball.y + ball.r > H){ ball.y = H - ball.r; ball.vy = -Math.abs(ball.vy); }
+
+                // The search field is the paddle.
+                var field = document.querySelector('.search-field');
+                if(field){
+                    var cr = canvas.getBoundingClientRect(), fr = field.getBoundingClientRect();
+                    bounce(fr.left - cr.left, fr.top - cr.top, fr.width, fr.height);
+                }
+
+                var anyAlive = false;
+                for(var i = 0; i < bricks.length; i++){
+                    var b = bricks[i];
+                    if(b.flash > 0){ b.flash -= 0.06; }
+                    if(b.alive){
+                        anyAlive = true;
+                        if(bounce(b.x, b.y, b.w, b.h)){ b.alive = false; b.flash = 1; }
+                    }
+                    if(b.alive || b.flash > 0){
+                        ctx.globalAlpha = b.alive ? 0.15 : Math.max(0, b.flash) * 0.4;
+                        ctx.fillStyle = col;
+                        var pop = b.alive ? 0 : (1 - b.flash) * 4;
+                        roundRect(ctx, b.x - pop, b.y - pop, b.w + pop * 2, b.h + pop * 2, 4);
+                        ctx.fill();
+                    }
+                }
+                if(!anyAlive){ layoutBricks(); }
+
+                // Trail + ball.
+                trail.push({ x: ball.x, y: ball.y });
+                if(trail.length > 12){ trail.shift(); }
+                for(var t = 0; t < trail.length; t++){
+                    ctx.globalAlpha = (t / trail.length) * 0.22;
+                    ctx.fillStyle = col;
+                    ctx.beginPath();
+                    ctx.arc(trail[t].x, trail[t].y, ball.r * (0.4 + 0.5 * t / trail.length), 0, 6.2832);
+                    ctx.fill();
+                }
+                ctx.globalAlpha = 0.6;
+                ctx.fillStyle = col;
+                ctx.beginPath();
+                ctx.arc(ball.x, ball.y, ball.r, 0, 6.2832);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+
+                requestAnimationFrame(frame);
+            }
+            requestAnimationFrame(frame);
+        }
+        function roundRect(ctx, x, y, w, h, r){
+            r = Math.min(r, w / 2, h / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
         }
 
         // ---- "Recent docs" module: paginated board ----
