@@ -725,14 +725,22 @@
         // ---- Floating background music (YouTube IFrame API) ----
         (function(){
             var VIDEO_ID = '08A9n8QyE3k';
-            var player, ready = false, playing = false, wantPlay = false;
+            var player, ready = false, playing = false, wantPlay = false, failed = false;
             var btn = document.getElementById('music-btn');
+
+            // If the API never loads (offline / blocked by an ad- or tracker
+            // blocker), tell the user instead of leaving a dead button.
+            var apiTimer = setTimeout(function(){
+                if(!player){ fail('음악 로드 실패 (네트워크·차단기 확인)'); }
+            }, 6000);
 
             var tag = document.createElement('script');
             tag.src = 'https://www.youtube.com/iframe_api';
+            tag.onerror = function(){ fail('음악 로드 실패 (네트워크·차단기 확인)'); };
             document.head.appendChild(tag);
 
             window.onYouTubeIframeAPIReady = function(){
+                clearTimeout(apiTimer);
                 player = new YT.Player('yt-music', {
                     // Real (off-screen) size — Safari refuses playback on a
                     // zero-size/hidden media element even after a user tap.
@@ -744,12 +752,19 @@
                         onReady: function(){
                             ready = true;
                             try{ player.setVolume(35); }catch(e){}
-                            // Honour a tap that happened before the API loaded.
+                            // Fallback for a tap that arrived before the player
+                            // object even existed (see toggleMusic).
                             if(wantPlay){ start(); }
                         },
                         onStateChange: function(e){
                             playing = (e.data === YT.PlayerState.PLAYING);
+                            if(playing){ failed = false; }
                             render();
+                        },
+                        onError: function(){
+                            // 2=bad id · 5=HTML5 error · 100=removed ·
+                            // 101/150=embedding disabled by the uploader.
+                            fail('이 영상은 재생할 수 없습니다 (임베드 제한)');
                         }
                     }
                 });
@@ -757,8 +772,17 @@
             function start(){
                 try{ player.playVideo(); player.setVolume(35); }catch(e){}
             }
+            function fail(msg){
+                failed = true; playing = false; wantPlay = false;
+                if(btn){
+                    btn.classList.remove('playing'); btn.classList.add('idle');
+                    btn.title = msg;
+                    btn.setAttribute('aria-label', msg);
+                }
+                try{ console.warn('[music] ' + msg); }catch(e){}
+            }
             function render(){
-                if(!btn){ return; }
+                if(!btn || failed){ return; }
                 btn.classList.toggle('playing', playing);
                 btn.classList.toggle('idle', !playing);
                 btn.setAttribute('aria-label', playing ? '배경음악 정지' : '배경음악 재생');
@@ -766,15 +790,22 @@
                 btn.title = playing ? '배경음악 정지' : '배경음악 재생';
             }
             window.toggleMusic = function(){
-                if(!ready){
-                    // API still loading — remember the intent so it starts as
-                    // soon as the player is ready (button gives feedback now).
+                // Player object not created yet (API script still loading):
+                // remember the intent; onReady will honour it.
+                if(!player){
                     wantPlay = true;
                     if(btn){ btn.classList.add('playing'); btn.classList.remove('idle'); }
                     return;
                 }
+                failed = false;
                 if(playing){ player.pauseVideo(); wantPlay = false; }
-                else{ start(); }
+                else{
+                    // Call playVideo() synchronously inside the user gesture. The
+                    // YT API queues commands issued before onReady, so playback
+                    // starts with sound instead of being deferred to a
+                    // non-gesture callback (which browsers block).
+                    start();
+                }
             };
         })();
     </script>

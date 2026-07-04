@@ -1,4 +1,39 @@
 <h2>생성 결과 리뷰 — 에이전트·스킬·오케스트레이터</h2>
+<div class="diagram">
+<svg viewBox="0 0 680 220" role="img" aria-label="생성된 .claude 아키텍처: 상단 오케스트레이터가 하위 에이전트들을 조율, 스킬이 주입되고 산출물은 공용 _workspace에 모임">
+    <rect class="d-box accent" x="255" y="10" width="170" height="46" rx="10"/>
+    <text class="d-label" x="340" y="38" text-anchor="middle">오케스트레이터</text>
+
+    <rect class="d-box" x="44" y="96" width="160" height="52" rx="10"/>
+    <text class="d-label sm" x="124" y="126" text-anchor="middle">에이전트 A</text>
+
+    <rect class="d-box" x="260" y="96" width="160" height="52" rx="10"/>
+    <text class="d-label sm" x="340" y="126" text-anchor="middle">에이전트 B</text>
+
+    <rect class="d-box" x="476" y="96" width="160" height="52" rx="10"/>
+    <text class="d-label sm" x="556" y="126" text-anchor="middle">에이전트 C</text>
+
+    <line class="d-edge" x1="340" y1="56" x2="124" y2="94"/><polygon class="d-arrow" points="119,88 129,88 124,95"/>
+    <line class="d-edge" x1="340" y1="56" x2="340" y2="94"/><polygon class="d-arrow" points="335,88 345,88 340,95"/>
+    <line class="d-edge" x1="340" y1="56" x2="556" y2="94"/><polygon class="d-arrow" points="551,88 561,88 556,95"/>
+
+    <circle class="d-node c" cx="212" cy="112" r="5"/>
+    <circle class="d-node c" cx="212" cy="132" r="5"/>
+    <circle class="d-node c" cx="428" cy="112" r="5"/>
+    <circle class="d-node c" cx="428" cy="132" r="5"/>
+    <circle class="d-node c" cx="644" cy="112" r="5"/>
+    <circle class="d-node c" cx="644" cy="132" r="5"/>
+    <text class="d-sub" x="124" y="86" text-anchor="middle">● 주입 스킬</text>
+
+    <rect class="d-box soft" x="200" y="168" width="280" height="44" rx="10"/>
+    <text class="d-label sm" x="340" y="195" text-anchor="middle">_workspace (공용 산출물)</text>
+
+    <line class="d-edge dash" x1="124" y1="148" x2="232" y2="168"/><polygon class="d-arrow" points="227,161 237,166 226,172"/>
+    <line class="d-edge dash" x1="340" y1="148" x2="340" y2="166"/><polygon class="d-arrow" points="335,166 345,166 340,172"/>
+    <line class="d-edge dash" x1="556" y1="148" x2="448" y2="168"/><polygon class="d-arrow" points="454,161 443,166 453,172"/>
+</svg>
+<div class="d-cap">오케스트레이터가 에이전트들을 조율하고, 스킬이 주입되며 산출물은 _workspace에 모입니다.</div>
+</div>
 <p>하네스가 구성되면 무엇이 만들어지는지 살펴봅니다. Claude Code는 에이전트·스킬 등을 <strong><code>.claude</code> 폴더 하위</strong>에 생성합니다.</p>
 
 <h3>만들어진 에이전트 (예시)</h3>

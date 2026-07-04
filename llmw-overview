@@ -1,6 +1,38 @@
 <h2>LLM Wiki — 개요</h2>
 <p>이 자료는 <strong>"LLM Wiki / 구요한"</strong> 강연을 순서대로 단락별로 정리한 것입니다. 인공지능 시대에는 <strong>내 자료를 어디에 어떻게 정리해 두는지</strong>가 매우 중요합니다. 우리는 이미 <code>CLAUDE.md</code>·<code>memory.md</code> 같은 마크다운으로 AI에 맥락을 확장해 왔는데, <strong>Obsidian</strong> 은 그 모든 것을 하나의 체계로 맥락화해 주는 시스템입니다.</p>
 
+<div class="diagram">
+<svg viewBox="0 0 680 190" role="img" aria-label="흩어진 자료를 볼트에 담으면 지도 이정표를 따라 AI가 라이브로 지식을 찾아 참고한다">
+    <rect class="d-box soft" x="12" y="30" width="122" height="34" rx="7"/>
+    <text class="d-label sm" x="73" y="51" text-anchor="middle">노트·자막</text>
+    <rect class="d-box soft" x="12" y="78" width="122" height="34" rx="7"/>
+    <text class="d-label sm" x="73" y="99" text-anchor="middle">회의록</text>
+    <rect class="d-box soft" x="12" y="126" width="122" height="34" rx="7"/>
+    <text class="d-label sm" x="73" y="147" text-anchor="middle">웹 클리핑</text>
+
+    <path class="d-edge" d="M134 47 C180 60, 180 88, 210 94"/>
+    <path class="d-edge" d="M134 95 H210"/>
+    <path class="d-edge" d="M134 143 C180 130, 180 102, 210 96"/>
+    <polygon class="d-arrow" points="210,90 218,95 210,100"/>
+
+    <rect class="d-box accent" x="220" y="52" width="204" height="86" rx="12"/>
+    <text class="d-label" x="322" y="78" text-anchor="middle">지식 볼트(Vault)</text>
+    <circle class="d-node" cx="286" cy="106" r="5"/>
+    <circle class="d-node b" cx="322" cy="112" r="5"/>
+    <circle class="d-node c" cx="358" cy="104" r="5"/>
+    <line class="d-edge" x1="286" y1="106" x2="322" y2="112"/>
+    <line class="d-edge" x1="322" y1="112" x2="358" y2="104"/>
+    <text class="d-sub" x="322" y="130" text-anchor="middle">지도·이정표로 연결</text>
+
+    <line class="d-edge accent" x1="424" y1="95" x2="466" y2="95"/>
+    <polygon class="d-arrow accent" points="466,90 474,95 466,100"/>
+    <rect class="d-box" x="474" y="64" width="194" height="60" rx="10"/>
+    <text class="d-label sm" x="571" y="88" text-anchor="middle">AI가 내비게이션</text>
+    <text class="d-sub" x="571" y="106" text-anchor="middle">라이브 임베딩으로 참고</text>
+</svg>
+<div class="d-cap">무거운 RAG·재컴파일 없이, 볼트의 <strong>지도(이정표)</strong>를 따라 AI가 라이브로 지식을 찾아갑니다.</div>
+</div>
+
 <h3>LLM Wiki란</h3>
 <p>Karpathy(카파시)가 4월에 제안한 개념으로, <strong>벡터DB·그래프DB를 만드는 무거운 RAG나 지속적인 컴파일링 없이도</strong>, 라이브로 임베딩해 인공지능이 지식을 참고할 수 있게 해 주는 시스템입니다. Obsidian 볼트에 지식 베이스를 구축하면, AI가 <strong>지도·내비게이션(이정표)</strong>을 보고 지식을 찾아갑니다.</p>
 

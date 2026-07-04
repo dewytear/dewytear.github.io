@@ -14,6 +14,30 @@ export OMC_SKIP_HOOKS=PreToolUse,PostToolUse</code></pre>
 
 <h3>Hook이 실행되는 시점</h3>
 <p>Hook은 Claude Code의 특정 이벤트마다 자동으로 끼어들어 실행되는 동작입니다. OMC는 이를 통해 컨텍스트를 주입하고 스킬을 자동으로 켭니다. 주요 타이밍은 네 가지입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 132" role="img" aria-label="Hook 이벤트 라이프사이클: SessionStart, UserPromptSubmit, PreToolUse, PostToolUse 순서">
+    <rect class="d-box" x="8" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="83" y="48" text-anchor="middle">SessionStart</text>
+    <text class="d-sub" x="83" y="65" text-anchor="middle">세션 시작</text>
+    <rect class="d-box" x="178" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="253" y="48" text-anchor="middle">UserPromptSubmit</text>
+    <text class="d-sub" x="253" y="65" text-anchor="middle">프롬프트 제출</text>
+    <rect class="d-box" x="352" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="427" y="48" text-anchor="middle">PreToolUse</text>
+    <text class="d-sub" x="427" y="65" text-anchor="middle">도구 직전</text>
+    <rect class="d-box accent" x="522" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="597" y="48" text-anchor="middle">PostToolUse</text>
+    <text class="d-sub" x="597" y="65" text-anchor="middle">도구 직후</text>
+
+    <line class="d-edge" x1="158" y1="51" x2="171" y2="51"/><polygon class="d-arrow" points="171,46 179,51 171,56"/>
+    <line class="d-edge" x1="328" y1="51" x2="345" y2="51"/><polygon class="d-arrow" points="345,46 353,51 345,56"/>
+    <line class="d-edge accent" x1="502" y1="51" x2="515" y2="51"/><polygon class="d-arrow accent" points="515,46 523,51 515,56"/>
+    <text class="d-sub" x="340" y="118" text-anchor="middle">세션 순서대로 진행 →</text>
+</svg>
+<div class="d-cap">세션이 시작되고 프롬프트를 낼 때, 도구 <strong>직전·직후</strong>마다 Hook이 자동으로 끼어듭니다.</div>
+</div>
+
 <ul>
     <li><strong>SessionStart</strong> — 세션이 시작될 때. OMC 초기화, notepad·project-memory 로드, 직전 실행 모드 상태 복구.</li>
     <li><strong>UserPromptSubmit</strong> — 프롬프트를 보낼 때. 매직 키워드 감지, 알맞은 스킬 자동 연결, 컨텍스트 주입.</li>

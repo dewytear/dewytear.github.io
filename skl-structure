@@ -2,6 +2,26 @@
 <p>스킬 폴더의 중심은 <code>SKILL.md</code> 파일이고, 그 밖에 <code>reference</code>·<code>examples</code>·<code>scripts</code> 같은 번들 파일이 함께 있습니다.</p>
 
 <h3>프론트매터 (메타데이터)</h3>
+<div class="diagram">
+<svg viewBox="0 0 640 210" role="img" aria-label="SKILL.md 해부: 프론트매터(name·description)는 항상 로드, 본문(지침)은 호출 시 로드">
+    <rect class="d-box" x="110" y="12" width="320" height="182" rx="10"/>
+    <text class="d-label" x="270" y="35" text-anchor="middle">SKILL.md</text>
+
+    <rect class="d-box accent" x="130" y="46" width="280" height="56" rx="9"/>
+    <text class="d-label" x="270" y="72" text-anchor="middle">프론트매터</text>
+    <text class="d-sub" x="270" y="90" text-anchor="middle">name · description</text>
+
+    <rect class="d-box soft" x="130" y="118" width="280" height="60" rx="9"/>
+    <text class="d-label" x="270" y="144" text-anchor="middle">본문 (지침)</text>
+    <text class="d-sub" x="270" y="162" text-anchor="middle">마크다운 · 사용법</text>
+
+    <line class="d-edge dash" x1="430" y1="74" x2="470" y2="74"/>
+    <text class="d-accent" x="478" y="78" text-anchor="start">항상 로드</text>
+    <line class="d-edge dash" x1="430" y1="148" x2="470" y2="148"/>
+    <text class="d-accent" x="478" y="152" text-anchor="start">호출 시 로드</text>
+</svg>
+<div class="d-cap">한 파일 안에서 프론트매터는 항상, 본문은 호출될 때 로드됩니다.</div>
+</div>
 <p><code>SKILL.md</code> 맨 위에는 YAML <strong>프론트매터</strong>가 있습니다. 예를 들어 PDF 스킬이라면:</p>
 <pre><code><span class="c"># SKILL.md 프론트매터 (항상 로딩되는 부분)</span>
 name: pdf

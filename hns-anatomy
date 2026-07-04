@@ -11,6 +11,34 @@
 </ul>
 
 <h3>어떻게 생산성이 올라가나</h3>
+<div class="diagram">
+<svg viewBox="0 0 680 150" role="img" aria-label="운영 루프: 목표 분해 → 병렬 실행 → 테스트 검증 → 문제 있으면 되돌리고, 통과하면 완료">
+    <rect class="d-box" x="6" y="70" width="110" height="48" rx="10"/>
+    <text class="d-label sm" x="61" y="98" text-anchor="middle">목표 분해</text>
+
+    <rect class="d-box" x="146" y="70" width="110" height="48" rx="10"/>
+    <text class="d-label sm" x="201" y="98" text-anchor="middle">병렬 실행</text>
+
+    <rect class="d-box" x="286" y="70" width="112" height="48" rx="10"/>
+    <text class="d-label sm" x="342" y="98" text-anchor="middle">테스트 검증</text>
+
+    <polygon class="d-box" points="470,66 512,94 470,122 428,94"/>
+    <text class="d-label sm" x="470" y="98" text-anchor="middle">문제?</text>
+
+    <rect class="d-box accent" x="548" y="70" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="608" y="98" text-anchor="middle">완료</text>
+
+    <line class="d-edge" x1="116" y1="94" x2="144" y2="94"/><polygon class="d-arrow" points="144,89 152,94 144,99"/>
+    <line class="d-edge" x1="256" y1="94" x2="284" y2="94"/><polygon class="d-arrow" points="284,89 292,94 284,99"/>
+    <line class="d-edge" x1="398" y1="94" x2="426" y2="94"/><polygon class="d-arrow" points="426,89 434,94 426,99"/>
+    <line class="d-edge" x1="512" y1="94" x2="546" y2="94"/><polygon class="d-arrow" points="546,89 554,94 546,99"/>
+    <text class="d-sub" x="530" y="84" text-anchor="middle">통과</text>
+
+    <path class="d-edge" d="M470 66 V27 H201 V68"/><polygon class="d-arrow" points="196,68 206,68 201,74"/>
+    <text class="d-sub" x="430" y="20" text-anchor="middle">문제 시 되돌림</text>
+</svg>
+<div class="d-cap">문제가 있으면 병렬 실행으로 되돌아가고, 통과하면 완료합니다.</div>
+</div>
 <p>운영 구조는 대략 이렇게 흐릅니다.</p>
 <ol>
     <li>목표를 <strong>분해</strong>하고 각 에이전트에게 <strong>분담</strong>.</li>

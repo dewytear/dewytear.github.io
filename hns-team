@@ -2,6 +2,38 @@
 <p>여러 에이전트를 어떻게 협업시키느냐, 그리고 컨텍스트를 어떻게 관리하느냐가 하네스 품질을 좌우합니다.</p>
 
 <h3>격리형 서브에이전트 → 커뮤니케이션하는 팀</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 172" role="img" aria-label="격리 서브에이전트(서로 대화 불가) vs 에이전트 팀(서로 통신) 비교">
+    <line class="d-edge dash" x1="350" y1="6" x2="350" y2="150"/>
+
+    <rect class="d-box" x="110" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="170" y="31" text-anchor="middle">오케스트레이터</text>
+    <rect class="d-box soft" x="40" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="95" y="104" text-anchor="middle">에이전트 A</text>
+    <rect class="d-box soft" x="190" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="245" y="104" text-anchor="middle">에이전트 B</text>
+    <line class="d-edge" x1="140" y1="44" x2="100" y2="78"/><polygon class="d-arrow" points="96,72 104,80 90,80"/>
+    <line class="d-edge" x1="200" y1="44" x2="240" y2="78"/><polygon class="d-arrow" points="244,72 250,80 236,80"/>
+    <text class="d-sub" x="170" y="105" text-anchor="middle">✕</text>
+    <text class="d-sub" x="170" y="140" text-anchor="middle">서로 대화 불가</text>
+    <text class="d-label sm" x="170" y="162" text-anchor="middle">격리 서브에이전트</text>
+
+    <rect class="d-box accent" x="470" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="530" y="31" text-anchor="middle">오케스트레이터</text>
+    <rect class="d-box" x="400" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="455" y="104" text-anchor="middle">에이전트 C</text>
+    <rect class="d-box" x="550" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="605" y="104" text-anchor="middle">에이전트 D</text>
+    <line class="d-edge" x1="500" y1="44" x2="460" y2="78"/><polygon class="d-arrow" points="456,72 464,80 450,80"/>
+    <line class="d-edge" x1="560" y1="44" x2="600" y2="78"/><polygon class="d-arrow" points="604,72 610,80 596,80"/>
+    <line class="d-edge accent" x1="512" y1="100" x2="548" y2="100"/>
+    <polygon class="d-arrow accent" points="548,95 556,100 548,105"/>
+    <polygon class="d-arrow accent" points="512,95 504,100 512,105"/>
+    <text class="d-accent" x="530" y="140" text-anchor="middle" font-size="11">↔ 서로 통신</text>
+    <text class="d-label sm" x="530" y="162" text-anchor="middle">에이전트 팀</text>
+</svg>
+<div class="d-cap">격리 서브에이전트는 결과만 리턴하지만, 에이전트 팀은 서로를 다시 깨워 협업합니다.</div>
+</div>
 <ul>
     <li><strong>기존 방식</strong> — 서브에이전트들이 <strong>격리된 환경</strong>에서 각자 일하고 결과만 리턴(병렬). 서로 대화하는 방법이 없었습니다.</li>
     <li><strong>에이전트 팀</strong> — 에이전트들이 <strong>커뮤니케이션하며</strong> 일해서 더 스마트하게 동작합니다.</li>

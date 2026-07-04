@@ -2,6 +2,34 @@
 <p>잘 써 봤다면 자연스럽게 "직접 만들고 싶다"는 생각이 듭니다. 스킬을 <strong>만드는 것을 스킬 엔지니어링</strong> 이라 부르며, 이를 돕는 <strong>스킬 만들기 스킬(skill-creator)</strong> 이 기본 탑재되어 있습니다.</p>
 
 <h3>skill-creator — 메타 스킬</h3>
+<div class="diagram">
+<svg viewBox="0 0 660 248" role="img" aria-label="스킬 생성 루프: 생성 → 평가(evaluator) → 개선 → 벤치마크 → 다시 생성, 통과하면 완료">
+    <rect class="d-box" x="60" y="16" width="180" height="54" rx="10"/>
+    <text class="d-label" x="150" y="48" text-anchor="middle">생성</text>
+
+    <rect class="d-box" x="420" y="16" width="180" height="54" rx="10"/>
+    <text class="d-label" x="510" y="40" text-anchor="middle">평가</text>
+    <text class="d-sub" x="510" y="57" text-anchor="middle">evaluator</text>
+
+    <rect class="d-box" x="420" y="110" width="180" height="54" rx="10"/>
+    <text class="d-label" x="510" y="142" text-anchor="middle">개선</text>
+
+    <rect class="d-box" x="60" y="110" width="180" height="54" rx="10"/>
+    <text class="d-label" x="150" y="142" text-anchor="middle">벤치마크</text>
+
+    <rect class="d-box accent" x="60" y="188" width="180" height="46" rx="10"/>
+    <text class="d-label" x="150" y="216" text-anchor="middle">완료</text>
+
+    <line class="d-edge" x1="240" y1="43" x2="416" y2="43"/><polygon class="d-arrow" points="416,38 424,43 416,48"/>
+    <line class="d-edge" x1="510" y1="70" x2="510" y2="106"/><polygon class="d-arrow" points="505,106 515,106 510,112"/>
+    <line class="d-edge" x1="420" y1="137" x2="244" y2="137"/><polygon class="d-arrow" points="244,132 236,137 244,142"/>
+    <line class="d-edge accent" x1="150" y1="108" x2="150" y2="76"/><polygon class="d-arrow accent" points="145,76 155,76 150,70"/>
+    <text class="d-sub" x="196" y="94" text-anchor="middle">개선 반영</text>
+    <line class="d-edge" x1="150" y1="164" x2="150" y2="186"/><polygon class="d-arrow" points="145,186 155,186 150,192"/>
+    <text class="d-sub" x="196" y="180" text-anchor="middle">통과 시</text>
+</svg>
+<div class="d-cap">A/B 테스트 루프를 돌며 다듬고, 벤치마크를 통과하면 완성됩니다.</div>
+</div>
 <p>스킬을 만드는 스킬로, 다음 흐름과 서브에이전트를 갖춥니다.</p>
 <ul>
     <li><strong>create → evaluate → improve → benchmark</strong> 루프.</li>

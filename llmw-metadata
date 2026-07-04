@@ -3,6 +3,34 @@
 
 <h3>YAML 프론트매터가 핵심</h3>
 <p>Obsidian이 마크다운 에디터로서 가치가 높은 지점이 바로 이 <strong>YAML 프론트매터</strong> 메타데이터 필드입니다. Claude Code에서 배운 <strong>점진적 공개(progressive disclosure)</strong> 와 같은 원리로 동작합니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 520 268" role="img" aria-label="노트 구조: 제목에서 YAML 프론트매터(메타데이터), 그다음 본문으로 이어지는 점진적 공개">
+    <rect class="d-box" x="130" y="18" width="260" height="44" rx="10"/>
+    <text class="d-label" x="260" y="45" text-anchor="middle">제목 (Title)</text>
+
+    <line class="d-edge" x1="260" y1="62" x2="260" y2="90"/>
+    <polygon class="d-arrow" points="260,90 255,82 265,82"/>
+
+    <rect class="d-box accent" x="110" y="92" width="300" height="66" rx="12"/>
+    <text class="d-label" x="260" y="124" text-anchor="middle">YAML 프론트매터</text>
+    <text class="d-sub" x="260" y="143" text-anchor="middle">메타데이터 — 영어로 간결히</text>
+
+    <line class="d-edge" x1="260" y1="158" x2="260" y2="186"/>
+    <polygon class="d-arrow" points="260,186 255,178 265,178"/>
+
+    <rect class="d-box soft" x="110" y="188" width="300" height="66" rx="12"/>
+    <text class="d-label" x="260" y="220" text-anchor="middle">본문 (Body)</text>
+    <text class="d-sub" x="260" y="239" text-anchor="middle">전체 내용 — 필요할 때만</text>
+
+    <text class="d-accent" x="462" y="128" text-anchor="middle" font-size="11">① 먼저</text>
+    <text class="d-accent" x="462" y="224" text-anchor="middle" font-size="11">② 필요시</text>
+    <path class="d-edge dash accent" d="M462 138 V206" fill="none"/>
+    <polygon class="d-arrow accent" points="462,210 457,202 467,202"/>
+</svg>
+<div class="d-cap">에이전트는 <strong>메타데이터(프론트매터)를 먼저</strong> 읽고, 필요할 때만 <strong>본문</strong>을 엽니다.</div>
+</div>
+
 <ul>
     <li>컨텍스트 윈도우는 제한(있어야 100만 토큰)되어 있어, 모든 내용을 다 열어 볼 수 없습니다.</li>
     <li>그래서 중요한 내용만 <strong>간결하게(concise)</strong> 맨 위(메타데이터)에 담아 둡니다.</li>

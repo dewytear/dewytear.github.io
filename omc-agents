@@ -2,6 +2,35 @@
 <p>OMC의 핵심은 <strong>위임(delegation)</strong>입니다. 메인 Claude가 지휘자 역할을 맡고, 역할이 정해진 전문 에이전트들에게 작업을 나눠 맡깁니다. 각 에이전트는 작업 난이도에 맞는 모델로 자동 배정되어(설계·분석엔 고성능 모델, 단순 조회엔 경량 모델), 한 명이 전부 처리할 때보다 정확하고 빠릅니다.</p>
 <p>에이전트는 역할에 따라 크게 네 그룹으로 나뉩니다. 아래는 그룹별 주요 에이전트와 각각이 하는 일입니다.</p>
 
+<div class="diagram">
+<svg viewBox="0 0 680 200" role="img" aria-label="위임 조직도: 메인 Claude(지휘자)가 탐색·분석, 구현·수정, 검증·품질, 문서·디자인·데이터 그룹으로 위임한다">
+    <rect class="d-box accent" x="250" y="14" width="180" height="52" rx="12"/>
+    <text class="d-label" x="340" y="38" text-anchor="middle">메인 Claude</text>
+    <text class="d-sub" x="340" y="55" text-anchor="middle">지휘자 (delegation)</text>
+
+    <path class="d-edge" d="M340 66 V100" fill="none"/>
+    <path class="d-edge" d="M83 100 H597" fill="none"/>
+    <path class="d-edge" d="M83 100 V126" fill="none"/><polygon class="d-arrow" points="78,126 88,126 83,132"/>
+    <path class="d-edge" d="M253 100 V126" fill="none"/><polygon class="d-arrow" points="248,126 258,126 253,132"/>
+    <path class="d-edge" d="M427 100 V126" fill="none"/><polygon class="d-arrow" points="422,126 432,126 427,132"/>
+    <path class="d-edge" d="M597 100 V126" fill="none"/><polygon class="d-arrow" points="592,126 602,126 597,132"/>
+
+    <rect class="d-box" x="8" y="132" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="83" y="156" text-anchor="middle">탐색·분석</text>
+    <text class="d-sub" x="83" y="173" text-anchor="middle">explore·architect</text>
+    <rect class="d-box" x="178" y="132" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="253" y="156" text-anchor="middle">구현·수정</text>
+    <text class="d-sub" x="253" y="173" text-anchor="middle">executor·debugger</text>
+    <rect class="d-box" x="352" y="132" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="427" y="156" text-anchor="middle">검증·품질</text>
+    <text class="d-sub" x="427" y="173" text-anchor="middle">qa·reviewer</text>
+    <rect class="d-box" x="522" y="132" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="597" y="156" text-anchor="middle">문서·디자인·데이터</text>
+    <text class="d-sub" x="597" y="173" text-anchor="middle">writer·designer</text>
+</svg>
+<div class="d-cap">메인 Claude가 <strong>지휘자</strong>로서 역할이 정해진 <strong>전문 에이전트 그룹</strong>에 작업을 나눠 맡깁니다.</div>
+</div>
+
 <h3>탐색 · 분석</h3>
 <ul>
     <li><strong>explore</strong> — 코드베이스를 훑어 작업과 관련된 파일과 구조를 찾아냅니다.</li>
