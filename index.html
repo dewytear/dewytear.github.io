@@ -78,6 +78,7 @@
         var DOCS = [];         // real docs: {name, label, section, tags:[]}
         var TAG_INDEX = {};    // tag -> [doc, ...]
         var DOC_BY_NAME = {};  // name -> doc
+        var FOLDER_DOCS = {};  // section (parent-folder path) -> [doc, ...] in tree order
         var DOC_MODEL = 'Claude Fable 5';   // default authoring-model badge (no icon)
 
         function buildIndexes(tree){
@@ -95,6 +96,10 @@
                         };
                         DOCS.push(doc);
                         DOC_BY_NAME[doc.name] = doc;
+                        // Group by immediate parent folder, in tree order. Kept
+                        // separate from DOCS so the later date-sort of DOCS
+                        // doesn't reorder a folder's own reading sequence.
+                        (FOLDER_DOCS[doc.section] = FOLDER_DOCS[doc.section] || []).push(doc);
                         doc.tags.forEach(function(t){
                             (TAG_INDEX[t] = TAG_INDEX[t] || []).push(doc);
                         });
@@ -110,16 +115,38 @@
         }
 
         // ---- Navigation tree ----
-        function renderNodes(nodes){
+        // A folder with 2+ direct docs (Work Log excluded) gets a digest icon
+        // that shows all its docs on one page. It rides inside the title button
+        // as a flex child (stopPropagation keeps it from toggling the branch),
+        // which aligns it cleanly at every nesting level. `path` mirrors
+        // buildIndexes so the folder's section key matches FOLDER_DOCS.
+        function folderDigestSpan(sectionKey){
+            var docs = FOLDER_DOCS[sectionKey];
+            if(!docs || docs.length < 2 || sectionKey.indexOf('Work Log') === 0){ return ''; }
+            return '<span class="folder-digest" role="button" tabindex="0"'
+                 + ' title="이 폴더 문서 모아보기" aria-label="이 폴더 문서 모아보기"'
+                 + ' data-section="' + escapeHtml(sectionKey) + '"'
+                 + ' onclick="openFolderDigest(event, this)">&#128220;</span>';
+        }
+        function openFolderDigest(ev, el){
+            ev.stopPropagation();   // don't toggle the branch
+            location.hash = '#!folder:' + encodeURIComponent(el.getAttribute('data-section'));
+        }
+        function renderNodes(nodes, path){
+            path = path || [];
             var html = '<ul>';
             var docSeq = 0;   // numbers the docs within this branch, per folder
             nodes.forEach(function(node){
                 var label = node.label || node.title || node.name;
                 if(node.children){    // a branch, collapsed by default
+                    var childPath = node.title ? path.concat(node.title) : path;
                     html += '<li class="nav-branch collapsed">'
                          +  '<button type="button" class="nav-title" onclick="toggleBranch(this)">'
-                         +  '<span class="nav-caret">&#9662;</span>' + label + '</button>';
-                    html += renderNodes(node.children);
+                         +  '<span class="nav-caret">&#9662;</span>'
+                         +  '<span class="nav-title-text">' + label + '</span>'
+                         +  folderDigestSpan(childPath.join(' · '))
+                         +  '</button>';
+                    html += renderNodes(node.children, childPath);
                     html += '</li>';
                 } else {
                     var target = node.route ? node.route : node.name;
@@ -362,6 +389,57 @@
             });
             html += '</ul>';
             setArticle(html);
+        }
+
+        // ---- Folder digest: every direct doc of a folder on one page ----
+        // Fetches the folder's docs in reading order and concatenates their
+        // bodies, with a jump-to table of contents. No tags / model badge.
+        function showFolder(section){
+            var docs = FOLDER_DOCS[section] || [];
+            var parts = section.split(' · ');
+            var title = parts[parts.length - 1] || section;
+            if(!docs.length){
+                setArticle('<h2>' + escapeHtml(title) + '</h2>'
+                         + '<p class="empty">이 폴더에는 모아 볼 문서가 없습니다.</p>');
+                return;
+            }
+            var toc = '<div class="folder-head">'
+                    + '<h2>' + escapeHtml(title) + '</h2>'
+                    + '<p class="folder-sub">' + escapeHtml(section)
+                    + ' · 문서 ' + docs.length + '개</p>'
+                    + '<ol class="folder-toc">';
+            docs.forEach(function(d, i){
+                // Buttons (not #anchors) so jumping doesn't trigger the router.
+                toc += '<li><button type="button" class="folder-toc-link"'
+                     + ' onclick="scrollFolderDoc(' + i + ')">'
+                     + escapeHtml(d.label) + '</button></li>';
+            });
+            toc += '</ol></div>';
+            setArticle(toc + '<div class="folder-body"><p class="empty">불러오는 중…</p></div>');
+            Promise.all(docs.map(function(d){
+                return fetch(d.name).then(function(r){ return r.ok ? r.text() : ''; })
+                                    .catch(function(){ return ''; });
+            })).then(function(texts){
+                var html = '';
+                docs.forEach(function(d, i){
+                    html += '<section class="folder-doc" id="folder-doc-' + i + '">'
+                         +  '<h3 class="folder-doc-head">'
+                         +    '<span class="folder-doc-num">' + (i + 1) + '</span>'
+                         +    escapeHtml(d.label)
+                         +  '</h3>'
+                         +  '<div class="folder-doc-body">' + texts[i] + '</div>'
+                         +  '</section>';
+                });
+                var body = document.querySelector('.folder-body');
+                if(body){ body.innerHTML = html; initCarousels(body); }
+            });
+        }
+
+        // Smooth-scroll a folder-digest section into view (works whether the
+        // scroller is #content-scroll or the window).
+        function scrollFolderDoc(i){
+            var el = document.getElementById('folder-doc-' + i);
+            if(el){ el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
         }
 
         // ---- Unified search screen (landing page & title click) ----
@@ -810,6 +888,7 @@
             if(isSearch){ showSearch(); markActiveNav(null); return; }
             if(path === 'tags'){ showTagIndex(); markActiveNav(null); }
             else if(path.indexOf('tag:') === 0){ showTag(decodeURIComponent(path.substr(4))); markActiveNav(null); }
+            else if(path.indexOf('folder:') === 0){ showFolder(decodeURIComponent(path.substr(7))); markActiveNav(null); }
             else if(path === 'settings'){ openSettings(); markActiveNav(null); }
             else { fetchPage(path); markActiveNav(path); }
         }
@@ -843,7 +922,7 @@
                   + '<button type="button" class="nav-tool" onclick="expandAll()">모두 펼치기</button>'
                   + '<button type="button" class="nav-tool" onclick="collapseAll()">모두 접기</button>'
                   + '</div>'
-                  + renderNodes(tree);
+                  + renderNodes(tree, []);
                 document.querySelector('#more').innerHTML = renderMore();
                 refreshRecentDocs();   // reorder by last-modified once dates load
                 route();   // render the initial page once indexes exist
