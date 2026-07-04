@@ -1154,17 +1154,8 @@
             var nav = document.getElementById('navigation');
             if(!nav){ return; }
             var want = name ? '#!' + name : null;
-            nav.querySelectorAll('.nav-branch.on-path').forEach(function(li){
-                li.classList.remove('on-path');
-            });
             nav.querySelectorAll('a').forEach(function(a){
-                var active = a.getAttribute('href') === want;
-                a.classList.toggle('nav-active', active);
-                if(active){
-                    // Light up the guide rails along the active doc's ancestry.
-                    var li = a.closest('.nav-branch');
-                    while(li){ li.classList.add('on-path'); li = li.parentNode.closest('.nav-branch'); }
-                }
+                a.classList.toggle('nav-active', a.getAttribute('href') === want);
             });
         }
 
