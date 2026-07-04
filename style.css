@@ -351,20 +351,20 @@
             inset: 0;
             z-index: 0;
             pointer-events: none;
-            /* Heartbeat: the whole gradient field throbs with a lub-dub beat.
+            /* Breathing: the whole gradient field swells and settles at an
+               even, calm pace — like a slow human breath, not a heartbeat.
                Composes with each blob's own slow drift transform. */
             transform-origin: center;
-            animation: heartbeat 2.4s ease-in-out infinite;
+            animation: breathe 5s ease-in-out infinite;
         }
-        /* The beat pulses both size AND colour intensity (saturate/contrast)
-           so it reads on a white background too — scaling faint pale blobs
-           alone is invisible in the light theme. Brightness is avoided since
-           it washes the pale orange toward white. */
-        @keyframes heartbeat{
-            0%, 45%, 100%{ transform: scale(1);     filter: saturate(1)    contrast(1); }
-            12%{ transform: scale(1.07);            filter: saturate(1.5)  contrast(1.08); }  /* lub */
-            24%{ transform: scale(1.02);            filter: saturate(1.15) contrast(1.02); }
-            33%{ transform: scale(1.075);           filter: saturate(1.6)  contrast(1.1); }   /* dub */
+        /* A single symmetric swell (peak at 50%) with ease-in-out gives a
+           smooth, steady in-and-out with no jerk or pause. It pulses size AND
+           colour intensity (saturate/contrast) so the breath reads on a white
+           background too; brightness is avoided since it washes pale orange
+           toward white. */
+        @keyframes breathe{
+            0%, 100%{ transform: scale(1);      filter: saturate(1)   contrast(1); }
+            50%{      transform: scale(1.055);  filter: saturate(1.4) contrast(1.06); }
         }
         .search-bg .blob{
             position: absolute;
