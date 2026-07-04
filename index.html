@@ -43,7 +43,7 @@
         <main id="content">
             <header id="masthead">
                 <button id="nav-toggle" onclick="toggleNav();" aria-label="Toggle navigation">&#9776;</button>
-                <h1><a href="#!tags">dewytear's claude wiki</a></h1>
+                <h1><a href="#!search">dewytear's claude wiki</a></h1>
                 <p id="tagline">: A guide to Anthropic's Claude Code.</p>
             </header>
             <div id="content-scroll">
@@ -351,6 +351,77 @@
             });
             html += '</ul>';
             setArticle(html);
+        }
+
+        // ---- Unified search screen (landing page & title click) ----
+        // Matches every whitespace-separated term against a doc's label,
+        // its section path, and its tags, so "hooks 자동화" narrows as typed.
+        function searchDocs(query){
+            var q = query.trim().toLowerCase();
+            if(!q){ return []; }
+            var terms = q.split(/\s+/);
+            return DOCS.filter(function(d){
+                var hay = (d.label + ' ' + d.section + ' ' + d.tags.join(' ')).toLowerCase();
+                return terms.every(function(t){ return hay.indexOf(t) !== -1; });
+            });
+        }
+
+        var SEARCH_LIMIT = 8;
+        function renderSearchResults(query){
+            var box = document.getElementById('search-results');
+            if(!box){ return; }
+            var q = query.trim();
+            if(!q){ box.innerHTML = ''; box.classList.remove('open'); return; }
+            var docs = searchDocs(query);
+            if(!docs.length){
+                box.innerHTML = '<p class="search-empty">&ldquo;' + escapeHtml(q)
+                              + '&rdquo;에 대한 결과가 없습니다.</p>';
+                box.classList.add('open');
+                return;
+            }
+            var html = '';
+            docs.slice(0, SEARCH_LIMIT).forEach(function(d){
+                html += '<a class="search-hit" href="#!' + d.name + '">'
+                     +  '<span class="sh-label">' + escapeHtml(d.label) + '</span>'
+                     +  '<span class="sh-meta">' + escapeHtml(d.section) + '</span>';
+                if(d.tags.length){
+                    html += '<span class="sh-tags">';
+                    d.tags.slice(0, 4).forEach(function(t){
+                        html += '<span class="sh-tag">' + escapeHtml(t) + '</span>';
+                    });
+                    html += '</span>';
+                }
+                html += '</a>';
+            });
+            if(docs.length > SEARCH_LIMIT){
+                html += '<p class="search-more">외 ' + (docs.length - SEARCH_LIMIT) + '개 더…</p>';
+            }
+            box.innerHTML = html;
+            box.classList.add('open');
+        }
+
+        function showSearch(){
+            var html =
+                '<div class="search-screen">'
+              +   '<div class="search-bg" aria-hidden="true">'
+              +     '<span class="blob b1"></span><span class="blob b2"></span>'
+              +     '<span class="blob b3"></span><span class="blob b4"></span>'
+              +   '</div>'
+              +   '<div class="search-core">'
+              +     '<h2 class="search-head">무엇을 찾으세요?</h2>'
+              +     '<p class="search-sub">Claude Code · 플러그인 · 하네스 · 세컨드 브레인</p>'
+              +     '<div class="search-field">'
+              +       '<span class="search-ico" aria-hidden="true">&#128269;</span>'
+              +       '<input id="search-input" type="search" autocomplete="off"'
+              +         ' placeholder="문서 · 태그 · 주제를 검색…"'
+              +         ' oninput="renderSearchResults(this.value)">'
+              +     '</div>'
+              +     '<div id="search-results"></div>'
+              +   '</div>'
+              + '</div>';
+            setArticle(html);
+            var box = document.getElementById('search-input');
+            if(box){ box.focus(); }
         }
 
         // ---- "Recent docs" module: paginated board ----
@@ -677,10 +748,14 @@
             document.body.classList.remove('nav-open');   // close mobile drawer
             var h = location.hash;
             var path = h ? h.substr(2) : '';               // strip "#!"
-            // Hide the "recent docs" module on the settings and tags screens.
+            // Hide the "recent docs" module on the settings, tags and search screens.
             document.body.classList.toggle('settings-view', path === 'settings');
             document.body.classList.toggle('tags-view', path === 'tags');
-            if(!h){ fetchPage('welcome'); markActiveNav('welcome'); return; }
+            // The unified search screen is both the landing page (empty hash)
+            // and the destination of the masthead title link (#!search).
+            var isSearch = !h || path === 'search';
+            document.body.classList.toggle('search-view', isSearch);
+            if(isSearch){ showSearch(); markActiveNav(null); return; }
             if(path === 'tags'){ showTagIndex(); markActiveNav(null); }
             else if(path.indexOf('tag:') === 0){ showTag(decodeURIComponent(path.substr(4))); markActiveNav(null); }
             else if(path === 'settings'){ openSettings(); markActiveNav(null); }

@@ -322,8 +322,205 @@
 
         /* ---- Screens without the "recent docs" module ---- */
         body.settings-view #more,
-        body.tags-view #more{
+        body.tags-view #more,
+        body.search-view #more{
             display: none;
+        }
+
+        /* ---- Unified search screen (landing / title click) ---- */
+        /* Full-bleed: drop the article padding so the screen fills the pane. */
+        body.search-view #article{
+            padding: 0;
+        }
+        body.search-view .fade-in{
+            animation: none;   /* the screen has its own entrance motion */
+        }
+        .search-screen{
+            position: relative;
+            min-height: calc(100vh - 82px);   /* fill the pane below the slim masthead */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;        /* pull the field toward the lower-center */
+            padding: 40px 24px 12vh;
+            overflow: hidden;
+        }
+        /* Animated background: soft gradient blobs drifting behind the field. */
+        .search-bg{
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .search-bg .blob{
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(64px);
+            opacity: 0.55;
+            will-change: transform;
+        }
+        .search-bg .b1{
+            width: 42vmin; height: 42vmin;
+            left: 8%; top: 12%;
+            background: var(--accent);
+            animation: blob-a 19s ease-in-out infinite;
+        }
+        .search-bg .b2{
+            width: 34vmin; height: 34vmin;
+            right: 10%; top: 18%;
+            background: var(--accent-ink);
+            opacity: 0.4;
+            animation: blob-b 23s ease-in-out infinite;
+        }
+        .search-bg .b3{
+            width: 48vmin; height: 48vmin;
+            left: 22%; bottom: 4%;
+            background: var(--accent);
+            opacity: 0.32;
+            animation: blob-c 27s ease-in-out infinite;
+        }
+        .search-bg .b4{
+            width: 30vmin; height: 30vmin;
+            right: 16%; bottom: 10%;
+            background: var(--accent-ink);
+            opacity: 0.3;
+            animation: blob-d 21s ease-in-out infinite;
+        }
+        @keyframes blob-a{
+            0%,100%{ transform: translate(0,0) scale(1); }
+            50%{ transform: translate(6vmin,4vmin) scale(1.12); }
+        }
+        @keyframes blob-b{
+            0%,100%{ transform: translate(0,0) scale(1); }
+            50%{ transform: translate(-5vmin,6vmin) scale(1.08); }
+        }
+        @keyframes blob-c{
+            0%,100%{ transform: translate(0,0) scale(1); }
+            50%{ transform: translate(4vmin,-5vmin) scale(0.9); }
+        }
+        @keyframes blob-d{
+            0%,100%{ transform: translate(0,0) scale(1); }
+            50%{ transform: translate(-6vmin,-4vmin) scale(1.15); }
+        }
+        @media (prefers-reduced-motion: reduce){
+            .search-bg .blob{ animation: none; }
+        }
+        .search-core{
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 620px;
+            text-align: center;
+            animation: search-rise 0.6s cubic-bezier(0.22,1,0.36,1) both;
+        }
+        @keyframes search-rise{
+            from{ opacity: 0; transform: translateY(16px); }
+            to{ opacity: 1; transform: translateY(0); }
+        }
+        .search-head{
+            margin: 0 0 6px;
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            border: 0;   /* override the default h2 underline */
+            padding: 0;
+        }
+        .search-sub{
+            margin: 0 0 22px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .search-field{
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .search-ico{
+            position: absolute;
+            left: 20px;
+            font-size: 18px;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        #search-input{
+            width: 100%;
+            padding: 16px 22px 16px 52px;
+            font-size: 17px;
+            color: var(--text);
+            background: var(--bg-alt);
+            border: 1.5px solid var(--border);
+            border-radius: 999px;
+            outline: none;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+        #search-input::placeholder{ color: var(--muted); }
+        #search-input:focus{
+            border-color: var(--accent);
+            background: var(--bg);
+            box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent),
+                        0 12px 36px rgba(0,0,0,0.16);
+        }
+        #search-results{
+            margin-top: 14px;
+            text-align: left;
+            max-height: 46vh;
+            overflow-y: auto;
+        }
+        #search-results.open{
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--bg-alt);
+            padding: 8px;
+            box-shadow: 0 10px 34px rgba(0,0,0,0.14);
+        }
+        .search-hit{
+            display: block;
+            padding: 11px 14px;
+            border-radius: 12px;
+            color: var(--text);
+            transition: background 0.15s ease;
+        }
+        .search-hit:hover{
+            background: var(--bg);
+            text-decoration: none;
+        }
+        .sh-label{
+            display: block;
+            font-weight: 700;
+            font-size: 15px;
+        }
+        .sh-meta{
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 1px;
+        }
+        .sh-tags{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 6px;
+        }
+        .sh-tag{
+            font-size: 11px;
+            color: var(--accent-ink);
+            background: color-mix(in srgb, var(--accent) 12%, transparent);
+            border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+            border-radius: 999px;
+            padding: 1px 8px;
+        }
+        .search-empty{
+            margin: 0;
+            padding: 14px 16px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .search-more{
+            margin: 4px 0 2px;
+            padding: 6px 14px;
+            color: var(--muted);
+            font-size: 12px;
         }
         .settings-note{
             color: var(--muted);
