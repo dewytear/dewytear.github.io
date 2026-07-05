@@ -1151,7 +1151,11 @@
             var dpr = Math.min(window.devicePixelRatio || 1, 2);
             var st = { ctx: ctx, W: 0, H: 0, onResize: null };
             function resize(){
-                var rect = canvas.parentNode.getBoundingClientRect();
+                // Size to the positioned ancestor (the absolute canvas's real
+                // containing block) — in search view that's the whole card,
+                // so the game field reaches up behind the title.
+                var box = canvas.offsetParent || canvas.parentNode;
+                var rect = box.getBoundingClientRect();
                 st.W = rect.width; st.H = rect.height;
                 canvas.width = st.W * dpr; canvas.height = st.H * dpr;
                 canvas.style.width = st.W + 'px'; canvas.style.height = st.H + 'px';
@@ -1245,7 +1249,10 @@
                 ball = { x: W / 2, y: H * 0.62, vx: sp * 0.8 * dir, vy: -sp, r: Math.max(5, W / 240) };
             }
             function resize(){
-                var rect = canvas.parentNode.getBoundingClientRect();
+                // Positioned ancestor = the search backdrop's containing
+                // block — in search view that's the whole card.
+                var box = canvas.offsetParent || canvas.parentNode;
+                var rect = box.getBoundingClientRect();
                 W = rect.width; H = rect.height;
                 canvas.width = W * dpr; canvas.height = H * dpr;
                 canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
