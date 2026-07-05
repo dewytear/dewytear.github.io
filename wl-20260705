@@ -25,6 +25,15 @@
     <li><strong>반복 3 · 종단 검증</strong> — 격리 사본에서 가상 문서 추가·수정으로 큐레이터 전 과정(감지→갱신→재빌드→집계 반영)을 실증. 이 과정에서 <strong>부동소수 합산 순서로 인한 비결정성 버그를 발견·수정</strong>(5개 해시시드 재현 확인). <span class="scn-sub">(PR #96)</span></li>
 </ul>
 
+<h3>오후 · UI와 미니게임</h3>
+<ul>
+    <li><strong>연관 문서 버그 수정</strong> — 메뉴로 문서를 이동해도 이전 문서의 연관 문서가 남던 문제(setArticle 잔여물 정리 누락). <span class="scn-sub">(PR #97)</span></li>
+    <li><strong>통합검색 미니게임 4종</strong> — 벽돌깨기(패들 드래그·반사각 조절), 개념 별똥별 받기(받으면 그 개념으로 검색), 퐁 랠리(공속 2배), 종이비행기 글라이딩. 설정은 기본값, <strong>방문자는 화면 하단 게임 독에서 직접 선택</strong>(브라우저별 기억). <span class="scn-sub">(PR #98~#102)</span></li>
+    <li><strong>Work Log 표시 규칙</strong> — 태그처럼 최근 문서 영역도 Work Log에선 숨김. <span class="scn-sub">(PR #100)</span></li>
+    <li><strong>클로드식 레이아웃</strong> — 틴트 셸이 둥근 본문 카드를 감싸는 claude.ai풍 디자인, 좌측 목록은 부드러운 슬라이드 개폐(가로모드 기본 = 가림, 선택 기억). <span class="scn-sub">(PR #103·#104)</span></li>
+    <li><strong>&#127756; 지식 코스모스</strong> — 지식 인덱스의 연관 관계를 3차원 별자리로: 문서=별(피연결수록 크게), 연관=연결선, 드래그 회전·휠 확대·별 클릭 시 문서 이동. <span class="scn-sub">(PR #104)</span></li>
+</ul>
+
 <div class="note">
     <span class="nh">남은 것</span>
     매일 자동 실행 예약(트리거)은 앱 권한 승인이 필요해 대기 중. 승인 전까지는 요청 시 수동으로 큐레이터를 실행한다(절차·도구는 검증 완료).
