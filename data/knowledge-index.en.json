@@ -1,10 +1,10 @@
 {
  "schemaVersion": 2,
  "note": "Structured knowledge index built by AI from every doc (summary, key concepts, related docs). related = idf-weighted concept overlap (via:concept) topped up with same-folder neighbours (via:folder).",
- "docCount": 86,
+ "docCount": 92,
  "stats": {
-  "docCount": 86,
-  "conceptCount": 279,
+  "docCount": 92,
+  "conceptCount": 296,
   "clusters": [
    {
     "label": "Introduction",
@@ -87,13 +87,13 @@
     }
    },
    {
-    "label": "Douzone dev.Center",
-    "section": "Douzone · dev.Center",
-    "count": 1,
+    "label": "Proposal",
+    "section": "Douzone · dev.Center · Proposal",
+    "count": 7,
     "hub": {
-     "name": "dz-knowledge-platform",
-     "title": "GitLab 기반 AI 개발 지식 플랫폼 구축 제안",
-     "refs": 3
+     "name": "dzp-overview",
+     "title": "제안 개요 — GitLab 기반 AI 개발 지식 플랫폼",
+     "refs": 4
     }
    }
   ],
@@ -154,13 +154,13 @@
     "refs": 6
    },
    {
-    "name": "llmw-vaults",
-    "title": "볼트 체계 — 메인 볼트와 위키 볼트",
+    "name": "llmw-capture",
+    "title": "무엇을 담는가 — 지식 캡처",
     "refs": 6
    },
    {
-    "name": "skl-strengths",
-    "title": "스킬의 특장점",
+    "name": "llmw-vaults",
+    "title": "볼트 체계 — 메인 볼트와 위키 볼트",
     "refs": 6
    }
   ],
@@ -214,6 +214,10 @@
     "n": 6
    },
    {
+    "c": "지식플랫폼",
+    "n": 6
+   },
+   {
     "c": "CLAUDE.md",
     "n": 5
    },
@@ -222,11 +226,7 @@
     "n": 5
    },
    {
-    "c": "토큰",
-    "n": 5
-   },
-   {
-    "c": "플러그인",
+    "c": "지식관리",
     "n": 5
    }
   ],
@@ -1164,14 +1164,6 @@
       "스킬"
      ],
      "via": "concept"
-    },
-    {
-     "name": "dz-knowledge-platform",
-     "title": "GitLab 기반 AI 개발 지식 플랫폼 구축 제안",
-     "shared": [
-      "조직지식"
-     ],
-     "via": "concept"
     }
    ]
   },
@@ -1218,10 +1210,10 @@
      "via": "concept"
     },
     {
-     "name": "dz-knowledge-platform",
-     "title": "GitLab 기반 AI 개발 지식 플랫폼 구축 제안",
+     "name": "skl-context",
+     "title": "컨텍스트 윈도우와 도구의 문제",
      "shared": [
-      "조직지식"
+      "프로그레시브공개"
      ],
      "via": "concept"
     }
@@ -1691,8 +1683,8 @@
    "section": "AI · Claude · Code · Second Brain",
    "related": [
     {
-     "name": "dz-knowledge-platform",
-     "title": "GitLab 기반 AI 개발 지식 플랫폼 구축 제안",
+     "name": "dzp-knowledge",
+     "title": "지식 관리 체계 — 판정·갱신·추적·신뢰·수명주기",
      "shared": [
       "인덱스"
      ],
@@ -2155,16 +2147,6 @@
    "section": "AI · Claude · Code · Harness",
    "related": [
     {
-     "name": "hnp-verify",
-     "title": "검증·품질과 _workspace",
-     "shared": [
-      "할루시네이션",
-      "_workspace",
-      "검증"
-     ],
-     "via": "concept"
-    },
-    {
      "name": "hnp-concepts",
      "title": "핵심 개념 쉽게",
      "shared": [
@@ -2181,6 +2163,16 @@
       "검증",
       "에이전트",
       "오케스트레이터"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "hnp-verify",
+     "title": "검증·품질과 _workspace",
+     "shared": [
+      "할루시네이션",
+      "_workspace",
+      "검증"
      ],
      "via": "concept"
     },
@@ -3051,15 +3043,6 @@
    "section": "AI · Claude · Code · LLM Wiki",
    "related": [
     {
-     "name": "llmw-capture",
-     "title": "무엇을 담는가 — 지식 캡처",
-     "shared": [
-      "위키볼트",
-      "메인볼트"
-     ],
-     "via": "concept"
-    },
-    {
      "name": "llmw-onboard",
      "title": "온보딩 (실습)",
      "shared": [
@@ -3078,11 +3061,20 @@
      "via": "concept"
     },
     {
+     "name": "llmw-capture",
+     "title": "무엇을 담는가 — 지식 캡처",
+     "shared": [
+      "메인볼트",
+      "위키볼트"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "llmw-philosophy",
      "title": "활용과 철학 — 읽는 능력과 두 볼트 운영",
      "shared": [
-      "위키볼트",
-      "메인볼트"
+      "메인볼트",
+      "위키볼트"
      ],
      "via": "concept"
     }
@@ -3106,8 +3098,8 @@
      "name": "llmw-philosophy",
      "title": "활용과 철학 — 읽는 능력과 두 볼트 운영",
      "shared": [
-      "위키볼트",
       "메인볼트",
+      "위키볼트",
       "지식관리"
      ],
      "via": "concept"
@@ -3116,22 +3108,23 @@
      "name": "llmw-vaults",
      "title": "볼트 체계 — 메인 볼트와 위키 볼트",
      "shared": [
+      "메인볼트",
+      "위키볼트"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "dzp-security",
+     "title": "자산 활용과 보안",
+     "shared": [
       "위키볼트",
-      "메인볼트"
+      "지식관리"
      ],
      "via": "concept"
     },
     {
      "name": "llmw-cards",
      "title": "위키 카드의 종류와 로우 소스",
-     "shared": [
-      "캡처"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "llmw-clipper-query",
-     "title": "웹 클리퍼와 인박스, Query 실전",
      "shared": [
       "캡처"
      ],
@@ -3319,6 +3312,14 @@
       "옵시디언"
      ],
      "via": "concept"
+    },
+    {
+     "name": "dzp-why",
+     "title": "왜 지금인가 — 흩어지고 사라지는 개발 지식",
+     "shared": [
+      "온보딩"
+     ],
+     "via": "concept"
     }
    ]
   },
@@ -3424,8 +3425,8 @@
      "name": "llmw-capture",
      "title": "무엇을 담는가 — 지식 캡처",
      "shared": [
-      "위키볼트",
       "메인볼트",
+      "위키볼트",
       "지식관리"
      ],
      "via": "concept"
@@ -3434,8 +3435,17 @@
      "name": "llmw-vaults",
      "title": "볼트 체계 — 메인 볼트와 위키 볼트",
      "shared": [
+      "메인볼트",
+      "위키볼트"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "dzp-security",
+     "title": "자산 활용과 보안",
+     "shared": [
       "위키볼트",
-      "메인볼트"
+      "지식관리"
      ],
      "via": "concept"
     }
@@ -3989,19 +3999,175 @@
    ]
   },
   {
-   "name": "dz-knowledge-platform",
-   "title": "GitLab 기반 AI 개발 지식 플랫폼 구축 제안",
-   "summary": "GitLab 개발 결과를 AI가 분석해 조직 지식으로 자동 축적하는 Read-Only 플랫폼 제안",
+   "name": "dzp-overview",
+   "title": "제안 개요 — GitLab 기반 AI 개발 지식 플랫폼",
+   "summary": "GitLab 개발 결과를 AI가 조직 지식으로 자동 축적하는 Read-Only 플랫폼 제안의 개요와 선순환",
+   "concepts": [
+    "GitLab",
+    "지식플랫폼",
+    "조직지식",
+    "선순환",
+    "Read-Only"
+   ],
+   "section": "Douzone · dev.Center · Proposal",
+   "related": [
+    {
+     "name": "dzp-architecture",
+     "title": "플랫폼 아키텍처",
+     "shared": [
+      "GitLab",
+      "지식플랫폼"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "dzp-core",
+     "title": "제안의 핵심 — 개발 흐름은 그대로, 지식화는 AI가",
+     "shared": [
+      "GitLab",
+      "지식플랫폼"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "dzp-why",
+     "title": "왜 지금인가 — 흩어지고 사라지는 개발 지식",
+     "shared": [
+      "조직지식",
+      "지식플랫폼"
+     ],
+     "via": "concept"
+    }
+   ]
+  },
+  {
+   "name": "dzp-why",
+   "title": "왜 지금인가 — 흩어지고 사라지는 개발 지식",
+   "summary": "분산·소실되는 개발 지식의 비용을 업계 통계로 근거화한 문제 정의",
+   "concepts": [
+    "지식플랫폼",
+    "조직지식",
+    "지식사일로",
+    "온보딩",
+    "문서화"
+   ],
+   "section": "Douzone · dev.Center · Proposal",
+   "related": [
+    {
+     "name": "dzp-overview",
+     "title": "제안 개요 — GitLab 기반 AI 개발 지식 플랫폼",
+     "shared": [
+      "조직지식",
+      "지식플랫폼"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "llmw-onboard",
+     "title": "온보딩 (실습)",
+     "shared": [
+      "온보딩"
+     ],
+     "via": "concept"
+    }
+   ]
+  },
+  {
+   "name": "dzp-core",
+   "title": "제안의 핵심 — 개발 흐름은 그대로, 지식화는 AI가",
+   "summary": "직원 흐름 무변경 원칙과 Event Stream/Knowledge State 분리, 업계 사례 근거",
    "concepts": [
     "GitLab",
     "지식플랫폼",
     "AI큐레이터",
-    "조직지식",
-    "지식관리",
-    "인덱스"
+    "EventStream",
+    "KnowledgeState"
    ],
-   "section": "Douzone · dev.Center",
+   "section": "Douzone · dev.Center · Proposal",
    "related": [
+    {
+     "name": "dzp-architecture",
+     "title": "플랫폼 아키텍처",
+     "shared": [
+      "GitLab",
+      "지식플랫폼"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "dzp-overview",
+     "title": "제안 개요 — GitLab 기반 AI 개발 지식 플랫폼",
+     "shared": [
+      "GitLab",
+      "지식플랫폼"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "dzp-knowledge",
+     "title": "지식 관리 체계 — 판정·갱신·추적·신뢰·수명주기",
+     "shared": [
+      "AI큐레이터"
+     ],
+     "via": "concept"
+    }
+   ]
+  },
+  {
+   "name": "dzp-architecture",
+   "title": "플랫폼 아키텍처",
+   "summary": "7계층 파이프라인, 지식 생성 Trigger, SHA 증분 분석, Context 확장, 운영 이중화",
+   "concepts": [
+    "GitLab",
+    "지식플랫폼",
+    "증분분석",
+    "트리거",
+    "파이프라인"
+   ],
+   "section": "Douzone · dev.Center · Proposal",
+   "related": [
+    {
+     "name": "dzp-core",
+     "title": "제안의 핵심 — 개발 흐름은 그대로, 지식화는 AI가",
+     "shared": [
+      "GitLab",
+      "지식플랫폼"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "dzp-overview",
+     "title": "제안 개요 — GitLab 기반 AI 개발 지식 플랫폼",
+     "shared": [
+      "GitLab",
+      "지식플랫폼"
+     ],
+     "via": "concept"
+    }
+   ]
+  },
+  {
+   "name": "dzp-knowledge",
+   "title": "지식 관리 체계 — 판정·갱신·추적·신뢰·수명주기",
+   "summary": "가치 판정, 누적 갱신, Identifier 검색, 출처 추적, FACT/INFERRED/DECISION, 수명주기",
+   "concepts": [
+    "AI큐레이터",
+    "지식관리",
+    "인덱스",
+    "Provenance",
+    "신뢰등급",
+    "수명주기"
+   ],
+   "section": "Douzone · dev.Center · Proposal",
+   "related": [
+    {
+     "name": "dzp-core",
+     "title": "제안의 핵심 — 개발 흐름은 그대로, 지식화는 AI가",
+     "shared": [
+      "AI큐레이터"
+     ],
+     "via": "concept"
+    },
     {
      "name": "sb-level2",
      "title": "레벨 2 · 주제로 묶기 (LLM 위키 + 메모리)",
@@ -4009,22 +4175,72 @@
       "인덱스"
      ],
      "via": "concept"
-    },
+    }
+   ]
+  },
+  {
+   "name": "dzp-security",
+   "title": "자산 활용과 보안",
+   "summary": "개인 위키 자산의 재사용 경로와 PUBLIC~RESTRICTED 지식 등급·접근 분리",
+   "concepts": [
+    "지식플랫폼",
+    "보안등급",
+    "지식관리",
+    "위키볼트",
+    "재사용"
+   ],
+   "section": "Douzone · dev.Center · Proposal",
+   "related": [
     {
-     "name": "skl-strengths",
-     "title": "스킬의 특장점",
+     "name": "llmw-capture",
+     "title": "무엇을 담는가 — 지식 캡처",
      "shared": [
-      "조직지식"
+      "위키볼트",
+      "지식관리"
      ],
      "via": "concept"
     },
     {
-     "name": "skl-what",
-     "title": "스킬이란 무엇인가",
+     "name": "llmw-philosophy",
+     "title": "활용과 철학 — 읽는 능력과 두 볼트 운영",
      "shared": [
-      "조직지식"
+      "위키볼트",
+      "지식관리"
      ],
      "via": "concept"
+    }
+   ]
+  },
+  {
+   "name": "dzp-roadmap",
+   "title": "추진 로드맵 — 4 Phase와 1차 PoC",
+   "summary": "개인 검증→회사 PoC→센터 확대→전사 확장 4단계와 OmniEsol AI 알림 PoC·KPI",
+   "concepts": [
+    "PoC",
+    "KPI",
+    "지식플랫폼",
+    "OmniEsol",
+    "로드맵"
+   ],
+   "section": "Douzone · dev.Center · Proposal",
+   "related": [
+    {
+     "name": "dzp-overview",
+     "title": "제안 개요 — GitLab 기반 AI 개발 지식 플랫폼",
+     "shared": [],
+     "via": "folder"
+    },
+    {
+     "name": "dzp-why",
+     "title": "왜 지금인가 — 흩어지고 사라지는 개발 지식",
+     "shared": [],
+     "via": "folder"
+    },
+    {
+     "name": "dzp-core",
+     "title": "제안의 핵심 — 개발 흐름은 그대로, 지식화는 AI가",
+     "shared": [],
+     "via": "folder"
     }
    ]
   }

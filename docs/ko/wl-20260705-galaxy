@@ -1,0 +1,23 @@
+<h2>Knowledge Universe 개편 — 갤럭시·성단 구조</h2>
+<p>지식 체계를 <strong>Knowledge Universe → 🌌 Galaxy(대분류) → ✦ 성단(클러스터)</strong>의 2계층으로 개편하고, 제안서를 시리즈로 분할했다.</p>
+
+<h3>작업 개요</h3>
+<ul>
+    <li><strong>제안서 시리즈 분할</strong> — 단일 <code>dz-knowledge-platform</code>을 삭제하고 다른 시리즈처럼 주제별 7편(<code>dzp-overview/why/core/architecture/knowledge/security/roadmap</code>)으로 분할, Douzone &gt; dev.Center &gt; <strong>Proposal</strong>(신설) 아래 배치. 폴더 ⧉ 두루마리 모아보기 동작 확인.</li>
+    <li><strong>Douzone 지식지도</strong> — <code>dz-map</code> 신설: Universe 2갤럭시 구조 SVG(예정 성단 표기 포함) + Douzone 성단 라이브 표. <code>hydrateAiMap</code>을 일반화해 <code>data-section-prefix</code>로 갤럭시별 필터를 지원.</li>
+    <li><strong>지식그래프 2계층화</strong> — cosmos <code>build()</code>를 개편: 대분류가 갤럭시 중심(피보나치 구, 반경 0.85), 그 주위에 성단(반경 0.5), 문서는 성단 주위 조밀 클라우드(0.2). 갤럭시 명판은 대문자·큰 폰트로 성단 명판과 구분. 대분류가 하나뿐이면(방문자 기본: Douzone 숨김) 기존 모습 그대로.</li>
+    <li><strong>내비 구조</strong> — Douzone 아래 Architecture · Development Guide 빈 폴더 신설(미래 성단 자리), Work Log 대분류에 표시 전용 모노크롬 아이콘(✎) 지원(<code>icon</code> 필드 — section 경로는 불변).</li>
+    <li><strong>연동 갱신</strong> — 클러스터 라벨 '제안(Proposal)'/'Proposal'(ko/en), 인덱스 재생성 92편(<code>--check</code> OK), ai-map(ko/en) 4갈래 도식·표·data-topics 갱신.</li>
+</ul>
+
+<h3>결정 사항</h3>
+<ul>
+    <li>dz-map은 ai-map처럼 메타 페이지로 인덱스에서 제외.</li>
+    <li>갤럭시 배치는 대분류 수에 적응 — 새 대분류가 생기면 자동으로 새 갤럭시가 나타난다.</li>
+</ul>
+
+<h3>다음 할 일</h3>
+<ul>
+    <li>Architecture · Development Guide · Project 성단의 첫 문서 채우기.</li>
+    <li>제안서 검토 제언(사람 승인 게이트, 비용 견적, KPI 기준선 등) 반영 여부 결정.</li>
+</ul>

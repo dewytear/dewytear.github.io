@@ -1,0 +1,106 @@
+<h2>지식 관리 체계 — 판정 · 갱신 · 추적 · 신뢰 · 수명주기</h2>
+<p>파이프라인이 지식을 만든다면, 이 편은 그 지식을 <strong>어떻게 관리해 신뢰를 유지하는가</strong>를 다룬다.</p>
+
+<h3>가치 판정 — 변경량이 아니라 재사용 가치</h3>
+<ul>
+    <li><strong>지식화 대상</strong> — 새로운 Architecture·업무 Rule, DB Table·Column 의미 변경, API 추가·변경, 상태 전이 변경, 외부 시스템 연계, 반복 가능한 장애 해결, 공통 개발 패턴, 성능 개선 사례, 보안 정책·Dependency 변화, 기존 설계 정책 변경</li>
+    <li><strong>기본 제외</strong> — 변수명 변경, 단순 Null Check, 오타·주석·Formatting, 단순 Log 추가, Test Data, 일회성 Debug, 기계적 Refactoring</li>
+</ul>
+
+<h3>누적 갱신 — 문서 수가 아니라 지식의 밀도</h3>
+<p>새 지식이 발견됐다고 항상 새 문서를 만들지 않는다. Knowledge Index를 먼저 검색해 관련 문서가 있으면 <strong>기존 문서를 확장</strong>한다. 예컨대 "수신자 처리 구조" 문서가 있는 상태에서 COL 동적 수신자 기능이 추가되면, 신규 문서 이전에 기존 문서 확장을 우선 판단한다. Wiki가 변경 이력의 집합이 아니라 <strong>지속적으로 정제된 현재 지식 상태</strong>로 유지되는 이유다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 172" role="img" aria-label="누적 갱신 분기: 새 지식 발견 후 인덱스를 검색해 관련 문서가 있으면 기존 문서를 갱신하고 없으면 신규 문서를 생성한다">
+    <rect class="d-box" x="8" y="66" width="150" height="48" rx="9"/>
+    <text class="d-label sm" x="83" y="86" text-anchor="middle">새 지식 발견</text>
+    <text class="d-sub" x="83" y="102" text-anchor="middle">Merge 분석 결과</text>
+    <rect class="d-box" x="186" y="66" width="140" height="48" rx="9"/>
+    <text class="d-label sm" x="256" y="86" text-anchor="middle">Index 검색</text>
+    <text class="d-sub" x="256" y="102" text-anchor="middle">관련 문서 탐색</text>
+    <polygon class="d-box" points="412,58 476,90 412,122 348,90"/>
+    <text class="d-label sm" x="412" y="94" text-anchor="middle">관련 문서 존재?</text>
+    <rect class="d-box accent" x="536" y="28" width="136" height="44" rx="9"/>
+    <text class="d-label sm" x="604" y="46" text-anchor="middle">기존 문서 갱신</text>
+    <text class="d-sub" x="604" y="62" text-anchor="middle">누적 확장</text>
+    <rect class="d-box" x="536" y="108" width="136" height="44" rx="9"/>
+    <text class="d-label sm" x="604" y="126" text-anchor="middle">신규 문서 생성</text>
+    <text class="d-sub" x="604" y="142" text-anchor="middle">새 지식 카드</text>
+    <line class="d-edge" x1="158" y1="90" x2="178" y2="90"/><polygon class="d-arrow" points="178,85 178,95 186,90"/>
+    <line class="d-edge" x1="326" y1="90" x2="340" y2="90"/><polygon class="d-arrow" points="340,85 340,95 348,90"/>
+    <path class="d-edge" d="M476 90 H500 C510 90, 514 84, 514 74 V64 C514 56, 518 54, 526 54 H528"/>
+    <polygon class="d-arrow" points="528,45 528,55 536,50"/>
+    <text class="d-sub" x="498" y="80" text-anchor="middle">YES</text>
+    <path class="d-edge" d="M476 90 H500 C510 90, 514 96, 514 106 V116 C514 124, 518 126, 526 126 H528"/>
+    <polygon class="d-arrow" points="528,125 528,135 536,130"/>
+    <text class="d-sub" x="498" y="112" text-anchor="middle">NO</text>
+</svg>
+<div class="d-cap">기존 문서 확장을 항상 먼저 판단한다 — 문서 수가 아니라 지식의 밀도를 늘린다.</div>
+</div>
+
+<h3>개발 Identifier 검색</h3>
+<p>개발자는 자연어보다 <strong>Table명 · Column명 · Rule ID · Class명 · Method명 · API명 · Mapper ID · Error Code</strong>로 찾는 경우가 많다. Knowledge Index에 identifier를 포함하고, 검색 우선순위를 <strong>① Identifier 완전 일치 → ② 제목 → ③ 개념 → ④ 요약 → ⑤ 태그 → ⑥ 연관 문서 → ⑦ 같은 프로젝트</strong>로 구성한다. 소스에서 만난 <code>CI_RULERCV_INFO</code> 하나만으로 관련 정책 문서에 도달할 수 있어야 한다.</p>
+<pre><code><span class="c"># Knowledge Index 엔트리 (예시)</span>
+{
+  "name": "dz-ai-noti-col-receiver",
+  "title": "COL 동적 수신자 정책",
+  "summary": "COL 유형의 동적 수신자 해석 정책",
+  "kind": "policy",
+  "product": "OmniEsol",  "domain": "SCM",  "project": "ai-notification",
+  "status": "active",
+  "concepts": ["동적수신자", "알림채널", "수신자해석"],
+  "identifiers": ["CI_RULERCV_INFO", "RCV_TP_CD", "RCV_DTL_DC", "SUB_RCV_CD", "COL"],
+  "sources": [{
+    "project": "scm/ai-notification",
+    "commit": "abc123",  "mergeRequest": 382,
+    "paths": ["src/.../ReceiverService.java", "mapper/.../ReceiverMapper.xml"]
+  }]
+}</code></pre>
+
+<h3>출처 추적 (Provenance)</h3>
+<p>모든 지식은 위 <code>sources</code>처럼 <strong>어느 프로젝트 → 어느 Commit → 어느 MR → 어느 Source File</strong>에서 왔는지 역추적할 수 있어야 한다. 검색으로 지식을 늘리되 출처를 함께 유지하는 접근은 RAG 연구가 확립한 방식으로, 외부 지식 결합이 더 사실적이고 출처 추적 가능한 생성을 만들고(<a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">Lewis et al., NeurIPS 2020</a>) 환각을 크게 줄인다(<a href="https://arxiv.org/abs/2104.07567" target="_blank" rel="noopener">Shuster et al., 2021</a>)는 것이 실증되어 있다.</p>
+
+<h3>신뢰 수준 — FACT · INFERRED · DECISION</h3>
+<p>코드에서 발견됐다는 이유만으로 공식 정책으로 확정하지 않는다. 최신 연구에서도 최고 성능 LLM조차 코드 요약의 품질·정확성을 오판하는 경우가 보고되며(<a href="https://arxiv.org/abs/2507.16587" target="_blank" rel="noopener">arXiv 2507.16587, 2025</a>), NIST의 생성형 AI 프로파일은 <strong>콘텐츠 출처 추적(Content Provenance)</strong>과 "자신 있게 서술되는 오류(confabulation)" 관리를 핵심 위험 통제로 요구한다(<a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf" target="_blank" rel="noopener">NIST AI 600-1</a>).</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>구분</th><th>의미</th><th>예시</th><th>게시 정책</th></tr></thead>
+        <tbody>
+            <tr><td><strong>FACT</strong></td><td>코드에서 직접 확인 가능</td><td>Table · Column · API · Class 관계</td><td>자동 게시 가능성 높음</td></tr>
+            <tr><td><strong>INFERRED</strong></td><td>코드 구조 기반 추론</td><td>재시도 목적 추정, 중복 방지 추정</td><td>추론임을 명시해 게시</td></tr>
+            <tr><td><strong>DECISION</strong></td><td>업무·Architecture 결정</td><td>GUID 선택 이유, 채널 제한 이유</td><td>MR·설계 문서 등 추가 근거 확인 후 게시</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>수명주기 — 삭제하지 않고 대체한다</h3>
+<p>정책이 바뀌었다고 과거 지식을 삭제하지 않는다. 예컨대 "COL 수신자 → Email only"가 "Email + Message"로 바뀌면 기존 문서를 <code>superseded</code>로 전환하고 새 정책 문서와 연결해, <strong>현재 정책과 변경 이력을 동시에</strong> 추적한다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 176" role="img" aria-label="지식 수명주기: draft에서 active가 되고, 유효성을 잃으면 deprecated, 새 정책으로 대체되면 superseded가 되어 새 active 문서와 연결된다">
+    <rect class="d-box" x="8" y="72" width="110" height="44" rx="9"/>
+    <text class="d-label sm" x="63" y="90" text-anchor="middle">draft</text>
+    <text class="d-sub" x="63" y="106" text-anchor="middle">작성 중</text>
+    <rect class="d-box accent" x="152" y="72" width="120" height="44" rx="9"/>
+    <text class="d-label sm" x="212" y="90" text-anchor="middle">active</text>
+    <text class="d-sub" x="212" y="106" text-anchor="middle">현재 유효</text>
+    <rect class="d-box" x="332" y="32" width="150" height="44" rx="9"/>
+    <text class="d-label sm" x="407" y="50" text-anchor="middle">deprecated</text>
+    <text class="d-sub" x="407" y="66" text-anchor="middle">더는 유효하지 않음</text>
+    <rect class="d-box" x="332" y="112" width="150" height="44" rx="9"/>
+    <text class="d-label sm" x="407" y="130" text-anchor="middle">superseded</text>
+    <text class="d-sub" x="407" y="146" text-anchor="middle">새 정책으로 대체</text>
+    <rect class="d-box accent" x="552" y="112" width="120" height="44" rx="9"/>
+    <text class="d-label sm" x="612" y="130" text-anchor="middle">새 active 문서</text>
+    <text class="d-sub" x="612" y="146" text-anchor="middle">연결 유지</text>
+    <line class="d-edge" x1="118" y1="94" x2="144" y2="94"/><polygon class="d-arrow" points="144,89 144,99 152,94"/>
+    <path class="d-edge" d="M272 94 H296 C306 94, 310 88, 310 78 V68 C310 60, 314 58, 322 58 H324"/>
+    <polygon class="d-arrow" points="324,49 324,59 332,54"/>
+    <text class="d-sub" x="296" y="84" text-anchor="middle">폐기</text>
+    <path class="d-edge" d="M272 94 H296 C306 94, 310 100, 310 110 V120 C310 128, 314 130, 322 130 H324"/>
+    <polygon class="d-arrow" points="324,125 324,135 332,130"/>
+    <text class="d-sub" x="296" y="116" text-anchor="middle">대체</text>
+    <line class="d-edge dash accent" x1="482" y1="134" x2="544" y2="134"/><polygon class="d-arrow accent" points="544,129 544,139 552,134"/>
+</svg>
+<div class="d-cap">superseded 문서는 새 문서와 연결된 채 남는다 — "왜 바뀌었는가"가 함께 보존된다.</div>
+</div>
