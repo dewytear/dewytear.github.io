@@ -568,15 +568,18 @@
         }
         function hydrateAiMap(){
             var s = KNOWLEDGE_STATS;
-            // Knowledge-map pages: the global map (ai-map) and per-galaxy
-            // maps (dz-map, …) share the same live-rendered cluster table.
+            // Knowledge-map pages: each galaxy map (ai-map, dz-map, …)
+            // shares the same live-rendered blocks.
             if(!s || ['ai-map', 'dz-map'].indexOf(CURRENT_DOC) === -1){ return; }
             var el = document.getElementById('km-clusters');
+            // A per-galaxy map (data-section-prefix) hydrates EVERY block —
+            // clusters, hubs, bridges, top concepts, totals — from its own
+            // galaxy's stats, so one map never leaks another galaxy's data.
+            var pref = el ? (el.getAttribute('data-section-prefix') || '') : '';
+            if(pref && s.galaxies && s.galaxies[pref]){ s = s.galaxies[pref]; }
             if(el){
                 var topics = {};
                 try{ topics = JSON.parse(el.getAttribute('data-topics')) || {}; }catch(e){}
-                // A per-galaxy map narrows the table to its own sections.
-                var pref = el.getAttribute('data-section-prefix') || '';
                 var rows = pref
                     ? s.clusters.filter(function(c){ return c.section.indexOf(pref) === 0; })
                     : s.clusters;
