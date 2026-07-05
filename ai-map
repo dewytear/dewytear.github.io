@@ -31,16 +31,16 @@
 </div>
 
 <h3>8개 지식 클러스터</h3>
-<p>강의는 아래 <strong>8개 클러스터</strong>로 묶입니다. &ldquo;허브 문서&rdquo;는 다른 문서에서 가장 많이 연관으로 지목된, 그 갈래의 관문 문서입니다.</p>
+<p>강의는 아래 <strong>8개 클러스터</strong>로 묶입니다. &ldquo;허브 문서&rdquo;는 다른 문서에서 가장 많이 연관으로 지목된, 그 갈래의 관문 문서입니다. <span class="scn-sub">표의 수치는 <code>knowledge-index.json</code>에서 실시간 집계됩니다.</span></p>
 <div class="tbl-wrap">
     <table>
         <thead><tr><th>클러스터</th><th>편수</th><th>중심 주제</th><th>허브 문서</th></tr></thead>
-        <tbody>
+        <tbody id="km-clusters" data-topics='{"Introduction":"Claude Code 첫걸음 · 설치 · 일상 사용","Tutorial(입문)":"터미널·CLAUDE.md·스킬·에이전트 실습","Skill":"스킬의 원리·구조·점진적 로딩·보안","Second Brain":"지식 관리 5단계 · 시맨틱·그래프","LLM Wiki":"옵시디언 볼트 · 캡처 · Ingest·Query·Lint","Harness 엔지니어링":"에이전트 팀·오케스트레이터·검증","Harness 플러그인":"의도 입력→팀 구성→자율 실행(ERP)","OMC 플러그인":"실행 모드·에이전트·훅·비용 관리"}'>
             <tr><td><strong>Introduction</strong></td><td>6</td><td>Claude Code 첫걸음 · 설치 · 일상 사용</td><td><a href="#!welcome">Welcome</a></td></tr>
             <tr><td><strong>Tutorial(입문)</strong></td><td>12</td><td>터미널·CLAUDE.md·스킬·에이전트 실습</td><td><a href="#!ccb-overview">강의 개요와 목표</a></td></tr>
-            <tr><td><strong>Skill</strong></td><td>12</td><td>스킬의 원리·구조·점진적 로딩·보안</td><td><a href="#!skl-overview">스킬 심화 개요</a></td></tr>
+            <tr><td><strong>Skill</strong></td><td>12</td><td>스킬의 원리·구조·점진적 로딩·보안</td><td><a href="#!skl-overview">스킬 심화 — 개요</a></td></tr>
             <tr><td><strong>Second Brain</strong></td><td>9</td><td>지식 관리 5단계 · 시맨틱·그래프</td><td><a href="#!sb-levels">5단계 한눈에 보기</a></td></tr>
-            <tr><td><strong>LLM Wiki</strong></td><td>11</td><td>옵시디언 볼트 · 캡처 · Ingest·Query·Lint</td><td><a href="#!llmw-overview">LLM Wiki 개요</a></td></tr>
+            <tr><td><strong>LLM Wiki</strong></td><td>11</td><td>옵시디언 볼트 · 캡처 · Ingest·Query·Lint</td><td><a href="#!llmw-vaults">볼트 체계</a></td></tr>
             <tr><td><strong>Harness 엔지니어링</strong></td><td>12</td><td>에이전트 팀·오케스트레이터·검증</td><td><a href="#!hns-anatomy">구성과 효과</a></td></tr>
             <tr><td><strong>Harness 플러그인</strong></td><td>10</td><td>의도 입력→팀 구성→자율 실행(ERP)</td><td><a href="#!hnp-intro">Harness 플러그인 소개</a></td></tr>
             <tr><td><strong>OMC 플러그인</strong></td><td>13</td><td>실행 모드·에이전트·훅·비용 관리</td><td><a href="#!omc-install">설치</a></td></tr>
@@ -53,32 +53,32 @@
 <div class="tbl-wrap">
     <table>
         <thead><tr><th>개념</th><th>연결 클러스터</th><th>등장</th></tr></thead>
-        <tbody>
-            <tr><td><strong>스킬</strong></td><td>6개 — Skill·Tutorial·Harness×2·OMC·Introduction</td><td>20편</td></tr>
-            <tr><td><strong>서브에이전트</strong></td><td>5개 — Skill·Tutorial·Harness×2·OMC</td><td>9편</td></tr>
-            <tr><td><strong>설치</strong></td><td>5개 — Introduction·Tutorial·Harness×2·OMC</td><td>8편</td></tr>
-            <tr><td><strong>CLAUDE.md</strong></td><td>5개 — Introduction·Tutorial·Harness·LLM Wiki·Second Brain</td><td>5편</td></tr>
-            <tr><td><strong>오케스트레이터</strong></td><td>3개 — Harness×2·OMC</td><td>10편</td></tr>
-            <tr><td><strong>하네스</strong></td><td>3개 — Harness 엔지니어링·Skill·Tutorial</td><td>10편</td></tr>
-            <tr><td><strong>슬래시명령어</strong></td><td>3개 — Introduction·LLM Wiki·OMC</td><td>8편</td></tr>
-            <tr><td><strong>마켓플레이스</strong></td><td>4개 — Tutorial·Harness×2·OMC</td><td>4편</td></tr>
+        <tbody id="km-bridges">
+            <tr><td><strong>스킬</strong></td><td>6개 — Harness 엔지니어링 · Harness 플러그인 · Introduction · OMC 플러그인 · Skill · Tutorial(입문)</td><td>20편</td></tr>
+            <tr><td><strong>서브에이전트</strong></td><td>5개 — Harness 엔지니어링 · Harness 플러그인 · OMC 플러그인 · Skill · Tutorial(입문)</td><td>9편</td></tr>
+            <tr><td><strong>설치</strong></td><td>5개 — Harness 엔지니어링 · Harness 플러그인 · Introduction · OMC 플러그인 · Tutorial(입문)</td><td>8편</td></tr>
+            <tr><td><strong>CLAUDE.md</strong></td><td>5개 — Harness 엔지니어링 · Introduction · LLM Wiki · Second Brain · Tutorial(입문)</td><td>5편</td></tr>
+            <tr><td><strong>마켓플레이스</strong></td><td>4개 — Harness 엔지니어링 · Harness 플러그인 · OMC 플러그인 · Tutorial(입문)</td><td>4편</td></tr>
+            <tr><td><strong>오케스트레이터</strong></td><td>3개 — Harness 엔지니어링 · Harness 플러그인 · OMC 플러그인</td><td>10편</td></tr>
+            <tr><td><strong>하네스</strong></td><td>3개 — Harness 엔지니어링 · Skill · Tutorial(입문)</td><td>10편</td></tr>
+            <tr><td><strong>슬래시명령어</strong></td><td>3개 — Introduction · LLM Wiki · OMC 플러그인</td><td>8편</td></tr>
         </tbody>
     </table>
 </div>
 
 <h3>허브 문서 — 가장 많이 연결된 관문</h3>
 <p>다른 문서들이 <strong>연관 문서</strong>로 가장 자주 지목한 상위 문서입니다. 새 주제를 시작할 때 좋은 출발점입니다.</p>
-<ul>
+<ul id="km-hubs">
     <li><a href="#!hns-anatomy">하네스의 구성과 효과</a> <span class="scn-sub">· 11회 연결</span></li>
-    <li><a href="#!omc-install">OMC 설치</a> · <a href="#!sb-levels">세컨드 브레인 5단계</a> <span class="scn-sub">· 각 9회</span></li>
-    <li><a href="#!ccb-overview">강의 개요와 목표</a> · <a href="#!skl-overview">스킬 심화 개요</a> <span class="scn-sub">· 각 8회</span></li>
-    <li><a href="#!llmw-overview">LLM Wiki 개요</a> · <a href="#!hns-run">하네스 실행하기</a> · <a href="#!hnp-intro">Harness 플러그인 소개</a> · <a href="#!hnp-first-run">첫 하네스 실행</a> · <a href="#!omc-concepts">OMC 핵심 용어</a> <span class="scn-sub">· 각 7회</span></li>
+    <li><a href="#!omc-install">설치</a> · <a href="#!sb-levels">5단계 한눈에 보기</a> <span class="scn-sub">· 각 9회</span></li>
+    <li><a href="#!ccb-overview">강의 개요와 목표</a> <span class="scn-sub">· 8회</span></li>
+    <li><a href="#!hnp-first-run">첫 하네스 실행</a> · <a href="#!hnp-intro">Harness 플러그인 소개</a> · <a href="#!hns-run">하네스 실행하기</a> · <a href="#!omc-concepts">핵심 용어</a> · <a href="#!skl-overview">스킬 심화 — 개요</a> <span class="scn-sub">· 각 7회</span></li>
 </ul>
 
 <h3>가장 많이 다루는 핵심 개념</h3>
-<p>위키 전체에서 반복되는 상위 개념입니다. 이 위키가 무엇에 관한 곳인지를 압축해서 보여 줍니다.</p>
-<p class="scn-sub">스킬 20 · 하네스 10 · 오케스트레이터 10 · 서브에이전트 9 · 세컨드브레인 9 · 설치 8 · 슬래시명령어 8 · 에이전트 8 · 검증 6 · 에이전트팀 6 · _workspace 6 · ERP커스터마이징 6 · CLAUDE.md 5 · 플러그인 5 · 토큰 5 · 의도전달 5</p>
-<p class="scn-sub">전체 85편 · 고유 개념 276개.</p>
+<p>위키 전체에서 반복되는 상위 개념입니다. 개념을 누르면 그 개념으로 <strong>통합 검색</strong>이 열립니다.</p>
+<p class="scn-sub" id="km-top">스킬 20 · 오케스트레이터 10 · 하네스 10 · 서브에이전트 9 · 세컨드브레인 9 · 설치 8 · 슬래시명령어 8 · 에이전트 8 · ERP커스터마이징 6 · _workspace 6 · 검증 6 · 에이전트팀 6</p>
+<p class="scn-sub" id="km-totals">전체 85편 · 고유 개념 276개.</p>
 
 <div class="note">
     <span class="nh">살아 있는 지도</span>

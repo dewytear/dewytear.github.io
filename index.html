@@ -284,18 +284,37 @@
                     // this render, so injectRelated re-runs when the index loads.
                     CURRENT_DOC = filename;
                     injectRelated();
+                    hydrateAiMap();
                 })
             })
         }
 
         // ---- AI knowledge index (structural embedding) ----
-        var KNOWLEDGE = null;   // name -> {summary, concepts, related:[...]}
-        var CURRENT_DOC = null; // the doc currently in the content pane, or null
+        var KNOWLEDGE = null;        // name -> {summary, concepts, related:[...]}
+        var KNOWLEDGE_STATS = null;  // aggregated stats from the same index
+        var CURRENT_DOC = null;      // the doc currently in the content pane, or null
+        // Jump to unified search pre-filled with a concept — the "click a
+        // concept anywhere, search by meaning" pivot. showSearch consumes it.
+        var PENDING_QUERY = '';
+        function searchConcept(el){
+            PENDING_QUERY = el.getAttribute('data-c') || '';
+            if(location.hash === '#!search'){
+                var box = document.getElementById('search-input');
+                if(box){ box.value = PENDING_QUERY; box.focus(); renderSearchResults(PENDING_QUERY); }
+                PENDING_QUERY = '';
+                return;
+            }
+            location.hash = '#!search';
+        }
+        function conceptBtn(c){
+            return '<button type="button" class="rel-c" data-c="' + escapeHtml(c)
+                 + '" onclick="searchConcept(this)">' + escapeHtml(c) + '</button>';
+        }
         function renderRelatedHTML(rel){
             var items = rel.map(function(r){
                 var why = (r.shared && r.shared.length)
-                        ? r.shared.map(escapeHtml).join(' · ')
-                        : '같은 폴더';
+                        ? r.shared.map(conceptBtn).join('')
+                        : '<span class="rel-why-plain">같은 폴더</span>';
                 return '<li><a href="#!' + encodeURIComponent(r.name) + '">'
                      + escapeHtml(r.title) + '</a>'
                      + '<span class="rel-why">' + why + '</span></li>';
@@ -315,6 +334,60 @@
             var node = wrap.firstChild;
             var badge = art.querySelector('.doc-model');
             if(badge){ art.insertBefore(node, badge); } else { art.appendChild(node); }
+        }
+
+        // ---- 지식 지도 라이브 집계 ----
+        // The 지식 지도 page carries static fallback numbers; when the index is
+        // loaded we overwrite them with live aggregation so the map can never
+        // drift from knowledge-index.json. Runs on both orders (doc first /
+        // index first) — whichever completes last does the hydration.
+        function docLink(name, title){
+            return '<a href="#!' + encodeURIComponent(name) + '">' + escapeHtml(title) + '</a>';
+        }
+        function hydrateAiMap(){
+            var s = KNOWLEDGE_STATS;
+            if(!s || CURRENT_DOC !== 'ai-map'){ return; }
+            var el = document.getElementById('km-clusters');
+            if(el){
+                var topics = {};
+                try{ topics = JSON.parse(el.getAttribute('data-topics')) || {}; }catch(e){}
+                el.innerHTML = s.clusters.map(function(c){
+                    return '<tr><td><strong>' + escapeHtml(c.label) + '</strong></td>'
+                         + '<td>' + c.count + '</td>'
+                         + '<td>' + escapeHtml(topics[c.label] || '') + '</td>'
+                         + '<td>' + docLink(c.hub.name, c.hub.title) + '</td></tr>';
+                }).join('');
+            }
+            el = document.getElementById('km-hubs');
+            if(el){
+                // Group hubs by reference count, one line per count.
+                var byRefs = {};
+                s.hubs.forEach(function(h){ (byRefs[h.refs] = byRefs[h.refs] || []).push(h); });
+                el.innerHTML = Object.keys(byRefs).sort(function(a, b){ return b - a; })
+                    .map(function(n){
+                        var links = byRefs[n].map(function(h){ return docLink(h.name, h.title); }).join(' · ');
+                        var label = byRefs[n].length > 1 ? '각 ' + n + '회' : n + '회 연결';
+                        return '<li>' + links + ' <span class="scn-sub">· ' + label + '</span></li>';
+                    }).join('');
+            }
+            el = document.getElementById('km-bridges');
+            if(el){
+                el.innerHTML = s.bridges.map(function(b){
+                    return '<tr><td><strong>' + escapeHtml(b.c) + '</strong></td>'
+                         + '<td>' + b.clusters.length + '개 — ' + b.clusters.map(escapeHtml).join(' · ') + '</td>'
+                         + '<td>' + b.n + '편</td></tr>';
+                }).join('');
+            }
+            el = document.getElementById('km-top');
+            if(el){
+                el.innerHTML = s.topConcepts.filter(function(t){ return t.n >= 5; })
+                    .map(function(t){ return conceptBtn(t.c) + ' <span class="km-n">' + t.n + '</span>'; })
+                    .join(' ');
+            }
+            el = document.getElementById('km-totals');
+            if(el){
+                el.textContent = '전체 ' + s.docCount + '편 · 고유 개념 ' + s.conceptCount + '개.';
+            }
         }
 
         // ---- Tag index (all tags) with instant search ----
@@ -729,7 +802,15 @@
             ensureTextIndex();   // start fetching doc bodies in the background
             startSearchGame();   // Breakout-style ball drifting behind the field
             var box = document.getElementById('search-input');
-            if(box){ box.focus(); }
+            if(box){
+                box.focus();
+                // A concept chip was clicked somewhere — run that search now.
+                if(PENDING_QUERY){
+                    box.value = PENDING_QUERY;
+                    renderSearchResults(PENDING_QUERY);
+                    PENDING_QUERY = '';
+                }
+            }
         }
 
         // A calm, decorative Breakout: a ball ricochets off the walls and the
@@ -1348,8 +1429,10 @@
         fetch('knowledge-index.json').then(function(r){ return r.json(); }).then(function(idx){
             KNOWLEDGE = {};
             (idx.docs || []).forEach(function(d){ KNOWLEDGE[d.name] = d; });
+            KNOWLEDGE_STATS = idx.stats || null;
             buildConceptIndex();
             injectRelated();
+            hydrateAiMap();
             // Concepts now available — re-rank any in-progress search.
             var box = document.getElementById('search-input');
             if(box && box.value.trim()){ renderSearchResults(box.value); }
