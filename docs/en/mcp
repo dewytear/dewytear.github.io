@@ -1,9 +1,9 @@
             <h2>MCP Servers</h2>
 <div class="diagram">
-<svg viewBox="0 0 680 224" role="img" aria-label="MCP 허브 구조: Claude Code가 MCP 서버를 거쳐 GitHub·데이터베이스·브라우저·이메일/캘린더에 연결된다">
+<svg viewBox="0 0 680 224" role="img" aria-label="MCP hub-and-spoke: Claude Code connects through MCP servers to GitHub, databases, browsers, and email/calendar">
     <rect class="d-box accent" x="18" y="88" width="140" height="48" rx="10"/>
     <text class="d-label" x="88" y="110" text-anchor="middle">Claude Code</text>
-    <text class="d-sub" x="88" y="127" text-anchor="middle">허브</text>
+    <text class="d-sub" x="88" y="127" text-anchor="middle">hub</text>
 
     <rect class="d-box" x="272" y="14" width="140" height="40" rx="10"/>
     <text class="d-label sm" x="342" y="38" text-anchor="middle">MCP server</text>
@@ -17,11 +17,11 @@
     <rect class="d-box soft" x="500" y="14" width="160" height="40" rx="10"/>
     <text class="d-label sm" x="580" y="38" text-anchor="middle">GitHub</text>
     <rect class="d-box soft" x="500" y="66" width="160" height="40" rx="10"/>
-    <text class="d-label sm" x="580" y="90" text-anchor="middle">데이터베이스</text>
+    <text class="d-label sm" x="580" y="90" text-anchor="middle">Database</text>
     <rect class="d-box soft" x="500" y="118" width="160" height="40" rx="10"/>
-    <text class="d-label sm" x="580" y="142" text-anchor="middle">브라우저</text>
+    <text class="d-label sm" x="580" y="142" text-anchor="middle">Browser</text>
     <rect class="d-box soft" x="500" y="170" width="160" height="40" rx="10"/>
-    <text class="d-label sm" x="580" y="194" text-anchor="middle">이메일 · 캘린더</text>
+    <text class="d-label sm" x="580" y="194" text-anchor="middle">Email · Calendar</text>
 
     <path class="d-edge accent" d="M158 112 C212 112 218 34 268 34"/><polygon class="d-arrow accent" points="264,29 272,34 264,39"/>
     <path class="d-edge accent" d="M158 112 C212 112 218 86 268 86"/><polygon class="d-arrow accent" points="264,81 272,86 264,91"/>
@@ -36,14 +36,14 @@
 </div>
             <p>
 
-                MCP(Model Context Protocol)는 AI 어시스턴트를 외부 도구·데이터 소스와 연결하기 위한 개방 표준입니다. Claude Code에 MCP 서버를 붙이면 로컬 파일 너머까지 손이 닿게 됩니다 &mdash; 데이터베이스, 이슈 트래커, 클라우드 서비스, 브라우저 등.
-                MCP 서버가 연결되면 그 서버의 도구들이 내장 도구와 똑같이 Claude Code에서 쓸 수 있게 됩니다. 예를 들어 적절한 서버가 구성되어 있으면 Claude는:
+                MCP (Model Context Protocol) is an open standard for connecting AI assistants to external tools and data sources. By adding MCP servers to Claude Code, you extend what it can reach beyond your local files &mdash; databases, issue trackers, cloud services, browsers, and more.
+                Once an MCP server is connected, its tools become available to Claude Code just like the built-in ones. For example, with the right servers configured Claude can:
                 <ul>
-                    <li>GitHub 이슈·PR을 읽고 만들 수 있습니다.</li>
-                    <li>데이터베이스나 사내 API에 질의할 수 있습니다.</li>
-                    <li>이메일·캘린더·문서를 검색할 수 있습니다.</li>
-                    <li>헤드리스 브라우저를 조작해 웹 페이지를 테스트할 수 있습니다.</li>
+                    <li>Read and create GitHub issues and pull requests.</li>
+                    <li>Query a database or an internal API.</li>
+                    <li>Search email, calendars, or documents.</li>
+                    <li>Drive a headless browser to test a web page.</li>
                 </ul>
-                서버 관리는 <code>claude mcp</code> 명령(add, list, remove)이나 설정 파일로 합니다. 각 서버는 자신이 노출하는 도구를 선언하고, Claude Code는 사용 전에 허락을 구합니다 &mdash; 외부 시스템에 닿는 범위는 늘 여러분이 통제합니다.
+                You manage servers with the <code>claude mcp</code> commands (add, list, remove) or through your configuration files. Each server declares which tools it exposes, and Claude Code asks for permission before using them &mdash; so you stay in control of what external systems it can touch.
 
             </p>
