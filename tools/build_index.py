@@ -128,7 +128,19 @@ def build(lang='ko'):
                     break
         d['related'] = rel
 
-    stats = build_stats(docs, CLUSTER_LABELS_BY_LANG.get(lang, CLUSTER_LABELS))
+    labels = CLUSTER_LABELS_BY_LANG.get(lang, CLUSTER_LABELS)
+    stats = build_stats(docs, labels)
+    # Per-galaxy stats: the same aggregation scoped to one top-level category
+    # (the section's first segment — "AI", "Douzone", …). Galaxy map pages
+    # (data-section-prefix) hydrate every block from their own galaxy here,
+    # while the graph and cross-galaxy views keep using the global stats.
+    galaxies = {}
+    for d in docs:
+        g = d['section'].split(' · ')[0] if d['section'] else ''
+        if g:
+            galaxies.setdefault(g, []).append(d)
+    stats['galaxies'] = {g: build_stats(members, labels)
+                         for g, members in sorted(galaxies.items())}
     return {'schemaVersion': 2, 'note': NOTE.get(lang, NOTE_DEFAULT),
             'docCount': len(docs), 'stats': stats, 'docs': docs}
 
@@ -192,9 +204,11 @@ def build_stats(docs, cluster_labels=None):
                                  'refs': indeg.get(hub['name'], 0)}})
 
     # Overall hubs: most-referenced docs (ties by name for determinism).
+    # related[] may point outside the given doc subset (cross-galaxy links
+    # when building per-galaxy stats) — only docs in the subset qualify.
     hubs = sorted(((n, c) for n, c in indeg.items()), key=lambda t: (-t[1], t[0]))
     hubs = [{'name': n, 'title': by_name[n]['title'], 'refs': c}
-            for n, c in hubs if c >= 6]
+            for n, c in hubs if c >= 6 and n in by_name]
 
     # Concept frequency + cluster spread (bridges connect 3+ clusters).
     freq, spread = {}, {}
