@@ -825,6 +825,9 @@
         // field glides back to center when you start typing.
         function paddleReset(){
             var field = document.querySelector('.search-field');
+            // Mid-drag searches (e.g. the concept-catch game auto-searching a
+            // caught word) must not yank the paddle out of the player's hand.
+            if(field && field.classList.contains('dragging')){ return; }
             if(field && field.style.transform){
                 field.classList.add('paddle-home');
                 field.style.transform = '';
@@ -866,14 +869,97 @@
             field.addEventListener('pointercancel', endDrag);
         }
 
-        // A calm, decorative Breakout: a ball ricochets off the walls and the
-        // search box (the "paddle"), knocking out faint bricks that respawn
-        // when cleared. Self-terminates once its canvas leaves the DOM (i.e.
-        // when you navigate away), so no loop leaks. Skipped for reduced motion.
+        // ---- Search-screen mini games ----
+        // Four calm, decorative games share the canvas behind the search
+        // field; Settings(searchGame) picks which one runs. Every game
+        // self-terminates once its canvas leaves the DOM (no loop leaks)
+        // and all are skipped for reduced motion.
+        var SEARCH_GAME_ACTIVE = '';
         function startSearchGame(){
             if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ return; }
             var canvas = document.querySelector('.search-game');
             if(!canvas || !canvas.getContext){ return; }
+            var mode = loadSettings().searchGame || 'breakout';
+            if(!SEARCH_GAMES[mode]){ mode = 'breakout'; }
+            SEARCH_GAME_ACTIVE = mode;
+            SEARCH_GAMES[mode](canvas);
+        }
+
+        // Shared stage for the newer games: HiDPI sizing, self-termination,
+        // theme color and the live paddle (search field) box.
+        function gameStage(canvas){
+            var ctx = canvas.getContext('2d');
+            var dpr = Math.min(window.devicePixelRatio || 1, 2);
+            var st = { ctx: ctx, W: 0, H: 0, onResize: null };
+            function resize(){
+                var rect = canvas.parentNode.getBoundingClientRect();
+                st.W = rect.width; st.H = rect.height;
+                canvas.width = st.W * dpr; canvas.height = st.H * dpr;
+                canvas.style.width = st.W + 'px'; canvas.style.height = st.H + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                if(st.onResize){ st.onResize(); }
+            }
+            st.gone = function(){
+                if(!canvas.isConnected){ window.removeEventListener('resize', resize); return true; }
+                return false;
+            };
+            st.accent = function(){
+                return (getComputedStyle(document.body).getPropertyValue('--accent') || '#ff6600').trim();
+            };
+            st.paddle = function(){
+                var field = document.querySelector('.search-field');
+                if(!field){ return null; }
+                var cr = canvas.getBoundingClientRect(), fr = field.getBoundingClientRect();
+                return { x: fr.left - cr.left, y: fr.top - cr.top, w: fr.width, h: fr.height };
+            };
+            window.addEventListener('resize', resize);
+            resize();
+            return st;
+        }
+        var GAME_FONT = '"Pretendard Variable", Pretendard, sans-serif';
+        // Reflect a ball out of an axis-aligned rect; returns true on hit.
+        function reflectBall(ball, rx, ry, rw, rh){
+            if(ball.x + ball.r < rx || ball.x - ball.r > rx + rw ||
+               ball.y + ball.r < ry || ball.y - ball.r > ry + rh){ return false; }
+            var overL = (ball.x + ball.r) - rx, overR = (rx + rw) - (ball.x - ball.r);
+            var overT = (ball.y + ball.r) - ry, overB = (ry + rh) - (ball.y - ball.r);
+            if(Math.min(overL, overR) < Math.min(overT, overB)){
+                ball.vx = overL < overR ? -Math.abs(ball.vx) : Math.abs(ball.vx);
+            } else {
+                ball.vy = overT < overB ? -Math.abs(ball.vy) : Math.abs(ball.vy);
+            }
+            return true;
+        }
+        // Paddle "english": where the ball lands on the paddle steers it.
+        function paddleEnglish(ball, p){
+            var t = (ball.x - (p.x + p.w / 2)) / (p.w / 2);
+            t = Math.max(-1, Math.min(1, t));
+            var sp = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
+            ball.vx = sp * 0.75 * t;
+            ball.vy = -Math.sqrt(Math.max(sp * sp - ball.vx * ball.vx, sp * sp * 0.2));
+        }
+        function drawBallTrail(ctx, col, ball, trail){
+            trail.push({ x: ball.x, y: ball.y });
+            if(trail.length > 12){ trail.shift(); }
+            for(var t = 0; t < trail.length; t++){
+                ctx.globalAlpha = (t / trail.length) * 0.22;
+                ctx.fillStyle = col;
+                ctx.beginPath();
+                ctx.arc(trail[t].x, trail[t].y, ball.r * (0.4 + 0.5 * t / trail.length), 0, 6.2832);
+                ctx.fill();
+            }
+            ctx.globalAlpha = 0.6;
+            ctx.fillStyle = col;
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.r, 0, 6.2832);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+
+        var SEARCH_GAMES = {};
+
+        // ① 벽돌깨기 (기본) — the original calm Breakout.
+        SEARCH_GAMES.breakout = function(canvas){
             var ctx = canvas.getContext('2d');
             var dpr = Math.min(window.devicePixelRatio || 1, 2);
             var W = 0, H = 0, bricks = [], ball, trail = [];
@@ -992,7 +1078,209 @@
                 requestAnimationFrame(frame);
             }
             requestAnimationFrame(frame);
-        }
+        };
+
+        // ② 개념 별똥별 받기 — concepts from the knowledge index drift down;
+        // catch one with the paddle and it searches itself. Play = explore.
+        SEARCH_GAMES.concept = function(canvas){
+            var st = gameStage(canvas);
+            var FALLBACK = ['스킬', '하네스', '오케스트레이터', '서브에이전트',
+                            '세컨드브레인', '벡터검색', '지식그래프', 'CLAUDE.md'];
+            var words = [], pops = [], lastSpawn = 0;
+            function spawn(now){
+                var pool = ALL_CONCEPTS.length ? ALL_CONCEPTS : FALLBACK;
+                words.push({
+                    text: pool[Math.floor(Math.random() * pool.length)],
+                    x: 40 + Math.random() * Math.max(1, st.W - 80),
+                    y: -16, vy: 0.35 + Math.random() * 0.4,
+                    sway: Math.random() * 6.2832,
+                    size: 13 + Math.random() * 6
+                });
+                lastSpawn = now;
+            }
+            function frame(now){
+                if(st.gone()){ return; }
+                var ctx = st.ctx; ctx.clearRect(0, 0, st.W, st.H);
+                var col = st.accent();
+                if(words.length < 6 && now - lastSpawn > 1500){ spawn(now); }
+                var p = st.paddle();
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                for(var i = words.length - 1; i >= 0; i--){
+                    var w = words[i];
+                    w.y += w.vy; w.sway += 0.02;
+                    var wx = w.x + Math.sin(w.sway) * 14;
+                    if(p && wx >= p.x - 8 && wx <= p.x + p.w + 8 &&
+                       w.y >= p.y - 4 && w.y <= p.y + p.h){
+                        // Caught: pop + search that concept.
+                        pops.push({ x: wx, y: p.y, r: 6, a: 0.7 });
+                        var box = document.getElementById('search-input');
+                        if(box){ box.value = w.text; renderSearchResults(w.text); }
+                        words.splice(i, 1);
+                        continue;
+                    }
+                    if(w.y - w.size > st.H){ words.splice(i, 1); continue; }
+                    ctx.globalAlpha = 0.4;
+                    ctx.fillStyle = col;
+                    ctx.font = '600 ' + w.size.toFixed(1) + 'px ' + GAME_FONT;
+                    ctx.fillText(w.text, wx, w.y);
+                }
+                for(var j = pops.length - 1; j >= 0; j--){
+                    var q = pops[j];
+                    q.r += 1.8; q.a -= 0.03;
+                    if(q.a <= 0){ pops.splice(j, 1); continue; }
+                    ctx.globalAlpha = q.a;
+                    ctx.strokeStyle = col; ctx.lineWidth = 2;
+                    ctx.beginPath(); ctx.arc(q.x, q.y, q.r, 0, 6.2832); ctx.stroke();
+                }
+                ctx.globalAlpha = 1;
+                requestAnimationFrame(frame);
+            }
+            requestAnimationFrame(frame);
+        };
+
+        // ③ 퐁 랠리 — an AI paddle up top returns your serves; the faint
+        // number counts the rally. Miss (either side) and it resets.
+        SEARCH_GAMES.pong = function(canvas){
+            var st = gameStage(canvas);
+            var ball = null, trail = [], rally = 0;
+            var ai = { x: 0, y: 54, w: 150, h: 12 };
+            function reset(){
+                var sp = Math.max(2.4, st.W / 520);
+                ball = { x: st.W / 2, y: st.H * 0.45,
+                         vx: (Math.random() < 0.5 ? -1 : 1) * sp * 0.7,
+                         vy: sp, r: Math.max(5, st.W / 240) };
+            }
+            st.onResize = function(){
+                ai.w = Math.max(120, st.W * 0.14);
+                if(!ball || ball.x > st.W || ball.y > st.H){ reset(); }
+            };
+            st.onResize();
+            function frame(){
+                if(st.gone()){ return; }
+                var ctx = st.ctx; ctx.clearRect(0, 0, st.W, st.H);
+                var col = st.accent();
+                // AI tracks the ball with capped speed — beatable, not perfect.
+                var maxV = Math.max(2.2, st.W / 420);
+                ai.x += Math.max(-maxV, Math.min(maxV, (ball.x - ai.w / 2) - ai.x));
+                ai.x = Math.max(8, Math.min(st.W - ai.w - 8, ai.x));
+                ball.x += ball.vx; ball.y += ball.vy;
+                if(ball.x - ball.r < 0){ ball.x = ball.r; ball.vx = Math.abs(ball.vx); }
+                if(ball.x + ball.r > st.W){ ball.x = st.W - ball.r; ball.vx = -Math.abs(ball.vx); }
+                if(ball.y - ball.r < 0){ ball.y = ball.r; ball.vy = Math.abs(ball.vy); rally = 0; }
+                if(ball.y + ball.r > st.H){ ball.y = st.H - ball.r; ball.vy = -Math.abs(ball.vy); rally = 0; }
+                if(reflectBall(ball, ai.x, ai.y, ai.w, ai.h) && ball.vy > 0){ rally++; }
+                var p = st.paddle();
+                if(p && reflectBall(ball, p.x, p.y, p.w, p.h) && ball.vy < 0){
+                    paddleEnglish(ball, p); rally++;
+                }
+                if(rally > 1){
+                    ctx.globalAlpha = 0.08;
+                    ctx.fillStyle = col;
+                    ctx.font = '800 120px ' + GAME_FONT;
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillText(rally, st.W / 2, st.H * 0.42);
+                }
+                ctx.globalAlpha = 0.3;
+                ctx.fillStyle = col;
+                roundRect(ctx, ai.x, ai.y, ai.w, ai.h, 6);
+                ctx.fill();
+                drawBallTrail(ctx, col, ball, trail);
+                requestAnimationFrame(frame);
+            }
+            requestAnimationFrame(frame);
+        };
+
+        // ④ 종이비행기 글라이딩 — click the empty background (or press
+        // Space/↑ outside the input) to lift the plane through the gates.
+        // A brush against a gate just fades and restarts; nothing harsh.
+        SEARCH_GAMES.plane = function(canvas){
+            var st = gameStage(canvas);
+            var screen = canvas.parentNode;
+            var plane, gates, tick, crashed, score;
+            function reset(){ plane = { x: st.W * 0.28, y: st.H * 0.4, vy: 0 };
+                              gates = []; tick = 0; crashed = 0; score = 0; }
+            reset();
+            function flap(){ if(!crashed){ plane.vy = -3.2; } }
+            function onDown(e){ if(!e.target.closest('.search-core')){ flap(); } }
+            function onKey(e){
+                if(e.target && e.target.id === 'search-input'){ return; }
+                if(e.code === 'Space' || e.code === 'ArrowUp'){ flap(); e.preventDefault(); }
+            }
+            screen.addEventListener('pointerdown', onDown);
+            window.addEventListener('keydown', onKey);
+            function frame(){
+                if(st.gone()){
+                    screen.removeEventListener('pointerdown', onDown);
+                    window.removeEventListener('keydown', onKey);
+                    return;
+                }
+                var ctx = st.ctx; ctx.clearRect(0, 0, st.W, st.H);
+                var col = st.accent();
+                tick++;
+                if(crashed > 0){
+                    crashed--;
+                    if(crashed === 0){ reset(); }
+                } else {
+                    plane.vy = Math.min(plane.vy + 0.09, 4);
+                    plane.y += plane.vy;
+                    if(plane.y < 14){ plane.y = 14; plane.vy = 0; }
+                    if(plane.y > st.H - 14){ plane.y = st.H - 14; plane.vy = -1; }
+                    if(tick % 170 === 0){
+                        var gapH = Math.max(150, st.H * 0.3);
+                        gates.push({ x: st.W + 40, w: 26, gapH: gapH,
+                                     gapY: 70 + Math.random() * Math.max(1, st.H - gapH - 160),
+                                     passed: false });
+                    }
+                    var speed = Math.max(1.4, st.W / 700);
+                    for(var i = gates.length - 1; i >= 0; i--){
+                        var g = gates[i];
+                        g.x -= speed;
+                        if(g.x + g.w < -20){ gates.splice(i, 1); continue; }
+                        if(plane.x + 8 > g.x && plane.x - 8 < g.x + g.w){
+                            if(plane.y < g.gapY || plane.y > g.gapY + g.gapH){ crashed = 40; }
+                            else if(!g.passed){ g.passed = true; score++; }
+                        }
+                    }
+                }
+                gates.forEach(function(g){
+                    ctx.globalAlpha = 0.14;
+                    ctx.fillStyle = col;
+                    roundRect(ctx, g.x, -8, g.w, g.gapY + 8, 10); ctx.fill();
+                    roundRect(ctx, g.x, g.gapY + g.gapH, g.w, st.H - (g.gapY + g.gapH) + 8, 10); ctx.fill();
+                });
+                if(score > 0){
+                    ctx.globalAlpha = 0.08;
+                    ctx.fillStyle = col;
+                    ctx.font = '800 120px ' + GAME_FONT;
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillText(score, st.W / 2, st.H * 0.42);
+                }
+                if(tick < 300 && score === 0){
+                    ctx.globalAlpha = 0.3;
+                    ctx.fillStyle = col;
+                    ctx.font = '600 13px ' + GAME_FONT;
+                    ctx.textAlign = 'center';
+                    ctx.fillText('빈 곳을 클릭해 비행 ✈', st.W / 2, Math.max(30, st.H * 0.08));
+                }
+                // The plane: a folded-paper triangle tilted by its climb rate.
+                var ang = Math.max(-0.5, Math.min(0.7, plane.vy * 0.09));
+                ctx.save();
+                ctx.translate(plane.x, plane.y);
+                ctx.rotate(ang);
+                ctx.globalAlpha = crashed ? Math.max(0.1, crashed / 40 * 0.7) : 0.7;
+                ctx.fillStyle = col;
+                ctx.beginPath();
+                ctx.moveTo(16, 0); ctx.lineTo(-11, -8); ctx.lineTo(-5, 0); ctx.lineTo(-11, 8);
+                ctx.closePath(); ctx.fill();
+                ctx.globalAlpha *= 0.5;
+                ctx.strokeStyle = col; ctx.lineWidth = 1;
+                ctx.beginPath(); ctx.moveTo(16, 0); ctx.lineTo(-5, 0); ctx.stroke();
+                ctx.restore();
+                ctx.globalAlpha = 1;
+                requestAnimationFrame(frame);
+            }
+            requestAnimationFrame(frame);
+        };
         function roundRect(ctx, x, y, w, h, r){
             r = Math.min(r, w / 2, h / 2);
             ctx.beginPath();
@@ -1242,6 +1530,7 @@
                              : ((document.querySelector('#profile-tagline .ptl-text') || {}).textContent || '');
             var curNavStyle = s.navLineStyle || 'dashed';
             var curNavWidth = s.navLineWidth || '1px';
+            var curGame = s.searchGame || 'breakout';
             var hiddenCats = s.hiddenCats || [];
             function opt(val, label, cur){
                 return '<option value="' + val + '"' + (val === cur ? ' selected' : '') + '>' + label + '</option>';
@@ -1287,6 +1576,15 @@
               +     opt('1px', '얇게 (기본)', curNavWidth)
               +     opt('2px', '보통', curNavWidth)
               +     opt('3px', '굵게', curNavWidth)
+              +   '</select>'
+              + '</div>'
+              + '<div class="settings-field">'
+              +   '<label for="settings-game">통합검색 미니게임</label>'
+              +   '<select id="settings-game">'
+              +     opt('breakout', '벽돌깨기 (기본)', curGame)
+              +     opt('concept', '개념 별똥별 받기 — 받으면 그 개념으로 검색', curGame)
+              +     opt('pong', '퐁 랠리 — AI 패들과 주고받기', curGame)
+              +     opt('plane', '종이비행기 글라이딩 — 빈 곳 클릭으로 비행', curGame)
               +   '</select>'
               + '</div>'
               + '<div class="settings-field">'
@@ -1393,6 +1691,7 @@
             s.navLineWidth = document.getElementById('settings-navwidth').value;
             s.hideRecent = document.getElementById('settings-hiderecent').checked;
             s.hideRelated = document.getElementById('settings-hiderelated').checked;
+            s.searchGame = document.getElementById('settings-game').value;
             if(SETTINGS_CATS){
                 s.hiddenCats = SETTINGS_CATS.all.filter(function(c){
                     return SETTINGS_CATS.exposed.indexOf(c) === -1;
