@@ -1220,7 +1220,11 @@
                 if(st.onResize){ st.onResize(); }
             }
             st.gone = function(){
-                if(!canvas.isConnected){ window.removeEventListener('resize', resize); return true; }
+                if(!canvas.isConnected){
+                    window.removeEventListener('resize', resize);
+                    if(ro){ ro.disconnect(); }
+                    return true;
+                }
                 return false;
             };
             st.accent = function(){
@@ -1233,6 +1237,13 @@
                 return { x: fr.left - cr.left, y: fr.top - cr.top, w: fr.width, h: fr.height };
             };
             window.addEventListener('resize', resize);
+            // The stage also grows without a window resize — search results
+            // stretch the card — so track the containing block itself.
+            var ro = null;
+            if(window.ResizeObserver){
+                ro = new ResizeObserver(resize);
+                ro.observe(canvas.offsetParent || canvas.parentNode);
+            }
             resize();
             return st;
         }
@@ -1336,9 +1347,20 @@
             resize();
             resetBall();
             window.addEventListener('resize', resize);
+            // Follow the card when it grows without a window resize
+            // (search results stretching the pane).
+            var ro = null;
+            if(window.ResizeObserver){
+                ro = new ResizeObserver(resize);
+                ro.observe(canvas.offsetParent || canvas.parentNode);
+            }
 
             function frame(){
-                if(!canvas.isConnected){ window.removeEventListener('resize', resize); return; }
+                if(!canvas.isConnected){
+                    window.removeEventListener('resize', resize);
+                    if(ro){ ro.disconnect(); }
+                    return;
+                }
                 ctx.clearRect(0, 0, W, H);
                 var col = accent();
 

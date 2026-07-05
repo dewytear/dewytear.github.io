@@ -2,14 +2,14 @@
 <p>스킬의 가장 핵심적인 원리는 <strong>점진적 로딩(progressive disclosure)</strong> 입니다. 스킬 전체를 컨텍스트에 올리는 게 아니라, <strong>메타데이터만</strong> 먼저 올려 두고 필요할 때 나머지를 꺼냅니다.</p>
 
 <h3>도서관 책 표지 비유</h3>
-<p>컨텍스트에는 등록된 스킬의 <strong>메타데이터(이름 + 설명, 3~4줄, 100토큰 미만)</strong> 만 들어갑니다. 도서관에 책이 쭉 꽂혀 있고, 우리는 <strong>책 표지(제목·간단 설명)</strong> 만 훑다가 필요할 때 꺼내 읽는 것과 같습니다. 메타데이터가 워낙 작아 <strong>100개 이상</strong> 넣어도 컨텍스트를 거의 차지하지 않습니다. (JSON 도구는 30개 정도가 한계였던 것과 대조적)</p>
+<p>컨텍스트에는 등록된 스킬의 <strong>메타데이터(이름 + 설명, 3~4줄, 스킬당 약 100토큰)</strong> 만 들어갑니다. 도서관에 책이 쭉 꽂혀 있고, 우리는 <strong>책 표지(제목·간단 설명)</strong> 만 훑다가 필요할 때 꺼내 읽는 것과 같습니다. 메타데이터가 워낙 작아 <strong>100개 이상</strong> 넣어도 컨텍스트를 거의 차지하지 않습니다. (JSON 도구는 전체 스키마가 컨텍스트를 미리 차지해 수가 많아질수록 부담이 커지는 것과 대조적 — 그래서 Claude Code는 MCP 도구 스키마도 지연 로드합니다)</p>
 
 <h3>3단계 로딩</h3>
 <div class="diagram">
 <svg viewBox="0 0 640 252" role="img" aria-label="스킬 3단계 점진적 로딩: 메타데이터는 항상, 지침 본문은 호출될 때, 리소스·스크립트는 필요할 때만 로드">
     <rect class="d-box accent" x="20" y="12" width="300" height="60" rx="10"/>
     <text class="d-label" x="170" y="38" text-anchor="middle">① 메타데이터</text>
-    <text class="d-sub" x="170" y="56" text-anchor="middle">이름 + 설명 · 100토큰 미만</text>
+    <text class="d-sub" x="170" y="56" text-anchor="middle">이름 + 설명 · 약 100토큰</text>
 
     <rect class="d-box" x="20" y="96" width="300" height="60" rx="10"/>
     <text class="d-label" x="170" y="122" text-anchor="middle">② 지침 본문</text>
@@ -19,8 +19,8 @@
     <text class="d-label" x="170" y="206" text-anchor="middle">③ 리소스 · 스크립트</text>
     <text class="d-sub" x="170" y="224" text-anchor="middle">번들 파일 · 템플릿</text>
 
-    <line class="d-edge" x1="170" y1="72" x2="170" y2="94"/><polygon class="d-arrow" points="165,94 175,94 170,100"/>
-    <line class="d-edge" x1="170" y1="156" x2="170" y2="178"/><polygon class="d-arrow" points="165,178 175,178 170,184"/>
+    <line class="d-edge" x1="170" y1="72" x2="170" y2="94"/><polygon class="d-arrow" points="165,90 175,90 170,96"/>
+    <line class="d-edge" x1="170" y1="156" x2="170" y2="178"/><polygon class="d-arrow" points="165,174 175,174 170,180"/>
 
     <line class="d-edge dash" x1="320" y1="42" x2="356" y2="42"/>
     <text class="d-accent" x="364" y="46" text-anchor="start">항상 로드</text>
@@ -35,13 +35,13 @@
     <table>
         <thead><tr><th>레벨</th><th>내용</th><th>로딩 시점</th></tr></thead>
         <tbody>
-            <tr><td>1</td><td><strong>메타데이터</strong> (SKILL.md의 이름·description)</td><td><strong>항상</strong> 로딩 (100토큰 미만)</td></tr>
+            <tr><td>1</td><td><strong>메타데이터</strong> (SKILL.md의 이름·description)</td><td><strong>항상</strong> 로딩 (스킬당 약 100토큰)</td></tr>
             <tr><td>2</td><td><strong>지침</strong> (SKILL.md 본문, 마크다운 사용법)</td><td>그 스킬이 <strong>호출될 때</strong></td></tr>
             <tr><td>3</td><td><strong>리소스 · 스크립트 · 템플릿</strong> (번들 파일)</td><td><strong>필요할 때만</strong> (스크립트는 로딩 없이 실행만)</td></tr>
         </tbody>
     </table>
 </div>
-<p>번들 파일은 필수가 아닙니다. 말(마크다운)로만 충분하면 파일 없이도 되고, 실행 스크립트·템플릿이 필요하면 포함합니다. 파일이 있을수록 더 <strong>결정론적인 결과</strong>를 얻습니다.</p>
+<p>번들 파일은 필수가 아닙니다. 말(마크다운)로만 충분하면 파일 없이도 되고, 실행 스크립트·템플릿이 필요하면 포함합니다. 파일이 있을수록 더 <strong>결정론적인 결과</strong>를 얻습니다. 참고로 공식 가이드는 <code>SKILL.md</code> 본문을 <strong>5K 토큰 미만</strong>으로 유지하고, 긴 내용은 번들 파일로 분리할 것을 권장합니다.</p>
 
 <div class="note">
     <span class="nh">매뉴얼 비유 (조립 제품 · 매트릭스 헬기)</span>
