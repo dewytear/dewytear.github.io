@@ -1,0 +1,314 @@
+<h2>GitLab 기반 AI 개발 지식 플랫폼 구축 제안</h2>
+<p>개발자는 지금처럼 GitLab에 개발 결과를 반영하기만 하고, <strong>AI가 그 결과를 분석해 조직 지식으로 자동 변환·축적</strong>하는 <strong>Read-Only Engineering Knowledge Platform</strong>을 제안한다. 사람이 문서를 쓰는 위키가 아니라, <strong>개발 결과물이 곧 지식의 원천</strong>이 되는 구조다.</p>
+
+<h3>1. 왜 지금인가 — 흩어지고 사라지는 개발 지식</h3>
+<p>프로젝트를 수행하면 Architecture와 설계 구조, 업무 Rule과 상태 전이, DB Table·Column의 의미, API 연계, 장애 원인과 해결 방법, 성능 개선 사례, 재사용 가능한 개발 패턴 같은 지식이 계속 만들어진다. 그러나 이 지식의 대부분은 <strong>Source Code · Commit · Merge Request · Issue · 메신저 · 이메일 · 회의 · 개인 기억</strong>에 분산된 채 남는다.</p>
+<p>그 비용은 업계 조사로 이미 수치화되어 있다.</p>
+<ul>
+    <li>개발자의 <strong>62%가 매일 30분 이상</strong>을 답을 찾는 데 쓰고, <strong>68%는 주 1회 이상 지식 사일로</strong>에 부딪힌다 — <a href="https://survey.stackoverflow.co/2022/" target="_blank" rel="noopener">Stack Overflow Developer Survey 2022</a></li>
+    <li>개발자의 <strong>69%가 주 8시간 이상(근무시간의 약 20%)을 비효율로 잃고</strong>, 주요 원인으로 <strong>"불충분한 문서"</strong>를 지목한다 — <a href="https://www.atlassian.com/blog/developer/developer-experience-report-2024" target="_blank" rel="noopener">Atlassian, State of Developer Experience 2024</a></li>
+    <li>지식노동자는 근무시간의 <strong>19%를 정보 검색·수집</strong>에 사용한다 — <a href="https://www.mckinsey.com/industries/technology-media-and-telecommunications/our-insights/the-social-economy" target="_blank" rel="noopener">McKinsey, The Social Economy (2012)</a></li>
+    <li>직무 지식의 <strong>42%는 그 사람에게만 있는 고유 지식</strong>이라, 퇴사하면 동료가 그 업무의 42%를 수행할 수 없다. 대형 기업 기준 비효율적 지식공유의 손실은 <strong>연 4,700만 달러</strong>로 추산된다 — <a href="https://www.panopto.com/company/news/inefficient-knowledge-sharing-costs-large-businesses-47-million-per-year/" target="_blank" rel="noopener">Panopto Workplace Knowledge Report (2018)</a></li>
+    <li>신규 개발자가 온전한 생산성에 도달하기까지는 평균 <strong>3~9개월</strong>이 걸린다 — <a href="https://newsletter.getdx.com/p/developer-onboarding-time" target="_blank" rel="noopener">DX, Developer Onboarding Research</a></li>
+</ul>
+<p>그 결과 조직에서는 같은 문제의 반복 분석, 설계 의도와 변경 배경의 소실, 프로젝트 간 경험 재사용 부족, 담당자 이동·퇴사에 따른 지식 손실, 신규 개발자의 높은 학습 비용, AI 개발 도구 사용 시 반복적인 Context 재설명이 되풀이된다.</p>
+<p><strong>"문서를 잘 쓰자"는 답이 되지 못한다.</strong> 오픈소스 설문에서 <strong>93%가 "불완전하거나 오래된 문서"를 만연한 문제</strong>로 꼽으면서도 60%는 문서에 거의 기여하지 않았고(<a href="https://opensourcesurvey.org/2017/" target="_blank" rel="noopener">GitHub Open Source Survey 2017</a>), Stack Overflow는 사내 위키·문서 DB가 방치되고 신뢰를 잃는 구조적 이유를 일찍이 분석한 바 있다(<a href="https://stackoverflow.blog/2019/09/30/why-your-wikis-instant-messaging-and-documentation-databases-dont-work/" target="_blank" rel="noopener">Why Your Wikis … Don't Work, 2019</a>). 일정과 우선순위에 밀리는 개발 현장에서 <strong>사람의 성실함에 의존하는 문서화는 지속되지 않는다.</strong></p>
+
+<h3>2. 제안의 핵심 — 개발 흐름은 그대로, 지식화는 AI가</h3>
+<p>본 제안의 목적은 단순한 회사 Wiki 구축이 아니다. GitLab에 축적되는 개발 결과를 AI가 지속적으로 분석해 지식을 추출하고, 기존 지식과 비교해 <strong>신규 생성·갱신·폐기</strong>를 판단하는 플랫폼을 만드는 것이다. 직원의 업무 흐름은 지금과 완전히 같다 — Wiki 작성, Markdown 편집, Tag 등록, 문서 분류, 지식 정리를 <strong>아무것도 추가로 요구하지 않는다</strong>. 직원은 최종 생성된 지식을 검색하고 읽기만 한다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 196" role="img" aria-label="직원은 기존처럼 개발·커밋·머지하고, 머지된 결과를 AI가 수집·분석·판정해 위키로 배포하는 2단 파이프라인">
+    <text class="d-sub" x="8" y="14" text-anchor="start">직원 — 기존 개발 흐름 그대로</text>
+    <rect class="d-box" x="8" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="56" y="46" text-anchor="middle">개발</text>
+    <rect class="d-box" x="118" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="166" y="46" text-anchor="middle">Commit</text>
+    <rect class="d-box" x="228" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="276" y="46" text-anchor="middle">Push</text>
+    <rect class="d-box" x="338" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="386" y="46" text-anchor="middle">Merge Request</text>
+    <rect class="d-box" x="448" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="496" y="46" text-anchor="middle">Review</text>
+    <rect class="d-box accent" x="558" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="606" y="46" text-anchor="middle">Merge</text>
+    <line class="d-edge" x1="104" y1="42" x2="110" y2="42"/><polygon class="d-arrow" points="110,37 110,47 118,42"/>
+    <line class="d-edge" x1="214" y1="42" x2="220" y2="42"/><polygon class="d-arrow" points="220,37 220,47 228,42"/>
+    <line class="d-edge" x1="324" y1="42" x2="330" y2="42"/><polygon class="d-arrow" points="330,37 330,47 338,42"/>
+    <line class="d-edge" x1="434" y1="42" x2="440" y2="42"/><polygon class="d-arrow" points="440,37 440,47 448,42"/>
+    <line class="d-edge" x1="544" y1="42" x2="550" y2="42"/><polygon class="d-arrow" points="550,37 550,47 558,42"/>
+
+    <path class="d-edge" d="M606 62 C606 80, 592 90, 572 90 H106 C88 90, 72 98, 72 112 V128"/>
+    <polygon class="d-arrow" points="67,127 77,127 72,134"/>
+    <polygon class="d-arrow" points="338,85 338,95 328,90"/>
+
+    <text class="d-sub" x="672" y="126" text-anchor="end">AI — 자동 지식화 파이프라인</text>
+    <rect class="d-box" x="12" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="72" y="153" text-anchor="middle">① 변경 수집</text>
+    <text class="d-sub" x="72" y="169" text-anchor="middle">Diff · MR · SHA</text>
+    <rect class="d-box" x="147" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="207" y="153" text-anchor="middle">② Context 분석</text>
+    <text class="d-sub" x="207" y="169" text-anchor="middle">관련 소스 확장</text>
+    <rect class="d-box" x="282" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="342" y="153" text-anchor="middle">③ 가치 판정</text>
+    <text class="d-sub" x="342" y="169" text-anchor="middle">지식인가?</text>
+    <rect class="d-box" x="417" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="477" y="153" text-anchor="middle">④ 생성·갱신·폐기</text>
+    <text class="d-sub" x="477" y="169" text-anchor="middle">기존 위키와 비교</text>
+    <rect class="d-box accent" x="552" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="612" y="153" text-anchor="middle">⑤ Portal 배포</text>
+    <text class="d-sub" x="612" y="169" text-anchor="middle">Read-Only</text>
+    <line class="d-edge" x1="132" y1="157" x2="139" y2="157"/><polygon class="d-arrow" points="139,152 139,162 147,157"/>
+    <line class="d-edge" x1="267" y1="157" x2="274" y2="157"/><polygon class="d-arrow" points="274,152 274,162 282,157"/>
+    <line class="d-edge" x1="402" y1="157" x2="409" y2="157"/><polygon class="d-arrow" points="409,152 409,162 417,157"/>
+    <line class="d-edge" x1="537" y1="157" x2="544" y2="157"/><polygon class="d-arrow" points="544,152 544,162 552,157"/>
+</svg>
+<div class="d-cap">직원의 역할은 위 행에서 끝난다. 아래 행 전체가 AI의 몫이다.</div>
+</div>
+
+<div class="note">
+    <span class="nh">핵심 개념 — Event Stream과 Knowledge State</span>
+    GitLab은 개발 변경의 <strong>Event Stream</strong>이고, Wiki는 현재 시점에 유효한 <strong>Knowledge State</strong>다. GitLab에는 Commit·MR·Release가 시간 순서로 계속 쌓이지만, Wiki는 "7/1 수정사항, 7/2 수정사항…" 같은 이력의 나열이 아니라 <strong>조직이 지금 알아야 하는 지식 구조</strong>(Architecture · Rule Engine · 상태 체계 · 채널 정책 · Troubleshooting …)로 정제되어 유지된다.
+</div>
+
+<p>이 방향은 업계가 이미 검증했거나 나아가고 있는 길이다.</p>
+<ul>
+    <li><strong>문서를 코드 곁에</strong> — Spotify는 문서를 코드와 같은 저장소에 두고 CI로 빌드하는 <a href="https://backstage.io/blog/2020/09/08/announcing-tech-docs/" target="_blank" rel="noopener">Backstage TechDocs</a>로 5,000개 이상의 문서 사이트를 운영하고, GitLab은 2,700페이지가 넘는 공개 핸드북의 <a href="https://handbook.gitlab.com/handbook/company/culture/all-remote/handbook-first/" target="_blank" rel="noopener">handbook-first 문화</a>로 유명하다. docs-as-code는 대규모 조직에서 이미 검증된 접근이다.</li>
+    <li><strong>문서 동기화의 자동화</strong> — <a href="https://swimm.io/blog/how-does-swimm-s-auto-sync-feature-work" target="_blank" rel="noopener">Swimm</a>은 모든 PR마다 코드 변경과 문서를 대조해 자동 갱신하는 Auto-sync로 "Continuous Documentation"을 상용화했다.</li>
+    <li><strong>코드에서 지식 자동 추출</strong> — Cognition의 <a href="https://cognition.com/blog/deepwiki" target="_blank" rel="noopener">DeepWiki(2025)</a>는 저장소를 분석해 아키텍처 다이어그램과 모듈 문서가 포함된 위키를 자동 생성하며 상위 공개 저장소 5만 개 이상을 인덱싱했다. GitHub은 저장소 지식을 상시 주입하는 <a href="https://github.blog/changelog/2025-09-24-copilot-spaces-is-now-generally-available/" target="_blank" rel="noopener">Copilot Spaces</a>를 GA했고, Claude Code의 <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">CLAUDE.md</a>·AGENTS.md는 "저장소 안의 기계가 읽는 지식 파일"을 업계 관례로 만들었다.</li>
+    <li><strong>지식 검색 시장의 급성장</strong> — 전사 AI 지식 검색의 <a href="https://futurumgroup.com/insights/glean-doubles-arr-to-200m-can-its-knowledge-graph-beat-copilot/" target="_blank" rel="noopener">Glean은 ARR $200M</a>을 넘겼고, Atlassian은 <a href="https://www.atlassian.com/software/rovo" target="_blank" rel="noopener">Rovo</a>를 클라우드 요금제에 기본 탑재했다.</li>
+</ul>
+<p>즉 <strong>"GitLab 개발 결과의 AI 자동 지식화"는 docs-as-code의 검증된 토대 위에, 2025년 이후 상용화된 자동 추출 기술을 조직 지식 관리에 적용하는 것</strong>이다.</p>
+
+<h3>3. 플랫폼 아키텍처</h3>
+<p>전체 플랫폼은 GitLab을 원천으로 하는 단방향 파이프라인으로 구성한다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 356" role="img" aria-label="7계층 구성: 개발자 → GitLab → Knowledge Collector → Change Analyzer → AI Knowledge Curator → Wiki Repository → Knowledge Portal">
+    <rect class="d-box" x="170" y="8" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="31" text-anchor="middle">개발자</text>
+    <text class="d-sub" x="522" y="31" text-anchor="start">Java · SQL · Mapper · API · Test</text>
+    <rect class="d-box" x="170" y="58" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="81" text-anchor="middle">GitLab</text>
+    <text class="d-sub" x="522" y="81" text-anchor="start">Project · Commit · MR · Pipeline</text>
+    <rect class="d-box" x="170" y="108" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="131" text-anchor="middle">Knowledge Collector</text>
+    <text class="d-sub" x="522" y="131" text-anchor="start">SHA · Diff · MR 수집</text>
+    <rect class="d-box" x="170" y="158" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="181" text-anchor="middle">Change Analyzer</text>
+    <text class="d-sub" x="522" y="181" text-anchor="start">Diff + 관련 Source Context</text>
+    <rect class="d-box accent" x="170" y="208" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="231" text-anchor="middle">AI Knowledge Curator</text>
+    <text class="d-sub" x="522" y="231" text-anchor="start">판정 · 검색 · 갱신 · 폐기</text>
+    <rect class="d-box" x="170" y="258" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="281" text-anchor="middle">Company Wiki Repository</text>
+    <text class="d-sub" x="522" y="281" text-anchor="start">HTML · Index · Provenance</text>
+    <rect class="d-box soft" x="170" y="308" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="331" text-anchor="middle">Company Knowledge Portal</text>
+    <text class="d-sub" x="522" y="331" text-anchor="start">직원 Read-Only</text>
+    <line class="d-edge" x1="340" y1="44" x2="340" y2="51"/><polygon class="d-arrow" points="335,51 345,51 340,58"/>
+    <line class="d-edge" x1="340" y1="94" x2="340" y2="101"/><polygon class="d-arrow" points="335,101 345,101 340,108"/>
+    <line class="d-edge" x1="340" y1="144" x2="340" y2="151"/><polygon class="d-arrow" points="335,151 345,151 340,158"/>
+    <line class="d-edge" x1="340" y1="194" x2="340" y2="201"/><polygon class="d-arrow" points="335,201 345,201 340,208"/>
+    <line class="d-edge" x1="340" y1="244" x2="340" y2="251"/><polygon class="d-arrow" points="335,251 345,251 340,258"/>
+    <line class="d-edge" x1="340" y1="294" x2="340" y2="301"/><polygon class="d-arrow" points="335,301 345,301 340,308"/>
+</svg>
+<div class="d-cap">개발 결과가 아래로 흐르며 지식이 된다. 직원이 개입하는 층은 맨 위(개발)와 맨 아래(읽기)뿐이다.</div>
+</div>
+
+<p><strong>지식 생성 Trigger — 완료로 인정된 변경만.</strong> 모든 Commit을 즉시 지식화하지 않는다. 개발 중에는 미완성 구현, 실패한 시도, Debug 코드, Rollback 대상, 임시 수정, 기계적 Refactoring이 섞여 있기 때문이다. 조직이 완료로 인정하는 관문 — <strong>Review를 거쳐 기준 Branch에 Merge되고 Pipeline이 성공한 변경</strong> — 만 분석 대상으로 삼는다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 120" role="img" aria-label="지식 생성 트리거: Feature Branch에서 Merge Request와 리뷰를 거쳐 기준 브랜치에 머지되고 파이프라인이 성공하면 Curator가 실행된다">
+    <rect class="d-box" x="8" y="18" width="124" height="50" rx="9"/>
+    <text class="d-label sm" x="70" y="38" text-anchor="middle">Feature Branch</text>
+    <text class="d-sub" x="70" y="55" text-anchor="middle">개발 진행</text>
+    <rect class="d-box" x="143" y="18" width="124" height="50" rx="9"/>
+    <text class="d-label sm" x="205" y="38" text-anchor="middle">Merge Request</text>
+    <text class="d-sub" x="205" y="55" text-anchor="middle">코드 리뷰</text>
+    <rect class="d-box" x="278" y="18" width="124" height="50" rx="9"/>
+    <text class="d-label sm" x="340" y="38" text-anchor="middle">기준 Branch Merge</text>
+    <text class="d-sub" x="340" y="55" text-anchor="middle">master · release/*</text>
+    <rect class="d-box" x="413" y="18" width="124" height="50" rx="9"/>
+    <text class="d-label sm" x="475" y="38" text-anchor="middle">Pipeline 성공</text>
+    <text class="d-sub" x="475" y="55" text-anchor="middle">품질 게이트</text>
+    <rect class="d-box accent" x="548" y="18" width="124" height="50" rx="9"/>
+    <text class="d-label sm" x="610" y="38" text-anchor="middle">Curator 실행</text>
+    <text class="d-sub" x="610" y="55" text-anchor="middle">지식 분석 시작</text>
+    <line class="d-edge" x1="132" y1="43" x2="136" y2="43"/><polygon class="d-arrow" points="136,38 136,48 143,43"/>
+    <line class="d-edge" x1="267" y1="43" x2="271" y2="43"/><polygon class="d-arrow" points="271,38 271,48 278,43"/>
+    <line class="d-edge" x1="402" y1="43" x2="406" y2="43"/><polygon class="d-arrow" points="406,38 406,48 413,43"/>
+    <line class="d-edge" x1="537" y1="43" x2="541" y2="43"/><polygon class="d-arrow" points="541,38 541,48 548,43"/>
+    <text class="d-sub" x="340" y="104" text-anchor="middle">프로젝트별 knowledgeBranches 설정으로 "완료로 인정한 변경"만 분석한다</text>
+</svg>
+</div>
+
+<p><strong>증분 분석 — 전체를 다시 읽지 않는다.</strong> 프로젝트별로 마지막 처리 Commit SHA를 관리하고, GitLab Compare로 그 이후의 변경 파일만 수집해 관련 Context를 확장 분석한다. AI Token 사용량 절감, 처리시간 단축, 중복 분석 방지, 장애 시 재처리가 모두 이 상태 관리에서 나온다.</p>
+<pre><code><span class="c"># 프로젝트별 knowledge trigger·sync 상태 (예시)</span>
+{
+  "project": "scm/ai-notification",
+  "knowledgeBranches": ["master", "release/*"],
+  "lastProcessedSha": "abc123def456",
+  "lastProcessedAt": "2026-07-06T14:32:00+09:00",
+  "status": "success"
+}</code></pre>
+
+<p><strong>단순 Diff가 아닌 Context 기반 분석.</strong> <code>if ("COL".equals(receiverType))</code> 한 줄만 보고는 업무 정책을 판단할 수 없다. 변경 Diff에 더해 <strong>전체 Class · 호출자 · 관련 Mapper와 SQL · 관련 Test · 관련 Config · 기존 Wiki</strong>를 함께 읽는 Impact Expansion을 거쳐, 단순 코드 요약이 아닌 실제 개발 지식을 추출한다.</p>
+
+<p><strong>운영 안정성 — 실시간과 보정의 이중화.</strong> Webhook(Merge → Queue → Curator) 실시간 처리에만 의존하지 않고, 정기 Batch가 Project Registry의 현재 SHA와 sync-state를 비교해 누락 변경을 재처리한다. Webhook 실패, Network 오류, Queue 누락, Curator 장애, 일시적 API 실패에 대응하는 구조다.</p>
+
+<h3>4. 지식 관리 체계 — 판정 · 갱신 · 추적 · 신뢰 · 수명주기</h3>
+<p><strong>가치 판정.</strong> 핵심은 변경량이 아니라 <strong>향후 재사용 가능한 지식 가치</strong>다.</p>
+<ul>
+    <li><strong>지식화 대상</strong> — 새로운 Architecture·업무 Rule, DB Table·Column 의미 변경, API 추가·변경, 상태 전이 변경, 외부 시스템 연계, 반복 가능한 장애 해결, 공통 개발 패턴, 성능 개선 사례, 보안 정책·Dependency 변화, 기존 설계 정책 변경</li>
+    <li><strong>기본 제외</strong> — 변수명 변경, 단순 Null Check, 오타·주석·Formatting, 단순 Log 추가, Test Data, 일회성 Debug, 기계적 Refactoring</li>
+</ul>
+
+<p><strong>누적 갱신.</strong> 새 지식이 발견됐다고 항상 새 문서를 만들지 않는다. Knowledge Index를 먼저 검색해 관련 문서가 있으면 <strong>기존 문서를 확장</strong>한다. 예컨대 "수신자 처리 구조" 문서가 있는 상태에서 COL 동적 수신자 기능이 추가되면, 신규 문서 이전에 기존 문서 확장을 우선 판단한다. Wiki가 변경 이력의 집합이 아니라 <strong>지속적으로 정제된 현재 지식 상태</strong>로 유지되는 이유다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 172" role="img" aria-label="누적 갱신 분기: 새 지식 발견 후 인덱스를 검색해 관련 문서가 있으면 기존 문서를 갱신하고 없으면 신규 문서를 생성한다">
+    <rect class="d-box" x="8" y="66" width="150" height="48" rx="9"/>
+    <text class="d-label sm" x="83" y="86" text-anchor="middle">새 지식 발견</text>
+    <text class="d-sub" x="83" y="102" text-anchor="middle">Merge 분석 결과</text>
+    <rect class="d-box" x="186" y="66" width="140" height="48" rx="9"/>
+    <text class="d-label sm" x="256" y="86" text-anchor="middle">Index 검색</text>
+    <text class="d-sub" x="256" y="102" text-anchor="middle">관련 문서 탐색</text>
+    <polygon class="d-box" points="412,58 476,90 412,122 348,90"/>
+    <text class="d-label sm" x="412" y="94" text-anchor="middle">관련 문서 존재?</text>
+    <rect class="d-box accent" x="536" y="28" width="136" height="44" rx="9"/>
+    <text class="d-label sm" x="604" y="46" text-anchor="middle">기존 문서 갱신</text>
+    <text class="d-sub" x="604" y="62" text-anchor="middle">누적 확장</text>
+    <rect class="d-box" x="536" y="108" width="136" height="44" rx="9"/>
+    <text class="d-label sm" x="604" y="126" text-anchor="middle">신규 문서 생성</text>
+    <text class="d-sub" x="604" y="142" text-anchor="middle">새 지식 카드</text>
+    <line class="d-edge" x1="158" y1="90" x2="178" y2="90"/><polygon class="d-arrow" points="178,85 178,95 186,90"/>
+    <line class="d-edge" x1="326" y1="90" x2="340" y2="90"/><polygon class="d-arrow" points="340,85 340,95 348,90"/>
+    <path class="d-edge" d="M476 90 H500 C510 90, 514 84, 514 74 V64 C514 56, 518 54, 526 54 H528"/>
+    <polygon class="d-arrow" points="528,45 528,55 536,50"/>
+    <text class="d-sub" x="498" y="80" text-anchor="middle">YES</text>
+    <path class="d-edge" d="M476 90 H500 C510 90, 514 96, 514 106 V116 C514 124, 518 126, 526 126 H528"/>
+    <polygon class="d-arrow" points="528,125 528,135 536,130"/>
+    <text class="d-sub" x="498" y="112" text-anchor="middle">NO</text>
+</svg>
+<div class="d-cap">기존 문서 확장을 항상 먼저 판단한다 — 문서 수가 아니라 지식의 밀도를 늘린다.</div>
+</div>
+
+<p><strong>개발 Identifier 검색.</strong> 개발자는 자연어보다 <strong>Table명 · Column명 · Rule ID · Class명 · Method명 · API명 · Mapper ID · Error Code</strong>로 찾는 경우가 많다. Knowledge Index에 identifier를 포함하고, 검색 우선순위를 <strong>① Identifier 완전 일치 → ② 제목 → ③ 개념 → ④ 요약 → ⑤ 태그 → ⑥ 연관 문서 → ⑦ 같은 프로젝트</strong>로 구성한다. 소스에서 만난 <code>CI_RULERCV_INFO</code> 하나만으로 관련 정책 문서에 도달할 수 있어야 한다.</p>
+<pre><code><span class="c"># Knowledge Index 엔트리 (예시)</span>
+{
+  "name": "dz-ai-noti-col-receiver",
+  "title": "COL 동적 수신자 정책",
+  "summary": "COL 유형의 동적 수신자 해석 정책",
+  "kind": "policy",
+  "product": "OmniEsol",  "domain": "SCM",  "project": "ai-notification",
+  "status": "active",
+  "concepts": ["동적수신자", "알림채널", "수신자해석"],
+  "identifiers": ["CI_RULERCV_INFO", "RCV_TP_CD", "RCV_DTL_DC", "SUB_RCV_CD", "COL"],
+  "sources": [{
+    "project": "scm/ai-notification",
+    "commit": "abc123",  "mergeRequest": 382,
+    "paths": ["src/.../ReceiverService.java", "mapper/.../ReceiverMapper.xml"]
+  }]
+}</code></pre>
+<p><strong>출처 추적(Provenance).</strong> 모든 지식은 위 <code>sources</code>처럼 <strong>어느 프로젝트 → 어느 Commit → 어느 MR → 어느 Source File</strong>에서 왔는지 역추적할 수 있어야 한다. 검색으로 지식을 늘리되 출처를 함께 유지하는 접근은 RAG 연구가 확립한 방식으로, 외부 지식 결합이 더 사실적이고 출처 추적 가능한 생성을 만들고(<a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">Lewis et al., NeurIPS 2020</a>) 환각을 크게 줄인다(<a href="https://arxiv.org/abs/2104.07567" target="_blank" rel="noopener">Shuster et al., 2021</a>)는 것이 실증되어 있다.</p>
+
+<p><strong>신뢰 수준.</strong> 코드에서 발견됐다는 이유만으로 공식 정책으로 확정하지 않는다. 최신 연구에서도 최고 성능 LLM조차 코드 요약의 품질·정확성을 오판하는 경우가 보고되며(<a href="https://arxiv.org/abs/2507.16587" target="_blank" rel="noopener">arXiv 2507.16587, 2025</a>), NIST의 생성형 AI 프로파일은 <strong>콘텐츠 출처 추적(Content Provenance)</strong>과 "자신 있게 서술되는 오류(confabulation)" 관리를 핵심 위험 통제로 요구한다(<a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf" target="_blank" rel="noopener">NIST AI 600-1</a>). 그래서 지식을 세 등급으로 구분한다.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>구분</th><th>의미</th><th>예시</th><th>게시 정책</th></tr></thead>
+        <tbody>
+            <tr><td><strong>FACT</strong></td><td>코드에서 직접 확인 가능</td><td>Table · Column · API · Class 관계</td><td>자동 게시 가능성 높음</td></tr>
+            <tr><td><strong>INFERRED</strong></td><td>코드 구조 기반 추론</td><td>재시도 목적 추정, 중복 방지 추정</td><td>추론임을 명시해 게시</td></tr>
+            <tr><td><strong>DECISION</strong></td><td>업무·Architecture 결정</td><td>GUID 선택 이유, 채널 제한 이유</td><td>MR·설계 문서 등 추가 근거 확인 후 게시</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<p><strong>수명주기.</strong> 정책이 바뀌었다고 과거 지식을 삭제하지 않는다. 예컨대 "COL 수신자 → Email only"가 "Email + Message"로 바뀌면 기존 문서를 <code>superseded</code>로 전환하고 새 정책 문서와 연결해, <strong>현재 정책과 변경 이력을 동시에</strong> 추적한다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 176" role="img" aria-label="지식 수명주기: draft에서 active가 되고, 유효성을 잃으면 deprecated, 새 정책으로 대체되면 superseded가 되어 새 active 문서와 연결된다">
+    <rect class="d-box" x="8" y="72" width="110" height="44" rx="9"/>
+    <text class="d-label sm" x="63" y="90" text-anchor="middle">draft</text>
+    <text class="d-sub" x="63" y="106" text-anchor="middle">작성 중</text>
+    <rect class="d-box accent" x="152" y="72" width="120" height="44" rx="9"/>
+    <text class="d-label sm" x="212" y="90" text-anchor="middle">active</text>
+    <text class="d-sub" x="212" y="106" text-anchor="middle">현재 유효</text>
+    <rect class="d-box" x="332" y="32" width="150" height="44" rx="9"/>
+    <text class="d-label sm" x="407" y="50" text-anchor="middle">deprecated</text>
+    <text class="d-sub" x="407" y="66" text-anchor="middle">더는 유효하지 않음</text>
+    <rect class="d-box" x="332" y="112" width="150" height="44" rx="9"/>
+    <text class="d-label sm" x="407" y="130" text-anchor="middle">superseded</text>
+    <text class="d-sub" x="407" y="146" text-anchor="middle">새 정책으로 대체</text>
+    <rect class="d-box accent" x="552" y="112" width="120" height="44" rx="9"/>
+    <text class="d-label sm" x="612" y="130" text-anchor="middle">새 active 문서</text>
+    <text class="d-sub" x="612" y="146" text-anchor="middle">연결 유지</text>
+    <line class="d-edge" x1="118" y1="94" x2="144" y2="94"/><polygon class="d-arrow" points="144,89 144,99 152,94"/>
+    <path class="d-edge" d="M272 94 H296 C306 94, 310 88, 310 78 V68 C310 60, 314 58, 322 58 H324"/>
+    <polygon class="d-arrow" points="324,49 324,59 332,54"/>
+    <text class="d-sub" x="296" y="84" text-anchor="middle">폐기</text>
+    <path class="d-edge" d="M272 94 H296 C306 94, 310 100, 310 110 V120 C310 128, 314 130, 322 130 H324"/>
+    <polygon class="d-arrow" points="324,125 324,135 332,130"/>
+    <text class="d-sub" x="296" y="116" text-anchor="middle">대체</text>
+    <line class="d-edge dash accent" x1="482" y1="134" x2="544" y2="134"/><polygon class="d-arrow accent" points="544,129 544,139 552,134"/>
+</svg>
+<div class="d-cap">superseded 문서는 새 문서와 연결된 채 남는다 — "왜 바뀌었는가"가 함께 보존된다.</div>
+</div>
+
+<h3>5. 기존 자산 활용과 보안</h3>
+<p><strong>처음부터 새로 만들지 않는다.</strong> 현재 운영 중인 개인 Wiki가 이미 갖춘 기능 — HTML Fragment 문서, SPA Web UI, JSON Navigation Tree, 통합/Tag/Concept 검색, Knowledge Index, 연관 문서 추천, Knowledge Map, AI Curator, 결정적 Index Build, Work Log, Git History — 을 복제해 PoC를 시작하고, 검증된 기능을 회사 플랫폼으로 발전시킨다. 문서는 HTML 중심으로 운영해 표·Dashboard·SVG Diagram·상태 Badge·Architecture Flow·DB 구조 시각화를 활용하고, Token 증가는 전체 HTML을 읽지 않는 <strong>Knowledge Index 기반 Retrieval</strong>로 최소화한다. 이는 CLAUDE.md 계층과 MCP 연동으로 조직 지식을 AI 컨텍스트화하는 <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Anthropic 공식 권장 패턴</a>과도 맞닿아 있다.</p>
+
+<div class="note warn">
+    <span class="nh">보안 — 하나의 공개 Wiki에 섞지 않는다</span>
+    회사 개발 지식에는 내부 Architecture, 고객 프로젝트 정보, DB 구조, 장애 분석, 보안 설정이 포함될 수 있다. 지식 등급을 <strong>PUBLIC / INTERNAL / CONFIDENTIAL / RESTRICTED</strong>로 구분하고, General Wiki(전 직원) · Engineering Wiki(개발 조직) · Restricted Knowledge(제한 조직)로 저장소·접근을 분리한다. 직원은 자신의 권한 범위 안에서만 검색·열람한다.
+</div>
+
+<h3>6. 추진 로드맵 — 4단계와 1차 PoC</h3>
+<ul>
+    <li><strong>Phase 1 · 개인 Wiki 기반 검증</strong> — Wiki Local Clone + Claude Code 연계, Knowledge Index 검색, HTML 지식 축적, AI Curator Prototype. 첫 대상: <strong>OmniEsol AI 알림</strong></li>
+    <li><strong>Phase 2 · 회사 PoC (SCM구축개발1Unit)</strong> — 회사 Wiki Repository, GitLab Project Registry, Change Collector, SHA 증분 처리, AI Knowledge Curator, Provenance, Read-Only Portal. 첫 Source: OmniEsol AI 알림 GitLab Repository</li>
+    <li><strong>Phase 3 · SCM개발센터 확대</strong> — 다중 프로젝트, Product/Domain 분류, 프로젝트 간 지식 연결, Lifecycle, 보안등급, 품질 KPI</li>
+    <li><strong>Phase 4 · 전사 확장</strong> — 사내 SSO, 전사 Search, 제품별 Knowledge Governance, AI Agent 연계, 사내 개발 플랫폼 공식화</li>
+</ul>
+<p><strong>1차 PoC 대상은 OmniEsol AI 알림을 제안한다.</strong> 3-Layer Architecture, Rule Engine, 상태 체계, GUID 정책, 수신자·채널 정책, Function Call, DB Table 구조, CLOB 정책, 발송 요청 구조, 장애 사례, 정책 변경 이력 등 지식화 가치가 높은 요소가 이미 존재하며, <code>CI_RULECOND_INFO</code> · <code>CI_RULERCV_INFO</code> · <code>RCV_TP_CD</code> · <code>COL</code> · <code>NR_SD_SO_COMPLETED</code> · <code>requestAiNotification</code> 같은 identifier로 검색·축적 효과를 즉시 검증할 수 있다.</p>
+<p><strong>검증 KPI</strong>는 네 축으로 측정한다.</p>
+<ul>
+    <li><strong>지식 생성 품질</strong> — 자동 생성 정확도, 기존 문서 갱신 성공률, 중복 문서 생성률, 잘못된 추론 비율</li>
+    <li><strong>검색 품질</strong> — Identifier 검색 성공률, 연관 문서 추천 정확도, 원하는 정보 도달 시간</li>
+    <li><strong>개발 생산성</strong> — 반복 질문 감소, 과거 장애 재분석 감소, 신규 개발자 학습 시간 감소, AI 도구 Context 설명량 감소</li>
+    <li><strong>운영 품질</strong> — Merge 대비 지식 반영률, 누락 변경 건수, 오래된 문서 비율, Deprecated 처리율</li>
+</ul>
+
+<h3>맺음 — 개발 결과가 지식이 되고, 지식이 다음 개발을 가속한다</h3>
+<p>사람이 쓰는 위키는 "개발 → 문서 작성 → Wiki 등록"의 추가 노동을 요구하고, 그래서 지속되지 못했다. 본 제안은 개발자의 업무 흐름을 바꾸지 않는다. 개발 경험이 조직 자산이 되고, 반복 분석이 줄고, 프로젝트 간 경험이 재사용되며, 온보딩이 빨라지고, 설계 의도가 보존되고, Claude Code 같은 AI 도구가 조직 지식을 Context로 활용하게 된다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 140" role="img" aria-label="선순환 구조: 개발 결과가 조직 지식이 되고, AI Retrieval을 거쳐 다음 개발에 재사용되어 다시 개발 결과로 이어진다">
+    <rect class="d-box" x="8" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="78" y="43" text-anchor="middle">개발 결과</text>
+    <text class="d-sub" x="78" y="60" text-anchor="middle">GitLab Merge</text>
+    <rect class="d-box accent" x="178" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="248" y="43" text-anchor="middle">조직 지식</text>
+    <text class="d-sub" x="248" y="60" text-anchor="middle">Wiki · Index</text>
+    <rect class="d-box" x="348" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="418" y="43" text-anchor="middle">AI Retrieval</text>
+    <text class="d-sub" x="418" y="60" text-anchor="middle">필요할 때 검색</text>
+    <rect class="d-box" x="518" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="588" y="43" text-anchor="middle">다음 개발</text>
+    <text class="d-sub" x="588" y="60" text-anchor="middle">Claude Code · Agent</text>
+    <line class="d-edge" x1="148" y1="48" x2="170" y2="48"/><polygon class="d-arrow" points="170,43 170,53 178,48"/>
+    <line class="d-edge" x1="318" y1="48" x2="340" y2="48"/><polygon class="d-arrow" points="340,43 340,53 348,48"/>
+    <line class="d-edge" x1="488" y1="48" x2="510" y2="48"/><polygon class="d-arrow" points="510,43 510,53 518,48"/>
+    <path class="d-edge" d="M588 74 C588 96, 572 104, 552 104 H114 C94 104, 78 96, 78 84"/>
+    <polygon class="d-arrow" points="73,82 83,82 78,74"/>
+    <polygon class="d-arrow" points="338,99 338,109 328,104"/>
+    <text class="d-sub" x="330" y="126" text-anchor="middle">축적된 지식이 다음 개발의 생산성을 높인다</text>
+</svg>
+<div class="d-cap">최종 목표는 위키가 아니라 <strong>선순환</strong>이다 — 개발할수록 조직이 똑똑해지는 구조.</div>
+</div>
+
+<div class="note">
+    <span class="nh">한 문장 요약</span>
+    GitLab에 축적되는 개발 결과물을 AI가 지속적으로 분석하여, 조직의 <strong>현재 유효한 개발 지식</strong>으로 변환·축적하는 <strong>Read-Only Engineering Knowledge Platform</strong>.
+</div>
