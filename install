@@ -1,9 +1,9 @@
             <h2>Install &amp; Start</h2>
 <div class="diagram">
-<svg viewBox="0 0 700 96" role="img" aria-label="Install flow: install with npm, go to your project, run claude, then authenticate">
+<svg viewBox="0 0 700 96" role="img" aria-label="Install flow: install with the native installer, go to your project, run claude, then authenticate">
     <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
-    <text class="d-label" x="85" y="46" text-anchor="middle">① Install (npm)</text>
-    <text class="d-sub" x="85" y="63" text-anchor="middle">npm install -g</text>
+    <text class="d-label" x="85" y="46" text-anchor="middle">① Install</text>
+    <text class="d-sub" x="85" y="63" text-anchor="middle">native installer</text>
 
     <rect class="d-box" x="180" y="24" width="150" height="48" rx="10"/>
     <text class="d-label" x="255" y="46" text-anchor="middle">② Go to project</text>
@@ -24,13 +24,14 @@
 </div>
             <p>
 
-                The fastest way to get started is to install Claude Code globally with npm and then run it inside any project directory.
+                The fastest way to get started is the native installer &mdash; a single command with no dependencies, and it keeps Claude Code updated automatically.
                 <ul>
-                    <li>Requires Node.js 18 or newer.</li>
-                    <li>Install: <code>npm install -g @anthropic-ai/claude-code</code></li>
+                    <li>macOS / Linux / WSL: <code>curl -fsSL https://claude.ai/install.sh | bash</code></li>
+                    <li>Windows (PowerShell): <code>irm https://claude.ai/install.ps1 | iex</code></li>
                     <li>Go to your project: <code>cd your-project</code></li>
                     <li>Launch it: <code>claude</code></li>
                 </ul>
+                Homebrew (<code>brew install --cask claude-code</code>) and WinGet are also supported. Installing with npm (<code>npm install -g @anthropic-ai/claude-code</code>, requires Node.js 22 or newer) still works and installs the same native binary.
                 On first launch, Claude Code walks you through authentication &mdash; you can log in with a Claude account (Pro/Max plan) or an Anthropic API key. After that, just describe what you want in plain language, for example: <em>"explain the auth flow"</em> or <em>"add a dark mode toggle and run the tests"</em>.
                 A few handy startup flags:
                 <ul>
