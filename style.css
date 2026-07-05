@@ -174,49 +174,69 @@
         #content{
             min-width: 0;   /* let long content shrink instead of overflowing */
         }
-        /* Desktop: sidebar and masthead stay fixed; only the content pane
-           scrolls, so picking a doc refreshes just the article area. */
+        /* Desktop — Claude-style shell: a tinted page background gently wraps
+           a rounded content card; the sidebar lives on the shell and slides
+           away smoothly (like claude.ai). Collapsed is the DEFAULT on first
+           visit; the hamburger toggles it and the choice is remembered. */
         @media(min-width: 801px){
             body{
                 overflow: hidden;
+                background: var(--bg-alt);   /* the wrapping shell tint */
             }
             #grid{
+                display: flex;
                 height: 100vh;
+                padding-left: 0;
             }
             #sidebar{
+                width: 272px;
+                flex: none;
                 height: 100vh;
                 overflow-y: auto;
+                padding: 10px 8px 0 24px;
+                border-right: none;   /* the card border does the separating */
+                transition: margin-left 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                            opacity 0.22s ease;
             }
+            body.nav-collapsed #sidebar{
+                margin-left: -272px;   /* slide out; content follows smoothly */
+                opacity: 0;
+                pointer-events: none;
+            }
+            /* The content pane is a rounded card inset in the shell. */
             #content{
+                flex: 1;
+                min-width: 0;
                 display: flex;
                 flex-direction: column;
-                height: 100vh;
+                height: calc(100vh - 20px);
+                margin: 10px 12px 10px 4px;
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                overflow: hidden;
+                box-shadow: 0 3px 18px rgba(0, 0, 0, 0.06);
+            }
+            body.nav-collapsed #content{
+                margin-left: 12px;
             }
             #masthead{
                 flex: none;
+                padding-left: 52px;   /* room for the hamburger */
             }
             #content-scroll{
                 flex: 1;
                 min-height: 0;
                 overflow-y: auto;
             }
-            /* Desktop sidebar toggle: the hamburger collapses/expands the
-               list column. Expanded is the default; the collapsed choice is
-               the user's own (remembered per browser). */
             #nav-toggle{
                 display: block;
             }
-            #masthead{
-                padding-left: 52px;   /* room for the hamburger */
-            }
-            body.nav-collapsed #sidebar{
-                display: none;
-            }
-            /* With the sidebar gone, the content is the sole grid item —
-               give it the whole row (a 0px first track would trap it). */
-            body.nav-collapsed #grid{
-                grid-template-columns: minmax(0, 1fr);
-                padding-left: 0;
+            /* Full-bleed screens fill the card pane (100vh - card margins
+               20px - masthead 82px). */
+            .search-screen,
+            .cosmos-screen{
+                min-height: calc(100vh - 102px);
             }
         }
         /* Sidebar scrolls without showing a scrollbar */
@@ -379,8 +399,45 @@
         body.tags-view #more,
         body.search-view #more,
         body.worklog-view #more,
+        body.cosmos-view #more,
         body.hide-recent #more{
             display: none;
+        }
+
+        /* ---- 지식 코스모스 (3D constellation of the knowledge graph) ---- */
+        body.cosmos-view #article{
+            padding: 0;   /* full-bleed like the search screen */
+        }
+        .cosmos-screen{
+            position: relative;
+            min-height: calc(100vh - 90px);
+            overflow: hidden;
+        }
+        .cosmos-canvas{
+            position: absolute;
+            inset: 0;
+            cursor: grab;
+            touch-action: none;   /* drags rotate; they don't scroll */
+        }
+        .cosmos-hud{
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            pointer-events: none;
+        }
+        .cosmos-head{
+            margin: 0;
+            border: 0;
+            padding: 0;
+            font-size: 22px;
+            font-weight: 800;
+        }
+        .cosmos-sub{
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: 12.5px;
         }
         /* "Related docs" follows the same rule: only on doc pages, and hidden
            when the Settings toggle is on. (It lives inside #article, so it is
