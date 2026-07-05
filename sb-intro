@@ -86,20 +86,26 @@
 <p>정리를 시작하기 전에 <strong>"이 데이터를 나중에 어떻게 꺼내 쓸 것인가"</strong>부터 정하세요. 꺼내는 방식이 <strong>담는 방식</strong>을 결정하기 때문입니다.</p>
 
 <div class="diagram">
-<svg viewBox="0 0 520 150" role="img" aria-label="역설계 비유: 골대(질문의 모양)에 맞춰 공(데이터)의 모양을 정한다">
-    <!-- hoop -->
-    <ellipse class="d-box accent" cx="150" cy="66" rx="46" ry="15"/>
-    <text class="d-label sm" x="150" y="112" text-anchor="middle">질문의 모양 (골대)</text>
-    <!-- round ball fits -->
-    <circle class="d-node" cx="150" cy="66" r="11"/>
-    <text class="d-sub" x="150" y="40" text-anchor="middle">둥근 공 → 통과 ✓</text>
+<svg viewBox="0 0 520 210" role="img" aria-label="역설계 비유: 골대(꺼낼 질문)의 모양에 맞춘 둥근 공은 골대를 쑥 통과하고, 모양이 안 맞는 네모 공은 테두리에 걸려 못 들어간다">
+    <!-- left: the round ball drops clean through the hoop -->
+    <text class="d-sub" x="150" y="18" text-anchor="middle">둥근 공 · 골대에 맞춘 형식</text>
+    <circle class="d-node" cx="150" cy="40" r="10"/>
+    <ellipse class="d-box accent" cx="150" cy="96" rx="46" ry="14"/>
+    <path class="d-edge accent dash" d="M150 56 V130" fill="none"/>
+    <polygon class="d-arrow accent" points="145,130 155,130 150,138"/>
+    <circle class="d-node" cx="150" cy="154" r="10"/>
+    <text class="d-accent" x="150" y="186" text-anchor="middle" font-size="12">쑥 들어간다 ✓</text>
 
-    <!-- square ball doesn't -->
-    <ellipse class="d-box" cx="380" cy="66" rx="46" ry="15"/>
-    <rect class="d-node dim" x="368" y="54" width="24" height="24" rx="3"/>
-    <text class="d-sub" x="380" y="40" text-anchor="middle">네모 공 → 안 들어감 ✕</text>
-    <text class="d-label sm" x="380" y="112" text-anchor="middle">엉뚱하게 담으면</text>
-    <text class="d-sub" x="380" y="130" text-anchor="middle">꺼낼 때 안 맞는다</text>
+    <!-- the hoop = the question you'll ask later -->
+    <text class="d-sub" x="265" y="100" text-anchor="middle">골대 = 질문</text>
+
+    <!-- right: the square ball jams in the rim -->
+    <text class="d-sub" x="380" y="18" text-anchor="middle">네모 공 · 모양이 안 맞는 형식</text>
+    <path class="d-edge dash" d="M380 32 V54" fill="none"/>
+    <polygon class="d-arrow" points="375,54 385,54 380,62"/>
+    <ellipse class="d-box" cx="380" cy="96" rx="46" ry="14"/>
+    <rect class="d-node dim" x="368" y="70" width="24" height="24" rx="3" transform="rotate(-14 380 82)"/>
+    <text class="d-sub" x="380" y="186" text-anchor="middle">테두리에 걸린다 ✕</text>
 </svg>
 <div class="d-cap">골대(꺼낼 질문)를 먼저 보고 공(데이터를 담는 방식)을 정합니다. 순서가 반대면 나중에 고생합니다.</div>
 </div>
