@@ -878,10 +878,68 @@
             font-size: 14px;
             margin-top: -6px;
         }
+        /* Settings tab bar (기본 설정 / 디자인 설정). */
+        .settings-tabs{
+            display: flex;
+            gap: 4px;
+            margin: 18px 0 4px;
+            border-bottom: 1px solid var(--border);
+            max-width: 420px;
+        }
+        .settings-tab{
+            padding: 8px 14px 9px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;             /* overlap the bar's border */
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: color .15s ease, border-color .15s ease;
+        }
+        .settings-tab:hover{ color: var(--text); }
+        .settings-tab.active{
+            color: var(--accent-ink);
+            border-bottom-color: var(--accent);
+        }
         .settings-field{
             margin: 18px 0;
             max-width: 420px;
         }
+        /* Theme accent color pickers. */
+        .color-row{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 10px;
+        }
+        .color-name{
+            width: 76px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+        .color-row input[type="color"]{
+            width: 46px;
+            height: 30px;
+            padding: 2px;
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .color-reset{
+            padding: 4px 10px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            color: var(--muted);
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        .color-reset:hover{ color: var(--text); border-color: var(--muted); }
         .settings-field > label{
             display: block;
             margin-bottom: 6px;
@@ -1427,8 +1485,8 @@
             color: var(--accent-ink);
         }
         .more-name{
-            font-size: 15px;   /* match the body text size */
-            font-weight: 700;
+            font-size: 15px;   /* match the body text size; no extra emphasis */
+            font-weight: 400;
         }
         .more-meta{
             color: var(--accent-ink);
@@ -1486,6 +1544,11 @@
             margin-top: 30px;
             padding-top: 16px;
             border-top: 1px solid var(--border);
+        }
+        /* The related module closes the article; pull the article's bottom
+           padding in so the gap below it matches the gap above. */
+        body:not(.hide-related) #article:has(.related){
+            padding-bottom: 24px;
         }
         .related-title{
             margin: 0 0 12px;

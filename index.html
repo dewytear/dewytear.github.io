@@ -1697,6 +1697,10 @@
         var SETTINGS_KEY = 'wikiSettings';
         var SETTINGS_UNLOCKED = false;
         var SETTINGS_CATS = null;   // category transfer-list working state
+        var SETTINGS_TAB = 'basic'; // active settings tab (basic | design)
+        // Theme accent defaults (must match the tokens in style.css).
+        var ACCENT_DAY_DEFAULT = '#ff6600';
+        var ACCENT_NIGHT_DEFAULT = '#4db6ac';
 
         function loadSettings(){
             try{ return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; }
@@ -1740,6 +1744,8 @@
             var root = document.documentElement;
             root.style.setProperty('--nav-line-style', s.navLineStyle || 'dashed');
             root.style.setProperty('--nav-line-width', s.navLineWidth || '1px');
+            // Theme accent colors (per light/dark mode, from Settings).
+            applyAccentVars(s.accentDay, s.accentNight);
             // "Recent docs" and "Related docs" footer modules — each toggled
             // independently from Settings, both hidden on non-doc screens.
             document.body.classList.toggle('hide-recent', !!s.hideRecent);
@@ -1778,6 +1784,53 @@
                     if(img){ img.src = src; }
                 }
             }).catch(function(){ /* offline / missing config: keep defaults */ });
+        }
+
+        // Override the theme accent tokens per mode. Only valid #rrggbb values
+        // (what <input type="color"> yields) are accepted; defaults emit no
+        // override so style.css stays the single source of truth.
+        function applyAccentVars(day, night){
+            var HEX = /^#[0-9a-f]{6}$/i;
+            var css = '';
+            if(night && HEX.test(night) && night.toLowerCase() !== ACCENT_NIGHT_DEFAULT){
+                css += ':root{--accent:' + night + ';--accent-ink:' + night + ';}';
+            }
+            if(day && HEX.test(day) && day.toLowerCase() !== ACCENT_DAY_DEFAULT){
+                // Small-text ink is a darkened shade so contrast on white holds.
+                css += 'body.day{--accent:' + day + ';'
+                     + '--accent-ink:color-mix(in srgb,' + day + ' 78%, black);}';
+            }
+            var el = document.getElementById('theme-vars');
+            if(!el){
+                el = document.createElement('style');
+                el.id = 'theme-vars';
+                document.head.appendChild(el);
+            }
+            el.textContent = css;
+        }
+        // Live preview while dragging the color pickers (persisted on 저장).
+        function previewAccent(){
+            var d = document.getElementById('settings-accent-day');
+            var n = document.getElementById('settings-accent-night');
+            applyAccentVars(d && d.value, n && n.value);
+        }
+        function resetAccent(which){
+            var el = document.getElementById('settings-accent-' + which);
+            if(el){ el.value = which === 'day' ? ACCENT_DAY_DEFAULT : ACCENT_NIGHT_DEFAULT; }
+            previewAccent();
+        }
+
+        function switchSettingsTab(tab){
+            SETTINGS_TAB = tab;
+            ['basic', 'design'].forEach(function(t){
+                var panel = document.getElementById('settings-panel-' + t);
+                if(panel){ panel.hidden = t !== tab; }
+                var btn = document.getElementById('settings-tab-' + t);
+                if(btn){
+                    btn.classList.toggle('active', t === tab);
+                    btn.setAttribute('aria-selected', t === tab ? 'true' : 'false');
+                }
+            });
         }
 
         function openSettings(){
@@ -1835,9 +1888,11 @@
             // Working state for the category transfer list (left=전체, right=노출).
             SETTINGS_CATS = { all: cats,
                               exposed: cats.filter(function(c){ return hiddenCats.indexOf(c) === -1; }) };
-            var html =
-                '<h2>설정</h2>'
-              + '<p class="settings-note">변경 내용은 이 브라우저에만 저장됩니다. 프로필 사진은 서버 설정에서 관리합니다.</p>'
+            var curAccentDay = s.accentDay || ACCENT_DAY_DEFAULT;
+            var curAccentNight = s.accentNight || ACCENT_NIGHT_DEFAULT;
+            var basic =
+                '<div id="settings-panel-basic" class="settings-panel"'
+              +   (SETTINGS_TAB === 'basic' ? '' : ' hidden') + '>'
               + '<div class="settings-field">'
               +   '<label for="settings-title">타이틀</label>'
               +   '<input id="settings-title" type="text" value="' + escapeHtml(curTitle) + '">'
@@ -1855,22 +1910,6 @@
               +   '<label for="settings-music">배경음악 (YouTube 링크 또는 영상 ID)</label>'
               +   '<input id="settings-music" type="text" value="' + escapeHtml(curMusic) + '"'
               +     ' placeholder="예: https://youtu.be/08A9n8QyE3k · 비우면 기본 트랙">'
-              + '</div>'
-              + '<div class="settings-field">'
-              +   '<label for="settings-navstyle">목록 구분선 모양</label>'
-              +   '<select id="settings-navstyle">'
-              +     opt('dashed', '파선 (기본)', curNavStyle)
-              +     opt('dotted', '점선', curNavStyle)
-              +     opt('solid', '실선', curNavStyle)
-              +   '</select>'
-              + '</div>'
-              + '<div class="settings-field">'
-              +   '<label for="settings-navwidth">목록 구분선 두께</label>'
-              +   '<select id="settings-navwidth">'
-              +     opt('1px', '얇게 (기본)', curNavWidth)
-              +     opt('2px', '보통', curNavWidth)
-              +     opt('3px', '굵게', curNavWidth)
-              +   '</select>'
               + '</div>'
               + '<div class="settings-field">'
               +   '<label for="settings-game">통합검색 미니게임 기본값 (방문자는 검색 화면 하단에서 직접 변경 가능)</label>'
@@ -1909,6 +1948,55 @@
               +   '<label for="settings-newpass">새 암호 (변경 시에만 입력)</label>'
               +   '<input id="settings-newpass" type="password" autocomplete="new-password" placeholder="비워두면 유지">'
               + '</div>'
+              + '</div>';
+            var design =
+                '<div id="settings-panel-design" class="settings-panel"'
+              +   (SETTINGS_TAB === 'design' ? '' : ' hidden') + '>'
+              + '<div class="settings-field">'
+              +   '<label>테마 포인트 색상 (고르는 즉시 미리보기, 저장을 눌러야 유지)</label>'
+              +   '<div class="color-row">'
+              +     '<span class="color-name">밝은 모드</span>'
+              +     '<input type="color" id="settings-accent-day" value="' + escapeHtml(curAccentDay) + '" oninput="previewAccent()">'
+              +     '<button type="button" class="color-reset" onclick="resetAccent(\'day\')">기본값</button>'
+              +   '</div>'
+              +   '<div class="color-row">'
+              +     '<span class="color-name">다크 모드</span>'
+              +     '<input type="color" id="settings-accent-night" value="' + escapeHtml(curAccentNight) + '" oninput="previewAccent()">'
+              +     '<button type="button" class="color-reset" onclick="resetAccent(\'night\')">기본값</button>'
+              +   '</div>'
+              + '</div>'
+              + '<div class="settings-field">'
+              +   '<label for="settings-navstyle">목록 구분선 모양</label>'
+              +   '<select id="settings-navstyle">'
+              +     opt('dashed', '파선 (기본)', curNavStyle)
+              +     opt('dotted', '점선', curNavStyle)
+              +     opt('solid', '실선', curNavStyle)
+              +   '</select>'
+              + '</div>'
+              + '<div class="settings-field">'
+              +   '<label for="settings-navwidth">목록 구분선 두께</label>'
+              +   '<select id="settings-navwidth">'
+              +     opt('1px', '얇게 (기본)', curNavWidth)
+              +     opt('2px', '보통', curNavWidth)
+              +     opt('3px', '굵게', curNavWidth)
+              +   '</select>'
+              + '</div>'
+              + '</div>';
+            var html =
+                '<h2>설정</h2>'
+              + '<p class="settings-note">변경 내용은 이 브라우저에만 저장됩니다. 프로필 사진은 서버 설정에서 관리합니다.</p>'
+              + '<div class="settings-tabs" role="tablist">'
+              +   '<button type="button" id="settings-tab-basic" class="settings-tab'
+              +     (SETTINGS_TAB === 'basic' ? ' active' : '') + '" role="tab"'
+              +     ' aria-selected="' + (SETTINGS_TAB === 'basic') + '"'
+              +     ' onclick="switchSettingsTab(\'basic\')">기본 설정</button>'
+              +   '<button type="button" id="settings-tab-design" class="settings-tab'
+              +     (SETTINGS_TAB === 'design' ? ' active' : '') + '" role="tab"'
+              +     ' aria-selected="' + (SETTINGS_TAB === 'design') + '"'
+              +     ' onclick="switchSettingsTab(\'design\')">디자인 설정</button>'
+              + '</div>'
+              + basic
+              + design
               + '<div class="settings-actions">'
               +   '<button class="settings-save" onclick="saveSettingsForm()">저장</button>'
               +   '<button class="settings-reset" onclick="resetSettings()">기본값으로</button>'
@@ -1986,6 +2074,11 @@
             s.hideRecent = document.getElementById('settings-hiderecent').checked;
             s.hideRelated = document.getElementById('settings-hiderelated').checked;
             s.searchGame = document.getElementById('settings-game').value;
+            // Accent overrides: default value = no override stored.
+            var ad = document.getElementById('settings-accent-day').value;
+            var an = document.getElementById('settings-accent-night').value;
+            if(ad && ad.toLowerCase() !== ACCENT_DAY_DEFAULT){ s.accentDay = ad; } else { delete s.accentDay; }
+            if(an && an.toLowerCase() !== ACCENT_NIGHT_DEFAULT){ s.accentNight = an; } else { delete s.accentNight; }
             if(SETTINGS_CATS){
                 s.hiddenCats = SETTINGS_CATS.all.filter(function(c){
                     return SETTINGS_CATS.exposed.indexOf(c) === -1;
