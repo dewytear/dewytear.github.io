@@ -6,7 +6,7 @@
     <li><strong>제안서 시리즈 분할</strong> — 단일 <code>dz-knowledge-platform</code>을 삭제하고 다른 시리즈처럼 주제별 7편(<code>dzp-overview/why/core/architecture/knowledge/security/roadmap</code>)으로 분할, Douzone &gt; dev.Center &gt; <strong>Proposal</strong>(신설) 아래 배치. 폴더 ⧉ 두루마리 모아보기 동작 확인.</li>
     <li><strong>Douzone 지식지도</strong> — <code>dz-map</code> 신설: Universe 2갤럭시 구조 SVG(예정 성단 표기 포함) + Douzone 성단 라이브 표. <code>hydrateAiMap</code>을 일반화해 <code>data-section-prefix</code>로 갤럭시별 필터를 지원.</li>
     <li><strong>지식그래프 2계층화</strong> — cosmos <code>build()</code>를 개편: 대분류가 갤럭시 중심(피보나치 구, 반경 0.85), 그 주위에 성단(반경 0.5), 문서는 성단 주위 조밀 클라우드(0.2). 갤럭시 명판은 대문자·큰 폰트로 성단 명판과 구분. 대분류가 하나뿐이면(방문자 기본: Douzone 숨김) 기존 모습 그대로.</li>
-    <li><strong>내비 구조</strong> — Douzone 아래 Architecture · Development Guide 빈 폴더 신설(미래 성단 자리), Work Log 대분류에 표시 전용 모노크롬 아이콘 지원(<code>icon</code>/<code>iconOpen</code> 필드 — section 경로는 불변). 아이콘이 접힘/펼침 상태를 따라 🗀↔🗁로 바뀌어 상태를 시각적으로 보여 준다(후보 3쌍 렌더 비교 후 폴더 쌍 선택).</li>
+    <li><strong>내비 구조</strong> — Douzone 아래 Architecture · Development Guide 빈 폴더 신설(미래 성단 자리), 브랜치 노드에 접힘/펼침 상태별 아이콘(<code>icon</code>/<code>iconOpen</code>) 메커니즘 추가 — 다만 폴더 글리프(🗀/🗁)가 일부 기기에서 tofu로 보여 Work Log에서는 아이콘을 빼고 캐럿만 유지, 대신 <strong>메뉴 아래쪽으로 분리 배치</strong>(margin)로 지식 대분류와 구분. 메커니즘 자체는 범용으로 남겨 둠.</li>
     <li><strong>연동 갱신</strong> — 클러스터 라벨 '제안(Proposal)'/'Proposal'(ko/en), 인덱스 재생성 92편(<code>--check</code> OK), ai-map(ko/en) 4갈래 도식·표·data-topics 갱신.</li>
     <li><strong>Universe 설명 ai-map 이식</strong> — dz-map의 Knowledge Universe 구조 도식(두 갤럭시·예정 성단)을 ai-map(ko/en)에도 추가 — 여기서는 AI 갤럭시를 강조하고 dz-map으로 건너가는 링크를 배치. <span class="scn-sub">(PR #155)</span></li>
 </ul>
