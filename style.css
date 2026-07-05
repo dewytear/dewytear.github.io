@@ -64,8 +64,10 @@
         }
         /* Visible keyboard focus on every interactive control; suppressed for
            mouse/touch (:focus-visible fires only for keyboard). */
+        /* Keyboard-only ring, softened to a gentle accent tint so it marks
+           the position without shouting (user preference). */
         :focus-visible{
-            outline: 2px solid var(--accent-ink);
+            outline: 2px solid color-mix(in srgb, var(--accent) 55%, var(--border));
             outline-offset: 2px;
             border-radius: 3px;
         }
@@ -2005,7 +2007,10 @@
             border-color: var(--accent);
         }
         #music-btn:active{ transform: scale(.96); }
-        #music-btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+        #music-btn:focus-visible{
+            outline: 2px solid color-mix(in srgb, var(--accent) 55%, var(--border));
+            outline-offset: 3px;
+        }
 
         /* Soft pulsing ring while playing */
         #music-btn::before{
