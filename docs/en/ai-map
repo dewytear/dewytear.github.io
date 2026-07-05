@@ -1,0 +1,85 @@
+<h2>&#10070; Knowledge Map</h2>
+<p>This page distills the <strong>structural knowledge index</strong> (<code>knowledge-index.json</code>) that AI built by reading all <strong>85 docs under the AI category</strong>. It gathers each doc's <strong>summary, key concepts, and related docs</strong> to show what lives where and <strong>how it all connects</strong>. The <strong>&ldquo;Related Docs&rdquo;</strong> recommendations at the foot of every doc come from the same index. You can also spin these relations in 3D in the <a href="#!cosmos"><strong>&#10022; Knowledge Graph</strong></a>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="Knowledge map: three branches (fundamentals, knowledge management, automation) tied together by shared concepts">
+    <!-- three theme groups -->
+    <rect class="d-box" x="18" y="20" width="205" height="74" rx="10"/>
+    <text class="d-label" x="120" y="50" text-anchor="middle">Fundamentals</text>
+    <text class="d-sub" x="120" y="72" text-anchor="middle">Introduction·Tutorial·Skill · 30 docs</text>
+
+    <rect class="d-box" x="257" y="20" width="205" height="74" rx="10"/>
+    <text class="d-label" x="360" y="50" text-anchor="middle">Knowledge Mgmt</text>
+    <text class="d-sub" x="360" y="72" text-anchor="middle">Second Brain·LLM Wiki · 20 docs</text>
+
+    <rect class="d-box" x="497" y="20" width="205" height="74" rx="10"/>
+    <text class="d-label" x="600" y="50" text-anchor="middle">Automation·Orchestration</text>
+    <text class="d-sub" x="600" y="72" text-anchor="middle">Harness·OMC · 35 docs</text>
+
+    <!-- connectors down to the shared-concept bar -->
+    <line class="d-edge" x1="120" y1="94" x2="120" y2="150"/>
+    <line class="d-edge" x1="360" y1="94" x2="360" y2="150"/>
+    <line class="d-edge" x1="600" y1="94" x2="600" y2="150"/>
+
+    <!-- shared-concept bridge bar -->
+    <rect class="d-box accent" x="18" y="150" width="684" height="80" rx="10"/>
+    <text class="d-label" x="360" y="178" text-anchor="middle">Bridges between branches · shared concepts</text>
+    <text class="d-sub" x="360" y="202" text-anchor="middle">skills · subagents · orchestrator · harness</text>
+    <text class="d-sub" x="360" y="220" text-anchor="middle">CLAUDE.md · install · marketplace · slash commands</text>
+</svg>
+<div class="d-cap">Three branches &mdash; but the <strong>shared concepts</strong> above cross-link the docs tightly between them.</div>
+</div>
+
+<h3>8 knowledge clusters</h3>
+<p>The docs group into <strong>8 clusters</strong>. A &ldquo;hub doc&rdquo; is the one most often pointed to as related &mdash; the gateway into its branch. <span class="scn-sub">Numbers in the table are aggregated live from <code>knowledge-index.json</code>.</span></p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Cluster</th><th>Docs</th><th>Focus</th><th>Hub doc</th></tr></thead>
+        <tbody id="km-clusters" data-topics='{"Introduction":"First steps · install · everyday use","Tutorial (Basics)":"Terminal · CLAUDE.md · skills · agents hands-on","Skill":"How skills work · structure · progressive loading · security","Second Brain":"5 levels of knowledge management · semantic · graph","LLM Wiki":"Obsidian vaults · capture · Ingest·Query·Lint","Harness Engineering":"Agent teams · orchestrator · verification","Harness Plugin":"Intent in → team assembly → autonomous runs (ERP)","OMC Plugin":"Execution modes · agents · hooks · cost control"}'>
+            <tr><td><strong>Introduction</strong></td><td>6</td><td>First steps · install · everyday use</td><td><a href="#!welcome">Welcome</a></td></tr>
+            <tr><td><strong>Tutorial (Basics)</strong></td><td>12</td><td>Terminal · CLAUDE.md · skills · agents hands-on</td><td><a href="#!ccb-overview">강의 개요와 목표</a></td></tr>
+            <tr><td><strong>Skill</strong></td><td>12</td><td>How skills work · structure · progressive loading · security</td><td><a href="#!skl-overview">스킬 심화 — 개요</a></td></tr>
+            <tr><td><strong>Second Brain</strong></td><td>9</td><td>5 levels of knowledge management · semantic · graph</td><td><a href="#!sb-levels">5단계 한눈에 보기</a></td></tr>
+            <tr><td><strong>LLM Wiki</strong></td><td>11</td><td>Obsidian vaults · capture · Ingest·Query·Lint</td><td><a href="#!llmw-vaults">볼트 체계</a></td></tr>
+            <tr><td><strong>Harness Engineering</strong></td><td>12</td><td>Agent teams · orchestrator · verification</td><td><a href="#!hns-anatomy">구성과 효과</a></td></tr>
+            <tr><td><strong>Harness Plugin</strong></td><td>10</td><td>Intent in → team assembly → autonomous runs (ERP)</td><td><a href="#!hnp-intro">Harness 플러그인 소개</a></td></tr>
+            <tr><td><strong>OMC Plugin</strong></td><td>13</td><td>Execution modes · agents · hooks · cost control</td><td><a href="#!omc-install">설치</a></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>Bridges between branches &mdash; bridge concepts</h3>
+<p>A concept that appears in <strong>several clusters at once</strong> acts as a &ldquo;bridge&rdquo; &mdash; a natural crossing point from one branch of study into another.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Concept</th><th>Clusters connected</th><th>Appears in</th></tr></thead>
+        <tbody id="km-bridges">
+            <tr><td><strong>스킬</strong></td><td>6 — Harness Engineering · Harness Plugin · Introduction · OMC Plugin · Skill · Tutorial (Basics)</td><td>20 docs</td></tr>
+            <tr><td><strong>서브에이전트</strong></td><td>5 — Harness Engineering · Harness Plugin · OMC Plugin · Skill · Tutorial (Basics)</td><td>9 docs</td></tr>
+            <tr><td><strong>설치</strong></td><td>5 — Harness Engineering · Harness Plugin · Introduction · OMC Plugin · Tutorial (Basics)</td><td>8 docs</td></tr>
+            <tr><td><strong>CLAUDE.md</strong></td><td>5 — Harness Engineering · Introduction · LLM Wiki · Second Brain · Tutorial (Basics)</td><td>5 docs</td></tr>
+            <tr><td><strong>마켓플레이스</strong></td><td>4 — Harness Engineering · Harness Plugin · OMC Plugin · Tutorial (Basics)</td><td>4 docs</td></tr>
+            <tr><td><strong>오케스트레이터</strong></td><td>3 — Harness Engineering · Harness Plugin · OMC Plugin</td><td>10 docs</td></tr>
+            <tr><td><strong>하네스</strong></td><td>3 — Harness Engineering · Skill · Tutorial (Basics)</td><td>10 docs</td></tr>
+            <tr><td><strong>슬래시명령어</strong></td><td>3 — Introduction · LLM Wiki · OMC Plugin</td><td>8 docs</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>Hub docs &mdash; the most connected gateways</h3>
+<p>The docs most often pointed to as <strong>Related Docs</strong> by the others. Great starting points for a new topic.</p>
+<ul id="km-hubs">
+    <li><a href="#!hns-anatomy">구성과 효과</a> <span class="scn-sub">· 11 links</span></li>
+    <li><a href="#!omc-install">설치</a> · <a href="#!sb-levels">5단계 한눈에 보기</a> <span class="scn-sub">· ×9 each</span></li>
+    <li><a href="#!ccb-overview">강의 개요와 목표</a> <span class="scn-sub">· 8 links</span></li>
+</ul>
+
+<h3>Most covered concepts</h3>
+<p>The concepts that recur most across the wiki. Click one to open a <strong>unified search</strong> for it. <span class="scn-sub">(Concept keywords stay in Korean until the full translation lands &mdash; they are shared matching keys across languages.)</span></p>
+<p class="scn-sub" id="km-top">스킬 20 · 오케스트레이터 10 · 하네스 10 · 서브에이전트 9 · 세컨드브레인 9 · 설치 8 · 슬래시명령어 8 · 에이전트 8</p>
+<p class="scn-sub" id="km-totals">AI category: 85 docs · 276 unique concepts.</p>
+
+<div class="note">
+    <span class="nh">A living map</span>
+    This map and <code>knowledge-index.json</code> are <strong>generated automatically</strong> by AI reading the docs. Related docs are scored by <strong>rarity-weighted concept overlap</strong> (rare shared concepts count more), topped up with <strong>same-folder neighbours</strong> when overlap is thin. When docs change, the index is rebuilt and the map follows.
+</div>

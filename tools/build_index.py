@@ -63,7 +63,15 @@ def load_sections():
 
 
 def build(lang='ko'):
-    entries = json.load(open(entries_path(lang), encoding='utf-8'))
+    # Non-Korean entry files are OVERLAYS: they carry only the docs (and
+    # fields) that are translated; everything else inherits from Korean.
+    # Concepts stay shared across languages so related[] and stats keep an
+    # identical structure — only display fields (title, summary) localize.
+    entries = json.load(open(entries_path('ko'), encoding='utf-8'))
+    if lang != 'ko':
+        overlay = {e['name']: e for e in json.load(open(entries_path(lang), encoding='utf-8'))}
+        entries = [dict(base, **{k: v for k, v in overlay.get(base['name'], {}).items() if k != 'name'})
+                   for base in entries]
     docs = [{'name': e['name'], 'title': e['title'].strip(),
              'summary': e['summary'].strip(),
              'concepts': [c.strip() for c in e['concepts'] if c.strip()]}
@@ -120,32 +128,49 @@ def build(lang='ko'):
                     break
         d['related'] = rel
 
-    stats = build_stats(docs)
+    stats = build_stats(docs, CLUSTER_LABELS_BY_LANG.get(lang, CLUSTER_LABELS))
     return {'schemaVersion': 2, 'note': NOTE.get(lang, NOTE_DEFAULT),
             'docCount': len(docs), 'stats': stats, 'docs': docs}
 
 
-# Cluster display names for the "AI 지식 지도" page, keyed by section path.
-CLUSTER_LABELS = [
-    ('AI · Claude · Code · Introduction', 'Introduction'),
-    ('AI · Claude · Code · Tutorial', 'Tutorial(입문)'),
-    ('AI · Claude · Code · Skill', 'Skill'),
-    ('AI · Claude · Code · Second Brain', 'Second Brain'),
-    ('AI · Claude · Code · LLM Wiki', 'LLM Wiki'),
-    ('AI · Claude · Code · Harness', 'Harness 엔지니어링'),
-    ('AI · Claude · PlugIn · Harness', 'Harness 플러그인'),
-    ('AI · Claude · PlugIn · OMC', 'OMC 플러그인'),
-]
+# Cluster display names for the Knowledge Map page, keyed by section path.
+# Per language — new clusters must be added to EVERY language here.
+CLUSTER_LABELS_BY_LANG = {
+    'ko': [
+        ('AI · Claude · Code · Introduction', 'Introduction'),
+        ('AI · Claude · Code · Tutorial', 'Tutorial(입문)'),
+        ('AI · Claude · Code · Skill', 'Skill'),
+        ('AI · Claude · Code · Second Brain', 'Second Brain'),
+        ('AI · Claude · Code · LLM Wiki', 'LLM Wiki'),
+        ('AI · Claude · Code · Harness', 'Harness 엔지니어링'),
+        ('AI · Claude · PlugIn · Harness', 'Harness 플러그인'),
+        ('AI · Claude · PlugIn · OMC', 'OMC 플러그인'),
+    ],
+    'en': [
+        ('AI · Claude · Code · Introduction', 'Introduction'),
+        ('AI · Claude · Code · Tutorial', 'Tutorial (Basics)'),
+        ('AI · Claude · Code · Skill', 'Skill'),
+        ('AI · Claude · Code · Second Brain', 'Second Brain'),
+        ('AI · Claude · Code · LLM Wiki', 'LLM Wiki'),
+        ('AI · Claude · Code · Harness', 'Harness Engineering'),
+        ('AI · Claude · PlugIn · Harness', 'Harness Plugin'),
+        ('AI · Claude · PlugIn · OMC', 'OMC Plugin'),
+    ],
+}
+# Backward-compatible alias (Korean is the source language).
+CLUSTER_LABELS = CLUSTER_LABELS_BY_LANG['ko']
 
 
-def build_stats(docs):
+def build_stats(docs, cluster_labels=None):
     """Deterministic aggregation the site renders live on the 지식 지도 page.
 
     Everything here derives from the entries alone (no clock, no randomness),
     so the same inputs always produce the same stats and --check stays valid.
     """
+    if cluster_labels is None:
+        cluster_labels = CLUSTER_LABELS
     by_name = {d['name']: d for d in docs}
-    label_of = dict(CLUSTER_LABELS)
+    label_of = dict(cluster_labels)
 
     # In-degree over related links = "how often docs point here".
     indeg = {}
@@ -155,7 +180,7 @@ def build_stats(docs):
 
     # Clusters in the fixed display order, each with its own top hub.
     clusters = []
-    for section, label in CLUSTER_LABELS:
+    for section, label in cluster_labels:
         members = [d for d in docs if d['section'] == section]
         if not members:
             continue
