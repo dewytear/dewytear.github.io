@@ -1,0 +1,37 @@
+<h2>Work Log — Logging Rules</h2>
+<p>This folder is where <strong>work done together with AI</strong> keeps accumulating, day by day. The structure always follows four levels: <strong>Year &gt; Month &gt; Day &gt; Topic</strong>.</p>
+
+<div class="note">
+    <span class="nh">Folder structure</span>
+    <code>Work Log &gt; 2026 &gt; 07월 &gt; 03일 &gt; (topic doc)</code><br>
+    · <strong>Year</strong> — four digits (e.g. <code>2026</code>)<br>
+    · <strong>Month</strong> — two digits + "월" (e.g. <code>07월</code>)<br>
+    · <strong>Day</strong> — two digits + "일" (e.g. <code>03일</code>)<br>
+    · <strong>Topic</strong> — one doc per piece of work done that day. Several pieces in a day mean several docs.
+</div>
+
+<div class="note warn">
+    <span class="nh">One day = multiple topic docs</span>
+    Even within the same day, <strong>work that differs in its overall topic must be split into separate docs</strong>. Mixing unrelated topics in a single log makes the context hard to recover later. Example: the 5th splits into <strong>6 docs</strong> — knowledge system · cosmos · mini games · design · settings · log housekeeping. Automated logging (the curator) follows the same rule.
+</div>
+
+<h3>Why we log</h3>
+<p>When you have AI do the work, the output survives but <strong>the "what, why, and how" of the decisions</strong> tends to scatter. This log preserves that context, so the next time you rerun or continue the same work you can <strong>recover the context immediately</strong>.</p>
+
+<h3>What to include (recommended)</h3>
+<ul>
+    <li><strong>Overview</strong> — one or two lines on what was done.</li>
+    <li><strong>Changes / decisions</strong> — what actually changed, and why it was decided that way.</li>
+    <li><strong>Results</strong> — deliverables, PRs, merge status, and so on.</li>
+    <li><strong>Next steps</strong> — what remains, what to continue.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">File naming rule</span>
+    Doc file names should follow <code>wl-YYYYMMDD-topic</code> (e.g. <code>wl-20260703-wiki</code>). The <code>label</code> in the list carries a human-friendly topic name.
+</div>
+
+<div class="note warn">
+    <span class="nh">No tags on logs</span>
+    Work-log docs carry <strong>no tags</strong> — keep <code>"tags": []</code> in <code>list</code>. If log tags leaked into the <strong>tag index and search</strong>, they would <strong>get in the way</strong> of finding the real content (lectures and docs). When classification is needed, use only the <code>label</code> and the date-based folder structure.
+</div>
