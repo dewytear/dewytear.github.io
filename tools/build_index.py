@@ -73,11 +73,13 @@ def build():
             shared = dc & set(o['concepts'])
             if not shared:
                 continue
-            score = sum(weight(c) for c in shared)
             # Deterministic shared order: heaviest concept first, ties by name
             # (set iteration is hash-randomized, so an explicit tiebreak is
             # required for a reproducible build).
             shared_sorted = sorted(shared, key=lambda c: (-weight(c), c))
+            # Sum in that FIXED order — float addition is order-sensitive, and
+            # summing over the raw set made near-ties flip between runs.
+            score = sum(weight(c) for c in shared_sorted)
             scored.append((score, len(shared), o['name'], shared_sorted))
         scored.sort(key=lambda t: (-t[0], -t[1], t[2]))
         rel, picked = [], set()
