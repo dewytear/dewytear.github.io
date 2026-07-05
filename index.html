@@ -315,17 +315,45 @@
             return (l !== 'ko' && node['tags_' + l]) || node.tags || [];
         }
         // 화면 문구 사전 — 언어가 준비되면 STRINGS.<lang>을 채운다.
-        var STRINGS = { ko: {
-            recent: '최근 문서',
-            related: '연관 문서',
-            expandAll: '모두 펼치기',
-            collapseAll: '모두 접기',
-            searchPh: '제목 · 태그 · 개념 · 본문을 검색…',
-            cosmosSub: '지식 인덱스의 연관 관계를 3차원 별자리로 — 드래그 회전 · 휠 확대 · 별을 클릭하면 그 문서로'
-        } };
+        var STRINGS = {
+            ko: {
+                recent: '최근 문서',
+                related: '연관 문서',
+                expandAll: '모두 펼치기',
+                collapseAll: '모두 접기',
+                searchPh: '제목 · 태그 · 개념 · 본문을 검색…',
+                cosmosSub: '지식 인덱스의 연관 관계를 3차원 별자리로 — 드래그 회전 · 휠 확대 · 별을 클릭하면 그 문서로',
+                kmEach: '각 {n}회',
+                kmRefs: '{n}회 연결',
+                kmBridgeN: '{n}개 — ',
+                kmDocsN: '{n}편',
+                kmTotals: 'AI 대분류 {d}편 · 고유 개념 {c}개.'
+            },
+            en: {
+                recent: 'Recent Docs',
+                related: 'Related Docs',
+                expandAll: 'Expand all',
+                collapseAll: 'Collapse all',
+                searchPh: 'Search titles · tags · concepts · full text…',
+                cosmosSub: 'The knowledge index as a 3D constellation — drag to rotate · wheel to zoom · click a star to open it',
+                kmEach: '×{n} each',
+                kmRefs: '{n} links',
+                kmBridgeN: '{n} — ',
+                kmDocsN: '{n} docs',
+                kmTotals: 'AI category: {d} docs · {c} unique concepts.'
+            }
+        };
         function STR(k){
             var l = currentLang();
             return (STRINGS[l] && STRINGS[l][k]) || STRINGS.ko[k] || k;
+        }
+        // Template variant: STRF('kmRefs', {n: 3}) → "3회 연결" / "3 links".
+        function STRF(k, vars){
+            var t = STR(k);
+            Object.keys(vars || {}).forEach(function(x){
+                t = t.replace('{' + x + '}', vars[x]);
+            });
+            return t;
         }
 
         function fetchPage(filename){
@@ -429,7 +457,7 @@
                 el.innerHTML = Object.keys(byRefs).sort(function(a, b){ return b - a; })
                     .map(function(n){
                         var links = byRefs[n].map(function(h){ return docLink(h.name, h.title); }).join(' · ');
-                        var label = byRefs[n].length > 1 ? '각 ' + n + '회' : n + '회 연결';
+                        var label = byRefs[n].length > 1 ? STRF('kmEach', { n: n }) : STRF('kmRefs', { n: n });
                         return '<li>' + links + ' <span class="scn-sub">· ' + label + '</span></li>';
                     }).join('');
             }
@@ -437,8 +465,8 @@
             if(el){
                 el.innerHTML = s.bridges.map(function(b){
                     return '<tr><td><strong>' + escapeHtml(b.c) + '</strong></td>'
-                         + '<td>' + b.clusters.length + '개 — ' + b.clusters.map(escapeHtml).join(' · ') + '</td>'
-                         + '<td>' + b.n + '편</td></tr>';
+                         + '<td>' + STRF('kmBridgeN', { n: b.clusters.length }) + b.clusters.map(escapeHtml).join(' · ') + '</td>'
+                         + '<td>' + STRF('kmDocsN', { n: b.n }) + '</td></tr>';
                 }).join('');
             }
             el = document.getElementById('km-top');
@@ -449,7 +477,7 @@
             }
             el = document.getElementById('km-totals');
             if(el){
-                el.textContent = 'AI 대분류 ' + s.docCount + '편 · 고유 개념 ' + s.conceptCount + '개.';
+                el.textContent = STRF('kmTotals', { d: s.docCount, c: s.conceptCount });
             }
         }
 
