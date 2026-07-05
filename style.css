@@ -1224,6 +1224,18 @@
             font-size: 10px;
             transition: transform 0.15s ease;
         }
+        /* State-aware branch glyph (e.g. Work Log ✎/✍): both states render
+           and the li's collapsed class picks which one shows — rides the
+           same toggle as the caret, stays monochrome by inheriting color. */
+        #navigation .nav-ico{
+            margin-right: 3px;
+        }
+        #navigation .nav-branch.collapsed > .nav-title .ico-o{
+            display: none;
+        }
+        #navigation .nav-branch:not(.collapsed) > .nav-title .ico-c{
+            display: none;
+        }
         /* Folder title text takes the row; ellipsises when long. */
         #navigation .nav-title-text{
             flex: 1 1 auto;

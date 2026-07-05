@@ -165,12 +165,20 @@
                                 ? ' data-cat="' + escapeHtml(node.title) + '"' : '';
                     // Display-only glyph (e.g. ✎ on Work Log) — the section
                     // path keeps using the bare title, so routing/worklog
-                    // detection are untouched.
-                    var deco = node.icon ? node.icon + ' ' : '';
+                    // detection are untouched. With iconOpen the glyph also
+                    // mirrors the branch state (CSS shows one of the pair
+                    // from the li's collapsed class).
+                    var deco = '';
+                    if(node.icon){
+                        deco = '<span class="nav-ico">'
+                             +   '<span class="ico-c">' + escapeHtml(node.icon) + '</span>'
+                             +   '<span class="ico-o">' + escapeHtml(node.iconOpen || node.icon) + '</span>'
+                             + '</span>';
+                    }
                     html += '<li class="nav-branch collapsed"' + catAttr + '>'
                          +  '<button type="button" class="nav-title" onclick="toggleBranch(this)">'
                          +  '<span class="nav-caret">&#9662;</span>'
-                         +  '<span class="nav-title-text">' + escapeHtml(deco + label) + '</span>'
+                         +  '<span class="nav-title-text">' + deco + escapeHtml(label) + '</span>'
                          +  folderDigestSpan(childPath.join(' · '))
                          +  '</button>';
                     html += renderNodes(node.children, childPath);
