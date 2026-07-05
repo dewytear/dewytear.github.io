@@ -54,6 +54,16 @@ GitHub Pages로 배포됩니다: https://dewytear.github.io
 3. **작성 AI·모델 표기** — AI가 문서를 추가하거나 대폭 다시 쓸 때는 노드에 `"model": "<작성 세션의 모델명>"`을 함께 기록합니다(제목 우측 배지로 표시). 이 값은 **그 문서를 실제로 쓴 세션의 정보**를 따르며, 없으면 기본값(`DOC_MODEL`)이 표시됩니다.
 4. 커밋하면 사이드바 트리에 자동으로 나타납니다.
 
+## 언어 추가하기 (다국어)
+
+설정 → 기본 설정의 **언어** 선택(한국어/English/中文/日本語)이 사이트 전체(문서·내비 라벨·화면 문구·지식 인덱스)를 전환합니다. 번역이 없는 조각은 자동으로 한국어에 폴백하므로, 아래를 채우는 만큼만 그 언어가 살아납니다.
+
+1. `docs/<lang>/`에 **같은 파일명**으로 번역 문서를 둡니다 (일부만 있어도 됨 — 나머지는 폴백).
+2. `index.html`의 `LANGS_READY` 배열에 `<lang>`을 추가하고, `STRINGS.<lang>` 문구 사전을 채웁니다.
+3. `list` 노드에 `label_<lang>`·`tags_<lang>` 필드를 추가합니다 (없으면 한국어 라벨 사용).
+4. `tools/doc-entries.<lang>.json`(번역된 title·summary·concepts)을 만들고 `python3 tools/build_index.py` — 언어별 `data/knowledge-index.<lang>.json`이 자동 생성됩니다.
+5. 설정 select에서 해당 언어의 "준비 중" 표기를 뗍니다.
+
 ## 프로필 이미지 바꾸기
 
 좌측 상단 이미지는 `profile.svg`(플레이스홀더)입니다. 원하는 이미지로 바꾸려면

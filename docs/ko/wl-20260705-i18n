@@ -1,0 +1,14 @@
+<h2>2026-07-05 · 다국어 기반 구조</h2>
+<p>언어(영어·중국어·일본어)를 "디렉터리와 사전만 채우면 되는" 형태로 얹을 수 있게, <strong>소스 트리 재구성 + 언어 전환 장치</strong>를 만든 작업입니다. 번역 콘텐츠 자체는 이후 단계.</p>
+
+<h3>주요 변경</h3>
+<ul>
+    <li><strong>소스 트리 재구성</strong> — 루트에 평평하게 있던 문서 102편을 <code>docs/ko/</code>로 이동(git mv, 이력 보존), 인덱스는 <code>data/knowledge-index.ko.json</code>·원료는 <code>tools/doc-entries.ko.json</code>으로 언어 명시 개명. 해시 URL은 불변이라 링크는 안 깨짐. <span class="scn-sub">(PR #144)</span></li>
+    <li><strong>언어 전환 장치</strong> — 설정 → 기본 설정에 <strong>언어</strong> 선택(한국어/English/中文/日本語 — 영어 이하 "준비 중"). 문서 로드(<code>fetchDoc</code>)·내비 라벨(<code>label_&lt;lang&gt;</code>)·태그(<code>tags_&lt;lang&gt;</code>)·화면 문구(<code>STRINGS</code>)·지식 인덱스(<code>knowledge-index.&lt;lang&gt;.json</code>)가 전부 언어를 따르고, <strong>없는 조각은 한국어로 폴백</strong>. 언어 변경 저장 시 새로고침으로 일괄 적용. <span class="scn-sub">(PR #145)</span></li>
+    <li><strong>빌드 도구 다국어화</strong> — <code>build_index.py</code>가 <code>doc-entries.*.json</code>이 존재하는 언어 전부의 인덱스를 일괄 생성·검사. README에 "언어 추가하기" 절차 5단계 문서화.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">다음 단계</span>
+    영어판: <code>docs/en/</code> 번역 + <code>STRINGS.en</code> + <code>label_en</code>/<code>tags_en</code> + <code>doc-entries.en.json</code>을 채우면 설정에서 English가 살아난다. 중국어·일본어도 같은 절차.
+</div>
