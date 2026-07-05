@@ -1236,6 +1236,11 @@
         #navigation .nav-branch:not(.collapsed) > .nav-title .ico-c{
             display: none;
         }
+        /* Work Log is a dev journal, not a knowledge category — set it
+           apart by dropping it well below the AI/DOUZONE group. */
+        #navigation > ul > li.nav-branch[data-cat="Work Log"]{
+            margin-top: 34px;
+        }
         /* Folder title text takes the row; ellipsises when long. */
         #navigation .nav-title-text{
             flex: 1 1 auto;
