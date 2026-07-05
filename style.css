@@ -956,9 +956,12 @@
             border-radius: 8px;
             font-size: 15px;
         }
+        /* Calm focus: gentle border tint only — the global focus ring stays
+           off since the border change already signals focus. */
         .settings-field input[type="text"]:focus,
         .settings-field input[type="password"]:focus{
-            border-color: var(--accent);
+            outline: none;
+            border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
         }
         .settings-field select{
             width: 100%;
@@ -971,7 +974,14 @@
             font-family: inherit;
             cursor: pointer;
         }
-        .settings-field select:focus{ border-color: var(--accent); }
+        .settings-field select:focus{
+            outline: none;
+            border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+        }
+        .color-row input[type="color"]:focus{
+            outline: none;
+            border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+        }
         /* Checkbox rows (the recent-docs toggle). */
         .settings-check{
             display: flex;
@@ -1638,8 +1648,11 @@
             border-radius: 20px;
             font-size: 14px;
         }
+        /* Calm focus, same treatment as the unified search box. */
         #tag-search:focus{
-            border-color: var(--accent);
+            outline: none;
+            border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+            background: var(--bg);
         }
         /* "Most used" band — surfaces the top-10 / top-3 ranking above the
            alphabetical index; top-3 wear their theme-aware medal colors. */
