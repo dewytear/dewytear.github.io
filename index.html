@@ -102,9 +102,9 @@
                     } else if(node.name && !node.route){
                         var doc = {
                             name: node.name,
-                            label: node.label || node.name,
+                            label: labelFor(node) || node.name,
                             section: path.join(' · '),
-                            tags: node.tags || [],
+                            tags: tagsFor(node),
                             model: node.model || ''   // optional per-doc override
                         };
                         DOCS.push(doc);
@@ -151,7 +151,7 @@
             var html = '<ul>';
             var docSeq = 0;   // numbers the docs within this branch, per folder
             nodes.forEach(function(node){
-                var label = node.label || node.title || node.name;
+                var label = labelFor(node) || node.title || node.name;
                 if(node.children){    // a branch, collapsed by default
                     var childPath = node.title ? path.concat(node.title) : path;
                     // Tag top-level categories so Settings can show/hide them.
@@ -280,11 +280,56 @@
 
         // Where a doc's content file lives. Languages become sibling dirs
         // (docs/en/, docs/zh/, …) later; today everything is the Korean tree.
-        function docPath(name){ return 'docs/ko/' + name; }
+        // ---- 다국어 장치 (language plumbing) ----
+        // 언어는 설정(effSettings().lang)으로 고르고, 'ko'가 원본 언어.
+        // 언어를 실제로 얹는 방법: docs/<lang>/에 같은 파일명 번역 +
+        // LANGS_READY에 추가 + STRINGS.<lang> + list의 label_<lang>/tags_<lang>
+        // + tools/doc-entries.<lang>.json. 없는 조각은 전부 한국어로 폴백.
+        var LANGS_READY = ['ko'];   // 번역 콘텐츠가 실제로 존재하는 언어
+        function currentLang(){ return effSettings().lang || 'ko'; }
+        function docPath(name, lang){
+            lang = lang || currentLang();
+            if(LANGS_READY.indexOf(lang) === -1){ lang = 'ko'; }
+            return 'docs/' + lang + '/' + name;
+        }
+        // 현재 언어로 본문을 가져오되, 번역 파일이 없으면(부분 번역 상태)
+        // 한국어 원본으로 폴백한다.
+        function fetchDoc(name){
+            var p = docPath(name), ko = 'docs/ko/' + name;
+            return fetch(p).then(function(r){
+                if(r.ok){ return r.text(); }
+                if(p !== ko){ return fetch(ko).then(function(r2){ return r2.ok ? r2.text() : ''; }); }
+                return '';
+            }).catch(function(){
+                return p === ko ? '' :
+                    fetch(ko).then(function(r2){ return r2.ok ? r2.text() : ''; }).catch(function(){ return ''; });
+            });
+        }
+        // list 노드의 언어별 필드(label_en, tags_en …) — 없으면 한국어.
+        function labelFor(node){
+            var l = currentLang();
+            return (l !== 'ko' && node['label_' + l]) || node.label;
+        }
+        function tagsFor(node){
+            var l = currentLang();
+            return (l !== 'ko' && node['tags_' + l]) || node.tags || [];
+        }
+        // 화면 문구 사전 — 언어가 준비되면 STRINGS.<lang>을 채운다.
+        var STRINGS = { ko: {
+            recent: '최근 문서',
+            related: '연관 문서',
+            expandAll: '모두 펼치기',
+            collapseAll: '모두 접기',
+            searchPh: '제목 · 태그 · 개념 · 본문을 검색…',
+            cosmosSub: '지식 인덱스의 연관 관계를 3차원 별자리로 — 드래그 회전 · 휠 확대 · 별을 클릭하면 그 문서로'
+        } };
+        function STR(k){
+            var l = currentLang();
+            return (STRINGS[l] && STRINGS[l][k]) || STRINGS.ko[k] || k;
+        }
 
         function fetchPage(filename){
-            fetch(docPath(filename)).then(function(response){
-                response.text().then(function(text){
+            fetchDoc(filename).then(function(text){
                     var doc = DOC_BY_NAME[filename];
                     if(doc && doc.tags.length){
                         text += renderDocTags(doc.tags);
@@ -304,7 +349,6 @@
                     CURRENT_DOC = filename;
                     injectRelated();
                     hydrateAiMap();
-                })
             })
         }
 
@@ -339,7 +383,7 @@
                      + '<span class="rel-why">' + why + '</span></li>';
             }).join('');
             return '<nav class="related" aria-label="연관 문서">'
-                 + '<h3 class="related-title">연관 문서</h3>'
+                 + '<h3 class="related-title">' + STR('related') + '</h3>'
                  + '<ul class="related-list">' + items + '</ul></nav>';
         }
         function injectRelated(){
@@ -419,7 +463,7 @@
               +   '<canvas class="cosmos-canvas"></canvas>'
               +   '<div class="cosmos-hud">'
               +     '<h2 class="cosmos-head">&#10022; Knowledge Graph</h2>'
-              +     '<p class="cosmos-sub">지식 인덱스의 연관 관계를 3차원 별자리로 &mdash; 드래그 회전 &middot; 휠 확대 &middot; 별을 클릭하면 그 문서로</p>'
+              +     '<p class="cosmos-sub">' + escapeHtml(STR('cosmosSub')) + '</p>'
               +   '</div>'
               + '</div>';
             setArticle(html);
@@ -808,8 +852,7 @@
             toc += '</ol></div>';
             setArticle(toc + '<div class="folder-body"><p class="empty">불러오는 중…</p></div>');
             Promise.all(docs.map(function(d){
-                return fetch(docPath(d.name)).then(function(r){ return r.ok ? r.text() : ''; })
-                                             .catch(function(){ return ''; });
+                return fetchDoc(d.name);
             })).then(function(texts){
                 var html = '';
                 docs.forEach(function(d, i){
@@ -857,9 +900,7 @@
 
         function buildTextIndex(){
             return Promise.all(DOCS.filter(isSearchableDoc).map(function(d){
-                return fetch(docPath(d.name)).then(function(r){
-                    return r.ok ? r.text() : '';
-                }).then(function(t){
+                return fetchDoc(d.name).then(function(t){
                     var txt = stripHtml(t);
                     DOC_TEXT_RAW[d.name] = txt;
                     DOC_TEXT[d.name] = txt.toLowerCase();
@@ -1074,7 +1115,7 @@
               +     '<div class="search-field">'
               +       '<span class="search-ico" aria-hidden="true">&#128269;</span>'
               +       '<input id="search-input" type="search" autocomplete="off"'
-              +         ' placeholder="제목 · 태그 · 개념 · 본문을 검색…"'
+              +         ' placeholder="' + STR('searchPh') + '"'
               +         ' oninput="renderSearchResults(this.value)">'
               +     '</div>'
               +     '<div id="search-results"></div>'
@@ -1695,7 +1736,7 @@
             var pages = morePageCount();
             if(morePage >= pages){ morePage = pages - 1; }
             var start = morePage * MORE_PAGE_SIZE;
-            var html = '<h3 class="more-title">최근 문서</h3><ul class="more-list">';
+            var html = '<h3 class="more-title">' + STR('recent') + '</h3><ul class="more-list">';
             DOCS.slice(start, start + MORE_PAGE_SIZE).forEach(function(d){
                 var meta = d.section + (d.date ? ' · ' + d.date.slice(0, 10) : '');
                 html += '<li><a href="#!' + d.name + '">'
@@ -1752,7 +1793,8 @@
         function fetchDocDates(){
             var dates = {};
             return Promise.all(DOCS.map(function(d){
-                var url = REPO_API + '/commits?path=' + encodeURIComponent(docPath(d.name)) + '&per_page=1';
+                // Dates always track the Korean source file (the original).
+                var url = REPO_API + '/commits?path=' + encodeURIComponent('docs/ko/' + d.name) + '&per_page=1';
                 return fetch(url).then(function(r){
                     return r.ok ? r.json() : null;
                 }).then(function(j){
@@ -1807,7 +1849,7 @@
         // working when config.json carries no defaults block.
         var SITE_DEFAULTS = {};
         var HARD_DEFAULTS = { navLineStyle: 'dashed', navLineWidth: '1px',
-                              searchGame: 'breakout', music: '',
+                              searchGame: 'breakout', music: '', lang: 'ko',
                               hideRecent: false, hideRelated: false };
         // Effective settings = site defaults overlaid with personal values.
         function effSettings(){
@@ -1877,6 +1919,8 @@
             if(toggle){ toggle.checked = isDay; }
             // Background-music track (site default or personal pick).
             if(window.setMusicVideo){ window.setMusicVideo(s.music || ''); }
+            // Document language for a11y / search engines.
+            document.documentElement.setAttribute('lang', s.lang || 'ko');
         }
 
         // Global config lives in the repo (same-origin, no API key needed).
@@ -2001,6 +2045,7 @@
             var curNavStyle = s.navLineStyle || 'dashed';
             var curNavWidth = s.navLineWidth || '1px';
             var curGame = s.searchGame || 'breakout';
+            var curLang = s.lang || 'ko';
             var hiddenCats = s.hiddenCats || [];
             function opt(val, label, cur){
                 return '<option value="' + val + '"' + (val === cur ? ' selected' : '') + '>' + label + '</option>';
@@ -2033,6 +2078,15 @@
               +   '<label for="settings-music">배경음악 (YouTube 링크 또는 영상 ID)</label>'
               +   '<input id="settings-music" type="text" value="' + escapeHtml(curMusic) + '"'
               +     ' placeholder="예: https://youtu.be/08A9n8QyE3k · 비우면 기본 트랙">'
+              + '</div>'
+              + '<div class="settings-field">'
+              +   '<label for="settings-lang">언어 (Language)</label>'
+              +   '<select id="settings-lang">'
+              +     opt('ko', '한국어 (기본)', curLang)
+              +     opt('en', 'English — 준비 중', curLang)
+              +     opt('zh', '中文 — 준비 중', curLang)
+              +     opt('ja', '日本語 — 준비 중', curLang)
+              +   '</select>'
               + '</div>'
               + '<div class="settings-field">'
               +   '<label for="settings-game">통합검색 미니게임 기본값 (방문자는 검색 화면 하단에서 직접 변경 가능)</label>'
@@ -2144,7 +2198,7 @@
             if(!box){ return; }
             var personal = loadSettings();
             var eff = effSettings();
-            var KEYS = ['theme', 'accentDay', 'accentNight', 'searchGame',
+            var KEYS = ['theme', 'lang', 'accentDay', 'accentNight', 'searchGame',
                         'navLineStyle', 'navLineWidth', 'hideRecent', 'hideRelated',
                         'music', 'title', 'tagline', 'photoLine', 'hiddenCats'];
             var rows = KEYS.map(function(k){
@@ -2263,6 +2317,8 @@
             setOrClear(s, 'hideRecent', document.getElementById('settings-hiderecent').checked);
             setOrClear(s, 'hideRelated', document.getElementById('settings-hiderelated').checked);
             setOrClear(s, 'searchGame', document.getElementById('settings-game').value);
+            var prevLang = currentLang();
+            setOrClear(s, 'lang', document.getElementById('settings-lang').value);
             // Accent overrides: the (site) default value = no override stored.
             var ad = document.getElementById('settings-accent-day').value;
             var an = document.getElementById('settings-accent-night').value;
@@ -2279,6 +2335,13 @@
                 saveSettings(s);
                 applySettings();   // also re-applies the music track
                 document.getElementById('settings-newpass').value = '';
+                // Language shapes nav labels·doc bodies·index at load time —
+                // a clean reload applies it everywhere at once.
+                if(currentLang() !== prevLang){
+                    settingsMsg('저장되었습니다. 언어 적용을 위해 새로고침합니다…');
+                    setTimeout(function(){ location.reload(); }, 700);
+                    return;
+                }
                 settingsMsg(np ? '저장되었습니다. 암호가 변경되었습니다.' : '저장되었습니다.');
             }catch(e){
                 settingsMsg('저장에 실패했습니다.', true);
@@ -2367,11 +2430,11 @@
                   + '<button type="button" class="nav-tool" onclick="expandAll()">'
                   +   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
                   +     '<path d="m7 9 5-5 5 5"/><path d="m7 15 5 5 5-5"/>'
-                  +   '</svg>모두 펼치기</button>'
+                  +   '</svg>' + STR('expandAll') + '</button>'
                   + '<button type="button" class="nav-tool" onclick="collapseAll()">'
                   +   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
                   +     '<path d="m7 4 5 5 5-5"/><path d="m7 20 5-5 5 5"/>'
-                  +   '</svg>모두 접기</button>'
+                  +   '</svg>' + STR('collapseAll') + '</button>'
                   + '</div>'
                   + renderNodes(tree, []);
                 applyCategoryVisibility(loadSettings().hiddenCats);   // nav now exists
@@ -2383,7 +2446,22 @@
 
         // Load the AI knowledge index (summaries·concepts·related). Non-blocking:
         // if a doc is already shown when it arrives, inject its related block.
-        fetch('data/knowledge-index.ko.json').then(function(r){ return r.json(); }).then(function(idx){
+        // The current language's index is preferred; missing → Korean fallback.
+        ;(function(){
+            var lang = currentLang();
+            var urls = ['data/knowledge-index.' + lang + '.json'];
+            if(lang !== 'ko'){ urls.push('data/knowledge-index.ko.json'); }
+            var attempt = urls.reduce(function(prev, u){
+                return prev.catch(function(){
+                    return fetch(u).then(function(r){
+                        if(!r.ok){ throw new Error(u); }
+                        return r.json();
+                    });
+                });
+            }, Promise.reject());
+            window.__loadKnowledge = attempt;
+        })();
+        window.__loadKnowledge.then(function(idx){
             KNOWLEDGE = {};
             (idx.docs || []).forEach(function(d){ KNOWLEDGE[d.name] = d; });
             KNOWLEDGE_STATS = idx.stats || null;

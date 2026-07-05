@@ -14,14 +14,33 @@ related[]: rarity-weighted (idf) concept overlap. Two docs sharing rare concepts
 rank higher than docs sharing common ones. Docs with little concept overlap are
 topped up with same-folder neighbours (via: "folder") so every doc gets 2-4.
 """
-import json, math, os, sys
+import glob, json, math, os, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ENTRIES = os.path.join(ROOT, 'tools', 'doc-entries.ko.json')
 LIST = os.path.join(ROOT, 'list')
-OUT = os.path.join(ROOT, 'data', 'knowledge-index.ko.json')
-NOTE = ('AI가 각 문서를 읽어 만든 구조적 지식 인덱스(요약·핵심개념·연관문서). '
-        'related는 희소성 가중 개념 중복(via:concept) + 같은 폴더 보완(via:folder)으로 계산.')
+NOTE = {
+    'ko': ('AI가 각 문서를 읽어 만든 구조적 지식 인덱스(요약·핵심개념·연관문서). '
+           'related는 희소성 가중 개념 중복(via:concept) + 같은 폴더 보완(via:folder)으로 계산.'),
+}
+NOTE_DEFAULT = ('Structured knowledge index built by AI from every doc (summary, key '
+                'concepts, related docs). related = idf-weighted concept overlap '
+                '(via:concept) topped up with same-folder neighbours (via:folder).')
+
+
+def langs():
+    """Languages that have a raw-entries file: tools/doc-entries.<lang>.json."""
+    out = []
+    for p in sorted(glob.glob(os.path.join(ROOT, 'tools', 'doc-entries.*.json'))):
+        out.append(os.path.basename(p).split('.')[1])
+    return out
+
+
+def entries_path(lang):
+    return os.path.join(ROOT, 'tools', 'doc-entries.%s.json' % lang)
+
+
+def out_path(lang):
+    return os.path.join(ROOT, 'data', 'knowledge-index.%s.json' % lang)
 
 
 def load_sections():
@@ -43,8 +62,8 @@ def load_sections():
     return sec_of, folder_docs
 
 
-def build():
-    entries = json.load(open(ENTRIES, encoding='utf-8'))
+def build(lang='ko'):
+    entries = json.load(open(entries_path(lang), encoding='utf-8'))
     docs = [{'name': e['name'], 'title': e['title'].strip(),
              'summary': e['summary'].strip(),
              'concepts': [c.strip() for c in e['concepts'] if c.strip()]}
@@ -102,8 +121,8 @@ def build():
         d['related'] = rel
 
     stats = build_stats(docs)
-    return {'schemaVersion': 2, 'note': NOTE, 'docCount': len(docs),
-            'stats': stats, 'docs': docs}
+    return {'schemaVersion': 2, 'note': NOTE.get(lang, NOTE_DEFAULT),
+            'docCount': len(docs), 'stats': stats, 'docs': docs}
 
 
 # Cluster display names for the "AI 지식 지도" page, keyed by section path.
@@ -177,14 +196,22 @@ def dump(obj):
 
 
 if __name__ == '__main__':
-    out = build()
-    text = dump(out)
-    if '--check' in sys.argv:
-        cur = open(OUT, encoding='utf-8').read()
-        if cur.strip() == text.strip():
-            print('OK: knowledge-index.json is up to date (%d docs)' % out['docCount'])
-            sys.exit(0)
-        print('DRIFT: knowledge-index.json differs from a fresh build. Run without --check to rewrite.')
-        sys.exit(1)
-    open(OUT, 'w', encoding='utf-8').write(text)
-    print('wrote knowledge-index.json (%d docs)' % out['docCount'])
+    # Every language with a doc-entries file gets its own index; --check
+    # verifies all of them (any drift fails the run).
+    failed = False
+    for lang in langs():
+        out = build(lang)
+        text = dump(out)
+        target = out_path(lang)
+        if '--check' in sys.argv:
+            cur = open(target, encoding='utf-8').read() if os.path.exists(target) else ''
+            if cur.strip() == text.strip():
+                print('OK: %s is up to date (%d docs)' % (os.path.basename(target), out['docCount']))
+            else:
+                print('DRIFT: %s differs from a fresh build. Run without --check to rewrite.'
+                      % os.path.basename(target))
+                failed = True
+        else:
+            open(target, 'w', encoding='utf-8').write(text)
+            print('wrote %s (%d docs)' % (os.path.basename(target), out['docCount']))
+    sys.exit(1 if failed else 0)
