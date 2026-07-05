@@ -121,14 +121,23 @@
             left: 12px;
             top: 50%;                       /* vertically center within the masthead */
             transform: translateY(-50%);
-            padding: 4px 8px;
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
             background: transparent;
             border: none;
-            color: var(--text);
-            font-size: 24px;
-            line-height: 1;
+            border-radius: 8px;
+            color: var(--muted);
             cursor: pointer;
+            transition: background .15s ease, color .15s ease;
         }
+        #nav-toggle:hover{
+            background: color-mix(in srgb, var(--muted) 12%, transparent);
+            color: var(--text);
+        }
+        #nav-toggle svg{ display: block; }
         #masthead h1{
             margin: 0;
             font-size: 21px;
@@ -253,7 +262,7 @@
                 overflow-y: auto;
             }
             #nav-toggle{
-                display: block;
+                display: flex;
             }
             /* Full-bleed screens fill the card pane (100vh - card margins
                20px - masthead 82px). */
@@ -1822,7 +1831,7 @@
                 padding-left: 0;   /* the sidebar becomes a drawer; no edge gap needed */
             }
             #nav-toggle{
-                display: block;
+                display: flex;
             }
             /* Keep the hamburger + title pinned to the top while scrolling. */
             #masthead{
