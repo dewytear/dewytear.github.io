@@ -157,7 +157,7 @@ CLUSTER_LABELS_BY_LANG = {
         ('AI · Claude · Code · Harness', 'Harness 엔지니어링'),
         ('AI · Claude · PlugIn · Harness', 'Harness 플러그인'),
         ('AI · Claude · PlugIn · OMC', 'OMC 플러그인'),
-        ('Douzone · dev.Center · Proposal', '제안(Proposal)'),
+        ('Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼', 'AI 개발 지식 플랫폼'),
     ],
     'en': [
         ('AI · Claude · Code · Introduction', 'Introduction'),
@@ -168,7 +168,7 @@ CLUSTER_LABELS_BY_LANG = {
         ('AI · Claude · Code · Harness', 'Harness Engineering'),
         ('AI · Claude · PlugIn · Harness', 'Harness Plugin'),
         ('AI · Claude · PlugIn · OMC', 'OMC Plugin'),
-        ('Douzone · dev.Center · Proposal', 'Proposal'),
+        ('Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼', 'AI Dev Knowledge Platform'),
     ],
 }
 # Backward-compatible alias (Korean is the source language).
