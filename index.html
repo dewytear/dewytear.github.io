@@ -1145,7 +1145,8 @@
             var ball = null, trail = [], rally = 0;
             var ai = { x: 0, y: 54, w: 150, h: 12 };
             function reset(){
-                var sp = Math.max(2.4, st.W / 520);
+                // Twice the Breakout pace — Pong wants snappy rallies.
+                var sp = Math.max(4.8, st.W / 260);
                 ball = { x: st.W / 2, y: st.H * 0.45,
                          vx: (Math.random() < 0.5 ? -1 : 1) * sp * 0.7,
                          vy: sp, r: Math.max(5, st.W / 240) };
@@ -1159,8 +1160,9 @@
                 if(st.gone()){ return; }
                 var ctx = st.ctx; ctx.clearRect(0, 0, st.W, st.H);
                 var col = st.accent();
-                // AI tracks the ball with capped speed — beatable, not perfect.
-                var maxV = Math.max(2.2, st.W / 420);
+                // AI tracks the ball with capped speed — keeps up with the
+                // faster ball on normal returns but loses sharp-angle shots.
+                var maxV = Math.max(3.4, st.W / 300);
                 ai.x += Math.max(-maxV, Math.min(maxV, (ball.x - ai.w / 2) - ai.x));
                 ai.x = Math.max(8, Math.min(st.W - ai.w - 8, ai.x));
                 ball.x += ball.vx; ball.y += ball.vy;
