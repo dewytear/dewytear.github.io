@@ -7,6 +7,7 @@
     <li><strong>언어 전환 장치</strong> — 설정 → 기본 설정에 <strong>언어</strong> 선택(한국어/English/中文/日本語 — 영어 이하 "준비 중"). 문서 로드(<code>fetchDoc</code>)·내비 라벨(<code>label_&lt;lang&gt;</code>)·태그(<code>tags_&lt;lang&gt;</code>)·화면 문구(<code>STRINGS</code>)·지식 인덱스(<code>knowledge-index.&lt;lang&gt;.json</code>)가 전부 언어를 따르고, <strong>없는 조각은 한국어로 폴백</strong>. 언어 변경 저장 시 새로고침으로 일괄 적용. <span class="scn-sub">(PR #145)</span></li>
     <li><strong>빌드 도구 다국어화</strong> — <code>build_index.py</code>가 <code>doc-entries.*.json</code>이 존재하는 언어 전부의 인덱스를 일괄 생성·검사. README에 "언어 추가하기" 절차 5단계 문서화.</li>
     <li><strong>Introduction 한국어 전환 + 영어판 첫 콘텐츠</strong> — 영어로 쓰여 있던 Introduction 6편(welcome·install·commands·skills·mcp·hooks)의 원문을 그대로 <code>docs/en/</code>으로 옮겨 영어판의 첫 콘텐츠로 살리고, <code>docs/ko/</code>는 전문용어를 유지한 한국어로 전환(도식 라벨 포함). 내비 라벨은 <code>label_en</code> 장치를 첫 실전 적용. <span class="scn-sub">(PR #146)</span></li>
+    <li><strong>언어별 태그</strong> — Introduction 6편의 기존 영어 태그를 <code>tags_en</code>으로 옮기고, 한국어판에는 기존 한글 태그 어휘와 일관된 새 태그(소개·설치·인증·슬래시명령어·플랜모드·연동·도구·권한·훅·자동화·이벤트 등)를 부여 — 언어 전환 시 문서 태그·태그 색인이 함께 바뀜. <span class="scn-sub">(PR #147)</span></li>
 </ul>
 
 <div class="note">
