@@ -163,10 +163,14 @@
                     // Tag top-level categories so Settings can show/hide them.
                     var catAttr = (path.length === 0 && node.title)
                                 ? ' data-cat="' + escapeHtml(node.title) + '"' : '';
+                    // Display-only glyph (e.g. ✎ on Work Log) — the section
+                    // path keeps using the bare title, so routing/worklog
+                    // detection are untouched.
+                    var deco = node.icon ? node.icon + ' ' : '';
                     html += '<li class="nav-branch collapsed"' + catAttr + '>'
                          +  '<button type="button" class="nav-title" onclick="toggleBranch(this)">'
                          +  '<span class="nav-caret">&#9662;</span>'
-                         +  '<span class="nav-title-text">' + escapeHtml(label) + '</span>'
+                         +  '<span class="nav-title-text">' + escapeHtml(deco + label) + '</span>'
                          +  folderDigestSpan(childPath.join(' · '))
                          +  '</button>';
                     html += renderNodes(node.children, childPath);
@@ -556,12 +560,19 @@
         }
         function hydrateAiMap(){
             var s = KNOWLEDGE_STATS;
-            if(!s || CURRENT_DOC !== 'ai-map'){ return; }
+            // Knowledge-map pages: the global map (ai-map) and per-galaxy
+            // maps (dz-map, …) share the same live-rendered cluster table.
+            if(!s || ['ai-map', 'dz-map'].indexOf(CURRENT_DOC) === -1){ return; }
             var el = document.getElementById('km-clusters');
             if(el){
                 var topics = {};
                 try{ topics = JSON.parse(el.getAttribute('data-topics')) || {}; }catch(e){}
-                el.innerHTML = s.clusters.map(function(c){
+                // A per-galaxy map narrows the table to its own sections.
+                var pref = el.getAttribute('data-section-prefix') || '';
+                var rows = pref
+                    ? s.clusters.filter(function(c){ return c.section.indexOf(pref) === 0; })
+                    : s.clusters;
+                el.innerHTML = rows.map(function(c){
                     return '<tr><td><strong>' + escapeHtml(c.label) + '</strong></td>'
                          + '<td>' + c.count + '</td>'
                          + '<td>' + escapeHtml(topics[c.label] || '') + '</td>'
@@ -666,10 +677,11 @@
                     });
                 }
                 if(!names.length){ return false; }
-                // Each 분류(section) is its OWN GALAXY: a compact star cloud
-                // around a center, centers spread apart on a golden spiral so
-                // the galaxies read as separate — related[] links become the
-                // bridges between them.
+                // Two levels: 대분류(첫 세그먼트) = GALAXY, 분류(section) =
+                // STAR CLUSTER(성단). Galaxy centers sit far apart; each
+                // galaxy's clusters spread on a smaller sphere around it, and
+                // docs form a tight cloud around their cluster. related[]
+                // links become the bridges between clusters and galaxies.
                 var secs = [];
                 names.forEach(function(n){
                     var s = KNOWLEDGE[n].section || '';
@@ -680,16 +692,43 @@
                 if(KNOWLEDGE_STATS && KNOWLEDGE_STATS.clusters){
                     KNOWLEDGE_STATS.clusters.forEach(function(c){ label_of[c.section] = c.label; });
                 }
+                var tops = [];
+                secs.forEach(function(s){
+                    var t = s.split(' · ')[0];
+                    if(tops.indexOf(t) === -1){ tops.push(t); }
+                });
+                tops.sort();
+                var topDir = {};
+                tops.forEach(function(t, i){
+                    if(tops.length === 1){ topDir[t] = [0, 0, 0]; return; }
+                    var y = 1 - 2 * (i + 0.5) / tops.length;
+                    var r = Math.sqrt(1 - y * y), a = i * 2.399963;
+                    topDir[t] = [r * Math.cos(a) * 0.85, y * 0.85, r * Math.sin(a) * 0.85];
+                });
+                // With one galaxy the clusters use the whole sphere (the
+                // original look); with several they huddle around their own
+                // galaxy center so the universe reads as galaxies-of-clusters.
+                var sub = tops.length === 1 ? 1 : 0.5;
                 var dirs = {};
                 galaxies = [];
-                secs.forEach(function(s, i){
-                    var y = 1 - 2 * (i + 0.5) / secs.length;
-                    var r = Math.sqrt(1 - y * y), t = i * 2.399963;
-                    dirs[s] = [r * Math.cos(t), y, r * Math.sin(t)];
-                    var parts = s.split(' · ');
-                    galaxies.push({ label: label_of[s] || parts[parts.length - 1] || s,
-                                    x: dirs[s][0], y: dirs[s][1], z: dirs[s][2],
-                                    sx: 0, sy: 0, ss: 1 });
+                tops.forEach(function(t){
+                    var mine = secs.filter(function(s){ return s.split(' · ')[0] === t; });
+                    mine.forEach(function(s, i){
+                        var y = 1 - 2 * (i + 0.5) / mine.length;
+                        var r = Math.sqrt(1 - y * y), a = i * 2.399963;
+                        dirs[s] = [topDir[t][0] + r * Math.cos(a) * sub,
+                                   topDir[t][1] + y * sub,
+                                   topDir[t][2] + r * Math.sin(a) * sub];
+                        var parts = s.split(' · ');
+                        galaxies.push({ label: label_of[s] || parts[parts.length - 1] || s,
+                                        x: dirs[s][0], y: dirs[s][1], z: dirs[s][2],
+                                        sx: 0, sy: 0, ss: 1 });
+                    });
+                    if(tops.length > 1){
+                        galaxies.push({ big: true, label: t.toUpperCase(),
+                                        x: topDir[t][0], y: topDir[t][1], z: topDir[t][2],
+                                        sx: 0, sy: 0, ss: 1 });
+                    }
                 });
                 var indeg = {};
                 names.forEach(function(n){
@@ -706,9 +745,9 @@
                     // renormalizing onto one shared sphere, so galaxies with
                     // different 분류 stay visibly apart.
                     return { name: n, title: d.title,
-                             x: dir[0] + j[0] * 0.26,
-                             y: dir[1] + j[1] * 0.26,
-                             z: dir[2] + j[2] * 0.26,
+                             x: dir[0] + j[0] * 0.2,
+                             y: dir[1] + j[1] * 0.2,
+                             z: dir[2] + j[2] * 0.2,
                              ref: indeg[n] || 0, sx: 0, sy: 0, ss: 1, sz: 0 };
                 });
                 var byName = {};
@@ -813,13 +852,19 @@
                     o.ss = pr; o.sz = z2;
                 }
                 for(var i = 0; i < nodes.length; i++){ project(nodes[i]); }
-                // Galaxy name plates — dim, behind everything.
+                // Name plates — dim, behind everything. Galaxy(대분류) plates
+                // read bigger than the star-cluster(성단) plates inside them.
                 ctx.textAlign = 'center';
                 for(var g = 0; g < galaxies.length; g++){
                     var gx = galaxies[g];
                     project(gx);
-                    ctx.font = '700 ' + Math.round(15 * gx.ss) + 'px ' + GAME_FONT;
-                    ctx.globalAlpha = Math.max(0.1, gx.ss * 0.22);
+                    if(gx.big){
+                        ctx.font = '800 ' + Math.round(22 * gx.ss) + 'px ' + GAME_FONT;
+                        ctx.globalAlpha = Math.max(0.12, gx.ss * 0.3);
+                    } else {
+                        ctx.font = '700 ' + Math.round(14 * gx.ss) + 'px ' + GAME_FONT;
+                        ctx.globalAlpha = Math.max(0.1, gx.ss * 0.22);
+                    }
                     ctx.fillStyle = mut;
                     ctx.fillText(gx.label, gx.sx, gx.sy);
                 }
