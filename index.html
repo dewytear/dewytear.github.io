@@ -2061,9 +2061,73 @@
               +   '<button class="settings-save" onclick="saveSettingsForm()">저장</button>'
               +   '<button class="settings-reset" onclick="resetSettings()">기본값으로</button>'
               + '</div>'
-              + '<p id="settings-msg" class="settings-msg" hidden></p>';
+              + '<p id="settings-msg" class="settings-msg" hidden></p>'
+              + '<details class="settings-dump-wrap">'
+              +   '<summary>이 브라우저의 현재 설정 값 보기 (진단)</summary>'
+              +   '<div id="settings-dump"></div>'
+              + '</details>';
             setArticle(html);
             renderCatTransfer();
+            renderSettingsDump();
+        }
+
+        // ---- "이 브라우저의 현재 값" 진단 패널 ----
+        // Settings live only in each visitor's browser (localStorage); this
+        // panel makes them visible on the device itself — per key: the
+        // effective value and where it comes from (개인 저장 > 사이트 기본 >
+        // 앱 기본). The raw JSON (password masked) can be copied out.
+        function renderSettingsDump(){
+            var box = document.getElementById('settings-dump');
+            if(!box){ return; }
+            var personal = loadSettings();
+            var eff = effSettings();
+            var KEYS = ['theme', 'accentDay', 'accentNight', 'searchGame',
+                        'navLineStyle', 'navLineWidth', 'hideRecent', 'hideRelated',
+                        'music', 'title', 'tagline', 'photoLine', 'hiddenCats'];
+            var rows = KEYS.map(function(k){
+                var v = eff[k];
+                var src = personal[k] !== undefined ? '개인 저장'
+                        : SITE_DEFAULTS[k] !== undefined ? '사이트 기본'
+                        : v !== undefined ? '앱 기본' : '—';
+                var shown = v === undefined ? '—'
+                          : Array.isArray(v) ? (v.length ? v.join(', ') : '(비어 있음)')
+                          : String(v);
+                return '<tr><td>' + k + '</td><td>' + escapeHtml(shown)
+                     + '</td><td>' + src + '</td></tr>';
+            });
+            rows.push('<tr><td>password</td><td>' + (personal.password ? '(변경됨)' : '(기본)')
+                    + '</td><td>' + (personal.password ? '개인 저장' : '앱 기본') + '</td></tr>');
+            var pick = '', collapsed = '';
+            try{ pick = localStorage.getItem('wikiGamePick') || ''; }catch(e){}
+            try{ collapsed = localStorage.getItem('navCollapsed') || ''; }catch(e){}
+            rows.push('<tr><td>wikiGamePick (게임 독 선택)</td><td>'
+                    + (pick ? escapeHtml(pick) : '—') + '</td><td>'
+                    + (pick ? '개인 저장' : '—') + '</td></tr>');
+            rows.push('<tr><td>navCollapsed (메뉴 접힘)</td><td>'
+                    + (collapsed === '' ? '—' : collapsed === '0' ? 'false' : 'true')
+                    + '</td><td>' + (collapsed === '' ? '—' : '개인 저장') + '</td></tr>');
+            var raw = {};
+            Object.keys(personal).forEach(function(k){ raw[k] = personal[k]; });
+            if(raw.password){ raw.password = '***'; }
+            var json = JSON.stringify(raw, null, 1);
+            box.innerHTML =
+                '<div class="tbl-wrap"><table>'
+              +   '<thead><tr><th>항목</th><th>적용 값</th><th>출처</th></tr></thead>'
+              +   '<tbody>' + rows.join('') + '</tbody>'
+              + '</table></div>'
+              + '<label class="dump-raw-label">이 브라우저에 저장된 원본(JSON)</label>'
+              + '<textarea id="settings-dump-raw" readonly rows="4">' + escapeHtml(json) + '</textarea>'
+              + '<button type="button" class="color-reset" onclick="copySettingsDump()">복사</button>';
+        }
+        function copySettingsDump(){
+            var ta = document.getElementById('settings-dump-raw');
+            if(!ta){ return; }
+            ta.select();
+            try{
+                if(navigator.clipboard){ navigator.clipboard.writeText(ta.value); }
+                else { document.execCommand('copy'); }
+                settingsMsg('설정 JSON을 복사했습니다.');
+            }catch(e){ settingsMsg('복사에 실패했습니다. 직접 선택해 복사해 주세요.', true); }
         }
 
         // ---- Category transfer list (전체 ↔ 노출) ----
