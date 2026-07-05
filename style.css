@@ -200,6 +200,24 @@
                 min-height: 0;
                 overflow-y: auto;
             }
+            /* Desktop sidebar toggle: the hamburger collapses/expands the
+               list column. Expanded is the default; the collapsed choice is
+               the user's own (remembered per browser). */
+            #nav-toggle{
+                display: block;
+            }
+            #masthead{
+                padding-left: 52px;   /* room for the hamburger */
+            }
+            body.nav-collapsed #sidebar{
+                display: none;
+            }
+            /* With the sidebar gone, the content is the sole grid item —
+               give it the whole row (a 0px first track would trap it). */
+            body.nav-collapsed #grid{
+                grid-template-columns: minmax(0, 1fr);
+                padding-left: 0;
+            }
         }
         /* Sidebar scrolls without showing a scrollbar */
         #sidebar{

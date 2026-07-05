@@ -73,6 +73,13 @@
                 var s = JSON.parse(localStorage.getItem('wikiSettings')) || {};
                 if((s.theme || 'day') === 'day'){ document.body.classList.add('day'); }
             }catch(e){ document.body.classList.add('day'); }
+            // Restore the user's own desktop sidebar collapse (default: open).
+            // The class only takes effect on wide screens (scoped in CSS).
+            try{
+                if(localStorage.getItem('navCollapsed') === '1'){
+                    document.body.classList.add('nav-collapsed');
+                }
+            }catch(e){}
         })();
 
         // ---- Global indexes (built once the list loads) ----
@@ -1793,7 +1800,14 @@
         }
 
         function toggleNav(){
-            document.body.classList.toggle('nav-open');
+            // Desktop: collapse/expand the sidebar column (default expanded;
+            // the choice is remembered per browser). Mobile: slide the drawer.
+            if(window.matchMedia && window.matchMedia('(min-width: 801px)').matches){
+                var on = document.body.classList.toggle('nav-collapsed');
+                try{ localStorage.setItem('navCollapsed', on ? '1' : '0'); }catch(e){}
+            } else {
+                document.body.classList.toggle('nav-open');
+            }
         }
 
         function toggleBranch(btn){
