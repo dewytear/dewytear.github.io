@@ -1223,8 +1223,8 @@
                 } else {
                     plane.vy = Math.min(plane.vy + 0.09, 4);
                     plane.y += plane.vy;
-                    if(plane.y < 14){ plane.y = 14; plane.vy = 0; }
-                    if(plane.y > st.H - 14){ plane.y = st.H - 14; plane.vy = -1; }
+                    if(plane.y < 18){ plane.y = 18; plane.vy = 0; }
+                    if(plane.y > st.H - 18){ plane.y = st.H - 18; plane.vy = -1; }
                     if(tick % 170 === 0){
                         var gapH = Math.max(150, st.H * 0.3);
                         gates.push({ x: st.W + 40, w: 26, gapH: gapH,
@@ -1236,7 +1236,7 @@
                         var g = gates[i];
                         g.x -= speed;
                         if(g.x + g.w < -20){ gates.splice(i, 1); continue; }
-                        if(plane.x + 8 > g.x && plane.x - 8 < g.x + g.w){
+                        if(plane.x + 11 > g.x && plane.x - 11 < g.x + g.w){
                             if(plane.y < g.gapY || plane.y > g.gapY + g.gapH){ crashed = 40; }
                             else if(!g.passed){ g.passed = true; score++; }
                         }
@@ -1270,11 +1270,11 @@
                 ctx.globalAlpha = crashed ? Math.max(0.1, crashed / 40 * 0.7) : 0.7;
                 ctx.fillStyle = col;
                 ctx.beginPath();
-                ctx.moveTo(16, 0); ctx.lineTo(-11, -8); ctx.lineTo(-5, 0); ctx.lineTo(-11, 8);
+                ctx.moveTo(23, 0); ctx.lineTo(-16, -12); ctx.lineTo(-7, 0); ctx.lineTo(-16, 12);
                 ctx.closePath(); ctx.fill();
                 ctx.globalAlpha *= 0.5;
-                ctx.strokeStyle = col; ctx.lineWidth = 1;
-                ctx.beginPath(); ctx.moveTo(16, 0); ctx.lineTo(-5, 0); ctx.stroke();
+                ctx.strokeStyle = col; ctx.lineWidth = 1.4;
+                ctx.beginPath(); ctx.moveTo(23, 0); ctx.lineTo(-7, 0); ctx.stroke();
                 ctx.restore();
                 ctx.globalAlpha = 1;
                 requestAnimationFrame(frame);
@@ -1740,6 +1740,11 @@
             var isSearch = !h || path === 'search';
             document.body.classList.toggle('search-view', isSearch);
             document.body.classList.toggle('folder-view', path.indexOf('folder:') === 0);
+            // Work Log docs are dev journal: like tags, the "recent docs"
+            // module stays out of them.
+            var doc = DOC_BY_NAME[path];
+            document.body.classList.toggle('worklog-view',
+                !!(doc && doc.section.indexOf('Work Log') === 0));
             CURRENT_DOC = null;   // cleared here; fetchPage sets it for real docs
             if(isSearch){ showSearch(); markActiveNav(null); return; }
             if(path === 'tags'){ showTagIndex(); markActiveNav(null); }
