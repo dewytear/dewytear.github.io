@@ -86,7 +86,7 @@
 <p>정리를 시작하기 전에 <strong>"이 데이터를 나중에 어떻게 꺼내 쓸 것인가"</strong>부터 정하세요. 꺼내는 방식이 <strong>담는 방식</strong>을 결정하기 때문입니다.</p>
 
 <div class="diagram">
-<svg viewBox="0 0 520 240" role="img" aria-label="역설계 비유: 골대(꺼낼 질문)보다 살짝 작은 둥근 공은 쑥 통과하지만, 골대보다 큰 네모 공은 테두리에 걸려 못 들어간다">
+<svg viewBox="0 0 520 240" role="img" aria-label="역설계 비유: 골대(꺼낼 질문)에 맞는 둥근 공은 쑥 통과하지만, 같은 크기의 네모 공은 기울어지면 대각선이 골대보다 길어져 테두리에 걸린다">
     <!-- left: the hoop-sized round ball drops clean through -->
     <text class="d-sub" x="150" y="18" text-anchor="middle">둥근 공 · 골대에 맞춘 형식</text>
     <circle class="d-node" cx="150" cy="64" r="36"/>
@@ -98,11 +98,13 @@
     <!-- the hoop = the question you'll ask later -->
     <text class="d-sub" x="265" y="144" text-anchor="middle">골대 = 질문</text>
 
-    <!-- right: the square is BIGGER than the hoop and jams on the rim -->
-    <text class="d-sub" x="380" y="18" text-anchor="middle">네모 공 · 골대보다 큰 모양</text>
+    <!-- right: same size as the ball, but tilted its diagonal outgrows
+         the rim (72 x sqrt2 = 102 > opening 92) and it jams tip-first -->
+    <text class="d-sub" x="380" y="18" text-anchor="middle">네모 공 · 둥근 공과 같은 크기</text>
     <ellipse class="d-box" cx="380" cy="140" rx="46" ry="14"/>
-    <rect class="d-node dim" x="332" y="28" width="96" height="96" rx="8" transform="rotate(-8 380 76)"/>
-    <text class="d-sub" x="380" y="212" text-anchor="middle">테두리에 걸린다 ✕</text>
+    <rect class="d-node dim" x="344" y="54" width="72" height="72" rx="6" transform="rotate(45 380 90)"/>
+    <line class="d-edge dash" x1="329" y1="90" x2="431" y2="90"/>
+    <text class="d-sub" x="380" y="212" text-anchor="middle">기울면 대각선이 더 길어 걸린다 ✕</text>
 </svg>
 <div class="d-cap">골대(꺼낼 질문)를 먼저 보고 공(데이터를 담는 방식)을 정합니다. 순서가 반대면 나중에 고생합니다.</div>
 </div>
