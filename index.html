@@ -215,9 +215,12 @@
         function setArticle(html){
             var art = document.querySelector('article');
             art.innerHTML = html;
-            // Clear any authoring-model badge left over from a previous doc;
-            // only real doc bodies (via fetchPage) should carry it.
-            document.querySelectorAll('#article .doc-model').forEach(function(el){ el.remove(); });
+            // Clear per-doc extras left over from the previous doc — the
+            // authoring-model badge and the AI related-docs block both live on
+            // the #article wrapper (outside <article>), so replacing the body
+            // alone would leave them showing the PREVIOUS doc's content.
+            document.querySelectorAll('#article .doc-model, #article .related')
+                .forEach(function(el){ el.remove(); });
             // Only the content pane resets; the sidebar and masthead stay put.
             var scroller = document.getElementById('content-scroll');
             if(scroller){ scroller.scrollTop = 0; }
