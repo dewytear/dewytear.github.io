@@ -105,8 +105,7 @@
                             label: node.label || node.name,
                             section: path.join(' · '),
                             tags: node.tags || [],
-                            model: node.model || '',  // optional per-doc override
-                            ord: DOCS.length          // menu (tree) position — survives the later date-sort
+                            model: node.model || ''   // optional per-doc override
                         };
                         DOCS.push(doc);
                         DOC_BY_NAME[doc.name] = doc;
@@ -345,15 +344,8 @@
             if(!art || art.querySelector('.related')){ return; }
             var info = KNOWLEDGE[CURRENT_DOC];
             if(!info || !info.related || !info.related.length){ return; }
-            // Relevance picks WHICH docs appear; the menu (tree) order
-            // decides how they line up, so cards read like the sidebar.
-            var rel = info.related.slice().sort(function(a, b){
-                var oa = DOC_BY_NAME[a.name] ? DOC_BY_NAME[a.name].ord : 1e9;
-                var ob = DOC_BY_NAME[b.name] ? DOC_BY_NAME[b.name].ord : 1e9;
-                return oa - ob;
-            });
             var wrap = document.createElement('div');
-            wrap.innerHTML = renderRelatedHTML(rel);
+            wrap.innerHTML = renderRelatedHTML(info.related);
             var node = wrap.firstChild;
             var badge = art.querySelector('.doc-model');
             if(badge){ art.insertBefore(node, badge); } else { art.appendChild(node); }
