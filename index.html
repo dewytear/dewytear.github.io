@@ -801,10 +801,17 @@
               +     '</div>'
               +     '<div id="search-results"></div>'
               +   '</div>'
+              +   (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? '' :
+                  '<div class="game-dock" role="group" aria-label="미니게임 선택">'
+                +   '<button type="button" data-g="breakout" title="벽돌깨기" aria-label="벽돌깨기" onclick="switchSearchGame(this)">&#129704;</button>'
+                +   '<button type="button" data-g="concept" title="개념 별똥별 받기 — 받으면 그 개념으로 검색" aria-label="개념 별똥별 받기" onclick="switchSearchGame(this)">&#127776;</button>'
+                +   '<button type="button" data-g="pong" title="퐁 랠리" aria-label="퐁 랠리" onclick="switchSearchGame(this)">&#127955;</button>'
+                +   '<button type="button" data-g="plane" title="종이비행기 글라이딩 — 빈 곳 클릭으로 비행" aria-label="종이비행기 글라이딩" onclick="switchSearchGame(this)">&#9992;&#65039;</button>'
+                + '</div>')
               + '</div>';
             setArticle(html);
             ensureTextIndex();   // start fetching doc bodies in the background
-            startSearchGame();   // Breakout-style ball drifting behind the field
+            startSearchGame();   // ambient mini game behind the field
             enableSearchPaddle();   // drag the field left/right like a paddle
             var box = document.getElementById('search-input');
             if(box){
@@ -875,14 +882,41 @@
         // self-terminates once its canvas leaves the DOM (no loop leaks)
         // and all are skipped for reduced motion.
         var SEARCH_GAME_ACTIVE = '';
+        // Which game to run: the visitor's own pick (stored per browser)
+        // wins; the owner's Settings choice is the default for new visitors.
+        function currentGameMode(){
+            var pick = '';
+            try{ pick = localStorage.getItem('wikiGamePick') || ''; }catch(e){}
+            var mode = pick || loadSettings().searchGame || 'breakout';
+            return SEARCH_GAMES[mode] ? mode : 'breakout';
+        }
         function startSearchGame(){
             if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ return; }
             var canvas = document.querySelector('.search-game');
             if(!canvas || !canvas.getContext){ return; }
-            var mode = loadSettings().searchGame || 'breakout';
-            if(!SEARCH_GAMES[mode]){ mode = 'breakout'; }
+            var mode = currentGameMode();
             SEARCH_GAME_ACTIVE = mode;
             SEARCH_GAMES[mode](canvas);
+            markGameDock(mode);
+        }
+        // Visitor-facing switcher: swap the game in place. The old canvas is
+        // replaced by a fresh clone, so the old loop sees isConnected=false
+        // and stops itself; the picked game starts on the new canvas.
+        function switchSearchGame(el){
+            var mode = el.getAttribute('data-g');
+            if(!SEARCH_GAMES[mode]){ return; }
+            try{ localStorage.setItem('wikiGamePick', mode); }catch(e){}
+            var old = document.querySelector('.search-game');
+            if(old){
+                var fresh = old.cloneNode(false);
+                old.parentNode.replaceChild(fresh, old);
+            }
+            startSearchGame();
+        }
+        function markGameDock(mode){
+            document.querySelectorAll('.game-dock button').forEach(function(b){
+                b.classList.toggle('on', b.getAttribute('data-g') === mode);
+            });
         }
 
         // Shared stage for the newer games: HiDPI sizing, self-termination,
@@ -1203,7 +1237,9 @@
                               gates = []; tick = 0; crashed = 0; score = 0; }
             reset();
             function flap(){ if(!crashed){ plane.vy = -3.2; } }
-            function onDown(e){ if(!e.target.closest('.search-core')){ flap(); } }
+            function onDown(e){
+                if(!e.target.closest('.search-core') && !e.target.closest('.game-dock')){ flap(); }
+            }
             function onKey(e){
                 if(e.target && e.target.id === 'search-input'){ return; }
                 if(e.code === 'Space' || e.code === 'ArrowUp'){ flap(); e.preventDefault(); }
@@ -1581,7 +1617,7 @@
               +   '</select>'
               + '</div>'
               + '<div class="settings-field">'
-              +   '<label for="settings-game">통합검색 미니게임</label>'
+              +   '<label for="settings-game">통합검색 미니게임 기본값 (방문자는 검색 화면 하단에서 직접 변경 가능)</label>'
               +   '<select id="settings-game">'
               +     opt('breakout', '벽돌깨기 (기본)', curGame)
               +     opt('concept', '개념 별똥별 받기 — 받으면 그 개념으로 검색', curGame)
