@@ -1,0 +1,80 @@
+<h2>플랫폼 아키텍처</h2>
+<p>전체 플랫폼은 GitLab을 원천으로 하는 단방향 파이프라인으로 구성한다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 356" role="img" aria-label="7계층 구성: 개발자 → GitLab → Knowledge Collector → Change Analyzer → AI Knowledge Curator → Wiki Repository → Knowledge Portal">
+    <rect class="d-box" x="170" y="8" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="31" text-anchor="middle">개발자</text>
+    <text class="d-sub" x="522" y="31" text-anchor="start">Java · SQL · Mapper · API · Test</text>
+    <rect class="d-box" x="170" y="58" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="81" text-anchor="middle">GitLab</text>
+    <text class="d-sub" x="522" y="81" text-anchor="start">Project · Commit · MR · Pipeline</text>
+    <rect class="d-box" x="170" y="108" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="131" text-anchor="middle">Knowledge Collector</text>
+    <text class="d-sub" x="522" y="131" text-anchor="start">SHA · Diff · MR 수집</text>
+    <rect class="d-box" x="170" y="158" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="181" text-anchor="middle">Change Analyzer</text>
+    <text class="d-sub" x="522" y="181" text-anchor="start">Diff + 관련 Source Context</text>
+    <rect class="d-box accent" x="170" y="208" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="231" text-anchor="middle">AI Knowledge Curator</text>
+    <text class="d-sub" x="522" y="231" text-anchor="start">판정 · 검색 · 갱신 · 폐기</text>
+    <rect class="d-box" x="170" y="258" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="281" text-anchor="middle">Company Wiki Repository</text>
+    <text class="d-sub" x="522" y="281" text-anchor="start">HTML · Index · Provenance</text>
+    <rect class="d-box soft" x="170" y="308" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="331" text-anchor="middle">Company Knowledge Portal</text>
+    <text class="d-sub" x="522" y="331" text-anchor="start">직원 Read-Only</text>
+    <line class="d-edge" x1="340" y1="44" x2="340" y2="51"/><polygon class="d-arrow" points="335,51 345,51 340,58"/>
+    <line class="d-edge" x1="340" y1="94" x2="340" y2="101"/><polygon class="d-arrow" points="335,101 345,101 340,108"/>
+    <line class="d-edge" x1="340" y1="144" x2="340" y2="151"/><polygon class="d-arrow" points="335,151 345,151 340,158"/>
+    <line class="d-edge" x1="340" y1="194" x2="340" y2="201"/><polygon class="d-arrow" points="335,201 345,201 340,208"/>
+    <line class="d-edge" x1="340" y1="244" x2="340" y2="251"/><polygon class="d-arrow" points="335,251 345,251 340,258"/>
+    <line class="d-edge" x1="340" y1="294" x2="340" y2="301"/><polygon class="d-arrow" points="335,301 345,301 340,308"/>
+</svg>
+<div class="d-cap">개발 결과가 아래로 흐르며 지식이 된다. 직원이 개입하는 층은 맨 위(개발)와 맨 아래(읽기)뿐이다.</div>
+</div>
+
+<h3>지식 생성 Trigger — 완료로 인정된 변경만</h3>
+<p>모든 Commit을 즉시 지식화하지 않는다. 개발 중에는 미완성 구현, 실패한 시도, Debug 코드, Rollback 대상, 임시 수정, 기계적 Refactoring이 섞여 있기 때문이다. 조직이 완료로 인정하는 관문 — <strong>Review를 거쳐 기준 Branch에 Merge되고 Pipeline이 성공한 변경</strong> — 만 분석 대상으로 삼는다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 120" role="img" aria-label="지식 생성 트리거: Feature Branch에서 Merge Request와 리뷰를 거쳐 기준 브랜치에 머지되고 파이프라인이 성공하면 Curator가 실행된다">
+    <rect class="d-box" x="8" y="18" width="124" height="50" rx="9"/>
+    <text class="d-label sm" x="70" y="38" text-anchor="middle">Feature Branch</text>
+    <text class="d-sub" x="70" y="55" text-anchor="middle">개발 진행</text>
+    <rect class="d-box" x="143" y="18" width="124" height="50" rx="9"/>
+    <text class="d-label sm" x="205" y="38" text-anchor="middle">Merge Request</text>
+    <text class="d-sub" x="205" y="55" text-anchor="middle">코드 리뷰</text>
+    <rect class="d-box" x="278" y="18" width="124" height="50" rx="9"/>
+    <text class="d-label sm" x="340" y="38" text-anchor="middle">기준 Branch Merge</text>
+    <text class="d-sub" x="340" y="55" text-anchor="middle">master · release/*</text>
+    <rect class="d-box" x="413" y="18" width="124" height="50" rx="9"/>
+    <text class="d-label sm" x="475" y="38" text-anchor="middle">Pipeline 성공</text>
+    <text class="d-sub" x="475" y="55" text-anchor="middle">품질 게이트</text>
+    <rect class="d-box accent" x="548" y="18" width="124" height="50" rx="9"/>
+    <text class="d-label sm" x="610" y="38" text-anchor="middle">Curator 실행</text>
+    <text class="d-sub" x="610" y="55" text-anchor="middle">지식 분석 시작</text>
+    <line class="d-edge" x1="132" y1="43" x2="136" y2="43"/><polygon class="d-arrow" points="136,38 136,48 143,43"/>
+    <line class="d-edge" x1="267" y1="43" x2="271" y2="43"/><polygon class="d-arrow" points="271,38 271,48 278,43"/>
+    <line class="d-edge" x1="402" y1="43" x2="406" y2="43"/><polygon class="d-arrow" points="406,38 406,48 413,43"/>
+    <line class="d-edge" x1="537" y1="43" x2="541" y2="43"/><polygon class="d-arrow" points="541,38 541,48 548,43"/>
+    <text class="d-sub" x="340" y="104" text-anchor="middle">프로젝트별 knowledgeBranches 설정으로 "완료로 인정한 변경"만 분석한다</text>
+</svg>
+</div>
+
+<h3>증분 분석 — 전체를 다시 읽지 않는다</h3>
+<p>프로젝트별로 마지막 처리 Commit SHA를 관리하고, GitLab Compare로 그 이후의 변경 파일만 수집해 관련 Context를 확장 분석한다. AI Token 사용량 절감, 처리시간 단축, 중복 분석 방지, 장애 시 재처리가 모두 이 상태 관리에서 나온다.</p>
+<pre><code><span class="c"># 프로젝트별 knowledge trigger·sync 상태 (예시)</span>
+{
+  "project": "scm/ai-notification",
+  "knowledgeBranches": ["master", "release/*"],
+  "lastProcessedSha": "abc123def456",
+  "lastProcessedAt": "2026-07-06T14:32:00+09:00",
+  "status": "success"
+}</code></pre>
+
+<h3>단순 Diff가 아닌 Context 기반 분석</h3>
+<p><code>if ("COL".equals(receiverType))</code> 한 줄만 보고는 업무 정책을 판단할 수 없다. 변경 Diff에 더해 <strong>전체 Class · 호출자 · 관련 Mapper와 SQL · 관련 Test · 관련 Config · 기존 Wiki</strong>를 함께 읽는 Impact Expansion을 거쳐, 단순 코드 요약이 아닌 실제 개발 지식을 추출한다.</p>
+
+<h3>운영 안정성 — 실시간과 보정의 이중화</h3>
+<p>Webhook(Merge → Queue → Curator) 실시간 처리에만 의존하지 않고, 정기 Batch가 Project Registry의 현재 SHA와 sync-state를 비교해 누락 변경을 재처리한다. Webhook 실패, Network 오류, Queue 누락, Curator 장애, 일시적 API 실패에 대응하는 구조다.</p>

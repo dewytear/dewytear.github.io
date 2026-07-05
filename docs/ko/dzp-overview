@@ -1,0 +1,45 @@
+<h2>제안 개요 — GitLab 기반 AI 개발 지식 플랫폼</h2>
+<p>개발자는 지금처럼 GitLab에 개발 결과를 반영하기만 하고, <strong>AI가 그 결과를 분석해 조직 지식으로 자동 변환·축적</strong>하는 <strong>Read-Only Engineering Knowledge Platform</strong>을 제안한다. 사람이 문서를 쓰는 위키가 아니라, <strong>개발 결과물이 곧 지식의 원천</strong>이 되는 구조다.</p>
+
+<div class="note">
+    <span class="nh">한 문장 요약</span>
+    GitLab에 축적되는 개발 결과물을 AI가 지속적으로 분석하여, 조직의 <strong>현재 유효한 개발 지식</strong>으로 변환·축적하는 <strong>Read-Only Engineering Knowledge Platform</strong>.
+</div>
+
+<h3>최종 그림 — 선순환</h3>
+<p>목표는 위키 그 자체가 아니다. 개발 결과가 지식이 되고, 축적된 지식이 다시 다음 개발의 생산성을 높이는 <strong>선순환 구조</strong>다. 사람이 쓰는 위키는 "개발 → 문서 작성 → Wiki 등록"의 추가 노동을 요구해 지속되지 못했지만, 이 구조에서는 개발 경험이 조직 자산이 되고, 반복 분석이 줄고, 프로젝트 간 경험이 재사용되며, 온보딩이 빨라지고, 설계 의도가 보존되고, Claude Code 같은 AI 도구가 조직 지식을 Context로 활용하게 된다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 140" role="img" aria-label="선순환 구조: 개발 결과가 조직 지식이 되고, AI Retrieval을 거쳐 다음 개발에 재사용되어 다시 개발 결과로 이어진다">
+    <rect class="d-box" x="8" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="78" y="43" text-anchor="middle">개발 결과</text>
+    <text class="d-sub" x="78" y="60" text-anchor="middle">GitLab Merge</text>
+    <rect class="d-box accent" x="178" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="248" y="43" text-anchor="middle">조직 지식</text>
+    <text class="d-sub" x="248" y="60" text-anchor="middle">Wiki · Index</text>
+    <rect class="d-box" x="348" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="418" y="43" text-anchor="middle">AI Retrieval</text>
+    <text class="d-sub" x="418" y="60" text-anchor="middle">필요할 때 검색</text>
+    <rect class="d-box" x="518" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="588" y="43" text-anchor="middle">다음 개발</text>
+    <text class="d-sub" x="588" y="60" text-anchor="middle">Claude Code · Agent</text>
+    <line class="d-edge" x1="148" y1="48" x2="170" y2="48"/><polygon class="d-arrow" points="170,43 170,53 178,48"/>
+    <line class="d-edge" x1="318" y1="48" x2="340" y2="48"/><polygon class="d-arrow" points="340,43 340,53 348,48"/>
+    <line class="d-edge" x1="488" y1="48" x2="510" y2="48"/><polygon class="d-arrow" points="510,43 510,53 518,48"/>
+    <path class="d-edge" d="M588 74 C588 96, 572 104, 552 104 H114 C94 104, 78 96, 78 84"/>
+    <polygon class="d-arrow" points="73,82 83,82 78,74"/>
+    <polygon class="d-arrow" points="338,99 338,109 328,104"/>
+    <text class="d-sub" x="330" y="126" text-anchor="middle">축적된 지식이 다음 개발의 생산성을 높인다</text>
+</svg>
+<div class="d-cap">개발할수록 조직이 똑똑해지는 구조 — 이것이 본 제안의 최종 방향이다.</div>
+</div>
+
+<h3>이 시리즈의 구성</h3>
+<ul>
+    <li><a href="#!dzp-why"><strong>왜 지금인가</strong></a> — 흩어지고 사라지는 개발 지식, 그 비용의 근거</li>
+    <li><a href="#!dzp-core"><strong>제안의 핵심</strong></a> — 개발 흐름은 그대로, 지식화는 AI가. Event Stream과 Knowledge State</li>
+    <li><a href="#!dzp-architecture"><strong>플랫폼 아키텍처</strong></a> — 7계층 구성, 지식 생성 Trigger, 증분 분석, 운영 안정성</li>
+    <li><a href="#!dzp-knowledge"><strong>지식 관리 체계</strong></a> — 가치 판정 · 누적 갱신 · Identifier 검색 · 출처 추적 · 신뢰 등급 · 수명주기</li>
+    <li><a href="#!dzp-security"><strong>자산 활용과 보안</strong></a> — 개인 위키 자산의 재사용, 지식 등급과 접근 분리</li>
+    <li><a href="#!dzp-roadmap"><strong>추진 로드맵</strong></a> — 4 Phase, 1차 PoC(OmniEsol AI 알림), 검증 KPI</li>
+</ul>
