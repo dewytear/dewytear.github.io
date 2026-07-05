@@ -160,13 +160,17 @@
                         // A marked doc (e.g. a guide) shows a symbol, not a
                         // sequence number, and doesn't consume the count.
                         numHtml = '<span class="doc-num doc-mark">' + escapeHtml(node.mark) + '</span>';
+                    } else if(node.nonum){
+                        // A top-level standalone doc (e.g. 지식 지도) carries no
+                        // number and doesn't consume the count.
+                        numHtml = '';
                     } else {
                         docSeq++;
                         var num = (docSeq < 10 ? '0' : '') + docSeq;
                         numHtml = '<span class="doc-num">' + num + '.</span>';
                     }
                     html += '<li><a href="#!' + target + '">'
-                         +  numHtml + ' ' + escapeHtml(label) + '</a></li>';
+                         +  (numHtml ? numHtml + ' ' : '') + escapeHtml(label) + '</a></li>';
                 }
             });
             html += '</ul>';
@@ -1010,8 +1014,10 @@
             var root = document.documentElement;
             root.style.setProperty('--nav-line-style', s.navLineStyle || 'dashed');
             root.style.setProperty('--nav-line-width', s.navLineWidth || '1px');
-            // "Recent docs" module visibility.
+            // "Recent docs" and "Related docs" footer modules — each toggled
+            // independently from Settings, both hidden on non-doc screens.
             document.body.classList.toggle('hide-recent', !!s.hideRecent);
+            document.body.classList.toggle('hide-related', !!s.hideRelated);
             // Top-level category visibility.
             applyCategoryVisibility(s.hiddenCats);
             // Light (day) theme is the default; a saved choice wins.
@@ -1143,6 +1149,8 @@
               +   '<label>표시 옵션</label>'
               +   '<label class="settings-check"><input type="checkbox" id="settings-hiderecent"'
               +     (s.hideRecent ? ' checked' : '') + '> 최근 문서 영역 숨기기</label>'
+              +   '<label class="settings-check"><input type="checkbox" id="settings-hiderelated"'
+              +     (s.hideRelated ? ' checked' : '') + '> 연관 문서 영역 숨기기</label>'
               + '</div>'
               + '<div class="settings-field">'
               +   '<label>대분류 노출 (전체 → 노출로 옮긴 항목만 표시)</label>'
@@ -1240,6 +1248,7 @@
             s.navLineStyle = document.getElementById('settings-navstyle').value;
             s.navLineWidth = document.getElementById('settings-navwidth').value;
             s.hideRecent = document.getElementById('settings-hiderecent').checked;
+            s.hideRelated = document.getElementById('settings-hiderelated').checked;
             if(SETTINGS_CATS){
                 s.hiddenCats = SETTINGS_CATS.all.filter(function(c){
                     return SETTINGS_CATS.exposed.indexOf(c) === -1;

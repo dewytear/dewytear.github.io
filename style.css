@@ -363,6 +363,12 @@
         body.hide-recent #more{
             display: none;
         }
+        /* "Related docs" follows the same rule: only on doc pages, and hidden
+           when the Settings toggle is on. (It lives inside #article, so it is
+           naturally absent from the search/tags/settings/folder screens.) */
+        body.hide-related .related{
+            display: none;
+        }
 
         /* ---- Unified search screen (landing / title click) ---- */
         /* Full-bleed: drop the article padding so the screen fills the pane. */
