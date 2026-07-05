@@ -1253,10 +1253,10 @@
             color: var(--text);
         }
         /* The two AI entries (Knowledge Graph / Knowledge Map): identical
-           shape, size and rhythm to every other menu item — only the ink
-           carries the accent, so they read quietly but unmistakably. */
-        #navigation a[href="#!cosmos"],
-        #navigation a[href="#!ai-map"]{
+           to every other menu item — only the leading glyph (✦ / ❖, the
+           first letter) carries the accent, the quietest possible cue. */
+        #navigation a[href="#!cosmos"]::first-letter,
+        #navigation a[href="#!ai-map"]::first-letter{
             color: var(--accent-ink);
         }
         /* Level-0 category titles: the only prominent tier. */
