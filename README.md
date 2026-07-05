@@ -14,7 +14,7 @@ GitHub Pages로 배포됩니다: https://dewytear.github.io
 - **태그 인덱스** — 사전식 초성/알파벳 그룹, 최다 사용 태그 밴드, 즉시 필터.
 
 ### AI 지식 관리 시스템
-- **지식 인덱스**(`knowledge-index.json`) — AI가 **AI 대분류 아래의 강의 문서**를 전부 읽어 문서별 요약·핵심 개념·연관 문서를 기록. `tools/build_index.py`로 **결정적 재생성**(`--check` 드리프트 검사).
+- **지식 인덱스**(`data/knowledge-index.ko.json`) — AI가 **AI 대분류 아래의 강의 문서**를 전부 읽어 문서별 요약·핵심 개념·연관 문서를 기록. `tools/build_index.py`로 **결정적 재생성**(`--check` 드리프트 검사).
 - **❖ 지식 지도**(`#!ai-map`) — 클러스터·허브·브리지 개념을 집계한 지도. 표의 수치는 인덱스의 `stats`에서 **실시간 렌더**(드리프트 원천 차단).
 - **✦ 지식 코스모스**(`#!cosmos`) — 연관 관계를 **3차원 별자리**로: 분류별 은하(이름표), 문서=별, 연관=연결선. 드래그 회전·휠 확대·별 클릭 시 문서 이동.
 - **연관 문서 추천** — 각 문서 하단에 의미 기반 추천 카드(공유 개념 칩 클릭 → 검색 피벗).
@@ -33,24 +33,23 @@ GitHub Pages로 배포됩니다: https://dewytear.github.io
 
 ## 파일 구조
 
-| 파일 | 설명 |
+| 경로 | 설명 |
 |------|------|
 | `index.html` | 메인 SPA — 라우팅·검색·지식 인덱스 로딩·미니게임·코스모스 |
 | `style.css` | 테마 토큰·셸 레이아웃·반응형 스타일 |
 | `colors.js` | 낮/밤 테마 토글 로직 |
 | `list` | 네비게이션 트리 정의 (JSON) |
 | `config.json` | 서버 전역 설정 — 타이틀·프로필 사진 + `defaults`(모든 방문자의 설정 기본값) |
-| `knowledge-index.json` | AI 지식 인덱스(요약·개념·연관·stats) — 직접 편집 금지 |
-| `ai-map` | ❖ 지식 지도 문서 |
+| `docs/ko/` | **모든 문서 콘텐츠(한국어 원본)** — 강의 조각(`welcome`·`ccb-*`·`skl-*`·`hns-*`·`hnp-*`·`llmw-*`·`sb-*`·`omc-*`), `ai-map`, Work Log(`wl-*`) |
+| `docs/en/`·`docs/zh/`·`docs/ja/` | (예정) 번역 문서 — 같은 파일명으로 두면 언어 설정에 따라 로드, 없으면 한국어 폴백 |
+| `data/knowledge-index.ko.json` | AI 지식 인덱스(요약·개념·연관·stats) — 직접 편집 금지, 언어별로 `.{lang}.json` |
 | `tools/build_index.py` | 인덱스 결정적 빌드(`--check` 검증) |
-| `tools/doc-entries.json` | 인덱스 원료(문서별 AI 작성 엔트리) |
+| `tools/doc-entries.ko.json` | 인덱스 원료(문서별 AI 작성 엔트리, 언어별) |
 | `tools/curator.md` | AI 큐레이터 절차서 |
-| `welcome`·`ccb-*`·`skl-*`·`hns-*`·`hnp-*`·`llmw-*`·`sb-*`·`omc-*` | 강의 문서 조각(HTML) |
-| `wl-*` | Work Log(개발 일지 — 태그·최근 문서 없음) |
 
 ## 문서 추가하기
 
-1. 새 문서 파일을 만듭니다 (예: `settings`). 내용은 `<h2>...</h2><p>...</p>` 형태의 HTML 조각으로 작성합니다.
+1. 새 문서 파일을 `docs/ko/`에 만듭니다 (예: `docs/ko/settings`). 내용은 `<h2>...</h2><p>...</p>` 형태의 HTML 조각으로 작성합니다.
 2. `list`(JSON) 트리에 노드를 추가합니다. 링크 노드는 `{ "name": "settings", "label": "Settings", "tags": ["config", "settings"] }`, 섹션은 `{ "title": "...", "children": [ ... ] }` 형태이며 `children`으로 얼마든지 중첩할 수 있습니다. `tags`는 선택 사항이며, 지정하면 문서 하단과 태그 인덱스에 자동으로 반영됩니다.
 3. **작성 AI·모델 표기** — AI가 문서를 추가하거나 대폭 다시 쓸 때는 노드에 `"model": "<작성 세션의 모델명>"`을 함께 기록합니다(제목 우측 배지로 표시). 이 값은 **그 문서를 실제로 쓴 세션의 정보**를 따르며, 없으면 기본값(`DOC_MODEL`)이 표시됩니다.
 4. 커밋하면 사이드바 트리에 자동으로 나타납니다.

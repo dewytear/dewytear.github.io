@@ -278,8 +278,12 @@
             return html;
         }
 
+        // Where a doc's content file lives. Languages become sibling dirs
+        // (docs/en/, docs/zh/, …) later; today everything is the Korean tree.
+        function docPath(name){ return 'docs/ko/' + name; }
+
         function fetchPage(filename){
-            fetch(filename).then(function(response){
+            fetch(docPath(filename)).then(function(response){
                 response.text().then(function(text){
                     var doc = DOC_BY_NAME[filename];
                     if(doc && doc.tags.length){
@@ -804,8 +808,8 @@
             toc += '</ol></div>';
             setArticle(toc + '<div class="folder-body"><p class="empty">불러오는 중…</p></div>');
             Promise.all(docs.map(function(d){
-                return fetch(d.name).then(function(r){ return r.ok ? r.text() : ''; })
-                                    .catch(function(){ return ''; });
+                return fetch(docPath(d.name)).then(function(r){ return r.ok ? r.text() : ''; })
+                                             .catch(function(){ return ''; });
             })).then(function(texts){
                 var html = '';
                 docs.forEach(function(d, i){
@@ -853,7 +857,7 @@
 
         function buildTextIndex(){
             return Promise.all(DOCS.filter(isSearchableDoc).map(function(d){
-                return fetch(d.name).then(function(r){
+                return fetch(docPath(d.name)).then(function(r){
                     return r.ok ? r.text() : '';
                 }).then(function(t){
                     var txt = stripHtml(t);
@@ -1748,7 +1752,7 @@
         function fetchDocDates(){
             var dates = {};
             return Promise.all(DOCS.map(function(d){
-                var url = REPO_API + '/commits?path=' + encodeURIComponent(d.name) + '&per_page=1';
+                var url = REPO_API + '/commits?path=' + encodeURIComponent(docPath(d.name)) + '&per_page=1';
                 return fetch(url).then(function(r){
                     return r.ok ? r.json() : null;
                 }).then(function(j){
@@ -2379,7 +2383,7 @@
 
         // Load the AI knowledge index (summaries·concepts·related). Non-blocking:
         // if a doc is already shown when it arrives, inject its related block.
-        fetch('knowledge-index.json').then(function(r){ return r.json(); }).then(function(idx){
+        fetch('data/knowledge-index.ko.json').then(function(r){ return r.json(); }).then(function(idx){
             KNOWLEDGE = {};
             (idx.docs || []).forEach(function(d){ KNOWLEDGE[d.name] = d; });
             KNOWLEDGE_STATS = idx.stats || null;
