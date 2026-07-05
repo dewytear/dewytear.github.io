@@ -1295,8 +1295,10 @@
            same vocabulary as the search screen's game dock: translucent at
            rest, wakes on hover, accent ink on the active segment. */
         .nav-tools{
-            display: inline-flex;
-            margin-bottom: 6px;
+            display: flex;
+            /* Sit just inside the category dividers' span, centered. */
+            width: calc(100% - 16px);
+            margin: 0 auto 6px;
             border: 1px solid var(--border);
             border-radius: 8px;
             background: color-mix(in srgb, var(--bg-alt) 72%, transparent);
@@ -1312,10 +1314,13 @@
             box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
         }
         .nav-tool{
+            flex: 1 1 0;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 5px 12px;
+            justify-content: center;
+            gap: 4px;
+            padding: 5px 6px;
+            white-space: nowrap;
             background: transparent;
             border: none;
             color: var(--muted);
