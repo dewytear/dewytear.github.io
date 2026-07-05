@@ -17,9 +17,9 @@ topped up with same-folder neighbours (via: "folder") so every doc gets 2-4.
 import json, math, os, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ENTRIES = os.path.join(ROOT, 'tools', 'doc-entries.json')
+ENTRIES = os.path.join(ROOT, 'tools', 'doc-entries.ko.json')
 LIST = os.path.join(ROOT, 'list')
-OUT = os.path.join(ROOT, 'knowledge-index.json')
+OUT = os.path.join(ROOT, 'data', 'knowledge-index.ko.json')
 NOTE = ('AI가 각 문서를 읽어 만든 구조적 지식 인덱스(요약·핵심개념·연관문서). '
         'related는 희소성 가중 개념 중복(via:concept) + 같은 폴더 보완(via:folder)으로 계산.')
 
