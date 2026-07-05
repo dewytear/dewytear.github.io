@@ -1141,6 +1141,16 @@
         /* ---- Navigation tree ---- */
         #navigation{
             padding: 20px 20px 20px 12px;   /* tighter left edge */
+            /* Fill the space above the sticky footer so the Work Log
+               branch can sink to the very bottom of the menu area. */
+            flex: 1 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+        #navigation > ul{
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         /* Backdrop behind the mobile drawer (only shown on small screens). */
         #nav-backdrop{
@@ -1236,10 +1246,13 @@
         #navigation .nav-branch:not(.collapsed) > .nav-title .ico-c{
             display: none;
         }
-        /* Work Log is a dev journal, not a knowledge category — set it
-           apart by dropping it well below the AI/DOUZONE group. */
+        /* Work Log is a dev journal, not a knowledge category — pin it to
+           the very bottom of the menu area, just above the day/night foot.
+           When the tree grows past the viewport the auto margin collapses
+           and the padding keeps a minimum gap. */
         #navigation > ul > li.nav-branch[data-cat="Work Log"]{
-            margin-top: 34px;
+            margin-top: auto;
+            padding-top: 24px;
         }
         /* Folder title text takes the row; ellipsises when long. */
         #navigation .nav-title-text{
