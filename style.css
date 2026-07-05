@@ -456,15 +456,31 @@
         }
 
         /* ---- Unified search screen (landing / title click) ---- */
-        /* Full-bleed: drop the article padding so the screen fills the pane. */
+        /* Full-bleed: drop the article padding so the screen fills the pane.
+           position:static so the bg/canvas skip #article (the model-badge
+           anchor) and anchor to #content — the backdrop reaches the title. */
         body.search-view #article{
             padding: 0;
+            position: static;
         }
         body.search-view .fade-in{
             animation: none;   /* the screen has its own entrance motion */
         }
-        .search-screen{
+        /* In search view the animated background + game canvas anchor to the
+           whole content card (#content becomes the positioned ancestor), so
+           the backdrop extends up behind the title. The masthead floats
+           transparently above it. */
+        body.search-view #content{
             position: relative;
+        }
+        body.search-view #masthead{
+            position: relative;
+            z-index: 2;
+            background: transparent;
+            border-bottom: none;
+        }
+        .search-screen{
+            position: static;   /* let bg/canvas anchor to #content instead */
             min-height: calc(100vh - 82px);   /* fill the pane below the slim masthead */
             display: flex;
             flex-direction: column;
