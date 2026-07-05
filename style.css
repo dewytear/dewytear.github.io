@@ -208,6 +208,12 @@
                #sidebar prefix outranks the later base #sidebar-foot rule. */
             #sidebar #sidebar-foot{
                 background: var(--bg-alt);
+                border-top: none;
+            }
+            /* No divider between the menu and the card — the base #sidebar
+               rule sits later in the file, so outrank it with #grid. */
+            #grid > #sidebar{
+                border-right: none;
             }
             /* The content pane is a rounded card inset in the shell —
                borderless like claude.ai, so no hard line runs beside the
@@ -1104,6 +1110,18 @@
         }
         #navigation .nav-branch.collapsed > .nav-title .nav-caret{
             transform: rotate(-90deg);
+        }
+        /* Top-level standalone links (e.g. 지식 코스모스) read like the
+           category titles beside them. */
+        #navigation > ul > li > a{
+            display: block;
+            margin: 22px 0 10px;
+            padding: 0 0 8px;
+            border-bottom: var(--nav-line-width) var(--nav-line-style) var(--border);
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--text);
         }
         /* Level-0 category titles: the only prominent tier. */
         #navigation > ul > li.nav-branch > .nav-title{

@@ -445,23 +445,35 @@
                 return [r * Math.cos(t), u, r * Math.sin(t)];
             }
 
-            var nodes = null, edges = null, maxRef = 1;
+            var nodes = null, edges = null, galaxies = null, maxRef = 1;
             function build(){
                 if(!KNOWLEDGE){ return false; }
                 var names = Object.keys(KNOWLEDGE);
                 if(!names.length){ return false; }
-                // One direction per cluster, spread on a sphere (golden spiral).
+                // Each 분류(section) is its OWN GALAXY: a compact star cloud
+                // around a center, centers spread apart on a golden spiral so
+                // the galaxies read as separate — related[] links become the
+                // bridges between them.
                 var secs = [];
                 names.forEach(function(n){
                     var s = KNOWLEDGE[n].section || '';
                     if(secs.indexOf(s) === -1){ secs.push(s); }
                 });
                 secs.sort();
+                var label_of = {};
+                if(KNOWLEDGE_STATS && KNOWLEDGE_STATS.clusters){
+                    KNOWLEDGE_STATS.clusters.forEach(function(c){ label_of[c.section] = c.label; });
+                }
                 var dirs = {};
+                galaxies = [];
                 secs.forEach(function(s, i){
                     var y = 1 - 2 * (i + 0.5) / secs.length;
                     var r = Math.sqrt(1 - y * y), t = i * 2.399963;
                     dirs[s] = [r * Math.cos(t), y, r * Math.sin(t)];
+                    var parts = s.split(' · ');
+                    galaxies.push({ label: label_of[s] || parts[parts.length - 1] || s,
+                                    x: dirs[s][0], y: dirs[s][1], z: dirs[s][2],
+                                    sx: 0, sy: 0, ss: 1 });
                 });
                 var indeg = {};
                 names.forEach(function(n){
@@ -474,11 +486,13 @@
                 nodes = names.map(function(n){
                     var d = KNOWLEDGE[n], dir = dirs[d.section] || [0, 1, 0];
                     var h1 = hash(n), j = unit((h1 % 9973) + 1);
-                    var v = [dir[0] + j[0] * 0.55, dir[1] + j[1] * 0.55, dir[2] + j[2] * 0.55];
-                    var L = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]) || 1;
-                    var R = 0.72 + rnd(h1 * 1.7) * 0.5;
+                    // A tight cloud (±0.26) around the galaxy center — no
+                    // renormalizing onto one shared sphere, so galaxies with
+                    // different 분류 stay visibly apart.
                     return { name: n, title: d.title,
-                             x: v[0] / L * R, y: v[1] / L * R, z: v[2] / L * R,
+                             x: dir[0] + j[0] * 0.26,
+                             y: dir[1] + j[1] * 0.26,
+                             z: dir[2] + j[2] * 0.26,
                              ref: indeg[n] || 0, sx: 0, sy: 0, ss: 1, sz: 0 };
                 });
                 var byName = {};
@@ -570,14 +584,24 @@
                 var cx = Math.cos(rotX), sx = Math.sin(rotX);
                 var scale = Math.min(W, H) * 0.47 * zoom, f = 3.2;
                 var midX = W / 2, midY = H * 0.54;
-                for(var i = 0; i < nodes.length; i++){
-                    var nd = nodes[i];
-                    var x = nd.x * cy + nd.z * sy, z = -nd.x * sy + nd.z * cy;
-                    var y2 = nd.y * cx - z * sx, z2 = nd.y * sx + z * cx;
+                function project(o){
+                    var x = o.x * cy + o.z * sy, z = -o.x * sy + o.z * cy;
+                    var y2 = o.y * cx - z * sx, z2 = o.y * sx + z * cx;
                     var pr = f / (f + z2);
-                    nd.sx = midX + x * scale * pr;
-                    nd.sy = midY + y2 * scale * pr;
-                    nd.ss = pr; nd.sz = z2;
+                    o.sx = midX + x * scale * pr;
+                    o.sy = midY + y2 * scale * pr;
+                    o.ss = pr; o.sz = z2;
+                }
+                for(var i = 0; i < nodes.length; i++){ project(nodes[i]); }
+                // Galaxy name plates — dim, behind everything.
+                ctx.textAlign = 'center';
+                for(var g = 0; g < galaxies.length; g++){
+                    var gx = galaxies[g];
+                    project(gx);
+                    ctx.font = '700 ' + Math.round(15 * gx.ss) + 'px ' + GAME_FONT;
+                    ctx.globalAlpha = Math.max(0.1, gx.ss * 0.22);
+                    ctx.fillStyle = mut;
+                    ctx.fillText(gx.label, gx.sx, gx.sy);
                 }
                 ctx.lineWidth = 1;
                 for(var e2 = 0; e2 < edges.length; e2++){
