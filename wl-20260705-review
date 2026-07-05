@@ -1,0 +1,40 @@
+<h2>2026-07-05 · 위키 전면 검증·보완</h2>
+<p>지식 문서 <strong>85편 전체</strong>를 대상으로 <strong>사실 검증(웹 대조) → 시리즈별 리뷰 → SVG 점검 → 인덱스 동기화</strong>를 한 번에 수행했습니다. 검증은 병렬 에이전트(사실 검증 3 + 시리즈 리뷰 8)로 진행하고, 모든 수정은 diff 검수와 Playwright 렌더 확인(양 테마)을 거쳐 커밋했습니다. 통합검색 미니게임의 <strong>플레이그라운드 크기 연동 버그</strong>도 함께 수정했습니다.</p>
+
+<h3>사실 검증 — 공식 문서·릴리스와 대조</h3>
+<ul>
+    <li><strong>설치 문서 현행화</strong> — 공식 권장이 npm에서 <strong>네이티브 인스톨러</strong>로 바뀐 것을 반영(npm 경로는 Node.js 22 이상). <span class="scn-sub">(install)</span></li>
+    <li><strong>컨텍스트 윈도우 정정</strong> — "무조건 1M" 단정을 기본 200K + 일부 모델(Fable 5·Sonnet 5·Opus 4.6 이후 등) 1M 지원으로 수정. 역사 수치도 "2K~8K"로 교정. <span class="scn-sub">(ccb-manage · skl-context)</span></li>
+    <li><strong>스킬 수치 정리</strong> — 메타데이터를 공식 표기 "스킬당 약 100토큰"으로, 근거 없는 "JSON 도구 30개 한계"는 스키마 선점 부담 설명으로 완화. <span class="scn-sub">(skl-progressive)</span></li>
+    <li><strong>OMC 현행화</strong> — 기준 버전 v4.14.6 → <strong>v4.15.2</strong>(07-05 확인), 구식 "WSL2 권장"을 psmux 네이티브 지원 기준으로 갱신, team이 현행 대표 모드임을 보강. <span class="scn-sub">(omc-intro · omc-hooks · omc-windows · omc-modes)</span></li>
+    <li><strong>검증 불가 수치에 출처 노트</strong> — "60% 향상 · 승률 100%", "4배 빠름"은 원문을 보존하되 강연자 자체 측정치임을 밝히고 Anthropic 멀티에이전트 90.2% 향상을 참고로 병기. <span class="scn-sub">(hns-hundred · hns-tools · hnp-hundred)</span></li>
+    <li><strong>실재 확인으로 종결</strong> — 모델명 나열(Gemini 3.5 Flash·GPT 5.5/5.6·Opus 4.8·Claude Mythos), Karpathy LLM Wiki(2026-04 X 게시글·gist), GBrain(garrytan/gbrain), OMC 레포·npm 패키지, 강의 라이브 링크 2건.</li>
+</ul>
+
+<h3>표현·표기 정리</h3>
+<ul>
+    <li>위키링크 vs 마크다운 링크 서술 정정, MOC 풀이 추가, Qdrant 표기 통일("쿼드런트"), Bookends·BM25 표기, 릴리스/릴리즈 통일, 비문·조사 오류·태그 공백 등 소소한 정리. <span class="scn-sub">(llmw · sb · hns · hnp 전반)</span></li>
+</ul>
+
+<h3>SVG 다이어그램 점검</h3>
+<ul>
+    <li>66개 전수 조사 — viewBox 이탈·화살표 어긋남·aria-label 누락 <strong>0건</strong>으로 견고함 확인.</li>
+    <li>수정 2곳 — 판정 다이어그램의 긴 라벨 축약(넘침 위험), 순차 폴백 캡션 중앙 정렬(x=150→340). <span class="scn-sub">(sb-context-connections)</span></li>
+</ul>
+
+<h3>미니게임 플레이그라운드 크기 연동</h3>
+<ul>
+    <li>사이드바 개폐 등 <strong>window resize 없이 카드 크기가 변하면</strong> 게임 캔버스가 이전 크기에 머물던 버그를 코스모스와 같은 <strong>ResizeObserver 패턴</strong>으로 수정(종료 경로에서 observer 해제). 수정 전 실패 → 수정 후 통과를 회귀 테스트로 교차 확인.</li>
+</ul>
+
+<h3>검증</h3>
+<ul>
+    <li>수정 페이지 28개 라우트 × 낮/밤 테마 전부 로드 — 콘솔 에러 0.</li>
+    <li>게임 4종(벽돌깨기·별똥별·퐁·비행기) 전환·리사이즈 추종·드로잉 확인.</li>
+    <li>인덱스 재생성 후 <code>build_index.py --check</code> 드리프트 0 (install·omc-windows 요약 갱신 반영).</li>
+</ul>
+
+<div class="note">
+    <span class="nh">남은 것</span>
+    skl-overview 강의 라이브 링크 1건은 이 환경에서 YouTube 접근이 차단되어 확인 보류. skl-wrap의 "맥락의 기회를 높이기" 표현은 강의 원문 확인 후 판단할 것.
+</div>
