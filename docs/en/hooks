@@ -1,0 +1,47 @@
+            <h2>Hooks</h2>
+<div class="diagram">
+<svg viewBox="0 0 660 188" role="img" aria-label="Hook lifecycle: SessionStart, UserPromptSubmit, PreToolUse, tool runs, PostToolUse, Stop">
+    <rect class="d-box" x="8" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="42" text-anchor="middle">SessionStart</text>
+    <text class="d-sub" x="108" y="59" text-anchor="middle">session start</text>
+
+    <rect class="d-box" x="223" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="42" text-anchor="middle">UserPromptSubmit</text>
+    <text class="d-sub" x="323" y="59" text-anchor="middle">prompt submitted</text>
+
+    <rect class="d-box" x="438" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="42" text-anchor="middle">PreToolUse</text>
+    <text class="d-sub" x="538" y="59" text-anchor="middle">before a tool runs</text>
+
+    <rect class="d-box soft" x="8" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="134" text-anchor="middle">Tool runs</text>
+    <text class="d-sub" x="108" y="151" text-anchor="middle">the tool executes</text>
+
+    <rect class="d-box" x="223" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="134" text-anchor="middle">PostToolUse</text>
+    <text class="d-sub" x="323" y="151" text-anchor="middle">after a tool runs</text>
+
+    <rect class="d-box accent" x="438" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="134" text-anchor="middle">Stop</text>
+    <text class="d-sub" x="538" y="151" text-anchor="middle">response ends</text>
+
+    <line class="d-edge" x1="208" y1="46" x2="221" y2="46"/><polygon class="d-arrow" points="215,41 223,46 215,51"/>
+    <line class="d-edge" x1="423" y1="46" x2="436" y2="46"/><polygon class="d-arrow" points="430,41 438,46 430,51"/>
+    <path class="d-edge" d="M538 72 C538 87, 523 92, 505 92 H141 C123 92, 108 97, 108 110"/><polygon class="d-arrow" points="103,106 113,106 108,112"/><polygon class="d-arrow" points="328,87 328,97 318,92"/>
+    <line class="d-edge" x1="208" y1="138" x2="221" y2="138"/><polygon class="d-arrow" points="215,133 223,138 215,143"/>
+    <line class="d-edge" x1="423" y1="138" x2="436" y2="138"/><polygon class="d-arrow" points="430,133 438,138 430,143"/>
+</svg>
+</div>
+            <p>
+
+                Hooks are user-defined shell commands that Claude Code runs automatically at specific points in its lifecycle. They let you enforce rules and automate behavior deterministically &mdash; the harness executes them, so they happen every time, not just when Claude remembers to.
+                Hooks are configured in your <code>settings.json</code> and are attached to events such as:
+                <ul>
+                    <li><strong>PreToolUse</strong> &mdash; before Claude runs a tool (e.g. block edits to protected files).</li>
+                    <li><strong>PostToolUse</strong> &mdash; after a tool runs (e.g. auto-format or lint a file that was just edited).</li>
+                    <li><strong>SessionStart</strong> &mdash; when a session begins (e.g. install dependencies so tests can run).</li>
+                    <li><strong>Stop</strong> &mdash; when Claude finishes responding (e.g. send a notification).</li>
+                </ul>
+                Typical uses include running a formatter after every edit, running the test suite before a commit, protecting sensitive paths, or sending a desktop notification when a long task completes. Because hooks are just shell commands, you can wire Claude Code into whatever tooling your project already uses.
+
+            </p>

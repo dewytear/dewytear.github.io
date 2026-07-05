@@ -1,29 +1,29 @@
             <h2>Hooks</h2>
 <div class="diagram">
-<svg viewBox="0 0 660 188" role="img" aria-label="Hook lifecycle: SessionStart, UserPromptSubmit, PreToolUse, tool runs, PostToolUse, Stop">
+<svg viewBox="0 0 660 188" role="img" aria-label="훅 수명주기: SessionStart, UserPromptSubmit, PreToolUse, 도구 실행, PostToolUse, Stop">
     <rect class="d-box" x="8" y="20" width="200" height="52" rx="10"/>
     <text class="d-label" x="108" y="42" text-anchor="middle">SessionStart</text>
-    <text class="d-sub" x="108" y="59" text-anchor="middle">session start</text>
+    <text class="d-sub" x="108" y="59" text-anchor="middle">세션 시작</text>
 
     <rect class="d-box" x="223" y="20" width="200" height="52" rx="10"/>
     <text class="d-label" x="323" y="42" text-anchor="middle">UserPromptSubmit</text>
-    <text class="d-sub" x="323" y="59" text-anchor="middle">prompt submitted</text>
+    <text class="d-sub" x="323" y="59" text-anchor="middle">프롬프트 제출</text>
 
     <rect class="d-box" x="438" y="20" width="200" height="52" rx="10"/>
     <text class="d-label" x="538" y="42" text-anchor="middle">PreToolUse</text>
-    <text class="d-sub" x="538" y="59" text-anchor="middle">before a tool runs</text>
+    <text class="d-sub" x="538" y="59" text-anchor="middle">도구 실행 직전</text>
 
     <rect class="d-box soft" x="8" y="112" width="200" height="52" rx="10"/>
-    <text class="d-label" x="108" y="134" text-anchor="middle">Tool runs</text>
-    <text class="d-sub" x="108" y="151" text-anchor="middle">the tool executes</text>
+    <text class="d-label" x="108" y="134" text-anchor="middle">도구 실행</text>
+    <text class="d-sub" x="108" y="151" text-anchor="middle">도구가 실제로 동작</text>
 
     <rect class="d-box" x="223" y="112" width="200" height="52" rx="10"/>
     <text class="d-label" x="323" y="134" text-anchor="middle">PostToolUse</text>
-    <text class="d-sub" x="323" y="151" text-anchor="middle">after a tool runs</text>
+    <text class="d-sub" x="323" y="151" text-anchor="middle">도구 실행 직후</text>
 
     <rect class="d-box accent" x="438" y="112" width="200" height="52" rx="10"/>
     <text class="d-label" x="538" y="134" text-anchor="middle">Stop</text>
-    <text class="d-sub" x="538" y="151" text-anchor="middle">response ends</text>
+    <text class="d-sub" x="538" y="151" text-anchor="middle">응답 종료</text>
 
     <line class="d-edge" x1="208" y1="46" x2="221" y2="46"/><polygon class="d-arrow" points="215,41 223,46 215,51"/>
     <line class="d-edge" x1="423" y1="46" x2="436" y2="46"/><polygon class="d-arrow" points="430,41 438,46 430,51"/>
@@ -34,14 +34,14 @@
 </div>
             <p>
 
-                Hooks are user-defined shell commands that Claude Code runs automatically at specific points in its lifecycle. They let you enforce rules and automate behavior deterministically &mdash; the harness executes them, so they happen every time, not just when Claude remembers to.
-                Hooks are configured in your <code>settings.json</code> and are attached to events such as:
+                훅(Hook)은 Claude Code가 수명주기의 특정 시점마다 자동으로 실행하는, 사용자가 정의한 셸 명령입니다. 규칙을 강제하고 동작을 결정론적으로 자동화할 수 있습니다 &mdash; 하네스가 직접 실행하므로 Claude가 기억할 때만이 아니라 <em>매번</em> 실행됩니다.
+                훅은 <code>settings.json</code>에 설정하며, 다음과 같은 이벤트에 붙습니다:
                 <ul>
-                    <li><strong>PreToolUse</strong> &mdash; before Claude runs a tool (e.g. block edits to protected files).</li>
-                    <li><strong>PostToolUse</strong> &mdash; after a tool runs (e.g. auto-format or lint a file that was just edited).</li>
-                    <li><strong>SessionStart</strong> &mdash; when a session begins (e.g. install dependencies so tests can run).</li>
-                    <li><strong>Stop</strong> &mdash; when Claude finishes responding (e.g. send a notification).</li>
+                    <li><strong>PreToolUse</strong> &mdash; 도구 실행 직전 (예: 보호된 파일의 수정 차단)</li>
+                    <li><strong>PostToolUse</strong> &mdash; 도구 실행 직후 (예: 방금 고친 파일을 자동 포맷·린트)</li>
+                    <li><strong>SessionStart</strong> &mdash; 세션이 시작될 때 (예: 테스트가 돌 수 있게 의존성 설치)</li>
+                    <li><strong>Stop</strong> &mdash; Claude가 응답을 마쳤을 때 (예: 알림 발송)</li>
                 </ul>
-                Typical uses include running a formatter after every edit, running the test suite before a commit, protecting sensitive paths, or sending a desktop notification when a long task completes. Because hooks are just shell commands, you can wire Claude Code into whatever tooling your project already uses.
+                대표적인 쓰임새는 수정할 때마다 포매터 실행, 커밋 전 테스트 스위트 실행, 민감한 경로 보호, 긴 작업이 끝나면 데스크톱 알림 보내기 등입니다. 훅은 결국 그냥 셸 명령이므로, 프로젝트가 이미 쓰는 어떤 도구와도 Claude Code를 이어 붙일 수 있습니다.
 
             </p>

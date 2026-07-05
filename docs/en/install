@@ -1,0 +1,44 @@
+            <h2>Install &amp; Start</h2>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="Install flow: install with the native installer, go to your project, run claude, then authenticate">
+    <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="85" y="46" text-anchor="middle">① Install</text>
+    <text class="d-sub" x="85" y="63" text-anchor="middle">native installer</text>
+
+    <rect class="d-box" x="180" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="255" y="46" text-anchor="middle">② Go to project</text>
+    <text class="d-sub" x="255" y="63" text-anchor="middle">cd your-project</text>
+
+    <rect class="d-box" x="350" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="425" y="46" text-anchor="middle">③ Run claude</text>
+    <text class="d-sub" x="425" y="63" text-anchor="middle">claude</text>
+
+    <rect class="d-box accent" x="520" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="595" y="46" text-anchor="middle">④ Authenticate</text>
+    <text class="d-sub" x="595" y="63" text-anchor="middle">log in · API key</text>
+
+    <line class="d-edge" x1="160" y1="48" x2="176" y2="48"/><polygon class="d-arrow" points="172,43 180,48 172,53"/>
+    <line class="d-edge" x1="330" y1="48" x2="346" y2="48"/><polygon class="d-arrow" points="342,43 350,48 342,53"/>
+    <line class="d-edge" x1="500" y1="48" x2="516" y2="48"/><polygon class="d-arrow" points="512,43 520,48 512,53"/>
+</svg>
+</div>
+            <p>
+
+                The fastest way to get started is the native installer &mdash; a single command with no dependencies, and it keeps Claude Code updated automatically.
+                <ul>
+                    <li>macOS / Linux / WSL: <code>curl -fsSL https://claude.ai/install.sh | bash</code></li>
+                    <li>Windows (PowerShell): <code>irm https://claude.ai/install.ps1 | iex</code></li>
+                    <li>Go to your project: <code>cd your-project</code></li>
+                    <li>Launch it: <code>claude</code></li>
+                </ul>
+                Homebrew (<code>brew install --cask claude-code</code>) and WinGet are also supported. Installing with npm (<code>npm install -g @anthropic-ai/claude-code</code>, requires Node.js 22 or newer) still works and installs the same native binary.
+                On first launch, Claude Code walks you through authentication &mdash; you can log in with a Claude account (Pro/Max plan) or an Anthropic API key. After that, just describe what you want in plain language, for example: <em>"explain the auth flow"</em> or <em>"add a dark mode toggle and run the tests"</em>.
+                A few handy startup flags:
+                <ul>
+                    <li><code>claude</code> &mdash; start an interactive session</li>
+                    <li><code>claude "your prompt"</code> &mdash; run a one-off task</li>
+                    <li><code>claude -c</code> &mdash; continue the most recent conversation</li>
+                    <li><code>claude --help</code> &mdash; list all options</li>
+                </ul>
+
+            </p>
