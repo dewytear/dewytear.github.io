@@ -203,7 +203,9 @@
                 opacity: 0;
                 pointer-events: none;
             }
-            /* The content pane is a rounded card inset in the shell. */
+            /* The content pane is a rounded card inset in the shell —
+               borderless like claude.ai, so no hard line runs beside the
+               menu; the tint contrast + soft shadow do the separating. */
             #content{
                 flex: 1;
                 min-width: 0;
@@ -212,10 +214,10 @@
                 height: calc(100vh - 20px);
                 margin: 10px 12px 10px 4px;
                 background: var(--bg);
-                border: 1px solid var(--border);
+                border: none;
                 border-radius: 14px;
                 overflow: hidden;
-                box-shadow: 0 3px 18px rgba(0, 0, 0, 0.06);
+                box-shadow: 0 2px 14px rgba(0, 0, 0, 0.08);
             }
             body.nav-collapsed #content{
                 margin-left: 12px;
