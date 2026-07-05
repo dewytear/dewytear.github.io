@@ -1165,7 +1165,7 @@
         function currentGameMode(){
             var pick = '';
             try{ pick = localStorage.getItem('wikiGamePick') || ''; }catch(e){}
-            var mode = pick || loadSettings().searchGame || 'breakout';
+            var mode = pick || effSettings().searchGame || 'breakout';
             return SEARCH_GAMES[mode] ? mode : 'breakout';
         }
         function startSearchGame(){
@@ -1738,6 +1738,32 @@
         function saveSettings(s){
             localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
         }
+        // ---- Site-wide defaults (config.json "defaults") ----
+        // The repo serves defaults to every visitor; a personal value saved
+        // in this browser wins on top. Hard-coded fallbacks keep the site
+        // working when config.json carries no defaults block.
+        var SITE_DEFAULTS = {};
+        var HARD_DEFAULTS = { navLineStyle: 'dashed', navLineWidth: '1px',
+                              searchGame: 'breakout', music: '',
+                              hideRecent: false, hideRelated: false };
+        // Effective settings = site defaults overlaid with personal values.
+        function effSettings(){
+            var out = {}, k;
+            for(k in SITE_DEFAULTS){ out[k] = SITE_DEFAULTS[k]; }
+            var s = loadSettings();
+            for(k in s){ out[k] = s[k]; }
+            return out;
+        }
+        function accentDefault(which){
+            var v = which === 'day' ? SITE_DEFAULTS.accentDay : SITE_DEFAULTS.accentNight;
+            return (v || (which === 'day' ? ACCENT_DAY_DEFAULT : ACCENT_NIGHT_DEFAULT)).toLowerCase();
+        }
+        // Store only deviations: a value equal to the effective default is
+        // removed, so future site-default changes keep reaching this browser.
+        function setOrClear(s, key, val){
+            var d = SITE_DEFAULTS[key] !== undefined ? SITE_DEFAULTS[key] : HARD_DEFAULTS[key];
+            if(val === d){ delete s[key]; } else { s[key] = val; }
+        }
         function getPassword(){
             var s = loadSettings();
             return s.password || '1111';   // default password
@@ -1751,7 +1777,7 @@
             });
         }
         function applySettings(){
-            var s = loadSettings();
+            var s = effSettings();   // site defaults + personal overrides
             if(s.title){
                 var h = document.querySelector('#masthead h1 a');
                 if(h){ h.textContent = s.title; }
@@ -1786,6 +1812,8 @@
             document.body.classList.toggle('day', isDay);
             var toggle = document.getElementById('theme-toggle');
             if(toggle){ toggle.checked = isDay; }
+            // Background-music track (site default or personal pick).
+            if(window.setMusicVideo){ window.setMusicVideo(s.music || ''); }
         }
 
         // Global config lives in the repo (same-origin, no API key needed).
@@ -1798,6 +1826,9 @@
                 return r.ok ? r.json() : null;
             }).then(function(cfg){
                 if(!cfg){ return; }
+                // Site-wide defaults for visitor-facing settings; personal
+                // localStorage values overlay these (see effSettings).
+                SITE_DEFAULTS = cfg.defaults || {};
                 if(cfg.title){
                     var h = document.querySelector('#masthead h1 a');
                     if(h){ h.textContent = cfg.title; }
@@ -1845,7 +1876,7 @@
         }
         function resetAccent(which){
             var el = document.getElementById('settings-accent-' + which);
-            if(el){ el.value = which === 'day' ? ACCENT_DAY_DEFAULT : ACCENT_NIGHT_DEFAULT; }
+            if(el){ el.value = accentDefault(which); }
             previewAccent();
         }
 
@@ -1897,7 +1928,7 @@
         }
 
         function showSettings(){
-            var s = loadSettings();
+            var s = effSettings();   // shows site defaults until overridden
             var curTitle = s.title || document.querySelector('#masthead h1 a').textContent;
             var curTagline = s.tagline != null ? s.tagline
                            : document.getElementById('tagline').textContent;
@@ -1917,8 +1948,8 @@
             // Working state for the category transfer list (left=전체, right=노출).
             SETTINGS_CATS = { all: cats,
                               exposed: cats.filter(function(c){ return hiddenCats.indexOf(c) === -1; }) };
-            var curAccentDay = s.accentDay || ACCENT_DAY_DEFAULT;
-            var curAccentNight = s.accentNight || ACCENT_NIGHT_DEFAULT;
+            var curAccentDay = s.accentDay || accentDefault('day');
+            var curAccentNight = s.accentNight || accentDefault('night');
             var basic =
                 '<div id="settings-panel-basic" class="settings-panel"'
               +   (SETTINGS_TAB === 'basic' ? '' : ' hidden') + '>'
@@ -2013,7 +2044,7 @@
               + '</div>';
             var html =
                 '<h2>설정</h2>'
-              + '<p class="settings-note">변경 내용은 이 브라우저에만 저장됩니다. 프로필 사진은 서버 설정에서 관리합니다.</p>'
+              + '<p class="settings-note">변경 내용은 이 브라우저에만 저장됩니다. 모든 방문자에게 적용할 기본값은 저장소의 <code>config.json</code> &rarr; <code>defaults</code>에서 관리합니다(개인 설정이 우선).</p>'
               + '<div class="settings-tabs" role="tablist">'
               +   '<button type="button" id="settings-tab-basic" class="settings-tab'
               +     (SETTINGS_TAB === 'basic' ? ' active' : '') + '" role="tab"'
@@ -2097,17 +2128,19 @@
             if(titleVal){ s.title = titleVal; } else { delete s.title; }
             s.tagline = document.getElementById('settings-tagline').value;
             s.photoLine = document.getElementById('settings-photoline').value;
-            s.music = document.getElementById('settings-music').value.trim();
-            s.navLineStyle = document.getElementById('settings-navstyle').value;
-            s.navLineWidth = document.getElementById('settings-navwidth').value;
-            s.hideRecent = document.getElementById('settings-hiderecent').checked;
-            s.hideRelated = document.getElementById('settings-hiderelated').checked;
-            s.searchGame = document.getElementById('settings-game').value;
-            // Accent overrides: default value = no override stored.
+            // Design/feature fields store only deviations from the site
+            // default, so config.json changes keep reaching this browser.
+            setOrClear(s, 'music', document.getElementById('settings-music').value.trim());
+            setOrClear(s, 'navLineStyle', document.getElementById('settings-navstyle').value);
+            setOrClear(s, 'navLineWidth', document.getElementById('settings-navwidth').value);
+            setOrClear(s, 'hideRecent', document.getElementById('settings-hiderecent').checked);
+            setOrClear(s, 'hideRelated', document.getElementById('settings-hiderelated').checked);
+            setOrClear(s, 'searchGame', document.getElementById('settings-game').value);
+            // Accent overrides: the (site) default value = no override stored.
             var ad = document.getElementById('settings-accent-day').value;
             var an = document.getElementById('settings-accent-night').value;
-            if(ad && ad.toLowerCase() !== ACCENT_DAY_DEFAULT){ s.accentDay = ad; } else { delete s.accentDay; }
-            if(an && an.toLowerCase() !== ACCENT_NIGHT_DEFAULT){ s.accentNight = an; } else { delete s.accentNight; }
+            if(ad && ad.toLowerCase() !== accentDefault('day')){ s.accentDay = ad; } else { delete s.accentDay; }
+            if(an && an.toLowerCase() !== accentDefault('night')){ s.accentNight = an; } else { delete s.accentNight; }
             if(SETTINGS_CATS){
                 s.hiddenCats = SETTINGS_CATS.all.filter(function(c){
                     return SETTINGS_CATS.exposed.indexOf(c) === -1;
@@ -2117,8 +2150,7 @@
             if(np){ s.password = np; }
             try{
                 saveSettings(s);
-                applySettings();
-                if(window.setMusicVideo){ window.setMusicVideo(s.music); }
+                applySettings();   // also re-applies the music track
                 document.getElementById('settings-newpass').value = '';
                 settingsMsg(np ? '저장되었습니다. 암호가 변경되었습니다.' : '저장되었습니다.');
             }catch(e){
@@ -2245,7 +2277,7 @@
         (function(){
             var DEFAULT_ID = '08A9n8QyE3k';
             function resolveId(){
-                try{ return parseYouTubeId((loadSettings().music) || '') || DEFAULT_ID; }
+                try{ return parseYouTubeId((effSettings().music) || '') || DEFAULT_ID; }
                 catch(e){ return DEFAULT_ID; }
             }
             var VIDEO_ID = resolveId();

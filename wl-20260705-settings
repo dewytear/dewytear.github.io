@@ -6,4 +6,5 @@
     <li><strong>탭 구성</strong> — "기본 설정"(타이틀·문구·배경음악·미니게임·표시 옵션·대분류·암호)과 "디자인 설정"(테마 색상·목록 구분선)으로 분리. 두 패널을 함께 렌더하고 표시만 전환해, 탭을 오가도 입력값이 유지되고 저장은 한 번에. <span class="scn-sub">(PR #118)</span></li>
     <li><strong>테마 포인트 색상</strong> — 밝은/다크 모드 각각 컬러피커로 지정. 고르는 즉시 <strong>라이브 미리보기</strong>, 저장 시 유지. 밝은 모드 링크색은 가독성을 위해 자동으로 어둡게 파생. 기본값이면 오버라이드를 저장하지 않아 <code>style.css</code>가 단일 기준. <span class="scn-sub">(PR #118)</span></li>
     <li><strong>여백·강조 다듬기</strong> — 연관 문서 영역의 하단 여백을 위쪽과 균형 있게(84→48px), 최근 문서 제목의 굵기 강조 제거. <span class="scn-sub">(PR #118)</span></li>
+    <li><strong>사이트 기본값 체계</strong> — <code>config.json</code>의 <code>defaults</code> 블록(테마 색·기본 게임·구분선·표시 옵션 등)이 <strong>모든 방문자</strong>의 시작값이 되고, 브라우저별 개인 설정이 그 위에 우선. 기본값과 같은 값은 저장하지 않아(편차 저장) 이후 기본값 변경이 계속 전달됨. <span class="scn-sub">(PR #124)</span></li>
 </ul>
