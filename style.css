@@ -1318,11 +1318,43 @@
             text-decoration: underline;
         }
         .rel-why{
-            display: block;
-            margin-top: 4px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 5px;
             color: var(--muted);
             font-size: 11px;
             line-height: 1.5;
+        }
+        .rel-why-plain{
+            color: var(--muted);
+        }
+        /* Clickable concept chip — pivots to unified search for that concept.
+           Used in related cards and on the 지식 지도 page. */
+        .rel-c{
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-ink);
+            background: color-mix(in srgb, var(--accent) 14%, transparent);
+            border: none;
+            border-radius: 999px;
+            padding: 1px 9px;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .rel-c:hover{
+            background: color-mix(in srgb, var(--accent) 26%, transparent);
+        }
+        .rel-c::before{
+            content: "\0023  ";
+            opacity: 0.6;
+        }
+        /* Concept-frequency count on the 지식 지도 page. */
+        .km-n{
+            color: var(--muted);
+            font-size: 11px;
+            margin-right: 6px;
         }
 
         /* Tag index page */

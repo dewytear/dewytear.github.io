@@ -99,7 +99,75 @@ def build():
                     break
         d['related'] = rel
 
-    return {'schemaVersion': 1, 'note': NOTE, 'docCount': len(docs), 'docs': docs}
+    stats = build_stats(docs)
+    return {'schemaVersion': 2, 'note': NOTE, 'docCount': len(docs),
+            'stats': stats, 'docs': docs}
+
+
+# Cluster display names for the "AI 지식 지도" page, keyed by section path.
+CLUSTER_LABELS = [
+    ('AI · Claude · Code · Introduction', 'Introduction'),
+    ('AI · Claude · Code · Tutorial', 'Tutorial(입문)'),
+    ('AI · Claude · Code · Skill', 'Skill'),
+    ('AI · Claude · Code · Second Brain', 'Second Brain'),
+    ('AI · Claude · Code · LLM Wiki', 'LLM Wiki'),
+    ('AI · Claude · Code · Harness', 'Harness 엔지니어링'),
+    ('AI · Claude · PlugIn · Harness', 'Harness 플러그인'),
+    ('AI · Claude · PlugIn · OMC', 'OMC 플러그인'),
+]
+
+
+def build_stats(docs):
+    """Deterministic aggregation the site renders live on the 지식 지도 page.
+
+    Everything here derives from the entries alone (no clock, no randomness),
+    so the same inputs always produce the same stats and --check stays valid.
+    """
+    by_name = {d['name']: d for d in docs}
+    label_of = dict(CLUSTER_LABELS)
+
+    # In-degree over related links = "how often docs point here".
+    indeg = {}
+    for d in docs:
+        for r in d['related']:
+            indeg[r['name']] = indeg.get(r['name'], 0) + 1
+
+    # Clusters in the fixed display order, each with its own top hub.
+    clusters = []
+    for section, label in CLUSTER_LABELS:
+        members = [d for d in docs if d['section'] == section]
+        if not members:
+            continue
+        hub = max(members, key=lambda d: (indeg.get(d['name'], 0), d['name']))
+        clusters.append({'label': label, 'section': section, 'count': len(members),
+                         'hub': {'name': hub['name'], 'title': hub['title'],
+                                 'refs': indeg.get(hub['name'], 0)}})
+
+    # Overall hubs: most-referenced docs (ties by name for determinism).
+    hubs = sorted(((n, c) for n, c in indeg.items()), key=lambda t: (-t[1], t[0]))
+    hubs = [{'name': n, 'title': by_name[n]['title'], 'refs': c}
+            for n, c in hubs if c >= 6]
+
+    # Concept frequency + cluster spread (bridges connect 3+ clusters).
+    freq, spread = {}, {}
+    for d in docs:
+        cl = label_of.get(d['section'], d['section'])
+        for c in set(d['concepts']):
+            freq[c] = freq.get(c, 0) + 1
+            spread.setdefault(c, set()).add(cl)
+    top_concepts = sorted(freq.items(), key=lambda t: (-t[1], t[0]))[:16]
+    bridges = sorted(((c, n) for c, n in freq.items() if len(spread[c]) >= 3),
+                     key=lambda t: (-len(spread[t[0]]), -t[1], t[0]))[:8]
+
+    return {
+        'docCount': len(docs),
+        'conceptCount': len(freq),
+        'clusters': clusters,
+        'hubs': hubs,
+        'topConcepts': [{'c': c, 'n': n} for c, n in top_concepts],
+        'bridges': [{'c': c, 'n': freq[c],
+                     'clusters': sorted(spread[c])} for c, n in bridges],
+    }
 
 
 def dump(obj):
