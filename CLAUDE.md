@@ -9,5 +9,8 @@
 - UI 색은 테마 토큰(`var(--accent)`, `var(--muted)`, `var(--border)` 등)만 사용 — 낮/밤 테마 자동 대응. 단, 문서 프래그먼트의 다이어그램 SVG는 Safari 호환을 위해 style.css에 테마별 hex가 하드코딩된 기존 체계를 따른다.
 - 새 컴포넌트는 기존 디자인 언어를 따른다: 반투명 필(pill) + backdrop-blur, 평소엔 낮은 존재감·호버 시 깨어남 (예: 검색 화면 `.game-dock`, 사이드바 `.nav-tools`).
 
+## 다국어 규칙
+- **번역·언어 관련 작업은 반드시 `tools/i18n.md` 체크리스트를 따른다** — 구조(폴백 계층)·핵심 원칙·추가 순서·검증 목록이 거기 있다. 특히: 문서의 `label_<lang>`·`tags_<lang>`·인덱스 오버레이는 **그 문서의 본문 번역과 같은 PR에서만** 갱신하고, 새 UI 문구는 하드코딩 대신 `STR()` 키 + `STRINGS` 사전으로 넣는다.
+
 ## 배포
 - GitHub Pages는 `master`를 배포한다. 머지 후 "pages build and deployment" 워크플로가 일시 오류로 실패하면(간헐적) master에 빈 커밋을 푸시해 재트리거한다.

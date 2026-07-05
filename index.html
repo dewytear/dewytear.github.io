@@ -137,7 +137,7 @@
             var docs = FOLDER_DOCS[sectionKey];
             if(!docs || docs.length < 2 || sectionKey.indexOf('Work Log') === 0){ return ''; }
             return '<span class="folder-digest" role="button" tabindex="0"'
-                 + ' title="이 폴더 문서 모아보기" aria-label="이 폴더 문서 모아보기"'
+                 + ' title="' + STR('digestTitle') + '" aria-label="' + STR('digestTitle') + '"'
                  + ' data-section="' + escapeHtml(sectionKey) + '"'
                  + ' onclick="openFolderDigest(event, this)"'
                  + ' onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openFolderDigest(event,this);}">&#10697;</span>';
@@ -317,30 +317,142 @@
         // 화면 문구 사전 — 언어가 준비되면 STRINGS.<lang>을 채운다.
         var STRINGS = {
             ko: {
-                recent: '최근 문서',
-                related: '연관 문서',
-                expandAll: '모두 펼치기',
-                collapseAll: '모두 접기',
+                recent: '최근 문서', related: '연관 문서',
+                expandAll: '모두 펼치기', collapseAll: '모두 접기',
                 searchPh: '제목 · 태그 · 개념 · 본문을 검색…',
                 cosmosSub: '지식 인덱스의 연관 관계를 3차원 별자리로 — 드래그 회전 · 휠 확대 · 별을 클릭하면 그 문서로',
-                kmEach: '각 {n}회',
-                kmRefs: '{n}회 연결',
-                kmBridgeN: '{n}개 — ',
-                kmDocsN: '{n}편',
-                kmTotals: 'AI 대분류 {d}편 · 고유 개념 {c}개.'
+                cosmosLoading: '지식 인덱스를 불러오는 중…',
+                kmEach: '각 {n}회', kmRefs: '{n}회 연결', kmBridgeN: '{n}개 — ',
+                kmDocsN: '{n}편', kmTotals: 'AI 대분류 {d}편 · 고유 개념 {c}개.',
+                digestTitle: '이 폴더 문서 모아보기', relFolder: '같은 폴더',
+                tagsTop: '많이 쓰인 태그',
+                folderEmpty: '이 폴더에는 모아 볼 문서가 없습니다.',
+                folderCount: '문서 {n}개', loading: '불러오는 중…',
+                searchIndexing: '본문 색인을 불러오는 중… (제목·태그·개념 우선)',
+                searchSuggests: '관련 개념',
+                searchEmpty: '&ldquo;{q}&rdquo;에 대한 결과가 없습니다.',
+                searchMore: '외 {n}개 더…',
+                searchHead: '무엇을 찾으세요?',
+                searchSubline: 'Claude Code · 플러그인 · 하네스 · 세컨드 브레인',
+                dockAria: '미니게임 선택',
+                gBreakout: '벽돌깨기', gBreakoutDef: '벽돌깨기 (기본)',
+                gConcept: '개념 별똥별 받기', gConceptLong: '개념 별똥별 받기 — 받으면 그 개념으로 검색',
+                gPong: '퐁 랠리', gPongLong: '퐁 랠리 — AI 패들과 주고받기',
+                gPlane: '종이비행기 글라이딩', gPlaneLong: '종이비행기 글라이딩 — 빈 곳 클릭으로 비행',
+                planeHint: '빈 곳을 클릭해 비행 ✈',
+                pagerPrev: '이전 7페이지', pagerNext: '다음 7페이지',
+                settings: '설정', themeSwitch: 'Day / Night 전환',
+                musicTitle: '배경음악', musicAria: '배경음악 재생',
+                lockNote: '설정을 변경하려면 암호를 입력하세요.',
+                pw: '암호', ok: '확인', wrongPw: '암호가 올바르지 않습니다.',
+                setNote: '변경 내용은 이 브라우저에만 저장됩니다. 프로필 사진은 서버 설정에서 관리합니다.',
+                tabBasic: '기본 설정', tabDesign: '디자인 설정',
+                fTitle: '타이틀', fTagline: '타이틀 문구', fPhoto: '사진 아래 문구',
+                phPhoto: '비우면 문구를 숨깁니다',
+                fMusic: '배경음악 (YouTube 링크 또는 영상 ID)',
+                phMusic: '예: https://youtu.be/08A9n8QyE3k · 비우면 기본 트랙',
+                fLang: '언어 (Language)',
+                langKo: '한국어 (기본)', langEn: 'English — 준비 중',
+                langZh: '中文 — 준비 중', langJa: '日本語 — 준비 중',
+                fGame: '통합검색 미니게임 기본값 (방문자는 검색 화면 하단에서 직접 변경 가능)',
+                fDisplay: '표시 옵션',
+                hideRecentL: '최근 문서 영역 숨기기', hideRelatedL: '연관 문서 영역 숨기기',
+                fCats: '대분류 노출 (전체 → 노출로 옮긴 항목만 표시)',
+                catAll: '전체 목록', catShown: '노출 목록',
+                catAdd: '노출에 추가', catRemove: '노출에서 빼기',
+                fNewPw: '새 암호 (변경 시에만 입력)', phNewPw: '비워두면 유지',
+                fAccent: '테마 포인트 색상 (고르는 즉시 미리보기, 저장을 눌러야 유지)',
+                dayMode: '밝은 모드', nightMode: '다크 모드', resetDefault: '기본값',
+                fNavStyle: '목록 구분선 모양',
+                optDashed: '파선 (기본)', optDotted: '점선', optSolid: '실선',
+                fNavWidth: '목록 구분선 두께',
+                optThin: '얇게 (기본)', optMed: '보통', optThick: '굵게',
+                save: '저장', resetAll: '기본값으로',
+                dumpSummary: '이 브라우저의 현재 설정 값 보기 (진단)',
+                thKey: '항목', thVal: '적용 값', thSrc: '출처',
+                srcPersonal: '개인 저장', srcSite: '사이트 기본', srcApp: '앱 기본',
+                valEmpty: '(비어 있음)', pwChanged: '(변경됨)', pwDefault: '(기본)',
+                rowPick: 'wikiGamePick (게임 독 선택)', rowCollapsed: 'navCollapsed (메뉴 접힘)',
+                dumpRawL: '이 브라우저에 저장된 원본(JSON)', copy: '복사',
+                copied: '설정 JSON을 복사했습니다.',
+                copyFail: '복사에 실패했습니다. 직접 선택해 복사해 주세요.',
+                saved: '저장되었습니다.', savedPw: '저장되었습니다. 암호가 변경되었습니다.',
+                savedLang: '저장되었습니다. 언어 적용을 위해 새로고침합니다…',
+                saveFail: '저장에 실패했습니다.',
+                resetConfirm: '타이틀·암호를 모두 기본값으로 되돌릴까요?',
+                musicFail: '음악 로드 실패 (네트워크·차단기 확인)',
+                musicEmbed: '이 영상은 재생할 수 없습니다 (임베드 제한)',
+                musicBlockedTitle: '재생 차단됨 — 눌러서 YouTube에서 열기',
+                musicNotice: '배경음악(YouTube)이 차단됐어요. Safari라면 <b>크로스 사이트 추적 방지</b> 때문일 수 있어요.<br>버튼을 누르면 <b>YouTube에서 열기</b> &#8599;'
             },
             en: {
-                recent: 'Recent Docs',
-                related: 'Related Docs',
-                expandAll: 'Expand all',
-                collapseAll: 'Collapse all',
+                recent: 'Recent Docs', related: 'Related Docs',
+                expandAll: 'Expand all', collapseAll: 'Collapse all',
                 searchPh: 'Search titles · tags · concepts · full text…',
                 cosmosSub: 'The knowledge index as a 3D constellation — drag to rotate · wheel to zoom · click a star to open it',
-                kmEach: '×{n} each',
-                kmRefs: '{n} links',
-                kmBridgeN: '{n} — ',
-                kmDocsN: '{n} docs',
-                kmTotals: 'AI category: {d} docs · {c} unique concepts.'
+                cosmosLoading: 'Loading the knowledge index…',
+                kmEach: '×{n} each', kmRefs: '{n} links', kmBridgeN: '{n} — ',
+                kmDocsN: '{n} docs', kmTotals: 'AI category: {d} docs · {c} unique concepts.',
+                digestTitle: 'Read this folder on one page', relFolder: 'same folder',
+                tagsTop: 'Most used tags',
+                folderEmpty: 'This folder has no docs to gather.',
+                folderCount: '{n} docs', loading: 'Loading…',
+                searchIndexing: 'Indexing doc bodies… (titles · tags · concepts first)',
+                searchSuggests: 'Related concepts',
+                searchEmpty: 'No results for &ldquo;{q}&rdquo;.',
+                searchMore: '+{n} more…',
+                searchHead: 'What are you looking for?',
+                searchSubline: 'Claude Code · Plugins · Harness · Second Brain',
+                dockAria: 'Choose a mini game',
+                gBreakout: 'Breakout', gBreakoutDef: 'Breakout (default)',
+                gConcept: 'Concept catch', gConceptLong: 'Concept catch — catching one searches it',
+                gPong: 'Pong rally', gPongLong: 'Pong rally — volley with an AI paddle',
+                gPlane: 'Paper-plane gliding', gPlaneLong: 'Paper-plane gliding — click empty space to fly',
+                planeHint: 'Click empty space to fly ✈',
+                pagerPrev: 'Previous 7 pages', pagerNext: 'Next 7 pages',
+                settings: 'Settings', themeSwitch: 'Day / Night',
+                musicTitle: 'Background music', musicAria: 'Play background music',
+                lockNote: 'Enter the password to change settings.',
+                pw: 'Password', ok: 'OK', wrongPw: 'Wrong password.',
+                setNote: 'Changes are saved in this browser only. The profile photo is managed in server config.',
+                tabBasic: 'Basic', tabDesign: 'Design',
+                fTitle: 'Title', fTagline: 'Tagline', fPhoto: 'Photo caption',
+                phPhoto: 'Leave empty to hide it',
+                fMusic: 'Background music (YouTube link or video id)',
+                phMusic: 'e.g. https://youtu.be/08A9n8QyE3k · empty = default track',
+                fLang: 'Language',
+                langKo: '한국어 (Korean, default)', langEn: 'English — in progress',
+                langZh: '中文 — coming soon', langJa: '日本語 — coming soon',
+                fGame: 'Default search mini game (visitors can switch in the dock)',
+                fDisplay: 'Display options',
+                hideRecentL: 'Hide the Recent Docs module', hideRelatedL: 'Hide the Related Docs module',
+                fCats: 'Top-level categories (only items moved to Shown are visible)',
+                catAll: 'All', catShown: 'Shown',
+                catAdd: 'Add to shown', catRemove: 'Remove from shown',
+                fNewPw: 'New password (only to change it)', phNewPw: 'Leave empty to keep',
+                fAccent: 'Theme accent colors (live preview; Save to keep)',
+                dayMode: 'Light', nightMode: 'Dark', resetDefault: 'Default',
+                fNavStyle: 'List divider style',
+                optDashed: 'Dashed (default)', optDotted: 'Dotted', optSolid: 'Solid',
+                fNavWidth: 'List divider width',
+                optThin: 'Thin (default)', optMed: 'Medium', optThick: 'Bold',
+                save: 'Save', resetAll: 'Reset to defaults',
+                dumpSummary: "View this browser's current settings (diagnostics)",
+                thKey: 'Key', thVal: 'Applied value', thSrc: 'Source',
+                srcPersonal: 'personal', srcSite: 'site default', srcApp: 'app default',
+                valEmpty: '(empty)', pwChanged: '(changed)', pwDefault: '(default)',
+                rowPick: 'wikiGamePick (game-dock pick)', rowCollapsed: 'navCollapsed (menu collapsed)',
+                dumpRawL: 'Raw JSON stored in this browser', copy: 'Copy',
+                copied: 'Settings JSON copied.',
+                copyFail: 'Copy failed — select and copy it manually.',
+                saved: 'Saved.', savedPw: 'Saved. Password changed.',
+                savedLang: 'Saved. Reloading to apply the language…',
+                saveFail: 'Save failed.',
+                resetConfirm: 'Reset title, password and all settings to defaults?',
+                musicFail: 'Music failed to load (check network / blockers)',
+                musicEmbed: "This video can't be played (embedding restricted)",
+                musicBlockedTitle: 'Playback blocked — press to open on YouTube',
+                musicNotice: 'Background music (YouTube) was blocked. On Safari this may be <b>Prevent Cross-Site Tracking</b>.<br>Press the button to <b>open it on YouTube</b> &#8599;'
             }
         };
         function STR(k){
@@ -405,12 +517,12 @@
             var items = rel.map(function(r){
                 var why = (r.shared && r.shared.length)
                         ? r.shared.map(conceptBtn).join('')
-                        : '<span class="rel-why-plain">같은 폴더</span>';
+                        : '<span class="rel-why-plain">' + STR('relFolder') + '</span>';
                 return '<li><a href="#!' + encodeURIComponent(r.name) + '">'
                      + escapeHtml(r.title) + '</a>'
                      + '<span class="rel-why">' + why + '</span></li>';
             }).join('');
-            return '<nav class="related" aria-label="연관 문서">'
+            return '<nav class="related" aria-label="' + STR('related') + '">'
                  + '<h3 class="related-title">' + STR('related') + '</h3>'
                  + '<ul class="related-list">' + items + '</ul></nav>';
         }
@@ -671,7 +783,7 @@
                         ctx.fillStyle = mut;
                         ctx.font = '14px ' + GAME_FONT;
                         ctx.textAlign = 'center';
-                        ctx.fillText('지식 인덱스를 불러오는 중…', W / 2, H / 2);
+                        ctx.fillText(STR('cosmosLoading'), W / 2, H / 2);
                         requestAnimationFrame(frame);
                         return;
                     }
@@ -766,7 +878,7 @@
             if(!el){ return; }
             if(!ranked.length){ el.innerHTML = ''; return; }
             ranked.sort(function(a, b){ return ranks[a] - ranks[b]; });
-            var html = '<h3 class="idx-top-title">많이 쓰인 태그</h3>'
+            var html = '<h3 class="idx-top-title">' + STR('tagsTop') + '</h3>'
                      + '<ol class="idx-top-list">';
             ranked.forEach(function(t){
                 html += '<li><a class="idx-top-item top-' + ranks[t] + '"'
@@ -863,13 +975,13 @@
             var title = parts[parts.length - 1] || section;
             if(!docs.length){
                 setArticle('<h2>' + escapeHtml(title) + '</h2>'
-                         + '<p class="empty">이 폴더에는 모아 볼 문서가 없습니다.</p>');
+                         + '<p class="empty">' + STR('folderEmpty') + '</p>');
                 return;
             }
             var toc = '<div class="folder-head">'
                     + '<h2>' + escapeHtml(title) + '</h2>'
                     + '<p class="folder-sub">' + escapeHtml(section)
-                    + ' · 문서 ' + docs.length + '개</p>'
+                    + ' · ' + STRF('folderCount', { n: docs.length }) + '</p>'
                     + '<ol class="folder-toc">';
             docs.forEach(function(d, i){
                 // Buttons (not #anchors) so jumping doesn't trigger the router.
@@ -878,7 +990,7 @@
                      + escapeHtml(d.label) + '</button></li>';
             });
             toc += '</ol></div>';
-            setArticle(toc + '<div class="folder-body"><p class="empty">불러오는 중…</p></div>');
+            setArticle(toc + '<div class="folder-body"><p class="empty">' + STR('loading') + '</p></div>');
             Promise.all(docs.map(function(d){
                 return fetchDoc(d.name);
             })).then(function(texts){
@@ -1069,12 +1181,12 @@
             var terms = q.toLowerCase().split(/\s+/);
             var hits = searchDocs(query);
             var indexing = !TEXT_INDEX_READY
-                         ? '<p class="search-indexing">본문 색인을 불러오는 중… (제목·태그·개념 우선)</p>' : '';
+                         ? '<p class="search-indexing">' + STR('searchIndexing') + '</p>' : '';
             // Meaning-level pivots: concepts the query partially names.
             var suggests = conceptSuggestions(query);
             var suggestHtml = '';
             if(suggests.length){
-                suggestHtml = '<div class="sh-suggests"><span class="sh-suggests-label">관련 개념</span>';
+                suggestHtml = '<div class="sh-suggests"><span class="sh-suggests-label">' + STR('searchSuggests') + '</span>';
                 suggests.forEach(function(c){
                     suggestHtml += '<button type="button" class="sh-suggest" data-c="'
                                 +  escapeHtml(c) + '" onclick="pickConcept(this)">'
@@ -1084,8 +1196,7 @@
             }
             if(!hits.length){
                 box.innerHTML = suggestHtml
-                              + '<p class="search-empty">&ldquo;' + escapeHtml(q)
-                              + '&rdquo;에 대한 결과가 없습니다.</p>' + indexing;
+                              + '<p class="search-empty">' + STRF('searchEmpty', { q: escapeHtml(q) }) + '</p>' + indexing;
                 box.classList.add('open');
                 return;
             }
@@ -1123,7 +1234,7 @@
                 html += '</a>';
             });
             if(hits.length > SEARCH_LIMIT){
-                html += '<p class="search-more">외 ' + (hits.length - SEARCH_LIMIT) + '개 더…</p>';
+                html += '<p class="search-more">' + STRF('searchMore', { n: hits.length - SEARCH_LIMIT }) + '</p>';
             }
             box.innerHTML = html + indexing;
             box.classList.add('open');
@@ -1138,8 +1249,8 @@
               +   '</div>'
               +   '<canvas class="search-game" aria-hidden="true"></canvas>'
               +   '<div class="search-core">'
-              +     '<h2 class="search-head">무엇을 찾으세요?</h2>'
-              +     '<p class="search-sub">Claude Code · 플러그인 · 하네스 · 세컨드 브레인</p>'
+              +     '<h2 class="search-head">' + STR('searchHead') + '</h2>'
+              +     '<p class="search-sub">' + escapeHtml(STR('searchSubline')) + '</p>'
               +     '<div class="search-field">'
               +       '<span class="search-ico" aria-hidden="true">&#128269;</span>'
               +       '<input id="search-input" type="search" autocomplete="off"'
@@ -1149,25 +1260,25 @@
               +     '<div id="search-results"></div>'
               +   '</div>'
               +   (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? '' :
-                  '<div class="game-dock" role="group" aria-label="미니게임 선택">'
-                +   '<button type="button" data-g="breakout" title="벽돌깨기" aria-label="벽돌깨기" onclick="switchSearchGame(this)">'
+                  '<div class="game-dock" role="group" aria-label="' + STR('dockAria') + '">'
+                +   '<button type="button" data-g="breakout" title="' + STR('gBreakout') + '" aria-label="' + STR('gBreakout') + '" onclick="switchSearchGame(this)">'
                 +     '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">'
                 +       '<line x1="4" y1="5" x2="9.5" y2="5"/><line x1="13" y1="5" x2="20" y2="5"/>'
                 +       '<line x1="4" y1="9" x2="7.5" y2="9"/><line x1="11" y1="9" x2="16.5" y2="9"/>'
                 +       '<circle cx="12" cy="14.5" r="1.4" fill="currentColor" stroke="none"/>'
                 +       '<line x1="8" y1="20" x2="16" y2="20" stroke-width="2.4"/>'
                 +     '</svg></button>'
-                +   '<button type="button" data-g="concept" title="개념 별똥별 받기 — 받으면 그 개념으로 검색" aria-label="개념 별똥별 받기" onclick="switchSearchGame(this)">'
+                +   '<button type="button" data-g="concept" title="' + STR('gConceptLong') + '" aria-label="' + STR('gConcept') + '" onclick="switchSearchGame(this)">'
                 +     '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
                 +       '<path d="M16.5 4.5l1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1z"/>'
                 +       '<line x1="4" y1="15" x2="9.5" y2="10.5"/><line x1="7" y1="19.5" x2="12" y2="15.5"/>'
                 +     '</svg></button>'
-                +   '<button type="button" data-g="pong" title="퐁 랠리" aria-label="퐁 랠리" onclick="switchSearchGame(this)">'
+                +   '<button type="button" data-g="pong" title="' + STR('gPong') + '" aria-label="' + STR('gPong') + '" onclick="switchSearchGame(this)">'
                 +     '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">'
                 +       '<line x1="4.5" y1="8" x2="4.5" y2="16"/><line x1="19.5" y1="8" x2="19.5" y2="16"/>'
                 +       '<circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>'
                 +     '</svg></button>'
-                +   '<button type="button" data-g="plane" title="종이비행기 글라이딩 — 빈 곳 클릭으로 비행" aria-label="종이비행기 글라이딩" onclick="switchSearchGame(this)">'
+                +   '<button type="button" data-g="plane" title="' + STR('gPlaneLong') + '" aria-label="' + STR('gPlane') + '" onclick="switchSearchGame(this)">'
                 +     '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
                 +       '<path d="M22 2 11 13"/><path d="m22 2-7 20-4-9-9-4 20-7z"/>'
                 +     '</svg></button>'
@@ -1715,7 +1826,7 @@
                     ctx.fillStyle = col;
                     ctx.font = '600 13px ' + GAME_FONT;
                     ctx.textAlign = 'center';
-                    ctx.fillText('빈 곳을 클릭해 비행 ✈', st.W / 2, Math.max(30, st.H * 0.08));
+                    ctx.fillText(STR('planeHint'), st.W / 2, Math.max(30, st.H * 0.08));
                 }
                 // The plane: a folded-paper triangle tilted by its climb rate.
                 var ang = Math.max(-0.5, Math.min(0.7, plane.vy * 0.09));
@@ -1780,7 +1891,7 @@
                 var last = Math.min(first + MORE_BLOCK, pages);
                 html += '<div class="more-nav">'
                      +  '<button class="more-arrow" onclick="moreBlock(-1)"'
-                     +      (block === 0 ? ' disabled' : '') + ' aria-label="이전 7페이지">&laquo;</button>'
+                     +      (block === 0 ? ' disabled' : '') + ' aria-label="' + STR('pagerPrev') + '">&laquo;</button>'
                      +  '<span class="more-pages">';
                 for(var i = first; i < last; i++){
                     html += '<button class="more-page' + (i === morePage ? ' active' : '') + '"'
@@ -1788,7 +1899,7 @@
                 }
                 html += '</span>'
                      +  '<button class="more-arrow" onclick="moreBlock(1)"'
-                     +      (last >= pages ? ' disabled' : '') + ' aria-label="다음 7페이지">&raquo;</button>'
+                     +      (last >= pages ? ' disabled' : '') + ' aria-label="' + STR('pagerNext') + '">&raquo;</button>'
                      +  '</div>';
             }
             return html;
@@ -1949,6 +2060,13 @@
             if(window.setMusicVideo){ window.setMusicVideo(s.music || ''); }
             // Document language for a11y / search engines.
             document.documentElement.setAttribute('lang', s.lang || 'ko');
+            // Static chrome attributes follow the language too.
+            var sl = document.getElementById('settings-link');
+            if(sl){ sl.title = STR('settings'); sl.setAttribute('aria-label', STR('settings')); }
+            var tsw = document.getElementById('theme-switch');
+            if(tsw){ tsw.title = STR('themeSwitch'); }
+            var mbtn = document.getElementById('music-btn');
+            if(mbtn){ mbtn.title = STR('musicTitle'); mbtn.setAttribute('aria-label', STR('musicAria')); }
         }
 
         // Global config lives in the repo (same-origin, no API key needed).
@@ -2034,17 +2152,17 @@
         }
 
         function showSettingsLock(){
-            var html = '<h2>설정</h2>'
-                     + '<p class="settings-note">설정을 변경하려면 암호를 입력하세요.</p>'
+            var html = '<h2>' + STR('settings') + '</h2>'
+                     + '<p class="settings-note">' + STR('lockNote') + '</p>'
                      + '<div class="settings-field">'
-                     +   '<label for="settings-pass">암호</label>'
+                     +   '<label for="settings-pass">' + STR('pw') + '</label>'
                      +   '<input id="settings-pass" type="password" autocomplete="current-password"'
                      +   ' onkeydown="if(event.key===\'Enter\'){unlockSettings();}">'
                      + '</div>'
                      + '<div class="settings-actions">'
-                     +   '<button class="settings-save" onclick="unlockSettings()">확인</button>'
+                     +   '<button class="settings-save" onclick="unlockSettings()">' + STR('ok') + '</button>'
                      + '</div>'
-                     + '<p id="settings-msg" class="settings-msg error" hidden>암호가 올바르지 않습니다.</p>';
+                     + '<p id="settings-msg" class="settings-msg error" hidden>' + STR('wrongPw') + '</p>';
             setArticle(html);
             var box = document.getElementById('settings-pass');
             if(box){ box.focus(); }
@@ -2090,125 +2208,125 @@
                 '<div id="settings-panel-basic" class="settings-panel"'
               +   (SETTINGS_TAB === 'basic' ? '' : ' hidden') + '>'
               + '<div class="settings-field">'
-              +   '<label for="settings-title">타이틀</label>'
+              +   '<label for="settings-title">' + STR('fTitle') + '</label>'
               +   '<input id="settings-title" type="text" value="' + escapeHtml(curTitle) + '">'
               + '</div>'
               + '<div class="settings-field">'
-              +   '<label for="settings-tagline">타이틀 문구</label>'
+              +   '<label for="settings-tagline">' + STR('fTagline') + '</label>'
               +   '<input id="settings-tagline" type="text" value="' + escapeHtml(curTagline) + '">'
               + '</div>'
               + '<div class="settings-field">'
-              +   '<label for="settings-photoline">사진 아래 문구</label>'
+              +   '<label for="settings-photoline">' + STR('fPhoto') + '</label>'
               +   '<input id="settings-photoline" type="text" value="' + escapeHtml(curPhotoLine) + '"'
-              +     ' placeholder="비우면 문구를 숨깁니다">'
+              +     ' placeholder="' + STR('phPhoto') + '">'
               + '</div>'
               + '<div class="settings-field">'
-              +   '<label for="settings-music">배경음악 (YouTube 링크 또는 영상 ID)</label>'
+              +   '<label for="settings-music">' + STR('fMusic') + '</label>'
               +   '<input id="settings-music" type="text" value="' + escapeHtml(curMusic) + '"'
-              +     ' placeholder="예: https://youtu.be/08A9n8QyE3k · 비우면 기본 트랙">'
+              +     ' placeholder="' + STR('phMusic') + '">'
               + '</div>'
               + '<div class="settings-field">'
-              +   '<label for="settings-lang">언어 (Language)</label>'
+              +   '<label for="settings-lang">' + STR('fLang') + '</label>'
               +   '<select id="settings-lang">'
-              +     opt('ko', '한국어 (기본)', curLang)
-              +     opt('en', 'English — 준비 중', curLang)
-              +     opt('zh', '中文 — 준비 중', curLang)
-              +     opt('ja', '日本語 — 준비 중', curLang)
+              +     opt('ko', STR('langKo'), curLang)
+              +     opt('en', STR('langEn'), curLang)
+              +     opt('zh', STR('langZh'), curLang)
+              +     opt('ja', STR('langJa'), curLang)
               +   '</select>'
               + '</div>'
               + '<div class="settings-field">'
-              +   '<label for="settings-game">통합검색 미니게임 기본값 (방문자는 검색 화면 하단에서 직접 변경 가능)</label>'
+              +   '<label for="settings-game">' + STR('fGame') + '</label>'
               +   '<select id="settings-game">'
-              +     opt('breakout', '벽돌깨기 (기본)', curGame)
-              +     opt('concept', '개념 별똥별 받기 — 받으면 그 개념으로 검색', curGame)
-              +     opt('pong', '퐁 랠리 — AI 패들과 주고받기', curGame)
-              +     opt('plane', '종이비행기 글라이딩 — 빈 곳 클릭으로 비행', curGame)
+              +     opt('breakout', STR('gBreakoutDef'), curGame)
+              +     opt('concept', STR('gConceptLong'), curGame)
+              +     opt('pong', STR('gPongLong'), curGame)
+              +     opt('plane', STR('gPlaneLong'), curGame)
               +   '</select>'
               + '</div>'
               + '<div class="settings-field">'
-              +   '<label>표시 옵션</label>'
+              +   '<label>' + STR('fDisplay') + '</label>'
               +   '<label class="settings-check"><input type="checkbox" id="settings-hiderecent"'
-              +     (s.hideRecent ? ' checked' : '') + '> 최근 문서 영역 숨기기</label>'
+              +     (s.hideRecent ? ' checked' : '') + '> ' + STR('hideRecentL') + '</label>'
               +   '<label class="settings-check"><input type="checkbox" id="settings-hiderelated"'
-              +     (s.hideRelated ? ' checked' : '') + '> 연관 문서 영역 숨기기</label>'
+              +     (s.hideRelated ? ' checked' : '') + '> ' + STR('hideRelatedL') + '</label>'
               + '</div>'
               + '<div class="settings-field">'
-              +   '<label>대분류 노출 (전체 → 노출로 옮긴 항목만 표시)</label>'
+              +   '<label>' + STR('fCats') + '</label>'
               +   '<div class="cat-transfer">'
               +     '<div class="cat-pane">'
-              +       '<div class="cat-pane-h">전체 목록</div>'
+              +       '<div class="cat-pane-h">' + STR('catAll') + '</div>'
               +       '<ul id="cat-left" class="cat-list"></ul>'
               +     '</div>'
               +     '<div class="cat-arrows">'
-              +       '<button type="button" class="cat-arrow" onclick="catMove(1)" aria-label="노출에 추가" title="노출에 추가">&#8594;</button>'
-              +       '<button type="button" class="cat-arrow" onclick="catMove(-1)" aria-label="노출에서 빼기" title="노출에서 빼기">&#8592;</button>'
+              +       '<button type="button" class="cat-arrow" onclick="catMove(1)" aria-label="' + STR('catAdd') + '" title="' + STR('catAdd') + '">&#8594;</button>'
+              +       '<button type="button" class="cat-arrow" onclick="catMove(-1)" aria-label="' + STR('catRemove') + '" title="' + STR('catRemove') + '">&#8592;</button>'
               +     '</div>'
               +     '<div class="cat-pane">'
-              +       '<div class="cat-pane-h">노출 목록</div>'
+              +       '<div class="cat-pane-h">' + STR('catShown') + '</div>'
               +       '<ul id="cat-right" class="cat-list"></ul>'
               +     '</div>'
               +   '</div>'
               + '</div>'
               + '<div class="settings-field">'
-              +   '<label for="settings-newpass">새 암호 (변경 시에만 입력)</label>'
-              +   '<input id="settings-newpass" type="password" autocomplete="new-password" placeholder="비워두면 유지">'
+              +   '<label for="settings-newpass">' + STR('fNewPw') + '</label>'
+              +   '<input id="settings-newpass" type="password" autocomplete="new-password" placeholder="' + STR('phNewPw') + '">'
               + '</div>'
               + '</div>';
             var design =
                 '<div id="settings-panel-design" class="settings-panel"'
               +   (SETTINGS_TAB === 'design' ? '' : ' hidden') + '>'
               + '<div class="settings-field">'
-              +   '<label>테마 포인트 색상 (고르는 즉시 미리보기, 저장을 눌러야 유지)</label>'
+              +   '<label>' + STR('fAccent') + '</label>'
               +   '<div class="color-row">'
-              +     '<span class="color-name">밝은 모드</span>'
+              +     '<span class="color-name">' + STR('dayMode') + '</span>'
               +     '<input type="color" id="settings-accent-day" value="' + escapeHtml(curAccentDay) + '" oninput="previewAccent()">'
-              +     '<button type="button" class="color-reset" onclick="resetAccent(\'day\')">기본값</button>'
+              +     '<button type="button" class="color-reset" onclick="resetAccent(\'day\')">' + STR('resetDefault') + '</button>'
               +   '</div>'
               +   '<div class="color-row">'
-              +     '<span class="color-name">다크 모드</span>'
+              +     '<span class="color-name">' + STR('nightMode') + '</span>'
               +     '<input type="color" id="settings-accent-night" value="' + escapeHtml(curAccentNight) + '" oninput="previewAccent()">'
-              +     '<button type="button" class="color-reset" onclick="resetAccent(\'night\')">기본값</button>'
+              +     '<button type="button" class="color-reset" onclick="resetAccent(\'night\')">' + STR('resetDefault') + '</button>'
               +   '</div>'
               + '</div>'
               + '<div class="settings-field">'
-              +   '<label for="settings-navstyle">목록 구분선 모양</label>'
+              +   '<label for="settings-navstyle">' + STR('fNavStyle') + '</label>'
               +   '<select id="settings-navstyle">'
-              +     opt('dashed', '파선 (기본)', curNavStyle)
-              +     opt('dotted', '점선', curNavStyle)
-              +     opt('solid', '실선', curNavStyle)
+              +     opt('dashed', STR('optDashed'), curNavStyle)
+              +     opt('dotted', STR('optDotted'), curNavStyle)
+              +     opt('solid', STR('optSolid'), curNavStyle)
               +   '</select>'
               + '</div>'
               + '<div class="settings-field">'
-              +   '<label for="settings-navwidth">목록 구분선 두께</label>'
+              +   '<label for="settings-navwidth">' + STR('fNavWidth') + '</label>'
               +   '<select id="settings-navwidth">'
-              +     opt('1px', '얇게 (기본)', curNavWidth)
-              +     opt('2px', '보통', curNavWidth)
-              +     opt('3px', '굵게', curNavWidth)
+              +     opt('1px', STR('optThin'), curNavWidth)
+              +     opt('2px', STR('optMed'), curNavWidth)
+              +     opt('3px', STR('optThick'), curNavWidth)
               +   '</select>'
               + '</div>'
               + '</div>';
             var html =
-                '<h2>설정</h2>'
-              + '<p class="settings-note">변경 내용은 이 브라우저에만 저장됩니다. 프로필 사진은 서버 설정에서 관리합니다.</p>'
+                '<h2>' + STR('settings') + '</h2>'
+              + '<p class="settings-note">' + STR('setNote') + '</p>'
               + '<div class="settings-tabs" role="tablist">'
               +   '<button type="button" id="settings-tab-basic" class="settings-tab'
               +     (SETTINGS_TAB === 'basic' ? ' active' : '') + '" role="tab"'
               +     ' aria-selected="' + (SETTINGS_TAB === 'basic') + '"'
-              +     ' onclick="switchSettingsTab(\'basic\')">기본 설정</button>'
+              +     ' onclick="switchSettingsTab(\'basic\')">' + STR('tabBasic') + '</button>'
               +   '<button type="button" id="settings-tab-design" class="settings-tab'
               +     (SETTINGS_TAB === 'design' ? ' active' : '') + '" role="tab"'
               +     ' aria-selected="' + (SETTINGS_TAB === 'design') + '"'
-              +     ' onclick="switchSettingsTab(\'design\')">디자인 설정</button>'
+              +     ' onclick="switchSettingsTab(\'design\')">' + STR('tabDesign') + '</button>'
               + '</div>'
               + basic
               + design
               + '<div class="settings-actions">'
-              +   '<button class="settings-save" onclick="saveSettingsForm()">저장</button>'
-              +   '<button class="settings-reset" onclick="resetSettings()">기본값으로</button>'
+              +   '<button class="settings-save" onclick="saveSettingsForm()">' + STR('save') + '</button>'
+              +   '<button class="settings-reset" onclick="resetSettings()">' + STR('resetAll') + '</button>'
               + '</div>'
               + '<p id="settings-msg" class="settings-msg" hidden></p>'
               + '<details class="settings-dump-wrap">'
-              +   '<summary>이 브라우저의 현재 설정 값 보기 (진단)</summary>'
+              +   '<summary>' + STR('dumpSummary') + '</summary>'
               +   '<div id="settings-dump"></div>'
               + '</details>';
             setArticle(html);
@@ -2231,38 +2349,38 @@
                         'music', 'title', 'tagline', 'photoLine', 'hiddenCats'];
             var rows = KEYS.map(function(k){
                 var v = eff[k];
-                var src = personal[k] !== undefined ? '개인 저장'
-                        : SITE_DEFAULTS[k] !== undefined ? '사이트 기본'
-                        : v !== undefined ? '앱 기본' : '—';
+                var src = personal[k] !== undefined ? STR('srcPersonal')
+                        : SITE_DEFAULTS[k] !== undefined ? STR('srcSite')
+                        : v !== undefined ? STR('srcApp') : '—';
                 var shown = v === undefined ? '—'
-                          : Array.isArray(v) ? (v.length ? v.join(', ') : '(비어 있음)')
+                          : Array.isArray(v) ? (v.length ? v.join(', ') : STR('valEmpty'))
                           : String(v);
                 return '<tr><td>' + k + '</td><td>' + escapeHtml(shown)
                      + '</td><td>' + src + '</td></tr>';
             });
-            rows.push('<tr><td>password</td><td>' + (personal.password ? '(변경됨)' : '(기본)')
-                    + '</td><td>' + (personal.password ? '개인 저장' : '앱 기본') + '</td></tr>');
+            rows.push('<tr><td>password</td><td>' + (personal.password ? STR('pwChanged') : STR('pwDefault'))
+                    + '</td><td>' + (personal.password ? STR('srcPersonal') : STR('srcApp')) + '</td></tr>');
             var pick = '', collapsed = '';
             try{ pick = localStorage.getItem('wikiGamePick') || ''; }catch(e){}
             try{ collapsed = localStorage.getItem('navCollapsed') || ''; }catch(e){}
-            rows.push('<tr><td>wikiGamePick (게임 독 선택)</td><td>'
+            rows.push('<tr><td>' + STR('rowPick') + '</td><td>'
                     + (pick ? escapeHtml(pick) : '—') + '</td><td>'
-                    + (pick ? '개인 저장' : '—') + '</td></tr>');
-            rows.push('<tr><td>navCollapsed (메뉴 접힘)</td><td>'
+                    + (pick ? STR('srcPersonal') : '—') + '</td></tr>');
+            rows.push('<tr><td>' + STR('rowCollapsed') + '</td><td>'
                     + (collapsed === '' ? '—' : collapsed === '0' ? 'false' : 'true')
-                    + '</td><td>' + (collapsed === '' ? '—' : '개인 저장') + '</td></tr>');
+                    + '</td><td>' + (collapsed === '' ? '—' : STR('srcPersonal')) + '</td></tr>');
             var raw = {};
             Object.keys(personal).forEach(function(k){ raw[k] = personal[k]; });
             if(raw.password){ raw.password = '***'; }
             var json = JSON.stringify(raw, null, 1);
             box.innerHTML =
                 '<div class="tbl-wrap"><table>'
-              +   '<thead><tr><th>항목</th><th>적용 값</th><th>출처</th></tr></thead>'
+              +   '<thead><tr><th>' + STR('thKey') + '</th><th>' + STR('thVal') + '</th><th>' + STR('thSrc') + '</th></tr></thead>'
               +   '<tbody>' + rows.join('') + '</tbody>'
               + '</table></div>'
-              + '<label class="dump-raw-label">이 브라우저에 저장된 원본(JSON)</label>'
+              + '<label class="dump-raw-label">' + STR('dumpRawL') + '</label>'
               + '<textarea id="settings-dump-raw" readonly rows="4">' + escapeHtml(json) + '</textarea>'
-              + '<button type="button" class="color-reset" onclick="copySettingsDump()">복사</button>';
+              + '<button type="button" class="color-reset" onclick="copySettingsDump()">' + STR('copy') + '</button>';
         }
         function copySettingsDump(){
             var ta = document.getElementById('settings-dump-raw');
@@ -2271,8 +2389,8 @@
             try{
                 if(navigator.clipboard){ navigator.clipboard.writeText(ta.value); }
                 else { document.execCommand('copy'); }
-                settingsMsg('설정 JSON을 복사했습니다.');
-            }catch(e){ settingsMsg('복사에 실패했습니다. 직접 선택해 복사해 주세요.', true); }
+                settingsMsg(STR('copied'));
+            }catch(e){ settingsMsg(STR('copyFail'), true); }
         }
 
         // ---- Category transfer list (전체 ↔ 노출) ----
@@ -2366,18 +2484,18 @@
                 // Language shapes nav labels·doc bodies·index at load time —
                 // a clean reload applies it everywhere at once.
                 if(currentLang() !== prevLang){
-                    settingsMsg('저장되었습니다. 언어 적용을 위해 새로고침합니다…');
+                    settingsMsg(STR('savedLang'));
                     setTimeout(function(){ location.reload(); }, 700);
                     return;
                 }
-                settingsMsg(np ? '저장되었습니다. 암호가 변경되었습니다.' : '저장되었습니다.');
+                settingsMsg(np ? STR('savedPw') : STR('saved'));
             }catch(e){
-                settingsMsg('저장에 실패했습니다.', true);
+                settingsMsg(STR('saveFail'), true);
             }
         }
 
         function resetSettings(){
-            if(!window.confirm('타이틀·암호를 모두 기본값으로 되돌릴까요?')){ return; }
+            if(!window.confirm(STR('resetConfirm'))){ return; }
             localStorage.removeItem(SETTINGS_KEY);
             SETTINGS_UNLOCKED = false;
             location.reload();
@@ -2527,12 +2645,12 @@
             // If the API never loads (offline / blocked by an ad- or tracker
             // blocker), tell the user instead of leaving a dead button.
             var apiTimer = setTimeout(function(){
-                if(!player){ fail('음악 로드 실패 (네트워크·차단기 확인)'); }
+                if(!player){ fail(STR('musicFail')); }
             }, 6000);
 
             var tag = document.createElement('script');
             tag.src = 'https://www.youtube.com/iframe_api';
-            tag.onerror = function(){ fail('음악 로드 실패 (네트워크·차단기 확인)'); };
+            tag.onerror = function(){ fail(STR('musicFail')); };
             document.head.appendChild(tag);
 
             window.onYouTubeIframeAPIReady = function(){
@@ -2560,7 +2678,7 @@
                         onError: function(){
                             // 2=bad id · 5=HTML5 error · 100=removed ·
                             // 101/150=embedding disabled by the uploader.
-                            fail('이 영상은 재생할 수 없습니다 (임베드 제한)');
+                            fail(STR('musicEmbed'));
                         }
                     }
                 });
@@ -2572,7 +2690,7 @@
                 failed = true; playing = false; wantPlay = false;
                 if(btn){
                     btn.classList.remove('playing'); btn.classList.add('idle', 'blocked');
-                    btn.title = '재생 차단됨 — 눌러서 YouTube에서 열기';
+                    btn.title = STR('musicBlockedTitle');
                     btn.setAttribute('aria-label', btn.title);
                 }
                 showMusicNote();
@@ -2584,9 +2702,7 @@
                 if(document.getElementById('music-note')){ return; }
                 var n = document.createElement('div');
                 n.id = 'music-note';
-                n.innerHTML = '배경음악(YouTube)이 차단됐어요. Safari라면 '
-                            + '<b>크로스 사이트 추적 방지</b> 때문일 수 있어요.<br>'
-                            + '버튼을 누르면 <b>YouTube에서 열기</b> &#8599;';
+                n.innerHTML = STR('musicNotice');
                 document.body.appendChild(n);
                 void n.offsetWidth;
                 n.classList.add('show');
