@@ -1,10 +1,10 @@
 <h2>Windows 주의</h2>
-<p>Windows PowerShell 환경에서는 별도 주의가 필요합니다. 핵심은 <strong>WSL2 권장, Native Windows는 실험적(experimental)</strong> 이라는 점입니다.</p>
+<p>Windows PowerShell 환경에서는 별도 주의가 필요합니다. 핵심은 <strong>tmux 의존 기능은 psmux로 해결(WSL 불필요), WSL2는 대안 경로</strong>라는 점입니다.</p>
 
 <ul>
-    <li>v4.14.4에서 Native Windows Hook manifest 관련 수정이 있었지만, 공식 Reference는 여전히 <strong>WSL2를 권장</strong>합니다.</li>
-    <li><code>tmux</code> 가 필요한 기능(<code>/omc-teams</code>, 일부 외부 AI 워커 병렬 실행)은 Native Windows PowerShell만으로는 제약이 있을 수 있습니다. 공식 README는 Windows용 네이티브 tmux 호환 도구인 <strong>psmux</strong>(<code>winget install psmux</code>)를 WSL 없이 쓸 수 있는 대안으로 안내합니다.</li>
-    <li>단순 플러그인 설치·setup·doctor·세션 내 스킬 사용은 Native Windows에서도 가능할 수 있으나, 문제가 반복되면 WSL2로 전환하는 것이 안정적입니다.</li>
+    <li>v4.14.4에서 Native Windows Hook manifest 관련 수정(sh 호출 제거)이 있었고, 이후 Native Windows Hook은 그대로 사용할 수 있습니다. 과거 문서의 "WSL2 권장" 안내는 구식으로, 현행 공식 README는 WSL2를 대안 경로로만 안내합니다.</li>
+    <li><code>tmux</code> 가 필요한 기능(<code>omc team</code> CLI, 일부 외부 AI 워커 병렬 실행)은 Native Windows PowerShell만으로는 제약이 있을 수 있습니다. 공식 README는 Windows용 네이티브 tmux 호환 도구인 <strong>psmux</strong>(<code>winget install psmux</code>)를 제시하며, psmux 사용 시 WSL이 필요 없습니다.</li>
+    <li>플러그인 설치·setup·doctor·세션 내 스킬 사용은 Native Windows에서 그대로 가능합니다. 문제가 반복되는 환경이라면 WSL2로 전환하는 대안 경로도 있습니다.</li>
     <li>PowerShell에서 <code>npm view</code>·<code>npm ping</code> 이 정상이어도, Claude Code 플러그인 설치 흐름과 npm CLI 설치 흐름은 별개입니다.</li>
 </ul>
 
