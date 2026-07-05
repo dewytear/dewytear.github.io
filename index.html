@@ -95,15 +95,21 @@
         var DOC_MODEL = 'Claude Fable 5';
 
         function buildIndexes(tree){
-            (function walk(nodes, path){
+            // `path` is canonical (node.title, Korean) — it keys FOLDER_DOCS and
+            // the 'Work Log' prefix checks. `dpath` is the localized twin, kept
+            // only for display (doc.sectionL).
+            (function walk(nodes, path, dpath){
                 nodes.forEach(function(node){
                     if(node.children && node.children.length){
-                        walk(node.children, node.title ? path.concat(node.title) : path);
+                        walk(node.children,
+                             node.title ? path.concat(node.title) : path,
+                             node.title ? dpath.concat(labelFor(node) || node.title) : dpath);
                     } else if(node.name && !node.route){
                         var doc = {
                             name: node.name,
                             label: labelFor(node) || node.name,
                             section: path.join(' · '),
+                            sectionL: dpath.join(' · '),
                             tags: tagsFor(node),
                             model: node.model || ''   // optional per-doc override
                         };
@@ -118,7 +124,7 @@
                         });
                     }
                 });
-            })(tree, []);
+            })(tree, [], []);
         }
 
         function escapeHtml(s){
@@ -305,10 +311,11 @@
                     fetch(ko).then(function(r2){ return r2.ok ? r2.text() : ''; }).catch(function(){ return ''; });
             });
         }
-        // list 노드의 언어별 필드(label_en, tags_en …) — 없으면 한국어.
+        // list 노드의 언어별 필드(label_en, title_en, tags_en …) — 없으면 한국어.
+        // 폴더(브랜치) 노드는 title_<lang>, 문서 노드는 label_<lang>을 쓴다.
         function labelFor(node){
             var l = currentLang();
-            return (l !== 'ko' && node['label_' + l]) || node.label;
+            return (l !== 'ko' && (node['label_' + l] || node['title_' + l])) || node.label;
         }
         function tagsFor(node){
             var l = currentLang();
@@ -960,7 +967,7 @@
             docs.forEach(function(d){
                 html += '<li><a href="#!' + d.name + '">'
                      +  '<span class="more-name">' + escapeHtml(d.label) + '</span>'
-                     +  '<span class="more-meta">' + escapeHtml(d.section) + '</span></a></li>';
+                     +  '<span class="more-meta">' + escapeHtml(d.sectionL) + '</span></a></li>';
             });
             html += '</ul>';
             setArticle(html);
@@ -1205,7 +1212,7 @@
                 var d = h.d;
                 html += '<a class="search-hit" href="#!' + d.name + '">'
                      +  '<span class="sh-label">' + escapeHtml(d.label) + '</span>'
-                     +  '<span class="sh-meta">' + escapeHtml(d.section) + '</span>';
+                     +  '<span class="sh-meta">' + escapeHtml(d.sectionL) + '</span>';
                 // Which concept(s) matched — the "semantic" signal.
                 if(h.concepts.length){
                     html += '<span class="sh-concepts">';
@@ -1877,7 +1884,7 @@
             var start = morePage * MORE_PAGE_SIZE;
             var html = '<h3 class="more-title">' + STR('recent') + '</h3><ul class="more-list">';
             DOCS.slice(start, start + MORE_PAGE_SIZE).forEach(function(d){
-                var meta = d.section + (d.date ? ' · ' + d.date.slice(0, 10) : '');
+                var meta = d.sectionL + (d.date ? ' · ' + d.date.slice(0, 10) : '');
                 html += '<li><a href="#!' + d.name + '">'
                      +  '<span class="more-name">' + escapeHtml(d.label) + '</span>'
                      +  '<span class="more-meta">' + escapeHtml(meta) + '</span></a></li>';
