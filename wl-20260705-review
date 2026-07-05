@@ -22,6 +22,12 @@
     <li>수정 2곳 — 판정 다이어그램의 긴 라벨 축약(넘침 위험), 순차 폴백 캡션 중앙 정렬(x=150→340). <span class="scn-sub">(sb-context-connections)</span></li>
 </ul>
 
+<h3>화살표 직관화 · 도형 침범 제거</h3>
+<ul>
+    <li><strong>줄바꿈 연결 곡선화</strong> — 2행 파이프라인 4곳과 되돌림 루프 1곳의 직각 꺾은선을 부드러운 곡선으로 바꾸고, 긴 가로 구간에 <strong>진행 방향 화살촉</strong>을 추가해 흐름을 즉시 인식하게. <span class="scn-sub">(ccb-overview · hooks · hns-core · llmw-clipper-query · hns-anatomy)</span></li>
+    <li><strong>화살촉 침범 전수 제거</strong> — 도형 안으로 4~8px 파고들던 화살촉 <strong>154개</strong>를 스크립트로 검출해 경계선에 정확히 닿도록 이동(연결선 끝점 동조정). 페인트 순서상 박스에 가려지는 경우·그룹 패널 내부는 제외, 재감사 침범 0건. <span class="scn-sub">(36개 파일)</span></li>
+</ul>
+
 <h3>미니게임 플레이그라운드 크기 연동</h3>
 <ul>
     <li>사이드바 개폐 등 <strong>window resize 없이 카드 크기가 변하면</strong> 게임 캔버스가 이전 크기에 머물던 버그를 코스모스와 같은 <strong>ResizeObserver 패턴</strong>으로 수정(종료 경로에서 observer 해제). 수정 전 실패 → 수정 후 통과를 회귀 테스트로 교차 확인.</li>
