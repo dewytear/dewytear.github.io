@@ -461,6 +461,15 @@
             function build(){
                 if(!KNOWLEDGE){ return false; }
                 var names = Object.keys(KNOWLEDGE);
+                // 메뉴에서 숨긴 대분류는 그래프에서도 제외 — 사이드바와 같은
+                // 유효 설정(사이트 기본값 + 개인 설정)을 따른다.
+                var hidden = effSettings().hiddenCats || [];
+                if(hidden.length){
+                    names = names.filter(function(n){
+                        var top = (KNOWLEDGE[n].section || '').split(' · ')[0];
+                        return hidden.indexOf(top) === -1;
+                    });
+                }
                 if(!names.length){ return false; }
                 // Each 분류(section) is its OWN GALAXY: a compact star cloud
                 // around a center, centers spread apart on a golden spiral so
