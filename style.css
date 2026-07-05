@@ -215,9 +215,11 @@
             #grid > #sidebar{
                 border-right: none;
             }
-            /* The content pane is a rounded card inset in the shell —
-               borderless like claude.ai, so no hard line runs beside the
-               menu; the tint contrast + soft shadow do the separating. */
+            /* The content pane — claude.ai behaviour: with the menu OPEN it
+               reads as a soft rounded card inset in the shell; with the menu
+               closed (full screen) the card cues melt away so it feels like
+               a plain full page. The two states morph together with the
+               sidebar slide. */
             #content{
                 flex: 1;
                 min-width: 0;
@@ -230,9 +232,15 @@
                 border-radius: 14px;
                 overflow: hidden;
                 box-shadow: 0 2px 14px rgba(0, 0, 0, 0.08);
+                transition: margin 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                            height 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+                            border-radius 0.3s ease, box-shadow 0.3s ease;
             }
             body.nav-collapsed #content{
-                margin-left: 12px;
+                margin: 0;
+                height: 100vh;
+                border-radius: 0;
+                box-shadow: none;
             }
             #masthead{
                 flex: none;
