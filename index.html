@@ -1304,6 +1304,8 @@
                 var sp = Math.max(2.4, W / 520);
                 var dir = Math.random() < 0.5 ? -1 : 1;
                 ball = { x: W / 2, y: H * 0.62, vx: sp * 0.8 * dir, vy: -sp, r: Math.max(5, W / 240) };
+                ball.sp0 = Math.hypot(ball.vx, ball.vy);   // base speed for the time ramp
+                ball.born = performance.now();
             }
             function resize(){
                 // Positioned ancestor = the search backdrop's containing
@@ -1340,6 +1342,12 @@
                 ctx.clearRect(0, 0, W, H);
                 var col = accent();
 
+                // Gentle time ramp: +60% speed over ~90s, then hold.
+                var target = ball.sp0 * (1 + Math.min(0.6,
+                    (performance.now() - ball.born) / 90000 * 0.6));
+                var cur = Math.hypot(ball.vx, ball.vy);
+                if(cur > 0){ ball.vx *= target / cur; ball.vy *= target / cur; }
+
                 ball.x += ball.vx; ball.y += ball.vy;
                 if(ball.x - ball.r < 0){ ball.x = ball.r; ball.vx = Math.abs(ball.vx); }
                 if(ball.x + ball.r > W){ ball.x = W - ball.r; ball.vx = -Math.abs(ball.vx); }
@@ -1348,7 +1356,8 @@
 
                 // The search field is the paddle. Like real Breakout, WHERE
                 // the ball lands on the paddle steers it: center = straight
-                // up, edges = sharp angles ("english"). Speed stays constant.
+                // up, edges = sharp angles ("english"). Each bounce keeps the
+                // magnitude; only the time ramp above changes it.
                 var field = document.querySelector('.search-field');
                 if(field){
                     var cr = canvas.getBoundingClientRect(), fr = field.getBoundingClientRect();
@@ -1466,6 +1475,7 @@
         SEARCH_GAMES.pong = function(canvas){
             var st = gameStage(canvas);
             var ball = null, trail = [], rally = 0;
+            var rampT0 = performance.now();   // speed ramp restarts on a miss
             var ai = { x: 0, y: 54, w: 150, h: 12 };
             function reset(){
                 // Twice the Breakout pace — Pong wants snappy rallies.
@@ -1473,6 +1483,8 @@
                 ball = { x: st.W / 2, y: st.H * 0.45,
                          vx: (Math.random() < 0.5 ? -1 : 1) * sp * 0.7,
                          vy: sp, r: Math.max(5, st.W / 240) };
+                ball.sp0 = Math.hypot(ball.vx, ball.vy);
+                rampT0 = performance.now();
             }
             st.onResize = function(){
                 ai.w = Math.max(120, st.W * 0.14);
@@ -1483,16 +1495,23 @@
                 if(st.gone()){ return; }
                 var ctx = st.ctx; ctx.clearRect(0, 0, st.W, st.H);
                 var col = st.accent();
+                // Gentle rally ramp: +50% speed over ~45s, reset on a miss.
+                var ramp = 1 + Math.min(0.5, (performance.now() - rampT0) / 45000 * 0.5);
+                var target = ball.sp0 * ramp;
+                var cur = Math.hypot(ball.vx, ball.vy);
+                if(cur > 0){ ball.vx *= target / cur; ball.vy *= target / cur; }
                 // AI tracks the ball with capped speed — keeps up with the
                 // faster ball on normal returns but loses sharp-angle shots.
-                var maxV = Math.max(3.4, st.W / 300);
+                // Its cap grows with the ramp so long rallies stay winnable
+                // for the AI too, just faster for the human.
+                var maxV = Math.max(3.4, st.W / 300) * ramp;
                 ai.x += Math.max(-maxV, Math.min(maxV, (ball.x - ai.w / 2) - ai.x));
                 ai.x = Math.max(8, Math.min(st.W - ai.w - 8, ai.x));
                 ball.x += ball.vx; ball.y += ball.vy;
                 if(ball.x - ball.r < 0){ ball.x = ball.r; ball.vx = Math.abs(ball.vx); }
                 if(ball.x + ball.r > st.W){ ball.x = st.W - ball.r; ball.vx = -Math.abs(ball.vx); }
-                if(ball.y - ball.r < 0){ ball.y = ball.r; ball.vy = Math.abs(ball.vy); rally = 0; }
-                if(ball.y + ball.r > st.H){ ball.y = st.H - ball.r; ball.vy = -Math.abs(ball.vy); rally = 0; }
+                if(ball.y - ball.r < 0){ ball.y = ball.r; ball.vy = Math.abs(ball.vy); rally = 0; rampT0 = performance.now(); }
+                if(ball.y + ball.r > st.H){ ball.y = st.H - ball.r; ball.vy = -Math.abs(ball.vy); rally = 0; rampT0 = performance.now(); }
                 if(reflectBall(ball, ai.x, ai.y, ai.w, ai.h) && ball.vy > 0){ rally++; }
                 var p = st.paddle();
                 if(p && reflectBall(ball, p.x, p.y, p.w, p.h) && ball.vy < 0){
@@ -1521,9 +1540,9 @@
         SEARCH_GAMES.plane = function(canvas){
             var st = gameStage(canvas);
             var screen = canvas.parentNode;
-            var plane, gates, tick, crashed, score;
+            var plane, gates, tick, crashed, score, lastGate;
             function reset(){ plane = { x: st.W * 0.28, y: st.H * 0.4, vy: 0 };
-                              gates = []; tick = 0; crashed = 0; score = 0; }
+                              gates = []; tick = 0; crashed = 0; score = 0; lastGate = 0; }
             reset();
             function flap(){ if(!crashed){ plane.vy = -3.2; } }
             function onDown(e){
@@ -1552,13 +1571,18 @@
                     plane.y += plane.vy;
                     if(plane.y < 18){ plane.y = 18; plane.vy = 0; }
                     if(plane.y > st.H - 18){ plane.y = st.H - 18; plane.vy = -1; }
-                    if(tick % 170 === 0){
+                    // Gentle survival ramp: +70% scroll speed over ~60s of
+                    // flight, reset by a crash. Gates spawn by time-distance
+                    // so their on-screen spacing stays constant as it speeds up.
+                    var ramp = 1 + Math.min(0.7, tick / 3600 * 0.7);
+                    if(tick - lastGate >= 170 / ramp){
                         var gapH = Math.max(150, st.H * 0.3);
                         gates.push({ x: st.W + 40, w: 26, gapH: gapH,
                                      gapY: 70 + Math.random() * Math.max(1, st.H - gapH - 160),
                                      passed: false });
+                        lastGate = tick;
                     }
-                    var speed = Math.max(1.4, st.W / 700);
+                    var speed = Math.max(1.4, st.W / 700) * ramp;
                     for(var i = gates.length - 1; i >= 0; i--){
                         var g = gates[i];
                         g.x -= speed;
