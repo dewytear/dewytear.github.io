@@ -514,6 +514,22 @@
             position: relative;
             display: flex;
             align-items: center;
+            /* Slightly narrower than the core so the Breakout paddle has
+               room to travel; draggable left/right (JS moves it via
+               translateX and the game reads its live position). */
+            max-width: 500px;
+            margin: 0 auto;
+            touch-action: pan-y;   /* horizontal touch drags reach the paddle */
+        }
+        .search-field.dragging,
+        .search-field.dragging #search-input{
+            cursor: grabbing;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        /* Smooth glide back to center when the user starts typing. */
+        .search-field.paddle-home{
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .search-ico{
             position: absolute;

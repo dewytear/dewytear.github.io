@@ -716,6 +716,7 @@
         function renderSearchResults(query){
             var box = document.getElementById('search-results');
             if(!box){ return; }
+            paddleReset();   // typing = searching: glide the field back home
             var q = query.trim();
             if(!q){ box.innerHTML = ''; box.classList.remove('open'); return; }
             var terms = q.toLowerCase().split(/\s+/);
@@ -804,6 +805,7 @@
             setArticle(html);
             ensureTextIndex();   // start fetching doc bodies in the background
             startSearchGame();   // Breakout-style ball drifting behind the field
+            enableSearchPaddle();   // drag the field left/right like a paddle
             var box = document.getElementById('search-input');
             if(box){
                 box.focus();
@@ -814,6 +816,54 @@
                     PENDING_QUERY = '';
                 }
             }
+        }
+
+        // ---- Search-field paddle drag ----
+        // The field doubles as the Breakout paddle: grab it and slide left or
+        // right. Click-to-focus and typing stay untouched — the drag only
+        // engages after a clear horizontal pull (8px, more X than Y), and the
+        // field glides back to center when you start typing.
+        function paddleReset(){
+            var field = document.querySelector('.search-field');
+            if(field && field.style.transform){
+                field.classList.add('paddle-home');
+                field.style.transform = '';
+                setTimeout(function(){ field.classList.remove('paddle-home'); }, 320);
+            }
+        }
+        function enableSearchPaddle(){
+            var field = document.querySelector('.search-field');
+            var screen = document.querySelector('.search-screen');
+            if(!field || !screen){ return; }
+            var drag = null, offset = 0;
+            function clampBound(){
+                var room = (screen.getBoundingClientRect().width - field.offsetWidth) / 2 - 12;
+                return Math.max(0, room);
+            }
+            field.addEventListener('pointerdown', function(e){
+                if(e.button !== undefined && e.button !== 0){ return; }
+                drag = { startX: e.clientX, startY: e.clientY, base: offset, on: false, id: e.pointerId };
+            });
+            field.addEventListener('pointermove', function(e){
+                if(!drag){ return; }
+                var mx = e.clientX - drag.startX, my = e.clientY - drag.startY;
+                if(!drag.on){
+                    if(Math.abs(mx) < 8 || Math.abs(mx) <= Math.abs(my)){ return; }
+                    drag.on = true;   // a real horizontal pull — engage the paddle
+                    field.classList.add('dragging');
+                    try{ field.setPointerCapture(drag.id); }catch(err){}
+                }
+                var b = clampBound();
+                offset = Math.max(-b, Math.min(b, drag.base + mx));
+                field.style.transform = offset ? 'translateX(' + offset + 'px)' : '';
+                e.preventDefault();
+            });
+            function endDrag(){
+                if(drag && drag.on){ field.classList.remove('dragging'); }
+                drag = null;
+            }
+            field.addEventListener('pointerup', endDrag);
+            field.addEventListener('pointercancel', endDrag);
         }
 
         // A calm, decorative Breakout: a ball ricochets off the walls and the
@@ -887,11 +937,21 @@
                 if(ball.y - ball.r < 0){ ball.y = ball.r; ball.vy = Math.abs(ball.vy); }
                 if(ball.y + ball.r > H){ ball.y = H - ball.r; ball.vy = -Math.abs(ball.vy); }
 
-                // The search field is the paddle.
+                // The search field is the paddle. Like real Breakout, WHERE
+                // the ball lands on the paddle steers it: center = straight
+                // up, edges = sharp angles ("english"). Speed stays constant.
                 var field = document.querySelector('.search-field');
                 if(field){
                     var cr = canvas.getBoundingClientRect(), fr = field.getBoundingClientRect();
-                    bounce(fr.left - cr.left, fr.top - cr.top, fr.width, fr.height);
+                    var px = fr.left - cr.left, py = fr.top - cr.top;
+                    if(bounce(px, py, fr.width, fr.height) && ball.vy < 0){
+                        var t = (ball.x - (px + fr.width / 2)) / (fr.width / 2);
+                        t = Math.max(-1, Math.min(1, t));
+                        var sp = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
+                        ball.vx = sp * 0.75 * t;
+                        ball.vy = -Math.sqrt(Math.max(sp * sp - ball.vx * ball.vx,
+                                                      sp * sp * 0.2));
+                    }
                 }
 
                 var anyAlive = false;
