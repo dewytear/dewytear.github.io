@@ -203,6 +203,12 @@
                 opacity: 0;
                 pointer-events: none;
             }
+            /* The sticky Tags/settings footer sits on the shell here, so it
+               wears the shell tint (mobile keeps the drawer's own bg).
+               #sidebar prefix outranks the later base #sidebar-foot rule. */
+            #sidebar #sidebar-foot{
+                background: var(--bg-alt);
+            }
             /* The content pane is a rounded card inset in the shell —
                borderless like claude.ai, so no hard line runs beside the
                menu; the tint contrast + soft shadow do the separating. */
