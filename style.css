@@ -1298,7 +1298,7 @@
             display: inline-flex;
             margin-bottom: 6px;
             border: 1px solid var(--border);
-            border-radius: 999px;
+            border-radius: 8px;
             background: color-mix(in srgb, var(--bg-alt) 72%, transparent);
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
@@ -1324,6 +1324,7 @@
             font-weight: 500;
             line-height: 1;
             cursor: pointer;
+            border-radius: 0;   /* the container's rounded corners do the clipping */
             transition: color 0.15s ease, background 0.15s ease;
         }
         .nav-tool + .nav-tool{
