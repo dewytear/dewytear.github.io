@@ -708,11 +708,13 @@
             transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
         }
         #search-input::placeholder{ color: var(--muted); }
+        /* Calm focus: just a gentle tint on the border — no glow ring, no
+           heavier shadow, and the global focus outline stays off since the
+           border change already signals focus. */
         #search-input:focus{
-            border-color: var(--accent);
+            outline: none;
+            border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
             background: var(--bg);
-            box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent),
-                        0 12px 36px rgba(0,0,0,0.16);
         }
         #search-results{
             margin-top: 14px;
