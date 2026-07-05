@@ -1171,6 +1171,13 @@
         #navigation li{
             margin: 8px 0;
         }
+        /* Top-level rows are flex items (the ul pins Work Log to the
+           bottom), so their margins no longer collapse with the titles' —
+           zero them and let the title margins (10 + 12) carry the original
+           22px rhythm. */
+        #navigation > ul > li{
+            margin: 0;
+        }
         #navigation li a{
             display: block;
             color: var(--text);
@@ -1285,7 +1292,10 @@
            category titles beside them. */
         #navigation > ul > li > a{
             display: block;
-            margin: 22px 0 10px;
+            /* 12px top: the nav ul is a flex column (Work Log pinning), so
+               margins no longer collapse — 12 + the previous row's 10px
+               bottom restores the original 22px rhythm. */
+            margin: 12px 0 10px;
             padding: 0 0 8px;
             border-bottom: var(--nav-line-width) var(--nav-line-style) var(--border);
             font-size: 15px;
@@ -1300,9 +1310,10 @@
         #navigation a[href="#!ai-map"]::first-letter{
             color: var(--accent-ink);
         }
-        /* Level-0 category titles: the only prominent tier. */
+        /* Level-0 category titles: the only prominent tier. (12px top —
+           see the top-level link rule above for the flex/no-collapse math.) */
         #navigation > ul > li.nav-branch > .nav-title{
-            margin: 22px 0 10px;
+            margin: 12px 0 10px;
             padding: 0 0 8px;
             border-bottom: var(--nav-line-width) var(--nav-line-style) var(--border);
             font-size: 15px;
@@ -1328,7 +1339,7 @@
             display: flex;
             /* Sit just inside the category dividers' span, centered. */
             width: calc(100% - 16px);
-            margin: 0 auto 6px;
+            margin: 0 auto 10px;   /* +first-row 12px = the original 22px gap */
             border: 1px solid var(--border);
             border-radius: 8px;
             background: color-mix(in srgb, var(--bg-alt) 72%, transparent);
