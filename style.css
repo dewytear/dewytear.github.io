@@ -559,31 +559,32 @@
         .game-dock:focus-within{
             opacity: 1;
         }
+        /* Monochrome stroke icons that follow the theme via currentColor —
+           muted at rest, text on hover, accent when selected. */
         .game-dock button{
             width: 34px;
             height: 34px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
-            line-height: 1;
             background: transparent;
             border: none;
             border-radius: 999px;
+            color: var(--muted);
             cursor: pointer;
-            filter: grayscale(1);
-            opacity: 0.65;
-            transition: background 0.15s ease, filter 0.15s ease,
+            opacity: 0.75;
+            transition: background 0.15s ease, color 0.15s ease,
                         opacity 0.15s ease, transform 0.15s ease;
         }
+        .game-dock button svg{ display: block; }
         .game-dock button:hover{
-            filter: none;
+            color: var(--text);
             opacity: 1;
             transform: translateY(-1px);
         }
         .game-dock button.on{
             background: color-mix(in srgb, var(--accent) 20%, transparent);
-            filter: none;
+            color: var(--accent-ink);
             opacity: 1;
         }
         /* A single symmetric swell (peak at 50%) with ease-in-out gives a
