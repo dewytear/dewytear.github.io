@@ -88,7 +88,11 @@
         var TAG_INDEX = {};    // tag -> [doc, ...]
         var DOC_BY_NAME = {};  // name -> doc
         var FOLDER_DOCS = {};  // section (parent-folder path) -> [doc, ...] in tree order
-        var DOC_MODEL = 'Claude Fable 5';   // default authoring-model badge (no icon)
+        // Authoring-model badge. Per-doc truth lives in the list node's
+        // "model" field — set it from the AUTHORING SESSION's model when a
+        // doc is added or substantially rewritten. This constant is only
+        // the fallback for docs that predate the rule.
+        var DOC_MODEL = 'Claude Fable 5';
 
         function buildIndexes(tree){
             (function walk(nodes, path){

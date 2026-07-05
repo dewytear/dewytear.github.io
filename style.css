@@ -1252,6 +1252,35 @@
             letter-spacing: 0.05em;
             color: var(--text);
         }
+        /* The two AI entries (Knowledge Graph / Knowledge Map) wear an
+           accent-tinted pill so they pop out of the monochrome list at a
+           glance, without changing the list's size or rhythm. */
+        #navigation > ul > li > a[href="#!cosmos"]{
+            display: inline-block;
+            padding: 5px 14px;
+            border-bottom: none;
+            letter-spacing: 0.04em;
+        }
+        #navigation a[href="#!cosmos"],
+        #navigation a[href="#!ai-map"]{
+            color: var(--accent-ink);
+            background: color-mix(in srgb, var(--accent) 6%, transparent);
+            border: 1px solid color-mix(in srgb, var(--accent) 16%, transparent);
+            border-radius: 999px;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+        #navigation li a[href="#!ai-map"]{
+            display: inline-block;
+            margin: 2px 0;
+            padding: 3px 12px;
+            font-weight: 600;
+        }
+        #navigation a[href="#!cosmos"]:hover,
+        #navigation a[href="#!ai-map"]:hover{
+            background: color-mix(in srgb, var(--accent) 12%, transparent);
+            border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+            text-decoration: none;
+        }
         /* Level-0 category titles: the only prominent tier. */
         #navigation > ul > li.nav-branch > .nav-title{
             margin: 22px 0 10px;
