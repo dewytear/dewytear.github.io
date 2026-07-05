@@ -675,6 +675,32 @@
             }
 
             var nodes = null, edges = null, galaxies = null, maxRef = 1;
+            var secMeta = null;   // section -> {gi, ci, cn} (갤럭시/성단 색 파생용)
+
+            // ---- 갤럭시·성단 색 체계 ----
+            // 팔레트를 하드코딩하지 않고 매 프레임 테마 accent에서 파생한다
+            // (낮/밤·개인 accent 변경 즉시 반영). 갤럭시끼리는 golden-angle
+            // (137.5°) 색상 회전으로 확연히 갈라지고, 같은 갤럭시의 성단은
+            // 그 색 주변 ±8°/step의 은은한 톤 차만 가진다.
+            function toHsl(c){
+                ctx.fillStyle = '#000'; ctx.fillStyle = c;
+                var v = ctx.fillStyle;                     // normalized '#rrggbb'
+                if(v.charAt(0) !== '#'){ return [25, 100, 50]; }
+                var r = parseInt(v.substr(1, 2), 16) / 255,
+                    g = parseInt(v.substr(3, 2), 16) / 255,
+                    b = parseInt(v.substr(5, 2), 16) / 255;
+                var mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+                var l = (mx + mn) / 2, d = mx - mn, h = 0, s = 0;
+                if(d){
+                    s = d / (1 - Math.abs(2 * l - 1));
+                    h = mx === r ? ((g - b) / d + 6) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+                    h *= 60;
+                }
+                return [h, s * 100, l * 100];
+            }
+            function hslStr(h, s, l){
+                return 'hsl(' + (((h % 360) + 360) % 360).toFixed(1) + ', ' + s.toFixed(1) + '%, ' + l.toFixed(1) + '%)';
+            }
             function build(){
                 if(!KNOWLEDGE){ return false; }
                 var names = Object.keys(KNOWLEDGE);
@@ -722,7 +748,8 @@
                 var sub = tops.length === 1 ? 1 : 0.5;
                 var dirs = {};
                 galaxies = [];
-                tops.forEach(function(t){
+                secMeta = {};
+                tops.forEach(function(t, ti){
                     var mine = secs.filter(function(s){ return s.split(' · ')[0] === t; });
                     mine.forEach(function(s, i){
                         var y = 1 - 2 * (i + 0.5) / mine.length;
@@ -730,13 +757,15 @@
                         dirs[s] = [topDir[t][0] + r * Math.cos(a) * sub,
                                    topDir[t][1] + y * sub,
                                    topDir[t][2] + r * Math.sin(a) * sub];
+                        secMeta[s] = { gi: ti, ci: i, cn: mine.length };
                         var parts = s.split(' · ');
                         galaxies.push({ label: label_of[s] || parts[parts.length - 1] || s,
+                                        gi: ti,
                                         x: dirs[s][0], y: dirs[s][1], z: dirs[s][2],
                                         sx: 0, sy: 0, ss: 1 });
                     });
                     if(tops.length > 1){
-                        galaxies.push({ big: true, label: t.toUpperCase(),
+                        galaxies.push({ big: true, label: t.toUpperCase(), gi: ti,
                                         x: topDir[t][0], y: topDir[t][1], z: topDir[t][2],
                                         sx: 0, sy: 0, ss: 1 });
                     }
@@ -755,7 +784,7 @@
                     // A tight cloud (±0.26) around the galaxy center — no
                     // renormalizing onto one shared sphere, so galaxies with
                     // different 분류 stay visibly apart.
-                    return { name: n, title: d.title,
+                    return { name: n, title: d.title, sec: d.section,
                              x: dir[0] + j[0] * 0.2,
                              y: dir[1] + j[1] * 0.2,
                              z: dir[2] + j[2] * 0.2,
@@ -850,6 +879,17 @@
                     auto = true;
                     rotY += 0.0018;
                 }
+                // 프레임당 1회, accent에서 섹션(성단)별 색을 파생한다.
+                var base = toHsl(col), secColor = {}, gxColor = [];
+                if(secMeta){
+                    for(var sk in secMeta){
+                        var sm = secMeta[sk];
+                        secColor[sk] = hslStr(base[0] + sm.gi * 137.5
+                                              + (sm.ci - (sm.cn - 1) / 2) * 8, base[1], base[2]);
+                        gxColor[sm.gi] = hslStr(base[0] + sm.gi * 137.5, base[1], base[2]);
+                    }
+                }
+                function colOf(nd){ return secColor[nd.sec] || col; }
                 var cy = Math.cos(rotY), sy = Math.sin(rotY);
                 var cx = Math.cos(rotX), sx = Math.sin(rotX);
                 var scale = Math.min(W, H) * 0.47 * zoom, f = 3.2;
@@ -876,7 +916,8 @@
                         ctx.font = '700 ' + Math.round(14 * gx.ss) + 'px ' + GAME_FONT;
                         ctx.globalAlpha = Math.max(0.1, gx.ss * 0.22);
                     }
-                    ctx.fillStyle = mut;
+                    // 명판은 자기 갤럭시 색 — 알파가 낮아(0.1~0.3) 은은하다.
+                    ctx.fillStyle = gxColor[gx.gi] || mut;
                     ctx.fillText(gx.label, gx.sx, gx.sy);
                 }
                 ctx.lineWidth = 1;
@@ -884,7 +925,7 @@
                     var a = nodes[edges[e2][0]], b = nodes[edges[e2][1]];
                     var hi = hover >= 0 && (edges[e2][0] === hover || edges[e2][1] === hover);
                     ctx.globalAlpha = (hi ? 0.6 : 0.1) * ((a.ss + b.ss) / 2) * edges[e2][2];
-                    ctx.strokeStyle = hi ? col : mut;
+                    ctx.strokeStyle = hi ? colOf(nodes[hover]) : mut;
                     ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
                 }
                 var order = nodes.map(function(_, k){ return k; })
@@ -893,11 +934,11 @@
                     var nd2 = nodes[order[o]];
                     var r2 = Math.max(2, (2.6 + nd2.ref / maxRef * 5.5) * nd2.ss);
                     ctx.globalAlpha = Math.max(0.18, Math.min(0.9, 0.25 + nd2.ss * 0.5));
-                    ctx.fillStyle = col;
+                    ctx.fillStyle = colOf(nd2);
                     ctx.beginPath(); ctx.arc(nd2.sx, nd2.sy, r2, 0, 6.2832); ctx.fill();
                     if(order[o] === hover){
                         ctx.globalAlpha = 0.9;
-                        ctx.strokeStyle = col; ctx.lineWidth = 1.5;
+                        ctx.strokeStyle = colOf(nd2); ctx.lineWidth = 1.5;
                         ctx.beginPath(); ctx.arc(nd2.sx, nd2.sy, r2 + 5, 0, 6.2832); ctx.stroke();
                         ctx.lineWidth = 1;
                     }
