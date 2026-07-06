@@ -4,8 +4,10 @@
 Called by .github/workflows/auto-worklog.yml on every push to master.
 Reads the commit from env (COMMIT_SHA / COMMIT_MSG / COMMIT_TIME), converts the
 time to KST (the Work Log date rule), and records it in the daily auto-log doc
-`docs/ko/wl-YYYYMMDD-auto` — creating the doc and its `list` nav node (plus the
-day/month/year blocks) on the first merge of that day.
+`docs/ko/work-log/YYYY/MM/DD/wl-YYYYMMDD-auto` — creating the doc and its
+`list` nav node (plus the day/month/year blocks) on the first merge of that day.
+The list node carries a "path" field (physical location under docs/<lang>/),
+matching the domain-tree layout; `name` stays the logical id / hash route.
 
 The `list` file is hand-formatted JSON, so edits are surgical text insertions
 that copy the surrounding indentation; the result is re-parsed with json.loads
@@ -125,7 +127,7 @@ def node_block(indent, lines):
     return '\n'.join(pad + l for l in lines)
 
 
-def update_list(when, doc_name, label):
+def update_list(when, doc_name, label, doc_rel):
     """Hang the auto-log node at Work Log > YYYY > MM월 > DD일, creating any
     missing year/month/day blocks. No-op if the node is already there."""
     text = open(LIST, encoding='utf-8').read()
@@ -138,7 +140,8 @@ def update_list(when, doc_name, label):
         raise RuntimeError('Work Log branch not found in list')
     _, wl_close, wl_indent = children_bounds(text, wl)
 
-    doc_line = ['{ "name": "%s", "label": "%s", "tags": [] }' % (doc_name, label)]
+    doc_line = ['{ "name": "%s", "path": "%s/%s", "label": "%s", "tags": [] }'
+                % (doc_name, doc_rel, doc_name, label)]
     day_lines = ['{',
                  '    "title": "%s일", "title_en": "Day %s",' % (day, day),
                  '    "children": ['] + \
@@ -198,12 +201,17 @@ def main():
 
     when = kst_time(os.environ.get('COMMIT_TIME', ''))
     doc_name = 'wl-%s-auto' % when.strftime('%Y%m%d')
-    doc_path = os.path.join(ROOT, 'docs', 'ko', doc_name)
+    # Physical home in the domain tree: work-log/YYYY/MM/DD/ (the list node's
+    # "path"). The hash route stays #!wl-YYYYMMDD-auto — name is the id.
+    doc_rel = 'work-log/%s/%s/%s' % (
+        when.strftime('%Y'), when.strftime('%m'), when.strftime('%d'))
+    doc_path = os.path.join(ROOT, 'docs', 'ko', *doc_rel.split('/'), doc_name)
+    os.makedirs(os.path.dirname(doc_path), exist_ok=True)
 
     if not update_doc(doc_path, when, subject, sha):
         print('skip (already logged): %s' % sha[:7])
         return 0
-    update_list(when, doc_name, '자동 머지 로그')
+    update_list(when, doc_name, '자동 머지 로그', doc_rel)
     print('logged %s -> %s' % (sha[:7], doc_name))
     return 0
 

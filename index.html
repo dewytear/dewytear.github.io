@@ -107,6 +107,9 @@
                     } else if(node.name && !node.route){
                         var doc = {
                             name: node.name,
+                            // list 노드의 "path" = docs/<lang>/ 아래 물리 위치.
+                            // 없으면 flat 레거시(파일명 = name)로 폴백.
+                            path: node.path || node.name,
                             label: labelFor(node) || node.name,
                             section: path.join(' · '),
                             sectionL: dpath.join(' · '),
@@ -296,24 +299,30 @@
             return html;
         }
 
-        // Where a doc's content file lives. Languages become sibling dirs
-        // (docs/en/, docs/zh/, …) later; today everything is the Korean tree.
+        // Where a doc's content file lives. `name`은 불변 논리 ID(해시 라우트,
+        // 인덱스 키)이고, 물리 위치는 list 노드의 `path`(도메인 트리)가 정한다.
+        // 언어 폴더(docs/en/, docs/zh/, …)는 한국어와 같은 상대 경로를 쓴다.
         // ---- 다국어 장치 (language plumbing) ----
         // 언어는 설정(effSettings().lang)으로 고르고, 'ko'가 원본 언어.
-        // 언어를 실제로 얹는 방법: docs/<lang>/에 같은 파일명 번역 +
+        // 언어를 실제로 얹는 방법: docs/<lang>/에 같은 상대 경로 번역 +
         // LANGS_READY에 추가 + STRINGS.<lang> + list의 label_<lang>/tags_<lang>
         // + tools/doc-entries.<lang>.json. 없는 조각은 전부 한국어로 폴백.
         var LANGS_READY = ['ko', 'en'];   // 번역 콘텐츠가 (일부라도) 존재하는 언어
         function currentLang(){ return effSettings().lang || 'ko'; }
+        // docs/<lang>/ 아래의 상대 경로 — list에 path가 없으면 flat 폴백.
+        function docRel(name){
+            var d = DOC_BY_NAME[name];
+            return (d && d.path) || name;
+        }
         function docPath(name, lang){
             lang = lang || currentLang();
             if(LANGS_READY.indexOf(lang) === -1){ lang = 'ko'; }
-            return 'docs/' + lang + '/' + name;
+            return 'docs/' + lang + '/' + docRel(name);
         }
         // 현재 언어로 본문을 가져오되, 번역 파일이 없으면(부분 번역 상태)
         // 한국어 원본으로 폴백한다.
         function fetchDoc(name){
-            var p = docPath(name), ko = 'docs/ko/' + name;
+            var p = docPath(name), ko = 'docs/ko/' + docRel(name);
             return fetch(p).then(function(r){
                 if(r.ok){ return r.text(); }
                 if(p !== ko){ return fetch(ko).then(function(r2){ return r2.ok ? r2.text() : ''; }); }
@@ -2037,7 +2046,7 @@
             var dates = {};
             return Promise.all(DOCS.map(function(d){
                 // Dates always track the Korean source file (the original).
-                var url = REPO_API + '/commits?path=' + encodeURIComponent('docs/ko/' + d.name) + '&per_page=1';
+                var url = REPO_API + '/commits?path=' + encodeURIComponent('docs/ko/' + (d.path || d.name)) + '&per_page=1';
                 return fetch(url).then(function(r){
                     return r.ok ? r.json() : null;
                 }).then(function(j){

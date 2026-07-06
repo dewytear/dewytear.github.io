@@ -1,0 +1,36 @@
+<h2>2026-07-06 · 문서 물리 구조 개편 — 도메인 트리 + name/path 분리</h2>
+<p>flat했던 <code>docs/ko/</code>(116편)·<code>docs/en/</code>(8편)를 <strong>안정적 도메인 트리</strong>로 재배치하고, <code>list</code> 노드에 <code>path</code> 필드를 도입해 <strong>논리 ID(<code>name</code>)와 물리 위치(<code>path</code>)의 책임을 분리</strong>했다. 문서가 수백 편으로 늘어도 10년 뒤에 다시 갈아엎지 않는 구조가 목표.</p>
+
+<h3>구조 원칙</h3>
+<ul>
+    <li><strong><code>name</code> = 불변 논리 ID</strong> — 해시 라우트(<code>#!문서명</code>)·인덱스 키·연관 참조가 전부 이걸 쓴다. 파일을 어디로 옮겨도 URL과 지식 그래프는 깨지지 않는다.</li>
+    <li><strong><code>path</code> = 물리 위치</strong> — <code>docs/&lt;lang&gt;/</code> 아래 상대 경로. 없으면 flat(<code>docs/&lt;lang&gt;/&lt;name&gt;</code>) 폴백이라 점진 적용이 가능하다.</li>
+    <li><strong>번역은 같은 상대 경로</strong> — <code>docs/en/…</code>이 한국어 트리를 미러링, ko 폴백 규칙 유지.</li>
+</ul>
+
+<h3>새 물리 트리</h3>
+<ul>
+    <li><code>ai/claude/code/{introduction,tutorial,skill,harness,llm-wiki,second-brain}/</code> — welcome·install 등 6편, ccb-*, skl-*, hns-*, llmw-*, sb-*</li>
+    <li><code>ai/claude/plugin/{harness,omc}/</code> — hnp-*, omc-*</li>
+    <li><code>ai/map/</code>·<code>douzone/map/</code> — 지식지도 2편</li>
+    <li><code>douzone/dev-center/proposal/ai-dev-knowledge-platform/</code> — dzp-* 7편</li>
+    <li><code>work-log/guide/</code>·<code>work-log/YYYY/MM/DD/</code> — wl-guide + 일자별 로그 22편</li>
+</ul>
+
+<h3>코드 변경 (경로 결합 지점 4곳)</h3>
+<ul>
+    <li><code>index.html</code> — <code>buildIndexes</code>가 노드의 <code>path</code>를 보존하고, <code>docRel()</code> 헬퍼로 <code>docPath</code>/<code>fetchDoc</code>(ko 폴백 포함)·<code>fetchDocDates</code>(GitHub commits API)가 물리 경로를 해석. 검색·연관문서·코스모스는 <code>name</code> 기준이라 무변경.</li>
+    <li><code>tools/auto_worklog.py</code> — 자동 로그를 <code>work-log/YYYY/MM/DD/</code>에 생성(폴더 자동 생성)하고 <code>list</code> 노드에 <code>path</code>를 포함.</li>
+    <li><code>tools/build_index.py</code>·지식 인덱스 — <code>name</code>과 논리 트리 기준이라 <strong>무변경</strong> (<code>--check</code> 통과 확인).</li>
+    <li>README·CLAUDE.md·tools/i18n.md — 문서 추가/번역 절차에 <code>path</code> 규칙 반영.</li>
+</ul>
+
+<h3>이관 방법</h3>
+<ul>
+    <li>일회성 Python 스크립트로 <strong>124개 파일을 <code>git mv</code></strong>(히스토리 rename 추적 보존) + <code>list</code>의 116개 문서 노드에 <code>path</code> 텍스트 삽입(수술식, <code>json.loads</code> 재검증). 이동 후 잔여 flat 파일 0·경로 불일치 0 확인.</li>
+</ul>
+
+<h3>알려진 트레이드오프</h3>
+<ul>
+    <li>GitHub commits API의 <code>?path=</code>는 rename을 추적하지 않아, 머지 직후 "최근 문서" 날짜가 일괄 이관 시점으로 보인다. 이후 문서가 수정되면 자연 회복.</li>
+</ul>

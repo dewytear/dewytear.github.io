@@ -40,8 +40,8 @@ GitHub Pages로 배포됩니다: https://dewytear.github.io
 | `colors.js` | 낮/밤 테마 토글 로직 |
 | `list` | 네비게이션 트리 정의 (JSON) |
 | `config.json` | 서버 전역 설정 — 타이틀·프로필 사진 + `defaults`(모든 방문자의 설정 기본값) |
-| `docs/ko/` | **모든 문서 콘텐츠(한국어 원본)** — 강의 조각(`welcome`·`ccb-*`·`skl-*`·`hns-*`·`hnp-*`·`llmw-*`·`sb-*`·`omc-*`), `ai-map`, Work Log(`wl-*`) |
-| `docs/en/`·`docs/zh/`·`docs/ja/` | (예정) 번역 문서 — 같은 파일명으로 두면 언어 설정에 따라 로드, 없으면 한국어 폴백 |
+| `docs/ko/` | **모든 문서 콘텐츠(한국어 원본)** — 안정적 도메인 트리로 배치: `ai/claude/code/{introduction,tutorial,skill,harness,llm-wiki,second-brain}/`, `ai/claude/plugin/{harness,omc}/`, `ai/map/`, `douzone/…`, `work-log/YYYY/MM/DD/` |
+| `docs/en/`·`docs/zh/`·`docs/ja/` | 번역 문서 — **한국어와 같은 상대 경로**에 두면 언어 설정에 따라 로드, 없으면 한국어 폴백 |
 | `data/knowledge-index.ko.json` | AI 지식 인덱스(요약·개념·연관·stats) — 직접 편집 금지, 언어별로 `.{lang}.json` |
 | `tools/build_index.py` | 인덱스 결정적 빌드(`--check` 검증) |
 | `tools/doc-entries.ko.json` | 인덱스 원료(문서별 AI 작성 엔트리, 언어별) |
@@ -49,8 +49,8 @@ GitHub Pages로 배포됩니다: https://dewytear.github.io
 
 ## 문서 추가하기
 
-1. 새 문서 파일을 `docs/ko/`에 만듭니다 (예: `docs/ko/settings`). 내용은 `<h2>...</h2><p>...</p>` 형태의 HTML 조각으로 작성합니다.
-2. `list`(JSON) 트리에 노드를 추가합니다. 링크 노드는 `{ "name": "settings", "label": "Settings", "tags": ["config", "settings"] }`, 섹션은 `{ "title": "...", "children": [ ... ] }` 형태이며 `children`으로 얼마든지 중첩할 수 있습니다. `tags`는 선택 사항이며, 지정하면 문서 하단과 태그 인덱스에 자동으로 반영됩니다.
+1. 새 문서 파일을 `docs/ko/` 아래 **해당 도메인 폴더**에 만듭니다 (예: `docs/ko/ai/claude/code/introduction/settings`). 내용은 `<h2>...</h2><p>...</p>` 형태의 HTML 조각으로 작성합니다.
+2. `list`(JSON) 트리에 노드를 추가합니다. 링크 노드는 `{ "name": "settings", "path": "ai/claude/code/introduction/settings", "label": "Settings", "tags": ["config", "settings"] }`, 섹션은 `{ "title": "...", "children": [ ... ] }` 형태이며 `children`으로 얼마든지 중첩할 수 있습니다. **`name`은 불변 논리 ID(해시 라우트 `#!name`), `path`는 `docs/<lang>/` 아래의 물리 위치**입니다 — `path`가 없으면 flat(`docs/<lang>/<name>`)으로 폴백합니다. `tags`는 선택 사항이며, 지정하면 문서 하단과 태그 인덱스에 자동으로 반영됩니다.
 3. **작성 AI·모델 표기** — AI가 문서를 추가하거나 대폭 다시 쓸 때는 노드에 `"model": "<작성 세션의 모델명>"`을 함께 기록합니다(제목 우측 배지로 표시). 이 값은 **그 문서를 실제로 쓴 세션의 정보**를 따르며, 없으면 기본값(`DOC_MODEL`)이 표시됩니다.
 4. 커밋하면 사이드바 트리에 자동으로 나타납니다.
 

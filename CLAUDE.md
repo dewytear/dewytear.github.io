@@ -10,10 +10,11 @@
 - 새 컴포넌트는 기존 디자인 언어를 따른다: 반투명 필(pill) + backdrop-blur, 평소엔 낮은 존재감·호버 시 깨어남 (예: 검색 화면 `.game-dock`, 사이드바 `.nav-tools`).
 
 ## 본문(문서) 추가 규칙
+- **물리 위치 규칙**: 문서 파일은 `docs/ko/` 아래 **도메인 트리**에 둔다 (예: `ai/claude/code/tutorial/`, `work-log/YYYY/MM/DD/`). `list` 노드의 `name`은 불변 논리 ID(해시 라우트), `path`는 `docs/<lang>/` 아래 상대 경로 — 둘을 항상 함께 기록한다. 번역 파일은 한국어와 같은 상대 경로.
 - **문서를 추가하면 지식 체계 반영이 항상 동반된다** (Douzone 등 어느 대분류든 동일):
-  1. `list`에 노드 추가 — `label`(+`label_en`), `tags`, 새 문서·대폭 재작성이면 `model` 기록
+  1. `list`에 노드 추가 — `path`, `label`(+`label_en`), `tags`, 새 문서·대폭 재작성이면 `model` 기록
   2. `tools/doc-entries.ko.json`에 엔트리 추가(title·summary·concepts — 기존 개념 어휘를 재사용해 연관 링크가 생기게) 후 `python3 tools/build_index.py` 재생성 + `--check` 통과 → 지식지도·지식그래프(cosmos)에 자동 반영
-  3. 새 대분류(섹션)라면 `tools/build_index.py`의 `CLUSTER_LABELS_BY_LANG`에 **모든 언어** 클러스터 라벨 추가 + `docs/*/ai-map`의 상단 도식·클러스터 표 fallback·`data-topics` 갱신
+  3. 새 대분류(섹션)라면 `tools/build_index.py`의 `CLUSTER_LABELS_BY_LANG`에 **모든 언어** 클러스터 라벨 추가 + `docs/*/ai/map/ai-map`의 상단 도식·클러스터 표 fallback·`data-topics` 갱신
   4. 작업이 끝나면 **Work Log 문서를 추가**하고 `list`의 해당 날짜 트리에 노드(`"tags": []`)를 단다
 
 ## 다국어 규칙
