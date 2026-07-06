@@ -361,13 +361,17 @@
             function resize(){
                 canvas.width = page.clientWidth;
                 canvas.height = page.clientHeight;
-                var want = Math.min(90, Math.round(canvas.width * canvas.height / 26000));
+                var want = Math.min(110, Math.round(canvas.width * canvas.height / 22000));
                 while(parts.length < want){
+                    // Base drift never decays (perpetual ambient motion);
+                    // the mouse only adds a temporary impulse on top.
                     parts.push({
                         x: Math.random() * canvas.width,
                         y: Math.random() * canvas.height,
-                        vx: (Math.random() - 0.5) * 0.35,
-                        vy: (Math.random() - 0.5) * 0.35,
+                        bvx: (Math.random() < 0.5 ? -1 : 1) * (0.12 + Math.random() * 0.28),
+                        bvy: (Math.random() < 0.5 ? -1 : 1) * (0.12 + Math.random() * 0.28),
+                        ivx: 0,
+                        ivy: 0,
                         r: 1.2 + Math.random() * 1.6
                     });
                 }
@@ -384,7 +388,7 @@
             }
             function onLeave(){ mouse.x = -9999; mouse.y = -9999; }
 
-            var LINK = 110, MOUSE_LINK = 150;
+            var LINK = 130, MOUSE_LINK = 150;
 
             function draw(){
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -395,13 +399,16 @@
                     dx = mouse.x - p.x; dy = mouse.y - p.y;
                     d = Math.sqrt(dx * dx + dy * dy);
                     if(d < MOUSE_LINK && d > 1){
-                        p.vx += dx / d * 0.012;
-                        p.vy += dy / d * 0.012;
+                        p.ivx += dx / d * 0.018;
+                        p.ivy += dy / d * 0.018;
                     }
-                    p.vx *= 0.985; p.vy *= 0.985;          // damping keeps speeds calm
-                    p.x += p.vx; p.y += p.vy;
-                    if(p.x < 0 || p.x > canvas.width){ p.vx *= -1; }
-                    if(p.y < 0 || p.y > canvas.height){ p.vy *= -1; }
+                    // Only the mouse impulse decays — the base drift keeps the
+                    // whole field in continuous motion across the full page.
+                    p.ivx *= 0.94; p.ivy *= 0.94;
+                    p.x += p.bvx + p.ivx;
+                    p.y += p.bvy + p.ivy;
+                    if(p.x < 0 || p.x > canvas.width){ p.bvx *= -1; p.ivx *= -1; }
+                    if(p.y < 0 || p.y > canvas.height){ p.bvy *= -1; p.ivy *= -1; }
                     p.x = Math.max(0, Math.min(canvas.width, p.x));
                     p.y = Math.max(0, Math.min(canvas.height, p.y));
                 }
@@ -668,9 +675,11 @@
                         text += renderDocTags(doc.tags);
                     }
                     setArticle(text);
-                    // Pin the authoring-model badge to the content pane's right edge.
+                    // Pin the authoring-model badge to the content pane's right
+                    // edge — only for listed knowledge docs. Unlisted special
+                    // pages (the About page) carry no AI/model attribution.
                     var art = document.getElementById('article');
-                    var label = (doc && doc.model) || DOC_MODEL;
+                    var label = doc ? (doc.model || DOC_MODEL) : '';
                     if(art && label){
                         var span = document.createElement('span');
                         span.className = 'doc-model';
