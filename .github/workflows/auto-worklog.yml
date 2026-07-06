@@ -1,0 +1,46 @@
+# master에 머지(푸시)될 때마다 tools/auto_worklog.py로 Work Log를 자동 기록한다.
+# - 봇 자신의 기록 커밋은 GITHUB_TOKEN 푸시라 이 워크플로를 재트리거하지 않지만
+#   (재귀 방지), actor 가드로 한 번 더 막는다.
+# - 기록 커밋도 Pages 배포는 정상적으로 트리거하므로 위키에 바로 반영된다.
+name: Auto Work Log
+
+on:
+  push:
+    branches: [master]
+
+# 연속 머지 시 기록 커밋이 서로 밟지 않도록 직렬화한다.
+concurrency:
+  group: auto-worklog
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  log:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Record work log entry
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          COMMIT_TIME: ${{ github.event.head_commit.timestamp }}
+        run: python3 tools/auto_worklog.py
+
+      - name: Commit and push
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          if git diff --quiet; then
+            echo "no log entry to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add list docs/ko
+          git commit -m "Work Log 자동 기록: ${COMMIT_SHA::7}"
+          git pull --rebase origin master
+          git push origin master

@@ -1,0 +1,27 @@
+<h2>2026-07-06 · master 머지 자동 Work Log 시스템</h2>
+<p><code>master</code>에 머지될 때마다 GitHub Actions가 <strong>Work Log를 자동으로 남기는</strong> 파이프라인을 구축했다. 이제 머지 기록은 사람이 챙기지 않아도 위키에 스스로 쌓인다.</p>
+
+<h3>작업 개요</h3>
+<ul>
+    <li><strong>워크플로</strong> — <code>.github/workflows/auto-worklog.yml</code>: <code>master</code> push 트리거, <code>github-actions[bot]</code> actor 가드 + GITHUB_TOKEN 푸시는 워크플로를 재트리거하지 않는 GitHub 규칙으로 <strong>재귀 방지 이중 안전장치</strong>. 연속 머지는 concurrency 그룹으로 직렬화.</li>
+    <li><strong>기록 스크립트</strong> — <code>tools/auto_worklog.py</code>: 커밋 시각을 <strong>KST로 환산</strong>해 날짜를 정하고(자정 넘김 규칙 준수), 하루치 자동 로그 문서 <code>wl-YYYYMMDD-auto</code>에 <code>시각 · 제목 · 커밋 링크</code> 한 줄을 추가. 그날 첫 머지면 문서와 <code>list</code> 노드(년&gt;월&gt;일 폴더가 없으면 그것까지)를 자동 생성.</li>
+    <li><strong>안전장치</strong> — <code>list</code>는 손으로 다듬은 JSON이라 전체 재직렬화 대신 <strong>주변 들여쓰기를 복제하는 국소 삽입</strong>으로 수정하고, 쓰기 전에 <code>json.loads</code> 재검증 — 구조가 어긋나면 파일을 건드리지 않고 실패한다. 커밋 sha 기준 멱등(재실행해도 중복 기록 없음), 제목 HTML 이스케이프.</li>
+    <li><strong>노이즈 필터</strong> — "chore: Pages 재배포"·"Work Log 자동 기록" 커밋은 기록하지 않는다. 자동 로그 문서는 wl-guide 규칙대로 <code>"tags": []</code>, 인덱스(지식지도·그래프)에는 넣지 않는다.</li>
+</ul>
+
+<h3>검증</h3>
+<ul>
+    <li>같은 날 연속 머지 · 중복 sha · 새 날/새 달/새 해 폴더 생성 · 스킵 패턴 · HTML 이스케이프 시나리오를 로컬에서 전부 통과, 생성된 <code>list</code> 블록이 기존 수작업 포맷과 바이트 단위로 동일함을 확인.</li>
+    <li>로컬 서버 + Playwright로 자동 로그 문서 렌더와 내비 노드 노출 확인.</li>
+</ul>
+
+<h3>동작 흐름</h3>
+<ul>
+    <li>PR 머지(또는 master 직접 푸시) → 워크플로 기동 → 스크립트가 문서·<code>list</code> 갱신 → 봇이 "Work Log 자동 기록: sha" 커밋을 푸시 → Pages가 배포해 위키에 반영.</li>
+</ul>
+
+<h3>다음 할 일</h3>
+<ul>
+    <li>운영하며 로그가 시끄러우면 스킵 패턴을 다듬는다.</li>
+    <li>향후 하루치 자동 로그를 AI 큐레이터가 주제별 요약으로 승격하는 단계(제안서의 지식화 파이프라인과 동일한 사상)를 검토.</li>
+</ul>
