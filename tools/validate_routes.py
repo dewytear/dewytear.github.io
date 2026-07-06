@@ -16,8 +16,11 @@ import os
 import re
 import sys
 
-SPECIAL_ROUTES = {'cosmos', 'tags', 'settings'}
+SPECIAL_ROUTES = {'cosmos', 'tags', 'settings', 'search', 'about'}
 SPECIAL_PREFIXES = ('tag:', 'folder:')
+# Deliberately nav-less doc files (reachable by dedicated UI, not the list
+# tree): the About page opens from the sidebar profile photo.
+UNLISTED_DOCS = {'about'}
 LINK_RE = re.compile(r'href="#!([^"]*)"')
 
 
@@ -115,6 +118,8 @@ def run(root):
 
     # 4. orphan-file: file under docs/ko/** not referenced by any list path.
     for rel in sorted(ko_files):
+        if rel in UNLISTED_DOCS:
+            continue
         if rel not in doc_paths:
             findings.append(_f('WARN', 'orphan-file', rel,
                                 "docs/ko/%s is not referenced by any list node" % rel))
@@ -150,6 +155,8 @@ def run(root):
 
     # 7. en-orphan: docs/en file whose relative path has no ko list node.
     for rel in sorted(walk_files(en_dir)):
+        if rel in UNLISTED_DOCS:
+            continue
         if rel not in doc_paths:
             findings.append(_f('ERROR', 'en-orphan', path_to_name.get(rel, rel),
                                 "docs/en/%s has no matching path in list" % rel))

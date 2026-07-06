@@ -21,9 +21,11 @@
     <div id="grid">
         <aside id="sidebar">
             <div id="profile">
-                <img id="profile-img" src="profile.jpg" alt="Profile"
-                     onerror="if(this.src.indexOf('profile.svg') === -1){ this.src = 'profile.svg'; }">
-                <p id="profile-tagline"><span class="ptl-text">Wanna fly with me</span> <span class="pf-arrow" aria-hidden="true">&#8599;</span></p>
+                <a id="profile-link" href="#!about" aria-label="About — 소개 페이지로 이동">
+                    <img id="profile-img" src="profile.jpg" alt="Profile"
+                         onerror="if(this.src.indexOf('profile.svg') === -1){ this.src = 'profile.svg'; }">
+                    <p id="profile-tagline"><span class="ptl-text">Wanna fly with me</span> <span class="pf-arrow" aria-hidden="true">&#8599;</span></p>
+                </a>
             </div>
             <nav id="navigation"></nav>
             <div id="sidebar-foot">
@@ -263,6 +265,7 @@
             void art.offsetWidth;   // force reflow so the animation restarts
             art.classList.add('fade-in');
             initCarousels(art);
+            initAboutFx(art);
         }
 
         // Carousels arrive via innerHTML, so their wiring lives here.
@@ -290,6 +293,168 @@
                 if(next){ next.addEventListener('click', function(){ show(idx + 1); }); }
                 show(0);
             });
+        }
+
+        // ---- About page effects: particle canvas + scroll reveal ----
+        // The about fragment (docs/<lang>/about, opened from the profile
+        // photo) arrives via innerHTML, so its wiring lives here. Handles are
+        // kept so each navigation tears the previous page down. Language is
+        // the site-wide setting — the fragment itself is single-language.
+        var ABOUT_FX = { raf: 0, cleanups: [] };
+
+        function destroyAboutFx(){
+            if(ABOUT_FX.raf){ cancelAnimationFrame(ABOUT_FX.raf); ABOUT_FX.raf = 0; }
+            ABOUT_FX.cleanups.forEach(function(fn){ fn(); });
+            ABOUT_FX.cleanups = [];
+        }
+
+        function initAboutFx(root){
+            destroyAboutFx();
+            var page = root.querySelector('.about-page');
+            if(!page){ return; }
+            initAboutReveal(page);
+            initAboutCanvas(page);
+        }
+
+        function initAboutReveal(page){
+            var els = page.querySelectorAll('.about-reveal');
+            if(!('IntersectionObserver' in window)){
+                els.forEach(function(el){ el.classList.add('visible'); });
+                return;
+            }
+            var io = new IntersectionObserver(function(entries){
+                entries.forEach(function(en){
+                    if(en.isIntersecting){
+                        en.target.classList.add('visible');
+                        io.unobserve(en.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+            els.forEach(function(el){ io.observe(el); });
+            ABOUT_FX.cleanups.push(function(){ io.disconnect(); });
+        }
+
+        function initAboutCanvas(page){
+            var canvas = page.querySelector('.about-canvas');
+            if(!canvas || !canvas.getContext){ return; }
+            var ctx = canvas.getContext('2d');
+            var reduced = window.matchMedia
+                       && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            // Colors follow the theme tokens so day/night both look right —
+            // re-read on body class/style changes (theme toggle, accent pick).
+            var colors;
+            function readColors(){
+                var cs = getComputedStyle(document.body);
+                colors = {
+                    dot: cs.getPropertyValue('--accent').trim() || '#4db6ac',
+                    line: cs.getPropertyValue('--muted').trim() || '#9aa4b2'
+                };
+            }
+            readColors();
+            var themeWatch = new MutationObserver(readColors);
+            themeWatch.observe(document.body, { attributes: true, attributeFilter: ['class', 'style'] });
+            ABOUT_FX.cleanups.push(function(){ themeWatch.disconnect(); });
+
+            var parts = [], mouse = { x: -9999, y: -9999 };
+
+            function resize(){
+                canvas.width = page.clientWidth;
+                canvas.height = page.clientHeight;
+                var want = Math.min(90, Math.round(canvas.width * canvas.height / 26000));
+                while(parts.length < want){
+                    parts.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 0.35,
+                        vy: (Math.random() - 0.5) * 0.35,
+                        r: 1.2 + Math.random() * 1.6
+                    });
+                }
+                parts.length = want;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+            ABOUT_FX.cleanups.push(function(){ window.removeEventListener('resize', resize); });
+
+            function onMove(e){
+                var box = canvas.getBoundingClientRect();
+                mouse.x = e.clientX - box.left;
+                mouse.y = e.clientY - box.top;
+            }
+            function onLeave(){ mouse.x = -9999; mouse.y = -9999; }
+
+            var LINK = 110, MOUSE_LINK = 150;
+
+            function draw(){
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                var i, j, p, q, dx, dy, d;
+                for(i = 0; i < parts.length; i++){
+                    p = parts[i];
+                    // Gentle pull toward a nearby cursor makes it feel alive.
+                    dx = mouse.x - p.x; dy = mouse.y - p.y;
+                    d = Math.sqrt(dx * dx + dy * dy);
+                    if(d < MOUSE_LINK && d > 1){
+                        p.vx += dx / d * 0.012;
+                        p.vy += dy / d * 0.012;
+                    }
+                    p.vx *= 0.985; p.vy *= 0.985;          // damping keeps speeds calm
+                    p.x += p.vx; p.y += p.vy;
+                    if(p.x < 0 || p.x > canvas.width){ p.vx *= -1; }
+                    if(p.y < 0 || p.y > canvas.height){ p.vy *= -1; }
+                    p.x = Math.max(0, Math.min(canvas.width, p.x));
+                    p.y = Math.max(0, Math.min(canvas.height, p.y));
+                }
+                ctx.strokeStyle = colors.line;
+                for(i = 0; i < parts.length; i++){
+                    p = parts[i];
+                    for(j = i + 1; j < parts.length; j++){
+                        q = parts[j];
+                        dx = p.x - q.x; dy = p.y - q.y;
+                        if(dx > LINK || dx < -LINK || dy > LINK || dy < -LINK){ continue; }
+                        d = Math.sqrt(dx * dx + dy * dy);
+                        if(d > LINK){ continue; }
+                        ctx.globalAlpha = (1 - d / LINK) * 0.28;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(q.x, q.y);
+                        ctx.stroke();
+                    }
+                    dx = p.x - mouse.x; dy = p.y - mouse.y;
+                    d = Math.sqrt(dx * dx + dy * dy);
+                    if(d < MOUSE_LINK){
+                        ctx.globalAlpha = (1 - d / MOUSE_LINK) * 0.4;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.stroke();
+                    }
+                }
+                ctx.fillStyle = colors.dot;
+                for(i = 0; i < parts.length; i++){
+                    p = parts[i];
+                    ctx.globalAlpha = 0.55;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.globalAlpha = 1;
+            }
+
+            if(reduced){
+                draw();   // a single still frame; no motion, no listeners
+                return;
+            }
+            page.addEventListener('mousemove', onMove);
+            page.addEventListener('mouseleave', onLeave);
+            ABOUT_FX.cleanups.push(function(){
+                page.removeEventListener('mousemove', onMove);
+                page.removeEventListener('mouseleave', onLeave);
+            });
+            (function loop(){
+                draw();
+                ABOUT_FX.raf = requestAnimationFrame(loop);
+            })();
         }
 
         function renderDocTags(tags){
@@ -2632,6 +2797,7 @@
             // Hide the "recent docs" module on the settings, tags and search screens.
             document.body.classList.toggle('settings-view', path === 'settings');
             document.body.classList.toggle('tags-view', path === 'tags');
+            document.body.classList.toggle('about-view', path === 'about');
             // The unified search screen is both the landing page (empty hash)
             // and the destination of the masthead title link (#!search).
             var isSearch = !h || path === 'search';

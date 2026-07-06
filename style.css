@@ -323,6 +323,15 @@
             padding: 20px 18px;
             border-bottom: 1px dashed var(--border);
         }
+        /* The whole profile block (photo + tagline) links to the About page. */
+        #profile a{
+            display: block;
+            color: inherit;
+            text-decoration: none;
+        }
+        #profile a:hover img{
+            border-color: var(--accent);
+        }
         #profile img{
             display: block;
             width: 100%;
@@ -440,6 +449,7 @@
         /* ---- Screens without the "recent docs" module ---- */
         body.settings-view #more,
         body.tags-view #more,
+        body.about-view #more,
         body.search-view #more,
         body.worklog-view #more,
         body.cosmos-view #more,
@@ -2357,4 +2367,258 @@
             border-bottom-width: 2px;
             border-radius: 6px;
             white-space: nowrap;
+        }
+
+        /* ---- About page (opened from the sidebar profile photo) ---- */
+        .about-page{
+            position: relative;
+        }
+        .about-canvas{
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .about-inner{
+            position: relative;
+            z-index: 1;
+        }
+        .about-hero{
+            padding: 8px 0 10px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 22px;
+        }
+        @media (min-width: 720px){
+            .about-hero{
+                grid-template-columns: 1fr 230px;
+                align-items: start;
+            }
+        }
+        .about-photo{
+            margin: 0;
+            justify-self: center;
+        }
+        .about-photo img{
+            display: block;
+            width: 100%;
+            max-width: 230px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .about-photo img:hover{
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+        }
+        .about-eyebrow{
+            margin: 0 0 4px;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .about-name{
+            margin: 0 0 6px;
+            font-size: clamp(28px, 5vw, 40px);
+            line-height: 1.2;
+        }
+        .about-name-sub{
+            color: var(--muted);
+            font-size: 0.55em;
+            font-weight: 500;
+            margin-left: 6px;
+        }
+        .about-role{
+            margin: 0 0 2px;
+            color: var(--muted);
+            font-size: 15px;
+        }
+        .about-location{
+            margin: 0 0 18px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+        .about-pin{
+            margin-right: 4px;
+        }
+        .about-intro{
+            margin: 0 0 10px;
+            max-width: 720px;
+        }
+        .about-quote{
+            margin: 14px 0;
+            padding: 14px 20px;
+            border-left: 3px solid var(--accent);
+            background: var(--bg-alt);
+            border-radius: 0 10px 10px 0;
+            font-size: 17px;
+        }
+        .about-section{
+            margin-top: 36px;
+        }
+        .about-section > h3{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            margin: 0 0 10px;
+        }
+        .about-section > h3::before{
+            content: "";
+            width: 18px;
+            height: 3px;
+            border-radius: 2px;
+            background: var(--accent);
+            flex: none;
+        }
+        .about-lead{
+            color: var(--muted);
+            max-width: 720px;
+        }
+        .about-cards{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin: 18px 0;
+        }
+        .about-card{
+            position: relative;
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            transition: transform 0.25s ease, border-color 0.25s ease,
+                        box-shadow 0.25s ease;
+        }
+        .about-card:hover{
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+        }
+        .about-card h4{
+            margin: 0 0 8px;
+            font-size: 16px;
+        }
+        .about-card ul{
+            margin: 0;
+            padding-left: 18px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .about-card p{
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .about-principles .about-card{
+            padding-top: 34px;
+        }
+        .principle-num{
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--accent);
+            opacity: 0.28;
+        }
+        .about-explore{
+            display: grid;
+            gap: 14px;
+            margin: 18px 0;
+        }
+        .explore-block{
+            background: var(--bg-alt);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            transition: border-color 0.25s ease;
+        }
+        .explore-block:hover{
+            border-color: var(--accent);
+        }
+        .explore-block h4{
+            margin: 0 0 6px;
+            color: var(--accent);
+            font-size: 16px;
+            letter-spacing: 0.5px;
+        }
+        .explore-block p{
+            margin: 6px 0;
+            font-size: 15px;
+        }
+        .explore-block ul{
+            margin: 6px 0;
+            padding-left: 20px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .explore-inline{
+            list-style: none;
+            padding-left: 0 !important;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .explore-inline li{
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 2px 12px;
+            font-size: 13px;
+        }
+        .about-chips{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 16px 0;
+        }
+        .about-chip{
+            border: 1px solid var(--border);
+            background: var(--bg-alt);
+            border-radius: 999px;
+            padding: 4px 14px;
+            font-size: 13px;
+            color: var(--text);
+            transition: border-color 0.2s ease, color 0.2s ease;
+        }
+        .about-chip:hover{
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .about-motto{
+            margin: 44px 0 10px;
+            text-align: center;
+            font-size: clamp(20px, 3vw, 28px);
+            font-weight: 800;
+            background: linear-gradient(110deg,
+                var(--accent) 20%, var(--gold) 50%, var(--accent) 80%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: titleSheen 7s linear infinite;
+        }
+        /* Scroll reveal: sections drift up as they enter the viewport. */
+        .about-reveal{
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .about-reveal.visible{
+            opacity: 1;
+            transform: none;
+        }
+        @media (prefers-reduced-motion: reduce){
+            .about-reveal{
+                opacity: 1;
+                transform: none;
+            }
+            .about-motto{
+                animation: none;
+            }
         }
