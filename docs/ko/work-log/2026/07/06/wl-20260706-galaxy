@@ -18,6 +18,14 @@
     <li>Proposal 아래에 <strong>"AI 개발 지식 플랫폼"</strong> 그룹 폴더를 신설해 dzp-* 7편을 그 하위로 묶음 — 향후 다른 제안이 나란히 붙는 구조. 클러스터도 같은 이름으로 재명명(섹션 경로 4단계), 인덱스 재생성·지도(ko/en) 갱신.</li>
 </ul>
 
+<h3>지식지도 상세화 개편 (같은 날 후속)</h3>
+<ul>
+    <li><strong>두 지도 구조 정렬</strong> — ai-map(ko/en)과 dz-map을 동일한 섹션 순서(개요 → Universe 도식 → 성단 표 → <strong>성단 상세</strong> → <strong>추천 경로</strong> → 브리지 → 허브 → 핵심 개념·총계 → 살아 있는 지도)로 재작성.</li>
+    <li><strong>내용 상세화</strong> — 성단마다 "무엇이 들어 있고 어떤 순서로 읽는가" 문단 신설(AI 8개 성단 전부 + Douzone 제안 7편 개별 요약·예정 성단 3개 설명), 추천 학습/읽기 경로 3종 추가.</li>
+    <li><strong>아이콘 제거</strong> — 지도 제목·SVG·본문의 ❖/✦ 글리프 제거, list의 두 지도 라벨 "❖ Knowledge Map" → "Knowledge Map", style.css first-letter 액센트 셀렉터에서 ai-map 제외(cosmos ✦만 유지).</li>
+    <li><strong>하이드레이션 정합</strong> — dz-map은 Douzone 갤럭시의 허브·브리지가 임계 미달(0건)이라 <code>km-hubs</code>/<code>km-bridges</code> id 없이 정적 설명으로 대체(빈 렌더 방지), <code>km-top</code>·<code>km-totals</code>는 추가. 정적 폴백 수치를 실측(AI 85편·276개 / Douzone 7편·26개)으로 맞춤.</li>
+</ul>
+
 <h3>결정 사항</h3>
 <ul>
     <li>dz-map은 ai-map처럼 메타 페이지로 인덱스에서 제외.</li>

@@ -1303,11 +1303,10 @@
             letter-spacing: 0.05em;
             color: var(--text);
         }
-        /* The two AI entries (Knowledge Graph / Knowledge Map): identical
-           to every other menu item — only the leading glyph (✦ / ❖, the
-           first letter) carries the accent, the quietest possible cue. */
-        #navigation a[href="#!cosmos"]::first-letter,
-        #navigation a[href="#!ai-map"]::first-letter{
+        /* Knowledge Graph entry: identical to every other menu item — only
+           the leading glyph (✦, the first letter) carries the accent, the
+           quietest possible cue. (The map entries dropped their glyph.) */
+        #navigation a[href="#!cosmos"]::first-letter{
             color: var(--accent-ink);
         }
         /* Level-0 category titles: the only prominent tier. (12px top —
