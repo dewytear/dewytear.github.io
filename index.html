@@ -14,6 +14,7 @@
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="colors.js"></script>
+    <script src="graphviews.js"></script>
     </head>
 
 <body>
@@ -520,8 +521,10 @@
                 recent: '최근 문서', related: '연관 문서',
                 expandAll: '모두 펼치기', collapseAll: '모두 접기',
                 searchPh: '제목 · 태그 · 개념 · 본문을 검색…',
-                cosmosSub: '지식 인덱스의 연관 관계를 3차원 별자리로 — 드래그 회전 · 휠 확대 · 별을 클릭하면 그 문서로',
+                cosmosSub: '지식 인덱스의 연관 관계를 3차원 그래프로 — 드래그 회전 · 휠 확대 · 점을 클릭하면 그 문서로',
                 cosmosLoading: '지식 인덱스를 불러오는 중…',
+                gvView3d: '3D', gvBundling: '번들링', gvChord: '코드',
+                gvPacking: '패킹', gvConcepts: '개념', gvArc: '아크', gvMatrix: '매트릭스',
                 kmEach: '각 {n}회', kmRefs: '{n}회 연결', kmBridgeN: '{n}개 — ',
                 kmDocsN: '{n}편', kmTotals: '지식 문서 {d}편 · 고유 개념 {c}개.',
                 digestTitle: '이 폴더 문서 모아보기', relFolder: '같은 폴더',
@@ -589,8 +592,10 @@
                 recent: 'Recent Docs', related: 'Related Docs',
                 expandAll: 'Expand all', collapseAll: 'Collapse all',
                 searchPh: 'Search titles · tags · concepts · full text…',
-                cosmosSub: 'The knowledge index as a 3D constellation — drag to rotate · wheel to zoom · click a star to open it',
+                cosmosSub: 'The knowledge index as a 3D graph — drag to rotate · wheel to zoom · click a dot to open it',
                 cosmosLoading: 'Loading the knowledge index…',
+                gvView3d: '3D', gvBundling: 'Bundling', gvChord: 'Chord',
+                gvPacking: 'Packing', gvConcepts: 'Concepts', gvArc: 'Arc', gvMatrix: 'Matrix',
                 kmEach: '×{n} each', kmRefs: '{n} links', kmBridgeN: '{n} — ',
                 kmDocsN: '{n} docs', kmTotals: '{d} knowledge docs · {c} unique concepts.',
                 digestTitle: 'Read this folder on one page', relFolder: 'same folder',
@@ -805,21 +810,184 @@
             }
         }
 
-        // ---- 지식 코스모스: the knowledge graph as a 3D constellation ----
+        // ---- 지식 코스모스: the knowledge graph in 3D ----
         // Every doc is a star, placed near its cluster's direction on a
-        // sphere; related[] links are the constellation lines. Drag to
+        // sphere; related[] links are the connecting lines. Drag to
         // rotate, wheel to zoom, click a star to open that doc.
         function showCosmos(){
+            var kinds = ['3d'].concat(window.GraphViews ? GraphViews.KINDS : []);
+            var lbl = { '3d': STR('gvView3d'), bundling: STR('gvBundling'),
+                        chord: STR('gvChord'), packing: STR('gvPacking'),
+                        concepts: STR('gvConcepts'), arc: STR('gvArc'),
+                        matrix: STR('gvMatrix') };
+            var dock = '<div class="gv-dock" role="group" aria-label="Graph view">'
+                     + kinds.map(function(k){
+                           return '<button type="button" data-gv="' + k + '">'
+                                + escapeHtml(lbl[k] || k) + '</button>';
+                       }).join('')
+                     + '</div>';
             var html =
                 '<div class="cosmos-screen">'
-              +   '<canvas class="cosmos-canvas"></canvas>'
               +   '<div class="cosmos-hud">'
               +     '<h2 class="cosmos-head">&#10022; Knowledge Graph</h2>'
               +     '<p class="cosmos-sub">' + escapeHtml(STR('cosmosSub')) + '</p>'
               +   '</div>'
+              +   dock
               + '</div>';
             setArticle(html);
-            startCosmos();
+            var screen = document.querySelector('.cosmos-screen');
+            screen.querySelectorAll('.gv-dock button').forEach(function(b){
+                b.addEventListener('click', function(){
+                    gvSelect(screen, b.getAttribute('data-gv'));
+                });
+            });
+            gvSelect(screen, gvCurrentKind());
+        }
+
+        // ---- Graph views: the same index in six 2D representations ----
+        // The 3D scene stays the default; the dock swaps in a 2D svg built
+        // by graphviews.js. Choice sticks per browser.
+        var GV_LS_KEY = 'graphView';
+        var GV_OBS = null;   // theme watcher while a 2D view is mounted
+
+        function gvCurrentKind(){
+            var v = null;
+            try{ v = localStorage.getItem(GV_LS_KEY); }catch(e){}
+            return (window.GraphViews && GraphViews.KINDS.indexOf(v) !== -1) ? v : '3d';
+        }
+
+        function gvSelect(screen, kind){
+            try{ localStorage.setItem(GV_LS_KEY, kind); }catch(e){}
+            screen.querySelectorAll('.gv-dock button').forEach(function(b){
+                b.classList.toggle('active', b.getAttribute('data-gv') === kind);
+            });
+            // Tear down whichever stage is up. Removing the canvas ends the
+            // 3D loop (its frame() bails when the canvas leaves the DOM).
+            var old = screen.querySelector('.cosmos-canvas');
+            if(old){ old.remove(); }
+            var st = screen.querySelector('.gv-stage');
+            if(st){ st.remove(); }
+            if(GV_OBS){ GV_OBS.disconnect(); GV_OBS = null; }
+            if(kind === '3d' || !window.GraphViews){
+                var canvas = document.createElement('canvas');
+                canvas.className = 'cosmos-canvas';
+                screen.insertBefore(canvas, screen.firstChild);
+                startCosmos();
+                return;
+            }
+            var stage = document.createElement('div');
+            stage.className = 'gv-stage';
+            screen.appendChild(stage);
+            gvRender(stage, kind);
+            // Day/night or accent changes re-derive the palette.
+            GV_OBS = new MutationObserver(function(){
+                if(!stage.isConnected){
+                    if(GV_OBS){ GV_OBS.disconnect(); GV_OBS = null; }
+                    return;
+                }
+                gvRender(stage, kind);
+            });
+            GV_OBS.observe(document.body, { attributes: true, attributeFilter: ['class', 'style'] });
+        }
+
+        function gvRender(stage, kind){
+            if(!KNOWLEDGE || !KNOWLEDGE_STATS){
+                stage.innerHTML = '<p class="gv-loading">' + escapeHtml(STR('cosmosLoading')) + '</p>';
+                setTimeout(function(){ if(stage.isConnected){ gvRender(stage, kind); } }, 300);
+                return;
+            }
+            var model = gvModel();
+            var legend = '<div class="gv-legend">' + model.clusters.map(function(c){
+                return '<span class="lg" style="color:' + c.color + '"><i></i>'
+                     + '<span style="color:var(--muted)">' + escapeHtml(c.label) + '</span></span>';
+            }).join('') + '</div>';
+            stage.innerHTML = legend + '<div class="gv-mount"></div>';
+            GraphViews.render(kind, stage.querySelector('.gv-mount'), model);
+        }
+
+        // Normalize any css color to [h, s, l] via the canvas parser.
+        function gvToHsl(c){
+            var cv = gvToHsl._cv || (gvToHsl._cv = document.createElement('canvas'));
+            var x = cv.getContext('2d');
+            x.fillStyle = '#000'; x.fillStyle = c;
+            var v = x.fillStyle;
+            if(v.charAt(0) !== '#'){ return [25, 100, 50]; }
+            var r = parseInt(v.substr(1, 2), 16) / 255,
+                g = parseInt(v.substr(3, 2), 16) / 255,
+                b = parseInt(v.substr(5, 2), 16) / 255;
+            var mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+            var l = (mx + mn) / 2, d = mx - mn, h = 0, s = 0;
+            if(d){
+                s = d / (1 - Math.abs(2 * l - 1));
+                h = mx === r ? ((g - b) / d + 6) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+                h *= 60;
+            }
+            return [h, s * 100, l * 100];
+        }
+
+        // Model for graphviews.js — same worlds/labels/colors as the 3D
+        // scene (golden-angle per world, ±8°/step inside), same hidden-
+        // category filter, docs in nav order, concept-via edges only.
+        function gvModel(){
+            var cs = getComputedStyle(document.body);
+            var ink = {
+                text: (cs.getPropertyValue('--text') || '#333').trim(),
+                muted: (cs.getPropertyValue('--muted') || '#888').trim(),
+                grid: (cs.getPropertyValue('--border') || '#444').trim(),
+                panel: (cs.getPropertyValue('--bg-alt') || '#222').trim(),
+                surface: (cs.getPropertyValue('--bg') || '#111').trim()
+            };
+            var base = gvToHsl((cs.getPropertyValue('--accent') || '#ff6600').trim());
+            var hidden = effSettings().hiddenCats || [];
+            var stats = (KNOWLEDGE_STATS && KNOWLEDGE_STATS.clusters) || [];
+            var label_of = {};
+            stats.forEach(function(c){ label_of[c.section] = c.label; });
+            var secs = stats.map(function(c){ return c.section; })
+                .filter(function(s){ return hidden.indexOf(s.split(' · ')[0]) === -1; })
+                .sort();
+            var tops = [];
+            secs.forEach(function(s){
+                var t = s.split(' · ')[0];
+                if(tops.indexOf(t) === -1){ tops.push(t); }
+            });
+            tops.sort();
+            var clusters = [];
+            tops.forEach(function(t, ti){
+                var mine = secs.filter(function(s){ return s.split(' · ')[0] === t; });
+                mine.forEach(function(s, i){
+                    var h = base[0] + ti * 137.5 + (i - (mine.length - 1) / 2) * 8;
+                    clusters.push({
+                        label: label_of[s] || s,
+                        color: 'hsl(' + (((h % 360) + 360) % 360).toFixed(1) + ', '
+                             + base[1].toFixed(1) + '%, ' + base[2].toFixed(1) + '%)',
+                        count: 0, galaxy: t, section: s
+                    });
+                });
+            });
+            var docs = [];
+            clusters.forEach(function(c, idx){
+                (FOLDER_DOCS[c.section] || []).forEach(function(d){
+                    var k = KNOWLEDGE[d.name];
+                    if(!k){ return; }
+                    docs.push({ name: d.name, title: k.title || d.label,
+                                clusterIndex: idx, concepts: k.concepts || [] });
+                    c.count++;
+                });
+            });
+            var have = {};
+            docs.forEach(function(d){ have[d.name] = 1; });
+            var edges = [], seen = {};
+            docs.forEach(function(d){
+                ((KNOWLEDGE[d.name] || {}).related || []).forEach(function(r){
+                    if(r.via !== 'concept' || !have[r.name]){ return; }
+                    var key = d.name < r.name ? d.name + '|' + r.name : r.name + '|' + d.name;
+                    if(seen[key]){ return; }
+                    seen[key] = 1;
+                    edges.push([d.name, r.name]);
+                });
+            });
+            return { docs: docs, edges: edges, clusters: clusters, ink: ink,
+                     onDocClick: function(name){ location.hash = '#!' + name; } };
         }
         function startCosmos(){
             var canvas = document.querySelector('.cosmos-canvas');
@@ -845,6 +1013,41 @@
             }
             resize();
 
+            // 배경 더스트 — 그래프 뒤에서 끊임없이 흐르는 희미한 입자층.
+            // 위치는 0..1 정규화 좌표(리사이즈에 안전), 드리프트는 감쇠 없이
+            // 상시 유지, 알파는 개별 위상의 사인 트윙클로 은은하게 숨쉰다.
+            var DUST_N = 120;
+            var dustReduced = window.matchMedia
+                           && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var dust = [];
+            for(var dn = 0; dn < DUST_N; dn++){
+                dust.push({
+                    x: rnd(dn * 12.9898 + 1), y: rnd(dn * 78.233 + 1),
+                    vx: (rnd(dn * 3.7 + 1) - 0.5) * 0.24,   // ±0.12px/frame
+                    vy: (rnd(dn * 9.1 + 1) - 0.5) * 0.24,
+                    r: 0.5 + rnd(dn * 5.3 + 1) * 0.9,
+                    ph: rnd(dn * 2.71 + 1) * 6.2832,
+                    tw: 0.4 + rnd(dn * 4.2 + 1) * 0.8
+                });
+            }
+            function drawDust(mut){
+                var t = dustReduced ? 0 : performance.now() / 1000;
+                ctx.fillStyle = mut;
+                for(var i = 0; i < dust.length; i++){
+                    var p = dust[i];
+                    if(!dustReduced && W > 0 && H > 0){
+                        p.x += p.vx / W; p.y += p.vy / H;
+                        if(p.x < 0){ p.x += 1; } else if(p.x >= 1){ p.x -= 1; }
+                        if(p.y < 0){ p.y += 1; } else if(p.y >= 1){ p.y -= 1; }
+                    }
+                    ctx.globalAlpha = 0.08 + 0.07 * (1 + Math.sin(t * p.tw + p.ph));
+                    ctx.beginPath();
+                    ctx.arc(p.x * W, p.y * H, p.r, 0, 6.2832);
+                    ctx.fill();
+                }
+                ctx.globalAlpha = 1;
+            }
+
             // Deterministic per-doc placement (stable across visits).
             function hash(s){
                 var h = 2166136261;
@@ -858,12 +1061,12 @@
             }
 
             var nodes = null, edges = null, galaxies = null, maxRef = 1;
-            var secMeta = null;   // section -> {gi, ci, cn} (갤럭시/성단 색 파생용)
+            var secMeta = null;   // section -> {gi, ci, cn} (World/System 색 파생용)
 
-            // ---- 갤럭시·성단 색 체계 ----
+            // ---- World·System 색 체계 ----
             // 팔레트를 하드코딩하지 않고 매 프레임 테마 accent에서 파생한다
-            // (낮/밤·개인 accent 변경 즉시 반영). 갤럭시끼리는 golden-angle
-            // (137.5°) 색상 회전으로 확연히 갈라지고, 같은 갤럭시의 성단은
+            // (낮/밤·개인 accent 변경 즉시 반영). World끼리는 golden-angle
+            // (137.5°) 색상 회전으로 확연히 갈라지고, 같은 World의 System은
             // 그 색 주변 ±8°/step의 은은한 톤 차만 가진다.
             function toHsl(c){
                 ctx.fillStyle = '#000'; ctx.fillStyle = c;
@@ -898,7 +1101,7 @@
                 }
                 if(!names.length){ return false; }
                 // Two levels: 대분류(첫 세그먼트) = GALAXY, 분류(section) =
-                // STAR CLUSTER(성단). Galaxy centers sit far apart; each
+                // System. World centers sit far apart; each
                 // galaxy's clusters spread on a smaller sphere around it, and
                 // docs form a tight cloud around their cluster. related[]
                 // links become the bridges between clusters and galaxies.
@@ -1047,6 +1250,7 @@
                 var col = (cs.getPropertyValue('--accent') || '#ff6600').trim();
                 var ink = (cs.getPropertyValue('--text') || '#333').trim();
                 var mut = (cs.getPropertyValue('--muted') || '#888').trim();
+                drawDust(mut);   // back layer — behind plates, edges, stars
                 if(!nodes){
                     if(!build()){
                         ctx.fillStyle = mut;
@@ -1062,7 +1266,7 @@
                     auto = true;
                     rotY += 0.0018;
                 }
-                // 프레임당 1회, accent에서 섹션(성단)별 색을 파생한다.
+                // 프레임당 1회, accent에서 섹션(System)별 색을 파생한다.
                 var base = toHsl(col), secColor = {}, gxColor = [];
                 if(secMeta){
                     for(var sk in secMeta){
@@ -1086,8 +1290,8 @@
                     o.ss = pr; o.sz = z2;
                 }
                 for(var i = 0; i < nodes.length; i++){ project(nodes[i]); }
-                // Name plates — dim, behind everything. Galaxy(대분류) plates
-                // read bigger than the star-cluster(성단) plates inside them.
+                // Name plates — dim, behind everything. World(대분류) plates
+                // read bigger than the System plates inside them.
                 ctx.textAlign = 'center';
                 for(var g = 0; g < galaxies.length; g++){
                     var gx = galaxies[g];
@@ -1099,7 +1303,7 @@
                         ctx.font = '700 ' + Math.round(14 * gx.ss) + 'px ' + GAME_FONT;
                         ctx.globalAlpha = Math.max(0.1, gx.ss * 0.22);
                     }
-                    // 명판은 자기 갤럭시 색 — 알파가 낮아(0.1~0.3) 은은하다.
+                    // 명판은 자기 World 색 — 알파가 낮아(0.1~0.3) 은은하다.
                     ctx.fillStyle = gxColor[gx.gi] || mut;
                     ctx.fillText(gx.label, gx.sx, gx.sy);
                 }

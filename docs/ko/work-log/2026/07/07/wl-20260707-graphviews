@@ -1,0 +1,24 @@
+<h2>2026-07-07 · Knowledge Graph 2D 뷰 6종 + 계층 용어 개편</h2>
+<p>Knowledge Graph(3D)에 <strong>6가지 2D 표현으로 전환하는 dock</strong>을 붙이고, 3D 배경에 상시 파티클을 더했다. 함께 지식 계층 표기를 <strong>천문 은유(우주·갤럭시·성단)에서 World → Domain → System → Document</strong>로 전면 개편했다. OMC team(worker 3병렬 + 리드 통합)으로 진행.</p>
+
+<h3>새 기능 — 2D 그래프 뷰</h3>
+<ul>
+    <li><strong>graphviews.js</strong>(신규) — 외부 라이브러리 없는 vanilla 렌더러 6종: <code>bundling</code>(계층 엣지 번들링)·<code>chord</code>(System 간 관계)·<code>packing</code>(포함 관계·규모)·<code>concepts</code>(개념 중심 쌍대 그래프)·<code>arc</code>(읽기 순서 vs 연결)·<code>matrix</code>(인접 행렬). 결정적 레이아웃(seed PRNG), 문서 클릭 시 해당 문서로 이동.</li>
+    <li><strong>cosmos 전환 dock</strong> — [3D · 번들링 · 코드 · 패킹 · 개념 · 아크 · 매트릭스], 선택은 localStorage 기억. 성단 색·라벨은 3D와 동일하게 accent에서 파생(테마 전환 시 재렌더). 모델은 지식 인덱스에서 nav 순서·concept 연관으로 구성.</li>
+    <li><strong>3D 배경 파티클</strong> — cosmos 렌더 루프 뒤 레이어에 희미한 더스트 120개, 감쇠 없는 상시 드리프트 + 사인 트윙클, wrap-around, <code>prefers-reduced-motion</code> 시 정지.</li>
+</ul>
+
+<h3>계층 용어 개편 (2026-07-06 결정 반영)</h3>
+<ul>
+    <li>표기 통일: <strong>World</strong>(최상위: AI·DOUZONE) → <strong>Domain</strong>(지식 영역) → <strong>System</strong>(구체적 체계/주제 = 기존 클러스터 라벨) → <strong>Document</strong>. 우주·갤럭시·성단·별자리 표현 전면 제거.</li>
+    <li>지도 3종(ai-map ko/en·dz-map): 첫 도식을 4계층 다이어그램으로 교체, "성단"→"System" 등 문구 정리. km-* id·data-topics 키·문서 경로는 불변.</li>
+    <li>index.html STRINGS(ko/en)·cosmos HUD·주석, README, i18n.md 정리. 데이터 키(<code>stats.galaxies</code> 등)·코드 식별자는 리네임하지 않음(회귀 방지). CLAUDE.md에 용어 규칙 명문화.</li>
+</ul>
+
+<h3>검증</h3>
+<ul>
+    <li>graphviews.js·index.html 인라인 스크립트 <code>node --check</code> 통과, 지도 3종 SVG well-formed.</li>
+    <li><code>validate_all.py</code> 0 ERROR(기존 WARN 12건 유지), <code>build_index.py --check</code> 통과.</li>
+    <li>Playwright로 cosmos 6개 2D 뷰 렌더·범례·문서 클릭 확인, 패킹 뷰 World 라벨 잘림 수정(슬롯 배분 sqrt 완화 + 라벨 클램프).</li>
+    <li>About 페이지 맨 아래 영문 모토 제거(ko/en).</li>
+</ul>

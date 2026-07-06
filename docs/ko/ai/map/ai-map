@@ -1,40 +1,45 @@
 <h2>Knowledge Map — AI</h2>
-<p>이 페이지는 <strong>AI 대분류(AI 갤럭시) 아래의 강의·학습 문서 전체</strong>를 AI가 읽어 만든 <strong>구조적 지식 인덱스</strong>(<code>knowledge-index.json</code>)를 종합한 지식 지도입니다. 문서별 <strong>요약 · 핵심 개념 · 연관 문서</strong>를 모아, 무엇이 어디에 있고 <strong>서로 어떻게 이어지는지</strong>를 보여 줍니다. 각 문서 하단의 <strong>&ldquo;연관 문서&rdquo;</strong> 추천도 같은 인덱스에서 나오며, 이 연관 관계는 <a href="#!cosmos"><strong>Knowledge Graph</strong></a>에서 3차원 별자리로 돌려 볼 수 있습니다.</p>
+<p>이 페이지는 <strong>AI World 아래의 강의·학습 문서 전체</strong>를 AI가 읽어 만든 <strong>구조적 지식 인덱스</strong>(<code>knowledge-index.json</code>)를 종합한 지식 지도입니다. 문서별 <strong>요약 · 핵심 개념 · 연관 문서</strong>를 모아, 무엇이 어디에 있고 <strong>서로 어떻게 이어지는지</strong>를 보여 줍니다. 각 문서 하단의 <strong>&ldquo;연관 문서&rdquo;</strong> 추천도 같은 인덱스에서 나오며, 이 연관 관계는 <a href="#!cosmos"><strong>Knowledge Graph</strong></a>에서 3차원 그래프와 6가지 2D 표현으로 살펴볼 수 있습니다.</p>
 
-<p>위키의 지식 전체는 하나의 <strong>Knowledge Universe</strong>를 이룹니다 — 그 아래 <strong>AI 갤럭시</strong>(강의·학습 지식)와 <strong>DOUZONE 갤럭시</strong>(업무·조직 지식)가 있고, 갤럭시마다 성단(클러스터)이 모입니다. 이 지도는 그중 <strong>AI 갤럭시</strong>를 다루고, 업무 지식은 <a href="#!dz-map"><strong>Douzone Knowledge Map</strong></a>이 같은 구조로 집계합니다.</p>
+<p>위키의 지식은 <strong>World → Domain → System → Document</strong>의 4계층으로 구성됩니다 — <strong>World</strong>는 최상위 지식 세계(AI · DOUZONE), <strong>Domain</strong>은 지식 영역, <strong>System</strong>은 구체적 체계·주제(아래 표의 그룹들), <strong>Document</strong>는 개별 문서입니다. 이 지도는 그중 <strong>AI World</strong>를 다루고, 업무 지식은 <a href="#!dz-map"><strong>Douzone Knowledge Map</strong></a>이 같은 구조로 집계합니다.</p>
 
 <div class="diagram">
-<svg viewBox="0 0 720 300" role="img" aria-label="Knowledge Universe 구조: 하나의 우주 아래 AI 갤럭시(강의·학습 지식)와 DOUZONE 갤럭시(업무·조직 지식)">
-    <text class="d-label" x="360" y="24" text-anchor="middle">Knowledge Universe</text>
-    <line class="d-edge" x1="360" y1="34" x2="360" y2="52"/>
-    <line class="d-edge" x1="185" y1="52" x2="535" y2="52"/>
-    <line class="d-edge" x1="185" y1="52" x2="185" y2="66"/>
-    <line class="d-edge" x1="535" y1="52" x2="535" y2="66"/>
+<svg viewBox="0 0 720 320" role="img" aria-label="지식 계층: World(AI·DOUZONE) → Domain(지식 영역) → System(주제 그룹) → Document(개별 문서)">
+    <text class="d-label" x="16" y="52" text-anchor="start">World</text>
+    <text class="d-sub" x="16" y="70" text-anchor="start">최상위 지식 세계</text>
+    <text class="d-label" x="16" y="128" text-anchor="start">Domain</text>
+    <text class="d-sub" x="16" y="146" text-anchor="start">지식 영역</text>
+    <text class="d-label" x="16" y="204" text-anchor="start">System</text>
+    <text class="d-sub" x="16" y="222" text-anchor="start">구체적 체계·주제</text>
+    <text class="d-label" x="16" y="280" text-anchor="start">Document</text>
+    <text class="d-sub" x="16" y="298" text-anchor="start">개별 문서</text>
 
-    <!-- AI galaxy (this map's home) -->
-    <rect class="d-box accent" x="60" y="66" width="250" height="60" rx="10"/>
-    <text class="d-label" x="185" y="92" text-anchor="middle">AI Galaxy</text>
-    <text class="d-sub" x="185" y="112" text-anchor="middle">강의·학습 지식 · 성단 8개 · 85편</text>
-    <line class="d-edge" x1="185" y1="126" x2="185" y2="146"/>
-    <rect class="d-box soft" x="30" y="146" width="310" height="120" rx="10"/>
-    <text class="d-sub" x="185" y="178" text-anchor="middle">Introduction · Tutorial · Skill</text>
-    <text class="d-sub" x="185" y="200" text-anchor="middle">Second Brain · LLM Wiki</text>
-    <text class="d-sub" x="185" y="222" text-anchor="middle">Harness 엔지니어링 · Harness 플러그인</text>
-    <text class="d-sub" x="185" y="244" text-anchor="middle">OMC</text>
+    <rect class="d-box accent" x="150" y="30" width="180" height="44" rx="9"/>
+    <text class="d-label" x="240" y="57" text-anchor="middle">AI</text>
+    <rect class="d-box" x="370" y="30" width="180" height="44" rx="9"/>
+    <text class="d-label" x="460" y="57" text-anchor="middle">DOUZONE</text>
+    <line class="d-edge" x1="240" y1="74" x2="240" y2="106"/>
+    <line class="d-edge" x1="460" y1="74" x2="460" y2="106"/>
 
-    <!-- DOUZONE galaxy -->
-    <rect class="d-box" x="410" y="66" width="250" height="60" rx="10"/>
-    <text class="d-label" x="535" y="92" text-anchor="middle">DOUZONE Galaxy</text>
-    <text class="d-sub" x="535" y="112" text-anchor="middle">업무·조직 지식</text>
-    <line class="d-edge" x1="535" y1="126" x2="535" y2="146"/>
-    <rect class="d-box soft" x="380" y="146" width="310" height="120" rx="10"/>
-    <text class="d-sub" x="535" y="170" text-anchor="middle">Proposal / AI 개발 지식 플랫폼 성단</text>
-    <text class="d-sub" x="535" y="192" text-anchor="middle">Architecture 성단 <tspan class="d-accent" font-size="10">예정</tspan></text>
-    <text class="d-sub" x="535" y="214" text-anchor="middle">Development Guide 성단 <tspan class="d-accent" font-size="10">예정</tspan></text>
-    <text class="d-sub" x="535" y="236" text-anchor="middle">Project 성단 <tspan class="d-accent" font-size="10">예정</tspan></text>
-    <text class="d-sub" x="535" y="256" text-anchor="middle">→ <a href="#!dz-map">Douzone Knowledge Map</a></text>
+    <rect class="d-box" x="150" y="106" width="180" height="44" rx="9"/>
+    <text class="d-label sm" x="240" y="133" text-anchor="middle">Claude &middot; Code / PlugIn</text>
+    <rect class="d-box" x="370" y="106" width="180" height="44" rx="9"/>
+    <text class="d-label sm" x="460" y="133" text-anchor="middle">dev.Center &middot; Proposal</text>
+    <line class="d-edge" x1="240" y1="150" x2="260" y2="176"/>
+    <line class="d-edge" x1="460" y1="150" x2="550" y2="176"/>
+
+    <rect class="d-box soft" x="110" y="176" width="300" height="56" rx="10"/>
+    <text class="d-sub" x="260" y="198" text-anchor="middle">Introduction &middot; Tutorial &middot; Skill &middot; Second Brain</text>
+    <text class="d-sub" x="260" y="216" text-anchor="middle">LLM Wiki &middot; Harness &middot; OMC</text>
+    <rect class="d-box soft" x="430" y="176" width="240" height="56" rx="10"/>
+    <text class="d-sub" x="550" y="207" text-anchor="middle">AI 개발 지식 플랫폼</text>
+    <line class="d-edge" x1="260" y1="232" x2="300" y2="252"/>
+    <line class="d-edge" x1="550" y1="232" x2="480" y2="252"/>
+
+    <rect class="d-box soft" x="110" y="252" width="560" height="44" rx="10"/>
+    <text class="d-sub" x="390" y="279" text-anchor="middle">개별 문서 — 각 System 아래 시리즈 순서로 정렬됩니다</text>
 </svg>
-<div class="d-cap">하나의 우주, 두 갤럭시 — 학습 지식(AI)과 업무 지식(DOUZONE)이 같은 인덱스 위에서 이어집니다.</div>
+<div class="d-cap">두 World — 학습 지식(AI)과 업무 지식(DOUZONE)이 같은 인덱스 위에서 이어집니다.</div>
 </div>
 
 <div class="diagram">
@@ -66,11 +71,11 @@
 <div class="d-cap">세 갈래로 나뉘지만, 위 <strong>공유 개념</strong>들이 갈래를 가로질러 문서를 촘촘히 연결합니다.</div>
 </div>
 
-<h3>성단(클러스터) 한눈에</h3>
-<p>문서는 아래 성단으로 묶입니다. &ldquo;허브 문서&rdquo;는 다른 문서에서 가장 많이 연관으로 지목된, 그 갈래의 관문 문서입니다. <span class="scn-sub">표의 수치는 <code>knowledge-index.json</code>에서 실시간 집계됩니다.</span></p>
+<h3>System 한눈에</h3>
+<p>문서는 아래 System으로 묶입니다. &ldquo;허브 문서&rdquo;는 다른 문서에서 가장 많이 연관으로 지목된, 그 갈래의 관문 문서입니다. <span class="scn-sub">표의 수치는 <code>knowledge-index.json</code>에서 실시간 집계됩니다.</span></p>
 <div class="tbl-wrap">
     <table>
-        <thead><tr><th>성단</th><th>편수</th><th>중심 주제</th><th>허브 문서</th></tr></thead>
+        <thead><tr><th>System</th><th>편수</th><th>중심 주제</th><th>허브 문서</th></tr></thead>
         <tbody id="km-clusters" data-section-prefix="AI" data-topics='{"Introduction":"Claude Code 첫걸음 · 설치 · 일상 사용","Tutorial(입문)":"터미널·CLAUDE.md·스킬·에이전트 실습","Skill":"스킬의 원리·구조·점진적 로딩·보안","Second Brain":"지식 관리 5단계 · 시맨틱·그래프","LLM Wiki":"옵시디언 볼트 · 캡처 · Ingest·Query·Lint","Harness 엔지니어링":"에이전트 팀·오케스트레이터·검증","Harness 플러그인":"의도 입력→팀 구성→자율 실행(ERP)","OMC 플러그인":"실행 모드·에이전트·훅·비용 관리"}'>
             <tr><td><strong>Introduction</strong></td><td>6</td><td>Claude Code 첫걸음 · 설치 · 일상 사용</td><td><a href="#!welcome">Welcome</a></td></tr>
             <tr><td><strong>Tutorial(입문)</strong></td><td>12</td><td>터미널·CLAUDE.md·스킬·에이전트 실습</td><td><a href="#!ccb-overview">강의 개요와 목표</a></td></tr>
@@ -84,31 +89,31 @@
     </table>
 </div>
 
-<h3>성단 상세 — 무엇이 들어 있고, 어떤 순서로 읽는가</h3>
+<h3>System 상세 — 무엇이 들어 있고, 어떤 순서로 읽는가</h3>
 
 <h4>Introduction — Claude Code 첫걸음 (6편)</h4>
-<p>Claude Code가 무엇이고 어떻게 시작하는지를 다루는 입구 성단입니다. <a href="#!welcome">Welcome</a>에서 도구의 정체를, <a href="#!install">설치와 시작</a>에서 설치·인증을, <a href="#!commands">일상 사용</a>에서 슬래시 명령어·CLAUDE.md·플랜 모드를 익힙니다. 이어서 확장 축 세 갈래 — <a href="#!skills">Skills</a>, <a href="#!mcp">MCP Servers</a>, <a href="#!hooks">Hooks</a> — 를 소개합니다. 이 성단의 개념(설치·슬래시명령어·CLAUDE.md)은 Tutorial·OMC 성단으로 그대로 이어집니다.</p>
+<p>Claude Code가 무엇이고 어떻게 시작하는지를 다루는 입구 System입니다. <a href="#!welcome">Welcome</a>에서 도구의 정체를, <a href="#!install">설치와 시작</a>에서 설치·인증을, <a href="#!commands">일상 사용</a>에서 슬래시 명령어·CLAUDE.md·플랜 모드를 익힙니다. 이어서 확장 축 세 갈래 — <a href="#!skills">Skills</a>, <a href="#!mcp">MCP Servers</a>, <a href="#!hooks">Hooks</a> — 를 소개합니다. 이 System의 개념(설치·슬래시명령어·CLAUDE.md)은 Tutorial·OMC System으로 그대로 이어집니다.</p>
 
 <h4>Tutorial(입문) — 기초 강의 실습 (12편)</h4>
-<p>Claude Code 기초 강의를 문서화한 성단으로, <a href="#!ccb-overview">강의 개요와 목표</a>가 관문입니다. <a href="#!ccb-what">Claude Code란</a> → <a href="#!ccb-terminal">터미널 기초</a> → <a href="#!ccb-claudemd">CLAUDE.md 지침</a>으로 기초를 다진 뒤, <a href="#!ccb-research-web">조사·파일·웹사이트</a>·<a href="#!ccb-design-system">디자인 시스템 추출</a>·<a href="#!ccb-papers">허깅페이스 논문 정리</a> 같은 실전 예제를 거쳐, <a href="#!ccb-skills">스킬 만들기</a>·<a href="#!ccb-plugins">플러그인</a>·<a href="#!ccb-agents">에이전트 만들기</a>로 확장하고 <a href="#!ccb-manage">사용량·컨텍스트 관리</a>·<a href="#!ccb-tips">유용한 기능</a>으로 마무리합니다.</p>
+<p>Claude Code 기초 강의를 문서화한 System으로, <a href="#!ccb-overview">강의 개요와 목표</a>가 관문입니다. <a href="#!ccb-what">Claude Code란</a> → <a href="#!ccb-terminal">터미널 기초</a> → <a href="#!ccb-claudemd">CLAUDE.md 지침</a>으로 기초를 다진 뒤, <a href="#!ccb-research-web">조사·파일·웹사이트</a>·<a href="#!ccb-design-system">디자인 시스템 추출</a>·<a href="#!ccb-papers">허깅페이스 논문 정리</a> 같은 실전 예제를 거쳐, <a href="#!ccb-skills">스킬 만들기</a>·<a href="#!ccb-plugins">플러그인</a>·<a href="#!ccb-agents">에이전트 만들기</a>로 확장하고 <a href="#!ccb-manage">사용량·컨텍스트 관리</a>·<a href="#!ccb-tips">유용한 기능</a>으로 마무리합니다.</p>
 
 <h4>Skill — 스킬 심화 (12편)</h4>
-<p>&ldquo;스킬이 왜, 어떻게 동작하는가&rdquo;를 원리부터 파는 성단입니다. <a href="#!skl-overview">개요</a>와 <a href="#!skl-coding-agent">코딩 에이전트의 탄생</a>으로 배경을 잡고, <a href="#!skl-what">스킬이란</a>·<a href="#!skl-strengths">특장점</a>·<a href="#!skl-context">컨텍스트 윈도우와 도구</a>·<a href="#!skl-progressive">점진적 로딩</a>으로 핵심 원리를, <a href="#!skl-structure">SKILL.md 구조</a>·<a href="#!skl-examples">예제 스킬</a>·<a href="#!skl-install">설치와 사용</a>·<a href="#!skl-security">보안 주의사항</a>·<a href="#!skl-creating">스킬 만들기</a>로 실무를 다룹니다. <a href="#!skl-wrap">엔지니어링 계층과 Q&amp;A</a>가 MCP·하네스와의 관계를 정리하며 자동화 갈래로 다리를 놓습니다.</p>
+<p>&ldquo;스킬이 왜, 어떻게 동작하는가&rdquo;를 원리부터 파는 System입니다. <a href="#!skl-overview">개요</a>와 <a href="#!skl-coding-agent">코딩 에이전트의 탄생</a>으로 배경을 잡고, <a href="#!skl-what">스킬이란</a>·<a href="#!skl-strengths">특장점</a>·<a href="#!skl-context">컨텍스트 윈도우와 도구</a>·<a href="#!skl-progressive">점진적 로딩</a>으로 핵심 원리를, <a href="#!skl-structure">SKILL.md 구조</a>·<a href="#!skl-examples">예제 스킬</a>·<a href="#!skl-install">설치와 사용</a>·<a href="#!skl-security">보안 주의사항</a>·<a href="#!skl-creating">스킬 만들기</a>로 실무를 다룹니다. <a href="#!skl-wrap">엔지니어링 계층과 Q&amp;A</a>가 MCP·하네스와의 관계를 정리하며 자동화 갈래로 다리를 놓습니다.</p>
 
 <h4>Second Brain — 지식 관리 5단계 (9편)</h4>
-<p>개인·조직의 지식 관리를 <strong>레벨 1(정확히 찾기)부터 레벨 5(자율 브레인 OS)까지</strong> 단계 모델로 설명하는 성단입니다. <a href="#!sb-intro">세컨드 브레인이란</a>으로 시작해 관문 문서 <a href="#!sb-levels">5단계 한눈에 보기</a>에서 전체 그림을 잡고, <a href="#!sb-level1">레벨 1</a>~<a href="#!sb-level5">레벨 5</a>를 차례로 읽습니다. <a href="#!sb-context-connections">무엇을 넣고 무엇을 둘까</a>와 <a href="#!sb-choose">내 레벨 찾기·팀 확장</a>이 실제 적용 판단을 돕습니다. LLM Wiki 성단이 이 모델의 레벨 2를 구현하는 실체입니다.</p>
+<p>개인·조직의 지식 관리를 <strong>레벨 1(정확히 찾기)부터 레벨 5(자율 브레인 OS)까지</strong> 단계 모델로 설명하는 System입니다. <a href="#!sb-intro">세컨드 브레인이란</a>으로 시작해 관문 문서 <a href="#!sb-levels">5단계 한눈에 보기</a>에서 전체 그림을 잡고, <a href="#!sb-level1">레벨 1</a>~<a href="#!sb-level5">레벨 5</a>를 차례로 읽습니다. <a href="#!sb-context-connections">무엇을 넣고 무엇을 둘까</a>와 <a href="#!sb-choose">내 레벨 찾기·팀 확장</a>이 실제 적용 판단을 돕습니다. LLM Wiki System이 이 모델의 레벨 2를 구현하는 실체입니다.</p>
 
 <h4>LLM Wiki — 옵시디언 기반 지식 볼트 (11편)</h4>
-<p>Obsidian 볼트로 LLM 친화적 위키를 운영하는 방법론 성단입니다. <a href="#!llmw-overview">개요</a> 후 관문 문서 <a href="#!llmw-vaults">볼트 체계</a>에서 구조를 잡고, <a href="#!llmw-capture">지식 캡처</a>·<a href="#!llmw-metadata">노트 메타데이터</a>·<a href="#!llmw-links">연결과 참조</a>·<a href="#!llmw-cards">위키 카드</a>·<a href="#!llmw-system">시스템 파일과 rules</a>로 운영 규칙을 배웁니다. <a href="#!llmw-onboard">온보딩 실습</a>·<a href="#!llmw-ingest-query-lint">Ingest·Query·Lint</a>·<a href="#!llmw-clipper-query">웹 클리퍼와 Query 실전</a>이 실습 축이고, <a href="#!llmw-philosophy">활용과 철학</a>이 마무리입니다.</p>
+<p>Obsidian 볼트로 LLM 친화적 위키를 운영하는 방법론 System입니다. <a href="#!llmw-overview">개요</a> 후 관문 문서 <a href="#!llmw-vaults">볼트 체계</a>에서 구조를 잡고, <a href="#!llmw-capture">지식 캡처</a>·<a href="#!llmw-metadata">노트 메타데이터</a>·<a href="#!llmw-links">연결과 참조</a>·<a href="#!llmw-cards">위키 카드</a>·<a href="#!llmw-system">시스템 파일과 rules</a>로 운영 규칙을 배웁니다. <a href="#!llmw-onboard">온보딩 실습</a>·<a href="#!llmw-ingest-query-lint">Ingest·Query·Lint</a>·<a href="#!llmw-clipper-query">웹 클리퍼와 Query 실전</a>이 실습 축이고, <a href="#!llmw-philosophy">활용과 철학</a>이 마무리입니다.</p>
 
 <h4>Harness 엔지니어링 — 에이전트 팀 방법론 (12편)</h4>
-<p>AI 갤럭시에서 <strong>가장 많이 연결된 허브</strong>(<a href="#!hns-anatomy">구성과 효과</a>, 11회)를 품은 성단입니다. <a href="#!hns-overview">개요</a> → <a href="#!hns-what">하네스 엔지니어링이란</a> → <a href="#!hns-anatomy">구성과 효과</a>로 개념을 잡고, <a href="#!hns-install">메타 하네스 스킬 설치</a>·<a href="#!hns-run">하네스 실행하기</a>·<a href="#!hns-review">생성 결과 리뷰</a>로 실습합니다. <a href="#!hns-kitchen">주방 비유</a>·<a href="#!hns-team">에이전트 팀과 컨텍스트</a>·<a href="#!hns-core">핵심 3요소</a>가 동작 원리를, <a href="#!hns-usecases">활용 사례</a>·<a href="#!hns-hundred">하네스 100</a>·<a href="#!hns-tools">도구 확장</a>이 응용을 다룹니다.</p>
+<p>AI World에서 <strong>가장 많이 연결된 허브</strong>(<a href="#!hns-anatomy">구성과 효과</a>, 11회)를 품은 System입니다. <a href="#!hns-overview">개요</a> → <a href="#!hns-what">하네스 엔지니어링이란</a> → <a href="#!hns-anatomy">구성과 효과</a>로 개념을 잡고, <a href="#!hns-install">메타 하네스 스킬 설치</a>·<a href="#!hns-run">하네스 실행하기</a>·<a href="#!hns-review">생성 결과 리뷰</a>로 실습합니다. <a href="#!hns-kitchen">주방 비유</a>·<a href="#!hns-team">에이전트 팀과 컨텍스트</a>·<a href="#!hns-core">핵심 3요소</a>가 동작 원리를, <a href="#!hns-usecases">활용 사례</a>·<a href="#!hns-hundred">하네스 100</a>·<a href="#!hns-tools">도구 확장</a>이 응용을 다룹니다.</p>
 
 <h4>Harness 플러그인 — ERP 실전 하네스 (10편)</h4>
-<p>하네스 방법론을 <strong>ERP 커스터마이징 실무</strong>에 적용한 플러그인 성단입니다. <a href="#!hnp-intro">소개</a>·<a href="#!hnp-concepts">핵심 개념</a>·<a href="#!hnp-install">설치</a> 후 <a href="#!hnp-first-run">첫 실행(영업·수주)</a>으로 바로 실습합니다. <a href="#!hnp-architecture">동작 구조와 6단계</a>·<a href="#!hnp-agents-skills">에이전트·스킬 설계</a>·<a href="#!hnp-verify">검증·품질과 _workspace</a>가 내부 구조를, <a href="#!hnp-scenarios">시나리오 게시판</a>·<a href="#!hnp-hundred">하네스100·성능</a>·<a href="#!hnp-commands">명령어</a>가 활용을 다룹니다. Harness 엔지니어링 성단의 이론이 여기서 업무 도메인과 만납니다.</p>
+<p>하네스 방법론을 <strong>ERP 커스터마이징 실무</strong>에 적용한 플러그인 System입니다. <a href="#!hnp-intro">소개</a>·<a href="#!hnp-concepts">핵심 개념</a>·<a href="#!hnp-install">설치</a> 후 <a href="#!hnp-first-run">첫 실행(영업·수주)</a>으로 바로 실습합니다. <a href="#!hnp-architecture">동작 구조와 6단계</a>·<a href="#!hnp-agents-skills">에이전트·스킬 설계</a>·<a href="#!hnp-verify">검증·품질과 _workspace</a>가 내부 구조를, <a href="#!hnp-scenarios">시나리오 게시판</a>·<a href="#!hnp-hundred">하네스100·성능</a>·<a href="#!hnp-commands">명령어</a>가 활용을 다룹니다. Harness 엔지니어링 System의 이론이 여기서 업무 도메인과 만납니다.</p>
 
 <h4>OMC 플러그인 — 실행 모드와 자율 실행 (13편)</h4>
-<p>oh-my-claudecode 플러그인의 사용법 성단으로, 편수가 가장 많습니다(13편). <a href="#!omc-intro">소개</a>·<a href="#!omc-concepts">핵심 용어</a> 후 허브 문서 <a href="#!omc-install">설치</a>와 <a href="#!omc-doctor">설치 진단</a>으로 환경을 만들고, <a href="#!omc-modes">실행 모드</a>(autopilot·ralph·ultrawork·team)·<a href="#!omc-agents">에이전트·스킬</a>·<a href="#!omc-hooks">Hook·메모리</a>·<a href="#!omc-tools">고급 도구</a>로 기능을 익힙니다. <a href="#!omc-workflows">실전 시나리오</a>·<a href="#!omc-windows">Windows 주의</a>·<a href="#!omc-cost">비용·성능</a>·<a href="#!omc-commands">명령어 모음</a>·<a href="#!omc-quickref">빠른 참조</a>가 운영 편입니다.</p>
+<p>oh-my-claudecode 플러그인의 사용법 System으로, 편수가 가장 많습니다(13편). <a href="#!omc-intro">소개</a>·<a href="#!omc-concepts">핵심 용어</a> 후 허브 문서 <a href="#!omc-install">설치</a>와 <a href="#!omc-doctor">설치 진단</a>으로 환경을 만들고, <a href="#!omc-modes">실행 모드</a>(autopilot·ralph·ultrawork·team)·<a href="#!omc-agents">에이전트·스킬</a>·<a href="#!omc-hooks">Hook·메모리</a>·<a href="#!omc-tools">고급 도구</a>로 기능을 익힙니다. <a href="#!omc-workflows">실전 시나리오</a>·<a href="#!omc-windows">Windows 주의</a>·<a href="#!omc-cost">비용·성능</a>·<a href="#!omc-commands">명령어 모음</a>·<a href="#!omc-quickref">빠른 참조</a>가 운영 편입니다.</p>
 
 <h3>추천 학습 경로</h3>
 <ul>
@@ -118,10 +123,10 @@
 </ul>
 
 <h3>지식을 잇는 다리 — 브리지 개념</h3>
-<p>여러 성단에 <strong>동시에</strong> 등장하는 개념일수록, 갈래를 넘나드는 &ldquo;다리&rdquo; 역할을 합니다. 한 갈래를 공부하다 다른 갈래로 자연스럽게 넘어가는 길목입니다.</p>
+<p>여러 System에 <strong>동시에</strong> 등장하는 개념일수록, 갈래를 넘나드는 &ldquo;다리&rdquo; 역할을 합니다. 한 갈래를 공부하다 다른 갈래로 자연스럽게 넘어가는 길목입니다.</p>
 <div class="tbl-wrap">
     <table>
-        <thead><tr><th>개념</th><th>연결 성단</th><th>등장</th></tr></thead>
+        <thead><tr><th>개념</th><th>연결 System</th><th>등장</th></tr></thead>
         <tbody id="km-bridges">
             <tr><td><strong>스킬</strong></td><td>6개 — Harness 엔지니어링 · Harness 플러그인 · Introduction · OMC 플러그인 · Skill · Tutorial(입문)</td><td>20편</td></tr>
             <tr><td><strong>서브에이전트</strong></td><td>5개 — Harness 엔지니어링 · Harness 플러그인 · OMC 플러그인 · Skill · Tutorial(입문)</td><td>9편</td></tr>
@@ -145,7 +150,7 @@
 </ul>
 
 <h3>가장 많이 다루는 핵심 개념</h3>
-<p>AI 갤럭시 전체에서 반복되는 상위 개념입니다. 개념을 누르면 그 개념으로 <strong>통합 검색</strong>이 열립니다.</p>
+<p>AI World 전체에서 반복되는 상위 개념입니다. 개념을 누르면 그 개념으로 <strong>통합 검색</strong>이 열립니다.</p>
 <p class="scn-sub" id="km-top">스킬 20 · 오케스트레이터 10 · 하네스 10 · 서브에이전트 9 · 세컨드브레인 9 · 설치 8 · 슬래시명령어 8 · 에이전트 8 · ERP커스터마이징 6 · _workspace 6 · 검증 6 · 에이전트팀 6</p>
 <p class="scn-sub" id="km-totals">지식 문서 85편 · 고유 개념 276개.</p>
 

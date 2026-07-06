@@ -2622,3 +2622,117 @@
                 animation: none;
             }
         }
+
+        /* ---- Graph views (cosmos 2D representations) ---- */
+        /* View switcher — same quiet-glass vocabulary as the search screen's
+           game dock: translucent pill at rest, wakes on hover/focus. Sits
+           centered under the cosmos title/subtitle (.cosmos-hud) and above
+           whichever stage (3D canvas or 2D svg) is currently showing. */
+        .gv-dock{
+            position: absolute;
+            top: 78px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 4px;
+            max-width: calc(100% - 24px);
+            padding: 5px;
+            background: color-mix(in srgb, var(--bg-alt) 72%, transparent);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            opacity: 0.55;
+            transition: opacity 0.25s ease;
+        }
+        .gv-dock:hover,
+        .gv-dock:focus-within{
+            opacity: 1;
+        }
+        .gv-dock button{
+            padding: 6px 14px;
+            background: transparent;
+            border: none;
+            border-radius: 999px;
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 12.5px;
+            font-weight: 600;
+            line-height: 1;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease,
+                        transform 0.15s ease;
+        }
+        .gv-dock button:hover{
+            color: var(--text);
+            background: color-mix(in srgb, var(--text) 8%, transparent);
+            transform: translateY(-1px);
+        }
+        .gv-dock button.active{
+            background: color-mix(in srgb, var(--accent) 20%, transparent);
+            color: var(--accent-ink);
+        }
+        .gv-dock button:focus-visible{
+            outline: 2px solid var(--accent);
+            outline-offset: -2px;
+        }
+        /* 2D stage — replaces the 3D canvas when a non-"3D" view is active.
+           Fills the same cosmos area; the top padding clears the title and
+           the dock, and it scrolls on its own axis when the rendered graph
+           is taller than the viewport. */
+        .gv-stage{
+            position: absolute;
+            inset: 0;
+            overflow: auto;
+            padding: 130px 20px 24px;
+            background: var(--bg);
+        }
+        .gv-stage svg{
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+        }
+        /* Legend row — cluster color swatch + label. The swatch itself
+           (.lg i) is a plain square painted via currentColor; graphviews.js
+           sets each swatch's color inline per cluster, so no hex lives here. */
+        .gv-legend{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 16px;
+            margin: 0 0 16px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+        .gv-legend .lg{
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .gv-legend .lg i{
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            background: currentColor;
+            font-style: normal;
+        }
+        @media (max-width: 800px){
+            .gv-dock{
+                top: 70px;
+                gap: 2px;
+                padding: 4px;
+            }
+            .gv-dock button{
+                padding: 5px 10px;
+                font-size: 11.5px;
+            }
+            .gv-stage{
+                padding: 116px 12px 20px;
+            }
+        }

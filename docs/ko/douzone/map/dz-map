@@ -1,53 +1,57 @@
 <h2>Knowledge Map — Douzone</h2>
-<p>이 페이지는 <strong>Knowledge Universe의 DOUZONE 갤럭시</strong>(업무·조직 지식)를 집계한 지식 지도입니다. 회사 지식 문서가 <strong>어느 성단(클러스터)에 속하고 서로 어떻게 이어지는지</strong>를 보여 줍니다. 문서별 요약·핵심 개념·연관 문서는 AI가 만든 구조적 지식 인덱스(<code>knowledge-index.json</code>)에서 나오며, 이 연관 관계는 <a href="#!cosmos"><strong>Knowledge Graph</strong></a>에서 3차원 별자리로 돌려 볼 수 있습니다. 강의·학습 지식은 <a href="#!ai-map"><strong>AI Knowledge Map</strong></a>이 같은 구조로 집계합니다.</p>
+<p>이 페이지는 <strong>DOUZONE World</strong>(업무·조직 지식)를 집계한 지식 지도입니다. 위키의 지식은 <strong>World → Domain → System → Document</strong>의 4계층으로 구성되며, 이 지도는 그중 DOUZONE World를 다룹니다. 회사 지식 문서가 <strong>어느 System에 속하고 서로 어떻게 이어지는지</strong>를 보여 줍니다. 문서별 요약·핵심 개념·연관 문서는 AI가 만든 구조적 지식 인덱스(<code>knowledge-index.json</code>)에서 나오며, 이 연관 관계는 <a href="#!cosmos"><strong>Knowledge Graph</strong></a>에서 3차원 그래프와 6가지 2D 표현으로 살펴볼 수 있습니다. 강의·학습 지식은 <a href="#!ai-map"><strong>AI Knowledge Map</strong></a>이 같은 구조로 집계합니다.</p>
 
 <div class="diagram">
-<svg viewBox="0 0 720 300" role="img" aria-label="Knowledge Universe 구조: AI 갤럭시와 DOUZONE 갤럭시, DOUZONE 아래 제안·Architecture·Development Guide·Project 성단">
-    <text class="d-label" x="360" y="24" text-anchor="middle">Knowledge Universe</text>
-    <line class="d-edge" x1="360" y1="34" x2="360" y2="52"/>
-    <line class="d-edge" x1="185" y1="52" x2="535" y2="52"/>
-    <line class="d-edge" x1="185" y1="52" x2="185" y2="66"/>
-    <line class="d-edge" x1="535" y1="52" x2="535" y2="66"/>
+<svg viewBox="0 0 720 320" role="img" aria-label="지식 계층: World(AI·DOUZONE) → Domain(지식 영역) → System(주제 그룹) → Document(개별 문서)">
+    <text class="d-label" x="16" y="52" text-anchor="start">World</text>
+    <text class="d-sub" x="16" y="70" text-anchor="start">최상위 지식 세계</text>
+    <text class="d-label" x="16" y="128" text-anchor="start">Domain</text>
+    <text class="d-sub" x="16" y="146" text-anchor="start">지식 영역</text>
+    <text class="d-label" x="16" y="204" text-anchor="start">System</text>
+    <text class="d-sub" x="16" y="222" text-anchor="start">구체적 체계·주제</text>
+    <text class="d-label" x="16" y="280" text-anchor="start">Document</text>
+    <text class="d-sub" x="16" y="298" text-anchor="start">개별 문서</text>
 
-    <!-- AI galaxy -->
-    <rect class="d-box" x="60" y="66" width="250" height="60" rx="10"/>
-    <text class="d-label" x="185" y="92" text-anchor="middle">AI Galaxy</text>
-    <text class="d-sub" x="185" y="112" text-anchor="middle">강의·학습 지식 · 성단 8개 · 85편</text>
-    <line class="d-edge" x1="185" y1="126" x2="185" y2="146"/>
-    <rect class="d-box soft" x="30" y="146" width="310" height="120" rx="10"/>
-    <text class="d-sub" x="185" y="170" text-anchor="middle">Introduction · Tutorial · Skill</text>
-    <text class="d-sub" x="185" y="192" text-anchor="middle">Second Brain · LLM Wiki</text>
-    <text class="d-sub" x="185" y="214" text-anchor="middle">Harness 엔지니어링 · Harness 플러그인</text>
-    <text class="d-sub" x="185" y="236" text-anchor="middle">OMC</text>
-    <text class="d-sub" x="185" y="256" text-anchor="middle">→ <a href="#!ai-map">AI Knowledge Map</a></text>
+    <rect class="d-box" x="150" y="30" width="180" height="44" rx="9"/>
+    <text class="d-label" x="240" y="57" text-anchor="middle">AI</text>
+    <rect class="d-box accent" x="370" y="30" width="180" height="44" rx="9"/>
+    <text class="d-label" x="460" y="57" text-anchor="middle">DOUZONE</text>
+    <line class="d-edge" x1="240" y1="74" x2="240" y2="106"/>
+    <line class="d-edge" x1="460" y1="74" x2="460" y2="106"/>
 
-    <!-- DOUZONE galaxy -->
-    <rect class="d-box accent" x="410" y="66" width="250" height="60" rx="10"/>
-    <text class="d-label" x="535" y="92" text-anchor="middle">DOUZONE Galaxy</text>
-    <text class="d-sub" x="535" y="112" text-anchor="middle">업무·조직 지식 · 7편</text>
-    <line class="d-edge" x1="535" y1="126" x2="535" y2="146"/>
-    <rect class="d-box soft" x="380" y="146" width="310" height="120" rx="10"/>
-    <text class="d-sub" x="535" y="170" text-anchor="middle">Proposal / AI 개발 지식 플랫폼 성단</text>
-    <text class="d-sub" x="535" y="192" text-anchor="middle">Architecture 성단 <tspan class="d-accent" font-size="10">예정</tspan></text>
-    <text class="d-sub" x="535" y="214" text-anchor="middle">Development Guide 성단 <tspan class="d-accent" font-size="10">예정</tspan></text>
-    <text class="d-sub" x="535" y="236" text-anchor="middle">Project 성단 <tspan class="d-accent" font-size="10">예정</tspan></text>
-    <text class="d-sub" x="535" y="256" text-anchor="middle">문서가 쌓이면 성단이 켜집니다</text>
+    <rect class="d-box" x="150" y="106" width="180" height="44" rx="9"/>
+    <text class="d-label sm" x="240" y="133" text-anchor="middle">Claude &middot; Code / PlugIn</text>
+    <rect class="d-box" x="370" y="106" width="180" height="44" rx="9"/>
+    <text class="d-label sm" x="460" y="133" text-anchor="middle">dev.Center &middot; Proposal</text>
+    <line class="d-edge" x1="240" y1="150" x2="260" y2="176"/>
+    <line class="d-edge" x1="460" y1="150" x2="550" y2="176"/>
+
+    <rect class="d-box soft" x="110" y="176" width="300" height="56" rx="10"/>
+    <text class="d-sub" x="260" y="198" text-anchor="middle">Introduction &middot; Tutorial &middot; Skill &middot; Second Brain</text>
+    <text class="d-sub" x="260" y="216" text-anchor="middle">LLM Wiki &middot; Harness &middot; OMC</text>
+    <rect class="d-box soft" x="430" y="176" width="240" height="56" rx="10"/>
+    <text class="d-sub" x="550" y="207" text-anchor="middle">AI 개발 지식 플랫폼</text>
+    <line class="d-edge" x1="260" y1="232" x2="300" y2="252"/>
+    <line class="d-edge" x1="550" y1="232" x2="480" y2="252"/>
+
+    <rect class="d-box soft" x="110" y="252" width="560" height="44" rx="10"/>
+    <text class="d-sub" x="390" y="279" text-anchor="middle">개별 문서 — 각 System 아래 시리즈 순서로 정렬됩니다</text>
 </svg>
-<div class="d-cap">하나의 우주, 두 갤럭시 — 학습 지식(AI)과 업무 지식(DOUZONE)이 같은 인덱스 위에서 이어집니다.</div>
+<div class="d-cap">두 World — 학습 지식(AI)과 업무 지식(DOUZONE)이 같은 인덱스 위에서 이어집니다.</div>
 </div>
 
-<h3>성단(클러스터) 한눈에</h3>
-<p>&ldquo;허브 문서&rdquo;는 다른 문서에서 가장 많이 연관으로 지목된, 그 갈래의 관문 문서입니다. <span class="scn-sub">표의 수치는 <code>knowledge-index.json</code>에서 실시간 집계되며, 새 성단은 문서가 등록되면 자동으로 나타납니다.</span></p>
+<h3>System 한눈에</h3>
+<p>&ldquo;허브 문서&rdquo;는 다른 문서에서 가장 많이 연관으로 지목된, 그 갈래의 관문 문서입니다. <span class="scn-sub">표의 수치는 <code>knowledge-index.json</code>에서 실시간 집계되며, 새 System은 문서가 등록되면 자동으로 나타납니다.</span></p>
 <div class="tbl-wrap">
     <table>
-        <thead><tr><th>성단</th><th>편수</th><th>중심 주제</th><th>허브 문서</th></tr></thead>
+        <thead><tr><th>System</th><th>편수</th><th>중심 주제</th><th>허브 문서</th></tr></thead>
         <tbody id="km-clusters" data-section-prefix="Douzone" data-topics='{"AI 개발 지식 플랫폼":"GitLab 개발 결과의 자동 지식화 제안","AI Dev Knowledge Platform":"Auto-knowledge platform from GitLab output"}'>
             <tr><td><strong>AI 개발 지식 플랫폼</strong></td><td>7</td><td>GitLab 개발 결과의 자동 지식화 제안</td><td><a href="#!dzp-overview">제안 개요</a></td></tr>
         </tbody>
     </table>
 </div>
 
-<h3>성단 상세 — 무엇이 들어 있고, 어떤 순서로 읽는가</h3>
+<h3>System 상세 — 무엇이 들어 있고, 어떤 순서로 읽는가</h3>
 
 <h4>AI 개발 지식 플랫폼 — GitLab 기반 자동 지식화 제안 (7편)</h4>
 <p>GitLab에 축적되는 개발 결과를 AI가 분석해 <strong>조직 지식으로 자동 변환·축적</strong>하는 Read-Only Engineering Knowledge Platform 제안 시리즈입니다. 아래 순서대로 읽으면 문제 정의부터 실행 계획까지 한 흐름으로 이어집니다.</p>
@@ -61,8 +65,8 @@
     <li><a href="#!dzp-roadmap">추진 로드맵</a> — 4 Phase 추진과 1차 PoC(OmniEsol ERP · SCM 도메인), 검증 KPI.</li>
 </ul>
 
-<h4>예정 성단 — 자리만 마련된 곳</h4>
-<p>아래 세 성단은 내비게이션에 폴더만 준비된 상태입니다. 해당 폴더에 문서가 추가되고 지식 인덱스에 등록되면 위 표와 <a href="#!cosmos">Knowledge Graph</a>에 자동으로 나타납니다.</p>
+<h4>예정 System — 자리만 마련된 곳</h4>
+<p>아래 세 System은 내비게이션에 폴더만 준비된 상태입니다. 해당 폴더에 문서가 추가되고 지식 인덱스에 등록되면 위 표와 <a href="#!cosmos">Knowledge Graph</a>에 자동으로 나타납니다.</p>
 <ul>
     <li><strong>Architecture</strong> — OmniEsol ERP·SCM 영역의 시스템 구조, 계층 설계, 모듈 간 연계 같은 아키텍처 지식이 쌓일 곳입니다.</li>
     <li><strong>Development Guide</strong> — 개발 표준, 공통 패턴, 코드 리뷰 기준 등 팀이 공유하는 개발 가이드가 모일 곳입니다.</li>
@@ -77,13 +81,13 @@
 </ul>
 
 <h3>지식을 잇는 다리 — 브리지 개념</h3>
-<p>여러 성단에 <strong>동시에</strong> 등장하는 개념은 갈래를 넘나드는 &ldquo;다리&rdquo;가 됩니다. DOUZONE 갤럭시는 아직 성단이 하나라 <strong>집계된 브리지가 없습니다</strong> — 개념이 3개 이상의 성단에 걸치면 이 자리에 자동으로 나타납니다. 지금은 <strong>지식플랫폼 · AI큐레이터 · 지식관리</strong> 같은 개념이 AI 갤럭시(Second Brain·LLM Wiki 성단)와 주제로 이어져 있어, 갤럭시를 가로지르는 다리 후보입니다.</p>
+<p>여러 System에 <strong>동시에</strong> 등장하는 개념은 갈래를 넘나드는 &ldquo;다리&rdquo;가 됩니다. DOUZONE World는 아직 System이 하나라 <strong>집계된 브리지가 없습니다</strong> — 개념이 3개 이상의 System에 걸치면 이 자리에 자동으로 나타납니다. 지금은 <strong>지식플랫폼 · AI큐레이터 · 지식관리</strong> 같은 개념이 AI World(Second Brain·LLM Wiki System)와 주제로 이어져 있어, World를 가로지르는 다리 후보입니다.</p>
 
 <h3>허브 문서 — 가장 많이 연결된 관문</h3>
-<p>다른 문서들이 <strong>연관 문서</strong>로 가장 자주 지목한 문서입니다. 현재 관문은 <a href="#!dzp-overview">제안 개요</a>(4회 연결)이며, 갤럭시 공통 허브 기준(6회 이상)에 도달하면 이 자리에 자동 집계됩니다.</p>
+<p>다른 문서들이 <strong>연관 문서</strong>로 가장 자주 지목한 문서입니다. 현재 관문은 <a href="#!dzp-overview">제안 개요</a>(4회 연결)이며, 공통 허브 기준(6회 이상)에 도달하면 이 자리에 자동 집계됩니다.</p>
 
 <h3>가장 많이 다루는 핵심 개념</h3>
-<p>DOUZONE 갤럭시에서 반복되는 상위 개념입니다. 개념을 누르면 그 개념으로 <strong>통합 검색</strong>이 열립니다.</p>
+<p>DOUZONE World에서 반복되는 상위 개념입니다. 개념을 누르면 그 개념으로 <strong>통합 검색</strong>이 열립니다.</p>
 <p class="scn-sub" id="km-top">지식플랫폼 6</p>
 <p class="scn-sub" id="km-totals">지식 문서 7편 · 고유 개념 26개.</p>
 
