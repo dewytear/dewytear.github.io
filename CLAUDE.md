@@ -16,6 +16,7 @@
   2. `tools/doc-entries.ko.json`에 엔트리 추가(title·summary·concepts — 기존 개념 어휘를 재사용해 연관 링크가 생기게) 후 `python3 tools/build_index.py` 재생성 + `--check` 통과 → 지식지도·지식그래프(cosmos)에 자동 반영
   3. 새 대분류(섹션)라면 `tools/build_index.py`의 `CLUSTER_LABELS_BY_LANG`에 **모든 언어** 클러스터 라벨 추가 + `docs/*/ai/map/ai-map`의 상단 도식·클러스터 표 fallback·`data-topics` 갱신
   4. 작업이 끝나면 **Work Log 문서를 추가**하고 `list`의 해당 날짜 트리에 노드(`"tags": []`)를 단다
+  5. 문서·`list`·인덱스를 바꾸는 PR은 `python tools/validate_all.py`를 먼저 실행한다 — **ERROR 0가 머지 조건**, WARN은 검토 후 보정하거나 사유를 Work Log에 남긴다
 
 ## 다국어 규칙
 - **번역·언어 관련 작업은 반드시 `tools/i18n.md` 체크리스트를 따른다** — 구조(폴백 계층)·핵심 원칙·추가 순서·검증 목록이 거기 있다. 특히: 문서의 `label_<lang>`·`tags_<lang>`·인덱스 오버레이는 **그 문서의 본문 번역과 같은 PR에서만** 갱신하고, 새 UI 문구는 하드코딩 대신 `STR()` 키 + `STRINGS` 사전으로 넣는다.

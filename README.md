@@ -46,6 +46,7 @@ GitHub Pages로 배포됩니다: https://dewytear.github.io
 | `tools/build_index.py` | 인덱스 결정적 빌드(`--check` 검증) |
 | `tools/doc-entries.ko.json` | 인덱스 원료(문서별 AI 작성 엔트리, 언어별) |
 | `tools/curator.md` | AI 큐레이터 절차서 |
+| `tools/validate_all.py` | 지식 품질 검증 스위트 통합 실행(문서·라우트·i18n·그래프) — PR 전 실행, ERROR 0가 머지 조건 |
 
 ## 문서 추가하기
 
