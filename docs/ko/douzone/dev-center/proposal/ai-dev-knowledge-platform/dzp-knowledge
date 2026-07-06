@@ -8,7 +8,7 @@
 </ul>
 
 <h3>누적 갱신 — 문서 수가 아니라 지식의 밀도</h3>
-<p>새 지식이 발견됐다고 항상 새 문서를 만들지 않는다. Knowledge Index를 먼저 검색해 관련 문서가 있으면 <strong>기존 문서를 확장</strong>한다. 예컨대 "수신자 처리 구조" 문서가 있는 상태에서 COL 동적 수신자 기능이 추가되면, 신규 문서 이전에 기존 문서 확장을 우선 판단한다. Wiki가 변경 이력의 집합이 아니라 <strong>지속적으로 정제된 현재 지식 상태</strong>로 유지되는 이유다.</p>
+<p>새 지식이 발견됐다고 항상 새 문서를 만들지 않는다. Knowledge Index를 먼저 검색해 관련 문서가 있으면 <strong>기존 문서를 확장</strong>한다. 예컨대 "수주 상태 전이 체계" 문서가 있는 상태에서 부분출고 상태가 추가되면, 신규 문서 이전에 기존 문서 확장을 우선 판단한다. Wiki가 변경 이력의 집합이 아니라 <strong>지속적으로 정제된 현재 지식 상태</strong>로 유지되는 이유다.</p>
 
 <div class="diagram">
 <svg viewBox="0 0 680 172" role="img" aria-label="누적 갱신 분기: 새 지식 발견 후 인덱스를 검색해 관련 문서가 있으면 기존 문서를 갱신하고 없으면 신규 문서를 생성한다">
@@ -39,21 +39,21 @@
 </div>
 
 <h3>개발 Identifier 검색</h3>
-<p>개발자는 자연어보다 <strong>Table명 · Column명 · Rule ID · Class명 · Method명 · API명 · Mapper ID · Error Code</strong>로 찾는 경우가 많다. Knowledge Index에 identifier를 포함하고, 검색 우선순위를 <strong>① Identifier 완전 일치 → ② 제목 → ③ 개념 → ④ 요약 → ⑤ 태그 → ⑥ 연관 문서 → ⑦ 같은 프로젝트</strong>로 구성한다. 소스에서 만난 <code>CI_RULERCV_INFO</code> 하나만으로 관련 정책 문서에 도달할 수 있어야 한다.</p>
+<p>개발자는 자연어보다 <strong>Table명 · Column명 · Rule ID · Class명 · Method명 · API명 · Mapper ID · Error Code</strong>로 찾는 경우가 많다. Knowledge Index에 identifier를 포함하고, 검색 우선순위를 <strong>① Identifier 완전 일치 → ② 제목 → ③ 개념 → ④ 요약 → ⑤ 태그 → ⑥ 연관 문서 → ⑦ 같은 프로젝트</strong>로 구성한다. 소스에서 만난 <code>SO_STS_CD</code> 하나만으로 관련 정책 문서에 도달할 수 있어야 한다.</p>
 <pre><code><span class="c"># Knowledge Index 엔트리 (예시)</span>
 {
-  "name": "dz-ai-noti-col-receiver",
-  "title": "COL 동적 수신자 정책",
-  "summary": "COL 유형의 동적 수신자 해석 정책",
+  "name": "dz-erp-so-status-transition",
+  "title": "수주 상태 전이 정책",
+  "summary": "판매오더 상태 체계와 출고·매출 전이 조건",
   "kind": "policy",
-  "product": "OmniEsol",  "domain": "SCM",  "project": "ai-notification",
+  "product": "OmniEsol",  "domain": "SCM",  "project": "sales-order",
   "status": "active",
-  "concepts": ["동적수신자", "알림채널", "수신자해석"],
-  "identifiers": ["CI_RULERCV_INFO", "RCV_TP_CD", "RCV_DTL_DC", "SUB_RCV_CD", "COL"],
+  "concepts": ["수주상태전이", "여신체크", "부분출고"],
+  "identifiers": ["SD_SO_HDR", "SD_SO_ITEM", "SO_STS_CD", "CREDIT_CHK_YN", "NR_SD_SO_COMPLETED"],
   "sources": [{
-    "project": "scm/ai-notification",
+    "project": "scm/sales-order",
     "commit": "abc123",  "mergeRequest": 382,
-    "paths": ["src/.../ReceiverService.java", "mapper/.../ReceiverMapper.xml"]
+    "paths": ["src/.../SalesOrderService.java", "mapper/.../SalesOrderMapper.xml"]
   }]
 }</code></pre>
 
@@ -68,13 +68,13 @@
         <tbody>
             <tr><td><strong>FACT</strong></td><td>코드에서 직접 확인 가능</td><td>Table · Column · API · Class 관계</td><td>자동 게시 가능성 높음</td></tr>
             <tr><td><strong>INFERRED</strong></td><td>코드 구조 기반 추론</td><td>재시도 목적 추정, 중복 방지 추정</td><td>추론임을 명시해 게시</td></tr>
-            <tr><td><strong>DECISION</strong></td><td>업무·Architecture 결정</td><td>GUID 선택 이유, 채널 제한 이유</td><td>MR·설계 문서 등 추가 근거 확인 후 게시</td></tr>
+            <tr><td><strong>DECISION</strong></td><td>업무·Architecture 결정</td><td>GUID 선택 이유, 여신 체크 시점 결정</td><td>MR·설계 문서 등 추가 근거 확인 후 게시</td></tr>
         </tbody>
     </table>
 </div>
 
 <h3>수명주기 — 삭제하지 않고 대체한다</h3>
-<p>정책이 바뀌었다고 과거 지식을 삭제하지 않는다. 예컨대 "COL 수신자 → Email only"가 "Email + Message"로 바뀌면 기존 문서를 <code>superseded</code>로 전환하고 새 정책 문서와 연결해, <strong>현재 정책과 변경 이력을 동시에</strong> 추적한다.</p>
+<p>정책이 바뀌었다고 과거 지식을 삭제하지 않는다. 예컨대 "여신 체크 → 수주 저장 시점"이 "수주 저장 + 출고 시점 재검증"으로 바뀌면 기존 문서를 <code>superseded</code>로 전환하고 새 정책 문서와 연결해, <strong>현재 정책과 변경 이력을 동시에</strong> 추적한다.</p>
 
 <div class="diagram">
 <svg viewBox="0 0 680 176" role="img" aria-label="지식 수명주기: draft에서 active가 되고, 유효성을 잃으면 deprecated, 새 정책으로 대체되면 superseded가 되어 새 active 문서와 연결된다">

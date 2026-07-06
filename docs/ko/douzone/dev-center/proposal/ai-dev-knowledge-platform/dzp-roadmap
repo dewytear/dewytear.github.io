@@ -1,18 +1,18 @@
 <h2>추진 로드맵 — 4 Phase와 1차 PoC</h2>
-<p>검증되지 않은 것을 조직에 도입하지 않는다. 개인 검증에서 시작해 팀 PoC, 센터 확대, 전사 확장의 순서로 단계를 밟는다.</p>
+<p>검증되지 않은 것을 조직에 도입하지 않는다. 사전 검증에서 시작해 팀 PoC, 센터 확대, 전사 확장의 순서로 단계를 밟는다.</p>
 
 <h3>4단계 추진</h3>
 <ul>
-    <li><strong>Phase 1 · 개인 Wiki 기반 검증</strong> — Wiki Local Clone + Claude Code 연계, Knowledge Index 검색, HTML 지식 축적, AI Curator Prototype. 첫 대상: <strong>OmniEsol AI 알림</strong></li>
-    <li><strong>Phase 2 · 회사 PoC (SCM구축개발1Unit)</strong> — 회사 Wiki Repository, GitLab Project Registry, Change Collector, SHA 증분 처리, AI Knowledge Curator, Provenance, Read-Only Portal. 첫 Source: OmniEsol AI 알림 GitLab Repository</li>
+    <li><strong>Phase 1 · Reference Wiki 기반 검증</strong> — Wiki Local Clone + Claude Code 연계, Knowledge Index 검색, HTML 지식 축적, AI Curator Prototype. 첫 대상: <strong>OmniEsol ERP · SCM 도메인</strong></li>
+    <li><strong>Phase 2 · 회사 PoC (SCM구축개발1Unit)</strong> — 회사 Wiki Repository, GitLab Project Registry, Change Collector, SHA 증분 처리, AI Knowledge Curator, Provenance, Read-Only Portal. 첫 Source: OmniEsol ERP SCM GitLab Repository</li>
     <li><strong>Phase 3 · SCM개발센터 확대</strong> — 다중 프로젝트, Product/Domain 분류, 프로젝트 간 지식 연결, Knowledge Lifecycle, 보안등급, 품질 KPI</li>
     <li><strong>Phase 4 · 전사 확장</strong> — 사내 SSO, 전사 Search, 제품별 Knowledge Governance, AI Agent 연계, 사내 개발 플랫폼 공식화</li>
 </ul>
 
-<h3>1차 PoC — OmniEsol AI 알림</h3>
-<p>3-Layer Architecture, Rule Engine, 상태 체계, GUID 정책, 수신자·채널 정책, Function Call, DB Table 구조, CLOB 정책, 발송 요청 구조, 장애 사례, 정책 변경 이력 등 <strong>지식화 가치가 높은 요소가 이미 존재</strong>하며, 아래 identifier로 검색·축적 효과를 즉시 검증할 수 있다.</p>
-<pre><code>CI_RULECOND_INFO   CI_RULERCV_INFO   RCV_TP_CD
-COL   NR_SD_SO_COMPLETED   requestAiNotification</code></pre>
+<h3>1차 PoC — OmniEsol ERP (SCM 도메인)</h3>
+<p>ERP는 <strong>업무 Rule의 밀도가 가장 높은 도메인</strong>이다. 영업·수주·구매·생산의 업무 Rule, 전표 상태 전이 체계(수주 → 출고 → 매출), 여신·가용재고(ATP) 체크 정책, 프로세스 간 연계, DB Table 구조와 Column 의미, 장애 사례, 정책 변경 이력 등 <strong>지식화 가치가 높은 요소가 이미 존재</strong>하며, 아래와 같은 identifier로 검색·축적 효과를 즉시 검증할 수 있다.</p>
+<pre><code>SD_SO_HDR   SD_SO_ITEM   SO_STS_CD
+CREDIT_CHK_YN   NR_SD_SO_COMPLETED   createSalesOrder</code></pre>
 
 <h3>검증 KPI — 네 축</h3>
 <ul>

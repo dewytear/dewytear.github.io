@@ -1,9 +1,47 @@
 <h2>자산 활용과 보안</h2>
 
 <h3>처음부터 새로 만들지 않는다</h3>
-<p>현재 운영 중인 개인 Wiki가 이미 갖춘 기능 — HTML Fragment 문서, SPA Web UI, JSON Navigation Tree, 통합/Tag/Concept 검색, Knowledge Index, 연관 문서 추천, Knowledge Map, AI Curator, 결정적 Index Build, Work Log, Git History — 을 복제해 PoC를 시작하고, 검증된 기능을 회사 플랫폼으로 발전시킨다.</p>
+<p>사전 검증용으로 운영 중인 <strong>Reference Wiki</strong>가 이미 갖춘 기능 — HTML Fragment 문서, SPA Web UI, JSON Navigation Tree, 통합/Tag/Concept 검색, Knowledge Index, 연관 문서 추천, Knowledge Map, AI Curator, 결정적 Index Build, Work Log, Git History — 을 복제해 PoC를 시작하고, 검증된 기능을 회사 플랫폼으로 발전시킨다.</p>
+
+<p>특히 이 Reference Wiki에서는 <strong>AI가 문서를 작성·수정할 때 지식 체계 반영이 규칙으로 의무화</strong>되어 있다(저장소의 AI 지침 문서로 강제). 문서 한 편이 추가되면 내비게이션 등록 → 지식 인덱스 엔트리 → 결정적 인덱스 빌드 → 지식지도·그래프·검색 자동 반영 → Work Log 기록까지가 <strong>같은 변경 단위(PR)</strong>로 함께 움직인다. 회사 플랫폼의 "지식 반영률" 운영 규율이 이미 소규모로 검증되고 있는 셈이다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 196" role="img" aria-label="Reference Wiki의 문서 추가 의무 절차: 문서 작성, list 노드 등록, 인덱스 엔트리 작성 후 결정적 인덱스 빌드를 거쳐 지도·그래프·검색에 자동 반영되고 Work Log까지 같은 변경 단위로 기록된다">
+    <text class="d-sub" x="8" y="14" text-anchor="start">문서 추가 — AI가 수행하는 의무 절차</text>
+    <rect class="d-box" x="8" y="22" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="108" y="41" text-anchor="middle">① 문서 작성</text>
+    <text class="d-sub" x="108" y="57" text-anchor="middle">HTML Fragment · 도메인 트리</text>
+    <rect class="d-box" x="240" y="22" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="340" y="41" text-anchor="middle">② 내비(list) 노드 등록</text>
+    <text class="d-sub" x="340" y="57" text-anchor="middle">name · path · label · tags · model</text>
+    <rect class="d-box accent" x="472" y="22" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="572" y="41" text-anchor="middle">③ Index 엔트리 작성</text>
+    <text class="d-sub" x="572" y="57" text-anchor="middle">title · summary · concepts</text>
+    <line class="d-edge" x1="208" y1="45" x2="232" y2="45"/><polygon class="d-arrow" points="232,40 232,50 240,45"/>
+    <line class="d-edge" x1="440" y1="45" x2="464" y2="45"/><polygon class="d-arrow" points="464,40 464,50 472,45"/>
+
+    <path class="d-edge" d="M572 68 C572 88, 556 98, 536 98 H144 C124 98, 108 106, 108 118 V126"/>
+    <polygon class="d-arrow" points="103,125 113,125 108,132"/>
+    <polygon class="d-arrow" points="348,93 348,103 338,98"/>
+
+    <text class="d-sub" x="672" y="122" text-anchor="end">지식 체계 자동 반영 — 같은 PR</text>
+    <rect class="d-box" x="8" y="134" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="108" y="153" text-anchor="middle">④ 결정적 Index Build</text>
+    <text class="d-sub" x="108" y="169" text-anchor="middle">재생성 · --check 검증</text>
+    <rect class="d-box" x="240" y="134" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="340" y="153" text-anchor="middle">⑤ 지도 · 그래프 · 검색 반영</text>
+    <text class="d-sub" x="340" y="169" text-anchor="middle">Knowledge Index JSON</text>
+    <rect class="d-box accent" x="472" y="134" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="572" y="153" text-anchor="middle">⑥ Work Log 기록</text>
+    <text class="d-sub" x="572" y="169" text-anchor="middle">주제별 문서에 동반 기록</text>
+    <line class="d-edge" x1="208" y1="157" x2="232" y2="157"/><polygon class="d-arrow" points="232,152 232,162 240,157"/>
+    <line class="d-edge" x1="440" y1="157" x2="464" y2="157"/><polygon class="d-arrow" points="464,152 464,162 472,157"/>
+</svg>
+<div class="d-cap">문서가 늘면 지식 체계가 함께 갱신된다 — 규칙으로 의무화되어 사람이 챙기지 않아도 깨지지 않는다.</div>
+</div>
+
 <ul>
-    <li><strong>개인 Wiki → 기능 실험 → 검증 → 회사 PoC → 안정화 → 조직 확산</strong>의 경로로, 검증되지 않은 것을 조직에 바로 도입하지 않는다.</li>
+    <li><strong>Reference Wiki → 기능 실험 → 검증 → 회사 PoC → 안정화 → 조직 확산</strong>의 경로로, 검증되지 않은 것을 조직에 바로 도입하지 않는다.</li>
     <li>문서는 <strong>HTML 중심</strong>으로 운영해 표 · Dashboard · SVG Diagram · <code>&lt;details&gt;</code> · 상태 Badge · Warning Box · Architecture Flow · DB 구조 시각화를 활용한다.</li>
     <li>HTML로 인한 AI Token 증가는 전체 문서를 읽지 않는 <strong>Knowledge Index 기반 Retrieval</strong>로 최소화한다. 이는 CLAUDE.md 계층과 MCP 연동으로 조직 지식을 AI 컨텍스트화하는 <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Anthropic 공식 권장 패턴</a>과도 맞닿아 있다.</li>
 </ul>
