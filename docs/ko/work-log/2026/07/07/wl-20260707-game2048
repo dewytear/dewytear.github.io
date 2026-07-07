@@ -1,0 +1,24 @@
+<h2>2026-07-07 · 홈 화면 "지식 2048" 미니게임</h2>
+<p>통합검색 화면 미니게임에 위키를 홍보할 대표 게임으로 2048을 추가했다. 타일을 합칠수록 <strong>이 위키의 실제 지식 용어</strong>가 커지는 테마(태그→…→세컨드 브레인)이고, 검색을 방해하지 않도록 <strong>검색 연동 워터마크 토글</strong>로 동작한다. 도크 순서도 조정하고, 모든 게임에 Best(세션 기록)를 붙였다.</p>
+
+<h3>배경</h3>
+<ul>
+    <li>기존 미니게임(벽돌깨기·별똥별·핑퐁·비행기)은 검색창 뒤에서 도는 앰비언트 배경. 2048은 방향키·스와이프로 직접 플레이하는 격자 게임이라 <strong>검색창을 가리거나 플레이를 방해하지 않을 배치</strong>가 필요했다.</li>
+    <li>라이선스: 2048 원작은 MIT이고 게임 규칙 자체는 저작권 대상이 아니라 <strong>직접 새로 구현</strong>하면 자유. 이름도 상표 아님.</li>
+</ul>
+
+<h3>변경</h3>
+<ul>
+    <li><strong>지식 2048 게임</strong>(<code>SEARCH_GAMES.g2048</code>) — 캔버스가 아닌 <strong>DOM/CSS 4×4 보드</strong>로 구현(또렷한 한글 라벨·테마 대응이 쉬움). 이동·병합·스폰·승리(2048)·게임오버·"새 게임" 포함. 방향키/WASD + 터치 스와이프.</li>
+    <li><strong>타일 = 위키 실제 용어 사다리</strong>: 태그·개념·노트·문서·볼트·시스템·도메인·월드·지식 지도·지식 그래프·세컨드 브레인(2→2048). Document⊂System⊂Domain⊂World는 위키 공식 계층(<code>ai-map</code>·<code>CLUSTER_LABELS_BY_LANG</code>), 천문 용어는 CLAUDE.md 규칙대로 배제. EN 라벨 병행, 숫자 작게 병기.</li>
+    <li><strong>이질감 없는 색</strong>: 다색 램프 대신 <code>--accent</code> 단색을 단계별 알파(0.12→0.92)로 얹어 다른 앰비언트 게임과 같은 톤. accent는 매 렌더 <code>getComputedStyle</code>로 읽어 낮/밤·사용자 지정 색까지 즉시 대응.</li>
+    <li><strong>검색 연동 워터마크 토글</strong>(핵심 UX): 검색어가 없을 땐 보드가 또렷·플레이 가능(필드는 상단으로 이동해 안 가림), <strong>검색어를 입력하면</strong> 보드가 <strong>흐릿한 워터마크로 물러나고 입력을 검색에 양보</strong>(방향키가 타일을 안 움직임), <strong>검색어를 비우면</strong> 다시 플레이 재개. 상태는 <code>.search-screen.searching</code> 클래스(검색 input 값 유무)로 토글.</li>
+    <li><strong>Score + Best (전 게임)</strong>: 점수는 기존처럼 흐릿한 워터마크 유지, 그 아래 작은 <code>BEST</code>를 추가. Best는 <strong>리셋(새로고침) 전까지의 세션 최고 기록</strong>으로 메모리 변수(<code>GAME_BEST</code>)만 사용(영구 저장 X). 공통 헬퍼 <code>drawScoreBest()</code>로 핑퐁·비행기·벽돌깨기·별똥별에 일괄 적용(벽돌깨기=깬 벽돌, 별똥별=받은 개념 수를 점수로).</li>
+    <li><strong>도크·설정 순서</strong>: 지식 2048 · 별똥별 · 벽돌깨기 · 핑퐁 · 비행기. 2048 도크 버튼(격자 아이콘) 신설, 설정 드롭다운 동기화. 홍보 목적상 <strong>기본 게임을 g2048</strong>로(<code>config.json</code>·<code>HARD_DEFAULTS</code>·폴백).</li>
+    <li>i18n: <code>g2048·g2048Long·g2048New·g2048Over·gameBest</code> 한/영 추가.</li>
+</ul>
+
+<h3>결과</h3>
+<ul>
+    <li><code>index.html</code>·<code>style.css</code>·<code>config.json</code> 수정. <code>validate_all</code> 0 ERROR, 인라인 JS 파싱 0 에러. 2048 병합 알고리즘 단위테스트 15/15, jsdom 통합테스트 11/11(보드 생성·2타일 스폰·위키 라벨·검색 중 정지·유휴 재개·정리·새 게임) 통과.</li>
+</ul>
