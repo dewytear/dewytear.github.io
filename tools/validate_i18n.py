@@ -215,13 +215,23 @@ def run(root):
                        | galaxy_labels(cluster_labels, 'en', 'Douzone'))
         check_map_doc('ko', 'douzone/map/dz-map', 'dz-map', dz_expected)
 
-    # 6. strings-parity: STRINGS.ko vs STRINGS.en key sets in index.html.
-    index_path = os.path.join(root, 'index.html')
-    try:
-        index_text = open(index_path, encoding='utf-8').read()
-    except OSError as e:
-        findings.append(_f('ERROR', 'strings-parity', '-', 'cannot read index.html: %s' % e))
-        index_text = None
+    # 6. strings-parity: STRINGS.ko vs STRINGS.en key sets.
+    # STRINGS lives in i18n.js since the module split; fall back to index.html
+    # so the check works across both layouts (older trees / future moves).
+    index_text = None
+    _read_err = None
+    for _cand in ('i18n.js', 'index.html'):
+        try:
+            _t = open(os.path.join(root, _cand), encoding='utf-8').read()
+        except OSError as e:
+            _read_err = e
+            continue
+        if 'STRINGS' in _t:
+            index_text = _t
+            break
+    if index_text is None:
+        findings.append(_f('ERROR', 'strings-parity', '-',
+                            'cannot read STRINGS source (i18n.js/index.html): %s' % _read_err))
 
     if index_text is not None:
         parsed = extract_strings_keys(index_text)
@@ -229,7 +239,7 @@ def run(root):
             # A parse failure must fail loudly: silently skipping would turn
             # every future STRINGS refactor into an unchecked i18n blind spot.
             findings.append(_f('ERROR', 'strings-parity', '-',
-                                "STRINGS.ko/en 파싱 실패 — index.html의 'var STRINGS = {' 구조가 바뀌었으면 extract_strings_keys를 함께 갱신할 것"))
+                                "STRINGS.ko/en 파싱 실패 — i18n.js의 'var STRINGS = {' 구조가 바뀌었으면 extract_strings_keys를 함께 갱신할 것"))
         else:
             ko_keys, en_keys = parsed['ko'], parsed['en']
             for k in sorted(en_keys - ko_keys):
