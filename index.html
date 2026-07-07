@@ -525,6 +525,7 @@
                 cosmosLoading: '지식 인덱스를 불러오는 중…',
                 gvView3d: '3D', gvBundling: '번들링', gvChord: '코드',
                 gvPacking: '패킹', gvConcepts: '개념', gvArc: '아크', gvMatrix: '매트릭스',
+                gvDockAria: '그래프 뷰 선택',
                 gvDocsN: '{n}편', gvConceptIn: '{n}편에 등장',
                 gvLinksN: '연관 {n}건', gvCrossN: 'System 간 연관 {n}건',
                 kmEach: '각 {n}회', kmRefs: '{n}회 연결', kmBridgeN: '{n}개 — ',
@@ -598,6 +599,7 @@
                 cosmosLoading: 'Loading the knowledge index…',
                 gvView3d: '3D', gvBundling: 'Bundling', gvChord: 'Chord',
                 gvPacking: 'Packing', gvConcepts: 'Concepts', gvArc: 'Arc', gvMatrix: 'Matrix',
+                gvDockAria: 'Choose a graph view',
                 gvDocsN: '{n} docs', gvConceptIn: 'in {n} docs',
                 gvLinksN: '{n} links', gvCrossN: '{n} cross-System links',
                 kmEach: '×{n} each', kmRefs: '{n} links', kmBridgeN: '{n} — ',
@@ -824,7 +826,7 @@
                         chord: STR('gvChord'), packing: STR('gvPacking'),
                         concepts: STR('gvConcepts'), arc: STR('gvArc'),
                         matrix: STR('gvMatrix') };
-            var dock = '<div class="gv-dock" role="group" aria-label="Graph view">'
+            var dock = '<div class="gv-dock" role="group" aria-label="' + escapeHtml(STR('gvDockAria')) + '">'
                      + kinds.map(function(k){
                            return '<button type="button" data-gv="' + k + '">'
                                 + escapeHtml(lbl[k] || k) + '</button>';
