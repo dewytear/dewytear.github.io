@@ -10,6 +10,7 @@
 <h3>변경</h3>
 <ul>
     <li><strong>WORK LOG "최근 로그로" 버튼</strong> — WORK LOG 제목줄에 <code>⤓</code> 글리프 버튼을 추가(기존 폴더 모아보기 <code>⧉</code>와 같은 결: 평소 옅고 호버 시 또렷). 누르면 <strong>다른 날짜는 모두 접히고 최신 로그가 있는 날만 펼쳐진 뒤</strong> 사이드바가 그 위치로 스크롤되고, 최신 로그 문서를 본문에 바로 연다. 최신 판별은 <code>list</code>의 작성 순서(시간순)를 그대로 이용 — Work Log 브랜치의 마지막 <code>&lt;a&gt;</code>가 최신이라, 비동기 커밋 날짜 fetch에 의존하지 않고 즉시 동작한다.</li>
+    <li><strong>버튼을 토글로</strong> — 첫 누름 때 <strong>직전에 보던 페이지의 해시를 기억</strong>해 두고, 최신 로그에 머문 상태에서 <strong>다시 누르면 Work Log를 접고 그 페이지로 돌아간다</strong>(직전 위치가 없으면 검색 화면으로). 토글 상태에서는 글리프가 위로 뒤집히고(<code>⤒</code> 느낌) 액센트 색이 입혀지며 툴팁도 "이전 페이지로"(EN: Back)로 바뀐다 — <code>STRINGS.worklogBack</code> 한/영 추가. 최신 로그를 벗어나 다른 곳으로 이동한 뒤 누르면 토글백이 아니라 새 점프로 동작한다.</li>
     <li><strong>Knowledge Map 아이콘 복원</strong> — <code>list</code>의 <code>ai-map</code>·<code>dz-map</code> 라벨에 <code>❖</code> 글리프를 되살렸다. 액센트 색은 제거 전엔 <code>ai-map</code>에만 있었지만, 두 Knowledge Map(AI·DOUZONE)이 같은 성격이라 <strong>일관성을 위해 <code>dz-map</code>도 <code>::first-letter</code> 액센트 선택자에 넣어</strong> 둘 다 글리프에 액센트 색이 입혀지도록 맞췄다(<code>cosmos</code>·<code>ai-map</code>과 동일). 본문·제목·SVG 글리프는 개편의 의도된 결과라 손대지 않고, <strong>목록 아이콘만</strong> 되살렸다.</li>
     <li>버튼 툴팁 문구는 UI 크롬이므로 <code>STRINGS</code>에 한/영 모두 추가(<code>최근 로그로</code> / <code>Latest log</code>).</li>
 </ul>

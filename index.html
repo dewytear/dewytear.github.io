@@ -531,7 +531,7 @@
             ko: {
                 recent: '최근 문서', related: '연관 문서',
                 expandAll: '모두 펼치기', collapseAll: '모두 접기',
-                worklogRecent: '최근 로그로',
+                worklogRecent: '최근 로그로', worklogBack: '이전 페이지로',
                 searchPh: '제목 · 태그 · 개념 · 본문을 검색…',
                 cosmosSub: '지식 인덱스의 연관 관계를 3차원 그래프로 — 드래그 회전 · 휠 확대 · 점을 클릭하면 그 문서로',
                 cosmosLoading: '지식 인덱스를 불러오는 중…',
@@ -606,7 +606,7 @@
             en: {
                 recent: 'Recent Docs', related: 'Related Docs',
                 expandAll: 'Expand all', collapseAll: 'Collapse all',
-                worklogRecent: 'Latest log',
+                worklogRecent: 'Latest log', worklogBack: 'Back',
                 searchPh: 'Search titles · tags · concepts · full text…',
                 cosmosSub: 'The knowledge index as a 3D graph — drag to rotate · wheel to zoom · click a dot to open it',
                 cosmosLoading: 'Loading the knowledge index…',
@@ -3098,26 +3098,48 @@
         function expandAll(){ setAllBranches(false); }
         function collapseAll(){ setAllBranches(true); }
 
-        // Jump to the newest Work Log entry. The list authors days in
-        // chronological order, so the last <a> in the Work Log branch is the
-        // most recent log. Collapse every date, expand only that day's
-        // ancestor chain, reveal it in the sidebar, and open the doc.
+        // The page we were on when the Work Log jump button was last pressed —
+        // null means "not currently jumped", so the next press is a fresh jump.
+        var worklogJumpReturn = null;
+        // Toggle the newest Work Log entry. First press: remember the current
+        // page, collapse every date, expand only the newest day's ancestor
+        // chain, reveal it, and open the doc. Press again while still on that
+        // log: collapse Work Log and return to the page we came from.
+        // (The list authors days chronologically, so the last <a> is newest.)
         function jumpRecentWorklog(ev){
             if(ev){ ev.stopPropagation(); }   // don't toggle the branch
             var wl = document.querySelector('#navigation li.nav-branch[data-cat="Work Log"]');
             if(!wl){ return; }
-            wl.querySelectorAll('.nav-branch').forEach(function(li){ li.classList.add('collapsed'); });
             var links = wl.querySelectorAll('a[href^="#!"]');
             var last = links[links.length - 1];
             if(!last){ return; }
+            var target = last.getAttribute('href');   // '#!<name>' — what route() expects
+            var btn = document.querySelector('#navigation .nav-jump');
+            var collapseAllWl = function(){
+                wl.querySelectorAll('.nav-branch').forEach(function(li){ li.classList.add('collapsed'); });
+            };
+            // Second press on the newest log → collapse and go back.
+            if(worklogJumpReturn !== null && location.hash === target){
+                collapseAllWl();
+                wl.classList.add('collapsed');
+                var back = worklogJumpReturn;
+                worklogJumpReturn = null;
+                if(btn){ btn.classList.remove('is-back'); btn.title = STR('worklogRecent'); btn.setAttribute('aria-label', STR('worklogRecent')); }
+                location.hash = (back && back.charAt(0) === '#') ? back : '#!search';
+                return;
+            }
+            // First press → remember where we are, then expand + open newest.
+            worklogJumpReturn = location.hash;
+            collapseAllWl();
             wl.classList.remove('collapsed');
             var el = last.parentNode;
             while(el && el !== wl){
                 if(el.classList && el.classList.contains('nav-branch')){ el.classList.remove('collapsed'); }
                 el = el.parentNode;
             }
+            if(btn){ btn.classList.add('is-back'); btn.title = STR('worklogBack'); btn.setAttribute('aria-label', STR('worklogBack')); }
             last.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            location.hash = last.getAttribute('href');   // '#!<name>' — what route() expects
+            location.hash = target;
         }
 
         // ---- Boot ----

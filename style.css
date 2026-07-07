@@ -1304,6 +1304,10 @@
         }
         #navigation .nav-title:hover .nav-jump{ opacity: 0.75; }
         #navigation .nav-jump:hover{ opacity: 1; transform: translateY(1px) scale(1.1); }
+        /* Jumped state: the glyph flips to point back up ("press again to
+           return") and takes the accent so the toggle reads at a glance. */
+        #navigation .nav-jump.is-back{ opacity: 1; color: var(--accent-ink); transform: rotate(180deg); }
+        #navigation .nav-jump.is-back:hover{ transform: rotate(180deg) scale(1.1); }
         /* Collapsed section: hide its children and rotate the caret. */
         #navigation .nav-branch.collapsed > ul{
             display: none;
@@ -2415,19 +2419,34 @@
         .about-photo{
             margin: 0;
             justify-self: center;
+            position: relative;        /* anchors the vignette overlay */
+            max-width: 230px;          /* hug the photo so ::after matches it */
+            line-height: 0;            /* drop the inline gap under the img */
+            transition: transform 0.3s ease;
+        }
+        .about-photo:hover{
+            transform: translateY(-4px) scale(1.02);
         }
         .about-photo img{
             display: block;
             width: 100%;
-            max-width: 230px;
             border-radius: 14px;
-            border: 1px solid var(--border);
             box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: box-shadow 0.3s ease;
         }
-        .about-photo img:hover{
-            transform: translateY(-4px) scale(1.02);
+        .about-photo:hover img{
             box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+        }
+        /* Soft edge: an inset vignette in the page bg is drawn OVER the photo
+           (an <img> hides inset box-shadow, so it lives on this overlay). The
+           rim melts into the page instead of reading as a crisp-edged mirror. */
+        .about-photo::after{
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 14px;
+            box-shadow: inset 0 0 20px 14px var(--bg);
+            pointer-events: none;
         }
         .about-eyebrow{
             margin: 0 0 4px;
