@@ -2477,7 +2477,7 @@
                     var v = grid[i], c = cells[i];
                     if(!v){ c.className = 'g2048-cell'; c.removeAttribute('style'); c.textContent = ''; continue; }
                     var idx = Math.round(Math.log(v) / Math.LN2);
-                    var alpha = Math.min(0.10 + 0.085 * (idx - 1), 0.92);
+                    var alpha = Math.min(0.30 + 0.065 * (idx - 1), 0.96);
                     c.className = 'g2048-cell filled';
                     c.style.background = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + alpha.toFixed(3) + ')';
                     c.style.borderColor = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + Math.min(alpha + 0.28, 1).toFixed(3) + ')';
