@@ -1291,6 +1291,19 @@
         }
         #navigation .nav-title:hover .folder-digest{ opacity: 0.75; }
         #navigation .folder-digest:hover{ opacity: 1; transform: scale(1.18); }
+        /* ⤓ "jump to the newest Work Log" — same low-key text glyph as the
+           folder-digest: quiet by default, wakes on hover. */
+        #navigation .nav-jump{
+            flex: 0 0 auto;
+            margin-left: 4px;
+            font-size: 13px;
+            line-height: 1;
+            opacity: 0.5;
+            cursor: pointer;
+            transition: opacity 0.15s ease, transform 0.15s ease;
+        }
+        #navigation .nav-title:hover .nav-jump{ opacity: 0.75; }
+        #navigation .nav-jump:hover{ opacity: 1; transform: translateY(1px) scale(1.1); }
         /* Collapsed section: hide its children and rotate the caret. */
         #navigation .nav-branch.collapsed > ul{
             display: none;
@@ -1313,10 +1326,11 @@
             letter-spacing: 0.05em;
             color: var(--text);
         }
-        /* Knowledge Graph entry: identical to every other menu item — only
-           the leading glyph (✦, the first letter) carries the accent, the
-           quietest possible cue. (The map entries dropped their glyph.) */
-        #navigation a[href="#!cosmos"]::first-letter{
+        /* The AI entries (Knowledge Graph / Knowledge Map): identical to every
+           other menu item — only the leading glyph (✦ / ❖, the first letter)
+           carries the accent, the quietest possible cue. */
+        #navigation a[href="#!cosmos"]::first-letter,
+        #navigation a[href="#!ai-map"]::first-letter{
             color: var(--accent-ink);
         }
         /* Level-0 category titles: the only prominent tier. (12px top —

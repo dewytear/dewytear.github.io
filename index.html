@@ -158,6 +158,14 @@
             ev.stopPropagation();   // don't toggle the branch
             location.hash = '#!folder:' + encodeURIComponent(el.getAttribute('data-section'));
         }
+        // ⤓ on the Work Log title — jumps to the newest log: collapses every
+        // other date, expands only the most recent day, then opens it.
+        function worklogJumpSpan(){
+            return '<span class="nav-jump" role="button" tabindex="0"'
+                 + ' title="' + STR('worklogRecent') + '" aria-label="' + STR('worklogRecent') + '"'
+                 + ' onclick="jumpRecentWorklog(event)"'
+                 + ' onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();jumpRecentWorklog(event);}">&#10515;</span>';
+        }
         function renderNodes(nodes, path){
             path = path || [];
             var html = '<ul>';
@@ -181,11 +189,14 @@
                              +   '<span class="ico-o">' + escapeHtml(node.iconOpen || node.icon) + '</span>'
                              + '</span>';
                     }
+                    var jumpSpan = (path.length === 0 && node.title === 'Work Log')
+                                 ? worklogJumpSpan() : '';
                     html += '<li class="nav-branch collapsed"' + catAttr + '>'
                          +  '<button type="button" class="nav-title" onclick="toggleBranch(this)">'
                          +  '<span class="nav-caret">&#9662;</span>'
                          +  '<span class="nav-title-text">' + deco + escapeHtml(label) + '</span>'
                          +  folderDigestSpan(childPath.join(' · '))
+                         +  jumpSpan
                          +  '</button>';
                     html += renderNodes(node.children, childPath);
                     html += '</li>';
@@ -520,6 +531,7 @@
             ko: {
                 recent: '최근 문서', related: '연관 문서',
                 expandAll: '모두 펼치기', collapseAll: '모두 접기',
+                worklogRecent: '최근 로그로',
                 searchPh: '제목 · 태그 · 개념 · 본문을 검색…',
                 cosmosSub: '지식 인덱스의 연관 관계를 3차원 그래프로 — 드래그 회전 · 휠 확대 · 점을 클릭하면 그 문서로',
                 cosmosLoading: '지식 인덱스를 불러오는 중…',
@@ -594,6 +606,7 @@
             en: {
                 recent: 'Recent Docs', related: 'Related Docs',
                 expandAll: 'Expand all', collapseAll: 'Collapse all',
+                worklogRecent: 'Latest log',
                 searchPh: 'Search titles · tags · concepts · full text…',
                 cosmosSub: 'The knowledge index as a 3D graph — drag to rotate · wheel to zoom · click a dot to open it',
                 cosmosLoading: 'Loading the knowledge index…',
@@ -3084,6 +3097,28 @@
         }
         function expandAll(){ setAllBranches(false); }
         function collapseAll(){ setAllBranches(true); }
+
+        // Jump to the newest Work Log entry. The list authors days in
+        // chronological order, so the last <a> in the Work Log branch is the
+        // most recent log. Collapse every date, expand only that day's
+        // ancestor chain, reveal it in the sidebar, and open the doc.
+        function jumpRecentWorklog(ev){
+            if(ev){ ev.stopPropagation(); }   // don't toggle the branch
+            var wl = document.querySelector('#navigation li.nav-branch[data-cat="Work Log"]');
+            if(!wl){ return; }
+            wl.querySelectorAll('.nav-branch').forEach(function(li){ li.classList.add('collapsed'); });
+            var links = wl.querySelectorAll('a[href^="#!"]');
+            var last = links[links.length - 1];
+            if(!last){ return; }
+            wl.classList.remove('collapsed');
+            var el = last.parentNode;
+            while(el && el !== wl){
+                if(el.classList && el.classList.contains('nav-branch')){ el.classList.remove('collapsed'); }
+                el = el.parentNode;
+            }
+            last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            location.hash = last.getAttribute('href');   // '#!<name>' — what route() expects
+        }
 
         // ---- Boot ----
         window.addEventListener('hashchange', route);
