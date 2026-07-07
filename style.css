@@ -671,7 +671,9 @@
             gap: 8px;
             padding: 8px;
             border-radius: 14px;
-            background: color-mix(in srgb, var(--bg-alt) 82%, var(--text) 5%);
+            /* opaque (the two mix percentages must sum to 100% or CSS makes
+               the result translucent — that leaked the orange bg through). */
+            background: color-mix(in srgb, var(--text) 5%, var(--bg-alt));
             border: 1px solid var(--border);
             touch-action: none;             /* let the board own swipes */
         }
@@ -683,7 +685,7 @@
             justify-content: center;
             text-align: center;
             line-height: 1.05;
-            background: color-mix(in srgb, var(--text) 6%, transparent);
+            background: color-mix(in srgb, var(--text) 9%, var(--bg-alt));
             border: 1px solid transparent;
             overflow: hidden;
             touch-action: none;   /* tiles are the actual touch target — iOS
