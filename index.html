@@ -12,9 +12,11 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="stylesheet" as="style" crossorigin
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script src="colors.js"></script>
-    <script src="graphviews.js"></script>
+    <!-- ?v= cache-buster: bump on any change to these files so browsers
+         (esp. iOS Safari, which caches past max-age) fetch the new version. -->
+    <link rel="stylesheet" href="style.css?v=2">
+    <script src="colors.js?v=2"></script>
+    <script src="graphviews.js?v=2"></script>
     </head>
 
 <body>
@@ -2449,19 +2451,23 @@
             if(!screen){ return; }
             var lang = (typeof currentLang === 'function') ? currentLang() : 'ko';
             var LAB = G2048_LADDER[lang] || G2048_LADDER.en;   // zh/ja → en labels
-            var N = 4, grid = new Array(N * N).fill(0), score = 0, won = false, over = false;
+            var N = 4, score = 0, won = false, over = false, animating = false, nextId = 1;
+            var SLIDE = 120;                       // ms; matches .g2048-tile transition
+            var board = [];                        // board[r][c] = tile | null
+            for(var r0 = 0; r0 < N; r0++){ board.push([null, null, null, null]); }
+            var tiles = [];                        // live tile objects {id,r,c,val,el,mergedFrom}
 
             var wrap = document.createElement('div');
             wrap.className = 'g2048';
-            var boardHtml = '';
-            for(var i = 0; i < N * N; i++){ boardHtml += '<div class="g2048-cell"></div>'; }
+            var wells = '';
+            for(var i = 0; i < N * N; i++){ wells += '<div class="g2048-cell"></div>'; }
             wrap.innerHTML =
                 '<div class="g2048-hud">'
               +   '<span class="g2048-score" aria-live="polite">0</span>'
               +   '<span class="g2048-best">' + STR('gameBest') + ' 0</span>'
               +   '<button type="button" class="g2048-new" title="' + STR('g2048New') + '" aria-label="' + STR('g2048New') + '">&#8635;</button>'
               + '</div>'
-              + '<div class="g2048-board">' + boardHtml + '</div>'
+              + '<div class="g2048-board">' + wells + '</div>'
               + '<div class="g2048-msg" hidden></div>';
             screen.appendChild(wrap);
             var cells = wrap.querySelectorAll('.g2048-cell');
@@ -2479,87 +2485,121 @@
                 if(mm){ return [+mm[1], +mm[2], +mm[3]]; }
                 return [255, 102, 0];
             }
-            function render(){
+            function styleTile(t){
                 var rgb = accentRGB(), cs = getComputedStyle(document.body);
                 var textCol = (cs.getPropertyValue('--text') || '#000').trim();
                 var bgCol = (cs.getPropertyValue('--bg') || '#fff').trim();
-                for(var i = 0; i < N * N; i++){
-                    var v = grid[i], c = cells[i];
-                    if(!v){ c.className = 'g2048-cell'; c.removeAttribute('style'); c.textContent = ''; continue; }
-                    var idx = Math.round(Math.log(v) / Math.LN2);
-                    var alpha = Math.min(0.30 + 0.065 * (idx - 1), 0.96);
-                    c.className = 'g2048-cell filled';
-                    c.style.background = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + alpha.toFixed(3) + ')';
-                    c.style.borderColor = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + Math.min(alpha + 0.28, 1).toFixed(3) + ')';
-                    c.style.color = alpha > 0.5 ? bgCol : textCol;
-                    c.innerHTML = '<span class="g2048-lab">' + escapeHtml(LAB[v] || String(v)) + '</span>'
-                                + '<span class="g2048-num">' + v + '</span>';
-                }
-                scoreEl.textContent = fmt(score);
-                bestEl.textContent = STR('gameBest') + ' ' + fmt(gameBestUpdate('g2048', score));
+                var idx = Math.round(Math.log(t.val) / Math.LN2);
+                var alpha = Math.min(0.30 + 0.065 * (idx - 1), 0.96);
+                var inner = t.el.firstChild;
+                inner.style.background = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + alpha.toFixed(3) + ')';
+                inner.style.borderColor = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + Math.min(alpha + 0.28, 1).toFixed(3) + ')';
+                inner.style.color = alpha > 0.5 ? bgCol : textCol;
+                inner.innerHTML = '<span class="g2048-lab">' + escapeHtml(LAB[t.val] || String(t.val)) + '</span>'
+                                + '<span class="g2048-num">' + t.val + '</span>';
             }
-            function spawn(){
+            // Position a tile over its background well. Reading the well's own
+            // offsets keeps tiles aligned to the grid at any size/gap. animate
+            // false → snap (initial paint / resize); true → CSS transition slides.
+            function place(t, animate){
+                var cell = cells[t.r * N + t.c];
+                if(!animate){ t.el.style.transition = 'none'; }
+                t.el.style.width = cell.offsetWidth + 'px';
+                t.el.style.height = cell.offsetHeight + 'px';
+                t.el.style.transform = 'translate(' + cell.offsetLeft + 'px,' + cell.offsetTop + 'px)';
+                if(!animate){ void t.el.offsetWidth; t.el.style.transition = ''; }
+            }
+            function newTile(r, c, val, isNew){
+                var el = document.createElement('div');
+                el.className = 'g2048-tile';
+                el.appendChild(document.createElement('div')).className = 'g2048-tile-inner';
+                boardEl.appendChild(el);
+                var t = { id: nextId++, r: r, c: c, val: val, el: el, mergedFrom: false };
+                styleTile(t); place(t, false);
+                tiles.push(t); board[r][c] = t;
+                if(isNew){ el.classList.add('spawn'); setTimeout(function(){ el.classList.remove('spawn'); }, 200); }
+                return t;
+            }
+            function spawnTile(){
                 var empt = [];
-                for(var i = 0; i < N * N; i++){ if(!grid[i]){ empt.push(i); } }
+                for(var r = 0; r < N; r++){ for(var c = 0; c < N; c++){ if(!board[r][c]){ empt.push([r, c]); } } }
                 if(!empt.length){ return; }
-                grid[empt[Math.floor(Math.random() * empt.length)]] = Math.random() < 0.9 ? 2 : 4;
+                var p = empt[Math.floor(Math.random() * empt.length)];
+                newTile(p[0], p[1], Math.random() < 0.9 ? 2 : 4, true);
             }
-            function lineIdx(dir, k){
-                var a = [];
-                for(var i = 0; i < N; i++){
-                    if(dir === 'left'){ a.push(k * N + i); }
-                    else if(dir === 'right'){ a.push(k * N + (N - 1 - i)); }
-                    else if(dir === 'up'){ a.push(i * N + k); }
-                    else { a.push((N - 1 - i) * N + k); }
-                }
-                return a;
-            }
-            function slide(vals){
-                var arr = vals.filter(function(x){ return x; }), gained = 0;
-                for(var i = 0; i < arr.length - 1; i++){
-                    if(arr[i] === arr[i + 1]){
-                        arr[i] *= 2; gained += arr[i];
-                        if(arr[i] === 2048){ won = true; }
-                        arr.splice(i + 1, 1);
-                    }
-                }
-                while(arr.length < N){ arr.push(0); }
-                var moved = arr.some(function(v, j){ return v !== vals[j]; });
-                return { line: arr, gained: gained, moved: moved };
+            function repositionAll(){ for(var i = 0; i < tiles.length; i++){ place(tiles[i], false); } }
+
+            var VEC = { left: [0, -1], right: [0, 1], up: [-1, 0], down: [1, 0] };
+            function inB(r, c){ return r >= 0 && r < N && c >= 0 && c < N; }
+            function farthest(r, c, v){
+                var pr = r, pc = c, nr = r + v[0], nc = c + v[1];
+                while(inB(nr, nc) && !board[nr][nc]){ pr = nr; pc = nc; nr += v[0]; nc += v[1]; }
+                return { far: [pr, pc], next: inB(nr, nc) ? [nr, nc] : null };
             }
             function movesLeft(){
-                for(var i = 0; i < N * N; i++){
-                    if(!grid[i]){ return true; }
-                    var x = i % N, y = (i / N) | 0;
-                    if(x < N - 1 && grid[i] === grid[i + 1]){ return true; }
-                    if(y < N - 1 && grid[i] === grid[i + N]){ return true; }
-                }
+                for(var r = 0; r < N; r++){ for(var c = 0; c < N; c++){
+                    var t = board[r][c]; if(!t){ return true; }
+                    if(c < N - 1 && board[r][c + 1] && board[r][c + 1].val === t.val){ return true; }
+                    if(r < N - 1 && board[r + 1][c] && board[r + 1][c].val === t.val){ return true; }
+                } }
                 return false;
             }
             function move(dir){
-                if(over){ return; }
-                var moved = false, gained = 0;
-                for(var k = 0; k < N; k++){
-                    var idxs = lineIdx(dir, k);
-                    var r = slide(idxs.map(function(ix){ return grid[ix]; }));
-                    if(r.moved){
-                        moved = true; gained += r.gained;
-                        r.line.forEach(function(v, j){ grid[idxs[j]] = v; });
+                if(over || animating){ return; }
+                var v = VEC[dir], rs = [0, 1, 2, 3], cs2 = [0, 1, 2, 3];
+                if(v[0] === 1){ rs = [3, 2, 1, 0]; }
+                if(v[1] === 1){ cs2 = [3, 2, 1, 0]; }
+                tiles.forEach(function(t){ t.mergedFrom = false; });
+                var moved = false, gained = 0, absorbed = [], upgraded = [];
+                rs.forEach(function(r){ cs2.forEach(function(c){
+                    var t = board[r][c]; if(!t){ return; }
+                    var f = farthest(r, c, v);
+                    var nt = f.next ? board[f.next[0]][f.next[1]] : null;
+                    if(nt && nt.val === t.val && !nt.mergedFrom){
+                        board[r][c] = null; t.r = nt.r; t.c = nt.c; place(t, true); absorbed.push(t);
+                        nt.val *= 2; nt.mergedFrom = true; upgraded.push(nt);
+                        score += nt.val; gained += nt.val; if(nt.val === 2048){ won = true; }
+                        moved = true;
+                    } else if(f.far[0] !== r || f.far[1] !== c){
+                        board[r][c] = null; board[f.far[0]][f.far[1]] = t;
+                        t.r = f.far[0]; t.c = f.far[1]; place(t, true); moved = true;
                     }
-                }
+                }); });
                 if(!moved){ return; }
-                score += gained;
-                spawn();
-                render();
-                if(won){ showMsg('2048! ' + STR('g2048New')); won = false; }
-                else if(!movesLeft()){ over = true; showMsg(STR('g2048Over')); }
+                scoreEl.textContent = fmt(score);
+                bestEl.textContent = STR('gameBest') + ' ' + fmt(gameBestUpdate('g2048', score));
+                animating = true;
+                setTimeout(function(){
+                    absorbed.forEach(function(t){
+                        if(t.el.parentNode){ t.el.parentNode.removeChild(t.el); }
+                        var i = tiles.indexOf(t); if(i >= 0){ tiles.splice(i, 1); }
+                    });
+                    upgraded.forEach(function(t){
+                        styleTile(t); t.el.classList.add('merged');
+                        setTimeout(function(){ t.el.classList.remove('merged'); }, 200);
+                    });
+                    spawnTile();
+                    animating = false;
+                    if(won){ showMsg('2048! ' + STR('g2048New')); won = false; }
+                    else if(!movesLeft()){ over = true; showMsg(STR('g2048Over')); }
+                }, SLIDE);
             }
             function showMsg(text){ msgEl.textContent = text; msgEl.hidden = false; }
             function hideMsg(){ msgEl.hidden = true; }
-            function newGame(){
-                grid = new Array(N * N).fill(0); score = 0; won = false; over = false;
-                hideMsg(); spawn(); spawn(); render();
+            function clearTiles(){
+                tiles.forEach(function(t){ if(t.el.parentNode){ t.el.parentNode.removeChild(t.el); } });
+                tiles = [];
+                for(var r = 0; r < N; r++){ board[r] = [null, null, null, null]; }
             }
+            function newGame(){
+                clearTiles(); score = 0; won = false; over = false; animating = false;
+                hideMsg();
+                scoreEl.textContent = '0';
+                bestEl.textContent = STR('gameBest') + ' ' + fmt(gameBestUpdate('g2048', 0));
+                spawnTile(); spawnTile();
+            }
+            var ro = null;
+            if(window.ResizeObserver){ ro = new ResizeObserver(function(){ repositionAll(); }); ro.observe(boardEl); }
 
             var searching = function(){ return screen.classList.contains('searching'); };
             function onKey(e){
@@ -2590,7 +2630,7 @@
             boardEl.addEventListener('touchend', onTEnd);
             wrap.querySelector('.g2048-new').addEventListener('click', function(e){ e.stopPropagation(); newGame(); });
             msgEl.addEventListener('click', newGame);
-            function cleanup(){ window.removeEventListener('keydown', onKey); }
+            function cleanup(){ window.removeEventListener('keydown', onKey); if(ro){ ro.disconnect(); } }
             wrap._cleanup = cleanup;
 
             newGame();

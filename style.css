@@ -289,27 +289,32 @@
         #sidebar::-webkit-scrollbar{
             display: none;                  /* Chrome / Edge / Safari */
         }
-        /* Content pane: slim scrollbar in theme colors */
+        /* Content pane: slim scrollbar in theme colors (search results share it) */
         #content-scroll,
-        article .carousel-stage{
+        article .carousel-stage,
+        #search-results{
             scrollbar-width: thin;
             scrollbar-color: var(--border) transparent;
         }
         #content-scroll::-webkit-scrollbar,
-        article .carousel-stage::-webkit-scrollbar{
+        article .carousel-stage::-webkit-scrollbar,
+        #search-results::-webkit-scrollbar{
             width: 6px;
         }
         #content-scroll::-webkit-scrollbar-track,
-        article .carousel-stage::-webkit-scrollbar-track{
+        article .carousel-stage::-webkit-scrollbar-track,
+        #search-results::-webkit-scrollbar-track{
             background: transparent;
         }
         #content-scroll::-webkit-scrollbar-thumb,
-        article .carousel-stage::-webkit-scrollbar-thumb{
+        article .carousel-stage::-webkit-scrollbar-thumb,
+        #search-results::-webkit-scrollbar-thumb{
             background: var(--border);
             border-radius: 99px;
         }
         #content-scroll::-webkit-scrollbar-thumb:hover,
-        article .carousel-stage::-webkit-scrollbar-thumb:hover{
+        article .carousel-stage::-webkit-scrollbar-thumb:hover,
+        #search-results::-webkit-scrollbar-thumb:hover{
             background: var(--accent);
         }
 
@@ -668,6 +673,7 @@
             aspect-ratio: 1 / 1;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);   /* equal rows → every cell square */
             gap: 8px;
             padding: 8px;
             border-radius: 14px;
@@ -688,10 +694,44 @@
             background: color-mix(in srgb, var(--text) 9%, var(--bg-alt));
             border: 1px solid transparent;
             overflow: hidden;
+            min-height: 0;        /* let the 1fr rows size the cell (square) */
             touch-action: none;   /* tiles are the actual touch target — iOS
                                      scrolls the page otherwise, eating swipes */
         }
-        .g2048-cell.filled{ font-weight: 800; }
+        /* Tile layer: absolutely placed over the wells; the outer element
+           translates (slide), the inner scales (spawn / merge pop) so the two
+           transforms don't fight. GPU-friendly: only transform/opacity move. */
+        .g2048-tile{
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.12s ease-out;
+            will-change: transform;
+            touch-action: none;
+        }
+        .g2048-tile-inner{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.05;
+            font-weight: 800;
+            border-radius: 9px;
+            border: 1px solid transparent;
+            overflow: hidden;
+        }
+        .g2048-tile.spawn .g2048-tile-inner{ animation: g2048-pop 0.16s ease-out; }
+        .g2048-tile.merged .g2048-tile-inner{ animation: g2048-merge 0.18s ease; }
+        @keyframes g2048-pop{ from{ transform: scale(0.3); opacity: 0.4; } to{ transform: scale(1); opacity: 1; } }
+        @keyframes g2048-merge{ 0%, 100%{ transform: scale(1); } 45%{ transform: scale(1.15); } }
+        @media (prefers-reduced-motion: reduce){
+            .g2048-tile{ transition: none; }
+            .g2048-tile.spawn .g2048-tile-inner,
+            .g2048-tile.merged .g2048-tile-inner{ animation: none; }
+        }
         .g2048-lab{ font-size: clamp(11px, 3.4vw, 15px); padding: 0 2px; word-break: keep-all; }
         .g2048-num{ font-size: 10px; font-weight: 700; opacity: 0.72;
                     margin-top: 2px; font-variant-numeric: tabular-nums; }
@@ -2212,6 +2252,11 @@
                 transform: translateX(-100%);
                 transition: transform 0.25s ease;
                 z-index: 1000;
+                /* Kill the fadeUp entrance here: it animates transform and
+                   would override translateX(-100%), flashing the drawer open
+                   then sliding it shut on load. The slide transition above
+                   still runs for real open/close. */
+                animation: none;
             }
             body.nav-open #sidebar{
                 transform: translateX(0);
