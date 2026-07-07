@@ -1,0 +1,25 @@
+<h2>2026-07-07 · News &amp; Articles 섹션 신설 + 첫 기사(미소스·루프드 트랜스포머)</h2>
+<p>AI World 아래 <strong>Claude와 같은 레벨</strong>로 <strong>News &amp; Articles</strong> System을 신설하고, 년도(2026) 하위에 첫 기사 문서를 넣었다. 하이젠버그 기고 「앤트로픽 미소스, 한국 기업들에 호재인 이유」를 출발점으로, 언급된 <strong>루프드 트랜스포머</strong> 기술을 조사·도식화했다. 4개 조사 에이전트를 병렬로 나눠(team) 기사 확인·기술 논문·미소스 맥락·코드 구조를 각각 맡겼다.</p>
+
+<h3>조사 (team 4병렬)</h3>
+<ul>
+    <li><strong>기사 확인</strong> — heisenberg.kr/claude-mythos(저자 DION, 2026-06-22) 실재 확인. 본문은 유료, 공개 &ldquo;1분 요약&rdquo;에서 루프드 트랜스포머 언급 대목을 원문 인용으로 확보.</li>
+    <li><strong>루프드 트랜스포머 기술</strong> — 가중치 공유 블록을 N회 반복하는 구조. 실재 arXiv 논문 검증(2502.05171 Huginn · 2311.12424 · 2301.13196 · 2409.15647 · 조상 1807.03819 Universal Transformer). 프렐류드→순환블록→코다 동작을 도식 근거로.</li>
+    <li><strong>미소스·한국 맥락</strong> — Fable 5/Mythos 5(2026-06-09) 2-tier 구조, 수출통제·해제, 삼성·SK하이닉스 투자·삼성 파운드리 칩 논의 확인. <strong>&ldquo;미소스=루프드&rdquo;는 앤트로픽 공식이 아닌 커뮤니티(OpenMythos) 추정</strong>임을 명시하도록 결정.</li>
+    <li><strong>코드 구조</strong> — list 노드 형태·물리 경로·doc-entries·CLUSTER_LABELS·SVG 규칙·i18n·validate 절차 정리.</li>
+</ul>
+
+<h3>변경</h3>
+<ul>
+    <li><strong>문서 신설</strong> — <a href="#!news-20260622-mythos-looped">미소스와 루프드 트랜스포머</a>(<code>ai/news/2026/news-20260622-mythos-looped</code>). <strong>사실·추정 분리형</strong> 서술: 기사 논지 → 기술 해설 → 한국 호재론(논평 표시) → 확인된 사실 → 추정·미확인(커뮤니티 추정 경고) → 출처. 사용자 요청대로 &ldquo;도식과 svg&rdquo;를 섬세하게: <strong>SVG 도식 2종</strong>(표준 스택 vs 루프드 대비 · 프렐류드→순환블록 ×N→코다 동작)을 <code>.d-*</code> 시맨틱 클래스로 작성(테마별 hex는 style.css, Safari 호환). 출처는 기사·검증 논문·커뮤니티 추정으로 구분 기록.</li>
+    <li><strong>list</strong> — AI World에 Claude 다음 형제로 <code>News &amp; Articles</code> 브랜치 + <code>2026</code> 하위 + 기사 노드(label_en 포함, 본문은 한국어만).</li>
+    <li><strong>인덱스</strong> — doc-entries.ko.json 엔트리 추가(개념: 루프드 트랜스포머·미소스·Anthropic·토큰비용·컨텍스트윈도우·온디바이스·잠재추론 — 모두 본문 실재), <code>build_index.py</code> 재생성(93편). 기사는 Anthropic·토큰비용·컨텍스트윈도우 개념으로 welcome·hnp-verify·hns-kitchen·skl-context와 연결(고립 아님).</li>
+    <li><strong>클러스터</strong> — 그래프는 <code>stats.clusters</code>(=CLUSTER_LABELS) 기반이라, 기사가 Knowledge Graph에 나오도록 <code>('AI · News &amp; Articles · 2026', 'News &amp; Articles')</code>를 ko·en 모두 등록. AI 지도(ko·en)의 <code>data-topics</code>·fallback 표 행도 추가(WARN 없이 정합).</li>
+</ul>
+
+<h3>검증</h3>
+<ul>
+    <li>list·doc-entries JSON 파싱 OK, <code>build_index.py --check</code> 드리프트 없음.</li>
+    <li><code>validate_all.py</code> <strong>0 ERROR</strong>(기존 WARN 12 유지, 새 WARN 없음). 새 INFO는 <code>label-without-en-body</code> 1건 — 라벨만 영문·본문은 한국어만이라 의도된 것(영문 본문은 추후 별도 PR).</li>
+    <li>헤드리스 Chrome 실측 — 데스크톱(1366)·모바일(390) 페이지·SVG 가로 오버플로 0. 도식 2종 명·암 테마 모두 정상(accent teal↔orange, 화살표·루프·라벨 정위치).</li>
+</ul>
