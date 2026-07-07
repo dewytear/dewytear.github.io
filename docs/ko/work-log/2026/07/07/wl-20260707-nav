@@ -16,6 +16,7 @@
     <li><strong>검색 결과 스크롤바 통일</strong> — 홈 검색 결과(<code>#search-results</code>, 자체 <code>overflow-y:auto</code>)가 기본 UA 스크롤바라 본문과 달라 보이던 것을, 본문 <code>#content-scroll</code>의 슬림 테마 스크롤바 grouped selector에 <code>#search-results</code>를 추가해 동일하게(6px·<code>--border</code> thumb·hover <code>--accent</code>).</li>
     <li><strong>모바일 드로어 flash 제거</strong> — 세로 진입 시 좌측 드로어가 잠깐 열렸다 닫히던 것. 원인은 <code>#sidebar</code>의 <code>fadeUp</code> 진입 애니메이션이 <code>transform</code>을 구동해 드로어 숨김(<code>translateX(-100%)</code>)을 덮어썼기 때문 → <code>@media(max-width:800px)</code>에서 <code>#sidebar{ animation:none }</code>으로 처음부터 숨김(열기/닫기 슬라이드는 유지).</li>
     <li><strong>CSS/JS 캐시 무효화</strong> — <code>style.css</code>·<code>colors.js</code>·<code>graphviews.js</code>를 버전 쿼리(<code>?v=2</code>)로 링크. iOS 사파리가 <code>max-age</code>를 넘겨 캐시하는 탓에 최근 수정(2048 보드 등)이 기기에 반영되지 않던 문제 해결 — 이후 에셋 변경 시 이 숫자를 올린다.</li>
+    <li><strong>검색 결과 바깥 클릭 닫기(입력값 유지)</strong> — 결과가 떠 있을 때 검색창 밖(보드·빈 곳)을 클릭하면 결과가 닫히고 입력한 단어는 유지, 검색창을 다시 포커스하면 복원. "결과 열림"을 단일 상태로 삼아 <code>#search-results.open</code>과 <code>.search-screen.searching</code>(2048 보드 물러남)을 <code>setSearchShown()</code>으로 lockstep. <code>#search-results:not(.open){display:none}</code>로 innerHTML·값 유지한 채 숨김, <code>.search-screen</code> pointerdown(바깥) 닫기 + input focus 복원, 백그라운드 재렌더는 <code>.open</code>일 때만.</li>
 </ul>
 
 <h3>결과</h3>
