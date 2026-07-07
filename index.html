@@ -14,7 +14,7 @@
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
     <!-- ?v= cache-buster: bump on any change to these files so browsers
          (esp. iOS Safari, which caches past max-age) fetch the new version. -->
-    <link rel="stylesheet" href="style.css?v=7">
+    <link rel="stylesheet" href="style.css?v=8">
     <script src="colors.js?v=2"></script>
     <script src="graphviews.js?v=2"></script>
     </head>
@@ -2041,11 +2041,10 @@
         }
         // Draw the faint Score watermark (existing style) plus a smaller BEST
         // under it, in the game's accent color. Used by every canvas game.
-        function drawScoreBest(ctx, W, H, col, mode, score){
-            var best = gameBestUpdate(mode, score);
-            // Vertically center the watermark in the empty band between the top
-            // masthead title and the search heading, so it never collides with
-            // either (esp. in short landscape). Falls back to 0.42H.
+        // Y for the big score watermark: vertically centered in the empty band
+        // between the top masthead title and the search heading, so it never
+        // collides with either (esp. short landscape). Falls back to 0.42H.
+        function gameWatermarkY(ctx, H){
             var y = H * 0.42;
             var mh = document.querySelector('#masthead');
             var sc = document.querySelector('.search-core');
@@ -2055,22 +2054,27 @@
                 var stop = sc.getBoundingClientRect().top - cr.top;
                 if(stop > mb){ y = (mb + stop) / 2; }
             }
-            ctx.textBaseline = 'middle';
+            return y;
+        }
+        function drawScoreBest(ctx, W, H, col, mode, score){
+            var best = gameBestUpdate(mode, score);
+            var y = gameWatermarkY(ctx, H);
             var sw = 0;
             if(score > 0){
                 ctx.globalAlpha = 0.08; ctx.fillStyle = col;
                 ctx.font = '800 120px ' + GAME_FONT;
-                ctx.textAlign = 'center';
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
                 ctx.fillText(score, W / 2, y);
                 sw = ctx.measureText(String(score)).width;
             }
             if(best > 0){
                 ctx.globalAlpha = 0.22; ctx.fillStyle = col;
                 ctx.font = '800 15px ' + GAME_FONT;
-                // BEST sits on the same line, just right of the score number.
-                ctx.textAlign = 'left';
-                ctx.fillText(STR('gameBest') + ' ' + best, W / 2 + sw / 2 + 12, y);
-                ctx.textAlign = 'center';
+                // Same line, right of the score, baseline aligned to the score's
+                // bottom (≈ +0.36·fontSize below the middle baseline).
+                ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+                ctx.fillText(STR('gameBest') + ' ' + best, W / 2 + sw / 2 + 12, y + 120 * 0.36);
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
             }
             ctx.globalAlpha = 1;
         }
@@ -2451,10 +2455,10 @@
                     ctx.fillStyle = col;
                     ctx.font = '600 13px ' + GAME_FONT;
                     ctx.textAlign = 'center';
-                    // Just above the search field — clear of the top title and
-                    // near where you'd tap empty space to fly.
-                    var php = st.paddle();
-                    ctx.fillText(STR('planeHint'), st.W / 2, php ? php.y - 20 : st.H * 0.72);
+                    // Same spot the score watermark uses (between the top title
+                    // and the search heading) — the hint only shows at score 0,
+                    // the watermark only at score>0, so they never clash.
+                    ctx.fillText(STR('planeHint'), st.W / 2, gameWatermarkY(st.ctx, st.H));
                 }
                 // The plane: a folded-paper triangle tilted by its climb rate.
                 var ang = Math.max(-0.5, Math.min(0.7, plane.vy * 0.09));

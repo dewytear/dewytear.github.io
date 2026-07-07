@@ -789,8 +789,12 @@
             /* Square sized by a viewport-height proportion (relative → adapts to
                any phone; no fixed-px buffer). Replaces flex height:100%, which
                collapsed to ~0 on iOS Safari (percent height vs flex-grow parent). */
+            /* Fit below the field: subtract the fixed chrome (masthead + field
+               + gaps + margins ≈ 220px) from the viewport height so the board
+               never overflows the bottom on short landscape phones. Verified
+               375/390/430 heights with a headless browser. */
             .g2048-board{
-                width: min(80vw, 54dvh);
+                width: min(80vw, calc(100dvh - 220px));
                 height: auto;
                 max-width: 86vw;
             }
