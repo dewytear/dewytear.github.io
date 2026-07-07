@@ -630,10 +630,7 @@
             position: relative;             /* positioned (not absolute) so it
                                                paints above the ambient canvas */
             margin: 0 auto;
-            /* As large as the free vertical space allows (min 160px), capped at
-               340/86vw. Shrinks in short/landscape viewports so it never covers
-               the field or overflows. */
-            width: min(86vw, 340px, max(160px, calc(100dvh - 220px)));
+            width: min(86vw, 340px);        /* relative; no fixed vh buffer */
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -766,15 +763,46 @@
            strip on the right so it doesn't eat the scarce vertical space, and
            let the board grow taller. Tablets (height ≥ 768) and desktop are
            excluded by max-height. */
+        /* Phone-like landscape (short height): dock goes vertical on the right
+           (aligned to the music button's center), HUD becomes a right-aligned
+           vertical column beside the board, and the board fills the free
+           vertical height via flexbox — no fixed px, adapts to any phone. */
         @media (orientation: landscape) and (max-height: 520px){
+            /* Dock centered on the same x as #music-btn (right:22px, w:54px →
+               center 49px from the right). Derived from those constants, so it
+               tracks the button on every phone rather than a viewport guess. */
             .game-dock{
-                left: auto; right: 10px; bottom: auto; top: 50%;
-                transform: translateY(-50%);
+                left: auto; bottom: auto; top: 50%;
+                right: calc(22px + 27px);
+                transform: translate(50%, -50%);
                 flex-direction: column;
             }
-            .search-screen.g2048-on{ padding-bottom: 12px; }
-            .g2048{ width: min(86vw, max(180px, calc(100dvh - 150px))); gap: 6px; }
-            .g2048-hud .g2048-score{ font-size: 24px; }
+            .search-screen.g2048-on{ justify-content: flex-start; padding-bottom: 16px; }
+            .search-screen.g2048-on .search-core{ flex: 0 0 auto; }
+            .g2048{
+                flex: 1 1 auto;
+                min-height: 0;
+                width: 100%;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                gap: 16px;
+            }
+            .g2048-board{
+                flex: 0 1 auto;
+                width: auto;
+                height: 100%;
+                max-width: 86vw;
+            }
+            .g2048-hud{
+                flex: 0 0 auto;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 16px;
+                text-align: right;
+            }
+            .g2048-hud .g2048-best,
+            .g2048-hud .g2048-new{ margin: 0; }
         }
         /* A single symmetric swell (peak at 50%) with ease-in-out gives a
            smooth, steady in-and-out with no jerk or pause. It pulses size AND
