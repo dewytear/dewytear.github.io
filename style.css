@@ -611,7 +611,11 @@
         /* ===== 지식 2048 board ===== */
         /* When 2048 is the active game the field slides to the top so the
            playable board owns the center; the head/sub collapse for room. */
-        .search-screen.g2048-on{ justify-content: flex-start; }
+        /* position:relative so the absolute board anchors to the search screen
+           (not #content, which .search-screen's static positioning would
+           otherwise hand it — the board landed off-screen on iOS). Only when
+           2048 is active, so the other games' canvas anchoring is untouched. */
+        .search-screen.g2048-on{ justify-content: flex-start; position: relative; }
         .search-screen.g2048-on .search-core{ margin-top: 4vh; }
         .search-screen.g2048-on .search-head,
         .search-screen.g2048-on .search-sub{ display: none; }
@@ -682,6 +686,8 @@
             background: color-mix(in srgb, var(--text) 6%, transparent);
             border: 1px solid transparent;
             overflow: hidden;
+            touch-action: none;   /* tiles are the actual touch target — iOS
+                                     scrolls the page otherwise, eating swipes */
         }
         .g2048-cell.filled{ font-weight: 800; }
         .g2048-lab{ font-size: clamp(11px, 3.4vw, 15px); padding: 0 2px; word-break: keep-all; }
