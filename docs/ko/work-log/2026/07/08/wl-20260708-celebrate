@@ -1,0 +1,24 @@
+<h2>2026-07-08 · 2048 세컨드 브레인 달성 축하 연출</h2>
+<p>지식 2048에서 2048(세컨드 브레인) 달성 시의 특별 축하 연출. 규칙대로 <strong>디자인 3안을 실제 렌더 영상과 함께</strong> 제시하고 사용자가 <strong>A+B 조합(문구는 A)</strong>을 골랐다: <em>계보 승천</em>(보드 위 사다리 라벨들이 승리 타일로 차례로 흡수, 타일이 부풀며 발광) → <em>지식그래프 탄생</em>(모든 타일이 입자로 흩어져 4클러스터 별자리로 재조립, 엣지 드로우-인 후 저속 궤도) → &ldquo;세컨드 브레인 탄생 — 타일들이 당신의 지식그래프가 되었습니다&rdquo;.</p>
+
+<h3>제시안 (프로토타입 녹화로 비교)</h3>
+<ul>
+    <li><strong>A. 지식그래프 탄생</strong> — 타일 입자가 위키 지식그래프 별자리로 재조립. 코스모스·그래프 뷰 정체성과 직결. <strong>(채택: 피날레+문구)</strong></li>
+    <li><strong>B. 계보 승천</strong> — 태그→개념→…→지식그래프가 승리 타일로 흡수되는 성장 서사. <strong>(채택: 도입부)</strong></li>
+    <li>C. 시냅스 불꽃 — 뉴런 발화 스파크 후 입자 뇌 실루엣. (미채택)</li>
+</ul>
+
+<h3>구현</h3>
+<ul>
+    <li><strong>celebrate() 시퀀스</strong> — 승리 분기가 <code>showMsg</code> 대신 호출. 보드 위 <code>.g2048-fx</code> 캔버스(DPR 대응, 타일 위·오버레이 아래)에서 2막 연출 후 <code>showWinMsg()</code>(제목+부제 2줄, <code>g2048WinTitle/g2048WinSub</code> STR 키 ko/en).</li>
+    <li><strong>색은 전부 테마 토큰 파생</strong> — 매 프레임 <code>--accent</code>를 읽어 <code>gvToHsl</code>로 기준 색상 추출, 클러스터 4색은 golden-angle(+137.5°) 오프셋(코스모스 월드 색 규칙과 동일 사상). 다크=틸 계열, 라이트=주황 계열로 자동 대응 — 하드코딩 hex 없음.</li>
+    <li><strong>승리 오버레이 .win 변형</strong> — 별자리가 보이도록 불투명 워시 대신 하단 그라디언트 + 하단 정렬 문구. 게임오버 오버레이는 기존 그대로.</li>
+    <li><strong>복원·정리</strong> — 오버레이 탭 시 <code>stopFx()</code>(rAF·타이머 취소, 캔버스 제거, 타일 opacity/transform 복원) 후 같은 보드로 계속. <code>newGame</code>·<code>cleanup</code>에도 연결. <code>prefers-reduced-motion</code>이면 연출 생략(기존 정책상 게임 자체가 안 뜨지만 방어 유지). 테스트 훅 <code>wrap._celebrate</code>는 기존 <code>_cleanup</code> 패턴을 따름.</li>
+</ul>
+
+<h3>검증</h3>
+<ul>
+    <li>헤드리스 Chrome E2E — 연출 구동→1막 캔버스 확인→2막 입자 픽셀 실측(getImageData)→2줄 문구 표시→탭 후 캔버스 제거·타일 복원(opacity 1)·계속 플레이 가능, 페이지 에러 0.</li>
+    <li>테마 파생색 실측 — 라이트에서 평균색이 난색 우세(주황 기준), 다크에서 틸 기준 클러스터. 양 테마 스크린샷 확보.</li>
+    <li><code>validate_all.py</code> 0 ERROR.</li>
+</ul>

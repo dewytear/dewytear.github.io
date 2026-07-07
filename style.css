@@ -764,6 +764,28 @@
         /* Only show the overlay when there's a message — a base display:flex
            would override the [hidden] attribute and blank the board. */
         .g2048-msg:not([hidden]){ display: flex; }
+        /* Celebration canvas — sits above the tiles, below the message. */
+        .g2048-fx{
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 4;
+            pointer-events: none;
+            border-radius: 14px;
+        }
+        /* Win variant: keep the constellation visible — no opaque wash, text
+           settles at the bottom over a soft gradient for legibility. */
+        .g2048-msg.win{
+            flex-direction: column;
+            gap: 4px;
+            justify-content: flex-end;
+            padding-bottom: 18px;
+            background: linear-gradient(to bottom, transparent 45%,
+                        color-mix(in srgb, var(--bg) 85%, transparent));
+        }
+        .g2048-msg-title{ font-size: 19px; font-weight: 900; color: var(--accent-ink, var(--accent)); }
+        .g2048-msg-sub{ font-size: 12px; font-weight: 600; color: var(--muted); }
         @media (max-width: 560px){
             .g2048{ width: min(90vw, 340px, max(160px, calc(100dvh - 210px))); }
         }

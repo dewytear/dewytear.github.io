@@ -14,7 +14,7 @@
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
     <!-- ?v= cache-buster: bump on any change to these files so browsers
          (esp. iOS Safari, which caches past max-age) fetch the new version. -->
-    <link rel="stylesheet" href="style.css?v=11">
+    <link rel="stylesheet" href="style.css?v=12">
     <script src="colors.js?v=2"></script>
     <script src="graphviews.js?v=2"></script>
     </head>
@@ -560,7 +560,9 @@
                 searchSubline: 'Claude Code · 플러그인 · 하네스 · 세컨드 브레인',
                 dockAria: '미니게임 선택',
                 g2048: '지식 2048', g2048Long: '지식 2048 — 타일을 합쳐 지식 단계를 키우기 (방향키·스와이프)',
-                g2048New: '새 게임', g2048Over: '게임 오버 — 눌러서 다시', g2048Win: '눌러서 계속', gameBest: 'BEST',
+                g2048New: '새 게임', g2048Over: '게임 오버 — 눌러서 다시', gameBest: 'BEST',
+                g2048WinTitle: '세컨드 브레인 탄생',
+                g2048WinSub: '타일들이 당신의 지식그래프가 되었습니다 — 눌러서 계속',
                 gBreakout: '벽돌깨기', gBreakoutDef: '벽돌깨기 (기본)',
                 gConcept: '개념 별똥별 받기', gConceptLong: '개념 별똥별 받기 — 받으면 그 개념으로 검색',
                 gPong: '퐁 랠리', gPongLong: '퐁 랠리 — AI 패들과 주고받기',
@@ -637,7 +639,9 @@
                 searchSubline: 'Claude Code · Plugins · Harness · Second Brain',
                 dockAria: 'Choose a mini game',
                 g2048: 'Knowledge 2048', g2048Long: 'Knowledge 2048 — merge tiles up the knowledge ladder (arrows / swipe)',
-                g2048New: 'New game', g2048Over: 'Game over — tap to restart', g2048Win: 'Tap to continue', gameBest: 'BEST',
+                g2048New: 'New game', g2048Over: 'Game over — tap to restart', gameBest: 'BEST',
+                g2048WinTitle: 'A Second Brain is born',
+                g2048WinSub: 'Your tiles became a knowledge graph — tap to continue',
                 gBreakout: 'Breakout', gBreakoutDef: 'Breakout (default)',
                 gConcept: 'Concept catch', gConceptLong: 'Concept catch — catching one searches it',
                 gPong: 'Pong rally', gPongLong: 'Pong rally — volley with an AI paddle',
@@ -2667,18 +2671,174 @@
                     });
                     spawnTile();
                     animating = false;
-                    if(won){ msgKind = 'win'; showMsg((LAB[2048] || '2048') + '! ' + STR('g2048Win')); won = false; }
+                    if(won){ msgKind = 'win'; celebrate(); won = false; }
                     else if(!movesLeft()){ over = true; msgKind = 'over'; showMsg(STR('g2048Over')); }
                 }, SLIDE);
             }
-            function showMsg(text){ msgEl.textContent = text; msgEl.hidden = false; }
-            function hideMsg(){ msgEl.hidden = true; }
+            function showMsg(text){ msgEl.classList.remove('win'); msgEl.textContent = text; msgEl.hidden = false; }
+            function hideMsg(){ msgEl.hidden = true; msgEl.classList.remove('win'); }
+            function showWinMsg(){
+                msgEl.innerHTML = '<span class="g2048-msg-title">' + escapeHtml(STR('g2048WinTitle')) + '</span>'
+                                + '<span class="g2048-msg-sub">' + escapeHtml(STR('g2048WinSub')) + '</span>';
+                msgEl.classList.add('win');
+                msgEl.hidden = false;
+            }
+
+            // ── Second Brain celebration ──────────────────────────────────
+            // Two acts on a canvas over the board: the ladder labels ascend
+            // into the 2048 tile (lineage absorbed), then every tile dissolves
+            // into particles that reassemble as a slowly-orbiting knowledge-
+            // graph constellation. Colors derive from the live --accent token
+            // (golden-angle hues, same idea as the cosmos world colors), so
+            // the show matches whichever theme is active.
+            var fxCanvas = null, fxRaf = 0, fxTimers = [];
+            function stopFx(){
+                if(fxRaf){ cancelAnimationFrame(fxRaf); fxRaf = 0; }
+                fxTimers.forEach(clearTimeout); fxTimers = [];
+                if(fxCanvas && fxCanvas.parentNode){ fxCanvas.parentNode.removeChild(fxCanvas); }
+                fxCanvas = null;
+                tiles.forEach(function(t){
+                    t.el.style.opacity = ''; t.el.style.transition = '';
+                    var inner = t.el.firstChild;
+                    inner.style.transform = ''; inner.style.transition = ''; inner.style.boxShadow = '';
+                });
+            }
+            function fxT(fn, ms){ fxTimers.push(setTimeout(fn, ms)); }
+            function celebrate(){
+                stopFx();
+                if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+                    showWinMsg(); return;
+                }
+                var W = boardEl.clientWidth, H = boardEl.clientHeight;
+                var DPR = Math.min(2, window.devicePixelRatio || 1);
+                fxCanvas = document.createElement('canvas');
+                fxCanvas.className = 'g2048-fx';
+                fxCanvas.width = W * DPR; fxCanvas.height = H * DPR;
+                boardEl.appendChild(fxCanvas);
+                var ctx = fxCanvas.getContext('2d');
+                function hue0(){
+                    var a = (getComputedStyle(document.body).getPropertyValue('--accent') || '#4db6ac').trim();
+                    return gvToHsl(a)[0];
+                }
+                var L = document.body.classList.contains('day') ? 46 : 64;
+                function col(h, a){ return 'hsla(' + h.toFixed(1) + ', 62%, ' + L + '%, ' + a + ')'; }
+                function centerOf(t){ return [t.el.offsetLeft + t.el.offsetWidth / 2, t.el.offsetTop + t.el.offsetHeight / 2]; }
+                function ease(k){ return 1 - Math.pow(1 - k, 3); }
+                var winT = null;
+                tiles.forEach(function(t){ if(t.val >= 2048 && (!winT || t.val > winT.val)){ winT = t; } });
+                if(!winT){ winT = tiles[tiles.length - 1]; }
+                var wc = centerOf(winT);
+
+                // Act 1 — lineage ascension: distinct ladder values on the
+                // board fly into the win tile, which swells and glows.
+                var vals = [];
+                tiles.forEach(function(t){ if(t !== winT && vals.indexOf(t.val) === -1){ vals.push(t.val); } });
+                vals.sort(function(a, b){ return a - b; });
+                var flights = [];
+                var winInner = winT.el.firstChild;
+                winInner.style.transition = 'transform 0.25s ease, box-shadow 0.25s ease';
+                vals.forEach(function(v, i){
+                    fxT(function(){
+                        var src = null;
+                        tiles.forEach(function(t){ if(!src && t.val === v){ src = t; } });
+                        if(!src){ return; }
+                        flights.push({ c: centerOf(src), t0: performance.now(), label: LAB[v] || String(v) });
+                        src.el.style.transition = 'transform 0.12s ease-out, opacity 0.4s ease';
+                        src.el.style.opacity = 0.25;
+                        winInner.style.transform = 'scale(' + (1 + 0.05 * (i + 1)) + ')';
+                        winInner.style.boxShadow = '0 0 ' + (8 + i * 4) + 'px color-mix(in srgb, var(--accent) 60%, transparent)';
+                    }, 400 + i * 240);
+                });
+                var act1End = 400 + vals.length * 240 + 400;
+
+                // Act 2 — constellation: particles leave the tiles and settle
+                // into 4 concept clusters with intra-cluster edges + a few
+                // cross-World bridges, then orbit slowly.
+                var CX = W / 2, CY = H / 2, R = Math.min(W, H);
+                var clusters = [
+                    { dh: 0,     x: -0.21 * R, y: -0.16 * R, n: 20 },
+                    { dh: 137.5, x:  0.23 * R, y: -0.12 * R, n: 15 },
+                    { dh: 275,   x: -0.16 * R, y:  0.22 * R, n: 13 },
+                    { dh: 52.5,  x:  0.19 * R, y:  0.19 * R, n: 12 }
+                ];
+                var nodes = [], parts = [], edges = [], born = 0;
+                clusters.forEach(function(cl){
+                    for(var i = 0; i < cl.n; i++){
+                        var a = Math.random() * 6.283, r = R * (0.03 + Math.random() * 0.13);
+                        nodes.push({ x: CX + cl.x + Math.cos(a) * r, y: CY + cl.y + Math.sin(a) * r * 0.8,
+                                     dh: cl.dh, cl: cl, s: 1.8 + Math.random() * 2, id: born++ });
+                    }
+                });
+                nodes.forEach(function(n){
+                    for(var k = 0; k < 2; k++){
+                        var m = nodes[Math.floor(Math.random() * nodes.length)];
+                        if(m !== n && (m.cl === n.cl || Math.random() < 0.06)){ edges.push([n, m]); }
+                    }
+                });
+                var srcs = tiles.length ? tiles : [winT];
+                nodes.forEach(function(n, i){
+                    var c = centerOf(srcs[i % srcs.length]);
+                    parts.push({ x0: c[0] + (Math.random() - 0.5) * 24, y0: c[1] + (Math.random() - 0.5) * 24, n: n });
+                });
+                var act2Start = 0;
+                fxT(function(){
+                    act2Start = performance.now();
+                    tiles.forEach(function(t){
+                        t.el.style.transition = 'transform 0.12s ease-out, opacity 0.6s ease';
+                        t.el.style.opacity = 0;
+                    });
+                }, act1End);
+                fxT(showWinMsg, act1End + 1900);
+
+                function frame(now){
+                    ctx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+                    var h0 = hue0();
+                    flights.forEach(function(f){
+                        var k = (now - f.t0) / 600; if(k < 0 || k >= 1){ return; }
+                        var e = ease(k);
+                        var x = f.c[0] + (wc[0] - f.c[0]) * e, y = f.c[1] + (wc[1] - f.c[1]) * e - Math.sin(k * 3.14) * H * 0.1;
+                        ctx.font = '700 ' + (12 * DPR) + 'px ' + getComputedStyle(document.body).fontFamily; ctx.textAlign = 'center';
+                        ctx.fillStyle = col(h0, 1 - k * 0.5);
+                        ctx.fillText(f.label, x * DPR, y * DPR);
+                        ctx.beginPath(); ctx.arc(x * DPR, (y + 7) * DPR, 2.2 * DPR, 0, 6.283);
+                        ctx.fill();
+                    });
+                    if(act2Start){
+                        var t2 = (now - act2Start) / 1000;
+                        var k2 = Math.min(1, Math.max(0, (t2 - 0.15) / 1.5)), e2 = ease(k2);
+                        var rot = t2 > 1.8 ? (t2 - 1.8) * 0.08 : 0;
+                        var cr = Math.cos(rot), sr = Math.sin(rot);
+                        var P = parts.map(function(p){
+                            var x = p.x0 + (p.n.x - p.x0) * e2, y = p.y0 + (p.n.y - p.y0) * e2;
+                            if(rot){ var dx = x - CX, dy = y - CY; x = CX + dx * cr - dy * sr; y = CY + dx * sr + dy * cr; }
+                            return [x, y];
+                        });
+                        if(k2 > 0.72){
+                            ctx.lineWidth = 1 * DPR;
+                            var ea = (k2 - 0.72) / 0.28 * 0.32;
+                            edges.forEach(function(ed){
+                                var A = P[ed[0].id], B = P[ed[1].id];
+                                ctx.strokeStyle = col(h0 + ed[0].dh, ea);
+                                ctx.beginPath(); ctx.moveTo(A[0] * DPR, A[1] * DPR); ctx.lineTo(B[0] * DPR, B[1] * DPR); ctx.stroke();
+                            });
+                        }
+                        parts.forEach(function(p, i){
+                            var tw = 0.75 + 0.25 * Math.sin(now / 320 + p.n.id);
+                            ctx.fillStyle = col(h0 + p.n.dh, 0.9 * tw * Math.max(0.15, e2));
+                            ctx.beginPath(); ctx.arc(P[i][0] * DPR, P[i][1] * DPR, p.n.s * DPR, 0, 6.283); ctx.fill();
+                        });
+                    }
+                    fxRaf = requestAnimationFrame(frame);
+                }
+                fxRaf = requestAnimationFrame(frame);
+            }
             function clearTiles(){
                 tiles.forEach(function(t){ if(t.el.parentNode){ t.el.parentNode.removeChild(t.el); } });
                 tiles = [];
                 for(var r = 0; r < N; r++){ board[r] = [null, null, null, null]; }
             }
             function newGame(){
+                stopFx();
                 clearTiles(); score = 0; won = false; over = false; animating = false;
                 msgKind = null;
                 hideMsg();
@@ -2720,10 +2880,11 @@
             msgEl.addEventListener('click', function(){
                 // Win overlay is a milestone, not an ending — dismiss and keep
                 // playing on the same board. Only game over restarts.
-                if(msgKind === 'win'){ msgKind = null; hideMsg(); return; }
+                if(msgKind === 'win'){ msgKind = null; stopFx(); hideMsg(); return; }
                 newGame();
             });
             function cleanup(){
+                stopFx();
                 window.removeEventListener('keydown', onKey);
                 boardEl.removeEventListener('touchstart', onTStart);
                 boardEl.removeEventListener('touchmove', onTMove);
@@ -2731,6 +2892,7 @@
                 if(ro){ ro.disconnect(); }
             }
             wrap._cleanup = cleanup;
+            wrap._celebrate = function(){ msgKind = 'win'; celebrate(); };
 
             newGame();
         };
