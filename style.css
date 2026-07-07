@@ -695,7 +695,9 @@
             justify-content: center;
             text-align: center;
             line-height: 1.05;
-            background: color-mix(in srgb, var(--text) 9%, var(--bg-alt));
+            /* Empty well tinted with the accent (warm in light / teal in dark)
+               so it matches the board instead of reading as a cool blue-grey. */
+            background: color-mix(in srgb, var(--accent) 16%, var(--bg-alt));
             border: 1px solid transparent;
             overflow: hidden;
             min-height: 0;        /* let the 1fr rows size the cell (square) */
@@ -777,27 +779,26 @@
                 transform: translate(50%, -50%);
                 flex-direction: column;
             }
-            .search-screen.g2048-on{ justify-content: flex-start; padding-bottom: 16px; }
-            .search-screen.g2048-on .search-core{ flex: 0 0 auto; }
-            .g2048{
-                flex: 1 1 auto;
-                min-height: 0;
-                width: 100%;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
-                gap: 16px;
-            }
+            .search-screen.g2048-on{ justify-content: center; padding-bottom: 16px; }
+            /* Only the board is in flow, so it centers on screen; the HUD is
+               absolutely placed to its left and doesn't shift it off-center. */
+            .g2048{ width: auto; }
+            /* Square sized by a viewport-height proportion (relative → adapts to
+               any phone; no fixed-px buffer). Replaces flex height:100%, which
+               collapsed to ~0 on iOS Safari (percent height vs flex-grow parent). */
             .g2048-board{
-                flex: 0 1 auto;
-                width: auto;
-                height: 100%;
+                width: min(80vw, 62dvh);
+                height: auto;
                 max-width: 86vw;
             }
             .g2048-hud{
-                flex: 0 0 auto;
+                position: absolute;
+                right: 100%;             /* sit just left of the centered board */
+                top: 50%;
+                transform: translateY(-50%);
+                margin-right: 16px;
                 flex-direction: column;
-                align-items: flex-end;
+                align-items: flex-end;   /* right-aligned toward the board */
                 gap: 16px;
                 text-align: right;
             }
