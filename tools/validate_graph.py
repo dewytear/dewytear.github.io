@@ -4,6 +4,16 @@ Checks operate purely on the index (docs[], stats.clusters) — no filesystem
 doc bodies are read here (see validate_docs.py for that). Findings are
 heuristics tuned for low false positives; only "dangling-ref" is an
 objective-breakage ERROR.
+
+Interpretation rule (see CLAUDE.md "지식 그래프 WARN 해석 규칙"):
+`isolated-doc`, `wrong-cluster`, and `generic-concept` are REVIEW SIGNALS, not
+defects. A sparsely-connected doc is often correct — some docs (sequential
+lecture/reference pages, already linked to neighbours via "folder") have no
+reason to share concepts with others. Do NOT silence these WARNs by adding
+concepts that are not genuinely in the doc's body: that distorts the graph and,
+because a single-shared-concept edge requires df<=3, bumping a borderline
+concept's df from 3 to 4 can sever a neighbour's only edge (whack-a-mole). Only
+enrich when a link is truly missing, and only with concepts real to the body.
 """
 import argparse
 import difflib
