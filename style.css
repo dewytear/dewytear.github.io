@@ -2277,6 +2277,16 @@
 
         /* ---- Responsive ---- */
         @media(max-width: 800px){
+            /* Guard: nothing may push the page wider than the viewport (e.g. a
+               stale landscape canvas width surviving an iOS rotation, which made
+               the home screen shift left with an empty gap on the right). `clip`
+               contains horizontal overflow WITHOUT creating a scroll container,
+               so vertical scroll and the sticky masthead stay intact. Wide
+               tables/diagrams keep their own overflow-x:auto wrappers. */
+            html, body{
+                overflow-x: clip;
+                max-width: 100%;
+            }
             #grid{
                 display: block;
                 padding-left: 0;   /* the sidebar becomes a drawer; no edge gap needed */

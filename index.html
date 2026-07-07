@@ -14,7 +14,7 @@
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
     <!-- ?v= cache-buster: bump on any change to these files so browsers
          (esp. iOS Safari, which caches past max-age) fetch the new version. -->
-    <link rel="stylesheet" href="style.css?v=9">
+    <link rel="stylesheet" href="style.css?v=10">
     <script src="colors.js?v=2"></script>
     <script src="graphviews.js?v=2"></script>
     </head>
@@ -119,7 +119,8 @@
                             section: path.join(' · '),
                             sectionL: dpath.join(' · '),
                             tags: tagsFor(node),
-                            model: node.model || ''   // optional per-doc override
+                            model: node.model || '',   // optional per-doc override
+                            nonum: !!node.nonum   // meta/nav page (지식지도 등) — 최근 문서에서 제외
                         };
                         DOCS.push(doc);
                         DOC_BY_NAME[doc.name] = doc;
@@ -193,7 +194,10 @@
                     }
                     var jumpSpan = (path.length === 0 && node.title === 'Work Log')
                                  ? worklogJumpSpan() : '';
-                    html += '<li class="nav-branch collapsed"' + catAttr + '>'
+                    // 최상위 대분류(AI·Douzone·Work Log 등, path.length===0)는 기본 펼침.
+                    // 그 하위(중첩) 브랜치는 종전처럼 collapsed로 시작.
+                    var branchCls = (path.length === 0) ? 'nav-branch' : 'nav-branch collapsed';
+                    html += '<li class="' + branchCls + '"' + catAttr + '>'
                          +  '<button type="button" class="nav-title" onclick="toggleBranch(this)">'
                          +  '<span class="nav-caret">&#9662;</span>'
                          +  '<span class="nav-title-text">' + deco + escapeHtml(label) + '</span>'
@@ -1506,6 +1510,10 @@
         // ---- Docs for a single tag ----
         function showTag(tag){
             var docs = TAG_INDEX[tag] || [];
+            // 결과가 하나뿐이면 목록을 건너뛰고 바로 그 문서로. location.replace로
+            // 현재 #!tag: 항목을 교체 → 문서에서 뒤로가기 시 태그로 되돌아왔다가
+            // 다시 문서로 튕기는 루프 방지.
+            if(docs.length === 1){ location.replace('#!' + docs[0].name); return; }
             var html = '<h2>' + escapeHtml(tag) + '</h2>'
                      + '<p class="tag-back"><a href="#!tags">&larr; All tags</a></p>'
                      + '<ul class="more-list">';
@@ -1903,6 +1911,29 @@
                 setTimeout(function(){ field.classList.remove('paddle-home'); }, 320);
             }
         }
+        // ---- Orientation-change re-measure ----
+        // iOS Safari fires 'resize' during a rotation while layout metrics are
+        // still the pre-rotation values; each game measures the container once
+        // per resize and can bake a stale (landscape) width into its canvas,
+        // leaving the portrait page wider than the viewport (content shifts
+        // left, empty gap on the right). After a rotation, re-run the measure
+        // once layout has settled, and drop any stale paddle drag offset. The
+        // CSS `overflow-x: clip` guard hides the symptom; this fixes the cause
+        // for the canvas games (accurate re-measure).
+        (function(){
+            function remeasure(){
+                paddleReset();
+                window.dispatchEvent(new Event('resize'));   // re-run each game's own resize()
+            }
+            function onRotate(){
+                // Double rAF catches the next painted frame; the delayed pass
+                // covers iOS still settling viewport metrics after the rotation.
+                requestAnimationFrame(function(){ requestAnimationFrame(remeasure); });
+                setTimeout(remeasure, 300);
+            }
+            window.addEventListener('orientationchange', onRotate);
+        })();
+
         function enableSearchPaddle(){
             var field = document.querySelector('.search-field');
             var screen = document.querySelector('.search-screen');
@@ -2713,8 +2744,14 @@
         var REPO_API = 'https://api.github.com/repos/dewytear/dewytear.github.io';
         var DOC_DATES_KEY = 'wikiDocDates.v1';
 
+        // 최근 문서 목록의 대상 — 메타/네비게이션 페이지(nonum: 지식지도 등)는 제외.
+        // 이름 하드코딩이 아니라 list의 구조 신호(nonum)로 거른다.
+        function recentDocs(){
+            return DOCS.filter(function(d){ return !d.nonum; });
+        }
+
         function morePageCount(){
-            return Math.max(1, Math.ceil(DOCS.length / MORE_PAGE_SIZE));
+            return Math.max(1, Math.ceil(recentDocs().length / MORE_PAGE_SIZE));
         }
 
         function renderMore(){
@@ -2722,7 +2759,7 @@
             if(morePage >= pages){ morePage = pages - 1; }
             var start = morePage * MORE_PAGE_SIZE;
             var html = '<h3 class="more-title">' + STR('recent') + '</h3><ul class="more-list">';
-            DOCS.slice(start, start + MORE_PAGE_SIZE).forEach(function(d){
+            recentDocs().slice(start, start + MORE_PAGE_SIZE).forEach(function(d){
                 var meta = d.sectionL + (d.date ? ' · ' + d.date.slice(0, 10) : '');
                 html += '<li><a href="#!' + d.name + '">'
                      +  '<span class="more-name">' + escapeHtml(d.label) + '</span>'
@@ -3363,6 +3400,9 @@
             document.body.classList.remove('nav-open');   // close mobile drawer
             var h = location.hash;
             var path = h ? h.substr(2) : '';               // strip "#!"
+            // Left the jumped Work Log page → restore the ⤓ icon to default.
+            // (On the jump's own navigation, hash === target, so it stays active.)
+            if(worklogJumpReturn !== null && h !== worklogJumpTarget){ clearWorklogJump(); }
             // Hide the "recent docs" module on the settings, tags and search screens.
             document.body.classList.toggle('settings-view', path === 'settings');
             document.body.classList.toggle('tags-view', path === 'tags');
@@ -3405,6 +3445,9 @@
 
         function setAllBranches(collapsed){
             document.querySelectorAll('#navigation .nav-branch').forEach(function(li){
+                // 최상위 대분류(data-cat, path.length===0)는 '모두 접기'에서도
+                // 열어둔다 — 대분류가 적어 전부 접히면 불편하므로.
+                if(collapsed && li.hasAttribute('data-cat')){ li.classList.remove('collapsed'); return; }
                 li.classList.toggle('collapsed', collapsed);
             });
         }
@@ -3414,6 +3457,21 @@
         // The page we were on when the Work Log jump button was last pressed —
         // null means "not currently jumped", so the next press is a fresh jump.
         var worklogJumpReturn = null;
+        // The newest-log hash the jump opened. route() compares against it so
+        // that leaving the log by ANY means (not just a second press) reverts
+        // the ⤓ icon to its default state.
+        var worklogJumpTarget = null;
+        // Revert the jump icon (⤓) to its resting state and clear the flags.
+        function clearWorklogJump(){
+            var btn = document.querySelector('#navigation .nav-jump');
+            if(btn){
+                btn.classList.remove('is-back');
+                btn.title = STR('worklogRecent');
+                btn.setAttribute('aria-label', STR('worklogRecent'));
+            }
+            worklogJumpReturn = null;
+            worklogJumpTarget = null;
+        }
         // Toggle the newest Work Log entry. First press: remember the current
         // page, collapse every date, expand only the newest day's ancestor
         // chain, reveal it, and open the doc. Press again while still on that
@@ -3436,13 +3494,13 @@
                 collapseAllWl();
                 wl.classList.add('collapsed');
                 var back = worklogJumpReturn;
-                worklogJumpReturn = null;
-                if(btn){ btn.classList.remove('is-back'); btn.title = STR('worklogRecent'); btn.setAttribute('aria-label', STR('worklogRecent')); }
+                clearWorklogJump();
                 location.hash = (back && back.charAt(0) === '#') ? back : '#!search';
                 return;
             }
             // First press → remember where we are, then expand + open newest.
             worklogJumpReturn = location.hash;
+            worklogJumpTarget = target;
             collapseAllWl();
             wl.classList.remove('collapsed');
             var el = last.parentNode;
