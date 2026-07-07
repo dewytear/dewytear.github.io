@@ -14,7 +14,7 @@
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
     <!-- ?v= cache-buster: bump on any change to these files so browsers
          (esp. iOS Safari, which caches past max-age) fetch the new version. -->
-    <link rel="stylesheet" href="style.css?v=10">
+    <link rel="stylesheet" href="style.css?v=11">
     <script src="colors.js?v=2"></script>
     <script src="graphviews.js?v=2"></script>
     </head>
@@ -560,7 +560,7 @@
                 searchSubline: 'Claude Code · 플러그인 · 하네스 · 세컨드 브레인',
                 dockAria: '미니게임 선택',
                 g2048: '지식 2048', g2048Long: '지식 2048 — 타일을 합쳐 지식 단계를 키우기 (방향키·스와이프)',
-                g2048New: '새 게임', g2048Over: '게임 오버 — 눌러서 다시', gameBest: 'BEST',
+                g2048New: '새 게임', g2048Over: '게임 오버 — 눌러서 다시', g2048Win: '눌러서 계속', gameBest: 'BEST',
                 gBreakout: '벽돌깨기', gBreakoutDef: '벽돌깨기 (기본)',
                 gConcept: '개념 별똥별 받기', gConceptLong: '개념 별똥별 받기 — 받으면 그 개념으로 검색',
                 gPong: '퐁 랠리', gPongLong: '퐁 랠리 — AI 패들과 주고받기',
@@ -637,7 +637,7 @@
                 searchSubline: 'Claude Code · Plugins · Harness · Second Brain',
                 dockAria: 'Choose a mini game',
                 g2048: 'Knowledge 2048', g2048Long: 'Knowledge 2048 — merge tiles up the knowledge ladder (arrows / swipe)',
-                g2048New: 'New game', g2048Over: 'Game over — tap to restart', gameBest: 'BEST',
+                g2048New: 'New game', g2048Over: 'Game over — tap to restart', g2048Win: 'Tap to continue', gameBest: 'BEST',
                 gBreakout: 'Breakout', gBreakoutDef: 'Breakout (default)',
                 gConcept: 'Concept catch', gConceptLong: 'Concept catch — catching one searches it',
                 gPong: 'Pong rally', gPongLong: 'Pong rally — volley with an AI paddle',
@@ -946,6 +946,11 @@
                 setTimeout(function(){ if(stage.isConnected){ gvRender(stage, kind); } }, 300);
                 return;
             }
+            // The dock pill wraps to two rows on narrow screens, so the CSS
+            // padding-top guess can fall short and let it cover the legend.
+            // Measure the real dock bottom and start the stage content there.
+            var dock = stage.parentElement && stage.parentElement.querySelector('.gv-dock');
+            if(dock){ stage.style.paddingTop = (dock.offsetTop + dock.offsetHeight + 14) + 'px'; }
             var model = gvModel();
             var legend = '<div class="gv-legend">' + model.clusters.map(function(c){
                 return '<span class="lg" style="color:' + c.color + '"><i></i>'
@@ -2540,6 +2545,7 @@
             var lang = (typeof currentLang === 'function') ? currentLang() : 'ko';
             var LAB = G2048_LADDER[lang] || G2048_LADDER.en;   // zh/ja → en labels
             var N = 4, score = 0, won = false, over = false, animating = false, nextId = 1;
+            var msgKind = null;                    // 'win' | 'over' while the overlay is up
             var SLIDE = 120;                       // ms; matches .g2048-tile transition
             var board = [];                        // board[r][c] = tile | null
             for(var r0 = 0; r0 < N; r0++){ board.push([null, null, null, null]); }
@@ -2566,24 +2572,16 @@
             boardEl.appendChild(msgEl);   // overlay lives inside the board so it aligns exactly
 
             function fmt(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
-            function accentRGB(){
-                var a = (getComputedStyle(document.body).getPropertyValue('--accent') || '#ff6600').trim();
-                var m = a.match(/^#([0-9a-f]{6})$/i);
-                if(m){ var n = parseInt(m[1], 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
-                var mm = a.match(/(\d+)[,\s]+(\d+)[,\s]+(\d+)/);
-                if(mm){ return [+mm[1], +mm[2], +mm[3]]; }
-                return [255, 102, 0];
-            }
             function styleTile(t){
-                var rgb = accentRGB(), cs = getComputedStyle(document.body);
-                var textCol = (cs.getPropertyValue('--text') || '#000').trim();
-                var bgCol = (cs.getPropertyValue('--bg') || '#fff').trim();
+                // Only the value ladder's *strength* (alpha %) is written inline;
+                // the actual colors resolve in CSS from theme tokens, so existing
+                // tiles follow day/night flips live instead of freezing.
                 var idx = Math.round(Math.log(t.val) / Math.LN2);
                 var alpha = Math.min(0.30 + 0.065 * (idx - 1), 0.96);
                 var inner = t.el.firstChild;
-                inner.style.background = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + alpha.toFixed(3) + ')';
-                inner.style.borderColor = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + Math.min(alpha + 0.28, 1).toFixed(3) + ')';
-                inner.style.color = alpha > 0.5 ? bgCol : textCol;
+                inner.style.setProperty('--ta', (alpha * 100).toFixed(1) + '%');
+                inner.style.setProperty('--tb', (Math.min(alpha + 0.28, 1) * 100).toFixed(1) + '%');
+                inner.classList.toggle('hi', alpha > 0.5);
                 inner.innerHTML = '<span class="g2048-lab">' + escapeHtml(LAB[t.val] || String(t.val)) + '</span>'
                                 + '<span class="g2048-num">' + t.val + '</span>';
             }
@@ -2634,7 +2632,7 @@
                 return false;
             }
             function move(dir){
-                if(over || animating){ return; }
+                if(over || animating || msgKind){ return; }   // overlay up → tap decides first
                 var v = VEC[dir], rs = [0, 1, 2, 3], cs2 = [0, 1, 2, 3];
                 if(v[0] === 1){ rs = [3, 2, 1, 0]; }
                 if(v[1] === 1){ cs2 = [3, 2, 1, 0]; }
@@ -2669,8 +2667,8 @@
                     });
                     spawnTile();
                     animating = false;
-                    if(won){ showMsg('2048! ' + STR('g2048New')); won = false; }
-                    else if(!movesLeft()){ over = true; showMsg(STR('g2048Over')); }
+                    if(won){ msgKind = 'win'; showMsg((LAB[2048] || '2048') + '! ' + STR('g2048Win')); won = false; }
+                    else if(!movesLeft()){ over = true; msgKind = 'over'; showMsg(STR('g2048Over')); }
                 }, SLIDE);
             }
             function showMsg(text){ msgEl.textContent = text; msgEl.hidden = false; }
@@ -2682,6 +2680,7 @@
             }
             function newGame(){
                 clearTiles(); score = 0; won = false; over = false; animating = false;
+                msgKind = null;
                 hideMsg();
                 scoreEl.textContent = '0';
                 bestEl.textContent = STR('gameBest') + ' ' + fmt(gameBestUpdate('g2048', 0));
@@ -2718,8 +2717,19 @@
             boardEl.addEventListener('touchmove', onTMove, { passive: false });
             boardEl.addEventListener('touchend', onTEnd);
             wrap.querySelector('.g2048-new').addEventListener('click', function(e){ e.stopPropagation(); newGame(); });
-            msgEl.addEventListener('click', newGame);
-            function cleanup(){ window.removeEventListener('keydown', onKey); if(ro){ ro.disconnect(); } }
+            msgEl.addEventListener('click', function(){
+                // Win overlay is a milestone, not an ending — dismiss and keep
+                // playing on the same board. Only game over restarts.
+                if(msgKind === 'win'){ msgKind = null; hideMsg(); return; }
+                newGame();
+            });
+            function cleanup(){
+                window.removeEventListener('keydown', onKey);
+                boardEl.removeEventListener('touchstart', onTStart);
+                boardEl.removeEventListener('touchmove', onTMove);
+                boardEl.removeEventListener('touchend', onTEnd);
+                if(ro){ ro.disconnect(); }
+            }
             wrap._cleanup = cleanup;
 
             newGame();
