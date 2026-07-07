@@ -35,6 +35,13 @@
     return (P && P.strings) || {};
   }
 
+  // Clamp v into [lo, hi]; if the range is inverted (box too small to hold
+  // both margins) fall back to the midpoint instead of producing NaN/garbage.
+  function clampRange(v, lo, hi) {
+    if (lo > hi) return (lo + hi) / 2;
+    return v < lo ? lo : v > hi ? hi : v;
+  }
+
   function mulberry32(a) {
     return function () {
       a |= 0;
@@ -48,7 +55,7 @@
   function svg(w, h, parts) {
     return (
       '<svg viewBox="0 0 ' + w + ' ' + h + '" role="img" ' +
-      'style="width:100%;height:auto;display:block" font-family="inherit">' +
+      'style="width:100%;height:100%;display:block" font-family="inherit">' +
       parts.join('') +
       '</svg>'
     );
@@ -111,7 +118,9 @@
     var ink = P.ink;
     var N = docs.length;
     var K = clusters.length;
-    var W = 760, H = 760, cx = W / 2, cy = H / 2, R = 285;
+    var W = P.W, H = P.H, cx = W / 2, cy = H / 2;
+    var LABEL_PAD = 120;
+    var R = Math.max(60, Math.min(W, H) / 2 - LABEL_PAD);
     var gap = (5 * Math.PI) / 180;
     var step = (2 * Math.PI - gap * K) / N;
     var ang = {};
@@ -166,6 +175,9 @@
       var mid = (span[0] + span[1]) / 2;
       var lx = cx + (R + 26) * Math.cos(mid), ly = cy + (R + 26) * Math.sin(mid);
       var anchor = Math.cos(mid) > 0.25 ? 'start' : Math.cos(mid) < -0.25 ? 'end' : 'middle';
+      var halfW = Math.max(8, (clusters[ci].label || '').length * 4);
+      lx = clampRange(lx, 8 + halfW, W - 8 - halfW);
+      ly = clampRange(ly, 14, H - 8);
       s.push(
         '<text x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" fill="' + ink.text +
         '" font-size="13" font-weight="600" text-anchor="' + anchor +
@@ -182,7 +194,10 @@
     var ink = P.ink;
     var st = strings(P);
     var K = clusters.length;
-    var W = 760, H = 760, cx = W / 2, cy = H / 2, R = 265, TH = 18;
+    var W = P.W, H = P.H, cx = W / 2, cy = H / 2;
+    var LABEL_PAD = 120;
+    var R = Math.max(60, Math.min(W, H) / 2 - LABEL_PAD);
+    var TH = 18;
     var i, j;
     var M = [];
     for (i = 0; i < K; i++) {
@@ -272,6 +287,9 @@
       var mid = (a0b + a1b) / 2;
       var lp = xy(mid, R + 22);
       var anchor = Math.cos(mid) > 0.25 ? 'start' : Math.cos(mid) < -0.25 ? 'end' : 'middle';
+      var halfW = Math.max(8, (clusters[i].label || '').length * 4);
+      lp[0] = clampRange(lp[0], 8 + halfW, W - 8 - halfW);
+      lp[1] = clampRange(lp[1], 14, H - 8);
       s.push(
         '<text x="' + lp[0].toFixed(1) + '" y="' + lp[1].toFixed(1) + '" fill="' + ink.text +
         '" font-size="13" font-weight="600" text-anchor="' + anchor +
@@ -286,7 +304,7 @@
   function figPacking(P) {
     var docs = P.docs, clusters = P.clusters, ink = P.ink;
     var st = strings(P);
-    var W = 980, H = 620;
+    var W = P.W, H = P.H;
     var s = [];
     var K = clusters.length;
     var i;
@@ -333,16 +351,20 @@
     var margin = 20;
     var innerW = W - margin * 2;
     var cy = H / 2;
-    var maxR = Math.min(H, W) / 2 - margin;
+    // Reserve room above (WORLD label) and below (cluster name + count
+    // labels) the galaxy circle so nothing sits outside the viewBox.
+    var TOPPAD = 44, BOTTOMPAD = 44;
+    var vertR = Math.max(40, H / 2 - TOPPAD - BOTTOMPAD);
+    var maxR = Math.max(40, Math.min(vertR, W / 2 - margin));
     var x = margin;
     for (i = 0; i < galaxyOrder.length; i++) {
       var share = galWeight[i] / totalWeight;
       var slotW = innerW * share;
-      var gr = Math.min(maxR, slotW / 2 - 10, H / 2 - 30);
-      gr = Math.max(gr, 60);
+      var gr = Math.min(maxR, slotW / 2 - 10);
+      gr = Math.max(gr, 40);
       var cgx = x + slotW / 2;
       // Keep the World label (drawn centered on cgx) inside the viewBox.
-      cgx = Math.max(margin + gr, Math.min(W - margin - gr, cgx));
+      cgx = clampRange(cgx, margin + gr, W - margin - gr);
       var cgy = cy;
       var gname = galaxyOrder[i] === 'all' || galaxyOrder[i] === 'default'
         ? null
@@ -353,8 +375,9 @@
         '" fill="' + ink.panel + '" stroke="' + ink.grid + '" stroke-width="1.5"/>'
       );
       if (gname) {
+        var wy = clampRange(cgy - gr + 26, 14, H - 8);
         s.push(
-          '<text x="' + cgx.toFixed(1) + '" y="' + (cgy - gr + 26).toFixed(1) + '" fill="' + ink.muted +
+          '<text x="' + cgx.toFixed(1) + '" y="' + wy.toFixed(1) + '" fill="' + ink.muted +
           '" font-size="15" font-weight="700" text-anchor="middle" letter-spacing="2">' +
           escapeHtml(gname.toUpperCase()) + ' WORLD</text>'
         );
@@ -365,17 +388,21 @@
       var k = 3.4;
       for (var mi = 0; mi < members.length; mi++) {
         var ci = members[mi];
-        radii[ci] = Math.max(26, k * Math.sqrt(counts[ci]) * 2.4);
+        // Cap the cluster circle so it (plus its label band below) stays
+        // inside the galaxy circle, which is itself bounded to the box.
+        radii[ci] = Math.max(18, Math.min(k * Math.sqrt(counts[ci]) * 2.4, gr - 34));
       }
       var centers = {};
       if (members.length === 1) {
-        centers[members[0]] = [cgx, cgy + 10];
+        var soloR = radii[members[0]];
+        var soloY = clampRange(cgy + 10, cgy - gr + soloR + 4, cgy + gr - soloR - 34);
+        centers[members[0]] = [cgx, soloY];
       } else {
         var maxRadius = 0;
         for (var mr = 0; mr < members.length; mr++) {
           if (radii[members[mr]] > maxRadius) maxRadius = radii[members[mr]];
         }
-        var ring = gr - maxRadius - 18;
+        var ring = Math.max(0, gr - maxRadius - 18);
         for (var n_ = 0; n_ < members.length; n_++) {
           var ci2 = members[n_];
           var t = -Math.PI / 2 + (2 * Math.PI * n_) / members.length;
@@ -413,13 +440,17 @@
             escapeHtml(doc.title) + '</title></circle>'
           );
         }
+        var lblHalfW = Math.max(8, (clusters[ciX].label || '').length * 3.5);
+        var lblX = clampRange(ccx, margin + lblHalfW, W - margin - lblHalfW);
+        var lblY1 = clampRange(ccy + cr + 13, 14, H - 8);
+        var lblY2 = clampRange(ccy + cr + 26, 14, H - 8);
         s.push(
-          '<text x="' + ccx.toFixed(1) + '" y="' + (ccy + cr + 13).toFixed(1) + '" fill="' + ink.text +
+          '<text x="' + lblX.toFixed(1) + '" y="' + lblY1.toFixed(1) + '" fill="' + ink.text +
           '" font-size="11.5" font-weight="600" text-anchor="middle">' +
           escapeHtml(clusters[ciX].label) + '</text>'
         );
         s.push(
-          '<text x="' + ccx.toFixed(1) + '" y="' + (ccy + cr + 26).toFixed(1) + '" fill="' + ink.muted +
+          '<text x="' + lblX.toFixed(1) + '" y="' + lblY2.toFixed(1) + '" fill="' + ink.muted +
           '" font-size="10.5" text-anchor="middle">' +
           escapeHtml(fmt(st.docsN || '{n}편', memberDocs.length)) + '</text>'
         );
@@ -489,14 +520,26 @@
       }
     }
 
-    var W = 900, H = 640;
+    var W = P.W, H = P.H;
+    // Concept-name labels sit ABOVE each node; leave enough top margin for
+    // the tallest label plus half its width on the sides so it never spills
+    // past the viewBox edges, whatever the box's aspect ratio.
+    var maxNameLen = 0;
+    for (i = 0; i < nodes.length; i++) {
+      if (nodes[i].length > maxNameLen) maxNameLen = nodes[i].length;
+    }
+    var PADX = clampRange(Math.max(50, maxNameLen * 4 + 20), 24, Math.max(24, W / 2 - 20));
+    var PADTOP = 40;
+    var PADBOTTOM = 40;
     var rng = mulberry32(42);
     function uniform(lo, hi) {
       return lo + rng() * (hi - lo);
     }
+    var spanX = Math.min(200, Math.max(20, W / 2 - PADX));
+    var spanY = Math.min(160, Math.max(20, H / 2 - PADTOP));
     var Pp = {};
     for (i = 0; i < nodes.length; i++) {
-      Pp[nodes[i]] = [W / 2 + uniform(-200, 200), H / 2 + uniform(-160, 160)];
+      Pp[nodes[i]] = [W / 2 + uniform(-spanX, spanX), H / 2 + uniform(-spanY, spanY)];
     }
     for (var iter = 0; iter < 320; iter++) {
       // repulsion
@@ -531,8 +574,8 @@
         var cn = nodes[i];
         Pp[cn][0] += (W / 2 - Pp[cn][0]) * 0.012;
         Pp[cn][1] += (H / 2 - Pp[cn][1]) * 0.012;
-        Pp[cn][0] = Math.min(W - 70, Math.max(70, Pp[cn][0]));
-        Pp[cn][1] = Math.min(H - 40, Math.max(40, Pp[cn][1]));
+        Pp[cn][0] = clampRange(Pp[cn][0], PADX, W - PADX);
+        Pp[cn][1] = clampRange(Pp[cn][1], PADTOP, H - PADBOTTOM);
       }
     }
 
@@ -563,8 +606,11 @@
         '" fill="' + clusters[dom].color + '" stroke="' + ink.surface + '" stroke-width="2"><title>' +
         escapeHtml(cn2) + ' · ' + escapeHtml(fmt(st.conceptIn || '{n}편에 등장', df[cn2])) + '</title></circle>'
       );
+      var nHalfW = Math.max(8, cn2.length * 4);
+      var nlx = clampRange(pos[0], nHalfW + 4, W - nHalfW - 4);
+      var nly = clampRange(pos[1] - r - 5, 12, H - 8);
       s.push(
-        '<text x="' + pos[0].toFixed(1) + '" y="' + (pos[1] - r - 5).toFixed(1) + '" fill="' + ink.text +
+        '<text x="' + nlx.toFixed(1) + '" y="' + nly.toFixed(1) + '" fill="' + ink.text +
         '" font-size="12" font-weight="600" text-anchor="middle">' + escapeHtml(cn2) + '</text>'
       );
     }
@@ -576,7 +622,13 @@
   function figArc(P) {
     var docs = P.docs, clusters = P.clusters, ink = P.ink, edges = P.edges;
     var N = docs.length;
-    var W = 1180, H = 420, base = H - 70, x0 = 40, x1 = W - 40;
+    var W = P.W, H = P.H;
+    // BOTTOMPAD holds the doc tick (14px) + gap + cluster label (at base+34);
+    // TOPPAD caps how tall an arc's apex may rise above the baseline.
+    var BOTTOMPAD = Math.max(50, Math.min(80, H * 0.19));
+    var TOPPAD = Math.max(16, H * 0.05);
+    var base = H - BOTTOMPAD;
+    var x0 = Math.max(24, Math.min(40, W * 0.05)), x1 = W - x0;
     var step = N > 1 ? (x1 - x0) / (N - 1) : 0;
     var X = {};
     var i;
@@ -590,9 +642,10 @@
         var tmp = xa; xa = xb; xb = tmp;
       }
       var r = (xb - xa) / 2;
+      var ry = Math.max(4, Math.min(r, base - TOPPAD));
       s.push(
         '<path d="M' + xa.toFixed(1) + ' ' + base + ' A' + r.toFixed(1) + ' ' +
-        Math.min(r, base - 24).toFixed(1) + ' 0 0 1 ' + xb.toFixed(1) + ' ' + base +
+        ry.toFixed(1) + ' 0 0 1 ' + xb.toFixed(1) + ' ' + base +
         '" fill="none" stroke="' + clusters[P.byName[a].clusterIndex].color +
         '" stroke-width="1" opacity="0.35"/>'
       );
@@ -614,8 +667,11 @@
       if (ci !== cur) {
         if (cur !== null) {
           var midx = (startx + X[prev]) / 2;
+          var alHalfW = Math.max(8, (clusters[cur].label || '').length * 3.5);
+          var alx = clampRange(midx, alHalfW + 4, W - alHalfW - 4);
+          var aly = clampRange(base + 34, base + 14, H - 8);
           s.push(
-            '<text x="' + midx.toFixed(1) + '" y="' + (base + 34) + '" fill="' + ink.muted +
+            '<text x="' + alx.toFixed(1) + '" y="' + aly.toFixed(1) + '" fill="' + ink.muted +
             '" font-size="10.5" font-weight="600" text-anchor="middle">' +
             escapeHtml(clusters[cur].label) + '</text>'
           );
@@ -637,8 +693,15 @@
     var posInOrder = {};
     var i;
     for (i = 0; i < N; i++) posInOrder[docs[i].name] = i;
-    var cell = 5.6, pad = 8;
-    var W = Math.round(N * cell + pad * 2), H = W;
+    var W = P.W, H = P.H;
+    var pad = 8, LABELPAD = 16;
+    // Fill the box: grow the cell to the largest square grid that fits,
+    // then center it so the border margin is even on every side.
+    var avail = Math.max(20, Math.min(W, H) - LABELPAD - pad * 2);
+    var cell = N > 0 ? Math.max(2, avail / N) : avail;
+    var gridSize = N * cell;
+    var offX = (W - gridSize) / 2;
+    var offY = (H - gridSize) / 2;
     var Sset = {};
     var Slist = [];
     for (i = 0; i < edges.length; i++) {
@@ -654,12 +717,12 @@
     });
 
     var s = [
-      '<rect x="' + pad + '" y="' + pad + '" width="' + (N * cell).toFixed(1) +
-      '" height="' + (N * cell).toFixed(1) + '" fill="' + ink.panel + '" rx="4"/>'
+      '<rect x="' + offX.toFixed(1) + '" y="' + offY.toFixed(1) + '" width="' + gridSize.toFixed(1) +
+      '" height="' + gridSize.toFixed(1) + '" fill="' + ink.panel + '" rx="4"/>'
     ];
     for (i = 0; i < N; i++) {
       s.push(
-        '<rect x="' + (pad + i * cell).toFixed(1) + '" y="' + (pad + i * cell).toFixed(1) +
+        '<rect x="' + (offX + i * cell).toFixed(1) + '" y="' + (offY + i * cell).toFixed(1) +
         '" width="' + (cell - 1).toFixed(1) + '" height="' + (cell - 1).toFixed(1) +
         '" fill="' + ink.grid + '" opacity="0.5"/>'
       );
@@ -668,7 +731,7 @@
       var ii = Slist[i][0], jj = Slist[i][1];
       var rowDoc = docs[ii], colDoc = docs[jj];
       s.push(
-        '<rect x="' + (pad + jj * cell).toFixed(1) + '" y="' + (pad + ii * cell).toFixed(1) +
+        '<rect x="' + (offX + jj * cell).toFixed(1) + '" y="' + (offY + ii * cell).toFixed(1) +
         '" width="' + (cell - 1).toFixed(1) + '" height="' + (cell - 1).toFixed(1) +
         '" fill="' + clusters[rowDoc.clusterIndex].color + '" style="cursor:pointer" data-doc="' +
         escapeHtml(rowDoc.name) + '"><title>' + escapeHtml(rowDoc.title) + ' ↔ ' +
@@ -680,7 +743,7 @@
       var n = 0;
       for (i = 0; i < N; i++) if (docs[i].clusterIndex === ci) n++;
       s.push(
-        '<rect x="' + (pad + b * cell).toFixed(1) + '" y="' + (pad + b * cell).toFixed(1) +
+        '<rect x="' + (offX + b * cell).toFixed(1) + '" y="' + (offY + b * cell).toFixed(1) +
         '" width="' + (n * cell).toFixed(1) + '" height="' + (n * cell).toFixed(1) +
         '" fill="none" stroke="' + clusters[ci].color + '" stroke-width="1.2" opacity="0.75"/>'
       );
@@ -708,6 +771,10 @@
     var P = prep(model);
     P.ink = model.ink || {};
     P.strings = model.strings || {};
+    var W = Math.max(280, (model && model.width) || 760);
+    var H = Math.max(280, (model && model.height) || W);
+    P.W = W;
+    P.H = H;
     var html = fn(P);
     mountEl.innerHTML = html;
     // Bind the click listener once per mount and re-read the latest model on

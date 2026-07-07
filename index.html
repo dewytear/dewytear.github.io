@@ -855,6 +855,7 @@
         // by graphviews.js. Choice sticks per browser.
         var GV_LS_KEY = 'graphView';
         var GV_OBS = null;   // theme watcher while a 2D view is mounted
+        var GV_RO = null;    // resize watcher while a 2D view is mounted
 
         function gvCurrentKind(){
             var v = null;
@@ -874,6 +875,7 @@
             var st = screen.querySelector('.gv-stage');
             if(st){ st.remove(); }
             if(GV_OBS){ GV_OBS.disconnect(); GV_OBS = null; }
+            if(GV_RO){ GV_RO.disconnect(); GV_RO = null; }
             if(kind === '3d' || !window.GraphViews){
                 var canvas = document.createElement('canvas');
                 canvas.className = 'cosmos-canvas';
@@ -894,6 +896,23 @@
                 gvRender(stage, kind);
             });
             GV_OBS.observe(document.body, { attributes: true, attributeFilter: ['class', 'style'] });
+            // Window resize, sidebar toggle, etc. resize the stage; re-render
+            // debounced so a drag doesn't thrash the layout engine.
+            if(window.ResizeObserver){
+                var gvResizeTimer = null;
+                GV_RO = new ResizeObserver(function(){
+                    if(gvResizeTimer){ clearTimeout(gvResizeTimer); }
+                    gvResizeTimer = setTimeout(function(){
+                        gvResizeTimer = null;
+                        if(!stage.isConnected){
+                            if(GV_RO){ GV_RO.disconnect(); GV_RO = null; }
+                            return;
+                        }
+                        gvRender(stage, kind);
+                    }, 120);
+                });
+                GV_RO.observe(stage);
+            }
         }
 
         function gvRender(stage, kind){
@@ -908,7 +927,10 @@
                      + '<span style="color:var(--muted)">' + escapeHtml(c.label) + '</span></span>';
             }).join('') + '</div>';
             stage.innerHTML = legend + '<div class="gv-mount"></div>';
-            GraphViews.render(kind, stage.querySelector('.gv-mount'), model);
+            var mount = stage.querySelector('.gv-mount');
+            model.width = Math.round(mount.clientWidth) || Math.round(stage.clientWidth) || 760;
+            model.height = Math.round(mount.clientHeight) || Math.max(320, stage.clientHeight - 60);
+            GraphViews.render(kind, mount, model);
         }
 
         // Normalize any css color to [h, s, l] via the canvas parser.

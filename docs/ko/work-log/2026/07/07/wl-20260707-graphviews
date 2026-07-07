@@ -27,4 +27,6 @@
 <ul>
     <li><strong>2D 뷰 다국어</strong> — packing 문서수·chord/concepts 툴팁의 한글 하드코딩(‘편·건·등장’, ‘성단’ 잔재)을 STRINGS 포맷 키(<code>gvDocsN·gvConceptIn·gvLinksN·gvCrossN</code>, ko/en)로 이관하고 모델에 주입. <code>render()</code>가 <code>model.strings</code>를 렌더러로 전달하도록 연결 — EN 모드에서 ‘12 docs·2 links’로 정상 표기(Playwright ko/en 확인).</li>
     <li><strong>지도 계층 도식 정렬</strong> — 지도 3종의 World→Domain→System→Document 도식을 두 열(AI·DOUZONE) 수직 정렬로 재작성: 각 계층 박스를 열 중심에 맞춰 연결선을 곧게 펴고, Document는 두 열을 아우르는 공유 박스로.</li>
+    <li><strong>NUL 구분자 정리</strong> — graphviews.js의 키 구분자 NUL(0x00) 8개를 U+001F로 교체(동작 동일, 파일이 바이너리로 오인되지 않게).</li>
+    <li><strong>2D 뷰 반응형화</strong>(OMC team, 파일 3분할) — 6개 뷰가 고정 viewBox라 크기가 제각각이던 문제 해결: 렌더러가 모델의 실측 <code>width×height</code>로 박스를 채우고(<code>svg</code> 100%×100%, 스테이지 flex 채움), <code>ResizeObserver</code>(디바운스 120ms)로 창 크기·사이드바 토글에 리플로우. 방사형은 라벨 폭까지 감안한 R 클램프, 나머지도 라벨 방향 여백을 둬 <strong>모든 텍스트·마크가 viewBox를 벗어나지 않게</strong>. Playwright 3해상도×6뷰(18조합) getBBox 검사 클리핑 0건·fill 100%·에러 0 확인.</li>
 </ul>

@@ -2687,20 +2687,32 @@
         .gv-stage{
             position: absolute;
             inset: 0;
-            overflow: auto;
+            overflow: hidden;
             padding: 130px 20px 24px;
             background: var(--bg);
+            display: flex;
+            flex-direction: column;
+        }
+        /* Mount point for the injected svg — flexes to fill whatever height
+           is left under the legend; min-height/width:0 let it actually
+           shrink to that remainder instead of sizing to content, which is
+           what lets graphviews.js measure a real clientHeight and the svg
+           fill it. */
+        .gv-mount{
+            flex: 1 1 auto;
+            min-height: 0;
+            min-width: 0;
         }
         .gv-stage svg{
             display: block;
-            margin: 0 auto;
-            max-width: 100%;
-            height: auto;
+            width: 100%;
+            height: 100%;
         }
         /* Legend row — cluster color swatch + label. The swatch itself
            (.lg i) is a plain square painted via currentColor; graphviews.js
            sets each swatch's color inline per cluster, so no hex lives here. */
         .gv-legend{
+            flex: 0 0 auto;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
