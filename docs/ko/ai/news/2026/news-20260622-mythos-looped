@@ -1,0 +1,122 @@
+<h2>앤트로픽 미소스와 루프드 트랜스포머 — 하이젠버그 기고 읽기</h2>
+<p>과학·기술 매체 <strong>하이젠버그</strong>에 기고된 「앤트로픽 미소스(Mythos), 한국 기업들에 호재인 이유」를 출발점으로, 기사가 지목한 핵심 기술 <strong>루프드 트랜스포머(Looped Transformer)</strong>가 무엇인지, 그리고 &ldquo;한국 기업에 호재&rdquo;라는 주장이 어디까지 <strong>확인된 사실</strong>이고 어디부터 <strong>추정</strong>인지를 정리한 문서입니다. 사실과 추정을 섞지 않는 것이 이 글의 목적이라, 검증된 것과 논평·추정을 구간마다 표시했습니다.</p>
+
+<div class="note">
+    <span class="nh">기사 정보 (출처)</span>
+    · 제목: <strong>앤트로픽 미소스(Mythos), 한국 기업들에 호재인 이유</strong><br>
+    · 매체: <strong>하이젠버그</strong>(heisenberg.kr) · 저자: <strong>DION(디온)</strong> · 게재: <strong>2026-06-22</strong><br>
+    · 원문: <a href="https://heisenberg.kr/claude-mythos/" target="_blank" rel="noopener">heisenberg.kr/claude-mythos</a> — 본문은 멤버십 유료, 아래 인용은 공개된 &ldquo;1분 요약&rdquo;에서 발췌.
+</div>
+
+<h3>기사의 논지</h3>
+<p>기사는 앤트로픽이 성능이 너무 강력해 일부를 봉인한 최상위 모델 &ldquo;미소스&rdquo; 안에 <strong>루프드 트랜스포머</strong>가 들어 있다고 보고, 그 구조의 효율 덕분에 <strong>클라우드 없이 기기에서 직접 도는 최고급 AI</strong>가 가능해지므로 디바이스 제조에 강한 한국 기업에 기회라고 주장합니다. 공개 요약의 핵심 대목은 다음과 같습니다(원문 그대로 인용).</p>
+<blockquote>&ldquo;그 안에 숨어 있다고 지목된 기술이 &lsquo;루프드 트랜스포머&rsquo;입니다. 기존 AI가 중간 사고를 글로 적어가며 푼다면, 이 구조는 아무것도 안 적고 같은 회로를 수십 번 머릿속에서만 곱씹습니다. 이렇게 되면 속도도 빨라지고 토큰 비용도 줄어듭니다. 특히 최근 논문 한 편이 이 방식으로 파라미터 절반짜리 모델이 일반 모델 수준에 거의 도달한다는 것을 처음으로 수학적으로 증명했습니다. 절반 크기로 같은 성능이면, 클라우드 없이 최고 수준의 AI가 직접 돌아갈 수 있다는 뜻입니다.&rdquo;</blockquote>
+<p class="scn-sub">— 하이젠버그, 「앤트로픽 미소스, 한국 기업들에 호재인 이유」 1분 요약 (2026-06-22)</p>
+
+<h3>루프드 트랜스포머란 — 한 블록을 반복하는 구조</h3>
+<p>보통의 트랜스포머는 <strong>서로 다른 가중치를 가진 층을 N개 쌓아</strong> 깊이를 만듭니다. 루프드 트랜스포머는 반대로 <strong>가중치를 공유하는 블록 하나를 N번 되풀이</strong>해서, 그 블록의 출력을 다시 입력으로 넣습니다. 층을 새로 쌓는 대신 같은 회로를 여러 번 통과시키는 셈이라, <strong>연산 깊이가 파라미터 수와 분리</strong>됩니다 — 작은 모델이 훨씬 깊은 스택을 흉내 낼 수 있습니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 342" role="img" aria-label="표준 트랜스포머는 서로 다른 층을 쌓고, 루프드 트랜스포머는 가중치를 공유하는 블록 하나를 여러 번 반복한다">
+    <text class="d-label sm" x="180" y="24" text-anchor="middle">표준 — 서로 다른 층을 쌓기</text>
+    <rect class="d-box soft" x="105" y="286" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="305" text-anchor="middle">입력 임베딩</text>
+    <line class="d-edge" x1="180" y1="286" x2="180" y2="272"/><polygon class="d-arrow" points="176,274 180,268 184,274"/>
+    <rect class="d-box" x="105" y="240" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="259" text-anchor="middle">층 &#952;&#8321;</text>
+    <line class="d-edge" x1="180" y1="240" x2="180" y2="226"/><polygon class="d-arrow" points="176,228 180,222 184,228"/>
+    <rect class="d-box" x="105" y="194" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="213" text-anchor="middle">층 &#952;&#8322;</text>
+    <line class="d-edge" x1="180" y1="194" x2="180" y2="180"/><polygon class="d-arrow" points="176,182 180,176 184,182"/>
+    <rect class="d-box" x="105" y="148" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="167" text-anchor="middle">층 &#952;&#8323;</text>
+    <line class="d-edge" x1="180" y1="148" x2="180" y2="134"/><polygon class="d-arrow" points="176,136 180,130 184,136"/>
+    <rect class="d-box" x="105" y="102" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="121" text-anchor="middle">층 &#952;&#8324;</text>
+    <line class="d-edge" x1="180" y1="102" x2="180" y2="88"/><polygon class="d-arrow" points="176,90 180,84 184,90"/>
+    <rect class="d-box soft" x="105" y="56" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="75" text-anchor="middle">출력</text>
+    <text class="d-sub" x="180" y="332" text-anchor="middle">깊이 = 파라미터 수 (층마다 다른 &#952;)</text>
+
+    <line class="d-edge dash" x1="360" y1="50" x2="360" y2="300"/>
+
+    <text class="d-label sm" x="540" y="24" text-anchor="middle">루프드 — 한 블록을 반복</text>
+    <rect class="d-box soft" x="465" y="286" width="150" height="30" rx="8"/><text class="d-label sm" x="540" y="305" text-anchor="middle">입력 임베딩 (프렐류드)</text>
+    <line class="d-edge accent" x1="540" y1="286" x2="540" y2="246"/><polygon class="d-arrow accent" points="536,248 540,242 544,248"/>
+    <rect class="d-box accent" x="470" y="150" width="140" height="94" rx="12"/><text class="d-label" x="540" y="192" text-anchor="middle">공유 블록 R</text><text class="d-sub" x="540" y="212" text-anchor="middle">같은 &#952; 재사용</text>
+    <path class="d-edge accent" d="M610 172 C672 168, 672 226, 612 224"/><polygon class="d-arrow accent" points="618,220 610,225 617,230"/>
+    <text class="d-sub" x="686" y="200" text-anchor="middle" transform="rotate(90 686 200)">&#215;N 반복</text>
+    <line class="d-edge accent" x1="540" y1="150" x2="540" y2="112"/><polygon class="d-arrow accent" points="536,114 540,108 544,114"/>
+    <rect class="d-box soft" x="465" y="80" width="150" height="30" rx="8"/><text class="d-label sm" x="540" y="99" text-anchor="middle">출력 (코다)</text>
+    <text class="d-sub" x="540" y="332" text-anchor="middle">깊이 &#8800; 파라미터 수 · 잠재공간에서 반복</text>
+</svg>
+<div class="d-cap">표준은 <strong>서로 다른 층을 한 번씩</strong> 쌓고, 루프드는 <strong>같은 블록 하나를 여러 번</strong> 통과시킨다.</div>
+</div>
+
+<p>최근 연구(아래 출처의 <em>Huginn</em> 계열)가 정리한 동작은 <strong>프렐류드(Prelude) → 순환 블록(Recurrent Block) → 코다(Coda)</strong>의 3단계입니다. 프렐류드가 입력을 잠재공간으로 임베딩하면(<code>e</code>), 순환 블록이 잠재상태 <code>s</code>를 <strong>매 반복마다 입력 <code>e</code>를 다시 섞어 가며</strong> 여러 번 갱신하고, 코다가 마지막 상태를 출력으로 되돌립니다. 반복 횟수는 고정이 아니라 <strong>입력 난도에 따라 달라질 수 있어</strong>(적응적 깊이), 어려운 문제일수록 더 오래 &ldquo;속으로 곱씹는&rdquo; 셈입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="루프드 트랜스포머의 동작: 프렐류드가 입력을 임베딩하고 순환 블록이 잠재상태를 매 반복 입력을 다시 주입하며 여러 번 갱신한 뒤 코다가 출력한다">
+    <rect class="d-box soft" x="16" y="104" width="96" height="44" rx="9"/><text class="d-label sm" x="64" y="130" text-anchor="middle">입력 토큰</text>
+    <line class="d-edge" x1="112" y1="126" x2="146" y2="126"/><polygon class="d-arrow" points="146,121 154,126 146,131"/>
+    <rect class="d-box" x="154" y="104" width="104" height="44" rx="9"/><text class="d-label sm" x="206" y="124" text-anchor="middle">P · 프렐류드</text><text class="d-sub" x="206" y="140" text-anchor="middle">임베딩 e</text>
+    <line class="d-edge accent" x1="258" y1="126" x2="300" y2="126"/><polygon class="d-arrow accent" points="300,121 308,126 300,131"/>
+    <rect class="d-box accent" x="308" y="78" width="164" height="96" rx="12"/><text class="d-label" x="390" y="118" text-anchor="middle">R · 순환 블록</text><text class="d-sub" x="390" y="138" text-anchor="middle">잠재상태 s&#7522; 반복</text>
+    <path class="d-edge accent" d="M472 100 C524 92, 524 60, 400 60 C360 60, 344 68, 340 76"/><polygon class="d-arrow accent" points="336,70 340,80 346,73"/>
+    <text class="d-sub" x="418" y="52" text-anchor="middle">&#215;N · 가중치 공유</text>
+    <path class="d-edge accent dash" d="M206 148 C206 200, 300 200, 340 174"/><polygon class="d-arrow accent" points="334,170 342,172 336,180"/>
+    <text class="d-sub" x="250" y="212" text-anchor="middle">매 반복 입력 e 재주입</text>
+    <line class="d-edge dash" x1="472" y1="150" x2="472" y2="196"/><polygon class="d-arrow" points="468,190 472,198 476,190"/>
+    <text class="d-sub" x="560" y="200" text-anchor="middle">KL &lt; &#949; 이면 종료 (적응적 깊이)</text>
+    <line class="d-edge accent" x1="472" y1="118" x2="512" y2="118"/><polygon class="d-arrow accent" points="512,113 520,118 512,123"/>
+    <rect class="d-box" x="520" y="96" width="96" height="44" rx="9"/><text class="d-label sm" x="568" y="116" text-anchor="middle">C · 코다</text><text class="d-sub" x="568" y="132" text-anchor="middle">출력</text>
+    <line class="d-edge" x1="616" y1="118" x2="650" y2="118"/><polygon class="d-arrow" points="650,113 658,118 650,123"/>
+    <rect class="d-box soft" x="658" y="96" width="54" height="44" rx="9"/><text class="d-label sm" x="685" y="122" text-anchor="middle">다음</text>
+</svg>
+<div class="d-cap">잠재공간(<code>s</code>)에서 반복 — 중간 사고를 <strong>글(토큰)로 적지 않고</strong> 속으로 곱씹는다. 어려울수록 더 많이 반복.</div>
+</div>
+
+<p>기사가 말한 &ldquo;중간 사고를 글로 적지 않는다&rdquo;는 대목은 이 지점입니다. 요즘 추론 모델이 생각을 길게 <strong>글(사고 사슬, chain-of-thought)</strong>로 풀어 쓰는 것과 달리, 루프드 방식은 <strong>연속적인 잠재상태</strong>를 반복해 다듬습니다. 그 결과 (1) 출력 토큰을 덜 뿜어 <strong>토큰 비용</strong>이 줄고, (2) 별도의 사고 사슬 학습 데이터가 없어도 되며, (3) 작은 <strong>컨텍스트 윈도우</strong>로도 깊은 추론이 가능하다는 장점이 보고됩니다. &ldquo;파라미터 절반으로 비슷한 성능&rdquo;이라는 기사의 표현도, 가중치를 공유해 파라미터를 아끼면서 반복으로 실효 깊이를 벌충한다는 이 계열 연구들의 결과와 맞닿아 있습니다.</p>
+
+<h3>왜 &lsquo;한국 기업 호재&rsquo;인가 <span class="scn-sub">— 기사의 논지(논평·추정)</span></h3>
+<p>기사의 추론 사슬은 이렇습니다: 절반 파라미터로 유사 성능 → 무거운 클라우드 없이 <strong>기기 위에서 직접(온디바이스)</strong> 최고급 AI 구동 가능 → 스마트폰·자동차·로봇을 <strong>만드는</strong> 데 강한 한국(삼성·LG·현대)에 유리. 클라우드 인프라 경쟁보다 <strong>디바이스</strong> 쪽 강점을 살릴 수 있다는 관점입니다.</p>
+<div class="note warn">
+    <span class="nh">여기는 &lsquo;논평&rsquo;입니다</span>
+    &ldquo;한국 기업 호재&rdquo;는 앤트로픽의 공식 입장이 아니라 <strong>기사의 해석</strong>입니다. 실제로 최상위 성능 모델(Fable 5)이 AWS·Google Cloud·Microsoft 등 <strong>주요 클라우드에서 일반 제공</strong>되어 어느 기업이든 쓸 수 있게 된 점, 그리고 아래 &ldquo;확인된 사실&rdquo;의 한국-앤트로픽 밀착이 이 논지의 근거로 볼 만합니다. 반면 미소스급 모델의 <strong>온디바이스 배포를 뒷받침하는 공식 자료는 확인되지 않았습니다.</strong>
+</div>
+
+<h3>확인된 사실</h3>
+<ul>
+    <li><strong>Claude Fable 5 · Mythos 5 공개</strong>(2026-06-09) — 둘은 <strong>같은 모델</strong>이되, Mythos는 일부 이중용도(사이버·생물) 안전장치를 완화해 <strong>검증된 소수 조직에만</strong> 제공(프로젝트 Glasswing). Fable 5는 API와 주요 클라우드에서 일반 제공.</li>
+    <li><strong>수출통제와 해제</strong> — 2026-06-12 미국이 Fable 5·Mythos 5에 수출통제를 적용해 약 19일간 중단, 2026-06-30~07-01 통제 해제·재배포.</li>
+    <li><strong>삼성전자·SK하이닉스, 앤트로픽 시리즈 H 투자</strong>(2026-05말 보도) — 전략적 인프라 파트너로 참여.</li>
+    <li><strong>삼성 파운드리, 앤트로픽 커스텀 AI 칩 제조 논의</strong>(2026-07-03 보도) — 2nm 공정·첨단 패키징 대상.</li>
+</ul>
+<p class="scn-sub">→ &ldquo;한국 기업 호재&rdquo; 논지의 <strong>가장 단단한 근거</strong>는 온디바이스 가설보다 이 실제 협력·투자 흐름입니다.</p>
+
+<h3>어디까지가 사실인가 <span class="scn-sub">— 추정·미확인</span></h3>
+<div class="note warn">
+    <span class="nh">&ldquo;미소스 = 루프드 트랜스포머&rdquo;는 공식 확인이 아님</span>
+    앤트로픽은 미소스가 <strong>순환 깊이(루프드) 구조</strong>를 쓴다고 공개한 적이 없습니다. 이 연결은 공개 문헌을 토대로 미소스 아키텍처를 <strong>추정 재구성</strong>한 커뮤니티 프로젝트 <strong>OpenMythos</strong>(Kye Gomez) 등에서 나온 <strong>가설</strong>이며, 그 보도들 자체도 &ldquo;확인되지 않았다&rdquo;고 명시합니다. 따라서 기사의 전제(미소스 안에 루프드가 있다)는 <strong>흥미로운 추정</strong>으로 읽어야 하며, 루프드 트랜스포머 <strong>기술 자체는 아래 논문들로 실재가 검증</strong>됩니다.
+</div>
+
+<h3>출처</h3>
+<p class="scn-sub"><strong>기사·뉴스</strong></p>
+<ul>
+    <li>하이젠버그, 「앤트로픽 미소스, 한국 기업들에 호재인 이유」(DION, 2026-06-22) — <a href="https://heisenberg.kr/claude-mythos/" target="_blank" rel="noopener">heisenberg.kr/claude-mythos</a></li>
+    <li>Anthropic, &ldquo;Claude Fable 5 and Claude Mythos 5&rdquo;(2026-06-09) — <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank" rel="noopener">anthropic.com</a></li>
+    <li>CNBC, 수출통제 해제 보도(2026-06-30) — <a href="https://www.cnbc.com/2026/06/30/anthropic-says-trump-admin-has-lifted-export-controls-on-claude-fable-5-and-mythos-5.html" target="_blank" rel="noopener">cnbc.com</a></li>
+    <li>Korea Herald, 삼성·SK하이닉스 앤트로픽 투자 — <a href="https://www.koreaherald.com/article/10758856" target="_blank" rel="noopener">koreaherald.com</a></li>
+    <li>KED Global, 삼성 파운드리·앤트로픽 커스텀 칩 논의(2026-07-03) — <a href="https://www.kedglobal.com/artificial-intelligence/newsView/ked202607030001" target="_blank" rel="noopener">kedglobal.com</a></li>
+</ul>
+<p class="scn-sub"><strong>루프드 트랜스포머 — 검증된 학술 자료</strong></p>
+<ul>
+    <li>Geiping et al., &ldquo;Scaling up Test-Time Compute with Latent Reasoning: A Recurrent Depth Approach&rdquo;(Huginn, 2025) — <a href="https://arxiv.org/abs/2502.05171" target="_blank" rel="noopener">arXiv:2502.05171</a></li>
+    <li>Yang, Lee, Nowak, Papailiopoulos, &ldquo;Looped Transformers are Better at Learning Learning Algorithms&rdquo;(2023/24) — <a href="https://arxiv.org/abs/2311.12424" target="_blank" rel="noopener">arXiv:2311.12424</a></li>
+    <li>Giannou et al., &ldquo;Looped Transformers as Programmable Computers&rdquo;(2023) — <a href="https://arxiv.org/abs/2301.13196" target="_blank" rel="noopener">arXiv:2301.13196</a></li>
+    <li>&ldquo;Looped Transformers for Length Generalization&rdquo;(2024) — <a href="https://arxiv.org/abs/2409.15647" target="_blank" rel="noopener">arXiv:2409.15647</a></li>
+    <li>Dehghani et al., &ldquo;Universal Transformers&rdquo;(ICLR 2019, 조상 격) — <a href="https://arxiv.org/abs/1807.03819" target="_blank" rel="noopener">arXiv:1807.03819</a></li>
+</ul>
+<p class="scn-sub"><strong>미소스 아키텍처 추정 (커뮤니티, 미확인)</strong></p>
+<ul>
+    <li>OpenMythos (Kye Gomez) — 공개 문헌 기반 미소스 구조 추정 재구성 — <a href="https://github.com/kyegomez/OpenMythos" target="_blank" rel="noopener">github.com/kyegomez/OpenMythos</a></li>
+</ul>
+
+<div class="note">
+    <span class="nh">이 문서의 태도</span>
+    루프드 트랜스포머라는 <strong>기술</strong>은 논문으로 실재가 확인되고, 앤트로픽과 한국 기업의 <strong>협력·투자</strong>도 사실입니다. 다만 &ldquo;미소스가 그 기술을 쓴다&rdquo;와 &ldquo;그래서 한국에 호재&rdquo;는 <strong>공식 확인이 아닌 추정·논평</strong>이라는 점을 분리해 읽는 것이 정확합니다.
+</div>
