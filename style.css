@@ -677,9 +677,13 @@
             gap: 8px;
             padding: 8px;
             border-radius: 14px;
-            /* opaque (the two mix percentages must sum to 100% or CSS makes
-               the result translucent — that leaked the orange bg through). */
-            background: color-mix(in srgb, var(--text) 5%, var(--bg-alt));
+            /* Subtle accent-tinted gradient so the board isn't a flat white
+               slab — a soft glow in one corner fading to the neutral panel.
+               Both color-mix stops are opaque (percentages sum to 100). */
+            background:
+                linear-gradient(150deg,
+                    color-mix(in srgb, var(--accent) 13%, var(--bg-alt)) 0%,
+                    color-mix(in srgb, var(--text) 5%, var(--bg-alt)) 72%);
             border: 1px solid var(--border);
             touch-action: none;             /* let the board own swipes */
         }
@@ -737,18 +741,17 @@
                     margin-top: 2px; font-variant-numeric: tabular-nums; }
         .g2048-msg{
             position: absolute;
-            inset: 8px;
-            top: 46px;                      /* cover the board, not the HUD */
+            inset: 0;                       /* lives inside .g2048-board → exact cover */
             align-items: center;
             justify-content: center;
             text-align: center;
             border-radius: 14px;
-            background: color-mix(in srgb, var(--bg) 78%, var(--accent) 22%);
+            background: color-mix(in srgb, var(--bg) 74%, var(--accent) 26%);
             color: var(--text);
             font-weight: 800;
             font-size: 16px;
             cursor: pointer;
-            z-index: 2;
+            z-index: 5;                     /* above the tiles */
         }
         /* Only show the overlay when there's a message — a base display:flex
            would override the [hidden] attribute and blank the board. */
