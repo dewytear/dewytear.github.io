@@ -699,19 +699,20 @@
             position: absolute;
             inset: 8px;
             top: 46px;                      /* cover the board, not the HUD */
-            display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             border-radius: 14px;
-            background: color-mix(in srgb, var(--bg) 78%, transparent);
-            backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+            background: color-mix(in srgb, var(--bg) 78%, var(--accent) 22%);
             color: var(--text);
             font-weight: 800;
             font-size: 16px;
             cursor: pointer;
             z-index: 2;
         }
+        /* Only show the overlay when there's a message — a base display:flex
+           would override the [hidden] attribute and blank the board. */
+        .g2048-msg:not([hidden]){ display: flex; }
         @media (max-width: 560px){
             .g2048{ width: min(88vw, 320px); top: 56%; }
         }

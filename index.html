@@ -1940,6 +1940,16 @@
             var mode = el.getAttribute('data-g');
             if(!SEARCH_GAMES[mode]){ return; }
             try{ localStorage.setItem('wikiGamePick', mode); }catch(e){}
+            // Concept-catch fills the field as you play; switching games must
+            // start clean so that query doesn't carry over (and 2048 doesn't
+            // open in watermark mode). Clear the box, results, and the state.
+            var box = document.getElementById('search-input');
+            if(box && box.value){
+                box.value = '';
+                if(typeof renderSearchResults === 'function'){ renderSearchResults(''); }
+            }
+            var scr = document.querySelector('.search-screen');
+            if(scr){ scr.classList.remove('searching'); }
             var old = document.querySelector('.search-game');
             if(old){
                 var fresh = old.cloneNode(false);
