@@ -620,17 +620,20 @@
            (not #content, which .search-screen's static positioning would
            otherwise hand it — the board landed off-screen on iOS). Only when
            2048 is active, so the other games' canvas anchoring is untouched. */
-        .search-screen.g2048-on{ justify-content: flex-start; position: relative; }
-        .search-screen.g2048-on .search-core{ margin-top: 4vh; }
+        /* In-flow (NOT absolute): keeps .search-screen static so the ambient
+           bg/canvas still anchor to #content and extend up behind the title,
+           like the other games. Centered as a flex group with the field. */
+        .search-screen.g2048-on{ justify-content: center; padding-bottom: 64px; }
         .search-screen.g2048-on .search-head,
         .search-screen.g2048-on .search-sub{ display: none; }
         .g2048{
-            position: absolute;
-            left: 50%;
-            top: 54%;
-            transform: translate(-50%, -50%);
-            z-index: 1;                     /* above the blank canvas, below the field/results */
-            width: min(86vw, 340px);
+            position: relative;             /* positioned (not absolute) so it
+                                               paints above the ambient canvas */
+            margin: 0 auto;
+            /* As large as the free vertical space allows (min 160px), capped at
+               340/86vw. Shrinks in short/landscape viewports so it never covers
+               the field or overflows. */
+            width: min(86vw, 340px, max(160px, calc(100dvh - 220px)));
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -757,7 +760,21 @@
            would override the [hidden] attribute and blank the board. */
         .g2048-msg:not([hidden]){ display: flex; }
         @media (max-width: 560px){
-            .g2048{ width: min(88vw, 320px); top: 56%; }
+            .g2048{ width: min(90vw, 340px, max(160px, calc(100dvh - 210px))); }
+        }
+        /* Phone-like landscape (short height): move the game dock to a vertical
+           strip on the right so it doesn't eat the scarce vertical space, and
+           let the board grow taller. Tablets (height ≥ 768) and desktop are
+           excluded by max-height. */
+        @media (orientation: landscape) and (max-height: 520px){
+            .game-dock{
+                left: auto; right: 10px; bottom: auto; top: 50%;
+                transform: translateY(-50%);
+                flex-direction: column;
+            }
+            .search-screen.g2048-on{ padding-bottom: 12px; }
+            .g2048{ width: min(86vw, max(180px, calc(100dvh - 150px))); gap: 6px; }
+            .g2048-hud .g2048-score{ font-size: 24px; }
         }
         /* A single symmetric swell (peak at 50%) with ease-in-out gives a
            smooth, steady in-and-out with no jerk or pause. It pulses size AND
@@ -914,6 +931,9 @@
             max-height: 46vh;
             overflow-y: auto;
         }
+        /* Dismissed (outside-click) → hidden, but innerHTML + query kept so a
+           re-focus restores it. */
+        #search-results:not(.open){ display: none; }
         #search-results.open{
             border: 1px solid var(--border);
             border-radius: 16px;

@@ -14,7 +14,7 @@
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
     <!-- ?v= cache-buster: bump on any change to these files so browsers
          (esp. iOS Safari, which caches past max-age) fetch the new version. -->
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=4">
     <script src="colors.js?v=2"></script>
     <script src="graphviews.js?v=2"></script>
     </head>
@@ -1589,7 +1589,8 @@
                 TEXT_INDEX_READY = true;
                 // Re-run the current query now that bodies are searchable.
                 var box = document.getElementById('search-input');
-                if(box && box.value.trim()){ renderSearchResults(box.value); }
+                var _sr = document.getElementById('search-results');
+                if(box && box.value.trim() && _sr && _sr.classList.contains('open')){ renderSearchResults(box.value); }
             });
         }
 
@@ -1712,12 +1713,22 @@
         }
 
         var SEARCH_LIMIT = 8;
+        // Show/hide the results panel AND the 2048 board watermark in lockstep.
+        // Hiding only removes .open (CSS: #search-results:not(.open){display:none})
+        // so the built results and the typed query survive — an outside click can
+        // dismiss, and re-focusing the field restores them.
+        function setSearchShown(on){
+            var r = document.getElementById('search-results');
+            var s = document.querySelector('.search-screen');
+            if(r){ r.classList.toggle('open', on); }
+            if(s){ s.classList.toggle('searching', on); }
+        }
         function renderSearchResults(query){
             var box = document.getElementById('search-results');
             if(!box){ return; }
             paddleReset();   // typing = searching: glide the field back home
             var q = query.trim();
-            if(!q){ box.innerHTML = ''; box.classList.remove('open'); return; }
+            if(!q){ box.innerHTML = ''; setSearchShown(false); return; }
             var terms = q.toLowerCase().split(/\s+/);
             var hits = searchDocs(query);
             var indexing = !TEXT_INDEX_READY
@@ -1737,7 +1748,7 @@
             if(!hits.length){
                 box.innerHTML = suggestHtml
                               + '<p class="search-empty">' + STRF('searchEmpty', { q: escapeHtml(q) }) + '</p>' + indexing;
-                box.classList.add('open');
+                setSearchShown(true);
                 return;
             }
             var html = suggestHtml;
@@ -1777,7 +1788,7 @@
                 html += '<p class="search-more">' + STRF('searchMore', { n: hits.length - SEARCH_LIMIT }) + '</p>';
             }
             box.innerHTML = html + indexing;
-            box.classList.add('open');
+            setSearchShown(true);
         }
 
         function showSearch(){
@@ -1842,16 +1853,25 @@
                     renderSearchResults(PENDING_QUERY);
                     PENDING_QUERY = '';
                 }
-                // "searching" = the field holds a query. The 2048 board reads
-                // this to recede to a watermark (see .search-screen.searching);
-                // other games ignore it. Value-based (not focus) so the board
-                // stays playable while the empty field is merely focused.
+                // Results panel = the single "searching" state (board recedes).
+                // Click outside the search area → dismiss the panel but KEEP the
+                // typed query; focus the field again → restore it. (oninput keeps
+                // rendering as you type.)
                 var scr = document.querySelector('.search-screen');
-                var syncSearching = function(){
-                    if(scr){ scr.classList.toggle('searching', !!(box.value && box.value.trim())); }
-                };
-                box.addEventListener('input', syncSearching);
-                syncSearching();
+                if(scr){
+                    scr.addEventListener('pointerdown', function(e){
+                        var r = document.getElementById('search-results');
+                        if(r && r.classList.contains('open') && !e.target.closest('.search-core')){
+                            setSearchShown(false);   // dismiss; value + built results kept
+                        }
+                    });
+                }
+                box.addEventListener('focus', function(){
+                    var r = document.getElementById('search-results');
+                    if(box.value.trim() && r && !r.classList.contains('open')){
+                        renderSearchResults(box.value);   // restore on re-focus
+                    }
+                });
             }
         }
 
