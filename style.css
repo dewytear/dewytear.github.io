@@ -2431,21 +2431,33 @@
             display: block;
             width: 100%;
             border-radius: 14px;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
-            transition: box-shadow 0.3s ease;
+            /* Feather the rim to transparent so no hard edge/border is
+               perceptible — the photo has no discernible frame at all. */
+            -webkit-mask-image:
+                linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent),
+                linear-gradient(to bottom, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+            -webkit-mask-composite: source-in;
+            mask-image:
+                linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent),
+                linear-gradient(to bottom, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+            mask-composite: intersect;
+            /* drop-shadow follows the feathered silhouette (a rectangular
+               box-shadow would reintroduce the hard edge we just removed). */
+            filter: drop-shadow(0 12px 26px rgba(0, 0, 0, 0.24));
+            transition: filter 0.3s ease;
         }
         .about-photo:hover img{
-            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+            filter: drop-shadow(0 18px 34px rgba(0, 0, 0, 0.3));
         }
-        /* Soft edge: an inset vignette in the page bg is drawn OVER the photo
-           (an <img> hides inset box-shadow, so it lives on this overlay). The
-           rim melts into the page instead of reading as a crisp-edged mirror. */
+        /* Vignette on top of the feathered photo: an inset bleed in the page bg
+           (same color the feathered rim reveals) deepens the melt inward. Drawn
+           on ::after because an <img> hides its own inset box-shadow. */
         .about-photo::after{
             content: "";
             position: absolute;
             inset: 0;
             border-radius: 14px;
-            box-shadow: inset 0 0 20px 14px var(--bg);
+            box-shadow: inset 0 0 22px 16px var(--bg);
             pointer-events: none;
         }
         .about-eyebrow{
