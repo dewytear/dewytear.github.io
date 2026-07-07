@@ -1,0 +1,27 @@
+<h2>2026-07-07 · Work Log 운영 정비 — Backlog 도입 + 자동 머지 로그 제거</h2>
+<p>Work Log의 "다음 할 일"이 날짜별 불변 로그에 박혀 나중에 해결돼도 계속 미해결처럼 남던 문제를 정리하고, 노이즈만 쌓이던 자동 머지 로그를 걷어냈다.</p>
+
+<h3>배경</h3>
+<ul>
+    <li>각 로그의 "다음 할 일"은 <strong>그 시점 스냅샷</strong>으로 나름의 가치가 있지만, 흩어진 로그를 뒤져 열린 일을 추적하는 것은 비현실적. 실제 '한 일 기록(불변)'과 '열린 일 상태(가변)'는 성격이 다르다 — 제안서의 Event Stream vs Knowledge State 사상과 동일.</li>
+    <li>자동 머지 로그(<code>wl-*-auto</code>)는 "무엇이 언제 머지됐나"를 위키에 한 줄씩 자동 기록했으나, 그 정보는 이미 git 히스토리에 있고 주제별 로그가 더 풍부해 <strong>중복</strong>이며, 머지마다 봇 커밋이 끼어 <strong>노이즈</strong>만 늘었다.</li>
+</ul>
+
+<h3>변경</h3>
+<ul>
+    <li><strong>Backlog 문서 신설</strong>(<a href="#!wl-backlog">☐ 할 일 · Backlog</a>) — 기록 규칙 안내 바로 밑. 지금 열린 일의 <strong>단일 살아있는 목록</strong>. 완료 시 "최근 완료"로 옮겨 ✅ + 해결한 로그 링크를 달고, 오래되면 걷어낸다(원본은 로그). 열린 항목은 실제 열림 여부를 검증해 시드(예: '편 단위 다국어'=완료 → 제외).</li>
+    <li><strong>wl-guide 규칙 보강</strong> — 로그의 "다음 할 일"은 불변 스냅샷임을 명시하고, 열린 일은 Backlog 단일 출처에서 관리하도록 규칙화.</li>
+    <li><strong>자동 머지 로그 제거</strong> — <code>.github/workflows/auto-worklog.yml</code>, <code>tools/auto_worklog.py</code>, <code>wl-20260706-auto</code>·<code>wl-20260707-auto</code> 문서와 list 노드 삭제. 앞으로 봇 커밋 없음.</li>
+    <li>CLAUDE.md·프로젝트 메모리에 동일 규칙 반영.</li>
+</ul>
+
+<h3>Work Log를 남기는 시점 (정리)</h3>
+<ul>
+    <li>이제 로그는 <strong>사람/AI가 직접</strong> 남긴다 — 하나의 작업(주제)을 끝내고 master에 머지할 때, 그 주제의 로그를 <strong>curated하게</strong> 작성하고 <code>list</code>의 날짜 트리에 노드를 단다(태그 없음).</li>
+    <li>남은 후속이 있으면 로그가 아니라 <strong>Backlog</strong>에 넣는다.</li>
+</ul>
+
+<h3>결과</h3>
+<ul>
+    <li>자동 로그 아티팩트 4종 삭제, Backlog 1종 신설, wl-guide 규칙 명시. <code>validate_all</code> 0 ERROR, 배포 완료.</li>
+</ul>
