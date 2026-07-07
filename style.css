@@ -779,7 +779,10 @@
                 transform: translate(50%, -50%);
                 flex-direction: column;
             }
-            .search-screen.g2048-on{ justify-content: center; padding-bottom: 16px; }
+            /* gap gives breathing room between the search field and the board
+               (they touched before); board shrinks a touch to keep the bottom
+               margin. */
+            .search-screen.g2048-on{ justify-content: center; padding-bottom: 16px; gap: 4vh; }
             /* Only the board is in flow, so it centers on screen; the HUD is
                absolutely placed to its left and doesn't shift it off-center. */
             .g2048{ width: auto; }
@@ -787,7 +790,7 @@
                any phone; no fixed-px buffer). Replaces flex height:100%, which
                collapsed to ~0 on iOS Safari (percent height vs flex-grow parent). */
             .g2048-board{
-                width: min(80vw, 62dvh);
+                width: min(80vw, 54dvh);
                 height: auto;
                 max-width: 86vw;
             }
