@@ -608,6 +608,105 @@
             color: var(--accent-ink);
             opacity: 1;
         }
+        /* ===== 지식 2048 board ===== */
+        /* When 2048 is the active game the field slides to the top so the
+           playable board owns the center; the head/sub collapse for room. */
+        .search-screen.g2048-on{ justify-content: flex-start; }
+        .search-screen.g2048-on .search-core{ margin-top: 4vh; }
+        .search-screen.g2048-on .search-head,
+        .search-screen.g2048-on .search-sub{ display: none; }
+        .g2048{
+            position: absolute;
+            left: 50%;
+            top: 54%;
+            transform: translate(-50%, -50%);
+            z-index: 1;                     /* above the blank canvas, below the field/results */
+            width: min(86vw, 340px);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: opacity 0.3s ease, filter 0.3s ease;
+        }
+        /* Searching → the board recedes to a faint watermark like the other
+           ambient games, and stops taking input, so the field/results win. */
+        .search-screen.searching .g2048{
+            opacity: 0.12;
+            filter: saturate(0.8);
+            pointer-events: none;
+        }
+        .g2048-hud{
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 10px;
+            color: var(--text);
+        }
+        .g2048-score{ font-size: 30px; font-weight: 800; opacity: 0.24;
+                      font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+        .g2048-best{ font-size: 12px; font-weight: 700; opacity: 0.45;
+                     letter-spacing: 0.1em; font-variant-numeric: tabular-nums;
+                     margin-right: auto; margin-left: 6px; }
+        .g2048-new{
+            flex: 0 0 auto;
+            width: 30px; height: 30px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: color-mix(in srgb, var(--bg-alt) 70%, transparent);
+            color: var(--muted);
+            font-size: 15px; line-height: 1; cursor: pointer;
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            transition: color 0.15s ease, border-color 0.15s ease;
+        }
+        .g2048-new:hover{ color: var(--accent-ink); border-color: var(--accent); }
+        .g2048-board{
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            padding: 8px;
+            border-radius: 14px;
+            background: color-mix(in srgb, var(--bg-alt) 82%, var(--text) 5%);
+            border: 1px solid var(--border);
+            touch-action: none;             /* let the board own swipes */
+        }
+        .g2048-cell{
+            border-radius: 9px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.05;
+            background: color-mix(in srgb, var(--text) 6%, transparent);
+            border: 1px solid transparent;
+            overflow: hidden;
+        }
+        .g2048-cell.filled{ font-weight: 800; }
+        .g2048-lab{ font-size: clamp(11px, 3.4vw, 15px); padding: 0 2px; word-break: keep-all; }
+        .g2048-num{ font-size: 10px; font-weight: 700; opacity: 0.72;
+                    margin-top: 2px; font-variant-numeric: tabular-nums; }
+        .g2048-msg{
+            position: absolute;
+            inset: 8px;
+            top: 46px;                      /* cover the board, not the HUD */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-radius: 14px;
+            background: color-mix(in srgb, var(--bg) 78%, transparent);
+            backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+            color: var(--text);
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 2;
+        }
+        @media (max-width: 560px){
+            .g2048{ width: min(88vw, 320px); top: 56%; }
+        }
         /* A single symmetric swell (peak at 50%) with ease-in-out gives a
            smooth, steady in-and-out with no jerk or pause. It pulses size AND
            colour intensity (saturate/contrast) so the breath reads on a white
