@@ -14,7 +14,7 @@
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
     <!-- ?v= cache-buster: bump on any change to these files so browsers
          (esp. iOS Safari, which caches past max-age) fetch the new version. -->
-    <link rel="stylesheet" href="style.css?v=8">
+    <link rel="stylesheet" href="style.css?v=9">
     <script src="colors.js?v=2"></script>
     <script src="graphviews.js?v=2"></script>
     </head>
@@ -535,7 +535,7 @@
                 expandAll: '모두 펼치기', collapseAll: '모두 접기',
                 worklogRecent: '최근 로그로', worklogBack: '이전 페이지로',
                 searchPh: '제목 · 태그 · 개념 · 본문을 검색…',
-                cosmosSub: '지식 인덱스의 연관 관계를 3차원 그래프로 — 드래그 회전 · 휠 확대 · 점을 클릭하면 그 문서로',
+                cosmosSub: '지식 연관 관계를 3D 그래프로 — 드래그 회전 · 휠 확대 · 점 클릭 시 문서로',
                 cosmosLoading: '지식 인덱스를 불러오는 중…',
                 gvView3d: '3D', gvBundling: '번들링', gvChord: '코드',
                 gvPacking: '패킹', gvConcepts: '개념', gvArc: '아크', gvMatrix: '매트릭스',
@@ -612,7 +612,7 @@
                 expandAll: 'Expand all', collapseAll: 'Collapse all',
                 worklogRecent: 'Latest log', worklogBack: 'Back',
                 searchPh: 'Search titles · tags · concepts · full text…',
-                cosmosSub: 'The knowledge index as a 3D graph — drag to rotate · wheel to zoom · click a dot to open it',
+                cosmosSub: 'Knowledge as a 3D graph — drag to rotate · wheel to zoom · click to open',
                 cosmosLoading: 'Loading the knowledge index…',
                 gvView3d: '3D', gvBundling: 'Bundling', gvChord: 'Chord',
                 gvPacking: 'Packing', gvConcepts: 'Concepts', gvArc: 'Arc', gvMatrix: 'Matrix',
@@ -887,6 +887,8 @@
             screen.querySelectorAll('.gv-dock button').forEach(function(b){
                 b.classList.toggle('active', b.getAttribute('data-gv') === kind);
             });
+            // 2D views hide the cosmos title/subtitle and pull the dock up.
+            screen.classList.toggle('gv-2d', kind !== '3d');
             // Tear down whichever stage is up. Removing the canvas ends the
             // 3D loop (its frame() bails when the canvas leaves the DOM).
             var old = screen.querySelector('.cosmos-canvas');
@@ -1070,13 +1072,19 @@
                            && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             var dust = [];
             for(var dn = 0; dn < DUST_N; dn++){
+                var rs = rnd(dn * 5.3 + 1);
                 dust.push({
                     x: rnd(dn * 12.9898 + 1), y: rnd(dn * 78.233 + 1),
                     vx: (rnd(dn * 3.7 + 1) - 0.5) * 0.24,   // ±0.12px/frame
                     vy: (rnd(dn * 9.1 + 1) - 0.5) * 0.24,
-                    r: 0.5 + rnd(dn * 5.3 + 1) * 0.9,
+                    // Star-like size spread: mostly tiny, a few slightly larger
+                    // (rs² biases small). Stays under the doc stars, and dust is
+                    // muted-grey vs the coloured stars, so they don't blur together.
+                    r: 0.5 + rs * rs * 1.7,
                     ph: rnd(dn * 2.71 + 1) * 6.2832,
-                    tw: 0.4 + rnd(dn * 4.2 + 1) * 0.8
+                    tw: 0.4 + rnd(dn * 4.2 + 1) * 0.9,
+                    // ~30% twinkle: dim most of the time, occasional sharp flash.
+                    spark: rnd(dn * 6.6 + 1) < 0.3
                 });
             }
             function drawDust(mut){
@@ -1089,7 +1097,11 @@
                         if(p.x < 0){ p.x += 1; } else if(p.x >= 1){ p.x -= 1; }
                         if(p.y < 0){ p.y += 1; } else if(p.y >= 1){ p.y -= 1; }
                     }
-                    ctx.globalAlpha = 0.08 + 0.07 * (1 + Math.sin(t * p.tw + p.ph));
+                    var s = 0.5 + 0.5 * Math.sin(t * p.tw + p.ph);   // 0..1
+                    // spark: dim baseline with occasional sharp flash (pow curve);
+                    // others: the original gentle, even shimmer.
+                    ctx.globalAlpha = p.spark ? (0.05 + 0.5 * Math.pow(s, 6))
+                                              : (0.08 + 0.14 * s);
                     ctx.beginPath();
                     ctx.arc(p.x * W, p.y * H, p.r, 0, 6.2832);
                     ctx.fill();

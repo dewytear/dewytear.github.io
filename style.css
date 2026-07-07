@@ -3006,3 +3006,13 @@
                 padding: 116px 12px 20px;
             }
         }
+        /* 2D graph views: the ✦ Knowledge Graph title/subtitle only make sense
+           for the 3D scene, so hide them in 2D and lift the dock into their
+           place — otherwise the dock/legend/graph sit far below an empty title
+           gap. Stage padding then places the legend just under the dock. */
+        .cosmos-screen.gv-2d .cosmos-hud{ display: none; }
+        .cosmos-screen.gv-2d .gv-dock{ top: 20px; }
+        .cosmos-screen.gv-2d .gv-stage{ padding-top: 72px; }
+        @media (max-width: 800px){
+            .cosmos-screen.gv-2d .gv-stage{ padding-top: 92px; }
+        }
