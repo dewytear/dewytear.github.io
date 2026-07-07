@@ -7,7 +7,7 @@
 // engages after a clear horizontal pull (8px, more X than Y), and the
 // field glides back to center when you start typing.
 function paddleReset(){
-    var field = document.querySelector('.search-field');
+    var field = App.searchDock.field();
     // Mid-drag searches (e.g. the concept-catch game auto-searching a
     // caught word) must not yank the paddle out of the player's hand.
     if(field && field.classList.contains('dragging')){ return; }
@@ -41,8 +41,8 @@ function paddleReset(){
 })();
 
 function enableSearchPaddle(){
-    var field = document.querySelector('.search-field');
-    var screen = document.querySelector('.search-screen');
+    var field = App.searchDock.field();
+    var screen = App.searchDock.screen();
     if(!field || !screen){ return; }
     var drag = null, offset = 0;
     function clampBound(){
@@ -98,7 +98,7 @@ function startSearchGame(){
     var stale = document.querySelector('.g2048');
     if(stale){ if(stale._cleanup){ stale._cleanup(); } stale.remove(); }
     var mode = currentGameMode();
-    var screen = document.querySelector('.search-screen');
+    var screen = App.searchDock.screen();
     if(screen){ screen.classList.toggle('g2048-on', mode === 'g2048'); }
     SEARCH_GAME_ACTIVE = mode;
     SEARCH_GAMES[mode](canvas);
@@ -119,7 +119,7 @@ function switchSearchGame(el){
         box.value = '';
         if(typeof renderSearchResults === 'function'){ renderSearchResults(''); }
     }
-    var scr = document.querySelector('.search-screen');
+    var scr = App.searchDock.screen();
     if(scr){ scr.classList.remove('searching'); }
     var old = document.querySelector('.search-game');
     if(old){
@@ -164,7 +164,7 @@ function gameStage(canvas){
         return (getComputedStyle(document.body).getPropertyValue('--accent') || '#ff6600').trim();
     };
     st.paddle = function(){
-        var field = document.querySelector('.search-field');
+        var field = App.searchDock.field();
         if(!field){ return null; }
         var cr = canvas.getBoundingClientRect(), fr = field.getBoundingClientRect();
         return { x: fr.left - cr.left, y: fr.top - cr.top, w: fr.width, h: fr.height };
@@ -359,7 +359,7 @@ SEARCH_GAMES.breakout = function(canvas){
         // the ball lands on the paddle steers it: center = straight
         // up, edges = sharp angles ("english"). Each bounce keeps the
         // magnitude; only the time ramp above changes it.
-        var field = document.querySelector('.search-field');
+        var field = App.searchDock.field();
         if(field){
             var cr = canvas.getBoundingClientRect(), fr = field.getBoundingClientRect();
             var px = fr.left - cr.left, py = fr.top - cr.top;
