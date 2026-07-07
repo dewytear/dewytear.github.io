@@ -80,11 +80,16 @@ def run(root):
     all_nodes = list(iter_nodes(top_nodes))
     docs = [n for n in all_nodes if 'name' in n]
 
-    # 1. list-json: every doc node needs name + label.
+    # 1. list-json: every doc node needs name + label + path (the name/path
+    # pair is the CLAUDE.md contract: name = immutable hash route, path =
+    # physical location under docs/<lang>/ — always recorded together).
     for n in docs:
         if not n.get('label'):
             findings.append(_f('ERROR', 'list-json', n.get('name', '-'),
                                 "doc node is missing 'label'"))
+        if not n.get('path'):
+            findings.append(_f('ERROR', 'list-json', n.get('name', '-'),
+                                "doc node is missing 'path' (name/path must be recorded together)"))
 
     # 2. dup-name: duplicate `name` across the tree.
     seen = {}

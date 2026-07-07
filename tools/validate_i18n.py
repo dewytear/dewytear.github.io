@@ -220,14 +220,16 @@ def run(root):
     try:
         index_text = open(index_path, encoding='utf-8').read()
     except OSError as e:
-        findings.append(_f('INFO', 'strings-parity', '-', 'cannot read index.html: %s' % e))
+        findings.append(_f('ERROR', 'strings-parity', '-', 'cannot read index.html: %s' % e))
         index_text = None
 
     if index_text is not None:
         parsed = extract_strings_keys(index_text)
         if not parsed or 'ko' not in parsed or 'en' not in parsed:
-            findings.append(_f('INFO', 'strings-parity', '-',
-                                'could not locate/parse STRINGS.ko / STRINGS.en in index.html; skipped'))
+            # A parse failure must fail loudly: silently skipping would turn
+            # every future STRINGS refactor into an unchecked i18n blind spot.
+            findings.append(_f('ERROR', 'strings-parity', '-',
+                                "STRINGS.ko/en 파싱 실패 — index.html의 'var STRINGS = {' 구조가 바뀌었으면 extract_strings_keys를 함께 갱신할 것"))
         else:
             ko_keys, en_keys = parsed['ko'], parsed['en']
             for k in sorted(en_keys - ko_keys):

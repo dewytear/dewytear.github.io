@@ -67,6 +67,8 @@ def load_doc_bodies(root, doc_nodes):
     that's a broken-link concern for a different check, not this one."""
     bodies = {}
     for n in doc_nodes:
+        if not n.get('path'):
+            continue   # validate_routes flags the missing field; don't crash here
         fpath = os.path.join(root, 'docs', 'ko', n['path'])
         if not os.path.isfile(fpath):
             continue
@@ -360,6 +362,85 @@ def check_summary_content_mismatch(entries, bodies):
     return findings
 
 
+def check_orphan_entries(doc_nodes, entries):
+    """ERROR: a doc-entries.ko.json entry whose `name` matches no doc node.
+    Such an entry is dead data — build_index walks `list`, so the entry never
+    reaches the knowledge index, and if the name is a typo the doc it was
+    written for silently loses its title/summary/concept links."""
+    findings = []
+    known = {n['name'] for n in doc_nodes}
+    for e in entries:
+        name = e.get('name', '')
+        if name not in known:
+            findings.append({
+                'level': 'ERROR', 'check': 'orphan-entry', 'name': name or '-',
+                'message': "doc-entries.ko.json 엔트리가 list의 어떤 doc 노드와도 매칭되지 않음 (오타 또는 삭제된 문서의 잔재)",
+            })
+    return findings
+
+
+# Map pages carry a static fallback table (for no-JS / index-load-failure)
+# that mirrors stats hydrateAiMap would render live. Fallback numbers rot
+# silently when docs are added, so cross-check them against the index.
+MAP_FALLBACKS = [
+    # (doc path under docs/, index file under data/, stats galaxy key)
+    ('ko/ai/map/ai-map', 'knowledge-index.ko.json', 'AI'),
+    ('en/ai/map/ai-map', 'knowledge-index.en.json', 'AI'),
+    ('ko/douzone/map/dz-map', 'knowledge-index.ko.json', 'Douzone'),
+]
+
+
+def check_map_fallback_drift(root):
+    """WARN: static fallback numbers in the knowledge-map pages disagree with
+    the generated index (cluster counts, hub doc, or the km-totals line)."""
+    findings = []
+    for rel, idx_file, galaxy in MAP_FALLBACKS:
+        fpath = os.path.join(root, 'docs', rel)
+        ipath = os.path.join(root, 'data', idx_file)
+        if not (os.path.isfile(fpath) and os.path.isfile(ipath)):
+            continue
+        with open(fpath, encoding='utf-8') as f:
+            doc = f.read()
+        with open(ipath, encoding='utf-8') as f:
+            stats = json.load(f).get('stats') or {}
+        g = (stats.get('galaxies') or {}).get(galaxy, stats)
+        want = {c['label']: c for c in g.get('clusters', [])}
+        name = rel.split('/')[-1] + ' (' + rel.split('/')[0] + ')'
+
+        # Fallback rows: <tr><td><strong>LABEL</strong></td><td>N</td>...#!hub
+        rows = re.findall(
+            r'<tr><td><strong>(.*?)</strong></td><td>(\d+)</td>.*?#!([\w-]+)', doc)
+        seen = set()
+        for raw_label, count, hub in rows:
+            label = html.unescape(raw_label)
+            seen.add(label)
+            c = want.get(label)
+            if c is None:
+                findings.append({'level': 'WARN', 'check': 'map-fallback-drift', 'name': name,
+                    'message': f"fallback 행 '{label}'이 인덱스 클러스터에 없음"})
+            else:
+                if int(count) != c['count']:
+                    findings.append({'level': 'WARN', 'check': 'map-fallback-drift', 'name': name,
+                        'message': f"'{label}' fallback 편수 {count} ≠ 인덱스 {c['count']}"})
+                if hub != c['hub']['name']:
+                    findings.append({'level': 'WARN', 'check': 'map-fallback-drift', 'name': name,
+                        'message': f"'{label}' fallback 허브 {hub} ≠ 인덱스 {c['hub']['name']}"})
+        for label in want:
+            if label not in seen:
+                findings.append({'level': 'WARN', 'check': 'map-fallback-drift', 'name': name,
+                    'message': f"인덱스 클러스터 '{label}'의 fallback 행이 없음"})
+
+        # Totals line: the two numbers in #km-totals (docs, then concepts).
+        m = re.search(r'id="km-totals"[^>]*>([^<]*)<', doc)
+        if m:
+            nums = [int(x) for x in re.findall(r'\d+', m.group(1))]
+            expect = [g.get('docCount'), g.get('conceptCount')]
+            if len(nums) >= 2 and nums[:2] != expect:
+                findings.append({'level': 'WARN', 'check': 'map-fallback-drift', 'name': name,
+                    'message': f"km-totals fallback {nums[:2]} ≠ 인덱스 {expect}"})
+    return findings
+
+
 def check_unindexed_sanity(doc_nodes, entries):
     """INFO-level sanity note: doc nodes that are neither indexed nor in the
     known-unindexed allowlist. Cheap cross-check that doesn't fit the other
@@ -393,6 +474,8 @@ def run(root):
     findings += check_title_mismatch(entries, bodies)
     findings += check_summary_content_mismatch(entries, bodies)
     findings += check_unindexed_sanity(doc_nodes, entries)
+    findings += check_orphan_entries(doc_nodes, entries)
+    findings += check_map_fallback_drift(root)
     return findings
 
 
