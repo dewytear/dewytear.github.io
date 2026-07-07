@@ -525,6 +525,8 @@
                 cosmosLoading: '지식 인덱스를 불러오는 중…',
                 gvView3d: '3D', gvBundling: '번들링', gvChord: '코드',
                 gvPacking: '패킹', gvConcepts: '개념', gvArc: '아크', gvMatrix: '매트릭스',
+                gvDocsN: '{n}편', gvConceptIn: '{n}편에 등장',
+                gvLinksN: '연관 {n}건', gvCrossN: 'System 간 연관 {n}건',
                 kmEach: '각 {n}회', kmRefs: '{n}회 연결', kmBridgeN: '{n}개 — ',
                 kmDocsN: '{n}편', kmTotals: '지식 문서 {d}편 · 고유 개념 {c}개.',
                 digestTitle: '이 폴더 문서 모아보기', relFolder: '같은 폴더',
@@ -596,6 +598,8 @@
                 cosmosLoading: 'Loading the knowledge index…',
                 gvView3d: '3D', gvBundling: 'Bundling', gvChord: 'Chord',
                 gvPacking: 'Packing', gvConcepts: 'Concepts', gvArc: 'Arc', gvMatrix: 'Matrix',
+                gvDocsN: '{n} docs', gvConceptIn: 'in {n} docs',
+                gvLinksN: '{n} links', gvCrossN: '{n} cross-System links',
                 kmEach: '×{n} each', kmRefs: '{n} links', kmBridgeN: '{n} — ',
                 kmDocsN: '{n} docs', kmTotals: '{d} knowledge docs · {c} unique concepts.',
                 digestTitle: 'Read this folder on one page', relFolder: 'same folder',
@@ -987,6 +991,8 @@
                 });
             });
             return { docs: docs, edges: edges, clusters: clusters, ink: ink,
+                     strings: { docsN: STR('gvDocsN'), conceptIn: STR('gvConceptIn'),
+                                linksN: STR('gvLinksN'), crossN: STR('gvCrossN') },
                      onDocClick: function(name){ location.hash = '#!' + name; } };
         }
         function startCosmos(){

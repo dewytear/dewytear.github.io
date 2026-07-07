@@ -22,3 +22,9 @@
     <li>Playwright로 cosmos 6개 2D 뷰 렌더·범례·문서 클릭 확인, 패킹 뷰 World 라벨 잘림 수정(슬롯 배분 sqrt 완화 + 라벨 클램프).</li>
     <li>About 페이지 맨 아래 영문 모토 제거(ko/en).</li>
 </ul>
+
+<h3>후속 다듬기</h3>
+<ul>
+    <li><strong>2D 뷰 다국어</strong> — packing 문서수·chord/concepts 툴팁의 한글 하드코딩(‘편·건·등장’, ‘성단’ 잔재)을 STRINGS 포맷 키(<code>gvDocsN·gvConceptIn·gvLinksN·gvCrossN</code>, ko/en)로 이관하고 모델에 주입. <code>render()</code>가 <code>model.strings</code>를 렌더러로 전달하도록 연결 — EN 모드에서 ‘12 docs·2 links’로 정상 표기(Playwright ko/en 확인).</li>
+    <li><strong>지도 계층 도식 정렬</strong> — 지도 3종의 World→Domain→System→Document 도식을 두 열(AI·DOUZONE) 수직 정렬로 재작성: 각 계층 박스를 열 중심에 맞춰 연결선을 곧게 펴고, Document는 두 열을 아우르는 공유 박스로.</li>
+</ul>
