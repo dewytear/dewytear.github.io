@@ -21,4 +21,5 @@
 <h3>결과</h3>
 <ul>
     <li><code>index.html</code>·<code>style.css</code>·<code>config.json</code> 수정. <code>validate_all</code> 0 ERROR, 인라인 JS 파싱 0 에러. 2048 병합 알고리즘 단위테스트 15/15, jsdom 통합테스트 11/11(보드 생성·2타일 스폰·위키 라벨·검색 중 정지·유휴 재개·정리·새 게임) 통과.</li>
+    <li><strong>iOS 사파리 수정</strong>: (1) 보드가 <code>position:absolute</code>인데 <code>.search-screen</code>이 <code>position:static</code>이라 <code>#content</code> 기준으로 앵커돼 iOS에서 화면 밖에 놓이던 것을 <code>.search-screen.g2048-on</code>에 <code>position:relative</code>를 줘 검색 화면 기준으로 앵커. (2) 타일(<code>.g2048-cell</code>)에 <code>touch-action:none</code>이 없어 iOS가 타일 위 스와이프를 페이지 스크롤로 먹던 것을 셀에도 적용 + <code>touchmove</code> preventDefault 추가.</li>
 </ul>

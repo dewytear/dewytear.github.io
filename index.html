@@ -2566,6 +2566,7 @@
             }
             var ts = null;
             function onTStart(e){ if(searching()){ return; } var t = e.touches ? e.touches[0] : e; ts = { x: t.clientX, y: t.clientY }; }
+            function onTMove(e){ if(ts && !searching() && e.cancelable){ e.preventDefault(); } }   // stop iOS from turning the swipe into a page scroll
             function onTEnd(e){
                 if(!ts || searching()){ ts = null; return; }
                 var t = e.changedTouches ? e.changedTouches[0] : e;
@@ -2575,6 +2576,7 @@
             }
             window.addEventListener('keydown', onKey);
             boardEl.addEventListener('touchstart', onTStart, { passive: true });
+            boardEl.addEventListener('touchmove', onTMove, { passive: false });
             boardEl.addEventListener('touchend', onTEnd);
             wrap.querySelector('.g2048-new').addEventListener('click', function(e){ e.stopPropagation(); newGame(); });
             msgEl.addEventListener('click', newGame);
