@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+  <title id="title">좁은 해법 고정과 넓은 영역 탐색의 대비</title>
+  <desc id="desc">왼쪽은 처음 떠올린 하나의 해법을 좁게 따라가는 방식, 오른쪽은 여러 설계 방향과 개입 지점을 넓게 탐색한 뒤 근거를 갖고 수렴하는 방식.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0f172a"/><stop offset="1" stop-color="#111827"/></linearGradient>
+    <marker id="aRed" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto"><path d="M0 0 L11 5.5 L0 11Z" fill="#fb7185"/></marker>
+    <marker id="aGreen" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto"><path d="M0 0 L11 5.5 L0 11Z" fill="#34d399"/></marker>
+  </defs>
+  <rect width="1200" height="600" rx="28" fill="url(#bg)"/>
+  <text x="55" y="60" fill="#f8fafc" font-size="30" font-weight="700" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">Search Space: Premature Fix vs Deliberate Exploration</text>
+  <text x="55" y="92" fill="#94a3b8" font-size="18" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">“이 함수를 고쳐”와 “어디에 개입할 수 있는지 찾아”는 모델이 탐색하는 영역이 다르다</text>
+  <rect x="55" y="130" width="510" height="390" rx="22" fill="#2a1821" stroke="#fb7185" stroke-width="2"/>
+  <text x="85" y="170" fill="#fecdd3" font-size="20" font-weight="700" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">A · 해법을 먼저 고정</text>
+  <text x="85" y="198" fill="#fda4af" font-size="14" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">처음 떠올린 변경점 하나로 곧장 수렴</text>
+  <g font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">
+    <circle cx="125" cy="325" r="23" fill="#4c1d2f" stroke="#fb7185"/><text x="125" y="331" text-anchor="middle" fill="#ffe4e6" font-size="13">문제</text>
+    <circle cx="265" cy="325" r="23" fill="#4c1d2f" stroke="#fb7185"/><text x="265" y="331" text-anchor="middle" fill="#ffe4e6" font-size="13">내 해법</text>
+    <circle cx="435" cy="325" r="30" fill="#4c1d2f" stroke="#fb7185"/><text x="435" y="331" text-anchor="middle" fill="#ffe4e6" font-size="13">구현</text>
+    <path d="M150 325 H235 M290 325 H395" fill="none" stroke="#fb7185" stroke-width="4" marker-end="url(#aRed)"/>
+    <path d="M240 270 C285 220, 370 220, 430 260" fill="none" stroke="#7f1d1d" stroke-width="2" stroke-dasharray="6 6"/>
+    <text x="335" y="232" text-anchor="middle" fill="#fca5a5" font-size="13">보지 못한 대안</text>
+    <circle cx="205" cy="245" r="7" fill="#7f1d1d"/><circle cx="350" cy="400" r="7" fill="#7f1d1d"/><circle cx="470" cy="235" r="7" fill="#7f1d1d"/>
+    <text x="310" y="470" text-anchor="middle" fill="#fecdd3" font-size="15">빠르지만, 잘못된 변경 지점이면 재작업 비용이 커진다</text>
+  </g>
+  <rect x="635" y="130" width="510" height="390" rx="22" fill="#123029" stroke="#34d399" stroke-width="2"/>
+  <text x="665" y="170" fill="#d1fae5" font-size="20" font-weight="700" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">B · 영역을 탐색한 뒤 수렴</text>
+  <text x="665" y="198" fill="#6ee7b7" font-size="14" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">서로 다른 방향·개입 지점·레퍼런스를 먼저 펼침</text>
+  <g font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">
+    <circle cx="700" cy="325" r="23" fill="#0f3b31" stroke="#34d399"/><text x="700" y="331" text-anchor="middle" fill="#ecfdf5" font-size="13">문제</text>
+    <circle cx="805" cy="240" r="20" fill="#0f3b31" stroke="#34d399"/><text x="805" y="246" text-anchor="middle" fill="#ecfdf5" font-size="12">안 A</text>
+    <circle cx="825" cy="325" r="20" fill="#0f3b31" stroke="#34d399"/><text x="825" y="331" text-anchor="middle" fill="#ecfdf5" font-size="12">안 B</text>
+    <circle cx="805" cy="410" r="20" fill="#0f3b31" stroke="#34d399"/><text x="805" y="416" text-anchor="middle" fill="#ecfdf5" font-size="12">안 C</text>
+    <circle cx="935" cy="220" r="19" fill="#164e3f" stroke="#6ee7b7"/><text x="935" y="226" text-anchor="middle" fill="#ecfdf5" font-size="11">UI</text>
+    <circle cx="955" cy="300" r="19" fill="#164e3f" stroke="#6ee7b7"/><text x="955" y="306" text-anchor="middle" fill="#ecfdf5" font-size="11">API</text>
+    <circle cx="935" cy="385" r="19" fill="#164e3f" stroke="#6ee7b7"/><text x="935" y="391" text-anchor="middle" fill="#ecfdf5" font-size="11">Rule</text>
+    <circle cx="1080" cy="325" r="32" fill="#0b5b49" stroke="#a7f3d0" stroke-width="2"/><text x="1080" y="321" text-anchor="middle" fill="#ecfdf5" font-size="12">근거 있는</text><text x="1080" y="339" text-anchor="middle" fill="#ecfdf5" font-size="12">수렴</text>
+    <path d="M725 312 L782 252 M725 325 H800 M725 338 L782 398" fill="none" stroke="#34d399" stroke-width="3" marker-end="url(#aGreen)"/>
+    <path d="M826 240 L915 220 M845 325 L934 300 M826 410 L915 385" fill="none" stroke="#6ee7b7" stroke-width="2"/>
+    <path d="M955 220 C1005 235 1030 270 1052 300 M974 300 H1046 M954 385 C1010 370 1030 350 1052 337" fill="none" stroke="#34d399" stroke-width="3" marker-end="url(#aGreen)"/>
+    <text x="890" y="470" text-anchor="middle" fill="#d1fae5" font-size="15">초기 비용은 조금 더 들지만, unknown을 싸게 발견하고 고비용 재작업을 줄인다</text>
+  </g>
+  <text x="600" y="565" text-anchor="middle" fill="#cbd5e1" font-size="16" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">타릭의 Brainstorm · Four directions · Mock · Reference는 해답 생성보다 탐색 공간의 품질을 높이는 장치다.</text>
+</svg>
