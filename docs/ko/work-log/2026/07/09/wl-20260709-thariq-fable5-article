@@ -1,0 +1,38 @@
+<h2>타릭 Fable 5 분석 기사 등록</h2>
+<p>사용자 제공 전사를 바탕으로 Anthropic Claude Code 팀의 타릭이 설명한 <strong>Fable 5, capability overhang, 지도와 영토, unknown 관리, 여섯 가지 실전 기법</strong>을 빠짐없이 재구성하고 공개 웹 자료로 논거를 보강했다.</p>
+
+<h3>작업 개요</h3>
+<ul>
+    <li><strong>위치</strong> — AI &gt; News &amp; Articles &gt; 2026</li>
+    <li><strong>문서</strong> — <a href="#!news-20260709-thariq-fable5-unknowns">Fable 5 시대의 병목은 모델이 아니라 인간인가</a></li>
+    <li><strong>핵심 프레임</strong> — capability overhang, map vs territory, 네 종류의 unknown, 6가지 unknown 탐색 기법</li>
+</ul>
+
+<h3>변경/결정</h3>
+<ul>
+    <li>타릭의 직접 주장과 개인 일화는 <strong>사용자 제공 전사</strong>를 1차 자료로 사용했다.</li>
+    <li>Fable 5의 공개 상태는 Reuters, 장기 작업 능력·Claude Code 구조·도입 효과·기술 경계 확장은 공개 연구로 보강했다.</li>
+    <li><strong>280만 조회, 시스템 프롬프트 80% 삭제, 질문 도구 개발자 귀속, 4시간 덱 제작</strong>은 독립 확인하지 못해 본문에 검증 상태를 명시했다.</li>
+    <li>기존 News &amp; Articles 문서와 동일하게 <code>&lt;h2&gt;</code>·<code>&lt;h3&gt;</code>·<code>.note</code>·표·목록 중심 HTML 프래그먼트 스타일을 유지했다.</li>
+    <li>번역 본문이 없으므로 i18n 원칙에 따라 <code>label_en</code>·영문 인덱스 오버레이를 선행 추가하지 않는다.</li>
+</ul>
+
+<h3>지식 체계 반영</h3>
+<ul>
+    <li><code>list</code>에 News &amp; Articles &gt; 2026 문서 노드와 07월 09일 Work Log 노드 추가</li>
+    <li><code>tools/doc-entries.ko.json</code>에 title·summary·concepts 추가</li>
+    <li><code>python3 tools/build_index.py</code>로 한국어·영어 지식 인덱스 재생성</li>
+    <li>한국어 인덱스 기준 문서 93→94편, 고유 개념 298→306개로 갱신</li>
+    <li>새 기사의 section을 <code>AI · News &amp; Articles · 2026</code>으로 확인하고 같은 폴더 기사 연관 링크 생성 확인</li>
+    <li>Work Log는 인덱스 제외 확인</li>
+</ul>
+
+<h3>검증 결과</h3>
+<ul>
+    <li><code>python3 tools/build_index.py --check</code> 통과</li>
+    <li>ko/en 양쪽 인덱스 기사 포함, Work Log 제외, section·related assertion 통과</li>
+    <li><code>python tools/validate_all.py</code> ERROR 0 조건 통과 후 생성 산출물 커밋 단계 진행</li>
+</ul>
+
+<h3>결과</h3>
+<p>타릭의 주장을 그대로 받아쓰지 않고 <strong>확인된 사실·개인 경험·미확인 수치·외부 연구 보강</strong>을 분리한 분석 기사로 정리했다. Work Log 자체는 운영 규칙에 따라 <code>tags: []</code>로 두며 지식 인덱스에는 포함하지 않는다.</p>
