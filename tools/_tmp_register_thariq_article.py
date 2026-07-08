@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import html
 import json
-import os
 import re
 import subprocess
 import sys
@@ -15,27 +14,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ARTICLE_NAME = "news-20260709-thariq-fable5-unknowns"
-ARTICLE_PATH = f"ai/news/2026/{ARTICLE_NAME}"
 LOG_NAME = "wl-20260709-thariq-fable5-article"
-LOG_PATH = f"work-log/2026/07/09/{LOG_NAME}"
-
-ARTICLE_NODE = {
-    "name": ARTICLE_NAME,
-    "path": ARTICLE_PATH,
-    "label": "Fable 5 — 지도와 영토, unknown 관리",
-    "model": "GPT-5.5 Thinking",
-    "tags": [
-        "Fable 5", "Claude Code", "capability overhang", "지도와 영토",
-        "unknown", "프롬프트", "에이전트"
-    ],
-}
-
-LOG_NODE = {
-    "name": LOG_NAME,
-    "path": LOG_PATH,
-    "label": "타릭 Fable 5 분석 기사 등록",
-    "tags": [],
-}
 
 INDEX_ENTRY = {
     "name": ARTICLE_NAME,
@@ -54,43 +33,67 @@ def run(*cmd: str) -> None:
     subprocess.run(cmd, cwd=ROOT, check=True)
 
 
-def child(nodes: list[dict], title: str) -> dict:
-    for node in nodes:
-        if node.get("title") == title:
-            return node
-    raise KeyError(f"missing branch title: {title}")
-
-
-def ensure_node(nodes: list[dict], new_node: dict) -> None:
-    matches = [n for n in nodes if n.get("name") == new_node["name"]]
-    if not matches:
-        nodes.append(new_node)
-    elif len(matches) > 1:
-        raise RuntimeError(f"duplicate node: {new_node['name']}")
-    else:
-        # Keep the operation idempotent but enforce the required metadata.
-        matches[0].update(new_node)
+def git_show(ref_path: str) -> str:
+    return subprocess.run(
+        ["git", "show", ref_path], cwd=ROOT, capture_output=True,
+        text=True, encoding="utf-8", check=True,
+    ).stdout
 
 
 def register_list() -> None:
+    """Start from master formatting and insert only the two required nodes."""
     path = ROOT / "list"
-    tree = json.loads(path.read_text(encoding="utf-8"))
+    text = git_show("origin/master:list")
 
-    ai = child(tree, "AI")
-    news = child(ai["children"], "News & Articles")
-    year = child(news["children"], "2026")
-    ensure_node(year["children"], ARTICLE_NODE)
+    article_anchor = (
+        '                            { "name": "news-20260622-mythos-looped", '
+        '"path": "ai/news/2026/news-20260622-mythos-looped", '
+        '"label": "미소스와 루프드 트랜스포머", '
+        '"label_en": "Mythos & the Looped Transformer", '
+        '"model": "Claude Opus 4.8", '
+        '"tags": ["루프드 트랜스포머", "미소스", "Anthropic", "온디바이스", "하이젠버그", "AI"], '
+        '"tags_en": ["Looped Transformer", "Mythos", "Anthropic", "on-device", "Heisenberg", "AI"] }'
+    )
+    article_node = (
+        '                            { "name": "news-20260709-thariq-fable5-unknowns", '
+        '"path": "ai/news/2026/news-20260709-thariq-fable5-unknowns", '
+        '"label": "Fable 5 — 지도와 영토, unknown 관리", '
+        '"model": "GPT-5.5 Thinking", '
+        '"tags": ["Fable 5", "Claude Code", "capability overhang", "지도와 영토", "unknown", "프롬프트", "에이전트"] }'
+    )
+    if ARTICLE_NAME not in text:
+        if article_anchor not in text:
+            raise RuntimeError("News & Articles anchor not found in origin/master:list")
+        text = text.replace(article_anchor, article_anchor + ",\n" + article_node, 1)
 
-    work = child(tree, "Work Log")
-    work_year = child(work["children"], "2026")
-    month = child(work_year["children"], "07월")
-    day = next((n for n in month["children"] if n.get("title") == "09일"), None)
-    if day is None:
-        day = {"title": "09일", "children": []}
-        month["children"].append(day)
-    ensure_node(day["children"], LOG_NODE)
+    day08 = '''                            {
+                                "title": "08일", "title_en": "Day 08",
+                                "children": [
+                                    { "name": "wl-20260708-uipolish", "path": "work-log/2026/07/08/wl-20260708-uipolish", "label": "모바일·내비 UI 개선 5건", "tags": [] },
+                                    { "name": "wl-20260708-bugfix", "path": "work-log/2026/07/08/wl-20260708-bugfix", "label": "2일치 리뷰 · 확인 버그 일괄 수정", "tags": [] },
+                                    { "name": "wl-20260708-celebrate", "path": "work-log/2026/07/08/wl-20260708-celebrate", "label": "2048 세컨드 브레인 축하 연출", "tags": [] },
+                                    { "name": "wl-20260708-validators", "path": "work-log/2026/07/08/wl-20260708-validators", "label": "검증 도구 견고성 · 지도 드리프트 검사", "tags": [] },
+                                    { "name": "wl-20260708-refactor", "path": "work-log/2026/07/08/wl-20260708-refactor", "label": "index.html 모듈 분해 (셸+모듈 8개)", "tags": [] },
+                                    { "name": "wl-20260708-docdates", "path": "work-log/2026/07/08/wl-20260708-docdates", "label": "문서 생성/수정일자 표기", "tags": [] }
+                                ]
+                            }'''
+    day09 = '''                            {
+                                "title": "09일", "title_en": "Day 09",
+                                "children": [
+                                    { "name": "wl-20260709-thariq-fable5-article", "path": "work-log/2026/07/09/wl-20260709-thariq-fable5-article", "label": "타릭 Fable 5 분석 기사 등록", "tags": [] }
+                                ]
+                            }'''
+    if LOG_NAME not in text:
+        if day08 not in text:
+            raise RuntimeError("Work Log day-08 anchor not found in origin/master:list")
+        text = text.replace(day08, day08 + ",\n" + day09, 1)
 
-    path.write_text(json.dumps(tree, ensure_ascii=False, indent=4) + "\n", encoding="utf-8")
+    # Validate before writing; no silent malformed list.
+    tree = json.loads(text)
+    serialized = json.dumps(tree, ensure_ascii=False)
+    assert serialized.count(ARTICLE_NAME) == 2  # name + path
+    assert serialized.count(LOG_NAME) == 2      # name + path
+    path.write_text(text, encoding="utf-8")
 
 
 def register_index_entry() -> None:
@@ -125,8 +128,6 @@ def update_map_fallback(lang: str) -> None:
 
     for label, cluster in clusters.items():
         label_html = html.escape(label, quote=False)
-        # One fallback row per cluster. Keep the human-authored topic cell,
-        # refresh only generated count + hub route/title.
         pattern = re.compile(
             r'(<tr><td><strong>' + re.escape(label_html) +
             r'</strong></td><td>)\d+(</td><td>.*?</td><td><a href="#!)[\w-]+(">).*?(</a></td></tr>)'
@@ -179,12 +180,10 @@ def assert_registered() -> None:
 def main() -> int:
     register_list()
     register_index_entry()
-
     run(sys.executable, "tools/build_index.py")
     update_map_fallback("ko")
     update_map_fallback("en")
 
-    # Date metadata is part of the visible document contract.
     dates = ROOT / "tools" / "build_dates.py"
     if dates.exists():
         run(sys.executable, "tools/build_dates.py")
