@@ -729,13 +729,12 @@ function scrollFolderDoc(i){
 
 
 // ---- "Recent docs" module: paginated board ----
-// Ordered by each doc's last commit date, fetched from the GitHub
-// API (cached for an hour). Until dates arrive, list order shows.
+// Ordered by each doc's updated date from data/doc-dates.json (built at
+// PR time from git history — see tools/build_dates.py). Until dates
+// arrive, list order shows.
 var MORE_PAGE_SIZE = 5;
 var MORE_BLOCK = 7;    // page numbers shown per pager block (fits mobile width)
 var morePage = 0;
-var REPO_API = 'https://api.github.com/repos/dewytear/dewytear.github.io';
-var DOC_DATES_KEY = 'wikiDocDates.v1';
 
 // 최근 문서 목록의 대상 — 메타/네비게이션 페이지(nonum: 지식지도 등)는 제외.
 // 이름 하드코딩이 아니라 list의 구조 신호(nonum)로 거른다.
@@ -797,38 +796,13 @@ function moreBlock(dir){
     document.querySelector('#more').innerHTML = renderMore();
 }
 
-function loadCachedDocDates(){
-    try{
-        var s = JSON.parse(localStorage.getItem(DOC_DATES_KEY));
-        if(s && Date.now() - s.at < 3600000){ return s.dates; }
-    }catch(e){}
-    return null;
-}
-
-function fetchDocDates(){
-    var dates = {};
-    return Promise.all(DOCS.map(function(d){
-        // Dates always track the Korean source file (the original).
-        var url = REPO_API + '/commits?path=' + encodeURIComponent('docs/ko/' + (d.path || d.name)) + '&per_page=1';
-        return fetch(url).then(function(r){
-            return r.ok ? r.json() : null;
-        }).then(function(j){
-            if(j && j[0]){ dates[d.name] = j[0].commit.committer.date; }
-        }).catch(function(){});
-    })).then(function(){
-        if(Object.keys(dates).length){
-            try{
-                localStorage.setItem(DOC_DATES_KEY,
-                    JSON.stringify({ at: Date.now(), dates: dates }));
-            }catch(e){}
-        }
-        return dates;
+function applyDocDates(dd){
+    var dates = (dd && dd.docs) || {};
+    if(!Object.keys(dates).length){ return; }
+    DOCS.forEach(function(d){
+        var rec = dates[d.name];
+        d.date = rec ? rec.u : '';
     });
-}
-
-function applyDocDates(dates){
-    if(!dates || !Object.keys(dates).length){ return; }
-    DOCS.forEach(function(d){ d.date = dates[d.name] || ''; });
     DOCS.sort(function(a, b){
         return a.date < b.date ? 1 : a.date > b.date ? -1 : 0;
     });
@@ -837,9 +811,7 @@ function applyDocDates(dates){
 }
 
 function refreshRecentDocs(){
-    var cached = loadCachedDocDates();
-    if(cached){ applyDocDates(cached); }
-    else { fetchDocDates().then(applyDocDates); }
+    App.data.loadDates().then(applyDocDates);
 }
 
 // ---- Settings (client-side, password-gated) ----
