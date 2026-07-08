@@ -71,6 +71,11 @@
 
 <p>문제는 지도가 언제나 불완전하다는 데 있다. 사람은 자신이 아는 것조차 전부 쓰지 않고, 모르는 것은 당연히 쓸 수 없으며, 고려하지 못한 것은 질문조차 만들지 못한다. 에이전트는 그 빈칸을 만났을 때 매번 멈추지 않는다. <strong>가정을 만들고 계속 간다.</strong> 모델이 강해질수록 그 가정 위에서 더 멀리 갈 수 있다.</p>
 
+<figure style="margin:1.8rem 0 2rem;">
+    <img src="/assets/diagrams/fable-map-vs-territory.svg" alt="왼쪽의 정돈된 지도와 오른쪽의 복잡한 실제 영토를 대비하고, 그 사이의 간극을 unknowns로 표시한 SVG 도식" loading="lazy" style="display:block;width:100%;height:auto;border-radius:18px;">
+    <figcaption style="margin-top:.65rem;text-align:center;font-size:.92em;opacity:.78;">지도는 프롬프트와 문서의 정돈된 표현이고, 영토는 코드·데이터·운영·조직 제약이 얽힌 현실이다. 중앙의 unknowns가 둘 사이의 결정 공백이다.</figcaption>
+</figure>
+
 <div class="note">
     <span class="nh">타릭의 역설</span>
     약한 모델은 빨리 막혀 사람이 개입한다. 강한 모델은 스스로 우회해 끝까지 갈 수 있다. 그래서 <strong>강한 모델일수록 잘못된 가정이 더 멀리 전파될 위험</strong>도 생긴다.
@@ -93,6 +98,11 @@
 <h3>7. &ldquo;6가지 기법&rdquo;은 요약이고, 1차 자료에는 11개 아티팩트가 있다</h3>
 
 <p>영상이나 2차 요약에서 타릭의 방법은 흔히 <strong>Blind Spot, Prototype, Interview, Reference, Implementation Notes, Quiz</strong>의 여섯 가지로 압축된다. 이 요약은 핵심 흐름을 이해하는 데 유용하다. 하지만 타릭 본인의 companion guide는 이를 더 세분해 <strong>11개의 독립 HTML 아티팩트</strong>로 공개한다.</p>
+
+<figure style="margin:1.8rem 0 2rem;">
+    <img src="/assets/diagrams/fable-unknown-discovery-process.svg" alt="구현 전 8개, 구현 중 1개, 구현 후 2개의 패턴이 순환하며 unknown을 known으로 바꾸는 프로세스 SVG" loading="lazy" style="display:block;width:100%;height:auto;border-radius:18px;">
+    <figcaption style="margin-top:.65rem;text-align:center;font-size:.92em;opacity:.78;">11개 패턴은 체크리스트가 아니라 루프다. 구현 중 발생한 deviation은 기록되고, 구현 후 공유·학습을 거쳐 다음 작업의 사전 컨텍스트로 되돌아간다.</figcaption>
+</figure>
 
 <table>
     <thead><tr><th>시점</th><th>타릭이 공개한 아티팩트</th><th>목적</th></tr></thead>
@@ -156,6 +166,13 @@
     <span class="nh">실무적 의미</span>
     &ldquo;이 함수를 수정해&rdquo;보다 &ldquo;이 문제를 줄일 수 있는 개입 지점을 탐색해&rdquo;가 먼저다. 사용자가 선택한 위치가 정말 최적의 변경점인지 검증하는 단계다.
 </div>
+
+<figure style="margin:1.8rem 0 2rem;">
+    <img src="/assets/diagrams/fable-search-space-contrast.svg" alt="왼쪽의 단일 해법 직선 경로와 오른쪽의 여러 설계 방향과 개입 지점을 탐색한 뒤 수렴하는 방식을 비교한 SVG" loading="lazy" style="display:block;width:100%;height:auto;border-radius:18px;">
+    <figcaption style="margin-top:.65rem;text-align:center;font-size:.92em;opacity:.78;">왼쪽은 처음 떠올린 해법을 곧장 구현한다. 오른쪽은 서로 다른 방향과 개입 지점을 먼저 펼쳐 unknown을 발견한 뒤 수렴한다. 타릭이 말한 &ldquo;영역에서 찾아 나아가기&rdquo;의 차이다.</figcaption>
+</figure>
+
+<p>이 대비는 Four design directions, Mock, Brainstorm, Reference가 왜 같은 계열인지 보여 준다. 네 기법 모두 모델에게 즉시 정답을 요구하지 않고 <strong>탐색 가능한 영역을 외부화한 뒤 사람이 반응할 수 있게 만든다.</strong> 즉, 정답 생성 성능보다 <strong>탐색 공간의 품질</strong>을 먼저 높인다.</p>
 
 <h3>13. 패턴 6 — The interview: AI가 사용자를 인터뷰한다</h3>
 
