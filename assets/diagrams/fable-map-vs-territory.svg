@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">지도와 영토의 차이</title>
+  <desc id="desc">왼쪽은 프롬프트와 문서로 구성된 정돈된 지도, 오른쪽은 숨은 제약과 예외가 있는 실제 영토를 대비한다. 중앙의 간극이 unknowns이다.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f172a"/><stop offset="1" stop-color="#111827"/></linearGradient>
+    <linearGradient id="mapFill" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e3a5f"/><stop offset="1" stop-color="#172554"/></linearGradient>
+    <linearGradient id="terrFill" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#143d33"/><stop offset="1" stop-color="#1f2937"/></linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 Z" fill="#f59e0b"/></marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000000" flood-opacity=".25"/></filter>
+  </defs>
+  <rect width="1200" height="620" rx="28" fill="url(#bg)"/>
+  <text x="60" y="60" fill="#f8fafc" font-size="30" font-weight="700" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">Map ≠ Territory</text>
+  <text x="60" y="92" fill="#94a3b8" font-size="18" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">AI가 받은 표현과 실제 일이 벌어지는 현실은 같지 않다</text>
+  <g filter="url(#shadow)"><rect x="55" y="125" width="455" height="405" rx="24" fill="url(#mapFill)" stroke="#60a5fa" stroke-width="2"/></g>
+  <text x="85" y="168" fill="#bfdbfe" font-size="18" font-weight="700" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">MAP · 전달된 표현</text>
+  <text x="85" y="198" fill="#e2e8f0" font-size="15" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">Prompt · PRD · CLAUDE.md · Spec · Example</text>
+  <g font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif" font-size="15">
+    <rect x="90" y="238" width="160" height="62" rx="12" fill="#0f2748" stroke="#60a5fa"/><text x="110" y="275" fill="#dbeafe">목표와 기능</text>
+    <rect x="315" y="238" width="150" height="62" rx="12" fill="#0f2748" stroke="#60a5fa"/><text x="335" y="275" fill="#dbeafe">API 계약</text>
+    <rect x="90" y="370" width="160" height="62" rx="12" fill="#0f2748" stroke="#60a5fa"/><text x="110" y="407" fill="#dbeafe">예시 코드</text>
+    <rect x="315" y="370" width="150" height="62" rx="12" fill="#0f2748" stroke="#60a5fa"/><text x="335" y="407" fill="#dbeafe">디자인 가이드</text>
+    <path d="M250 269 H315 M390 300 V370 M315 401 H250 M170 370 V300" fill="none" stroke="#93c5fd" stroke-width="3" stroke-dasharray="7 7"/>
+    <circle cx="282" cy="335" r="30" fill="#172554" stroke="#bfdbfe" stroke-width="2"/><text x="258" y="341" fill="#eff6ff" font-size="13">계획</text>
+  </g>
+  <g>
+    <path d="M520 328 C550 265, 590 265, 620 328 C650 390, 690 390, 720 328" fill="none" stroke="#f59e0b" stroke-width="5" stroke-dasharray="10 9"/>
+    <path d="M530 328 H700" fill="none" stroke="#f59e0b" stroke-width="3" marker-end="url(#arrow)"/>
+    <rect x="540" y="210" width="155" height="70" rx="16" fill="#3a2608" stroke="#f59e0b"/>
+    <text x="617" y="239" text-anchor="middle" fill="#fde68a" font-size="17" font-weight="700" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">UNKNOWNS</text>
+    <text x="617" y="263" text-anchor="middle" fill="#fbbf24" font-size="14" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">지도에 없는 결정 지점</text>
+  </g>
+  <g filter="url(#shadow)"><rect x="710" y="125" width="435" height="405" rx="24" fill="url(#terrFill)" stroke="#34d399" stroke-width="2"/></g>
+  <text x="740" y="168" fill="#a7f3d0" font-size="18" font-weight="700" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">TERRITORY · 실제 현실</text>
+  <text x="740" y="198" fill="#d1fae5" font-size="15" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">Codebase · Data · Users · Ops · Constraints</text>
+  <g fill="none" stroke-linecap="round"><path d="M755 250 C815 205, 900 215, 940 260 S1035 315, 1090 245" stroke="#6ee7b7" stroke-width="3"/><path d="M745 310 C810 275, 865 305, 910 345 S1020 420, 1100 350" stroke="#34d399" stroke-width="3"/><path d="M760 430 C820 365, 900 400, 950 455 S1050 490, 1100 445" stroke="#10b981" stroke-width="3"/></g>
+  <g font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif" font-size="14">
+    <circle cx="810" cy="250" r="10" fill="#f97316"/><text x="828" y="255" fill="#fed7aa">레거시 예외</text>
+    <circle cx="985" cy="300" r="10" fill="#ef4444"/><text x="1003" y="305" fill="#fecaca">운영 장애 이력</text>
+    <circle cx="840" cy="370" r="10" fill="#eab308"/><text x="858" y="375" fill="#fef3c7">암묵 규칙</text>
+    <circle cx="1010" cy="430" r="10" fill="#a78bfa"/><text x="1028" y="435" fill="#ede9fe">규제·권한</text>
+    <circle cx="930" cy="480" r="10" fill="#38bdf8"/><text x="948" y="485" fill="#e0f2fe">실데이터 분포</text>
+  </g>
+  <text x="600" y="580" text-anchor="middle" fill="#cbd5e1" font-size="17" font-family="Pretendard, Noto Sans KR, Noto Sans CJK KR, Apple SD Gothic Neo, sans-serif">좋은 에이전트 워크플로는 지도를 더 길게 쓰는 것이 아니라, 영토를 탐색하며 unknown을 줄인다.</text>
+</svg>
