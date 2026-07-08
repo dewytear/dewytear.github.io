@@ -54,6 +54,7 @@
 ```
 python3 tools/build_index.py            # data/knowledge-index.ko.json 재생성
 python3 tools/build_index.py --check    # 재생성 결과와 파일이 일치하는지 확인(0이어야 함)
+python3 tools/build_dates.py            # data/doc-dates.json 재생성 (문서 생성/수정일자 — git 이력 기반)
 ```
 `build_index.py`는 손대지 않는다(로직 변경 필요 시 사람이 검토).
 

@@ -398,6 +398,31 @@ function renderDocTags(tags){
 }
 
 
+// Which docs show their *updated* date instead of the created date:
+// living meta pages whose value is freshness, not authorship moment.
+var UPDATED_DATE_DOCS = { 'ai-map': 1, 'dz-map': 1, 'wl-backlog': 1, 'wl-guide': 1 };
+
+// 제목(첫 h2) 바로 밑에 생성/수정일자를 작은 우측 정렬 텍스트로 단다.
+// 날짜 데이터는 git 이력에서 빌드 타임에 생성 (tools/build_dates.py).
+function injectDocDate(name){
+    App.data.loadDates().then(function(dd){
+        if(CURRENT_DOC !== name){ return; }   // 라우트가 이미 바뀐 늦은 응답
+        var rec = (dd.docs || {})[name];
+        if(!rec){ return; }
+        var useUpdated = UPDATED_DATE_DOCS[name] === 1;
+        var text = formatDocDate(useUpdated ? rec.u : rec.c);
+        if(!text){ return; }
+        var art = document.getElementById('article');
+        var h2 = art && art.querySelector('h2');
+        if(!art || art.querySelector('.doc-date')){ return; }
+        var p = document.createElement('p');
+        p.className = 'doc-date';
+        p.textContent = STR(useUpdated ? 'dateUpdated' : 'dateCreated') + ' ' + text;
+        if(h2){ h2.insertAdjacentElement('afterend', p); }
+        else { art.insertAdjacentElement('afterbegin', p); }
+    });
+}
+
 function fetchPage(filename){
     fetchDoc(filename).then(function(text){
             var doc = DOC_BY_NAME[filename];
@@ -419,6 +444,7 @@ function fetchPage(filename){
             // AI 연관 문서 추천 (knowledge-index.json). May arrive after
             // this render, so injectRelated re-runs when the index loads.
             CURRENT_DOC = filename;
+            injectDocDate(filename);
             injectRelated();
             hydrateAiMap();
     })
