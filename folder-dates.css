@@ -1,7 +1,18 @@
-/* Folder digest TOC — creation date pinned to the right edge. */
+/* Folder digest TOC — title on the left, creation date on the same row at right. */
+.folder-toc li{
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.folder-toc-link{
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
 .folder-toc-date{
-    float: right;
-    margin-left: 16px;
+    flex: 0 0 auto;
+    margin-left: auto;
     color: var(--muted);
     font-size: 12px;
     font-weight: 400;
@@ -11,10 +22,10 @@
 }
 
 @media(max-width: 560px){
+    .folder-toc li{
+        gap: 8px;
+    }
     .folder-toc-date{
-        float: none;
-        display: block;
-        margin: 1px 0 0 0;
         font-size: 11px;
     }
 }
