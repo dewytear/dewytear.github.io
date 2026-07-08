@@ -1,228 +1,358 @@
-<h2>Fable 5 시대의 병목은 모델이 아니라 인간인가 — 타릭의 &ldquo;지도와 영토&rdquo; 프레임</h2>
-<p>Anthropic의 Claude Code 팀에서 일하는 것으로 소개된 <strong>타릭(Tarik)</strong>의 글과 AI Engineer World&rsquo;s Fair 키노트 전사를 바탕으로, <strong>왜 강력한 모델에 일을 맡겨도 결과가 기대와 어긋나는지</strong>를 분석한다. 타릭의 핵심 주장은 도발적이다. 모델이 강해질수록 품질 병목은 모델의 지능 부족보다 <strong>사용자가 무엇을 원하는지 명시하고, 자신이 무엇을 모르는지 찾아내는 능력</strong>으로 이동한다는 것이다.</p>
+<h2>Fable 5 시대의 병목은 모델이 아니라 인간인가 — Thariq Shihipar의 &ldquo;지도와 영토&rdquo; 프레임</h2>
+
+<p>Anthropic의 Claude Code 팀에서 일하는 <strong>Thariq Shihipar(타릭 시히파르)</strong>는 Fable 5를 다루며 반복해서 같은 문제를 만났다고 말한다. 모델은 이전보다 훨씬 긴 작업을 수행하고, 도구를 사용하며, 코드베이스를 탐색하고, 사용자가 적지 않은 부분까지 스스로 결정한다. 그런데 바로 그 때문에 결과가 기대와 어긋날 수 있다. <strong>모델이 약해서가 아니라, 사용자가 전달한 지도(map)가 실제 영토(territory)를 충분히 담지 못했기 때문</strong>이다.</p>
+
+<p>이 글은 타릭의 공개 글 <em>A Field Guide to Fable: Finding Your Unknowns</em>, 그가 직접 공개한 11개 HTML 실전 아티팩트, Fable 5에 관한 Anthropic 공식 발표와 모델 문서, 그리고 장기 에이전트·코딩 에이전트 연구를 교차해 분석한다. 결론부터 말하면 타릭의 주장은 단순한 &ldquo;프롬프트를 잘 써라&rdquo;가 아니다. <strong>강한 에이전트 시대에는 구현 능력보다 unknown을 발견하고, 결정의 근거를 남기고, 결과를 이해하는 능력이 새로운 병목이 된다</strong>는 주장이다.</p>
 
 <div class="note">
-    <span class="nh">이 글의 사실 확인 원칙</span>
-    타릭의 직접 발언·일화·프롬프트 기법은 <strong>사용자 제공 전사</strong>를 1차 자료로 재구성했다. Fable 5의 공개 상태, 에이전트의 장기 작업 능력, 도구 사용·프로젝트 컨텍스트의 효과 등은 공개 자료와 연구로 교차 보강했다. 다만 <strong>원문 글의 280만 조회</strong>, <strong>Claude Code 시스템 프롬프트 80% 삭제</strong>, <strong>질문 도구의 정확한 개발자 귀속</strong>, <strong>키노트 덱을 전날 밤 4시간 만에 제작</strong> 같은 세부 수치는 이번 공개 웹 검색에서 독립적으로 확인할 수 없었다. 따라서 아래에서는 이를 <strong>&ldquo;타릭의 전사상 주장·자술&rdquo;</strong>로 표시하며 회사 공식 사실과 혼동하지 않는다.
+    <span class="nh">출처 계층</span>
+    <strong>1차 자료</strong>: Thariq Shihipar의 공개 글과 직접 공개한 11개 아티팩트.<br>
+    <strong>공식 자료</strong>: Anthropic의 Fable 5 발표 및 Claude 모델 문서.<br>
+    <strong>보강 자료</strong>: AI Engineer 발표 요약·보도와 장기 작업·코딩 에이전트 연구.<br>
+    조회 수처럼 시점에 따라 달라지는 지표와 발표 중 개인 일화는 별도 표시하며, 회사 공식 사실과 섞지 않는다.
 </div>
 
-<h3>먼저 확인할 사실 — Fable 5는 무엇인가</h3>
-<p>2026년 6월 9일 Reuters는 Anthropic이 제한적으로 운용하던 Mythos 계열의 공개 버전을 <strong>Claude Fable 5</strong>라는 이름으로 출시했으며, 당시 회사의 <strong>가장 강력한 공개 모델</strong>이라고 보도했다. 즉 타릭의 논의는 단순한 &ldquo;프롬프트 팁&rdquo;이 아니라, 장시간 도구를 사용하고 넓은 코드베이스를 탐색하는 최신 에이전트형 모델에서 <strong>인간의 명세 품질이 어떤 식으로 병목이 되는가</strong>에 관한 문제로 읽는 편이 정확하다.</p>
+<h3>1. 먼저 바로잡을 것 — 원문은 확인된다</h3>
+
+<p>타릭의 핵심 원문은 X에 공개된 <strong><em>A Field Guide to Fable: Finding Your Unknowns</em></strong>다. 첫 문장은 Fable 5와 일하며 오래된 교훈을 다시 배운다는 문제의식에서 출발한다. <strong>&ldquo;지도는 영토가 아니다&rdquo;</strong>. 사용자가 프롬프트·스펙·문서로 묘사한 세계와 실제 코드·데이터·조직·사용자 행동은 같지 않다는 뜻이다.</p>
 
 <div class="note">
-    <span class="nh">독립 확인</span>
-    · Reuters(2026-06-09): <a href="https://www.reuters.com/technology/anthropic-rolls-out-public-version-mythos-without-cybersecurity-capability-2026-06-09/" target="_blank" rel="noopener">Anthropic rolls out public version of Mythos without cybersecurity capability</a><br>
-    · 타릭의 론칭 전 사용 경험, 원문 조회 수, 발표자 직책 세부는 사용자 제공 전사 기준이며 이번 검색으로 동일 원문 링크를 독립 확인하지 못했다.
+    <span class="nh">1차 출처</span>
+    · <a href="https://x.com/trq212/status/2073100352921215386" target="_blank" rel="noopener">Thariq Shihipar, A Field Guide to Fable: Finding Your Unknowns</a><br>
+    · <a href="https://thariqs.github.io/html-effectiveness/unknowns/" target="_blank" rel="noopener">Know your unknowns — Thariq의 11개 실전 HTML 아티팩트</a>
 </div>
 
-<h3>1. 능력은 있는데 꺼내 쓰지 못한다 — Capability Overhang</h3>
-<p>타릭은 Anthropic 내부에서 모델을 <strong>&ldquo;설계한다&rdquo;기보다 &ldquo;기른다&rdquo;</strong>고 자주 말한다고 설명한다. 데이터와 피드백으로 훈련된 대형 모델은 개발자조차 모든 능력 조합을 미리 열거할 수 없고, 출시 뒤 사용자가 새로운 프롬프트·도구·환경을 조합하면서 숨어 있던 능력이 드러난다는 관점이다. 그는 이를 <strong>capability overhang</strong>, 즉 <strong>능력은 이미 존재하지만 활용법이 뒤늦게 발견되는 상태</strong>로 설명한다.</p>
+<p>특히 두 번째 링크는 해석의 여지가 적다. 타릭이 직접 공개한 companion guide는 실전 패턴을 <strong>사전 8개, 구현 중 1개, 구현 후 2개 — 총 11개</strong>로 명시한다. 따라서 이를 단순히 &ldquo;6가지 프롬프트 팁&rdquo;으로만 소개하면 핵심 압축에는 도움이 되지만, 공개 자료 전체를 전달한 것은 아니다.</p>
 
-<p>전사에 등장하는 포켓몬 예시는 이 주장을 직관적으로 보여 준다. 일반 채팅 모델은 &ldquo;1,000개가 넘는 이름 중 특정 문자열 조건을 만족하는 포켓몬을 모두 찾아라&rdquo; 같은 문제에서 틀릴 수 있다. 그러나 Claude Code는 모든 이름을 외워서 답하려 하지 않고, <strong>데이터를 가져오고 스크립트로 필터링</strong>할 수 있다. 핵심은 모델의 기억력이 갑자기 좋아진 것이 아니라 <strong>문제를 도구 사용 가능한 형태로 재구성</strong>한 데 있다.</p>
+<h3>2. Fable 5는 어떤 모델인가 — 공식 확인 범위</h3>
+
+<p>Anthropic은 <strong>2026년 6월 9일</strong> Claude Fable 5를 발표했다. 공식 발표는 이를 일반 사용이 가능한 Mythos급 모델로 소개하며, 당시 일반적으로 이용 가능한 기존 모델을 넘어서는 능력과 <strong>더 길고 복잡한 작업에서의 우위</strong>를 강조한다. Anthropic 모델 문서 역시 Fable 5를 <strong>장시간 실행되는 에이전트(long-running agents)</strong>를 위한 차세대 지능으로 설명한다.</p>
+
+<p>공식 문서에서 중요한 부분은 단순 벤치마크 숫자가 아니다. Fable 5는 더 오래 자율적으로 작업하고, 긴 컨텍스트에서 자체 노트를 유지하며, 복합 작업을 이어 가는 방향으로 설계돼 있다. 타릭의 unknown 논의는 바로 이 능력과 연결된다. <strong>에이전트가 더 오래 일할수록, 사용자가 직접 확인하지 않은 결정도 더 많이 누적될 수 있다.</strong></p>
 
 <div class="note">
-    <span class="nh">논거 보강 — &ldquo;모델 + 도구&rdquo;는 다른 시스템이다</span>
-    2026년 Claude Code 아키텍처 분석 연구는 핵심 루프 자체보다 권한 체계, 컨텍스트 관리, MCP·플러그인·스킬·훅, 서브에이전트 같은 <strong>주변 시스템</strong>이 대부분의 설계를 차지한다고 분석한다. 이는 타릭의 포켓몬 예시처럼 &ldquo;모델이 아는가&rdquo;와 &ldquo;에이전트가 도구를 써서 해결할 수 있는가&rdquo;가 다른 질문임을 뒷받침한다.<br>
-    · <a href="https://arxiv.org/abs/2604.14228" target="_blank" rel="noopener">Liu et al., Dive into Claude Code (2026)</a>
+    <span class="nh">Anthropic 공식 자료</span>
+    · <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank" rel="noopener">Introducing Claude Fable 5</a>, 2026-06-09.<br>
+    · <a href="https://platform.claude.com/docs/en/intro" target="_blank" rel="noopener">Claude Platform Docs — model overview</a>
 </div>
 
-<h3>2. 더 강한 모델에 더 많은 규칙을 주면 오히려 약해질 수 있다</h3>
-<p>타릭의 전사상 주장에 따르면 Claude Code 팀은 최근 시스템 프롬프트의 약 80%를 덜어냈다. 예전 모델은 &ldquo;이것을 하지 마라&rdquo;라는 금지 목록과 많은 예시가 안전장치가 되기 쉬웠지만, 더 강한 모델에서는 그 예시가 <strong>가능한 해법의 경계</strong>처럼 작동해 상상력과 탐색을 가둘 수 있었다는 설명이다. 그래서 방향을 <strong>제약을 늘리는 것에서 맥락을 주는 것</strong>으로 옮겼다는 것이다.</p>
+<h3>3. 타릭의 첫 번째 논거 — Capability Overhang: 능력은 있는데 사용법을 모른다</h3>
 
-<p>이 <strong>80%</strong> 수치는 이번 웹 검색에서 Anthropic 공식 문서로 확인되지 않았다. 따라서 회사의 공식 발표로 단정해서는 안 된다. 다만 논거 자체, 즉 장기 에이전트에게는 단순 금지 목록보다 <strong>프로젝트 구조·명령·아키텍처·운영 원칙 같은 실행 맥락</strong>이 중요하다는 주장은 외부 연구와 맞닿아 있다. 실제 공개 프로젝트의 Claude.md 계열 파일을 분석한 연구에서도 운영 명령, 기술 구현 노트, 상위 아키텍처가 주요 내용으로 나타났다.</p>
+<p>타릭의 발표를 관통하는 첫 번째 개념은 <strong>capability overhang</strong>이다. 모델에는 이미 어떤 능력이 존재하지만, 사용자와 제품 팀이 그 능력을 끌어내는 방법을 아직 발견하지 못한 상태다. 새 모델을 이전 모델과 같은 프롬프트, 같은 시스템 프롬프트, 같은 도구 계약으로만 평가하면 실제 능력을 과소평가할 수 있다.</p>
+
+<p>그가 드는 포켓몬 예시는 직관적이다. 수많은 이름 중 특정 문자열 조건을 만족하는 항목을 모두 찾으라고 하면 일반 채팅 모델은 기억과 추론만으로 틀릴 수 있다. 그러나 Claude Code 같은 에이전트는 데이터를 가져오고, 스크립트를 작성하고, 필터를 실행해 답을 검증할 수 있다. 여기서 성능 향상은 &ldquo;더 많이 외웠기 때문&rdquo;이 아니라 <strong>문제를 도구 사용 가능한 형태로 바꿨기 때문</strong>이다.</p>
 
 <div class="note">
-    <span class="nh">논거 보강 — 규칙 파일은 &ldquo;금지 목록&rdquo;보다 작업 환경의 지도에 가깝다</span>
-    · <a href="https://arxiv.org/abs/2509.14744" target="_blank" rel="noopener">Chatlatanagulchai et al., On the Use of Agentic Coding Manifests (2025)</a><br>
-    이 연구는 242개 저장소의 Claude.md 계열 파일을 분석해, 에이전트 설정이 프로젝트 컨텍스트·운영 명령·아키텍처 정보를 전달하는 역할을 한다고 보고한다.
+    <span class="nh">실무 해석</span>
+    <strong>모델</strong>과 <strong>모델+도구+권한+컨텍스트+검증 루프</strong>는 같은 시스템이 아니다. AI가 못한다고 결론내리기 전에, 그 능력을 드러낼 하네스가 있는지 먼저 봐야 한다.
 </div>
 
-<h3>3. 같은 질문 도구도 모델 세대가 바뀌면 사용 방식이 바뀐다</h3>
-<p>타릭은 자신이 질문 도구를 만들었다고 소개하며 모델 세대 차이를 설명한다. 전사 기준으로는 <strong>Opus 4</strong>가 도구를 안정적으로 호출하지 못해 계속 손을 봐야 했고, <strong>Opus 4.5</strong>에서는 &ldquo;스펙에 대해 질문을 많이 해 달라&rdquo;고 하면 실제 인터뷰처럼 작동했으며, <strong>Fable 5</strong>에서는 질문 묶음을 HTML 보고서에 조직해 가져오는 수준까지 갔다고 말한다.</p>
+<p>2026년 Claude Code 아키텍처 분석 연구도 이 관점을 보강한다. 연구는 단순한 모델 호출 루프보다 셸 도구, 권한, 컨텍스트 관리, MCP·플러그인·스킬·훅, 서브에이전트 같은 주변 시스템을 중요한 설계 공간으로 본다. 타릭의 표현으로 바꾸면 <strong>모델 능력의 상한과 실제 제품에서 꺼내 쓰는 능력 사이에 간극</strong>이 있다.</p>
 
-<p>이 사례의 중요한 부분은 개별 버전의 우열표가 아니다. <strong>도구 스펙은 같은데 모델이 바뀌자 상호작용 패턴 자체가 변했다</strong>는 점이다. 따라서 새 모델을 이전 모델의 프롬프트와 규칙으로만 평가하면, 새로운 능력을 오히려 오래된 사용법에 가둘 수 있다는 것이 타릭의 결론이다. 다만 질문 도구의 정확한 개발자 귀속과 각 버전별 동작 비교는 이번 검색에서 별도 공개 자료로 독립 확인되지 않았다.</p>
+<h3>4. Unhobbling Claude — 강한 모델을 이전 모델의 규칙으로 묶지 않는다</h3>
 
-<h3>4. 핵심 프레임 — 지도는 영토가 아니다</h3>
-<p>여기서 타릭은 발표의 중심 비유를 꺼낸다. <strong>지도(map)</strong>는 사용자가 AI에 주는 모든 표현이다. 프롬프트, 스펙, CLAUDE.md, 스킬, 참고 문서, 예시 코드, 컨텍스트가 지도다. <strong>영토(territory)</strong>는 실제 일이 벌어지는 곳이다. 진짜 코드베이스, 레거시 제약, 배포 환경, 조직의 암묵지, 고객의 행동, 데이터의 예외가 영토다.</p>
+<p>타릭은 새 모델을 잘 쓰는 일을 단순 프롬프트 엔지니어링보다 <strong>unhobbling</strong>, 즉 모델의 발목을 묶은 제약을 풀어 주는 문제로 설명한다. 여기에는 두 가지 중요한 사례가 있다.</p>
 
-<p>이 표현은 AI에서 처음 생긴 말이 아니다. &ldquo;지도는 영토가 아니다&rdquo;는 20세기 일반 의미론의 알프레드 코르지브스키와 연결되는 오래된 명제다. 표현·모델·설명은 현실을 유용하게 압축하지만 현실과 동일하지 않다. 타릭은 이 고전적 구분을 에이전트 작업에 옮긴다.</p>
+<h4>4-1. 시스템 프롬프트를 줄였다는 주장</h4>
+
+<p>타릭의 공개 발표를 정리한 자료에 따르면 Claude Code 팀은 모델이 강해지면서 시스템 프롬프트의 상당 부분을 걷어 냈고, 발표에서는 <strong>약 80%</strong>라는 수치가 언급됐다. 이유는 역설적이다. 약한 모델에 유용했던 금지 목록과 예시가 강한 모델에서는 가능한 해법의 경계처럼 작동할 수 있기 때문이다.</p>
+
+<p>다만 이 <strong>80%</strong>는 Anthropic 제품 문서에 명시된 공식 변경 수치로 확인되는 것은 아니다. 따라서 정확한 회사 공식 지표로 단정하지 않고 <strong>타릭의 공개 발표상 주장</strong>으로 다루는 것이 맞다. 그럼에도 논지는 분명하다. 새 모델을 도입하면서 과거 실패를 막기 위해 쌓은 규칙을 그대로 유지하면, 과거 모델의 한계를 새 모델에 상속할 수 있다.</p>
+
+<h4>4-2. 같은 질문 도구도 모델 세대에 따라 달라졌다</h4>
+
+<p>타릭은 사용자에게 질문하는 도구를 사례로 든다. 그의 설명에 따르면 이전 세대 모델에서는 도구를 안정적으로 호출하게 만들기 위해 손을 많이 봐야 했고, 이후 모델에서는 스펙에 관해 질문하도록 지시하면 실제 인터뷰처럼 동작했으며, Fable에서는 질문과 결과를 더 구조화된 형태로 조직하는 수준까지 갔다.</p>
+
+<p>핵심은 버전별 승패가 아니다. <strong>도구 스펙이 같아도 모델이 바뀌면 상호작용 패턴이 달라진다.</strong> 따라서 모델 업그레이드는 단순 교체가 아니라 프롬프트, 도구 설명, 권한, 검증 방식까지 다시 실험해야 하는 시스템 변경이다.</p>
+
+<h3>5. 핵심 프레임 — 지도는 영토가 아니다</h3>
+
+<p><strong>지도(map)</strong>는 사용자가 AI에 전달한 표현이다. 프롬프트, PRD, 스펙, CLAUDE.md, 예시 코드, 디자인 가이드, 회의록, 티켓이 여기에 해당한다. <strong>영토(territory)</strong>는 실제 일이 벌어지는 현실이다. 레거시 코드, 숨은 데이터 제약, 배포 환경, 고객 행동, 조직의 암묵 규칙, 장애 이력, 법적 제한이 영토다.</p>
+
+<p>문제는 지도가 언제나 불완전하다는 데 있다. 사람은 자신이 아는 것조차 전부 쓰지 않고, 모르는 것은 당연히 쓸 수 없으며, 고려하지 못한 것은 질문조차 만들지 못한다. 에이전트는 그 빈칸을 만났을 때 매번 멈추지 않는다. <strong>가정을 만들고 계속 간다.</strong> 모델이 강해질수록 그 가정 위에서 더 멀리 갈 수 있다.</p>
 
 <div class="note">
-    <span class="nh">타릭식 재해석</span>
-    AI가 지도에 없는 지형을 만나는 순간 <strong>unknown</strong>이 생긴다. 에이전트는 매번 멈춰 사람에게 묻지 않는다. 자기가 추정한 사용자 의도에 따라 결정을 내린다. 강한 모델이 더 넓은 영토를 오래 탐색할수록, <strong>명시하지 않은 결정 지점</strong>도 늘어날 수 있다.
+    <span class="nh">타릭의 역설</span>
+    약한 모델은 빨리 막혀 사람이 개입한다. 강한 모델은 스스로 우회해 끝까지 갈 수 있다. 그래서 <strong>강한 모델일수록 잘못된 가정이 더 멀리 전파될 위험</strong>도 생긴다.
 </div>
 
-<p>이 논리는 장기 에이전트 연구와도 맞는다. METR 연구진은 모델이 성공적으로 수행할 수 있는 작업 길이가 빠르게 늘고 있으며, 2019년 이후 50% 성공률 기준 작업 시간 지평이 대략 수개월 단위로 두 배씩 증가하는 경향을 보고했다. 연구진은 발전 원인으로 <strong>실수에 적응하는 능력, 논리 추론, 도구 사용</strong>을 함께 지목한다. 타릭의 표현으로 바꾸면, 모델이 더 오래 돌아다닐수록 &ldquo;영토&rdquo;가 넓어지고 unknown 관리가 더 중요해진다.</p>
+<h3>6. 네 종류의 unknown — 가장 비싼 것은 &ldquo;모르는지도 모르는 것&rdquo;</h3>
 
-<div class="note">
-    <span class="nh">논거 보강 — 장기 작업 능력의 확대</span>
-    · <a href="https://arxiv.org/abs/2503.14499" target="_blank" rel="noopener">Kwa et al., Measuring AI Ability to Complete Long Tasks (2025)</a><br>
-    연구는 프런티어 모델의 장기 작업 능력이 빠르게 증가한다고 보고하지만, 실제 모든 소프트웨어 프로젝트에 그대로 일반화할 수 있는지는 별도 검증이 필요하다고 한계를 명시한다.
-</div>
-
-<h3>5. 네 칸의 unknown — 가장 비싼 것은 &ldquo;모르는지도 모르는 것&rdquo;</h3>
-<p>타릭은 문제를 네 칸으로 나눠 생각한다.</p>
 <table>
-    <thead><tr><th>구분</th><th>의미</th><th>프로젝트에서의 예</th></tr></thead>
+    <thead><tr><th>구분</th><th>의미</th><th>프로젝트 예시</th></tr></thead>
     <tbody>
-        <tr><td><strong>Known knowns</strong></td><td>내가 알고, 안다는 것도 아는 것</td><td>프롬프트에 적은 목표·기능·기한</td></tr>
-        <tr><td><strong>Known unknowns</strong></td><td>모른다는 사실은 아는 것</td><td>아직 선택하지 않은 DB, 인증 방식, 배포 전략</td></tr>
-        <tr><td><strong>Unknown knowns</strong></td><td>나는 알고 있지만 너무 당연해 적지 않은 것</td><td>팀의 암묵 규칙, &ldquo;이 경우 당연히 승인받는다&rdquo; 같은 관행</td></tr>
-        <tr><td><strong>Unknown unknowns</strong></td><td>고려조차 하지 않은 것</td><td>후반에 발견되는 규제·데이터·성능·호환성 제약</td></tr>
+        <tr><td><strong>Known knowns</strong></td><td>알고 있고, 안다는 것도 안다</td><td>명시한 목표, 기능, 일정, API 계약</td></tr>
+        <tr><td><strong>Known unknowns</strong></td><td>모른다는 사실은 안다</td><td>아직 선택하지 않은 DB, 인증 방식, 배포 전략</td></tr>
+        <tr><td><strong>Unknown knowns</strong></td><td>알지만 너무 당연해서 적지 않았다</td><td>팀 관행, 승인 절차, 암묵적 예외 처리</td></tr>
+        <tr><td><strong>Unknown unknowns</strong></td><td>고려조차 하지 않았다</td><td>후반에 발견되는 규제, 성능, 데이터, 호환성 제약</td></tr>
     </tbody>
 </table>
 
-<p>가장 비싼 칸은 마지막이다. 프로젝트 말미에 발견되면 구조를 갈아엎게 만드는 제약이 여기서 나온다. 따라서 타릭의 여섯 기법은 &ldquo;더 멋진 프롬프트&rdquo;를 쓰는 기술이라기보다, <strong>unknown unknown을 비싸지기 전에 싸게 발견하는 기술</strong>이다.</p>
+<p>타릭의 실전 가이드는 이 네 칸, 특히 <strong>unknown unknowns</strong>를 싸게 발견하기 위한 장치다. 프로젝트 후반에 발견하면 아키텍처를 뒤집어야 할 문제를, 구현 전에 질문·프로토타입·레퍼런스로 끌어올리는 것이다.</p>
 
-<h3>6. 기법 1 — Blind Spot Check: 일을 시키기 전에 사각지대부터 찾는다</h3>
-<p>낯선 영역에서는 바로 구현을 지시하지 않는다. 먼저 모델에게 <strong>내가 무엇을 모르는지도 모르는지</strong>를 탐색하게 한다. 타릭의 예시는 인증 모듈을 처음 보는 상황이다.</p>
+<h3>7. &ldquo;6가지 기법&rdquo;은 요약이고, 1차 자료에는 11개 아티팩트가 있다</h3>
 
-<div class="note">
-    <span class="nh">프롬프트 패턴</span>
-    나는 이 코드베이스의 인증 모듈을 거의 모른다. 바로 구현하지 말고 먼저 사각지대 점검을 해라. 내가 고려하지 못한 제약, 보안 경계, 실패 모드, 기존 관례를 찾아 설명하고, 그 결과를 바탕으로 내가 더 좋은 작업 프롬프트를 쓰게 도와줘.
-</div>
+<p>영상이나 2차 요약에서 타릭의 방법은 흔히 <strong>Blind Spot, Prototype, Interview, Reference, Implementation Notes, Quiz</strong>의 여섯 가지로 압축된다. 이 요약은 핵심 흐름을 이해하는 데 유용하다. 하지만 타릭 본인의 companion guide는 이를 더 세분해 <strong>11개의 독립 HTML 아티팩트</strong>로 공개한다.</p>
 
-<p>코딩만의 기법도 아니다. 타릭은 색보정을 모르는 상태에서 영상 편집을 하며, 작업부터 시키지 않고 색보정이라는 영역의 기본 구조와 자신이 놓친 판단 기준을 먼저 가르쳐 달라고 했다고 설명한다. 핵심은 <strong>도메인 지식이 부족한 사람이 명세를 억지로 확정하지 않는 것</strong>이다.</p>
-
-<h3>7. 기법 2 — Brainstorming &amp; Prototype: 말로 못 하는 것은 눈앞에 놓고 고른다</h3>
-<p>두 번째는 <strong>&ldquo;보면 아는데 말로는 못 하는 것&rdquo;</strong>을 처리하는 방법이다. 디자인, 인터랙션, 문체, 정보 밀도처럼 선호를 언어로 완전히 설명하기 어려운 영역에서 특히 유효하다.</p>
-
-<div class="note">
-    <span class="nh">프롬프트 패턴</span>
-    나는 디자인 감각을 정확히 언어화하지 못한다. 서로 미세하게 다른 안이 아니라, 전제가 다른 방향 네 가지를 실제로 만들어 보여 줘. 내가 반응하고 선택하겠다. 선택 결과를 다음 반복의 제약으로 사용해라.
-</div>
-
-<p>타릭의 논지는 &ldquo;스펙을 완벽히 쓰고 시작하라&rdquo;가 아니다. 오히려 <strong>싼 프로토타입을 만들어 사용자의 숨은 선호를 외부화</strong>하라는 것이다. 이는 unknown knowns, 즉 사용자는 알고 있지만 말로 적지 않은 기준을 발견하는 장치다.</p>
-
-<h3>8. 기법 3 — Interview: AI가 사용자를 취조하게 한다</h3>
-<p>방향이 잡혔다면 모델이 거꾸로 질문하게 한다. 여기서 중요한 것은 단순히 &ldquo;질문 있어?&rdquo;라고 묻는 게 아니다.</p>
-
-<ul>
-    <li><strong>한 번에 하나씩</strong> 묻게 한다 — 답이 다음 질문을 바꾸게 한다.</li>
-    <li><strong>답에 따라 설계가 크게 바뀌는 질문부터</strong> 묻게 한다.</li>
-    <li>취향 확인보다 <strong>비가역 결정·비용 큰 결정</strong>을 우선한다.</li>
-    <li>질문이 끝나면 답변을 <strong>명시적 스펙과 미결정 항목</strong>으로 분리한다.</li>
-</ul>
-
-<div class="note">
-    <span class="nh">프롬프트 패턴</span>
-    구현 전에 나를 인터뷰해라. 애매한 점을 한 번에 하나씩 질문하고, 내 답에 따라 후속 질문을 바꿔라. 질문 순서는 답이 시스템 설계를 가장 크게 바꾸는 항목부터 정해라. 충분해지면 결정된 것, 미결정인 것, 가정한 것을 분리해 요약해라.
-</div>
-
-<h3>9. 기법 4 — Reference: 말보다 이미 작동하는 다른 지도를 준다</h3>
-<p>원하는 동작을 설명하기 어렵다면 <strong>레퍼런스 구현</strong>을 준다. 타릭의 예시는 &ldquo;이 폴더의 Rust 라이브러리가 원하는 동작 그대로이니 읽고 같은 의미를 TypeScript로 구현하라&rdquo;는 식이다. 언어가 달라도 괜찮다. 중요한 것은 표면 문법이 아니라 <strong>행동 의미와 불변조건</strong>이다.</p>
-
-<p>좋은 레퍼런스는 지도와 영토의 간극을 줄인다. 사용자가 수십 문장으로 설명하지 못한 오류 처리, 순서, 경계 조건, API 감각이 실제 코드에 이미 들어 있기 때문이다. 단, 레퍼런스를 복사하는 것이 아니라 <strong>무엇을 보존하고 무엇을 현 환경에 맞게 바꿀지</strong> 명시해야 한다.</p>
-
-<h3>10. 기법 5 — Implementation Notes: 계획 이탈을 숨기지 말고 기록한다</h3>
-<p>아무리 준비해도 구현 중에는 복병이 나온다. 강한 에이전트가 위험해지는 순간은 계획에서 벗어났다는 사실 자체보다, <strong>그 이탈을 사용자에게 보이지 않은 채 합리화</strong>할 때다. 타릭은 작업 전에 구현 노트 파일을 만들게 한다.</p>
-
-<div class="note">
-    <span class="nh">프롬프트 패턴</span>
-    구현 노트를 유지해라. 계획에서 벗어나야 할 때는 가능한 선택지 중 보수적인 쪽을 택하고, 무엇이 달라졌는지·왜 그랬는지·어떤 가정을 했는지 이탈 항목에 기록해라. 치명적 차단 사유가 아니면 멈추지 말고 계속 진행해라.
-</div>
-
-<p>이 파일은 단순 로그가 아니다. 첫 프로젝트에서 발견된 unknown을 다음 프로젝트의 known으로 바꾸는 <strong>지도 갱신 장치</strong>다. 장기 에이전트가 넓은 영토를 탐색할수록, 이런 provenance가 없으면 결과만 남고 의사결정 이유는 사라진다.</p>
-
-<h3>11. 기법 6 — Quiz: AI가 한 일을 내가 설명할 수 있는지 시험한다</h3>
-<p>마지막 기법은 퀴즈다. 구현이 끝나면 보고서와 퀴즈를 만들게 하고, 사용자가 변경을 실제로 이해했는지 확인한다. 타릭의 표현을 요약하면 <strong>&ldquo;AI가 한 일을 내가 설명하지 못하면 아직 내 코드가 아니다&rdquo;</strong>에 가깝다.</p>
-
-<div class="note">
-    <span class="nh">프롬프트 패턴</span>
-    이번 변경을 내가 완전히 이해했는지 확인해야 한다. 아키텍처, 핵심 결정, 실패 모드, 되돌리는 법을 보고서로 정리하고 마지막에 퀴즈를 붙여라. 내가 틀린 답은 다시 설명하고 변형 문제를 내라. 내가 충분히 이해하기 전에는 완료로 간주하지 마라.
-</div>
-
-<p>이 기법은 단순 교육이 아니다. 코드 리뷰의 질문을 <strong>&ldquo;코드가 돌아가는가&rdquo;</strong>에서 <strong>&ldquo;운영자가 시스템의 결정 구조를 이해하는가&rdquo;</strong>로 확장한다. 특히 에이전트가 생성한 코드가 많을수록 소유권과 유지보수 능력을 확인하는 장치가 된다.</p>
-
-<h3>12. 여섯 기법의 공통점 — 비싼 실수를 앞당겨 싸게 산다</h3>
 <table>
-    <thead><tr><th>시점</th><th>기법</th><th>찾으려는 unknown</th></tr></thead>
+    <thead><tr><th>시점</th><th>타릭이 공개한 아티팩트</th><th>목적</th></tr></thead>
     <tbody>
-        <tr><td>시작 전</td><td>Blind Spot Check</td><td>도메인 자체를 몰라 놓친 것</td></tr>
-        <tr><td>시작 전</td><td>Brainstorming &amp; Prototype</td><td>말로 표현 못 한 선호</td></tr>
-        <tr><td>시작 전</td><td>Interview</td><td>미결정·애매한 요구</td></tr>
-        <tr><td>시작 전</td><td>Reference</td><td>설명에서 빠지는 행동 의미</td></tr>
-        <tr><td>구현 중</td><td>Implementation Notes</td><td>현실과 계획이 충돌한 지점</td></tr>
-        <tr><td>완료 후</td><td>Quiz</td><td>사용자의 이해 공백</td></tr>
+        <tr><td>구현 전</td><td><strong>1. Blindspot pass</strong></td><td>코드베이스·도메인의 숨은 제약 찾기</td></tr>
+        <tr><td>구현 전</td><td><strong>2. Teach me my unknowns</strong></td><td>낯선 영역의 어휘와 판단 기준 학습</td></tr>
+        <tr><td>구현 전</td><td><strong>3. Four design directions</strong></td><td>말로 못 하는 선호를 극단적으로 다른 안으로 외부화</td></tr>
+        <tr><td>구현 전</td><td><strong>4. Mock before you wire</strong></td><td>실제 앱을 건드리기 전에 싼 프로토타입으로 검증</td></tr>
+        <tr><td>구현 전</td><td><strong>5. Brainstorm the intervention</strong></td><td>개입 지점을 폭넓게 탐색하고 비용 순으로 비교</td></tr>
+        <tr><td>구현 전</td><td><strong>6. The interview</strong></td><td>설계를 크게 바꾸는 질문부터 한 번에 하나씩 확인</td></tr>
+        <tr><td>구현 전</td><td><strong>7. Point at a reference</strong></td><td>설명 대신 작동하는 레퍼런스의 의미·불변조건 전달</td></tr>
+        <tr><td>구현 전</td><td><strong>8. The tweakable plan</strong></td><td>바꾸기 쉬운 결정과 기계적 작업을 분리해 계획 검토</td></tr>
+        <tr><td>구현 중</td><td><strong>9. Implementation notes</strong></td><td>계획 이탈·가정·보수적 선택을 기록</td></tr>
+        <tr><td>구현 후</td><td><strong>10. Buy-in doc</strong></td><td>데모·스펙·구현 노트를 의사결정 문서로 패키징</td></tr>
+        <tr><td>구현 후</td><td><strong>11. Quiz me before I merge</strong></td><td>사용자가 변경을 실제로 이해하는지 검증</td></tr>
     </tbody>
 </table>
 
-<p>브레인스토밍, 인터뷰, 프로토타입은 모두 추가 작업처럼 보인다. 그러나 타릭의 관점에서는 반대다. 후반의 재작업을 피하기 위해 <strong>초기의 싼 실패를 의도적으로 구매</strong>하는 것이다. 좋은 프롬프트의 목적은 모델을 더 열심히 일시키는 것이 아니라, <strong>틀린 방향으로 오래 일하지 못하게 하는 것</strong>이다.</p>
+<h3>8. 패턴 1 — Blindspot pass: 바로 구현하지 말고 사각지대부터 찾는다</h3>
 
-<h3>13. 키노트 후반 — &ldquo;코딩을 사랑했지만 돌아갈 수 없다&rdquo;</h3>
-<p>전사에 따르면 타릭은 Anthropic에 오기 전 약 30명 규모 스타트업을 운영했다. 당시에는 코드가 어려워 늘 둘 중 하나를 골라야 했다고 회고한다. 앱을 빠르게 만들 것인가, 새 기능을 실험할 것인가. 한쪽은 한 달, 다른 쪽은 두 달이 걸릴 수 있어 둘 다 할 수 없었다는 것이다.</p>
-
-<p>그는 몇 주 전 옛 코드베이스를 다시 열어 과거에 하고 싶었던 일을 시도했고, 예전에는 몇 주 걸리던 것이 몇 시간 만에 끝났다고 말한다. 동시에 손으로 코드를 쓰던 감각, 머릿속에서 코드베이스를 회전시키는 듯한 즐거움을 사랑했다고 고백한다. 그러나 밤늦게 디버깅하고, 몇 주 동안 실패하고, 대부분의 프로젝트와 스타트업이 실패하는 현실도 기억한다. 그래서 결론은 낙관적 구호보다 복잡하다. <strong>그 시절을 사랑했지만 돌아갈 수는 없다. 앞으로 나가는 길은 이 변화를 통과하는 것뿐</strong>이라는 태도다.</p>
+<p>낯선 코드베이스에서 가장 위험한 행동은 모르는 사람이 먼저 상세 스펙을 확정하는 것이다. 타릭의 첫 번째 패턴은 구현 전에 에이전트가 코드베이스를 읽고 <strong>사용자가 아직 질문하지 못한 문제</strong>를 찾게 한다.</p>
 
 <div class="note">
-    <span class="nh">논거 보강 — 생산성 증가는 관찰되지만 &ldquo;가치&rdquo;와 동일하지 않다</span>
-    Microsoft의 2026년 대규모 도입 연구는 CLI 코딩 에이전트 채택자가 반사실적 추정 대비 약 <strong>24% 더 많은 PR을 머지</strong>한 것으로 보고한다. 다만 연구진 스스로 <strong>머지된 PR이 곧 가치</strong>는 아니라고 경고한다. 이 구분은 타릭의 &ldquo;만드는 것은 쉬워졌지만 가치를 만드는 것은 여전히 어렵다&rdquo;는 주장과 정확히 맞물린다.<br>
-    · <a href="https://arxiv.org/abs/2607.01418" target="_blank" rel="noopener">Murphy-Hill et al., Adoption and Impact of Command-Line AI Coding Agents (2026)</a>
+    <span class="nh">프롬프트 패턴 — 원문의 의미를 보존한 한국어 재구성</span>
+    나는 Acme에 새 SSO 인증 제공자를 추가하려 하지만 인증 모듈을 다뤄 본 적이 없다. 바로 구현하지 말고 blindspot pass를 수행해라. 이 코드베이스 영역에서 내가 모르는지도 모르는 것을 찾고, 각각을 설명한 뒤, 구현을 위해 내가 더 좋은 프롬프트를 쓰는 방법을 알려줘.
 </div>
 
-<h3>14. 비합리적으로 굴기 — 트레이드오프를 너무 일찍 받아들이지 않는다</h3>
-<p>키노트 후반에서 타릭은 기술 이야기를 조직 문화와 삶의 선택으로 확장한다. 이전 회사에서는 우선순위 목록을 만들고 하나를 고르고 나머지를 미루는 것이 합리적이라고 배웠다. 그러나 Anthropic에서 좋아하게 된 태도는, 전사 표현대로라면 <strong>&ldquo;트레이드오프가 존재한다고 너무 빨리 믿지 말라&rdquo;</strong>는 것이다.</p>
+<p>이 패턴은 곧바로 &ldquo;정답을 줘&rdquo;가 아니라 <strong>&ldquo;내 질문의 결함을 찾아줘&rdquo;</strong>다. ERP처럼 업무 규칙이 코드와 데이터에 분산된 시스템에서는 특히 강하다. 요청서에 없는 상태 전이, 취소 규칙, 회계 마감, 고객사 확장 컬럼 같은 제약이 구현 전에 드러날 수 있기 때문이다.</p>
 
-<p>그의 질문은 이렇다. <strong>둘 중 하나를 고르기 전에 둘 다 해 보면 안 되는가?</strong> 현실이 정말 제약을 보여 줄 때까지 실행 범위를 넓혀 보면 안 되는가? 모델이 작업 비용을 크게 내리면, 과거의 우선순위 체계가 그대로 최적인지 다시 물어야 한다는 주장이다.</p>
+<h3>9. 패턴 2 — Teach me my unknowns: 모르는 영역의 언어부터 배운다</h3>
 
-<p>전사에 따르면 19분짜리 키노트 덱 자체도 전날 밤 Fable과 약 4시간 만에 만들었다. 이 수치는 독립 확인하지 못했으므로 개인 자술로만 다룬다. 그러나 더 중요한 결론은 따로 있다. <strong>생산 비용이 내려간다고 가치 판단 비용까지 사라지는 것은 아니다.</strong> 도구 세팅 자체에 몰입하지 말고, 빨라진 손으로 삶에서 가장 좋은 작업을 하라는 메시지다.</p>
-
-<h3>15. 타릭의 논거를 더 강하게 만드는 외부 증거</h3>
-<p>타릭의 주장을 &ldquo;좋은 프롬프트를 쓰면 된다&rdquo;로 축소하면 핵심을 놓친다. 외부 연구를 함께 보면 세 가지 더 큰 흐름이 보인다.</p>
-
-<ul>
-    <li><strong>에이전트는 더 긴 일을 맡고 있다.</strong> 장기 작업 지평 연구는 모델이 수행 가능한 작업 길이가 빠르게 늘고 있음을 보여 준다. 따라서 한 번의 잘못된 가정이 더 긴 경로로 증폭될 가능성도 커진다.</li>
-    <li><strong>도구와 환경이 능력을 바꾼다.</strong> Claude Code 분석은 셸·권한·컨텍스트·확장·서브에이전트가 실제 시스템 능력의 중요한 부분임을 보여 준다. &ldquo;모델이 몰라서 못 한다&rdquo;와 &ldquo;도구를 안 줘서 못 한다&rdquo;를 구분해야 한다.</li>
-    <li><strong>AI는 개발자의 기술 경계를 넓힐 수 있다.</strong> 5,838명 개발자 패널 연구는 Claude Code 채택 이후 사용 언어 수와 새 언어 진입이 늘어난 패턴을 보고한다. 연구진은 엄격한 인과 추론에는 한계가 있다고 명시하지만, 낯선 영토 진입 비용이 낮아질 수 있다는 타릭의 경험과 방향이 맞는다.</li>
-</ul>
+<p>두 번째 아티팩트는 작업 대상이 코드가 아닐 때 더 선명하다. 타릭은 색보정(color grading)을 예로 든다. 자신이 전문 용어와 판단 기준을 모르면 원하는 결과를 정확히 요청할 수 없다. 그래서 AI에 결과부터 만들라고 하지 않고, <strong>전문가가 보는 축과 어휘를 먼저 가르쳐 달라</strong>고 한다.</p>
 
 <div class="note">
-    <span class="nh">추가 연구</span>
-    · <a href="https://arxiv.org/abs/2605.25438" target="_blank" rel="noopener">Quispe, Coding Beyond Your Training (2026)</a> — Claude Code 채택과 기술 스택 확장의 관계를 분석, 인과 식별 한계도 명시.<br>
-    · <a href="https://arxiv.org/abs/2604.14228" target="_blank" rel="noopener">Liu et al., Dive into Claude Code (2026)</a> — 도구·권한·컨텍스트·확장 메커니즘 중심의 에이전트 구조 분석.
+    <span class="nh">핵심</span>
+    좋은 프롬프트를 쓰려면 먼저 그 분야에서 무엇을 구분해야 하는지 알아야 한다. AI는 실행자이기 전에 <strong>질문을 만들기 위한 튜터</strong>가 될 수 있다.
 </div>
 
-<h3>16. 사실관계 체크 — 무엇이 확인됐고 무엇이 아직 주장인가</h3>
+<h3>10. 패턴 3 — Four design directions: 선호를 설명하지 말고 충돌시키며 찾는다</h3>
+
+<p>사용자는 종종 결과를 보면 좋고 나쁨을 알지만, 시작 전에 취향을 언어화하지 못한다. 타릭은 미세하게 다른 네 안이 아니라 <strong>전제가 크게 다른 네 방향</strong>을 실제 HTML로 만들게 한다. 사용자는 반응하고 선택하고, 선택 결과가 다음 반복의 제약이 된다.</p>
+
+<div class="note">
+    <span class="nh">프롬프트 패턴</span>
+    나는 이 화면에 대한 시각적 취향을 정확히 설명하지 못한다. 비슷한 변형 네 개가 아니라, 서로 철학이 다른 네 가지 디자인 방향을 하나의 HTML 페이지에 만들어 보여줘. 내가 비교하고 반응하겠다.
+</div>
+
+<p>이는 <strong>unknown knowns</strong>를 찾는 방법이다. 사용자는 선호를 이미 갖고 있지만 설명하지 못한다. 프로토타입이 그 암묵 기준을 밖으로 꺼낸다.</p>
+
+<h3>11. 패턴 4 — Mock before you wire: 실제 시스템을 건드리기 전에 싼 실패를 산다</h3>
+
+<p>타릭의 네 번째 패턴은 실제 앱에 연결하기 전에 <strong>단일 HTML mock</strong>을 만든다. 데이터 계약, 백엔드 연결, 상태 관리 같은 비싼 작업에 들어가기 전에 흐름과 화면을 검증한다.</p>
+
+<p>중요한 것은 &ldquo;프로토타입도 만들어라&rdquo;가 아니다. <strong>비가역 비용이 커지기 전에 사용자의 숨은 기준을 발견하라</strong>는 것이다. 구현 전 30분짜리 실패가 구현 후 3일짜리 재작업을 막을 수 있다.</p>
+
+<h3>12. 패턴 5 — Brainstorm the intervention: 해법 하나를 고르기 전에 개입 지점을 넓힌다</h3>
+
+<p>사용자가 문제를 발견하면 흔히 곧바로 자신이 떠올린 해결책을 프롬프트에 쓴다. 하지만 그 순간 해법 공간이 좁아진다. 타릭은 먼저 코드베이스를 읽고 <strong>가능한 개입 지점 10개</strong>를 찾게 하며, 가장 싼 것부터 가장 야심찬 것까지 펼쳐 놓는다.</p>
+
+<div class="note">
+    <span class="nh">실무적 의미</span>
+    &ldquo;이 함수를 수정해&rdquo;보다 &ldquo;이 문제를 줄일 수 있는 개입 지점을 탐색해&rdquo;가 먼저다. 사용자가 선택한 위치가 정말 최적의 변경점인지 검증하는 단계다.
+</div>
+
+<h3>13. 패턴 6 — The interview: AI가 사용자를 인터뷰한다</h3>
+
+<p>방향이 잡히면 모델이 거꾸로 질문하게 한다. 여기서 중요한 것은 &ldquo;질문 있어?&rdquo;가 아니다. 타릭의 패턴은 <strong>한 번에 하나씩</strong> 질문하고, 사용자의 답이 다음 질문을 바꾸게 하며, <strong>아키텍처를 가장 크게 바꾸는 질문부터</strong> 묻는다.</p>
+
+<div class="note">
+    <span class="nh">프롬프트 패턴</span>
+    구현 전에 나를 인터뷰해라. 한 번에 하나씩 질문하고 내 답에 따라 후속 질문을 바꿔라. 질문 순서는 답이 아키텍처를 가장 크게 바꾸는 항목부터 정해라. 충분해지면 결정된 것, 미결정인 것, 네가 가정한 것을 분리해 요약해라.
+</div>
+
+<p>이 방식은 질문 수를 늘리는 것이 목적이 아니다. <strong>정보 가치가 높은 질문을 앞당기는 것</strong>이 목적이다. 인증 주체, 데이터 소유권, 다중 회사 범위, 장애 시 일관성처럼 뒤집기 비싼 결정을 먼저 확정한다.</p>
+
+<h3>14. 패턴 7 — Point at a reference: 설명보다 작동하는 지도를 준다</h3>
+
+<p>원하는 동작을 말로 정확히 설명하기 어렵다면 이미 작동하는 구현을 준다. 타릭의 공개 예시는 <strong>Rust crate의 의미를 TypeScript로 재구현</strong>하는 상황이다. 언어가 달라도 상관없다. 먼저 semantics map을 만들고, 무엇을 보존해야 하는지 확인한 뒤 옮긴다.</p>
+
+<p>좋은 레퍼런스는 수십 문장보다 많은 정보를 담는다. 오류 처리, 순서, 경계 조건, 불변조건, API 감각이 실제 동작에 들어 있기 때문이다. 단, 복사는 답이 아니다. <strong>보존할 의미와 현 환경에 맞게 바꿀 표면을 분리</strong>해야 한다.</p>
+
+<h3>15. 패턴 8 — The tweakable plan: 바꿀 수 있는 결정을 계획의 앞에 둔다</h3>
+
+<p>타릭의 companion guide에서 쉽게 누락되는 중요한 패턴이다. 구현 계획을 단순 작업 목록으로 만들지 않고, <strong>사용자가 조정할 수 있는 결정</strong>을 앞에 둔다. 데이터 모델, 타입 인터페이스, 사용자 노출 동작처럼 방향을 바꾸면 큰 영향을 주는 항목을 먼저 보여 주고, 기계적인 리팩터링은 뒤로 보낸다.</p>
+
+<div class="note">
+    <span class="nh">왜 중요한가</span>
+    사람이 검토해야 할 것은 모든 코드 줄이 아니다. <strong>결정 공간</strong>이다. 계획 문서가 기계적 작업으로 가득 차면 정작 바꿔야 할 설계 결정을 놓친다.
+</div>
+
+<h3>16. 패턴 9 — Implementation notes: 계획 이탈을 숨기지 않는다</h3>
+
+<p>아무리 준비해도 구현 중에는 현실이 계획과 충돌한다. 강한 에이전트의 위험은 계획에서 벗어나는 것 자체가 아니라, <strong>벗어났다는 사실을 보이지 않은 채 스스로 합리화하고 계속 가는 것</strong>이다. 타릭은 별도의 implementation-notes 파일을 유지하게 한다.</p>
+
+<div class="note">
+    <span class="nh">프롬프트 패턴</span>
+    구현 노트 파일을 유지해라. 엣지 케이스 때문에 계획에서 벗어나야 하면 가능한 선택 중 보수적인 쪽을 택하고, 무엇이 달라졌는지·왜 그랬는지·어떤 가정을 했는지를 Deviations 아래 기록해라. 치명적 차단 사유가 아니면 계속 진행해라.
+</div>
+
+<p>이 노트는 로그 이상의 의미를 갖는다. 첫 작업의 unknown을 다음 작업의 known으로 바꾸는 <strong>지도 갱신 장치</strong>다. 특히 장기 에이전트에서는 결과만 남기지 않고 의사결정 provenance를 남겨야 한다.</p>
+
+<h3>17. 패턴 10 — Buy-in doc: 구현 결과를 조직의 의사결정 단위로 바꾼다</h3>
+
+<p>타릭의 공개 11개 중 두 번째로 자주 빠지는 항목이다. 구현이 끝나면 프로토타입, 스펙, implementation notes를 흩어진 채 두지 않고 <strong>Slack에 바로 공유할 수 있는 단일 buy-in 문서</strong>로 패키징한다. 그리고 설명보다 데모를 앞세운다.</p>
+
+<p>이는 개인 생산성을 조직 생산성으로 바꾸는 단계다. AI가 빨리 만든 결과가 팀에서 채택되지 못하면 가치가 없다. 데모, 결정 이유, 변경 범위, 남은 위험을 한 문서에 묶어 <strong>검토와 동의의 비용</strong>을 낮춘다.</p>
+
+<h3>18. 패턴 11 — Quiz me before I merge: 설명할 수 없는 코드는 아직 내 코드가 아니다</h3>
+
+<p>마지막은 퀴즈다. 타릭은 diff를 기반으로 변경의 맥락, 직관, 실제 구현 내용을 설명하는 HTML 보고서를 만들고, 사용자가 이해했는지 퀴즈로 확인하게 한다.</p>
+
+<div class="note">
+    <span class="nh">프롬프트 패턴</span>
+    이 diff를 기반으로 내가 변경을 완전히 이해할 수 있는 HTML 보고서를 만들어라. 맥락, 핵심 직관, 실제로 한 일을 설명하고 마지막에 퀴즈를 붙여라. 내가 틀린 부분은 다시 설명하고 변형 문제를 내라. 충분히 이해하기 전에는 완료로 간주하지 마라.
+</div>
+
+<p>이것은 교육용 장난이 아니다. AI 생성 코드가 많아질수록 리뷰의 질문은 <strong>&ldquo;테스트가 통과하는가&rdquo;</strong>만으로 부족하다. <strong>&ldquo;운영자가 실패 모드와 복구 방법을 설명할 수 있는가&rdquo;</strong>까지 확인해야 소유권이 생긴다.</p>
+
+<h3>19. 여섯 개의 큰 흐름으로 다시 압축하면</h3>
+
+<p>11개 아티팩트는 실무에서 다음 여섯 흐름으로 압축할 수 있다. 이 때문에 2차 콘텐츠에서 &ldquo;6가지 기법&rdquo;으로 소개되는 것도 완전히 틀린 것은 아니다. 다만 아래는 <strong>요약 계층</strong>이고, 원자료는 11개라는 점을 구분해야 한다.</p>
+
 <table>
-    <thead><tr><th>항목</th><th>판정</th><th>근거</th></tr></thead>
+    <thead><tr><th>큰 흐름</th><th>포함되는 11개 아티팩트</th><th>찾는 공백</th></tr></thead>
     <tbody>
-        <tr><td>Fable 5가 2026년 공개된 Anthropic의 최상위 공개 모델이라는 설명</td><td><strong>독립 확인</strong></td><td>Reuters 2026-06-09</td></tr>
-        <tr><td>강한 에이전트가 장기·복합 작업을 더 넓게 수행한다는 방향</td><td><strong>연구 보강</strong></td><td>METR 계열 장기 작업 연구, Claude Code 구조 연구</td></tr>
-        <tr><td>프로젝트 컨텍스트·매니페스트가 에이전트 작업에 중요하다는 방향</td><td><strong>연구 보강</strong></td><td>Claude.md 프로젝트 실증 연구</td></tr>
-        <tr><td>타릭의 글 280만 조회</td><td><strong>미확인</strong></td><td>사용자 제공 전사에는 있으나 이번 검색에서 원문 지표 미확인</td></tr>
-        <tr><td>Claude Code 시스템 프롬프트 80% 삭제</td><td><strong>미확인</strong></td><td>타릭 전사상 주장, 공식 공개 자료 미확인</td></tr>
-        <tr><td>타릭이 질문 도구를 직접 만들었다는 귀속</td><td><strong>미확인</strong></td><td>사용자 제공 전사 기준, 독립 프로필·원문 미확인</td></tr>
-        <tr><td>Opus 4 → 4.5 → Fable 질문 도구 사용 패턴 비교</td><td><strong>개인 경험</strong></td><td>타릭 전사상 관찰, 통제 실험으로 보기는 어려움</td></tr>
-        <tr><td>옛 코드베이스의 몇 주 작업이 몇 시간으로 단축</td><td><strong>개인 일화</strong></td><td>타릭 자술, 외부 검증 대상이 아닌 경험담</td></tr>
-        <tr><td>키노트 덱을 전날 밤 4시간 만에 제작</td><td><strong>개인 일화·미확인</strong></td><td>타릭 전사상 주장</td></tr>
+        <tr><td><strong>Blind Spot</strong></td><td>Blindspot pass, Teach me my unknowns</td><td>도메인 자체를 몰라 질문하지 못한 것</td></tr>
+        <tr><td><strong>Explore &amp; Prototype</strong></td><td>Four design directions, Mock before you wire, Brainstorm the intervention</td><td>숨은 선호와 대안 공간</td></tr>
+        <tr><td><strong>Interview</strong></td><td>The interview, The tweakable plan</td><td>미결정 사항과 비가역 결정</td></tr>
+        <tr><td><strong>Reference</strong></td><td>Point at a reference</td><td>말로 빠지는 행동 의미와 불변조건</td></tr>
+        <tr><td><strong>Implementation Memory</strong></td><td>Implementation notes</td><td>현실과 계획이 충돌한 지점</td></tr>
+        <tr><td><strong>Ownership</strong></td><td>Buy-in doc, Quiz me before I merge</td><td>조직 합의와 사용자 이해 공백</td></tr>
     </tbody>
 </table>
 
-<h3>17. 실무적으로 가져갈 결론</h3>
+<h3>20. 타릭의 두 번째 큰 메시지 — 생산 비용이 내려가면 트레이드오프도 다시 계산해야 한다</h3>
+
+<p>타릭의 발표 후반은 프롬프트 기술을 넘어선다. 그는 과거 스타트업을 운영하며 늘 하나를 선택해야 했다고 회고한다. 앱을 다듬을지, 새 기능을 실험할지, 한쪽을 하면 다른 쪽은 미뤄야 했다. 소프트웨어 제작 비용이 높았기 때문이다.</p>
+
+<p>Fable과 같은 강한 코딩 에이전트가 작업 비용을 크게 낮추면, 과거의 우선순위 체계를 그대로 유지하는 것이 합리적인지 다시 물어야 한다. 타릭의 태도는 <strong>&ldquo;트레이드오프가 있다고 너무 빨리 믿지 말라&rdquo;</strong>에 가깝다. 둘 중 하나를 고르기 전에 둘 다 시도할 수 있는지, 과거에는 비쌌지만 지금은 싸진 실험이 무엇인지 확인하라는 것이다.</p>
+
+<p>이 지점에서 그의 &ldquo;비합리적으로 굴기(be unreasonable)&rdquo;는 무모함과 다르다. <strong>비용 함수가 바뀌었는데도 옛 제약을 사실처럼 받아들이지 말라</strong>는 주장이다.</p>
+
+<h3>21. &ldquo;코딩을 사랑했지만 돌아갈 수 없다&rdquo; — 변화에 대한 애도</h3>
+
+<p>타릭은 코딩 에이전트의 생산성만 찬양하지 않는다. 그는 손으로 코드를 쓰고, 머릿속에서 코드베이스를 회전시키며, 밤늦게 디버깅하던 감각을 사랑했다고 말한다. 동시에 몇 주씩 실패하고 대부분의 프로젝트가 뜻대로 되지 않던 비용도 기억한다.</p>
+
+<p>그래서 결론은 단순한 &ldquo;AI가 개발자를 대체한다&rdquo;가 아니다. <strong>좋아했던 작업 방식의 일부를 잃는 감정은 실제이지만, 생산 방식이 바뀐 뒤 과거로 돌아가는 것이 답은 아니다.</strong> 변화 자체를 통과하면서 새로운 소유권과 이해 방식을 만들어야 한다는 메시지다.</p>
+
+<h3>22. 외부 연구는 타릭의 논거를 어디까지 보강하는가</h3>
+
+<h4>22-1. 에이전트는 더 긴 작업을 수행하는 방향으로 발전하고 있다</h4>
+
+<p>METR 계열 연구는 프런티어 AI가 성공적으로 수행할 수 있는 작업의 시간 지평이 빠르게 늘어나는 추세를 보고한다. 이 결과를 모든 실무 프로젝트에 그대로 일반화할 수는 없지만, <strong>모델이 더 긴 작업 경로를 자율적으로 탐색한다</strong>는 타릭의 문제의식을 보강한다.</p>
+
+<h4>22-2. 모델 성능만으로 에이전트 성능을 설명할 수 없다</h4>
+
+<p>Claude Code 아키텍처 분석은 도구, 권한, 컨텍스트, 확장 메커니즘, 서브에이전트가 시스템 능력의 핵심 요소임을 보여 준다. 이는 capability overhang과 unhobbling 논거에 직접 연결된다. <strong>모델이 할 수 있는 것과 제품이 실제로 허용·유도하는 것은 다르다.</strong></p>
+
+<h4>22-3. 생산성 지표와 가치 지표는 구분해야 한다</h4>
+
+<p>코딩 에이전트 도입 연구는 개발 산출량 증가를 관찰하지만, 머지된 PR 수가 곧 고객 가치나 유지보수 품질을 뜻하지는 않는다고 경고한다. 타릭의 메시지 역시 같은 지점에 닿는다. <strong>만드는 비용이 내려가도 무엇을 만들지 판단하는 비용은 사라지지 않는다.</strong></p>
+
+<div class="note">
+    <span class="nh">연구 보강 자료</span>
+    · <a href="https://arxiv.org/abs/2503.14499" target="_blank" rel="noopener">Kwa et al., Measuring AI Ability to Complete Long Tasks</a>.<br>
+    · <a href="https://arxiv.org/abs/2604.14228" target="_blank" rel="noopener">Liu et al., Dive into Claude Code: The Design Space of Today&rsquo;s and Future AI Agent Systems</a>.<br>
+    · <a href="https://arxiv.org/abs/2607.01418" target="_blank" rel="noopener">Murphy-Hill et al., Adoption and Impact of Command-Line AI Coding Agents</a>.<br>
+    · <a href="https://arxiv.org/abs/2605.25438" target="_blank" rel="noopener">Quispe, Coding Beyond Your Training</a>.
+</div>
+
+<h3>23. 사실관계 체크 — 확인된 것, 발표상 주장, 아직 검증하기 어려운 것</h3>
+
+<table>
+    <thead><tr><th>항목</th><th>판정</th><th>근거와 해석</th></tr></thead>
+    <tbody>
+        <tr><td>타릭의 <em>A Field Guide to Fable</em> 원문 존재</td><td><strong>1차 출처 확인</strong></td><td>Thariq 본인 X 게시물</td></tr>
+        <tr><td>실전 패턴이 사전 8·중간 1·사후 2, 총 11개</td><td><strong>1차 출처 확인</strong></td><td>Thariq 본인 companion guide가 명시</td></tr>
+        <tr><td>Fable 5의 2026-06-09 공식 발표</td><td><strong>공식 확인</strong></td><td>Anthropic 공식 발표</td></tr>
+        <tr><td>Fable 5가 장기·복합 에이전트 작업을 핵심 용도로 둔다는 설명</td><td><strong>공식 확인</strong></td><td>Anthropic 발표 및 모델 문서</td></tr>
+        <tr><td>강한 모델에서 도구·하네스·컨텍스트가 성능에 중요하다는 방향</td><td><strong>연구 보강</strong></td><td>Claude Code 아키텍처 연구</td></tr>
+        <tr><td>Claude Code 시스템 프롬프트 약 80% 삭제</td><td><strong>타릭 공개 발표상 주장</strong></td><td>발표 요약에서 확인되나 Anthropic 제품 문서의 공식 변경 수치로는 다루지 않음</td></tr>
+        <tr><td>질문 도구가 모델 세대별로 다르게 동작했다는 비교</td><td><strong>타릭의 실무 경험</strong></td><td>제품 팀 경험담; 통제 실험은 아님</td></tr>
+        <tr><td>원문 280만 조회</td><td><strong>시점 의존·독립 검증 보류</strong></td><td>조회 지표는 변동 가능하며 본문의 논거로 사용하지 않음</td></tr>
+        <tr><td>발표 덱을 전날 밤 약 4시간 만에 제작</td><td><strong>개인 일화</strong></td><td>발표상 자술로 취급, 독립 검증 대상과 구분</td></tr>
+        <tr><td>옛 코드베이스의 몇 주 작업이 몇 시간으로 단축</td><td><strong>개인 일화</strong></td><td>타릭의 경험담이며 일반 생산성 수치로 일반화하지 않음</td></tr>
+    </tbody>
+</table>
+
+<h3>24. 곽영진 수석연구원의 GitHub WIKI와 더존 개발 조직에 적용하면</h3>
+
+<p>타릭의 프레임은 개인 프롬프트 기술보다 <strong>조직 지식 시스템</strong>에 더 크게 적용할 수 있다. 특히 ERP 개발은 코드만 읽어서는 영토를 알 수 없다. 업무 규칙, 고객사 예외, DB 상태, 배포 이력, 장애 대응, 담당자 판단이 여러 시스템과 사람에게 흩어져 있기 때문이다.</p>
+
+<table>
+    <thead><tr><th>타릭의 패턴</th><th>ERP·개발 조직 적용</th><th>WIKI 자산화</th></tr></thead>
+    <tbody>
+        <tr><td>Blindspot pass</td><td>개발 요청 전 기존 Rule·상태·DB·고객사 확장·장애 이력 탐색</td><td>미확인 제약 목록</td></tr>
+        <tr><td>Teach me my unknowns</td><td>낯선 업무 도메인의 핵심 용어·결정 축 학습</td><td>Domain Primer</td></tr>
+        <tr><td>Design directions / Mock</td><td>공통 UI·Agent 화면을 여러 전제로 빠르게 비교</td><td>Prototype Decision</td></tr>
+        <tr><td>Brainstorm intervention</td><td>요청된 수정 위치 외에 Rule·API·DB·배치·UI 개입점 비교</td><td>Option Map</td></tr>
+        <tr><td>Interview</td><td>컨설턴트·PM·개발자에게 아키텍처 영향 큰 질문부터 확인</td><td>Decision Record</td></tr>
+        <tr><td>Reference</td><td>기존 고객사 구현·표준 모듈·타제품 동작을 의미 단위로 비교</td><td>Semantic Reference</td></tr>
+        <tr><td>Tweakable plan</td><td>데이터 모델·상태체계·API 계약을 기계적 수정과 분리</td><td>Reviewable Plan</td></tr>
+        <tr><td>Implementation notes</td><td>계획 이탈, 운영 데이터 예외, 보수적 선택 기록</td><td>Deviation Log</td></tr>
+        <tr><td>Buy-in doc</td><td>데모·결정·리스크를 상무/PM/관련 Unit 공유용으로 패키징</td><td>Decision Brief</td></tr>
+        <tr><td>Quiz</td><td>AI 생성 변경을 담당 개발자가 장애·복구 관점까지 설명</td><td>Ownership Check</td></tr>
+    </tbody>
+</table>
+
+<p>여기서 GitHub WIKI는 단순 문서 보관소가 아니라 <strong>unknown을 known으로 승격시키는 장치</strong>가 된다. Implementation notes에서 발견된 예외가 문서화되고, 문서의 핵심 개념이 Knowledge Graph에 연결되고, 다음 에이전트가 그 지도를 다시 읽는다. 그러면 첫 프로젝트의 시행착오가 다음 프로젝트의 사전 컨텍스트가 된다.</p>
+
+<div class="note">
+    <span class="nh">이 위키 관점에서 가장 중요한 결론</span>
+    <strong>좋은 지식 그래프는 이미 아는 사실을 연결하는 것만이 아니다. 과거 작업에서 발견된 unknown을 다음 작업의 known context로 재사용하게 해야 한다.</strong>
+</div>
+
+<h3>25. 실무 운영 프로토콜 — 다음 에이전트 작업부터 이렇게 시작한다</h3>
+
 <ol>
-    <li><strong>AI가 멍청해 보이면 능력 부족만 의심하지 않는다.</strong> 도구·환경·지나친 금지 규칙이 능력을 묶고 있는지 본다.</li>
-    <li><strong>결과가 이상하면 프롬프트 길이부터 늘리지 않는다.</strong> 지도와 영토의 간극, 즉 unknown을 찾는다.</li>
-    <li><strong>시작 전에 네 가지를 쓴다.</strong> Blind Spot Check, Prototype, Interview, Reference.</li>
-    <li><strong>구현 중에는 Implementation Notes를 남긴다.</strong> 계획 이탈을 숨기지 않고 다음 작업의 지도 자산으로 바꾼다.</li>
-    <li><strong>끝나면 Quiz로 소유권을 확인한다.</strong> 설명할 수 없는 생성 코드는 아직 운영 가능한 내 지식이 아니다.</li>
-    <li><strong>트레이드오프를 너무 일찍 확정하지 않는다.</strong> AI가 한계 비용을 바꿨다면 예전 우선순위 공식도 다시 계산한다.</li>
+    <li><strong>작업 지시 전에 Blindspot pass</strong> — 코드·문서·이력에서 내가 놓친 제약을 먼저 찾는다.</li>
+    <li><strong>낯선 도메인이면 Teach me my unknowns</strong> — 전문 용어와 판단 축을 배운다.</li>
+    <li><strong>선호가 애매하면 4개 방향과 mock</strong> — 말로 스펙을 억지 확정하지 않는다.</li>
+    <li><strong>해법을 고정하기 전에 intervention points 탐색</strong> — 변경 지점을 넓게 비교한다.</li>
+    <li><strong>아키텍처 영향 큰 질문부터 인터뷰</strong> — 한 번에 하나씩 답에 따라 다음 질문을 바꾼다.</li>
+    <li><strong>좋은 기존 구현이 있으면 semantics map</strong> — 표면 복사가 아니라 의미와 불변조건을 옮긴다.</li>
+    <li><strong>계획은 tweakable decisions first</strong> — 사람이 바꿀 수 있는 결정을 앞에 둔다.</li>
+    <li><strong>구현 중 deviations 기록</strong> — 계획 이탈과 가정을 숨기지 않는다.</li>
+    <li><strong>완료 후 buy-in doc</strong> — 데모, 결정, 위험을 한 문서로 만든다.</li>
+    <li><strong>merge 전 quiz</strong> — 담당자가 실패 모드와 복구법을 설명할 수 있어야 한다.</li>
 </ol>
+
+<h3>26. 최종 해석 — 병목이 인간이라는 말의 진짜 뜻</h3>
+
+<p>타릭의 주장을 &ldquo;AI 결과가 나쁘면 사용자 탓&rdquo;으로 읽으면 핵심을 놓친다. 오히려 반대다. 모델이 좋아질수록 인간에게 남는 희소 자원이 무엇인지 다시 정의하는 주장이다.</p>
+
+<ul>
+    <li><strong>무엇이 가치 있는 문제인지 판단하는 능력</strong></li>
+    <li><strong>자신이 무엇을 모르는지 발견하는 능력</strong></li>
+    <li><strong>말로 못 한 선호와 암묵 규칙을 외부화하는 능력</strong></li>
+    <li><strong>에이전트의 계획 이탈과 가정을 추적하는 능력</strong></li>
+    <li><strong>생성된 결과를 운영할 만큼 이해하고 소유하는 능력</strong></li>
+</ul>
+
+<p>강한 모델은 더 적은 지시로 더 멀리 간다. 그래서 프롬프트를 길게 만드는 것만으로는 충분하지 않다. 필요한 것은 <strong>지도와 영토의 차이를 의도적으로 드러내는 워크플로</strong>다. 타릭의 11개 아티팩트는 그 차이를 구현 전·중·후에 찾는 구체적인 장치다.</p>
 
 <div class="note">
     <span class="nh">한 문장으로 압축</span>
-    <strong>다음 프로젝트에서 일부터 시키지 말고, &ldquo;내가 무엇을 모르는지부터 같이 찾자&rdquo;고 시작하라.</strong>
+    <strong>다음 프로젝트에서 AI에게 바로 일을 시키지 말고, 먼저 &ldquo;내가 무엇을 모르는지부터 같이 찾자&rdquo;고 시작하라.</strong>
 </div>
 
-<p>타릭의 &ldquo;병목은 당신&rdquo;이라는 표현은 인간을 탓하는 말로 읽을 필요가 없다. 오히려 반대다. 모델이 좋아질수록 가치 있는 희소 자원은 <strong>무엇을 원하는지 판단하는 능력, 모르는 것을 발견하는 능력, 결과를 소유할 만큼 이해하는 능력</strong>이 된다. 병목이 인간이라는 것은, 최종 결정권과 의미 부여의 책임도 아직 인간에게 있다는 뜻이다.</p>
-
 <h3>출처와 참고 자료</h3>
+
 <ul>
-    <li><strong>1차 자료</strong> — 사용자 제공: 타릭의 글·AI Engineer World&rsquo;s Fair 키노트 내용 전사. 직접 발언·여섯 기법·개인 일화 재구성의 기준.</li>
-    <li><a href="https://www.reuters.com/technology/anthropic-rolls-out-public-version-mythos-without-cybersecurity-capability-2026-06-09/" target="_blank" rel="noopener">Reuters, Anthropic rolls out public version of Mythos without cybersecurity capability</a>, 2026-06-09.</li>
+    <li><strong>1차 자료</strong> — <a href="https://x.com/trq212/status/2073100352921215386" target="_blank" rel="noopener">Thariq Shihipar, A Field Guide to Fable: Finding Your Unknowns</a>.</li>
+    <li><strong>1차 자료</strong> — <a href="https://thariqs.github.io/html-effectiveness/unknowns/" target="_blank" rel="noopener">Thariq Shihipar, Know your unknowns — 11 self-contained HTML artifacts</a>.</li>
+    <li><strong>공식</strong> — <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank" rel="noopener">Anthropic, Introducing Claude Fable 5</a>, 2026-06-09.</li>
+    <li><strong>공식</strong> — <a href="https://platform.claude.com/docs/en/intro" target="_blank" rel="noopener">Anthropic Claude Platform Docs — model overview</a>.</li>
+    <li><strong>2차 보도</strong> — <a href="https://the-decoder.com/anthropic-developer-shares-prompting-tips-for-fable-5-that-focus-on-finding-your-own-blind-spots-first/" target="_blank" rel="noopener">THE DECODER, Anthropic developer shares prompting tips for Fable 5 that focus on finding your own blind spots first</a>, 2026-07-04.</li>
+    <li><strong>발표 보강</strong> — <a href="https://explainx.ai/blog/field-guide-to-fable-thariq-shihipar-anthropic-ai-engineer-2026" target="_blank" rel="noopener">Field Guide to Fable — Thariq Shihipar talk recap</a>.</li>
     <li><a href="https://arxiv.org/abs/2503.14499" target="_blank" rel="noopener">Kwa et al., Measuring AI Ability to Complete Long Tasks</a>, 2025.</li>
     <li><a href="https://arxiv.org/abs/2604.14228" target="_blank" rel="noopener">Liu et al., Dive into Claude Code: The Design Space of Today&rsquo;s and Future AI Agent Systems</a>, 2026.</li>
     <li><a href="https://arxiv.org/abs/2607.01418" target="_blank" rel="noopener">Murphy-Hill et al., Adoption and Impact of Command-Line AI Coding Agents</a>, 2026.</li>
     <li><a href="https://arxiv.org/abs/2605.25438" target="_blank" rel="noopener">Quispe, Coding Beyond Your Training</a>, 2026.</li>
-    <li><a href="https://arxiv.org/abs/2509.14744" target="_blank" rel="noopener">Chatlatanagulchai et al., On the Use of Agentic Coding Manifests</a>, 2025.</li>
-    <li><a href="https://en.wikipedia.org/wiki/Map%E2%80%93territory_relation" target="_blank" rel="noopener">Map–territory relation</a> — 코르지브스키의 고전적 &ldquo;지도와 영토&rdquo; 배경 확인용.</li>
 </ul>
