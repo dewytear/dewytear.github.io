@@ -19,10 +19,19 @@
 
 <h3>지식 체계 반영</h3>
 <ul>
-    <li><code>list</code>에 News &amp; Articles &gt; 2026 문서 노드 추가</li>
+    <li><code>list</code>에 News &amp; Articles &gt; 2026 문서 노드와 07월 09일 Work Log 노드 추가</li>
     <li><code>tools/doc-entries.ko.json</code>에 title·summary·concepts 추가</li>
-    <li><code>python3 tools/build_index.py</code>로 지식 인덱스 재생성</li>
-    <li><code>python3 tools/build_index.py --check</code>와 <code>python tools/validate_all.py</code> 검증</li>
+    <li><code>python3 tools/build_index.py</code>로 한국어·영어 지식 인덱스 재생성</li>
+    <li>한국어 인덱스 기준 문서 93→94편, 고유 개념 298→306개로 갱신</li>
+    <li>새 기사의 section을 <code>AI · News &amp; Articles · 2026</code>으로 확인하고 같은 폴더 기사 연관 링크 생성 확인</li>
+    <li>Work Log는 인덱스 제외 확인</li>
+</ul>
+
+<h3>검증 결과</h3>
+<ul>
+    <li><code>python3 tools/build_index.py --check</code> 통과</li>
+    <li>ko/en 양쪽 인덱스 기사 포함, Work Log 제외, section·related assertion 통과</li>
+    <li><code>python tools/validate_all.py</code> ERROR 0 조건 통과 후 생성 산출물 커밋 단계 진행</li>
 </ul>
 
 <h3>결과</h3>
