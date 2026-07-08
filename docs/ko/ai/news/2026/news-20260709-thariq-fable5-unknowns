@@ -71,10 +71,37 @@
 
 <p>문제는 지도가 언제나 불완전하다는 데 있다. 사람은 자신이 아는 것조차 전부 쓰지 않고, 모르는 것은 당연히 쓸 수 없으며, 고려하지 못한 것은 질문조차 만들지 못한다. 에이전트는 그 빈칸을 만났을 때 매번 멈추지 않는다. <strong>가정을 만들고 계속 간다.</strong> 모델이 강해질수록 그 가정 위에서 더 멀리 갈 수 있다.</p>
 
-<figure style="margin:1.8rem 0 2rem;">
-    <img src="/assets/diagrams/fable-map-vs-territory.svg" alt="왼쪽의 정돈된 지도와 오른쪽의 복잡한 실제 영토를 대비하고, 그 사이의 간극을 unknowns로 표시한 SVG 도식" loading="lazy" style="display:block;width:100%;height:auto;border-radius:18px;">
-    <figcaption style="margin-top:.65rem;text-align:center;font-size:.92em;opacity:.78;">지도는 프롬프트와 문서의 정돈된 표현이고, 영토는 코드·데이터·운영·조직 제약이 얽힌 현실이다. 중앙의 unknowns가 둘 사이의 결정 공백이다.</figcaption>
-</figure>
+<div class="diagram">
+<svg viewBox="0 0 760 400" role="img" aria-label="왼쪽의 정돈된 지도와 오른쪽의 복잡한 실제 영토를 대비하고, 그 사이의 간극을 unknowns로 표시한 도식">
+    <rect class="d-box soft" x="20" y="46" width="300" height="320" rx="16"/>
+    <text class="d-label" x="40" y="76">MAP · 전달된 표현</text>
+    <text class="d-sub" x="40" y="96">Prompt · PRD · CLAUDE.md · Spec</text>
+    <rect class="d-box" x="40" y="112" width="120" height="50" rx="10"/><text class="d-label sm" x="100" y="142" text-anchor="middle">목표와 기능</text>
+    <rect class="d-box" x="180" y="112" width="120" height="50" rx="10"/><text class="d-label sm" x="240" y="142" text-anchor="middle">API 계약</text>
+    <rect class="d-box" x="40" y="182" width="120" height="50" rx="10"/><text class="d-label sm" x="100" y="212" text-anchor="middle">예시 코드</text>
+    <rect class="d-box" x="180" y="182" width="120" height="50" rx="10"/><text class="d-label sm" x="240" y="212" text-anchor="middle">디자인 가이드</text>
+    <path class="d-edge dash" d="M160 137 L170 172 M180 137 L170 172 M160 207 L170 172 M180 207 L170 172"/>
+    <circle class="d-box accent" cx="170" cy="172" r="20"/><text class="d-label sm" x="170" y="176" text-anchor="middle">계획</text>
+    <text class="d-sub" x="170" y="342" text-anchor="middle">사람이 언어로 적어 전달한 표현</text>
+
+    <path class="d-edge accent" d="M320 204 H330"/>
+    <rect class="d-box accent" x="330" y="176" width="100" height="56" rx="12"/>
+    <text class="d-label sm" x="380" y="198" text-anchor="middle">UNKNOWNS</text>
+    <text class="d-sub" x="380" y="216" text-anchor="middle">지도에 없는 결정</text>
+    <path class="d-edge accent" d="M430 204 H436"/><polygon class="d-arrow accent" points="434,199 442,204 434,209"/>
+
+    <rect class="d-box" x="440" y="46" width="300" height="320" rx="16"/>
+    <text class="d-label" x="460" y="76">TERRITORY · 실제 현실</text>
+    <text class="d-sub" x="460" y="96">Codebase · Data · Users · Ops · Constraints</text>
+    <circle class="d-node" cx="470" cy="132" r="7"/><text class="d-label sm" x="486" y="136">레거시 예외</text>
+    <circle class="d-node b" cx="470" cy="170" r="7"/><text class="d-label sm" x="486" y="174">운영 장애 이력</text>
+    <circle class="d-node c" cx="470" cy="208" r="7"/><text class="d-label sm" x="486" y="212">암묵 규칙</text>
+    <circle class="d-node d" cx="470" cy="246" r="7"/><text class="d-label sm" x="486" y="250">규제·권한</text>
+    <circle class="d-node dim" cx="470" cy="284" r="7"/><text class="d-label sm" x="486" y="288">실데이터 분포</text>
+    <text class="d-sub" x="590" y="342" text-anchor="middle">코드·데이터·조직에 흩어진 현실</text>
+</svg>
+<div class="d-cap">지도는 프롬프트와 문서의 정돈된 표현이고, 영토는 코드·데이터·운영·조직 제약이 얽힌 현실이다. 중앙의 unknowns가 둘 사이의 결정 공백이다.</div>
+</div>
 
 <div class="note">
     <span class="nh">타릭의 역설</span>
@@ -99,10 +126,42 @@
 
 <p>영상이나 2차 요약에서 타릭의 방법은 흔히 <strong>Blind Spot, Prototype, Interview, Reference, Implementation Notes, Quiz</strong>의 여섯 가지로 압축된다. 이 요약은 핵심 흐름을 이해하는 데 유용하다. 하지만 타릭 본인의 companion guide는 이를 더 세분해 <strong>11개의 독립 HTML 아티팩트</strong>로 공개한다.</p>
 
-<figure style="margin:1.8rem 0 2rem;">
-    <img src="/assets/diagrams/fable-unknown-discovery-process.svg" alt="구현 전 8개, 구현 중 1개, 구현 후 2개의 패턴이 순환하며 unknown을 known으로 바꾸는 프로세스 SVG" loading="lazy" style="display:block;width:100%;height:auto;border-radius:18px;">
-    <figcaption style="margin-top:.65rem;text-align:center;font-size:.92em;opacity:.78;">11개 패턴은 체크리스트가 아니라 루프다. 구현 중 발생한 deviation은 기록되고, 구현 후 공유·학습을 거쳐 다음 작업의 사전 컨텍스트로 되돌아간다.</figcaption>
-</figure>
+<div class="diagram">
+<svg viewBox="0 0 760 450" role="img" aria-label="구현 전 8개, 구현 중 1개, 구현 후 2개의 패턴이 순환하며 unknown을 known으로 바꾸는 프로세스 도식">
+    <rect class="d-box soft" x="20" y="40" width="460" height="270" rx="16"/>
+    <text class="d-label" x="40" y="66">BEFORE · 구현 전</text>
+    <rect class="d-box" x="40" y="86" width="92" height="56" rx="10"/><text class="d-label sm" x="86" y="106" text-anchor="middle">1 · Blindspot</text><text class="d-sub" x="86" y="124" text-anchor="middle">질문 못한 제약</text>
+    <rect class="d-box" x="142" y="86" width="92" height="56" rx="10"/><text class="d-label sm" x="188" y="106" text-anchor="middle">2 · Teach</text><text class="d-sub" x="188" y="124" text-anchor="middle">판단 어휘 학습</text>
+    <rect class="d-box" x="244" y="86" width="92" height="56" rx="10"/><text class="d-label sm" x="290" y="106" text-anchor="middle">3 · 4 directions</text><text class="d-sub" x="290" y="124" text-anchor="middle">암묵 선호 외부화</text>
+    <rect class="d-box" x="346" y="86" width="92" height="56" rx="10"/><text class="d-label sm" x="392" y="106" text-anchor="middle">4 · Mock first</text><text class="d-sub" x="392" y="124" text-anchor="middle">싼 실패로 검증</text>
+    <rect class="d-box" x="40" y="150" width="92" height="56" rx="10"/><text class="d-label sm" x="86" y="170" text-anchor="middle">5 · Brainstorm</text><text class="d-sub" x="86" y="188" text-anchor="middle">개입 공간 확장</text>
+    <rect class="d-box" x="142" y="150" width="92" height="56" rx="10"/><text class="d-label sm" x="188" y="170" text-anchor="middle">6 · Interview</text><text class="d-sub" x="188" y="188" text-anchor="middle">고가 결정부터</text>
+    <rect class="d-box" x="244" y="150" width="92" height="56" rx="10"/><text class="d-label sm" x="290" y="170" text-anchor="middle">7 · Reference</text><text class="d-sub" x="290" y="188" text-anchor="middle">의미·불변조건</text>
+    <rect class="d-box" x="346" y="150" width="92" height="56" rx="10"/><text class="d-label sm" x="392" y="170" text-anchor="middle">8 · Tweakable</text><text class="d-sub" x="392" y="188" text-anchor="middle">결정 공간 검토</text>
+    <text class="d-sub" x="250" y="292" text-anchor="middle">8개 사전 패턴 — 사각지대·선호·해법공간을 미리 넓힌다</text>
+
+    <path class="d-edge accent" d="M480 175 H498"/><polygon class="d-arrow accent" points="494,170 502,175 494,180"/>
+    <rect class="d-box accent" x="500" y="40" width="110" height="270" rx="16"/>
+    <text class="d-label sm" x="512" y="66">DURING</text>
+    <rect class="d-box soft" x="510" y="130" width="90" height="90" rx="10"/>
+    <text class="d-label sm" x="555" y="155" text-anchor="middle">9 · Impl.</text><text class="d-label sm" x="555" y="172" text-anchor="middle">notes</text>
+    <text class="d-sub" x="555" y="196" text-anchor="middle">이탈·가정 기록</text>
+
+    <path class="d-edge accent" d="M610 175 H628"/><polygon class="d-arrow accent" points="624,170 632,175 624,180"/>
+    <rect class="d-box" x="630" y="40" width="110" height="270" rx="16"/>
+    <text class="d-label sm" x="642" y="66">AFTER</text>
+    <rect class="d-box soft" x="640" y="110" width="90" height="70" rx="10"/><text class="d-label sm" x="685" y="140" text-anchor="middle">10 · Buy-in</text><text class="d-sub" x="685" y="158" text-anchor="middle">조직 합의</text>
+    <rect class="d-box soft" x="640" y="200" width="90" height="70" rx="10"/><text class="d-label sm" x="685" y="230" text-anchor="middle">11 · Quiz me</text><text class="d-sub" x="685" y="248" text-anchor="middle">사용자 이해</text>
+
+    <rect class="d-box" x="210" y="326" width="340" height="60" rx="14"/>
+    <text class="d-label sm" x="380" y="352" text-anchor="middle">Unknown → Decision → Record → Shared Context</text>
+    <text class="d-sub" x="380" y="374" text-anchor="middle">첫 작업의 unknown을 다음 작업의 known으로 승격</text>
+
+    <path class="d-edge accent dash" d="M685 310 C 700 400, 460 430, 250 410 C 150 400, 90 360, 62 312"/>
+    <polygon class="d-arrow accent" points="55,314 63,306 68,320"/>
+</svg>
+<div class="d-cap">11개 패턴은 체크리스트가 아니라 루프다. 구현 중 발생한 deviation은 기록되고, 구현 후 공유·학습을 거쳐 다음 작업의 사전 컨텍스트로 되돌아간다.</div>
+</div>
 
 <table>
     <thead><tr><th>시점</th><th>타릭이 공개한 아티팩트</th><th>목적</th></tr></thead>
@@ -167,10 +226,39 @@
     &ldquo;이 함수를 수정해&rdquo;보다 &ldquo;이 문제를 줄일 수 있는 개입 지점을 탐색해&rdquo;가 먼저다. 사용자가 선택한 위치가 정말 최적의 변경점인지 검증하는 단계다.
 </div>
 
-<figure style="margin:1.8rem 0 2rem;">
-    <img src="/assets/diagrams/fable-search-space-contrast.svg" alt="왼쪽의 단일 해법 직선 경로와 오른쪽의 여러 설계 방향과 개입 지점을 탐색한 뒤 수렴하는 방식을 비교한 SVG" loading="lazy" style="display:block;width:100%;height:auto;border-radius:18px;">
-    <figcaption style="margin-top:.65rem;text-align:center;font-size:.92em;opacity:.78;">왼쪽은 처음 떠올린 해법을 곧장 구현한다. 오른쪽은 서로 다른 방향과 개입 지점을 먼저 펼쳐 unknown을 발견한 뒤 수렴한다. 타릭이 말한 &ldquo;영역에서 찾아 나아가기&rdquo;의 차이다.</figcaption>
-</figure>
+<div class="diagram">
+<svg viewBox="0 0 760 380" role="img" aria-label="왼쪽의 단일 해법 직선 경로와 오른쪽의 여러 설계 방향과 개입 지점을 탐색한 뒤 수렴하는 방식을 비교한 도식">
+    <rect class="d-box" x="20" y="40" width="340" height="280" rx="16"/>
+    <text class="d-label" x="40" y="66">A · 해법을 먼저 고정</text>
+    <text class="d-sub" x="40" y="86">처음 떠올린 변경점 하나로 곧장 수렴</text>
+    <circle class="d-node dim" cx="110" cy="140" r="6"/><circle class="d-node dim" cx="230" cy="150" r="6"/><circle class="d-node dim" cx="250" cy="235" r="6"/>
+    <text class="d-sub" x="190" y="118" text-anchor="middle">보지 못한 대안</text>
+    <circle class="d-box accent" cx="70" cy="190" r="20"/><text class="d-label sm" x="70" y="194" text-anchor="middle">문제</text>
+    <circle class="d-box accent" cx="170" cy="190" r="20"/><text class="d-label sm" x="170" y="194" text-anchor="middle">해법</text>
+    <circle class="d-box accent" cx="290" cy="190" r="24"/><text class="d-label sm" x="290" y="194" text-anchor="middle">구현</text>
+    <path class="d-edge accent" d="M92 190 H148 M192 190 H264"/>
+    <polygon class="d-arrow accent" points="144,185 152,190 144,195"/><polygon class="d-arrow accent" points="260,185 268,190 260,195"/>
+    <text class="d-sub" x="190" y="290" text-anchor="middle">빠르지만, 잘못된 지점이면 재작업 비용이 커진다</text>
+
+    <rect class="d-box accent" x="380" y="40" width="360" height="280" rx="16"/>
+    <text class="d-label" x="400" y="66">B · 영역을 탐색한 뒤 수렴</text>
+    <text class="d-sub" x="400" y="86">서로 다른 방향·개입 지점을 먼저 펼침</text>
+    <circle class="d-box accent" cx="430" cy="190" r="20"/><text class="d-label sm" x="430" y="194" text-anchor="middle">문제</text>
+    <circle class="d-node b" cx="510" cy="150" r="15"/><text class="d-label sm" x="510" y="154" text-anchor="middle">A</text>
+    <circle class="d-node c" cx="520" cy="190" r="15"/><text class="d-label sm" x="520" y="194" text-anchor="middle">B</text>
+    <circle class="d-node d" cx="510" cy="230" r="15"/><text class="d-label sm" x="510" y="234" text-anchor="middle">C</text>
+    <circle class="d-node dim" cx="600" cy="130" r="11"/><text class="d-sub" x="600" y="133" text-anchor="middle">UI</text>
+    <circle class="d-node dim" cx="615" cy="190" r="11"/><text class="d-sub" x="615" y="193" text-anchor="middle">API</text>
+    <circle class="d-node dim" cx="600" cy="250" r="11"/><text class="d-sub" x="600" y="253" text-anchor="middle">Rule</text>
+    <path class="d-edge accent" d="M450 178 L495 155 M450 190 L505 190 M450 202 L495 225"/>
+    <path class="d-edge" d="M525 148 L589 132 M535 190 L604 190 M525 232 L589 248"/>
+    <path class="d-edge accent" d="M611 132 L668 178 M626 190 L668 190 M611 248 L668 202"/>
+    <circle class="d-box accent" cx="690" cy="190" r="34"/>
+    <text class="d-label sm" x="690" y="186" text-anchor="middle">근거 있는</text><text class="d-label sm" x="690" y="200" text-anchor="middle">수렴</text>
+    <text class="d-sub" x="560" y="286" text-anchor="middle"><tspan x="560" dy="0">초기 비용은 조금 더 들지만,</tspan><tspan x="560" dy="14">unknown을 싸게 발견해 재작업을 줄인다</tspan></text>
+</svg>
+<div class="d-cap">왼쪽은 처음 떠올린 해법을 곧장 구현한다. 오른쪽은 서로 다른 방향과 개입 지점을 먼저 펼쳐 unknown을 발견한 뒤 수렴한다. 타릭이 말한 &ldquo;영역에서 찾아 나아가기&rdquo;의 차이다.</div>
+</div>
 
 <p>이 대비는 Four design directions, Mock, Brainstorm, Reference가 왜 같은 계열인지 보여 준다. 네 기법 모두 모델에게 즉시 정답을 요구하지 않고 <strong>탐색 가능한 영역을 외부화한 뒤 사람이 반응할 수 있게 만든다.</strong> 즉, 정답 생성 성능보다 <strong>탐색 공간의 품질</strong>을 먼저 높인다.</p>
 
