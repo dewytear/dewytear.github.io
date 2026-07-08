@@ -25,6 +25,16 @@ App.data = {
             return r.json();
         });
     },
+    // 문서 날짜(생성 c / 수정 u — git 이력에서 tools/build_dates.py가 생성).
+    // 1회 fetch 후 캐시. 실패 시 빈 사전으로 resolve — 날짜만 조용히 미표기.
+    loadDates: function(){
+        if(!this._dates){
+            this._dates = fetch('data/doc-dates.json')
+                .then(function(r){ if(!r.ok){ throw new Error('doc-dates'); } return r.json(); })
+                .catch(function(){ return { docs: {} }; });
+        }
+        return this._dates;
+    },
     // 지식 인덱스. 요청 언어 → 한국어 폴백. resolve: 파싱된 index.
     loadIndex: function(lang){
         var urls = ['data/knowledge-index.' + lang + '.json'];

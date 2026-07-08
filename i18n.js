@@ -74,6 +74,7 @@ var STRINGS = {
         searchSubline: 'Claude Code · 플러그인 · 하네스 · 세컨드 브레인',
         dockAria: '미니게임 선택',
         g2048: '지식 2048', g2048Long: '지식 2048 — 타일을 합쳐 지식 단계를 키우기 (방향키·스와이프)',
+        dateCreated: '생성일자:', dateUpdated: '수정일자:',
         g2048New: '새 게임', g2048Over: '게임 오버 — 눌러서 다시', gameBest: 'BEST',
         g2048WinTitle: '세컨드 브레인 탄생',
         g2048WinSub: '타일들이 당신의 지식그래프가 되었습니다 — 눌러서 계속',
@@ -153,6 +154,7 @@ var STRINGS = {
         searchSubline: 'Claude Code · Plugins · Harness · Second Brain',
         dockAria: 'Choose a mini game',
         g2048: 'Knowledge 2048', g2048Long: 'Knowledge 2048 — merge tiles up the knowledge ladder (arrows / swipe)',
+        dateCreated: 'Created:', dateUpdated: 'Updated:',
         g2048New: 'New game', g2048Over: 'Game over — tap to restart', gameBest: 'BEST',
         g2048WinTitle: 'A Second Brain is born',
         g2048WinSub: 'Your tiles became a knowledge graph — tap to continue',
@@ -218,4 +220,19 @@ function STRF(k, vars){
         t = t.replace('{' + x + '}', vars[x]);
     });
     return t;
+}
+
+// ISO 날짜(YYYY-MM-DD)를 현재 언어의 표기법으로 — ko "2026년 7월 6일",
+// en "July 6, 2026". Intl이 없거나 실패해도 ISO를 그대로 노출하지 않는다.
+function formatDocDate(iso){
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    if(!m){ return ''; }
+    var y = +m[1], mo = +m[2], d = +m[3];
+    var lang = currentLang();
+    try{
+        return new Intl.DateTimeFormat(lang, { year: 'numeric', month: 'long', day: 'numeric' })
+            .format(new Date(y, mo - 1, d));
+    }catch(e){
+        return lang === 'ko' ? (y + '년 ' + mo + '월 ' + d + '일') : (mo + '/' + d + '/' + y);
+    }
 }
