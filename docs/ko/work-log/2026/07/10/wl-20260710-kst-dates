@@ -1,0 +1,24 @@
+<h2>날짜 집계를 한국시간(KST) 기준으로 정정</h2>
+<p>한국시간이 자정을 넘어 <strong>07-10</strong>인데도 문서 날짜가 <strong>07-09</strong>로 집계되던 버그. 이 로그가 첫 07-10 항목 — 수정 후 날짜가 KST로 잡히는 것을 시연한다.</p>
+
+<h3>원인 — 타임존 혼재</h3>
+<ul>
+    <li>doc-dates <code>c</code>/<code>u</code>가 <strong>UTC/KST 혼재</strong>였다: 이 세션의 로컬 커밋은 author tz가 <code>+00:00</code>(UTC), GitHub 스쿼시 머지·원본 콘텐츠는 <code>+09:00</code>(KST). <code>build_dates</code>가 <code>%aI</code>(커밋 원래 tz)를 그대로 써서, 자정 넘어(UTC 15:00+ = KST 익일 00:00+) 만든 커밋이 UTC 날짜(07-09)로 저장됐다. 예: <code>newdoc-markers</code>의 <code>u</code>가 <code>15:36+00:00</code>(UTC 07-09) → KST로는 07-10.</li>
+</ul>
+
+<h3>수정 — 전부 KST로 정규화</h3>
+<ul>
+    <li><strong><code>tools/build_dates.py</code></strong>: <code>%aI</code> → <code>%ad --date=iso-strict-local</code> + <code>TZ=Asia/Seoul</code>. 커밋 tz가 UTC든 +09:00이든 <strong>KST 기준 같은 날짜</strong>로 저장(모든 <code>c</code>/<code>u</code>가 <code>+09:00</code>). 정렬·표시·판정이 KST로 일관.</li>
+    <li><strong><code>app.js</code> <code>docAgeDays</code></strong>: "오늘"을 방문자 로컬이 아니라 <strong>KST 달력일</strong>로 계산(<code>kstTodayYMD()</code> = <code>Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul'})</code>). 저장된 생성일(KST)과 같은 기준으로 "며칠 됐나"를 센다.</li>
+    <li>캐시버스터 <code>app.js</code> 상향. doc-dates 전체 재생성.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">검증</span>
+    CDP: <code>kstTodayYMD()</code>="2026-07-10", <code>docAgeDays('welcome')</code>=3(07-07→07-10). doc-dates <code>newdoc-markers.u</code>가 <code>15:36+00:00</code> → <code>2026-07-10T00:36+09:00</code>로 정정. <code>validate_all</code> ERROR 0.
+</div>
+
+<div class="note warn">
+    <span class="nh">참고 — 폴더 날짜</span>
+    Work Log 폴더(<code>work-log/YYYY/MM/DD/</code>)는 수동 지정이다. 앞으로는 KST 날짜 기준으로 폴더를 만든다(그래서 이 로그가 <code>07/10</code>). 기존 07-09 로그들은 KST 07-09에 생성된 것이라 그대로 둔다.
+</div>
