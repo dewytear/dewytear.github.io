@@ -29,3 +29,10 @@
     <span class="nh">구조 검토 결과</span>
     i18n 신규 8키 ko·en 짝 완비, doc-dates 전 항목 +09:00, <code>validate_all</code> ERROR 0. 남는 알려진 한계(문서화 유지): <code>check_worklog</code>는 "로그 접점 유무"만 보는 백스톱 — 내용·주제 정합은 사람/AI 큐레이션 몫.
 </div>
+
+<h3>기존 로그 일자별 빅 프레임 병합 (48 → 26) + 지속 규칙</h3>
+<ul>
+    <li><strong>빅 프레임 4종 확정</strong>: ①콘텐츠(문서·기사·강의) ②기능 ③디자인·UI ④운영·도구(검증기·CI·로그 체계·리팩터). 하루 안에서 같은 프레임 로그는 하나로 — 하루 최대 4개.</li>
+    <li><strong>기존 48개 로그를 26개로 병합</strong>: 05일 8→3 · 06일 7→3 · 07일 6→4 · 08일 6→3 · 09일 11→3 (01~04·10일은 이미 프레임 상이라 유지). 병합 파일은 <code>wl-YYYYMMDD-&lt;frame&gt;</code> 이름으로, 흡수 로그의 <strong>원문을 h3 섹션으로 이식</strong>(h2 제거·h3→h4 강등 — 큐레이션 내용 무손실). 삭제된 33개 이름을 가리키던 링크(Backlog·guide·로그 상호 참조)는 전수 치환.</li>
+    <li><strong>지속 규칙</strong>: CLAUDE.md 규칙 4·wl-guide에 빅 프레임 명문화("같은 날 같은 프레임이면 새 파일 대신 그 로그에 h3 섹션 추가"). <code>validate_routes</code>에 <code>worklog-day-split</code> WARN 신설 — 한 날짜 폴더 로그 5개 이상이면 병합 검토 신호(프레임 판정은 기계 불가라 하드 게이트 아님).</li>
+</ul>

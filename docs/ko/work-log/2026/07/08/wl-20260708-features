@@ -1,0 +1,45 @@
+<h2>기능 — 2048 축하 연출·문서 일자 표기</h2>
+<p>2048 세컨드 브레인 축하 연출과 문서 생성/수정일자 표기를 묶은 기록.</p>
+
+<h3>2026-07-08 · 2048 세컨드 브레인 달성 축하 연출</h3>
+<p>지식 2048에서 2048(세컨드 브레인) 달성 시의 특별 축하 연출. 규칙대로 <strong>디자인 3안을 실제 렌더 영상과 함께</strong> 제시하고 사용자가 <strong>A+B 조합(문구는 A)</strong>을 골랐다: <em>계보 승천</em>(보드 위 사다리 라벨들이 승리 타일로 차례로 흡수, 타일이 부풀며 발광) → <em>지식그래프 탄생</em>(모든 타일이 입자로 흩어져 4클러스터 별자리로 재조립, 엣지 드로우-인 후 저속 궤도) → &ldquo;세컨드 브레인 탄생 — 타일들이 당신의 지식그래프가 되었습니다&rdquo;.</p>
+
+<h4>제시안 (프로토타입 녹화로 비교)</h4>
+<ul>
+    <li><strong>A. 지식그래프 탄생</strong> — 타일 입자가 위키 지식그래프 별자리로 재조립. 코스모스·그래프 뷰 정체성과 직결. <strong>(채택: 피날레+문구)</strong></li>
+    <li><strong>B. 계보 승천</strong> — 태그→개념→…→지식그래프가 승리 타일로 흡수되는 성장 서사. <strong>(채택: 도입부)</strong></li>
+    <li>C. 시냅스 불꽃 — 뉴런 발화 스파크 후 입자 뇌 실루엣. (미채택)</li>
+</ul>
+
+<h4>구현</h4>
+<ul>
+    <li><strong>celebrate() 시퀀스</strong> — 승리 분기가 <code>showMsg</code> 대신 호출. 보드 위 <code>.g2048-fx</code> 캔버스(DPR 대응, 타일 위·오버레이 아래)에서 2막 연출 후 <code>showWinMsg()</code>(제목+부제 2줄, <code>g2048WinTitle/g2048WinSub</code> STR 키 ko/en).</li>
+    <li><strong>색은 전부 테마 토큰 파생</strong> — 매 프레임 <code>--accent</code>를 읽어 <code>gvToHsl</code>로 기준 색상 추출, 클러스터 4색은 golden-angle(+137.5°) 오프셋(코스모스 월드 색 규칙과 동일 사상). 다크=틸 계열, 라이트=주황 계열로 자동 대응 — 하드코딩 hex 없음.</li>
+    <li><strong>승리 오버레이 .win 변형</strong> — 별자리가 보이도록 불투명 워시 대신 하단 그라디언트 + 하단 정렬 문구. 게임오버 오버레이는 기존 그대로.</li>
+    <li><strong>복원·정리</strong> — 오버레이 탭 시 <code>stopFx()</code>(rAF·타이머 취소, 캔버스 제거, 타일 opacity/transform 복원) 후 같은 보드로 계속. <code>newGame</code>·<code>cleanup</code>에도 연결. <code>prefers-reduced-motion</code>이면 연출 생략(기존 정책상 게임 자체가 안 뜨지만 방어 유지). 테스트 훅 <code>wrap._celebrate</code>는 기존 <code>_cleanup</code> 패턴을 따름.</li>
+</ul>
+
+<h4>검증</h4>
+<ul>
+    <li>헤드리스 Chrome E2E — 연출 구동→1막 캔버스 확인→2막 입자 픽셀 실측(getImageData)→2줄 문구 표시→탭 후 캔버스 제거·타일 복원(opacity 1)·계속 플레이 가능, 페이지 에러 0.</li>
+    <li>테마 파생색 실측 — 라이트에서 평균색이 난색 우세(주황 기준), 다크에서 틸 기준 클러스터. 양 테마 스크린샷 확보.</li>
+    <li><code>validate_all.py</code> 0 ERROR.</li>
+</ul>
+
+<h3>2026-07-08 · 문서 생성/수정일자 표기 (git 이력 기반)</h3>
+<p>모든 본문 문서 제목 밑에 <strong>생성일자</strong>를, 살아있는 메타 문서(지식지도 ai-map·dz-map, Backlog, 기록 규칙)에는 <strong>수정일자</strong>를 작은 글씨·우측 정렬로 표기. 날짜의 진실은 git 이력 — 런타임 API가 아니라 <strong>빌드 타임 사전 생성</strong>(기존 인덱스 철학)으로 해결했다.</p>
+
+<h4>구현</h4>
+<ul>
+    <li><strong><code>tools/build_dates.py</code></strong> — list의 doc 노드 전수에 대해 <code>git log --follow --format=%as</code>로 생성일(첫 커밋)·수정일(마지막 커밋)을 추출해 <code>data/doc-dates.json</code> 생성. <code>--follow</code> 덕에 07-06 도메인 트리 물리 이동 이전의 생성일까지 정확히 추적. 콘텐츠 PR에서 build_index와 함께 재생성(curator.md에 안내 추가). 머지 시각에 따라 수 시간 흔들릴 수 있어 <code>--check</code> 게이트는 두지 않음.</li>
+    <li><strong>어댑터 소비</strong> — 리팩토링에서 만든 <code>App.data</code>에 <code>loadDates()</code>(1회 캐시, 실패 시 조용히 미표기) 추가. app.js <code>injectDocDate</code>가 fetchPage 체인에서 첫 <code>&lt;h2&gt;</code> 바로 밑에 <code>.doc-date</code> 주입(늦은 응답은 CURRENT_DOC 대조로 무시, 중복 가드).</li>
+    <li><strong>언어별 날짜 표기</strong> — 데이터는 ISO로 저장, 표시 시 <code>Intl.DateTimeFormat(currentLang())</code>로 해당 언어 관례를 따름: ko &ldquo;생성일자: 2026년 7월 6일&rdquo; / en &ldquo;Created: July 6, 2026&rdquo;. 라벨은 STR 키(<code>dateCreated/dateUpdated</code>, ko/en 동시 — i18n 규칙). Intl 실패 시에도 ISO를 노출하지 않는 수동 조립 폴백.</li>
+    <li><strong>수정일자 대상</strong> — <code>UPDATED_DATE_DOCS</code> = ai-map · dz-map · wl-backlog · wl-guide (가치가 &lsquo;신선도&rsquo;인 살아있는 문서). 그 외 전부 생성일자.</li>
+    <li>스타일은 테마 토큰만(<code>var(--muted)</code>), <code>style.css?v=13</code>·core/i18n/app <code>?v=2</code>.</li>
+</ul>
+
+<h4>검증</h4>
+<ul>
+    <li>정확 문자열 assert — welcome &ldquo;생성일자: 2026년 7월 6일&rdquo;(우측 정렬) · ai-map/Backlog &ldquo;수정일자: 2026년 7월 8일&rdquo; · 가이드 07-07 · en 모드 &ldquo;Created: July 6, 2026&rdquo;/&ldquo;Updated: July 8, 2026&rdquo; · 문서 전환 반복 시 중복 0 · 콘솔 에러 0.</li>
+    <li>전체 스모크 20항목 재통과, <code>validate_all</code> 0 ERROR, 131편 전수 날짜 생성 확인.</li>
+</ul>

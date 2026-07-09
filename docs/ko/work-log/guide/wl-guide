@@ -12,8 +12,8 @@
 </div>
 
 <div class="note warn">
-    <span class="nh">하루 = 여러 주제 문서</span>
-    같은 날 작업이라도 <strong>큰 틀에서 주제가 다르면 반드시 문서를 나눕니다</strong>. 하나의 로그에 이질적인 주제를 섞으면 나중에 맥락을 되찾기 어렵기 때문입니다. 예: 05일은 지식 시스템 · 코스모스 · 미니게임 · 디자인 · 설정 · 로그 정비 · 전면 검증 · 다국어의 <strong>8개 문서</strong>로 나뉩니다. 자동 기록(큐레이터)도 같은 규칙을 따릅니다.
+    <span class="nh">하루 = 빅 프레임 4종으로 묶는다</span>
+    같은 날의 로그는 <strong>빅 프레임 4종</strong> 단위로 묶습니다 — <strong>①콘텐츠</strong>(문서·기사·강의) · <strong>②기능</strong>(동작 추가/변경) · <strong>③디자인·UI</strong> · <strong>④운영·도구</strong>(검증기·CI·로그 체계·리팩터). 하루 최대 4개 문서가 기본이고, <strong>같은 날 같은 프레임의 로그가 이미 있으면 새 파일 대신 그 로그에 <code>&lt;h3&gt;</code> 섹션으로 추가</strong>합니다(작업 하나 = 섹션 하나). 잘게 쪼개면 목록이 과분할되고, 반대로 프레임이 다른 것을 한 문서에 섞으면 맥락을 되찾기 어렵습니다. 예: 05일은 기능(지식 시스템·코스모스·미니게임·다국어) · 디자인(정밀화·설정) · 운영(로그 체계·전면 검증)의 <strong>3개 문서</strong>입니다.
 </div>
 
 <h3>기록하는 이유</h3>
@@ -39,7 +39,7 @@
 
 <div class="note">
     <span class="nh">파일 이름 규칙</span>
-    문서 파일명은 <code>wl-YYYYMMDD-주제</code> 형식을 권장합니다 (예: <code>wl-20260703-wiki</code>). 목록의 <code>label</code>에는 사람이 읽기 좋은 작업주제를 적습니다.
+    문서 파일명은 <code>wl-YYYYMMDD-&lt;frame&gt;</code>을 권장합니다 — frame은 <code>content</code>·<code>features</code>·<code>design</code>·<code>ops</code> (예: <code>wl-20260709-ops</code>). 목록의 <code>label</code>에는 "프레임 — 요약"(예: "운영 — 도식·Work Log 재발 방지 6건")처럼 사람이 읽기 좋은 제목을 적습니다.
 </div>
 
 <div class="note warn">
