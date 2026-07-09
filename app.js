@@ -779,7 +779,7 @@ function scrollFolderDoc(i){
 // PR time from git history — see tools/build_dates.py). Until dates
 // arrive, list order shows.
 var MORE_PAGE_SIZE = 5;
-var MORE_BLOCK = 7;    // page numbers shown per pager block (fits mobile width)
+var MORE_BLOCK = 6;    // page numbers shown per pager block (fits mobile width)
 var morePage = 0;
 var NEW_PAGE_SIZE = 7;   // #!new 게시판 페이지당 개수
 var newPage = 0;
