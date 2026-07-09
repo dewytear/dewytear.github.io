@@ -1,14 +1,14 @@
-<h2>"모두 접기"에서 최상위 대분류는 접지 않도록 되돌림(기본 레이아웃 = 이 상태)</h2>
-<p><a href="#!wl-20260709-collapse-all">직전(#206)</a>에 "모두 접기 = 전부 접힘"으로 바꿨으나, 사용자 최종 결정은 <strong>모두 접어도 최상위 대분류(AI·Douzone·Work Log)는 열린 채 유지</strong>. 그리고 이 상태가 기본이어야 한다. 원래 동작으로 복원한다.</p>
+<h2>사이드바 "모두 접기 / 모두 펼치기" 동작 정리</h2>
+<p><code>setAllBranches</code>(app.js)의 최상위 대분류 처리를 최종 확정했다. (07-09에 한 번 "전부 접힘"으로 바꿨다가 되돌린 것을 하나로 모은 기록.)</p>
 
-<h3>수정 — <code>setAllBranches</code> (app.js)</h3>
+<h3>최종 동작</h3>
 <ul>
-    <li><code>if(collapsed && li.hasAttribute('data-cat')){ remove; return; }</code> 예외 복원 → '모두 접기'는 최상위를 열어두고 하위만 접는다. '모두 펼치기'는 전부 편다.</li>
-    <li>결과가 <strong>기본 레이아웃(최상위 열림·하위 접힘)과 동일</strong> — "이것이 default"라는 요구 충족(초기 로드도 같은 모양).</li>
-    <li>캐시버스터 <code>app.js</code> 7→8.</li>
+    <li><strong>모두 접기</strong> — 최상위 대분류(AI·Douzone·Work Log)는 <strong>접지 않고 열어둔다</strong>, 하위 브랜치만 접는다. 결과가 <strong>기본(초기 로드) 레이아웃과 동일</strong>.</li>
+    <li><strong>모두 펼치기</strong> — 최상위·하위 전부 편다.</li>
+    <li>구현: <code>if(collapsed &amp;&amp; li.hasAttribute('data-cat')){ remove; return; }</code> 예외로 최상위를 열어둔다. 초기 렌더(<code>renderNodes</code>)의 "최상위 기본 펼침"과 같은 상태로 수렴.</li>
 </ul>
 
 <div class="note">
-    <span class="nh">검증</span>
-    CDP: 기본·모두 접기 모두 최상위 0 collapsed·하위 30/33 collapsed(동일), 모두 펼치기 0 collapsed. <code>validate_all</code> ERROR 0.
+    <span class="nh">경위</span>
+    중간에 "모두 접기 = 최상위 포함 전부 접힘"으로 바꿨으나, 최종 결정은 <strong>최상위는 열림 유지(그게 default)</strong>로 되돌림. CDP 검증: 기본·모두 접기 모두 최상위 0 collapsed·하위 collapsed, 모두 펼치기 0 collapsed. <code>validate_all</code> ERROR 0.
 </div>
