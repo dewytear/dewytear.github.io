@@ -1018,12 +1018,11 @@
         }
         .search-new .plus{ font-size: 15px; font-weight: 700; }
         .search-new:hover{ border-color: var(--accent); color: var(--accent-ink); }
-        /* 새 글이 있을 때만 accent 배경. on-accent 텍스트는 두 테마 모두
-           밝은 accent(teal/orange) 위에서 읽히도록 어두운 잉크 고정. */
+        /* 새 글이 있을 때만 배경색 — game-dock "on"처럼 옅은 accent 틴트. */
         .search-new.has-new{
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #14181f;
+            background: color-mix(in srgb, var(--accent) 20%, transparent);
+            border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+            color: var(--accent-ink);
         }
         .search-go{
             width: 38px;
@@ -1041,31 +1040,25 @@
         }
         .search-go:hover{ color: var(--accent-ink); border-color: var(--accent); }
 
-        /* ① 폴더 새 글 수 배지 — 모아보기(⧉) 왼쪽. 항상 동일 진하기(그라데이션 없음). */
-        .nav-newbadge{
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 17px;
-            height: 17px;
+        /* ① 폴더 새 글 수 — 모아보기(⧉) 왼쪽. 배경 없이 숫자만, 옅은 accent 색. */
+        #navigation .nav-newbadge{
             margin-left: 6px;
-            padding: 0 5px;
-            border-radius: 999px;
-            background: var(--accent);
-            color: #14181f;   /* on-accent 어두운 잉크(두 테마 공통) */
-            font-size: 10.5px;
-            font-weight: 800;
+            color: color-mix(in srgb, var(--accent) 55%, var(--muted));
+            opacity: 0.8;
+            font-size: 11px;
+            font-weight: 700;
             line-height: 1;
             font-variant-numeric: tabular-nums;
         }
         .nav-newbadge[hidden]{ display: none; }
 
-        /* ② 제목 앞 숫자 자체를 일자별 그라데이션(오늘=진한 accent → 옅어짐).
-           --nf(0..1)는 app.js가 인라인으로 세팅. 점 치환 없음. */
-        .doc-num.is-new{
-            font-weight: 800;
-            color: color-mix(in srgb, var(--accent) calc(var(--nf, 1) * 100%), var(--muted));
-            opacity: calc(0.45 + var(--nf, 1) * 0.55);
+        /* ② 제목 앞 숫자 자체를 일자별 그라데이션(오늘=진하게 → 옅어짐).
+           #navigation로 스코프해 #navigation .doc-num(1,1,0)을 이긴다.
+           폴더 숫자처럼 전체 톤은 옅게(accent 최대 70% + 낮은 opacity). */
+        #navigation .doc-num.is-new{
+            font-weight: 700;
+            color: color-mix(in srgb, var(--accent) calc(var(--nf, 1) * 70%), var(--muted));
+            opacity: calc(0.4 + var(--nf, 1) * 0.4);
         }
 
         #search-results{

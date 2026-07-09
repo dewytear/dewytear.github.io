@@ -829,7 +829,7 @@ function moreBlock(dir){
 var DOC_DATES = {};   // name -> {c, u}
 function newDaysSetting(){
     var n = parseInt(effSettings().newDays, 10);
-    return (n > 0) ? n : 7;
+    return (n > 0) ? n : 3;
 }
 function docAgeDays(name){
     var rec = DOC_DATES[name];
@@ -946,7 +946,7 @@ function saveSettings(s){
 var SITE_DEFAULTS = {};
 var HARD_DEFAULTS = { navLineStyle: 'dashed', navLineWidth: '1px',
                       searchGame: 'g2048', music: '', lang: 'ko',
-                      hideRecent: false, hideRelated: false, newDays: 7 };
+                      hideRecent: false, hideRelated: false, newDays: 3 };
 // Effective settings = site defaults overlaid with personal values.
 function effSettings(){
     var out = {}, k;
@@ -1213,7 +1213,7 @@ function showSettings(){
       + '<div class="settings-field">'
       +   '<label for="settings-newdays">' + STR('fNewDays') + '</label>'
       +   '<input id="settings-newdays" type="number" min="1" max="30" value="'
-      +     (parseInt(s.newDays, 10) || 7) + '">'
+      +     (parseInt(s.newDays, 10) || 3) + '">'
       + '</div>'
       + '<div class="settings-field">'
       +   '<label>' + STR('fCats') + '</label>'
@@ -1427,7 +1427,7 @@ function saveSettingsForm(){
     setOrClear(s, 'navLineWidth', document.getElementById('settings-navwidth').value);
     setOrClear(s, 'hideRecent', document.getElementById('settings-hiderecent').checked);
     setOrClear(s, 'hideRelated', document.getElementById('settings-hiderelated').checked);
-    setOrClear(s, 'newDays', parseInt(document.getElementById('settings-newdays').value, 10) || 7);
+    setOrClear(s, 'newDays', parseInt(document.getElementById('settings-newdays').value, 10) || 3);
     setOrClear(s, 'searchGame', document.getElementById('settings-game').value);
     var prevLang = currentLang();
     setOrClear(s, 'lang', document.getElementById('settings-lang').value);
