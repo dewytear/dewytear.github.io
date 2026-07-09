@@ -693,8 +693,8 @@ function showNew(){
     }
     html += '<ul class="more-list">';
     docs.forEach(function(d){
-        var c = (DOC_DATES[d.name] || {}).c || '';
-        var meta = d.sectionL + (c ? ' · ' + c.slice(0, 10) : '');
+        var cd = formatDocDate(((DOC_DATES[d.name] || {}).c || '').slice(0, 10));
+        var meta = d.sectionL + (cd ? ' · ' + cd : '');
         html += '<li><a href="#!' + d.name + '">'
              +  '<span class="more-name">' + escapeHtml(d.label) + '</span>'
              +  '<span class="more-meta">' + escapeHtml(meta) + '</span></a></li>';
@@ -778,7 +778,8 @@ function renderMore(){
     var start = morePage * MORE_PAGE_SIZE;
     var html = '<h3 class="more-title">' + STR('recent') + '</h3><ul class="more-list">';
     recentDocs().slice(start, start + MORE_PAGE_SIZE).forEach(function(d){
-        var meta = d.sectionL + (d.date ? ' · ' + d.date.slice(0, 10) : '');
+        var dd = formatDocDate((d.date || '').slice(0, 10));
+        var meta = d.sectionL + (dd ? ' · ' + dd : '');
         html += '<li><a href="#!' + d.name + '">'
              +  '<span class="more-name">' + escapeHtml(d.label) + '</span>'
              +  '<span class="more-meta">' + escapeHtml(meta) + '</span></a></li>';
