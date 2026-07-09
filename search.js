@@ -249,10 +249,17 @@ function showSearch(){
       +     '<h2 class="search-head">' + STR('searchHead') + '</h2>'
       +     '<p class="search-sub">' + escapeHtml(STR('searchSubline')) + '</p>'
       +     '<div class="search-field">'
-      +       '<span class="search-ico" aria-hidden="true">&#128269;</span>'
       +       '<input id="search-input" type="search" autocomplete="off"'
       +         ' placeholder="' + STR('searchPh') + '"'
       +         ' oninput="renderSearchResults(this.value)">'
+      +       '<span class="search-ctrls">'
+      +         '<button type="button" class="search-new" title="' + STR('newCollect') + '" aria-label="' + STR('newCollect') + '"'
+      +           ' onpointerdown="event.stopPropagation()" onclick="location.hash=\'#!new\'">'
+      +           'new<span class="plus" aria-hidden="true">+</span></button>'
+      +         '<button type="button" class="search-go" title="' + STR('searchGoAria') + '" aria-label="' + STR('searchGoAria') + '"'
+      +           ' onpointerdown="event.stopPropagation()"'
+      +           ' onclick="var b=document.getElementById(\'search-input\'); renderSearchResults(b.value); b.focus();">&#128269;</button>'
+      +       '</span>'
       +     '</div>'
       +     '<div id="search-results"></div>'
       +   '</div>'
@@ -290,6 +297,9 @@ function showSearch(){
     ensureTextIndex();   // start fetching doc bodies in the background
     startSearchGame();   // ambient mini game behind the field
     enableSearchPaddle();   // drag the field left/right like a paddle
+    // new+ 버튼: 새 글이 있을 때만 배경색(app.js의 anyNewDocs).
+    var sn = document.querySelector('.search-new');
+    if(sn && typeof anyNewDocs === 'function'){ sn.classList.toggle('has-new', anyNewDocs()); }
     var box = document.getElementById('search-input');
     if(box){
         box.focus();

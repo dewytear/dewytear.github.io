@@ -16,7 +16,7 @@
   1. `list`에 노드 추가 — `path`, `label`(+`label_en`), `tags`, 새 문서·대폭 재작성이면 `model` 기록
   2. `tools/doc-entries.ko.json`에 엔트리 추가(title·summary·concepts — 기존 개념 어휘를 재사용해 연관 링크가 생기게) 후 `python3 tools/build_index.py` 재생성 + `--check` 통과 → 지식지도·지식그래프(cosmos)에 자동 반영
   3. 새 대분류(섹션)라면 `tools/build_index.py`의 `CLUSTER_LABELS_BY_LANG`에 **모든 언어** 클러스터 라벨 추가 + `docs/*/ai/map/ai-map`의 상단 도식·클러스터 표 fallback·`data-topics` 갱신
-  4. 작업이 끝나면 **Work Log 문서를 추가**하고 `list`의 해당 날짜 트리에 노드(`"tags": []`)를 단다 — 하나의 작업(주제)을 master에 머지할 때 사람/AI가 직접 curated하게 작성한다(자동 머지 로그는 폐지됨). **작아도 예외 없음** — PR CI의 `tools/check_worklog.py`가 실질 변경이 있는데 새 로그가 없는 PR을 실패시킨다(로깅 전용 PR은 예외). 로그의 "다음 할 일"은 **그 시점 스냅샷(불변)**일 뿐이니, 열린 일은 로그에 박지 말고 **`work-log/wl-backlog`(☐ Backlog, 단일 살아있는 목록)**에서만 관리한다 — 후속이 생기면 Backlog에 추가, 완료하면 Backlog "최근 완료"로 옮겨 ✅+해결 로그 링크를 달고 오래된 건 걷어낸다(원본은 로그). 옛 로그는 소급 수정하지 않는다.
+  4. 작업이 끝나면 **Work Log 문서를 추가**하고 `list`의 해당 날짜 트리에 노드(`"tags": []`)를 단다 — 하나의 작업(주제)을 master에 머지할 때 사람/AI가 직접 curated하게 작성한다(자동 머지 로그는 폐지됨). **작아도 예외 없음** — PR CI의 `tools/check_worklog.py`가 실질 변경이 있는데 새 로그가 없는 PR을 실패시킨다(로깅 전용 PR은 예외). 또한 로그 파일만 추가하고 `list` 노드를 빠뜨리면 문서가 내비게이션에 안 떠 "안 쌓인" 것과 같으므로, `tools/validate_routes.py`가 `list` 미등록 work-log 파일을 **ERROR(orphan-file)**로 막는다(일반 문서 고아는 WARN, work-log만 ERROR — push·PR 모두 `validate_all`에서 검사). 로그의 "다음 할 일"은 **그 시점 스냅샷(불변)**일 뿐이니, 열린 일은 로그에 박지 말고 **`work-log/wl-backlog`(☐ Backlog, 단일 살아있는 목록)**에서만 관리한다 — 후속이 생기면 Backlog에 추가, 완료하면 Backlog "최근 완료"로 옮겨 ✅+해결 로그 링크를 달고 오래된 건 걷어낸다(원본은 로그). 옛 로그는 소급 수정하지 않는다.
   5. 문서·`list`·인덱스를 바꾸는 PR은 `python tools/validate_all.py`를 먼저 실행한다 — **ERROR 0가 머지 조건**, WARN은 검토 후 보정하거나 사유를 Work Log에 남긴다
 
 ## 지식 그래프 WARN 해석 규칙

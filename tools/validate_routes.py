@@ -16,7 +16,7 @@ import os
 import re
 import sys
 
-SPECIAL_ROUTES = {'cosmos', 'tags', 'settings', 'search', 'about'}
+SPECIAL_ROUTES = {'cosmos', 'tags', 'settings', 'search', 'about', 'new'}
 SPECIAL_PREFIXES = ('tag:', 'folder:')
 # Deliberately nav-less doc files (reachable by dedicated UI, not the list
 # tree): the About page opens from the sidebar profile photo.
@@ -122,11 +122,17 @@ def run(root):
                                 "docs/ko/%s not found" % rel))
 
     # 4. orphan-file: file under docs/ko/** not referenced by any list path.
+    # Work Log docs are held to a stricter bar (ERROR, not WARN): an unlisted
+    # work-log file never appears in the nav tree, so the log silently fails
+    # to "accumulate" — exactly the CLAUDE.md 규칙 4 gap this guards against
+    # (add a doc → always register a list node). A work-log file on disk with
+    # no list node is never intentional, so it must fail the merge, not warn.
     for rel in sorted(ko_files):
         if rel in UNLISTED_DOCS:
             continue
         if rel not in doc_paths:
-            findings.append(_f('WARN', 'orphan-file', rel,
+            level = 'ERROR' if rel.startswith('work-log/') else 'WARN'
+            findings.append(_f(level, 'orphan-file', rel,
                                 "docs/ko/%s is not referenced by any list node" % rel))
 
     # 5. broken-link: href="#!..." targets that resolve to nothing.
