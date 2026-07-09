@@ -231,7 +231,7 @@ function STRF(k, vars){
 // ISO 날짜(YYYY-MM-DD)를 현재 언어의 표기법으로 — ko "2026년 7월 6일",
 // en "July 6, 2026". Intl이 없거나 실패해도 ISO를 그대로 노출하지 않는다.
 function formatDocDate(iso){
-    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || '');
     if(!m){ return ''; }
     var y = +m[1], mo = +m[2], d = +m[3];
     var lang = currentLang();

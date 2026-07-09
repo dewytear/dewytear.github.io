@@ -1,0 +1,21 @@
+<h2>날짜에 시분초 보유 — 표시는 날짜만, 정렬만 시각까지</h2>
+<p><code>doc-dates.json</code>의 <code>c</code>/<code>u</code>가 <code>YYYY-MM-DD</code>(날짜만)라, 같은 날 생성된 문서들이 최근 문서 보드·<code>#!new</code>에서 <strong>동률이 되어 순서가 list 순서로 흐트러졌다</strong>. 내부적으로 시분초까지 갖되, <strong>화면 표시는 지금과 똑같이 날짜만</strong>, 정렬이 필요한 곳만 시각까지 보게 한다.</p>
+
+<h3>변경(작다 — 기존 구조가 이미 뒷받침)</h3>
+<ul>
+    <li><strong><code>tools/build_dates.py</code></strong>: <code>git log --format=%as</code>(YYYY-MM-DD) → <strong><code>%aI</code></strong>(strict ISO, 예 <code>2026-07-09T22:54:02+09:00</code>). <code>%aI</code>는 author 로컬 타임존이라 <strong>날짜 접두어가 기존 <code>%as</code>와 동일</strong> → 표시 날짜 불변.</li>
+    <li><strong><code>i18n.js</code> <code>formatDocDate</code></strong>: 정규식 <code>^(\d{4})-(\d{2})-(\d{2})$</code>에서 <code>$</code> 제거(접두어 허용) → 전체 ISO가 들어와도 날짜부만 포맷. 모든 표시 지점(문서 제목 밑 일자·폴더 목차·<code>#!new</code>·최근 문서)이 현재와 동일.</li>
+    <li><strong>정렬은 코드 변경 없음</strong>: <code>applyDocDates</code>(최근 문서)·<code>showNew</code>는 이미 <code>c</code>/<code>u</code> 문자열을 그대로 비교 → 값이 ISO 시분초가 되면서 자동으로 시각까지 반영.</li>
+    <li><strong>판정 변경 없음</strong>: <code>docAgeDays</code>는 접두어 정규식이라 시각이 붙어도 날짜 기준 유지 → 새 글 판정·그라데이션 불변.</li>
+    <li><code>data/doc-dates.json</code> 전체 재생성(144편 모두 새 형식). 캐시버스터 <code>i18n.js</code> 3→4.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">검증</span>
+    CDP: <code>formatDocDate('…T00:55:15+09:00')</code> → "2026년 7월 9일"(날짜만), <code>#!new</code> 메타 날짜만, <code>docAgeDays</code>·새 글 수(94) 불변. 최근 문서 상위가 <code>22:54 &gt; 22:43 &gt; 22:28 &gt; 22:23</code>로 <strong>같은 날도 시분초 순 정렬</strong> 확인. <code>validate_all</code> ERROR 0.
+</div>
+
+<div class="note warn">
+    <span class="nh">정렬 정확성 전제</span>
+    <code>%aI</code>는 author 타임존 오프셋 포함. 단일 작성자(같은 타임존)에선 문자열 비교가 시간순과 정확히 일치. 서로 다른 오프셋 커밋이 자정 근처에서 섞이면 최대 오프셋 차만큼 오차 가능(희귀). UTC 정규화는 정렬은 완벽하나 표시 날짜가 하루 밀릴 수 있어 택하지 않음(표시 동일 우선).
+</div>
