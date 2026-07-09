@@ -30,3 +30,4 @@
 
 ## 배포
 - GitHub Pages는 `master`를 배포한다. 머지 후 "pages build and deployment" 워크플로가 일시 오류로 실패하면(간헐적) master에 빈 커밋을 푸시해 재트리거한다.
+- **캐시버스터**: `index.html`이 `?v=`로 로드하는 자산(app.js·style.css 등)을 고치면 **같은 PR에서 그 자산의 `?v`를 올린다** — 안 올리면 재방문 브라우저(특히 iOS Safari)가 옛 캐시를 계속 써서 "반영이 안 됨". PR CI의 `tools/check_cachebuster.py`가 이를 기계적으로 강제한다.
