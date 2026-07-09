@@ -1,7 +1,7 @@
 """Aggregate the tools/validate_*.py checks into one report.
 
 Each sibling module (validate_docs, validate_routes, validate_i18n,
-validate_graph) exposes run(root) -> list[dict] findings. This script does
+validate_graph, validate_design) exposes run(root) -> list[dict] findings. This script does
 not duplicate their logic — it loads whichever ones exist, runs them, and
 prints a combined report. Missing modules degrade to a WARN, not a crash.
 """
@@ -11,7 +11,7 @@ import json
 import os
 import sys
 
-MODULE_NAMES = ['validate_docs', 'validate_routes', 'validate_i18n', 'validate_graph']
+MODULE_NAMES = ['validate_docs', 'validate_routes', 'validate_i18n', 'validate_graph', 'validate_design']
 
 _LEVEL_ORDER = {'ERROR': 0, 'WARN': 1, 'INFO': 2}
 

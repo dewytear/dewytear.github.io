@@ -379,6 +379,62 @@ def check_orphan_entries(doc_nodes, entries):
     return findings
 
 
+# CLAUDE.md 디자인 규칙: 지식 계층 표기는 World→Domain→System→Document,
+# 천문 은유(우주·갤럭시·성단·은하) 표현 금지 — 2026-07-06 개편(300dc4f) 이전에
+# 실제로 쓰이다 사후 금지된 이력이 있어, 재등장을 기계적으로 표면화한다.
+BANNED_METAPHORS = ('우주', '갤럭시', '성단', '은하')
+
+
+def check_banned_astronomy_metaphor(doc_nodes, entries, bodies):
+    """WARN: 천문 은유 단어가 살아있는 콘텐츠(label/tags/summary/concepts/본문)에
+    등장. ERROR가 아닌 이유 — 금지 대상은 지식 계층의 '은유'이지 단어 자체가
+    아니고, 단순 부분 문자열 매칭은 정당한 사용을 구분하지 못한다(예: 일반 단어
+    '구성단위'가 '성단'을 포함, 삼성 '갤럭시' 기기 기사, '우주항공' 산업 기사).
+    은유인지 아닌지는 사람 판단이 필요하므로 "사람이 한번 볼 목록"(WARN)으로 낸다.
+    work-log/ 문서는 제외 — 개편 이전/개편 과정 자체를 서술한 불변 역사
+    기록이라 CLAUDE.md의 "옛 로그는 소급 수정하지 않는다" 원칙이 적용된다."""
+    findings = []
+
+    def hits(text):
+        return sorted({w for w in BANNED_METAPHORS if w in (text or '')})
+
+    for n in doc_nodes:
+        if (n.get('path') or '').startswith('work-log/'):
+            continue
+        fields = {
+            'label': n.get('label', ''), 'label_en': n.get('label_en', ''),
+            'tags': ' '.join(n.get('tags') or []), 'tags_en': ' '.join(n.get('tags_en') or []),
+        }
+        for field, text in fields.items():
+            for w in hits(text):
+                findings.append({
+                    'level': 'WARN', 'check': 'banned-astronomy-metaphor', 'name': n['name'],
+                    'message': f'list의 {field}에 금지된 천문 은유 "{w}" 사용',
+                })
+        body = bodies.get(n['name'])
+        if body:
+            _, normalized = body
+            for w in hits(normalized):
+                findings.append({
+                    'level': 'WARN', 'check': 'banned-astronomy-metaphor', 'name': n['name'],
+                    'message': f'본문에 금지된 천문 은유 "{w}" 사용',
+                })
+
+    worklog_names = {n['name'] for n in doc_nodes if (n.get('path') or '').startswith('work-log/')}
+    for e in entries:
+        if e.get('name') in worklog_names:
+            continue
+        fields = {'title': e.get('title', ''), 'summary': e.get('summary', ''),
+                   'concepts': ' '.join(e.get('concepts') or [])}
+        for field, text in fields.items():
+            for w in hits(text):
+                findings.append({
+                    'level': 'WARN', 'check': 'banned-astronomy-metaphor', 'name': e.get('name', '-'),
+                    'message': f'doc-entries.ko.json의 {field}에 금지된 천문 은유 "{w}" 사용',
+                })
+    return findings
+
+
 # Map pages carry a static fallback table (for no-JS / index-load-failure)
 # that mirrors stats hydrateAiMap would render live. Fallback numbers rot
 # silently when docs are added, so cross-check them against the index.
@@ -475,6 +531,7 @@ def run(root):
     findings += check_summary_content_mismatch(entries, bodies)
     findings += check_unindexed_sanity(doc_nodes, entries)
     findings += check_orphan_entries(doc_nodes, entries)
+    findings += check_banned_astronomy_metaphor(doc_nodes, entries, bodies)
     findings += check_map_fallback_drift(root)
     return findings
 

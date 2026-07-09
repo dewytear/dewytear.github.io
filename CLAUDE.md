@@ -7,7 +7,7 @@
 
 ## 디자인 규칙
 - **지식 계층 표기는 World → Domain → System → Document** (2026-07-06 결정). 우주·갤럭시·성단 등 천문 은유 표현 금지 — 단 데이터 키(`stats.galaxies` 등)와 코드 식별자는 리네임하지 않는다.
-- UI 색은 테마 토큰(`var(--accent)`, `var(--muted)`, `var(--border)` 등)만 사용 — 낮/밤 테마 자동 대응. 단, 문서 프래그먼트의 다이어그램 SVG는 Safari 호환을 위해 style.css에 테마별 hex가 하드코딩된 기존 체계를 따른다.
+- UI 색은 테마 토큰(`var(--accent)`, `var(--muted)`, `var(--border)` 등)만 사용 — 낮/밤 테마 자동 대응. 단, 문서 프래그먼트의 다이어그램 SVG는 Safari 호환을 위해 style.css에 테마별 hex가 하드코딩된 기존 체계를 따른다. 구체적으로: 인라인 `<svg>`를 `<div class="diagram">` 안에 넣고 `style.css`의 `.d-box`/`.d-label`/`.d-sub`/`.d-edge`/`.d-arrow`/`.d-node` 시맨틱 클래스만 쓴다 — 예시는 `docs/ko/ai/news/2026/news-20260622-mythos-looped`. 문서 본문에서 `<img src="*.svg">`로 외부 SVG 파일을 불러오지 않는다(부모 페이지 CSS가 `<img>` 내부까지 못 미쳐 테마 전환이 끊긴다).
 - 새 컴포넌트는 기존 디자인 언어를 따른다: 반투명 필(pill) + backdrop-blur, 평소엔 낮은 존재감·호버 시 깨어남 (예: 검색 화면 `.game-dock`, 사이드바 `.nav-tools`).
 
 ## 본문(문서) 추가 규칙
