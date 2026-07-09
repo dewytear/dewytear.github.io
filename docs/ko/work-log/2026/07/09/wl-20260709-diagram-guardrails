@@ -1,0 +1,38 @@
+<h2>도식 규칙 재발 방지 — CLAUDE.md 보강·검증기 추가·크로스 모델 정합화</h2>
+<p>Fable5 기사 도식 사고(코덱스가 문서 다이어그램을 외부 이미지 자산으로 오분류)를 고친 뒤, 코덱스가 스스로 작성한 원인 분석을 검토하고 재발 방지 조치를 실행했다. "다른 AI 모델이 작업해도 동일한 결과가 나오게 해달라"는 요청에 따라 멀티 에이전트(Explore 3개 병렬)로 저장소 전체를 팀 리뷰했다.</p>
+
+<h3>코덱스 분석에 대한 판단</h3>
+<ul>
+    <li>진단(규칙 부재가 아니라 규칙 적용 경계가 암묵적이었고 검증기가 강제하지 않았다)은 정확하다고 판단.</li>
+    <li>원인 비중 "65~70% / 30~35%" 같은 소수점 정밀도는 근거 없는 허상 수치로 판단, 채택하지 않음.</li>
+    <li>제안한 <code>DIAGRAM_GUIDE.md</code> 신설은 반대 — 이 저장소는 지금까지 새 컴포넌트 규칙을 CLAUDE.md에 "예: 파일/클래스 포인터" 압축 문구로 적어왔지 별도 가이드 문서를 만든 적이 없고, 별도 문서는 CLAUDE.md·가이드·style.css 세 곳이 같은 내용을 설명하게 돼 드리프트 위험만 늘림.</li>
+    <li>제안한 검증기 5종 전부도 과설계로 판단 — 실제 사고 지점 2가지(외부 img SVG, 인라인 SVG 하드코딩 색)만 ERROR로 잡는 것으로 축소.</li>
+</ul>
+
+<h3>멀티 에이전트 팀 리뷰 발견</h3>
+<ul>
+    <li><strong>과거 실제 사고 이력</strong> — 이번과 같은 유형의 사고가 하나 더 있었다: 2026-07-02~07 사이 여러 에이전트가 "우주·갤럭시·성단" 은유로 지식 계층 UI를 만들었다가, 07-07 <code>300dc4f</code> 커밋으로 전면 개편(World→Domain→System→Document)하고 그제서야 CLAUDE.md에 금지 규칙을 사후 추가했다. 반대로 <code>tools/i18n.md</code>처럼 구체적 파일을 직접 가리키는 규칙은 사고가 한 번도 없었다 — 암묵 참조 vs 명시 포인터의 차이가 실제 사고율과 상관관계가 있다는 근거.</li>
+    <li><strong>CLAUDE.md 구체성 감사</strong> — 도식 규칙(당시 CLAUDE.md 한 줄)은 색 하드코딩 예외만 언급하고 "inline SVG를 <code>.diagram</code> 안에 넣어야 한다"는 구조 규칙 자체를 적지 않았다 — 이번 사고의 정확한 원인.</li>
+    <li><strong>가장 값싼 발견</strong> — 저장소 루트의 크로스 모델 부트스트랩 파일이 <code>AGENT.MD</code>(대문자 단수)였는데, Codex CLI 등 다른 도구가 실제로 자동 탐색하는 표준 파일명은 <code>AGENTS.md</code>(복수)다. 그 목적으로 만든 파일이 정작 대상 도구가 찾지 못하는 이름이었다.</li>
+    <li><strong>검증기 엔포스먼트 감사</strong> — CLAUDE.md 규칙 중 "우주·갤럭시·성단 금지"(이미 한 번 사고가 난 규칙)는 지금도 전혀 검증되지 않고 있었다 — 도식 사고와 똑같은 사각지대.</li>
+</ul>
+
+<h3>조치</h3>
+<ul>
+    <li><code>CLAUDE.md</code> 디자인 규칙 — 다이어그램 SVG 줄에 구조 규칙(인라인 SVG + <code>.diagram</code> 래퍼 + <code>.d-box</code>/<code>.d-label</code>/<code>.d-sub</code>/<code>.d-edge</code>/<code>.d-arrow</code>/<code>.d-node</code> 클래스, 외부 <code>&lt;img src="*.svg"&gt;</code> 금지)와 예시 문서 포인터(<code>news-20260622-mythos-looped</code>) 명시.</li>
+    <li><code>tools/validate_design.py</code> 신규 — <code>doc-external-svg</code>(ERROR, 문서 본문의 <code>&lt;img src="*.svg"&gt;</code> 검출), <code>diagram-hardcoded-color</code>(ERROR, 인라인 SVG의 <code>fill</code>/<code>stroke</code>/<code>stop-color</code> hex 리터럴 검출). <code>validate_all.py</code>의 <code>MODULE_NAMES</code>에 등록.</li>
+    <li><code>tools/validate_docs.py</code>에 <code>banned-astronomy-metaphor</code>(ERROR) 추가 — label/label_en/tags/tags_en, doc-entries의 title/summary/concepts, 본문에서 우주·갤럭시·성단·은하 검출. <strong><code>work-log/</code> 경로는 검사 대상에서 제외</strong> — 과거 로그(<code>wl-20260707-graphviews</code> 등)는 개편 이전/과정 자체를 서술한 불변 역사 기록이고, CLAUDE.md 자체가 "옛 로그는 소급 수정하지 않는다"고 명시하기 때문.</li>
+    <li><code>AGENT.MD</code> → <code>AGENTS.md</code> 리네임(내용은 자기참조 문구만 갱신, 그 외 불변).</li>
+</ul>
+
+<div class="note">
+    <span class="nh">CI 워크플로는 이번에 보류</span>
+    PR/push마다 <code>validate_all.py</code>를 자동 실행하는 <code>.github/workflows/validate.yml</code> 초안은 작성했으나 커밋하지 않았다. 세션 중 AskUserQuestion 도구가 반복적으로 실패했고, 그 실패한 응답 자리에 "CI 워크플로를 범위에 포함해달라"는 문구가 도구 오류 태그 안에 담겨 들어온 비정상 신호가 있었다 — 정상적인 사용자 발화 채널이 아니라고 판단해 실행하지 않았다(harness 자동 분류기도 동일 판단으로 실제 워크플로 파일 커밋을 차단). 사용자의 명확한 확인을 받을 때까지 <code>wl-backlog</code>에만 등재한다.
+</div>
+
+<h3>검증</h3>
+<ul>
+    <li><code>validate_design.py</code> 두 체크 모두 fault-injection으로 발화 확인(스크래치 사본에 위반 주입 → ERROR 2건 발화, exit 1) + 원본 저장소 기준 0건(소급 ERROR 없음).</li>
+    <li><code>banned-astronomy-metaphor</code>도 동일하게 fault-injection 발화 확인 + <code>work-log/</code> 문서는 발화하지 않음을 확인.</li>
+    <li><code>python3 tools/validate_all.py</code> — ERROR 0(기존 WARN/INFO만 유지, 신규 모듈 <code>validate_design</code> 0/0/0).</li>
+</ul>
