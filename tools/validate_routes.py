@@ -135,6 +135,20 @@ def run(root):
             findings.append(_f(level, 'orphan-file', rel,
                                 "docs/ko/%s is not referenced by any list node" % rel))
 
+    # 4b. worklog-day-split: 한 날짜 폴더에 로그가 5개 이상이면 과분할 신호.
+    # 로그는 빅 프레임 4종(콘텐츠/기능/디자인/운영·도구)으로 묶는 게 규칙이라
+    # (CLAUDE.md 규칙 4) 하루 4개가 기본 상한 — 프레임 판정은 기계로 못 하므로
+    # 하드 게이트가 아니라 검토 신호(WARN)로만 낸다(지식그래프 WARN 철학).
+    day_counts = {}
+    for rel in ko_files:
+        m = re.match(r'work-log/(\d{4}/\d{2}/\d{2})/', rel)
+        if m:
+            day_counts[m.group(1)] = day_counts.get(m.group(1), 0) + 1
+    for day, count in sorted(day_counts.items()):
+        if count >= 5:
+            findings.append(_f('WARN', 'worklog-day-split', day,
+                                'work-log %s에 로그 %d개 — 빅 프레임(콘텐츠/기능/디자인/운영) 병합 검토' % (day, count)))
+
     # 5. broken-link: href="#!..." targets that resolve to nothing.
     names = {n['name'] for n in docs}
     for lang, base in (('ko', ko_dir), ('en', en_dir)):

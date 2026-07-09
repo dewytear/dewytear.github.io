@@ -1,0 +1,86 @@
+<h2>기능 — 지식 시스템·코스모스·미니게임·다국어 기반</h2>
+<p>AI 지식 관리·지식 코스모스·통합검색 미니게임·다국어 기반 등 이날 추가된 기능들을 한 프레임으로 묶은 기록.</p>
+
+<h3>2026-07-05 · AI 지식 관리 시스템</h3>
+<p>"AI가 위키를 라이브로 임베딩해 지식을 참고·정리·집계하고 지속 관리한다"는 목표로, <strong>지식 인덱스 → 시맨틱 검색 → 자동 큐레이터</strong>의 3단계 시스템을 만들었습니다. 마지막에 전체를 3회 반복 검토(감사 → 라이브화 → 종단 검증)로 다듬었습니다.</p>
+
+<h4>1단계 · 지식 인덱스</h4>
+<ul>
+    <li><strong>knowledge-index.json</strong> — 강의 문서 85편을 AI가 전부 읽어 문서별 <em>요약·핵심 개념·연관 문서</em>를 기록. 연관도는 희소성 가중(idf) 개념 중복 + 같은 폴더 보완. <span class="scn-sub">(PR #91)</span></li>
+    <li><strong>지식 지도</strong> — 8개 클러스터·허브 문서·브리지 개념을 집계한 최상위 문서(번호 없음). 각 문서 하단에 <strong>연관 문서</strong> 카드 노출. <span class="scn-sub">(PR #91·#92)</span></li>
+</ul>
+
+<h4>2단계 · 개념 기반 시맨틱 검색</h4>
+<ul>
+    <li>통합 검색이 <strong>필드 가중 랭킹</strong>(개념 &gt; 제목 &gt; 태그 &gt; 요약 &gt; 본문)으로 의미 매칭 문서를 상단에. 결과 카드에 <code>#개념</code> 칩, 관련 개념 피벗 제안. <span class="scn-sub">(PR #92)</span></li>
+    <li><strong>연관 문서 표시 규칙</strong>을 최근 문서와 통일하고 설정에 숨김 토글 추가. <span class="scn-sub">(PR #92)</span></li>
+</ul>
+
+<h4>3단계 · 지속 관리(큐레이터)</h4>
+<ul>
+    <li><strong>재현 가능한 빌드</strong> — <code>tools/doc-entries.json</code>(원료) + <code>tools/build_index.py</code>(결정적 빌드) + <code>tools/curator.md</code>(절차서: 변경 감지 → 엔트리 갱신 → 재빌드 → Work Log 기록 → 검토용 PR, 자동 머지 금지). <span class="scn-sub">(PR #93·#94)</span></li>
+</ul>
+
+<h4>3회 반복 검토</h4>
+<ul>
+    <li><strong>반복 1 · 감사</strong> — 인덱스 85/85 완전성·related 무결성 통과. 지도의 수동 수치가 인덱스와 어긋난 <strong>드리프트 발견</strong>.</li>
+    <li><strong>반복 2 · 라이브화</strong> — 지도 집계(클러스터·허브·브리지·핵심 개념·총계)를 인덱스의 <code>stats</code>에서 <strong>실시간 렌더</strong>로 전환해 드리프트 원천 차단. 지도·연관 카드의 <strong>개념 칩 클릭 → 통합 검색</strong> 피벗. <span class="scn-sub">(PR #95)</span></li>
+    <li><strong>반복 3 · 종단 검증</strong> — 격리 사본에서 가상 문서 추가·수정으로 큐레이터 전 과정(감지→갱신→재빌드→집계 반영)을 실증. 이 과정에서 <strong>부동소수 합산 순서로 인한 비결정성 버그를 발견·수정</strong>(5개 해시시드 재현 확인). <span class="scn-sub">(PR #96)</span></li>
+</ul>
+
+<h4>버그 수정</h4>
+<ul>
+    <li><strong>연관 문서 갱신 버그</strong> — 메뉴로 문서를 이동해도 이전 문서의 연관 문서가 남던 문제(setArticle 잔여물 정리 누락). <span class="scn-sub">(PR #97)</span></li>
+</ul>
+
+<div class="note">
+    <span class="nh">남은 것</span>
+    매일 자동 실행 예약(트리거)은 앱 권한 승인이 필요해 대기 중. 승인 전까지는 요청 시 수동으로 큐레이터를 실행한다(절차·도구는 검증 완료).
+</div>
+
+<h3>2026-07-05 · &#10022; 지식 코스모스</h3>
+<p>지식 인덱스의 연관 관계를 <strong>3차원 별자리</strong>로 보여 주는 화면을 만들고 다듬은 작업입니다. 외부 라이브러리 없이 캔버스로 직접 그립니다.</p>
+
+<h4>주요 변경</h4>
+<ul>
+    <li><strong>코스모스 신설</strong> — 문서=별(피연결수록 크게), 연관=연결선, 드래그 회전·휠 확대·별 클릭 시 문서 이동. <span class="scn-sub">(PR #104)</span></li>
+    <li><strong>화면 가득 확대</strong> — 투영 스케일과 캔버스 크기를 키워 본문 카드를 무대로 사용. <span class="scn-sub">(PR #106)</span></li>
+    <li><strong>네비 최상위 승격</strong> — 대분류와 같은 레벨을 지나 <strong>맨 위로</strong>. 지식 지도는 AI 아래 유지. <span class="scn-sub">(PR #111·#113)</span></li>
+    <li><strong>분류 = 은하</strong> — 대분류가 다른 문서는 <strong>서로 다른 은하</strong>(이름표 달린 성단)로 분리 — 분류를 넘는 연관 링크가 은하 간 다리로 보임. <span class="scn-sub">(PR #113)</span></li>
+    <li><strong>무대 크기 추적</strong> — 사이드바 개폐로 본문 카드 폭이 변해도 캔버스가 <code>ResizeObserver</code>로 따라감. 메뉴 이름은 통용어인 <strong>Knowledge Graph</strong>로. <span class="scn-sub">(PR #120)</span></li>
+    <li><strong>숨김 대분류 제외</strong> — 메뉴에서 숨긴 대분류(예: Douzone)의 문서는 인덱스에 있어도 그래프에 별로 표시하지 않음. 사이드바와 같은 유효 설정(사이트 기본값+개인 설정)을 따르므로, 노출로 바꾼 브라우저에서는 다시 보임. <span class="scn-sub">(PR #143)</span></li>
+</ul>
+
+<div class="note">
+    <span class="nh">결과</span>
+    지식 지도의 표가 "무엇이 있는가"라면, 코스모스는 "어떻게 이어지는가"를 감각적으로 보여 줍니다.
+</div>
+
+<h3>2026-07-05 · 통합검색 미니게임</h3>
+<p>통합 검색 화면의 배경을 <strong>놀이 공간</strong>으로 만든 작업입니다. 검색을 방해하지 않는 선에서, 기다리는 화면을 재미있게.</p>
+
+<h4>주요 변경</h4>
+<ul>
+    <li><strong>검색창 = 드래그 패들</strong> — 검색창 폭을 살짝 줄이고 좌우 드래그를 지원, 벽돌깨기의 패들로. 패들 위치별 <strong>반사각 조절</strong>. <span class="scn-sub">(PR #98)</span></li>
+    <li><strong>미니게임 4종</strong> — 벽돌깨기 · <strong>개념 별똥별 받기</strong>(받으면 그 개념으로 통합 검색) · <strong>퐁 랠리</strong>(AI 패들, 공속 2배) · <strong>종이비행기 글라이딩</strong>(빈 곳 클릭으로 비행, 비행기 크기 상향). <span class="scn-sub">(PR #99~#101)</span></li>
+    <li><strong>게임 독</strong> — 화면 하단 유리 질감 알약 바에서 <strong>방문자가 직접 게임 선택</strong>(브라우저별 기억). 설정에선 기본 게임만 지정. <span class="scn-sub">(PR #102)</span></li>
+    <li><strong>아이콘 테마 통일</strong> — 컬러 이모지 4개를 테마 색을 따르는 <strong>모노크롬 스트로크 아이콘</strong>(벽돌+공+패들 · 별똥별 · 퐁 패들 · 종이비행기)으로 교체. 평소 muted → 호버 본문색 → 선택 시 포인트색 틴트. <span class="scn-sub">(PR #123)</span></li>
+    <li><strong>점진 가속</strong> — 벽돌깨기(90초에 +60%)·퐁 랠리(45초에 +50%, 실점 시 초기화, AI 패들도 함께 빨라짐)·종이비행기(비행 60초에 +70%, 추락 시 초기화, 기둥 간격은 일정 유지)가 시간이 지날수록 부드럽게 빨라짐. <span class="scn-sub">(PR #132)</span></li>
+</ul>
+
+<div class="note">
+    <span class="nh">결과</span>
+    방문자 선택(게임 독) &gt; 설정 기본값 &gt; 벽돌깨기 순의 우선순위로 동작합니다.
+</div>
+
+<h3>2026-07-05 · 다국어 기반 구조</h3>
+<p>언어(영어·중국어·일본어)를 "디렉터리와 사전만 채우면 되는" 형태로 얹을 수 있게, <strong>소스 트리 재구성 + 언어 전환 장치</strong>를 만든 작업입니다. 번역 콘텐츠 자체는 이후 단계. 자정을 넘겨 이어진 작업(지도·UI 영어화 등)은 KST 기준에 따라 <a href="#!wl-20260706-features">06일 문서</a>에 있습니다.</p>
+
+<h4>주요 변경</h4>
+<ul>
+    <li><strong>소스 트리 재구성</strong> — 루트에 평평하게 있던 문서 102편을 <code>docs/ko/</code>로 이동(git mv, 이력 보존), 인덱스는 <code>data/knowledge-index.ko.json</code>·원료는 <code>tools/doc-entries.ko.json</code>으로 언어 명시 개명. 해시 URL은 불변이라 링크는 안 깨짐. <span class="scn-sub">(PR #144)</span></li>
+    <li><strong>언어 전환 장치</strong> — 설정 → 기본 설정에 <strong>언어</strong> 선택(한국어/English/中文/日本語 — 영어 이하 "준비 중"). 문서 로드(<code>fetchDoc</code>)·내비 라벨(<code>label_&lt;lang&gt;</code>)·태그(<code>tags_&lt;lang&gt;</code>)·화면 문구(<code>STRINGS</code>)·지식 인덱스(<code>knowledge-index.&lt;lang&gt;.json</code>)가 전부 언어를 따르고, <strong>없는 조각은 한국어로 폴백</strong>. 언어 변경 저장 시 새로고침으로 일괄 적용. <span class="scn-sub">(PR #145)</span></li>
+    <li><strong>빌드 도구 다국어화</strong> — <code>build_index.py</code>가 <code>doc-entries.*.json</code>이 존재하는 언어 전부의 인덱스를 일괄 생성·검사. README에 "언어 추가하기" 절차 5단계 문서화.</li>
+    <li><strong>Introduction 한국어 전환 + 영어판 첫 콘텐츠</strong> — 영어로 쓰여 있던 Introduction 6편(welcome·install·commands·skills·mcp·hooks)의 원문을 그대로 <code>docs/en/</code>으로 옮겨 영어판의 첫 콘텐츠로 살리고, <code>docs/ko/</code>는 전문용어를 유지한 한국어로 전환(도식 라벨 포함). 내비 라벨은 <code>label_en</code> 장치를 첫 실전 적용. <span class="scn-sub">(PR #146)</span></li>
+    <li><strong>언어별 태그</strong> — Introduction 6편의 기존 영어 태그를 <code>tags_en</code>으로 옮기고, 한국어판에는 기존 한글 태그 어휘와 일관된 새 태그(소개·설치·인증·슬래시명령어·플랜모드·연동·도구·권한·훅·자동화·이벤트 등)를 부여 — 언어 전환 시 문서 태그·태그 색인이 함께 바뀜. <span class="scn-sub">(PR #147)</span></li>
+</ul>

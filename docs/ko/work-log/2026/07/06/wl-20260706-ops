@@ -1,0 +1,101 @@
+<h2>운영 — 문서 구조 개편·검증 도구·자동 로그</h2>
+<p>문서 물리 구조 개편, 지식 품질 검증 도구, 머지 자동 기록 시스템을 묶은 기록.</p>
+
+<h3>2026-07-06 · 문서 물리 구조 개편 — 도메인 트리 + name/path 분리</h3>
+<p>flat했던 <code>docs/ko/</code>(116편)·<code>docs/en/</code>(8편)를 <strong>안정적 도메인 트리</strong>로 재배치하고, <code>list</code> 노드에 <code>path</code> 필드를 도입해 <strong>논리 ID(<code>name</code>)와 물리 위치(<code>path</code>)의 책임을 분리</strong>했다. 문서가 수백 편으로 늘어도 10년 뒤에 다시 갈아엎지 않는 구조가 목표.</p>
+
+<h4>구조 원칙</h4>
+<ul>
+    <li><strong><code>name</code> = 불변 논리 ID</strong> — 해시 라우트(<code>#!문서명</code>)·인덱스 키·연관 참조가 전부 이걸 쓴다. 파일을 어디로 옮겨도 URL과 지식 그래프는 깨지지 않는다.</li>
+    <li><strong><code>path</code> = 물리 위치</strong> — <code>docs/&lt;lang&gt;/</code> 아래 상대 경로. 없으면 flat(<code>docs/&lt;lang&gt;/&lt;name&gt;</code>) 폴백이라 점진 적용이 가능하다.</li>
+    <li><strong>번역은 같은 상대 경로</strong> — <code>docs/en/…</code>이 한국어 트리를 미러링, ko 폴백 규칙 유지.</li>
+</ul>
+
+<h4>새 물리 트리</h4>
+<ul>
+    <li><code>ai/claude/code/{introduction,tutorial,skill,harness,llm-wiki,second-brain}/</code> — welcome·install 등 6편, ccb-*, skl-*, hns-*, llmw-*, sb-*</li>
+    <li><code>ai/claude/plugin/{harness,omc}/</code> — hnp-*, omc-*</li>
+    <li><code>ai/map/</code>·<code>douzone/map/</code> — 지식지도 2편</li>
+    <li><code>douzone/dev-center/proposal/ai-dev-knowledge-platform/</code> — dzp-* 7편</li>
+    <li><code>work-log/guide/</code>·<code>work-log/YYYY/MM/DD/</code> — wl-guide + 일자별 로그 22편</li>
+</ul>
+
+<h4>코드 변경 (경로 결합 지점 4곳)</h4>
+<ul>
+    <li><code>index.html</code> — <code>buildIndexes</code>가 노드의 <code>path</code>를 보존하고, <code>docRel()</code> 헬퍼로 <code>docPath</code>/<code>fetchDoc</code>(ko 폴백 포함)·<code>fetchDocDates</code>(GitHub commits API)가 물리 경로를 해석. 검색·연관문서·코스모스는 <code>name</code> 기준이라 무변경.</li>
+    <li><code>tools/auto_worklog.py</code> — 자동 로그를 <code>work-log/YYYY/MM/DD/</code>에 생성(폴더 자동 생성)하고 <code>list</code> 노드에 <code>path</code>를 포함.</li>
+    <li><code>tools/build_index.py</code>·지식 인덱스 — <code>name</code>과 논리 트리 기준이라 <strong>무변경</strong> (<code>--check</code> 통과 확인).</li>
+    <li>README·CLAUDE.md·tools/i18n.md — 문서 추가/번역 절차에 <code>path</code> 규칙 반영.</li>
+</ul>
+
+<h4>이관 방법</h4>
+<ul>
+    <li>일회성 Python 스크립트로 <strong>124개 파일을 <code>git mv</code></strong>(히스토리 rename 추적 보존) + <code>list</code>의 116개 문서 노드에 <code>path</code> 텍스트 삽입(수술식, <code>json.loads</code> 재검증). 이동 후 잔여 flat 파일 0·경로 불일치 0 확인.</li>
+</ul>
+
+<h4>알려진 트레이드오프</h4>
+<ul>
+    <li>GitHub commits API의 <code>?path=</code>는 rename을 추적하지 않아, 머지 직후 "최근 문서" 날짜가 일괄 이관 시점으로 보인다. 이후 문서가 수정되면 자연 회복.</li>
+</ul>
+
+<h3>2026-07-06 · 지식 품질 검증 도구 — validate 스위트</h3>
+<p>위키의 지식 품질(중복·유사·고립·과연결 문서, 클러스터 오소속, 과일반·동의어 개념, 노후 문서, 태그/제목/요약 불일치)을 상시 점검하는 <strong>파이썬 검증 스위트 5종</strong>을 OMC team(워커 3병렬)으로 제작하고, 첫 실행 결과를 보정했다.</p>
+
+<h4>만든 것 — tools/validate_*.py</h4>
+<ul>
+    <li><code>validate_docs.py</code> — 중복/유사 문서(difflib), 노후 문서(git 커밋일), 태그-본문 불일치, 제목/요약-본문 불일치</li>
+    <li><code>validate_routes.py</code> — list JSON·name 중복·파일 존재·고아 파일·깨진 <code>#!</code> 링크·en 고아</li>
+    <li><code>validate_i18n.py</code> — en 미러 경로·label_en 짝·인덱스 오버레이·data-topics 키(클러스터 라벨 대조)·STRINGS 키 패리티</li>
+    <li><code>validate_graph.py</code> — 지식 인덱스 기반 고립/과연결 문서, 클러스터 오소속, 과일반(>20%)·동의어 개념</li>
+    <li><code>validate_all.py</code> — 4종 통합 실행·요약표·<code>--json</code>. 공통 계약: <code>run(root)</code> → findings, ERROR 있으면 exit 1</li>
+</ul>
+
+<h4>첫 실행 결과와 보정 (33 WARN → 12 WARN, 0 ERROR)</h4>
+<ul>
+    <li><strong>검증기 개선</strong> — 태그-본문 매칭에 공백·하이픈 평탄화 추가("지식지도" vs "지식 지도" 오탐 14건 제거), 요약 토큰의 조사·어미 완화 매칭.</li>
+    <li><strong>동의어 개념 통일</strong> — '슬래시명령'(3편) → '슬래시명령어', '재사용성'(3편) → '재사용'.</li>
+    <li><strong>고립 문서 연결</strong> — 본문에 실재하는 어휘만 개념에 보강: llmw-system +컨텍스트, omc-windows +PowerShell, sb-level5 +자동화, dzp-roadmap +GitLab → 4편 모두 concept 연관 생성. (ccb-claudemd는 CLAUDE.md 공유(5편)가 희소 기준을 넘어 엣지가 없는 잔여 1건 — 문서가 늘면 자연 해소)</li>
+    <li><strong>본문 어휘 보강</strong> — dzp-why(조직 지식·온보딩), llmw-overview(LLM 위키·Claude Code), skl-what(조직 지식) — 태그가 가리키는 어휘를 본문에 자연스럽게 명시.</li>
+    <li><strong>i18n</strong> — ai-map list 노드에 label_en 추가. dzp-* 7편의 label_en-본문 미번역 상태는 계획된 INFO로 유지.</li>
+    <li><strong>인덱스 재생성</strong> — 92편, <code>--check</code> ko/en 통과.</li>
+</ul>
+
+<h4>잔여 경고 12건의 판정 (모두 by design / 검토용)</h4>
+<ul>
+    <li>generic-concept '스킬'(22%) — 6개 성단을 잇는 <strong>최상위 브리지 개념</strong>으로 의도된 설계.</li>
+    <li>wrong-cluster 10건 — Harness 엔지니어링↔플러그인처럼 <strong>어휘를 공유하는 쌍둥이 성단</strong> 사이에서 개념 중복 점수만으로는 소속을 가릴 수 없는 메트릭 한계. 실제 오소속 아님.</li>
+    <li>isolated-doc 1건(ccb-claudemd) — 상기 잔여.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">운영 규칙</span>
+    앞으로 문서·인덱스를 바꾸는 PR은 <code>python tools/validate_all.py</code>를 먼저 실행한다 — ERROR 0가 머지 조건, WARN은 검토 대상. CLAUDE.md에 규칙으로 기록.
+</div>
+
+<h3>2026-07-06 · master 머지 자동 Work Log 시스템</h3>
+<p><code>master</code>에 머지될 때마다 GitHub Actions가 <strong>Work Log를 자동으로 남기는</strong> 파이프라인을 구축했다. 이제 머지 기록은 사람이 챙기지 않아도 위키에 스스로 쌓인다.</p>
+
+<h4>작업 개요</h4>
+<ul>
+    <li><strong>워크플로</strong> — <code>.github/workflows/auto-worklog.yml</code>: <code>master</code> push 트리거, <code>github-actions[bot]</code> actor 가드 + GITHUB_TOKEN 푸시는 워크플로를 재트리거하지 않는 GitHub 규칙으로 <strong>재귀 방지 이중 안전장치</strong>. 연속 머지는 concurrency 그룹으로 직렬화.</li>
+    <li><strong>기록 스크립트</strong> — <code>tools/auto_worklog.py</code>: 커밋 시각을 <strong>KST로 환산</strong>해 날짜를 정하고(자정 넘김 규칙 준수), 하루치 자동 로그 문서 <code>wl-YYYYMMDD-auto</code>에 <code>시각 · 제목 · 커밋 링크</code> 한 줄을 추가. 그날 첫 머지면 문서와 <code>list</code> 노드(년&gt;월&gt;일 폴더가 없으면 그것까지)를 자동 생성.</li>
+    <li><strong>안전장치</strong> — <code>list</code>는 손으로 다듬은 JSON이라 전체 재직렬화 대신 <strong>주변 들여쓰기를 복제하는 국소 삽입</strong>으로 수정하고, 쓰기 전에 <code>json.loads</code> 재검증 — 구조가 어긋나면 파일을 건드리지 않고 실패한다. 커밋 sha 기준 멱등(재실행해도 중복 기록 없음), 제목 HTML 이스케이프.</li>
+    <li><strong>노이즈 필터</strong> — "chore: Pages 재배포"·"Work Log 자동 기록" 커밋은 기록하지 않는다. 자동 로그 문서는 wl-guide 규칙대로 <code>"tags": []</code>, 인덱스(지식지도·그래프)에는 넣지 않는다.</li>
+</ul>
+
+<h4>검증</h4>
+<ul>
+    <li>같은 날 연속 머지 · 중복 sha · 새 날/새 달/새 해 폴더 생성 · 스킵 패턴 · HTML 이스케이프 시나리오를 로컬에서 전부 통과, 생성된 <code>list</code> 블록이 기존 수작업 포맷과 바이트 단위로 동일함을 확인.</li>
+    <li>로컬 서버 + Playwright로 자동 로그 문서 렌더와 내비 노드 노출 확인.</li>
+</ul>
+
+<h4>동작 흐름</h4>
+<ul>
+    <li>PR 머지(또는 master 직접 푸시) → 워크플로 기동 → 스크립트가 문서·<code>list</code> 갱신 → 봇이 "Work Log 자동 기록: sha" 커밋을 푸시 → Pages가 배포해 위키에 반영.</li>
+</ul>
+
+<h4>다음 할 일</h4>
+<ul>
+    <li>운영하며 로그가 시끄러우면 스킵 패턴을 다듬는다.</li>
+    <li>향후 하루치 자동 로그를 AI 큐레이터가 주제별 요약으로 승격하는 단계(제안서의 지식화 파이프라인과 동일한 사상)를 검토.</li>
+</ul>

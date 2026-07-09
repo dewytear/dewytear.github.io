@@ -1,0 +1,88 @@
+<h2>기능 — Knowledge Universe·다국어 확장·About</h2>
+<p>Knowledge Universe 개편, 지도·UI 영어화, About 페이지 신설을 묶은 기록.</p>
+
+<h3>2026-07-06 · Knowledge Universe 개편 — 갤럭시·성단 구조</h3>
+<p>지식 체계를 <strong>Knowledge Universe → 🌌 Galaxy(대분류) → ✦ 성단(클러스터)</strong>의 2계층으로 개편하고, 제안서를 시리즈로 분할했다.</p>
+
+<h4>작업 개요</h4>
+<ul>
+    <li><strong>제안서 시리즈 분할</strong> — 단일 <code>dz-knowledge-platform</code>을 삭제하고 다른 시리즈처럼 주제별 7편(<code>dzp-overview/why/core/architecture/knowledge/security/roadmap</code>)으로 분할, Douzone &gt; dev.Center &gt; <strong>Proposal</strong>(신설) 아래 배치. 폴더 ⧉ 두루마리 모아보기 동작 확인.</li>
+    <li><strong>Douzone 지식지도</strong> — <code>dz-map</code> 신설: Universe 2갤럭시 구조 SVG(예정 성단 표기 포함) + Douzone 성단 라이브 표. <code>hydrateAiMap</code>을 일반화해 <code>data-section-prefix</code>로 갤럭시별 필터를 지원.</li>
+    <li><strong>지식그래프 2계층화</strong> — cosmos <code>build()</code>를 개편: 대분류가 갤럭시 중심(피보나치 구, 반경 0.85), 그 주위에 성단(반경 0.5), 문서는 성단 주위 조밀 클라우드(0.2). 갤럭시 명판은 대문자·큰 폰트로 성단 명판과 구분. 대분류가 하나뿐이면(방문자 기본: Douzone 숨김) 기존 모습 그대로.</li>
+    <li><strong>내비 구조</strong> — Douzone 아래 Architecture · Development Guide 빈 폴더 신설(미래 성단 자리), 브랜치 노드에 접힘/펼침 상태별 아이콘(<code>icon</code>/<code>iconOpen</code>) 메커니즘 추가 — 다만 폴더 글리프(🗀/🗁)가 일부 기기에서 tofu로 보여 Work Log에서는 아이콘을 빼고 캐럿만 유지, 대신 <strong>메뉴 아래쪽으로 분리 배치</strong>(margin)로 지식 대분류와 구분. 메커니즘 자체는 범용으로 남겨 둠.</li>
+    <li><strong>연동 갱신</strong> — 클러스터 라벨 '제안(Proposal)'/'Proposal'(ko/en), 인덱스 재생성 92편(<code>--check</code> OK), ai-map(ko/en) 4갈래 도식·표·data-topics 갱신.</li>
+    <li><strong>Universe 설명 ai-map 이식</strong> — dz-map의 Knowledge Universe 구조 도식(두 갤럭시·예정 성단)을 ai-map(ko/en)에도 추가 — 여기서는 AI 갤럭시를 강조하고 dz-map으로 건너가는 링크를 배치. <span class="scn-sub">(PR #155)</span></li>
+    <li><strong>그래프 색 체계 — 갤럭시는 뚜렷, 성단은 은은</strong> — 별·명판·호버 색을 테마 accent에서 파생: 갤럭시끼리는 golden-angle(137.5°) 색상 회전으로 확연히 갈라지고, 같은 갤럭시의 성단은 ±8°/step의 미묘한 톤 차만. 낮/밤·개인 accent 변경에 자동 대응(매 프레임 파생), 팔레트 하드코딩 없음. <span class="scn-sub">(PR #164)</span></li>
+    <li><strong>ai-map을 AI 갤럭시 전용으로 재조정</strong> — dz-map 분리에 맞춰 ai-map(ko/en)의 인트로·4갈래 도식(→3갈래)·클러스터 표에서 Douzone 내용을 정리. 인덱스에 <strong>갤럭시별 통계(stats.galaxies)</strong>를 추가하고 <code>data-section-prefix</code>가 허브·브리지·상위 개념·총계까지 전부 갤럭시 범위로 렌더하도록 hydrate 확장(기존엔 클러스터 표만 걸러 총계가 92편으로 새던 문제 해결). <span class="scn-sub">(PR #158)</span></li>
+</ul>
+
+<h4>후속 반영</h4>
+<ul>
+    <li>Proposal 아래에 <strong>"AI 개발 지식 플랫폼"</strong> 그룹 폴더를 신설해 dzp-* 7편을 그 하위로 묶음 — 향후 다른 제안이 나란히 붙는 구조. 클러스터도 같은 이름으로 재명명(섹션 경로 4단계), 인덱스 재생성·지도(ko/en) 갱신.</li>
+</ul>
+
+<h4>지식지도 상세화 개편 (같은 날 후속)</h4>
+<ul>
+    <li><strong>두 지도 구조 정렬</strong> — ai-map(ko/en)과 dz-map을 동일한 섹션 순서(개요 → Universe 도식 → 성단 표 → <strong>성단 상세</strong> → <strong>추천 경로</strong> → 브리지 → 허브 → 핵심 개념·총계 → 살아 있는 지도)로 재작성.</li>
+    <li><strong>내용 상세화</strong> — 성단마다 "무엇이 들어 있고 어떤 순서로 읽는가" 문단 신설(AI 8개 성단 전부 + Douzone 제안 7편 개별 요약·예정 성단 3개 설명), 추천 학습/읽기 경로 3종 추가.</li>
+    <li><strong>아이콘 제거</strong> — 지도 제목·SVG·본문의 ❖/✦ 글리프 제거, list의 두 지도 라벨 "❖ Knowledge Map" → "Knowledge Map", style.css first-letter 액센트 셀렉터에서 ai-map 제외(cosmos ✦만 유지).</li>
+    <li><strong>하이드레이션 정합</strong> — dz-map은 Douzone 갤럭시의 허브·브리지가 임계 미달(0건)이라 <code>km-hubs</code>/<code>km-bridges</code> id 없이 정적 설명으로 대체(빈 렌더 방지), <code>km-top</code>·<code>km-totals</code>는 추가. 정적 폴백 수치를 실측(AI 85편·276개 / Douzone 7편·26개)으로 맞춤.</li>
+</ul>
+
+<h4>결정 사항</h4>
+<ul>
+    <li>dz-map은 ai-map처럼 메타 페이지로 인덱스에서 제외.</li>
+    <li>갤럭시 배치는 대분류 수에 적응 — 새 대분류가 생기면 자동으로 새 갤럭시가 나타난다.</li>
+</ul>
+
+<h4>다음 할 일</h4>
+<ul>
+    <li>Architecture · Development Guide · Project 성단의 첫 문서 채우기.</li>
+    <li>제안서 검토 제언(사람 승인 게이트, 비용 견적, KPI 기준선 등) 반영 여부 결정.</li>
+</ul>
+
+<h3>2026-07-06 · 다국어 확장 — 지도·UI·구조 라벨</h3>
+<p><a href="#!wl-20260705-features">05일의 다국어 기반 구조</a>를 이어받아 자정 이후 진행한 작업입니다. 지식지도·그래프의 언어 반영과 화면 문구 전면 영어화로 <strong>English 모드에서 본문을 제외한 모든 것</strong>이 영어가 됐습니다.</p>
+
+<h4>주요 변경</h4>
+<ul>
+    <li><strong>지도·그래프 언어 반영</strong> — 언어 오버레이 인덱스(ko 엔트리에 title·summary만 덮어쓰기, 개념은 공유 키)와 언어별 클러스터 라벨로 Knowledge Map·Graph가 언어를 따름. 영문 지도(<code>docs/en/ai-map</code>) 신설. <span class="scn-sub">(PR #148)</span></li>
+    <li><strong>UI 전면 영어화 + 절차서</strong> — 화면 문구 전부(설정 화면·검색·태그·모아보기·게임·음악 안내·진단 패널)를 STRINGS 사전으로 전환해 English 모드에서 <strong>본문 제외 모든 UI가 영어</strong>. 다국어 절차서 <code>tools/i18n.md</code> 신설(본문 파생 데이터는 본문 번역과 한 몸 원칙 포함) + CLAUDE.md 규칙 등록. <span class="scn-sub">(PR #149)</span></li>
+    <li><strong>기록 규칙 안내 영문판</strong> — Work Log 운영 규칙(wl-guide)을 <code>docs/en/wl-guide</code>로 번역(라벨 "Logging Rules" 포함) — English 모드에서 위키 운영 규칙을 읽을 수 있음. <span class="scn-sub">(PR #150)</span></li>
+    <li><strong>Work Log 트리 구조 라벨 번역</strong> — 폴더 제목("07월"·"01일"~"05일")에 <code>title_en</code>(July·Day 01~05)을 부여하고 <code>labelFor</code>가 브랜치의 <code>title_&lt;lang&gt;</code>도 해석하도록 확장. 최근 문서·태그 목록·검색 결과의 섹션 경로 표기도 지역화(<code>sectionL</code>) — 내부 키는 canonical 유지. <span class="scn-sub">(PR #151)</span></li>
+    <li><strong>Work Log 날짜 기준 KST 명문화</strong> — 날짜 폴더 분류가 <strong>한국 시간(KST, UTC+9)</strong> 기준임을 wl-guide(ko/en)에 명시하고, 자정 이후(00:01~) 진행된 기록을 05일 문서에서 분리해 06일로 재분류(이 문서와 <a href="#!wl-20260706-features">Knowledge Universe 개편</a>).</li>
+</ul>
+
+<div class="note">
+    <span class="nh">다음 단계</span>
+    영어판: <code>docs/en/</code> 번역 + <code>STRINGS.en</code> + <code>label_en</code>/<code>tags_en</code> + <code>doc-entries.en.json</code>을 채우면 설정에서 English가 살아난다. 중국어·일본어도 같은 절차.
+</div>
+
+<h3>2026-07-06 · About 페이지 — 프로필 사진 클릭 진입</h3>
+<p>사이드바 <strong>프로필 사진(+ "Wanna fly with me" 태그라인)을 클릭하면 자기소개 페이지(<code>#!about</code>)가 열리도록</strong> 반영했다. 이 기능은 이달 초 <code>feature/about-page</code> 브랜치에 구현됐으나 merge되지 않은 채 master가 크게 진화(문서 도메인 트리·전역 다국어·검증 스위트)해서, 옛 브랜치를 merge하는 대신 <strong>현재 구조에 맞게 재이식</strong>했다.</p>
+
+<h4>구성</h4>
+<ul>
+    <li><strong>본문</strong> — <code>docs/ko/about</code> + <code>docs/en/about</code>. 내비(list)에는 등록하지 않는 특수 페이지로, 프로필 클릭으로만 진입. 옛 버전의 자체 KO/EN 토글은 제거하고 <strong>사이트 전역 언어 설정</strong>(en 미러 + ko 폴백)을 따르도록 통합.</li>
+    <li><strong>콘텐츠</strong> — Hero(이름·직함·<strong>Based in South Korea</strong>·포트레이트 사진 <code>about-photo.jpg</code>), What I Do 카드 4종, What I'm Exploring 3블록, How I Work 원칙 4종, Why This Wiki Exists(주제 칩), Current Direction, 그라디언트 모토.</li>
+    <li><strong>인터랙션</strong> — 마우스 반응형 파티클 네트워크 캔버스(테마 토큰 색, 낮/밤·액센트 변경 자동 추종), 스크롤 리빌, <code>prefers-reduced-motion</code>이면 정지 프레임. 페이지 이탈 시 RAF·리스너·옵저버 정리.</li>
+    <li><strong>라우팅</strong> — 별도 분기 없이 기본 <code>fetchDoc('about')</code>의 flat 폴백(<code>docs/&lt;lang&gt;/about</code>)을 사용. <code>about-view</code> body 클래스로 최근 문서 모듈 숨김.</li>
+</ul>
+
+<h4>검증 스위트 연동</h4>
+<ul>
+    <li><code>validate_routes.py</code>에 <strong>의도적 내비 미등록 문서 allowlist</strong>(<code>UNLISTED_DOCS = {'about'}</code>)와 특수 라우트(<code>about</code>·<code>search</code>)를 추가 — 고아 파일/깨진 링크 오탐 방지.</li>
+    <li><code>validate_all.py</code> 0 ERROR 유지 확인 후 merge.</li>
+</ul>
+
+<h4>다듬기 (같은 날 후속)</h4>
+<ul>
+    <li><strong>AI/모델 표기 제거</strong> — 내비 미등록 특수 페이지(About)에는 작성 모델 배지를 붙이지 않도록 <code>fetchPage</code> 수정 (배지는 지식 문서 전용으로 한정).</li>
+    <li><strong>파티클 상시 유동</strong> — 감쇠가 기본 속도까지 깎아 점점 멈추던 물리를 <em>기본 드리프트(비감쇠) + 마우스 임펄스(감쇠)</em> 2성분으로 분리해 전 영역에서 지속적으로 움직이게 함. 밀도(≤110개)·연결 거리(130px) 상향.</li>
+</ul>
+
+<h4>결정 사항</h4>
+<ul>
+    <li>About은 지식 문서가 아니므로 지식 인덱스(doc-entries)·지도·그래프에 넣지 않는다 (ai-map·dz-map과 같은 메타/특수 페이지 취급).</li>
+    <li>미머지 구 브랜치(<code>feature/about-page</code>·<code>feature/profile-img-link</code>)는 이 재이식으로 대체됨 — 정리 대상.</li>
+</ul>

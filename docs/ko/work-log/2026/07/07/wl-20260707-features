@@ -1,13 +1,50 @@
-<h2>2026-07-07 · 홈 화면 "지식 2048" 미니게임</h2>
+<h2>기능 — 그래프 2D 뷰·지식 2048</h2>
+<p>그래프 2D 뷰(계층 용어 개편)와 홈 화면 지식 2048 미니게임을 묶은 기록.</p>
+
+<h3>2026-07-07 · Knowledge Graph 2D 뷰 6종 + 계층 용어 개편</h3>
+<p>Knowledge Graph(3D)에 <strong>6가지 2D 표현으로 전환하는 dock</strong>을 붙이고, 3D 배경에 상시 파티클을 더했다. 함께 지식 계층 표기를 <strong>천문 은유(우주·갤럭시·성단)에서 World → Domain → System → Document</strong>로 전면 개편했다. OMC team(worker 3병렬 + 리드 통합)으로 진행.</p>
+
+<h4>새 기능 — 2D 그래프 뷰</h4>
+<ul>
+    <li><strong>graphviews.js</strong>(신규) — 외부 라이브러리 없는 vanilla 렌더러 6종: <code>bundling</code>(계층 엣지 번들링)·<code>chord</code>(System 간 관계)·<code>packing</code>(포함 관계·규모)·<code>concepts</code>(개념 중심 쌍대 그래프)·<code>arc</code>(읽기 순서 vs 연결)·<code>matrix</code>(인접 행렬). 결정적 레이아웃(seed PRNG), 문서 클릭 시 해당 문서로 이동.</li>
+    <li><strong>cosmos 전환 dock</strong> — [3D · 번들링 · 코드 · 패킹 · 개념 · 아크 · 매트릭스], 선택은 localStorage 기억. 성단 색·라벨은 3D와 동일하게 accent에서 파생(테마 전환 시 재렌더). 모델은 지식 인덱스에서 nav 순서·concept 연관으로 구성.</li>
+    <li><strong>3D 배경 파티클</strong> — cosmos 렌더 루프 뒤 레이어에 희미한 더스트 120개, 감쇠 없는 상시 드리프트 + 사인 트윙클, wrap-around, <code>prefers-reduced-motion</code> 시 정지.</li>
+</ul>
+
+<h4>계층 용어 개편 (2026-07-06 결정 반영)</h4>
+<ul>
+    <li>표기 통일: <strong>World</strong>(최상위: AI·DOUZONE) → <strong>Domain</strong>(지식 영역) → <strong>System</strong>(구체적 체계/주제 = 기존 클러스터 라벨) → <strong>Document</strong>. 우주·갤럭시·성단·별자리 표현 전면 제거.</li>
+    <li>지도 3종(ai-map ko/en·dz-map): 첫 도식을 4계층 다이어그램으로 교체, "성단"→"System" 등 문구 정리. km-* id·data-topics 키·문서 경로는 불변.</li>
+    <li>index.html STRINGS(ko/en)·cosmos HUD·주석, README, i18n.md 정리. 데이터 키(<code>stats.galaxies</code> 등)·코드 식별자는 리네임하지 않음(회귀 방지). CLAUDE.md에 용어 규칙 명문화.</li>
+</ul>
+
+<h4>검증</h4>
+<ul>
+    <li>graphviews.js·index.html 인라인 스크립트 <code>node --check</code> 통과, 지도 3종 SVG well-formed.</li>
+    <li><code>validate_all.py</code> 0 ERROR(기존 WARN 12건 유지), <code>build_index.py --check</code> 통과.</li>
+    <li>Playwright로 cosmos 6개 2D 뷰 렌더·범례·문서 클릭 확인, 패킹 뷰 World 라벨 잘림 수정(슬롯 배분 sqrt 완화 + 라벨 클램프).</li>
+    <li>About 페이지 맨 아래 영문 모토 제거(ko/en).</li>
+</ul>
+
+<h4>후속 다듬기</h4>
+<ul>
+    <li><strong>2D 뷰 다국어</strong> — packing 문서수·chord/concepts 툴팁의 한글 하드코딩(‘편·건·등장’, ‘성단’ 잔재)을 STRINGS 포맷 키(<code>gvDocsN·gvConceptIn·gvLinksN·gvCrossN</code>, ko/en)로 이관하고 모델에 주입. <code>render()</code>가 <code>model.strings</code>를 렌더러로 전달하도록 연결 — EN 모드에서 ‘12 docs·2 links’로 정상 표기(Playwright ko/en 확인).</li>
+    <li><strong>지도 계층 도식 정렬</strong> — 지도 3종의 World→Domain→System→Document 도식을 두 열(AI·DOUZONE) 수직 정렬로 재작성: 각 계층 박스를 열 중심에 맞춰 연결선을 곧게 펴고, Document는 두 열을 아우르는 공유 박스로.</li>
+    <li><strong>NUL 구분자 정리</strong> — graphviews.js의 키 구분자 NUL(0x00) 8개를 U+001F로 교체(동작 동일, 파일이 바이너리로 오인되지 않게).</li>
+    <li><strong>2D 뷰 반응형화</strong>(OMC team, 파일 3분할) — 6개 뷰가 고정 viewBox라 크기가 제각각이던 문제 해결: 렌더러가 모델의 실측 <code>width×height</code>로 박스를 채우고(<code>svg</code> 100%×100%, 스테이지 flex 채움), <code>ResizeObserver</code>(디바운스 120ms)로 창 크기·사이드바 토글에 리플로우. 방사형은 라벨 폭까지 감안한 R 클램프, 나머지도 라벨 방향 여백을 둬 <strong>모든 텍스트·마크가 viewBox를 벗어나지 않게</strong>. Playwright 3해상도×6뷰(18조합) getBBox 검사 클리핑 0건·fill 100%·에러 0 확인.</li>
+    <li><strong>후속 다듬기(헤드리스 Chrome 실측)</strong> — (1) 3D 설명 문구(<code>cosmosSub</code>) 축약. (2) <strong>2D에선 타이틀/부제(<code>.cosmos-hud</code>)를 숨기고 도크를 그 자리로 끌어올림</strong>(<code>gvSelect</code>가 <code>.cosmos-screen.gv-2d</code> 토글 → <code>.cosmos-hud</code> display:none, <code>.gv-dock top:20</code>, <code>.gv-stage</code> padding-top 축소) — 2D에서 도크·범례·그래프가 상단 빈 타이틀 공간만큼 위로. 세로·가로·데스크톱 겹침 0 실측. (3) <strong>3D 배경 입자(dust)를 별처럼</strong> — 크기를 작은 쪽 편향 분포로 다양화(최대 ~2.2px, 지식 별보다 작고 muted 회색이라 구별), 일부(~30%)는 <code>pow</code> 곡선으로 가끔 또렷이 반짝이게. <code>style.css?v=9</code>.</li>
+</ul>
+
+<h3>2026-07-07 · 홈 화면 "지식 2048" 미니게임</h3>
 <p>통합검색 화면 미니게임에 위키를 홍보할 대표 게임으로 2048을 추가했다. 타일을 합칠수록 <strong>이 위키의 실제 지식 용어</strong>가 커지는 테마(태그→…→세컨드 브레인)이고, 검색을 방해하지 않도록 <strong>검색 연동 워터마크 토글</strong>로 동작한다. 도크 순서도 조정하고, 모든 게임에 Best(세션 기록)를 붙였다.</p>
 
-<h3>배경</h3>
+<h4>배경</h4>
 <ul>
     <li>기존 미니게임(벽돌깨기·별똥별·핑퐁·비행기)은 검색창 뒤에서 도는 앰비언트 배경. 2048은 방향키·스와이프로 직접 플레이하는 격자 게임이라 <strong>검색창을 가리거나 플레이를 방해하지 않을 배치</strong>가 필요했다.</li>
     <li>라이선스: 2048 원작은 MIT이고 게임 규칙 자체는 저작권 대상이 아니라 <strong>직접 새로 구현</strong>하면 자유. 이름도 상표 아님.</li>
 </ul>
 
-<h3>변경</h3>
+<h4>변경</h4>
 <ul>
     <li><strong>지식 2048 게임</strong>(<code>SEARCH_GAMES.g2048</code>) — 캔버스가 아닌 <strong>DOM/CSS 4×4 보드</strong>로 구현(또렷한 한글 라벨·테마 대응이 쉬움). 이동·병합·스폰·승리(2048)·게임오버·"새 게임" 포함. 방향키/WASD + 터치 스와이프.</li>
     <li><strong>타일 = 위키 실제 용어 사다리</strong>: 태그·개념·노트·문서·볼트·시스템·도메인·월드·지식 지도·지식 그래프·세컨드 브레인(2→2048). Document⊂System⊂Domain⊂World는 위키 공식 계층(<code>ai-map</code>·<code>CLUSTER_LABELS_BY_LANG</code>), 천문 용어는 CLAUDE.md 규칙대로 배제. EN 라벨 병행, 숫자 작게 병기.</li>
@@ -18,7 +55,7 @@
     <li>i18n: <code>g2048·g2048Long·g2048New·g2048Over·gameBest</code> 한/영 추가.</li>
 </ul>
 
-<h3>결과</h3>
+<h4>결과</h4>
 <ul>
     <li><code>index.html</code>·<code>style.css</code>·<code>config.json</code> 수정. <code>validate_all</code> 0 ERROR, 인라인 JS 파싱 0 에러. 2048 병합 알고리즘 단위테스트 15/15, jsdom 통합테스트 11/11(보드 생성·2타일 스폰·위키 라벨·검색 중 정지·유휴 재개·정리·새 게임) 통과.</li>
     <li><strong>iOS 사파리 수정</strong>: (1) 보드가 <code>position:absolute</code>인데 <code>.search-screen</code>이 <code>position:static</code>이라 <code>#content</code> 기준으로 앵커돼 iOS에서 화면 밖에 놓이던 것을 <code>.search-screen.g2048-on</code>에 <code>position:relative</code>를 줘 검색 화면 기준으로 앵커. (2) 타일(<code>.g2048-cell</code>)에 <code>touch-action:none</code>이 없어 iOS가 타일 위 스와이프를 페이지 스크롤로 먹던 것을 셀에도 적용 + <code>touchmove</code> preventDefault 추가.</li>

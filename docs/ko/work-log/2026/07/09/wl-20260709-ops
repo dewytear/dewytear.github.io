@@ -1,0 +1,164 @@
+<h2>운영 — 도식·Work Log 재발 방지 6건</h2>
+<p>도식 규칙 가드레일, Work Log 게이트 2종, 마감 점검, 로그 큐레이션, 주제 단위 규칙까지 — 이날 운영·재발 방지 작업 전부를 묶은 기록.</p>
+
+<h3>도식 규칙 재발 방지 — CLAUDE.md 보강·검증기 추가·크로스 모델 정합화</h3>
+<p>Fable5 기사 도식 사고(코덱스가 문서 다이어그램을 외부 이미지 자산으로 오분류)를 고친 뒤, 코덱스가 스스로 작성한 원인 분석을 검토하고 재발 방지 조치를 실행했다. "다른 AI 모델이 작업해도 동일한 결과가 나오게 해달라"는 요청에 따라 멀티 에이전트(Explore 3개 병렬)로 저장소 전체를 팀 리뷰했다.</p>
+
+<h4>코덱스 분석에 대한 판단</h4>
+<ul>
+    <li>진단(규칙 부재가 아니라 규칙 적용 경계가 암묵적이었고 검증기가 강제하지 않았다)은 정확하다고 판단.</li>
+    <li>원인 비중 "65~70% / 30~35%" 같은 소수점 정밀도는 근거 없는 허상 수치로 판단, 채택하지 않음.</li>
+    <li>제안한 <code>DIAGRAM_GUIDE.md</code> 신설은 반대 — 이 저장소는 지금까지 새 컴포넌트 규칙을 CLAUDE.md에 "예: 파일/클래스 포인터" 압축 문구로 적어왔지 별도 가이드 문서를 만든 적이 없고, 별도 문서는 CLAUDE.md·가이드·style.css 세 곳이 같은 내용을 설명하게 돼 드리프트 위험만 늘림.</li>
+    <li>제안한 검증기 5종 전부도 과설계로 판단 — 실제 사고 지점 2가지(외부 img SVG, 인라인 SVG 하드코딩 색)만 ERROR로 잡는 것으로 축소.</li>
+</ul>
+
+<h4>멀티 에이전트 팀 리뷰 발견</h4>
+<ul>
+    <li><strong>과거 실제 사고 이력</strong> — 이번과 같은 유형의 사고가 하나 더 있었다: 2026-07-02~07 사이 여러 에이전트가 "우주·갤럭시·성단" 은유로 지식 계층 UI를 만들었다가, 07-07 <code>300dc4f</code> 커밋으로 전면 개편(World→Domain→System→Document)하고 그제서야 CLAUDE.md에 금지 규칙을 사후 추가했다. 반대로 <code>tools/i18n.md</code>처럼 구체적 파일을 직접 가리키는 규칙은 사고가 한 번도 없었다 — 암묵 참조 vs 명시 포인터의 차이가 실제 사고율과 상관관계가 있다는 근거.</li>
+    <li><strong>CLAUDE.md 구체성 감사</strong> — 도식 규칙(당시 CLAUDE.md 한 줄)은 색 하드코딩 예외만 언급하고 "inline SVG를 <code>.diagram</code> 안에 넣어야 한다"는 구조 규칙 자체를 적지 않았다 — 이번 사고의 정확한 원인.</li>
+    <li><strong>가장 값싼 발견</strong> — 저장소 루트의 크로스 모델 부트스트랩 파일이 <code>AGENT.MD</code>(대문자 단수)였는데, Codex CLI 등 다른 도구가 실제로 자동 탐색하는 표준 파일명은 <code>AGENTS.md</code>(복수)다. 그 목적으로 만든 파일이 정작 대상 도구가 찾지 못하는 이름이었다.</li>
+    <li><strong>검증기 엔포스먼트 감사</strong> — CLAUDE.md 규칙 중 "우주·갤럭시·성단 금지"(이미 한 번 사고가 난 규칙)는 지금도 전혀 검증되지 않고 있었다 — 도식 사고와 똑같은 사각지대.</li>
+</ul>
+
+<h4>조치</h4>
+<ul>
+    <li><code>CLAUDE.md</code> 디자인 규칙 — 다이어그램 SVG 줄에 구조 규칙(인라인 SVG + <code>.diagram</code> 래퍼 + <code>.d-box</code>/<code>.d-label</code>/<code>.d-sub</code>/<code>.d-edge</code>/<code>.d-arrow</code>/<code>.d-node</code> 클래스, 외부 <code>&lt;img src="*.svg"&gt;</code> 금지)와 예시 문서 포인터(<code>news-20260622-mythos-looped</code>) 명시.</li>
+    <li><code>tools/validate_design.py</code> 신규 — <code>doc-external-svg</code>(ERROR, 문서 본문의 <code>&lt;img src="*.svg"&gt;</code> 검출), <code>diagram-hardcoded-color</code>(ERROR, 인라인 SVG의 <code>fill</code>/<code>stroke</code>/<code>stop-color</code> hex 리터럴 검출). <code>validate_all.py</code>의 <code>MODULE_NAMES</code>에 등록.</li>
+    <li><code>tools/validate_docs.py</code>에 <code>banned-astronomy-metaphor</code>(<strong>WARN</strong>) 추가 — label/label_en/tags/tags_en, doc-entries의 title/summary/concepts, 본문에서 우주·갤럭시·성단·은하 검출. <strong><code>work-log/</code> 경로는 검사 대상에서 제외</strong> — 과거 로그(<code>wl-20260707-graphviews</code> 등)는 개편 이전/과정 자체를 서술한 불변 역사 기록이고, CLAUDE.md 자체가 "옛 로그는 소급 수정하지 않는다"고 명시하기 때문.</li>
+    <li><code>AGENT.MD</code> → <code>AGENTS.md</code> 리네임(내용은 자기참조 문구만 갱신, 그 외 불변).</li>
+    <li><code>.github/workflows/validate.yml</code> 신설 — master 대상 PR/push마다 <code>validate_all.py</code>를 자동 실행해 ERROR를 기계적으로 차단(지금까지는 수동 실행 의존). 사용자의 명시적 확인 후 포함.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">2차 검증(모델 교체 후 재검토)에서 잡은 결함 3건</span>
+    사용자가 모델을 교체하며 전체 재검증을 요청, 1차 구현의 결함을 발견·보정했다.<br>
+    · <strong>검증기 회피 가능</strong> — 두 디자인 체크가 큰따옴표 속성만 매칭해 <code>src='x.svg'</code>(작은따옴표)·따옴표 없는 속성·<code>style="fill:#…"</code>(인라인 스타일)은 통과했다. 다른 AI 모델은 따옴표 스타일이 다를 수 있으므로 세 형태 모두 잡도록 정규식 보강.<br>
+    · <strong>천문 은유 체크의 치명적 오탐</strong> — ERROR로 넣었던 것을 <strong>WARN으로 강등</strong>. 부분 문자열 매칭은 일반 단어 '구성단위'('성단' 포함), 삼성 '갤럭시' 기기 기사, '우주항공' 기사 같은 정당한 사용을 은유와 구분하지 못한다. 금지 대상은 <em>은유</em>이지 단어가 아니므로, 은유 여부 판단은 사람 몫 — 이 저장소의 WARN 철학("사람이 한번 볼 목록") 그대로.<br>
+    · <strong>YAML 함정</strong> — 워크플로의 <code>on:</code> 키가 YAML 1.1 규격상 불리언 <code>true</code>로 파싱되는 문제를 <code>"on":</code> 인용으로 해소, <code>permissions: contents: read</code> 최소 권한도 명시.
+</div>
+
+<h4>검증</h4>
+<ul>
+    <li><code>validate_design.py</code> 두 체크 — 저장소 사본 fault-injection 발화 확인(ERROR 2건, exit 1)에 더해, 2차 검증에서 회피 벡터 6종(작은따옴표·무따옴표 src, 작은따옴표 fill, style 인라인 색, 정상 도식 2종) 프로브로 전 형태 검출·오탐 0 확인.</li>
+    <li><code>banned-astronomy-metaphor</code> — 발화 확인 + <code>work-log/</code> 제외 확인 + 오탐 시나리오('구성단위'·'갤럭시 S27'·'우주항공') 실측으로 WARN 강등 근거 확보.</li>
+    <li><code>python3 tools/validate_all.py</code> — ERROR 0(기존 WARN/INFO만 유지, 신규 모듈 <code>validate_design</code> 0/0/0).</li>
+    <li>워크플로 YAML 파싱 검증(<code>"on"</code> 키 정상 인식). Actions 실제 구동은 master 반영 후 확인 예정.</li>
+</ul>
+
+<h3>오늘 작업 마감 점검 — Work Log 누락분 보완 · CI 첫 구동 확정</h3>
+<p>"오늘 작업 중 Work Log에 기록 안 된 것이 있는지 검토해달라"는 요청으로 오늘 master에 머지된 PR #195~#198 전체와 07/09 로그 4편을 대조했다. 누락 2건을 이 로그로 보완하고, Backlog의 열린 항목 1건을 완료 처리한다. 이미 머지된 기존 로그를 소급 수정하는 대신 보완 로그를 새로 추가하는 방식 — CLAUDE.md의 "옛 로그는 소급 수정하지 않는다" 원칙.</p>
+
+<h4>누락 1 — Backlog 사이드바 아이콘 ☐ → ✔ (PR #195)</h4>
+<p>좌측 목록의 '할 일 · Backlog' 앞 마커를 네모(☐)에서 체크(✔, U+2714)로 변경 — Backlog 문서 본문이 미완료 마커로 쓰는 ✔와 동일 글자로 통일. 이전 세션이 <code>claude/wiki-connection-nz338e</code> 브랜치에 커밋(<code>960300c</code>)만 만들어 두고 PR을 올리지 않아 떠 있던 것을, 오늘 세션 시작에서 발견해 PR #195로 머지했다. 당시 Work Log를 빠뜨려 커밋 메시지가 유일한 기록이었다.</p>
+
+<h4>누락 2 — Fable5 기사 과잉 강조 제거 (PR #197 일부)</h4>
+<p>타릭 Fable 5 기사의 강조(<code>&lt;strong&gt;</code>) 사용 전수 점검 결과, 본문 문단들은 문단당 1~2개로 절제돼 적절했으나 "26. 최종 해석" 절의 5개 목록 항목만 <strong>전부 처음부터 끝까지 강조</strong>돼 있었다. 목록 100%가 강조되면 상대적 대비가 사라져 강조가 기능하지 않으므로 태그를 제거했다(항목이 짧은 명사구라 부분 강조도 불필요 판단). 같은 PR의 도식 재작성 로그(<a href="#!wl-20260709-content">wl-20260709-fable-diagrams-fix</a>)가 이 작업 전에 작성돼 기록이 빠졌었다.</p>
+
+<h4>완료 확정 — validate CI 첫 구동</h4>
+<ul>
+    <li>PR #198 체크(run #1, pull_request): <strong>성공</strong> — validate-all 잡 8초.</li>
+    <li>머지 후 master push(run #2): <strong>성공</strong> — 12초. 이 시점부터 ERROR 0 게이트가 수동 실행 의존 없이 기계적으로 동작.</li>
+    <li>Pages 배포(pages-build-deployment #242): <strong>성공</strong> — 사이트 반영 확인.</li>
+    <li>Backlog의 "CI 첫 구동 확인" 항목을 최근 완료로 이동.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">재발 방지 메모</span>
+    이번 누락 2건의 공통 원인은 <strong>"작은 변경"이라 로그를 생략</strong>한 것 — 아이콘 한 글자, 태그 제거 5줄. 하지만 CLAUDE.md 규칙은 크기가 아니라 <strong>"하나의 작업(주제)을 master에 머지할 때"</strong>를 기준으로 한다. 작아도 독립 주제로 머지되면 로그를 남긴다.
+</div>
+
+<h3>Work Log 누락 방지 게이트 — check_worklog.py를 PR CI에 연결</h3>
+<p>오늘 발견된 로그 누락 2건(<a href="#!wl-20260709-ops">wl-20260709-loose-ends</a>)의 재발을 막기 위해, CLAUDE.md 규칙 4("하나의 작업을 master에 머지할 때 Work Log를 추가한다")를 PR CI에서 기계적으로 강제한다. 도식 사고 때와 같은 구조 — 규칙은 프로즈로 있었지만 검증기가 없었다.</p>
+
+<h4>구현 — <code>tools/check_worklog.py</code></h4>
+<ul>
+    <li><strong>판정 규칙</strong>: PR diff에 <code>docs/&lt;lang&gt;/work-log/YYYY/…</code> 신규 파일이 있으면 통과. 없으면, 변경 파일 전부가 기록·부산물 집합(work-log 문서 자체·<code>data/doc-dates.json</code>)일 때만 통과(Backlog 갱신 같은 로깅 전용 PR은 그 자체가 기록). 그 외 실질 변경(본문·list·코드·스타일)이 있는데 새 로그가 없으면 ERROR·exit 1.</li>
+    <li><strong>validate_all.py에 넣지 않은 이유</strong>: 다른 validate_*는 저장소의 현재 상태를 검사하지만 이 체크는 diff 기준점(base)이 필요하다. base가 명확한 PR CI에서만 별도 스텝으로 실행(<code>if: github.event_name == 'pull_request'</code>), 워크플로 checkout에 <code>fetch-depth: 0</code> 추가.</li>
+    <li>CLAUDE.md 규칙 4에 게이트 포인터 한 구절 추가 — 규칙 옆에 강제 장치의 위치를 명시(이번 세션 전체의 교훈: 암묵 참조가 아니라 구체 포인터).</li>
+</ul>
+
+<h4>검증 — 오늘 실제 PR 5건 + 로깅 전용 1건으로 백테스트</h4>
+<table>
+    <thead><tr><th>PR</th><th>기대</th><th>결과</th></tr></thead>
+    <tbody>
+        <tr><td>#195 아이콘 (실제로 로그 누락됐던 것)</td><td>FAIL</td><td>✔ FAIL — 게이트가 있었다면 그날 잡았음</td></tr>
+        <tr><td>#196 최근 문서 정렬</td><td>PASS</td><td>✔</td></tr>
+        <tr><td>#197 도식 재작성</td><td>PASS</td><td>✔</td></tr>
+        <tr><td>#198 가드레일</td><td>PASS</td><td>✔</td></tr>
+        <tr><td>#199 마감 점검</td><td>PASS</td><td>✔</td></tr>
+        <tr><td>#191 Backlog만 수정 (로깅 전용)</td><td>PASS</td><td>✔ — 예외 집합 정상 동작</td></tr>
+    </tbody>
+</table>
+
+<div class="note">
+    <span class="nh">한계 (정직하게)</span>
+    이 게이트는 "로그가 아예 없는 PR"을 잡는다. #197처럼 <strong>로그는 있으나 PR 후반 커밋의 내용이 로그에 빠지는</strong> 부분 누락은 기계로 못 잡는다 — 그건 머지 전 로그를 마지막에 다시 읽는 습관(사람/AI)의 몫.
+</div>
+
+<h3>Work Log "안 쌓임" 재발 방지 강화 — list 미등록 work-log를 ERROR로</h3>
+<p>"내 위키에 work log가 쌓이지 않는다"의 재발을, 세션·작업자가 바뀌어도 기계적으로 막는다. 로그 누락 자체는 <a href="#!wl-20260709-ops">wl-20260709-worklog-gate</a>(<code>check_worklog.py</code>)로 이미 막았지만, 그 게이트가 못 보는 두 번째 경로가 남아 있었다 — <strong>로그 파일은 추가했는데 <code>list</code> 노드 등록을 빠뜨리는 경우</strong>. 이러면 문서가 내비게이션 트리에 아예 안 떠서, 파일은 있으나 "안 쌓인" 것과 결과가 같다.</p>
+
+<h4>구멍 진단</h4>
+<ul>
+    <li><code>check_worklog.py</code>는 PR diff에 <code>work-log/YYYY/…</code> 신규 <strong>파일</strong>이 있으면 통과 — 파일만 있으면 되고 <code>list</code> 등록 여부는 안 본다.</li>
+    <li><code>validate_routes.py</code>의 <code>orphan-file</code>(디스크에 있으나 <code>list</code>에 없는 파일)은 모든 문서에 대해 <strong>WARN</strong>이었다. <code>validate_all.py</code>의 머지 조건은 "ERROR 0"이라 WARN은 통과 → <strong>list 미등록 work-log가 CI를 그냥 통과</strong>했다.</li>
+    <li>재현 확인: <code>docs/ko/work-log/…/wl-test</code>를 만들고 <code>list</code>에 안 넣어도 두 검사 모두 통과(게이트는 파일 있음으로 OK, routes는 WARN만).</li>
+</ul>
+
+<h4>수정 — <code>tools/validate_routes.py</code></h4>
+<ul>
+    <li><code>orphan-file</code>을 경로별로 차등: <code>work-log/</code> 아래 미등록 파일은 <strong>ERROR</strong>, 그 외 일반 문서는 종전대로 <strong>WARN</strong>. work-log 파일이 <code>list</code>에 없는 건 의도적일 이유가 없으므로(있으면 안 보이는 문서) 머지를 실패시키는 게 옳다.</li>
+    <li><code>check_worklog.py</code>가 아니라 <code>validate_routes.py</code>(→ <code>validate_all.py</code>)에 넣은 이유: routes 검사는 diff가 아니라 <strong>저장소 현재 상태</strong>를 보므로 언제 들어온 미등록 파일이든 잡고, <code>validate_all</code>은 <strong>PR·push 모두</strong> 돌아 PR을 우회한 직접 push도 커버한다.</li>
+    <li>CLAUDE.md 규칙 4에 이 강제 장치 포인터 한 구절 추가 — 규칙 옆에 검증기 위치를 명시(이 저장소의 반복된 교훈: 프로즈만 두지 말고 구체 포인터).</li>
+</ul>
+
+<h4>검증</h4>
+<ul>
+    <li>수정 후: work-log 고아 파일 → <code>[ERROR] orphan-file</code> (routes 1 errors), 일반 문서 고아 → <code>[WARN]</code> 유지 확인.</li>
+    <li>현 저장소 <code>validate_all.py</code> — 디스크의 work-log 파일 전부가 <code>list</code>에 등록돼 있어 <strong>ERROR 0 유지</strong>(회귀 없음).</li>
+    <li><code>check_worklog.py</code> — 이 로그 문서 추가로 게이트 통과.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">방어선 요약 (세션 무관)</span>
+    ① 로그가 <strong>아예 없음</strong> → <code>check_worklog.py</code> (PR CI). ② 로그는 있으나 <strong>list 미등록</strong> → <code>validate_routes.py</code> ERROR (PR·push CI). 둘 다 AI의 기억이 아니라 CI가 강제하므로, 다음 세션이 규칙을 몰라도 미등록·누락은 머지되지 못한다. 남는 한계는 "로그는 있고 list에도 있으나 <strong>내용이 부실한</strong>" 경우 — 이건 기계가 아니라 리뷰의 몫.
+</div>
+
+<div class="note warn">
+    <span class="nh">전제</span>
+    CI가 실제로 머지를 <strong>막으려면</strong> GitHub 브랜치 보호에서 <code>validate</code> 체크를 <strong>required</strong>로 지정해야 한다(저장소 설정, 코드 밖). 미지정 시 빨간 CI로도 머지가 가능하니 별도 확인 필요.
+</div>
+
+<h3>07-09 Work Log 주제별 병합 (9건 → 3주제)</h3>
+<p>이날 작업을 <strong>변경 하나마다 로그 하나</strong>로 쪼개 등록한 것이 CLAUDE.md 규칙 4("하나의 작업=주제를 머지할 때 하나의 curated 로그")에 어긋났다. 사용자 지시로 주제별로 병합한다.</p>
+
+<h4>병합 결과</h4>
+<ul>
+    <li><strong>① 새 글 인지 표시 기능</strong> ← newdoc-markers(유지·통합본) + cachebuster·newmarker-tune·newlist-datefmt·datetime-sort·recent-exclude-worklog(흡수·삭제)</li>
+    <li><strong>② 사이드바 모두 접기/펼치기</strong> ← collapse-keep-top(유지·통합본) + collapse-all(흡수·삭제)</li>
+    <li><strong>③ Work Log 미등록 게이트</strong> ← <a href="#!wl-20260709-ops">wl-20260709-worklog-listing-gate</a>(단독 유지)</li>
+</ul>
+
+<div class="note">
+    <span class="nh">방식·주의</span>
+    통합 대상 로그의 본문을 주제 대표 로그에 curated로 합치고, 나머지 파일과 <code>list</code> 노드를 삭제. CLAUDE.md는 원래 "옛 로그 소급 수정 안 함"이지만, 이번은 <strong>같은 날 과분할된 로그를 정리</strong>하는 예외적 큐레이션(사용자 지시). 이전 세션 로그(타릭 기사·recentdocs-fix·fable-diagrams·diagram-guardrails·loose-ends·worklog-gate)는 건드리지 않았다. 앞으로는 한 주제를 머지할 때 로그 하나로 curated한다.
+</div>
+
+<h3>Work Log 과분할 방지 — "주제 단위 로그" 규칙·게이트 보강</h3>
+<p>이날 <a href="#!wl-20260709-ops">로그가 9건으로 과분할</a>된 근본 원인은 두 가지였다: (1) 한 주제를 여러 PR로 쪼개 머지했고, (2) <code>check_worklog</code>가 <strong>PR마다 "새 로그 파일 추가"</strong>를 요구해 후속 수정도 새 로그를 만들게 유도했다. 같은 실수를 세션이 바뀌어도 반복하지 않도록, 규칙과 게이트를 함께 고친다.</p>
+
+<h4>수정</h4>
+<ul>
+    <li><strong>CLAUDE.md 규칙 4</strong>: "로그는 PR·커밋 단위가 아니라 <strong>주제 단위</strong>. 한 주제는 되도록 한 브랜치로 묶고, 진행 중 추가 수정·후속 버그픽스는 <strong>그 주제의 기존 로그를 갱신</strong>한다(변경마다 새 로그로 과분할 금지)"를 명시.</li>
+    <li><strong><code>tools/check_worklog.py</code></strong>: 통과 조건을 "새 dated 로그 <strong>추가(A)</strong>"에서 "work-log 문서 <strong>추가(A) 또는 수정(M)</strong>"으로 확장. 즉 <strong>기존 주제 로그 갱신도 통과</strong>로 인정 → 후속 PR이 새 로그를 억지로 만들 유인을 제거. 로그를 <strong>아예 안 건드린</strong> 실질 변경만 ERROR. 메시지는 신규/갱신 구분.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">검증</span>
+    로컬 시뮬레이션: (A) 코드 변경 + <strong>기존 로그 수정</strong>(새 로그 없음) → <code>OK: Work Log 갱신</code>. (B) 코드 변경 + 로그 미변경 → <code>ERROR</code>. (C) 새 dated 로그 추가 → <code>OK: 신규</code>. <code>validate_all</code> ERROR 0.
+</div>
+
+<div class="note warn">
+    <span class="nh">한계</span>
+    게이트는 여전히 "로그 접점이 있는가"만 본다(내용 품질·주제 정합은 기계로 못 봄). "관계없는 옛 로그를 살짝 고쳐 통과"는 가능하나, 이는 원래 게이트도 마찬가지인 백스톱의 성격이며 규칙 프로즈로 보완한다.
+</div>
