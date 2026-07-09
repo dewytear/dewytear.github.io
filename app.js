@@ -109,6 +109,7 @@ function renderNodes(nodes, path){
                  +  '<button type="button" class="nav-title" onclick="toggleBranch(this)">'
                  +  '<span class="nav-caret">&#9662;</span>'
                  +  '<span class="nav-title-text">' + deco + escapeHtml(label) + '</span>'
+                 +  '<span class="nav-newbadge" hidden></span>'
                  +  folderDigestSpan(childPath.join(' · '))
                  +  jumpSpan
                  +  '</button>';
@@ -677,6 +678,31 @@ function showTag(tag){
     setArticle(html);
 }
 
+// ---- "새 글 모아보기" (#!new) — 최근 newDays일 내 생성 문서 ----
+// 생성일 내림차순. showTag과 같은 .more-list 마크업을 재사용.
+function showNew(){
+    var docs = DOCS.filter(function(d){ return isNewDoc(d.name); });
+    docs.sort(function(a, b){
+        var ca = (DOC_DATES[a.name] || {}).c || '', cb = (DOC_DATES[b.name] || {}).c || '';
+        return ca < cb ? 1 : ca > cb ? -1 : 0;
+    });
+    var html = '<h2>' + STR('newPageHead') + '</h2>';
+    if(!docs.length){
+        setArticle(html + '<p class="empty">' + STR('newEmpty') + '</p>');
+        return;
+    }
+    html += '<ul class="more-list">';
+    docs.forEach(function(d){
+        var c = (DOC_DATES[d.name] || {}).c || '';
+        var meta = d.sectionL + (c ? ' · ' + c.slice(0, 10) : '');
+        html += '<li><a href="#!' + d.name + '">'
+             +  '<span class="more-name">' + escapeHtml(d.label) + '</span>'
+             +  '<span class="more-meta">' + escapeHtml(meta) + '</span></a></li>';
+    });
+    html += '</ul>';
+    setArticle(html);
+}
+
 // ---- Folder digest: every direct doc of a folder on one page ----
 // Fetches the folder's docs in reading order and concatenates their
 // bodies, with a jump-to table of contents. No tags / model badge.
@@ -796,9 +822,89 @@ function moreBlock(dir){
     document.querySelector('#more').innerHTML = renderMore();
 }
 
+// ---- "새 글" 판정 (생성일 기준 최근 newDays일, Work Log·메타 제외) ----
+// 데이터는 applyDocDates가 doc-dates.json에서 채운다. newDays는 설정값
+// (하드코딩 없음 — effSettings().newDays, 기본 7). 그라데이션 신선도는
+// 생성 경과일을 하루 단위로 계단화한다.
+var DOC_DATES = {};   // name -> {c, u}
+function newDaysSetting(){
+    var n = parseInt(effSettings().newDays, 10);
+    return (n > 0) ? n : 7;
+}
+function docAgeDays(name){
+    var rec = DOC_DATES[name];
+    var m = rec && /^(\d{4})-(\d{2})-(\d{2})/.exec(rec.c || '');
+    if(!m){ return null; }
+    var created = new Date(+m[1], +m[2] - 1, +m[3]);
+    var now = new Date();
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return Math.floor((today - created) / 86400000);
+}
+// 새 글이면 신선도 0..1(오늘=1, newDays-1일=거의 0), 아니면 null.
+// Work Log·nonum(메타) 문서는 항상 null(제외).
+function docFreshness(name){
+    var d = DOC_BY_NAME[name];
+    if(!d || d.nonum){ return null; }
+    if(d.section && d.section.indexOf('Work Log') === 0){ return null; }
+    var age = docAgeDays(name);
+    if(age === null || age < 0){ return null; }
+    var N = newDaysSetting();
+    if(age >= N){ return null; }
+    return (N - age) / N;
+}
+function isNewDoc(name){ return docFreshness(name) !== null; }
+function anyNewDocs(){
+    return DOCS.some(function(d){ return isNewDoc(d.name); });
+}
+// 날짜 로드 후 nav DOM에 새 글 표시를 단다(펼침 상태 보존, 재렌더 없음):
+// ① 폴더 제목 배지 = 하위 새 글 수, ② 문서 숫자 그라데이션, ③ 검색 new+ 배경.
+function applyNavNewMarkers(){
+    var nav = document.getElementById('navigation');
+    if(!nav){ return; }
+    // ② 제목 앞 숫자: 새 글 링크의 doc-num 자체를 그라데이션.
+    nav.querySelectorAll('a[href^="#!"]').forEach(function(a){
+        var name = a.getAttribute('href').slice(2);
+        var num = a.querySelector('.doc-num');
+        if(!num || num.classList.contains('doc-mark')){ return; }
+        var f = docFreshness(name);
+        if(f !== null){
+            num.classList.add('is-new');
+            num.style.setProperty('--nf', f.toFixed(3));
+        } else {
+            num.classList.remove('is-new');
+            num.style.removeProperty('--nf');
+        }
+    });
+    // ① 폴더 배지: 그 브랜치 하위(중첩 포함) 새 글 수.
+    nav.querySelectorAll('li.nav-branch').forEach(function(li){
+        var btn = li.querySelector('button.nav-title');   // 첫 매치 = 이 브랜치 자신
+        var badge = btn && btn.querySelector('.nav-newbadge');
+        if(!badge){ return; }
+        var n = 0;
+        li.querySelectorAll('a[href^="#!"]').forEach(function(a){
+            if(isNewDoc(a.getAttribute('href').slice(2))){ n++; }
+        });
+        if(n > 0){
+            badge.textContent = n;
+            badge.hidden = false;
+            badge.setAttribute('title', STRF('newCount', { n: n }));
+            badge.setAttribute('aria-label', STRF('newCount', { n: n }));
+        } else {
+            badge.hidden = true;
+            badge.textContent = '';
+            badge.removeAttribute('title');
+            badge.removeAttribute('aria-label');
+        }
+    });
+    // ③ 검색창 new+ 버튼: 새 글이 있을 때만 배경색.
+    var sn = document.querySelector('.search-new');
+    if(sn){ sn.classList.toggle('has-new', anyNewDocs()); }
+}
+
 function applyDocDates(dd){
     var dates = (dd && dd.docs) || {};
     if(!Object.keys(dates).length){ return; }
+    DOC_DATES = dates;   // 새 글 판정이 재사용
     DOCS.forEach(function(d){
         var rec = dates[d.name];
         d.date = rec ? rec.u : '';
@@ -808,6 +914,9 @@ function applyDocDates(dd){
     });
     morePage = 0;   // reordering restarts the board at page one
     document.querySelector('#more').innerHTML = renderMore();
+    applyNavNewMarkers();   // nav 새 글 표시 갱신
+    // #!new 화면에 이미 있었다면(날짜 로드 전 렌더된 경우) 다시 그린다.
+    if(location.hash === '#!new'){ showNew(); }
 }
 
 function refreshRecentDocs(){
@@ -837,7 +946,7 @@ function saveSettings(s){
 var SITE_DEFAULTS = {};
 var HARD_DEFAULTS = { navLineStyle: 'dashed', navLineWidth: '1px',
                       searchGame: 'g2048', music: '', lang: 'ko',
-                      hideRecent: false, hideRelated: false };
+                      hideRecent: false, hideRelated: false, newDays: 7 };
 // Effective settings = site defaults overlaid with personal values.
 function effSettings(){
     var out = {}, k;
@@ -915,6 +1024,8 @@ function applySettings(){
     if(tsw){ tsw.title = STR('themeSwitch'); }
     var mbtn = document.getElementById('music-btn');
     if(mbtn){ mbtn.title = STR('musicTitle'); mbtn.setAttribute('aria-label', STR('musicAria')); }
+    // 새 글 기간(newDays)·언어 변경 등이 반영되도록 nav 새 글 표시를 다시 단다.
+    applyNavNewMarkers();
 }
 
 // Global config lives in the repo (same-origin, no API key needed).
@@ -1100,6 +1211,11 @@ function showSettings(){
       +     (s.hideRelated ? ' checked' : '') + '> ' + STR('hideRelatedL') + '</label>'
       + '</div>'
       + '<div class="settings-field">'
+      +   '<label for="settings-newdays">' + STR('fNewDays') + '</label>'
+      +   '<input id="settings-newdays" type="number" min="1" max="30" value="'
+      +     (parseInt(s.newDays, 10) || 7) + '">'
+      + '</div>'
+      + '<div class="settings-field">'
       +   '<label>' + STR('fCats') + '</label>'
       +   '<div class="cat-transfer">'
       +     '<div class="cat-pane">'
@@ -1194,7 +1310,7 @@ function renderSettingsDump(){
     var personal = loadSettings();
     var eff = effSettings();
     var KEYS = ['theme', 'lang', 'accentDay', 'accentNight', 'searchGame',
-                'navLineStyle', 'navLineWidth', 'hideRecent', 'hideRelated',
+                'navLineStyle', 'navLineWidth', 'hideRecent', 'hideRelated', 'newDays',
                 'music', 'title', 'tagline', 'photoLine', 'hiddenCats'];
     var rows = KEYS.map(function(k){
         var v = eff[k];
@@ -1311,6 +1427,7 @@ function saveSettingsForm(){
     setOrClear(s, 'navLineWidth', document.getElementById('settings-navwidth').value);
     setOrClear(s, 'hideRecent', document.getElementById('settings-hiderecent').checked);
     setOrClear(s, 'hideRelated', document.getElementById('settings-hiderelated').checked);
+    setOrClear(s, 'newDays', parseInt(document.getElementById('settings-newdays').value, 10) || 7);
     setOrClear(s, 'searchGame', document.getElementById('settings-game').value);
     var prevLang = currentLang();
     setOrClear(s, 'lang', document.getElementById('settings-lang').value);
@@ -1378,6 +1495,7 @@ function route(){
     document.body.classList.toggle('search-view', isSearch);
     document.body.classList.toggle('folder-view', path.indexOf('folder:') === 0);
     document.body.classList.toggle('cosmos-view', path === 'cosmos');
+    document.body.classList.toggle('newlist-view', path === 'new');
     // Work Log docs are dev journal: like tags, the "recent docs"
     // module stays out of them.
     var doc = DOC_BY_NAME[path];
@@ -1389,6 +1507,7 @@ function route(){
     if(path === 'tags'){ showTagIndex(); markActiveNav(null); }
     else if(path.indexOf('tag:') === 0){ showTag(decodeURIComponent(path.substr(4))); markActiveNav(null); }
     else if(path.indexOf('folder:') === 0){ showFolder(decodeURIComponent(path.substr(7))); markActiveNav(null); }
+    else if(path === 'new'){ showNew(); markActiveNav(null); }
     else if(path === 'settings'){ openSettings(); markActiveNav(null); }
     else { fetchPage(path); markActiveNav(path); }
 }

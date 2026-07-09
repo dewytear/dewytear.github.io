@@ -458,6 +458,7 @@
         body.search-view #more,
         body.worklog-view #more,
         body.cosmos-view #more,
+        body.newlist-view #more,
         body.hide-recent #more{
             display: none;
         }
@@ -971,7 +972,8 @@
         }
         #search-input{
             width: 100%;
-            padding: 16px 22px 16px 52px;
+            /* 왼쪽 아이콘 제거 → 왼쪽 일반 여백, 오른쪽에 new+·🔍 두 컨트롤 자리. */
+            padding: 16px 116px 16px 22px;
             font-size: 17px;
             color: var(--text);
             background: var(--bg-alt);
@@ -989,6 +991,83 @@
             border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
             background: var(--bg);
         }
+        /* 검색창 오른쪽 컨트롤: new+ 모아보기 + 검색 버튼(🔍). game-dock 언어
+           (반투명·저존재감·호버 시 깨어남). 새 글이 있을 때만 new+에 배경색. */
+        .search-ctrls{
+            position: absolute;
+            right: 8px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .search-new{
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            border: 1px solid var(--border);
+            background: transparent;   /* 새 글 없으면 무배경(저존재감) */
+            color: var(--muted);
+            border-radius: 999px;
+            padding: 7px 11px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            line-height: 1;
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+        }
+        .search-new .plus{ font-size: 15px; font-weight: 700; }
+        .search-new:hover{ border-color: var(--accent); color: var(--accent-ink); }
+        /* 새 글이 있을 때만 accent 배경. on-accent 텍스트는 두 테마 모두
+           밝은 accent(teal/orange) 위에서 읽히도록 어두운 잉크 고정. */
+        .search-new.has-new{
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #14181f;
+        }
+        .search-go{
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: color-mix(in srgb, var(--bg-alt) 70%, transparent);
+            color: var(--muted);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.15s ease, border-color 0.15s ease;
+        }
+        .search-go:hover{ color: var(--accent-ink); border-color: var(--accent); }
+
+        /* ① 폴더 새 글 수 배지 — 모아보기(⧉) 왼쪽. 항상 동일 진하기(그라데이션 없음). */
+        .nav-newbadge{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 17px;
+            height: 17px;
+            margin-left: 6px;
+            padding: 0 5px;
+            border-radius: 999px;
+            background: var(--accent);
+            color: #14181f;   /* on-accent 어두운 잉크(두 테마 공통) */
+            font-size: 10.5px;
+            font-weight: 800;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+        .nav-newbadge[hidden]{ display: none; }
+
+        /* ② 제목 앞 숫자 자체를 일자별 그라데이션(오늘=진한 accent → 옅어짐).
+           --nf(0..1)는 app.js가 인라인으로 세팅. 점 치환 없음. */
+        .doc-num.is-new{
+            font-weight: 800;
+            color: color-mix(in srgb, var(--accent) calc(var(--nf, 1) * 100%), var(--muted));
+            opacity: calc(0.45 + var(--nf, 1) * 0.55);
+        }
+
         #search-results{
             margin-top: 14px;
             text-align: left;

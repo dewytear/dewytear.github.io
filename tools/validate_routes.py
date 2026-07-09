@@ -16,7 +16,7 @@ import os
 import re
 import sys
 
-SPECIAL_ROUTES = {'cosmos', 'tags', 'settings', 'search', 'about'}
+SPECIAL_ROUTES = {'cosmos', 'tags', 'settings', 'search', 'about', 'new'}
 SPECIAL_PREFIXES = ('tag:', 'folder:')
 # Deliberately nav-less doc files (reachable by dedicated UI, not the list
 # tree): the About page opens from the sidebar profile photo.
