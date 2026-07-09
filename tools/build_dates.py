@@ -9,7 +9,11 @@ dates survive physical relocation.
 Run alongside build_index.py in any content PR:
     python3 tools/build_dates.py
 
-Output: {"docs": {name: {"c": "YYYY-MM-DD", "u": "YYYY-MM-DD"}}}
+Output: {"docs": {name: {"c": "<ISO8601>", "u": "<ISO8601>"}}}
+`%aI` = author date, strict ISO 8601 with the commit's local timezone
+(e.g. "2026-07-09T10:23:45+09:00"). 화면 표시는 formatDocDate가 날짜부
+(YYYY-MM-DD)만 쓰므로 기존과 동일; 시분초는 최근 문서·#!new 등 "정렬"에서만
+쓰여 같은 날 문서의 순서를 시각으로 가른다. 날짜 접두어는 종전 %as와 동일.
 No --check gate: squash-merge timestamps legitimately drift a few hours
 from branch-time values, so freshness is a convention, not a hard gate.
 """
@@ -40,7 +44,7 @@ def main():
         rel = os.path.join('docs', 'ko', n.get('path', n['name']))
         try:
             out = subprocess.run(
-                ['git', 'log', '--follow', '--format=%as', '--', rel],
+                ['git', 'log', '--follow', '--format=%aI', '--', rel],
                 cwd=root, capture_output=True, text=True, check=True,
             ).stdout.split()
         except subprocess.CalledProcessError:
