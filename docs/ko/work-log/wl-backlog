@@ -14,7 +14,6 @@
 
 <h3>지금 할 일</h3>
 <ul>
-    <li>&#10004; <strong>[플랫폼] 스키마 계약 동결</strong> — 인덱스 스키마(schemaVersion 2: name/path·concepts·related·clusters)를 <code>tools/schema.md</code>로 명문화. 플러그인·미래 백엔드의 공용 계약. <em>마켓플레이스 공개 전 필수.</em></li>
     <li>&#10004; <strong>[플랫폼] 인덱스 샤드 레이아웃</strong> — build_index 출력을 <code>data/index/&lt;world&gt;.json</code> + 매니페스트로. App.data 어댑터 뒤라 호출부 무변경. <em>트리거: 문서 ~500편 또는 플러그인 공개 시.</em></li>
     <li>&#10004; <strong>[플랫폼] 사전 전문검색 인덱스</strong> — buildTextIndex의 "전 문서 fetch" 절벽 제거: build_index가 text-index.json(gzip) 생성, search.js가 1요청 로드. <em>트리거: ~500편 또는 모바일 첫 검색 2초+.</em></li>
     <li>&#10004; <strong>[플러그인] wiki-plugin 스캐폴드</strong> — .claude-plugin/plugin.json + 스킬(wiki-init·add-doc·index·validate) + tools/* 동봉 + marketplace.json 저장소. 이 위키가 첫 도그푸딩 사용자. <em>선행: 스키마 동결.</em></li>
@@ -36,6 +35,7 @@
 <h3>최근 완료</h3>
 <p class="scn-sub">완료 항목을 ✅ + Work Log 링크와 함께 잠시 여기 둡니다. 오래되면 걷어냅니다(원본은 해당 로그에).</p>
 <ul>
+    <li>&#9989; [플랫폼] 스키마 계약 동결 — <code>tools/schema.md</code> 신설(인덱스·doc-dates·list 계약 + 호환 규칙), 실물 전수 대조 일치 <a href="#!wl-20260710-worklog-digest-audit">wl-20260710 운영</a></li>
     <li>&#9989; CI 첫 구동 확인 — PR 체크·master push·Pages 배포 모두 성공 <a href="#!wl-20260709-ops">wl-20260709-loose-ends</a></li>
     <li>&#9989; 도식 규칙 재발 방지 — CLAUDE.md 보강·validate_design·천문은유 WARN·AGENTS.md·CI 워크플로 <a href="#!wl-20260709-ops">wl-20260709-diagram-guardrails</a></li>
     <li>&#9989; index.html 모듈 분해 — 3,887→102줄 셸 + 모듈 8개 (플러그인·빅데이터 전제) <a href="#!wl-20260708-ops">wl-20260708-refactor</a></li>
