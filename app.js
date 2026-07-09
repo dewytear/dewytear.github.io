@@ -934,7 +934,7 @@ function applyNavNewMarkers(){
             if(isNewDoc(a.getAttribute('href').slice(2))){ n++; }
         });
         if(n > 0){
-            badge.textContent = n;
+            badge.textContent = '+' + n;   // "+N" — 총 문서 수가 아니라 "새 글 수"임을 구분
             badge.hidden = false;
             badge.setAttribute('title', STRF('newCount', { n: n }));
             badge.setAttribute('aria-label', STRF('newCount', { n: n }));
