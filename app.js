@@ -1529,10 +1529,10 @@ function toggleBranch(btn){
 }
 
 function setAllBranches(collapsed){
+    // '모두 접기'는 최상위 대분류를 포함해 전부 접고, '모두 펼치기'는 전부 편다
+    // ('모두'의 문자 그대로). 최상위가 기본 펼침인 것은 초기 렌더(renderNodes)의
+    // 규칙일 뿐, 이 버튼은 예외 없이 전체에 적용된다.
     document.querySelectorAll('#navigation .nav-branch').forEach(function(li){
-        // 최상위 대분류(data-cat, path.length===0)는 '모두 접기'에서도
-        // 열어둔다 — 대분류가 적어 전부 접히면 불편하므로.
-        if(collapsed && li.hasAttribute('data-cat')){ li.classList.remove('collapsed'); return; }
         li.classList.toggle('collapsed', collapsed);
     });
 }
