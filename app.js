@@ -189,9 +189,23 @@ function topTagRanks(){
 }
 
 // ---- Article helpers ----
+// 표 반응형 자동 보정: .tbl-wrap(overflow-x:auto) 없이 들어온 맨 <table>을
+// 렌더 시 감싼다. 모바일은 body가 overflow-x:clip이라 래퍼 없는 표가
+// 스크롤 불가로 잘리므로, 작성 누락이 있어도 여기서 구조적으로 막는다.
+function wrapBareTables(container){
+    if(!container){ return; }
+    container.querySelectorAll('table').forEach(function(tb){
+        if(tb.parentElement && tb.parentElement.classList.contains('tbl-wrap')){ return; }
+        var wrap = document.createElement('div');
+        wrap.className = 'tbl-wrap';
+        tb.parentNode.insertBefore(wrap, tb);
+        wrap.appendChild(tb);
+    });
+}
 function setArticle(html){
     var art = document.querySelector('article');
     art.innerHTML = html;
+    wrapBareTables(art);
     // Clear per-doc extras left over from the previous doc — the
     // authoring-model badge and the AI related-docs block both live on
     // the #article wrapper (outside <article>), so replacing the body
@@ -778,7 +792,7 @@ function showFolder(section){
                  +  '</section>';
         });
         var body = document.querySelector('.folder-body');
-        if(body){ body.innerHTML = html; initCarousels(body); }
+        if(body){ body.innerHTML = html; wrapBareTables(body); initCarousels(body); }
     });
 }
 
