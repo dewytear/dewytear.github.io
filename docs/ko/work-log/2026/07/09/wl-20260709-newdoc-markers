@@ -27,3 +27,11 @@
     <li>자산 변경 때 <code>index.html</code> <code>?v=</code> 캐시버스터 상향(app.js·search.js·style.css·i18n.js). 초기에 이를 빠뜨려 "반영 안 됨"을 겪은 뒤로 자산 변경과 함께 올린다.</li>
     <li>검증: 헤드리스 Chromium/CDP로 폴더 배지·숫자 그라데이션(computed color 확인)·<code>new +</code> 상태·<code>#!new</code>(Work Log 0)·정렬 시각순·언어별 날짜 표기 확인. <code>validate_all</code> ERROR 0.</li>
 </ul>
+
+<h3>후속 — <code>#!new</code> 게시판화 + 처음/끝 페이저(최근 문서 보드에도)</h3>
+<ul>
+    <li><code>#!new</code>가 "판정 창(새 글)에 든 글만"이 아니라 <strong>최근순 전체를 7개씩 페이지네이션한 게시판</strong>(본문 하단 "최근 문서"와 같은 형태)이 되도록 <code>showNew</code>를 재작성 — <code>recentDocs()</code>(Work Log·메타 제외) 재사용, <code>NEW_PAGE_SIZE=7</code>, <code>newPage</code>/<code>renderNewBoard</code>/<code>newGoto</code>/<code>newBlock</code>.</li>
+    <li>공용 페이저 <code>boardPager(cur, pages, ns)</code> 도입: <strong>[« 처음][‹ 이전블록][1 2 3 …][› 다음블록][» 끝]</strong> — 양 끝에 <strong>처음/끝 이동</strong>. <code>renderMore</code>(최근 문서 보드)도 이 페이저를 쓰도록 리팩터해 <strong>같은 처음/끝 기능</strong>을 얻음(#more는 5개/페이지 유지).</li>
+    <li>i18n: <code>pagerFirst</code>·<code>pagerLast</code>(ko·en). 캐시버스터 app.js·i18n.js 상향.</li>
+    <li>검증(CDP): <code>#!new</code> 7개/페이지·14페이지·처음/끝 disabled 정확·Work Log 0; <code>#more</code> 5개/페이지·화살표 4개(« ‹ › »)·처음/끝 이동 정상.</li>
+</ul>
