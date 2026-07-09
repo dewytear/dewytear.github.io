@@ -866,14 +866,28 @@ function newDaysSetting(){
     var n = parseInt(effSettings().newDays, 10);
     return (n > 0) ? n : 7;
 }
+// 오늘(KST, Asia/Seoul 달력일) — 데이터의 생성일이 KST로 저장되므로 판정도
+// KST 기준으로 맞춘다(방문자 tz와 무관하게 한국시간으로 며칠 됐나를 센다).
+function kstTodayYMD(){
+    try{
+        return new Intl.DateTimeFormat('en-CA', {
+            timeZone: 'Asia/Seoul', year: 'numeric', month: '2-digit', day: '2-digit'
+        }).format(new Date());   // "YYYY-MM-DD"
+    }catch(e){
+        var d = new Date(Date.now() + 9 * 3600 * 1000);   // 폴백: UTC+9
+        return d.getUTCFullYear() + '-'
+             + String(d.getUTCMonth() + 1).padStart(2, '0') + '-'
+             + String(d.getUTCDate()).padStart(2, '0');
+    }
+}
 function docAgeDays(name){
     var rec = DOC_DATES[name];
     var m = rec && /^(\d{4})-(\d{2})-(\d{2})/.exec(rec.c || '');
     if(!m){ return null; }
-    var created = new Date(+m[1], +m[2] - 1, +m[3]);
-    var now = new Date();
-    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    return Math.floor((today - created) / 86400000);
+    var created = Date.UTC(+m[1], +m[2] - 1, +m[3]);
+    var t = kstTodayYMD().split('-');
+    var today = Date.UTC(+t[0], +t[1] - 1, +t[2]);
+    return Math.round((today - created) / 86400000);
 }
 // 새 글이면 신선도 0..1(오늘=1, newDays-1일=거의 0), 아니면 null.
 // Work Log·nonum(메타) 문서는 항상 null(제외).
