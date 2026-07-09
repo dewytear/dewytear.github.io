@@ -765,7 +765,11 @@ var morePage = 0;
 // 최근 문서 목록의 대상 — 메타/네비게이션 페이지(nonum: 지식지도 등)는 제외.
 // 이름 하드코딩이 아니라 list의 구조 신호(nonum)로 거른다.
 function recentDocs(){
-    return DOCS.filter(function(d){ return !d.nonum; });
+    // 메타/네비 페이지(nonum)와 Work Log(데브 저널)는 최근 문서에서 제외 —
+    // Work Log는 section이 'Work Log'로 시작(#!new·새 글 표시와 동일 기준).
+    return DOCS.filter(function(d){
+        return !d.nonum && !(d.section && d.section.indexOf('Work Log') === 0);
+    });
 }
 
 function morePageCount(){
