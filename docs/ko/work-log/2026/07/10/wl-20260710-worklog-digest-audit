@@ -44,3 +44,13 @@
     <li><strong>호환 규칙(동결)</strong>: 필드 추가=하위호환(소비자는 미지 필드 무시), 의미 변경·제거=<code>schemaVersion</code> 증가, 데이터 키 리네임 금지. 소비자 목록(app·cosmos·graphviews·search·미래 wiki-plugin) 명시.</li>
     <li><strong>실물 전수 대조</strong>: 문서의 모든 키를 <code>knowledge-index.ko.json</code>·<code>doc-dates.json</code>과 파이썬으로 비교 — 초안에서 stats의 <code>hubs</code>·<code>topConcepts</code>·<code>bridges</code> 누락을 검출·보정 후 <strong>ALL PASS</strong>. curator.md에 포인터 추가, Backlog 항목 "최근 완료"로 이동.</li>
 </ul>
+
+<h3>[플러그인] wiki-plugin 스캐폴드 — 마켓플레이스+플러그인 겸용 저장소</h3>
+<p>스키마 동결로 선행 조건이 풀려 Backlog #4 착수. 사용자 결정: 별도 저장소 대신 <strong>이 저장소를 마켓플레이스+플러그인 겸용</strong>으로(공식 지원 구조, 나중에 분리 가능).</p>
+<ul>
+    <li><strong>구조</strong>: 루트 <code>.claude-plugin/marketplace.json</code>(마켓 id <code>dewytear-wiki</code>) + <code>plugins/wiki-plugin/</code>(<code>.claude-plugin/plugin.json</code> v0.1.0 · README · <strong>스킬 4종</strong> · tools 스냅샷 13개 파일).</li>
+    <li><strong>스킬</strong>: <code>wiki-init</code>(새 위키 부트스트랩) · <code>add-doc</code>(문서 추가 워크플로 = CLAUDE.md 규칙 1~5) · <code>index</code>(인덱스 재생성+계약) · <code>validate</code>(검증 일괄+ERROR/WARN 해석). 도구 경로 규칙: 프로젝트 <code>tools/</code> 우선(도그푸딩), 없으면 <code>${CLAUDE_PLUGIN_ROOT}/tools/</code>.</li>
+    <li><strong>동기화 정책</strong>: 위키 repo <code>tools/</code>가 원본, 플러그인은 버전 시점 스냅샷(README 명시).</li>
+    <li><strong>검증</strong>: <code>claude plugin validate .</code>(마켓) · <code>validate ./plugins/wiki-plugin</code>(플러그인) 모두 통과. 설치: <code>/plugin marketplace add dewytear/dewytear.github.io</code> → <code>/plugin install wiki-plugin@dewytear-wiki</code>.</li>
+    <li>Backlog: 스캐폴드 완료 처리, 후속 "도그푸딩 검증" 항목을 지금 할 일에 추가.</li>
+</ul>
