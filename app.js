@@ -51,14 +51,29 @@ function buildIndexes(tree){
 }
 
 // ---- Navigation tree ----
-// A folder with 2+ direct docs (Work Log excluded) gets a digest icon
-// that shows all its docs on one page. It rides inside the title button
-// as a flex child (stopPropagation keeps it from toggling the branch),
-// which aligns it cleanly at every nesting level. `path` mirrors
-// buildIndexes so the folder's section key matches FOLDER_DOCS.
+// A folder with 2+ docs gets a digest icon that shows its docs on one
+// page. Knowledge folders keep the original semantics (direct docs only —
+// "read this folder in order"); Work Log folders collect DESCENDANTS too,
+// so 일(day)뿐 아니라 월/연/최상위에서도 그 기간의 로그를 몰아 읽는다
+// (저장은 주제별 파일 유지, 누적 읽기는 뷰로 제공). The icon rides inside
+// the title button as a flex child (stopPropagation keeps it from
+// toggling the branch). `path` mirrors buildIndexes so the folder's
+// section key matches FOLDER_DOCS.
+// FOLDER_DOCS 키는 buildIndexes의 DFS 삽입 순서라, 접두어 매칭으로 모으면
+// 트리 순서(=Work Log에선 날짜순) 그대로 나온다.
+function folderDocsDeep(section){
+    var out = [];
+    Object.keys(FOLDER_DOCS).forEach(function(k){
+        if(k === section || k.indexOf(section + ' · ') === 0){
+            out = out.concat(FOLDER_DOCS[k]);
+        }
+    });
+    return out;
+}
 function folderDigestSpan(sectionKey){
-    var docs = FOLDER_DOCS[sectionKey];
-    if(!docs || docs.length < 2 || sectionKey.indexOf('Work Log') === 0){ return ''; }
+    var docs = sectionKey.indexOf('Work Log') === 0
+             ? folderDocsDeep(sectionKey) : FOLDER_DOCS[sectionKey];
+    if(!docs || docs.length < 2){ return ''; }
     return '<span class="folder-digest" role="button" tabindex="0"'
          + ' title="' + STR('digestTitle') + '" aria-label="' + STR('digestTitle') + '"'
          + ' data-section="' + escapeHtml(sectionKey) + '"'
@@ -727,7 +742,9 @@ function newBlock(dir){
 // Fetches the folder's docs in reading order and concatenates their
 // bodies, with a jump-to table of contents. No tags / model badge.
 function showFolder(section){
-    var docs = FOLDER_DOCS[section] || [];
+    // Work Log 폴더는 하위(일 폴더)까지 딥 수집 — 월/연 누적 읽기 뷰.
+    var docs = (section.indexOf('Work Log') === 0
+              ? folderDocsDeep(section) : FOLDER_DOCS[section]) || [];
     var parts = section.split(' · ');
     var title = parts[parts.length - 1] || section;
     if(!docs.length){
@@ -1546,10 +1563,12 @@ function route(){
     document.body.classList.toggle('cosmos-view', path === 'cosmos');
     document.body.classList.toggle('newlist-view', path === 'new');
     // Work Log docs are dev journal: like tags, the "recent docs"
-    // module stays out of them.
+    // module stays out of them — Work Log 폴더 모아보기(folder:Work Log …)도 동일.
     var doc = DOC_BY_NAME[path];
+    var wlFolder = path.indexOf('folder:') === 0
+                && decodeURIComponent(path.substr(7)).indexOf('Work Log') === 0;
     document.body.classList.toggle('worklog-view',
-        !!(doc && doc.section.indexOf('Work Log') === 0));
+        !!(doc && doc.section.indexOf('Work Log') === 0) || wlFolder);
     CURRENT_DOC = null;   // cleared here; fetchPage sets it for real docs
     if(isSearch){ showSearch(); markActiveNav(null); return; }
     if(path === 'cosmos'){ showCosmos(); markActiveNav(null); return; }
