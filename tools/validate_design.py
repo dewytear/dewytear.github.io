@@ -24,9 +24,16 @@ import sys
 
 LEVEL_RANK = {'ERROR': 0, 'WARN': 1, 'INFO': 2}
 
-IMG_SVG_RE = re.compile(r'<img\b[^>]*\bsrc\s*=\s*"[^"]*\.svg(?:[?#][^"]*)?"', re.I)
+# src/fill 값의 따옴표는 "…" · '…' · 없음 세 형태 모두 잡는다 — 다른 AI
+# 모델이 작성한 마크업은 따옴표 스타일이 다를 수 있다.
+IMG_SVG_RE = re.compile(
+    r'<img\b[^>]*\bsrc\s*=\s*(?:"[^"]*\.svg(?:[?#][^"]*)?"'
+    r"|'[^']*\.svg(?:[?#][^']*)?'"
+    r'|[^\s"\'>]*\.svg(?:[?#][^\s>]*)?)', re.I)
 SVG_BLOCK_RE = re.compile(r'<svg\b.*?</svg>', re.S | re.I)
-HARDCODED_COLOR_RE = re.compile(r'\b(?:fill|stroke|stop-color)\s*=\s*"(#[0-9a-fA-F]{3,8})"')
+# 속성형(fill="#…"/'#…')과 style 인라인형(style="fill:#…")을 모두 검출.
+HARDCODED_COLOR_RE = re.compile(
+    r'\b(?:fill|stroke|stop-color)\s*[=:]\s*["\']?\s*(#[0-9a-fA-F]{3,8})', re.I)
 
 
 # ---------------------------------------------------------------------------

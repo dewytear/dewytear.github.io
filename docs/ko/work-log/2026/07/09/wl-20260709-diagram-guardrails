@@ -21,18 +21,23 @@
 <ul>
     <li><code>CLAUDE.md</code> 디자인 규칙 — 다이어그램 SVG 줄에 구조 규칙(인라인 SVG + <code>.diagram</code> 래퍼 + <code>.d-box</code>/<code>.d-label</code>/<code>.d-sub</code>/<code>.d-edge</code>/<code>.d-arrow</code>/<code>.d-node</code> 클래스, 외부 <code>&lt;img src="*.svg"&gt;</code> 금지)와 예시 문서 포인터(<code>news-20260622-mythos-looped</code>) 명시.</li>
     <li><code>tools/validate_design.py</code> 신규 — <code>doc-external-svg</code>(ERROR, 문서 본문의 <code>&lt;img src="*.svg"&gt;</code> 검출), <code>diagram-hardcoded-color</code>(ERROR, 인라인 SVG의 <code>fill</code>/<code>stroke</code>/<code>stop-color</code> hex 리터럴 검출). <code>validate_all.py</code>의 <code>MODULE_NAMES</code>에 등록.</li>
-    <li><code>tools/validate_docs.py</code>에 <code>banned-astronomy-metaphor</code>(ERROR) 추가 — label/label_en/tags/tags_en, doc-entries의 title/summary/concepts, 본문에서 우주·갤럭시·성단·은하 검출. <strong><code>work-log/</code> 경로는 검사 대상에서 제외</strong> — 과거 로그(<code>wl-20260707-graphviews</code> 등)는 개편 이전/과정 자체를 서술한 불변 역사 기록이고, CLAUDE.md 자체가 "옛 로그는 소급 수정하지 않는다"고 명시하기 때문.</li>
+    <li><code>tools/validate_docs.py</code>에 <code>banned-astronomy-metaphor</code>(<strong>WARN</strong>) 추가 — label/label_en/tags/tags_en, doc-entries의 title/summary/concepts, 본문에서 우주·갤럭시·성단·은하 검출. <strong><code>work-log/</code> 경로는 검사 대상에서 제외</strong> — 과거 로그(<code>wl-20260707-graphviews</code> 등)는 개편 이전/과정 자체를 서술한 불변 역사 기록이고, CLAUDE.md 자체가 "옛 로그는 소급 수정하지 않는다"고 명시하기 때문.</li>
     <li><code>AGENT.MD</code> → <code>AGENTS.md</code> 리네임(내용은 자기참조 문구만 갱신, 그 외 불변).</li>
+    <li><code>.github/workflows/validate.yml</code> 신설 — master 대상 PR/push마다 <code>validate_all.py</code>를 자동 실행해 ERROR를 기계적으로 차단(지금까지는 수동 실행 의존). 사용자의 명시적 확인 후 포함.</li>
 </ul>
 
 <div class="note">
-    <span class="nh">CI 워크플로는 이번에 보류</span>
-    PR/push마다 <code>validate_all.py</code>를 자동 실행하는 <code>.github/workflows/validate.yml</code> 초안은 작성했으나 커밋하지 않았다. 세션 중 AskUserQuestion 도구가 반복적으로 실패했고, 그 실패한 응답 자리에 "CI 워크플로를 범위에 포함해달라"는 문구가 도구 오류 태그 안에 담겨 들어온 비정상 신호가 있었다 — 정상적인 사용자 발화 채널이 아니라고 판단해 실행하지 않았다(harness 자동 분류기도 동일 판단으로 실제 워크플로 파일 커밋을 차단). 사용자의 명확한 확인을 받을 때까지 <code>wl-backlog</code>에만 등재한다.
+    <span class="nh">2차 검증(모델 교체 후 재검토)에서 잡은 결함 3건</span>
+    사용자가 모델을 교체하며 전체 재검증을 요청, 1차 구현의 결함을 발견·보정했다.<br>
+    · <strong>검증기 회피 가능</strong> — 두 디자인 체크가 큰따옴표 속성만 매칭해 <code>src='x.svg'</code>(작은따옴표)·따옴표 없는 속성·<code>style="fill:#…"</code>(인라인 스타일)은 통과했다. 다른 AI 모델은 따옴표 스타일이 다를 수 있으므로 세 형태 모두 잡도록 정규식 보강.<br>
+    · <strong>천문 은유 체크의 치명적 오탐</strong> — ERROR로 넣었던 것을 <strong>WARN으로 강등</strong>. 부분 문자열 매칭은 일반 단어 '구성단위'('성단' 포함), 삼성 '갤럭시' 기기 기사, '우주항공' 기사 같은 정당한 사용을 은유와 구분하지 못한다. 금지 대상은 <em>은유</em>이지 단어가 아니므로, 은유 여부 판단은 사람 몫 — 이 저장소의 WARN 철학("사람이 한번 볼 목록") 그대로.<br>
+    · <strong>YAML 함정</strong> — 워크플로의 <code>on:</code> 키가 YAML 1.1 규격상 불리언 <code>true</code>로 파싱되는 문제를 <code>"on":</code> 인용으로 해소, <code>permissions: contents: read</code> 최소 권한도 명시.
 </div>
 
 <h3>검증</h3>
 <ul>
-    <li><code>validate_design.py</code> 두 체크 모두 fault-injection으로 발화 확인(스크래치 사본에 위반 주입 → ERROR 2건 발화, exit 1) + 원본 저장소 기준 0건(소급 ERROR 없음).</li>
-    <li><code>banned-astronomy-metaphor</code>도 동일하게 fault-injection 발화 확인 + <code>work-log/</code> 문서는 발화하지 않음을 확인.</li>
+    <li><code>validate_design.py</code> 두 체크 — 저장소 사본 fault-injection 발화 확인(ERROR 2건, exit 1)에 더해, 2차 검증에서 회피 벡터 6종(작은따옴표·무따옴표 src, 작은따옴표 fill, style 인라인 색, 정상 도식 2종) 프로브로 전 형태 검출·오탐 0 확인.</li>
+    <li><code>banned-astronomy-metaphor</code> — 발화 확인 + <code>work-log/</code> 제외 확인 + 오탐 시나리오('구성단위'·'갤럭시 S27'·'우주항공') 실측으로 WARN 강등 근거 확보.</li>
     <li><code>python3 tools/validate_all.py</code> — ERROR 0(기존 WARN/INFO만 유지, 신규 모듈 <code>validate_design</code> 0/0/0).</li>
+    <li>워크플로 YAML 파싱 검증(<code>"on"</code> 키 정상 인식). Actions 실제 구동은 master 반영 후 확인 예정.</li>
 </ul>
