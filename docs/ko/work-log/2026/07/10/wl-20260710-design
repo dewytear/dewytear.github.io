@@ -1,0 +1,14 @@
+<h2>디자인 — 본문 표 반응형 보정 (누락 래퍼 + 자동 래핑)</h2>
+<p>"본문 표가 반응형이 아니다"라는 보고. 조사 결과 표 반응형 패턴(<code>.tbl-wrap</code>{overflow-x:auto} + <code>article table</code>{min-width:560px})은 설계돼 있었고 표 43개 중 37개가 쓰고 있었는데, <strong>최근 작성된 2개 문서의 표 6개가 래퍼 없이 맨 <code>&lt;table&gt;</code></strong>로 들어갔다 — 타릭 Fable 5 기사(5개)·09일 운영 로그의 백테스트 표(1개). 모바일(≤800px)은 <code>body</code>가 <code>overflow-x:clip</code>이라 래퍼 없는 표는 <strong>스크롤도 못 하고 잘려</strong> 보였다.</p>
+
+<h3>수정</h3>
+<ul>
+    <li><strong>콘텐츠</strong>: 두 문서의 표 6개를 <code>&lt;div class="tbl-wrap"&gt;</code>로 감쌈(소스 정직성). 전수 검사로 잔여 맨 table 0 확인.</li>
+    <li><strong>구조적 재발 차단</strong> — app.js <code>wrapBareTables(container)</code>: 렌더 시 부모가 <code>.tbl-wrap</code>이 아닌 표를 자동으로 감싼다. 호출: <code>setArticle()</code>(모든 본문의 단일 관문) + <code>showFolder()</code> 폴더 본문 주입 직후. → <strong>앞으로 작성 누락이 있어도 화면에서는 항상 반응형</strong>.</li>
+    <li>캐시버스터 <code>app.js</code> 상향.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">검증 (CDP, 375px 모바일 뷰포트)</span>
+    타릭 기사 표 5개 전부 <code>.tbl-wrap</code> 안에서 가로 스크롤(잘림 없음), 페이지 자체 가로 넘침 없음. 맨 table을 <code>setArticle</code>로 주입해 자동 래핑 동작 확인. <code>validate_all</code> ERROR 0.
+</div>
