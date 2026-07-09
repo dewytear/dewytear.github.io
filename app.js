@@ -680,27 +680,47 @@ function showTag(tag){
 
 // ---- "새 글 모아보기" (#!new) — 최근 newDays일 내 생성 문서 ----
 // 생성일 내림차순. showTag과 같은 .more-list 마크업을 재사용.
-function showNew(){
-    var docs = DOCS.filter(function(d){ return isNewDoc(d.name); });
-    docs.sort(function(a, b){
-        var ca = (DOC_DATES[a.name] || {}).c || '', cb = (DOC_DATES[b.name] || {}).c || '';
-        return ca < cb ? 1 : ca > cb ? -1 : 0;
-    });
+// #!new 게시판: 판정 창(새 글)만이 아니라 최근순 전체를 7개씩 페이지네이션
+// (본문 하단 "최근 문서" 보드와 같은 형태 + 처음/끝 이동). Work Log·메타 제외.
+function newPageCount(){
+    return Math.max(1, Math.ceil(recentDocs().length / NEW_PAGE_SIZE));
+}
+function renderNewBoard(){
+    var docs = recentDocs();
+    var pages = newPageCount();
+    newPage = Math.max(0, Math.min(newPage, pages - 1));
     var html = '<h2>' + STR('newPageHead') + '</h2>';
     if(!docs.length){
         setArticle(html + '<p class="empty">' + STR('newEmpty') + '</p>');
         return;
     }
+    var start = newPage * NEW_PAGE_SIZE;
     html += '<ul class="more-list">';
-    docs.forEach(function(d){
-        var cd = formatDocDate(((DOC_DATES[d.name] || {}).c || '').slice(0, 10));
+    docs.slice(start, start + NEW_PAGE_SIZE).forEach(function(d){
+        var cd = formatDocDate((d.date || '').slice(0, 10));
         var meta = d.sectionL + (cd ? ' · ' + cd : '');
         html += '<li><a href="#!' + d.name + '">'
              +  '<span class="more-name">' + escapeHtml(d.label) + '</span>'
              +  '<span class="more-meta">' + escapeHtml(meta) + '</span></a></li>';
     });
-    html += '</ul>';
+    html += '</ul>' + boardPager(newPage, pages, 'new');
     setArticle(html);
+}
+// route/진입은 첫 페이지부터. 페이저는 renderNewBoard만 다시 그린다(리셋 없음).
+function showNew(){ newPage = 0; renderNewBoard(); }
+function newGoto(page){
+    newPage = Math.max(0, Math.min(page, newPageCount() - 1));
+    renderNewBoard();
+    var sc = document.getElementById('content-scroll');
+    if(sc){ sc.scrollTop = 0; }
+}
+function newBlock(dir){
+    var maxBlock = Math.floor((newPageCount() - 1) / MORE_BLOCK);
+    var block = Math.max(0, Math.min(Math.floor(newPage / MORE_BLOCK) + dir, maxBlock));
+    newPage = block * MORE_BLOCK;
+    renderNewBoard();
+    var sc = document.getElementById('content-scroll');
+    if(sc){ sc.scrollTop = 0; }
 }
 
 // ---- Folder digest: every direct doc of a folder on one page ----
@@ -761,6 +781,34 @@ function scrollFolderDoc(i){
 var MORE_PAGE_SIZE = 5;
 var MORE_BLOCK = 7;    // page numbers shown per pager block (fits mobile width)
 var morePage = 0;
+var NEW_PAGE_SIZE = 7;   // #!new 게시판 페이지당 개수
+var newPage = 0;
+
+// 공용 게시판 페이저: [« 처음][‹ 이전블록][1 2 3 …][› 다음블록][» 끝].
+// ns = 'more' | 'new' → ns+'Goto'(i) / ns+'Block'(dir) 핸들러를 부른다.
+function boardPager(cur, pages, ns){
+    if(pages <= 1){ return ''; }
+    var block = Math.floor(cur / MORE_BLOCK);
+    var first = block * MORE_BLOCK;
+    var last = Math.min(first + MORE_BLOCK, pages);
+    var h = '<div class="more-nav">'
+        + '<button class="more-arrow" onclick="' + ns + 'Goto(0)"' + (cur === 0 ? ' disabled' : '')
+        +   ' aria-label="' + STR('pagerFirst') + '" title="' + STR('pagerFirst') + '">&laquo;</button>'
+        + '<button class="more-arrow" onclick="' + ns + 'Block(-1)"' + (block === 0 ? ' disabled' : '')
+        +   ' aria-label="' + STR('pagerPrev') + '" title="' + STR('pagerPrev') + '">&lsaquo;</button>'
+        + '<span class="more-pages">';
+    for(var i = first; i < last; i++){
+        h += '<button class="more-page' + (i === cur ? ' active' : '') + '"'
+          +  ' onclick="' + ns + 'Goto(' + i + ')">' + (i + 1) + '</button>';
+    }
+    h += '</span>'
+      + '<button class="more-arrow" onclick="' + ns + 'Block(1)"' + (last >= pages ? ' disabled' : '')
+      +   ' aria-label="' + STR('pagerNext') + '" title="' + STR('pagerNext') + '">&rsaquo;</button>'
+      + '<button class="more-arrow" onclick="' + ns + 'Goto(' + (pages - 1) + ')"' + (cur === pages - 1 ? ' disabled' : '')
+      +   ' aria-label="' + STR('pagerLast') + '" title="' + STR('pagerLast') + '">&raquo;</button>'
+      + '</div>';
+    return h;
+}
 
 // 최근 문서 목록의 대상 — 메타/네비게이션 페이지(nonum: 지식지도 등)는 제외.
 // 이름 하드코딩이 아니라 list의 구조 신호(nonum)로 거른다.
@@ -789,25 +837,7 @@ function renderMore(){
              +  '<span class="more-meta">' + escapeHtml(meta) + '</span></a></li>';
     });
     html += '</ul>';
-    if(pages > 1){
-        // Numbered pager: seven pages per block, with side arrows that
-        // jump a whole seven-page block at a time.
-        var block = Math.floor(morePage / MORE_BLOCK);
-        var first = block * MORE_BLOCK;
-        var last = Math.min(first + MORE_BLOCK, pages);
-        html += '<div class="more-nav">'
-             +  '<button class="more-arrow" onclick="moreBlock(-1)"'
-             +      (block === 0 ? ' disabled' : '') + ' aria-label="' + STR('pagerPrev') + '">&laquo;</button>'
-             +  '<span class="more-pages">';
-        for(var i = first; i < last; i++){
-            html += '<button class="more-page' + (i === morePage ? ' active' : '') + '"'
-                 +  ' onclick="moreGoto(' + i + ')">' + (i + 1) + '</button>';
-        }
-        html += '</span>'
-             +  '<button class="more-arrow" onclick="moreBlock(1)"'
-             +      (last >= pages ? ' disabled' : '') + ' aria-label="' + STR('pagerNext') + '">&raquo;</button>'
-             +  '</div>';
-    }
+    html += boardPager(morePage, pages, 'more');   // [« ‹ 1 2 3 › »]
     return html;
 }
 
