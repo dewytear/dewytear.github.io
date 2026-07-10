@@ -1,0 +1,10 @@
+<h2>콘텐츠 — LLM Wiki·날리지 컨텍스트 세미나 분석 아티클</h2>
+
+<h3>LLM Wiki와 날리지 컨텍스트 아티클 등록</h3>
+<ul>
+    <li>세미나 발표(LLM Wiki → 날리지 컨텍스트 구현 → OpenViking → 거버넌스)를 분석해 <a href="#!news-20260710-llm-wiki-knowledge-context">뉴스 아티클</a>로 등록. 발표 전언에 그치지 않고 <strong>언급된 원 출처를 웹에서 직접 확인해 근거를 보충</strong>: 카파시 LLM Wiki gist(3층 구조·index.md/log.md·컴파일러 비유), volcengine/OpenViking(viking:// 파일시스템 패러다임·L0/L1/L2 계층 로딩·디렉토리 재귀 검색), kepano/obsidian-skills(Obsidian CEO의 SKILL.md 5종).</li>
+    <li><strong>프로세스 도식 4종을 인라인 SVG</strong>(.diagram + .d-* 시맨틱 클래스, hex 하드코딩 없음)로 제작: ①RAG vs LLM Wiki(읽기 시점 검색 vs 쓰기 시점 컴파일) ②카파시 3층 구조 ③개인→팀 승격(promotion) 플로우 ④OpenViking L0→L1→L2 계층 로딩.</li>
+    <li>비교표 2개(RAG/LLM Wiki, 거버넌스 분담)는 <code>.tbl-wrap</code>으로 감싸 반응형 유지. 발표자 사례 보고와 공개 출처로 확인된 사실을 &ldquo;이 문서의 태도&rdquo; 노트로 분리 표기.</li>
+    <li>인덱싱 동반: <code>list</code> 노드(AI · News &amp; Articles · 2026, model 기록) + <code>doc-entries.ko.json</code> 엔트리 — concepts는 본문 실재 어휘로 기존 개념(LLM위키·RAG·옵시디언·지식관리·거버넌스·스킬·인덱스·에이전트·컨텍스트) 재사용해 <a href="#!llmw-overview">LLM Wiki 강의</a>·<a href="#!sb-level2">세컨드 브레인</a>·<a href="#!dzp-core">Douzone 제안</a> 계보와 자연 연결. <code>build_index</code> 재생성 + <code>--check</code> 통과.</li>
+    <li>지식지도 fallback 동기화: News &amp; Articles 편수 2→3·대표 문서를 새 아티클로, km-totals 88편·287개(ko·en) — <code>map-fallback-drift</code> WARN 해소. 남는 <code>wrong-cluster</code> WARN(새 아티클이 LLM Wiki 클러스터와 5점 겹침)은 주제 특성상 자연스러운 교차라 보정하지 않음(WARN 해석 규칙).</li>
+</ul>
