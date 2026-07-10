@@ -1,0 +1,195 @@
+<h2>LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식</h2>
+<p>LLM Wiki를 주제로 한 세미나 발표를 분석한 문서입니다. 발표는 <strong>카파시(Andrej Karpathy)의 LLM Wiki 제안</strong>에서 출발해, 발표자 팀이 실제 운영 중인 <strong>&ldquo;날리지 컨텍스트&rdquo;</strong>(Obsidian 볼트 + Git 저장소) 구현, 규모가 커지며 만난 <strong>인덱스 폭증 문제와 OpenViking 도입</strong>, 그리고 <strong>사람·에이전트 역할을 가른 거버넌스</strong>까지를 다룹니다. 발표 내용을 그대로 옮기는 대신, 언급된 도구·제안의 <strong>원 출처(카파시 gist·GitHub 저장소·공식 문서)를 웹에서 확인해 근거를 보충</strong>하고, 핵심 프로세스를 도식으로 정리했습니다.</p>
+
+<div class="note">
+    <span class="nh">다룬 내용과 근거 확인</span>
+    · 소재: 사내 세미나 발표 &ldquo;LLM Wiki와 날리지 컨텍스트&rdquo; (2026-07)<br>
+    · 근거 보충: 카파시의 LLM Wiki gist, <strong>volcengine/OpenViking</strong>(GitHub·공식 문서), <strong>kepano/obsidian-skills</strong>(GitHub)를 직접 확인 — 링크는 문서 끝 출처 절.<br>
+    · 이 위키의 <a href="#!llmw-overview">LLM Wiki — 개요</a> 강의 시리즈, <a href="#!sb-level2">세컨드 브레인 레벨 2</a>와 같은 주제 계보의 문서입니다.
+</div>
+
+<h3>① 문제 — 지식은 있는데, 매번 다시 설명한다</h3>
+<p>발표가 짚은 출발점은 익숙한 풍경입니다. 팀의 지식이 채팅 로그·문서·개인 메모에 흩어져 있어, 새 구성원이 오거나 에이전트에게 일을 시킬 때마다 <strong>같은 맥락을 처음부터 다시 설명</strong>합니다. 공유 문서는 &ldquo;최종&rdquo;, &ldquo;진짜최종&rdquo; 사본이 늘어나며 어느 것이 현행인지 알 수 없게 되고(구글 독스식 사본 증식), 정작 가장 값진 <strong>암묵지</strong> — 왜 그렇게 결정했는지, 어떤 시도가 실패했는지 — 는 기록되지 않은 채 사람 머릿속에만 남습니다. LLM 시대에 이 비용은 <strong>토큰으로도 청구</strong>됩니다: 에이전트를 부를 때마다 같은 배경 설명을 컨텍스트에 다시 붓는 셈이기 때문입니다.</p>
+
+<h3>② RAG와 LLM Wiki — 읽기 시점 검색 vs 쓰기 시점 컴파일</h3>
+<p>이 문제에 대한 통상의 답은 RAG(검색 증강 생성)입니다. 문서를 조각(청크) 내 임베딩해 두고, <strong>질문이 들어온 순간</strong> 비슷한 조각을 찾아 컨텍스트에 끼워 넣는 방식 — 즉 지식 정리를 <strong>읽기(질의) 시점</strong>으로 미룹니다. 카파시가 제안한 LLM Wiki는 방향을 뒤집습니다. 자료가 <strong>들어오는 시점</strong>에 LLM이 읽고 정리·통합해 사람이 읽을 수 있는 위키 문서로 만들어 두면, 질의 시점에는 검색 파이프라인 없이 <strong>그냥 그 문서를 읽으면</strong> 됩니다. 카파시는 이를 컴파일러에 비유합니다 — 원본 자료가 소스 코드, LLM이 컴파일러, 위키가 실행 산출물이고, RAG가 매 실행마다 소스를 다시 뒤지는 인터프리터라면 LLM Wiki는 <strong>미리 컴파일해 두는</strong> 쪽입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 330" role="img" aria-label="RAG는 질의 시점에 조각을 검색해 주입하고, LLM Wiki는 쓰기 시점에 LLM이 컴파일해 둔 위키를 질의 시점에 그냥 읽는다">
+    <text class="d-label sm" x="360" y="26" text-anchor="middle">RAG — 읽기(질의) 시점 검색</text>
+    <rect class="d-box soft" x="16" y="44" width="110" height="48" rx="9"/><text class="d-label sm" x="71" y="65" text-anchor="middle">원본 문서</text><text class="d-sub" x="71" y="81" text-anchor="middle">그대로 저장</text>
+    <line class="d-edge" x1="126" y1="68" x2="150" y2="68"/><polygon class="d-arrow" points="150,63 158,68 150,73"/>
+    <rect class="d-box" x="158" y="44" width="110" height="48" rx="9"/><text class="d-label sm" x="213" y="65" text-anchor="middle">청크·임베딩</text><text class="d-sub" x="213" y="81" text-anchor="middle">색인만 준비</text>
+    <line class="d-edge" x1="268" y1="68" x2="292" y2="68"/><polygon class="d-arrow" points="292,63 300,68 292,73"/>
+    <rect class="d-box" x="300" y="44" width="110" height="48" rx="9"/><text class="d-label sm" x="355" y="65" text-anchor="middle">질문 &#8594; 검색</text><text class="d-sub" x="355" y="81" text-anchor="middle">유사 조각 topK</text>
+    <line class="d-edge" x1="410" y1="68" x2="434" y2="68"/><polygon class="d-arrow" points="434,63 442,68 434,73"/>
+    <rect class="d-box" x="442" y="44" width="110" height="48" rx="9"/><text class="d-label sm" x="497" y="65" text-anchor="middle">컨텍스트 주입</text><text class="d-sub" x="497" y="81" text-anchor="middle">조각 이어붙임</text>
+    <line class="d-edge" x1="552" y1="68" x2="576" y2="68"/><polygon class="d-arrow" points="576,63 584,68 576,73"/>
+    <rect class="d-box soft" x="584" y="44" width="110" height="48" rx="9"/><text class="d-label sm" x="639" y="65" text-anchor="middle">답변</text><text class="d-sub" x="639" y="81" text-anchor="middle">매 질의마다 반복</text>
+    <text class="d-sub" x="360" y="118" text-anchor="middle">정리를 질의 시점으로 미룬다 — 조각난 컨텍스트, 파이프라인 상시 필요</text>
+
+    <line class="d-edge dash" x1="30" y1="146" x2="690" y2="146"/>
+
+    <text class="d-label sm" x="360" y="180" text-anchor="middle">LLM Wiki — 쓰기 시점 컴파일</text>
+    <rect class="d-box soft" x="16" y="198" width="110" height="48" rx="9"/><text class="d-label sm" x="71" y="219" text-anchor="middle">원본 자료</text><text class="d-sub" x="71" y="235" text-anchor="middle">불변 보관</text>
+    <line class="d-edge accent" x1="126" y1="222" x2="150" y2="222"/><polygon class="d-arrow accent" points="150,217 158,222 150,227"/>
+    <rect class="d-box accent" x="158" y="198" width="110" height="48" rx="9"/><text class="d-label sm" x="213" y="219" text-anchor="middle">LLM 컴파일</text><text class="d-sub" x="213" y="235" text-anchor="middle">정리·통합·연결</text>
+    <line class="d-edge accent" x1="268" y1="222" x2="292" y2="222"/><polygon class="d-arrow accent" points="292,217 300,222 292,227"/>
+    <rect class="d-box" x="300" y="198" width="110" height="48" rx="9"/><text class="d-label sm" x="355" y="219" text-anchor="middle">위키 문서</text><text class="d-sub" x="355" y="235" text-anchor="middle">사람도 읽는 *.md</text>
+    <line class="d-edge" x1="410" y1="222" x2="434" y2="222"/><polygon class="d-arrow" points="434,217 442,222 434,227"/>
+    <rect class="d-box" x="442" y="198" width="110" height="48" rx="9"/><text class="d-label sm" x="497" y="219" text-anchor="middle">질문 &#8594; 읽기</text><text class="d-sub" x="497" y="235" text-anchor="middle">검색 없이 문서째</text>
+    <line class="d-edge" x1="552" y1="222" x2="576" y2="222"/><polygon class="d-arrow" points="576,217 584,222 576,227"/>
+    <rect class="d-box soft" x="584" y="198" width="110" height="48" rx="9"/><text class="d-label sm" x="639" y="219" text-anchor="middle">답변</text><text class="d-sub" x="639" y="235" text-anchor="middle">정리는 이미 끝남</text>
+    <text class="d-sub" x="360" y="272" text-anchor="middle">정리를 쓰기 시점에 끝낸다 — 컴파일 비용은 한 번, 읽기는 값싸게 반복</text>
+    <text class="d-sub" x="360" y="306" text-anchor="middle">카파시의 비유: 원본=소스 코드 · LLM=컴파일러 · 위키=산출물 · lint=테스트</text>
+</svg>
+<div class="d-cap">같은 지식, 다른 시점 — RAG는 <strong>질의 때마다</strong> 찾고, LLM Wiki는 <strong>들어올 때 한 번</strong> 정리한다.</div>
+</div>
+
+<div class="tbl-wrap"><table>
+    <thead><tr><th></th><th>RAG (읽기 시점 검색)</th><th>LLM Wiki (쓰기 시점 컴파일)</th></tr></thead>
+    <tbody>
+        <tr><td>정리 시점</td><td>질의 순간(그때그때)</td><td>자료 유입 시(미리 한 번)</td></tr>
+        <tr><td>질의 비용</td><td>검색 파이프라인 + 조각 주입 반복</td><td>문서 읽기(파이프라인 불필요)</td></tr>
+        <tr><td>지식 형태</td><td>조각(청크) — 사람이 읽기 어려움</td><td>통합 문서 — 사람·LLM 공용</td></tr>
+        <tr><td>일관성</td><td>조각 간 모순 감지 어려움</td><td>컴파일·lint 단계에서 통합·점검</td></tr>
+        <tr><td>맞는 자리</td><td>방대·저빈도·원문 인용이 중요한 자료</td><td>팀이 반복해서 쓰는 살아있는 지식</td></tr>
+    </tbody>
+</table></div>
+<p class="scn-sub">둘은 배타적이지 않습니다 — 발표도 &ldquo;자주 쓰는 핵심 지식은 위키로 컴파일, 방대한 원문은 검색으로&rdquo;라는 병행을 전제합니다.</p>
+
+<h3>③ 카파시의 LLM Wiki — 3층 구조와 index.md·log.md</h3>
+<p>카파시가 gist로 공개한 제안의 뼈대는 <strong>3층 구조</strong>입니다. 맨 아래에 <strong>원본 소스</strong>(들어온 자료를 원문 그대로, 불변으로 보관), 그 위에 LLM이 원본을 읽어 개념 단위 마크다운으로 유지보수하는 <strong>위키 레이어</strong>(사람은 읽기 전용 — 고치고 싶으면 원본층에 자료를 넣어 다시 컴파일시킨다), 그리고 이 모든 동작을 규정하는 <strong>스키마 레이어</strong>(CLAUDE.md·AGENTS.md류 규약: 문서 형식, 명명, 연결 규칙)입니다. 여기에 관리 파일 둘이 붙습니다 — 전체 항목의 목차인 <code>index.md</code>, 그리고 모든 변경을 <code>## [날짜] 동작 | 대상</code> 형식으로 덧붙이기만 하는 <code>log.md</code>. 운영 동작은 <strong>ingest</strong>(새 자료 컴파일) · <strong>query</strong>(질의 응답) · <strong>lint</strong>(위키 전체의 모순·깨진 링크 점검) 세 가지로 정리됩니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 320" role="img" aria-label="카파시 LLM Wiki 3층 구조: 원본 소스를 LLM이 ingest로 컴파일해 위키 레이어를 만들고, 스키마 규약이 이를 통제하며, index.md와 log.md가 목차·이력을 담당하고, lint가 일관성을 점검하고 query로 읽는다">
+    <rect class="d-box soft" x="60" y="20" width="250" height="44" rx="9"/><text class="d-label sm" x="185" y="39" text-anchor="middle">질의 — 사람·에이전트</text><text class="d-sub" x="185" y="55" text-anchor="middle">query: 위키를 읽고 답한다</text>
+    <line class="d-edge" x1="185" y1="106" x2="185" y2="72"/><polygon class="d-arrow" points="181,74 185,66 189,74"/>
+    <rect class="d-box accent" x="60" y="106" width="250" height="76" rx="12"/><text class="d-label" x="185" y="138" text-anchor="middle">위키 레이어 (*.md)</text><text class="d-sub" x="185" y="158" text-anchor="middle">개념 단위 · LLM이 유지보수</text><text class="d-sub" x="185" y="172" text-anchor="middle">사람은 읽기 전용</text>
+    <path class="d-edge accent" d="M60 128 C18 132, 18 162, 58 160"/><polygon class="d-arrow accent" points="64,156 56,161 63,166"/>
+    <text class="d-sub" x="30" y="196" text-anchor="middle">lint 점검</text>
+    <line class="d-edge accent" x1="185" y1="240" x2="185" y2="190"/><polygon class="d-arrow accent" points="181,192 185,184 189,192"/>
+    <text class="d-sub" x="248" y="220" text-anchor="middle">ingest — LLM이 컴파일</text>
+    <rect class="d-box soft" x="60" y="240" width="250" height="56" rx="9"/><text class="d-label sm" x="185" y="263" text-anchor="middle">원본 소스 (sources/)</text><text class="d-sub" x="185" y="281" text-anchor="middle">원문 그대로 · 불변 · 사람이 투입</text>
+
+    <rect class="d-box" x="440" y="106" width="240" height="76" rx="12"/><text class="d-label" x="560" y="138" text-anchor="middle">스키마 레이어</text><text class="d-sub" x="560" y="158" text-anchor="middle">CLAUDE.md · AGENTS.md 규약</text><text class="d-sub" x="560" y="172" text-anchor="middle">형식·명명·연결 규칙</text>
+    <line class="d-edge dash" x1="440" y1="144" x2="318" y2="144"/><polygon class="d-arrow" points="320,140 312,144 320,148"/>
+    <text class="d-sub" x="379" y="134" text-anchor="middle">규약이 통제</text>
+
+    <rect class="d-box" x="440" y="216" width="115" height="52" rx="9"/><text class="d-label sm" x="497" y="238" text-anchor="middle">index.md</text><text class="d-sub" x="497" y="256" text-anchor="middle">전체 목차</text>
+    <rect class="d-box" x="565" y="216" width="115" height="52" rx="9"/><text class="d-label sm" x="622" y="238" text-anchor="middle">log.md</text><text class="d-sub" x="622" y="256" text-anchor="middle">추가 전용 이력</text>
+    <line class="d-edge dash" x1="497" y1="216" x2="330" y2="168"/><polygon class="d-arrow" points="335,164 322,166 331,172"/>
+    <text class="d-sub" x="560" y="296" text-anchor="middle">모든 동작을 &#35;&#35; [날짜] 동작 | 대상 으로 기록</text>
+</svg>
+<div class="d-cap">3층 구조: <strong>원본은 불변</strong>, <strong>위키는 LLM이 관리</strong>, <strong>스키마가 규약을 강제</strong> — index.md·log.md가 목차와 이력을 담당한다.</div>
+</div>
+
+<div class="note">
+    <span class="nh">이 위키와의 접점</span>
+    지금 보고 있는 이 위키가 정확히 이 구조의 변형입니다 — 본문(HTML 프래그먼트)이 위키 레이어, <code>list</code>·지식 인덱스가 index.md 역할, Work Log가 log.md 역할, CLAUDE.md 규칙 + validate 게이트가 스키마·lint 역할을 합니다. 강의 시리즈 <a href="#!llmw-overview">LLM Wiki — 개요</a>에서 같은 개념을 단계별로 다룹니다.
+</div>
+
+<h3>④ 날리지 컨텍스트 — Obsidian 볼트 + Git으로 팀에 이식</h3>
+<p>발표의 중심은 카파시의 개인용 제안을 <strong>팀 규모로</strong> 옮긴 실제 구현입니다. 저장소 하나가 곧 팀의 지식 컨텍스트이고, 물리적으로는 <strong>Obsidian 볼트이자 Git 저장소</strong>입니다 — 비개발자는 Obsidian 화면에서 노트를 쓰고, 개발자는 Git으로 PR을 보냅니다. 같은 파일을 두 창구로 다루는 것뿐입니다. 폴더 구조가 곧 권한 구조입니다:</p>
+<ul>
+    <li><code>context/</code> — <strong>팀 공유층</strong>. 검증을 통과한 지식만 들어오는, 팀의 공식 컨텍스트.</li>
+    <li><code>members/&lt;이름&gt;/</code> — <strong>개인 작업층</strong>. 각자의 초안·실험·메모. 여기까지는 자유.</li>
+    <li><code>agents/</code> — 에이전트 설정과 스킬. 공유층과 개인층 <strong>양쪽에 존재</strong>해서, 개인이 만든 스킬이 검증을 거쳐 팀 스킬로 승격됩니다. <code>AGENTS.md</code>가 팀의 <strong>공식 시스템 프롬프트</strong> 역할.</li>
+    <li><code>_private/</code> — 동기화에서 <strong>제외</strong>되는 영역. 승격 경로 자체가 없습니다.</li>
+</ul>
+<p>핵심 프로세스는 개인 지식이 팀 지식이 되는 <strong>승격(promotion) 플로우</strong>입니다. 개인층의 노트를 공유층으로 올리려면 PR을 열고, 자동 검증(형식·링크·frontmatter)과 AI 리뷰(중복·규약 위반·기존 문서와의 충돌)를 거쳐, <strong>마지막에 사람이 승인</strong>해야 <code>context/</code>에 합쳐집니다. frontmatter(메타데이터)는 Obsidian Templates로 입력 시점에 강제하고, 모든 이력은 Git 히스토리가 자동으로 남깁니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 240" role="img" aria-label="승격 플로우: 개인층 초안이 Git PR로 올라가 자동 검증, AI 리뷰를 거쳐 사람 승인 후 팀 공유층 context/에 합쳐진다. _private은 동기화 제외로 승격 경로가 없다">
+    <rect class="d-box soft" x="10" y="60" width="102" height="60" rx="9"/><text class="d-label sm" x="61" y="83" text-anchor="middle">members/</text><text class="d-sub" x="61" y="99" text-anchor="middle">개인 초안</text><text class="d-sub" x="61" y="112" text-anchor="middle">자유롭게 작성</text>
+    <line class="d-edge" x1="112" y1="90" x2="122" y2="90"/><polygon class="d-arrow" points="122,85 130,90 122,95"/>
+    <rect class="d-box" x="130" y="60" width="102" height="60" rx="9"/><text class="d-label sm" x="181" y="83" text-anchor="middle">Git PR</text><text class="d-sub" x="181" y="99" text-anchor="middle">승격 요청</text><text class="d-sub" x="181" y="112" text-anchor="middle">Obsidian/Git 겸용</text>
+    <line class="d-edge" x1="232" y1="90" x2="242" y2="90"/><polygon class="d-arrow" points="242,85 250,90 242,95"/>
+    <rect class="d-box" x="250" y="60" width="102" height="60" rx="9"/><text class="d-label sm" x="301" y="83" text-anchor="middle">자동 검증</text><text class="d-sub" x="301" y="99" text-anchor="middle">형식·링크</text><text class="d-sub" x="301" y="112" text-anchor="middle">frontmatter</text>
+    <line class="d-edge" x1="352" y1="90" x2="362" y2="90"/><polygon class="d-arrow" points="362,85 370,90 362,95"/>
+    <rect class="d-box" x="370" y="60" width="102" height="60" rx="9"/><text class="d-label sm" x="421" y="83" text-anchor="middle">AI 리뷰</text><text class="d-sub" x="421" y="99" text-anchor="middle">중복·규약</text><text class="d-sub" x="421" y="112" text-anchor="middle">기존 문서 충돌</text>
+    <line class="d-edge" x1="472" y1="90" x2="482" y2="90"/><polygon class="d-arrow" points="482,85 490,90 482,95"/>
+    <rect class="d-box accent" x="490" y="60" width="102" height="60" rx="9"/><text class="d-label sm" x="541" y="83" text-anchor="middle">사람 승인</text><text class="d-sub" x="541" y="99" text-anchor="middle">최종 게이트</text><text class="d-sub" x="541" y="112" text-anchor="middle">머지 권한</text>
+    <line class="d-edge accent" x1="592" y1="90" x2="602" y2="90"/><polygon class="d-arrow accent" points="602,85 610,90 602,95"/>
+    <rect class="d-box accent" x="610" y="60" width="100" height="60" rx="9"/><text class="d-label sm" x="660" y="83" text-anchor="middle">context/</text><text class="d-sub" x="660" y="99" text-anchor="middle">팀 공유층</text><text class="d-sub" x="660" y="112" text-anchor="middle">공식 컨텍스트</text>
+    <text class="d-sub" x="360" y="36" text-anchor="middle">개인 지식 &#8594; 팀 지식 승격 플로우 — 검증은 기계·AI가, 책임은 사람이</text>
+    <rect class="d-box" x="10" y="160" width="102" height="44" rx="9" stroke-dasharray="5 4"/><text class="d-label sm" x="61" y="179" text-anchor="middle">_private/</text><text class="d-sub" x="61" y="195" text-anchor="middle">동기화 제외</text>
+    <line class="d-edge dash" x1="112" y1="182" x2="180" y2="182"/>
+    <text class="d-sub" x="250" y="186">승격 경로 없음 — 애초에 공유 대상이 아님</text>
+    <text class="d-sub" x="360" y="228" text-anchor="middle">agents/ 폴더(스킬·에이전트 설정)도 같은 플로우로 개인 &#8594; 팀 승격 · AGENTS.md = 팀 공식 시스템 프롬프트</text>
+</svg>
+<div class="d-cap">지식만이 아니라 <strong>스킬도 같은 관문</strong>을 지난다 — 잘 만든 개인 스킬이 팀 자산이 되는 경로.</div>
+</div>
+
+<p>발표가 든 효과는 넷입니다. (1) 배경 설명 대신 <strong>노트 링크 하나</strong>로 맥락이 전달되고, (2) 에이전트에 같은 설명을 반복 주입하지 않아 <strong>토큰이 절약</strong>되며, (3) 개인의 스킬·프롬프트가 승격 플로우를 타고 <strong>팀 전체에 전파</strong>되고, (4) 공식 컨텍스트가 단일 저장소이므로 <strong>&ldquo;최종_진짜최종&rdquo; 사본 문제가 구조적으로 사라집니다</strong>. 결정의 배경 같은 암묵지도 PR 설명과 노트로 남아 쌓입니다.</p>
+
+<h3>⑤ 스케일의 벽 — 마크다운 폭증과 OpenViking</h3>
+<p>운영이 자리 잡자 다른 문제가 왔습니다. 노트가 수천 장으로 늘며 <strong>인덱스 파일이 1,000~3,000줄짜리 20~30개</strong>로 불었고, 에이전트가 맥락을 잡으려 인덱스만 읽어도 컨텍스트 상당분이 소모됐습니다 — 쓰기 시점 컴파일로 아꼈던 토큰을 <strong>찾기 비용</strong>이 도로 먹는 상황입니다. 발표 팀이 도입한 해법이 바이트댄스가 공개한 <strong>OpenViking</strong>입니다: 에이전트의 메모리·지식(RAG)·스킬을 <strong>하나의 파일시스템 패러다임</strong>으로 통합한 &ldquo;컨텍스트 데이터베이스&rdquo;로, 모든 지식이 <code>viking://</code> 경로를 갖습니다. 핵심은 <strong>계층 로딩</strong>입니다 — 모든 노드가 <strong>L0(한 줄 요약) · L1(개요) · L2(전문)</strong> 세 단계 요약을 갖고, 에이전트는 L0로 전체를 값싸게 훑고, 후보의 L1로 계획을 세운 뒤, <strong>정말 필요한 문서만 L2로</strong> 내려받습니다. 디렉토리 단위 재귀 검색(폴더의 L0·L1로 위치를 좁힌 뒤 하위로 드릴다운)이 거대 인덱스를 대체합니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="OpenViking 계층 로딩: 에이전트가 viking:// 트리의 L0 한 줄 요약으로 전체를 훑고, 후보 폴더의 L1 개요로 계획하고, 필요한 문서만 L2 전문으로 로드한다">
+    <rect class="d-box soft" x="16" y="20" width="180" height="44" rx="9"/><text class="d-label sm" x="106" y="39" text-anchor="middle">viking://context/</text><text class="d-sub" x="106" y="55" text-anchor="middle">지식 트리 루트</text>
+    <line class="d-edge" x1="60" y1="64" x2="60" y2="240"/>
+    <line class="d-edge" x1="60" y1="96" x2="84" y2="96"/><rect class="d-box soft" x="88" y="80" width="130" height="32" rx="7"/><text class="d-label sm" x="153" y="100" text-anchor="middle">resources/</text>
+    <line class="d-edge" x1="60" y1="144" x2="84" y2="144"/><rect class="d-box soft" x="88" y="128" width="130" height="32" rx="7"/><text class="d-label sm" x="153" y="148" text-anchor="middle">evidence/</text>
+    <line class="d-edge" x1="60" y1="192" x2="84" y2="192"/><rect class="d-box soft" x="88" y="176" width="130" height="32" rx="7"/><text class="d-label sm" x="153" y="196" text-anchor="middle">skills/</text>
+    <line class="d-edge" x1="60" y1="240" x2="84" y2="240"/><rect class="d-box soft" x="88" y="224" width="130" height="32" rx="7"/><text class="d-label sm" x="153" y="244" text-anchor="middle">memory/</text>
+    <text class="d-sub" x="117" y="284" text-anchor="middle">메모리·지식·스킬을 한 트리로 통합</text>
+
+    <rect class="d-box" x="300" y="20" width="150" height="44" rx="9"/><text class="d-label sm" x="375" y="39" text-anchor="middle">에이전트 질의</text><text class="d-sub" x="375" y="55" text-anchor="middle">무엇이 필요한가</text>
+    <line class="d-edge accent" x1="375" y1="64" x2="375" y2="86"/><polygon class="d-arrow accent" points="371,88 375,96 379,88"/>
+    <rect class="d-box accent" x="280" y="96" width="190" height="48" rx="9"/><text class="d-label sm" x="375" y="117" text-anchor="middle">L0 — 한 줄 요약</text><text class="d-sub" x="375" y="133" text-anchor="middle">전 노드를 값싸게 훑기</text>
+    <line class="d-edge accent" x1="375" y1="144" x2="375" y2="166"/><polygon class="d-arrow accent" points="371,168 375,176 379,168"/>
+    <rect class="d-box accent" x="280" y="176" width="190" height="48" rx="9"/><text class="d-label sm" x="375" y="197" text-anchor="middle">L1 — 개요</text><text class="d-sub" x="375" y="213" text-anchor="middle">후보 폴더·문서로 계획 수립</text>
+    <line class="d-edge accent" x1="375" y1="224" x2="375" y2="246"/><polygon class="d-arrow accent" points="371,248 375,256 379,248"/>
+    <rect class="d-box" x="280" y="256" width="190" height="36" rx="9"/><text class="d-label sm" x="375" y="279" text-anchor="middle">L2 — 전문 (필요한 것만)</text>
+
+    <line class="d-edge dash" x1="218" y1="112" x2="278" y2="112"/>
+    <text class="d-sub" x="595" y="120" text-anchor="middle">폴더 요약으로 위치를 좁히고</text>
+    <text class="d-sub" x="595" y="138" text-anchor="middle">하위로 재귀 드릴다운</text>
+    <text class="d-sub" x="595" y="200" text-anchor="middle">아래로 갈수록 토큰 비용 증가</text>
+    <text class="d-sub" x="595" y="218" text-anchor="middle">&#8594; 거대 인덱스 파일 불필요</text>
+    <text class="d-sub" x="595" y="279" text-anchor="middle">사용 이력으로 요약 개선(자기 진화)</text>
+</svg>
+<div class="d-cap">전부 읽지 말고 <strong>요약의 사다리</strong>를 타고 내려가라 — L0 &#8594; L1 &#8594; L2 점진 로딩이 인덱스 폭증을 대체한다.</div>
+</div>
+
+<p>발표는 기존 폴더를 OpenViking의 타입에 대응시키는 매핑도 소개했습니다 — 참고 자료는 <code>resources</code>, 결정의 근거·회의록은 <code>evidence</code>, 에이전트 스킬은 <code>skills</code>, 대화·작업 기억은 <code>memory</code>, 아직 분류 전인 것은 unindexed로 두고 점진 편입. 검색·로딩이 어떤 경로를 얼마나 읽었는지 <strong>관측 가능(observability)</strong>하다는 점도 도입 이유로 꼽았습니다.</p>
+
+<h3>⑥ 거버넌스 — 사람이 쥐는 것, 에이전트에 맡기는 것</h3>
+<p>&ldquo;에이전트가 위키를 관리한다&rdquo;가 &ldquo;전부 맡긴다&rdquo;는 뜻은 아닙니다. 발표 팀의 원칙은 <strong>기본은 에이전트, 예외를 사람이 명시</strong>하는 화이트리스트의 역전입니다:</p>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>주체</th><th>담당</th><th>이유</th></tr></thead>
+    <tbody>
+        <tr><td rowspan="3"><strong>사람만</strong></td><td><code>_private/</code> 영역</td><td>동기화·승격 경로 자체가 없음 — 기계가 접근할 이유가 없다</td></tr>
+        <tr><td>삭제</td><td>지식의 제거는 되돌리기 어렵고 맥락 판단이 필요</td></tr>
+        <tr><td>민감 권한·최종 승인</td><td>공유층 머지의 책임 소재는 사람에게</td></tr>
+        <tr><td><strong>에이전트</strong></td><td>그 밖의 전부</td><td>정리·통합·링크·요약·리뷰 등 반복 작업은 기계가 더 성실하다</td></tr>
+    </tbody>
+</table></div>
+<p>이를 받치는 장치가 셋입니다 — frontmatter는 <strong>Obsidian Templates로 입력 시점에 강제</strong>해 사후 교정을 줄이고, <strong>Git 히스토리</strong>가 누가(사람이든 에이전트든) 무엇을 언제 바꿨는지를 빠짐없이 남기며, 승격 플로우의 <strong>사람 승인 게이트</strong>가 공유층의 품질 하한을 지킵니다. 이 위키의 <a href="#!dzp-core">Douzone 지식 플랫폼 제안</a>이 취한 &ldquo;개발 흐름은 그대로, 지식화는 AI가&rdquo;와 같은 사상입니다.</p>
+
+<h3>⑦ 도구 생태계 — 에이전트가 Obsidian을 다루기 시작했다</h3>
+<p>발표가 마지막으로 짚은 신호는 도구 쪽입니다. Obsidian CEO 스테판 앙고(Steph Ango, kepano)가 <strong>obsidian-skills</strong>를 공개했는데, 이는 Claude Code 같은 코딩 에이전트가 Obsidian의 파일 형식(.md의 위키링크·콜아웃, .base 데이터베이스, .canvas 캔버스)을 올바르게 읽고 쓰도록 가르치는 <strong>Agent Skills 규격의 SKILL.md 다섯 개</strong>입니다. Obsidian이 CLI도 제공하기 시작해, &ldquo;사람은 Obsidian 화면으로, 에이전트는 파일·CLI·스킬로&rdquo; 같은 볼트를 다루는 이 글의 구도가 <strong>공식 도구로 지지</strong>되는 셈입니다. 날리지 컨텍스트처럼 마크다운+Git을 택한 팀에게는, 에이전트 쪽 창구가 표준화되고 있다는 뜻입니다.</p>
+
+<h3>정리 — 세 문장으로</h3>
+<ul>
+    <li>지식 정리를 <strong>질의 시점(RAG)에서 쓰기 시점(위키 컴파일)으로</strong> 옮기면, 팀과 에이전트가 같은 문서를 읽는 단일 컨텍스트가 생긴다.</li>
+    <li>팀 규모에서는 구조가 곧 거버넌스다 — <strong>개인층/공유층/비공개층 분리와 승격 PR 플로우</strong>가 품질과 책임을 만든다.</li>
+    <li>지식이 커지면 찾기 비용이 병목이 된다 — <strong>계층 요약(L0·L1·L2)과 재귀 드릴다운</strong>이 거대 인덱스의 다음 단계다.</li>
+</ul>
+
+<h3>출처</h3>
+<p class="scn-sub"><strong>확인한 원 출처</strong></p>
+<ul>
+    <li>Andrej Karpathy, &ldquo;LLM Wiki&rdquo; 제안 gist — <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noopener">gist.github.com/karpathy</a> — 3층 구조·index.md·log.md·컴파일러 비유의 원문.</li>
+    <li>OpenViking (바이트댄스 volcengine 공개) — <a href="https://github.com/volcengine/OpenViking" target="_blank" rel="noopener">github.com/volcengine/OpenViking</a> · 문서 <a href="https://docs.openviking.ai" target="_blank" rel="noopener">docs.openviking.ai</a> — &ldquo;Self-evolving Context Database for AI Agents&rdquo;, viking:// 경로·L0/L1/L2 계층 로딩·디렉토리 재귀 검색.</li>
+    <li>Steph Ango (kepano), obsidian-skills — <a href="https://github.com/kepano/obsidian-skills" target="_blank" rel="noopener">github.com/kepano/obsidian-skills</a> — .md/.base/.canvas용 SKILL.md 5종, Agent Skills 규격.</li>
+    <li>Obsidian — <a href="https://obsidian.md" target="_blank" rel="noopener">obsidian.md</a></li>
+</ul>
+<p class="scn-sub"><strong>이 위키의 연관 문서</strong> — <a href="#!llmw-overview">LLM Wiki 강의 시리즈</a> · <a href="#!sb-level2">세컨드 브레인 레벨 2 (LLM 위키 + 메모리)</a> · <a href="#!dzp-core">Douzone 지식 플랫폼 제안</a></p>
+
+<div class="note">
+    <span class="nh">이 문서의 태도</span>
+    카파시 제안·OpenViking·obsidian-skills는 <strong>공개 저장소·문서로 실재를 확인</strong>했습니다. 반면 &ldquo;날리지 컨텍스트&rdquo; 운영 경험(폴더 구조, 인덱스 20~30개 폭증, 매핑 등)은 <strong>발표자의 사례 보고</strong>로, 수치·효과는 해당 팀의 맥락에서 읽어야 합니다.
+</div>
