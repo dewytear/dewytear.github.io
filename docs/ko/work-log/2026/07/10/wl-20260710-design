@@ -33,3 +33,4 @@
     <span class="nh">검증 (CDP, 390px 모바일 + 데스크톱, 낮·밤 테마)</span>
     ① 제목이 모바일에서 전체 폭으로 넓어짐(3줄→2줄). ② 제목 아래 <code>AI · News &amp; Articles · 2026</code> 경로 표시, DOM상 <strong>맨 끝 <code>2026</code>만</strong> <code>&lt;a href="#!folder:…"&gt;</code> 링크(<code>&amp;</code> 이스케이프 확인). ③ 모델 브랜드가 날짜와 같은 줄 왼쪽에 표시. 밤 테마에서 teal accent·muted 정상 대응, 가로 넘침 없음. <code>validate_all</code> ERROR 0.
 </div>
+<p class="scn-sub"><strong>후속 버그픽스</strong>: 위 배지 이동으로 <strong>연관 문서(TAGS와 최근 문서 사이) 섹션이 사라지는</strong> 회귀가 있었다. <code>injectRelated()</code>가 연관 nav를 article의 마지막 직속 자식이던 <code>.doc-model</code> 배지 <em>앞</em>에 <code>insertBefore</code>로 끼워 넣었는데, 배지가 상단 <code>.doc-meta</code> 안으로 옮겨가 <strong>더 이상 article의 직속 자식이 아니게 되자 <code>insertBefore</code>가 예외를 던져</strong> 연관 섹션이 렌더되지 않았다. 이제 배지가 상단에 있으니 연관 nav는 본문 맨 끝(태그 다음)에 단순 <code>appendChild</code>한다. CDP로 TAGS → 연관 문서(3건) → 최근 문서 순서 복구 확인. 캐시버스터 <code>app.js</code> 18→19.</p>

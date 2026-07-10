@@ -566,8 +566,10 @@ function injectRelated(){
     var wrap = document.createElement('div');
     wrap.innerHTML = renderRelatedHTML(info.related);
     var node = wrap.firstChild;
-    var badge = art.querySelector('.doc-model');
-    if(badge){ art.insertBefore(node, badge); } else { art.appendChild(node); }
+    // 본문 맨 끝(태그 다음)에 붙인다. 예전엔 우상단 모델 배지가 article의
+    // 마지막 직속 자식이라 그 앞에 끼웠지만, 배지가 상단 .doc-meta로 옮겨간
+    // 뒤로는 단순 append가 맞다.
+    art.appendChild(node);
 }
 
 // ---- 지식 지도 라이브 집계 ----
