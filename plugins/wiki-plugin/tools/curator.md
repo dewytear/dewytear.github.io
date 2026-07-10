@@ -60,7 +60,7 @@ python3 tools/build_dates.py            # data/doc-dates.json 재생성 (문서 
 산출물의 **스키마 계약(동결)**은 `tools/schema.md` — 필드 추가는 하위호환, 의미 변경·제거는 `schemaVersion` 증가.
 
 ### 4. 지도 갱신(대부분 불필요)
-지도 페이지의 표·수치(클러스터·허브·브리지·핵심 개념·총계)는 `data/knowledge-index.ko.json`의 `stats`에서 **사이트가 실시간 렌더**하므로 인덱스만 재생성하면 자동으로 맞는다. `ai-map`을 손댈 일은 **새 클러스터(폴더)가 생겼을 때뿐**이다: 그때는 `tools/build_index.py`의 `CLUSTER_LABELS`에 (섹션 경로, 표시명)을 추가하고 — 이것이 유일하게 허용되는 build_index.py 수정 — `ai-map`의 `#km-clusters` `data-topics`에 그 클러스터의 "중심 주제" 문구를 더한 뒤, 정적 폴백 행도 하나 추가한다. SVG·본문 문구 개편은 사람 몫이므로 PR 본문에 제안만 남긴다.
+지도 페이지의 표·수치(클러스터·허브·브리지·핵심 개념·총계)는 `data/knowledge-index.ko.json`의 `stats`에서 **사이트가 실시간 렌더**하므로 인덱스만 재생성하면 자동으로 맞는다. `ai-map`을 손댈 일은 **새 클러스터(폴더)가 생겼을 때뿐**이다: 그때는 `tools/clusters.json`에 [섹션 경로, 표시명]을 **모든 언어**에 추가하고(build_index.py 코드는 수정하지 않는다), `ai-map`의 `#km-clusters` `data-topics`에 그 클러스터의 "중심 주제" 문구를 더한 뒤, 정적 폴백 행도 하나 추가한다. SVG·본문 문구 개편은 사람 몫이므로 PR 본문에 제안만 남긴다.
 
 ### 5. Work Log 기록 (변경이 있을 때)
 인덱스에 변경이 생겼으면(2~4단계에서 무언가 바뀌었으면) **오늘 날짜의 Work Log**도 같은 PR에 함께 갱신한다. 오늘 날짜는 시스템에서 확인한다(예: 커밋 시각 기준 `YYYY-MM-DD`, KST). Work Log는 개발 일지이며 **태그를 달지 않는다.**
@@ -86,7 +86,7 @@ git push -u origin <branch>
 - GitHub MCP(`create_pull_request`)가 있으면 그것으로 PR 생성.
 - 없으면 브랜치만 푸시하고, PR은 사람이 열 수 있도록 브랜치명과 요약을 리포트한다.
 
-**절대 하지 않을 것:** 자동 머지, `build_index.py` 로직 변경(예외: 새 클러스터 등록 시 `CLUSTER_LABELS` 항목 추가만 허용), `data/knowledge-index.ko.json` 직접 편집, (인덱스·지도·오늘 Work Log·`list` 외) 관계없는 파일 수정.
+**절대 하지 않을 것:** 자동 머지, `build_index.py` 로직 변경(새 클러스터 등록은 `tools/clusters.json` 데이터 추가로 — 코드 수정 불필요), `data/knowledge-index.ko.json` 직접 편집, (인덱스·지도·오늘 Work Log·`list` 외) 관계없는 파일 수정.
 
 ## 커밋 트레일러
 ```

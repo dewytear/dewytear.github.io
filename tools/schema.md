@@ -66,7 +66,7 @@
 {
   "docCount": 94,
   "conceptCount": 306,          // 고유 개념 수
-  "clusters": [                 // CLUSTER_LABELS_BY_LANG 순서의 클러스터 요약
+  "clusters": [                 // tools/clusters.json(언어별) 순서의 클러스터 요약
     {
       "label": "Introduction",  // 표시 라벨(언어별)
       "section": "AI · Claude · Code · Introduction",

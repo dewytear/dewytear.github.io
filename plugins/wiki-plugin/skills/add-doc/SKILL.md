@@ -24,6 +24,6 @@ description: LLM 위키에 문서를 추가하는 전체 워크플로 — 파일
 6. **검증** — `python3 tools/validate_all.py` 실행, **ERROR 0가 머지 조건**. WARN은 검토 후 보정하거나 사유를 Work Log에 남긴다.
 
 ## 주의
-- 새 대분류(섹션)를 만들면 `tools/build_index.py`의 `CLUSTER_LABELS_BY_LANG`에 **모든 언어** 라벨 추가 + 지식지도 문서의 fallback 갱신이 필요하다.
+- 새 대분류(섹션)를 만들면 `tools/clusters.json`에 **모든 언어** 라벨([섹션 경로, 표시명]) 추가 + 지식지도 문서의 fallback 갱신이 필요하다. clusters.json은 위키별 설정이라 플러그인에 동봉되지 않는다 — 없으면 이름 붙은 클러스터 없이 동작.
 - 번역·언어 작업은 `tools/i18n.md` 체크리스트를 따른다(오버레이는 본문 번역과 같은 PR에서만).
 - 프로젝트에 CLAUDE.md가 있으면 그 규칙이 우선한다 — 이 스킬은 그 규칙의 실행 절차다.

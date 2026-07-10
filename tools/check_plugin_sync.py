@@ -36,10 +36,10 @@ BUNDLE = os.path.join(ROOT, 'plugins', 'wiki-plugin', 'tools')
 PLUGIN_DIR = 'plugins/wiki-plugin/'
 PLUGIN_JSON = 'plugins/wiki-plugin/.claude-plugin/plugin.json'
 
-# 번들 대상에서 제외 — 위키별 콘텐츠(doc-entries), 부산물(__pycache__),
-# 그리고 이 게이트 자신(다운스트림 위키 운영 도구가 아니라 이 저장소의
-# 플러그인 정합 검사일 뿐이라 번들하지 않는다).
-EXCLUDE_EXACT = {'__pycache__', 'check_plugin_sync.py'}
+# 번들 대상에서 제외 — 위키별 콘텐츠·설정(doc-entries, clusters.json),
+# 부산물(__pycache__), 그리고 이 게이트 자신(다운스트림 위키 운영 도구가
+# 아니라 이 저장소의 플러그인 정합 검사일 뿐이라 번들하지 않는다).
+EXCLUDE_EXACT = {'__pycache__', 'check_plugin_sync.py', 'clusters.json'}
 
 
 def is_excluded(name):
