@@ -432,6 +432,36 @@ function renderDocTags(tags){
 // living meta pages whose value is freshness, not authorship moment.
 var UPDATED_DATE_DOCS = { 'ai-map': 1, 'dz-map': 1, 'wl-backlog': 1, 'wl-guide': 1 };
 
+// 제목(첫 h2) 바로 밑에 이 문서의 폴더 경로(브레드크럼)를 단다 — 새 글·최근·
+// 연관 문서로 진입했을 때 "어느 폴더에 속한 문서인지" 위치를 보여준다. 맨 끝
+// (가장 깊은) 폴더만 그 폴더 모아보기(#!folder:)로 링크하고, 상위 세그먼트는
+// 텍스트로만 둔다(중간 폴더는 직속 문서가 없어 다이제스트가 빌 수 있음).
+// doc.sectionL=현지화(표시)·doc.section=canonical(라우팅) — walk에서 병렬
+// 생성이라 세그먼트 수가 같다. 미등록(About)·최상위(경로 없음) 문서는 스킵.
+function injectBreadcrumb(name){
+    var doc = DOC_BY_NAME[name];
+    if(!doc || !doc.sectionL){ return; }
+    var art = document.getElementById('article');
+    var h2 = art && art.querySelector('h2');
+    if(!art || !h2 || art.querySelector('.doc-crumb')){ return; }
+    var disp = doc.sectionL.split(' · ');
+    var last = disp.length - 1;
+    var html = '';
+    disp.forEach(function(seg, i){
+        if(i){ html += '<span class="doc-crumb-sep"> · </span>'; }
+        if(i === last){
+            html += '<a href="#!folder:' + encodeURIComponent(doc.section) + '"'
+                 +  ' title="' + STR('digestTitle') + '">' + escapeHtml(seg) + '</a>';
+        } else {
+            html += '<span>' + escapeHtml(seg) + '</span>';
+        }
+    });
+    var nav = document.createElement('nav');
+    nav.className = 'doc-crumb';
+    nav.innerHTML = html;
+    h2.insertAdjacentElement('afterend', nav);
+}
+
 // 제목(첫 h2) 바로 밑에 생성/수정일자를 작은 우측 정렬 텍스트로 단다.
 // 날짜 데이터는 git 이력에서 빌드 타임에 생성 (tools/build_dates.py).
 function injectDocDate(name){
@@ -448,7 +478,13 @@ function injectDocDate(name){
         var p = document.createElement('p');
         p.className = 'doc-date';
         p.textContent = STR(useUpdated ? 'dateUpdated' : 'dateCreated') + ' ' + text;
-        if(h2){ h2.insertAdjacentElement('afterend', p); }
+        // 메타 라인(.doc-meta)이 있으면 그 오른쪽(모델 브랜드 옆)에, 없으면
+        // crumb/제목 뒤에 폴백(About 등 미등록 문서).
+        var meta = art.querySelector('.doc-meta');
+        var crumb = art.querySelector('.doc-crumb');
+        if(meta){ meta.appendChild(p); }
+        else if(crumb){ crumb.insertAdjacentElement('afterend', p); }
+        else if(h2){ h2.insertAdjacentElement('afterend', p); }
         else { art.insertAdjacentElement('afterbegin', p); }
     });
 }
@@ -460,20 +496,27 @@ function fetchPage(filename){
                 text += renderDocTags(doc.tags);
             }
             setArticle(text);
-            // Pin the authoring-model badge to the content pane's right
-            // edge — only for listed knowledge docs. Unlisted special
-            // pages (the About page) carry no AI/model attribution.
             var art = document.getElementById('article');
+            CURRENT_DOC = filename;
+            // 제목 아래 폴더 경로(브레드크럼) 먼저 — 메타 라인이 그 뒤에 붙는다.
+            injectBreadcrumb(filename);
+            // 저작 모델 배지 — 예전엔 우상단 절대배치였으나, 모바일 제목 폭을
+            // 확보하려 생성일자와 같은 라인(.doc-meta)의 왼쪽으로 옮겼다. 등재된
+            // 지식 문서만 표시(About 등 미등재 특수 페이지는 모델 표기 없음).
             var label = doc ? (doc.model || DOC_MODEL) : '';
             if(art && label){
+                var meta = document.createElement('div');
+                meta.className = 'doc-meta';
                 var span = document.createElement('span');
                 span.className = 'doc-model';
                 span.textContent = label;
-                art.appendChild(span);
+                meta.appendChild(span);
+                var anchor = art.querySelector('.doc-crumb') || art.querySelector('h2');
+                if(anchor){ anchor.insertAdjacentElement('afterend', meta); }
+                else { art.insertAdjacentElement('afterbegin', meta); }
             }
             // AI 연관 문서 추천 (knowledge-index.json). May arrive after
             // this render, so injectRelated re-runs when the index loads.
-            CURRENT_DOC = filename;
             injectDocDate(filename);
             injectRelated();
             hydrateAiMap();

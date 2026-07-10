@@ -20,3 +20,16 @@
     <li><strong>수정</strong>: 노드 위 글자 전용 <code>.diagram .d-node-label</code> 신설 — 밝은 노드에 대비되도록 <strong>어둡고 굵게</strong>(다크 <code>#0f1c1a</code>, 낮 <code>#3a1900</code>, weight 700). teal·orange 모두에서 대비비 5~8로 또렷. 홉 도식의 노드 라벨 5개와 첫 도식 &lsquo;와인1&rsquo; 노드를 이 클래스로 전환(박스 위 라벨은 종전 <code>.d-label</code> 유지).</li>
     <li><strong>검증</strong>: 다크·낮 두 테마 CDP 렌더로 노드 글자 또렷함 확인. <code>validate_design</code> 경계 게이트(신 클래스 fs 11 추정) 무오탐, <code>check_diagram_bounds.mjs</code> 통과. <code>style.css</code> 변경 → <code>?v</code> 15→16.</li>
 </ul>
+
+<h3>문서 헤더 재구성 — 폴더 경로(브레드크럼) + 모델 배지 라인 이동</h3>
+<p>새 글(<code>#!new</code>)·최근 문서·연관 문서로 진입하면 그 문서가 지식 트리(World → Domain → System → Document)의 <strong>어디에 속하는지</strong> 알 수 없었다. 또 저작 모델 배지(<code>.doc-model</code>)가 우상단 <code>position:absolute</code>로 떠 있고, 이를 피하려 <code>article h2</code>에 <code>padding-right:140px</code>가 걸려 <strong>휴대폰에서 제목이 좁게</strong> 눌렸다.</p>
+<ul>
+    <li><strong>브레드크럼</strong>: 제목(첫 <code>&lt;h2&gt;</code>)과 생성일자 사이에 폴더 경로를 표시(<code>injectBreadcrumb</code> 신설). 데이터는 이미 있던 <code>doc.sectionL</code>(현지화 경로)·<code>doc.section</code>(canonical 라우팅)을 재사용 — 새 데이터·빌드 없음. <strong>맨 끝(가장 깊은) 폴더만</strong> 그 폴더 모아보기(<code>#!folder:</code> 다이제스트, 기존 <code>openFolderDigest</code>와 동일한 인코딩)로 링크하고 상위 세그먼트는 텍스트(중간 폴더는 직속 문서가 없어 다이제스트가 빌 수 있음). 미등재(About)·최상위(경로 없음) 문서는 스킵.</li>
+    <li><strong>모델 배지 이동</strong>: 우상단 절대배치 → 생성일자와 <strong>같은 라인(<code>.doc-meta</code> flex)의 왼쪽</strong>으로. <code>article h2</code>의 <code>padding-right:140px</code> 및 이제 불필요해진 folder/tags/settings-view의 <code>padding-right:0</code> 재정의를 함께 제거 → <strong>모바일 제목이 전체 폭</strong>(오라클 아티클 기준 3줄→2줄, 배지 침범 없음).</li>
+    <li>날짜 삽입(<code>injectDocDate</code>)은 <code>.doc-meta</code>가 있으면 그 오른쪽에 붙이고, 없으면 crumb/제목 뒤 폴백. 새 <code>.doc-crumb</code>·<code>.doc-meta</code>·<code>.doc-model</code>은 테마 토큰(<code>--muted</code>·<code>--accent</code>·<code>--border</code>)만 사용 — 낮/밤 자동 대응. 링크 세그먼트는 평소 muted·호버 시 accent(디자인 언어).</li>
+    <li>캐시버스터: <code>app.js</code> 17→18, <code>style.css</code> 16→17.</li>
+</ul>
+<div class="note">
+    <span class="nh">검증 (CDP, 390px 모바일 + 데스크톱, 낮·밤 테마)</span>
+    ① 제목이 모바일에서 전체 폭으로 넓어짐(3줄→2줄). ② 제목 아래 <code>AI · News &amp; Articles · 2026</code> 경로 표시, DOM상 <strong>맨 끝 <code>2026</code>만</strong> <code>&lt;a href="#!folder:…"&gt;</code> 링크(<code>&amp;</code> 이스케이프 확인). ③ 모델 브랜드가 날짜와 같은 줄 왼쪽에 표시. 밤 테마에서 teal accent·muted 정상 대응, 가로 넘침 없음. <code>validate_all</code> ERROR 0.
+</div>
