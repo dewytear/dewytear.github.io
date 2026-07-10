@@ -26,3 +26,21 @@ jobs:
       # ?v 캐시 자산을 고친 PR은 index.html의 해당 ?v 상향을 동반해야 한다 (CLAUDE.md 배포)
       - if: github.event_name == 'pull_request'
         run: python tools/check_cachebuster.py --base "origin/${{ github.base_ref }}"
+
+  # 도식 글자·경계 삐짐 정밀 검사 — validate_design의 순수 파이썬 게이트(하한 추정,
+  # 확실한 초과만 ERROR)를 넘어, 실제 브라우저 렌더로 경계값까지 전수 확인한다.
+  diagram-bounds:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Serve, launch Chrome, check diagram bounds
+        run: |
+          python3 -m http.server 8799 >/dev/null 2>&1 &
+          CHROME="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium-browser || command -v chromium)"
+          echo "using browser: $CHROME"
+          "$CHROME" --headless=new --remote-debugging-port=9333 --no-sandbox --disable-gpu about:blank >/dev/null 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:9333/json/version >/dev/null && break; sleep 1; done
+          node tools/check_diagram_bounds.mjs
