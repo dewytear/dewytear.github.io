@@ -1,0 +1,21 @@
+<h2>기능 — 검색 입력 WASD 인식·2048 마우스 조작 버그 수정</h2>
+
+<h3>검색창 W·A·S·D 입력이 방향키로 먹히던 문제</h3>
+<ul>
+    <li>증상: 검색창에 <strong>W·A·S·D</strong>를 치면 홈 화면의 2048 워터마크 게임이 방향 이동으로 가로채 <code>preventDefault</code> — 글자가 입력되지 않았다.</li>
+    <li>원인: <code>games.js</code>의 window <code>keydown</code>(<code>onKey</code>)이 WASD를 이동키로 처리하는데, 무력화 조건이 <code>searching()</code>(=검색 결과가 떠 있는 <code>.searching</code> 상태)뿐이었다. <strong>질의가 아직 비어 있는데 입력창에 포커스</strong>된 상태에서는 <code>searching()</code>이 false라, 첫 글자부터 WASD가 게임에 먹혔다(그래서 &ldquo;wasd&rdquo;를 아예 못 침).</li>
+    <li>수정: <code>onKey</code>에서 <strong>이벤트 대상이 입력 요소(<code>INPUT</code>·<code>TEXTAREA</code>·contenteditable)면 즉시 반환</strong>. 필드에 타이핑 중이면 질의 유무와 무관하게 키를 뺏지 않는다. 필드 밖(본문·홈 배경) 포커스일 때는 종전대로 WASD·화살표로 게임이 움직인다.</li>
+</ul>
+
+<h3>2048이 마우스로 조작되지 않던 문제</h3>
+<ul>
+    <li>증상: 데스크톱에서 <strong>마우스 드래그로 타일이 움직이지 않음</strong>. 게임은 키보드(<code>keydown</code>)와 터치(<code>touch*</code>)만 바인딩돼 있었고 마우스 이벤트가 없었다.</li>
+    <li>수정: 스와이프의 데스크톱 등가로 <strong>마우스 드래그</strong>를 추가 — <code>boardEl</code>의 <code>mousedown</code>으로 시작점을 잡고(기존 <code>onTStart</code> 재사용, 텍스트 선택 방지 <code>preventDefault</code>), <strong><code>window</code>의 <code>mouseup</code></strong>으로 종료해 보드 밖에서 놓아도 이동이 완결된다. 24px 미만 이동은 클릭으로 간주해 무시(&ldquo;새 게임&rdquo;·승리 오버레이 클릭과 충돌 없음). <code>cleanup</code>에 해제 등록.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">검증 (CDP 실측)</span>
+    ① <code>#search-input</code> 포커스 상태에서 W·A·S·D 실제 키이벤트 → 값 &ldquo;wasd&rdquo; 입력됨(수정 전 &ldquo;&rdquo;). ② 보드에 마우스 프레스→무브→릴리스(&gt;24px) → 보드 타일 변화(이동 성립). ③ 필드 미포커스 시 WASD로 게임 이동 무회귀. <code>games.js</code> 수정이라 <code>index.html</code>의 <code>?v</code> 상향(1→2, 캐시버스터 규칙).
+</div>
+
+<p class="scn-sub"><code>validate_routes</code>의 <code>worklog-day-split</code> WARN(10일 로그 5개)은 보정하지 않는다 — 오늘치 5개는 각각 다른 주제(콘텐츠·날짜집계·운영감사·표디자인·입력기능)라 과분할이 아니며, 억지 병합은 주제 정합을 오히려 해친다. WARN은 병합 &ldquo;검토&rdquo; 신호일 뿐이다.</p>

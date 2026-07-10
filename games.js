@@ -950,6 +950,8 @@ SEARCH_GAMES.g2048 = function(canvas){
     function onKey(e){
         if(!wrap.isConnected){ cleanup(); return; }
         if(searching()){ return; }   // query present → keys belong to the field
+        var el = e.target;   // typing into the search field (even while empty) → don't steal W/A/S/D
+        if(el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)){ return; }
         var k = e.key, dir = '';
         if(k === 'ArrowLeft' || k === 'a' || k === 'A'){ dir = 'left'; }
         else if(k === 'ArrowRight' || k === 'd' || k === 'D'){ dir = 'right'; }
@@ -969,10 +971,16 @@ SEARCH_GAMES.g2048 = function(canvas){
         if(Math.max(Math.abs(dx), Math.abs(dy)) < 24){ return; }
         move(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'));
     }
+    // Mouse drag = the desktop equivalent of a swipe. mouseup listens on window
+    // so a release outside the board still completes the move.
+    function onMDown(e){ if(searching() || e.button !== 0){ return; } e.preventDefault(); onTStart(e); }
+    function onMUp(e){ if(ts){ onTEnd(e); } }
     window.addEventListener('keydown', onKey);
     boardEl.addEventListener('touchstart', onTStart, { passive: true });
     boardEl.addEventListener('touchmove', onTMove, { passive: false });
     boardEl.addEventListener('touchend', onTEnd);
+    boardEl.addEventListener('mousedown', onMDown);
+    window.addEventListener('mouseup', onMUp);
     wrap.querySelector('.g2048-new').addEventListener('click', function(e){ e.stopPropagation(); newGame(); });
     msgEl.addEventListener('click', function(){
         // Win overlay is a milestone, not an ending — dismiss and keep
@@ -986,6 +994,8 @@ SEARCH_GAMES.g2048 = function(canvas){
         boardEl.removeEventListener('touchstart', onTStart);
         boardEl.removeEventListener('touchmove', onTMove);
         boardEl.removeEventListener('touchend', onTEnd);
+        boardEl.removeEventListener('mousedown', onMDown);
+        window.removeEventListener('mouseup', onMUp);
         if(ro){ ro.disconnect(); }
     }
     wrap._cleanup = cleanup;
