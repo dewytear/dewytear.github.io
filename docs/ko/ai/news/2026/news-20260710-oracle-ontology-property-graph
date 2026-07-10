@@ -1,0 +1,255 @@
+<h2>오라클 온톨로지와 프로퍼티 그래프 — 테이블을 지식의 지도로</h2>
+<p>오라클과의 온톨로지 도입 검토 회의를 분석한 문서입니다. 회의는 <strong>RDF와 프로퍼티 그래프(Property Graph)</strong>라는 두 갈래 그래프를 비교하고, 흩어진 관계형 테이블(RDB)을 <strong>개체와 관계로 이어 &ldquo;지식의 지도&rdquo;(넓은 의미의 온톨로지)로 만드는 법</strong>, 그것을 오라클 DB 안에서 <strong>PGQL·SQL/PGQ</strong>로 질의하고 <strong>Select AI</strong>로 자연어 질의까지 잇는 흐름을 다뤘습니다. 발표 전언을 그대로 옮기지 않고, 언급된 기술(오라클 그래프, PGQL, SQL/PGQ, Graph Studio, Select AI)의 <strong>공식 문서를 확인해 근거를 보충</strong>하고, 처음 듣는 용어는 각 절과 끝의 <strong>용어 사전</strong>에서 풀어 설명했습니다.</p>
+
+<div class="note">
+    <span class="nh">다룬 내용과 근거 확인</span>
+    · 소재: 오라클 온톨로지(프로퍼티 그래프) 도입 검토 회의 (2026-07)<br>
+    · 근거 보충: 오라클 공식 블로그·문서(SQL/PGQ·PGQL·Graph Server/PGX·Graph Studio·Select AI), ISO SQL:2023 표준, oracle/pgql-lang — 링크는 문서 끝 출처 절.<br>
+    · 이 위키의 <a href="#!sb-level4">세컨드 브레인 레벨 4 · 지식 그래프</a>, <a href="#!dzp-core">Douzone 지식 플랫폼 제안</a>과 같은 &ldquo;지식을 관계로 잇는다&rdquo;는 계보의 문서입니다.
+</div>
+
+<h3>① 두 갈래 그래프 — RDF vs 프로퍼티 그래프</h3>
+<p>회의의 출발점은 지난 회차에 다룬 <strong>RDF</strong>와 이번의 <strong>프로퍼티 그래프</strong>를 나란히 놓는 것이었습니다. 둘 다 데이터를 &ldquo;점과 선&rdquo;(개체와 관계)으로 보는 그래프지만 성격이 다릅니다.</p>
+<div class="note">
+    <span class="nh">용어 — RDF와 트리플</span>
+    <strong>RDF</strong>(Resource Description Framework)는 모든 사실을 <strong>주어–서술어–목적어</strong> 세 조각, 즉 <strong>트리플(triple)</strong>로 엄격하게 표현하는 표준입니다(예: &ldquo;와인1 – 원산지 – 프랑스&rdquo;). 규칙·개념을 정의한 <strong>어휘집·단어장</strong>에 가까워, 의미를 형식적으로 따지는 데(추론) 강합니다.
+</div>
+<p>프로퍼티 그래프는 더 유연합니다. 데이터를 <strong>노드(node)·엣지(edge)·프로퍼티(property)</strong> 셋으로 표현합니다.</p>
+<ul>
+    <li><strong>노드(=버텍스, vertex)</strong> — 하나의 대상. 사람·사건·사물 같은 <strong>개체</strong>. (예: &lsquo;이몽룡&rsquo;, &lsquo;성춘향&rsquo;)</li>
+    <li><strong>엣지(edge)</strong> — 노드와 노드를 잇는 <strong>관계</strong>. (예: &lsquo;결혼했다&rsquo;)</li>
+    <li><strong>프로퍼티(property)</strong> — 노드나 엣지에 붙는 <strong>속성</strong>. RDF와 달리 <strong>있어도 되고 없어도 되는</strong> 유연한 값. (예: 성별=남, 나이=20)</li>
+    <li><strong>라벨(label)</strong> — 노드·엣지에 붙이는 <strong>이름표</strong>(유형). (예: 노드 라벨 &lsquo;사람&rsquo;)</li>
+</ul>
+<p>핵심 차이는 <strong>속성을 어디에 두느냐</strong>입니다. 같은 와인 테이블을 표현할 때, RDF는 주종·수입사·빈티지·원산지·가격 <strong>컬럼 하나하나를 전부 엣지로</strong> 빼내 한 노드에 5개의 선이 매달립니다 — 데이터가 늘면 급격히 복잡·무거워집니다. 프로퍼티 그래프는 그중 빈티지·가격처럼 <strong>탐색할 필요 없는 값은 속성으로 노드 안에 넣고</strong>, 원산지·수입사처럼 <strong>공유·탐색할 값만 엣지로</strong> 남깁니다. 그 결과 선(엣지) 수가 줄어 깔끔하고, &ldquo;프랑스산 와인만&rdquo;·&ldquo;같은 수입사 와인만&rdquo; 같은 <strong>연결 탐색이 빨라집니다</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 360" role="img" aria-label="같은 와인 테이블을 RDF는 모든 컬럼을 엣지로 빼서 한 노드에 다섯 개의 선이 매달리고, 프로퍼티 그래프는 탐색할 값만 엣지로 남기고 나머지는 속성으로 노드에 넣는다">
+    <text class="d-label sm" x="360" y="22" text-anchor="middle">같은 와인 데이터, 두 가지 표현</text>
+    <rect class="d-box soft" x="270" y="38" width="180" height="30" rx="7"/><text class="d-label sm" x="360" y="57" text-anchor="middle">RDB 테이블: 와인 · 주종 · 수입사 · 빈티지 · 원산지 · 가격</text>
+
+    <text class="d-label sm" x="180" y="98" text-anchor="middle">RDF — 컬럼을 모두 엣지로</text>
+    <circle class="d-node" cx="180" cy="180" r="26"/><text class="d-label sm" x="180" y="184" text-anchor="middle">와인1</text>
+    <line class="d-edge" x1="158" y1="164" x2="96" y2="132"/><rect class="d-box soft" x="40" y="118" width="60" height="24" rx="6"/><text class="d-sub" x="70" y="134" text-anchor="middle">주종</text>
+    <line class="d-edge" x1="154" y1="180" x2="96" y2="180"/><rect class="d-box soft" x="34" y="168" width="62" height="24" rx="6"/><text class="d-sub" x="65" y="184" text-anchor="middle">수입사</text>
+    <line class="d-edge" x1="158" y1="196" x2="96" y2="228"/><rect class="d-box soft" x="38" y="216" width="62" height="24" rx="6"/><text class="d-sub" x="69" y="232" text-anchor="middle">빈티지</text>
+    <line class="d-edge" x1="202" y1="164" x2="250" y2="136"/><rect class="d-box soft" x="248" y="122" width="62" height="24" rx="6"/><text class="d-sub" x="279" y="138" text-anchor="middle">원산지</text>
+    <line class="d-edge" x1="206" y1="192" x2="250" y2="220"/><rect class="d-box soft" x="248" y="210" width="52" height="24" rx="6"/><text class="d-sub" x="274" y="226" text-anchor="middle">가격</text>
+    <text class="d-sub" x="180" y="284" text-anchor="middle">노드 1개에 엣지 5개 — 늘면 복잡·무거움</text>
+
+    <line class="d-edge dash" x1="360" y1="100" x2="360" y2="300"/>
+
+    <text class="d-label sm" x="545" y="98" text-anchor="middle">프로퍼티 그래프 — 속성은 노드 안에</text>
+    <rect class="d-box accent" x="470" y="150" width="150" height="80" rx="12"/><text class="d-label sm" x="545" y="172" text-anchor="middle">와인1</text><text class="d-sub" x="545" y="192" text-anchor="middle">빈티지=2018</text><text class="d-sub" x="545" y="208" text-anchor="middle">가격=₩</text>
+    <line class="d-edge accent" x1="470" y1="176" x2="410" y2="150"/><rect class="d-box soft" x="352" y="136" width="62" height="24" rx="6"/><text class="d-sub" x="383" y="152" text-anchor="middle">원산지</text>
+    <line class="d-edge accent" x1="470" y1="204" x2="410" y2="230"/><rect class="d-box soft" x="352" y="220" width="62" height="24" rx="6"/><text class="d-sub" x="383" y="236" text-anchor="middle">수입사</text>
+    <line class="d-edge accent" x1="620" y1="190" x2="668" y2="190"/><rect class="d-box soft" x="642" y="150" width="72" height="24" rx="6"/><text class="d-sub" x="678" y="166" text-anchor="middle">프랑스산?</text><text class="d-sub" x="678" y="214" text-anchor="middle">엣지 따라 즉시</text>
+    <text class="d-sub" x="545" y="284" text-anchor="middle">엣지 수 감소 · 연결 탐색에 유리</text>
+</svg>
+<div class="d-cap">차이는 <strong>속성의 위치</strong> — RDF는 전부 엣지로 빼 엄격하지만 무겁고, 프로퍼티 그래프는 <strong>탐색할 것만 엣지</strong>로 남겨 가볍다.</div>
+</div>
+
+<h3>② 왜 프로퍼티 그래프인가 — 조인 대신 연결을 따라간다</h3>
+<p>프로퍼티 그래프의 쓸모는 <strong>관계 탐색</strong>에서 드러납니다. 회의가 든 두 예시:</p>
+<ul>
+    <li><strong>은행 송금</strong> — 계좌 테이블과 송금 테이블이 있을 때, &ldquo;1번 계좌가 833번과 연결돼 있나?&rdquo;를 RDB에서 보려면 송금 내역을 SQL로 <strong>반복 조인</strong>하며 따라가야 합니다. 그래프로는 계좌를 노드, 송금을 엣지로 두면 <strong>경로를 그대로 시각화</strong>해 어떤 계좌를 거쳤는지 직관적으로 보입니다.</li>
+    <li><strong>리테일 주문</strong> — 고객·주문·상품 테이블에서 &ldquo;초콜릿 산 고객이 또 무엇을 샀나?&rdquo;를 물으면 SQL은 여러 번 조인해야 하지만, 그래프는 상품→고객→상품을 <strong>엣지를 따라</strong> 바로 훑습니다.</li>
+</ul>
+<p>공통점은 <strong>&ldquo;연결이 중요한 질문&rdquo;</strong>이라는 것입니다. 회의가 정리한 산업별 쓰임: <strong>금융</strong>(부정 송금·자금 세탁 탐지), <strong>리테일</strong>(구매 패턴 군집·추천), <strong>병원</strong>(유사 환자 이동 경로), <strong>제조</strong>(부품 계층·고장 파급·공급망 영향), <strong>네트워크</strong>(통신·교통·도로망 장애 라우팅, 클라우드 장애의 근본원인 추적). 데이터가 서로 <strong>연결·종속</strong>된 곳이면 어디든 맞습니다.</p>
+
+<h3>③ 온톨로지란 무엇인가 — 넓게 보면 &lsquo;지식의 지도&rsquo;</h3>
+<p>회의에서 상무가 짚은 대목이 이 글의 개념적 중심입니다. <strong>온톨로지</strong>를 어렵게 &ldquo;의미론·OWL 표준&rdquo;으로만 볼 필요가 없다는 것입니다.</p>
+<div class="note">
+    <span class="nh">용어 — 온톨로지(넓은 뜻 vs 좁은 뜻)</span>
+    <strong>좁은 뜻</strong>: <strong>OWL</strong>(Web Ontology Language)이라는 W3C 표준으로 개념의 <strong>문법과 어휘·의미(semantics)</strong>를 형식적으로 정의하고 <strong>추론</strong>까지 하는 체계 — RDF 계열의 엄밀한 온톨로지.<br>
+    <strong>넓은 뜻</strong>: 흩어진 테이블의 <strong>개체와 관계를 이어 놓은 그래프 그 자체</strong>도 &ldquo;지식의 층(레이어)&rdquo;으로 보아 온톨로지라 부른다. 회의의 관점 — &ldquo;팔란티어가 온톨로지라 부르는 것도 실은 이 연결성&rdquo;. <strong>중요한 건 형식 표준보다, 분산된 업무 데이터가 하나의 지식 지도가 된다는 점.</strong>
+</div>
+<p>즉 회의는 <strong>넓은 뜻</strong>을 택합니다. 지금 워크플로우·업무가 대부분 <strong>테이블(엔티티)</strong>로 관리되는데, 그 <strong>엔티티들 사이의 관계(릴레이션십)</strong>를 명시적으로 이어 주면, 테이블 단위로 조각나 있던 것이 <strong>서로 연결해 보는 지식의 지도</strong>가 됩니다. RDF/OWL의 형식적 추론이 필요 없다면, 프로퍼티 그래프만으로도 실용적 &ldquo;지식 레이어&rdquo;를 얻는다는 것이 회의의 결론입니다. (형식 의미론·추론이 꼭 필요한 경우엔 RDF/OWL이 강점 — 두 접근은 배타적이지 않습니다.)</p>
+
+<h3>④ 그래프 만들기 — 데이터 복제 없이 메타데이터로</h3>
+<p>가장 실무적인 대목. 프로퍼티 그래프는 <strong>데이터를 물리적으로 복제하지 않습니다</strong>. 기존 RDB 테이블 위에 <strong>메타데이터만으로 그래프 &lsquo;뷰&rsquo;</strong>를 얹습니다. <code>CREATE PROPERTY GRAPH</code> 문으로,</p>
+<ul>
+    <li><strong>노드가 될 테이블</strong>을 지정하고 키(계좌번호 등)와 필요한 <strong>프로퍼티</strong>를 고른다 (예: 뱅크 어카운트 → 노드, 키=id, 속성=name·balance).</li>
+    <li><strong>관계가 될 테이블</strong>을 <strong>엣지 테이블(회의의 &ldquo;H 테이블&rdquo;)</strong>로 지정하고, 소스 키·목적지 키로 어느 노드에서 어느 노드로 잇는지 정한다 (예: 뱅크 트랜스퍼 → 엣지, source=송금계좌, destination=수취계좌).</li>
+</ul>
+<div class="note warn">
+    <span class="nh">용어 — 엣지 테이블(H 테이블)과 &ldquo;FK가 없어도 된다&rdquo;</span>
+    관계를 담는 별도 테이블을 회의에서 <strong>H 테이블</strong>이라 부릅니다(엣지 테이블). 전통적 RDB라면 테이블 간 관계를 <strong>외래키(FK, Foreign Key)</strong>로 표현하지만, 프로퍼티 그래프의 소스/목적지 키는 <strong>PK–FK 제약이 걸려 있지 않아도 지정할 수 있습니다.</strong> 즉 기존 스키마에 FK가 정리돼 있지 않아도 그래프를 얹을 수 있습니다.
+</div>
+<p>회의의 실전 팁: 엣지(H) 테이블을 손으로 만드는 건 번거롭지만, 테이블 정보와 기존 관계를 주면 <strong>ChatGPT·클로드 같은 AI가 &ldquo;이렇게 만들면 된다&rdquo;고 제안</strong>해 줍니다. 오라클 <strong>Autonomous DB</strong>에서는 스키마(ERD) 정보를 주면 그래프 생성까지 <strong>자동</strong>으로 도와주는 기능도 있습니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 260" role="img" aria-label="RDB의 계좌 테이블은 노드로, 송금 테이블은 엣지 H 테이블로 지정해 CREATE PROPERTY GRAPH 문으로 물리 복제 없이 그래프 뷰를 만든다">
+    <rect class="d-box soft" x="20" y="40" width="150" height="60" rx="9"/><text class="d-label sm" x="95" y="62" text-anchor="middle">뱅크 어카운트</text><text class="d-sub" x="95" y="80" text-anchor="middle">RDB 테이블 · 계좌</text><text class="d-sub" x="95" y="93" text-anchor="middle">키=id, name, balance</text>
+    <rect class="d-box soft" x="20" y="150" width="150" height="60" rx="9"/><text class="d-label sm" x="95" y="172" text-anchor="middle">뱅크 트랜스퍼</text><text class="d-sub" x="95" y="190" text-anchor="middle">RDB 테이블 · 송금</text><text class="d-sub" x="95" y="203" text-anchor="middle">src · dst · amount</text>
+    <line class="d-edge" x1="170" y1="70" x2="214" y2="100"/><polygon class="d-arrow" points="209,94 216,102 207,100"/>
+    <text class="d-sub" x="192" y="66" text-anchor="middle">노드로</text>
+    <line class="d-edge" x1="170" y1="180" x2="214" y2="150"/><polygon class="d-arrow" points="207,150 216,148 209,156"/>
+    <text class="d-sub" x="188" y="200" text-anchor="middle">엣지(H)로</text>
+    <rect class="d-box accent" x="222" y="96" width="196" height="58" rx="11"/><text class="d-label sm" x="320" y="120" text-anchor="middle">CREATE PROPERTY GRAPH</text><text class="d-sub" x="320" y="140" text-anchor="middle">메타데이터만 — 데이터 복제 없음</text>
+    <line class="d-edge accent" x1="418" y1="125" x2="462" y2="125"/><polygon class="d-arrow accent" points="462,120 470,125 462,130"/>
+    <rect class="d-box accent" x="470" y="88" width="230" height="74" rx="12"/><text class="d-label" x="585" y="116" text-anchor="middle">프로퍼티 그래프 뷰</text><text class="d-sub" x="585" y="136" text-anchor="middle">계좌=노드 · 송금=엣지</text><text class="d-sub" x="585" y="150" text-anchor="middle">FK 없어도 src/dst 키로 연결</text>
+    <text class="d-sub" x="320" y="196" text-anchor="middle">엣지 테이블(H) 작성은 AI가 제안 · ADB는 ERD로 자동 생성</text>
+    <text class="d-sub" x="585" y="196" text-anchor="middle">RDF와 같은 원리 — 물리 데이터가 아닌 뷰</text>
+</svg>
+<div class="d-cap">그래프는 <strong>새 저장소가 아니라 기존 테이블 위의 뷰</strong> — 노드 테이블 + 엣지(H) 테이블을 지정하면 끝.</div>
+</div>
+
+<h3>⑤ 그래프 질의 — PGQL과 SQL/PGQ, 그리고 &lsquo;홉&rsquo;</h3>
+<p>만든 그래프에 질문을 던지는 언어가 둘입니다. 둘 다 <strong>SQL 기반</strong>이라 <code>SELECT</code>·<code>WHERE</code>는 그대로 쓰고, <strong>그래프 패턴은 <code>MATCH</code> 절</strong>에 적습니다.</p>
+<div class="note">
+    <span class="nh">용어 — PGQL · SQL/PGQ · 홉(hop)</span>
+    <strong>PGQL</strong>(Property Graph Query Language): 오라클이 참여해 만든 오픈 그래프 질의 언어. 그래프 분석 엔진(PGX)에서 알고리즘을 돌릴 때 강점.<br>
+    <strong>SQL/PGQ</strong>: <strong>ISO SQL:2023 표준</strong>(Part 16)에 편입된 그래프 질의 기능. <code>GRAPH_TABLE(...)</code> 연산자 + <code>MATCH</code> 패턴을 씁니다. <strong>SQL 엔진에서 바로 돌아 더 빠릅니다.</strong><br>
+    <strong>패턴 표기</strong>: 노드는 <code>(소괄호)</code>, 관계는 <code>[대괄호]</code>, 방향 있으면 <code>-&gt;</code> 없으면 <code>-</code>.<br>
+    <strong>홉(hop)</strong>: 관계를 한 번 건너뛰는 것. <code>{1,3}</code>은 &ldquo;1~3번까지 거쳐서라도 연결된&rdquo; 경로 — 중간 계정을 몇 단계 거친 송금까지 찾습니다.
+</div>
+<p>이 &lsquo;홉&rsquo; 덕분에 <strong>복잡한 연결 분석</strong>이 한 줄로 표현됩니다. 회의가 든 세 가지 금융 질의:</p>
+<ul>
+    <li><strong>직접 송금</strong> — 한 번이라도 이체한 계좌 반환 (소스→목적지 1홉).</li>
+    <li><strong>다단계 송금</strong> — <code>{1,3}</code>홉: 중간 계정을 1~3단계 거쳐 이체된 경로까지. <strong>자금 세탁</strong> 탐지에 사용.</li>
+    <li><strong>순환(루프) 탐지</strong> — 시작과 끝이 같은 계정(예: 5홉 뒤 나에게 되돌아온 돈). 세탁 고리 탐지의 핵심.</li>
+</ul>
+<p>같은 질의를 전통 SQL로 쓰면 <strong>수많은 조인과 유니온</strong>으로 커지지만, SQL/PGQ는 <code>MATCH</code> 한 줄이면 됩니다 — 이것이 그래프 쿼리의 핵심 가치(복잡한 연결을 간결·직관적으로).</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="계좌 그래프에서 1홉 직접 송금, 1에서 3홉 다단계 송금 자금세탁, 그리고 시작과 끝이 같은 순환 루프 탐지를 보여준다">
+    <text class="d-label sm" x="120" y="26" text-anchor="middle">1홉 — 직접 송금</text>
+    <circle class="d-node" cx="50" cy="90" r="20"/><text class="d-sub" x="50" y="94" text-anchor="middle">A1</text>
+    <line class="d-edge accent" x1="70" y1="90" x2="168" y2="90"/><polygon class="d-arrow accent" points="168,85 178,90 168,95"/>
+    <circle class="d-node" cx="198" cy="90" r="20"/><text class="d-sub" x="198" y="94" text-anchor="middle">A2</text>
+    <text class="d-sub" x="120" y="140" text-anchor="middle">MATCH (a)-[t]-&gt;(b)</text>
+
+    <line class="d-edge dash" x1="252" y1="30" x2="252" y2="210"/>
+
+    <text class="d-label sm" x="360" y="26" text-anchor="middle">{1,3}홉 — 다단계 · 자금세탁</text>
+    <circle class="d-node" cx="292" cy="90" r="18"/><text class="d-sub" x="292" y="94" text-anchor="middle">A1</text>
+    <line class="d-edge accent" x1="310" y1="90" x2="336" y2="90"/><polygon class="d-arrow accent" points="336,86 344,90 336,94"/>
+    <circle class="d-node" cx="362" cy="90" r="18"/><text class="d-sub" x="362" y="94" text-anchor="middle">중간</text>
+    <line class="d-edge accent" x1="380" y1="90" x2="406" y2="90"/><polygon class="d-arrow accent" points="406,86 414,90 406,94"/>
+    <circle class="d-node" cx="432" cy="90" r="18"/><text class="d-sub" x="432" y="94" text-anchor="middle">A9</text>
+    <text class="d-sub" x="360" y="140" text-anchor="middle">MATCH (a)-[t]-&gt;{1,3}(b)</text>
+
+    <line class="d-edge dash" x1="486" y1="30" x2="486" y2="210"/>
+
+    <text class="d-label sm" x="605" y="26" text-anchor="middle">순환 — 루프 탐지</text>
+    <circle class="d-node" cx="605" cy="70" r="18"/><text class="d-sub" x="605" y="74" text-anchor="middle">A1</text>
+    <circle class="d-node" cx="545" cy="140" r="16"/><circle class="d-node" cx="665" cy="140" r="16"/>
+    <line class="d-edge accent" x1="592" y1="83" x2="556" y2="126"/><polygon class="d-arrow accent" points="553,120 555,130 561,124"/>
+    <line class="d-edge accent" x1="559" y1="148" x2="651" y2="148"/><polygon class="d-arrow accent" points="651,143 660,148 651,153"/>
+    <line class="d-edge accent" x1="656" y1="127" x2="617" y2="84"/><polygon class="d-arrow accent" points="622,84 614,80 620,90"/>
+    <text class="d-sub" x="605" y="186" text-anchor="middle">시작=끝 계정 (5홉 뒤 복귀)</text>
+    <text class="d-sub" x="360" y="232" text-anchor="middle">전통 SQL이면 수많은 조인·유니온 → SQL/PGQ는 MATCH 한 줄</text>
+</svg>
+<div class="d-cap">홉 표기 하나로 <strong>직접→다단계→순환</strong> 분석이 열린다 — 자금 세탁 탐지가 대표 사례.</div>
+</div>
+
+<h3>⑥ 그래프 알고리즘 — 80여 종의 내장 분석</h3>
+<p>그래프는 &ldquo;찾기&rdquo;를 넘어 &ldquo;분석&rdquo;으로 갑니다. 오라클 DB에는 <strong>80여 개의 그래프 알고리즘</strong>이 내장돼 유명한 것은 거의 지원합니다. 회의가 든 네 갈래:</p>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>갈래</th><th>무엇을 찾나</th><th>쓰임</th></tr></thead>
+    <tbody>
+        <tr><td><strong>커뮤니티 탐지</strong></td><td>밀접하게 연결된 그룹(군집)</td><td>리테일 유사 구매 고객 군집화</td></tr>
+        <tr><td><strong>중심성(centrality)</strong></td><td>네트워크의 핵심·영향력 노드</td><td>인플루언서·허브 계좌 식별</td></tr>
+        <tr><td><strong>구조 식별</strong></td><td>반복되는 패턴</td><td>사기 거래·자금 세탁 패턴 탐지</td></tr>
+        <tr><td><strong>경로 찾기</strong></td><td>두 노드 사이 연결 경로</td><td>자금 추적·최단 경로</td></tr>
+    </tbody>
+</table></div>
+<p>단순 연결을 넘어 <strong>패턴 속 숨은 인사이트</strong>를 끌어내는 것이 프로퍼티 그래프의 가장 큰 값입니다. 다만 알고리즘 분석(특히 대용량)은 인메모리 <strong>그래프 서버(PGX)</strong>를 별도로 올려 병렬로 돌리므로, 단순 조회보다 시간이 더 걸립니다.</p>
+
+<h3>⑦ Select AI — 자연어로 그래프를 묻는다</h3>
+<p>회의에서 상무가 가장 강조한 방향: 사용자가 PGQL·SQL/PGQ를 <strong>직접 짜지 말고, AI가 자동 생성</strong>하게 하자. 오라클 <strong>Select AI</strong>가 이를 DB에 내장으로 제공합니다. 자연어를 그래프 질의로 바꿔 주는데, 핵심은 <strong>메타데이터</strong>입니다.</p>
+<div class="note">
+    <span class="nh">용어 — Select AI · AI 프로파일</span>
+    <strong>Select AI</strong>: <code>SELECT AI &lt;자연어&gt;</code>처럼 자연어를 넣으면 DB가 SQL(테이블) 또는 SQL/PGQ(그래프)로 바꿔 실행하는 기능.<br>
+    <strong>AI 프로파일</strong>: 오라클은 자체 LLM을 제공하지 않으므로, 어떤 <strong>모델</strong>을 쓸지와 <strong>어떤 스키마·객체</strong>를 대상으로 할지를 프로파일에 등록합니다. 질의 시 그 객체의 메타데이터(테이블은 DDL, 그래프는 <code>CREATE PROPERTY GRAPH</code> 문)가 <strong>자동으로 LLM에 전달</strong>돼 정확한 쿼리를 만듭니다.
+</div>
+<p>동작은 <strong>자연어 → (AI 프로파일: 모델+대상 메타데이터) → LLM이 GRAPH_TABLE 쿼리 생성 → SQL 엔진 실행 → 결과</strong> 순입니다. 지원 동작(action): <strong>runsql</strong>(바로 실행)·<strong>showsql</strong>(생성된 쿼리 보기)·<strong>explainsql</strong>(왜 그렇게 됐는지)·<strong>narrate</strong>(결과를 말로 풀이)·<strong>showprompt</strong>(LLM에 실제 간 프롬프트 — 여기에 <code>CREATE PROPERTY GRAPH</code> 문이 그대로 담겨 감).</p>
+<div class="note warn">
+    <span class="nh">회의 시점의 제약</span>
+    자연어 생성은 <strong>SQL/PGQ만 지원</strong>(PGQL은 대상 아님) → 이 점도 SQL/PGQ로 가는 이유. 합성(가짜) 테스트 데이터 생성이나 그래프+테이블을 <strong>한 쿼리로 합치는 것</strong>은 회의 시점엔 미지원. 자연어가 좋은 쿼리를 내려면 테이블·컬럼에 <strong>코멘트(설명)</strong>가 달려 있어야 하고, 한글·동의어 대응은 <strong>디스크립션 프로퍼티</strong>와 <strong>AI 에이전트</strong>로 보완합니다. (기능은 빠르게 갱신 중 — 회의 시점 스냅샷.)
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 720 240" role="img" aria-label="Select AI 파이프라인: 자연어 질문이 AI 프로파일을 통해 대상 그래프 메타데이터와 함께 LLM에 전달되고, LLM이 GRAPH_TABLE SQL/PGQ 쿼리를 생성해 SQL 엔진이 실행하고 결과를 narrate로 풀이한다">
+    <rect class="d-box soft" x="14" y="94" width="120" height="52" rx="9"/><text class="d-label sm" x="74" y="116" text-anchor="middle">자연어 질문</text><text class="d-sub" x="74" y="134" text-anchor="middle">&ldquo;1→330 연결됐나&rdquo;</text>
+    <line class="d-edge accent" x1="134" y1="120" x2="164" y2="120"/><polygon class="d-arrow accent" points="164,115 172,120 164,125"/>
+    <rect class="d-box accent" x="172" y="80" width="140" height="80" rx="11"/><text class="d-label sm" x="242" y="104" text-anchor="middle">AI 프로파일</text><text class="d-sub" x="242" y="124" text-anchor="middle">모델 지정 +</text><text class="d-sub" x="242" y="138" text-anchor="middle">대상 그래프 메타데이터</text>
+    <line class="d-edge accent" x1="242" y1="80" x2="242" y2="52"/><polygon class="d-arrow accent" points="238,58 242,50 246,58"/>
+    <rect class="d-box soft" x="176" y="20" width="132" height="30" rx="7"/><text class="d-sub" x="242" y="39" text-anchor="middle">CREATE PROPERTY GRAPH 문</text>
+    <line class="d-edge accent" x1="312" y1="120" x2="342" y2="120"/><polygon class="d-arrow accent" points="342,115 350,120 342,125"/>
+    <rect class="d-box" x="350" y="94" width="110" height="52" rx="9"/><text class="d-label sm" x="405" y="116" text-anchor="middle">LLM</text><text class="d-sub" x="405" y="134" text-anchor="middle">쿼리 생성</text>
+    <line class="d-edge accent" x1="460" y1="120" x2="490" y2="120"/><polygon class="d-arrow accent" points="490,115 498,120 490,125"/>
+    <rect class="d-box" x="498" y="94" width="122" height="52" rx="9"/><text class="d-label sm" x="559" y="112" text-anchor="middle">GRAPH_TABLE</text><text class="d-sub" x="559" y="132" text-anchor="middle">SQL/PGQ · SQL 엔진</text>
+    <line class="d-edge accent" x1="620" y1="120" x2="650" y2="120"/><polygon class="d-arrow accent" points="650,115 658,120 650,125"/>
+    <rect class="d-box soft" x="658" y="94" width="54" height="52" rx="9"/><text class="d-label sm" x="685" y="116" text-anchor="middle">결과</text><text class="d-sub" x="685" y="134" text-anchor="middle">narrate</text>
+    <text class="d-sub" x="360" y="196" text-anchor="middle">action: runsql · showsql · explainsql · narrate · showprompt</text>
+    <text class="d-sub" x="360" y="216" text-anchor="middle">자연어 생성은 SQL/PGQ만 — 대상 메타데이터(코멘트·디스크립션)가 정확도를 좌우</text>
+</svg>
+<div class="d-cap">사용자는 자연어만 던지고, <strong>메타데이터를 실은 LLM</strong>이 그래프 쿼리를 대신 짠다 — 정확도의 열쇠는 &ldquo;설명이 달린 스키마&rdquo;.</div>
+</div>
+
+<h3>⑧ 도구와 에디션 — 무엇을 언제 쓰나</h3>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>도구</th><th>무엇</th><th>조건</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Graph Server &amp; Client</strong></td><td>인메모리 그래프 질의·분석 엔진(PGX) + 시각화·CLI</td><td>DB <strong>12.2+</strong>에서 <strong>추가 라이선스 없이</strong> 기본 제공</td></tr>
+        <tr><td><strong>Enterprise Edition</strong></td><td>병렬 아키텍처(대용량 알고리즘 분석)</td><td>병렬 처리는 <strong>EE 이상</strong> 필요(SE 불가)</td></tr>
+        <tr><td><strong>Graph Studio</strong></td><td>노트북·자동 모델링·시각화 통합 환경</td><td>Autonomous DB(클라우드)에서 프로비저닝하면 즉시</td></tr>
+    </tbody>
+</table></div>
+<p>회의의 실무 결론: 당장은 <strong>코어(그래프를 만들고 자연어로 질의)</strong>에 집중하고, 시각화·고급 알고리즘·클라우드(ADB)는 필요할 때 확장. PoC는 &ldquo;기능을 먼저 보여주는 1단계 → 실제 업무로 함께 해보는 2단계(파트너 참여 검토)&rdquo;로 단계화하되, <strong>제일 먼저 &ldquo;풀려는 업무&rdquo;를 이해하는 미팅</strong>이 선행돼야 한다는 데 합의했습니다.</p>
+
+<h3>용어 사전</h3>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>용어</th><th>뜻</th></tr></thead>
+    <tbody>
+        <tr><td><strong>RDF · 트리플</strong></td><td>모든 사실을 주어–서술어–목적어 3조각으로 엄격히 표현하는 표준. 규칙·어휘 정의에 강함.</td></tr>
+        <tr><td><strong>프로퍼티 그래프</strong></td><td>노드·엣지·프로퍼티로 데이터를 표현하는 유연한 그래프 모델. 연결 탐색에 강함.</td></tr>
+        <tr><td><strong>노드 · 버텍스</strong></td><td>개체(사람·사물·사건). 같은 뜻의 두 이름.</td></tr>
+        <tr><td><strong>엣지</strong></td><td>노드와 노드를 잇는 관계. 방향이 있을 수도 없을 수도.</td></tr>
+        <tr><td><strong>프로퍼티</strong></td><td>노드·엣지에 붙는 속성(키–값). 있어도 없어도 됨.</td></tr>
+        <tr><td><strong>라벨</strong></td><td>노드·엣지에 붙이는 이름표(유형).</td></tr>
+        <tr><td><strong>온톨로지</strong></td><td>(좁게) OWL로 개념의 의미·추론을 형식화. (넓게) 개체·관계를 이은 지식의 지도 그 자체.</td></tr>
+        <tr><td><strong>OWL</strong></td><td>Web Ontology Language. RDF 위에서 형식 의미론과 추론을 제공하는 W3C 표준.</td></tr>
+        <tr><td><strong>엣지 테이블(H 테이블)</strong></td><td>관계를 담는 별도 테이블. 그래프의 엣지가 됨. PK–FK 제약이 없어도 지정 가능.</td></tr>
+        <tr><td><strong>PGQL</strong></td><td>오라클이 참여한 SQL 기반 그래프 질의 언어. 분석 엔진(PGX)에 강점.</td></tr>
+        <tr><td><strong>SQL/PGQ</strong></td><td>ISO SQL:2023 표준의 그래프 질의. GRAPH_TABLE+MATCH. SQL 엔진에서 바로 실행(빠름).</td></tr>
+        <tr><td><strong>GRAPH_TABLE</strong></td><td>그래프 패턴 매칭 결과를 관계형 테이블처럼 돌려주는 SQL/PGQ 연산자.</td></tr>
+        <tr><td><strong>MATCH</strong></td><td>찾을 그래프 패턴을 적는 절. 노드 (), 관계 [], 방향 -&gt;.</td></tr>
+        <tr><td><strong>홉(hop)</strong></td><td>관계를 한 번 건너뜀. {1,3}=1~3단계까지 이어진 경로.</td></tr>
+        <tr><td><strong>그래프 알고리즘</strong></td><td>커뮤니티 탐지·중심성·구조 식별·경로 찾기 등 80여 종 내장.</td></tr>
+        <tr><td><strong>Graph Server(PGX)</strong></td><td>인메모리 병렬 그래프 분석 엔진. 대용량 알고리즘용.</td></tr>
+        <tr><td><strong>Select AI · AI 프로파일</strong></td><td>자연어를 SQL/PGQ로 변환. 프로파일에 모델+대상 스키마를 등록해 메타데이터를 LLM에 전달.</td></tr>
+    </tbody>
+</table></div>
+
+<h3>정리 — 세 문장으로</h3>
+<ul>
+    <li><strong>프로퍼티 그래프</strong>는 흩어진 테이블을 개체·관계로 이어 &ldquo;지식의 지도&rdquo;(넓은 뜻의 온톨로지)를 만들되, 데이터를 복제하지 않고 <strong>메타데이터 뷰</strong>로 얹는다.</li>
+    <li>연결이 중요한 질문(자금 세탁·추천·장애 추적)은 SQL 조인 대신 <strong><code>MATCH</code>와 홉</strong> 한 줄로 — <strong>SQL/PGQ</strong>가 표준이자 빠른 길이다.</li>
+    <li>쿼리는 손으로 짜지 말고 <strong>Select AI</strong>로 자연어에서 생성 — 열쇠는 &ldquo;<strong>설명이 달린 메타데이터</strong>&rdquo;다.</li>
+</ul>
+
+<h3>출처</h3>
+<p class="scn-sub"><strong>오라클 공식 · 표준</strong></p>
+<ul>
+    <li>Oracle, &ldquo;Property Graphs in Oracle Database 23ai: The SQL/PGQ Standard&rdquo; — <a href="https://blogs.oracle.com/database/property-graphs-in-oracle-database-23ai-the-sql-pgq-standard" target="_blank" rel="noopener">blogs.oracle.com</a></li>
+    <li>Oracle, &ldquo;Discover connections with SQL Property Graphs in Oracle Autonomous Database&rdquo; — <a href="https://blogs.oracle.com/database/sql-property-graphs-in-oracle-autonomous-database" target="_blank" rel="noopener">blogs.oracle.com</a></li>
+    <li>ISO SQL:2023 · SQL/PGQ(Part 16), GRAPH_TABLE·MATCH — ORACLE-BASE 정리 — <a href="https://oracle-base.com/articles/23/sql-property-graphs-and-sql-pgq-23" target="_blank" rel="noopener">oracle-base.com</a></li>
+    <li>PGQL 언어·명세 — <a href="https://pgql-lang.org/" target="_blank" rel="noopener">pgql-lang.org</a> · <a href="https://github.com/oracle/pgql-lang" target="_blank" rel="noopener">github.com/oracle/pgql-lang</a></li>
+    <li>Oracle Graph Server &amp; Client(PGX), 80+ 알고리즘·병렬 — <a href="https://www.oracle.com/database/technologies/spatialandgraph/property-graph-features/graph-server-and-client.html" target="_blank" rel="noopener">oracle.com</a></li>
+    <li>Graph Studio(Autonomous DB) 소개 — <a href="https://blogs.oracle.com/database/introducing-graph-studio-with-oracle-autonomous-database" target="_blank" rel="noopener">blogs.oracle.com</a></li>
+    <li>Select AI for Property Graphs(자연어→PGQ, GRAPH_TABLE) — <a href="https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/graph-autonomous-database.html" target="_blank" rel="noopener">docs.oracle.com</a></li>
+</ul>
+<p class="scn-sub"><strong>RDF vs 프로퍼티 그래프 · 온톨로지 배경</strong></p>
+<ul>
+    <li>Neo4j, &ldquo;RDF triple stores vs. property graphs&rdquo; — <a href="https://neo4j.com/blog/knowledge-graph/rdf-vs-property-graphs-knowledge-graphs/" target="_blank" rel="noopener">neo4j.com</a></li>
+    <li>Atlan, &ldquo;Ontology vs Knowledge Graph&rdquo; — <a href="https://atlan.com/know/ai-agent/knowledge-graph/ontology-vs-knowledge-graph/" target="_blank" rel="noopener">atlan.com</a></li>
+</ul>
+<p class="scn-sub"><strong>이 위키의 연관 문서</strong> — <a href="#!sb-level4">세컨드 브레인 레벨 4 · 지식 그래프</a> · <a href="#!dzp-core">Douzone 지식 플랫폼 제안</a> · <a href="#!dzp-architecture">플랫폼 아키텍처</a></p>
+
+<div class="note">
+    <span class="nh">이 문서의 태도</span>
+    오라클 그래프 기술(SQL/PGQ·PGQL·PGX·Graph Studio·Select AI)은 <strong>공식 문서·표준으로 실재를 확인</strong>했습니다. 반면 회의에서 언급된 <strong>제약·기능 범위(합성 데이터·그래프+테이블 병합 미지원 등)</strong>는 <strong>회의 시점의 스냅샷</strong>이며, Select AI 등은 빠르게 갱신되므로 실제 도입 시 최신 문서로 재확인이 필요합니다. 특정 PoC 수치·업무 적용은 해당 팀 맥락에서 읽어야 합니다.
+</div>
