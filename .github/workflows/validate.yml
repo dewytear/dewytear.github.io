@@ -20,6 +20,9 @@ jobs:
         with:
           python-version: "3.11"
       - run: python tools/validate_all.py
+      # 동봉 플러그인 tools 스냅샷이 source of truth(tools/)와 어긋나면 실패
+      # (push·PR 양쪽 — stateless 정합 검사라 base diff 불필요)
+      - run: python tools/check_plugin_sync.py
       # 본문을 바꾸는 PR은 Work Log 신규 문서를 동반해야 한다 (CLAUDE.md 규칙 4)
       - if: github.event_name == 'pull_request'
         run: python tools/check_worklog.py --base "origin/${{ github.base_ref }}"
