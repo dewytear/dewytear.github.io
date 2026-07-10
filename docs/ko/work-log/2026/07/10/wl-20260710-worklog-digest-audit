@@ -90,3 +90,13 @@
     <li><strong>검증</strong>: 현재 15파일 in sync → OK(exit 0). 네거티브 — 번들 파일 1줄 변경 → <code>drift</code> exit 1, 번들 파일 삭제 → <code>missing-in-bundle</code> exit 1 확인 후 복구. README 동기화 정책에 "CI가 기계적으로 강제" 명시.</li>
     <li>프로즈(스킬/README의 schemaVersion·연관 규칙 문구 등)의 의미적 드리프트는 기계 diff 불가라 게이트 밖 — 규율로 유지(도그푸딩 후 동기화 검토 결론).</li>
 </ul>
+
+<h3>[플러그인] 설계 검토 — 동기화·구조 진단 5건과 조치</h3>
+<p>"위키를 플러그인으로 제공하기 위한 자동 동기화·구조 설계가 온전한가"를 전수 점검했다. <strong>건전한 것</strong>: 스킬 격리(<code>${CLAUDE_PLUGIN_ROOT}</code>만 참조), 엔진/콘텐츠 분리(본문·Work Log·list·data·doc-entries는 번들에 없음 — EXCLUDE로 명문화), 동기화는 "자동 복사"가 아닌 <strong>"어긋나면 머지 불가"</strong> CI 게이트(리뷰 없는 번들 변경 방지), 계약 동결(schema.md 동봉), 프로젝트 tools/ 우선 규칙.</p>
+<ul>
+    <li><strong>G1 뷰어 미동봉(최대 갭)</strong>: wiki-init 뼈대 도식에 index.html이 있지만 플러그인은 SPA 셸을 번들하지도 생성하지도 않아, 다운스트림은 <strong>데이터 파이프라인만 있는 "머리 없는" 위키</strong>를 얻는다. → SKILL.md에 정직하게 명시(뷰어는 레퍼런스 저장소에서 복사 또는 데이터 전용 운영), 템플릿화는 Backlog.</li>
+    <li><strong>G2 릴리스 규율 부재 → 게이트 신설</strong>: 번들은 진화하는데 <code>plugin.json</code>이 0.1.0 고정 — 설치 사용자가 낡음을 알 수 없음. <code>check_plugin_sync.py --base</code> 모드 추가: PR에서 <code>plugins/wiki-plugin/**</code> 변경 시 version 상향을 요구(cachebuster와 동일 사상 "번들 갱신 = 버전 상향"). CI PR 스텝에 <code>--base</code> 전달, push는 종전 정합 검사만. 네거티브(버전 미상향 커밋 → exit 1)·포지티브 실측. 이번 PR이 첫 준수 사례(0.1.0→0.2.0).</li>
+    <li><strong>G3 마켓=위키 통짜 저장소</strong>: 마켓 추가가 위키 전체(현 2.7M+.git 2.2M)를 클론해 200K 플러그인을 얻는 구조. 지금은 무해, 콘텐츠 성장 시 설치 비용 비례 증가 → Backlog(트리거: 저장소 50MB↑ 또는 외부 공개).</li>
+    <li><strong>G4 CLUSTER_LABELS 하드코딩</strong>: 기존 Backlog 항목 유지.</li>
+    <li><strong>G5 다운스트림 CI 함정</strong>: <code>check_worklog</code>(base diff)·<code>build_dates</code>(git 이력)는 shallow clone에서 오동작 — wiki-init CI 단계에 <strong><code>fetch-depth: 0</code> 필수</strong> 명시 추가.</li>
+</ul>
