@@ -81,3 +81,12 @@
     <li><strong>노트 — build_dates 클론 민감성</strong>: <code>build_dates.py</code>를 이 컨테이너(신규 클론)에서 돌리면 생성일(<code>c</code>)이 최초 커밋 시각을 따라 흔들린다(07-07→07-08). 실 위키는 안정된 CI 이력에서 PR 시점 재생성하므로 정상 — 여기선 재생성분을 <code>git restore</code>로 되돌려 쓰기 0 유지.</li>
     <li><strong>정상 동작 확인</strong>: <code>index</code>(<code>build_index --check</code> 결정적 일치, related 계산: 스크래치 hello↔why-wiki 공유개념 <code>세컨드브레인·위키</code> 양방향 엣지) · <code>validate</code>(실 위키 <code>validate_all</code> ERROR 0, 게이트 동작) · <code>add-doc</code>(파일→list→doc-entries→인덱스→Work Log→검증 전체 라이프사이클 ERROR 0) · <code>wiki-init</code>(발견② 반영 후 "빈 폴더→동작 위키" 성립, 동봉 도식 게이트까지 구동). 스크래치 삭제 후 실 저장소 <code>git status</code>는 Phase 의도 변경(플러그인 5파일)만 — 실행 흔적 0.</li>
 </ul>
+
+<h3>스냅샷 드리프트 재발 방지 게이트 — <code>check_plugin_sync.py</code></h3>
+<p>위 도그푸딩에서 스냅샷이 <strong>조용히</strong> 190줄 드리프트한 걸 실측했으므로("규칙은 게이트로" 원칙), 프로즈 동기화 규칙을 <strong>기계적 CI 게이트</strong>로 굳혔다. 동봉 스냅샷은 순수 바이트 복사본이라 diff 판정이 <strong>오탐 0</strong>이다.</p>
+<ul>
+    <li><strong>게이트</strong>: <code>tools/check_plugin_sync.py</code> — 루트 <code>tools/</code>의 번들 대상 파일을 <code>plugins/wiki-plugin/tools/</code> 동명 파일과 바이트 비교. <code>drift</code>(내용 상이)·<code>missing-in-bundle</code>(복사 누락)·<code>orphan-in-bundle</code>(원본 없는 번들 파일) 셋 중 하나라도 있으면 exit 1. 번들 제외(EXCLUDE): 위키별 콘텐츠 <code>doc-entries.*.json</code>·<code>__pycache__</code>·게이트 자신.</li>
+    <li><strong>CI</strong>: <code>validate.yml</code>의 <code>validate-all</code> 잡에 스텝 추가. base diff가 필요 없는 stateless 정합 검사라 <strong>push·PR 양쪽 무조건</strong> 실행(worklog·cachebuster 게이트는 PR 전용).</li>
+    <li><strong>검증</strong>: 현재 15파일 in sync → OK(exit 0). 네거티브 — 번들 파일 1줄 변경 → <code>drift</code> exit 1, 번들 파일 삭제 → <code>missing-in-bundle</code> exit 1 확인 후 복구. README 동기화 정책에 "CI가 기계적으로 강제" 명시.</li>
+    <li>프로즈(스킬/README의 schemaVersion·연관 규칙 문구 등)의 의미적 드리프트는 기계 diff 불가라 게이트 밖 — 규율로 유지(도그푸딩 후 동기화 검토 결론).</li>
+</ul>
