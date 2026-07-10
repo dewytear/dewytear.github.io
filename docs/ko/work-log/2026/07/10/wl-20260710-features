@@ -18,4 +18,14 @@
     ① <code>#search-input</code> 포커스 상태에서 W·A·S·D 실제 키이벤트 → 값 &ldquo;wasd&rdquo; 입력됨(수정 전 &ldquo;&rdquo;). ② 보드에 마우스 프레스→무브→릴리스(&gt;24px) → 보드 타일 변화(이동 성립). ③ 필드 미포커스 시 WASD로 게임 이동 무회귀. <code>games.js</code> 수정이라 <code>index.html</code>의 <code>?v</code> 상향(1→2, 캐시버스터 규칙).
 </div>
 
+<h3>&ldquo;새 글&rdquo;·&ldquo;최근 문서&rdquo; 정렬을 수정일 대신 생성일 기준으로 통일</h3>
+<ul>
+    <li>증상: <code>#!new</code>(새 글 모아보기)·본문 하단 &ldquo;최근 문서&rdquo; 보드가 실제로는 <strong>수정일(<code>doc-dates.json</code>의 <code>u</code>)</strong> 기준으로 정렬되고 있었다 — <code>#!new</code> 코드 주석은 &ldquo;생성일 내림차순&rdquo;이라고 적혀 있었는데 실제 구현은 달랐다(주석-구현 불일치). 그 결과 오래된 문서라도 최근에 살짝 고쳐지면 새 글처럼 상단에 뜰 수 있었다.</li>
+    <li>수정: <code>applyDocDates()</code>에서 <code>d.date = rec.u</code> → <code>d.date = rec.c</code>(생성일)로 변경. 두 보드 모두 <code>d.date</code> 하나로 정렬·날짜 표시를 겸하므로, 이 한 곳을 고치면 정렬 기준과 옆에 찍히는 날짜(&ldquo;· YYYY-MM-DD&rdquo;)가 함께 생성일로 맞춰진다. 개별 문서 페이지의 생성일 표시(<code>injectDocDate</code>, <code>UPDATED_DATE_DOCS</code> 예외 목록)는 이번 변경과 무관 — 그대로 유지.</li>
+</ul>
+<div class="note">
+    <span class="nh">검증</span>
+    <code>data/doc-dates.json</code>에서 <code>c</code>(생성)·<code>u</code>(수정) 필드가 서로 다른 표본(예: <code>ai-map</code>)으로 확인 — 변경 전에는 이런 문서가 최근 수정만으로 보드 상단에 노출됐고, 변경 후에는 실제 생성일 순서로만 정렬됨. <code>d.date</code>를 참조하는 곳은 정렬 비교식과 두 보드의 날짜 표시 두 곳뿐이라 부작용 없음. <code>app.js</code> 수정이라 <code>index.html</code>의 <code>?v</code> 상향(16→17, 캐시버스터 규칙).
+</div>
+
 <p class="scn-sub"><code>validate_routes</code>의 <code>worklog-day-split</code> WARN(10일 로그 5개)은 보정하지 않는다 — 오늘치 5개는 각각 다른 주제(콘텐츠·날짜집계·운영감사·표디자인·입력기능)라 과분할이 아니며, 억지 병합은 주제 정합을 오히려 해친다. WARN은 병합 &ldquo;검토&rdquo; 신호일 뿐이다.</p>

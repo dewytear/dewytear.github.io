@@ -806,7 +806,7 @@ function scrollFolderDoc(i){
 
 
 // ---- "Recent docs" module: paginated board ----
-// Ordered by each doc's updated date from data/doc-dates.json (built at
+// Ordered by each doc's created date from data/doc-dates.json (built at
 // PR time from git history — see tools/build_dates.py). Until dates
 // arrive, list order shows.
 var MORE_PAGE_SIZE = 5;
@@ -987,7 +987,7 @@ function applyDocDates(dd){
     DOC_DATES = dates;   // 새 글 판정이 재사용
     DOCS.forEach(function(d){
         var rec = dates[d.name];
-        d.date = rec ? rec.u : '';
+        d.date = rec ? rec.c : '';
     });
     DOCS.sort(function(a, b){
         return a.date < b.date ? 1 : a.date > b.date ? -1 : 0;
