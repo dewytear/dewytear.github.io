@@ -12,3 +12,11 @@
     <span class="nh">검증 (CDP, 375px 모바일 뷰포트)</span>
     타릭 기사 표 5개 전부 <code>.tbl-wrap</code> 안에서 가로 스크롤(잘림 없음), 페이지 자체 가로 넘침 없음. 맨 table을 <code>setArticle</code>로 주입해 자동 래핑 동작 확인. <code>validate_all</code> ERROR 0.
 </div>
+
+<h3>도식 노드 안 글자 시인성 — <code>.d-node-label</code> 신설</h3>
+<p>오라클 온톨로지 아티클 &lsquo;홉&rsquo; 도식(③)에서 <strong>노드(<code>.d-node</code>) 안의 글자(A1·중간·A9…)가 <code>.d-sub</code>(muted 회색)</strong>이라, 밝은 노드 채움(다크=teal <code>#4db6ac</code>, 낮=orange <code>#ff6600</code>) 위에서 대비가 약했다 — 특히 <strong>다크 테마</strong>에서 muted 회색이 teal에 묻혀 거의 안 보였다(대비비 ≈1.2).</p>
+<ul>
+    <li><strong>원인</strong>: <code>.d-label</code>·<code>.d-sub</code>는 <strong>어두운 캔버스</strong>용(밝은/회색 글자)이라 노드 <em>위</em> 글자에는 부적합. 첫 도식의 &lsquo;와인1&rsquo;은 <code>.d-label sm</code>(다크 테마 near-white)이라 그나마 나았지만 teal 위 흰 글자도 대비가 낮았다.</li>
+    <li><strong>수정</strong>: 노드 위 글자 전용 <code>.diagram .d-node-label</code> 신설 — 밝은 노드에 대비되도록 <strong>어둡고 굵게</strong>(다크 <code>#0f1c1a</code>, 낮 <code>#3a1900</code>, weight 700). teal·orange 모두에서 대비비 5~8로 또렷. 홉 도식의 노드 라벨 5개와 첫 도식 &lsquo;와인1&rsquo; 노드를 이 클래스로 전환(박스 위 라벨은 종전 <code>.d-label</code> 유지).</li>
+    <li><strong>검증</strong>: 다크·낮 두 테마 CDP 렌더로 노드 글자 또렷함 확인. <code>validate_design</code> 경계 게이트(신 클래스 fs 11 추정) 무오탐, <code>check_diagram_bounds.mjs</code> 통과. <code>style.css</code> 변경 → <code>?v</code> 15→16.</li>
+</ul>

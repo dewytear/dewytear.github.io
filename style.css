@@ -2667,6 +2667,10 @@
         .diagram .d-label{ fill: #e6e8eb; font-family: inherit; font-size: 13px; font-weight: 600; }
         .diagram .d-label.sm{ font-size: 11.5px; font-weight: 500; }
         .diagram .d-sub{ fill: #9aa4b2; font-family: inherit; font-size: 11px; }
+        /* Label sitting ON a filled node (.d-node): dark+bold for contrast on the
+           bright teal/orange fill in both themes — .d-label/.d-sub are tuned for
+           the dark canvas, not for on-node text, so they read poorly (esp. dark). */
+        .diagram .d-node-label{ fill: #0f1c1a; font-family: inherit; font-size: 11px; font-weight: 700; }
         .diagram .d-accent{ fill: #4db6ac; font-weight: 700; }
         .diagram .d-edge{ stroke: #9aa4b2; stroke-width: 1.6; fill: none; }
         .diagram .d-edge.accent{ stroke: #4db6ac; }
@@ -2676,6 +2680,7 @@
         .diagram .d-cap{ text-align: center; color: var(--muted); font-size: 12px; margin-top: 6px; }
 
         /* Light theme */
+        body.day .diagram .d-node-label{ fill: #3a1900; }
         body.day .diagram .d-box{ fill: #f5f6f8; stroke: #d3d8e0; }
         body.day .diagram .d-box.accent{ fill: #ffe9d6; stroke: #ff6600; }
         body.day .diagram .d-box.soft{ fill: #ffffff; stroke: #d3d8e0; }
