@@ -1,0 +1,72 @@
+<h2>위키는 어떻게 스스로를 지키는가 — 게이트와 자동화 체계</h2>
+<p>앞의 다섯 편은 지식이 <a href="#!kgs-overview">쌓이고</a>, <a href="#!kgs-edges">이어지고</a>, <a href="#!kgs-views">읽히고</a>, <a href="#!kgs-ai-layer">AI에게 소비되고</a>, <a href="#!kgs-plugin">플러그인으로 패키징되는</a> 구조를 설명했습니다. 마지막 질문이 남습니다 — <strong>이 구조가 어긋나지 않는다는 것을 누가 보장하는가?</strong> 문서를 추가하고 인덱스 재생성을 잊으면? 도구를 고치고 플러그인 사본을 잊으면? 이 편은 그 보장을 담당하는 <strong>게이트(gate)와 자동화 체계</strong>를 실제 사고 사례와 함께 설명합니다.</p>
+
+<h3>원칙 — 판단 없는 노동은 기계가, 판단은 사람이</h3>
+<p>이 위키의 자동화는 <strong>생성이 아니라 검증 중심</strong>입니다. 요약·개념·관계·본문은 사람(또는 AI 작업자)이 문서를 읽고 큐레이션합니다 — 여기엔 판단이 필요하고, 판단을 기계에 넘기면 그래프의 정직성이 무너지기 때문입니다. 대신 기계는 두 가지를 맡습니다: <strong>① 큐레이션의 결과가 서로 어긋나지 않았는지 판정</strong>하고(게이트), <strong>② 판단이 필요 없는 복원 노동을 대신</strong>합니다(--fix). 규칙을 프로즈로만 적어 두면 잊힙니다 — 실제로 잊혀서 사고가 났고, 그때마다 규칙이 게이트로 기계화됐습니다.</p>
+
+<h3>항상 같은 결과 — 결정적 빌드와 드리프트 게이트</h3>
+<p>지식 인덱스·그래프 JSON·<code>llms.txt</code>·sitemap·문서 일자 — 사이트가 읽는 산출물은 전부 <strong>도구가 생성하며, 손으로 편집하지 않습니다</strong>. 빌드는 <strong>결정적</strong>(같은 입력 → 언제나 같은 출력)이라, CI의 <code>--check</code> 모드가 "지금 저장소의 산출물"과 "소스에서 갓 만든 산출물"을 바이트로 비교할 수 있습니다. 어긋나면(= 문서를 고치고 재생성을 잊으면) <strong>머지가 막힙니다</strong>. 그래서 <a href="#!kgs-ai-layer">AI가 읽는 그래프 파일</a>이 실제 지식과 다른 순간이 구조적으로 존재하지 않습니다.</p>
+
+<h3>PR을 지키는 동반 게이트 — "A를 바꿨으면 B도 함께"</h3>
+<p>어떤 규칙은 산출물 비교로는 못 잡습니다. "자산을 고쳤으면 캐시버스터도 올려라" 같은 <strong>동반 규칙</strong>은, PR의 변경 목록(diff)을 보고 <strong>짝이 함께 왔는지</strong>를 검사해야 합니다. 이런 게이트가 넷 있고, 전부 실제 사고나 운영 필요에서 태어났습니다:</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>게이트</th><th>지키는 규칙</th><th>태어난 계기</th></tr></thead>
+<tbody>
+<tr><td><code>check_worklog</code></td><td>실질 변경이 있는 PR엔 <strong>Work Log 동반</strong> (기존 로그 갱신도 인정)</td><td>"작아도 기록" 규칙이 프로즈로만 있어 잊히던 문제</td></tr>
+<tr><td><code>check_cachebuster</code></td><td>?v 자산(app.js 등)을 고치면 <strong>같은 PR에서 ?v 상향</strong></td><td>2026-07-09 실사고 — 고쳤는데 재방문 브라우저에 "반영 안 됨"</td></tr>
+<tr><td><code>check_plugin_sync</code></td><td>플러그인 동봉 도구는 루트 <code>tools/</code>와 <strong>바이트 일치</strong> + 번들 변경 시 <strong>버전 상향</strong></td><td>2026-07-10 실사고 — 검증기 190줄이 낡은 채 배포됨</td></tr>
+<tr><td><code>diagram-bounds</code></td><td>도식 글자가 박스·viewBox를 <strong>1px도 넘지 않게</strong> 헤드리스 브라우저로 실렌더 검사</td><td>폰트 폭 추정만으로는 경계값 삐짐을 놓치던 문제</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="PR이 CI 게이트 층(상태 검증, 드리프트 검사, 동반 게이트, 실렌더 검사)을 모두 통과해야 master에 머지되고 배포된다">
+    <rect class="d-box" x="14" y="112" width="140" height="56" rx="10"/>
+    <text class="d-label" x="84" y="136" text-anchor="middle">변경 커밋</text>
+    <text class="d-sub" x="84" y="156" text-anchor="middle">Pull Request</text>
+    <line class="d-edge" x1="154" y1="140" x2="190" y2="140"/>
+    <polygon class="d-arrow" points="190,135 198,140 190,145"/>
+    <rect class="d-box soft" x="200" y="16" width="330" height="248" rx="12"/>
+    <text class="d-label" x="365" y="42" text-anchor="middle">CI 게이트 층</text>
+    <rect class="d-box" x="214" y="56" width="302" height="42" rx="8"/>
+    <text class="d-sub" x="365" y="82" text-anchor="middle">① 상태 검증 — 라우트·문서·그래프·도식·i18n</text>
+    <rect class="d-box" x="214" y="104" width="302" height="42" rx="8"/>
+    <text class="d-sub" x="365" y="130" text-anchor="middle">② 드리프트 — 산출물이 소스와 어긋나면 차단</text>
+    <rect class="d-box" x="214" y="152" width="302" height="42" rx="8"/>
+    <text class="d-sub" x="365" y="178" text-anchor="middle">③ 동반 — Work Log · ?v · 번들+버전</text>
+    <rect class="d-box" x="214" y="200" width="302" height="42" rx="8"/>
+    <text class="d-sub" x="365" y="226" text-anchor="middle">④ 실렌더 — 도식 경계 전수 확인</text>
+    <line class="d-edge" x1="530" y1="100" x2="548" y2="100"/>
+    <polygon class="d-arrow" points="548,95 556,100 548,105"/>
+    <rect class="d-box accent" x="560" y="72" width="146" height="56" rx="10"/>
+    <text class="d-label" x="633" y="96" text-anchor="middle">ERROR 0</text>
+    <text class="d-sub" x="633" y="116" text-anchor="middle">머지 조건</text>
+    <line class="d-edge" x1="633" y1="128" x2="633" y2="158"/>
+    <polygon class="d-arrow" points="628,158 633,166 638,158"/>
+    <rect class="d-box" x="560" y="168" width="146" height="56" rx="10"/>
+    <text class="d-label" x="633" y="192" text-anchor="middle">master 머지</text>
+    <text class="d-sub" x="633" y="212" text-anchor="middle">Pages 배포</text>
+    <text class="d-sub" x="360" y="290" text-anchor="middle">머지되는 순간, 인덱스·그래프·llms.txt·지도까지 전 표면이 이미 함께 갱신돼 있습니다</text>
+</svg>
+<div class="d-cap">모든 PR은 네 층의 게이트를 지나야 합니다 — 하나라도 ERROR면 머지 불가.</div>
+</div>
+
+<h3>스스로 고치는 게이트 — --fix</h3>
+<p>게이트가 "어긋났다"고 판정한 뒤의 복원은 대부분 판단이 필요 없는 노동입니다: 번들 사본은 루트에서 <em>복사</em>하면 되고, 캐시버스터는 숫자를 <em>+1</em>하면 됩니다. 그래서 두 게이트에 <code>--fix</code> 모드가 있습니다 — <code>check_plugin_sync --fix</code>는 어긋난 스냅샷을 자동 복원하고, <code>check_cachebuster --fix</code>는 낡은 <code>?v</code>를 자동 상향합니다. 경계는 명확합니다: <strong>복원은 기계, 판단은 사람.</strong> 플러그인 버전을 얼마나 올릴지(내용 갱신=minor, 버그픽스=patch), 기능 변경이 해설 문서를 낡게 했는지는 --fix가 건드리지 않습니다.</p>
+
+<h3>변경 유형 선언 — 게이트가 못 잡는 것을 위한 규율</h3>
+<p>기계 게이트에는 한계가 있습니다. 관계 타입 기능을 넣은 PR은 모든 게이트를 통과했지만, 정작 <strong>이 시리즈의 문서들이 새 기능을 설명하지 않는 서술 갭</strong>은 별도 검토에서야 발견됐습니다 — "설명이 낡았는가"는 오탐 없이 기계가 판정할 수 없기 때문입니다. 그래서 마지막 장치는 게이트가 아니라 <strong>선언 규율</strong>입니다. 작업을 시작할 때 변경 유형을 선언하고, 유형별 영향표를 훑습니다:</p>
+<ul>
+    <li><code>ENGINE</code> 뷰어 동작 — 자기기술 문서 검토 · ?v 상향 &nbsp;/&nbsp; <code>STYLE</code> 디자인·도식 — 디자인 규칙 · ?v 상향</li>
+    <li><code>TOOL</code> 빌드·검증 도구 — 번들 동기 + 버전 &nbsp;/&nbsp; <code>SCHEMA</code> 산출물 계약 — schema.md 동반 · 하위호환 판단 · 해설 문서 검토</li>
+    <li><code>PLUGIN</code> 스킬·메타 — 버전 상향 &nbsp;/&nbsp; <code>CONTENT</code> 본문·목록 — 등재 5단계 · 플러그인 반영 금지</li>
+</ul>
+<p>선언은 플랜·PR 본문에 한 줄이면 됩니다(예: <em>"변경 유형: TOOL + PLUGIN"</em>). 복수 선언이 정상입니다 — 관계 타입 기능은 다섯 유형을 관통했고, 시작 때 선언했다면 <code>SCHEMA</code> 행의 "해설 문서 검토"가 구현 PR 안에서 걸렸을 것입니다. 이것은 게이트(강제)가 아니라 <strong>판단 보조</strong>입니다 — 판단이 필요한 영역을 기계화하는 대신, 판단할 시점을 앞으로 당깁니다.</p>
+
+<div class="note">
+    <span class="nh">한눈 요약</span>
+    산출물은 <strong>결정적 빌드</strong>로만 생성(직접 편집 금지) → <code>--check</code>가 드리프트를 차단 → 동반 게이트 4종이 "짝이 함께 왔는지" 검사 → <strong>ERROR 0가 머지 조건</strong>. 복원 노동은 <code>--fix</code>가 대신하고, 기계가 판정 못 하는 서술·버전 판단은 <strong>변경 유형 선언</strong>으로 사람이 시작 시점에 챙깁니다. 게이트는 전부 실제 사고의 재발 방지로 태어났습니다.
+</div>
