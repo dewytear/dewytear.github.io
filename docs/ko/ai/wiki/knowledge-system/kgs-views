@@ -1,0 +1,51 @@
+<h2>그래프를 읽는 7가지 눈 — 뷰마다 다른 질문에 답한다</h2>
+<p>같은 지식그래프라도 <strong>무엇이 궁금한지</strong>에 따라 맞는 시각화가 다릅니다. <a href="#!cosmos">Knowledge Graph</a> 화면의 독에는 3D를 포함해 <strong>7가지 뷰</strong>가 있고, 각각은 서로 다른 질문 하나에 답하도록 고른 것입니다. 이 문서는 "이 뷰에서 무엇을 보면 되는지"를 정리합니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 216" role="img" aria-label="7가지 뷰: 3D, 번들링, 코드, 패킹은 윗줄, 개념, 아크, 매트릭스는 아랫줄">
+    <rect class="d-box accent" x="16" y="16" width="164" height="76" rx="10"/>
+    <text class="d-label" x="98" y="46" text-anchor="middle">3D</text>
+    <text class="d-sub" x="98" y="66" text-anchor="middle">전체 모양·클러스터</text>
+    <rect class="d-box" x="196" y="16" width="164" height="76" rx="10"/>
+    <text class="d-label" x="278" y="46" text-anchor="middle">번들링</text>
+    <text class="d-sub" x="278" y="66" text-anchor="middle">문서↔문서 연결 다발</text>
+    <rect class="d-box" x="376" y="16" width="164" height="76" rx="10"/>
+    <text class="d-label" x="458" y="46" text-anchor="middle">코드(Chord)</text>
+    <text class="d-sub" x="458" y="66" text-anchor="middle">System 간 결합 강도</text>
+    <rect class="d-box" x="556" y="16" width="148" height="76" rx="10"/>
+    <text class="d-label" x="630" y="46" text-anchor="middle">패킹</text>
+    <text class="d-sub" x="630" y="66" text-anchor="middle">규모·부피 비교</text>
+    <rect class="d-box" x="106" y="120" width="164" height="76" rx="10"/>
+    <text class="d-label" x="188" y="150" text-anchor="middle">개념</text>
+    <text class="d-sub" x="188" y="170" text-anchor="middle">개념 동시출현 지도</text>
+    <rect class="d-box" x="286" y="120" width="164" height="76" rx="10"/>
+    <text class="d-label" x="368" y="150" text-anchor="middle">아크</text>
+    <text class="d-sub" x="368" y="170" text-anchor="middle">가까운/먼 연결 구분</text>
+    <rect class="d-box" x="466" y="120" width="164" height="76" rx="10"/>
+    <text class="d-label" x="548" y="150" text-anchor="middle">매트릭스</text>
+    <text class="d-sub" x="548" y="170" text-anchor="middle">블록(밀집/공백) 구조</text>
+</svg>
+<div class="d-cap">7가지 눈 — 모두 같은 인덱스에서 그려지므로, 어느 뷰든 데이터는 하나입니다.</div>
+</div>
+
+<h3>뷰별 "이 질문에 이 뷰"</h3>
+<div class="tbl-wrap"><table>
+<thead><tr><th>뷰</th><th>답하는 질문</th><th>읽는 법</th></tr></thead>
+<tbody>
+<tr><td><strong>3D</strong></td><td>지식 전체가 어떤 모양인가?</td><td>둥근 공 위에서 <strong>색 = World/System</strong>. 같은 색 패치가 한 주제 클러스터이고, 패치를 가로지르는 선이 주제 간 다리입니다. 설정에서 둥글기(0~100)를 조절할 수 있습니다.</td></tr>
+<tr><td><strong>번들링</strong></td><td>어떤 문서들이 서로 당기나?</td><td>원 둘레에 문서가 System 순서로 놓이고, 개념 연결이 중심으로 휘어 다발을 이룹니다. <strong>굵은 다발 = 강하게 얽힌 주제 쌍</strong>.</td></tr>
+<tr><td><strong>코드(Chord)</strong></td><td>System끼리 얼마나 결합돼 있나?</td><td>호의 길이 = 그 System의 대외 연결량, 리본 굵기 = 두 System 사이의 연결 수. <strong>가장 굵은 리본</strong>이 지식의 실질적 이웃 관계입니다.</td></tr>
+<tr><td><strong>패킹</strong></td><td>어디에 지식이 많이 쌓였나?</td><td>World 원 안에 System 원, 그 안에 문서 점. <strong>원의 크기 = 문서 수</strong> — 성장 편차가 한눈에 보입니다.</td></tr>
+<tr><td><strong>개념</strong></td><td>개념들은 서로 어떻게 붙어 다니나?</td><td>노드가 문서가 아니라 <strong>개념</strong>인 유일한 뷰. 함께 등장하는 개념끼리 이어져, 어휘 수준의 지식 지형(예: '스킬' 주변에 무엇이 모이나)을 보여 줍니다.</td></tr>
+<tr><td><strong>아크</strong></td><td>연결이 이웃 안인가, 멀리 가나?</td><td>문서를 한 줄로 놓고 연결을 호로 그립니다. <strong>낮은 호 = 같은 주제 안</strong>, <strong>높은 호 = 주제를 건너뛰는 다리</strong>.</td></tr>
+<tr><td><strong>매트릭스</strong></td><td>어느 블록이 밀집이고 어디가 공백인가?</td><td>문서×문서 격자에 연결을 점으로. System 순서로 정렬돼 <strong>대각 블록 = 내부 결속</strong>, <strong>블록 밖 점 = 교차 연결</strong>, 빈 영역 = 아직 잇지 않은 지식.</td></tr>
+</tbody>
+</table></div>
+
+<h3>허브와 브리지 — 그래프의 중심을 찾는 법</h3>
+<p>뷰가 무엇이든, 분석의 진입점은 두 가지입니다:</p>
+<ul>
+    <li><strong>허브(hub)</strong> — 다른 문서들이 가장 많이 참조하는 문서. 현재 1위는 <a href="#!hns-anatomy">하네스의 구성과 효과</a>(피참조 11회)이고, <a href="#!llmw-overview">LLM Wiki 개요</a>·<a href="#!llmw-vaults">볼트 체계</a>가 각 8회로 뒤를 잇습니다. 어떤 주제를 처음 파악할 때는 그 클러스터의 허브부터 읽는 것이 가장 빠릅니다.</li>
+    <li><strong>브리지(bridge)</strong> — 여러 System에 걸쳐 등장하는 개념. '스킬'은 <strong>7개 System</strong>에 걸쳐 있는 최대 브리지이고, '슬래시명령어'·'서브에이전트'가 각 5개 System을 잇습니다. 브리지 개념을 따라가면 <strong>주제와 주제가 실제로 만나는 지점</strong>이 드러납니다.</li>
+</ul>
+<p>허브·브리지·System별 집계는 <a href="#!ai-map">지식지도</a>가 표로 보여 주며, 문서가 추가될 때마다 라이브로 다시 계산됩니다. 요컨대 — <strong>지식지도는 "요약된 표", 7가지 뷰는 "같은 데이터의 시각화"</strong>이고, 이 문서 시리즈는 그 데이터가 만들어지는 원리(<a href="#!kgs-edges">앞 편</a>)와 소비되는 방식(<a href="#!kgs-ai-layer">다음 편</a>)을 설명합니다.</p>

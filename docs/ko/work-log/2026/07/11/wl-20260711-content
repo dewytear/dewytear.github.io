@@ -16,3 +16,24 @@
     <li>도식 재구성: 초판의 neosemantics 내부 매핑 도식(이 글에 없는 내용)을 걷어내고, <strong>원문에 실재하는</strong> ①조직 원리 스펙트럼 ②관계 표현 대비(관계 1급 아님) ③권고 흐름(PG 기본+온톨로지 레이어) 3종으로 교체. 노드 라벨은 <code>.d-node-label</code>. 개념에서 본문에 없어진 &ldquo;리이피케이션&rdquo; 제거(정직성) → 고유 개념 296→295, km-totals 동기화.</li>
     <li>&ldquo;태도&rdquo; 노트도 &ldquo;봇 차단 재구성&rdquo; → &ldquo;<strong>Neo4j 소속 저자의 관점</strong>(PG 우호)&rdquo; 고지로 갱신. <code>validate_all</code> ERROR 0, 도식 경계 게이트·브라우저 정밀검사 통과, 자산 무변경.</li>
 </ul>
+
+<h2>&lsquo;지식 체계&rsquo; System 신설 — 이 위키 자체를 설명하는 5편</h2>
+
+<h3>배경</h3>
+<p>&ldquo;지식 그래프 적용 내용을 구조적·논리적으로 알기 쉽게 설명하는 콘텐츠&rdquo; 요청. 단일 페이지 대신 <strong>AI World에 파트(System) 신설</strong>로 확정 — 문서들이 doc-entries에 인덱싱되어 <strong>그 자체가 지식 그래프의 노드</strong>가 되는 자기기술 위키. 독자 기준: 처음 온 사람도 이해하되 <strong>실데이터 예제로 아주 상세하게</strong>.</p>
+
+<h3>구성 (AI · Wiki · 지식 체계, 5편 + 도식 7개)</h3>
+<ul>
+    <li><strong>kgs-overview 지식은 어떻게 쌓이는가</strong> — 4계층(World→Domain→System→Document)·불변 name/물리 path·등재 파이프라인. welcome의 4계층 주소 도식 + 파이프라인 도식.</li>
+    <li><strong>kgs-edges 문서는 어떻게 이어지는가</strong> — 개념 큐레이션 정직성, 희소성(idf) 저울(실측: '스킬' df21→1.54 vs '벡터검색' df2→3.89), 실제 엣지 해부(welcome↔ccb-what 6.40), 판정 3갈래(공유2↑/희귀1/폴더 보완) 플로우 도식, 경계값 파급(df 3→4).</li>
+    <li><strong>kgs-views 그래프를 읽는 7가지 눈</strong> — 뷰별 &ldquo;답하는 질문&rdquo; 표 + 허브(hns-anatomy 11refs)·브리지('스킬' 7 System) 읽는 법.</li>
+    <li><strong>kgs-ai-layer AI가 이 위키를 읽는 법</strong> — llms.txt→자기완결 그래프 JSON→원문 순회 도식, 2홉 실례(허브에서 13편), 드리프트 게이트.</li>
+    <li><strong>kgs-plugin 위키 엔진의 플러그인화</strong> — 엔진/콘텐츠 분리, 스킬 4종 표, 스냅샷 동기화 규율 도식(원본→번들→CI 게이트·버전 상향), 도그푸딩.</li>
+</ul>
+
+<h3>지식 체계 반영 (파이프라인 전체)</h3>
+<ul>
+    <li><code>list</code>에 Wiki&gt;지식 체계 브랜치(+model)·<code>doc-entries</code> 5엔트리·<code>clusters.json</code> ko/en·ai-map ko/en(상단 도식 Domain/System 나열·data-topics·표 fallback·System 상세 h4)·인덱스/AI export 재생성. 97→<strong>102문서</strong>.</li>
+    <li><strong>개념 설계</strong>: df==3 경계 개념 회피(파급 방지). 내부는 '지식그래프'+2차 개념으로 쌍마다 공유 2개(overview↔edges 큐레이션, edges↔views 허브, overview↔ai-layer 지식관리), plugin은 '플러그인·마켓플레이스·스킬'로 ccb-plugins·omc-install·hns-install과 <strong>자연 다리</strong>.</li>
+    <li><strong>엣지 diff 검증</strong>: 기존 문서 중 3편(skills·ccb-overview·ccb-plugins)이 cap-4 재순위로 1엣지 교체됐으나 <strong>역방향이 살아 있어 무방향 그래프 기준 끊긴 연결 0</strong>. df≤3 파급 0.</li>
+</ul>

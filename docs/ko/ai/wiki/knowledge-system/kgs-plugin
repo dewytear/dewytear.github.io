@@ -1,0 +1,51 @@
+<h2>위키 엔진의 플러그인화 — wiki-plugin과 동기화 규율</h2>
+<p>이 지식 체계는 이 사이트 전용이 아닙니다. 구조·파이프라인·검증 게이트를 <strong>Claude Code 플러그인(wiki-plugin)</strong> 으로 패키징해, <strong>어느 저장소든 같은 지식 체계를 부트스트랩</strong>할 수 있게 했습니다. 이 문서는 무엇을 왜 플러그인으로 만들었고, 원본과 사본이 어긋나지 않도록 어떤 규율을 두었는지 설명합니다.</p>
+
+<h3>왜 — 엔진과 콘텐츠의 분리</h3>
+<p>이 위키는 두 층으로 이뤄져 있습니다. <strong>엔진</strong>(4계층 구조, 등재 파이프라인, 인덱스 빌더, 검증 게이트, 뷰어)과 <strong>콘텐츠</strong>(문서들, 큐레이션된 개념, 클러스터 이름). 앞의 네 편이 설명한 원리는 전부 엔진의 성질이라 <strong>재사용 가능</strong>합니다 — 새 프로젝트의 지식관리를 시작할 때 이 엔진을 설치하면, 문서를 넣는 순간부터 같은 지식그래프가 자라납니다. 반대로 콘텐츠(이 사이트의 <code>doc-entries</code>·클러스터 라벨)는 사이트 고유 자산이라 <strong>번들에서 제외</strong>됩니다.</p>
+
+<h3>구성 — 스킬 4종 + 도구 스냅샷</h3>
+<p>플러그인은 마켓플레이스에서 두 줄로 설치합니다(<code>/plugin marketplace add</code> → <code>/plugin install</code>). 설치하면 위키 운영의 네 국면이 <strong>스킬</strong>로 들어옵니다:</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>스킬</th><th>하는 일</th></tr></thead>
+<tbody>
+<tr><td><code>wiki-init</code></td><td>새 위키 프로젝트 부트스트랩 — 구조·내비 트리·인덱스 파이프라인·검증 게이트·CI까지 한 번에.</td></tr>
+<tr><td><code>add-doc</code></td><td>문서 추가의 전체 워크플로 강제 — 파일 → 트리 등록 → 큐레이션 → 인덱스 → Work Log → 검증.</td></tr>
+<tr><td><code>index</code></td><td>지식 인덱스·문서 일자·AI 소비 계층 재생성 + 스키마 계약 준수.</td></tr>
+<tr><td><code>validate</code></td><td>품질 검증 일괄 실행과 ERROR/WARN 해석 — "무엇이 결함이고 무엇이 검토 신호인지"까지.</td></tr>
+</tbody>
+</table></div>
+<p>스킬과 함께 인덱스 빌더·검증기 등 <strong>운영 도구의 스냅샷</strong>이 동봉됩니다. 프로젝트에 자체 <code>tools/</code>가 있으면 그것을 우선 쓰고(도그푸딩 경로), 없으면 플러그인 동봉본을 씁니다. SPA 뷰어(화면)는 마켓 추가가 저장소 전체를 클론하는 구조라 별도 번들 없이 항상 최신 실물이 로컬에 있습니다.</p>
+
+<h3>규율 — 스냅샷은 반드시 원본과 같아야 한다</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 168" role="img" aria-label="동기화 규율: 원본 tools가 소스 오브 트루스, 플러그인 번들은 스냅샷, CI 게이트가 드리프트를 차단하고 버전 상향을 강제">
+    <rect class="d-box accent" x="20" y="30" width="230" height="62" rx="10"/>
+    <text class="d-label" x="135" y="56" text-anchor="middle">원본 tools/</text>
+    <text class="d-sub" x="135" y="76" text-anchor="middle">source of truth</text>
+    <line class="d-edge" x1="250" y1="61" x2="296" y2="61"/>
+    <polygon class="d-arrow" points="296,56 304,61 296,66"/>
+    <text class="d-sub" x="276" y="46" text-anchor="middle">복사</text>
+    <rect class="d-box" x="306" y="30" width="230" height="62" rx="10"/>
+    <text class="d-label" x="421" y="56" text-anchor="middle">플러그인 번들 tools/</text>
+    <text class="d-sub" x="421" y="76" text-anchor="middle">버전 시점의 스냅샷</text>
+    <line class="d-edge dash" x1="536" y1="61" x2="582" y2="61"/>
+    <polygon class="d-arrow" points="582,56 590,61 582,66"/>
+    <rect class="d-box soft" x="592" y="18" width="116" height="88" rx="10"/>
+    <text class="d-label" x="650" y="48" text-anchor="middle">CI 게이트</text>
+    <text class="d-sub" x="650" y="68" text-anchor="middle">다르면 실패</text>
+    <text class="d-sub" x="650" y="86" text-anchor="middle">버전 상향 강제</text>
+    <text class="d-sub" x="364" y="140" text-anchor="middle">원본을 고치면 같은 PR에서 사본 재동기화 + 플러그인 버전(현재 0.4.0) 상향 — 어기면 머지 불가</text>
+</svg>
+<div class="d-cap">동기화 규율 — 사람의 기억이 아니라 CI가 원본·사본의 일치를 보증합니다.</div>
+</div>
+
+<p>스냅샷 방식의 약점은 <strong>드리프트</strong>(원본만 고치고 사본을 잊는 것)입니다. 그래서 전용 게이트가 원본 <code>tools/</code>와 번들을 <strong>바이트 단위로 비교</strong>해, 다르면 CI를 실패시킵니다. 또한 번들이 바뀌는 PR은 <strong>플러그인 버전 상향</strong>을 동반해야 통과합니다 — 설치자가 "언제 무엇이 바뀌었는지"를 버전으로 추적할 수 있게 하는 릴리스 규율입니다. 이 게이트 자체와 사이트 고유 데이터(클러스터 라벨·큐레이션 엔트리)는 번들 제외 목록에 있습니다.</p>
+
+<h3>도그푸딩 — 첫 사용자는 이 위키 자신</h3>
+<p>이 위키가 wiki-plugin의 <strong>첫 사용자이자 레퍼런스 구현</strong>입니다. 문서 추가·인덱스 재생성·검증까지 이 사이트의 일상 운영이 곧 플러그인의 통합 테스트가 되고, 운영에서 발견된 갭(누락 가이드, 게이트 구멍)은 플러그인 개선으로 환류됩니다. 앞의 네 편에서 본 원리 — <a href="#!kgs-overview">쌓는 구조</a>, <a href="#!kgs-edges">잇는 규칙</a>, <a href="#!kgs-views">읽는 눈</a>, <a href="#!kgs-ai-layer">AI 소비</a> — 가 전부 이 플러그인 안에 들어 있으므로, 이 시리즈는 곧 wiki-plugin의 설계 해설이기도 합니다.</p>
+
+<div class="note">
+    <span class="nh">설치</span>
+    <code>/plugin marketplace add dewytear/dewytear.github.io</code> → <code>/plugin install wiki-plugin@dewytear-wiki</code>. 스킬 상세와 동기화 정책은 저장소의 <code>plugins/wiki-plugin/README.md</code>에 있습니다.
+</div>

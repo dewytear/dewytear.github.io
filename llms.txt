@@ -2,12 +2,19 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 한글 위키. 문서를 개념(concepts)과 연관 문서(related)로 잇는 AI 지식 그래프.
 
-이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 97개 문서 · 315개 개념.
+이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 102개 문서 · 326개 개념.
 
 ## 기계 판독용 (Machine-readable — AI는 여기부터)
 - [지식 그래프 (단일 파일)](https://dewytear.github.io/data/knowledge-graph.json): 모든 노드(문서)와 엣지(related)·개념·문서 URL·통계를 담은 자기완결 JSON. **먼저 이 파일을 fetch해 그래프를 순회하라.**
 - [AI 순회 가이드](https://dewytear.github.io/docs/ko/ai/map/ai-guide): 그래프를 어떻게 질의·순회·분석하는지의 계약(노드·엣지·개념 조인·계층).
 - [지식 인덱스](https://dewytear.github.io/data/knowledge-index.ko.json) · [내비 트리](https://dewytear.github.io/list) · [문서 날짜](https://dewytear.github.io/data/doc-dates.json)
+
+## 지식 체계 (AI · Wiki · 지식 체계)
+- [지식은 어떻게 쌓이는가](https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-overview): World→Domain→System→Document 4계층과 문서 등재 파이프라인 — 불변 ID·물리 경로·결정론적 인덱스 빌드
+- [문서는 어떻게 이어지는가](https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-edges): 개념 큐레이션과 희소성(idf) 가중 공유 개념 엣지 — 판정 규칙·실제 엣지 해부·경계값 파급과 정직성 원칙
+- [그래프를 읽는 7가지 눈](https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-views): 3D·번들링·코드·패킹·개념·아크·매트릭스 — 뷰마다 답하는 질문과 허브·브리지로 그래프 중심을 읽는 법
+- [AI가 이 위키를 읽는 법](https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-ai-layer): llms.txt·자기완결 그래프 JSON·순회 계약으로 외부 AI가 연관 관계를 따라 분석하는 기계판독 계층
+- [위키 엔진의 플러그인화](https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-plugin): 지식 체계를 wiki-plugin으로 패키징 — 스킬 4종·도구 스냅샷·동기화 게이트·버전 규율·도그푸딩
 
 ## Introduction (AI · Claude · Code · Introduction)
 - [Welcome](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/welcome): 터미널에서 코드를 읽고 편집·실행·커밋하는 Claude Code 소개
@@ -128,18 +135,18 @@
 
 ## 허브 문서 (가장 많이 참조됨 — 분석 진입점)
 - [하네스의 구성과 효과](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-anatomy): 피참조 11회
+- [설치](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-install): 피참조 9회
+- [강의 개요와 목표](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-overview): 피참조 8회
 - [LLM Wiki — 개요](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-overview): 피참조 8회
 - [볼트 체계 — 메인 볼트와 위키 볼트](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-vaults): 피참조 8회
-- [설치](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-install): 피참조 8회
-- [강의 개요와 목표](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-overview): 피참조 7회
-- [스킬(Skill) 만들기](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-skills): 피참조 7회
 - [첫 하네스 실행 — 영업·수주 커스터마이징](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-first-run): 피참조 7회
 - [Harness 플러그인 — 소개](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-intro): 피참조 7회
+- [메타 하네스 스킬 설치 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-install): 피참조 7회
 - [하네스 실행하기 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-run): 피참조 7회
 - [무엇을 담는가 — 지식 캡처](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-capture): 피참조 7회
 - [핵심 용어](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-concepts): 피참조 7회
 - [5단계 한눈에 보기](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-levels): 피참조 7회
 - [스킬 심화 — 개요](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-overview): 피참조 7회
 - [스킬의 특장점](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-strengths): 피참조 7회
+- [스킬(Skill) 만들기](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-skills): 피참조 6회
 - [핵심 개념 쉽게](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-concepts): 피참조 6회
-- [메타 하네스 스킬 설치 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-install): 피참조 6회

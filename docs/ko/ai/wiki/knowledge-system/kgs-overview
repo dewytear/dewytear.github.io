@@ -1,0 +1,83 @@
+<h2>지식은 어떻게 쌓이는가 — 4계층 지식계층과 등재 파이프라인</h2>
+<p>이 파트는 <strong>이 위키 자체</strong>를 설명합니다. 위키의 목표는 단순한 글 모음이 아니라, 문서가 늘어날수록 <strong>연결이 함께 자라는 지식그래프</strong>가 되는 것입니다. 그러려면 지식이 <em>아무 데나</em> 쌓이면 안 되고, <strong>정해진 구조</strong>(어디에)와 <strong>정해진 절차</strong>(어떻게)로 쌓여야 합니다. 이 문서는 그 구조와 절차를 실제 문서 하나(<a href="#!welcome">Welcome</a>)를 예로 끝까지 따라가며 설명합니다.</p>
+
+<h3>구조 — World → Domain → System → Document</h3>
+<p>모든 문서는 4단계 <strong>지식계층</strong> 안에 자리를 갖습니다. 최상위 <strong>World</strong>는 지식 세계(학습 지식 <code>AI</code> · 업무 지식 <code>Douzone</code>), <strong>Domain</strong>은 그 안의 영역, <strong>System</strong>은 구체적 주제 체계, <strong>Document</strong>가 개별 문서입니다. 예를 들어 <a href="#!welcome">Welcome</a> 문서의 주소는 이렇게 읽힙니다:</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 128" role="img" aria-label="Welcome 문서의 4계층 주소: World AI, Domain Claude·Code, System Introduction, Document welcome">
+    <rect class="d-box accent" x="14" y="34" width="120" height="46" rx="9"/>
+    <text class="d-label" x="74" y="55" text-anchor="middle">AI</text>
+    <text class="d-sub" x="74" y="72" text-anchor="middle">World</text>
+    <line class="d-edge" x1="134" y1="57" x2="166" y2="57"/>
+    <polygon class="d-arrow" points="166,52 174,57 166,62"/>
+    <rect class="d-box" x="176" y="34" width="150" height="46" rx="9"/>
+    <text class="d-label" x="251" y="55" text-anchor="middle">Claude · Code</text>
+    <text class="d-sub" x="251" y="72" text-anchor="middle">Domain</text>
+    <line class="d-edge" x1="326" y1="57" x2="358" y2="57"/>
+    <polygon class="d-arrow" points="358,52 366,57 358,62"/>
+    <rect class="d-box" x="368" y="34" width="150" height="46" rx="9"/>
+    <text class="d-label" x="443" y="55" text-anchor="middle">Introduction</text>
+    <text class="d-sub" x="443" y="72" text-anchor="middle">System</text>
+    <line class="d-edge" x1="518" y1="57" x2="550" y2="57"/>
+    <polygon class="d-arrow" points="550,52 558,57 550,62"/>
+    <rect class="d-box soft" x="560" y="34" width="146" height="46" rx="9"/>
+    <text class="d-label" x="633" y="55" text-anchor="middle">welcome</text>
+    <text class="d-sub" x="633" y="72" text-anchor="middle">Document</text>
+</svg>
+<div class="d-cap">Welcome의 4계층 주소 — section 문자열로는 <code>AI · Claude · Code · Introduction</code>.</div>
+</div>
+
+<p>이 계층은 별도 데이터베이스가 아니라 <strong>내비게이션 트리(<code>list</code> 파일)의 중첩 그 자체</strong>에서 파생됩니다. 사이드바에서 보이는 폴더 구조가 곧 지식계층이라, "메뉴 따로 · 분류 따로"의 불일치가 원천적으로 없습니다. 같은 System(잎 폴더)에 있는 문서들은 <strong>읽는 순서가 있는 시리즈</strong>로 취급되고, 이 폴더 소속은 뒤에서 볼 연관 문서 계산의 안전망(폴더 보완)으로도 쓰입니다.</p>
+
+<h3>문서의 두 이름 — 불변 ID와 물리 경로</h3>
+<p>트리의 잎(문서) 노드는 두 가지 핵심 필드를 갖습니다:</p>
+<ul>
+    <li><strong><code>name</code> — 불변 논리 ID</strong>: 해시 라우트(<code>#!welcome</code>)이자 지식그래프의 노드 키. 한 번 정하면 바뀌지 않아, 문서를 다른 폴더로 옮겨도 <strong>기존 링크·엣지가 깨지지 않습니다</strong>.</li>
+    <li><strong><code>path</code> — 물리 경로</strong>: <code>docs/ko/</code> 아래 실제 파일 위치(예: <code>ai/claude/code/introduction/welcome</code>). 도메인 트리를 따라가므로 폴더만 봐도 지식계층을 알 수 있습니다.</li>
+</ul>
+<p>문서 본문은 <strong>정적 HTML 조각</strong>(뼈대 없는 <code>&lt;h2&gt;…&lt;p&gt;…</code>)입니다. 빌드 도구도, 서버도, JS 렌더링도 필요 없이 <strong>URL로 그대로 fetch</strong>되기 때문에 사람의 브라우저와 AI 모두 같은 원문을 읽습니다 — 이 성질이 <a href="#!kgs-ai-layer">AI 소비 계층</a>의 기반이 됩니다.</p>
+
+<h3>절차 — 문서 하나가 등재되는 파이프라인</h3>
+<p>새 지식이 들어올 때는 반드시 같은 절차를 거칩니다. 절차의 핵심은 <strong>사람(또는 AI)이 문서를 실제로 읽고 큐레이션한 요약·개념</strong>을 남기는 단계(3)입니다 — 여기서 지식그래프의 재료가 만들어집니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 210" role="img" aria-label="등재 파이프라인: 본문 작성, list 등록, doc-entries 큐레이션, build_index 재생성, 그래프·지도·AI 계층 자동 반영">
+    <rect class="d-box" x="14" y="18" width="200" height="52" rx="9"/>
+    <text class="d-label" x="114" y="40" text-anchor="middle">① 본문 작성</text>
+    <text class="d-sub" x="114" y="58" text-anchor="middle">docs/ko/&lt;도메인 트리&gt;</text>
+    <rect class="d-box" x="258" y="18" width="200" height="52" rx="9"/>
+    <text class="d-label" x="358" y="40" text-anchor="middle">② list 등록</text>
+    <text class="d-sub" x="358" y="58" text-anchor="middle">name(불변) + path(물리)</text>
+    <rect class="d-box accent" x="502" y="18" width="204" height="52" rx="9"/>
+    <text class="d-label" x="604" y="40" text-anchor="middle">③ 큐레이션</text>
+    <text class="d-sub" x="604" y="58" text-anchor="middle">요약 + 핵심 개념 5~6개</text>
+    <line class="d-edge" x1="214" y1="44" x2="250" y2="44"/>
+    <polygon class="d-arrow" points="250,39 258,44 250,49"/>
+    <line class="d-edge" x1="458" y1="44" x2="494" y2="44"/>
+    <polygon class="d-arrow" points="494,39 502,44 494,49"/>
+    <line class="d-edge" x1="604" y1="70" x2="604" y2="102"/>
+    <polygon class="d-arrow" points="599,102 604,110 609,102"/>
+    <rect class="d-box" x="258" y="110" width="448" height="52" rx="9"/>
+    <text class="d-label" x="482" y="132" text-anchor="middle">④ 인덱스 재생성 (결정론적 빌드)</text>
+    <text class="d-sub" x="482" y="150" text-anchor="middle">같은 입력 → 항상 같은 결과 · --check로 드리프트 차단</text>
+    <line class="d-edge" x1="482" y1="162" x2="482" y2="184"/>
+    <polygon class="d-arrow" points="477,184 482,192 487,184"/>
+    <text class="d-sub" x="482" y="206" text-anchor="middle">지식그래프 · 지식지도 · 검색 · AI 계층에 자동 반영</text>
+</svg>
+<div class="d-cap">등재 파이프라인 — 사람이 하는 일은 ①~③, ④부터는 기계가 같은 결과를 재현합니다.</div>
+</div>
+
+<ol>
+    <li><strong>본문 작성</strong> — 도메인 트리 자리에 HTML 조각으로 저장.</li>
+    <li><strong><code>list</code> 등록</strong> — <code>name</code>·<code>path</code>·라벨·태그를 트리에 추가. 이 순간 내비게이션과 지식계층에 자리가 생깁니다.</li>
+    <li><strong>큐레이션</strong> — 문서를 읽고 <code>doc-entries</code>에 <strong>요약 1줄 + 핵심 개념(평균 6개)</strong>을 기록. 개념은 본문에 실재하는 것만 적는 것이 원칙입니다(<a href="#!kgs-edges">다음 편</a>의 정직성 원칙).</li>
+    <li><strong>인덱스 재생성</strong> — 빌드 도구가 ②의 계층과 ③의 개념으로 <strong>연관 문서(related)를 계산</strong>해 지식 인덱스를 다시 만듭니다. 이 빌드는 <strong>결정론적</strong>(같은 입력 → 언제나 같은 출력)이라, CI의 <code>--check</code>가 "인덱스가 소스와 어긋나면 머지 불가"를 기계적으로 강제합니다.</li>
+</ol>
+
+<p>결과적으로 문서 하나를 넣으면 — 내비게이션·지식지도·3D 지식그래프·검색·<a href="#!kgs-ai-layer">AI용 그래프 파일</a>까지 <strong>모든 표면이 자동으로 함께 갱신</strong>됩니다. 지식관리에서 흔한 "정리는 했는데 찾을 수 없는" 상태가 구조적으로 생기지 않는 이유입니다.</p>
+
+<div class="note">
+    <span class="nh">현재 규모</span>
+    이 절차로 쌓인 지식은 현재 <strong>문서 97편 · 고유 개념 315개 · 연결 209개</strong>(문서당 평균 4.3개)입니다. 고아 문서(연결 0)는 0편 — 모든 문서가 그래프 안에 있습니다. 숫자는 <a href="#!ai-map">지식지도</a>에서 라이브로 집계됩니다.
+</div>

@@ -1,0 +1,65 @@
+<h2>문서는 어떻게 이어지는가 — 개념 큐레이션과 idf가중치 엣지</h2>
+<p>지식그래프의 품질은 결국 <strong>"두 문서가 관련 있다"를 무엇으로 판정하느냐</strong>에 달려 있습니다. 이 위키는 임베딩·통계 추출 같은 블랙박스 대신, <strong>사람이 읽고 남긴 개념(concepts)</strong>을 재료로 <strong>검증 가능한 규칙</strong>으로 엣지를 계산합니다. 이 문서는 그 규칙을 실제 수치와 실제 엣지로 끝까지 해부합니다.</p>
+
+<h3>재료 — 개념은 추출이 아니라 큐레이션</h3>
+<p>모든 문서는 등재될 때 <strong>핵심 개념 5~6개</strong>를 큐레이션받습니다(<a href="#!kgs-overview">앞 편</a>의 파이프라인 ③). 여기에 한 가지 원칙이 있습니다: <strong>개념은 본문에 실재하는 것만 적는다</strong>. 연결을 만들고 싶다고 본문에 없는 개념을 넣으면 그래프가 "실제 지식의 지도"이기를 멈추기 때문입니다. 그래서 이 그래프의 엣지는 수가 적은 대신, <strong>하나하나가 근거(공유 개념)를 제시할 수 있습니다</strong>.</p>
+
+<h3>저울 — 희귀한 개념일수록 강한 연결</h3>
+<p>두 문서가 개념을 공유하면 연결 후보가 됩니다. 그런데 모든 개념이 같은 무게일 수는 없습니다. 97편 중 <strong>21편</strong>에 나오는 '스킬'을 공유하는 것은 우연에 가깝지만, 단 <strong>2편</strong>에만 나오는 '벡터검색'을 공유하는 것은 강한 신호입니다. 그래서 개념마다 <strong>희소성 가중치(idf)</strong> — 대략 "전체 문서 수 ÷ 그 개념이 나오는 문서 수"의 로그 — 를 부여합니다:</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 176" role="img" aria-label="idf 저울: 스킬은 21편에 나와 가중치 1.54로 가볍고, 벡터검색은 2편에만 나와 3.89로 무겁다">
+    <rect class="d-box" x="30" y="24" width="300" height="60" rx="10"/>
+    <text class="d-label" x="180" y="49" text-anchor="middle">'스킬' — 21편에 등장</text>
+    <text class="d-sub" x="180" y="70" text-anchor="middle">흔한 개념 → 가중치 log(98/21) ≈ 1.54</text>
+    <rect class="d-box accent" x="390" y="24" width="300" height="60" rx="10"/>
+    <text class="d-label" x="540" y="49" text-anchor="middle">'벡터검색' — 2편에만 등장</text>
+    <text class="d-sub" x="540" y="70" text-anchor="middle">희귀 개념 → 가중치 log(98/2) ≈ 3.89</text>
+    <line class="d-edge" x1="180" y1="84" x2="180" y2="116"/>
+    <line class="d-edge accent" x1="540" y1="84" x2="540" y2="116"/>
+    <text class="d-sub" x="180" y="138" text-anchor="middle">공유해도 약한 연결 신호</text>
+    <text class="d-label" x="540" y="138" text-anchor="middle">공유하면 강한 연결 신호</text>
+    <text class="d-sub" x="360" y="166" text-anchor="middle">같은 "공유 1개"라도 무게가 2.5배 이상 다르다</text>
+</svg>
+<div class="d-cap">희소성 저울 — 흔한 개념의 공유는 가볍게, 희귀한 개념의 공유는 무겁게 칩니다.</div>
+</div>
+
+<h3>실제 엣지 해부 — Welcome ↔ "Claude Code란 무엇인가"</h3>
+<p>실제 그래프의 엣지 하나를 뜯어 보면: <a href="#!welcome">Welcome</a>과 <a href="#!ccb-what">Claude Code란 무엇인가</a>는 <strong>'Claude Code'(가중치 3.20)와 '터미널'(3.20)</strong> 두 개념을 공유합니다. 점수는 두 가중치의 합 <strong>≈ 6.40</strong> — 후보들 가운데 최상위라 Welcome의 연관 문서 1순위가 됩니다. 문서 하단의 "연관 문서"에서 이 근거 개념이 그대로 칩으로 표시되므로, <strong>왜 이어졌는지</strong>를 언제나 확인할 수 있습니다.</p>
+
+<h3>판정 규칙 — 세 갈래</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 234" role="img" aria-label="엣지 판정: 공유 2개 이상이면 연결, 공유 1개면 그 개념이 3편 이하일 때만 연결, 그 외엔 폴더 보완">
+    <rect class="d-box" x="230" y="14" width="260" height="46" rx="9"/>
+    <text class="d-label" x="360" y="42" text-anchor="middle">두 문서의 공유 개념은?</text>
+    <line class="d-edge" x1="290" y1="60" x2="128" y2="96"/>
+    <line class="d-edge" x1="360" y1="60" x2="360" y2="96"/>
+    <line class="d-edge" x1="430" y1="60" x2="592" y2="96"/>
+    <rect class="d-box accent" x="24" y="100" width="210" height="58" rx="9"/>
+    <text class="d-label" x="129" y="124" text-anchor="middle">2개 이상 공유</text>
+    <text class="d-sub" x="129" y="144" text-anchor="middle">연결 (via:concept)</text>
+    <rect class="d-box accent" x="254" y="100" width="212" height="58" rx="9"/>
+    <text class="d-label" x="360" y="124" text-anchor="middle">1개 공유 + 3편 이하</text>
+    <text class="d-sub" x="360" y="144" text-anchor="middle">희귀 개념만 인정 (concept)</text>
+    <rect class="d-box soft" x="486" y="100" width="210" height="58" rx="9"/>
+    <text class="d-label" x="591" y="124" text-anchor="middle">그 외 (0~1개 공유)</text>
+    <text class="d-sub" x="591" y="144" text-anchor="middle">연결하지 않음</text>
+    <line class="d-edge dash" x1="591" y1="158" x2="591" y2="188"/>
+    <text class="d-sub" x="360" y="208" text-anchor="middle">개념 연결이 2개 미만인 문서는 같은 System 이웃으로 보완 (via:folder) — 모든 문서가 2~4개 연결을 가짐</text>
+</svg>
+<div class="d-cap">판정 플로우 — 우연한 1개 공유는 버리되, 희귀 개념(3편 이하)의 1개 공유는 인정합니다.</div>
+</div>
+
+<ul>
+    <li><strong>공유 2개 이상</strong> → 연결. 서로 다른 개념 두 개가 겹치는 것은 우연이기 어렵습니다.</li>
+    <li><strong>공유 1개 + 그 개념이 3편 이하에만 등장</strong> → 연결. 실례: Welcome ↔ <a href="#!commands">일상 사용</a>은 '자연어' 하나만 공유하지만, '자연어'가 워낙 희귀해 인정됩니다. 반대로 '스킬' 하나만 공유한 쌍은 연결되지 않습니다 — 21편이 공유하는 개념 1개는 근거가 못 되기 때문입니다.</li>
+    <li><strong>그 외</strong> → 개념으로는 연결하지 않습니다. 대신 개념 연결이 2개가 안 되는 문서는 <strong>같은 System의 이웃</strong>(예: <a href="#!ccb-claudemd">CLAUDE.md 편</a> → 같은 Tutorial의 앞뒤 강의)으로 보완해, <strong>모든 문서가 최소 2~4개의 연결</strong>을 갖게 합니다. 현재 비율은 개념 연결 161개(77%) · 폴더 보완 48개(23%)입니다.</li>
+</ul>
+
+<h3>경계값의 파급 — 왜 함부로 개념을 못 늘리나</h3>
+<p>"3편 이하" 규칙에는 미묘한 파급이 있습니다. 어떤 희귀 개념이 지금 3편에 등장하는데, 새 문서가 그 개념을 하나 더 쓰면 <strong>4편이 되는 순간</strong> 그 개념 하나로 이어져 있던 기존 엣지가 <strong>자격을 잃고 끊어집니다</strong>. 그래서 이 위키의 규칙집(CLAUDE.md)은 "고립을 없애려 본문에 없는 개념을 추가하는 것"을 금지합니다 — 억지 연결 하나가 옆 문서의 진짜 연결을 끊을 수 있기 때문입니다. 연결이 옅은 문서는 결함이 아니라 <strong>검토 신호</strong>로만 다룹니다. 이것이 이 그래프의 <strong>정직성 원칙</strong>입니다: 엣지는 늘 실제 본문에 근거하고, 큐레이션은 그래프를 좋게 보이게 하는 도구가 아닙니다.</p>
+
+<div class="note">
+    <span class="nh">한눈 요약</span>
+    개념은 <strong>큐레이션</strong>(본문 실재만) → 엣지는 <strong>희소성 가중 공유</strong>(2개↑ 또는 희귀 1개) → 부족하면 <strong>폴더 보완</strong> → 모든 문서 2~4연결·고아 0. 많이 참조되는 문서가 <strong>허브</strong>가 되어 그래프의 중심을 이룹니다(<a href="#!kgs-views">다음 편</a>).
+</div>
