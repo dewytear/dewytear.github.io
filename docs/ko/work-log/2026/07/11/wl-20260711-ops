@@ -43,3 +43,14 @@
 </ul>
 
 <p><strong>운영성 지적(84점) 취사선택</strong> — 사용자 지시대로 무조건 수용하지 않고 판정: <strong>수용</strong> ①"지금 할 일 없음↔바로 착수 가능" 모순(문구 정정: 기술적 준비 완료 ≠ 우선순위 확정) ②✔ 기호 혼동(상태 칩 READY/WATCH/LATER로 교체 — ✅ 완료와 분리) ③파일럿 종료 기준 부재(위 명세로 해소) ④curated→source ⑤authority 어휘 정의표 선행 ⑥항목 과밀(1~2줄 압축). <strong>기각</strong> ①상태별 섹션 전면 재구조 — 주제 트랙 4개는 사용자가 직접 지시한 구조라 유지, 상태는 칩으로 병기(두 뷰는 직교) ②별도 설계 문서(wl-specs) 신설 — 살아있는 메타 문서 추가는 "단 하나의 살아있는 목록" 원칙과 충돌, 확정 명세는 불변 기록(이 로그)에 박제 ③100만 편 Vision 분리 — 이미 한 줄+트리거인 LATER 항목, 문서 신설 비용 &gt; 이익.</p>
+
+<h3>자동화 성숙도 외부 분석 취사선택 — 게이트에 --fix를 달다</h3>
+<p>ChatGPT의 "검증 자동화는 강하나 <strong>생성 자동화가 없다</strong>" 분석을 실측 대조했다. <strong>사실관계는 대체로 정확</strong> — check_* 게이트 4종 모두 판정→exit 1→수동 지시뿐이고(--fix 부재), build_plugin.py·매니페스트류 없음, wiki-init은 절차서(스크립트 아님), wiki-update 스킬 없음. 단 성숙도 점수표(65점 등)는 근거 없는 정밀도라 무시했고, 문서 경로 오류(kgs-*를 <code>ai/map/</code>으로 표기 — 실제 <code>ai/wiki/knowledge-system/</code>)가 있었다. 원칙대로 취사선택:</p>
+<ul>
+    <li><strong>수용·구현 ①</strong> <code>check_plugin_sync.py --fix</code> — drift/missing은 루트→번들 복사, orphan은 제거(스냅샷=미러) 후 재검사. 순수 바이트 사본이라 복원에 판단이 필요 없다. <strong>version 상향은 --fix가 안 한다</strong> — minor/patch는 의미 판단(사람), 게이트는 계속 강제. 3종 판정 동시 시뮬레이션으로 자가 테스트 통과. 이번 PR의 번들 반영 자체를 이 --fix로 수행(도그푸딩).</li>
+    <li><strong>수용·구현 ②</strong> <code>check_cachebuster.py --fix</code> — stale 자산의 <code>?v</code>를 작업트리 index.html에 자동 +1 기록(유일 매치 검증 포함). 스크래치 클론에서 검출→fix(23&rarr;24)→커밋→게이트 통과 전 사이클 확인. <strong>해시 매니페스트·빌드 스크립트는 기각</strong> — 노빌드 정적 사이트(GitHub Pages master 직배포) 구조를 깨는 과설계, 숫자 자동 범프로 같은 목표 달성.</li>
+    <li><strong>축소 수용</strong> "변경 영향 판정" — validate_change_impact.py·영향 매니페스트 대신 <strong>CLAUDE.md 규칙 한 줄로 박제</strong>: 엔진 기능(스키마·UI 블록·그래프 모델) 변경 시 자기기술 문서(kgs-*·ai-guide·ai-map) 반영을 같은 주제에서 검토(PR #252의 교훈). 서술 갭은 본질적으로 사람 판단 영역 — 기계 판정기는 오탐으로 무시 학습을 낳는다.</li>
+    <li><strong>보류(트리거 명시)</strong> Fresh-install CI 스모크는 ④트랙 템플릿화 WATCH에 병기(wiki-init 스크립트화가 선행이라 한 몸), wiki-update(설치본 업그레이드)는 LATER 신규 — <em>트리거: 외부 설치본 등장(현재 0개, 지금 만들면 사용자 없는 기계)</em>.</li>
+    <li><strong>기각</strong> ①features.yml·doc-bindings.yml 매니페스트 — 새 살아있는 메타 파일은 그 자체가 드리프트원("게이트를 지키는 게이트" 회귀), 단일 저자·102문서에서 유지 비용&gt;이익, "단 하나의 살아있는 목록" 원칙과 충돌 ②GENERATED marker 문서 자동 생성 — kgs 문서는 사실표가 아닌 서술 에세이, 연 몇 회 바뀌는 사실을 위해 생성기+게이트를 얹는 역비례(기계 대상 사실은 이미 schema.md 동결 계약이 담당) ③Bot PR 파이프라인 — 단일 저자+AI 작업자 세션이 이미 "자동 수정+사람 승인" 그 자체.</li>
+</ul>
+<p>요지: 이 위키의 자동화 방향은 <strong>"판단 없는 노동은 기계가, 판단은 사람이"</strong>다. --fix 2종은 전자라 수용했고, 매니페스트·문서 생성은 후자를 기계에 넘기는 것이라 기각했다.</p>
