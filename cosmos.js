@@ -324,7 +324,8 @@ function startCosmos(){
         var names = Object.keys(KNOWLEDGE);
         // 메뉴에서 숨긴 대분류는 그래프에서도 제외 — 사이드바와 같은
         // 유효 설정(사이트 기본값 + 개인 설정)을 따른다.
-        var hidden = effSettings().hiddenCats || [];
+        var eff = effSettings();
+        var hidden = eff.hiddenCats || [];
         if(hidden.length){
             names = names.filter(function(n){
                 var top = (KNOWLEDGE[n].section || '').split(' · ')[0];
@@ -365,6 +366,14 @@ function startCosmos(){
         // galaxy center so the universe reads as galaxies-of-clusters.
         var sub = tops.length === 1 ? 1 : 0.5;
         var CRAD = 1;   // shared-sphere radius — the round-ball envelope.
+        // Roundness (설정 → 디자인 탭): 100 = 완전한 둥근 공(모든 노드를
+        // 공유 구에 균일 분포), 0 = 분류(클러스터)별로 분리된 원래 배치.
+        // 그 사이는 클러스터 위치 ↔ 구면 위치를 lerp. effSettings()는
+        // HARD_DEFAULTS를 안 읽으므로 리터럴 100으로 폴백.
+        var cr = eff.cosmosRoundness;
+        var round = (cr == null ? 100 : cr) / 100;
+        if(round < 0){ round = 0; }
+        if(round > 1){ round = 1; }
         var dirs = {};
         galaxies = [];
         secMeta = {};
@@ -435,13 +444,17 @@ function startCosmos(){
         var Ntot = ord.length;
         for(var k = 0; k < Ntot; k++){
             var nd4 = nodes[ord[k]];
+            // Cluster-grouped seed (dir + jitter) set above; blend toward the
+            // even sphere position by `round` (1 = full ball, 0 = clusters).
+            var cx = nd4.x, cy = nd4.y, cz = nd4.z;
             var yy = 1 - 2 * (k + 0.5) / Ntot;
             var rr = Math.sqrt(Math.max(0, 1 - yy * yy)), aa = k * 2.399963;
             // A little inward jitter gives the shell a soft thickness.
             var rad = CRAD * (1 - ((hash(nd4.name) % 1000) / 1000) * 0.14);
-            nd4.x = rr * Math.cos(aa) * rad;
-            nd4.y = yy * rad;
-            nd4.z = rr * Math.sin(aa) * rad;
+            var sx = rr * Math.cos(aa) * rad, sy = yy * rad, sz = rr * Math.sin(aa) * rad;
+            nd4.x = cx * (1 - round) + sx * round;
+            nd4.y = cy * (1 - round) + sy * round;
+            nd4.z = cz * (1 - round) + sz * round;
         }
         function onSphere(c, scale){
             var m = Math.sqrt(c[0] * c[0] + c[1] * c[1] + c[2] * c[2]) || 1e-3;
@@ -451,6 +464,9 @@ function startCosmos(){
         // Cluster plates sit on the surface over their node patch; World plates
         // float a little outside (1.18×) so the big banners never collide with
         // the cluster labels or pile up near the center.
+        // Plates follow the (blended) node centroid `mid`; the surface
+        // projection is lerped by the same `round`, so at round=0 the plate
+        // sits at the cluster centroid and at round=1 on the sphere surface.
         var cen = {};
         nodes.forEach(function(nd){
             var c = cen[nd.sec] || (cen[nd.sec] = [0, 0, 0, 0]);
@@ -461,15 +477,20 @@ function startCosmos(){
             if(g.sec && cen[g.sec]){
                 var c = cen[g.sec], mid = [c[0] / c[3], c[1] / c[3], c[2] / c[3]];
                 var p = onSphere(mid, 1);
-                g.x = p[0]; g.y = p[1]; g.z = p[2];
+                g.x = mid[0] * (1 - round) + p[0] * round;
+                g.y = mid[1] * (1 - round) + p[1] * round;
+                g.z = mid[2] * (1 - round) + p[2] * round;
                 var tk = g.sec.split(' · ')[0], tc = topc[tk] || (topc[tk] = [0, 0, 0, 0]);
                 tc[0] += mid[0]; tc[1] += mid[1]; tc[2] += mid[2]; tc[3]++;
             }
         });
         galaxies.forEach(function(g){
             if(g.top && topc[g.top]){
-                var c = topc[g.top], p = onSphere([c[0] / c[3], c[1] / c[3], c[2] / c[3]], 1.18);
-                g.x = p[0]; g.y = p[1]; g.z = p[2];
+                var c = topc[g.top], tmid = [c[0] / c[3], c[1] / c[3], c[2] / c[3]];
+                var p = onSphere(tmid, 1.18);
+                g.x = tmid[0] * (1 - round) + p[0] * round;
+                g.y = tmid[1] * (1 - round) + p[1] * round;
+                g.z = tmid[2] * (1 - round) + p[2] * round;
             }
         });
         window.COSMOS_COUNT = nodes.length;

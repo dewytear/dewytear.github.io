@@ -37,3 +37,17 @@
     <span class="nh">검증 (CDP 렌더)</span>
     헤드리스 크로뮴으로 <code>#!cosmos</code> 다크 렌더 — 현행(울퉁불퉁·치우침) vs 둥근 공을 <strong>같은 각도로 비교 이미지</strong>를 만들어 고르게 했다(CLAUDE.md: 디자인은 렌더 이미지로). 확정안은 <strong>97개 노드가 구 전체에 고르게, 클러스터는 색 영역으로</strong> 유지되는 중심 잡힌 둥근 공. 콘솔 예외 0.
 </div>
+
+<h3>후속 — 설정에서 둥글기를 수치로 조정</h3>
+<p>둥근 공이 하드코딩(항상 완전 구)이라 사용자가 못 바꾸는 점을 보완. &ldquo;수치를 입력해 조정&rdquo; 요청에 따라 <strong>설정 &gt; 디자인 탭에 <code>3D 그래프 둥글기 (%)</code> 숫자 입력</strong>을 추가했다.</p>
+<ul>
+    <li><strong>블렌드</strong>: <code>cosmos.js build()</code>가 <code>effSettings().cosmosRoundness</code>(0~100, 기본 100)를 읽어, 노드·명판 좌표를 <strong>클러스터 위치 ↔ 구면 위치 사이로 lerp</strong>한다. <code>100</code> = 완전한 둥근 공(현재 배포 모습), <code>0</code> = 분류(클러스터)별로 분리된 원래 배치, 그 사이는 매끄럽게 변형. 명판도 같은 계수로 표면 투영을 lerp해 노드 구름을 따라간다.</li>
+    <li><strong>설정계 재사용</strong>: <code>HARD_DEFAULTS.cosmosRoundness = 100</code> + <code>setOrClear</code>(기본과 같으면 미저장) + <code>saveSettingsForm</code> 클램프. cosmos는 이미 <code>effSettings()</code>를 읽고 <strong>매 <code>#!cosmos</code> 진입마다 <code>build()</code>를 재실행</strong>하므로, 저장 후 그래프로 이동하면 자동 반영(라이브 이벤트 버스 불필요).</li>
+    <li><strong>컨트롤 스타일</strong>: 숫자 입력이 실은 <code>style.css</code>에 미스타일 상태였음(텍스트·셀렉트만 스타일)을 발견 — <code>input[type="number"]</code>를 기존 셀렉터에 합치고 <code>.settings-hint</code>(테마 토큰 <code>var(--muted)</code>)를 추가. 기존 &lsquo;새 문서 기간&rsquo; 숫자 필드도 함께 정돈됨.</li>
+    <li><code>i18n.js</code>에 <code>fRoundness</code>·<code>fRoundnessHint</code>(ko·en). 자산 변경 → <code>index.html</code> <code>?v</code>: app.js 20→21, cosmos.js 2→3, i18n.js 6→7, style.css 17→18.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">검증 (CDP 렌더)</span>
+    둥글기 <strong>0·50·100</strong>을 <code>localStorage</code> 주입으로 <code>#!cosmos</code> 다크 렌더 — 0(클러스터 분리)→50(중간)→100(완전 구)로 <strong>매끄럽게 블렌드</strong>됨을 확인(각 97노드, 예외 0). 설정 디자인 탭 렌더로 숫자 필드가 기존 스타일·힌트와 함께 뜨는 것도 확인. <code>validate_all</code> ERROR 0.
+</div>

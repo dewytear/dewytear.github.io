@@ -1316,7 +1316,8 @@
             font-size: 14px;
         }
         .settings-field input[type="text"],
-        .settings-field input[type="password"]{
+        .settings-field input[type="password"],
+        .settings-field input[type="number"]{
             width: 100%;
             padding: 10px 13px;
             background: var(--bg-alt);
@@ -1328,9 +1329,17 @@
         /* Calm focus: gentle border tint only — the global focus ring stays
            off since the border change already signals focus. */
         .settings-field input[type="text"]:focus,
-        .settings-field input[type="password"]:focus{
+        .settings-field input[type="password"]:focus,
+        .settings-field input[type="number"]:focus{
             outline: none;
             border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+        }
+        /* Sub-label hint under a settings control (e.g. what the value means). */
+        .settings-hint{
+            margin: 6px 0 0;
+            font-size: 12.5px;
+            line-height: 1.5;
+            color: var(--muted);
         }
         .settings-field select{
             width: 100%;
