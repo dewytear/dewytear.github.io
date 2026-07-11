@@ -51,29 +51,23 @@ function buildIndexes(tree){
 }
 
 // ---- Navigation tree ----
-// A folder with 2+ docs gets a digest icon that shows its docs on one
-// page. Knowledge folders keep the original semantics (direct docs only —
-// "read this folder in order"); Work Log folders collect DESCENDANTS too,
-// so 일(day)뿐 아니라 월/연/최상위에서도 그 기간의 로그를 몰아 읽는다
-// (저장은 주제별 파일 유지, 누적 읽기는 뷰로 제공). The icon rides inside
-// the title button as a flex child (stopPropagation keeps it from
-// toggling the branch). `path` mirrors buildIndexes so the folder's
-// section key matches FOLDER_DOCS.
-// FOLDER_DOCS 키는 buildIndexes의 DFS 삽입 순서라, 접두어 매칭으로 모으면
-// 트리 순서(=Work Log에선 날짜순) 그대로 나온다.
-function folderDocsDeep(section){
-    var out = [];
-    Object.keys(FOLDER_DOCS).forEach(function(k){
-        if(k === section || k.indexOf(section + ' · ') === 0){
-            out = out.concat(FOLDER_DOCS[k]);
-        }
-    });
-    return out;
-}
+// A folder with 2+ DIRECT docs gets a digest icon that shows those docs on
+// one page ("read this folder in order"). The icon appears ONLY on the leaf
+// folder that actually holds the doc files — Work Log 도 동일하게 말단(일
+// 폴더)에만 뜬다(월/연/최상위엔 직속 문서가 없어 아이콘도 없다). The icon rides
+// inside the title button as a flex child (stopPropagation keeps it from
+// toggling the branch). `path` mirrors buildIndexes so the folder's section
+// key matches FOLDER_DOCS.
 function folderDigestSpan(sectionKey){
-    var docs = sectionKey.indexOf('Work Log') === 0
-             ? folderDocsDeep(sectionKey) : FOLDER_DOCS[sectionKey];
+    var docs = FOLDER_DOCS[sectionKey];
     if(!docs || docs.length < 2){ return ''; }
+    // 말단(leaf) 폴더에만 — 하위 폴더를 더 가진 폴더엔 달지 않는다. 예:
+    // 최상위 'Work Log'는 직속 메타 문서(가이드·백로그)와 연/월/일 하위를
+    // 함께 가지므로 leaf가 아니다 → 아이콘 제외.
+    var hasSub = Object.keys(FOLDER_DOCS).some(function(k){
+        return k.indexOf(sectionKey + ' · ') === 0;
+    });
+    if(hasSub){ return ''; }
     return '<span class="folder-digest" role="button" tabindex="0"'
          + ' title="' + STR('digestTitle') + '" aria-label="' + STR('digestTitle') + '"'
          + ' data-section="' + escapeHtml(sectionKey) + '"'
@@ -441,6 +435,9 @@ var UPDATED_DATE_DOCS = { 'ai-map': 1, 'dz-map': 1, 'wl-backlog': 1, 'wl-guide':
 function injectBreadcrumb(name){
     var doc = DOC_BY_NAME[name];
     if(!doc || !doc.sectionL){ return; }
+    // Work Log 문서는 제목 아래 폴더 경로(브레드크럼)를 달지 않는다 — 데브
+    // 저널이라 폴더 위치 표기가 불필요. 제목 아래엔 생성일자만 남긴다.
+    if(doc.section && doc.section.indexOf('Work Log') === 0){ return; }
     var art = document.getElementById('article');
     var h2 = art && art.querySelector('h2');
     if(!art || !h2 || art.querySelector('.doc-crumb')){ return; }
@@ -804,9 +801,7 @@ function newBlock(dir){
 // Fetches the folder's docs in reading order and concatenates their
 // bodies, with a jump-to table of contents. No tags / model badge.
 function showFolder(section){
-    // Work Log 폴더는 하위(일 폴더)까지 딥 수집 — 월/연 누적 읽기 뷰.
-    var docs = (section.indexOf('Work Log') === 0
-              ? folderDocsDeep(section) : FOLDER_DOCS[section]) || [];
+    var docs = FOLDER_DOCS[section] || [];
     var parts = section.split(' · ');
     var title = parts[parts.length - 1] || section;
     if(!docs.length){
