@@ -65,3 +65,17 @@
     <span class="nh">검증 (CDP 렌더, 캐시 비움)</span>
     localStorage를 비운 <strong>신규 방문자</strong> 상태로 렌더: 검색 독이 <strong>별똥별→2048→…</strong> 순이고 별똥별이 활성(<code>effSettings().searchGame==='concept'</code>), <code>#!cosmos</code>가 <strong>둥글기 40</strong>(<code>effSettings().cosmosRoundness===40</code>), <code>newDays===5</code> 확인. <code>validate_all</code> ERROR 0.
 </div>
+
+<h3>Work Log 표시 3건 — 생성일자·폴더 경로·모아보기 아이콘</h3>
+<p>Work Log 문서/폴더 표시 관련 지적 3건을 함께 수정.</p>
+<ul>
+    <li><strong>생성일자 미표시</strong>: 오늘자 <code>wl-20260711-design</code>이 <code>data/doc-dates.json</code>에 <strong>누락</strong>돼 날짜가 안 떴다(로그를 갱신하며 <code>tools/build_dates.py</code> 재생성을 빠뜨림). <code>build_dates.py</code>를 다시 돌려 채웠다(131→132). 날짜는 git 이력 파생 아티팩트라 문서 추가/갱신 PR에서 재생성하는 관례.</li>
+    <li><strong>제목 아래 폴더 경로 제거</strong>: <code>injectBreadcrumb</code>에서 <strong>Work Log 문서면 브레드크럼을 달지 않는다</strong>(<code>section.indexOf('Work Log')===0</code>이면 return). 데브 저널이라 폴더 위치 표기가 불필요 — 제목 아래엔 생성일자만 남는다. crumb이 없으면 <code>injectDocDate</code>가 자연히 제목(h2) 바로 아래에 날짜를 붙인다.</li>
+    <li><strong>모아보기(⧉) 아이콘을 말단 폴더에만</strong>: 기존엔 Work Log 폴더가 <em>하위까지 딥 수집</em>(<code>folderDocsDeep</code>)해 연/월/최상위에도 아이콘이 떴다. 이를 폐지하고 <strong>직속 문서 ≥2 & 하위 폴더 없음(leaf)</strong>일 때만 아이콘을 단다 — Work Log는 <strong>일(day) 폴더에만</strong> 뜨고, 직속 메타(가이드·백로그)+하위를 함께 가진 최상위 &lsquo;Work Log&rsquo;도 leaf가 아니라 제외. 지식 폴더는 영향 없음(원래 직속 문서 기준).</li>
+    <li><code>app.js</code> 변경 → <code>index.html</code> <code>?v</code> 21→22. <code>doc-dates.json</code>은 <code>?v</code> 미로드 자산이라 캐시버스터 대상 아님(관례).</li>
+</ul>
+
+<div class="note">
+    <span class="nh">검증 (CDP 렌더)</span>
+    <code>#!wl-20260711-design</code> 렌더 — 제목 아래 <strong>&ldquo;생성일자: 2026년 7월 11일&rdquo;</strong> 표시·<strong>브레드크럼 없음</strong>(<code>.doc-crumb</code> 부재) 확인. 내비 <code>.folder-digest</code> <code>data-section</code> 수집 결과 Work Log는 <strong>일 폴더 9건(03~11일)에만</strong>, 최상위·연·월엔 없음. <code>validate_all</code> ERROR 0.
+</div>
