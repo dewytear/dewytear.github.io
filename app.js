@@ -1074,7 +1074,8 @@ function saveSettings(s){
 var SITE_DEFAULTS = {};
 var HARD_DEFAULTS = { navLineStyle: 'dashed', navLineWidth: '1px',
                       searchGame: 'g2048', music: '', lang: 'ko',
-                      hideRecent: false, hideRelated: false, newDays: 7 };
+                      hideRecent: false, hideRelated: false, newDays: 7,
+                      cosmosRoundness: 100 };
 // Effective settings = site defaults overlaid with personal values.
 function effSettings(){
     var out = {}, k;
@@ -1291,6 +1292,7 @@ function showSettings(){
                       exposed: cats.filter(function(c){ return hiddenCats.indexOf(c) === -1; }) };
     var curAccentDay = s.accentDay || accentDefault('day');
     var curAccentNight = s.accentNight || accentDefault('night');
+    var curRound = (s.cosmosRoundness != null ? s.cosmosRoundness : 100);
     var basic =
         '<div id="settings-panel-basic" class="settings-panel"'
       +   (SETTINGS_TAB === 'basic' ? '' : ' hidden') + '>'
@@ -1397,6 +1399,12 @@ function showSettings(){
       +     opt('3px', STR('optThick'), curNavWidth)
       +   '</select>'
       + '</div>'
+      + '<div class="settings-field">'
+      +   '<label for="settings-roundness">' + STR('fRoundness') + '</label>'
+      +   '<input id="settings-roundness" type="number" min="0" max="100" step="10" value="'
+      +     curRound + '">'
+      +   '<p class="settings-hint">' + STR('fRoundnessHint') + '</p>'
+      + '</div>'
       + '</div>';
     var html =
         '<h2>' + STR('settings') + '</h2>'
@@ -1439,7 +1447,7 @@ function renderSettingsDump(){
     var eff = effSettings();
     var KEYS = ['theme', 'lang', 'accentDay', 'accentNight', 'searchGame',
                 'navLineStyle', 'navLineWidth', 'hideRecent', 'hideRelated', 'newDays',
-                'music', 'title', 'tagline', 'photoLine', 'hiddenCats'];
+                'cosmosRoundness', 'music', 'title', 'tagline', 'photoLine', 'hiddenCats'];
     var rows = KEYS.map(function(k){
         var v = eff[k];
         var src = personal[k] !== undefined ? STR('srcPersonal')
@@ -1557,6 +1565,12 @@ function saveSettingsForm(){
     setOrClear(s, 'hideRelated', document.getElementById('settings-hiderelated').checked);
     setOrClear(s, 'newDays', parseInt(document.getElementById('settings-newdays').value, 10) || 7);
     setOrClear(s, 'searchGame', document.getElementById('settings-game').value);
+    // 3D 그래프 둥글기 (%): 0~100 클램프, 기본 100.
+    var rv = parseInt(document.getElementById('settings-roundness').value, 10);
+    if(isNaN(rv)){ rv = 100; }
+    if(rv < 0){ rv = 0; }
+    if(rv > 100){ rv = 100; }
+    setOrClear(s, 'cosmosRoundness', rv);
     var prevLang = currentLang();
     setOrClear(s, 'lang', document.getElementById('settings-lang').value);
     // Accent overrides: the (site) default value = no override stored.
