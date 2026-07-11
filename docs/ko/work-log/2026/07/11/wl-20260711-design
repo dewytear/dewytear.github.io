@@ -1,0 +1,20 @@
+<h2>디자인 — Work Log 헤더에 잘못 뜨던 &lsquo;Claude Fable 5&rsquo; 모델 배지 제거</h2>
+
+<h3>증상과 원인</h3>
+<p>Work Log 문서를 열면 헤더에 <strong>저작 모델 배지 &ldquo;Claude Fable 5&rdquo;</strong>가 붙어 있었다. 그런데 <code>list</code>의 work-log 노드는 <strong>애초에 <code>model</code> 필드가 없다</strong>(CLAUDE.md 규칙상 work log는 <code>"tags": []</code>만 — 사람/AI가 함께 큐레이트하는 데브 저널이라 단일 저작 모델을 달 문서가 아님). 원인은 배지를 그리는 <code>app.js</code>의 <strong>전역 폴백</strong>이었다:</p>
+<ul>
+    <li><code>app.js</code> <code>DOC_MODEL = 'Claude Fable 5'</code>(다른 세션이 하드코딩한 &ldquo;규칙 이전 문서용&rdquo; 폴백).</li>
+    <li><code>fetchPage</code>: <code>var label = doc ? (doc.model || DOC_MODEL) : ''</code> → model 없는 <strong>모든 work log</strong>가 폴백값 &ldquo;Claude Fable 5&rdquo;로 오표기.</li>
+</ul>
+
+<h3>수정</h3>
+<ul>
+    <li><code>fetchPage</code>에서 <strong>Work Log 문서면 배지를 숨긴다</strong> — <code>recentDocs</code>가 쓰는 것과 같은 섹션 프리픽스 검사 재사용: <code>doc.section.indexOf('Work Log') === 0</code>이면 <code>label</code>을 비운다. 오늘자·과거 <strong>모든 work log가 일관되게 배지 없음</strong>, 콘텐츠 문서는 무변경.</li>
+    <li><strong>범위 한정</strong>: 콘텐츠 문서(news·tutorial·dzp)의 <code>DOC_MODEL</code> 폴백(Fable 5)은 그대로 둔다 — 그 문서들은 실제 Fable-5 세션이 작성한 것이라 폴백이 의도적. 지적은 work log에 한정.</li>
+    <li><code>app.js</code> 변경 → <code>index.html</code> <code>?v</code> 19→20(캐시버스터 규칙).</li>
+</ul>
+
+<div class="note">
+    <span class="nh">검증 (CDP 렌더)</span>
+    <code>wl-20260711-content</code>·<code>wl-20260710-design</code> 등 work log 헤더 <strong>배지 없음</strong> 확인. 콘텐츠 문서는 유지 — Neo4j 아티클 &ldquo;Claude Opus 4.8&rdquo;, LLM Wiki 아티클 &ldquo;Claude Fable 5&rdquo;(명시 model), welcome &ldquo;Claude Fable 5&rdquo;(폴백). <code>validate_all</code> ERROR 0.
+</div>
