@@ -503,7 +503,10 @@ function fetchPage(filename){
             // 저작 모델 배지 — 예전엔 우상단 절대배치였으나, 모바일 제목 폭을
             // 확보하려 생성일자와 같은 라인(.doc-meta)의 왼쪽으로 옮겼다. 등재된
             // 지식 문서만 표시(About 등 미등재 특수 페이지는 모델 표기 없음).
-            var label = doc ? (doc.model || DOC_MODEL) : '';
+            // Work Log는 사람/AI가 함께 큐레이트하는 데브 저널이라 저작-모델 배지를
+            // 달지 않는다(list 노드에 model 없음 → DOC_MODEL 폴백으로 오표기되던 것 차단).
+            var isWorklog = doc && doc.section && doc.section.indexOf('Work Log') === 0;
+            var label = (doc && !isWorklog) ? (doc.model || DOC_MODEL) : '';
             if(art && label){
                 var meta = document.createElement('div');
                 meta.className = 'doc-meta';
