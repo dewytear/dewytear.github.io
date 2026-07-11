@@ -37,20 +37,67 @@ colors.js  graphviews.js  core.js  utils.js  i18n.js  cosmos.js
 search.js  games.js  app.js  folder-dates.js  music.js
 ```
 
-복사 후 커스터마이즈 최소 3점:
-1. `index.html`의 사이트 제목·헤더 문구를 내 위키 것으로.
-2. `config.json`의 defaults(언어·테마 액센트 등)를 내 취향으로.
-3. 안 쓸 모듈(예: `music.js`·`games.js`)을 지우면 `index.html`의 해당
-   `<script>` 태그도 함께 제거.
-
 이후 이 파일들을 고칠 때는 **캐시버스터 규칙**을 지킨다 — `index.html`이
 `?v=`로 로드하는 자산을 수정하면 같은 PR에서 그 `?v`를 올린다
 (`check_cachebuster.py`가 강제).
 
+## 1.6 개인화 인터뷰 (필수 — 복사 직후)
+
+복사한 뷰어는 **레퍼런스 위키의 개인 값**(제목 "Aaron's Claude Wiki"·개인
+YouTube 음악 링크·profile.jpg·photoLine)을 담고 있다 — **확인 없이 남겨두지
+말 것.** 아래 항목을 **사용자에게 질문**하고(AskUserQuestion 도구가 있으면
+그것으로, 없으면 대화로) 답을 반영한다. **1번(위키 이름)은 반드시 묻는다**;
+나머지는 제안 기본값 수락을 허용한다.
+
+| # | 질문 | 반영 위치 | 미응답 기본값 |
+|---|---|---|---|
+| 1 | **위키 이름** | `config.json` `title` + `index.html`의 `<title>`·`<h1>` 폴백 | 프로젝트 폴더명 |
+| 2 | 부제(태그라인) | `config.json` `tagline` + `index.html` 폴백 | 빈 값 |
+| 3 | 기본 언어 | `defaults.lang` (ko/en) | ko |
+| 4 | 프로필 사진 | `image` — 사용자 파일 경로, 없으면 빈 값 | 빈 값 (profile.jpg 참조 제거) |
+| 5 | 프로필 한 줄 | `defaults.photoLine` — ''이면 자동 숨김 | 빈 값 |
+| 6 | 배경음악 | `defaults.music` — 본인 YouTube URL 또는 ''(끔) | '' (**레퍼런스의 개인 링크 상속 금지**) |
+| 7 | 테마·액센트 | `defaults.theme`·`accentDay`·`accentNight` | day·#ff6600·#4db6ac |
+| 8 | 모듈 선택 | `music.js`·`games.js` 안 쓰면 복사 생략 + `index.html`의 해당 `<script>` 제거 | 둘 다 포함 |
+
+헤더는 `config.json`에서 하이드레이션되므로(title→h1·탭 제목, tagline, image)
+**본체는 config.json 수정**이고, `index.html`의 하드코딩 3곳(`<title>`·
+`<h1>`·`#tagline`)은 로딩 직전 잠깐 보이는 폴백이라 같은 값으로 맞춰 준다.
+
+## 1.7 about 페이지 (기본 스캐폴드)
+
+프로필 사진 클릭이 `docs/<lang>/about`을 여는데, 파일이 없으면 **빈 화면**이
+된다(fetchDoc이 404 시 ''를 반환). 그러므로 기본 about을 반드시 만든다 —
+인터뷰의 위키 이름·부제를 넣어 `docs/ko/about`을 스캐폴드:
+
+```html
+<h2>{위키 이름} 소개</h2>
+<p>{부제 또는 위키 이름}의 지식을 모아 연결하는 위키입니다.</p>
+<div class="note">
+    <span class="nh">이 페이지 바꾸기</span>
+    프로필 사진을 누르면 이 페이지가 열립니다. <code>docs/ko/about</code>
+    파일을 수정해 나만의 소개로 바꾸세요.
+</div>
+```
+
+about은 내비에 등록하지 않는 특수 문서다(`validate_routes`의
+`UNLISTED_DOCS`에 이미 예외 등록 — list 노드를 만들지 않는다).
+
 ## 2. 초기화 순서
 
 1. `mkdir -p docs/ko data tools` 후 `${CLAUDE_PLUGIN_ROOT}/tools/`의 파일을 프로젝트 `tools/`로 복사.
-2. 최소 `list` 작성 — 대분류(World) 1개 + 첫 문서 노드. **name(불변 ID)과 path(물리 경로)를 항상 쌍으로.**
+2. **스타터 콘텐츠** — 새 위키는 본문·대분류·폴더가 전부 비어 있으므로, 첫
+   화면 자체가 사용 안내가 되게 한다: 첫 World(예: "가이드") 아래 첫 문서를
+   빈 껍데기가 아니라 **"이 위키 키우는 법" 온보딩 가이드**로 만든다. 담을
+   골자 —
+   ① 지식 트리는 **World → Domain → System → Document**, `list` 노드는
+      **name(불변 ID)과 path(물리 경로)를 항상 쌍으로**;
+   ② 문서 추가는 `/wiki-plugin:add-doc` 스킬로(파일→list→doc-entries→인덱스
+      →Work Log→검증이 한 워크플로);
+   ③ 새 대분류(섹션)를 만들면 `tools/clusters.json`에 [섹션 경로, 표시명]을
+      모든 언어로 추가(지식지도 클러스터 표시);
+   ④ 이 가이드 문서 자체도 여느 문서처럼 수정·삭제해도 된다는 안내.
+   `list`에는 이 World 1개 + 가이드 문서 노드로 시작한다.
 3. `tools/doc-entries.ko.json`을 `{"docs": []}` 대신 문서 엔트리 배열 형식으로 시작(README·schema.md 참조).
    - **`tools/doc-entries.en.json`도 함께 만든다** — 영어를 아직 안 쓰면 빈 배열 `[]`로. (없으면 `validate_i18n`이 `en-entry-orphan` **ERROR**를 낸다.)
 4. **`i18n.js`(또는 `index.html`)에 `var STRINGS = { ko: {…}, en: {…} }` 블록을 만든다** — ko/en 키 집합이 같아야 한다. (없으면 `validate_i18n`이 `strings-parity` **ERROR**를 낸다. 새 UI 문구는 하드코딩 대신 이 STRINGS 키로 넣는다.)
