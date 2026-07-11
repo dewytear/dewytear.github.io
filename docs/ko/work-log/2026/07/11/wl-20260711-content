@@ -1,0 +1,10 @@
+<h2>콘텐츠 — Neo4j &lsquo;RDF vs 프로퍼티 그래프&rsquo; 아티클</h2>
+
+<h3>RDF vs 프로퍼티 그래프 (Neo4j) 아티클 등록</h3>
+<ul>
+    <li>사용자 제공 URL(Neo4j 블로그 &ldquo;RDF vs. property graphs: Choosing the right approach…&rdquo;)을 <a href="#!news-20260711-neo4j-rdf-vs-property-graph">뉴스 아티클</a>로 등록. <strong>원문 페이지가 봇 차단(403)</strong>이라 WebFetch·프록시·아카이브 모두 실패 → 글의 핵심 논지를 <strong>Neo4j 공식 문서(neosemantics·Cypher)·W3C·ISO(GQL) 자료로 교차 확인해 재구성</strong>. &ldquo;이 문서의 태도&rdquo; 노트에 재구성임을 명시하고 원문 링크로 유도(정직성).</li>
+    <li><strong>도식 2종 인라인 SVG</strong>(.d-* 클래스, 노드 글자는 신 <code>.d-node-label</code>): ①관계에 속성 붙이기 — LPG 엣지 직접 vs RDF 리이피케이션(관계를 개체로 복제) ②neosemantics n10s의 RDF↔프로퍼티 그래프 매핑(datatype→property·object→relationship·rdf:type→label). 비교표 3개(모델 대비·선택 가이드·용어)는 <code>.tbl-wrap</code>.</li>
+    <li>오라클 아티클이 오라클(SQL/PGQ) 관점이라면 이 글은 <strong>Neo4j·시맨틱 웹 관점</strong> — 리이피케이션·RDFS/OWL/SPARQL·GQL·상호운용을 보강해 <a href="#!news-20260710-oracle-ontology-property-graph">오라클 프로퍼티 그래프</a>·<a href="#!sb-level4">지식 그래프</a>와 자연 연결.</li>
+    <li>인덱싱: <code>list</code> 노드(11일 트리 신설, model 기록) + <code>doc-entries</code>(기존 개념 RDF·프로퍼티그래프·지식그래프·온톨로지·엔티티관계·쿼리·메타데이터 재사용) + <code>build_index</code> 재생성·<code>--check</code>. 지식지도 fallback 동기화(News 4→5, km-totals 90편/296개 ko·en).</li>
+    <li>검증: <code>validate_all</code> ERROR 0, 도식 경계 게이트(<code>diagram-text-overflow</code>·<code>diagram-viewbox-overflow</code>) 무플래그 — 자산 무변경.</li>
+</ul>

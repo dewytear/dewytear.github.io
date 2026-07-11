@@ -1,0 +1,151 @@
+<h2>RDF냐 프로퍼티 그래프냐 — 지식 그래프를 위한 두 모델 (Neo4j)</h2>
+<p>Neo4j 블로그 글 <strong>&ldquo;RDF vs. property graphs: Choosing the right approach for implementing a knowledge graph&rdquo;</strong>를 정리한 문서입니다. 지식 그래프를 <strong>실제로 구축</strong>할 때 마주치는 근본 선택 — <strong>RDF(트리플)</strong> 계열이냐 <strong>레이블드 프로퍼티 그래프(LPG)</strong>냐 — 를, 두 모델의 데이터 표현·표준·질의 언어·강약점으로 비교하고, Neo4j의 결론인 <strong>&ldquo;택일이 아니라 상호운용&rdquo;</strong>(neosemantics로 RDF와 오가기)까지 다룹니다. 이 위키의 <a href="#!news-20260710-oracle-ontology-property-graph">오라클 온톨로지·프로퍼티 그래프</a>가 오라클(SQL/PGQ) 관점이라면, 이 글은 <strong>Neo4j·시맨틱 웹 관점</strong>에서 같은 물음을 봅니다.</p>
+
+<div class="note">
+    <span class="nh">출처와 이 문서의 범위</span>
+    · 원문: Neo4j 블로그 &ldquo;RDF vs. property graphs: Choosing the right approach…&rdquo; — <a href="https://neo4j.com/blog/knowledge-graph/rdf-vs-property-graphs-knowledge-graphs/" target="_blank" rel="noopener">neo4j.com/blog/…/rdf-vs-property-graphs</a><br>
+    · 원문 페이지가 봇 차단(403)이라 <strong>본문 직접 인용 대신, 글의 핵심 논지를 Neo4j 공식 문서(neosemantics·Cypher/GQL)와 표준 자료로 교차 확인해 재구성</strong>했습니다. 세부 표현·예시는 원문과 다를 수 있으니 링크로 확인하세요.<br>
+    · 계보: <a href="#!sb-level4">세컨드 브레인 레벨 4 · 지식 그래프</a>, <a href="#!news-20260710-oracle-ontology-property-graph">오라클 프로퍼티 그래프</a>와 이어지는 &ldquo;지식을 관계로 잇는다&rdquo; 문서.
+</div>
+
+<h3>① 두 모델 — 트리플이냐, 노드·관계·속성이냐</h3>
+<p>둘 다 데이터를 &ldquo;점과 선&rdquo;(개체와 관계)으로 보는 그래프지만, 태생과 표현 방식이 다릅니다.</p>
+<div class="note">
+    <span class="nh">용어 — RDF · 트리플 · URI</span>
+    <strong>RDF</strong>(Resource Description Framework)는 <strong>시맨틱 웹</strong>(1990년대 말 W3C)에서 나온 모델로, 모든 사실을 <strong>주어–서술어–목적어</strong> 세 조각, 즉 <strong>트리플(triple)</strong>로 표현합니다. 자원·관계·속성 모두 <strong>URI</strong>(전역 식별자)로 이름 붙여, 서로 다른 시스템의 데이터가 <strong>표준으로 맞물립니다</strong>(상호운용).
+</div>
+<div class="note">
+    <span class="nh">용어 — 레이블드 프로퍼티 그래프(LPG)</span>
+    <strong>LPG</strong>(Labeled Property Graph, Neo4j가 대표)는 <strong>노드·관계(엣지)·속성(property)</strong>로 표현합니다. 노드와 <strong>관계 둘 다에 키–값 속성을 직접</strong> 붙일 수 있어, 저장이 <strong>compact·직관적</strong>이고 <strong>경로 탐색이 빠릅니다</strong>. 태생이 저장 효율·빠른 순회에 맞춰져 있습니다.
+</div>
+<p>즉 RDF는 <strong>표준·의미·상호운용</strong>에, LPG는 <strong>표현의 간결함·탐색 성능·개발 편의</strong>에 무게가 실린 모델입니다.</p>
+
+<h3>② 핵심 쟁점 — &lsquo;관계에 속성 붙이기&rsquo;와 리이피케이션</h3>
+<p>글이 가장 힘주어 짚는 차이. &ldquo;이몽룡이 성춘향에게 <strong>2018년에</strong> 약을 처방했다&rdquo;처럼 <strong>관계 자체에 속성(시점·용량 등)</strong>을 달아야 할 때, 두 모델의 손맛이 갈립니다.</p>
+<ul>
+    <li><strong>LPG</strong>: 관계(엣지)에 <code>date=2018</code>을 <strong>그냥 얹으면</strong> 끝. 노드든 관계든 속성이 1급이라 중첩 순서를 신경 쓸 필요가 없습니다.</li>
+    <li><strong>RDF</strong>: 트리플은 <strong>주어–서술어–목적어</strong> 세 조각뿐이라 &ldquo;관계에 대한 속성&rdquo;을 직접 못 답니다. <strong>리이피케이션(reification)</strong> — 그 관계를 <strong>하나의 별도 개체로 복제</strong>해 놓고, 거기에 속성 트리플을 다시 매다는 우회가 필요합니다(또는 named graph·RDF-star 같은 유사 기법). 트리플 하나가 <strong>여러 개</strong>로 불어나 무겁고 다루기 번거로워집니다.</li>
+</ul>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="관계에 속성을 붙일 때, 프로퍼티 그래프는 엣지에 직접 속성을 얹지만 RDF는 관계를 별도 개체로 리이피케이션해 여러 트리플로 표현한다">
+    <text class="d-label sm" x="180" y="24" text-anchor="middle">프로퍼티 그래프(LPG) — 엣지에 직접</text>
+    <circle class="d-node" cx="70" cy="120" r="26"/><text class="d-node-label" x="70" y="124" text-anchor="middle">이몽룡</text>
+    <circle class="d-node" cx="300" cy="120" r="26"/><text class="d-node-label" x="300" y="124" text-anchor="middle">성춘향</text>
+    <line class="d-edge accent" x1="98" y1="120" x2="266" y2="120"/><polygon class="d-arrow accent" points="266,115 276,120 266,125"/>
+    <rect class="d-box accent" x="128" y="70" width="114" height="38" rx="9"/><text class="d-label sm" x="185" y="87" text-anchor="middle">처방</text><text class="d-sub" x="185" y="101" text-anchor="middle">date=2018 · 용량</text>
+    <line class="d-edge accent dash" x1="185" y1="108" x2="185" y2="118"/>
+    <text class="d-sub" x="185" y="176" text-anchor="middle">관계에 속성을 그냥 얹는다 — 트리플 1개</text>
+    <text class="d-sub" x="185" y="196" text-anchor="middle">Cypher: (a)-[:처방 {date:2018}]-&gt;(b)</text>
+
+    <line class="d-edge dash" x1="380" y1="44" x2="380" y2="270"/>
+
+    <text class="d-label sm" x="550" y="24" text-anchor="middle">RDF — 리이피케이션(관계를 개체로)</text>
+    <circle class="d-node" cx="450" cy="80" r="22"/><text class="d-node-label" x="450" y="84" text-anchor="middle">이몽룡</text>
+    <circle class="d-node" cx="660" cy="80" r="22"/><text class="d-node-label" x="660" y="84" text-anchor="middle">성춘향</text>
+    <rect class="d-box" x="502" y="150" width="106" height="40" rx="9"/><text class="d-label sm" x="555" y="167" text-anchor="middle">처방사건 #1</text><text class="d-sub" x="555" y="182" text-anchor="middle">(별도 개체)</text>
+    <line class="d-edge" x1="470" y1="98" x2="524" y2="148"/><text class="d-sub" x="470" y="140" text-anchor="middle">subject</text>
+    <line class="d-edge" x1="640" y1="98" x2="588" y2="148"/><text class="d-sub" x="642" y="140" text-anchor="middle">object</text>
+    <line class="d-edge" x1="555" y1="190" x2="555" y2="216"/><polygon class="d-arrow" points="551,216 559,216 555,222"/>
+    <rect class="d-box soft" x="500" y="224" width="110" height="30" rx="7"/><text class="d-sub" x="555" y="243" text-anchor="middle">date=2018 · 용량</text>
+    <text class="d-sub" x="555" y="278" text-anchor="middle">트리플 4개+ — 무겁고 우회적</text>
+</svg>
+<div class="d-cap">같은 &ldquo;관계에 속성&rdquo;을, LPG는 <strong>엣지에 한 번</strong>에 얹고 RDF는 <strong>관계를 개체로 복제(리이피케이션)</strong>해 여러 트리플로 표현한다.</div>
+</div>
+
+<h3>③ 표준·추론 vs 편의·성능 — 서로 다른 강점</h3>
+<p>리이피케이션의 번거로움에도 RDF가 널리 쓰이는 이유는 <strong>표준과 형식 의미론</strong>입니다. LPG의 강점은 <strong>편의와 성능</strong>이고요. 정리하면:</p>
+<div class="tbl-wrap"><table>
+    <thead><tr><th></th><th>RDF (트리플)</th><th>프로퍼티 그래프(LPG)</th></tr></thead>
+    <tbody>
+        <tr><td>데이터 단위</td><td>주어–서술어–목적어 트리플</td><td>노드 · 관계 · 속성</td></tr>
+        <tr><td>관계에 속성</td><td>리이피케이션 등 우회 필요</td><td>엣지에 직접 부착</td></tr>
+        <tr><td>식별</td><td>URI(전역 식별자)</td><td>내부 id/키</td></tr>
+        <tr><td>표준</td><td>W3C: RDFS · OWL · SKOS · SPARQL</td><td>ISO <strong>GQL</strong>(신규) · Cypher</td></tr>
+        <tr><td>의미·추론</td><td>OWL 등 <strong>형식 의미론·논리 추론</strong> 강점</td><td>형식 의미론·내장 추론은 약함</td></tr>
+        <tr><td>상호운용</td><td>표준 기반, 시스템 간 결합 쉬움</td><td>표준화가 늦게 시작(GQL로 수렴 중)</td></tr>
+        <tr><td>강점</td><td>의미·추론·상호운용·거버넌스</td><td>간결한 표현 · 빠른 탐색 · 개발 편의</td></tr>
+        <tr><td>약점</td><td>리이피케이션·질의 표현력 제약</td><td>형식 의미론·표준 성숙도</td></tr>
+    </tbody>
+</table></div>
+
+<h3>④ 질의 언어 — SPARQL vs Cypher/GQL</h3>
+<p>질의 언어도 성격이 갈립니다. <strong>SPARQL</strong>(RDF)은 <strong>트리플 패턴</strong>의 결합·선택·옵션으로 짜며, 규칙·추론과 잘 맞습니다. <strong>Cypher</strong>(LPG)는 <strong>찾으려는 그래프 패턴을 그림 그리듯</strong> 적는 선언형 언어로, 사람이 읽기 쉽고 패턴 매칭·경로 탐색에 강합니다. Cypher 계열은 이제 <strong>ISO <code>GQL</code></strong>(그래프 질의의 국제 표준)으로 표준화돼, 그동안 RDF/SPARQL만 갖던 &ldquo;표준 질의 언어&rdquo;의 공백을 메웁니다.</p>
+<div class="note">
+    <span class="nh">용어 — SPARQL · Cypher · GQL</span>
+    <strong>SPARQL</strong>: RDF 트리플 저장소용 W3C 표준 질의어(트리플 패턴 기반).<br>
+    <strong>Cypher</strong>: Neo4j가 만든 프로퍼티 그래프 질의어. <code>(a)-[:REL]-&gt;(b)</code>처럼 <strong>패턴을 그린다</strong>.<br>
+    <strong>GQL</strong>(Graph Query Language): 2024년 제정된 <strong>ISO 표준</strong> 그래프 질의어. Cypher가 대표 구현.
+</div>
+
+<h3>⑤ 결론 — 택일이 아니라 상호운용 (neosemantics)</h3>
+<p>Neo4j의 실용적 결론: <strong>둘 중 하나만 고를 필요가 없다.</strong> 운영·개발은 프로퍼티 그래프로 하되, RDF 표준·상호운용이 필요한 지점은 <strong>neosemantics(n10s)</strong> 플러그인으로 잇습니다. n10s는 RDF와 그 어휘(OWL·RDFS·SKOS)를 Neo4j에서 쓰게 해 주고, <strong>RDF를 소비/생산</strong>해 기존 트리플 저장소와 연동합니다. RDF를 가져오면 <strong>정해진 규칙으로 프로퍼티 그래프에 매핑</strong>됩니다:</p>
+<ul>
+    <li><strong>datatype 속성</strong>(리터럴 값) → 노드의 <strong>속성(property)</strong></li>
+    <li><strong>object 속성</strong>(자원 간 링크) → 노드를 잇는 <strong>관계(relationship)</strong></li>
+    <li><strong><code>rdf:type</code></strong> → 노드의 <strong>레이블(label)</strong></li>
+</ul>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="neosemantics가 RDF 트리플을 프로퍼티 그래프로 매핑한다: datatype 속성은 노드 속성으로, object 속성은 관계로, rdf:type은 레이블로. 반대로 내보내기도 가능해 트리플 저장소와 상호운용한다">
+    <rect class="d-box soft" x="16" y="86" width="150" height="78" rx="11"/><text class="d-label sm" x="91" y="110" text-anchor="middle">RDF 트리플</text><text class="d-sub" x="91" y="128" text-anchor="middle">주어·서술어·목적어</text><text class="d-sub" x="91" y="144" text-anchor="middle">URI · OWL/RDFS/SKOS</text>
+    <line class="d-edge accent" x1="166" y1="112" x2="210" y2="112"/><polygon class="d-arrow accent" points="210,107 218,112 210,117"/>
+    <rect class="d-box accent" x="218" y="90" width="120" height="70" rx="11"/><text class="d-label sm" x="278" y="118" text-anchor="middle">neosemantics</text><text class="d-sub" x="278" y="136" text-anchor="middle">n10s 매핑</text>
+    <line class="d-edge accent" x1="278" y1="90" x2="278" y2="72"/><polygon class="d-arrow accent" points="274,78 278,70 282,78"/>
+    <text class="d-sub" x="278" y="64" text-anchor="middle">내보내기도(export) — 트리플로 되돌림</text>
+    <line class="d-edge accent" x1="338" y1="125" x2="382" y2="125"/><polygon class="d-arrow accent" points="382,120 390,125 382,130"/>
+    <rect class="d-box" x="390" y="70" width="314" height="30" rx="7"/><text class="d-sub" x="547" y="89" text-anchor="middle">datatype 속성 &#8594; 노드 property</text>
+    <rect class="d-box" x="390" y="110" width="314" height="30" rx="7"/><text class="d-sub" x="547" y="129" text-anchor="middle">object 속성 &#8594; 관계(relationship)</text>
+    <rect class="d-box" x="390" y="150" width="314" height="30" rx="7"/><text class="d-sub" x="547" y="169" text-anchor="middle">rdf:type &#8594; 노드 레이블(label)</text>
+    <text class="d-sub" x="360" y="216" text-anchor="middle">운영은 프로퍼티 그래프로 · 표준·상호운용이 필요한 곳은 RDF로 오간다</text>
+</svg>
+<div class="d-cap">&ldquo;둘 중 하나&rdquo;가 아니라 <strong>다리</strong>를 놓는다 — n10s가 RDF↔프로퍼티 그래프를 규칙대로 매핑해 상호운용시킨다.</div>
+</div>
+
+<h3>언제 무엇을 — 선택 가이드</h3>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>이럴 때</th><th>기울기</th></tr></thead>
+    <tbody>
+        <tr><td>공개 표준·기관 간 데이터 교환, 온톨로지 기반 <strong>추론</strong>이 핵심</td><td><strong>RDF</strong>(RDFS/OWL/SPARQL)</td></tr>
+        <tr><td>빠른 개발·직관적 모델링, <strong>경로·패턴 탐색</strong>과 성능이 핵심</td><td><strong>프로퍼티 그래프</strong>(Cypher/GQL)</td></tr>
+        <tr><td>관계 자체에 속성이 많다(시점·가중치·근거)</td><td>프로퍼티 그래프(리이피케이션 회피)</td></tr>
+        <tr><td>둘 다 필요 — 운영은 빠르게, 상호운용은 표준으로</td><td>프로퍼티 그래프 + <strong>neosemantics</strong></td></tr>
+    </tbody>
+</table></div>
+
+<h3>용어 사전</h3>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>용어</th><th>뜻</th></tr></thead>
+    <tbody>
+        <tr><td><strong>RDF · 트리플</strong></td><td>사실을 주어–서술어–목적어로 표현하는 W3C 시맨틱 웹 모델.</td></tr>
+        <tr><td><strong>URI</strong></td><td>자원·관계·속성에 붙이는 전역 식별자 — 시스템 간 상호운용의 기반.</td></tr>
+        <tr><td><strong>LPG</strong></td><td>레이블드 프로퍼티 그래프 — 노드·관계·속성 모델(Neo4j).</td></tr>
+        <tr><td><strong>리이피케이션</strong></td><td>관계에 속성을 달기 위해 그 관계를 별도 개체로 복제하는 RDF 우회 기법.</td></tr>
+        <tr><td><strong>RDFS · OWL · SKOS</strong></td><td>RDF 위의 스키마·온톨로지·어휘 표준(형식 의미론·추론 제공).</td></tr>
+        <tr><td><strong>SPARQL</strong></td><td>RDF용 W3C 표준 질의어(트리플 패턴).</td></tr>
+        <tr><td><strong>Cypher</strong></td><td>프로퍼티 그래프 질의어 — 패턴을 그리듯 적는 선언형.</td></tr>
+        <tr><td><strong>GQL</strong></td><td>2024년 제정된 ISO 그래프 질의 표준(Cypher가 대표 구현).</td></tr>
+        <tr><td><strong>neosemantics(n10s)</strong></td><td>Neo4j에서 RDF를 가져오고 내보내는 플러그인 — RDF↔프로퍼티 그래프 상호운용.</td></tr>
+    </tbody>
+</table></div>
+
+<h3>정리 — 세 문장으로</h3>
+<ul>
+    <li>RDF는 <strong>표준·의미·추론·상호운용</strong>에, 프로퍼티 그래프는 <strong>간결한 표현·빠른 탐색·개발 편의</strong>에 강하다.</li>
+    <li>둘을 가르는 실무적 지점은 &ldquo;<strong>관계에 속성 붙이기</strong>&rdquo; — LPG는 엣지에 직접, RDF는 리이피케이션으로 우회한다.</li>
+    <li>선택은 배타적이지 않다 — 운영은 프로퍼티 그래프로, 표준·상호운용은 <strong>neosemantics</strong>로 RDF와 오가면 된다. 표준 질의의 공백도 <strong>GQL</strong>로 메워지는 중.</li>
+</ul>
+
+<h3>출처</h3>
+<ul>
+    <li>Neo4j, &ldquo;RDF vs. property graphs: Choosing the right approach for implementing a knowledge graph&rdquo; — <a href="https://neo4j.com/blog/knowledge-graph/rdf-vs-property-graphs-knowledge-graphs/" target="_blank" rel="noopener">neo4j.com</a> (원문)</li>
+    <li>Neo4j Labs, neosemantics(n10s) — RDF import/export 매핑 — <a href="https://neo4j.com/labs/neosemantics/" target="_blank" rel="noopener">neo4j.com/labs/neosemantics</a></li>
+    <li>ISO/IEC 39075 GQL(Graph Query Language) 표준 개요 — <a href="https://www.iso.org/standard/76120.html" target="_blank" rel="noopener">iso.org</a></li>
+    <li>W3C RDF · SPARQL · OWL 표준 — <a href="https://www.w3.org/RDF/" target="_blank" rel="noopener">w3.org/RDF</a></li>
+</ul>
+<p class="scn-sub"><strong>이 위키의 연관 문서</strong> — <a href="#!news-20260710-oracle-ontology-property-graph">오라클 온톨로지·프로퍼티 그래프</a> · <a href="#!sb-level4">세컨드 브레인 레벨 4 · 지식 그래프</a> · <a href="#!dzp-core">Douzone 지식 플랫폼 제안</a></p>
+
+<div class="note">
+    <span class="nh">이 문서의 태도</span>
+    RDF·프로퍼티 그래프의 기술 사실(트리플·리이피케이션·SPARQL/Cypher·GQL·neosemantics 매핑)은 <strong>W3C·ISO·Neo4j 공식 문서로 확인</strong>했습니다. 다만 원문 블로그 페이지가 봇 차단이라 <strong>본문을 직접 인용하지 못하고 논지를 재구성</strong>했으므로, Neo4j 특유의 강조점·예시·문구는 위 원문 링크로 확인하는 것이 정확합니다. &ldquo;어느 쪽이 낫다&rdquo;는 결론은 워크로드에 달려 있습니다.
+</div>
