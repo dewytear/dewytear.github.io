@@ -19,6 +19,7 @@
   3. 새 대분류(섹션)라면 `tools/clusters.json`에 **모든 언어** 클러스터 라벨([섹션 경로, 표시명]) 추가 + `docs/*/ai/map/ai-map`의 상단 도식·클러스터 표 fallback·`data-topics` 갱신
   4. 작업이 끝나면 **Work Log 문서를 추가**하고 `list`의 해당 날짜 트리에 노드(`"tags": []`)를 단다 — 하나의 작업(주제)을 master에 머지할 때 사람/AI가 직접 curated하게 작성한다(자동 머지 로그는 폐지됨). **로그는 PR·커밋 단위가 아니라 주제 단위다**: 한 주제는 되도록 한 브랜치로 묶어 진행하고, **진행 중 추가 수정·후속 버그픽스는 그 주제의 기존 로그를 갱신**한다 — 변경마다 새 로그를 만들어 과분할하지 말 것(그래서 `check_worklog`는 새 로그 추가뿐 아니라 **기존 로그 갱신도 통과**로 인정한다). **하루 안에서 주제는 빅 프레임 4종으로 묶는다** — ①콘텐츠(문서·기사·강의) ②기능 ③디자인·UI ④운영·도구(검증기·CI·로그 체계·리팩터). 같은 날 같은 프레임 로그가 이미 있으면 새 파일 대신 **그 로그에 `<h3>` 섹션으로 추가**하고, 파일명은 `wl-YYYYMMDD-<frame>`(content|features|design|ops)을 권장한다. `validate_routes`가 한 날짜 폴더에 로그 5개 이상이면 WARN(병합 검토 신호)을 낸다. **작아도(주제라면) 예외 없음** — PR CI의 `tools/check_worklog.py`가 실질 변경이 있는데 로그를 아예 안 건드린 PR을 실패시킨다(로깅 전용 PR은 예외). 또한 로그 파일만 추가하고 `list` 노드를 빠뜨리면 문서가 내비게이션에 안 떠 "안 쌓인" 것과 같으므로, `tools/validate_routes.py`가 `list` 미등록 work-log 파일을 **ERROR(orphan-file)**로 막는다(일반 문서 고아는 WARN, work-log만 ERROR — push·PR 모두 `validate_all`에서 검사). 로그의 "다음 할 일"은 **그 시점 스냅샷(불변)**일 뿐이니, 열린 일은 로그에 박지 말고 **`work-log/wl-backlog`(☐ Backlog, 단일 살아있는 목록)**에서만 관리한다 — 후속이 생기면 Backlog에 추가, 완료하면 Backlog "최근 완료"로 옮겨 ✅+해결 로그 링크를 달고 오래된 건 걷어낸다(원본은 로그). 옛 로그는 소급 수정하지 않는다.
   5. 문서·`list`·인덱스를 바꾸는 PR은 `python tools/validate_all.py`를 먼저 실행한다 — **ERROR 0가 머지 조건**, WARN은 검토 후 보정하거나 사유를 Work Log에 남긴다
+- **엔진 기능이 바뀌면 자기기술 문서 반영을 같은 주제에서 검토한다**: 스키마 필드·본문 UI 블록·그래프 모델처럼 위키의 동작 방식이 추가·변경되면, 그것을 해설하는 '지식 체계' 문서(`kgs-*`)·`ai-guide`·지식지도(`ai-map`)의 서술이 낡지 않았는지 확인하고 필요분을 반영한다(예: relations 도입 시 kgs-edges가 related만 설명하는 자기모순 — 2026-07-11 발견·정합). 서술 갭은 기계 게이트가 못 잡는 사람 판단 영역이라 규칙으로 박는다.
 
 ## 지식 그래프 WARN 해석 규칙
 - **연결이 옅은 것은 결함이 아니다.** `validate_graph`의 `isolated-doc`·`wrong-cluster`·`generic-concept`는 ERROR가 아니라 **검토 신호(WARN/INFO)** 다. 문서 성격상 다른 문서와 강하게 이어질 이유가 없으면(순서대로 읽는 강의·참조 문서 등, 이미 folder 연관으로 앞뒤와 이어짐) **연결이 없는 게 자연스러운 것**이며 그대로 둔다.
@@ -31,4 +32,4 @@
 
 ## 배포
 - GitHub Pages는 `master`를 배포한다. 머지 후 "pages build and deployment" 워크플로가 일시 오류로 실패하면(간헐적) master에 빈 커밋을 푸시해 재트리거한다.
-- **캐시버스터**: `index.html`이 `?v=`로 로드하는 자산(app.js·style.css 등)을 고치면 **같은 PR에서 그 자산의 `?v`를 올린다** — 안 올리면 재방문 브라우저(특히 iOS Safari)가 옛 캐시를 계속 써서 "반영이 안 됨". PR CI의 `tools/check_cachebuster.py`가 이를 기계적으로 강제한다.
+- **캐시버스터**: `index.html`이 `?v=`로 로드하는 자산(app.js·style.css 등)을 고치면 **같은 PR에서 그 자산의 `?v`를 올린다** — 안 올리면 재방문 브라우저(특히 iOS Safari)가 옛 캐시를 계속 써서 "반영이 안 됨". PR CI의 `tools/check_cachebuster.py`가 이를 기계적으로 강제하고, **`--fix`를 주면 stale 자산의 `?v`를 자동 +1 기록**한다. 플러그인 스냅샷도 같은 패턴 — `tools/check_plugin_sync.py --fix`가 루트→번들 복사를 자동 수행한다(단 plugin.json `version` 상향은 의미 판단이라 수동 유지).

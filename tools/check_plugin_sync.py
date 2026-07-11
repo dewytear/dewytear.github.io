@@ -20,13 +20,21 @@
 달라야 통과 — 설치 사용자가 "번들이 갱신됐다"를 버전으로 알 수 있게 강제한다
 (check_cachebuster의 "자산 변경 = ?v 상향"과 동일 사상).
 
+`--fix`를 주면 판정에서 그치지 않고 스냅샷을 직접 복원한다(로컬 전용):
+drift/missing은 루트→번들 복사, orphan은 번들에서 제거(스냅샷=미러) 후
+재검사로 0을 확인한다. 순수 바이트 사본이라 기계 복원에 판단이 필요 없다.
+단 **version 상향은 --fix가 하지 않는다** — minor/patch는 의미 판단이라
+사람이 올리고, PR 게이트가 계속 강제한다.
+
 Usage:
   python tools/check_plugin_sync.py                          # 정합 검사만 (push·로컬)
   python tools/check_plugin_sync.py --base origin/master     # + 버전 상향 검사 (PR)
+  python tools/check_plugin_sync.py --fix                    # 어긋난 스냅샷 자동 복원 (로컬)
 """
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 
@@ -78,6 +86,17 @@ def check_snapshot():
     return findings, len(src_files)
 
 
+def apply_fix(findings):
+    """findings를 기계 복원: drift/missing은 루트→번들 복사, orphan은 제거."""
+    for check, name, _why in findings:
+        if check in ('drift', 'missing-in-bundle'):
+            shutil.copy2(os.path.join(SRC, name), os.path.join(BUNDLE, name))
+            print(f'  fixed: {name} — 루트 tools/에서 번들로 복사')
+        elif check == 'orphan-in-bundle':
+            os.remove(os.path.join(BUNDLE, name))
+            print(f'  fixed: {name} — 번들에서 제거(루트에 원본 없음)')
+
+
 def git(args):
     return subprocess.run(['git'] + args, cwd=ROOT, capture_output=True,
                           text=True, check=True).stdout
@@ -116,6 +135,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--base', default=None,
                         help='PR base rev — 주면 번들 변경 시 version 상향도 검사')
+    parser.add_argument('--fix', action='store_true',
+                        help='어긋난 스냅샷을 루트 tools/ 기준으로 자동 복원 (로컬 전용)')
     args = parser.parse_args()
 
     if not os.path.isdir(BUNDLE):
@@ -123,11 +144,15 @@ def main():
         return
 
     findings, n_src = check_snapshot()
+    if findings and args.fix:
+        print(f'FIX: 스냅샷 어긋남 {len(findings)}건 복원')
+        apply_fix(findings)
+        findings, n_src = check_snapshot()   # 복원 후 재검사 — 0이어야 정상
     if findings:
         print('[ERROR] plugin-sync | 동봉 스냅샷이 source of truth(tools/)와 어긋남')
         for check, name, why in findings:
             print(f'  - {check} | {name} — {why}')
-        print('→ `cp tools/<파일> plugins/wiki-plugin/tools/`로 재동기화하세요.')
+        print('→ `python tools/check_plugin_sync.py --fix`로 재동기화하세요.')
         sys.exit(1)
 
     if args.base:
