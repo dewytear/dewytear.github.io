@@ -2190,6 +2190,45 @@
             -webkit-line-clamp: 2;
             overflow: hidden;
         }
+        /* ===== 인터랙티브 시나리오 연표 (.tl-scenario) ===== */
+        /* 프래그먼트가 마크업을, app.js가 wiring을 담당. 테마 토큰만 써
+           낮/밤 자동, 폭은 반응형으로 뷰포트를 넘지 않는다. */
+        .tl-scenario{ margin: 22px 0; }
+        .tl-track{
+            display: flex; justify-content: space-between; align-items: flex-start;
+            position: relative; margin: 8px 4px 0;
+        }
+        .tl-track::before{
+            content: ""; position: absolute; left: 3%; right: 3%; top: 8px;
+            height: 2px; background: var(--border);
+        }
+        .tl-node{
+            position: relative; z-index: 1; display: flex; flex-direction: column;
+            align-items: center; gap: 6px; background: none; border: none;
+            cursor: pointer; color: var(--muted); font: inherit; padding: 2px 4px;
+            flex: 1 1 0; min-width: 0;
+        }
+        .tl-dot{
+            width: 16px; height: 16px; border-radius: 50%;
+            border: 2px solid var(--border); background: var(--bg); transition: all .18s;
+        }
+        .tl-year{ font-size: .8rem; font-weight: 700; transition: color .18s; text-align: center; }
+        .tl-node:hover .tl-dot{ border-color: var(--accent); }
+        .tl-node:focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+        .tl-node[aria-selected="true"] .tl-dot{
+            background: var(--accent); border-color: var(--accent); transform: scale(1.25);
+        }
+        .tl-node[aria-selected="true"] .tl-year{ color: var(--accent-ink); }
+        .tl-panel{
+            margin-top: 18px; border: 1px solid var(--border); border-radius: 12px;
+            background: color-mix(in srgb, var(--bg-alt) 86%, transparent);
+            padding: 14px 16px; animation: tl-fade .2s ease-out;
+        }
+        @keyframes tl-fade{ from{ opacity: 0; transform: translateY(4px); } to{ opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce){ .tl-panel{ animation: none; } }
+        .tl-panel h4{ margin: 0 0 6px; font-size: 1rem; }
+        .tl-panel h4 .tl-yr{ color: var(--accent-ink); }
+        .tl-panel p{ margin: 0; color: var(--muted); line-height: 1.6; }
         /* ---- 지식 관계 (curated typed relations — distinct from .related) ---- */
         .relations{
             margin-top: 26px;

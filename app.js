@@ -215,7 +215,34 @@ function setArticle(html){
     void art.offsetWidth;   // force reflow so the animation restarts
     art.classList.add('fade-in');
     initCarousels(art);
+    initScenarioTimeline(art);
     initAboutFx(art);
+}
+
+// 인터랙티브 연표(.tl-scenario)도 innerHTML로 오므로 wiring은 여기.
+// 각 노드가 data-title·data-desc를 지녀 별도 데이터 소스가 필요 없다.
+function initScenarioTimeline(root){
+    root.querySelectorAll('.tl-scenario').forEach(function(tl){
+        var nodes = Array.prototype.slice.call(tl.querySelectorAll('.tl-node'));
+        var panel = tl.querySelector('.tl-panel');
+        if(!nodes.length || !panel){ return; }
+        function show(i){
+            i = (i + nodes.length) % nodes.length;
+            nodes.forEach(function(n, k){ n.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
+            var n = nodes[i];
+            panel.innerHTML = '<h4><span class="tl-yr">' + escapeHtml(n.getAttribute('data-year') || '')
+                + '</span> — ' + escapeHtml(n.getAttribute('data-title') || '') + '</h4>'
+                + '<p>' + escapeHtml(n.getAttribute('data-desc') || '') + '</p>';
+        }
+        nodes.forEach(function(n, k){ n.addEventListener('click', function(){ show(k); }); });
+        tl.addEventListener('keydown', function(ev){
+            var cur = nodes.findIndex(function(n){ return n.getAttribute('aria-selected') === 'true'; });
+            if(cur < 0){ cur = 0; }
+            if(ev.key === 'ArrowRight'){ show(cur + 1); nodes[(cur + 1) % nodes.length].focus(); ev.preventDefault(); }
+            if(ev.key === 'ArrowLeft'){ show(cur - 1); nodes[(cur - 1 + nodes.length) % nodes.length].focus(); ev.preventDefault(); }
+        });
+        show(0);
+    });
 }
 
 // Carousels arrive via innerHTML, so their wiring lives here.
