@@ -364,6 +364,7 @@ function startCosmos(){
         // original look); with several they huddle around their own
         // galaxy center so the universe reads as galaxies-of-clusters.
         var sub = tops.length === 1 ? 1 : 0.5;
+        var CRAD = 1;   // shared-sphere radius — the round-ball envelope.
         var dirs = {};
         galaxies = [];
         secMeta = {};
@@ -378,12 +379,12 @@ function startCosmos(){
                 secMeta[s] = { gi: ti, ci: i, cn: mine.length };
                 var parts = s.split(' · ');
                 galaxies.push({ label: label_of[s] || parts[parts.length - 1] || s,
-                                gi: ti,
+                                gi: ti, sec: s,
                                 x: dirs[s][0], y: dirs[s][1], z: dirs[s][2],
                                 sx: 0, sy: 0, ss: 1 });
             });
             if(tops.length > 1){
-                galaxies.push({ big: true, label: t.toUpperCase(), gi: ti,
+                galaxies.push({ big: true, label: t.toUpperCase(), gi: ti, top: t,
                                 x: topDir[t][0], y: topDir[t][1], z: topDir[t][2],
                                 sx: 0, sy: 0, ss: 1 });
             }
@@ -399,9 +400,8 @@ function startCosmos(){
         nodes = names.map(function(n){
             var d = KNOWLEDGE[n], dir = dirs[d.section] || [0, 1, 0];
             var h1 = hash(n), j = unit((h1 % 9973) + 1);
-            // A tight cloud (±0.26) around the galaxy center — no
-            // renormalizing onto one shared sphere, so galaxies with
-            // different 분류 stay visibly apart.
+            // Seed each node near its cluster center; the round-ball pass below
+            // then redistributes every node evenly over the shared sphere.
             return { name: n, title: d.title, sec: d.section,
                      x: dir[0] + j[0] * 0.2,
                      y: dir[1] + j[1] * 0.2,
@@ -421,6 +421,56 @@ function startCosmos(){
                 seen[key] = 1;
                 edges.push([a, b, rl.via === 'folder' ? 0.4 : 1]);
             });
+        });
+        // Round-ball layout: the cluster/World structure above supplies colors
+        // and name plates, but its per-galaxy shells look lumpy and lopsided
+        // when cluster sizes differ. So spread ALL nodes evenly over one shared
+        // Fibonacci sphere, keeping each cluster contiguous by ordering nodes on
+        // 분류 — the whole graph then reads as a full round ball. Name plates get
+        // projected onto the sphere surface over each cluster/World's patch.
+        var ord = nodes.map(function(_, i){ return i; }).sort(function(p, q){
+            var A = nodes[p], B = nodes[q];
+            return A.sec < B.sec ? -1 : A.sec > B.sec ? 1 : (A.name < B.name ? -1 : 1);
+        });
+        var Ntot = ord.length;
+        for(var k = 0; k < Ntot; k++){
+            var nd4 = nodes[ord[k]];
+            var yy = 1 - 2 * (k + 0.5) / Ntot;
+            var rr = Math.sqrt(Math.max(0, 1 - yy * yy)), aa = k * 2.399963;
+            // A little inward jitter gives the shell a soft thickness.
+            var rad = CRAD * (1 - ((hash(nd4.name) % 1000) / 1000) * 0.14);
+            nd4.x = rr * Math.cos(aa) * rad;
+            nd4.y = yy * rad;
+            nd4.z = rr * Math.sin(aa) * rad;
+        }
+        function onSphere(c, scale){
+            var m = Math.sqrt(c[0] * c[0] + c[1] * c[1] + c[2] * c[2]) || 1e-3;
+            var k = CRAD * scale / m;
+            return [c[0] * k, c[1] * k, c[2] * k];
+        }
+        // Cluster plates sit on the surface over their node patch; World plates
+        // float a little outside (1.18×) so the big banners never collide with
+        // the cluster labels or pile up near the center.
+        var cen = {};
+        nodes.forEach(function(nd){
+            var c = cen[nd.sec] || (cen[nd.sec] = [0, 0, 0, 0]);
+            c[0] += nd.x; c[1] += nd.y; c[2] += nd.z; c[3]++;
+        });
+        var topc = {};
+        galaxies.forEach(function(g){
+            if(g.sec && cen[g.sec]){
+                var c = cen[g.sec], mid = [c[0] / c[3], c[1] / c[3], c[2] / c[3]];
+                var p = onSphere(mid, 1);
+                g.x = p[0]; g.y = p[1]; g.z = p[2];
+                var tk = g.sec.split(' · ')[0], tc = topc[tk] || (topc[tk] = [0, 0, 0, 0]);
+                tc[0] += mid[0]; tc[1] += mid[1]; tc[2] += mid[2]; tc[3]++;
+            }
+        });
+        galaxies.forEach(function(g){
+            if(g.top && topc[g.top]){
+                var c = topc[g.top], p = onSphere([c[0] / c[3], c[1] / c[3], c[2] / c[3]], 1.18);
+                g.x = p[0]; g.y = p[1]; g.z = p[2];
+            }
         });
         window.COSMOS_COUNT = nodes.length;
         return true;
