@@ -18,3 +18,22 @@
     <span class="nh">검증 (CDP 렌더)</span>
     <code>wl-20260711-content</code>·<code>wl-20260710-design</code> 등 work log 헤더 <strong>배지 없음</strong> 확인. 콘텐츠 문서는 유지 — Neo4j 아티클 &ldquo;Claude Opus 4.8&rdquo;, LLM Wiki 아티클 &ldquo;Claude Fable 5&rdquo;(명시 model), welcome &ldquo;Claude Fable 5&rdquo;(폴백). <code>validate_all</code> ERROR 0.
 </div>
+
+<h2>지식 그래프(3D) 전체 형태를 둥근 공으로</h2>
+
+<h3>요청과 진단</h3>
+<p>&ldquo;3D 지식 그래프를 더 둥글게 표현할 수 있냐&rdquo;는 요청. 처음엔 <strong>노드를 구체로 셰이딩</strong>하는 것으로 오해했으나, 정정을 받아 <strong>그래프 <em>전체 형태</em>를 둥글게</strong> 하는 것이 목표임을 확인했다. 기존 레이아웃(<code>cosmos.js</code> <code>build()</code>)은 노드를 <strong>공유 구에 재정규화하지 않고</strong> World(대분류)마다 다른 반경의 껍질에 뭉쳐 놓아(주석 &ldquo;no renormalizing onto one shared sphere&rdquo;), 문서 수가 많은 AI World 쪽으로 <strong>한쪽이 불룩한 울퉁불퉁한 덩어리</strong>로 보였다. 클러스터 각도만 정규화하는 <code>roundify</code> 절충안(lerp)도 렌더해 봤으나 <strong>데이터 불균형</strong> 탓에 여전히 치우쳐, 둥근 공이 되지 않았다.</p>
+
+<h3>해결 — 공유 구에 균일 분포</h3>
+<ul>
+    <li><strong>모든 노드를 하나의 피보나치 구에 고르게 분포</strong>시킨다. 노드를 <code>분류</code>(section)로 정렬한 순서대로 구면에 배치해 <strong>같은 클러스터는 구 위 인접 패치로 뭉쳐</strong> 색 영역이 유지되고, 클러스터 크기가 얼마나 치우쳤든 전체는 <strong>중심이 맞는 둥근 공</strong>으로 읽힌다.</li>
+    <li>노드별 <strong>안쪽 지터(≈0.14)</strong>로 껍질에 부드러운 두께를 준다 — 완전한 종잇장 구가 아니라 볼륨감 있는 구름.</li>
+    <li><strong>명판(클러스터·World 라벨)은 구 표면으로 투영</strong>: 클러스터 명판은 자기 노드 패치의 중심을 표면(1.0×)에, World 명판은 살짝 바깥(1.18×)에 띄워 중앙에서 라벨이 겹치지 않게 했다.</li>
+    <li>노드 드로(색·평면 원)·엣지·원근·dust는 <strong>무변경</strong> — 이번은 전체 형태(envelope)만.</li>
+    <li><code>cosmos.js</code> 변경 → <code>index.html</code> <code>?v</code> 1→2(캐시버스터 규칙).</li>
+</ul>
+
+<div class="note">
+    <span class="nh">검증 (CDP 렌더)</span>
+    헤드리스 크로뮴으로 <code>#!cosmos</code> 다크 렌더 — 현행(울퉁불퉁·치우침) vs 둥근 공을 <strong>같은 각도로 비교 이미지</strong>를 만들어 고르게 했다(CLAUDE.md: 디자인은 렌더 이미지로). 확정안은 <strong>97개 노드가 구 전체에 고르게, 클러스터는 색 영역으로</strong> 유지되는 중심 잡힌 둥근 공. 콘솔 예외 0.
+</div>
