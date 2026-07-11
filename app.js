@@ -204,7 +204,7 @@ function setArticle(html){
     // authoring-model badge and the AI related-docs block both live on
     // the #article wrapper (outside <article>), so replacing the body
     // alone would leave them showing the PREVIOUS doc's content.
-    document.querySelectorAll('#article .doc-model, #article .related')
+    document.querySelectorAll('#article .doc-model, #article .related, #article .relations')
         .forEach(function(el){ el.remove(); });
     // Only the content pane resets; the sidebar and masthead stay put.
     var scroller = document.getElementById('content-scroll');
@@ -518,6 +518,7 @@ function fetchPage(filename){
             // AI 연관 문서 추천 (knowledge-index.json). May arrive after
             // this render, so injectRelated re-runs when the index loads.
             injectDocDate(filename);
+            injectRelations();
             injectRelated();
             hydrateAiMap();
     })
@@ -570,6 +571,62 @@ function injectRelated(){
     // 마지막 직속 자식이라 그 앞에 끼웠지만, 배지가 상단 .doc-meta로 옮겨간
     // 뒤로는 단순 append가 맞다.
     art.appendChild(node);
+}
+
+// ---- 지식 관계 (큐레이트된 의미 관계 — 자동 '연관 문서'와 별개) ----
+// relations는 사람이 선언한 방향 있는 관계(선행지식·구현·사례·근거·대체).
+// 정방향은 이 문서의 relations, 역방향은 전 문서를 스캔해 유도한다.
+var REL_TYPE_KEY = {
+    'prerequisite': 'relTypePrerequisite', 'implements': 'relTypeImplements',
+    'example-of': 'relTypeExampleOf', 'evidence-for': 'relTypeEvidenceFor',
+    'supersedes': 'relTypeSupersedes'
+};
+function relTypeLabel(t){ return STR(REL_TYPE_KEY[t] || t); }
+function relRow(name, type, ev){
+    var info = (KNOWLEDGE && KNOWLEDGE[name]) || {};
+    var title = info.title || name;
+    var why = ev ? '<span class="rel-ev">' + escapeHtml(ev) + '</span>' : '';
+    return '<li><span class="rel-type rt-' + escapeHtml(type) + '">'
+         + escapeHtml(relTypeLabel(type)) + '</span>'
+         + '<a href="#!' + encodeURIComponent(name) + '">' + escapeHtml(title) + '</a>'
+         + why + '</li>';
+}
+function relInverse(cur){
+    var out = [];
+    Object.keys(KNOWLEDGE || {}).forEach(function(n){
+        ((KNOWLEDGE[n] && KNOWLEDGE[n].relations) || []).forEach(function(r){
+            if(r.target === cur){ out.push({ name: n, type: r.type, ev: r.evidenceRef }); }
+        });
+    });
+    return out;
+}
+function relGroup(dirKey, rows){
+    if(!rows.length){ return ''; }
+    return '<div class="rel-group"><span class="rel-dir">' + STR(dirKey) + '</span>'
+         + '<ul class="relations-list">' + rows.join('') + '</ul></div>';
+}
+function renderRelationsHTML(cur){
+    var info = (KNOWLEDGE && KNOWLEDGE[cur]) || {};
+    var outRels = info.relations || [];
+    var inRels = relInverse(cur);
+    if(!outRels.length && !inRels.length){ return ''; }
+    var outHtml = relGroup('relOut', outRels.map(function(r){
+        return relRow(r.target, r.type, r.evidenceRef); }));
+    var inHtml = relGroup('relIn', inRels.map(function(r){
+        return relRow(r.name, r.type, r.ev); }));
+    return '<nav class="relations" aria-label="' + STR('relations') + '">'
+         + '<h3 class="relations-title">' + STR('relations') + '</h3>'
+         + outHtml + inHtml + '</nav>';
+}
+function injectRelations(){
+    if(!KNOWLEDGE || !CURRENT_DOC){ return; }
+    var art = document.getElementById('article');
+    if(!art || art.querySelector('.relations')){ return; }
+    var html = renderRelationsHTML(CURRENT_DOC);
+    if(!html){ return; }
+    var wrap = document.createElement('div');
+    wrap.innerHTML = html;
+    art.appendChild(wrap.firstChild);
 }
 
 // ---- 지식 지도 라이브 집계 ----
@@ -1773,6 +1830,7 @@ window.__loadKnowledge.then(function(idx){
     (idx.docs || []).forEach(function(d){ KNOWLEDGE[d.name] = d; });
     KNOWLEDGE_STATS = idx.stats || null;
     buildConceptIndex();
+    injectRelations();
     injectRelated();
     hydrateAiMap();
     // Concepts now available — re-rank any in-progress search.

@@ -74,7 +74,11 @@ def build(lang='ko'):
                    for base in entries]
     docs = [{'name': e['name'], 'title': e['title'].strip(),
              'summary': e['summary'].strip(),
-             'concepts': [c.strip() for c in e['concepts'] if c.strip()]}
+             'concepts': [c.strip() for c in e['concepts'] if c.strip()],
+             # Curated semantic relations (additive passthrough) — DISTINCT from
+             # the computed `related` below. Author-declared {target,type,
+             # evidenceRef,source}; omit key when a doc has none.
+             **({'relations': e['relations']} if e.get('relations') else {})}
             for e in entries]
 
     sec_of, folder_docs = load_sections()

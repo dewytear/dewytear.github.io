@@ -66,6 +66,42 @@ def _check_dangling_ref(docs, by_name):
     return findings
 
 
+# 큐레이트된 의미 관계(relations)의 무결성. 자동 related와 달리 사람이 손으로
+# 적으므로 오타·미존재 target·미정의 타입을 기계로 잡는다. 어휘는 doc-entries
+# 커레이터가 쓰는 5종으로 동결(방향은 A→target).
+RELATION_TYPES = {'prerequisite', 'implements', 'example-of', 'evidence-for', 'supersedes'}
+
+
+def _check_relations(docs, by_name):
+    findings = []
+    # (source, target) → 타입 집합, 상충(맞물림) 검사용.
+    seen = {}
+    for d in docs:
+        for r in d.get('relations', []):
+            tgt, typ = r.get('target'), r.get('type')
+            if tgt not in by_name:
+                findings.append(_finding(
+                    'ERROR', 'relations-dangling-ref', d['name'],
+                    f"relations에 존재하지 않는 문서 '{tgt}' 참조"))
+            if typ not in RELATION_TYPES:
+                findings.append(_finding(
+                    'ERROR', 'relations-unknown-type', d['name'],
+                    f"relations에 미정의 타입 '{typ}' (허용: {', '.join(sorted(RELATION_TYPES))})"))
+            if not (r.get('evidenceRef') or '').strip():
+                findings.append(_finding(
+                    'WARN', 'relations-missing-evidence', d['name'],
+                    f"relations({tgt})에 evidenceRef 근거가 비어 있음"))
+            seen[(d['name'], tgt, typ)] = True
+    # 상충: 같은 타입이 A→B와 B→A로 동시에 있으면 방향 모순(prerequisite/
+    # supersedes 같은 비대칭 관계에서 특히 문제).
+    for (s, t, typ) in seen:
+        if typ in ('prerequisite', 'supersedes', 'implements', 'example-of') and (t, s, typ) in seen:
+            findings.append(_finding(
+                'WARN', 'relations-conflict', s,
+                f"'{s}'↔'{t}' 이 '{typ}' 관계로 상호 지정됨(방향 모순 검토)"))
+    return findings
+
+
 def _check_isolated_doc(docs, indeg):
     findings = []
     for d in docs:
@@ -226,6 +262,7 @@ def run(root):
 
     findings = []
     findings += _check_dangling_ref(docs, by_name)
+    findings += _check_relations(docs, by_name)
     findings += _check_isolated_doc(docs, indeg)
     findings += _check_over_connected(docs, indeg)
     findings += _check_wrong_cluster(docs, cluster_labels)
