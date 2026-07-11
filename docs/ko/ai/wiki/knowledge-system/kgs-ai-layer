@@ -4,7 +4,7 @@
 <h3>세 개의 문 — 표지 · 그래프 · 계약</h3>
 <ul>
     <li><strong><code>llms.txt</code> (표지)</strong> — 사이트 루트의 AI용 대문. 위키의 목적, 기계 파일 위치, 그리고 <strong>모든 문서의 제목·요약·URL</strong>이 System별로 정리돼 있습니다. AI 생태계의 관례(llms.txt)를 따르므로, 처음 온 에이전트가 가장 먼저 읽는 파일입니다.</li>
-    <li><strong><code>data/knowledge-graph.json</code> (자기완결 그래프)</strong> — <strong>이 파일 하나만 fetch하면</strong> 전체 그래프를 순회할 수 있습니다. 각 노드(문서)에 제목·요약·개념·<strong>연관 엣지</strong>는 물론 <strong>원문 URL까지 인라인</strong>돼 있어, 다른 파일과 조인할 필요가 없습니다.</li>
+    <li><strong><code>data/knowledge-graph.json</code> (자기완결 그래프)</strong> — <strong>이 파일 하나만 fetch하면</strong> 전체 그래프를 순회할 수 있습니다. 각 노드(문서)에 제목·요약·개념·<strong>연관 엣지(<code>related</code>)</strong>와 <strong>방향 있는 타입 관계(<code>relations</code>)</strong>는 물론 <strong>원문 URL까지 인라인</strong>돼 있어, 다른 파일과 조인할 필요가 없습니다.</li>
     <li><strong><a href="#!ai-guide">AI 순회 가이드</a> (계약)</strong> — "노드는 무엇이고 엣지는 어떻게 해석하며 어떤 순서로 fetch하라"를 명문화한 문서. 스키마와 규칙이 여기 고정돼 있어, 어떤 에이전트든 같은 방식으로 읽습니다.</li>
 </ul>
 
@@ -29,12 +29,12 @@
 <div class="d-cap">단일 fetch 순회 — 그래프 파일 하나로 계획을 세우고, 원문은 필요한 것만 가져옵니다.</div>
 </div>
 
-<p>실제 2홉 순회를 예로 들면: 허브 <a href="#!hns-anatomy">하네스의 구성과 효과</a>에서 출발하면 1홉에 이웃 4편, 2홉이면 <strong>13편</strong>에 닿습니다. AI는 이렇게 도달한 문서 집합에서 <strong>공유 개념(shared)</strong>을 근거로 "이 문서들이 왜 한 묶음인지"를 설명하며 분석할 수 있습니다 — 낱장 검색으로는 불가능한, <strong>관계 기반</strong> 독해입니다.</p>
+<p>실제 2홉 순회를 예로 들면: 허브 <a href="#!hns-anatomy">하네스의 구성과 효과</a>에서 출발하면 1홉에 이웃 4편, 2홉이면 <strong>13편</strong>에 닿습니다. AI는 이렇게 도달한 문서 집합에서 <strong>공유 개념(shared)</strong>을 근거로 "이 문서들이 왜 한 묶음인지"를 설명하며 분석할 수 있습니다 — 낱장 검색으로는 불가능한, <strong>관계 기반</strong> 독해입니다. 여기에 <code>relations</code>가 더해지면 단순히 "관련 있다"를 넘어 <strong>선행·구현·근거 같은 관계의 종류와 방향</strong>까지 읽어, "무엇을 먼저 읽어야 하는지"·"어느 문서가 어느 주장의 근거인지"를 짚어 분석할 수 있습니다.</p>
 
 <h3>절대 어긋나지 않게 — 드리프트 게이트</h3>
 <p>기계판독 파일이 실제 지식과 어긋나면 없느니만 못합니다. 그래서 이 파일들은 손으로 쓰지 않고 <strong>지식 인덱스에서 자동 생성</strong>되며, CI의 <code>--check</code> 게이트가 "문서를 추가·수정하고 재생성하지 않으면 머지 불가"를 강제합니다. 결과: <strong>문서가 늘어나는 순간 llms.txt·그래프 JSON·sitemap이 항상 함께 최신</strong>이 됩니다. 검증 시점에는 97개 노드의 URL이 전부 실제 파일과 일치하고, 끊어진 참조(dangling)가 0임을 기계적으로 확인했습니다.</p>
 
 <div class="note">
     <span class="nh">AI에게 일을 시킬 때</span>
-    프롬프트에 한 줄이면 충분합니다 — <em>"dewytear.github.io/llms.txt를 먼저 읽고, knowledge-graph.json의 연관 관계(related·concepts)를 따라 분석하라."</em> 스키마 상세와 순회 규칙은 <a href="#!ai-guide">AI 순회 가이드</a>가 계약으로 보증합니다. 이런 지식관리 구조 덕에, 위키가 커질수록 AI의 분석 반경도 자동으로 함께 커집니다.
+    프롬프트에 한 줄이면 충분합니다 — <em>"dewytear.github.io/llms.txt를 먼저 읽고, knowledge-graph.json의 연관 관계(related·relations·concepts)를 따라 분석하라."</em> 스키마 상세와 순회 규칙은 <a href="#!ai-guide">AI 순회 가이드</a>가 계약으로 보증합니다. 이런 지식관리 구조 덕에, 위키가 커질수록 AI의 분석 반경도 자동으로 함께 커집니다.
 </div>

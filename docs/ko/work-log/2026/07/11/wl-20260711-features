@@ -21,3 +21,12 @@
 
 <h3>정직하게 조정한 것 — supersedes 미적용</h3>
 <p>종료 기준 &ldquo;타입별 최소 2건&rdquo;을 기계적으로 채우지 않았다. 현 코퍼스에 <code>supersedes</code>(구버전을 남긴 채 신버전이 대체)의 <strong>깨끗한 사례가 없다</strong> — 이 위키는 문서를 in-place로 개정하기 때문. 어휘·검증·UI는 갖추되 <strong>실제 케이스가 생길 때 적용</strong>하기로 하고, 종료 기준을 4/5 타입 ≥2로 정직하게 조정했다(억지 관계를 넣어 그래프를 왜곡하지 않는다 — 정직성 규칙). 나머지 4타입은 각 2건 이상 충족.</p>
+
+<h3>후속 — 자기기술 문서에 반영</h3>
+<p>파일럿으로 <code>relations</code>를 넣었지만, 정작 <strong>이 위키가 자기 지식 그래프를 해설하는 &lsquo;지식 체계&rsquo; 문서들이 그 새 레이어를 설명하지 않는</strong> 갭이 남았다 — 문서 하단에 &ldquo;지식 관계&rdquo; UI 블록을 띄우면서도 정본인 <a href="#!kgs-edges">kgs-edges</a>는 자동 계산 <code>related</code>만 해부하고 있었다. 같은 주제의 후속으로 자기기술·지도 문서를 정합했다:</p>
+<ul>
+    <li><strong><a href="#!kgs-edges">kgs-edges</a>(정본)</strong>: &ldquo;손으로 잇는 관계 — 방향 있는 타입 엣지&rdquo; 섹션 신설. <code>related</code>(기계·대칭·개념)와 <code>relations</code>(사람·방향·타입)의 대비 축, 어휘 5종, 역방향 자동 유도, supersedes 보류 사실까지 서술. 자기참조 예시(kgs-overview →[선행지식]→ kgs-edges) 인라인 도식은 기존 시맨틱 클래스만 써 도식 경계 게이트를 통과.</li>
+    <li><strong><a href="#!kgs-ai-layer">kgs-ai-layer</a></strong>: 그래프 JSON에 <code>relations</code>도 실림·순회 시 관계의 <strong>종류와 방향</strong>까지 읽을 수 있음을 반영. AI 프롬프트 예시를 <code>(related·relations·concepts)</code>로 갱신.</li>
+    <li><strong><a href="#!ai-map">지식지도</a>(ko·en)</strong>: &ldquo;지식 체계&rdquo; System 설명(data-topics·fallback·상세 문단)에 &ldquo;타입 관계&rdquo;를 더해 파리티 유지. 상세 서술은 kgs-edges에 위임.</li>
+</ul>
+<p>본문만 편집해 개념을 추가하지 않았으므로 인덱스·그래프·캐시버스터는 무변경(정직성·df≤3 파급 회피). kgs-overview의 &ldquo;연결 209개&rdquo; 집계·kgs-views는 related 수치가 여전히 정확해 이번 범위 밖으로 두었다.</p>

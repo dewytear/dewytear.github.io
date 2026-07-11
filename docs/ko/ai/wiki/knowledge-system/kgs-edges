@@ -59,7 +59,29 @@
 <h3>경계값의 파급 — 왜 함부로 개념을 못 늘리나</h3>
 <p>"3편 이하" 규칙에는 미묘한 파급이 있습니다. 어떤 희귀 개념이 지금 3편에 등장하는데, 새 문서가 그 개념을 하나 더 쓰면 <strong>4편이 되는 순간</strong> 그 개념 하나로 이어져 있던 기존 엣지가 <strong>자격을 잃고 끊어집니다</strong>. 그래서 이 위키의 규칙집(CLAUDE.md)은 "고립을 없애려 본문에 없는 개념을 추가하는 것"을 금지합니다 — 억지 연결 하나가 옆 문서의 진짜 연결을 끊을 수 있기 때문입니다. 연결이 옅은 문서는 결함이 아니라 <strong>검토 신호</strong>로만 다룹니다. 이것이 이 그래프의 <strong>정직성 원칙</strong>입니다: 엣지는 늘 실제 본문에 근거하고, 큐레이션은 그래프를 좋게 보이게 하는 도구가 아닙니다.</p>
 
+<h3>손으로 잇는 관계 — 방향 있는 타입 엣지</h3>
+<p>지금까지의 엣지(<code>related</code>)는 <strong>기계가 공유 개념으로 자동 계산한 대칭 관계</strong>입니다 — A와 B가 이어지면 방향도 종류도 없이 "서로 관련 있다"일 뿐입니다. 그런데 지식에는 <strong>방향과 종류가 있는 관계</strong>도 있습니다: "이걸 읽으려면 저게 먼저", "이 개념을 저 문서가 구현한다", "이 기사가 저 주장의 근거다". 이런 관계는 개념 공유만으로는 잡히지 않아, 이 위키는 <code>related</code>와 <strong>별개의 컬렉션</strong>으로 <strong>사람이 손으로 선언하는 타입 관계(<code>relations</code>)</strong>를 따로 답니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 140" role="img" aria-label="방향 있는 타입 관계: '지식은 어떻게 쌓이는가'가 '문서는 어떻게 이어지는가'의 선행지식(prerequisite)이다">
+    <rect class="d-box accent" x="44" y="40" width="252" height="60" rx="10"/>
+    <text class="d-label" x="170" y="66" text-anchor="middle">지식은 어떻게 쌓이는가</text>
+    <text class="d-sub" x="170" y="86" text-anchor="middle">선행 문서 · kgs-overview</text>
+    <text class="d-label" x="361" y="58" text-anchor="middle">선행지식</text>
+    <line class="d-edge" x1="296" y1="70" x2="416" y2="70"/>
+    <polygon class="d-arrow" points="416,64 426,70 416,76"/>
+    <text class="d-sub" x="361" y="90" text-anchor="middle">prerequisite</text>
+    <rect class="d-box" x="430" y="40" width="248" height="60" rx="10"/>
+    <text class="d-label" x="554" y="66" text-anchor="middle">문서는 어떻게 이어지는가</text>
+    <text class="d-sub" x="554" y="86" text-anchor="middle">이 문서 · kgs-edges</text>
+</svg>
+<div class="d-cap">방향 있는 타입 엣지 — 사람이 "이 문서를 읽으려면 저 문서가 먼저"라고 선언합니다(역방향은 자동 유도).</div>
+</div>
+
+<p>어휘는 다섯 가지입니다 — <strong>선행지식</strong>(prerequisite)·<strong>구현</strong>(implements)·<strong>사례</strong>(example-of)·<strong>근거</strong>(evidence-for)·<strong>대체</strong>(supersedes). 각 관계는 <strong>방향</strong>(A→대상)과 <strong>한 줄 근거</strong>(어디서 성립하는지)를 함께 답니다. 저장은 정방향 한 번뿐이고, 반대 방향("이 문서로 들어오는 관계")은 전 문서를 훑어 자동으로 유도합니다. 문서 하단의 <strong>"지식 관계"</strong> 블록에서 나가는·들어오는 관계를 타입 뱃지와 함께 볼 수 있습니다.</p>
+<p>두 레이어는 성격이 다릅니다. <code>related</code>는 <strong>기계·대칭·개념 기반</strong>이라 넓게 깔리고, <code>relations</code>는 <strong>사람·방향·타입</strong>이라 적지만 의미가 진합니다. 그리고 같은 정직성 원칙을 따릅니다 — <strong>본문에 실재하는 관계만</strong> 답니다. 실제로 "구버전을 남긴 채 신버전이 대체"하는 <code>대체</code> 사례가 현 위키엔 없어(문서를 제자리에서 고치므로), 어휘·검증·UI는 갖추되 그 타입은 <strong>비워 두었습니다</strong> — 관계를 채우려 억지 쌍을 만들지 않습니다.</p>
+
 <div class="note">
     <span class="nh">한눈 요약</span>
-    개념은 <strong>큐레이션</strong>(본문 실재만) → 엣지는 <strong>희소성 가중 공유</strong>(2개↑ 또는 희귀 1개) → 부족하면 <strong>폴더 보완</strong> → 모든 문서 2~4연결·고아 0. 많이 참조되는 문서가 <strong>허브</strong>가 되어 그래프의 중심을 이룹니다(<a href="#!kgs-views">다음 편</a>).
+    개념은 <strong>큐레이션</strong>(본문 실재만) → 엣지는 <strong>희소성 가중 공유</strong>(2개↑ 또는 희귀 1개) → 부족하면 <strong>폴더 보완</strong> → 모든 문서 2~4연결·고아 0. 그 위에 사람이 손으로 <strong>방향 있는 타입 관계(<code>relations</code>)</strong>를 별도로 얹습니다. 많이 참조되는 문서가 <strong>허브</strong>가 되어 그래프의 중심을 이룹니다(<a href="#!kgs-views">다음 편</a>).
 </div>
