@@ -16,36 +16,36 @@
 <p class="scn-sub">지금 열린 항목 없음. 새 할 일이 생기면 여기에 추가한다.</p>
 
 <h3>아이디어 · 나중에</h3>
-<p class="scn-sub">주제 트랙별로 묶고, 필요(우선순위)가 읽히는 순서로 둔다. 각 항목은 요지 + 착수 트리거.</p>
+<p class="scn-sub">주제 트랙별로 묶고, 필요(우선순위)가 읽히는 순서로 둔다. 상태 칩: <code>READY</code> 설계 완료·착수 결정 대기 · <code>WATCH</code> 지표 관찰 중 · <code>LATER</code> 장기. 상세 설계는 <a href="#!wl-20260711-ops">확정 명세(07-11 운영 로그)</a>에 박제 — 보드는 요지만.</p>
 
-<h4>① 그래프·지식 품질 — 외부 평가(2026-07-11 ChatGPT 87 → 91 → 96점)의 개선 축</h4>
-<p class="scn-sub">우선순위는 목적에 따라 이원: <strong>개인 Knowledge OS 고도화</strong>면 관계 타입 → 메타 3축 → 별칭 정규화 순, <strong>더존 내부 실증</strong>이 목표면 사설 위키 부트스트랩을 1~2순위로 승격. <strong>설계 라운드는 96점 검토로 종결</strong> — 다음 단계는 확장이 아니라 아래 파일럿 실행.</p>
+<h4>① 그래프·지식 품질 — 외부 평가(2026-07-11, 87→91→96점) 개선 축 · 설계 종결, 파일럿 대기</h4>
+<p class="scn-sub">우선순위 이원: <strong>개인 고도화</strong>면 관계 타입부터, <strong>더존 실증</strong>이면 사설 부트스트랩부터.</p>
 <ul>
-    <li>&#10004; <strong>[그래프] 관계 타입 모델</strong> — 지금의 엣지는 "연관"뿐(concept/folder). 자동 계산 <code>related</code>에 섞지 않고 <strong>별도 <code>relations</code> 컬렉션</strong>으로 분리: <code>{target, type, evidenceRef, curated}</code> — 사람이 큐레이트한 <strong>의미 관계</strong>만, 근거·방향·검증규칙을 자동 관계와 구분(생성 주체·신뢰도가 다름). <strong>초기 어휘 5종 확정</strong>: <code>prerequisite</code>(선행지식) · <code>implements</code>(구현) · <code>example-of</code>(사례) · <code>evidence-for</code>(근거) · <code>supersedes</code>(대체) — 각 타입의 <strong>방향·역관계</strong>(A prerequisite B &harr; B has-prerequisite A)를 함께 정의. 자동 추론 금지 — 정직성 원칙. 스키마는 컬렉션 추가라 하위호환, UI는 연관 문서 칩에 타입 뱃지. <em>파일럿: 3~5종 타입을 10개 문서에 적용 후 검증 — 어휘는 확정됐으므로 바로 착수 가능.</em> (재평가 §4·96점 검토 반영)</li>
-    <li>&#10004; <strong>[그래프] 개념 별칭 정규화</strong> — 단일문서 개념 68.6%·표기 드리프트('코딩에이전트' vs '코딩 에이전트')를 canonical&harr;synonym 맵으로 <strong>보수적 병합</strong>. <code>validate_graph</code>의 synonym WARN이 후보 목록. 경계값(df&le;3) 파급 diff 필수. <em>트리거: synonym WARN 누적 또는 관계 타입 작업과 동시 착수.</em></li>
-    <li>&#10004; <strong>[메타] 문서 수명·권위·근거 3축 + 신선도</strong> — AI 생성·기사 분석·공식 표준이 같은 무게로 보이는 문제. 단일 trust 열거형은 서로 다른 차원을 뭉개므로(검증·권위·생성방식·내용성격) <strong>3축 파일럿</strong>: <code>status</code>(draft/reviewed/approved/deprecated/archived) · <code>authority</code>(personal/community/internal-standard/official) · <code>evidenceLevel</code>(unverified/source-backed/reviewed/verified — 관계 수준 <code>evidenceRef</code>와 이름 구분). 생성 방식(authorship)은 기존 <code>model</code> 필드가 이미 일부 담당. 여기에 <strong>신선도 관리</strong> — <code>owner</code>(개인 위키는 maintainer)·<code>reviewedAt</code>·<code>reviewDue</code>(노후화 정책: approved여도 기한 경과 시 재검토 신호) — 를 통합. 헤더 뱃지 + validate 규칙(deprecated는 최근 문서·추천 제외, reviewDue 경과 WARN). <strong>적용 범위는 전 문서 강제가 아니라 우선 대상부터</strong>: 더존 내부 제안·표준 / News &amp; Articles / deprecated 후보 기술 문서 / 허브 문서 / AI 대폭 작성 문서. <em>파일럿(더존 트랙): 사설 저장소 부트스트랩 후 실제 내부 문서 몇 건에 status/authority/evidenceLevel/owner/reviewDue 적용.</em> (재평가 §5·96점 검토 반영)</li>
-    <li>&#10004; <strong>[보안] 사설 위키 부트스트랩 실증</strong> — 공개(GitHub Pages)/내부 지식 분리는 <strong>저장소 분리</strong>로(hiddenCats·UI 비노출은 보안이 아님 — Git에 있으면 공개): wiki-plugin으로 사설 repo에 같은 엔진을 부트스트랩(dzp 제안서의 실증 모델). <em>트리거: Douzone 내부 문서가 실제로 생기기 전 1회 실험 — 조직 실증이 목표면 이 트랙의 1~2순위.</em></li>
-    <li>&#10004; <strong>[운영] 개인화 관측 실험 → 사용 데이터 루프</strong> — 1단계 localStorage는 <strong>개인화 관측</strong>(개인의 최근 열람·즐겨찾기·개인 추천 — 중앙 집계 불가, 조직 KM 지표 아님)으로 한정 정의. <strong>조직 KM 개선 루프</strong>(전체 무결과 검색어·조회수·클릭률·노후 문서 사용량 익명 집계)는 경량 외부 수집기 연결 시점부터. <em>트리거: 1단계는 UX 필요 시 수시, 2단계는 조직 전환 결정.</em> (재평가 §7 재정의)</li>
+    <li><code>READY</code> <strong>[그래프] 관계 타입 파일럿</strong> — 별도 <code>relations</code> 컬렉션(<code>{target,type,evidenceRef,source}</code>), 어휘 5종+역관계 확정. 범위 3~5종×10문서, <a href="#!wl-20260711-ops">종료 기준 8항</a>. <em>착수 대기 — 다음 우선 과제로 결정할 때.</em></li>
+    <li><code>READY</code> <strong>[메타] 3축+신선도 파일럿</strong> — <code>status</code>·<code>authority</code>·<code>evidenceLevel</code> + <code>owner/reviewedAt/reviewDue</code>. 적용은 우선 대상 5류부터(전 문서 강제 금지). <em>선행 조건: authority 어휘 정의표 확정(<a href="#!wl-20260711-ops">명세</a>).</em></li>
+    <li><code>READY</code> <strong>[보안] 사설 위키 부트스트랩 실증</strong> — wiki-plugin으로 사설 repo에 같은 엔진 부트스트랩(공개/내부는 저장소 분리 — UI 비노출은 보안 아님). <em>더존 실증 목표면 이 트랙 1~2순위.</em></li>
+    <li><code>WATCH</code> <strong>[그래프] 개념 별칭 정규화</strong> — canonical&harr;synonym 보수적 병합, <code>validate_graph</code> synonym WARN이 후보 목록, df&le;3 파급 diff 필수. <em>관찰: WARN 누적(또는 관계 타입과 동시 착수).</em></li>
+    <li><code>LATER</code> <strong>[운영] 사용 데이터</strong> — 1단계 localStorage는 <strong>개인화 관측</strong>(중앙 집계 불가, KM 지표 아님), 조직 KM 루프는 외부 수집기 연결부터. <em>트리거: 조직 전환 결정.</em></li>
 </ul>
 
 <h4>② 플랫폼 스케일링 — 트리거가 전부 "규모" 계열인 한 트랙 (wl-20260708 확장성 분석)</h4>
-<p class="scn-sub">문서 수는 대리 지표 — 실제 판단은 <strong>모바일 첫 검색 준비 2초+ · 본문 총 payload 5~10MB+ · fetch 수·메모리</strong>로(짧은 500편보다 긴 100편이 무거울 수 있음).</p>
+<p class="scn-sub">문서 수는 대리 지표 — 실제 판단은 <strong>모바일 첫 검색 2초+ · 본문 총 payload 5~10MB+ · fetch 수·메모리</strong>.</p>
 <ul>
-    <li>&#10004; <strong>~500편</strong>: 사전 전문검색 인덱스(build가 text-index.json 생성, 1요청 로드 — "전 문서 fetch" 절벽 제거) + 인덱스 샤드(<code>data/index/&lt;world&gt;.json</code>, App.data 어댑터 뒤라 호출부 무변경).</li>
-    <li>&#10004; <strong>클러스터당 ~300편</strong>: concepts 2D 뷰 노드 상한(O(n²) 물리 시뮬, ×10 실측 1.3s).</li>
-    <li>&#10004; <strong>~1만 편</strong>: 사이드바 가상 스크롤 + 그래프 계층 드릴다운(현 방식 천장 실측 1~2만 편).</li>
-    <li>&#10004; <strong>100만 편+</strong>: 검색엔진 백엔드 + 큐레이션 자동 파이프라인 — dzp Phase 1 실험과 통합 검토, 유입원 확정이 첫 입력.</li>
+    <li><code>WATCH</code> <strong>~500편</strong>: 사전 전문검색 인덱스(text-index.json 1요청) + 인덱스 샤드(<code>data/index/&lt;world&gt;.json</code>, App.data 어댑터 뒤라 호출부 무변경).</li>
+    <li><code>WATCH</code> <strong>클러스터당 ~300편</strong>: concepts 2D 뷰 노드 상한(O(n²) 물리, ×10 실측 1.3s).</li>
+    <li><code>LATER</code> <strong>~1만 편</strong>: 사이드바 가상 스크롤 + 그래프 계층 드릴다운(천장 실측 1~2만 편).</li>
+    <li><code>LATER</code> <strong>100만 편+</strong>: 검색 백엔드 + 자동 큐레이션 파이프라인(정적 위키의 연장이 아닌 별도 플랫폼) — dzp Phase 1과 통합 검토.</li>
 </ul>
 
 <h4>③ 현지화</h4>
 <ul>
-    <li>&#10004; 영문 커버리지 갭 — 실측 89편·~480KB 미번역. 사실상 전체 현지화 프로젝트라 <em>트리거: 영어 독자 수요 확인 또는 콘텐츠 안정기.</em> 착수 시 관문 문서(welcome·about·지식지도)부터, 본문 번역과 같은 PR에서 오버레이 갱신(i18n 규칙). (2026-07-10 보류 결정)</li>
+    <li><code>WATCH</code> 영문 커버리지 갭 — 실측 89편·~480KB 미번역(전체 현지화 프로젝트). <em>관찰 지표: 해외 유입 비중·영문 문서 요청·플러그인 외부 사용자.</em> 착수 시 관문 문서부터, 본문 번역과 같은 PR에서 오버레이 갱신(i18n 규칙). (2026-07-10 보류 결정)</li>
 </ul>
 
 <h4>④ 플러그인</h4>
 <ul>
-    <li>&#10004; 뷰어 정식 템플릿화 — 브랜딩 파라미터화(제목·모듈 선택). 실용판(마켓 클론 복사)은 해소됨. <em>트리거: 플러그인 외부 사용자 등장.</em> (설계 검토 G1)</li>
-    <li>&#10004; 마켓 저장소 분리 검토 — <em>트리거: 저장소 50MB&uarr; 또는 외부 공개.</em> 분리 시 동기화 게이트·뷰어 동봉이 깨지므로 <strong>템플릿화 선행 필수</strong>. (설계 검토 G3)</li>
+    <li><code>WATCH</code> 뷰어 정식 템플릿화 — 브랜딩 파라미터화. <em>관찰: 플러그인 외부 사용자 등장.</em> (설계 검토 G1)</li>
+    <li><code>LATER</code> 마켓 저장소 분리 — <em>트리거: 저장소 50MB&uarr; 또는 외부 공개.</em> <strong>템플릿화 선행 필수</strong>(분리 시 동기화 게이트·뷰어 동봉 파손). (설계 검토 G3)</li>
 </ul>
 
 <h3>최근 완료</h3>
