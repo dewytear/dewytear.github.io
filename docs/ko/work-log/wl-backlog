@@ -24,14 +24,15 @@
     <li>&#10004; [플랫폼 Stage 2] 검색엔진 백엔드 + 큐레이션 자동 파이프라인 — 100만 편+ 목표 시. dzp Phase 1 실험과 통합 검토. 유입원 확정이 첫 입력.</li>
     <li>&#10004; concepts 2D 뷰 노드 상한 — <em>트리거: 클러스터당 ~300편 또는 뷰 전환 0.5초+.</em> (O(n²) 물리 시뮬, ×10 실측 1.3s)</li>
     <li>&#10004; 하루치 자동 로그를 AI 큐레이터가 주제별 요약으로 승격 — 제안서의 지식화 파이프라인과 동일한 사상.</li>
-    <li>&#10004; [플러그인] 클러스터 지도 데이터화 — <code>build_index.py</code>의 <code>CLUSTER_LABELS_BY_LANG</code>가 dewytear 섹션명으로 하드코딩. 새 위키가 무관한 라벨을 물려받지 않게 데이터 파일(예: <code>tools/clusters.json</code>)로 분리. (도그푸딩 발견, <a href="#!wl-20260710-worklog-digest-audit">wl-20260710 운영</a>)</li>
-    <li>&#10004; [플러그인] 뷰어(SPA 셸) 템플릿화 동봉 — wiki-init이 세우는 건 데이터 파이프라인뿐, index.html·app.js·style.css는 미동봉("머리 없는" 위키). 템플릿화해 부트스트랩에 포함. <em>트리거: 플러그인 외부 사용자 등장.</em> (설계 검토 G1)</li>
-    <li>&#10004; [플러그인] 마켓 저장소 분리 검토 — 마켓 추가가 위키 전체를 클론해 200K 플러그인을 얻는 구조. <em>트리거: 저장소 50MB↑ 또는 플러그인 외부 공개.</em> (설계 검토 G3)</li>
+    <li>&#10004; [플러그인] 뷰어 정식 템플릿화 — 실용판(마켓 클론에서 뷰어 15파일 복사, wiki-init "뷰어 설치" 절)은 해소됨. 남은 것은 브랜딩 파라미터화(제목·모듈 선택)된 정식 템플릿. <em>트리거: 플러그인 외부 사용자 등장.</em> (설계 검토 G1)</li>
+    <li>&#10004; [플러그인] 마켓 저장소 분리 검토 — 마켓 추가가 위키 전체를 클론해 200K 플러그인을 얻는 구조. <em>트리거: 저장소 50MB↑ 또는 플러그인 외부 공개.</em> 주의: 분리하면 동기화 게이트(동일 저장소 diff)와 뷰어 실용판(클론에 뷰어 동봉)이 깨지므로 <strong>정식 템플릿화 선행 필수</strong>. (설계 검토 G3)</li>
 </ul>
 
 <h3>최근 완료</h3>
 <p class="scn-sub">완료 항목을 ✅ + Work Log 링크와 함께 잠시 여기 둡니다. 오래되면 걷어냅니다(원본은 해당 로그에).</p>
 <ul>
+    <li>&#9989; [플러그인] 클러스터 지도 데이터화 — <code>CLUSTER_LABELS_BY_LANG</code> 하드코딩을 <code>tools/clusters.json</code>(위키별 설정, 번들 제외)으로 분리, 인덱스 바이트 등가 확인 <a href="#!wl-20260710-worklog-digest-audit">wl-20260710 운영</a></li>
+    <li>&#9989; [플러그인] 뷰어 설치 실용판 — 마켓 클론에 뷰어가 이미 동봉됨을 활용, wiki-init에 복사 목록·커스터마이즈 절 추가("머리 없는 위키" 갭 해소) <a href="#!wl-20260710-worklog-digest-audit">wl-20260710 운영</a></li>
     <li>&#9989; [플러그인] 스냅샷 드리프트 재발 방지 게이트 — <code>check_plugin_sync.py</code>(번들↔루트 tools/ 바이트 diff, 오탐 0) + CI 스텝(push·PR) <a href="#!wl-20260710-worklog-digest-audit">wl-20260710 운영</a></li>
     <li>&#9989; [플러그인] wiki-plugin 도그푸딩 — 스킬 4종 실사용(index·validate 실 위키 읽기전용, wiki-init·add-doc 스크래치). 스냅샷 드리프트(validate_design 190줄+파일 2종) 재동기화·wiki-init SKILL 갭(en엔트리·STRINGS) 보강 <a href="#!wl-20260710-worklog-digest-audit">wl-20260710 운영</a></li>
     <li>&#9989; [플러그인] wiki-plugin 스캐폴드 — 마켓(.claude-plugin/marketplace.json)+플러그인(plugins/wiki-plugin: 스킬 4종·tools 동봉), <code>claude plugin validate</code> 통과 <a href="#!wl-20260710-worklog-digest-audit">wl-20260710 운영</a></li>

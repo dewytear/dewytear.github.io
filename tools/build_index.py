@@ -146,35 +146,22 @@ def build(lang='ko'):
 
 
 # Cluster display names for the Knowledge Map page, keyed by section path.
-# Per language — new clusters must be added to EVERY language here.
-CLUSTER_LABELS_BY_LANG = {
-    'ko': [
-        ('AI · Claude · Code · Introduction', 'Introduction'),
-        ('AI · Claude · Code · Tutorial', 'Tutorial(입문)'),
-        ('AI · Claude · Code · Skill', 'Skill'),
-        ('AI · Claude · Code · Second Brain', 'Second Brain'),
-        ('AI · Claude · Code · LLM Wiki', 'LLM Wiki'),
-        ('AI · Claude · Code · Harness', 'Harness 엔지니어링'),
-        ('AI · Claude · PlugIn · Harness', 'Harness 플러그인'),
-        ('AI · Claude · PlugIn · OMC', 'OMC 플러그인'),
-        ('AI · News & Articles · 2026', 'News & Articles'),
-        ('Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼', 'AI 개발 지식 플랫폼'),
-    ],
-    'en': [
-        ('AI · Claude · Code · Introduction', 'Introduction'),
-        ('AI · Claude · Code · Tutorial', 'Tutorial (Basics)'),
-        ('AI · Claude · Code · Skill', 'Skill'),
-        ('AI · Claude · Code · Second Brain', 'Second Brain'),
-        ('AI · Claude · Code · LLM Wiki', 'LLM Wiki'),
-        ('AI · Claude · Code · Harness', 'Harness Engineering'),
-        ('AI · Claude · PlugIn · Harness', 'Harness Plugin'),
-        ('AI · Claude · PlugIn · OMC', 'OMC Plugin'),
-        ('AI · News & Articles · 2026', 'News & Articles'),
-        ('Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼', 'AI Dev Knowledge Platform'),
-    ],
-}
+# Per-wiki config in tools/clusters.json — {lang: [[section, label], …]};
+# new clusters must be added to EVERY language there. A missing file just
+# means no named clusters (fresh wikis bootstrap fine without one), so the
+# plugin bundle ships the engine without dewytear-specific section names.
+def _load_cluster_labels():
+    path = os.path.join(ROOT, 'tools', 'clusters.json')
+    try:
+        with open(path, encoding='utf-8') as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+CLUSTER_LABELS_BY_LANG = _load_cluster_labels()
 # Backward-compatible alias (Korean is the source language).
-CLUSTER_LABELS = CLUSTER_LABELS_BY_LANG['ko']
+CLUSTER_LABELS = CLUSTER_LABELS_BY_LANG.get('ko', [])
 
 
 def build_stats(docs, cluster_labels=None):
