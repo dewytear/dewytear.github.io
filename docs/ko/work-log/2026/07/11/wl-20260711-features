@@ -30,3 +30,15 @@
     <li><strong><a href="#!ai-map">지식지도</a>(ko·en)</strong>: &ldquo;지식 체계&rdquo; System 설명(data-topics·fallback·상세 문단)에 &ldquo;타입 관계&rdquo;를 더해 파리티 유지. 상세 서술은 kgs-edges에 위임.</li>
 </ul>
 <p>본문만 편집해 개념을 추가하지 않았으므로 인덱스·그래프·캐시버스터는 무변경(정직성·df≤3 파급 회피). kgs-overview의 &ldquo;연결 209개&rdquo; 집계·kgs-views는 related 수치가 여전히 정확해 이번 범위 밖으로 두었다.</p>
+
+<h3>내부 링크 팝오버 미리보기 — 본문 <code>#!</code> 링크 hover 카드</h3>
+<p><strong>배경</strong>: 외부 위키 사례 조사(gwern 팝업·Quartz popover·Maggie 툴팁, 07-11 Backlog 등재)의 첫 구현. 링크를 누르기 전에 대상 문서를 파악하게 해 탐색 왕복을 줄인다. 실제 사이트 복사본에 A안(미니)·B안(리치) × 낮/밤 목업 4종을 렌더해 제시했고 <strong>A안+계층 경로 한 줄</strong>(제목→경로 1줄 말줄임→요약 2줄 클램프)이 선택됐다.</p>
+<ul>
+    <li><strong>엔진</strong> <code>app.js</code> 팝오버 모듈(~100줄) — <code>#article</code> 위임 리스너, 발동은 <code>matchMedia('(hover: hover) and (pointer: fine)')</code> 충족 시에만(터치 기기는 탭=이동 그대로). 대상은 콜론 라우트(<code>tag:</code>·<code>folder:</code>)와 현재 문서 자기링크 제외. 데이터는 이미 로드된 <code>KNOWLEDGE</code> 재사용이라 <strong>추가 fetch 0</strong>, 인덱스 미도착 시 조용히 무발동. 표시 300ms 지연·카드 이동 80ms 유예(링크→카드 8px 틈), scroll·resize·회전·해시 변경·ESC·클릭 시 즉시 닫음. 접근성: <code>role="tooltip"</code>+<code>aria-describedby</code>, <code>focusin/focusout</code>으로 키보드도 동일 동작.</li>
+    <li><strong>스타일</strong> <code>style.css</code> <code>.po-card</code> — 반투명 필+backdrop-blur 기존 언어, 테마 토큰만 사용해 낮/밤 자동. <strong>반응형</strong>: 폭 <code>min(320px, calc(100vw - 24px))</code>+좌우 12px 클램프로 어떤 뷰포트도 초과 불가, rem 상대 단위, <code>prefers-reduced-motion</code> 시 등장 애니메이션 제거. z-index 700(오버레이 800+·설정 모달 900+ 아래).</li>
+    <li><strong>캐시버스터</strong> app.js 23→24 · style.css 19→20.</li>
+</ul>
+<div class="note">
+    <span class="nh">검증 (CDP 헤드리스 하네스, 실코드 이벤트 구동)</span>
+    데스크톱 낮/밤 카드 표시+뷰포트 안 ✓ · 420px 좁은 창 클램프(우측 여백 15px) ✓ · 콜론 라우트 미발동 ✓ · 터치(포인터 없음) 가드 미발동 ✓ · 자기링크 제외 ✓ · scroll 닫힘 ✓. <code>validate_all</code> ERROR 0. 도식·인덱스·그래프 무변경.
+</div>
