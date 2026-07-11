@@ -21,7 +21,8 @@
 <h4>① 그래프·지식 품질 — 외부 평가(2026-07-11, 87→91→96점) 개선 축 · 관계 타입 파일럿 완료, 나머지 파일럿 대기</h4>
 <p class="scn-sub">우선순위 이원: <strong>개인 고도화</strong>면 (관계 타입 완료) 다음은 메타 3축, <strong>더존 실증</strong>이면 사설 부트스트랩부터.</p>
 <ul>
-    <li><code>READY</code> <strong>[메타] 3축+신선도 파일럿</strong> — <code>status</code>·<code>authority</code>·<code>evidenceLevel</code> + <code>owner/reviewedAt/reviewDue</code>. 적용은 우선 대상 5류부터(전 문서 강제 금지). <em>선행 조건: authority 어휘 정의표 확정(<a href="#!wl-20260711-ops">명세</a>).</em></li>
+    <li><code>READY</code> <strong>[메타] 3축+신선도 파일럿</strong> — <code>status</code>·<code>authority</code>·<code>evidenceLevel</code> + <code>owner/reviewedAt/reviewDue</code>. 적용은 우선 대상 5류부터(전 문서 강제 금지). <em>선행 조건: authority 어휘 정의표 확정(<a href="#!wl-20260711-ops">명세</a>).</em> 외부 사례가 설계를 뒷받침: gwern(status·confidence·importance)·Maggie Appleton(growthStage seedling&rarr;evergreen) — 독자 노출 배지(성장단계형) 형태를 스펙에 포함 검토 (2026-07-11 외부 위키 사례 조사).</li>
+    <li><code>READY</code> <strong>[그래프] 본문 인용 백링크(자동)</strong> — build_index.py가 문서 프래그먼트의 <code>#!</code> 내부 링크를 파싱해 <code>citedBy</code> 계산 필드 추가(스키마 필드 추가 = 하위호환) + 연관 블록에 &ldquo;이 문서를 인용한 문서&rdquo; 표기. 재사용: <code>validate_routes.py</code>의 링크 파서(전 문서 #!링크 이미 파싱), relations의 들어오는/나가는 방향 UI. 본문에 실재하는 링크만 쓰므로 개념 정직성 규칙과 정합. 근거: gwern·Quartz·Matuschak 백링크 (2026-07-11 외부 위키 사례 조사).</li>
     <li><code>READY</code> <strong>[보안] 사설 위키 부트스트랩 실증</strong> — wiki-plugin으로 사설 repo에 같은 엔진 부트스트랩(공개/내부는 저장소 분리 — UI 비노출은 보안 아님). <em>더존 실증 목표면 이 트랙 1~2순위.</em></li>
     <li><code>WATCH</code> <strong>[그래프] 개념 별칭 정규화</strong> — canonical&harr;synonym 보수적 병합, <code>validate_graph</code> synonym WARN이 후보 목록, df&le;3 파급 diff 필수. <em>관찰: WARN 누적(또는 관계 타입과 동시 착수).</em></li>
     <li><code>LATER</code> <strong>[운영] 사용 데이터</strong> — 1단계 localStorage는 <strong>개인화 관측</strong>(중앙 집계 불가, KM 지표 아님), 조직 KM 루프는 외부 수집기 연결부터. <em>트리거: 조직 전환 결정.</em></li>
@@ -46,6 +47,14 @@
     <li><code>WATCH</code> 뷰어 정식 템플릿화 — 브랜딩 파라미터화 + <strong>Fresh-install CI 스모크</strong>(빈 디렉터리→init→샘플 문서→build→validate — wiki-init의 스크립트화가 선행이라 템플릿화와 한 몸). <em>관찰: 플러그인 외부 사용자 등장.</em> (설계 검토 G1 · 자동화 분석 2026-07-11)</li>
     <li><code>LATER</code> 마켓 저장소 분리 — <em>트리거: 저장소 50MB&uarr; 또는 외부 공개.</em> <strong>템플릿화 선행 필수</strong>(분리 시 동기화 게이트·뷰어 동봉 파손). (설계 검토 G3)</li>
     <li><code>LATER</code> wiki-update(설치본 업그레이드 경로) — 버전 비교·파일별 병합 정책·스키마 마이그레이션. <em>트리거: 외부 설치본 등장(현재 0개 — 지금 만들면 사용자 없는 기계). 템플릿화 선행.</em> (자동화 분석 2026-07-11)</li>
+</ul>
+
+<h4>⑤ 독자 UX — 외부 위키 사례 조사(2026-07-11: gwern·simonw/til·Maggie Appleton·Quartz 등 7곳) 유래</h4>
+<p class="scn-sub">쓰는 사람·AI 인프라는 상위권, 격차는 <strong>읽는 사람을 위한 신호·마이크로 UX</strong>라는 진단. 기각분(임베딩 유사추천 — 개념 정직성 충돌·sliding panes — SPA 대수술·PARA 재편 — 계층 충돌)은 조사 리포트에 사유 기록.</p>
+<ul>
+    <li><code>LATER</code> <strong>내부 링크 팝오버 미리보기</strong> — hover 시 title+summary 카드(데이터는 knowledge-index에 이미 존재). Quartz popover·gwern 팝업·Maggie Tippy.js 전례. <em>선행 조건: 모바일(터치) 동작 정의 + 디자인 목업 이미지 제시(CLAUDE.md 소통 규칙).</em></li>
+    <li><code>LATER</code> <strong>RSS/Atom 피드</strong> — doc-dates.json+doc-entries 기반 빌드타임 feed.xml 생성(해시 라우트 URL). simonw/til·Quartz 전례. 새 글의 구독 배달 — 공유·정착률 장치.</li>
+    <li><code>LATER</code> <strong>외부 링크 부패 검사</strong> — 주기 CI(주 1회 등, PR 게이트 아님 — 네트워크 오탐 방지)로 외부 href 404 리포트. 내부 <code>#!</code>는 <code>validate_routes</code>가 이미 ERROR로 차단, 외부만 무방비. gwern 전면 아카이빙은 과잉이라 기각, 검사만 축소 수용.</li>
 </ul>
 
 <h3>최근 완료</h3>
