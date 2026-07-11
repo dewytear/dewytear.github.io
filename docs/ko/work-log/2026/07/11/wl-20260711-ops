@@ -1,0 +1,23 @@
+<h2>AI 소비 계층 신설 — llms.txt · 자기완결 지식 그래프 · 순회 가이드</h2>
+
+<h3>배경 (진단)</h3>
+<p>&ldquo;외부 AI에게 업무를 줄 때 이 위키를 먼저 찾아보고 연관관계로 분석&rdquo;하게 하려는 목표. 조사(3개 병렬 탐색) 결과 <strong>구조적 축적은 매우 튼튼</strong>(97문서·315개념·엣지 209·고아 0·<code>validate_graph</code> ERROR 0)하고 데이터도 동일출처 정적 JSON이라 fetch 가능하나, <strong>외부 AI가 스스로 발견·순회할 &ldquo;앞문&rdquo;이 없었다</strong> — <code>llms.txt</code>·<code>robots</code>·<code>sitemap</code>·JSON-LD 전무, name→문서 URL을 잇는 자기완결 그래프 파일 없음, 순회 계약이 repo 내부에만 존재.</p>
+
+<h3>만든 것 (정적 파일 + 빌드 도구 + 드리프트 게이트)</h3>
+<ul>
+    <li><strong><code>tools/build_ai_export.py</code></strong>(신규): 인덱스(<code>build_index.build()</code> 재사용)+<code>list</code>에서 아래를 결정론적으로 생성. <code>--check</code> 드리프트 모드. <strong>config 구동</strong>(<code>config.json</code>의 <code>url</code>·<code>title</code>·<code>description</code> 사용 → 사이트 비종속, 플러그인 번들 적격).</li>
+    <li><strong><code>llms.txt</code></strong>(루트, llmstxt.org 관례): 위키 목적·기계 파일 포인터·System별 문서(제목+요약+절대 URL)·허브. AI의 첫 방문지.</li>
+    <li><strong><code>data/knowledge-graph.json</code></strong>(신규, 자기완결): 노드 <code>{name,title,summary,section,concepts,url,route,related}</code> — 인덱스에 <strong>원문 URL을 인라인</strong>해 단일 fetch로 전 그래프 순회. + stats.</li>
+    <li><strong><code>docs/ko|en/ai/map/ai-guide</code></strong>(신규, nonum 메타): 순회 계약 문서 — 노드=name·엣지=related(concept/folder)·개념=조인키·name→url·계층. <code>list</code>에 등록, <code>ai-map</code>·<code>cosmos</code>와 상호링크.</li>
+    <li><strong>발견성 위생</strong>: <code>robots.txt</code>(허용+sitemap+AI 진입점) · <code>sitemap.xml</code>(홈+기계파일+전 문서 조각 URL, <code>list</code>에서 생성) · <code>index.html</code> JSON-LD(<code>WebSite</code>+<code>Dataset</code> → 그래프 JSON 지시).</li>
+    <li><strong>드리프트 게이트</strong>: CI(<code>.github/workflows/validate.yml</code>)에 <code>build_ai_export.py --check</code> 추가 — 문서 추가/수정 후 export 재생성을 강제(push·PR 양쪽, stateless).</li>
+    <li><strong>플러그인 번들</strong>: <code>build_ai_export.py</code>·<code>validate_docs.py</code>(ai-guide를 메타 허용목록에 추가)를 <code>plugins/wiki-plugin/tools/</code>에 동기화, <code>index</code> 스킬에 명령 추가, <code>plugin.json</code> 0.3.0→0.4.0.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">검증 (외부 AI 시뮬레이션)</span>
+    <code>knowledge-graph.json</code>의 <strong>97개 노드 URL이 전부 실제 파일과 매핑</strong>(누락 0), 최상위 허브(<code>hns-anatomy</code>)에서 <strong>related 2홉에 13개 노드 도달</strong>, dangling 참조 0. <code>llms.txt</code>→그래프→원문 fetch 경로 무결. <code>validate_all</code> ERROR 0, <code>build_ai_export --check</code>·<code>check_plugin_sync</code>(16파일 + 버전 상향) OK.
+</div>
+
+<h3>남긴 것 (후속)</h3>
+<p>2차 개선거리 — 개념의 68.6%가 단일문서 출현(vocabulary 드리프트). <strong>개념 별칭 정규화 레이어</strong>로 의미 엣지 밀도를 높이는 것은 정직성/큐레이션 부담이 커 별도 주제로 분리(Backlog).</p>

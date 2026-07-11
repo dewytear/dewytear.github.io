@@ -1,0 +1,46 @@
+<h2>AI 순회 가이드 — 이 위키를 기계로 읽는 법</h2>
+<p>이 페이지는 <strong>외부 AI가 이 위키를 업무의 첫 참고처로 삼아, 정보의 연관 관계에 따라 분석</strong>하도록 돕는 <strong>계약(contract)</strong>입니다. 사람이 읽는 <a href="#!ai-map"><strong>Knowledge Map</strong></a>·<a href="#!cosmos"><strong>Knowledge Graph</strong></a>와 같은 데이터를 쓰되, 여기서는 <strong>어떤 파일을 어떤 순서로 fetch하고 어떻게 순회·분석하는지</strong>를 규정합니다.</p>
+
+<h3>먼저 읽을 것 — 단 하나의 파일</h3>
+<p>루트의 <a href="https://dewytear.github.io/llms.txt"><code>llms.txt</code></a>가 표지이고, 실제 순회는 아래 <strong>자기완결 그래프 파일 하나</strong>로 충분합니다:</p>
+<ul>
+    <li><strong><a href="https://dewytear.github.io/data/knowledge-graph.json"><code>data/knowledge-graph.json</code></a></strong> — 모든 <strong>노드(문서)</strong>와 <strong>엣지(related)</strong>·<strong>개념</strong>·<strong>원문 URL</strong>·통계를 한 파일에 담았습니다. 다른 파일을 조인하지 않아도 전 그래프를 순회할 수 있습니다.</li>
+</ul>
+<p>보조 파일(필요 시): <a href="https://dewytear.github.io/data/knowledge-index.ko.json"><code>knowledge-index.ko.json</code></a>(같은 그래프의 원본 인덱스) · <a href="https://dewytear.github.io/list"><code>list</code></a>(내비 트리·문서 경로) · <a href="https://dewytear.github.io/data/doc-dates.json"><code>doc-dates.json</code></a>(생성·수정일).</p>
+
+<h3>노드 스키마</h3>
+<p><code>knowledge-graph.json</code>의 <code>nodes[]</code> 각 원소:</p>
+<pre><code>{
+  "name": "welcome",                     // 불변 논리 ID (노드 키)
+  "title": "Welcome",
+  "summary": "터미널에서 코드를 읽고 편집·실행·커밋하는 Claude Code 소개",
+  "section": "AI · Claude · Code · Introduction",   // World · Domain · System · …
+  "concepts": ["Claude Code","터미널","CLI", "..."],  // 조인 키(사람이 큐레이트)
+  "url":   "https://dewytear.github.io/docs/ko/ai/claude/code/introduction/welcome",
+  "route": "https://dewytear.github.io/#!welcome",   // 사람용 SPA 뷰
+  "related": [
+    { "name":"ccb-what", "title":"...", "shared":["Claude Code","터미널"], "via":"concept" },
+    { "name":"install",  "title":"...", "shared":[],                      "via":"folder" }
+  ]
+}</code></pre>
+
+<h3>순회·분석 규칙</h3>
+<ul>
+    <li><strong>노드 = 문서</strong>(<code>name</code>이 키), <strong>엣지 = <code>related</code></strong>. 엣지는 두 종류다 — <code>via:"concept"</code>는 <strong>희소성 가중 공유 개념</strong>으로 이어진 <em>의미</em> 관계(<code>shared</code>가 근거 개념), <code>via:"folder"</code>는 같은 System 내 <strong>인접 보완</strong> 관계(모든 문서가 최소 2~4개 엣지를 갖도록).</li>
+    <li><strong>개념(<code>concepts</code>)이 조인 키</strong>다. 두 문서가 같은 개념을 공유하면 관련. 희귀 개념일수록 강한 신호(idf 가중). 특정 개념으로 관련 문서를 모으려면 <code>concepts</code>를 역인덱싱하라.</li>
+    <li><strong>원문은 <code>url</code>로 바로 fetch</strong> — JS 렌더 없이 정적 HTML 조각(<code>&lt;h2&gt;…&lt;/h2&gt;&lt;p&gt;…</code>)이 그대로 온다. 본문 분석은 이 조각을 파싱하면 된다.</li>
+    <li><strong>계층은 <code>section</code></strong>(<code>"World · Domain · System · Document"</code>의 상위 3계층)과 <strong><code>stats.clusters</code></strong>(System별 문서 수·허브)로 파악한다. 첫 세그먼트가 World(예: <code>AI</code>, <code>Douzone</code>).</li>
+    <li><strong>진입점</strong>: <code>stats.hubs</code>(피참조 최다 문서)에서 시작해 <code>related</code>를 따라 넓히면 주제의 핵심에서 주변으로 분석이 퍼진다. <code>stats.bridges</code>는 여러 System을 잇는 다리 개념이다.</li>
+</ul>
+
+<h3>순회 예시 (2홉)</h3>
+<pre><code>1) fetch https://dewytear.github.io/data/knowledge-graph.json
+2) 질의 주제와 겹치는 concepts를 가진 노드 선택 (또는 stats.hubs에서 시작)
+3) 그 노드의 related[].name 으로 1홉 이웃, 다시 그 이웃의 related 로 2홉 확장
+4) 관심 노드의 url 을 fetch 해 원문(HTML 조각)을 읽고 분석
+5) shared[] 근거 개념으로 "왜 이어졌는지"를 설명에 활용</code></pre>
+
+<h3>정직성 원칙</h3>
+<p>개념과 요약은 <strong>사람/AI가 문서를 읽고 큐레이트</strong>한 것이지 본문에서 무차별 추출한 것이 아니다. 그래서 엣지는 적지만 신뢰도가 높다 — <strong>연결이 옅다고 결함이 아니며</strong>, World가 다르면(예: AI ↔ DOUZONE) 사이가 성긴 것이 정상이다. 분석 시 <code>via</code>와 <code>shared</code>를 근거로 삼아 <strong>있는 관계만</strong> 사용하라.</p>
+
+<p>이 파일들은 문서가 추가될 때마다 자동 재생성되어 항상 현재 그래프와 일치한다(<code>tools/build_ai_export.py</code>).</p>

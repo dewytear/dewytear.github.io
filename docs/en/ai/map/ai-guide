@@ -1,0 +1,38 @@
+<h2>AI Traversal Guide — how to read this wiki by machine</h2>
+<p>This page is the <strong>contract</strong> for an external AI to consult this wiki first when given a task and analyze information by its relations. It uses the same data as the human-facing <a href="#!ai-map"><strong>Knowledge Map</strong></a> / <a href="#!cosmos"><strong>Knowledge Graph</strong></a>, but specifies <strong>which files to fetch, in what order, and how to traverse and analyze</strong>.</p>
+
+<h3>Read this first — a single file</h3>
+<p>The root <a href="https://dewytear.github.io/llms.txt"><code>llms.txt</code></a> is the sign-post; actual traversal needs only one self-contained file:</p>
+<ul>
+    <li><strong><a href="https://dewytear.github.io/data/knowledge-graph.json"><code>data/knowledge-graph.json</code></a></strong> — every <strong>node (document)</strong> plus <strong>edges (related)</strong>, <strong>concepts</strong>, <strong>raw URL</strong>, and stats in one file. No joining required to traverse the whole graph.</li>
+</ul>
+<p>Optional: <a href="https://dewytear.github.io/data/knowledge-index.ko.json"><code>knowledge-index.ko.json</code></a> (source index) · <a href="https://dewytear.github.io/list"><code>list</code></a> (nav tree / paths) · <a href="https://dewytear.github.io/data/doc-dates.json"><code>doc-dates.json</code></a> (dates).</p>
+
+<h3>Node schema</h3>
+<pre><code>{
+  "name": "welcome",                     // immutable logical id (node key)
+  "title": "Welcome",
+  "summary": "...",
+  "section": "AI · Claude · Code · Introduction",   // World · Domain · System · …
+  "concepts": ["Claude Code","CLI", "..."],          // join keys (human-curated)
+  "url":   "https://dewytear.github.io/docs/ko/ai/claude/code/introduction/welcome",
+  "route": "https://dewytear.github.io/#!welcome",
+  "related": [
+    { "name":"ccb-what", "shared":["Claude Code"], "via":"concept" },
+    { "name":"install",  "shared":[],              "via":"folder" }
+  ]
+}</code></pre>
+
+<h3>Traversal &amp; analysis rules</h3>
+<ul>
+    <li><strong>Nodes = documents</strong> (keyed by <code>name</code>), <strong>edges = <code>related</code></strong>. <code>via:"concept"</code> is a <em>semantic</em> link via rarity-weighted shared concepts (<code>shared</code> is the evidence); <code>via:"folder"</code> is same-System adjacency (so every doc has 2–4 edges).</li>
+    <li><strong>Concepts are the join keys.</strong> Docs sharing a concept are related; rarer concepts are stronger (idf). Reverse-index <code>concepts</code> to gather a topic.</li>
+    <li><strong>Fetch raw content via <code>url</code></strong> — a static HTML fragment, no JS rendering needed.</li>
+    <li><strong>Hierarchy</strong> comes from <code>section</code> (top 3 tiers) and <code>stats.clusters</code> (per-System counts / hubs). First segment = World.</li>
+    <li><strong>Entry points</strong>: start from <code>stats.hubs</code> (most-referenced) and expand along <code>related</code>; <code>stats.bridges</code> are concepts spanning multiple Systems.</li>
+</ul>
+
+<h3>Honesty principle</h3>
+<p>Concepts and summaries are <strong>human/AI-curated</strong>, not scraped — so edges are few but trustworthy. A sparse link is not a defect, and different Worlds (e.g. AI ↔ DOUZONE) are meant to be loosely coupled. Analyze using only the relations that exist, citing <code>via</code> and <code>shared</code>.</p>
+
+<p>These files regenerate whenever a document is added, so they always match the current graph (<code>tools/build_ai_export.py</code>).</p>

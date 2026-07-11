@@ -14,6 +14,8 @@ description: 위키 지식 인덱스(knowledge-index)와 문서 일자(doc-dates
 python3 tools/build_index.py            # data/knowledge-index.<lang>.json 재생성 (결정적 빌드)
 python3 tools/build_index.py --check    # 재생성 결과와 파일 일치 확인 — 0이어야 함
 python3 tools/build_dates.py            # data/doc-dates.json 재생성 (git 이력 기반, KST 정규화)
+python3 tools/build_ai_export.py        # llms.txt · data/knowledge-graph.json · sitemap.xml (AI 소비 계층)
+python3 tools/build_ai_export.py --check # 재생성 결과와 파일 일치 확인 — 0이어야 함
 ```
 
 ## 계약 (자세한 것은 tools/schema.md)

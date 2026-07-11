@@ -27,7 +27,7 @@ LEVEL_RANK = {'ERROR': 0, 'WARN': 1, 'INFO': 2}
 # Doc names intentionally absent from doc-entries.ko.json: work-log entries
 # (they document themselves) and the two knowledge-map pages (meta, not content).
 UNINDEXED_PREFIXES = ('wl-',)
-UNINDEXED_NAMES = {'ai-map', 'dz-map'}
+UNINDEXED_NAMES = {'ai-map', 'dz-map', 'ai-guide'}
 
 
 def is_unindexed(name):

@@ -20,6 +20,9 @@ jobs:
         with:
           python-version: "3.11"
       - run: python tools/validate_all.py
+      # AI 소비 계층(llms.txt·data/knowledge-graph.json·sitemap.xml)이 인덱스와
+      # 어긋나면 실패 — 문서 추가/수정 후 build_ai_export.py 재실행을 강제 (stateless)
+      - run: python tools/build_ai_export.py --check
       # 동봉 플러그인 tools 스냅샷이 source of truth(tools/)와 어긋나면 실패
       # (push·PR 양쪽 — stateless 정합 검사라 base diff 불필요)
       - if: github.event_name != 'pull_request'

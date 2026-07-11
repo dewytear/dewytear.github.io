@@ -1,0 +1,145 @@
+# Aaron's Claude Wiki
+
+> Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 한글 위키. 문서를 개념(concepts)과 연관 문서(related)로 잇는 AI 지식 그래프.
+
+이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 97개 문서 · 315개 개념.
+
+## 기계 판독용 (Machine-readable — AI는 여기부터)
+- [지식 그래프 (단일 파일)](https://dewytear.github.io/data/knowledge-graph.json): 모든 노드(문서)와 엣지(related)·개념·문서 URL·통계를 담은 자기완결 JSON. **먼저 이 파일을 fetch해 그래프를 순회하라.**
+- [AI 순회 가이드](https://dewytear.github.io/docs/ko/ai/map/ai-guide): 그래프를 어떻게 질의·순회·분석하는지의 계약(노드·엣지·개념 조인·계층).
+- [지식 인덱스](https://dewytear.github.io/data/knowledge-index.ko.json) · [내비 트리](https://dewytear.github.io/list) · [문서 날짜](https://dewytear.github.io/data/doc-dates.json)
+
+## Introduction (AI · Claude · Code · Introduction)
+- [Welcome](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/welcome): 터미널에서 코드를 읽고 편집·실행·커밋하는 Claude Code 소개
+- [설치와 시작](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/install): 네이티브 인스톨러로 설치하고 프로젝트에서 실행·인증하는 방법
+- [일상 사용](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/commands): 자연어 프롬프트와 슬래시명령어로 세션을 다루는 일상 사용법
+- [Skills](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/skills): 특정 작업의 지식과 워크플로를 패키징한 재사용 스킬
+- [MCP Servers](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/mcp): 외부 도구·데이터를 연결하는 MCP 서버 개념과 관리
+- [Hooks](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/hooks): 수명주기 이벤트마다 셸 명령을 자동 실행하는 훅
+
+## Tutorial(입문) (AI · Claude · Code · Tutorial)
+- [강의 개요와 목표](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-overview): 강의 목표와 하네스로 책을 만드는 전체 그림 소개
+- [Claude Code란 무엇인가](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-what): 로컬 파일을 직접 다루는 Claude Code의 개념과 차별점
+- [터미널 기초 명령어](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-terminal): pwd·cd·mkdir로 폴더를 만들고 claude를 실행하는 기초
+- [CLAUDE.md — 작업 지침 파일](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-claudemd): 작업 지침 파일 CLAUDE.md의 4계층 적용 범위와 작성법
+- [실습: 웹 조사 → 파일 → 웹사이트](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-research-web): 웹 조사부터 파일 저장·웹사이트 생성·디자인 수정까지 실습
+- [디자인 시스템 추출](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-design-system): 완성된 사이트에서 디자인 요소를 뽑아 디자인 시스템 제작
+- [웹 자료 정리 — 허깅페이스 논문](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-papers): 허깅페이스 데일리 페이퍼를 초록 수집·분류해 파일로 정리
+- [스킬(Skill) 만들기](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-skills): 반복 작업을 재사용 스킬로 만들고 @참조·권한을 다루는 법
+- [플러그인 · 마켓플레이스](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-plugins): 마켓플레이스에서 document-skills 플러그인을 설치·확인하기
+- [에이전트(Agent) 만들기](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-agents): 논문 분석용 전문 에이전트를 만들어 PDF를 병렬 분석
+- [사용량 · 컨텍스트 · 세션 관리](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-manage): 토큰 사용량과 컨텍스트·세션을 관리해 품질과 비용 조절
+- [유용한 기능과 마무리](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-tips): 유용한 명령·스킬과 Cowork 소개로 강의를 마무리
+
+## Skill (AI · Claude · Code · Skill)
+- [스킬 심화 — 개요](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-overview): 스킬 심화 강의의 전체 구성과 배우는 이유를 소개한다.
+- [스킬의 배경 — 코딩 에이전트의 탄생](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-coding-agent): 스킬이 코딩 에이전트 위에서 등장한 배경을 설명한다.
+- [스킬이란 무엇인가](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-what): 스킬은 조직에 일관된 품질을 주는 재사용 작업 패키지임을 설명한다.
+- [스킬의 특장점](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-strengths): 재사용성·점진적로딩·결정론적 실행 등 스킬의 장점을 정리한다.
+- [컨텍스트 윈도우와 도구의 문제](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-context): 컨텍스트 윈도우 한계와 도구가 컨텍스트를 소모하는 문제를 설명한다.
+- [점진적 로딩 (스킬의 핵심 원리)](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-progressive): 메타데이터만 먼저 올리는 점진적 로딩의 3단계 원리를 설명한다.
+- [SKILL.md 구조와 디스크립션](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-structure): SKILL.md의 프론트매터 구조와 디스크립션 작성 중요성을 다룬다.
+- [예제 스킬 둘러보기](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-examples): Anthropic·과학·한국형 등 실제 예제 스킬 모음을 둘러본다.
+- [스킬 설치와 사용 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-install): 스킬을 설치하고 호출해 쓰는 실습 방법을 안내한다.
+- [보안 주의사항](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-security): 스킬이 실행 권한을 갖는 만큼의 보안 위험과 대처를 다룬다.
+- [스킬 만들기 (스킬 엔지니어링)](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-creating): skill-creator로 스킬을 만드는 엔지니어링과 두 카테고리를 설명한다.
+- [정리 — 엔지니어링 계층과 Q&A](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-wrap): 엔지니어링 계층 구분과 MCP·스킬 관계를 정리한다.
+
+## Second Brain (AI · Claude · Code · Second Brain)
+- [세컨드 브레인이란 무엇인가](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-intro): 세컨드 브레인의 정의와 데이터 해자, 5단계 큰 그림을 소개한다.
+- [5단계 한눈에 보기](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-levels): 검색·회상 능력에 따른 세컨드 브레인 5단계를 개괄한다.
+- [레벨 1 · 정확히 찾기 (라우터로서의 CLAUDE.md)](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-level1): CLAUDE.md를 라우터로 쓰는 레벨1 정확 검색을 설명한다.
+- [레벨 2 · 주제로 묶기 (LLM 위키 + 메모리)](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-level2): LLM 위키와 메모리로 주제를 묶는 레벨2를 설명한다.
+- [레벨 3 · 의미로 찾기 (시맨틱 검색·벡터DB)](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-level3): 임베딩·청킹 기반 시맨틱 검색과 한계를 설명한다.
+- [레벨 4 · 관계로 잇기 (지식 그래프)](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-level4): 엔티티와 관계로 잇는 지식 그래프 레벨4를 설명한다.
+- [레벨 5 · 항상 켜진 브레인 OS](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-level5): cron으로 상시 자동 갱신되는 자율 브레인 OS를 설명한다.
+- [무엇을 넣고 무엇을 둘까 (컨텍스트 vs 커넥션)](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-context-connections): 4C 기준으로 담을 데이터와 접근만 할 데이터를 가른다.
+- [내 레벨 찾기 · 팀 세컨드 브레인](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-choose): 통증 기반으로 레벨을 고르고 팀으로 확장하는 법을 정리한다.
+
+## LLM Wiki (AI · Claude · Code · LLM Wiki)
+- [LLM Wiki — 개요](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-overview): 카파시가 제안한 옵시디언 기반 LLM 위키의 전체 개념과 구성을 소개한다.
+- [볼트 체계 — 메인 볼트와 위키 볼트](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-vaults): 메인 볼트와 위키 볼트로 지식을 분리하는 2-볼트 구조를 설명한다.
+- [무엇을 담는가 — 지식 캡처](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-capture): 학습 전초기지로서 관심 있는 지식을 캡처하는 이유와 방법을 다룬다.
+- [노트 구조 — 메타데이터와 점진적 공개](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-metadata): YAML 프론트매터 메타데이터와 점진적 공개로 컨텍스트를 최적화한다.
+- [연결(Links)과 볼트 간 참조](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-links): 노트 간 링크와 볼트를 넘는 마크다운 링크로 지식 그래프를 연결한다.
+- [위키 카드의 종류와 로우 소스](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-cards): 로우 소스를 인제스트해 개념·엔티티·가이드·맵 위키 카드로 만든다.
+- [시스템 파일과 rules](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-system): AI 동작을 규정하는 시스템 파일과 .claude/rules 규칙을 설명한다.
+- [온보딩 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-onboard): 릴리즈를 받아 /onboard로 위키 볼트를 세팅하고 옵시디언에서 여는 실습이다.
+- [세 가지 핵심 동작 — Ingest · Query · Lint](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-ingest-query-lint): 인제스트·쿼리·린트 세 축과 단계적 검색 방식으로 지식 베이스를 운영한다.
+- [웹 클리퍼와 인박스, Query 실전](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-clipper-query): 웹 클리퍼로 인박스에 모아 분류·인제스트하고 쿼리로 꺼내 쓴다.
+- [활용과 철학 — 읽는 능력과 두 볼트 운영](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-philosophy): 위키는 재료 저장소이며 읽는 능력과 두 볼트 분리 운영의 철학을 강조한다.
+
+## Harness 엔지니어링 (AI · Claude · Code · Harness)
+- [하네스 엔지니어링 — 개요와 복습](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-overview): 하네스 엔지니어링 강의 개요와 Claude Code 기초 복습을 소개한다.
+- [하네스 엔지니어링이란?](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-what): AI가 일하는 시스템 전체를 설계하는 하네스 개념을 정의한다.
+- [하네스의 구성과 효과](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-anatomy): 하네스 핵심 구성요소와 운영 루프로 생산성이 오르는 원리를 설명한다.
+- [메타 하네스 스킬 설치 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-install): 메타 하네스 플러그인을 마켓플레이스로 설치하는 실습이다.
+- [하네스 실행하기 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-run): 의도만 전달해 에이전트 팀을 구성하고 실행하는 방법을 실습한다.
+- [생성 결과 리뷰 — 에이전트·스킬·오케스트레이터](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-review): 하네스가 생성한 에이전트·스킬·오케스트레이터 구조를 리뷰한다.
+- [주방 비유로 이해하는 하네스](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-kitchen): 주방 운영에 빗대 단일과 멀티 에이전트 차이를 이해시킨다.
+- [에이전트 팀과 컨텍스트 관리](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-team): 격리 서브에이전트와 통신하는 에이전트 팀, 컨텍스트 관리를 다룬다.
+- [핵심 3요소와 동작 구조](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-core): 에이전트·스킬·오케스트레이터 3요소와 6단계 구성을 설명한다.
+- [활용 사례 — 콘텐츠부터 리서치까지](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-usecases): 소설·웹툰·리서치 등 다양한 하네스 활용 사례를 소개한다.
+- [하네스 100 · 실습 아이디어 · 성능](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-hundred): 하네스100 모음과 실습 아이디어, 성능 측정 결과를 소개한다.
+- [도구 확장과 마무리](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-tools): Codex CLI 2차 검증 등 도구 확장과 사람의 역할을 마무리한다.
+
+## Harness 플러그인 (AI · Claude · PlugIn · Harness)
+- [Harness 플러그인 — 소개](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-intro): 하네스 플러그인 개념과 ERP 커스터마이징 적합성을 소개한다.
+- [핵심 개념 쉽게](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-concepts): 하네스 다섯 요소를 회사 팀에 빗대 쉽게 설명한다.
+- [설치와 준비](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-install): 하네스 플러그인 마켓플레이스 등록과 설치 3단계를 안내한다.
+- [첫 하네스 실행 — 영업·수주 커스터마이징](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-first-run): ERP 영업·수주 CR을 의도로 주고 하네스를 실행하는 실습이다.
+- [동작 구조와 6단계](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-architecture): 진행 승인 후 6단계 팀 구성과 운영 루프 동작 구조를 설명한다.
+- [에이전트와 스킬 설계](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-agents-skills): 에이전트 직무기술서와 스킬 매뉴얼 설계 원리를 다룬다.
+- [검증·품질과 _workspace](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-verify): QA 에이전트 검증 루프와 근거 기록으로 품질을 확보한다.
+- [시나리오 게시판](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-scenarios): ERP 모듈별 커스터마이징 시나리오와 추천 팀 구성을 모았다.
+- [하네스100 · 성능](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-hundred): 하네스100 사례를 ERP 커스텀으로 치환하는 법과 성능을 소개한다.
+- [명령어 · 빠른 참조](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-commands): 하네스 핵심 명령·단축키·설정을 빠른 참조로 정리한다.
+
+## OMC 플러그인 (AI · Claude · PlugIn · OMC)
+- [OMC 소개](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-intro): OMC 플러그인이 클로드 코드에 더하는 자율 실행·멀티 에이전트·자동 검증을 소개한다.
+- [핵심 용어](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-concepts): 슬래시 명령어·에이전트·스킬·훅 등 OMC 기본 용어를 정리한다.
+- [설치](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-install): 플러그인 마켓플레이스·--local·npm CLI 세 가지 OMC 설치 방법을 안내한다.
+- [설치 진단](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-doctor): omc-doctor 명령으로 설치·설정 상태를 진단하는 방법을 다룬다.
+- [실행 모드](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-modes): autopilot·ralph·ultrawork·team 등 강도별 실행 모드를 상세히 설명한다.
+- [에이전트 · 스킬](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-agents): 지휘자 클로드가 역할별 전문 에이전트에 위임하는 구조와 스킬을 설명한다.
+- [Hook · 메모리](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-hooks): OMC의 훅 이벤트와 notepad·project-memory 같은 메모리 장치를 설명한다.
+- [고급 도구](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-tools): LSP·AST Grep·Python REPL 등 정밀 코드 분석 도구군을 소개한다.
+- [실전 시나리오별 워크플로우](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-workflows): 킥오프·기능추가·리팩토링 등 8가지 실전 워크플로우를 예시로 정리한다.
+- [Windows 주의](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-windows): 윈도우 네이티브 훅 지원과 psmux 대안, WSL2 대안 경로를 안내한다.
+- [비용 · 성능](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-cost): 병렬·자율 실행이 속도와 토큰 비용에 미치는 영향과 균형을 설명한다.
+- [명령어 모음](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-commands): 설치부터 실행·취소까지 자주 쓰는 OMC 슬래시 명령어를 표로 정리한다.
+- [빠른 참조 카드](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-quickref): 상황별로 자주 쓰는 OMC 명령을 묶은 치트시트다.
+
+## News & Articles (AI · News & Articles · 2026)
+- [앤트로픽 미소스와 루프드 트랜스포머 — 하이젠버그 기고 읽기](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260622-mythos-looped): 하이젠버그 기고를 읽고, 루프드 트랜스포머가 무엇인지와 미소스·한국 기업 호재론의 사실과 추정을 가려 정리
+- [Fable 5 시대의 병목은 모델이 아니라 인간인가 — 타릭의 지도와 영토 프레임](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260709-thariq-fable5-unknowns): 타릭의 Fable 5 경험을 바탕으로 capability overhang, 지도와 영토, unknown 관리와 여섯 가지 실전 기법을 사실 검증과 외부 연구로 분석한다.
+- [LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260710-llm-wiki-knowledge-context): 세미나 발표를 분석해 카파시의 LLM Wiki(쓰기 시점 컴파일 vs RAG), Obsidian+Git 팀 구현의 승격 플로우, OpenViking 계층 로딩, 사람·에이전트 거버넌스를 원 출처 확인과 도식으로 정리
+- [오라클 온톨로지와 프로퍼티 그래프 — 테이블을 지식의 지도로](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260710-oracle-ontology-property-graph): 오라클의 온톨로지·프로퍼티 그래프 접근을 정리 — RDF vs 프로퍼티 그래프, 메타데이터 뷰 그래프 생성, PGQL·SQL/PGQ 멀티홉·순환 질의, 그래프 알고리즘, Select AI 자연어 질의를 공식 문서 확인과 도식·용어 사전으로 설명
+- [RDF냐 프로퍼티 그래프냐 — 지식 그래프를 위한 두 모델 (Neo4j)](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260711-neo4j-rdf-vs-property-graph): Neo4j 짐 웨버의 'RDF vs property graphs'(2024) 정리 — 지식 그래프의 개체·관계·조직 원리, RDF 트리플·시맨틱 웹의 한계(관계가 1급 아님·SPARQL 종료·온톨로지 유지비), 프로퍼티 그래프 장점과 NASA·Basecamp·Novo Nordisk 사례, ISO GQL, '기본은 프로퍼티 그래프 + 필요 시 온톨로지 레이어' 결론
+
+## AI 개발 지식 플랫폼 (Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼)
+- [제안 개요 — GitLab 기반 AI 개발 지식 플랫폼](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-overview): GitLab 개발 결과를 AI가 조직 지식으로 자동 축적하는 Read-Only 플랫폼 제안의 개요와 선순환
+- [왜 지금인가 — 흩어지고 사라지는 개발 지식](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-why): 분산·소실되는 개발 지식의 비용을 업계 통계로 근거화한 문제 정의
+- [제안의 핵심 — 개발 흐름은 그대로, 지식화는 AI가](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-core): 직원 흐름 무변경 원칙과 Event Stream/Knowledge State 분리, 업계 사례 근거
+- [플랫폼 아키텍처](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-architecture): 7계층 파이프라인, 지식 생성 Trigger, SHA 증분 분석, Context 확장, 운영 이중화
+- [지식 관리 체계 — 판정·갱신·추적·신뢰·수명주기](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-knowledge): 가치 판정, 누적 갱신, Identifier 검색, 출처 추적, FACT/INFERRED/DECISION, 수명주기
+- [자산 활용과 보안](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-security): Reference Wiki 자산의 재사용 경로(지식 체계 반영 의무 절차 포함)와 PUBLIC~RESTRICTED 지식 등급·접근 분리
+- [추진 로드맵 — 4 Phase와 1차 PoC](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-roadmap): 사전 검증→회사 PoC→센터 확대→전사 확장 4단계와 OmniEsol ERP(SCM 도메인) PoC·KPI
+
+## 허브 문서 (가장 많이 참조됨 — 분석 진입점)
+- [하네스의 구성과 효과](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-anatomy): 피참조 11회
+- [LLM Wiki — 개요](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-overview): 피참조 8회
+- [볼트 체계 — 메인 볼트와 위키 볼트](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-vaults): 피참조 8회
+- [설치](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-install): 피참조 8회
+- [강의 개요와 목표](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-overview): 피참조 7회
+- [스킬(Skill) 만들기](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-skills): 피참조 7회
+- [첫 하네스 실행 — 영업·수주 커스터마이징](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-first-run): 피참조 7회
+- [Harness 플러그인 — 소개](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-intro): 피참조 7회
+- [하네스 실행하기 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-run): 피참조 7회
+- [무엇을 담는가 — 지식 캡처](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-capture): 피참조 7회
+- [핵심 용어](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-concepts): 피참조 7회
+- [5단계 한눈에 보기](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-levels): 피참조 7회
+- [스킬 심화 — 개요](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-overview): 피참조 7회
+- [스킬의 특장점](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-strengths): 피참조 7회
+- [핵심 개념 쉽게](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-concepts): 피참조 6회
+- [메타 하네스 스킬 설치 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-install): 피참조 6회
