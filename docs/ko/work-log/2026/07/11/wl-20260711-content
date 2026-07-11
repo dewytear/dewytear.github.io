@@ -8,3 +8,11 @@
     <li>인덱싱: <code>list</code> 노드(11일 트리 신설, model 기록) + <code>doc-entries</code>(기존 개념 RDF·프로퍼티그래프·지식그래프·온톨로지·엔티티관계·쿼리·메타데이터 재사용) + <code>build_index</code> 재생성·<code>--check</code>. 지식지도 fallback 동기화(News 4→5, km-totals 90편/296개 ko·en).</li>
     <li>검증: <code>validate_all</code> ERROR 0, 도식 경계 게이트(<code>diagram-text-overflow</code>·<code>diagram-viewbox-overflow</code>) 무플래그 — 자산 무변경.</li>
 </ul>
+
+<h3>원문 발췌 반영 — 재구성 → 원문 충실 개정</h3>
+<ul>
+    <li>이후 사용자가 <strong>원문 전문을 발췌 제공</strong>(짐 웨버, Neo4j Chief Scientist, 2024-06-04). 봇 차단으로 재구성했던 초판을 <strong>원문 논지에 맞게 전면 개정</strong>했다.</li>
+    <li><strong>보강·정정</strong>: ① 지식 그래프 정의(개체·관계·<strong>조직 원리</strong>)와 조직 원리 <strong>복잡도 스펙트럼</strong>(레이블→제품 계층→온톨로지) ② 생성형 AI·RAG 접지 동기 ③ RDF 한계를 원문대로 <strong>&ldquo;관계가 1급 시민이 아님&rdquo;</strong>(같은 타입 다중 관계·관계 속성에 트리플·노드 추가=조인 테이블)·<strong>SPARQL 종료 미보장</strong>·온톨로지 3부담(스킬·자원·현실 지체)로 교정 ④ 프로퍼티 그래프 &ldquo;<strong>그린 대로 저장</strong>(논리=물리 동형)&rdquo; ⑤ 장점 4종(단순·상세·상호운용·ISO GQL) ⑥ <strong>사례</strong>(NASA·Basecamp·Novo Nordisk) ⑦ 원문 <strong>기능 매트릭스</strong> 표 ⑧ 결론 &ldquo;<strong>기본은 프로퍼티 그래프 + 필요 시 온톨로지 레이어</strong>&rdquo;.</li>
+    <li>도식 재구성: 초판의 neosemantics 내부 매핑 도식(이 글에 없는 내용)을 걷어내고, <strong>원문에 실재하는</strong> ①조직 원리 스펙트럼 ②관계 표현 대비(관계 1급 아님) ③권고 흐름(PG 기본+온톨로지 레이어) 3종으로 교체. 노드 라벨은 <code>.d-node-label</code>. 개념에서 본문에 없어진 &ldquo;리이피케이션&rdquo; 제거(정직성) → 고유 개념 296→295, km-totals 동기화.</li>
+    <li>&ldquo;태도&rdquo; 노트도 &ldquo;봇 차단 재구성&rdquo; → &ldquo;<strong>Neo4j 소속 저자의 관점</strong>(PG 우호)&rdquo; 고지로 갱신. <code>validate_all</code> ERROR 0, 도식 경계 게이트·브라우저 정밀검사 통과, 자산 무변경.</li>
+</ul>
