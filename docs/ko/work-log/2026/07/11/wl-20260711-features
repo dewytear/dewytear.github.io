@@ -42,3 +42,16 @@
     <span class="nh">검증 (CDP 헤드리스 하네스, 실코드 이벤트 구동)</span>
     데스크톱 낮/밤 카드 표시+뷰포트 안 ✓ · 420px 좁은 창 클램프(우측 여백 15px) ✓ · 콜론 라우트 미발동 ✓ · 터치(포인터 없음) 가드 미발동 ✓ · 자기링크 제외 ✓ · scroll 닫힘 ✓. <code>validate_all</code> ERROR 0. 도식·인덱스·그래프 무변경.
 </div>
+
+<h3>인터랙티브 시나리오 연표 — 본문 재사용 컴포넌트(.tl-scenario)</h3>
+<p><strong>배경</strong>: <a href="#!news-20260709-ai-2040-plan-a">AI 2040: Plan A</a> 아티클 등재 시 사용자가 &ldquo;원 사이트의 인터랙티브를 위키에도 적용 가능한가&rdquo;를 물었다. 원 사이트의 단계별 시나리오를 <strong>자기완결(외부 CDN 0)</strong> 컴포넌트로 재현. 클릭형 연표 목업(낮/밤/420px)을 먼저 렌더해 승인받고 반영.</p>
+<ul>
+    <li><strong>엔진</strong> <code>app.js</code> <code>initScenarioTimeline(root)</code> — <code>setArticle()</code>에서 <code>initCarousels</code> 옆에 호출(프래그먼트가 innerHTML로 오므로 wiring은 여기, 캐러셀 패턴 복제). <code>.tl-node[data-year·data-title·data-desc]</code>를 읽어 <strong>별도 데이터 소스 없이</strong> 패널 갱신, 클릭·←/→ 키·<code>aria-selected</code>. 인라인 <code>&lt;script&gt;</code>는 innerHTML에서 실행되지 않으므로 반드시 엔진에서 wiring.</li>
+    <li><strong>스타일</strong> <code>style.css</code> <code>.tl-scenario</code> 계열 — 테마 토큰만 써 낮/밤 자동, <code>flex</code>+상대 폭으로 반응형(뷰포트 초과 없음), <code>prefers-reduced-motion</code> 대응, <code>:focus-visible</code> 아웃라인. SVG 도식이 아니라 diagram-bounds 대상 아님(신규 컴포넌트=디자인 언어 따르기).</li>
+    <li><strong>프래그먼트</strong>: 아티클의 정적 SVG 연표를 <code>.tl-scenario</code> 마크업으로 교체, <code>.tl-panel</code>에 첫 해(2029) 프리렌더로 JS 전에도 의미 있게(graceful). 하단 연표 표는 게시판형 fallback 유지.</li>
+    <li><strong>캐시버스터</strong> app.js 24→25 · style.css 20→21.</li>
+</ul>
+<div class="note">
+    <span class="nh">검증 (CDP 헤드리스, 실제 아티클 페이지 구동)</span>
+    <code>#!news-20260709-ai-2040-plan-a</code> 실렌더로 노드 클릭·키보드 시 패널 전환 ✓ · 낮/밤 테마 ✓ · 420px 반응형(뷰포트 초과 0) ✓. <code>validate_all</code> ERROR 0 · <code>check_cachebuster</code> OK.
+</div>
