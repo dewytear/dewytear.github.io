@@ -37,3 +37,12 @@
     <li><strong>개념 설계</strong>: df==3 경계 개념 회피(파급 방지). 내부는 '지식그래프'+2차 개념으로 쌍마다 공유 2개(overview↔edges 큐레이션, edges↔views 허브, overview↔ai-layer 지식관리), plugin은 '플러그인·마켓플레이스·스킬'로 ccb-plugins·omc-install·hns-install과 <strong>자연 다리</strong>.</li>
     <li><strong>엣지 diff 검증</strong>: 기존 문서 중 3편(skills·ccb-overview·ccb-plugins)이 cap-4 재순위로 1엣지 교체됐으나 <strong>역방향이 살아 있어 무방향 그래프 기준 끊긴 연결 0</strong>. df≤3 파급 0.</li>
 </ul>
+
+<h3>지식 체계 시리즈 보강 — 표식·관계·엣지 원리 상세화 + 6편 &lsquo;게이트&rsquo; 신설</h3>
+<ul>
+    <li><strong>요청</strong>: tags·지식관계(relations)·연관문서(related)의 원리를 예시와 함께 쉽게, 그리고 유형 선언 등 자동화 항목·메커니즘까지 자기기술 문서에 반영. 실측 결과 tags 원리는 시리즈 어디에도 없었고(코드 조사: <code>TAG_INDEX</code>·사전 색인·검색 가중 3·<strong>그래프 미사용</strong>), 자동화 해설 문서 자체가 부재했다.</li>
+    <li><strong><a href="#!kgs-overview">1편</a> &ldquo;세 가지 표식&rdquo; 신설</strong>: label(표시명)·tags(찾아 들어가는 문 — 하단 칩·<code>#!tags</code> 초성 색인·검색 보조)·concepts(잇는 재료 — 엣지 원료)의 역할 분담을 Welcome 실물 값으로 대비. 핵심: <strong>태그를 달아도 그래프 엣지는 생기지 않는다</strong>(데이터 소스·소비처 분리). 규모 노트 실측 갱신(103편·329개념·219연결·타입 관계 15건).</li>
+    <li><strong><a href="#!kgs-edges">2편</a> relations 실물 예시 보강</strong>: 실제 선언 JSON 1건(기사→sb-level4 evidence-for, evidenceRef 포함) + 타입별 실례 4종(시리즈 prerequisite 체인·implements·example-of·evidence-for) + 검증기(<code>relations-dangling-ref</code>·<code>unknown-type</code> ERROR) 서술.</li>
+    <li><strong><a href="#!kgs-gates">6편 신설</a> &ldquo;위키는 어떻게 스스로를 지키는가&rdquo;</strong>: 검증 중심 자동화 철학(판단 없는 노동은 기계가) → 결정적 빌드+<code>--check</code> 드리프트 → PR 동반 게이트 4종 표(각각 태어난 실사고 계기 포함) → <code>--fix</code> 자동 복원(복원은 기계·판단은 사람) → 변경 유형 선언 6유형. CI 게이트 층 도식 1개(bounds 통과). 등재: list·doc-entries(개념 6종, df 파급 검토)·kgs-plugin에 prerequisite 체인 연장(15번째 관계)·ai-map ko/en 6편 반영.</li>
+    <li><strong>검증 중 자기 증명 2건</strong>: ①<code>map-fallback-drift</code> 게이트가 허브 교체(kgs-plugin→kgs-overview)·km-totals(96편/309개) 폴백 드리프트를 즉시 잡아 정정 — 6편이 설명하는 바로 그 메커니즘 ②CDP 검증에서 <strong>이전 세션의 낡은 브라우저가 9333 포트를 점유</strong>해 stale 데이터로 도식 검사가 헛돌던 것을 발견, 프로세스 재기동 후 재검증(실렌더 경계 0·relations 역방향·ai-map 라이브 6편 확인).</li>
+</ul>

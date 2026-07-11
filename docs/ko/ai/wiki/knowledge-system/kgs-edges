@@ -79,7 +79,23 @@
 </div>
 
 <p>어휘는 다섯 가지입니다 — <strong>선행지식</strong>(prerequisite)·<strong>구현</strong>(implements)·<strong>사례</strong>(example-of)·<strong>근거</strong>(evidence-for)·<strong>대체</strong>(supersedes). 각 관계는 <strong>방향</strong>(A→대상)과 <strong>한 줄 근거</strong>(어디서 성립하는지)를 함께 답니다. 저장은 정방향 한 번뿐이고, 반대 방향("이 문서로 들어오는 관계")은 전 문서를 훑어 자동으로 유도합니다. 문서 하단의 <strong>"지식 관계"</strong> 블록에서 나가는·들어오는 관계를 타입 뱃지와 함께 볼 수 있습니다.</p>
-<p>두 레이어는 성격이 다릅니다. <code>related</code>는 <strong>기계·대칭·개념 기반</strong>이라 넓게 깔리고, <code>relations</code>는 <strong>사람·방향·타입</strong>이라 적지만 의미가 진합니다. 그리고 같은 정직성 원칙을 따릅니다 — <strong>본문에 실재하는 관계만</strong> 답니다. 실제로 "구버전을 남긴 채 신버전이 대체"하는 <code>대체</code> 사례가 현 위키엔 없어(문서를 제자리에서 고치므로), 어휘·검증·UI는 갖추되 그 타입은 <strong>비워 두었습니다</strong> — 관계를 채우려 억지 쌍을 만들지 않습니다.</p>
+<p>선언은 이렇게 생겼습니다 — 실제 데이터에서 한 건을 그대로 가져오면(기사가 지식 문서의 <strong>근거</strong>가 되는 관계):</p>
+
+<pre><code>{ "target": "sb-level4",              // 이 관계가 향하는 문서
+  "type": "evidence-for",             // 관계의 종류: 근거
+  "evidenceRef": "Neo4j 짐 웨버 원문(2024-06-04) 정리 —
+                  sb-level4 지식 그래프 접근의 전문가 근거",
+  "source": "human" }                 // 누가 선언했나 (사람)</code></pre>
+
+<p>현재 위키에 선언된 관계는 <strong>14건</strong>이고, 전부 이 형식입니다. 타입별 실례:</p>
+<ul>
+    <li><strong>선행지식(prerequisite)</strong> — 이 시리즈 자체가 체인입니다: <a href="#!kgs-overview">쌓이는가</a> → 이 문서 → <a href="#!kgs-views">7가지 눈</a> → <a href="#!kgs-ai-layer">AI가 읽는 법</a> → <a href="#!kgs-plugin">플러그인화</a>. 각 편이 다음 편의 선행지식으로 선언돼 있어 "무엇을 먼저 읽어야 하는지"를 그래프가 압니다. <a href="#!welcome">Welcome</a> → <a href="#!install">설치와 시작</a>도 같은 타입.</li>
+    <li><strong>구현(implements)</strong> — <a href="#!kgs-plugin">위키 엔진의 플러그인화</a>가 이 시리즈가 설명한 엔진을 <em>구현</em>합니다. 하네스 개념 문서 → 플러그인 아키텍처 문서도 같은 계보.</li>
+    <li><strong>사례(example-of)</strong> — <a href="#!skl-examples">스킬 예제 모음</a>은 <a href="#!skl-what">스킬이란 무엇인가</a>의 "재사용 작업 패키지" 정의의 <em>실사례</em>입니다.</li>
+    <li><strong>근거(evidence-for)</strong> — 위의 JSON처럼, 외부 원문을 확인한 <a href="#!news-20260711-neo4j-rdf-vs-property-graph">기사</a>가 <a href="#!sb-level4">Second Brain 4단계</a> 주장의 <em>외부 근거</em>로 붙습니다. 기사 3편이 이 타입으로 지식 문서를 받칩니다.</li>
+</ul>
+
+<p>두 레이어는 성격이 다릅니다. <code>related</code>는 <strong>기계·대칭·개념 기반</strong>이라 넓게 깔리고, <code>relations</code>는 <strong>사람·방향·타입</strong>이라 적지만 의미가 진합니다. 그리고 같은 정직성 원칙을 따릅니다 — <strong>본문에 실재하는 관계만</strong> 답니다. 실제로 "구버전을 남긴 채 신버전이 대체"하는 <code>대체</code>(supersedes) 사례가 현 위키엔 없어(문서를 제자리에서 고치므로), 어휘·검증·UI는 갖추되 그 타입은 <strong>비워 두었습니다</strong> — 관계를 채우려 억지 쌍을 만들지 않습니다. 선언된 관계는 검증기가 지킵니다: 존재하지 않는 대상(<code>relations-dangling-ref</code>)과 5어휘 밖 타입(<code>relations-unknown-type</code>)은 ERROR로 머지가 막히고, 근거 누락과 상충 선언은 WARN으로 검토 신호가 됩니다.</p>
 
 <div class="note">
     <span class="nh">한눈 요약</span>
