@@ -1,0 +1,23 @@
+<h2>관계 타입 파일럿 — 큐레이트된 의미 관계(<code>relations</code>) + 타입 UI</h2>
+
+<h3>배경 (무엇을·왜)</h3>
+<p>Backlog READY 3건 중 <strong>이 저장소에서 완결 가능한 것</strong>을 판정해 진행했다. <strong>관계 타입 파일럿만 실행</strong> — 메타 3축 파일럿은 더존(사설 repo) 트랙에 묶여 있고 이상적 대상(내부 표준·deprecated)이 공개 콘텐츠에 희소해 보류, 사설 위키 부트스트랩은 별도 저장소·조직 설정이 필요해 이 repo 밖. 07-11 ops 로그에 박제한 <a href="#!wl-20260711-ops">확정 명세</a>를 그대로 구현한다.</p>
+<p>핵심 설계: <code>relations</code>는 자동 계산되는 <code>related</code>(대칭 공유-개념 엣지)와 <strong>분리된 별도 컬렉션</strong>이다. 사람이 손으로 선언하는 <strong>방향 있는 의미 관계</strong>로, <strong>기존 <code>related</code> 계산은 한 바이트도 바뀌지 않는다</strong>(파일럿 종료 기준 8항의 마지막).</p>
+
+<h3>만든 것 (데이터 → 파이프라인 → UI → 검증 → 번들)</h3>
+<ul>
+    <li><strong>스키마</strong> <code>{target, type, evidenceRef, source}</code> — <code>type</code>은 5어휘(<code>prerequisite</code>·<code>implements</code>·<code>example-of</code>·<code>evidence-for</code>·<code>supersedes</code>), <code>source</code>는 파일럿에서 <code>human</code> 고정. 방향은 문서→<code>target</code> 1회 저장, 역관계는 소비자가 전 문서 스캔으로 유도(저장 안 함).</li>
+    <li><strong>데이터</strong> <code>tools/doc-entries.ko.json</code>의 14개 엔트리에 <code>relations</code> 추가(<code>concepts</code> 뒤) — 자기기술 '지식 체계' 읽기순 체인(<code>kgs-overview→edges→views→ai-layer→plugin</code>)·<code>welcome→install</code>(prerequisite 5), 개념→구현(implements 3), 개념→사례(example-of 3), 기사→제안(evidence-for 3). <strong>전부 실존 문서·본문에 실재하는 관계</strong>(정직성).</li>
+    <li><strong>파이프라인</strong> <code>build_index.py</code>는 <code>relations</code>를 additive 패스스루(값 있을 때만 키 방출, <code>related</code>·stats 무변경). <code>build_ai_export.py</code>는 그래프 노드에 <code>relations</code>를 실어 외부 AI에 전달. <code>schemaVersion</code> 2 유지(필드 추가 = 하위호환).</li>
+    <li><strong>검증</strong> <code>validate_graph.py</code>에 <code>_check_relations()</code> 신설 — <strong>relations-dangling-ref(ERROR)</strong>(target 미존재)·<strong>relations-unknown-type(ERROR)</strong>(5어휘 밖)·relations-missing-evidence(WARN)·relations-conflict(WARN, A↔B 동일 타입 상호 선언). <code>schema.md</code> §1.1에 <code>relations</code> 블록 문서화.</li>
+    <li><strong>UI</strong> <code>app.js</code>에 <code>renderRelationsHTML()</code>+<code>injectRelations()</code>(연관 문서 블록과 별도의 &ldquo;지식 관계&rdquo; 블록) — <strong>나가는(정방향)·들어오는(역방향)</strong> 두 그룹, 타입 뱃지, <code>evidenceRef</code>를 근거 텍스트로. 역방향은 <code>Object.keys(KNOWLEDGE)</code> 스캔. <code>style.css</code>에 <code>.relations</code>·<code>.rel-type</code>(<code>.rel-c</code> 미러) 추가, <code>i18n.js</code>에 타입 라벨 ko/en.</li>
+    <li><strong>번들</strong> <code>build_index</code>·<code>build_ai_export</code>·<code>validate_graph</code>·<code>schema.md</code>를 <code>plugins/wiki-plugin/tools/</code>에 동기화, <code>plugin.json</code> 0.4.0→0.5.0. 캐시버스터 <code>app.js</code> 22→23·<code>style.css</code> 18→19·<code>i18n.js</code> 7→8.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">검증 (종료 기준 8항 대조)</span>
+    관계 <strong>14건</strong>(범위 15~25에 근접, supersedes 보류분 제외)·<strong>깨진 target 0</strong>·<strong>evidenceRef 누락 0</strong>·상충 0·UI 방향 식별 가능(들어오는/나가는 그룹)·<code>knowledge-graph.json</code>에 동일 포함·<strong>기존 <code>related</code> 바이트 무변경</strong>(conceptCount 326 유지). <code>validate_all</code> ERROR 0, <code>build_index --check</code>·<code>build_ai_export --check</code>·<code>check_plugin_sync</code>(16파일+버전 상향)·<code>check_cachebuster</code> OK.
+</div>
+
+<h3>정직하게 조정한 것 — supersedes 미적용</h3>
+<p>종료 기준 &ldquo;타입별 최소 2건&rdquo;을 기계적으로 채우지 않았다. 현 코퍼스에 <code>supersedes</code>(구버전을 남긴 채 신버전이 대체)의 <strong>깨끗한 사례가 없다</strong> — 이 위키는 문서를 in-place로 개정하기 때문. 어휘·검증·UI는 갖추되 <strong>실제 케이스가 생길 때 적용</strong>하기로 하고, 종료 기준을 4/5 타입 ≥2로 정직하게 조정했다(억지 관계를 넣어 그래프를 왜곡하지 않는다 — 정직성 규칙). 나머지 4타입은 각 2건 이상 충족.</p>

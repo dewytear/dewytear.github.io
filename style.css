@@ -2143,6 +2143,67 @@
             content: "\0023  ";
             opacity: 0.6;
         }
+        /* ---- 지식 관계 (curated typed relations — distinct from .related) ---- */
+        .relations{
+            margin-top: 26px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        .relations-title{
+            margin: 0 0 12px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .rel-group{ margin-bottom: 10px; }
+        .rel-dir{
+            display: block;
+            margin-bottom: 6px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .relations-list{
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+        .relations-list li{
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 7px;
+            margin: 0;
+        }
+        .relations-list li a{
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--accent-ink);
+        }
+        .relations-list li a:hover{ text-decoration: underline; }
+        /* Relation-type badge — pill mirroring .rel-c, minus the leading "#". */
+        .rel-type{
+            flex: none;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--accent-ink);
+            background: color-mix(in srgb, var(--accent) 16%, transparent);
+            border-radius: 999px;
+            padding: 1px 9px;
+            letter-spacing: 0.02em;
+        }
+        .rel-ev{
+            flex-basis: 100%;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+            padding-left: 2px;
+        }
         /* Concept-frequency count on the 지식 지도 page. */
         .km-n{
             color: var(--muted);

@@ -60,6 +60,23 @@
 - 경계값 주의: df 3→4로 넘어가는 개념 추가는 옆 문서의 단일-공유 엣지를 끊을 수 있다
   (CLAUDE.md 지식 그래프 WARN 해석 규칙 참조).
 
+**`relations` (선택 필드 — 큐레이트된 의미 관계):** `related`(계산)와 **별개**로,
+사람이 손으로 선언하는 방향 있는 의미 관계. 없으면 키 자체를 생략한다(하위호환).
+```jsonc
+"relations": [
+  {
+    "target": "install",          // 대상 문서 name (미존재 = ERROR)
+    "type": "prerequisite",       // prerequisite | implements | example-of | evidence-for | supersedes
+    "evidenceRef": "…",           // 이 관계의 한 줄 근거(본문 어디서 성립하는지)
+    "source": "human"             // 생성 주체: human | ai-proposed | imported | rule-derived
+  }
+]
+```
+- 방향은 `A(문서) → target`. 역관계(예: prerequisite ↔ has-prerequisite)는 **저장 안 하고**
+  소비자가 전 문서 스캔으로 유도한다(저장은 정방향 1회).
+- 원본은 `doc-entries.<lang>.json`(비-ko는 ko에서 상속). 자동 추론 금지 — 본문에 실재하는
+  관계만(정직성 규칙). 검증은 `validate_graph.py`의 `relations-*` 체크.
+
 ### 1.2 `stats` — 집계
 
 ```jsonc

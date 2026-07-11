@@ -100,6 +100,7 @@ def build_graph():
             'url': doc_url(d['name'], paths),
             'route': BASE + '#!' + d['name'],
             'related': d['related'],
+            'relations': d.get('relations', []),
         })
     return {
         'schemaVersion': 2,

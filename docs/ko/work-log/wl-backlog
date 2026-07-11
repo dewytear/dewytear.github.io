@@ -18,10 +18,9 @@
 <h3>아이디어 · 나중에</h3>
 <p class="scn-sub">주제 트랙별로 묶고, 필요(우선순위)가 읽히는 순서로 둔다. 상태 칩: <code>READY</code> 설계 완료·착수 결정 대기 · <code>WATCH</code> 지표 관찰 중 · <code>LATER</code> 장기. 상세 설계는 <a href="#!wl-20260711-ops">확정 명세(07-11 운영 로그)</a>에 박제 — 보드는 요지만.</p>
 
-<h4>① 그래프·지식 품질 — 외부 평가(2026-07-11, 87→91→96점) 개선 축 · 설계 종결, 파일럿 대기</h4>
-<p class="scn-sub">우선순위 이원: <strong>개인 고도화</strong>면 관계 타입부터, <strong>더존 실증</strong>이면 사설 부트스트랩부터.</p>
+<h4>① 그래프·지식 품질 — 외부 평가(2026-07-11, 87→91→96점) 개선 축 · 관계 타입 파일럿 완료, 나머지 파일럿 대기</h4>
+<p class="scn-sub">우선순위 이원: <strong>개인 고도화</strong>면 (관계 타입 완료) 다음은 메타 3축, <strong>더존 실증</strong>이면 사설 부트스트랩부터.</p>
 <ul>
-    <li><code>READY</code> <strong>[그래프] 관계 타입 파일럿</strong> — 별도 <code>relations</code> 컬렉션(<code>{target,type,evidenceRef,source}</code>), 어휘 5종+역관계 확정. 범위 3~5종×10문서, <a href="#!wl-20260711-ops">종료 기준 8항</a>. <em>착수 대기 — 다음 우선 과제로 결정할 때.</em></li>
     <li><code>READY</code> <strong>[메타] 3축+신선도 파일럿</strong> — <code>status</code>·<code>authority</code>·<code>evidenceLevel</code> + <code>owner/reviewedAt/reviewDue</code>. 적용은 우선 대상 5류부터(전 문서 강제 금지). <em>선행 조건: authority 어휘 정의표 확정(<a href="#!wl-20260711-ops">명세</a>).</em></li>
     <li><code>READY</code> <strong>[보안] 사설 위키 부트스트랩 실증</strong> — wiki-plugin으로 사설 repo에 같은 엔진 부트스트랩(공개/내부는 저장소 분리 — UI 비노출은 보안 아님). <em>더존 실증 목표면 이 트랙 1~2순위.</em></li>
     <li><code>WATCH</code> <strong>[그래프] 개념 별칭 정규화</strong> — canonical&harr;synonym 보수적 병합, <code>validate_graph</code> synonym WARN이 후보 목록, df&le;3 파급 diff 필수. <em>관찰: WARN 누적(또는 관계 타입과 동시 착수).</em></li>
@@ -57,6 +56,7 @@
     <li>&#9989; [플러그인] wiki-plugin 도그푸딩 — 스킬 4종 실사용(index·validate 실 위키 읽기전용, wiki-init·add-doc 스크래치). 스냅샷 드리프트(validate_design 190줄+파일 2종) 재동기화·wiki-init SKILL 갭(en엔트리·STRINGS) 보강 <a href="#!wl-20260710-worklog-digest-audit">wl-20260710 운영</a></li>
     <li>&#9989; [플러그인] wiki-plugin 스캐폴드 — 마켓(.claude-plugin/marketplace.json)+플러그인(plugins/wiki-plugin: 스킬 4종·tools 동봉), <code>claude plugin validate</code> 통과 <a href="#!wl-20260710-worklog-digest-audit">wl-20260710 운영</a></li>
     <li>&#9989; [플랫폼] 스키마 계약 동결 — <code>tools/schema.md</code> 신설(인덱스·doc-dates·list 계약 + 호환 규칙), 실물 전수 대조 일치 <a href="#!wl-20260710-worklog-digest-audit">wl-20260710 운영</a></li>
+    <li>&#9989; [그래프] 관계 타입 파일럿 — 별도 <code>relations</code> 컬렉션(<code>{target,type,evidenceRef,source}</code>) 14건, 타입 뱃지·방향(들어오는/나가는) UI, <code>related</code> 계산 무변경. <strong><code>supersedes</code>는 정직하게 보류</strong>(현 코퍼스에 깨끗한 대체 사례 없음 — 어휘·검증·UI는 갖춤, 케이스 생기면 적용) <a href="#!wl-20260711-features">wl-20260711 기능</a></li>
     <li>&#9989; AI 소비 계층 — llms.txt·자기완결 knowledge-graph.json·순회 가이드·robots/sitemap/JSON-LD + CI 드리프트 게이트 <a href="#!wl-20260711-ops">wl-20260711 운영</a></li>
     <li>&#9989; '지식 체계' System 신설 — 이 위키의 지식 그래프 해설 5편(자기기술), 97&rarr;102문서 <a href="#!wl-20260711-content">wl-20260711 콘텐츠</a></li>
     <li>&#9989; (정리) "하루치 자동 로그 AI 승격" 아이디어 제거 — 전제였던 자동 머지 로그가 폐지되고 주제 단위 수동 큐레이션(빅 프레임)이 확립되어 무의미해짐 (2026-07-11 Backlog 재정리)</li>

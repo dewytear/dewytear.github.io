@@ -21,12 +21,16 @@
   "related": [
     { "name":"ccb-what", "title":"...", "shared":["Claude Code","터미널"], "via":"concept" },
     { "name":"install",  "title":"...", "shared":[],                      "via":"folder" }
+  ],
+  "relations": [                          // (선택) 큐레이트된 방향 있는 의미 관계 — related(계산)와 별개
+    { "target":"kgs-edges", "type":"prerequisite", "evidenceRef":"...", "source":"human" }
   ]
 }</code></pre>
 
 <h3>순회·분석 규칙</h3>
 <ul>
     <li><strong>노드 = 문서</strong>(<code>name</code>이 키), <strong>엣지 = <code>related</code></strong>. 엣지는 두 종류다 — <code>via:"concept"</code>는 <strong>희소성 가중 공유 개념</strong>으로 이어진 <em>의미</em> 관계(<code>shared</code>가 근거 개념), <code>via:"folder"</code>는 같은 System 내 <strong>인접 보완</strong> 관계(모든 문서가 최소 2~4개 엣지를 갖도록).</li>
+    <li><strong>타입 있는 관계 = <code>relations</code></strong>(선택). <code>related</code>가 <em>대칭·계산</em> 엣지라면, <code>relations</code>는 사람이 큐레이트한 <strong>방향 있는 의미 관계</strong>다 — <code>type</code>은 <code>prerequisite</code>(선행)·<code>implements</code>(구현)·<code>example-of</code>(사례)·<code>evidence-for</code>(근거)·<code>supersedes</code>(대체), <code>evidenceRef</code>가 근거. 방향은 이 노드 → <code>target</code>이며 역관계는 전 노드를 스캔해 유도한다(저장은 정방향 1회). <code>related</code>와 겹치지 않는 별도 신호이니 <strong>둘 다</strong> 활용하라.</li>
     <li><strong>개념(<code>concepts</code>)이 조인 키</strong>다. 두 문서가 같은 개념을 공유하면 관련. 희귀 개념일수록 강한 신호(idf 가중). 특정 개념으로 관련 문서를 모으려면 <code>concepts</code>를 역인덱싱하라.</li>
     <li><strong>원문은 <code>url</code>로 바로 fetch</strong> — JS 렌더 없이 정적 HTML 조각(<code>&lt;h2&gt;…&lt;/h2&gt;&lt;p&gt;…</code>)이 그대로 온다. 본문 분석은 이 조각을 파싱하면 된다.</li>
     <li><strong>계층은 <code>section</code></strong>(<code>"World · Domain · System · Document"</code>의 상위 3계층)과 <strong><code>stats.clusters</code></strong>(System별 문서 수·허브)로 파악한다. 첫 세그먼트가 World(예: <code>AI</code>, <code>Douzone</code>).</li>
