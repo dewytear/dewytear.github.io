@@ -1837,3 +1837,102 @@ window.__loadKnowledge.then(function(idx){
     var box = document.getElementById('search-input');
     if(box && box.value.trim()){ renderSearchResults(box.value); }
 }).catch(function(){ KNOWLEDGE = {}; });
+
+// ---- 내부 링크 팝오버 미리보기 ----
+// 본문(#article)의 #!문서 링크에 hover하면 대상 문서의 제목·계층 경로·요약
+// 카드를 띄운다. 데이터는 이미 로드된 KNOWLEDGE를 재사용하므로 추가 fetch 없음.
+// hover가 있는 정밀 포인터에서만 발동 — 터치 기기는 탭=이동 그대로.
+var PO_SHOW_DELAY = 300;
+var PO_HIDE_DELAY = 80;   // 링크→카드 사이 8px 틈을 건널 시간
+var poShowTimer = null, poHideTimer = null, poCard = null, poAnchor = null;
+
+// #! 뒤가 순수 문서 이름인 링크만 대상 (tag:/folder: 등 콜론 라우트와
+// 지금 보고 있는 문서 자신은 제외).
+function poLinkTarget(a){
+    var href = a.getAttribute('href') || '';
+    if(href.slice(0, 2) !== '#!') return null;
+    var name = decodeURIComponent(href.slice(2));
+    if(!name || name.indexOf(':') !== -1) return null;
+    if(name === decodeURIComponent(location.hash.slice(2))) return null;
+    return name;
+}
+
+function poHide(){
+    clearTimeout(poShowTimer); poShowTimer = null;
+    clearTimeout(poHideTimer); poHideTimer = null;
+    if(poCard){ poCard.remove(); poCard = null; }
+    if(poAnchor){ poAnchor.removeAttribute('aria-describedby'); poAnchor = null; }
+}
+
+function poShow(a, name){
+    var doc = KNOWLEDGE && KNOWLEDGE[name];
+    if(!doc || !doc.summary) return;   // 인덱스 미도착·미등재 문서는 조용히 무발동
+    poHide();
+    var card = document.createElement('div');
+    card.className = 'po-card';
+    card.id = 'link-popover';
+    card.setAttribute('role', 'tooltip');
+    card.innerHTML =
+        '<p class="po-title">' + escapeHtml(doc.title || name) + '</p>'
+      + (doc.section ? '<p class="po-path">' + escapeHtml(doc.section) + '</p>' : '')
+      + '<p class="po-sum">' + escapeHtml(doc.summary) + '</p>';
+    document.body.appendChild(card);
+    var r = a.getBoundingClientRect();
+    var x = Math.max(12, Math.min(r.left, window.innerWidth - card.offsetWidth - 12));
+    var y = r.bottom + 8;
+    if(y + card.offsetHeight > window.innerHeight - 12){ y = r.top - card.offsetHeight - 8; }
+    card.style.left = x + 'px';
+    card.style.top = Math.max(12, y) + 'px';
+    a.setAttribute('aria-describedby', 'link-popover');
+    // 커서가 카드 위에 머무는 동안 유지, 떠나면 닫는다(카드 안에 링크 없음 — 중첩 없음).
+    card.addEventListener('mouseenter', function(){ clearTimeout(poHideTimer); });
+    card.addEventListener('mouseleave', poHide);
+    poCard = card; poAnchor = a;
+}
+
+function poScheduleHide(){
+    clearTimeout(poShowTimer); poShowTimer = null;
+    clearTimeout(poHideTimer);
+    poHideTimer = setTimeout(poHide, PO_HIDE_DELAY);
+}
+
+(function initLinkPopover(){
+    if(!(window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches)) return;
+    var art = document.getElementById('article');
+    if(!art || !art.addEventListener) return;
+    function linkOf(ev){
+        var el = ev.target;
+        return (el && el.closest) ? el.closest('a[href^="#!"]') : null;
+    }
+    art.addEventListener('mouseover', function(ev){
+        var a = linkOf(ev);
+        if(!a) return;
+        clearTimeout(poHideTimer); poHideTimer = null;
+        if(poAnchor === a && poCard) return;
+        var name = poLinkTarget(a);
+        if(!name) return;
+        clearTimeout(poShowTimer);
+        poShowTimer = setTimeout(function(){ poShow(a, name); }, PO_SHOW_DELAY);
+    });
+    art.addEventListener('mouseout', function(ev){
+        if(!linkOf(ev)) return;
+        var to = ev.relatedTarget;
+        if(to && poCard && poCard.contains(to)) return;
+        poScheduleHide();
+    });
+    // 키보드 접근성: 포커스로도 열리고, 포커스가 떠나면 닫힌다.
+    art.addEventListener('focusin', function(ev){
+        var a = linkOf(ev);
+        if(!a) return;
+        var name = poLinkTarget(a);
+        if(name){ poShow(a, name); }
+    });
+    art.addEventListener('focusout', poScheduleHide);
+    // 화면이 움직이면 좌표가 낡으므로 재배치 대신 닫는다 (반응형·단순성).
+    window.addEventListener('scroll', poHide, { passive: true });
+    window.addEventListener('resize', poHide);
+    window.addEventListener('orientationchange', poHide);
+    window.addEventListener('hashchange', poHide);
+    document.addEventListener('keydown', function(ev){ if(ev.key === 'Escape') poHide(); });
+    document.addEventListener('click', poHide);
+})();

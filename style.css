@@ -2143,6 +2143,53 @@
             content: "\0023  ";
             opacity: 0.6;
         }
+        /* ===== 내부 링크 팝오버 미리보기 ===== */
+        /* 본문 #! 링크 hover 시 제목·계층 경로·요약 카드. 테마 토큰만 사용해
+           낮/밤 자동 대응. 폭은 min()으로 어떤 뷰포트도 넘지 않는다. */
+        .po-card{
+            position: fixed;
+            z-index: 700;   /* 본문 위 · 오버레이(800+)와 설정 모달(900+) 아래 */
+            max-width: min(320px, calc(100vw - 24px));
+            background: color-mix(in srgb, var(--bg-alt) 86%, transparent);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, .20);
+            font-size: .86rem;
+            line-height: 1.55;
+            color: var(--text);
+            animation: po-in .16s ease-out;
+        }
+        @keyframes po-in{
+            from{ opacity: 0; transform: translateY(4px); }
+            to{ opacity: 1; transform: none; }
+        }
+        @media (prefers-reduced-motion: reduce){
+            .po-card{ animation: none; }
+        }
+        .po-card .po-title{
+            margin: 0 0 2px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .po-card .po-path{
+            margin: 0 0 6px;
+            font-size: .72rem;
+            color: var(--muted);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .po-card .po-sum{
+            margin: 0;
+            color: var(--muted);
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+        }
         /* ---- 지식 관계 (curated typed relations — distinct from .related) ---- */
         .relations{
             margin-top: 26px;

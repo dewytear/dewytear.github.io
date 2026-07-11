@@ -52,7 +52,6 @@
 <h4>⑤ 독자 UX — 외부 위키 사례 조사(2026-07-11: gwern·simonw/til·Maggie Appleton·Quartz 등 7곳) 유래</h4>
 <p class="scn-sub">쓰는 사람·AI 인프라는 상위권, 격차는 <strong>읽는 사람을 위한 신호·마이크로 UX</strong>라는 진단. 기각분(임베딩 유사추천 — 개념 정직성 충돌·sliding panes — SPA 대수술·PARA 재편 — 계층 충돌)은 조사 리포트에 사유 기록.</p>
 <ul>
-    <li><code>LATER</code> <strong>내부 링크 팝오버 미리보기</strong> — hover 시 title+summary 카드(데이터는 knowledge-index에 이미 존재). Quartz popover·gwern 팝업·Maggie Tippy.js 전례. <em>선행 조건: 모바일(터치) 동작 정의 + 디자인 목업 이미지 제시(CLAUDE.md 소통 규칙).</em></li>
     <li><code>LATER</code> <strong>RSS/Atom 피드</strong> — doc-dates.json+doc-entries 기반 빌드타임 feed.xml 생성(해시 라우트 URL). simonw/til·Quartz 전례. 새 글의 구독 배달 — 공유·정착률 장치.</li>
     <li><code>LATER</code> <strong>외부 링크 부패 검사</strong> — 주기 CI(주 1회 등, PR 게이트 아님 — 네트워크 오탐 방지)로 외부 href 404 리포트. 내부 <code>#!</code>는 <code>validate_routes</code>가 이미 ERROR로 차단, 외부만 무방비. gwern 전면 아카이빙은 과잉이라 기각, 검사만 축소 수용.</li>
 </ul>
@@ -60,6 +59,7 @@
 <h3>최근 완료</h3>
 <p class="scn-sub">완료 항목을 ✅ + Work Log 링크와 함께 잠시 여기 둡니다. 오래되면 걷어냅니다(원본은 해당 로그에).</p>
 <ul>
+    <li>&#9989; [독자 UX] 내부 링크 팝오버 미리보기 — 본문 <code>#!</code> 링크 hover 시 제목·계층 경로·요약 카드(A안+경로, 목업 선택). hover 정밀 포인터 전용(터치는 탭=이동), KNOWLEDGE 재사용 추가 fetch 0, 반응형 min() 클램프. CDP 하네스 7항목 검증 <a href="#!wl-20260711-features">wl-20260711 기능</a></li>
     <li>&#9989; [운영] 변경 유형 기준표 — <code>tools/change-types.md</code>(ENGINE/STYLE/TOOL/SCHEMA/PLUGIN/CONTENT → 반영·게이트·프레임 매핑) + 작업 시작 시 선언 규칙(CLAUDE.md). 기각했던 매니페스트의 경량 대안(미러 없는 규칙 표) 수용 <a href="#!wl-20260711-ops">wl-20260711 운영</a></li>
     <li>&#9989; [운영] 게이트 자동 복원(--fix) 2종 — <code>check_plugin_sync --fix</code>(루트→번들 자동 복사·orphan 제거)·<code>check_cachebuster --fix</code>(stale ?v 자동 +1). 판단이 필요 없는 기계 노동만 자동화, 게이트·버전 판단은 유지. 외부 자동화 분석의 취사선택 결과(매니페스트·문서 자동생성·Bot PR은 기각 — 사유는 로그에) <a href="#!wl-20260711-ops">wl-20260711 운영</a></li>
     <li>&#9989; [플러그인] 클러스터 지도 데이터화 — <code>CLUSTER_LABELS_BY_LANG</code> 하드코딩을 <code>tools/clusters.json</code>(위키별 설정, 번들 제외)으로 분리, 인덱스 바이트 등가 확인 <a href="#!wl-20260710-worklog-digest-audit">wl-20260710 운영</a></li>
