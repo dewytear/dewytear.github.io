@@ -1,6 +1,16 @@
 <h2>콘텐츠 — AI 2040: Plan A 아티클 + Neo4j &lsquo;RDF vs 프로퍼티 그래프&rsquo;</h2>
 
-<h3>AI 2040: Plan A 아티클 등록 (ai-2040.com)</h3>
+<h3>AI 2040: Plan A 아티클 — 폴더 4편으로 재구성</h3>
+<p><strong>초판의 4결함 수정</strong>(사용자 지적): ①<code>list</code>에 폴더 노드를 안 만들어 내비에 낱개로 뜸 ②2026 뉴스 맨 앞에 꽂아 기존 글을 밀어냄 ③<code>build_dates.py</code> 미실행으로 생성일자 미표시 ④내용이 너무 요약. 사용자 결정대로 <strong>폴더 안 4편으로 분할·보강</strong>.</p>
+<ul>
+    <li><strong>폴더 노드</strong>: <code>list</code>에 <code>{title:"AI 2040: Plan A", children:[4]}</code>를 2026 children의 <strong>올바른 시간 위치</strong>(0622 다음, 0709 자리 — thariq 옆)에 삽입 → 내비에 폴더로 표시, 기존 글 순서 복원.</li>
+    <li><strong>4편</strong>: 개요(허브·인터랙티브 연표)·<a href="#!news-20260709-ai-2040-scenario">연도별 시나리오</a>(2027 두 노동력·2028 대선/데이터센터·2030 회피·2035 정지·2040 해제)·<a href="#!news-20260709-ai-2040-policy">정책·검증</a>(전면 투명성·네트워크 탭/부분 재연산·데이터센터 재배치·상호확증 연산 파괴)·<a href="#!news-20260709-ai-2040-reactions">반응·비평</a>(응고 3지적·프리드먼·로힛·언론, 게시판 표). 원문 차단으로 WebSearch 교차 확인, 요약·분석+짧은 인용+출처(정직성).</li>
+    <li><strong>생성일자 복구</strong>: <code>build_dates.py</code> 실행해 <code>doc-dates.json</code>에 4편 날짜 채움(git 기준). <strong>순서 원칙 재확인</strong>: 뉴스 트리는 오래된 순 유지.</li>
+    <li>인덱싱: <code>doc-entries</code> 1→4엔트리(개념 재사용)·<code>build_index</code>·<code>build_ai_export</code> 재생성. 지식지도 fallback(News 6→9, km-totals 97/316→107/337 ko·en). <code>validate_all</code> ERROR 0.</li>
+</ul>
+<details class="scn-sub"><summary>초판(단일 문서) 등록 기록</summary>
+
+<h4>AI 2040: Plan A 아티클 등록 (ai-2040.com) — 초판</h4>
 <ul>
     <li>사용자 제공 URL <code>ai-2040.com</code>(AI Futures Project, &ldquo;AI 2027&rdquo; 저자들의 후속 규범 시나리오)을 <a href="#!news-20260709-ai-2040-plan-a">뉴스 아티클</a>로 등록. 요청대로 <code>ai/news/2026/</code> 아래 <strong>새 폴더</strong>(<code>ai-2040-plan-a/</code>)에 배치.</li>
     <li><strong>원문 도메인이 조직 egress 정책으로 차단(403)</strong> — WebFetch·프록시·Substack 미러·archive.org 모두 실패, <strong>WebSearch만 동작</strong>. 검색으로 저자·공개일·연표·정책 골자·반응을 교차 확인해 <strong>해설·요약으로 재구성</strong>(원문 통째 복제 아님 — 저작권 + 위키 관례). 출처 노트에 &ldquo;열람 아닌 요약 기반&rdquo; 명시, 원문·미러·LessWrong 링크로 유도(정직성).</li>
@@ -9,6 +19,7 @@
     <li>인덱싱: <code>list</code> 노드(11일 뉴스 트리 최상단, model 기록) + <code>doc-entries</code>(기존 개념 재사용: 초지능·AI 거버넌스·AI 안전·AI 2027·AI 정렬·미중 경쟁) + <code>build_index</code> 재생성·<code>--check</code> + AI export 재생성. 지식지도 fallback 동기화(News 5→6, km-totals 96편/309개 → 97편/316개 ko·en).</li>
     <li>검증: <code>validate_all</code> ERROR 0, 도식 경계 게이트 무플래그, 자산(app.js/style.css) 무변경.</li>
 </ul>
+</details>
 
 <h3>Neo4j &lsquo;RDF vs 프로퍼티 그래프&rsquo; 아티클 등록</h3>
 
