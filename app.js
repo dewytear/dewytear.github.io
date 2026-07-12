@@ -919,7 +919,7 @@ function showFolder(section){
                  +  '</section>';
         });
         var body = document.querySelector('.folder-body');
-        if(body){ body.innerHTML = html; wrapBareTables(body); initCarousels(body); }
+        if(body){ body.innerHTML = html; wrapBareTables(body); initCarousels(body); initScenarioTimeline(body); }
     });
 }
 

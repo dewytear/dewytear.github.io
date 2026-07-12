@@ -6,7 +6,8 @@
     <li><strong>폴더 노드</strong>: <code>list</code>에 <code>{title:"AI 2040: Plan A", children:[4]}</code>를 2026 children의 <strong>올바른 시간 위치</strong>(0622 다음, 0709 자리 — thariq 옆)에 삽입 → 내비에 폴더로 표시, 기존 글 순서 복원.</li>
     <li><strong>4편</strong>: 개요(허브·인터랙티브 연표)·<a href="#!news-20260709-ai-2040-scenario">연도별 시나리오</a>(2027 두 노동력·2028 대선/데이터센터·2030 회피·2035 정지·2040 해제)·<a href="#!news-20260709-ai-2040-policy">정책·검증</a>(전면 투명성·네트워크 탭/부분 재연산·데이터센터 재배치·상호확증 연산 파괴)·<a href="#!news-20260709-ai-2040-reactions">반응·비평</a>(응고 3지적·프리드먼·로힛·언론, 게시판 표). 원문 차단으로 WebSearch 교차 확인, 요약·분석+짧은 인용+출처(정직성).</li>
     <li><strong>생성일자 복구</strong>: <code>build_dates.py</code> 실행해 <code>doc-dates.json</code>에 4편 날짜 채움(git 기준). <strong>순서 원칙 재확인</strong>: 뉴스 트리는 오래된 순 유지.</li>
-    <li>인덱싱: <code>doc-entries</code> 1→4엔트리(개념 재사용)·<code>build_index</code>·<code>build_ai_export</code> 재생성. 지식지도 fallback(News 6→9, km-totals 97/316→107/337 ko·en). <code>validate_all</code> ERROR 0.</li>
+    <li>인덱싱: <code>doc-entries</code> 1→4엔트리(개념 재사용)·<code>build_index</code>·<code>build_ai_export</code> 재생성. 지식지도 fallback(News 6→5<em>(폴더 중첩)</em>, km-totals 97/316→100/317 AI 갤럭시 기준). <code>validate_all</code> ERROR 0.</li>
+    <li><strong>후속 수정 2건</strong>: ①폴더명을 <code>06. AI 2040: Plan A</code>로 변경(정렬 접두어). ②<strong>모아보기(#!folder:)에서 인터랙티브 연표 클릭 무동작 버그</strong> — <code>showFolder()</code>가 본문 주입 후 <code>initCarousels</code>만 부르고 <code>initScenarioTimeline</code>을 안 불러서였음. 같은 자리에 <code>initScenarioTimeline(body)</code> 추가(캐러셀과 동일 패턴). 캐시버스터 app.js 25→26. CDP로 모아보기 연표 클릭·패널 전환 확인.</li>
 </ul>
 <details class="scn-sub"><summary>초판(단일 문서) 등록 기록</summary>
 
