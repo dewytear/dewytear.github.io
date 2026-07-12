@@ -18,7 +18,7 @@
 <h3>아이디어 · 나중에</h3>
 <p class="scn-sub">주제 트랙별로 묶고, 필요(우선순위)가 읽히는 순서로 둔다. 상태 칩: <code>READY</code> 설계 완료·착수 결정 대기 · <code>WATCH</code> 지표 관찰 중 · <code>LATER</code> 장기. 상세 설계는 <a href="#!wl-20260711-ops">확정 명세(07-11 운영 로그)</a>에 박제 — 보드는 요지만.</p>
 
-<h4>① 그래프·지식 품질 — 외부 평가(2026-07-11, 87→91→96점) 개선 축 · 관계 타입 파일럿 완료, 나머지 파일럿 대기</h4>
+<h4>① 그래프·지식 품질 — 외부 평가(2026-07-11, 87→91→96점) 개선 축 · 관계 타입 보편 적용 완료, 나머지 파일럿 대기</h4>
 <p class="scn-sub">우선순위 이원: <strong>개인 고도화</strong>면 (관계 타입 완료) 다음은 메타 3축, <strong>더존 실증</strong>이면 사설 부트스트랩부터.</p>
 <ul>
     <li><code>READY</code> <strong>[메타] 3축+신선도 파일럿</strong> — <code>status</code>·<code>authority</code>·<code>evidenceLevel</code> + <code>owner/reviewedAt/reviewDue</code>. 적용은 우선 대상 5류부터(전 문서 강제 금지). <em>선행 조건: authority 어휘 정의표 확정(<a href="#!wl-20260711-ops">명세</a>).</em> 외부 사례가 설계를 뒷받침: gwern(status·confidence·importance)·Maggie Appleton(growthStage seedling&rarr;evergreen) — 독자 노출 배지(성장단계형) 형태를 스펙에 포함 검토 (2026-07-11 외부 위키 사례 조사).</li>
@@ -59,6 +59,7 @@
 <h3>최근 완료</h3>
 <p class="scn-sub">완료 항목을 ✅ + Work Log 링크와 함께 잠시 여기 둡니다. 오래되면 걷어냅니다(원본은 해당 로그에).</p>
 <ul>
+    <li>&#9989; [그래프] 관계 타입 <strong>보편 적용</strong> — 파일럿 15건 → <strong>100건</strong>. 강의형 10개 시스템에 읽기순 prerequisite 체인(82엣지) + 검증된 교차 관계 3건(Tutorial·Skill→Harness 학습경로·Install→플러그인 설치). News·독립 문서 제외, 정직성 유지(본문 실재만). kgs-overview·kgs-edges 수치 갱신 <a href="#!wl-20260711-features">wl-20260711 기능</a></li>
     <li>&#9989; [독자 UX] 내부 링크 팝오버 미리보기 — 본문 <code>#!</code> 링크 hover 시 제목·계층 경로·요약 카드(A안+경로, 목업 선택). hover 정밀 포인터 전용(터치는 탭=이동), KNOWLEDGE 재사용 추가 fetch 0, 반응형 min() 클램프. CDP 하네스 7항목 검증 <a href="#!wl-20260711-features">wl-20260711 기능</a></li>
     <li>&#9989; [운영] 변경 유형 기준표 — <code>tools/change-types.md</code>(ENGINE/STYLE/TOOL/SCHEMA/PLUGIN/CONTENT → 반영·게이트·프레임 매핑) + 작업 시작 시 선언 규칙(CLAUDE.md). 기각했던 매니페스트의 경량 대안(미러 없는 규칙 표) 수용 <a href="#!wl-20260711-ops">wl-20260711 운영</a></li>
     <li>&#9989; [운영] 게이트 자동 복원(--fix) 2종 — <code>check_plugin_sync --fix</code>(루트→번들 자동 복사·orphan 제거)·<code>check_cachebuster --fix</code>(stale ?v 자동 +1). 판단이 필요 없는 기계 노동만 자동화, 게이트·버전 판단은 유지. 외부 자동화 분석의 취사선택 결과(매니페스트·문서 자동생성·Bot PR은 기각 — 사유는 로그에) <a href="#!wl-20260711-ops">wl-20260711 운영</a></li>
