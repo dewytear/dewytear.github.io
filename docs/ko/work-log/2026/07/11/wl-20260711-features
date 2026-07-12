@@ -55,3 +55,15 @@
     <span class="nh">검증 (CDP 헤드리스, 실제 아티클 페이지 구동)</span>
     <code>#!news-20260709-ai-2040-plan-a</code> 실렌더로 노드 클릭·키보드 시 패널 전환 ✓ · 낮/밤 테마 ✓ · 420px 반응형(뷰포트 초과 0) ✓. <code>validate_all</code> ERROR 0 · <code>check_cachebuster</code> OK.
 </div>
+
+<h3>관계 타입(relations) 보편 적용 — 파일럿 15건 → 100건</h3>
+<p><strong>배경</strong>: 파일럿으로 15건만 있던 typed <code>relations</code>를 전 코퍼스로 확대. 인프라(스키마·<code>build_index</code>/<code>build_ai_export</code> 패스스루·<code>validate_graph</code> <code>relations-*</code>·나가는/들어오는 UI)는 파일럿에서 완비돼 있어 이번은 <strong>데이터 큐레이션</strong>. 정직성 규칙(자동 추론 금지·본문 실재 관계만) 유지. 방향 규약: <code>A -[prerequisite]-&gt; B</code> = &ldquo;A가 B의 선행&rdquo;(앞 문서에 저장, 역방향은 UI가 스캔).</p>
+<ul>
+    <li><strong>읽기순 prerequisite 체인(82엣지)</strong> — 강의형 10개 시스템(Introduction·Tutorial·Skill·Second Brain·Harness·Harness 플러그인·LLM Wiki·OMC·dzp, 지식 체계는 파일럿에서 완결)의 <code>list</code> 순서대로 이웃 쌍에 prerequisite 추가. 결정적 스크립트로 생성(기존 relations 보존·중복 회피), evidenceRef는 두 문서 제목을 참조해 &ldquo;시리즈 읽기 순서상 앞 문서를 전제&rdquo;. <strong>News·독립 문서 제외</strong>(순서 의존 아님).</li>
+    <li><strong>교차 관계 3건(검증)</strong> — 본문 <code>#!</code> 링크의 실제 의존 문맥을 확인해서만 추가: <code>ccb-overview</code>&rarr;<code>hns-overview</code>(&ldquo;지난 기초 강의에 이어&rdquo;)·<code>skl-overview</code>&rarr;<code>hns-overview</code>(&ldquo;이어질 하네스&rdquo;)·<code>install</code>&rarr;<code>hnp-install</code>(&ldquo;Install &amp; Start 참고&rdquo;). 억지 관계는 넣지 않음(불확실 후보 다수 기각).</li>
+    <li><strong>자기기술 갱신</strong>: <a href="#!kgs-edges">kgs-edges</a>(14건 → 100건 + 체인/교차 설명)·<a href="#!kgs-overview">kgs-overview</a> 규모 노트(문서 107·개념 337·연결 225·관계 100). <code>supersedes</code> 보류 유지(깨끗한 사례 없음).</li>
+</ul>
+<div class="note">
+    <span class="nh">검증</span>
+    <code>validate_graph</code> <code>relations-dangling-ref</code>·<code>unknown-type</code>(ERROR) 0 · <code>missing-evidence</code>·<code>conflict</code>(WARN) 0. <code>build_index --check</code>·<code>build_ai_export --check</code>·<code>validate_all</code> ERROR 0. 자산 무변경(캐시버스터 불필요). CDP로 강의형 문서 &ldquo;지식 관계&rdquo; 나가는/들어오는 표시 확인.
+</div>
