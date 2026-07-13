@@ -1,0 +1,12 @@
+<h2>디자인 — 최근 문서 목록, 세로모드에서 제목이 세로로 쪼개지는 문제</h2>
+
+<h3>증상과 진단</h3>
+<p>사용자 스크린샷(세로모드 폰): 홈 <strong>최근 문서</strong>의 행에서 제목이 <strong>한 글자씩 세로로</strong> 표시되고 오른쪽 경로·생성일은 화면 밖으로 넘쳤다.</p>
+<p><strong>원인</strong>: 행이 flex 한 줄(<code>.more-list li a</code>, <code>justify-content: space-between</code>)인데 <code>.more-meta</code>에 <code>white-space: nowrap</code>이 걸려 있어, 좁은 화면에서 긴 경로·날짜 문자열이 가용 폭을 전부 차지하고 제목(<code>.more-name</code>)이 한 글자 폭으로 눌린 것.</p>
+
+<h3>수정 — 모바일 2줄 스택</h3>
+<p>기존 모바일 브레이크포인트 <code>@media(max-width: 800px)</code>에 <strong>2줄 스택</strong> 오버라이드 추가 — <code>.more-list li a</code>를 <code>flex-direction: column</code>(제목 줄 + 경로·날짜 줄, gap 4px)으로, <code>.more-meta</code>는 <code>white-space: normal</code>로 줄바꿈 허용. 801px 이상 데스크톱은 기존 한 줄 유지. 가로모드 폰(844px+)은 브레이크포인트 밖이라 &ldquo;세로모드일 때만 2줄&rdquo; 요구와 일치. 캐시버스터 style.css 21→22.</p>
+<div class="note">
+    <span class="nh">검증 (CDP 실앱)</span>
+    390×844 세로모드에서 제목 한 줄 렌더(글자별 세로 쪼개짐 소멸)·경로/날짜 아랫줄 스택·가로 오버플로 0, 1280px 데스크톱은 기존 한 줄 레이아웃 유지. <code>validate_all</code> ERROR 0 · <code>check_cachebuster</code> OK.
+</div>
