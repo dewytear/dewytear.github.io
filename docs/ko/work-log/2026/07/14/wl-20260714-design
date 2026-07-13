@@ -19,3 +19,11 @@
     <span class="nh">검증</span>
     CDP 실앱 <code>#!cosmos</code> 독 7버튼 영문 렌더·뷰 전환 동작, <code>check_diagram_bounds.mjs kgs-views</code> 경계 초과 0(영문 라벨 실렌더), <code>validate_all</code> ERROR 0 · <code>check_cachebuster</code>(i18n.js ?v 상향) OK.
 </div>
+
+<h3>후속 — 사이드바 아이콘 스왑: 지식그래프(✦) ↔ 지식지도·AI 순회 가이드(❖)</h3>
+<p>사용자 요청으로 사이드바 항목의 선두 글리프를 교환 — <strong>Knowledge Graph는 ❖</strong>, <strong>Knowledge Map(AI·DOUZONE)·AI 순회 가이드는 ✦</strong>. 아이콘은 <code>list</code> 라벨의 첫 글자라 데이터만 수정(글리프 6곳: cosmos 1 · ai-map 2 · ai-guide 2 · dz-map 1). dz-map도 함께 바꾼 것은 두 Knowledge Map을 동일 취급하는 기존 결정(7/7 디자인 로그)의 유지다. README의 자기기술 아이콘 2곳도 정합.</p>
+<p>액센트 색은 <code>::first-letter</code> 선택자(글리프 무관)라 CSS 무변경, 인덱스 산출물에 글리프가 없어 재생성 불요, <code>list</code>는 no-cache 재검증 fetch라 캐시버스터도 불요.</p>
+<div class="note">
+    <span class="nh">검증 (CDP 실앱)</span>
+    사이드바 렌더에서 ❖ Knowledge Graph · ✦ Knowledge Map(AI·DOUZONE) · ✦ AI 순회 가이드 확인, 선두 글리프 액센트 색 유지. <code>validate_all</code> ERROR 0 · <code>build_index/ai_export --check</code> 무드리프트.
+</div>
