@@ -497,6 +497,48 @@ def check_map_fallback_drift(root):
     return findings
 
 
+def check_cluster_coverage(root):
+    """ERROR: an indexed doc's section resolves to no cluster in
+    tools/clusters.json even though its galaxy has clusters defined.
+
+    Membership mirrors build_index.build_stats: subtree (longest-prefix)
+    match on the ' · '-joined section path. A miss means a new section was
+    added without registering a cluster — its docs silently vanish from the
+    knowledge-map table (the AI 2040 folder shipped that way: News showed 5
+    while 4 nested docs counted nowhere). Galaxies with no clusters at all
+    are exempt (fresh wikis bootstrap without clusters.json).
+    """
+    findings = []
+    cpath = os.path.join(root, 'tools', 'clusters.json')
+    ipath = os.path.join(root, 'data', 'knowledge-index.ko.json')
+    if not (os.path.isfile(cpath) and os.path.isfile(ipath)):
+        return findings
+    with open(cpath, encoding='utf-8') as f:
+        labels = json.load(f).get('ko', [])
+    with open(ipath, encoding='utf-8') as f:
+        docs = json.load(f).get('docs', [])
+    sections = sorted((s for s, _ in labels), key=len, reverse=True)
+    clustered_galaxies = {s.split(' · ')[0] for s in sections}
+
+    def covered(sec):
+        return any(sec == cs or sec.startswith(cs + ' · ') for cs in sections)
+
+    missed = {}
+    for d in docs:
+        sec = d.get('section') or ''
+        galaxy = sec.split(' · ')[0] if sec else ''
+        if galaxy not in clustered_galaxies or covered(sec):
+            continue
+        missed.setdefault(sec, []).append(d.get('name', '-'))
+    for sec, names in sorted(missed.items()):
+        findings.append({
+            'level': 'ERROR', 'check': 'cluster-coverage', 'name': names[0],
+            'message': f"섹션 '{sec}'의 문서 {len(names)}편이 어느 클러스터에도 집계되지 않음"
+                       f" — tools/clusters.json에 섹션(또는 상위 폴더) 등록 필요",
+        })
+    return findings
+
+
 def check_unindexed_sanity(doc_nodes, entries):
     """INFO-level sanity note: doc nodes that are neither indexed nor in the
     known-unindexed allowlist. Cheap cross-check that doesn't fit the other
@@ -533,6 +575,7 @@ def run(root):
     findings += check_orphan_entries(doc_nodes, entries)
     findings += check_banned_astronomy_metaphor(doc_nodes, entries, bodies)
     findings += check_map_fallback_drift(root)
+    findings += check_cluster_coverage(root)
     return findings
 
 
