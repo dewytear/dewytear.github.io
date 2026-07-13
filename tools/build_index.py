@@ -179,6 +179,20 @@ def build_stats(docs, cluster_labels=None):
     by_name = {d['name']: d for d in docs}
     label_of = dict(cluster_labels)
 
+    # Cluster membership is a subtree match: a doc belongs to the cluster
+    # whose section is the LONGEST prefix of the doc's section path. Exact
+    # equality alone silently dropped docs nested in sub-folders (e.g. the
+    # 4 docs under "… News & Articles · 2026 · 06. AI 2040: Plan A"), and
+    # longest-match keeps a doc in exactly one cluster even if a sub-folder
+    # is later promoted to its own cluster.
+    _sections = sorted((s for s, _ in cluster_labels), key=len, reverse=True)
+
+    def cluster_of(section):
+        for cs in _sections:
+            if section == cs or section.startswith(cs + ' · '):
+                return cs
+        return None
+
     # In-degree over related links = "how often docs point here".
     indeg = {}
     for d in docs:
@@ -188,7 +202,7 @@ def build_stats(docs, cluster_labels=None):
     # Clusters in the fixed display order, each with its own top hub.
     clusters = []
     for section, label in cluster_labels:
-        members = [d for d in docs if d['section'] == section]
+        members = [d for d in docs if cluster_of(d['section']) == section]
         if not members:
             continue
         hub = max(members, key=lambda d: (indeg.get(d['name'], 0), d['name']))
@@ -206,7 +220,8 @@ def build_stats(docs, cluster_labels=None):
     # Concept frequency + cluster spread (bridges connect 3+ clusters).
     freq, spread = {}, {}
     for d in docs:
-        cl = label_of.get(d['section'], d['section'])
+        _cs = cluster_of(d['section'])
+        cl = label_of[_cs] if _cs else d['section']
         for c in set(d['concepts']):
             freq[c] = freq.get(c, 0) + 1
             spread.setdefault(c, set()).add(cl)
