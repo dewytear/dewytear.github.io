@@ -16,3 +16,6 @@
     <span class="nh">검증 (CDP 실앱 렌더)</span>
     ko 내비 <strong>&ldquo;이 위키에 대하여&rdquo;</strong> 표시·bare &ldquo;Wiki&rdquo; 사라짐 확인, en 프로바이더 강제 재렌더로 <strong>&ldquo;About This Wiki&rdquo;</strong>(<code>labelFor</code> 반환) 확인 — 양쪽 다 하위 <code>지식 체계</code>·kgs-* 6편 그대로 열림, <code>#!</code> 라우팅 정상. ai-map 도식은 <code>check_diagram_bounds.mjs</code>(ko)·CDP 폭 실측(en &ldquo;This Wiki · Claude · News&rdquo; 145px &lt; 박스 188px)로 경계 초과 0. <code>validate_all</code> ERROR 0 · <code>build_index --check</code> 무드리프트.
 </div>
+
+<h3>후속 — sitemap.xml 재생성(CI 정합)</h3>
+<p>이 로그 문서를 <code>list</code>에 추가하면서 <code>build_ai_export</code>를 재생성하지 않아 <code>sitemap.xml</code>이 드리프트, CI <code>validate</code>의 <code>build_ai_export --check</code>가 실패했다. sitemap에 <code>wl-20260713-design</code> URL 한 줄을 더해 정합(<code>knowledge-graph.json</code>·<code>llms.txt</code>는 불변). 문서를 <code>list</code>에 추가할 때 <code>build_ai_export</code> 재생성도 동반해야 함을 재확인.</p>
