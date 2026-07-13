@@ -35,7 +35,7 @@
 </div>
 
 <h3>지식 생성 Trigger — 완료로 인정된 변경만</h3>
-<p>모든 Commit을 즉시 지식화하지 않는다. 개발 중에는 미완성 구현, 실패한 시도, Debug 코드, Rollback 대상, 임시 수정, 기계적 Refactoring이 섞여 있기 때문이다. 조직이 완료로 인정하는 관문 — <strong>Review를 거쳐 기준 Branch에 Merge되고 Pipeline이 성공한 변경</strong> — 만 분석 대상으로 삼는다.</p>
+<p>모든 Commit을 즉시 지식화하지 않는다. 개발 중에는 미완성 구현, 실패한 시도, 임시 수정이 섞여 있기 때문이다. 조직이 완료로 인정하는 관문 — <strong>Review를 거쳐 기준 Branch에 Merge되고 Pipeline이 성공한 변경</strong> — 만 분석 대상으로 삼는다. 완료된 변경 안에서 무엇이 지식이고 무엇이 아닌지(기계적 Refactoring·오타 등 제외 기준)는 <a href="#!dzp-knowledge">지식 관리 체계</a>의 가치 판정이 담당한다.</p>
 
 <div class="diagram">
 <svg viewBox="0 0 680 120" role="img" aria-label="지식 생성 트리거: Feature Branch에서 Merge Request와 리뷰를 거쳐 기준 브랜치에 머지되고 파이프라인이 성공하면 Curator가 실행된다">
@@ -75,6 +75,16 @@
 
 <h3>단순 Diff가 아닌 Context 기반 분석</h3>
 <p><code>if ("CREDIT_HOLD".equals(soStatus))</code> 한 줄만 보고는 업무 정책을 판단할 수 없다. 변경 Diff에 더해 <strong>전체 Class · 호출자 · 관련 Mapper와 SQL · 관련 Test · 관련 Config · 기존 Wiki</strong>를 함께 읽는 Impact Expansion을 거쳐, 단순 코드 요약이 아닌 실제 개발 지식을 추출한다.</p>
+
+<h3>지식 무결성 게이트 — Trigger와 별개의 층</h3>
+<p>Pipeline 성공은 <strong>입구</strong>의 게이트다 — "이 변경을 분석할 자격이 있는가"만 판정한다. 지식 저장소 <strong>자신의</strong> 무결성은 별개의 게이트 층이 지키며, 이 층은 Reference Wiki가 이미 CI로 운영 중인 것을 그대로 물려받는다(<a href="#!kgs-gates">위키는 어떻게 스스로를 지키는가</a>):</p>
+<ul>
+    <li><strong>상태 검증</strong> — 끊어진 링크·중복 ID·고아 문서·인덱스 미등재·도식 경계 초과를 커밋마다 전수 검사(ERROR 0가 머지 조건).</li>
+    <li><strong>드리프트 검증(<code>--check</code>)</strong> — 인덱스·그래프·<code>llms.txt</code>·sitemap이 결정적 재빌드 결과와 바이트 단위로 일치하는지 판정. AI Curator가 문서만 고치고 인덱스 반영을 빠뜨리는 사고를 기계가 차단한다.</li>
+    <li><strong>동반 게이트</strong> — "문서를 바꿨으면 기록(Work Log)도, 지식 체계 반영도 같은 변경 단위에" 규칙을 diff 기반으로 강제. 회사 KPI의 "Merge 대비 지식 반영률"이 바로 이 게이트의 통과율이다(<a href="#!dzp-roadmap">로드맵</a>).</li>
+    <li><strong>리뷰 신호(비차단)</strong> — 기계가 강제할 수 없는 판단 영역(예: 지식관계를 다각도로 검토했는가)은 차단 대신 체크리스트를 띄워 사람의 검토를 유도한다.</li>
+</ul>
+<p>Wiki Repository 층의 <strong>Index</strong>와 <strong>Provenance</strong>가 구체적으로 어떤 구조인지 — 어떤 필드가 이미 실증됐고 어떤 필드를 회사용으로 확장하는지 — 는 다음 편 <a href="#!dzp-knowledge">지식 관리 체계</a>가 다룬다.</p>
 
 <h3>운영 안정성 — 실시간과 보정의 이중화</h3>
 <p>Webhook(Merge → Queue → Curator) 실시간 처리에만 의존하지 않고, 정기 Batch가 Project Registry의 현재 SHA와 sync-state를 비교해 누락 변경을 재처리한다. Webhook 실패, Network 오류, Queue 누락, Curator 장애, 일시적 API 실패에 대응하는 구조다.</p>

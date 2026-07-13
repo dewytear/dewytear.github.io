@@ -55,6 +55,9 @@
     GitLab은 개발 변경의 <strong>Event Stream</strong>이고, Wiki는 현재 시점에 유효한 <strong>Knowledge State</strong>다. GitLab에는 Commit·MR·Release가 시간 순서로 계속 쌓이지만, Wiki는 "7/1 수정사항, 7/2 수정사항…" 같은 이력의 나열이 아니라 <strong>조직이 지금 알아야 하는 지식 구조</strong>(Architecture · Rule Engine · 상태 체계 · 채널 정책 · Troubleshooting …)로 정제되어 유지된다.
 </div>
 
+<h3>Knowledge State의 실체 — 결정적으로 빌드되는 인덱스</h3>
+<p>"현재 유효한 지식 상태"는 추상적 구호가 아니라 <strong>기계적으로 재현 가능한 산출물</strong>이어야 한다. Reference Wiki가 이를 이미 실증했다: 모든 문서의 메타데이터(제목·요약·개념·관계)는 큐레이션 파일 하나에서 <a href="#!kgs-overview">결정적 빌드</a>로 지식 인덱스 JSON이 되고, <strong>같은 입력은 언제나 같은 출력</strong>을 낸다. 그래서 <code>--check</code> 한 번으로 "저장된 상태가 소스와 어긋났는가"를 바이트 단위로 판정할 수 있고, 어긋난 채로는 머지가 불가능하다(<a href="#!kgs-gates">드리프트 게이트</a>). Knowledge State가 Event Stream보다 뒤처지거나 소스와 모순되는 것을 <strong>규율이 아니라 기계가</strong> 막는 구조 — 이것이 회사 플랫폼이 물려받을 상태 관리의 실체다.</p>
+
 <h3>업계가 이미 가고 있는 길</h3>
 <ul>
     <li><strong>문서를 코드 곁에</strong> — Spotify는 문서를 코드와 같은 저장소에 두고 CI로 빌드하는 <a href="https://backstage.io/blog/2020/09/08/announcing-tech-docs/" target="_blank" rel="noopener">Backstage TechDocs</a>로 5,000개 이상의 문서 사이트를 운영하고, GitLab은 2,700페이지가 넘는 공개 핸드북의 <a href="https://handbook.gitlab.com/handbook/company/culture/all-remote/handbook-first/" target="_blank" rel="noopener">handbook-first 문화</a>로 유명하다. docs-as-code는 대규모 조직에서 이미 검증된 접근이다.</li>
