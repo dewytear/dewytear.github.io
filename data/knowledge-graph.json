@@ -2,10 +2,10 @@
  "schemaVersion": 2,
  "note": "자기완결 지식 그래프 — 노드=문서(name), 엣지=related (via:concept 희소성 가중 개념 중복 / via:folder 같은 폴더 보완), concepts=조인 키, url=원문(HTML 조각) fetch 주소. 계층은 section(\"World · Domain · System · Document\")과 stats.clusters. 순회 가이드: https://dewytear.github.io/docs/ko/ai/map/ai-guide",
  "base": "https://dewytear.github.io/",
- "docCount": 107,
+ "docCount": 108,
  "stats": {
-  "docCount": 107,
-  "conceptCount": 337,
+  "docCount": 108,
+  "conceptCount": 338,
   "clusters": [
    {
     "label": "지식 체계",
@@ -110,7 +110,7 @@
    {
     "label": "AI 개발 지식 플랫폼",
     "section": "Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼",
-    "count": 7,
+    "count": 8,
     "hub": {
      "name": "dzp-overview",
      "title": "제안 개요 — GitLab 기반 AI 개발 지식 플랫폼",
@@ -254,15 +254,15 @@
     "n": 7
    },
    {
+    "c": "지식플랫폼",
+    "n": 7
+   },
+   {
     "c": "ERP커스터마이징",
     "n": 6
    },
    {
     "c": "_workspace",
-    "n": 6
-   },
-   {
-    "c": "에이전트팀",
     "n": 6
    }
   ],
@@ -705,13 +705,13 @@
     ]
    },
    "Douzone": {
-    "docCount": 7,
-    "conceptCount": 26,
+    "docCount": 8,
+    "conceptCount": 27,
     "clusters": [
      {
       "label": "AI 개발 지식 플랫폼",
       "section": "Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼",
-      "count": 7,
+      "count": 8,
       "hub": {
        "name": "dzp-overview",
        "title": "제안 개요 — GitLab 기반 AI 개발 지식 플랫폼",
@@ -723,7 +723,7 @@
     "topConcepts": [
      {
       "c": "지식플랫폼",
-      "n": 6
+      "n": 7
      },
      {
       "c": "GitLab",
@@ -734,12 +734,28 @@
       "n": 2
      },
      {
+      "c": "Read-Only",
+      "n": 2
+     },
+     {
+      "c": "보안등급",
+      "n": 2
+     },
+     {
+      "c": "온보딩",
+      "n": 2
+     },
+     {
       "c": "조직지식",
       "n": 2
      },
      {
       "c": "지식관리",
       "n": 2
+     },
+     {
+      "c": "API명세",
+      "n": 1
      },
      {
       "c": "EventStream",
@@ -766,23 +782,7 @@
       "n": 1
      },
      {
-      "c": "Read-Only",
-      "n": 1
-     },
-     {
       "c": "로드맵",
-      "n": 1
-     },
-     {
-      "c": "문서화",
-      "n": 1
-     },
-     {
-      "c": "보안등급",
-      "n": 1
-     },
-     {
-      "c": "선순환",
       "n": 1
      }
     ],
@@ -4837,6 +4837,14 @@
      "via": "concept"
     },
     {
+     "name": "dzp-value",
+     "title": "부가가치와 활용 시나리오",
+     "shared": [
+      "온보딩"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "dzp-why",
      "title": "왜 지금인가 — 흩어지고 사라지는 개발 지식",
      "shared": [
@@ -5698,6 +5706,15 @@
    "route": "https://dewytear.github.io/#!dzp-overview",
    "related": [
     {
+     "name": "dzp-value",
+     "title": "부가가치와 활용 시나리오",
+     "shared": [
+      "Read-Only",
+      "지식플랫폼"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "dzp-architecture",
      "title": "플랫폼 아키텍처",
      "shared": [
@@ -5720,15 +5737,6 @@
      "title": "추진 로드맵 — 4 Phase와 1차 PoC",
      "shared": [
       "GitLab",
-      "지식플랫폼"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "dzp-why",
-     "title": "왜 지금인가 — 흩어지고 사라지는 개발 지식",
-     "shared": [
-      "조직지식",
       "지식플랫폼"
      ],
      "via": "concept"
@@ -5764,6 +5772,15 @@
    "url": "https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-why",
    "route": "https://dewytear.github.io/#!dzp-why",
    "related": [
+    {
+     "name": "dzp-value",
+     "title": "부가가치와 활용 시나리오",
+     "shared": [
+      "온보딩",
+      "지식플랫폼"
+     ],
+     "via": "concept"
+    },
     {
      "name": "dzp-overview",
      "title": "제안 개요 — GitLab 기반 AI 개발 지식 플랫폼",
@@ -5982,6 +5999,15 @@
    "route": "https://dewytear.github.io/#!dzp-security",
    "related": [
     {
+     "name": "dzp-value",
+     "title": "부가가치와 활용 시나리오",
+     "shared": [
+      "보안등급",
+      "지식플랫폼"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "skills",
      "title": "Skills",
      "shared": [
@@ -5989,31 +6015,79 @@
       "플러그인"
      ],
      "via": "concept"
-    },
-    {
-     "name": "dzp-overview",
-     "title": "제안 개요 — GitLab 기반 AI 개발 지식 플랫폼",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "dzp-why",
-     "title": "왜 지금인가 — 흩어지고 사라지는 개발 지식",
-     "shared": [],
-     "via": "folder"
     }
    ],
    "relations": [
     {
-     "target": "dzp-roadmap",
+     "target": "dzp-value",
      "type": "prerequisite",
-     "evidenceRef": "자산 활용과 보안 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 추진 로드맵 — 4 Phase와 1차 PoC로 이어진다",
+     "evidenceRef": "자산 활용과 보안 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 부가가치와 활용 시나리오로 이어진다",
      "source": "human"
     },
     {
      "target": "kgs-overview",
      "type": "implements",
      "evidenceRef": "Reference Wiki(이 위키) 복제·문서추가 의무절차가 kgs-overview 등재 파이프라인을 재현·구현",
+     "source": "human"
+    }
+   ]
+  },
+  {
+   "name": "dzp-value",
+   "title": "부가가치와 활용 시나리오",
+   "summary": "하나의 Knowledge State에 등급 필터로 대상별 뷰를 늘리는 부가가치 — API 명세서 자동 갱신(FACT·identifiers·supersedes), 직원·파트너·고객사·AI Agent 활용, 신뢰 등급이 넓히는 비개발 독자",
+   "section": "Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼",
+   "concepts": [
+    "지식플랫폼",
+    "보안등급",
+    "API명세",
+    "온보딩",
+    "Read-Only"
+   ],
+   "url": "https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-value",
+   "route": "https://dewytear.github.io/#!dzp-value",
+   "related": [
+    {
+     "name": "dzp-overview",
+     "title": "제안 개요 — GitLab 기반 AI 개발 지식 플랫폼",
+     "shared": [
+      "Read-Only",
+      "지식플랫폼"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "dzp-security",
+     "title": "자산 활용과 보안",
+     "shared": [
+      "보안등급",
+      "지식플랫폼"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "dzp-why",
+     "title": "왜 지금인가 — 흩어지고 사라지는 개발 지식",
+     "shared": [
+      "온보딩",
+      "지식플랫폼"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "llmw-onboard",
+     "title": "온보딩 (실습)",
+     "shared": [
+      "온보딩"
+     ],
+     "via": "concept"
+    }
+   ],
+   "relations": [
+    {
+     "target": "dzp-roadmap",
+     "type": "prerequisite",
+     "evidenceRef": "부가가치·활용 시나리오 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 추진 로드맵으로 이어진다",
      "source": "human"
     }
    ]
