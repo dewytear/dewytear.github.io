@@ -67,3 +67,15 @@
     <span class="nh">검증</span>
     <code>validate_graph</code> <code>relations-dangling-ref</code>·<code>unknown-type</code>(ERROR) 0 · <code>missing-evidence</code>·<code>conflict</code>(WARN) 0. <code>build_index --check</code>·<code>build_ai_export --check</code>·<code>validate_all</code> ERROR 0. 자산 무변경(캐시버스터 불필요). CDP로 강의형 문서 &ldquo;지식 관계&rdquo; 나가는/들어오는 표시 확인.
 </div>
+
+<h3>후속 버그픽스 — 지식 관계가 안 보임: 데이터 JSON 캐시 재검증</h3>
+<p><strong>증상</strong>: relations 100건 머지 후에도 문서의 tags와 연관 문서 사이에 &ldquo;지식 관계&rdquo; 블록이 안 뜬다는 보고. <strong>진단</strong>: master 데이터(91개 문서·100건, target 정합 100%)와 렌더 코드는 정상 — master 스냅샷을 CDP 헤드리스로 실구동하면 <code>kgs-overview</code>·<code>ccb-claudemd</code>·<code>ccb-agents</code> 모두 본문 → <code>.relations</code> → <code>.related</code> 순서로 정상 렌더. 원인은 <strong>브라우저가 옛 <code>knowledge-index</code>를 캐시에서 계속 쓰는 것</strong>: 데이터 3종(<code>list</code>·<code>doc-dates.json</code>·<code>knowledge-index.*.json</code>)은 <code>?v=</code> 캐시버스터 없이 플레인 <code>fetch</code>로 로드돼, 재방문 브라우저(특히 iOS Safari)가 관계 14건짜리 옛 인덱스를 서빙하면 새 문서의 관계 블록이 조용히 숨는다(데이터 없으면 블록 자체를 안 그리는 설계).</p>
+<ul>
+    <li><strong>엔진</strong> <code>core.js</code> — <code>loadList</code>·<code>loadDates</code>·<code>loadIndex</code> 3곳에 <code>{cache:'no-cache'}</code>(매번 ETag 조건부 재검증, 변경 없으면 304로 재다운로드 없음). <code>config.json</code>의 기존 <code>no-store</code> 선례를 따르되, 데이터 파일은 크기가 있어(<code>list</code> 100KB·인덱스 150KB) 전량 재다운로드하는 <code>no-store</code> 대신 <code>no-cache</code>.</li>
+    <li><strong>범위 결정(사용자)</strong>: 시작 시 1회 로드하는 데이터 3종만. 문서 프래그먼트(<code>i18n.js</code>)는 <strong>제외</strong> — 클릭마다 재검증 왕복(+1 RTT)이 붙어 문서 탐색 체감을 해치는 단점이 실익보다 크다. 비용은 첫 로드 병렬 재검증 +1 RTT뿐.</li>
+    <li><strong>캐시버스터</strong> core.js 2→3.</li>
+</ul>
+<div class="note">
+    <span class="nh">검증 (CDP 헤드리스, 실앱 구동)</span>
+    데이터 3종 요청이 재검증 모드로 나감 ✓ · 문서 프래그먼트는 기존 캐시 정책 유지(범위 제외 확인) ✓ · 관계 블록 회귀(3개 문서, 본문→relations→related 순서) ✓. <code>validate_all</code> ERROR 0 · <code>check_cachebuster</code> OK.
+</div>

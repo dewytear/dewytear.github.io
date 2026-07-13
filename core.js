@@ -17,10 +17,14 @@ App.state = {};
 
 // 데이터 어댑터 — 인덱스가 단일 JSON이든, World별 샤드든, API든
 // 이 두 함수 뒤에서만 바뀐다. 호출부는 형태를 모른다.
+// 데이터 3종(list·doc-dates·knowledge-index)은 ?v= 캐시버스터 없이 로드되므로
+// {cache:'no-cache'}로 매번 ETag 재검증한다(변경 없으면 304, 재다운로드 없음) —
+// 안 그러면 재방문 브라우저(특히 iOS Safari)가 옛 데이터를 계속 써서
+// 새 문서·관계가 조용히 안 뜬다. 문서 프래그먼트는 클릭마다 왕복이 붙어 제외.
 App.data = {
     // 내비 트리(list). resolve: 파싱된 tree.
     loadList: function(){
-        return fetch('list').then(function(r){
+        return fetch('list', { cache: 'no-cache' }).then(function(r){
             if(!r.ok){ throw new Error('list'); }
             return r.json();
         });
@@ -29,7 +33,7 @@ App.data = {
     // 1회 fetch 후 캐시. 실패 시 빈 사전으로 resolve — 날짜만 조용히 미표기.
     loadDates: function(){
         if(!this._dates){
-            this._dates = fetch('data/doc-dates.json')
+            this._dates = fetch('data/doc-dates.json', { cache: 'no-cache' })
                 .then(function(r){ if(!r.ok){ throw new Error('doc-dates'); } return r.json(); })
                 .catch(function(){ return { docs: {} }; });
         }
@@ -41,7 +45,7 @@ App.data = {
         if(lang !== 'ko'){ urls.push('data/knowledge-index.ko.json'); }
         return urls.reduce(function(prev, u){
             return prev.catch(function(){
-                return fetch(u).then(function(r){
+                return fetch(u, { cache: 'no-cache' }).then(function(r){
                     if(!r.ok){ throw new Error(u); }
                     return r.json();
                 });
