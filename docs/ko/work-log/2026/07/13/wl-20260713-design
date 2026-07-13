@@ -1,0 +1,18 @@
+<h2>디자인 — 내비 &lsquo;Wiki&rsquo; 폴더를 &lsquo;이 위키에 대하여&rsquo;로 리라벨(일반 위키 오인 방지)</h2>
+
+<h3>증상과 진단</h3>
+<p>사용자 지적: 문서 목록(내비)의 <strong>&ldquo;Wiki&rdquo; 폴더</strong>가 <strong>일반적인 위키 폴더</strong>로 오인될 수 있어, <strong>이 사이트 자체에 대한 설명</strong>임이 드러나게 하고 싶다.</p>
+<p>원인은 라벨이 없어 폴더명이 그대로 노출된 것이다 — <code>list</code>의 <code>{"title":"Wiki", …}</code> 브랜치 노드(AI World 아래 <strong>Domain</strong> 레벨, <code>Claude</code>·<code>News</code> 형제)에 <code>label</code>/<code>label_en</code>이 <strong>없어서</strong> <code>labelFor</code>(i18n.js)가 폴백으로 <code>node.title</code>을 써 모든 언어에서 리터럴 <strong>&ldquo;Wiki&rdquo;</strong>로 렌더됐다. 정작 그 안의 System <code>지식 체계</code>(kgs-* 6편)는 이미 <a href="#!ai-map">지식지도</a>에서 &ldquo;이 위키 자체의 설명서&rdquo;로 규정돼 있어, <strong>콘텐츠는 자기기술인데 폴더 라벨만 모호</strong>한 상태였다.</p>
+
+<h3>수정 — title은 두고 표시 라벨만 추가</h3>
+<ul>
+    <li><strong><code>list</code></strong>: <code>title:"Wiki"</code> 노드에 <code>"label":"이 위키에 대하여"</code>·<code>"label_en":"About This Wiki"</code>만 추가. <code>title</code>은 <strong>클러스터·섹션의 정규 경로 키</strong>(<code>"AI · Wiki · 지식 체계"</code> — <code>clusters.json</code>·<code>FOLDER_DOCS</code>)라 <strong>그대로 유지</strong> → 인덱스·클러스터·라우팅 무변경, 표시만 바뀐다. <code>labelFor</code>가 <code>label_&lt;lang&gt;</code>을 우선 사용하므로 브랜치 노드에도 적용됨.</li>
+    <li><strong>지식지도 도식 정합</strong>(<code>docs/ko·en/ai/map/ai-map</code>): 상단 4계층 SVG의 Domain 행 하드코딩 텍스트 <code>Wiki · Claude · News</code>를 <strong>이 위키 · Claude · News</strong> / <strong>This Wiki · Claude · News</strong>로 갱신(도식은 짧은 도메인명 나열이라 전체 라벨 대신 짧은 형태). 폭 실측 결과 박스 안에 여유 있게 들어가 <strong>박스 확대 불필요</strong>.</li>
+    <li>클러스터 표시 라벨은 System명 <code>지식 체계</code>/<code>Knowledge System</code>이라 이미 명확 — 불변. <code>title</code> 리네임은 클러스터 키 파급이 커 하지 않음(label 추가로 목적 달성).</li>
+    <li>자산(app.js/style.css) 무변경 → 캐시버스터·플러그인 동기 불요. 데이터 인덱스도 무드리프트(label은 <code>list</code> 표시 필드).</li>
+</ul>
+
+<div class="note">
+    <span class="nh">검증 (CDP 실앱 렌더)</span>
+    ko 내비 <strong>&ldquo;이 위키에 대하여&rdquo;</strong> 표시·bare &ldquo;Wiki&rdquo; 사라짐 확인, en 프로바이더 강제 재렌더로 <strong>&ldquo;About This Wiki&rdquo;</strong>(<code>labelFor</code> 반환) 확인 — 양쪽 다 하위 <code>지식 체계</code>·kgs-* 6편 그대로 열림, <code>#!</code> 라우팅 정상. ai-map 도식은 <code>check_diagram_bounds.mjs</code>(ko)·CDP 폭 실측(en &ldquo;This Wiki · Claude · News&rdquo; 145px &lt; 박스 188px)로 경계 초과 0. <code>validate_all</code> ERROR 0 · <code>build_index --check</code> 무드리프트.
+</div>
