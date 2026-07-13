@@ -79,3 +79,16 @@
     <span class="nh">검증 (CDP 헤드리스, 실앱 구동)</span>
     데이터 3종 요청이 재검증 모드로 나감 ✓ · 문서 프래그먼트는 기존 캐시 정책 유지(범위 제외 확인) ✓ · 관계 블록 회귀(3개 문서, 본문→relations→related 순서) ✓. <code>validate_all</code> ERROR 0 · <code>check_cachebuster</code> OK.
 </div>
+
+<h3>후속 — AI 2040 시리즈 4편에 읽기순 관계 추가(뉴스 일괄 제외의 커버리지 갭)</h3>
+<p><strong>증상</strong>: <a href="#!news-20260709-ai-2040-plan-a">AI 2040: Plan A</a> 폴더의 4개 문서에서 &ldquo;지식 관계&rdquo; 표시기가 안 뜬다는 보고. <strong>원인</strong>: 4편 모두 relations 0건(나가는·들어오는)이라 <code>renderRelationsHTML</code>의 <code>if(!outRels.length &amp;&amp; !inRels.length) return ''</code> 가드에 걸려 블록이 아예 안 그려졌다. relations 100건 확대 때 <strong>&ldquo;News·독립 문서 제외&rdquo;</strong> 규칙으로 뉴스 전체를 읽기순 체인에서 뺐는데, AI 2040은 <code>ai/news/</code> 아래라 이 일괄 제외에 휩쓸렸다.</p>
+<p>그러나 이 4편은 본문이 명시적으로 <strong>읽기순 시리즈</strong>임을 밝힌다 — 허브(plan-a)의 &ldquo;4편 시리즈의 첫 편(개요·허브)&rdquo;+&ldquo;이 시리즈 구성&rdquo; 표, 나머지 3편 인트로의 &ldquo;…개요의 <strong>후속</strong>으로&rdquo;, scenario/policy 말미의 &ldquo;<strong>다음</strong> — …&rdquo;, reactions 말미의 &ldquo;<strong>시리즈</strong> — 개요·시나리오·정책·반응(이 글)&rdquo;. 강의형 시스템의 체인과 성격이 동일한 <strong>본문 실재 관계</strong>라, 일괄 뉴스 제외가 지나치게 거칠어 생긴 갭으로 판단해 정직하게 채웠다.</p>
+<ul>
+    <li><strong>데이터</strong> <code>tools/doc-entries.ko.json</code>의 앞 3편(plan-a·scenario·policy)에 순방향 <code>prerequisite</code> 1건씩(<code>kgs-*</code> 체인 형식 미러: target·type·evidenceRef·source). 체인 <strong>plan-a → scenario → policy → reactions</strong>. 마지막 reactions는 policy로부터 들어오는 관계로 블록이 뜬다 → 4편 모두 렌더. <code>doc-entries.en.json</code>은 무변경(기존 관례대로 ko relations가 두 인덱스에 패스스루, evidenceRef 한국어 공유).</li>
+    <li><strong>재생성</strong> <code>build_index</code>(ko·en)·<code>build_ai_export</code> — 관계 총 100→<strong>103건</strong>. <code>related</code>·개념·stats 무변경(관계는 별도 컬렉션).</li>
+    <li><strong>자기기술 정합</strong> <a href="#!kgs-overview">kgs-overview</a>·<a href="#!kgs-edges">kgs-edges</a>의 &ldquo;관계 100건&rdquo; → 103건, kgs-edges의 &ldquo;대부분은 강의형 시스템의 읽기 순서 체인&rdquo; 서술에 AI 2040 뉴스 시리즈를 더해 낡지 않게 보정.</li>
+</ul>
+<div class="note">
+    <span class="nh">검증 (CDP 헤드리스, 실앱 4라우트 구동)</span>
+    plan-a(나가는→시나리오) · scenario(나가는→정책·들어오는←개요) · policy(나가는→반응·들어오는←시나리오) · reactions(들어오는←정책) 모두 본문 → <code>.relations</code> → <code>.related</code> 순서로 렌더 ✓. <code>validate_all</code> ERROR 0(관계 WARN 0 — dangling·unknown-type·missing-evidence·conflict 없음) · <code>build_index --check</code>·<code>build_ai_export --check</code> OK. 자산 무변경(캐시버스터·플러그인 동기 불요).
+</div>
