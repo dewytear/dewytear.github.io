@@ -121,6 +121,28 @@ def run(root):
             findings.append(_f('ERROR', 'missing-file', n['name'],
                                 "docs/ko/%s not found" % rel))
 
+    # 3.5. missing-date: every list doc must have a doc-dates.json entry.
+    # 날짜 재생성(build_dates.py)은 관례일 뿐 자동 파이프라인이 없어, 누락돼도
+    # 앱이 조용히 미표기해 아무 검증에도 걸리지 않았다(2026-07-13 dzp-value
+    # 생성일 미표시 실사고). 커버리지를 ERROR로 강제한다 — 새 문서는 커밋 후
+    # build_dates.py를 재생성해 같은 PR(amend)에 싣는다. 정확성(값)은 여전히
+    # 게이트하지 않는다(스쿼시 표류 관용 — build_dates.py 문서 참조).
+    dates_path = os.path.join(root, 'data', 'doc-dates.json')
+    try:
+        with open(dates_path, encoding='utf-8') as f:
+            dated = set(json.load(f).get('docs', {}))
+    except (OSError, json.JSONDecodeError):
+        dated = None
+    if dated is None:
+        findings.append(_f('ERROR', 'missing-date', '-',
+                           'data/doc-dates.json을 읽을 수 없음 — build_dates.py 재생성 필요'))
+    else:
+        for n in docs:
+            if n['name'] not in dated:
+                findings.append(_f('ERROR', 'missing-date', n['name'],
+                                   'doc-dates.json에 생성일 엔트리 없음 — 문서 커밋 후 '
+                                   'python3 tools/build_dates.py 재생성(amend)'))
+
     # 4. orphan-file: file under docs/ko/** not referenced by any list path.
     # Work Log docs are held to a stricter bar (ERROR, not WARN): an unlisted
     # work-log file never appears in the nav tree, so the log silently fails
