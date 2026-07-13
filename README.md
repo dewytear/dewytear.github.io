@@ -67,6 +67,19 @@ GitHub Pages로 배포됩니다: https://dewytear.github.io
 `profile.svg`를 교체하거나, `index.html`의 `#profile-img` 태그 `src`를 원하는 파일
 경로(예: `profile.jpg`)로 수정하면 됩니다.
 
+## 플러그인으로 쓰기 (wiki-plugin)
+
+이 저장소는 **Claude Code 플러그인이자 마켓플레이스**이기도 합니다 — 루트의 `.claude-plugin/marketplace.json`(마켓명 `dewytear-wiki`)이 `wiki-plugin`을 등록하고 있어, 다른 프로젝트에서 이 위키의 지식 관리 엔진(등재 워크플로·지식 인덱스·검증 게이트)을 그대로 설치해 쓸 수 있습니다.
+
+```
+/plugin marketplace add dewytear/dewytear.github.io
+/plugin install wiki-plugin@dewytear-wiki
+```
+
+설치하면 스킬 4종을 씁니다 — `wiki-init`(새 위키 부트스트랩) · `add-doc`(문서 추가 워크플로) · `index`(인덱스·일자 재생성) · `validate`(품질 검증). 마켓 등록은 **심사·승인 없이 누구나** 자기 저장소에 `marketplace.json`을 두면 되는 열린 구조입니다.
+
+**설치 후 개인설정**(전제 도구·개인화 인터뷰·CI 주의)은 [`plugins/wiki-plugin/README.md`](plugins/wiki-plugin/README.md)를 참고하세요.
+
 ## 로컬 실행
 
 `fetch()`는 `file://` 프로토콜에서 동작하지 않으므로 로컬 서버가 필요합니다.

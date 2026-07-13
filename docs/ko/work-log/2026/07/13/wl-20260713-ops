@@ -19,3 +19,15 @@
     <span class="nh">검증</span>
     게이트: 엔트리 1건 임시 제거 → <code>missing-date</code> ERROR 발화 확인 → 원복. 가드: 생성일 날짜부 인위 변조 → <code>dates-created-drift</code> exit 1·파일 미기록 → <code>--force</code>로 정상 복구. CDP 실렌더로 <code>dzp-value</code> 제목 아래 <strong>"생성일자: 2026년 7월 13일"</strong> 표시 확인. <code>validate_all</code> ERROR 0 · <code>build --check</code>·<code>check_plugin_sync</code>(0.7.1) OK.
 </div>
+
+<h3>후속 — wiki-plugin 설치 안내 + 설치 후 개인설정 가이드</h3>
+<p>플러그인을 남이 쓰도록 설치·개인설정 안내를 보강했다(마켓 등록이 열려 있고 이 repo가 이미 마켓임을 확인한 흐름의 후속).</p>
+<ul>
+    <li><strong>루트 <code>README.md</code></strong> — "플러그인으로 쓰기 (wiki-plugin)" 섹션 신설(기존엔 위키 자체 설명만). 이 repo가 마켓플레이스(<code>dewytear-wiki</code>)임·설치 2줄(<code>/plugin marketplace add</code>→<code>/plugin install</code>)·스킬 4종·심사 없는 열린 등록 구조, 개인설정은 플러그인 README로 위임.</li>
+    <li><strong><code>plugins/wiki-plugin/README.md</code></strong> — "설치 후 개인설정" 섹션 신설: 전제 도구 표(Python3 필수·Node 선택·git identity), <code>/wiki-plugin:wiki-init</code> 개인화 인터뷰 값 표(title·언어·이미지·<strong>배경음악은 레퍼런스 개인 링크 상속 금지 경고</strong>·테마색·모듈), 개인설정 vs 사이트 기본값, CI <code>fetch-depth:0</code> 주의(생성일 실사고 연결), CLAUDE.md 운영 규칙 링크. 상세는 wiki-init 스킬로 위임(중복 회피).</li>
+    <li><code>plugins/wiki-plugin/**</code> 변경이라 <code>plugin.json</code> 0.7.1→<strong>0.7.2</strong>(문서 개선 patch). tools/ 스냅샷 무변경.</li>
+</ul>
+<div class="note">
+    <span class="nh">검증</span>
+    <code>validate_all</code> ERROR 0 · <code>check_plugin_sync</code>(스냅샷 정합+0.7.2 상향)·<code>check_worklog</code>·<code>check_cachebuster</code> OK · <code>build_index/ai_export --check</code> 무드리프트. README 링크 경로 육안 확인(SPA 라우트 아님).
+</div>
