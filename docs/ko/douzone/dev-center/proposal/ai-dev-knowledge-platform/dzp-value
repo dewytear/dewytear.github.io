@@ -1,0 +1,62 @@
+<h2>부가가치와 활용 시나리오 — 개발 조직을 넘어</h2>
+<p>지금까지의 편들은 개발 조직 내부의 관점 — 지식이 어떻게 만들어지고 관리되는가 — 를 다뤘다. 이 편은 그렇게 쌓인 <strong>하나의 Knowledge State가 얼마나 여러 얼굴로 소비될 수 있는가</strong>를 다룬다. 부가가치의 원천은 문서를 더 쓰는 것이 아니라, 이미 축적된 저장소에 <strong>대상별 뷰를 하나 더 다는 것</strong>이다 — 한 번 축적하면 직원·파트너·고객사·AI가 각자의 범위에서 같은 지식을 꺼내 쓴다.</p>
+
+<h3>API 명세서 자동 갱신 — 첫 번째 파생 상품</h3>
+<p>가장 즉각적인 부가가치는 <strong>API 명세서가 코드와 함께 살아 있게 되는 것</strong>이다. 수동 명세서의 고질은 잘 알려져 있다 — 최초 작성 후 갱신이 밀리고, 코드와 어긋난 명세가 연계 개발자와 고객사를 잘못 인도한다. 이 플랫폼에서 API 명세는 별도 산출물이 아니라 <strong>지식 파이프라인의 자연스러운 출력</strong>이 된다:</p>
+<ul>
+    <li><strong>추출</strong> — Merge된 Controller·Mapper·Config 변경에서 Endpoint · Parameter · 응답 구조 · Error Code를 읽어 낸다. 코드에서 직접 확인되는 사실이므로 대부분 <strong>FACT 등급</strong> — <a href="#!dzp-knowledge">신뢰 수준 체계</a>에서 자동 게시 가능성이 가장 높은 지식이다.</li>
+    <li><strong>갱신</strong> — API가 바뀌면 같은 Merge 트리거가 명세 문서를 갱신한다. "명세서 따로, 코드 따로"의 이중 관리가 구조적으로 사라진다.</li>
+    <li><strong>검색</strong> — <code>identifiers</code> 확장 필드에 API명·Error Code가 실리므로, 연계 개발자가 오류 코드 하나로 해당 명세와 정책 문서에 바로 도달한다.</li>
+    <li><strong>이력</strong> — 인터페이스 정책이 바뀌면 구버전 명세를 <code>supersedes</code>로 대체 연결해, "지금의 스펙"과 "왜 바뀌었는가"를 함께 보존한다.</li>
+</ul>
+
+<h3>하나의 저장소, 대상별 뷰</h3>
+<p><a href="#!dzp-security">보안 4등급</a>은 접근 통제 장치인 동시에 <strong>게시 채널 선별기</strong>다. 같은 저장소에서 등급 필터만 달리해 대상별 Read-Only 뷰를 만든다 — 저장소를 복제하거나 문서를 옮겨 쓰지 않는다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 220" role="img" aria-label="하나의 지식 저장소가 보안 등급 필터를 거쳐 직원, 파트너, 고객사, AI Agent 네 대상의 뷰로 소비된다">
+    <rect class="d-box accent" x="8" y="80" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="83" y="103" text-anchor="middle">지식 저장소</text>
+    <text class="d-sub" x="83" y="121" text-anchor="middle">Knowledge State</text>
+    <rect class="d-box" x="196" y="80" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="271" y="103" text-anchor="middle">보안 등급 필터</text>
+    <text class="d-sub" x="271" y="121" text-anchor="middle">4등급 선별</text>
+    <line class="d-edge" x1="158" y1="108" x2="188" y2="108"/><polygon class="d-arrow" points="188,103 188,113 196,108"/>
+    <rect class="d-box" x="420" y="8" width="252" height="42" rx="9"/>
+    <text class="d-label sm" x="546" y="26" text-anchor="middle">직원 · 개발 조직</text>
+    <text class="d-sub" x="546" y="42" text-anchor="middle">전체 등급 — 검색 · AI 컨텍스트</text>
+    <rect class="d-box" x="420" y="62" width="252" height="42" rx="9"/>
+    <text class="d-label sm" x="546" y="80" text-anchor="middle">파트너 · 협력사</text>
+    <text class="d-sub" x="546" y="96" text-anchor="middle">INTERNAL 선별 — 연계 개발 가이드</text>
+    <rect class="d-box" x="420" y="116" width="252" height="42" rx="9"/>
+    <text class="d-label sm" x="546" y="134" text-anchor="middle">고객사</text>
+    <text class="d-sub" x="546" y="150" text-anchor="middle">PUBLIC — 제품 · API 문서 포털</text>
+    <rect class="d-box" x="420" y="170" width="252" height="42" rx="9"/>
+    <text class="d-label sm" x="546" y="188" text-anchor="middle">AI Agent</text>
+    <text class="d-sub" x="546" y="204" text-anchor="middle">llms.txt 계약 — 자동 소비</text>
+    <path class="d-edge" d="M346 100 H380 C390 100, 394 94, 394 84 V39 C394 31, 398 29, 406 29 H412"/>
+    <polygon class="d-arrow" points="412,24 412,34 420,29"/>
+    <path class="d-edge" d="M346 104 H384 C394 104, 398 100, 398 93 C398 87, 402 83, 410 83 H412"/>
+    <polygon class="d-arrow" points="412,78 412,88 420,83"/>
+    <path class="d-edge" d="M346 112 H384 C394 112, 398 116, 398 123 C398 129, 402 133, 410 133 H412"/>
+    <polygon class="d-arrow" points="412,128 412,138 420,133"/>
+    <path class="d-edge" d="M346 116 H380 C390 116, 394 122, 394 132 V181 C394 189, 398 191, 406 191 H412"/>
+    <polygon class="d-arrow" points="412,186 412,196 420,191"/>
+</svg>
+<div class="d-cap">저장소는 하나, 뷰는 대상 수만큼 — 등급 필터가 게시 채널이 된다.</div>
+</div>
+
+<ul>
+    <li><strong>직원 · 개발 조직</strong> — 전체 등급 범위에서 Identifier 검색, AI 도구 컨텍스트, 온보딩 경로. <a href="#!dzp-why">왜 지금인가</a>가 수치화한 손실(주 8시간 비효율·온보딩 3~9개월)을 직접 줄이는 기본 뷰.</li>
+    <li><strong>파트너 · 협력사</strong> — INTERNAL 중 선별된 연계 개발 가이드·API 명세·커스터마이징 지식. 파트너가 겪는 "담당자에게 물어봐야만 아는" 연계 지식이 셀프서비스가 되고, 반복 문의 대응 비용이 줄어든다.</li>
+    <li><strong>고객사</strong> — PUBLIC 등급의 제품 기술 문서·API 가이드·릴리스 영향 안내. 고객용 문서 사이트를 <strong>따로 만들어 또 낡게 두는</strong> 이중 관리가 사라진다 — 코드가 바뀌면 고객 문서도 같은 파이프라인으로 갱신되기 때문이다.</li>
+    <li><strong>AI Agent</strong> — <a href="#!dzp-security">AI 소비층</a>의 llms.txt·그래프 JSON 계약을 그대로 써서, 사내 어시스턴트와 고객 지원 봇이 같은 지식을 근거(출처 포함)로 답한다. 사람용 뷰와 기계용 뷰가 하나의 저장소에서 나온다.</li>
+</ul>
+
+<h3>비개발 직군까지 — 신뢰 등급이 독자를 넓힌다</h3>
+<p>개발 지식은 개발자만의 것이 아니다. <strong>기술지원·CS</strong>는 장애 사례·Troubleshooting을 검색해 1차 대응 품질을 높이고, <strong>영업·PM</strong>은 제품 기능·정책·용어 지식으로 고객 대화의 정확도를 높이며, <strong>신규 입사자</strong>는 직무와 무관하게 조직의 지식 지도를 온보딩 경로로 쓴다. 비개발 독자가 코드를 못 읽어도 안전한 이유는 <a href="#!dzp-knowledge">신뢰 등급</a>이 문서마다 붙기 때문이다 — FACT(코드에서 확인된 사실)와 INFERRED(추론)·DECISION(결정)이 구분되어, 독자가 지식의 확실성을 오해하지 않는다.</p>
+
+<div class="note">
+    <span class="nh">요점</span>
+    이 플랫폼의 부가가치는 부서마다 문서 채널을 새로 만드는 데서 오지 않는다. <strong>한 번 축적된 Knowledge State에 등급 필터로 뷰를 늘리는 것</strong> — API 명세서, 파트너 가이드, 고객 문서 포털, AI 컨텍스트가 전부 같은 저장소의 다른 단면이다. 축적 비용은 한 번, 소비는 다각도.
+</div>
