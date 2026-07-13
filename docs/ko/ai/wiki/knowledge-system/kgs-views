@@ -2,27 +2,27 @@
 <p>같은 지식그래프라도 <strong>무엇이 궁금한지</strong>에 따라 맞는 시각화가 다릅니다. <a href="#!cosmos">Knowledge Graph</a> 화면의 독에는 3D를 포함해 <strong>7가지 뷰</strong>가 있고, 각각은 서로 다른 질문 하나에 답하도록 고른 것입니다. 이 문서는 "이 뷰에서 무엇을 보면 되는지"를 정리합니다.</p>
 
 <div class="diagram">
-<svg viewBox="0 0 720 216" role="img" aria-label="7가지 뷰: 3D, 번들링, 코드, 패킹은 윗줄, 개념, 아크, 매트릭스는 아랫줄">
+<svg viewBox="0 0 720 216" role="img" aria-label="7가지 뷰: 3D, Bundling, Chord, Packing은 윗줄, Concepts, Arc, Matrix는 아랫줄">
     <rect class="d-box accent" x="16" y="16" width="164" height="76" rx="10"/>
     <text class="d-label" x="98" y="46" text-anchor="middle">3D</text>
     <text class="d-sub" x="98" y="66" text-anchor="middle">전체 모양·클러스터</text>
     <rect class="d-box" x="196" y="16" width="164" height="76" rx="10"/>
-    <text class="d-label" x="278" y="46" text-anchor="middle">번들링</text>
+    <text class="d-label" x="278" y="46" text-anchor="middle">Bundling</text>
     <text class="d-sub" x="278" y="66" text-anchor="middle">문서↔문서 연결 다발</text>
     <rect class="d-box" x="376" y="16" width="164" height="76" rx="10"/>
-    <text class="d-label" x="458" y="46" text-anchor="middle">코드(Chord)</text>
+    <text class="d-label" x="458" y="46" text-anchor="middle">Chord</text>
     <text class="d-sub" x="458" y="66" text-anchor="middle">System 간 결합 강도</text>
     <rect class="d-box" x="556" y="16" width="148" height="76" rx="10"/>
-    <text class="d-label" x="630" y="46" text-anchor="middle">패킹</text>
+    <text class="d-label" x="630" y="46" text-anchor="middle">Packing</text>
     <text class="d-sub" x="630" y="66" text-anchor="middle">규모·부피 비교</text>
     <rect class="d-box" x="106" y="120" width="164" height="76" rx="10"/>
-    <text class="d-label" x="188" y="150" text-anchor="middle">개념</text>
+    <text class="d-label" x="188" y="150" text-anchor="middle">Concepts</text>
     <text class="d-sub" x="188" y="170" text-anchor="middle">개념 동시출현 지도</text>
     <rect class="d-box" x="286" y="120" width="164" height="76" rx="10"/>
-    <text class="d-label" x="368" y="150" text-anchor="middle">아크</text>
+    <text class="d-label" x="368" y="150" text-anchor="middle">Arc</text>
     <text class="d-sub" x="368" y="170" text-anchor="middle">가까운/먼 연결 구분</text>
     <rect class="d-box" x="466" y="120" width="164" height="76" rx="10"/>
-    <text class="d-label" x="548" y="150" text-anchor="middle">매트릭스</text>
+    <text class="d-label" x="548" y="150" text-anchor="middle">Matrix</text>
     <text class="d-sub" x="548" y="170" text-anchor="middle">블록(밀집/공백) 구조</text>
 </svg>
 <div class="d-cap">7가지 눈 — 모두 같은 인덱스에서 그려지므로, 어느 뷰든 데이터는 하나입니다.</div>
@@ -33,12 +33,12 @@
 <thead><tr><th>뷰</th><th>답하는 질문</th><th>읽는 법</th></tr></thead>
 <tbody>
 <tr><td><strong>3D</strong></td><td>지식 전체가 어떤 모양인가?</td><td>둥근 공 위에서 <strong>색 = World/System</strong>. 같은 색 패치가 한 주제 클러스터이고, 패치를 가로지르는 선이 주제 간 다리입니다. 설정에서 둥글기(0~100)를 조절할 수 있습니다.</td></tr>
-<tr><td><strong>번들링</strong></td><td>어떤 문서들이 서로 당기나?</td><td>원 둘레에 문서가 System 순서로 놓이고, 개념 연결이 중심으로 휘어 다발을 이룹니다. <strong>굵은 다발 = 강하게 얽힌 주제 쌍</strong>.</td></tr>
-<tr><td><strong>코드(Chord)</strong></td><td>System끼리 얼마나 결합돼 있나?</td><td>호의 길이 = 그 System의 대외 연결량, 리본 굵기 = 두 System 사이의 연결 수. <strong>가장 굵은 리본</strong>이 지식의 실질적 이웃 관계입니다.</td></tr>
-<tr><td><strong>패킹</strong></td><td>어디에 지식이 많이 쌓였나?</td><td>World 원 안에 System 원, 그 안에 문서 점. <strong>원의 크기 = 문서 수</strong> — 성장 편차가 한눈에 보입니다.</td></tr>
-<tr><td><strong>개념</strong></td><td>개념들은 서로 어떻게 붙어 다니나?</td><td>노드가 문서가 아니라 <strong>개념</strong>인 유일한 뷰. 함께 등장하는 개념끼리 이어져, 어휘 수준의 지식 지형(예: '스킬' 주변에 무엇이 모이나)을 보여 줍니다.</td></tr>
-<tr><td><strong>아크</strong></td><td>연결이 이웃 안인가, 멀리 가나?</td><td>문서를 한 줄로 놓고 연결을 호로 그립니다. <strong>낮은 호 = 같은 주제 안</strong>, <strong>높은 호 = 주제를 건너뛰는 다리</strong>.</td></tr>
-<tr><td><strong>매트릭스</strong></td><td>어느 블록이 밀집이고 어디가 공백인가?</td><td>문서×문서 격자에 연결을 점으로. System 순서로 정렬돼 <strong>대각 블록 = 내부 결속</strong>, <strong>블록 밖 점 = 교차 연결</strong>, 빈 영역 = 아직 잇지 않은 지식.</td></tr>
+<tr><td><strong>Bundling</strong></td><td>어떤 문서들이 서로 당기나?</td><td>원 둘레에 문서가 System 순서로 놓이고, 개념 연결이 중심으로 휘어 다발을 이룹니다. <strong>굵은 다발 = 강하게 얽힌 주제 쌍</strong>.</td></tr>
+<tr><td><strong>Chord</strong></td><td>System끼리 얼마나 결합돼 있나?</td><td>호의 길이 = 그 System의 대외 연결량, 리본 굵기 = 두 System 사이의 연결 수. <strong>가장 굵은 리본</strong>이 지식의 실질적 이웃 관계입니다.</td></tr>
+<tr><td><strong>Packing</strong></td><td>어디에 지식이 많이 쌓였나?</td><td>World 원 안에 System 원, 그 안에 문서 점. <strong>원의 크기 = 문서 수</strong> — 성장 편차가 한눈에 보입니다.</td></tr>
+<tr><td><strong>Concepts</strong></td><td>개념들은 서로 어떻게 붙어 다니나?</td><td>노드가 문서가 아니라 <strong>개념</strong>인 유일한 뷰. 함께 등장하는 개념끼리 이어져, 어휘 수준의 지식 지형(예: '스킬' 주변에 무엇이 모이나)을 보여 줍니다.</td></tr>
+<tr><td><strong>Arc</strong></td><td>연결이 이웃 안인가, 멀리 가나?</td><td>문서를 한 줄로 놓고 연결을 호로 그립니다. <strong>낮은 호 = 같은 주제 안</strong>, <strong>높은 호 = 주제를 건너뛰는 다리</strong>.</td></tr>
+<tr><td><strong>Matrix</strong></td><td>어느 블록이 밀집이고 어디가 공백인가?</td><td>문서×문서 격자에 연결을 점으로. System 순서로 정렬돼 <strong>대각 블록 = 내부 결속</strong>, <strong>블록 밖 점 = 교차 연결</strong>, 빈 영역 = 아직 잇지 않은 지식.</td></tr>
 </tbody>
 </table></div>
 
