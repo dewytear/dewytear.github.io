@@ -1154,7 +1154,7 @@ var SITE_DEFAULTS = {};
 var HARD_DEFAULTS = { navLineStyle: 'dashed', navLineWidth: '1px',
                       searchGame: 'g2048', music: '', lang: 'ko',
                       hideRecent: false, hideRelated: false, newDays: 7,
-                      cosmosRoundness: 100 };
+                      cosmosRoundness: 100, cosmosLabelMin: 5 };
 // Effective settings = site defaults overlaid with personal values.
 function effSettings(){
     var out = {}, k;
@@ -1372,6 +1372,7 @@ function showSettings(){
     var curAccentDay = s.accentDay || accentDefault('day');
     var curAccentNight = s.accentNight || accentDefault('night');
     var curRound = (s.cosmosRoundness != null ? s.cosmosRoundness : 100);
+    var curLabelMin = (s.cosmosLabelMin != null ? s.cosmosLabelMin : 5);
     var basic =
         '<div id="settings-panel-basic" class="settings-panel"'
       +   (SETTINGS_TAB === 'basic' ? '' : ' hidden') + '>'
@@ -1484,6 +1485,12 @@ function showSettings(){
       +     curRound + '">'
       +   '<p class="settings-hint">' + STR('fRoundnessHint') + '</p>'
       + '</div>'
+      + '<div class="settings-field">'
+      +   '<label for="settings-labelmin">' + STR('fCosmosLabelMin') + '</label>'
+      +   '<input id="settings-labelmin" type="number" min="1" max="20" step="1" value="'
+      +     curLabelMin + '">'
+      +   '<p class="settings-hint">' + STR('fCosmosLabelMinHint') + '</p>'
+      + '</div>'
       + '</div>';
     var html =
         '<h2>' + STR('settings') + '</h2>'
@@ -1526,7 +1533,7 @@ function renderSettingsDump(){
     var eff = effSettings();
     var KEYS = ['theme', 'lang', 'accentDay', 'accentNight', 'searchGame',
                 'navLineStyle', 'navLineWidth', 'hideRecent', 'hideRelated', 'newDays',
-                'cosmosRoundness', 'music', 'title', 'tagline', 'photoLine', 'hiddenCats'];
+                'cosmosRoundness', 'cosmosLabelMin', 'music', 'title', 'tagline', 'photoLine', 'hiddenCats'];
     var rows = KEYS.map(function(k){
         var v = eff[k];
         var src = personal[k] !== undefined ? STR('srcPersonal')
@@ -1650,6 +1657,12 @@ function saveSettingsForm(){
     if(rv < 0){ rv = 0; }
     if(rv > 100){ rv = 100; }
     setOrClear(s, 'cosmosRoundness', rv);
+    // 3D 이름표 기준(피참조 수): 1~20 클램프, 기본 5.
+    var lm = parseInt(document.getElementById('settings-labelmin').value, 10);
+    if(isNaN(lm)){ lm = 5; }
+    if(lm < 1){ lm = 1; }
+    if(lm > 20){ lm = 20; }
+    setOrClear(s, 'cosmosLabelMin', lm);
     var prevLang = currentLang();
     setOrClear(s, 'lang', document.getElementById('settings-lang').value);
     // Accent overrides: the (site) default value = no override stored.

@@ -19,3 +19,17 @@
 
 <h3>후속 — sitemap.xml 재생성(CI 정합)</h3>
 <p>이 로그 문서를 <code>list</code>에 추가하면서 <code>build_ai_export</code>를 재생성하지 않아 <code>sitemap.xml</code>이 드리프트, CI <code>validate</code>의 <code>build_ai_export --check</code>가 실패했다. sitemap에 <code>wl-20260713-design</code> URL 한 줄을 더해 정합(<code>knowledge-graph.json</code>·<code>llms.txt</code>는 불변). 문서를 <code>list</code>에 추가할 때 <code>build_ai_export</code> 재생성도 동반해야 함을 재확인.</p>
+
+<h3>후속 — 3D 지식 그래프 이름표 기준을 설정으로(cosmosLabelMin)</h3>
+<p>3D 그래프에서 문서 이름표가 뜨는 기준이 <code>cosmos.js</code>에 <code>ref &lt; 6</code>으로 하드코딩돼 있었다. 이를 <strong>개인 설정</strong>으로 승격 — 기존 <code>cosmosRoundness</code> 배선을 그대로 미러.</p>
+<ul>
+    <li><strong>정본 분리</strong>: 지도·<code>stats.hubs</code>·<code>llms.txt</code>의 허브 임계값(빌드타임 6)은 <strong>구조적 "허브" 정본</strong>으로 그대로 두고, 3D 이름표는 <strong>표시 밀도 취향</strong>으로 분리했다. 두 축이 섞이지 않아 "지도=정본, 3D=취향"으로 깔끔.</li>
+    <li><strong>기본값 5</strong>(사용자 결정) — 6보다 살짝 낮춰 이름이 조금 더 보인다. 설정에서 1~20 조절.</li>
+    <li><code>cosmos.js</code>: <code>effSettings().cosmosLabelMin</code>(없으면 5)을 build 시 읽어 렌더 게이트에 적용(<code>#!cosmos</code> 진입마다 재빌드라 라이브). hover 라벨은 임계값 무관 유지.</li>
+    <li><code>app.js</code>: <code>HARD_DEFAULTS.cosmosLabelMin=5</code>, 디자인 탭 숫자 입력(1~20), <code>saveSettingsForm</code> 클램프, 진단 패널 KEYS에 추가. <code>i18n.js</code>: <code>fCosmosLabelMin</code>·힌트(ko/en). <code>config.json</code> <code>defaults.cosmosLabelMin=5</code>.</li>
+    <li>캐시버스터: cosmos.js 3→4 · app.js 26→27 · i18n.js 8→9(config.json은 no-store).</li>
+</ul>
+<div class="note">
+    <span class="nh">검증 (CDP 실앱)</span>
+    <code>cosmosLabelMin</code>을 3·5·10로 주입 시 이름표 대상 문서 수 <strong>65→26→1</strong>로 변화, 미설정=사이트 기본 5(26개)로 현행과 동일, <code>#!cosmos</code> 예외 없이 렌더. <code>validate_all</code> ERROR 0 · <code>build_index --check</code> 무드리프트 · i18n strings-parity 통과.
+</div>
