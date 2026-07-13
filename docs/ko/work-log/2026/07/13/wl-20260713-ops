@@ -1,0 +1,21 @@
+<h2>운영·도구 — 생성일자 누락 재발 방지: build_dates 가드 2종 + missing-date ERROR 게이트</h2>
+
+<h3>증상과 2겹의 원인</h3>
+<p>새 문서 <a href="#!dzp-value">부가가치와 활용 시나리오</a>에 생성일자가 표시되지 않았다(같은 날 워크로그 2편도 동일). 원인은 두 겹:</p>
+<ul>
+    <li><strong>얕은 클론의 조용한 손상</strong> — 원격 세션의 클론이 shallow(커밋 58개)라, 여기서 <code>build_dates.py</code>를 돌리면 <code>git log --follow</code>가 잘린 이력을 보고 <strong>기존 문서 100+편의 생성일이 클론 시점으로 뭉개진다</strong>(세션 중 실측·되돌림). 그래서 날짜 재생성을 건너뛰었다.</li>
+    <li><strong>커버리지 게이트 부재</strong> — <code>doc-dates.json</code>은 자동 파이프라인 없이 PR 관례로만 재생성되는데, "모든 등재 문서에 엔트리가 있는가"를 검사하는 게이트가 없어 누락이 어떤 검증에도 걸리지 않고 머지·배포됐다(앱은 날짜 없으면 조용히 미표기).</li>
+</ul>
+
+<h3>수정 — 관례를 기계로</h3>
+<ul>
+    <li><strong>즉시 충전</strong>: <code>git fetch --unshallow</code>로 전체 이력(58→389 커밋) 확보 후 재생성 — 신규 3편 충전, 기존 생성일 날짜부 무변경 확인(스쿼시 머지로 인한 같은 날짜 안 시분초 표류 3건만 — 정상).</li>
+    <li><strong><code>build_dates.py</code> 가드 2종</strong>: ①얕은 클론이면 unshallow 자동 시도, 실패 시 <strong>파일을 쓰지 않고 exit 1</strong>(dates-shallow) ②기존 문서의 생성일 <strong>날짜부(KST)</strong>가 달라지면 목록 출력 후 <strong>exit 1</strong>(dates-created-drift, 미기록 — 의도적 재산정은 <code>--force</code>). 잘린 이력으로 날짜를 덮어쓰는 사고가 구조적으로 불가능해졌다. 스쿼시 표류(시분초)는 관용.</li>
+    <li><strong><code>validate_routes.py</code> 신규 ERROR <code>missing-date</code></strong>: <code>list</code>의 모든 문서 노드가 <code>doc-dates.json</code>에 엔트리를 가져야 한다 — 없으면 ERROR(orphan-file과 같은 계열). <code>validate_all</code>에 자동 포함되어 push·PR CI 모두에서 걸리므로 <strong>이번 같은 누락은 머지 자체가 불가능</strong>하다.</li>
+    <li><strong>절차 명문화</strong>(CLAUDE.md 본문 추가 규칙 6): 새 문서는 <strong>커밋 → build_dates 재생성 → amend</strong>(커밋 전 실행은 이력이 없어 누락). 플러그인 번들 동기 + <code>plugin.json</code> 0.7.0→0.7.1.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">검증</span>
+    게이트: 엔트리 1건 임시 제거 → <code>missing-date</code> ERROR 발화 확인 → 원복. 가드: 생성일 날짜부 인위 변조 → <code>dates-created-drift</code> exit 1·파일 미기록 → <code>--force</code>로 정상 복구. CDP 실렌더로 <code>dzp-value</code> 제목 아래 <strong>"생성일자: 2026년 7월 13일"</strong> 표시 확인. <code>validate_all</code> ERROR 0 · <code>build --check</code>·<code>check_plugin_sync</code>(0.7.1) OK.
+</div>

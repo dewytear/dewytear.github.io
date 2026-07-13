@@ -50,13 +50,22 @@
     <li><strong>직원 · 개발 조직</strong> — 전체 등급 범위에서 Identifier 검색, AI 도구 컨텍스트, 온보딩 경로. <a href="#!dzp-why">왜 지금인가</a>가 수치화한 손실(주 8시간 비효율·온보딩 3~9개월)을 직접 줄이는 기본 뷰.</li>
     <li><strong>파트너 · 협력사</strong> — INTERNAL 중 선별된 연계 개발 가이드·API 명세·커스터마이징 지식. 파트너가 겪는 "담당자에게 물어봐야만 아는" 연계 지식이 셀프서비스가 되고, 반복 문의 대응 비용이 줄어든다.</li>
     <li><strong>고객사</strong> — PUBLIC 등급의 제품 기술 문서·API 가이드·릴리스 영향 안내. 고객용 문서 사이트를 <strong>따로 만들어 또 낡게 두는</strong> 이중 관리가 사라진다 — 코드가 바뀌면 고객 문서도 같은 파이프라인으로 갱신되기 때문이다.</li>
-    <li><strong>AI Agent</strong> — <a href="#!dzp-security">AI 소비층</a>의 llms.txt·그래프 JSON 계약을 그대로 써서, 사내 어시스턴트와 고객 지원 봇이 같은 지식을 근거(출처 포함)로 답한다. 사람용 뷰와 기계용 뷰가 하나의 저장소에서 나온다.</li>
+    <li><strong>AI Agent</strong> — <a href="#!dzp-security">AI 소비층</a>의 llms.txt·그래프 JSON 계약을 그대로 써서, 사내 어시스턴트와 고객 지원 봇이 같은 지식을 근거(출처 포함)로 답한다. 사람용 뷰와 기계용 뷰가 하나의 저장소에서 나온다 — 그리고 이 기계용 뷰의 으뜸 소비자가 아래의 <strong>AI 코딩</strong>이다.</li>
 </ul>
+
+<h3>AI 코딩의 사전지식 — 선순환이 닫히는 지점</h3>
+<p>가장 전략적인 활용은 <strong>지식그래프를 AI 코딩의 사전지식으로 쓰는 것</strong>이다. 지금은 개발자가 Claude Code 같은 AI 도구에 매번 도메인 배경을 다시 설명한다 — "수주 상태는 이렇게 전이되고, 여신 체크는 저 시점에 하고…"(<a href="#!dzp-why">왜 지금인가</a>가 지목한 반복 Context 재설명 비용). 이 플랫폼에서는 AI가 <strong>작업을 시작하기 전에</strong> 지식그래프를 먼저 읽는다:</p>
+<ul>
+    <li><strong>진입</strong> — llms.txt로 지식의 전체 지형을 파악하고, knowledge-graph.json <strong>한 번의 fetch</strong>로 노드·관계·개념·URL을 확보한다.</li>
+    <li><strong>선별</strong> — 작업 대상 소스에서 만난 <code>identifiers</code>(Table·Rule ID·API명)로 관련 정책 문서에 도달하고, 타입 관계를 따라 필요한 만큼만 확장한다 — 선행지식으로 배경을, supersedes로 "지금 유효한 정책"을, DECISION 등급으로 설계 결정의 이유를.</li>
+    <li><strong>작업</strong> — 도메인 Rule·상태 전이·과거 장애·설계 의도를 <strong>이미 아는 상태로</strong> 코드를 읽고 쓴다. CLAUDE.md·MCP 연계로 이 절차를 프로젝트 관례로 고정할 수 있다.</li>
+</ul>
+<p>이것이 <a href="#!dzp-overview">개요</a>의 선순환 도식에서 넷째 상자("다음 개발 — Claude Code · Agent")의 실체다 — 개발 결과가 지식이 되고, 그 지식이 <strong>다음 개발의 AI에게 사전지식으로 주입</strong>되어 다시 개발 결과의 품질을 높인다. 지식이 쌓일수록 AI 코딩의 정확도가 조직 단위로 복리처럼 상승하는 구조이며, Reference Wiki의 <a href="#!kgs-ai-layer">순회 계약</a>이 이 소비 방식을 이미 소규모로 실증했다.</p>
 
 <h3>비개발 직군까지 — 신뢰 등급이 독자를 넓힌다</h3>
 <p>개발 지식은 개발자만의 것이 아니다. <strong>기술지원·CS</strong>는 장애 사례·Troubleshooting을 검색해 1차 대응 품질을 높이고, <strong>영업·PM</strong>은 제품 기능·정책·용어 지식으로 고객 대화의 정확도를 높이며, <strong>신규 입사자</strong>는 직무와 무관하게 조직의 지식 지도를 온보딩 경로로 쓴다. 비개발 독자가 코드를 못 읽어도 안전한 이유는 <a href="#!dzp-knowledge">신뢰 등급</a>이 문서마다 붙기 때문이다 — FACT(코드에서 확인된 사실)와 INFERRED(추론)·DECISION(결정)이 구분되어, 독자가 지식의 확실성을 오해하지 않는다.</p>
 
 <div class="note">
     <span class="nh">요점</span>
-    이 플랫폼의 부가가치는 부서마다 문서 채널을 새로 만드는 데서 오지 않는다. <strong>한 번 축적된 Knowledge State에 등급 필터로 뷰를 늘리는 것</strong> — API 명세서, 파트너 가이드, 고객 문서 포털, AI 컨텍스트가 전부 같은 저장소의 다른 단면이다. 축적 비용은 한 번, 소비는 다각도.
+    이 플랫폼의 부가가치는 부서마다 문서 채널을 새로 만드는 데서 오지 않는다. <strong>한 번 축적된 Knowledge State에 등급 필터로 뷰를 늘리는 것</strong> — API 명세서, 파트너 가이드, 고객 문서 포털, 그리고 AI 코딩의 사전지식이 전부 같은 저장소의 다른 단면이다. 축적 비용은 한 번, 소비는 다각도.
 </div>
