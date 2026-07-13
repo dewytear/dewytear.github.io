@@ -10,3 +10,12 @@
     <span class="nh">검증 (CDP 실앱)</span>
     390×844 세로모드에서 제목 한 줄 렌더(글자별 세로 쪼개짐 소멸)·경로/날짜 아랫줄 스택·가로 오버플로 0, 1280px 데스크톱은 기존 한 줄 레이아웃 유지. <code>validate_all</code> ERROR 0 · <code>check_cachebuster</code> OK.
 </div>
+
+<h3>후속 — 지식 그래프 독의 뷰 이름 음차 표기(코드→Code 오독) 영문화</h3>
+<p>사용자 지적: <a href="#!cosmos">Knowledge Graph</a> 독의 뷰 전환 버튼이 한국어 UI에서 음차 표기(번들링·코드·패킹·아크·매트릭스)로 렌더돼, 특히 <strong>&ldquo;코드&rdquo;(Chord의 음차)가 Code로 오독</strong>될 소지가 있었다.</p>
+<p><strong>원인</strong>: 독 라벨은 <code>STR()</code> 키(<code>gvChord</code> 등)로 그리는데 <code>STRINGS.ko</code> 값이 음차였다(<code>STRINGS.en</code>은 이미 영문 정식 명칭).</p>
+<p><strong>수정</strong>: 뷰 이름은 차트 종류 고유명사 세트이므로 한국어 UI에서도 <strong>영문 정식 명칭으로 통일</strong> — <code>3D · Bundling · Chord · Packing · Concepts · Arc · Matrix</code> ('개념'만 한국어로 남기는 혼재안은 균일성이 깨져 배제, aria·설명 문구는 한국어 유지). 자기기술 문서 <a href="#!kgs-views">kgs-views</a>의 도식 라벨·aria·표 행 이름도 동일하게 정합. 캐시버스터 i18n.js 9→10.</p>
+<div class="note">
+    <span class="nh">검증</span>
+    CDP 실앱 <code>#!cosmos</code> 독 7버튼 영문 렌더·뷰 전환 동작, <code>check_diagram_bounds.mjs kgs-views</code> 경계 초과 0(영문 라벨 실렌더), <code>validate_all</code> ERROR 0 · <code>check_cachebuster</code>(i18n.js ?v 상향) OK.
+</div>
