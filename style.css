@@ -2636,6 +2636,16 @@
             #more{
                 padding: 20px;
             }
+            /* Narrow screens: the nowrap meta starves the title down to one
+               character per line — stack title over path/date instead. */
+            .more-list li a{
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .more-meta{
+                white-space: normal;
+            }
             article .carousel-stage{
                 height: 400px;
             }
