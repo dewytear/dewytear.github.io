@@ -293,6 +293,7 @@ function startCosmos(){
     }
 
     var nodes = null, edges = null, galaxies = null, maxRef = 1;
+    var labelMin = 5;     // 이름표 상시 표시 최소 피참조 수 — build()에서 설정값으로 갱신
     var secMeta = null;   // section -> {gi, ci, cn} (World/System 색 파생용)
 
     // ---- World·System 색 체계 ----
@@ -326,6 +327,10 @@ function startCosmos(){
         // 유효 설정(사이트 기본값 + 개인 설정)을 따른다.
         var eff = effSettings();
         var hidden = eff.hiddenCats || [];
+        // 3D 이름표 기준(개인 설정) — 이 값 이상 피참조된 문서만 상시 이름표.
+        // 지도·stats.hubs의 구조적 허브 임계값과 별개인 "표시 밀도" 취향.
+        labelMin = (eff.cosmosLabelMin != null && !isNaN(eff.cosmosLabelMin))
+                 ? eff.cosmosLabelMin : 5;
         if(hidden.length){
             names = names.filter(function(n){
                 var top = (KNOWLEDGE[n].section || '').split(' · ')[0];
@@ -637,7 +642,7 @@ function startCosmos(){
         ctx.textAlign = 'center';
         for(var L2 = 0; L2 < nodes.length; L2++){
             var nd3 = nodes[L2];
-            if(L2 !== hover && nd3.ref < 6){ continue; }
+            if(L2 !== hover && nd3.ref < labelMin){ continue; }
             ctx.font = (L2 === hover ? '700 14px ' : '600 12px ') + GAME_FONT;
             ctx.globalAlpha = L2 === hover ? 1 : Math.max(0.25, nd3.ss * 0.55);
             ctx.fillStyle = ink;
