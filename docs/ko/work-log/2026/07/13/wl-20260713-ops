@@ -31,17 +31,3 @@
     <span class="nh">검증</span>
     <code>validate_all</code> ERROR 0 · <code>check_plugin_sync</code>(스냅샷 정합+0.7.2 상향)·<code>check_worklog</code>·<code>check_cachebuster</code> OK · <code>build_index/ai_export --check</code> 무드리프트. README 링크 경로 육안 확인(SPA 라우트 아님).
 </div>
-
-<h3>후속 — 지식지도 클러스터 편수가 중첩 폴더 문서를 누락 (News 5→9) + cluster-coverage 게이트</h3>
-<p>사용자 보고: AI 지식지도의 News &amp; Articles가 <strong>5편</strong>으로 표시되는데 실제는 06. AI 2040 폴더까지 있다. 조사 결과 실문서는 직속 5편 + 폴더 안 4편 = <strong>9편</strong>.</p>
-<p><strong>원인</strong>: <code>build_index.py</code>의 <code>build_stats</code>가 클러스터 소속을 섹션 문자열 <strong>완전 일치</strong>로 판정 — AI 2040 폴더 안 4편은 섹션이 <code>… · 06. AI 2040: Plan A</code>로 더 길어 <strong>어느 클러스터에도 집계되지 않고 조용히 누락</strong>됐다. <code>map-fallback-drift</code> 게이트는 "fallback 숫자 = 인덱스 숫자"만 비교하므로 인덱스 자체가 5로 계산하면 통과 — "문서가 아무 클러스터에도 안 잡힘"을 보는 눈이 없었다.</p>
-<p><strong>수정 2겹</strong>:</p>
-<ul>
-    <li><strong>서브트리(최장 접두) 매칭</strong> — <code>build_stats</code>에 <code>cluster_of(section)</code> 헬퍼: 클러스터 섹션 중 가장 긴 접두 일치로 소속 판정(멤버 집계·개념 spread 두 곳). 앞으로 어떤 중첩 폴더가 생겨도 자동 포함되고, 하위 폴더가 자기 클러스터로 승격돼도 최장 일치라 이중 집계가 없다. News 5→<strong>9</strong>(ko·en), hub·bridges·totals(100/317) 불변 — diff로 확인.</li>
-    <li><strong>신규 ERROR 게이트 <code>cluster-coverage</code></strong>(validate_docs) — 클러스터가 정의된 갤럭시에서 <code>cluster_of</code>가 None인 문서가 있으면 ERROR. "새 섹션인데 clusters.json 미등록"(CLAUDE.md 본문 규칙 3)을 머지 전에 차단. 클러스터 없는 갤럭시는 면제(신규 위키 부트스트랩 배려).</li>
-</ul>
-<p>지도 fallback(ko·en) News 행 5→9 미러, 플러그인 스냅샷 동기 + <code>plugin.json</code> 0.7.2→<strong>0.8.0</strong>(집계 규칙 변경+신규 게이트 = minor). 자산 무변경이라 캐시버스터 불요(데이터 JSON은 no-cache 재검증).</p>
-<div class="note">
-    <span class="nh">검증</span>
-    게이트 실동작: clusters.json에서 News 항목 임시 제거 → <code>cluster-coverage</code> ERROR 발화 → 복원 후 0. CDP 실앱 <code>#!ai-map</code>에서 News 행 라이브 <strong>9</strong> 렌더·dz-map 회귀 없음. <code>validate_all</code> ERROR 0 · <code>build_index/ai_export --check</code> 무드리프트 · <code>check_plugin_sync</code>(0.8.0)·<code>check_worklog</code> OK.
-</div>
