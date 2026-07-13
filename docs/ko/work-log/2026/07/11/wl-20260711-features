@@ -92,3 +92,26 @@
     <span class="nh">검증 (CDP 헤드리스, 실앱 4라우트 구동)</span>
     plan-a(나가는→시나리오) · scenario(나가는→정책·들어오는←개요) · policy(나가는→반응·들어오는←시나리오) · reactions(들어오는←정책) 모두 본문 → <code>.relations</code> → <code>.related</code> 순서로 렌더 ✓. <code>validate_all</code> ERROR 0(관계 WARN 0 — dangling·unknown-type·missing-evidence·conflict 없음) · <code>build_index --check</code>·<code>build_ai_export --check</code> OK. 자산 무변경(캐시버스터·플러그인 동기 불요).
 </div>
+
+<h3>후속 — 관계 타입 다양화(103→107) + 새 문서 등록 시 다각도 검토 상시화</h3>
+<p><strong>지적</strong>: 새로 만든 관계가 <strong>대부분 선행지식(prerequisite)</strong>(103건 중 94건, 91%)이라 다각도 분석이 아쉽고, <strong>이번뿐 아니라 새 글이 등록될 때마다</strong> 다각도 검토가 필요하다. 두 갈래로 대응했다.</p>
+<h4>Part A — 정직한 비-prerequisite 관계 보강</h4>
+<p>3각도(implements·example-of·evidence-for/supersedes) 병렬 조사로 코퍼스 전체에서 본문에 실재하는 후보만 골라 4건 추가(정직성 — 개념만 겹치는 근사 후보·구조적 유추는 기각):</p>
+<ul>
+    <li><strong>근거(evidence-for)</strong> <a href="#!news-20260709-thariq-fable5-unknowns">타릭 Fable 필드가이드 정리</a> → <a href="#!hns-what">하네스 엔지니어링</a> — 원문·아키텍처 논문 확인으로 "모델보다 하네스가 결과를 좌우"를 뒷받침(본문 "하네스" 명시).</li>
+    <li><strong>사례(example-of)</strong> <a href="#!llmw-overview">LLM Wiki</a> → <a href="#!sb-level2">세컨드 브레인 레벨 2</a> — 레벨2 본문이 "LLM 위키 = 주제로 묶기", "레벨 2가 바로 그 세계"라 LLM Wiki를 그 실현으로 명시.</li>
+    <li><strong>구현(implements, 교차 World)</strong> <a href="#!dzp-security">Douzone 지식 플랫폼</a> → <a href="#!kgs-overview">이 위키 등재 파이프라인</a> — "Reference Wiki(이 위키)" 복제·문서추가 의무절차가 등재 파이프라인을 재현.</li>
+    <li><strong>구현(implements)</strong> <a href="#!hnp-concepts">하네스 플러그인 개념</a> → <a href="#!hns-anatomy">하네스 구성</a> — 플러그인 다섯 요소가 하네스 핵심 구성요소와 1:1(기존 hnp-architecture→hns-core와 같은 계보).</li>
+</ul>
+<p>분포 94/5/4/4/0 = <strong>107</strong>(비-prerequisite 9→13). <strong>supersedes=0 유지</strong>(깨끗한 대체 사례 없음 재확인 — 억지 금지). prerequisite가 여전히 다수인 건 코퍼스가 순서형 강의 위주라 <strong>정직한 상한</strong>. <code>kgs-overview</code>·<code>kgs-edges</code> 수치(103→107)·타입 예시 문단에 교차 World 구현·교차 시스템 근거를 반영.</p>
+<h4>Part B — 새 문서 등록 시 다각도 검토 상시화</h4>
+<p>관계는 본문 실재 시에만 다는 것이라 <strong>기계가 강제할 수 없다</strong>(억지 링크 금지) → 차단 게이트가 아니라 <strong>리뷰 신호</strong>로 설계(isolated-doc WARN과 같은 "사람이 한번 볼 목록" 철학):</p>
+<ul>
+    <li><strong><code>tools/check_relations_review.py</code>(신규, 비차단)</strong> — PR diff에서 새로 등재된 문서를 골라 관계 타입 분포와 5타입 체크리스트를 띄운다. <strong>항상 exit 0</strong>. CI <code>validate</code> 잡에 정보성 스텝 추가.</li>
+    <li><strong><code>CLAUDE.md</code></strong> 본문 추가 규칙에 "관계는 다각도로 검토"(선행지식 기본값 처리 금지, 5타입 본문 대조, 실재 시만) 규칙 신설. <strong><code>change-types.md</code></strong> CONTENT 행, <strong><code>kgs-gates</code></strong>(비차단 리뷰 신호 서술)에 반영.</li>
+    <li>번들 동기(<code>check_plugin_sync --fix</code>, 18파일) + <code>plugin.json</code> 0.6.0→0.7.0.</li>
+</ul>
+<div class="note">
+    <span class="nh">검증</span>
+    <strong>CDP 실앱</strong>: 4개 신규 관계가 나가는·들어오는 양방향으로 정확한 뱃지(근거/사례/구현)와 함께 렌더 확인(thariq→hns-what, dzp-security→kgs-overview, llmw-overview→sb-level2, hnp-concepts→hns-anatomy). <code>check_relations_review.py</code>: 이 PR엔 신규 문서 없음("대상 없음")·옛 base로 신규 문서 케이스 리마인더·exit 0 확인. <code>validate_all</code> ERROR 0(관계 WARN 0) · <code>build_index/ai-export --check</code> · <code>check_plugin_sync</code>(18파일+version) OK. 자산 무변경(캐시버스터 불요).
+</div>

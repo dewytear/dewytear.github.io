@@ -36,6 +36,10 @@ jobs:
       # ?v 캐시 자산을 고친 PR은 index.html의 해당 ?v 상향을 동반해야 한다 (CLAUDE.md 배포)
       - if: github.event_name == 'pull_request'
         run: python tools/check_cachebuster.py --base "origin/${{ github.base_ref }}"
+      # 새로 등재된 문서의 지식 관계를 5타입 다각도로 검토했는지 리뷰 신호로 띄운다
+      # (비차단 — 관계는 본문 실재 시만 다는 것이라 강제 못 함; 로그 가시화용, always exit 0)
+      - if: github.event_name == 'pull_request'
+        run: python tools/check_relations_review.py --base "origin/${{ github.base_ref }}"
 
   # 도식 글자·경계 삐짐 정밀 검사 — validate_design의 순수 파이썬 게이트(하한 추정,
   # 확실한 초과만 ERROR)를 넘어, 실제 브라우저 렌더로 경계값까지 전수 확인한다.

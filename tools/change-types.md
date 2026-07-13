@@ -26,7 +26,7 @@
 | `TOOL` | `tools/` 빌드·검증·게이트 스크립트와 절차서 | 관련 절차서(i18n.md 등) 정합 · 새 게이트면 CI 스텝 추가 여부 | 번들 동기(`check_plugin_sync --fix`) + plugin.json version 상향 | ④운영·도구 |
 | `SCHEMA` | 인덱스·그래프 산출물의 필드·의미(빌드 도구의 출력 계약) | **schema.md를 같은 PR에서 갱신** · additive(하위호환)/파괴적(schemaVersion↑ + 소비자 이행) 판단 · 자기기술 문서(kgs-edges·kgs-ai-layer)·ai-guide 서술 검토 | 재생성(build_index·build_ai_export) + `--check` · 번들 동기 + version | ②기능 |
 | `PLUGIN` | `plugins/wiki-plugin/` 자체 — 스킬(SKILL.md)·plugin.json·marketplace | 스킬 문서가 번들 도구·실제 절차와 일치하는지 | plugin.json version 상향(PR 게이트 강제) | ④운영·도구 |
-| `CONTENT` | `docs/` 본문·`list`·doc-entries·clusters.json | 문서 추가 5단계(CLAUDE.md — list·doc-entries·인덱스·Work Log·검증) · 번역이면 i18n.md 체크리스트 | 재생성(index·dates·ai_export) · **플러그인 반영 금지**(콘텐츠는 비번들) | ①콘텐츠 |
+| `CONTENT` | `docs/` 본문·`list`·doc-entries·clusters.json | 문서 추가 5단계(CLAUDE.md — list·doc-entries·인덱스·Work Log·검증) · **관계(relations)는 5타입 다각도 검토**(선행지식으로 기본값 처리 금지, 본문 실재 시만 — `check_relations_review.py` 리뷰 신호) · 번역이면 i18n.md 체크리스트 | 재생성(index·dates·ai_export) · **플러그인 반영 금지**(콘텐츠는 비번들) | ①콘텐츠 |
 
 ## 실례 — 왜 선언이 먼저인가
 
