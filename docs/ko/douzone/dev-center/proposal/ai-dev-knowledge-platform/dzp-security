@@ -1,9 +1,11 @@
 <h2>자산 활용과 보안</h2>
 
 <h3>처음부터 새로 만들지 않는다</h3>
-<p>사전 검증용으로 운영 중인 <strong>Reference Wiki</strong>가 이미 갖춘 기능 — HTML Fragment 문서, SPA Web UI, JSON Navigation Tree, 통합/Tag/Concept 검색, Knowledge Index, 연관 문서 추천, Knowledge Map, AI Curator, 결정적 Index Build, Work Log, Git History — 을 복제해 PoC를 시작하고, 검증된 기능을 회사 플랫폼으로 발전시킨다.</p>
+<p>사전 검증용으로 운영 중인 <strong>Reference Wiki</strong>(<a href="#!kgs-overview">지식은 어떻게 쌓이는가</a> 시리즈가 해설하는 그 위키)가 이미 갖춘 기능을 복제해 PoC를 시작하고, 검증된 기능을 회사 플랫폼으로 발전시킨다. 2026-07 기준 실증 범위: HTML Fragment 문서, SPA Web UI, JSON Navigation Tree(불변 ID·물리 경로 분리), 통합/Tag/Concept 검색, Knowledge Index(결정적 빌드 + <code>--check</code> 드리프트 게이트), 자동 연관 추천(<code>related</code>)과 <strong>타입 지식관계 5종(<code>relations</code>)</strong>, Knowledge Map · 3D/2D 지식그래프, <strong>AI 소비층(llms.txt · 자기완결 그래프 JSON)</strong>, 4층 CI 검증 게이트, Work Log, Git History 기반 문서 이력.</p>
 
-<p>특히 이 Reference Wiki에서는 <strong>AI가 문서를 작성·수정할 때 지식 체계 반영이 규칙으로 의무화</strong>되어 있다(저장소의 AI 지침 문서로 강제). 문서 한 편이 추가되면 내비게이션 등록 → 지식 인덱스 엔트리 → 결정적 인덱스 빌드 → 지식지도·그래프·검색 자동 반영 → Work Log 기록까지가 <strong>같은 변경 단위(PR)</strong>로 함께 움직인다. 회사 플랫폼의 "지식 반영률" 운영 규율이 이미 소규모로 검증되고 있는 셈이다.</p>
+<p>재사용은 "코드를 참고한다" 수준이 아니다. 이 엔진은 이미 <strong>wiki-plugin(v0.7.0)으로 패키징</strong>되어 있다 — 등재·인덱스·검증 도구 18종과 스킬 4종(add-doc · index · validate · wiki-init)을 담아, 새 저장소에 설치하면 같은 지식 체계를 즉시 부트스트랩한다(<a href="#!kgs-plugin">위키 엔진의 플러그인화</a>). Reference Wiki 자신이 이 플러그인의 첫 도그푸딩 사용자로 운영 중이므로, "처음부터 새로 만들지 않는다"는 구호가 아니라 <strong>설치 절차</strong>다.</p>
+
+<p>특히 이 Reference Wiki에서는 <strong>AI가 문서를 작성·수정할 때 지식 체계 반영이 규칙으로 의무화</strong>되어 있다(저장소의 AI 지침 문서로 강제). 문서 한 편이 추가되면 내비게이션 등록 → 지식 인덱스 엔트리(개념과 <strong>관계 5타입 다각도 검토</strong> 포함 — 검토 누락은 비차단 리뷰 신호가 띄운다) → 결정적 인덱스 빌드 → 지식지도·그래프·검색 자동 반영 → Work Log 기록까지가 <strong>같은 변경 단위(PR)</strong>로 함께 움직인다. 회사 플랫폼의 "지식 반영률" 운영 규율이 이미 소규모로 검증되고 있는 셈이다.</p>
 
 <div class="diagram">
 <svg viewBox="0 0 680 196" role="img" aria-label="Reference Wiki의 문서 추가 의무 절차: 문서 작성, list 노드 등록, 인덱스 엔트리 작성 후 결정적 인덱스 빌드를 거쳐 지도·그래프·검색에 자동 반영되고 Work Log까지 같은 변경 단위로 기록된다">
@@ -45,6 +47,9 @@
     <li>문서는 <strong>HTML 중심</strong>으로 운영해 표 · Dashboard · SVG Diagram · <code>&lt;details&gt;</code> · 상태 Badge · Warning Box · Architecture Flow · DB 구조 시각화를 활용한다.</li>
     <li>HTML로 인한 AI Token 증가는 전체 문서를 읽지 않는 <strong>Knowledge Index 기반 Retrieval</strong>로 최소화한다. 이는 CLAUDE.md 계층과 MCP 연동으로 조직 지식을 AI 컨텍스트화하는 <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Anthropic 공식 권장 패턴</a>과도 맞닿아 있다.</li>
 </ul>
+
+<h3>AI 소비층 — 기계가 읽는 문 세 개</h3>
+<p>"AI가 조직 지식을 Context로 활용한다"는 약속도 Reference Wiki에 이미 실물이 있다(<a href="#!kgs-ai-layer">AI가 이 위키를 읽는 법</a>). 외부 AI는 세 개의 문으로 들어온다: ① <code>llms.txt</code> — 전체 지식의 표지(무엇이 어디 있는지)를 llmstxt.org 관례로 노출 → ② <code>knowledge-graph.json</code> — <strong>단 한 번의 fetch</strong>로 전체 그래프(노드·연관·타입 관계·개념·각 문서의 URL)를 받는 자기완결 파일 → ③ 필요한 문서만 골라 개별 fetch. 전체 코퍼스를 임베딩하거나 매번 크롤링하지 않고도 AI가 관계를 따라 필요한 만큼만 읽는 구조이며, 이 파일들은 인덱스에서 자동 생성되고 <code>--check</code> 게이트가 낡은 채 배포되는 것을 막는다. 회사 플랫폼의 Claude Code·AI Agent 연계는 이 계약을 사내망 URL 위에 그대로 옮기는 일이다.</p>
 
 <h3>보안과 접근 구조</h3>
 <p>회사 개발 지식에는 내부 Architecture, 고객 프로젝트 정보, DB 구조, 장애 분석, 보안 설정, 인증 관련 정보가 포함될 수 있다. 따라서 지식 등급을 구분하고 저장소와 접근을 분리한다.</p>

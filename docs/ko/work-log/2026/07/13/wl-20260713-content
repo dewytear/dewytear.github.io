@@ -1,0 +1,34 @@
+<h2>콘텐츠 — AI 지식 플랫폼 제안서(dzp) 완성본: Reference Wiki 실증 메커니즘과 결합 재작성</h2>
+
+<h3>배경 — 제안서의 자기모순</h3>
+<p>사용자 요청: dzp 시리즈를 분석하고 <strong>이 위키의 인덱싱·노드 속성·지식관계 논리를 결합해 완성본</strong>으로(필요 시 전면 수정). 2각도 병렬 분석 결과, 기존 7편(405줄)은 비전("Event Stream vs Knowledge State")은 좋으나 결정적 자기모순이 있었다 — <a href="#!dzp-security">자산 활용</a>이 "Reference Wiki를 복제한다"고 선언하면서 정작 그 위키가 이미 구현한 메커니즘(불변 ID·물리 경로 분리, idf 가중 related 엣지, 타입 관계 5종, llms.txt+자기완결 그래프 JSON, 결정적 빌드 <code>--check</code>, 4층 CI 게이트, wiki-plugin 패키징)을 하나도 구체 인용하지 않았고, <a href="#!dzp-knowledge">지식 관리 체계</a>의 인덱스 스키마 예시(<code>kind/product/identifiers/sources…</code>)는 <strong>실제 인덱스 스키마와 모순</strong>되는 가상 스키마였다. 그 외 선순환 명제 3중복·제외 목록 2중복·KPI 계측 방법 부재·중간 4편의 본문 교차링크 0.</p>
+
+<h3>재작성 방향 — "만들 수 있는 것"에서 "운영 중인 엔진의 확장"으로</h3>
+<p>위키의 실증 스키마·수치(2026-07 기준 문서 107·개념 337·related 349·relations 107)를 정본 코어로 삼고, 회사 특화분(identifiers·sources·trust 등)은 <strong>스키마 v2의 additive 확장 필드(제안)</strong>로 명확히 구분했다. 결합의 축 3개:</p>
+<ul>
+    <li><strong><code>source</code> 어휘 접합</strong> — 실증 스키마가 예약해 둔 <code>ai-proposed</code>가 AI Curator의 관계 제안→사람 승인(<code>human</code> 승격) 흐름과 정확히 맞물림.</li>
+    <li><strong><code>supersedes</code> 실전 투입</strong> — 위키에선 제자리 개정이라 정직하게 0건인 타입이, 정책 변경이 실재하는 회사 지식에서 처음 실제로 쓰인다(수명주기 state machine의 "대체" 전이 = supersedes 관계 생성).</li>
+    <li><strong>KPI를 게이트로 계측</strong> — "Merge 대비 지식 반영률"=동반 게이트 통과율, 고아 0=그래프 검증, 드리프트 0=<code>--check</code>, 관계 다양성=비차단 리뷰 신호.</li>
+</ul>
+
+<h3>편별 변경</h3>
+<ul>
+    <li><strong>overview</strong> — "백지 설계가 아니다" 프레임 전환 단락(실측 수치+<a href="#!kgs-overview">등재 파이프라인</a> 링크), TOC 현행화. 선순환 명제 정본화.</li>
+    <li><strong>why</strong> — 재정의 노트에 "구조의 절반은 이미 운영 중, 없는 것은 GitLab 연결" 브리지.</li>
+    <li><strong>core</strong> — "Knowledge State의 실체 — 결정적으로 빌드되는 인덱스" 소절 신설(<a href="#!kgs-gates">드리프트 게이트</a>).</li>
+    <li><strong>architecture</strong> — "지식 무결성 게이트 — Trigger와 별개의 층" 신설(4층 게이트 계승), 제외 목록을 knowledge로 일원화, Index·Provenance를 knowledge로 포워드.</li>
+    <li><strong>knowledge(전면)</strong> — 앵커로 승격: 지식의 원자 구조(노드 속성 name/path 분리 + <strong>실증 코어·회사 확장을 주석으로 구분한 스키마 예시</strong> — 기존 모순 해소), 두 겹의 연결(related 판정 규칙 + relations 5종·방향·evidenceRef·source), ai-proposed 승인 흐름, Identifier 7단 검색의 실존 필드 매핑, supersedes 실전 투입, 정직성 원칙 계승 노트. 도식 2종·신뢰 표·RAG/NIST 인용 보존.</li>
+    <li><strong>security</strong> — 기능 열거 현행화(타입 관계·AI 소비층·4층 게이트), <strong>wiki-plugin v0.7.0(도구 18종·스킬 4종) = "설치 절차로서의 재사용"</strong>(<a href="#!kgs-plugin">플러그인화</a>), "AI 소비층 — 기계가 읽는 문 세 개"(llms.txt→그래프 JSON→개별 fetch, <a href="#!kgs-ai-layer">순회 계약</a>) 신설, 의무 절차에 관계 5타입 다각도 검토 반영.</li>
+    <li><strong>roadmap</strong> — Phase 1을 "wiki-plugin 설치로 부트스트랩"으로 구체화, KPI 4축에 계측 방법·방향 목표(반영률·Identifier 도달률 ≥90%) 부여, Phase 3·4에 supersedes 운영·사내망 llms.txt 계약 반영.</li>
+</ul>
+
+<h3>메타데이터·그래프 동반</h3>
+<ul>
+    <li><strong>doc-entries</strong>: 7편 summary 현행화. 본문 실재화된 관계 2건 추가 — <code>dzp-knowledge -[implements]-&gt; kgs-edges</code>(두 겹 연결 모델 채택), <code>dzp-roadmap -[implements]-&gt; kgs-plugin</code>(플러그인 이식) → 관계 107→<strong>109</strong>(구현 7). <strong>정직성 보정</strong>: dzp-security의 '위키볼트' 개념은 본문에 실재하지 않아 제거하고, 재작성 본문의 중심이 된 '플러그인'을 추가.</li>
+    <li><strong>파급 정합</strong>: 개념 변경으로 Douzone 개념 25→26·Tutorial 클러스터 허브가 ccb-overview→ccb-skills로 이동 → <code>dz-map</code> km-totals·<code>ai-map</code>(ko·en) 허브 fallback을 인덱스에 동기화(map-fallback-drift WARN 0). dzp-security 고립 WARN도 해소. dz-map의 dzp 서술 현행화.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">검증</span>
+    <code>validate_all</code> <strong>ERROR 0</strong>(WARN 21 — 전부 기존 검토 신호, 관계 ERROR·WARN 0) · <code>build_index --check</code>·<code>build_ai_export --check</code> OK · CDP 실앱 7편 렌더(도식·교차링크·지식 관계 블록) 확인. 자산 무변경 — 캐시버스터·플러그인 동기 불요(doc-entries는 비번들). <code>doc-dates.json</code>은 환경의 얕은 클론 이슈로 불변(실 파이프라인에서 충전).
+</div>

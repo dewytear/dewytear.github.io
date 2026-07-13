@@ -1875,7 +1875,7 @@
  {
   "name": "dzp-overview",
   "title": "제안 개요 — GitLab 기반 AI 개발 지식 플랫폼",
-  "summary": "GitLab 개발 결과를 AI가 조직 지식으로 자동 축적하는 Read-Only 플랫폼 제안의 개요와 선순환",
+  "summary": "GitLab 개발 결과를 AI가 조직 지식으로 자동 축적하는 Read-Only 플랫폼 제안의 개요와 선순환 — Reference Wiki에서 검증된 엔진의 확장임을 명시",
   "concepts": [
    "GitLab",
    "지식플랫폼",
@@ -1921,7 +1921,7 @@
  {
   "name": "dzp-core",
   "title": "제안의 핵심 — 개발 흐름은 그대로, 지식화는 AI가",
-  "summary": "직원 흐름 무변경 원칙과 Event Stream/Knowledge State 분리, 업계 사례 근거",
+  "summary": "개발 흐름은 그대로, 지식화는 AI가 — Event Stream(GitLab)과 Knowledge State(Wiki)의 분리, 결정적으로 빌드되는 인덱스라는 상태의 실체, 업계 사례",
   "concepts": [
    "GitLab",
    "지식플랫폼",
@@ -1941,7 +1941,7 @@
  {
   "name": "dzp-architecture",
   "title": "플랫폼 아키텍처",
-  "summary": "7계층 파이프라인, 지식 생성 Trigger, SHA 증분 분석, Context 확장, 운영 이중화",
+  "summary": "GitLab 원천 7계층 파이프라인 — 지식 생성 트리거, SHA 증분 분석, Context 확장, 트리거와 별개의 지식 무결성 게이트 층, 실시간·보정 이중화",
   "concepts": [
    "GitLab",
    "지식플랫폼",
@@ -1967,7 +1967,7 @@
  {
   "name": "dzp-knowledge",
   "title": "지식 관리 체계 — 판정·갱신·추적·신뢰·수명주기",
-  "summary": "가치 판정, 누적 갱신, Identifier 검색, 출처 추적, FACT/INFERRED/DECISION, 수명주기",
+  "summary": "지식의 원자 구조(실증 인덱스 코어+identifiers·sources·trust 확장)와 두 겹의 연결(계산된 related·선언된 relations 5종, ai-proposed 승인 흐름) — 가치 판정·누적 갱신·Identifier 검색·Provenance·신뢰 등급·supersedes 수명주기",
   "concepts": [
    "AI큐레이터",
    "지식관리",
@@ -1982,19 +1982,25 @@
     "type": "prerequisite",
     "evidenceRef": "지식 관리 체계 — 판정·갱신·추적·신뢰·수명주기 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 자산 활용과 보안로 이어진다",
     "source": "human"
+   },
+   {
+    "target": "kgs-edges",
+    "type": "implements",
+    "evidenceRef": "'두 겹의 연결'이 kgs-edges의 계산 엣지+타입 관계 모델을 회사 플랫폼 구조로 채택·구현",
+    "source": "human"
    }
   ]
  },
  {
   "name": "dzp-security",
   "title": "자산 활용과 보안",
-  "summary": "Reference Wiki 자산의 재사용 경로(지식 체계 반영 의무 절차 포함)와 PUBLIC~RESTRICTED 지식 등급·접근 분리",
+  "summary": "검증된 Reference Wiki 엔진의 재사용 — wiki-plugin 패키징(도구 18종·스킬 4종), 의무 등재 절차, llms.txt·그래프 JSON AI 소비층, 보안 4등급과 저장소 분리",
   "concepts": [
    "지식플랫폼",
    "보안등급",
    "지식관리",
-   "위키볼트",
-   "재사용"
+   "재사용",
+   "플러그인"
   ],
   "relations": [
    {
@@ -2014,7 +2020,7 @@
  {
   "name": "dzp-roadmap",
   "title": "추진 로드맵 — 4 Phase와 1차 PoC",
-  "summary": "사전 검증→회사 PoC→센터 확대→전사 확장 4단계와 OmniEsol ERP(SCM 도메인) PoC·KPI",
+  "summary": "4 Phase 추진(wiki-plugin 이식→회사 PoC→센터 확대→전사)과 OmniEsol ERP SCM 1차 PoC — 게이트로 계측하는 검증 KPI 네 축",
   "concepts": [
    "PoC",
    "KPI",
@@ -2022,6 +2028,14 @@
    "GitLab",
    "OmniEsol",
    "로드맵"
+  ],
+  "relations": [
+   {
+    "target": "kgs-plugin",
+    "type": "implements",
+    "evidenceRef": "Phase 1이 wiki-plugin 설치(wiki-init·add-doc·validate)로 지식 체계를 부트스트랩",
+    "source": "human"
+   }
   ]
  },
  {
