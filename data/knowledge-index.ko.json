@@ -1,10 +1,10 @@
 {
  "schemaVersion": 2,
  "note": "AI가 각 문서를 읽어 만든 구조적 지식 인덱스(요약·핵심개념·연관문서). related는 희소성 가중 개념 중복(via:concept) + 같은 폴더 보완(via:folder)으로 계산.",
- "docCount": 108,
+ "docCount": 111,
  "stats": {
-  "docCount": 108,
-  "conceptCount": 338,
+  "docCount": 111,
+  "conceptCount": 356,
   "clusters": [
    {
     "label": "지식 체계",
@@ -115,6 +115,16 @@
      "title": "제안 개요 — GitLab 기반 AI 개발 지식 플랫폼",
      "refs": 5
     }
+   },
+   {
+    "label": "AI 알림 발송엔진",
+    "section": "Douzone · dev.Center · Proposal · AI 알림 발송엔진",
+    "count": 3,
+    "hub": {
+     "name": "sne-scope",
+     "title": "발송엔진 구현 요청 사항",
+     "refs": 3
+    }
    }
   ],
   "hubs": [
@@ -169,11 +179,6 @@
     "refs": 7
    },
    {
-    "name": "omc-concepts",
-    "title": "핵심 용어",
-    "refs": 7
-   },
-   {
     "name": "skl-overview",
     "title": "스킬 심화 — 개요",
     "refs": 7
@@ -191,6 +196,11 @@
    {
     "name": "llmw-capture",
     "title": "무엇을 담는가 — 지식 캡처",
+    "refs": 6
+   },
+   {
+    "name": "omc-concepts",
+    "title": "핵심 용어",
     "refs": 6
    },
    {
@@ -515,11 +525,6 @@
       "refs": 7
      },
      {
-      "name": "omc-concepts",
-      "title": "핵심 용어",
-      "refs": 7
-     },
-     {
       "name": "skl-overview",
       "title": "스킬 심화 — 개요",
       "refs": 7
@@ -537,6 +542,11 @@
      {
       "name": "llmw-capture",
       "title": "무엇을 담는가 — 지식 캡처",
+      "refs": 6
+     },
+     {
+      "name": "omc-concepts",
+      "title": "핵심 용어",
       "refs": 6
      },
      {
@@ -704,8 +714,8 @@
     ]
    },
    "Douzone": {
-    "docCount": 8,
-    "conceptCount": 27,
+    "docCount": 11,
+    "conceptCount": 46,
     "clusters": [
      {
       "label": "AI 개발 지식 플랫폼",
@@ -715,6 +725,16 @@
        "name": "dzp-overview",
        "title": "제안 개요 — GitLab 기반 AI 개발 지식 플랫폼",
        "refs": 5
+      }
+     },
+     {
+      "label": "AI 알림 발송엔진",
+      "section": "Douzone · dev.Center · Proposal · AI 알림 발송엔진",
+      "count": 3,
+      "hub": {
+       "name": "sne-scope",
+       "title": "발송엔진 구현 요청 사항",
+       "refs": 2
       }
      }
     ],
@@ -757,6 +777,10 @@
       "n": 1
      },
      {
+      "c": "DLQ",
+      "n": 1
+     },
+     {
       "c": "EventStream",
       "n": 1
      },
@@ -773,15 +797,11 @@
       "n": 1
      },
      {
+      "c": "Phase",
+      "n": 1
+     },
+     {
       "c": "PoC",
-      "n": 1
-     },
-     {
-      "c": "Provenance",
-      "n": 1
-     },
-     {
-      "c": "로드맵",
       "n": 1
      }
     ],
@@ -3509,15 +3529,6 @@
      "via": "concept"
     },
     {
-     "name": "hnp-architecture",
-     "title": "동작 구조와 6단계",
-     "shared": [
-      "6단계",
-      "오케스트레이터"
-     ],
-     "via": "concept"
-    },
-    {
      "name": "hnp-concepts",
      "title": "핵심 개념 쉽게",
      "shared": [
@@ -3530,6 +3541,16 @@
     {
      "name": "hns-anatomy",
      "title": "하네스의 구성과 효과",
+     "shared": [
+      "에이전트",
+      "오케스트레이터",
+      "스킬"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "hns-review",
+     "title": "생성 결과 리뷰 — 에이전트·스킬·오케스트레이터",
      "shared": [
       "에이전트",
       "오케스트레이터",
@@ -5385,16 +5406,12 @@
      "via": "concept"
     },
     {
-     "name": "omc-intro",
-     "title": "OMC 소개",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "omc-concepts",
-     "title": "핵심 용어",
-     "shared": [],
-     "via": "folder"
+     "name": "sne-scope",
+     "title": "발송엔진 구현 요청 사항",
+     "shared": [
+      "재시도"
+     ],
+     "via": "concept"
     }
    ]
   },
@@ -5934,6 +5951,115 @@
       "지식플랫폼"
      ],
      "via": "concept"
+    }
+   ]
+  },
+  {
+   "name": "sne-overview",
+   "title": "발송엔진 구현 요청 — 개요와 책임 경계",
+   "summary": "발송요청 생성까지가 AI 알림, 이후 발송·타이밍·재처리·현황은 발송엔진 — 카프카 기반 발송엔진 구현 요청의 개요와 책임 경계",
+   "concepts": [
+    "발송엔진",
+    "카프카",
+    "메시지큐",
+    "책임경계",
+    "발송요청",
+    "비동기"
+   ],
+   "relations": [
+    {
+     "target": "sne-scope",
+     "type": "prerequisite",
+     "evidenceRef": "개요·책임 경계를 전제로 엔진이 구현할 구체 요청 사항으로 이어진다",
+     "source": "ai"
+    }
+   ],
+   "section": "Douzone · dev.Center · Proposal · AI 알림 발송엔진",
+   "related": [
+    {
+     "name": "sne-scope",
+     "title": "발송엔진 구현 요청 사항",
+     "shared": [],
+     "via": "folder"
+    },
+    {
+     "name": "sne-interface",
+     "title": "발송엔진 인터페이스·규모·협의",
+     "shared": [],
+     "via": "folder"
+    }
+   ]
+  },
+  {
+   "name": "sne-scope",
+   "title": "발송엔진 구현 요청 사항",
+   "summary": "채널 발송·멱등·전달보장·DLQ와 시점 4유형 타이밍·발송 시점 최신 조회·주기 배치 수명주기·발송 현황 화면 요구",
+   "concepts": [
+    "시점",
+    "멱등",
+    "DLQ",
+    "재시도",
+    "배치수명주기",
+    "발송현황",
+    "전달보장"
+   ],
+   "relations": [
+    {
+     "target": "sne-interface",
+     "type": "prerequisite",
+     "evidenceRef": "요청 사항을 전제로 먼저 확정할 인터페이스·협의 순서로 이어진다",
+     "source": "ai"
+    }
+   ],
+   "section": "Douzone · dev.Center · Proposal · AI 알림 발송엔진",
+   "related": [
+    {
+     "name": "omc-cost",
+     "title": "비용 · 성능",
+     "shared": [
+      "재시도"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "sne-overview",
+     "title": "발송엔진 구현 요청 — 개요와 책임 경계",
+     "shared": [],
+     "via": "folder"
+    },
+    {
+     "name": "sne-interface",
+     "title": "발송엔진 인터페이스·규모·협의",
+     "shared": [],
+     "via": "folder"
+    }
+   ]
+  },
+  {
+   "name": "sne-interface",
+   "title": "발송엔진 인터페이스·규모·협의",
+   "summary": "엔진 본체보다 인터페이스를 먼저 확정해 병행 구현 — 발송요청 발행·발송 시점 확정·결과 회신 인터페이스와 Phase 우선순위·협의사항",
+   "concepts": [
+    "인터페이스",
+    "선확정",
+    "Phase",
+    "SLA",
+    "협의",
+    "병행구현"
+   ],
+   "section": "Douzone · dev.Center · Proposal · AI 알림 발송엔진",
+   "related": [
+    {
+     "name": "sne-overview",
+     "title": "발송엔진 구현 요청 — 개요와 책임 경계",
+     "shared": [],
+     "via": "folder"
+    },
+    {
+     "name": "sne-scope",
+     "title": "발송엔진 구현 요청 사항",
+     "shared": [],
+     "via": "folder"
     }
    ]
   },

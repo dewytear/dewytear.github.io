@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 한글 위키. 문서를 개념(concepts)과 연관 문서(related)로 잇는 AI 지식 그래프.
 
-이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 108개 문서 · 338개 개념.
+이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 111개 문서 · 356개 개념.
 
 ## 기계 판독용 (Machine-readable — AI는 여기부터)
 - [지식 그래프 (단일 파일)](https://dewytear.github.io/data/knowledge-graph.json): 모든 노드(문서)와 엣지(related)·개념·문서 URL·통계를 담은 자기완결 JSON. **먼저 이 파일을 fetch해 그래프를 순회하라.**
@@ -135,6 +135,11 @@
 - [부가가치와 활용 시나리오](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-value): 하나의 Knowledge State에 등급 필터로 대상별 뷰를 늘리는 부가가치 — API 명세서 자동 갱신(FACT·identifiers·supersedes), 직원·파트너·고객사·AI Agent 활용, 지식그래프를 AI 코딩의 사전지식으로 로드하는 선순환의 실체, 신뢰 등급이 넓히는 비개발 독자
 - [추진 로드맵 — 4 Phase와 1차 PoC](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-roadmap): 4 Phase 추진(wiki-plugin 이식→회사 PoC→센터 확대→전사)과 OmniEsol ERP SCM 1차 PoC — 게이트로 계측하는 검증 KPI 네 축
 
+## AI 알림 발송엔진 (Douzone · dev.Center · Proposal · AI 알림 발송엔진)
+- [발송엔진 구현 요청 — 개요와 책임 경계](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-noti-send-engine/sne-overview): 발송요청 생성까지가 AI 알림, 이후 발송·타이밍·재처리·현황은 발송엔진 — 카프카 기반 발송엔진 구현 요청의 개요와 책임 경계
+- [발송엔진 구현 요청 사항](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-noti-send-engine/sne-scope): 채널 발송·멱등·전달보장·DLQ와 시점 4유형 타이밍·발송 시점 최신 조회·주기 배치 수명주기·발송 현황 화면 요구
+- [발송엔진 인터페이스·규모·협의](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-noti-send-engine/sne-interface): 엔진 본체보다 인터페이스를 먼저 확정해 병행 구현 — 발송요청 발행·발송 시점 확정·결과 회신 인터페이스와 Phase 우선순위·협의사항
+
 ## 06. AI 2040: Plan A (AI · News & Articles · 2026 · 06. AI 2040: Plan A)
 - [AI 2040: 플랜 A — 개요 (초지능을 2040까지 늦추자는 규범 시나리오)](https://dewytear.github.io/docs/ko/ai/news/2026/ai-2040-plan-a/news-20260709-ai-2040-plan-a): AI 2027 저자들(AI Futures Project)의 후속 규범 시나리오 해설 시리즈의 개요·허브. 예측이 아닌 권고로, 미·중 합의로 초지능을 2040까지 지연하는 골자·한줄 요지·인터랙티브 연표·AI 2027 대비를 담고 시나리오/정책/반응 3편으로 안내
 - [AI 2040: 플랜 A — 연도별 시나리오 (2027→2040)](https://dewytear.github.io/docs/ko/ai/news/2026/ai-2040-plan-a/news-20260709-ai-2040-scenario): Plan A가 그리는 연도별 세계 — 2027 두 노동력(인간+AI 에이전트), 2028 대선·데이터센터 비용, 2029 미·중 합의, 2030 완전 자동화 회피, 2030-35 전문가급 확장, 2035 통제 위한 일시정지, 2040 해제·초지능. 예측이 아닌 권고임을 명시
@@ -152,9 +157,9 @@
 - [Harness 플러그인 — 소개](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-intro): 피참조 7회
 - [메타 하네스 스킬 설치 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-install): 피참조 7회
 - [하네스 실행하기 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-run): 피참조 7회
-- [핵심 용어](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-concepts): 피참조 7회
 - [스킬 심화 — 개요](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-overview): 피참조 7회
 - [스킬의 특장점](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-strengths): 피참조 7회
 - [핵심 개념 쉽게](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-concepts): 피참조 6회
 - [무엇을 담는가 — 지식 캡처](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-capture): 피참조 6회
+- [핵심 용어](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-concepts): 피참조 6회
 - [5단계 한눈에 보기](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-levels): 피참조 6회
