@@ -11,8 +11,9 @@
 <div class="tbl-wrap">
     <table>
         <thead><tr><th>System</th><th>편수</th><th>중심 주제</th><th>허브 문서</th></tr></thead>
-        <tbody id="km-clusters" data-section-prefix="Douzone" data-topics='{"AI 개발 지식 플랫폼":"GitLab 개발 결과의 자동 지식화 제안","AI Dev Knowledge Platform":"Auto-knowledge platform from GitLab output"}'>
+        <tbody id="km-clusters" data-section-prefix="Douzone" data-topics='{"AI 개발 지식 플랫폼":"GitLab 개발 결과의 자동 지식화 제안","AI Dev Knowledge Platform":"Auto-knowledge platform from GitLab output","AI 알림 발송엔진":"카프카 기반 발송엔진 구현 요청","AI Notification Send Engine":"Kafka-based send engine implementation request"}'>
             <tr><td><strong>AI 개발 지식 플랫폼</strong></td><td>8</td><td>GitLab 개발 결과의 자동 지식화 제안</td><td><a href="#!dzp-overview">제안 개요</a></td></tr>
+            <tr><td><strong>AI 알림 발송엔진</strong></td><td>3</td><td>카프카 기반 발송엔진 구현 요청</td><td><a href="#!sne-scope">구현 요청 사항</a></td></tr>
         </tbody>
     </table>
 </div>
@@ -32,6 +33,14 @@
     <li><a href="#!dzp-roadmap">추진 로드맵</a> — 4 Phase 추진(wiki-plugin 이식부터)과 1차 PoC(OmniEsol ERP · SCM 도메인), 게이트로 계측하는 검증 KPI.</li>
 </ul>
 
+<h4>AI 알림 발송엔진 — 카프카 기반 발송엔진 구현 요청 (3편)</h4>
+<p>AI 알림이 <strong>발송요청 생성까지</strong> 마친 뒤의 실제 발송·타이밍·재처리·현황을, 플랫폼팀이 <strong>카프카 기반 공용 발송엔진</strong>으로 구현해 주도록 요청하는 제안 시리즈입니다. 개념 위주로 정리했으며 구체 설계는 협의로 확정합니다.</p>
+<ul>
+    <li><a href="#!sne-overview">개요·책임 경계</a> — 발송요청 생성까지가 AI 알림, 그 이후 발송·타이밍·재처리·현황이 발송엔진이라는 책임 경계.</li>
+    <li><a href="#!sne-scope">구현 요청 사항</a> — 채널 발송·멱등·전달 보장·DLQ, 시점 4유형(즉시·지연·주기·전이) 타이밍, 발송 순간 최신 조회, 주기 배치 수명주기, 발송 현황 화면.</li>
+    <li><a href="#!sne-interface">인터페이스·협의</a> — 엔진보다 인터페이스를 먼저 확정해 병행 구현. 발송요청 전달·발송 시점 확정·결과 회신 인터페이스와 Phase 우선순위.</li>
+</ul>
+
 <h4>예정 System — 자리만 마련된 곳</h4>
 <p>아래 세 System은 내비게이션에 폴더만 준비된 상태입니다. 해당 폴더에 문서가 추가되고 지식 인덱스에 등록되면 위 표와 <a href="#!cosmos">Knowledge Graph</a>에 자동으로 나타납니다.</p>
 <ul>
@@ -48,7 +57,7 @@
 </ul>
 
 <h3>지식을 잇는 다리 — 브리지 개념</h3>
-<p>여러 System에 <strong>동시에</strong> 등장하는 개념은 갈래를 넘나드는 &ldquo;다리&rdquo;가 됩니다. DOUZONE World는 아직 System이 하나라 <strong>집계된 브리지가 없습니다</strong> — 개념이 3개 이상의 System에 걸치면 이 자리에 자동으로 나타납니다. 지금은 <strong>지식플랫폼 · AI큐레이터 · 지식관리</strong> 같은 개념이 AI World(Second Brain·LLM Wiki System)와 주제로 이어져 있어, World를 가로지르는 다리 후보입니다.</p>
+<p>여러 System에 <strong>동시에</strong> 등장하는 개념은 갈래를 넘나드는 &ldquo;다리&rdquo;가 됩니다. DOUZONE World의 두 System(제안 시리즈)은 아직 <strong>공유하는 핵심 개념이 없어 집계된 브리지가 없습니다</strong> — 개념이 3개 이상의 System에 걸치면 이 자리에 자동으로 나타납니다. 지금은 <strong>지식플랫폼 · AI큐레이터 · 지식관리</strong> 같은 개념이 AI World(Second Brain·LLM Wiki System)와 주제로 이어져 있어, World를 가로지르는 다리 후보입니다.</p>
 
 <h3>허브 문서 — 가장 많이 연결된 관문</h3>
 <p>다른 문서들이 <strong>연관 문서</strong>로 가장 자주 지목한 문서입니다. 현재 관문은 <a href="#!dzp-overview">제안 개요</a>(4회 연결)이며, 공통 허브 기준(6회 이상)에 도달하면 이 자리에 자동 집계됩니다.</p>
@@ -56,7 +65,7 @@
 <h3>가장 많이 다루는 핵심 개념</h3>
 <p>DOUZONE World에서 반복되는 상위 개념입니다. 개념을 누르면 그 개념으로 <strong>통합 검색</strong>이 열립니다.</p>
 <p class="scn-sub" id="km-top">지식플랫폼 6</p>
-<p class="scn-sub" id="km-totals">지식 문서 8편 · 고유 개념 27개.</p>
+<p class="scn-sub" id="km-totals">지식 문서 11편 · 고유 개념 46개.</p>
 
 <div class="note">
     <span class="nh">살아 있는 지도</span>

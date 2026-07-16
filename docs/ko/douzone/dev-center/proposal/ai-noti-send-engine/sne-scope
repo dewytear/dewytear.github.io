@@ -1,0 +1,82 @@
+<h2>발송엔진 구현 요청 사항</h2>
+<p>각 항목은 "엔진이 무엇을·왜 해야 하는가"를 개념 수준으로 기술한다. 구체 방식·구조는 플랫폼팀 판단·협의로 정한다.</p>
+
+<h3>발송요청 수신 · 채널 발송</h3>
+<ul>
+  <li><strong>발송요청 수신</strong> — 큐에서 발송요청을 받아 처리.</li>
+  <li><strong>채널 발송</strong> — 알림(인앱)·쪽지·메일로 발송하고, <strong>향후 대화·카카오톡 등</strong> 채널을 추가할 수 있어야 한다. 채널별 규칙(엔진이 지켜야 할 것): 메일은 제목이 필요하고, 채널마다 수신자별로 도달 가능 여부가 다르며, 일부 채널은 발송 후 회수가 가능하다.</li>
+</ul>
+
+<h3>신뢰성 — 멱등 · 전달 보장 · 순서 · 재처리</h3>
+<ul>
+  <li><strong>멱등/중복 방지</strong> — 같은 발송요청이 두 번 들어와도 실제로는 한 번만 발송.</li>
+  <li><strong>전달 보장</strong> — 유실 없이 발송하고, 가능하면 <strong>실제 도달(및 읽음) 여부</strong>를 확인해 회신. (현재는 "보냈다" 이후 도달 확인이 약하므로 핵심 개선점.)</li>
+  <li><strong>순서 보장</strong> — 같은 대상·같은 요청 내 발송 순서 유지.</li>
+  <li><strong>재시도·백오프·DLQ</strong> — 일시 실패 자동 재시도, 반복 실패는 데드레터로 격리하고 운영자가 <strong>수동 재처리</strong>.</li>
+  <li><strong>예약·취소/회수</strong> — 예약 발송, 발송 전 취소·발송 후 회수(가능 채널 한정).</li>
+  <li><strong>대량 처리·병렬</strong> — 대량 수신자 병렬 발송, 처리량·지연 목표 충족.</li>
+</ul>
+
+<h3>시점(Timing)별 발송 — 상세 · 구현 요청</h3>
+<p>발송은 "언제 보낼지"가 유형별로 다르다. AI 알림이 <strong>시점 유형과 파라미터</strong>를 정해 발송요청에 실어 보내면, 엔진은 그 유형에 맞는 <strong>타이밍을 실제로 실행</strong>해야 한다. (막연히 "요청 오면 즉시 발송"이 아니라 유형별 동작을 구현해야 한다.)</p>
+<table>
+  <thead><tr><th>시점 유형</th><th>의미</th><th>엔진이 실행할 것</th></tr></thead>
+  <tbody>
+    <tr><td><strong>즉시</strong></td><td>이벤트 발생 즉시 보냄</td><td>지체 없이(실시간) 발송</td></tr>
+    <tr><td><strong>지연</strong></td><td>특정 상태가 일정 시간 지속되면 보냄(예: 승인 대기 3일 경과)</td><td>예정 시각까지 <strong>대기</strong> 후 발송(발송 순간 최신 확정은 아래 참조)</td></tr>
+    <tr><td><strong>주기</strong></td><td>정해진 주기·일시에 반복(예: 매일 09:00, 매월 5일)</td><td><strong>주기 스케줄 실행</strong> + 중복발송 방지 + 배치 수명주기</td></tr>
+    <tr><td><strong>전이</strong></td><td>상태가 특정 값으로 <strong>바뀌는 순간</strong> 보냄(예: 수주 확정)</td><td>전이 <strong>감지는 AI 알림</strong>이 수행 → 전이 순간 넘어온 요청을 즉시 발송(엔진이 업무상태를 관찰하지 않음)</td></tr>
+  </tbody>
+</table>
+<div class="diagram">
+  <svg viewBox="0 0 900 250" role="img" aria-label="시점 4유형(즉시·지연·주기·전이)의 트리거와 발송 타이밍 개념">
+    <defs><marker id="th" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path class="d-arrow" d="M0,0 L9,4.5 L0,9 Z"/></marker></defs>
+    <rect class="d-box accent" x="12" y="16" width="120" height="38" rx="9"/><text class="d-label" x="72" y="40" text-anchor="middle">즉시</text>
+    <line class="d-edge" x1="132" y1="35" x2="300" y2="35" marker-end="url(#th)"/>
+    <text class="d-sub" x="150" y="27">이벤트</text><text class="d-sub" x="320" y="39">→ 곧바로 발송</text>
+    <rect class="d-box accent" x="12" y="72" width="120" height="38" rx="9"/><text class="d-label" x="72" y="96" text-anchor="middle">지연</text>
+    <line class="d-edge dash" x1="132" y1="91" x2="300" y2="91"/><line class="d-edge" x1="300" y1="91" x2="340" y2="91" marker-end="url(#th)"/>
+    <text class="d-sub" x="150" y="83">상태 지속(N)</text><text class="d-sub" x="360" y="95">→ 대기 후 발송</text>
+    <rect class="d-box accent" x="12" y="128" width="120" height="38" rx="9"/><text class="d-label" x="72" y="152" text-anchor="middle">주기</text>
+    <line class="d-edge" x1="150" y1="147" x2="180" y2="147" marker-end="url(#th)"/>
+    <line class="d-edge" x1="230" y1="147" x2="260" y2="147" marker-end="url(#th)"/>
+    <line class="d-edge" x1="310" y1="147" x2="340" y2="147" marker-end="url(#th)"/>
+    <text class="d-sub" x="360" y="151">→ 반복 발송(스케줄)</text>
+    <rect class="d-box accent" x="12" y="184" width="120" height="38" rx="9"/><text class="d-label" x="72" y="208" text-anchor="middle">전이</text>
+    <line class="d-edge" x1="132" y1="203" x2="300" y2="203" marker-end="url(#th)"/>
+    <text class="d-sub" x="150" y="195">상태 A→B 감지(AI 알림)</text><text class="d-sub" x="320" y="207">→ 그 순간 발송</text>
+  </svg>
+  <div class="d-cap">그림 3. 시점 4유형의 트리거·타이밍(개념)</div>
+</div>
+
+<h3>발송 시점의 최신 조회 · 확정</h3>
+<div class="note"><span class="nh">중요</span>
+발송은 <strong>발송요청을 만든 시점의 값이 아니라, 실제 발송하는 순간의 최신 데이터</strong>로 이뤄져야 한다. 지연·주기·전이로 인해 요청 생성과 실제 발송 사이에 시간 차가 있고, 그 사이 대상 데이터가 바뀔 수 있기 때문이다. 따라서 발송 순간 <strong>"지금 누구에게·무엇을 보낼지"를 다시 조회·확정</strong>하는 단계가 필요하다.</div>
+<ul>
+  <li><strong>확정(조회·해석)은 AI 알림</strong>이 수행한다(업무 데이터·수신자 해석은 AI 알림 영역).</li>
+  <li>엔진은 타이밍이 도래하면 <strong>"이번에 발송할 최종 대상·내용"을 AI 알림에 확정 요청</strong>하고, 그 결과로 발송한다. (해당 시점에 대상이 사라졌다면 그 건은 발송 제외.)</li>
+  <li>이 "발송 시점 확정" 절차가 인터페이스에 포함되어야 한다.</li>
+</ul>
+
+<h3>주기 배치의 동적 수명주기 관리</h3>
+<p>주기(스케줄) 알림은 고정된 배치가 아니라, 알림 등록·해제에 따라 <strong>배치가 생겼다 사라져야</strong> 한다.</p>
+<ul>
+  <li><strong>생성</strong> — 주기성 알림이 <strong>등록되면</strong> 그에 맞는 스케줄 배치를 <strong>동적으로 생성</strong>.</li>
+  <li><strong>제거</strong> — 해당 알림이 <strong>비활성·삭제되거나 종료일이 지나면</strong> 배치를 <strong>자동 제거·해제</strong>.</li>
+  <li>목적: 쓰이지 않는 배치가 계속 쌓이지 않도록 관리. (주기=‘언제 반복하는가’, 수명주기=‘그 반복 배치를 언제 만들고 없앨지’.)</li>
+</ul>
+
+<h3>발송 데이터 관리 · 현황(display)</h3>
+<p>발송만이 아니라, 발송 <strong>데이터의 관리</strong>와 운영자가 보는 <strong>현황 화면</strong>도 함께 필요하다.</p>
+<ul>
+  <li><strong>데이터 관리</strong> — 발송요청·처리결과·이력 데이터의 보관·정리.</li>
+  <li><strong>현황 화면/대시보드</strong> — 처리 상태(대기·처리중·성공·부분실패·실패) 분포, 재시도·DLQ 현황, 채널별·회사별 통계, <strong>실패 건 조회·수동 재처리</strong>, 예약 건 조회·취소.</li>
+  <li>운영자가 "무엇이 언제 어떻게 발송됐는지" 확인하고 즉시 조치할 수 있어야 한다.</li>
+</ul>
+
+<h3>관측성 · 멀티테넌시 · 보안</h3>
+<ul>
+  <li><strong>관측성·운영</strong> — 처리량·실패율 등 모니터링 지표, 실패 알람, 재처리 도구.</li>
+  <li><strong>멀티테넌시</strong> — <strong>회사 단위로 격리</strong>되어야 하며, 전사 일괄 발송 같은 경로는 열리지 않아야 한다.</li>
+  <li><strong>보안</strong> — 채널 인증 정보의 안전한 관리, 수신자 개인정보 보호.</li>
+</ul>

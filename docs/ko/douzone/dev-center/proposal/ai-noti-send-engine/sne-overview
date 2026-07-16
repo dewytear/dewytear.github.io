@@ -1,0 +1,93 @@
+<h2>발송엔진 구현 요청 — 개요와 책임 경계</h2>
+<p>AI 알림은 "무엇을·언제·누구에게·어떤 채널로 보낼지" 판단해 <strong>발송요청</strong>을 만드는 데까지 완료했다. 그 이후의 <strong>실제 발송·타이밍·재처리·현황</strong>을 담당할 <strong>카프카(메시지 큐) 기반 발송엔진</strong> 구현을 플랫폼팀에 요청한다.</p>
+
+<div class="note"><span class="nh">이 문서의 목적</span>
+발송 단계를 공용 발송엔진으로 구현해 주기를 요청하는 문서다. <strong>플랫폼팀이 구현해야 할 것</strong>과 <strong>AI 알림이 필요로 하는 것</strong>을 중심으로 개념 위주로 정리했으며, 구체적인 내부 설계는 담지 않았다(세부는 협의로 확정).</div>
+
+<h3>개요</h3>
+<p>AI 알림 시스템은 업무 이벤트·사용자 요청을 받아 <strong>어떤 알림을 · 어떤 시점에 · 누구에게 · 어떤 채널로</strong> 보낼지 규칙으로 판단하고, 그 결과를 <strong>"발송요청"</strong> 이라는 형태로 만들어 둔다. 여기까지가 1차 구현으로 완료된 AI 알림 영역이다.</p>
+<p>이제 그 발송요청을 받아 <strong>실제로 발송하고, 시점에 맞춰 타이밍을 실행하고, 실패를 재처리하고, 발송 현황을 관리·표시</strong>하는 <strong>발송엔진</strong>이 필요하다. 대량·비동기·전달 보장·확장성이 요구되므로 카프카 기반으로 구현해 주기를 요청한다.</p>
+
+<h3>현재까지 — AI 알림이 만들어 두는 것</h3>
+<p>AI 알림은 아래 흐름으로 <strong>발송요청</strong>을 생성한다. "언제·누구에게 보낼지"의 <strong>판단</strong>과, 전이형의 경우 <strong>상태 전이 감지</strong>까지가 AI 알림 몫이다.</p>
+<div class="diagram">
+  <svg viewBox="0 0 900 132" role="img" aria-label="AI 알림이 판단·발송요청 생성까지 하고, 경계 너머 발송엔진이 발송을 담당한다">
+    <defs>
+      <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path class="d-arrow" d="M0,0 L9,4.5 L0,9 Z"/></marker>
+      <marker id="ahA" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path class="d-arrow accent" d="M0,0 L9,4.5 L0,9 Z"/></marker>
+    </defs>
+    <rect class="d-box" x="10" y="34" width="150" height="44" rx="9"/>
+    <text class="d-label" x="85" y="53" text-anchor="middle">업무 이벤트</text>
+    <text class="d-sub" x="85" y="68" text-anchor="middle">/ 사용자 요청</text>
+    <rect class="d-box" x="200" y="34" width="170" height="44" rx="9"/>
+    <text class="d-label" x="285" y="53" text-anchor="middle">규칙 판단</text>
+    <text class="d-sub" x="285" y="68" text-anchor="middle">대상·내용·수신자·채널·시점</text>
+    <rect class="d-box accent" x="410" y="34" width="180" height="44" rx="9"/>
+    <text class="d-label" x="500" y="53" text-anchor="middle">발송요청 생성</text>
+    <text class="d-sub" x="500" y="68" text-anchor="middle">전이형은 전이 감지 포함</text>
+    <rect class="d-box soft" x="700" y="34" width="185" height="44" rx="9"/>
+    <text class="d-label" x="792" y="53" text-anchor="middle">발송엔진</text>
+    <text class="d-sub" x="792" y="68" text-anchor="middle">발송·타이밍·재처리·현황</text>
+    <line class="d-edge" x1="160" y1="56" x2="196" y2="56" marker-end="url(#ah)"/>
+    <line class="d-edge" x1="370" y1="56" x2="406" y2="56" marker-end="url(#ah)"/>
+    <line class="d-edge accent" x1="590" y1="56" x2="696" y2="56" marker-end="url(#ahA)"/>
+    <line class="d-edge dash" x1="645" y1="14" x2="645" y2="104"/>
+    <text class="d-accent" x="655" y="122" font-size="11">◀ AI 알림 영역 · 발송엔진 영역(요청) ▶</text>
+  </svg>
+  <div class="d-cap">그림 1. 책임 경계 — 발송요청 생성까지는 AI 알림, 그 이후 발송은 발송엔진</div>
+</div>
+
+<h3>요청 개요 — 발송의 요구 특성과 책임 경계</h3>
+<p>발송 단계는 다음 특성을 요구한다. (큐 기술 선택·토폴로지는 플랫폼팀 판단에 맡기며, 카프카 기반을 전제로 요청한다.)</p>
+<ul>
+  <li><strong>비동기·폭주 흡수</strong> — 판단과 발송을 분리하고, 순간 대량 발송을 큐로 완충.</li>
+  <li><strong>전달 보장</strong> — 유실 없이 발송되고, 실제 도달 여부를 확인.</li>
+  <li><strong>재처리</strong> — 일시 실패는 자동 재시도, 반복 실패는 격리 후 수동 재처리.</li>
+  <li><strong>정확한 타이밍</strong> — 즉시·지연·주기·전이 등 시점 유형에 맞는 발송.</li>
+  <li><strong>확장성</strong> — 채널·물량 증가에 대응.</li>
+</ul>
+<h4>책임 경계</h4>
+<table>
+  <thead><tr><th>구분</th><th>AI 알림팀 (완료·유지)</th><th>발송엔진 (플랫폼팀 · 구현 요청)</th></tr></thead>
+  <tbody>
+    <tr><td>판단</td><td>대상·내용·수신자·채널·<strong>시점 유형</strong> 판단, <strong>전이 감지</strong>·업무조건 평가</td><td>—</td></tr>
+    <tr><td>발송요청</td><td>발송요청 <strong>생성·전달</strong></td><td>발송요청 <strong>수신(소비)</strong></td></tr>
+    <tr><td>타이밍</td><td>시점 유형·파라미터 결정</td><td>즉시·지연·주기·재시도 <strong>타이밍 실행</strong>, <strong>주기 배치 수명주기</strong></td></tr>
+    <tr><td>발송 시점 확정</td><td>발송 순간 <strong>최신 대상 조회·해석</strong>(누구에게·무엇을)</td><td>확정 결과로 <strong>실제 발송</strong></td></tr>
+    <tr><td>발송</td><td>—</td><td>채널 발송·멱등·전달보장·순서·DLQ</td></tr>
+    <tr><td>결과·현황</td><td>결과 수신·이력 반영</td><td>결과 <strong>회신</strong>, 발송 <strong>데이터 관리·현황 화면</strong></td></tr>
+  </tbody>
+</table>
+<div class="diagram">
+  <svg viewBox="0 0 900 210" role="img" aria-label="발송요청 큐에서 발송엔진이 소비해 채널로 발송하고, 실패는 DLQ로, 결과와 현황을 회신한다">
+    <defs>
+      <marker id="bh" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path class="d-arrow" d="M0,0 L9,4.5 L0,9 Z"/></marker>
+      <marker id="bhA" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path class="d-arrow accent" d="M0,0 L9,4.5 L0,9 Z"/></marker>
+    </defs>
+    <rect class="d-box" x="12" y="70" width="150" height="46" rx="9"/>
+    <text class="d-label" x="87" y="89" text-anchor="middle">AI 알림</text>
+    <text class="d-sub" x="87" y="104" text-anchor="middle">발송요청 발행</text>
+    <rect class="d-box accent" x="200" y="70" width="130" height="46" rx="9"/>
+    <text class="d-label" x="265" y="97" text-anchor="middle">발송요청 큐</text>
+    <rect class="d-box" x="370" y="62" width="170" height="62" rx="9"/>
+    <text class="d-label" x="455" y="86" text-anchor="middle">발송엔진</text>
+    <text class="d-sub" x="455" y="102" text-anchor="middle">소비·타이밍·발송</text>
+    <text class="d-sub" x="455" y="116" text-anchor="middle">재시도·멱등</text>
+    <rect class="d-box soft" x="600" y="18" width="150" height="40" rx="9"/>
+    <text class="d-label sm" x="675" y="43" text-anchor="middle">채널(알림·쪽지·메일…)</text>
+    <rect class="d-box soft" x="600" y="82" width="150" height="38" rx="9"/>
+    <text class="d-label sm" x="675" y="105" text-anchor="middle">DLQ(격리·재처리)</text>
+    <rect class="d-box soft" x="600" y="142" width="150" height="40" rx="9"/>
+    <text class="d-label sm" x="675" y="167" text-anchor="middle">현황 화면·데이터 관리</text>
+    <line class="d-edge accent" x1="162" y1="93" x2="196" y2="93" marker-end="url(#bhA)"/>
+    <line class="d-edge accent" x1="330" y1="93" x2="366" y2="93" marker-end="url(#bhA)"/>
+    <line class="d-edge" x1="540" y1="84" x2="596" y2="42" marker-end="url(#bh)"/>
+    <line class="d-edge" x1="540" y1="98" x2="596" y2="100" marker-end="url(#bh)"/>
+    <line class="d-edge" x1="540" y1="112" x2="596" y2="158" marker-end="url(#bh)"/>
+    <line class="d-edge dash" x1="455" y1="124" x2="455" y2="195"/>
+    <line class="d-edge dash" x1="455" y1="195" x2="87" y2="195"/>
+    <line class="d-edge dash" x1="87" y1="195" x2="87" y2="118" marker-end="url(#bh)"/>
+    <text class="d-sub" x="250" y="190" text-anchor="middle">결과·상태 회신 → 이력 반영</text>
+  </svg>
+  <div class="d-cap">그림 2. 발송엔진 큐 흐름(개념) — 요청 소비 → 발송 → 채널/DLQ, 결과 회신</div>
+</div>
