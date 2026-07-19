@@ -1,0 +1,21 @@
+<h2>2026-07-19 · 디자인 — 통합검색 배경 수묵 번짐 + 커서 자취</h2>
+<p>통합검색 화면(<code>#!search</code>)의 배경을 <strong>한국 수묵화처럼 번지는</strong> 질감으로 바꾸고, <strong>마우스 호버 시 커서를 따라 먹이 배어 스미는 자취</strong>를 더했다. 사용자 요청: 배경을 호버로 액티브하게, 멋지게. 디자인 언어(<em>평소 낮은 존재감·호버 시 깨어남</em> — <code>.game-dock</code> 계열)를 그대로 따른다.</p>
+
+<h3>이전 상태와 교체</h3>
+<p>기존 배경은 <code>.search-bg</code> 안의 <code>blur(64px)</code> 원형 그라디언트 blob 4개가 구름처럼 떠다니는(<code>blob-a~d</code>) 정적 앰비언트였다 — 깔끔한 원형 blur라 &ldquo;빛 무리&rdquo;에 가깝고 수묵 느낌이 없었다. 이를 <strong>인라인 SVG 잉크 레이어</strong>(<code>svg.search-ink</code>)로 교체:</p>
+<ul>
+    <li><strong>먹 웅덩이(평소 배경)</strong> — 방사 그라디언트(<code>#ink-pool</code>/<code>#ink-pool2</code>, 진한 중심→투명 가장자리)로 채운 <code>&lt;ellipse&gt;</code> 4개. 색은 테마 토큰 <code>var(--accent)</code>/<code>var(--accent-ink)</code>만 사용(낮/밤 자동 대응 — 밤 청록·낮 주황 먹). 기존 blob의 위치·크기 비율을 <code>viewBox 0..100</code> 좌표로 이식하고 <code>ink-drift-a~d</code>로 아주 느리게 떠다니며 <code>breathe</code>로 함께 숨쉰다.</li>
+    <li><strong>수묵 번짐 필터</strong>(<code>#ink-bleed</code>) — 저주파 프랙탈 노이즈(<code>feTurbulence baseFrequency="0.05" numOctaves="3"</code>, seed 고정=정적)로 부드러운 가장자리를 물결처럼 밀고(<code>feDisplacementMap scale="14"</code>), 왜곡 뒤 <code>feGaussianBlur stdDeviation="0.6"</code>으로 잔점을 뭉갠다 → 한지에 스민 먹처럼 가장자리가 불규칙하게 번진다. 노이즈가 정적이라 브라우저가 텍스처를 캐시하고 <strong>콘텐츠(웅덩이·자취)만</strong> 그 위로 움직인다. 필터는 그룹이 아니라 <strong>개별 웅덩이·스탬프에</strong> 걸어(작은 필터 영역) 재계산을 싸게 하고 얼룩마다 고유한 번짐을 준다.</li>
+</ul>
+
+<h3>커서 자취(호버 반응)</h3>
+<ul>
+    <li><code>startSearchInk()</code>(search.js)가 <code>.search-screen</code>에 <code>pointermove</code>를 걸어, 포인터를 <code>viewBox 0..100</code> 공간으로 정규화하고 거리 임계값(≈2.2단위)마다 미리 만든 <strong>스탬프 풀(circle 22개)</strong>을 순환 배치한다. 각 스탬프는 <strong>Web Animations API</strong>로 &ldquo;배어 나왔다 스미며 사라짐&rdquo;(scale·opacity)을 한 번 재생 — <strong>RAF 루프가 없어</strong> 컴포지터가 처리하고 배터리·성능에 유리하다. 강도는 <strong>은은하게</strong>(사용자 선택): 평소엔 낮은 존재감, 움직일 때 은은히 따라오는 먹결.</li>
+    <li><strong>Safari 호환</strong>: <code>r</code>/<code>cx</code>/<code>cy</code> CSS 지오메트리 프로퍼티 갭을 피해 위치·크기는 <code>transform</code>(+<code>transform-box: fill-box</code>)만 애니메이트. HTML <code>filter:url()</code>의 Safari 불안정을 피해 필터는 <strong>인라인 SVG 요소</strong>에만 적용. 스탬프 base 반경을 넉넉히(7) 두어 displacement가 작은 필터 영역에서 잘려 사각 아티팩트가 나는 것을 막았다.</li>
+    <li><strong>가드</strong>: <code>prefers-reduced-motion: reduce</code>거나 <code>hover: hover</code>·<code>pointer: fine</code>이 아니면(터치) 자취를 걸지 않는다 — <strong>평소 수묵 웅덩이는 유지</strong>(SVG는 JS 없이 렌더). 트레일은 정밀 포인터(데스크톱) 전용이라 터치의 필터 비용을 피한다. 리스너는 네비게이션 시 노드째 교체되는 <code>.search-screen</code>에 붙어 자동 정리된다.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">변경 유형 · 검증</span>
+    <strong>STYLE + ENGINE</strong>(<code>tools/change-types.md</code>) — 자기기술 문서 영향 없음(엔진 동작 방식이 아닌 앰비언트 연출). 자산 <code>?v</code> 상향: <code>style.css 22→23</code>·<code>search.js 3→4</code>(<code>check_cachebuster</code> 통과). 헤드리스 Chromium(Playwright)으로 <code>#!search</code> 낮·밤 실렌더 확인 — 웅덩이 번짐·커서 자취(스탬프 위치·불투명도)·호버 각성 정상, 디자인 규칙(테마 토큰만) 준수. <code>python tools/validate_all.py</code> ERROR 0.
+</div>

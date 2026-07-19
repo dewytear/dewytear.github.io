@@ -240,10 +240,37 @@ function renderSearchResults(query){
 function showSearch(){
     var html =
         '<div class="search-screen">'
-      +   '<div class="search-bg" aria-hidden="true">'
-      +     '<span class="blob b1"></span><span class="blob b2"></span>'
-      +     '<span class="blob b3"></span><span class="blob b4"></span>'
-      +   '</div>'
+      +   '<svg class="search-ink" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none">'
+      +     '<defs>'
+      +       '<radialGradient id="ink-pool" cx="50%" cy="50%" r="50%">'
+      +         '<stop offset="0%" stop-color="var(--accent)" stop-opacity="0.95"/>'
+      +         '<stop offset="45%" stop-color="var(--accent)" stop-opacity="0.55"/>'
+      +         '<stop offset="78%" stop-color="var(--accent)" stop-opacity="0.14"/>'
+      +         '<stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>'
+      +       '</radialGradient>'
+      +       '<radialGradient id="ink-pool2" cx="50%" cy="50%" r="50%">'
+      +         '<stop offset="0%" stop-color="var(--accent-ink)" stop-opacity="0.9"/>'
+      +         '<stop offset="45%" stop-color="var(--accent-ink)" stop-opacity="0.5"/>'
+      +         '<stop offset="78%" stop-color="var(--accent-ink)" stop-opacity="0.12"/>'
+      +         '<stop offset="100%" stop-color="var(--accent-ink)" stop-opacity="0"/>'
+      +       '</radialGradient>'
+      // 수묵 번짐: 저주파 프랙탈 노이즈로 부드러운 가장자리를 물결처럼 밀어 한지에
+      // 스민 먹처럼 만들고, 왜곡 뒤 살짝 번지게 해 잔점을 뭉갠다. 노이즈는 정적(seed
+      // 고정)이라 브라우저가 텍스처를 캐시 — 콘텐츠(blob·자취)만 그 위로 움직인다.
+      +       '<filter id="ink-bleed" x="-70%" y="-70%" width="240%" height="240%">'
+      +         '<feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" seed="7" result="n"/>'
+      +         '<feDisplacementMap in="SourceGraphic" in2="n" scale="14" xChannelSelector="R" yChannelSelector="G" result="d"/>'
+      +         '<feGaussianBlur in="d" stdDeviation="0.6"/>'
+      +       '</filter>'
+      +     '</defs>'
+      // 평소 배경 — 네 개의 먹 웅덩이(코너), 각기 느리게 떠다니며 숨쉰다.
+      +     '<ellipse class="ink-blob ib1" fill="url(#ink-pool)" cx="18" cy="24" rx="18" ry="22" filter="url(#ink-bleed)"/>'
+      +     '<ellipse class="ink-blob ib2" fill="url(#ink-pool2)" cx="84" cy="26" rx="13" ry="17" filter="url(#ink-bleed)"/>'
+      +     '<ellipse class="ink-blob ib3" fill="url(#ink-pool)" cx="34" cy="78" rx="20" ry="26" filter="url(#ink-bleed)"/>'
+      +     '<ellipse class="ink-blob ib4" fill="url(#ink-pool2)" cx="80" cy="74" rx="13" ry="17" filter="url(#ink-bleed)"/>'
+      // 커서 자취 — startSearchInk()가 pointermove 때 이 그룹의 스탬프 풀을 재사용.
+      +     '<g class="ink-trail"></g>'
+      +   '</svg>'
       +   '<canvas class="search-game" aria-hidden="true"></canvas>'
       +   '<div class="search-core">'
       +     '<h2 class="search-head">' + STR('searchHead') + '</h2>'
@@ -296,6 +323,7 @@ function showSearch(){
     setArticle(html);
     ensureTextIndex();   // start fetching doc bodies in the background
     startSearchGame();   // ambient mini game behind the field
+    startSearchInk();    // 수묵 커서 자취(호버 시 배경이 깨어남)
     enableSearchPaddle();   // drag the field left/right like a paddle
     // new+ 버튼: 새 글이 있을 때만 배경색(app.js의 anyNewDocs).
     var sn = document.querySelector('.search-new');
@@ -329,4 +357,64 @@ function showSearch(){
             }
         });
     }
+}
+
+// ---- 수묵 커서 자취 (ink bleed trail) ----
+// 마우스가 배경 위를 지날 때 먹이 배어 나와 한지에 스미듯 번지고 사라지는 자취.
+// 미리 만든 스탬프(circle) 풀을 순환 재사용하고, 각 스탬프는 Web Animations API로
+// "번져 나왔다 스며 사라짐"을 한 번 재생 — RAF 루프가 없어 컴포지터가 처리한다.
+// 좌표는 SVG viewBox(0..100) 공간; 포인터를 그 공간으로 정규화해 스탬프를 놓는다.
+// reduced-motion이거나 hover 불가(터치)면 자취를 걸지 않는다 — 평소 수묵 blob은 유지.
+function startSearchInk(){
+    var screen = document.querySelector('.search-screen');
+    if(!screen){ return; }
+    var svg = screen.querySelector('.search-ink');
+    if(!svg){ return; }
+    var mm = window.matchMedia;
+    if(mm && mm('(prefers-reduced-motion: reduce)').matches){ return; }
+    // 자취는 정밀 포인터(데스크톱) 전용 — 터치엔 hover가 없고 필터 비용만 크다.
+    if(mm && !mm('(hover: hover) and (pointer: fine)').matches){ return; }
+
+    var trail = svg.querySelector('.ink-trail');
+    if(!trail){ return; }
+    var NS = 'http://www.w3.org/2000/svg';
+    var N = 22, pool = [], idx = 0;
+    for(var i = 0; i < N; i++){
+        var c = document.createElementNS(NS, 'circle');
+        c.setAttribute('class', 'ink-stamp');
+        // 넉넉한 base 반경 → 필터 영역이 커서 displacement가 잘리지 않는다(작으면 사각 아티팩트).
+        c.setAttribute('r', '7');
+        c.setAttribute('cx', '0');
+        c.setAttribute('cy', '0');
+        c.setAttribute('fill', 'url(#ink-pool)');
+        c.setAttribute('filter', 'url(#ink-bleed)');
+        trail.appendChild(c);
+        pool.push(c);
+    }
+    if(!pool[0].animate){ return; }   // WAAPI 미지원 브라우저: 정적 수묵만 유지
+
+    var lastX = null, lastY = null;
+    screen.addEventListener('pointermove', function(e){
+        var rect = svg.getBoundingClientRect();
+        if(!rect.width || !rect.height){ return; }
+        var sx = (e.clientX - rect.left) / rect.width * 100;
+        var sy = (e.clientY - rect.top) / rect.height * 100;
+        // 거리 임계값(≈3 단위) — 촘촘한 이벤트를 솎아 자취가 균질한 붓결이 되게.
+        if(lastX !== null){
+            var dx = sx - lastX, dy = sy - lastY;
+            if(dx * dx + dy * dy < 5){ return; }   // ≈2.2 단위 — 촘촘한 붓결
+        }
+        lastX = sx; lastY = sy;
+        var c = pool[idx = (idx + 1) % N];
+        var seed = idx;
+        var peak = 1.1 + (seed % 5) * 0.15;          // 최종 크기 변주(붓 자취의 불균질함)
+        var dur = 1350 + (seed % 4) * 220;
+        var op = 0.58 + (seed % 3) * 0.08;
+        var pos = 'translate(' + sx.toFixed(2) + 'px,' + sy.toFixed(2) + 'px)';
+        c.animate([
+            { transform: pos + ' scale(0.28)', opacity: 0 },
+            { opacity: op, offset: 0.22 },
+            { transform: pos + ' scale(' + peak.toFixed(2) + ')', opacity: 0 }
+        ], { duration: dur, easing: 'ease-out' });
+    });
 }
