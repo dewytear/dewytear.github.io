@@ -1,5 +1,5 @@
 <h2>Kimi K3 — 2.8조 파라미터 오픈웨이트, 프런티어에 닿다</h2>
-<p>2026-07-16, 중국 문샷(Moonshot AI)이 <strong>Kimi K3</strong>를 공개했습니다. 총 <strong>2.8조(2.8T) 파라미터</strong>로 역대 최대 오픈웨이트급 모델이며, 여러 공개 벤치마크에서 Claude Fable 5·GPT-5.6 Sol 바로 아래(일부에서는 위)에 자리합니다. 이 문서는 <strong>웹검색 교차검증을 통과한 내용만</strong> 수록했습니다 — 검증 과정에서 정정하거나 걸러낸 대목은 말미의 &ldquo;사실검증 노트&rdquo;에 따로 정리했습니다.</p>
+<p>2026년 7월 16일, 중국의 AI 회사 <strong>문샷(Moonshot AI)</strong>이 새 AI 모델 <strong>Kimi K3</strong>를 공개했습니다. 한 줄로 요약하면 이렇습니다 — <strong>&ldquo;누구나 내려받아 쓸 수 있는 공개 모델이, 처음으로 세계 1위권 유료 모델들의 턱밑까지 왔다.&rdquo;</strong> 이 글은 그 소식을 AI를 처음 접하는 분도 이해할 수 있게 풀어 쓴 것입니다. 실린 수치는 전부 <strong>여러 독립된 출처를 웹검색으로 교차검증</strong>한 것만 담았고, 검증 과정에서 정정하거나 걸러낸 내용은 말미의 &ldquo;사실검증 노트&rdquo;에 따로 정리했습니다.</p>
 
 <div class="note">
     <span class="nh">기사 정보 (출처)</span>
@@ -8,16 +8,39 @@
     · 공식 원문: <a href="https://www.kimi.com/blog/kimi-k3" target="_blank" rel="noopener">Kimi K3 Tech Blog (kimi.com/blog/kimi-k3)</a> · 문서 말미에 분류별 출처 목록
 </div>
 
-<h3>무엇이 공개됐나</h3>
+<h3>세 줄 요약</h3>
 <ul>
-    <li><strong>공개일</strong>: 2026-07-16, Moonshot AI(베이징). 앱·API로 즉시 제공.</li>
-    <li><strong>규모</strong>: 총 2.8T 파라미터의 희소 MoE — 토큰당 활성 파라미터는 약 <strong>50B</strong>(&ldquo;2.8T-A50B&rdquo;). 공개 시점 기준 <strong>역대 최대 오픈웨이트급 모델</strong>.</li>
-    <li><strong>스펙</strong>: 컨텍스트 윈도우 <strong>100만 토큰</strong>(1,048,576), 네이티브 비전(멀티모달), 추론(thinking) 강도 3단계.</li>
-    <li><strong>가중치</strong>: 공개 발표는 됐지만 <strong>실제 가중치 파일은 2026-07-27 공개 예정</strong> — 이 글 작성 시점에는 아직 API·앱으로만 쓸 수 있습니다.</li>
+    <li>Kimi K3는 <strong>역대 가장 큰 공개(오픈웨이트) 모델</strong>입니다 — 두뇌 크기(파라미터)가 2.8조 개.</li>
+    <li>여러 공개 시험(벤치마크)에서 <strong>Claude Fable 5, GPT-5.6 바로 아래 3위권</strong>이고, 웹 화면 만들기 같은 일부 분야는 <strong>1위</strong>입니다.</li>
+    <li>그런데 가격은 1위권 모델들보다 <strong>한 단계 쌉니다</strong>. &ldquo;공개 모델은 미국 유료 모델보다 반 년~1년 뒤진다&rdquo;던 통념이 깨진 사건이라, 업계가 크게 술렁였습니다.</li>
 </ul>
 
-<h3>아키텍처 — KDA · AttnRes · 희소 MoE</h3>
-<p>Moonshot이 공식 테크블로그에서 밝힌 구조적 변화는 세 가지입니다. 첫째, <strong>Kimi Delta Attention(KDA)</strong> — 하이브리드 선형 어텐션으로, 시퀀스 방향의 정보 흐름을 효율화해 100만 토큰 컨텍스트에서 디코딩을 최대 <strong>6.3배</strong> 가속합니다. 둘째, <strong>Attention Residuals(AttnRes)</strong> — 잔차 연결(residual connection)의 대체물로, 층을 지나며 표현을 균일하게 누적하는 대신 <strong>깊이 방향으로 선택적으로 회수</strong>해 중요한 정보가 깊은 층에서 희석되지 않게 합니다. 셋째, <strong>MoE 희소성 확대</strong> — 총 <strong>896개 expert 중 토큰마다 16개만 활성화</strong>하며, 라우터 점수의 분위수에서 배분을 유도하는 <strong>Quantile Balancing</strong>(Stable LatentMoE 프레임워크)으로 부하를 고르게 나눕니다.</p>
+<h3>먼저 용어 다섯 개만 알고 가기</h3>
+<p>이 다섯 개만 알면 아래 내용이 전부 읽힙니다.</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>용어</th><th>쉬운 설명</th></tr></thead>
+    <tbody>
+        <tr><td><strong>파라미터</strong></td><td>모델 안에 든 <strong>조절 나사의 개수</strong>. 학습하면서 이 나사들이 조금씩 돌아가며 지식과 능력이 새겨집니다. 많을수록 담을 수 있는 게 많아지는 대신, 만들고 돌리는 비용이 커집니다.</td></tr>
+        <tr><td><strong>토큰</strong></td><td>AI가 글을 읽고 쓸 때의 <strong>최소 조각</strong>. 대략 단어 하나가 1~2토큰입니다. AI 사용료도 토큰 개수로 계산합니다.</td></tr>
+        <tr><td><strong>컨텍스트 윈도우</strong></td><td>모델이 <strong>한 번에 기억하며 작업할 수 있는 분량</strong>. K3는 100만 토큰 — 두꺼운 책 여러 권을 통째로 주고 &ldquo;이거 다 읽고 답해&rdquo;가 가능한 크기입니다.</td></tr>
+        <tr><td><strong>오픈웨이트</strong></td><td>학습이 끝난 모델의 <strong>&lsquo;두뇌 파일&rsquo;(가중치)을 통째로 공개</strong>하는 것. 누구나 내려받아 자기 서버에서 돌리고 고쳐 쓸 수 있습니다. 반대는 폐쇄형 — OpenAI·Anthropic처럼 파일은 감추고 사용권만 파는 방식.</td></tr>
+        <tr><td><strong>벤치마크</strong></td><td>여러 모델에게 <strong>같은 시험지를 주고 채점한 성적표</strong>. 코딩 시험, 상식 시험, 실무 시험 등 종류가 많고, 이 글에 나오는 순위는 전부 벤치마크 순위입니다.</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>무슨 일이 있었나</h3>
+<ul>
+    <li><strong>공개</strong>: 2026-07-16, Moonshot AI(베이징). 앱과 API(개발자용 유료 접속창구)로 바로 쓸 수 있습니다.</li>
+    <li><strong>크기</strong>: 파라미터 <strong>2.8조 개</strong> — 공개 모델 역사상 최대입니다.</li>
+    <li><strong>기억력</strong>: 컨텍스트 윈도우 <strong>100만 토큰</strong>, 그림·사진도 이해하는 멀티모달, 생각을 깊게/얕게 조절하는 3단계 추론 모드.</li>
+    <li><strong>주의</strong>: &ldquo;오픈웨이트&rdquo;라고 발표했지만 두뇌 파일 자체는 <strong>2026-07-27에 공개 예정</strong>입니다. 이 글을 쓰는 시점엔 아직 앱·API로만 쓸 수 있습니다.</li>
+</ul>
+
+<h3>비결 ① — 전문가 896명 중 16명만 부른다 (MoE)</h3>
+<p>&ldquo;2.8조 파라미터면 돌리는 데 돈이 어마어마하지 않나?&rdquo; — 맞습니다. 그래서 K3는 <strong>MoE(Mixture of Experts, 전문가 혼합)</strong>라는 구조를 씁니다. 큰 종합병원을 떠올려 보세요. 전문의가 896명 있지만, 환자 한 명을 896명이 다 진료하지는 않습니다. 접수처가 증상을 보고 <strong>꼭 필요한 16명만</strong> 호출하죠.</p>
+<p>K3가 정확히 이렇게 일합니다. 글의 조각(토큰) 하나가 들어올 때마다 <strong>라우터</strong>(접수처)가 896개의 전문가 신경망 중 <strong>16개만 골라</strong> 일을 시킵니다. 그래서 전체 지식 창고는 2.8조로 거대하지만, 매 순간 실제로 일하는 부분은 <strong>약 500억(50B)</strong>뿐입니다 — 지식은 코끼리인데 발걸음은 치타인 셈입니다.</p>
 
 <div class="diagram">
 <svg viewBox="0 0 720 320" role="img" aria-label="Kimi K3 블록 구조: 입력 토큰이 KDA 어텐션과 라우터를 지나 896개 expert 풀 중 16개만 활성화되어 출력으로 이어지고, AttnRes가 층을 건너 선택적으로 잔차를 회수한다">
@@ -44,14 +67,20 @@
     <path class="d-edge accent dash" d="M205 178 C205 296, 679 296, 679 174"/><polygon class="d-arrow accent" points="674,180 679,170 684,180"/>
     <text class="d-sub" x="360" y="312" text-anchor="middle">AttnRes — 층을 건너 선택적 잔차 회수</text>
 </svg>
-<div class="d-cap">토큰은 <strong>896개 expert 중 16개</strong>만 거친다(총 2.8T·활성 ~50B). KDA가 시퀀스 방향, <strong>AttnRes</strong>가 깊이 방향의 정보 흐름을 맡는다.</div>
+<div class="d-cap">병원 비유로 보기: 접수처(라우터)가 전문의 896명 중 <strong>16명만 호출</strong>한다. 지식 창고는 2.8조지만 매 순간 일하는 건 ~50B.</div>
 </div>
 
-<p>Moonshot은 이 구조 변화와 학습 레시피 개선으로 <strong>K2 대비 약 2.5배의 스케일링 효율</strong>을 얻었다고 밝힙니다. 주의할 점: 이것은 &ldquo;2.5배 더 똑똑하다&rdquo;가 아니라, <strong>같은 컴퓨트·데이터를 능력으로 전환하는 효율</strong>이 2.5배라는 뜻입니다 — 정보가 라우팅되는 경로를 개선해 같은 자원에서 더 많은 지능을 뽑아낸다는 이야기입니다.</p>
+<h3>비결 ② — 길게 읽고, 깊어져도 잊지 않는다 (KDA · AttnRes)</h3>
+<p>Moonshot이 공식 블로그에서 밝힌 나머지 두 가지 개선입니다. 이름은 어렵지만 하는 일은 단순합니다.</p>
+<ul>
+    <li><strong>Kimi Delta Attention(KDA)</strong> — AI가 글을 읽을 때는 &ldquo;어느 단어에 주목할까&rdquo;를 계속 계산하는데(이걸 <strong>어텐션</strong>이라고 합니다), 글이 길어질수록 이 계산이 눈덩이처럼 불어납니다. KDA는 이 계산을 가볍게 만든 방식으로, 100만 토큰짜리 긴 문서에서 답을 쓰는 속도를 <strong>최대 6.3배</strong> 높입니다. 책 전체에 밑줄을 긋는 대신, 잘 정리된 요약 메모를 들고 읽는 셈입니다.</li>
+    <li><strong>Attention Residuals(AttnRes)</strong> — AI 모델은 수십~수백 개의 층(레이어)을 통과하며 생각을 다듬는데, 층이 깊어지면 <strong>앞에서 본 중요한 정보가 점점 흐려지는</strong> 문제가 있습니다. AttnRes는 필요할 때 앞 층의 정보를 <strong>골라서 다시 꺼내 쓰는</strong> 장치입니다. 전달게임에서 말이 변형되지 않도록, 중간에 원본 쪽지를 다시 확인하는 것과 비슷합니다.</li>
+</ul>
+<p>이 구조 개선들 덕에 K3는 전작 K2보다 <strong>&lsquo;연비&rsquo;가 약 2.5배</strong> 좋아졌다고 Moonshot은 설명합니다. &ldquo;2.5배 더 똑똑하다&rdquo;는 뜻이 아니라, <strong>같은 양의 컴퓨터 자원과 학습 데이터로 2.5배 더 많은 실력을 뽑아낸다</strong>는 뜻입니다.</p>
 
-<h3>벤치마크 — 어디까지 확인됐나</h3>
-<h4>종합 지수</h4>
-<p>Artificial Analysis의 <strong>Intelligence Index v4.1</strong>(GDPval-AA v2·Terminal-Bench 2.1·SciCode·Humanity&rsquo;s Last Exam·GPQA Diamond 등 9개 평가 종합)에서 K3 Max는 <strong>57.1점</strong>으로, Claude Fable 5 Max(59.9)·GPT-5.6 Sol Max(58.9)에 이어 모델 패밀리 기준 <strong>3위</strong>(설정별 집계로는 4위)입니다. Artificial Analysis 스스로 &ldquo;Opus 4.8·GPT-5.5와 비견되는 수준&rdquo;이라고 평했습니다. 실물 업무 수행을 평가하는 GDPval-AA v2에서도 Fable 5·GPT-5.6 Sol에 이어 3위입니다.</p>
+<h3>성적표 — 얼마나 잘하나</h3>
+<h4>종합 점수: 1위권 턱밑</h4>
+<p>여러 시험 결과를 하나로 합산해 주는 <strong>Artificial Analysis Intelligence Index</strong>(9개 시험 평균, 일종의 &lsquo;모의고사 총점&rsquo;)에서 K3는 <strong>57.1점</strong>을 받았습니다. 1위 Claude Fable 5 Max(59.9), 2위 GPT-5.6 Sol Max(58.9)에 이은 <strong>3위</strong>입니다. 점수 차이가 3점이 안 됩니다 — 아래 그림처럼, 사실상 어깨를 나란히 한 수준입니다.</p>
 
 <div class="diagram">
 <svg viewBox="0 0 720 230" role="img" aria-label="Artificial Analysis Intelligence Index v4.1 상위 3개 모델: Claude Fable 5 Max 59.9점, GPT-5.6 Sol Max 58.9점, Kimi K3 Max 57.1점으로 격차가 근소하다">
@@ -68,77 +97,74 @@
     <text class="d-sub" x="190" y="194">0</text>
     <text class="d-sub" x="360" y="216" text-anchor="middle">Artificial Analysis Intelligence Index v4.1 · 막대는 0부터 비례</text>
 </svg>
-<div class="d-cap">종합 지수 상위권 — <strong>격차는 근소</strong>하다. 오픈웨이트(예정) 모델이 폐쇄형 프런티어 바로 아래까지 왔다는 것이 이번 공개의 핵심.</div>
+<div class="d-cap">위 두 모델은 <strong>폐쇄형 유료</strong>, K3는 <strong>공개(예정) 모델</strong>이다 — 이 근소한 격차가 이번 공개의 핵심.</div>
 </div>
 
-<h4>코딩·에이전트</h4>
+<h4>코딩 시험: 일부는 1위</h4>
+<p>코딩은 그동안 Anthropic·OpenAI가 가장 앞서 있다고 여겨진 분야인데, K3는 여기서도 1~2위를 다툽니다.</p>
 <div class="tbl-wrap">
 <table>
-    <thead><tr><th>벤치마크</th><th>K3 점수</th><th>순위</th><th>비교</th></tr></thead>
+    <thead><tr><th>벤치마크 (시험 종류)</th><th>K3 점수</th><th>순위</th><th>비교</th></tr></thead>
     <tbody>
-        <tr><td>ProgramBench</td><td>77.8</td><td><strong>1위</strong></td><td>GPT-5.6 Sol 77.6 · Fable 5 76.8</td></tr>
-        <tr><td>SWE-Marathon (장시간 코딩 세션)</td><td>42.0</td><td><strong>1위</strong></td><td>—</td></tr>
-        <tr><td>FrontierSWE</td><td>81.2</td><td>2위</td><td>Fable 5 86.6 · GPT-5.6 Sol 71.3</td></tr>
-        <tr><td>Terminal-Bench 2.1 (자체 보고)</td><td>88.3</td><td>2위</td><td>GPT-5.6 Sol 88.8</td></tr>
-        <tr><td>DeepSWE 리더보드 (mini-SWE-agent)</td><td>67.3</td><td>—</td><td>공식 리더보드 수치</td></tr>
+        <tr><td>ProgramBench (프로그램 작성)</td><td>77.8</td><td><strong>1위</strong></td><td>GPT-5.6 Sol 77.6 · Fable 5 76.8</td></tr>
+        <tr><td>SWE-Marathon (장시간 코딩 지구력)</td><td>42.0</td><td><strong>1위</strong></td><td>—</td></tr>
+        <tr><td>FrontierSWE (실제 소프트웨어 수정)</td><td>81.2</td><td>2위</td><td>Fable 5 86.6 · GPT-5.6 Sol 71.3</td></tr>
+        <tr><td>Terminal-Bench 2.1 (터미널 작업 · 자체 보고)</td><td>88.3</td><td>2위</td><td>GPT-5.6 Sol 88.8</td></tr>
+        <tr><td>DeepSWE 리더보드 (공식 코딩 순위표)</td><td>67.3</td><td>—</td><td>mini-SWE-agent 기준</td></tr>
     </tbody>
 </table>
 </div>
-<p class="scn-sub">자체 보고 수치는 KimiCode 하니스·최대 추론 강도 기준(공식 평가 스크립트로 재계산해 공표). 하니스 의존성은 아래 &ldquo;자체 보고 vs 독립 재현&rdquo; 참조.</p>
 
-<h4>아레나·작문</h4>
-<ul>
-    <li><strong>LMArena Frontend Code Arena 1위(1,679점)</strong> — Claude Fable 5를 제쳤고, 전작 Kimi K2.6의 18위에서 <strong>17계단 상승</strong>. 7개 도메인 중 6개(브랜드·마케팅, 레퍼런스 기반 디자인, 데이터·분석, 컨슈머 제품, 시뮬레이션, 콘텐츠 제작 도구)에서 1위, 게이밍만 Fable 5에 이어 2위. 같은 과제의 출력을 나란히 비교하는 pairwise 대결에서 평균 <strong>76% 승률</strong>.</li>
-    <li><strong>Vals Index 2위</strong> — 금융·코딩 등 실무 과제 가중 평가에서 38개 모델 중 2위(74.7%).</li>
-    <li><strong>작문</strong> — AI 뉴스레터 운영자 루이(Louie)의 자체 작문 벤치마크(실제 대본을 블라인드로 Elo 채점)에서 <strong>2,840 Elo로 1위</strong>. 오픈웨이트(예정) 모델이 이 리더보드를 처음 넘겨받았고, K2.6의 21위에서 1위로 뛰었습니다.</li>
-</ul>
+<h4>사람들이 직접 뽑은 1위: 웹 화면 만들기</h4>
+<p><strong>LMArena</strong>는 특이한 시험장입니다. 문제를 주고 두 모델의 답을 <strong>이름을 가린 채 나란히 보여준 뒤, 사람이 더 나은 쪽에 투표</strong>합니다. 그 승패를 체스 랭킹처럼 점수(Elo)로 쌓죠. 웹 화면(프런트엔드)을 만들어 보이는 <strong>Frontend Code Arena</strong>에서 K3는 <strong>1,679점으로 1위</strong> — Claude Fable 5를 제쳤습니다. 전작 K2.6이 18위였으니 <strong>한 세대 만에 17계단</strong>을 뛰었고, 7개 세부 분야 중 6개에서 1위(게임 분야만 Fable 5에 이어 2위)였습니다. 같은 문제로 맞붙었을 때 K3의 답이 뽑힌 비율(승률)은 평균 <strong>76%</strong> — 100번 붙으면 76번 이겼다는 뜻입니다.</p>
+<p>글쓰기도 강합니다. 실제 대본을 블라인드 채점하는 한 작문 리더보드(운영자 Louie)에서 <strong>2,840 Elo로 1위</strong>에 올랐는데, 공개 모델이 이 보드 1위를 차지한 건 처음입니다(전작은 21위). 실무 과제 위주로 평가하는 <strong>Vals Index</strong>에서도 38개 모델 중 <strong>2위(74.7%)</strong>였습니다.</p>
 
-<h4>자체 보고 vs 독립 재현 — 하니스가 결과를 좌우한다</h4>
+<h3>잠깐 — 자기가 매긴 점수는 그대로 믿으면 안 됩니다</h3>
 <div class="note warn">
-    <span class="nh">같은 모델, 같은 벤치마크, 7점 차이</span>
-    Terminal-Bench 2.1에서 Moonshot 자체 보고는 <strong>88.3</strong>(KimiCode 하니스, 최대 추론 강도)이지만, 평가기관 Vals의 <strong>독립 재현은 약 80.9</strong>로 7점가량 낮습니다. 조작이라기보다 <strong>하니스·설정 차이</strong>가 만드는 간극으로, 자체 보고 벤치마크는 항상 &ldquo;어떤 하니스로 쟀는가&rdquo;와 함께 읽어야 한다는 실측 사례입니다. 이 간극 때문에 Vals는 자체 하니스 기준 순위를 따로 냅니다(그 기준으로도 K3는 상위권).
+    <span class="nh">같은 모델, 같은 시험, 7점 차이</span>
+    위 표의 Terminal-Bench 88.3점은 <strong>Moonshot이 직접 잰</strong> 점수입니다. 그런데 평가 기관 Vals가 <strong>독립적으로 다시 재보니 약 80.9점</strong>이 나왔습니다. 속임수라기보다, 모델에게 어떤 도구를 쥐여주고 어떤 설정으로 시험을 치르게 했는지 — 즉 <strong>&lsquo;하니스&rsquo;(모델을 감싸는 실행 환경)</strong> — 가 달랐기 때문입니다. 같은 운전자라도 차가 다르면 랩타임이 달라지는 것과 같습니다. 교훈: <strong>AI 성적표는 항상 &ldquo;누가, 어떤 조건으로 쟀는가&rdquo;를 함께 봐야 합니다.</strong>
 </div>
 
-<h3>가격 — 프런티어급 성능, 한 단계 아래 가격대</h3>
+<h3>가격 — 왜 다들 &ldquo;가성비&rdquo;를 말하나</h3>
+<p>AI 모델의 API는 <strong>토큰 수만큼 요금을 내는</strong> 종량제입니다. 질문(입력)과 답변(출력)에 각각 값이 매겨집니다.</p>
 <div class="tbl-wrap">
 <table>
-    <thead><tr><th>항목</th><th>가격 (1M 토큰당)</th></tr></thead>
+    <thead><tr><th>항목</th><th>가격 (100만 토큰당)</th></tr></thead>
     <tbody>
-        <tr><td>입력 (캐시 미스)</td><td>$3.00</td></tr>
-        <tr><td>입력 (캐시 히트)</td><td>$0.30 (자동 프롬프트 캐싱, 90% 할인)</td></tr>
+        <tr><td>입력</td><td>$3.00</td></tr>
+        <tr><td>입력 — 캐시 히트</td><td>$0.30 <span class="scn-sub">(같은 내용을 반복해 보낼 때 자동 90% 할인)</span></td></tr>
         <tr><td>출력</td><td>$15.00</td></tr>
     </tbody>
 </table>
 </div>
-<p>100만 토큰 컨텍스트에 <strong>롱컨텍스트 할증이 없다</strong>는 점이 특징입니다. 업계 평은 두 갈래입니다 — 한쪽에서는 &ldquo;Opus 4.8급 성능을 Sonnet 5 가격대에&rdquo;(Latent.space AINews)라는 가성비 프레임, 다른 쪽에서는 전작 K2 대비 크게 오른 가격을 두고 <strong>&ldquo;초저가 중국 AI 시대의 종언&rdquo;</strong>(The Decoder)이라는 신호로 읽습니다. 두 해석 모두 사실의 다른 면입니다: 폐쇄형 프런티어보다는 싸고, 이전의 중국 오픈 모델들보다는 비쌉니다.</p>
+<p>이 가격의 의미는 비교해야 보입니다. 업계 정리로는 <strong>&ldquo;Opus 4.8급 성능을 Sonnet 5 가격대에&rdquo;</strong> — 즉 최상급 모델의 실력을 한 단계 아래 등급의 값에 판다는 것입니다(Latent.space). 게다가 100만 토큰짜리 긴 문서를 넣어도 <strong>추가 할증이 없습니다</strong>. 반대편 해석도 있습니다: 전작 K2보다는 값이 크게 올라서, &ldquo;<strong>초저가 중국 AI 시대는 끝났다</strong>&rdquo;는 신호로 읽는 시각입니다(The Decoder). 둘 다 사실의 양면입니다 — <strong>1위권보다는 싸고, 예전의 중국 공개 모델들보다는 비쌉니다.</strong></p>
 
-<h3>공식 데모 — 장기 자율 작업 사례</h3>
-<p>공식 테크블로그의 쇼케이스는 단발 코딩보다 <strong>장기(long-horizon) 자율 작업</strong>에 초점이 있습니다. 대표 사례:</p>
+<h3>무엇을 만들 수 있나 — 공식 데모</h3>
+<p>Moonshot의 쇼케이스는 &ldquo;한 번 시켜서 끝나는 일&rdquo;보다 <strong>장기 자율 작업</strong> — 사람이 일을 맡기고 자리를 떠도 몇 시간~며칠을 혼자 계획하고, 만들고, 결과를 확인하며 고쳐 나가는 방식 — 에 초점이 있습니다.</p>
 <ul>
-    <li><strong>칩 설계</strong> — 24~48시간 자율 실행으로, 오픈소스 EDA 도구와 Nangate 45nm 라이브러리를 써서 자기 아키텍처 기반 소형 모델을 서빙하는 칩을 설계·최적화·검증. 4mm² 면적에 표준 셀 146만 개·SRAM 0.277MB·INT4 MAC 어레이, 100MHz 타이밍 클로저, 시뮬레이션에서 초당 8,700토큰 디코딩.</li>
-    <li><strong>과학 연구 파이프라인</strong> — 중력파 이벤트 391건을 <strong>동시 서브에이전트 20여 개</strong>로 분석해 과학 시각화 7종·표 2개·논문 10여 편의 문헌 종합을 산출.</li>
-    <li><strong>게임·3D</strong> — 우시아(무협) 오픈월드 RPG, 콜로세움, 격투 게임, GBA 에뮬레이터, 부품이 분해되는 3D 기계식 타자기, 블랙홀 시뮬레이션 등을 브라우저 기반으로 생성 — 자기 출력의 스크린샷을 읽고 고치는 <strong>시각 피드백 루프</strong>(네이티브 비전)를 활용.</li>
-    <li><strong>모션 디자인·영상</strong> — 텍스트·이미지·비디오를 한 모델이 다루는 멀티모달 구조로 자체 아키텍처 해설 모션그래픽 등을 생성.</li>
+    <li><strong>반도체 칩 설계</strong> — 24~48시간을 혼자 돌며, 공개 설계 도구로 자그마한 AI 전용 칩을 설계하고 검증까지 마쳤습니다(4mm² 면적, 시뮬레이션에서 초당 8,700토큰 처리). AI가 &ldquo;AI를 돌릴 칩&rdquo;을 설계한 셈입니다.</li>
+    <li><strong>과학 데이터 분석</strong> — 중력파(블랙홀 충돌 등이 만드는 시공간의 잔물결) 관측 이벤트 391건을, <strong>서브에이전트</strong>(본체가 부리는 보조 AI 일꾼) 20여 개를 동시에 부려 분석하고, 시각화 7종과 논문 10여 편의 요약을 만들어냈습니다.</li>
+    <li><strong>게임·3D</strong> — 무협 오픈월드 RPG, 콜로세움, 격투 게임, 게임보이 에뮬레이터, 부품이 분해되는 3D 타자기, 블랙홀 시뮬레이션 등을 브라우저용으로 제작. 특히 <strong>자기가 만든 화면을 스크린샷으로 찍어 눈으로 확인하고 고치는</strong> — 사람 개발자와 같은 — 피드백 루프를 씁니다.</li>
+    <li><strong>모션 그래픽·영상</strong> — 글·이미지·영상을 한 모델이 함께 다루는 구조라, 자기 아키텍처를 설명하는 애니메이션 영상 같은 것도 만들었습니다.</li>
 </ul>
 <div class="note">
     <span class="nh">읽는 법</span>
-    위 사례는 모두 <strong>Moonshot 자사 쇼케이스</strong>입니다. 실제 산출물이 공개되어 있긴 하지만 독립 재현·감사를 거친 결과는 아니므로, 능력의 <strong>방향</strong>(장기 자율 작업·시각 피드백 루프)을 보여주는 자료로 읽는 것이 정확합니다.
-</div>
+    위 사례는 모두 <strong>Moonshot 자사 홍보용 쇼케이스</strong>입니다. 산출물이 실제로 공개돼 있긴 하지만 제3자가 재현·검증한 결과는 아니므로, &ldquo;이런 방향의 일(오래 걸리는 자율 작업)을 시킬 수 있게 됐다&rdquo; 정도로 읽는 것이 정확합니다.</div>
 
-<h3>반응과 파장</h3>
+<h3>세상의 반응</h3>
 <ul>
-    <li><strong>&ldquo;따라잡기의 끝&rdquo;</strong> — OpenAI 연구원 roon은 &ldquo;중국 랩이 한참 뒤처져 있던 시대는 끝났다. Kimi는 최소한 현세대 공개 프런티어 모델들과 대등하다&rdquo;고 평하면서도, &ldquo;며칠 지나면 일부는 K3가 오늘의 수치가 시사하는 것보다 실사용에서 덜 유용하다고 느낄 것&rdquo;이라는 유보를 함께 달았습니다.</li>
-    <li><strong>사이버 리스크 논쟁</strong> — 공개된 벤치마크에 <strong>CyberGym(사이버 공격 능력) 점수가 없다</strong>는 점이 즉시 쟁점이 됐습니다. &ldquo;가장 흥미로운 질문은 K3가 사이버 리스크를 갖느냐다. AISI가 벤치하길 기다린다&rdquo;(X 이용자 prinz), &ldquo;K3는 사이버 리스크가 있을 가능성이 높다 — 가중치가 풀리면 내일 아침 다른 세상에서 깨어나는 것&rdquo;(Dan McAteer) 같은 반응이 이어졌고, 프런티어급 능력의 <strong>오픈웨이트 배포에 대한 규제 논의</strong>로 번졌습니다. 반면 &ldquo;패닉은 불필요하다&rdquo;는 반론(Transformer)도 있습니다.</li>
-    <li><strong>시장 반응</strong> — 공개 직후 &ldquo;프런티어급 오픈 모델이 반도체·AI 인프라 수요 전망을 흔든다&rdquo;는 해석과 함께 칩 관련주 급락 보도가 이어졌습니다(2025년 초 DeepSeek 쇼크의 재연이라는 프레임).</li>
+    <li><strong>&ldquo;따라잡기의 시대는 끝났다&rdquo;</strong> — OpenAI 연구원 roon은 &ldquo;중국 연구소들이 한참 뒤처져 있던 시대는 끝났다. Kimi는 최소한 현재의 공개 1위권 모델들과 대등하다&rdquo;고 평했습니다. 다만 &ldquo;써 보면 오늘 성적표가 시사하는 것보다는 덜 유용하다고 느끼는 사람도 나올 것&rdquo;이라는 단서도 달았습니다.</li>
+    <li><strong>안전 걱정</strong> — 폐쇄형 모델은 문제가 생기면 회사가 차단할 수 있지만, <strong>오픈웨이트는 한 번 풀리면 회수가 불가능</strong>합니다. 그래서 &ldquo;이 정도로 강한 모델을 공개해도 되나, 특히 해킹(사이버 공격) 능력은 어느 정도인가&rdquo;가 즉시 쟁점이 됐습니다. 공개된 성적표에 사이버 능력 시험(CyberGym) 점수가 <strong>빠져 있다</strong>는 지적과 함께, 영국 AI안전연구소(AISI) 등의 독립 평가를 요구하는 목소리가 나왔고, &ldquo;과도한 공포는 불필요하다&rdquo;는 반론(Transformer)도 있습니다.</li>
+    <li><strong>주식 시장까지 출렁</strong> — &ldquo;비싼 유료 모델과 거대 인프라에 돈이 몰릴 것&rdquo;이라는 전망 위에 서 있던 반도체·AI 관련 주가가 공개 직후 급락했다는 보도가 이어졌습니다. 2025년 초 저가 중국 모델 DeepSeek이 시장을 흔들었던 &lsquo;DeepSeek 쇼크&rsquo;의 재연이라는 평가입니다.</li>
 </ul>
 
 <h3>사실검증 노트 — 정정·제외한 것</h3>
 <div class="note warn">
     <span class="nh">초기 리뷰·커뮤니티에 퍼진 서술 중 정정·제외한 것</span>
-    · <strong>&ldquo;3조 파라미터&rdquo;</strong> → 공식·언론 일치 수치는 <strong>2.8T</strong> (본문 반영)<br>
+    · <strong>&ldquo;3조 파라미터&rdquo;</strong> → 공식·언론 일치 수치는 <strong>2.8조(2.8T)</strong> (본문 반영)<br>
     · <strong>&ldquo;가중치가 이미 웹에 공개돼 있다&rdquo;</strong> → 공개 <strong>예정</strong>(2026-07-27), 작성 시점엔 API만<br>
     · <strong>&ldquo;GDPval은 OpenAI가 만든 벤치마크&rdquo;</strong> → 본문이 인용한 것은 Artificial Analysis가 운영하는 변형(<strong>GDPval-AA v2</strong>)<br>
-    · <strong>제외(교차검증 실패)</strong>: 특정 이용자의 &ldquo;CSGO 클론 $324&rdquo; 사례, &ldquo;지능 단위당 $0.94 vs Opus $1.80&rdquo; 비용 지표, Meta &ldquo;Muse Spark&rdquo; 언급, 경쟁 모델들의 pairwise 승률 58% 수치, 개별 디버깅 실패 트윗 — 복수의 독립 출처로 확인되지 않아 싣지 않았습니다.
+    · <strong>제외(교차검증 실패)</strong>: 특정 이용자의 &ldquo;CSGO 클론 $324&rdquo; 사례, &ldquo;지능 단위당 $0.94 vs Opus $1.80&rdquo; 비용 지표, Meta &ldquo;Muse Spark&rdquo; 언급, 경쟁 모델들의 승률 58% 수치, 개별 디버깅 실패 트윗 — 복수의 독립 출처로 확인되지 않아 싣지 않았습니다.
 </div>
 
 <h3>출처</h3>
