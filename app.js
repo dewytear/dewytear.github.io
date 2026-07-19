@@ -93,6 +93,10 @@ function renderNodes(nodes, path){
     nodes.forEach(function(node){
         var label = labelFor(node) || node.title || node.name;
         if(node.children){    // a branch, collapsed by default
+            // A branch consumes one sequence slot too, so a doc that
+            // follows a folder keeps a coherent number (e.g. docs 01–05,
+            // folder titled "06. …", next doc auto-numbers 07).
+            docSeq++;
             var childPath = node.title ? path.concat(node.title) : path;
             // Tag top-level categories so Settings can show/hide them.
             var catAttr = (path.length === 0 && node.title)

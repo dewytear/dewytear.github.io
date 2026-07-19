@@ -1,0 +1,22 @@
+<h2>2026-07-19 · 기능 — 사이드바 순번이 폴더도 소비하도록 개선 (NEW 표시 복원)</h2>
+<p>새로 등록한 Kimi K3 아티클에 <strong>&ldquo;새 글&rdquo; 표시가 안 뜬다</strong>는 리포트에서 출발해, 원인 연쇄를 추적하고 내비게이션 자동 번호 엔진을 고쳤다.</p>
+
+<h3>증상 → 원인</h3>
+<ul>
+    <li><strong>증상</strong> — 생성 당일(age 0)인 <code>news-20260716-kimi-k3</code>가 NEW 배지(+N)·번호 그라데이션·<code>#!new</code> 게시판·&ldquo;최근 문서&rdquo; 보드 어디에도 안 뜸.</li>
+    <li><strong>직접 원인</strong> — 번호 중복(&ldquo;06.07.&rdquo;)을 피하려고 넣었던 <code>nonum</code> 속성. <code>docFreshness()</code>·<code>recentDocs()</code>가 <code>nonum</code> 문서를 새 글 판정에서 명시적으로 제외한다(ai-map류 최상위 독립 문서를 빼려는 기존 의도).</li>
+    <li><strong>근본 원인</strong> — <code>renderNodes()</code>의 자동 순번(<code>docSeq</code>)이 <strong>폴더를 순번에서 제외</strong>: 문서 5편(01–05) 뒤 &ldquo;06. AI 2040&rdquo; 폴더가 슬롯을 차지하지 않아 그 뒤 문서가 자동 06이 됨 → 수동 07 라벨 → 중복 → nonum → NEW 제외의 연쇄. 아티클 트리는 &ldquo;보통은 문서, 큰 주제는 폴더&rdquo;로 혼재하므로 이 구조는 반복될 문제.</li>
+</ul>
+
+<h3>수정 (ENGINE + CONTENT)</h3>
+<ul>
+    <li><strong>app.js <code>renderNodes()</code></strong> — 브랜치(폴더)도 <code>docSeq</code>를 1 소비하게 변경. 문서 01–05 → 폴더가 06 슬롯 → 다음 문서가 자동 <strong>07</strong>. <code>mark</code>·<code>nonum</code> 문서가 카운트를 안 쓰는 기존 동작은 유지. <code>index.html</code>의 <code>app.js?v</code> 27→28 상향.</li>
+    <li><strong>list 정리</strong> — Kimi 노드의 <code>nonum</code> 제거(NEW 판정 복원), 라벨의 수동 &ldquo;07. &rdquo; 접두어 제거(자동 번호로 대체).</li>
+    <li><strong>파급 0 확인</strong> — list 전수 스캔 결과 폴더 뒤에 번호 문서가 오는 브랜치는 이 노드가 유일, 기존 문서의 번호가 바뀌는 곳 없음. 배지·번호를 서술한 자기기술 문서도 없음(grep 확인).</li>
+</ul>
+
+<h3>검증</h3>
+<ul>
+    <li>헤드리스 DOM 덤프 — 사이드바 항목이 <code>&lt;span class="doc-num"&gt;07.&lt;/span&gt;</code> 자동 번호 + <code>is-new</code> 그라데이션으로 렌더되고, 상위 브랜치 <code>.nav-newbadge</code>가 hidden 해제되어 &ldquo;+1&rdquo; 표시, <code>#!new</code>·최근 문서에 노출되는 것 확인.</li>
+    <li><code>python tools/validate_all.py</code> — <strong>ERROR 0</strong> · <code>build_index/ai_export --check</code> 무드리프트 · <code>check_cachebuster</code> 통과.</li>
+</ul>
