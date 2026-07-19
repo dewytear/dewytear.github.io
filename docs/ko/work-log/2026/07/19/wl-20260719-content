@@ -1,0 +1,21 @@
+<h2>2026-07-19 · 콘텐츠 — Kimi K3 공개 아티클 등록</h2>
+<p>유튜브 리뷰 영상 전사를 출발점으로 Moonshot AI <strong>Kimi K3</strong>(2026-07-16 공개) 아티클을 <em>AI &gt; News &amp; Articles &gt; 2026</em>에 등록했다. 전사를 그대로 옮기지 않고 <strong>웹검색 교차검증을 통과한 사실만</strong> 수록하는 방식으로 작성 — 서로 독립적인 복수 출처가 일치하는 수치만 싣고, 정정·제외분은 문서 안 &ldquo;사실검증 노트&rdquo;에 명시했다.</p>
+
+<h3>추가된 문서</h3>
+<ul>
+    <li><strong>Kimi K3 — 2.8조 오픈웨이트, 프런티어에 닿다</strong> (<code>ai/news/2026/news-20260716-kimi-k3</code>) — 2.8T·활성 50B MoE와 KDA·AttnRes 아키텍처, AA Intelligence Index 3위·Frontend Code Arena 1위 등 벤치마크, $3/$15 가격, 칩 설계·중력파 분석 등 장기 자율 데모, 자체 보고 vs 독립 재현(Terminal-Bench 88.3 vs ~80.9) 격차, 사이버 리스크·시장 파장까지 정리. 인라인 SVG 도식 2개(MoE 라우팅 구조, 종합 지수 포지션).</li>
+</ul>
+
+<h3>등록·구성</h3>
+<ul>
+    <li><strong>사실검증 방식</strong> — 원문 사이트 직접 열람이 차단된 환경이라 WebSearch 교차검증으로 진행: 전사의 주장 단위로 복수 독립 출처(공식 테크블로그·Artificial Analysis·Arena 공지·주요 언론)를 대조. 전사의 &ldquo;3조 파라미터&rdquo;→2.8T, &ldquo;가중치 이미 공개&rdquo;→7/27 예정 등을 정정하고, 교차검증에 실패한 개별 사례·수치는 제외 목록으로 명시. 스크린샷은 외부 접속 차단으로 이번엔 싣지 못했고(사실관계는 원출처 직링크로 대체), 필요 시 네트워크가 열린 환경에서 후속 추가.</li>
+    <li><strong><code>list</code>·인덱스</strong> — News 2026 트리에 노드 추가(<code>label_en</code>·<code>tags_en</code> 포함, model 기록), <code>tools/doc-entries.ko.json</code> 엔트리 추가 후 <code>build_index.py</code> 재생성.</li>
+    <li><strong>관계(relations) 5타입 검토</strong> — 선행지식·구현·사례·근거·대체를 본문과 대조한 결과 <code>evidence-for → hns-what</code> 1건만 실재: 자체 하니스(KimiCode) 88.3 vs Vals 독립 재현 ~80.9 격차가 &ldquo;하네스가 결과를 좌우한다&rdquo;는 논지의 실측 근거. 나머지 타입은 본문에 대응 대상이 없어 달지 않음.</li>
+</ul>
+
+<h3>검증</h3>
+<ul>
+    <li><code>python3 tools/build_index.py --check</code> · <code>python tools/validate_all.py</code> — <strong>ERROR 0</strong>(머지 조건 충족).</li>
+    <li><code>node tools/check_diagram_bounds.mjs ai/news/2026/news-20260716-kimi-k3</code> — 신규 도식 2개 실제 렌더 경계 위반 0.</li>
+    <li>커밋 후 <code>python3 tools/build_dates.py</code> 재생성을 amend로 실어 생성일 표기 누락(missing-date) 방지.</li>
+</ul>
