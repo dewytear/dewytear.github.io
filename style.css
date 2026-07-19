@@ -541,18 +541,22 @@
             padding: 40px 24px 12vh;
             overflow: hidden;
         }
-        /* Animated background: soft gradient blobs drifting behind the field. */
-        .search-bg{
+        /* 수묵 배경: 먹 웅덩이(blob)가 한지에 스민 듯 번진 가장자리로 떠다니는
+           인라인 SVG 레이어. 프랙탈 노이즈 왜곡(#ink-bleed)은 blob·자취에 개별 적용.
+           호버하면 전체가 또렷해지며 "깨어난다"(평소 낮은 존재감·호버 시 각성). */
+        .search-ink{
             position: absolute;
             inset: 0;
             z-index: 0;
             pointer-events: none;
-            /* Breathing: the whole gradient field swells and settles at an
-               even, calm pace — like a slow human breath, not a heartbeat.
-               Composes with each blob's own slow drift transform. */
+            opacity: 0.82;
+            /* Breathing: the whole ink field swells and settles at an even, calm
+               pace — like a slow human breath. Composes with each blob's drift. */
             transform-origin: center;
             animation: breathe 5s ease-in-out infinite;
+            transition: opacity 0.6s ease;
         }
+        .search-screen:hover .search-ink{ opacity: 1; }
         /* Breakout layer: a ball drifting behind the field, breaking bricks.
            Sits above the blobs, below the search card; never breathes so its
            coordinate space stays stable. */
@@ -850,72 +854,66 @@
             0%, 100%{ transform: scale(1);      filter: saturate(1)   contrast(1); }
             50%{      transform: scale(1.055);  filter: saturate(1.4) contrast(1.06); }
         }
-        .search-bg .blob{
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(64px);
-            opacity: 0.55;
-            will-change: transform;
+        /* 먹 웅덩이. transform은 자기 중심 기준(fill-box)으로 걸어 drift/breathe가
+           blob을 제자리에서 살짝 밀고 부풀린다 — Safari의 r/cx/cy CSS 지오메트리
+           갭을 피하려 위치·크기 애니는 transform만 쓴다. 색·번짐은 fill+#ink-bleed. */
+        .ink-blob{
+            transform-box: fill-box;
+            transform-origin: center;
+            will-change: transform, opacity;
+            transition: opacity 0.6s ease;
         }
-        .search-bg .b1{
-            width: 42vmin; height: 42vmin;
-            left: 8%; top: 12%;
-            background: var(--accent);
-            animation: blob-a 38s ease-in-out infinite;
+        .ink-blob.ib1{ opacity: 0.62; animation: ink-drift-a 38s ease-in-out infinite; }
+        .ink-blob.ib2{ opacity: 0.50; animation: ink-drift-b 46s ease-in-out infinite; }
+        .ink-blob.ib3{ opacity: 0.46; animation: ink-drift-c 52s ease-in-out infinite; }
+        .ink-blob.ib4{ opacity: 0.42; animation: ink-drift-d 42s ease-in-out infinite; }
+        /* 호버 시 먹이 짙어지며 배경이 깨어난다. */
+        .search-screen:hover .ink-blob.ib1{ opacity: 0.76; }
+        .search-screen:hover .ink-blob.ib2{ opacity: 0.64; }
+        .search-screen:hover .ink-blob.ib3{ opacity: 0.60; }
+        .search-screen:hover .ink-blob.ib4{ opacity: 0.56; }
+        /* Light theme: pale orange on white is faint, so give the pools more
+           presence so the breathing pulse has something visible to work with. */
+        body.day .ink-blob.ib1{ opacity: 0.70; }
+        body.day .ink-blob.ib2{ opacity: 0.60; }
+        body.day .ink-blob.ib3{ opacity: 0.56; }
+        body.day .ink-blob.ib4{ opacity: 0.52; }
+        body.day .search-screen:hover .ink-blob.ib1{ opacity: 0.84; }
+        body.day .search-screen:hover .ink-blob.ib2{ opacity: 0.74; }
+        body.day .search-screen:hover .ink-blob.ib3{ opacity: 0.70; }
+        body.day .search-screen:hover .ink-blob.ib4{ opacity: 0.66; }
+        /* 커서 자취 스탬프 — startSearchInk()의 WAAPI가 transform/opacity를 재생. */
+        .ink-stamp{
+            transform-box: fill-box;
+            transform-origin: center;
+            opacity: 0;
         }
-        .search-bg .b2{
-            width: 34vmin; height: 34vmin;
-            right: 10%; top: 18%;
-            background: var(--accent-ink);
-            opacity: 0.4;
-            animation: blob-b 46s ease-in-out infinite;
-        }
-        .search-bg .b3{
-            width: 48vmin; height: 48vmin;
-            left: 22%; bottom: 4%;
-            background: var(--accent);
-            opacity: 0.32;
-            animation: blob-c 52s ease-in-out infinite;
-        }
-        .search-bg .b4{
-            width: 30vmin; height: 30vmin;
-            right: 16%; bottom: 10%;
-            background: var(--accent-ink);
-            opacity: 0.3;
-            animation: blob-d 42s ease-in-out infinite;
-        }
-        /* Light theme: pale orange on white is faint, so give the blobs more
-           mass so the breathing pulse has something visible to work with. */
-        body.day .search-bg .b1{ opacity: 0.72; }
-        body.day .search-bg .b2{ opacity: 0.58; }
-        body.day .search-bg .b3{ opacity: 0.5; }
-        body.day .search-bg .b4{ opacity: 0.46; }
-        /* Cloud drift: each blob wanders a wide, horizontal-biased loop with a
-           gentle vertical bob, over a long, slow cycle — like clouds floating
-           across the sky. Composes with the container's breathing. */
-        @keyframes blob-a{
+        /* Ink drift: each pool wanders a small, slow loop and swells gently —
+           like ink settling on paper. Values are viewBox(0..100) user units.
+           Composes with the container's breathing. */
+        @keyframes ink-drift-a{
             0%,100%{ transform: translate(0,0) scale(1); }
-            25%{ transform: translate(9vmin,-3vmin) scale(1.06); }
-            55%{ transform: translate(15vmin,4vmin) scale(1.12); }
-            80%{ transform: translate(6vmin,6vmin) scale(1.04); }
+            25%{ transform: translate(2px,-1px) scale(1.05); }
+            55%{ transform: translate(4px,1px) scale(1.10); }
+            80%{ transform: translate(1.5px,1.5px) scale(1.03); }
         }
-        @keyframes blob-b{
+        @keyframes ink-drift-b{
             0%,100%{ transform: translate(0,0) scale(1); }
-            30%{ transform: translate(-8vmin,4vmin) scale(1.05); }
-            60%{ transform: translate(-14vmin,-3vmin) scale(1.1); }
-            82%{ transform: translate(-5vmin,-6vmin) scale(1.03); }
+            30%{ transform: translate(-2px,1px) scale(1.04); }
+            60%{ transform: translate(-3.5px,-1px) scale(1.09); }
+            82%{ transform: translate(-1px,-1.5px) scale(1.02); }
         }
-        @keyframes blob-c{
+        @keyframes ink-drift-c{
             0%,100%{ transform: translate(0,0) scale(1); }
-            28%{ transform: translate(8vmin,-4vmin) scale(0.95); }
-            58%{ transform: translate(14vmin,-1vmin) scale(0.9); }
-            80%{ transform: translate(5vmin,4vmin) scale(0.97); }
+            28%{ transform: translate(2px,-1px) scale(0.96); }
+            58%{ transform: translate(3.5px,0px) scale(0.91); }
+            80%{ transform: translate(1px,1px) scale(0.98); }
         }
-        @keyframes blob-d{
+        @keyframes ink-drift-d{
             0%,100%{ transform: translate(0,0) scale(1); }
-            32%{ transform: translate(-9vmin,-4vmin) scale(1.1); }
-            62%{ transform: translate(-15vmin,3vmin) scale(1.16); }
-            84%{ transform: translate(-6vmin,6vmin) scale(1.05); }
+            32%{ transform: translate(-2px,-1px) scale(1.09); }
+            62%{ transform: translate(-3.5px,1px) scale(1.15); }
+            84%{ transform: translate(-1.5px,1.5px) scale(1.04); }
         }
         .search-core{
             position: relative;
