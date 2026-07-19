@@ -2873,12 +2873,25 @@
         }
         body:not(.day) article .doc-img img{ filter: brightness(.9); }
         article .diagram{ margin: 18px 0 20px; overflow-x: auto; }
-        /* Hover-revealed annotation inside a diagram — the wiki's "quiet by
-           default, wakes on hover" language applied to data callouts. Static
-           geometry (opacity only), so diagram bounds checks are unaffected. */
-        .diagram .d-reveal{ opacity: 0; transition: opacity .45s ease; }
-        .diagram:hover .d-reveal, .diagram:focus-within .d-reveal{ opacity: 1; }
-        @media (hover: none){ .diagram .d-reveal{ opacity: 1; } }
+        /* Dynamic comparison table — bars fill in when the table appears
+           (fragments are re-inserted per route, so it replays per visit)
+           and rows wake on hover. Widths are honest value proportions set
+           via --w; bars stay static under prefers-reduced-motion. */
+        article .tbl-wrap.cmp td{ vertical-align: middle; }
+        article .cmp-bar{
+            display: block; height: 15px; margin-bottom: 5px; overflow: hidden;
+            border-radius: 5px; background: var(--bg); border: 1px solid var(--border);
+        }
+        article .cmp-fill{
+            display: block; height: 100%; width: var(--w, 0%);
+            background: color-mix(in srgb, var(--accent) 35%, transparent);
+            transform-origin: left; animation: cmp-grow .9s ease-out both;
+        }
+        article .cmp-fill.accent{ background: var(--accent); }
+        @keyframes cmp-grow{ from{ transform: scaleX(0); } }
+        article .tbl-wrap.cmp tbody tr{ transition: background .25s ease; }
+        article .tbl-wrap.cmp tbody tr:hover{ background: color-mix(in srgb, var(--accent) 8%, transparent); }
+        @media (prefers-reduced-motion: reduce){ article .cmp-fill{ animation: none; } }
         article .diagram svg{ display: block; max-width: 100%; height: auto; margin: 0 auto; }
 
         /* Dark theme (default) */
