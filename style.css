@@ -541,20 +541,25 @@
             padding: 40px 24px 12vh;
             overflow: hidden;
         }
-        /* 수묵 배경: 먹 웅덩이(blob)가 한지에 스민 듯 번진 가장자리로 떠다니는
-           인라인 SVG 레이어. 프랙탈 노이즈 왜곡(#ink-bleed)은 blob·자취에 개별 적용.
-           호버하면 전체가 또렷해지며 "깨어난다"(평소 낮은 존재감·호버 시 각성). */
+        /* 수묵 배경: 먹 웅덩이(blob)가 한지에 스민 듯 번진 가장자리로 떠다니는 레이어.
+           번짐 질감은 프랙탈 노이즈(feTurbulence+feDisplacementMap)를 '정적 mask-image'
+           (--ink-mask, 데이터 URI SVG)에 구워 1회만 래스터한다 — 라이브 filter를 매 프레임
+           재계산하던 옛 방식이 5fps로 떨어져(옆 캔버스 리페인트가 필터 캐시를 무효화) 이전했다.
+           색은 background: var(--accent)가 마스크 알파로 드러나 테마 대응, 애니는
+           transform/opacity만이라 컴포지터가 처리(60fps). 호버 시 또렷해지며 "깨어난다". */
         .search-ink{
             position: absolute;
             inset: 0;
             z-index: 0;
             pointer-events: none;
+            overflow: hidden;
             opacity: 0.82;
-            /* Breathing: the whole ink field swells and settles at an even, calm
-               pace — like a slow human breath. Composes with each blob's drift. */
             transform-origin: center;
-            animation: breathe 5s ease-in-out infinite;
+            animation: breathe 5s ease-in-out infinite;   /* scale-only, 컴포지터 처리 */
             transition: opacity 0.6s ease;
+            /* 번짐이 알파에 구워진 정적 마스크(먹방울 2종 — seed 7 / seed 3). */
+            --ink-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cdefs%3E%3CradialGradient id='g'%3E%3Cstop offset='0%25' stop-color='%23fff' stop-opacity='1'/%3E%3Cstop offset='55%25' stop-color='%23fff' stop-opacity='.6'/%3E%3Cstop offset='100%25' stop-color='%23fff' stop-opacity='0'/%3E%3C/radialGradient%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='2' seed='7' result='n'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='n' scale='34'/%3E%3C/filter%3E%3C/defs%3E%3Ccircle cx='120' cy='120' r='82' fill='url(%23g)' filter='url(%23f)'/%3E%3C/svg%3E");
+            --ink-mask2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cdefs%3E%3CradialGradient id='g'%3E%3Cstop offset='0%25' stop-color='%23fff' stop-opacity='1'/%3E%3Cstop offset='55%25' stop-color='%23fff' stop-opacity='.6'/%3E%3Cstop offset='100%25' stop-color='%23fff' stop-opacity='0'/%3E%3C/radialGradient%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.045' numOctaves='2' seed='3' result='n'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='n' scale='30'/%3E%3C/filter%3E%3C/defs%3E%3Ccircle cx='120' cy='120' r='80' fill='url(%23g)' filter='url(%23f)'/%3E%3C/svg%3E");
         }
         .search-screen:hover .search-ink{ opacity: 1; }
         /* Breakout layer: a ball drifting behind the field, breaking bricks.
@@ -850,30 +855,34 @@
            colour intensity (saturate/contrast) so the breath reads on a white
            background too; brightness is avoided since it washes pale orange
            toward white. */
+        /* Breath: a subtle scale swell only (no filter animation — animating a
+           CSS filter re-rasters the whole subtree each frame; scale composites). */
         @keyframes breathe{
-            0%, 100%{ transform: scale(1);      filter: saturate(1)   contrast(1); }
-            50%{      transform: scale(1.055);  filter: saturate(1.4) contrast(1.06); }
+            0%, 100%{ transform: scale(1); }
+            50%{      transform: scale(1.045); }
         }
-        /* 먹 웅덩이. transform은 자기 중심 기준(fill-box)으로 걸어 drift/breathe가
-           blob을 제자리에서 살짝 밀고 부풀린다 — Safari의 r/cx/cy CSS 지오메트리
-           갭을 피하려 위치·크기 애니는 transform만 쓴다. 색·번짐은 fill+#ink-bleed. */
+        /* 먹 웅덩이. 모양·번짐은 정적 mask-image(--ink-mask)에서 오고, 색은 flat
+           background가 마스크 알파로 드러난다(테마 대응). drift/breathe는 transform만
+           써 컴포지터가 처리 — 라이브 필터가 없어 60fps. */
         .ink-blob{
-            transform-box: fill-box;
-            transform-origin: center;
-            will-change: transform, opacity;
+            position: absolute;
+            background: var(--accent);
+            -webkit-mask: var(--ink-mask) center / 100% 100% no-repeat;
+            mask: var(--ink-mask) center / 100% 100% no-repeat;
+            will-change: transform;
             transition: opacity 0.6s ease;
         }
-        .ink-blob.ib1{ opacity: 0.62; animation: ink-drift-a 38s ease-in-out infinite; }
-        .ink-blob.ib2{ opacity: 0.50; animation: ink-drift-b 46s ease-in-out infinite; }
-        .ink-blob.ib3{ opacity: 0.46; animation: ink-drift-c 52s ease-in-out infinite; }
-        .ink-blob.ib4{ opacity: 0.42; animation: ink-drift-d 42s ease-in-out infinite; }
+        /* 네 개의 코너 웅덩이 — 위치·크기·색·마스크시드·드리프트를 각기 다르게. */
+        .ink-blob.ib1{ left: -6%;  top: -4%;  width: 44vmax; height: 44vmax; opacity: 0.62; animation: ink-drift-a 38s ease-in-out infinite; }
+        .ink-blob.ib2{ left: 62%;  top: -2%;  width: 34vmax; height: 34vmax; opacity: 0.50; background: var(--accent-ink); -webkit-mask-image: var(--ink-mask2); mask-image: var(--ink-mask2); animation: ink-drift-b 46s ease-in-out infinite; }
+        .ink-blob.ib3{ left: 8%;   top: 48%;  width: 50vmax; height: 50vmax; opacity: 0.46; animation: ink-drift-c 52s ease-in-out infinite; }
+        .ink-blob.ib4{ left: 64%;  top: 50%;  width: 34vmax; height: 34vmax; opacity: 0.42; background: var(--accent-ink); -webkit-mask-image: var(--ink-mask2); mask-image: var(--ink-mask2); animation: ink-drift-d 42s ease-in-out infinite; }
         /* 호버 시 먹이 짙어지며 배경이 깨어난다. */
         .search-screen:hover .ink-blob.ib1{ opacity: 0.76; }
         .search-screen:hover .ink-blob.ib2{ opacity: 0.64; }
         .search-screen:hover .ink-blob.ib3{ opacity: 0.60; }
         .search-screen:hover .ink-blob.ib4{ opacity: 0.56; }
-        /* Light theme: pale orange on white is faint, so give the pools more
-           presence so the breathing pulse has something visible to work with. */
+        /* Light theme: pale orange on white is faint, so give the pools more presence. */
         body.day .ink-blob.ib1{ opacity: 0.70; }
         body.day .ink-blob.ib2{ opacity: 0.60; }
         body.day .ink-blob.ib3{ opacity: 0.56; }
@@ -882,38 +891,44 @@
         body.day .search-screen:hover .ink-blob.ib2{ opacity: 0.74; }
         body.day .search-screen:hover .ink-blob.ib3{ opacity: 0.70; }
         body.day .search-screen:hover .ink-blob.ib4{ opacity: 0.66; }
-        /* 커서 자취 스탬프 — startSearchInk()의 WAAPI가 transform/opacity를 재생. */
+        /* 커서 자취 스탬프 — 같은 정적 마스크. left/top(%)은 JS가 커서로 세팅하고,
+           WAAPI가 transform(translate(-50%,-50%) + scale)·opacity만 재생(컴포지터). */
         .ink-stamp{
-            transform-box: fill-box;
-            transform-origin: center;
+            position: absolute;
+            width: 15vmax;
+            height: 15vmax;
+            background: var(--accent);
             opacity: 0;
+            -webkit-mask: var(--ink-mask) center / 100% 100% no-repeat;
+            mask: var(--ink-mask) center / 100% 100% no-repeat;
+            will-change: transform, opacity;
         }
-        /* Ink drift: each pool wanders a small, slow loop and swells gently —
-           like ink settling on paper. Values are viewBox(0..100) user units.
-           Composes with the container's breathing. */
+        .ink-stamp.alt{ -webkit-mask-image: var(--ink-mask2); mask-image: var(--ink-mask2); }
+        /* Ink drift: each pool wanders a small, slow loop and swells gently — like
+           ink settling on paper. transform-only so it stays on the compositor. */
         @keyframes ink-drift-a{
             0%,100%{ transform: translate(0,0) scale(1); }
-            25%{ transform: translate(2px,-1px) scale(1.05); }
-            55%{ transform: translate(4px,1px) scale(1.10); }
-            80%{ transform: translate(1.5px,1.5px) scale(1.03); }
+            25%{ transform: translate(1.5vmax,-1vmax) scale(1.05); }
+            55%{ transform: translate(3vmax,1vmax) scale(1.10); }
+            80%{ transform: translate(1vmax,1.5vmax) scale(1.03); }
         }
         @keyframes ink-drift-b{
             0%,100%{ transform: translate(0,0) scale(1); }
-            30%{ transform: translate(-2px,1px) scale(1.04); }
-            60%{ transform: translate(-3.5px,-1px) scale(1.09); }
-            82%{ transform: translate(-1px,-1.5px) scale(1.02); }
+            30%{ transform: translate(-1.5vmax,1vmax) scale(1.04); }
+            60%{ transform: translate(-3vmax,-1vmax) scale(1.09); }
+            82%{ transform: translate(-1vmax,-1.5vmax) scale(1.02); }
         }
         @keyframes ink-drift-c{
             0%,100%{ transform: translate(0,0) scale(1); }
-            28%{ transform: translate(2px,-1px) scale(0.96); }
-            58%{ transform: translate(3.5px,0px) scale(0.91); }
-            80%{ transform: translate(1px,1px) scale(0.98); }
+            28%{ transform: translate(1.5vmax,-1vmax) scale(0.96); }
+            58%{ transform: translate(3vmax,0) scale(0.91); }
+            80%{ transform: translate(1vmax,1vmax) scale(0.98); }
         }
         @keyframes ink-drift-d{
             0%,100%{ transform: translate(0,0) scale(1); }
-            32%{ transform: translate(-2px,-1px) scale(1.09); }
-            62%{ transform: translate(-3.5px,1px) scale(1.15); }
-            84%{ transform: translate(-1.5px,1.5px) scale(1.04); }
+            32%{ transform: translate(-1.5vmax,-1vmax) scale(1.09); }
+            62%{ transform: translate(-3vmax,1vmax) scale(1.15); }
+            84%{ transform: translate(-1vmax,1.5vmax) scale(1.04); }
         }
         .search-core{
             position: relative;

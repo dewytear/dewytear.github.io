@@ -19,3 +19,11 @@
     <span class="nh">변경 유형 · 검증</span>
     <strong>STYLE + ENGINE</strong>(<code>tools/change-types.md</code>) — 자기기술 문서 영향 없음(엔진 동작 방식이 아닌 앰비언트 연출). 자산 <code>?v</code> 상향: <code>style.css 22→23</code>·<code>search.js 3→4</code>(<code>check_cachebuster</code> 통과). 헤드리스 Chromium(Playwright)으로 <code>#!search</code> 낮·밤 실렌더 확인 — 웅덩이 번짐·커서 자취(스탬프 위치·불투명도)·호버 각성 정상, 디자인 규칙(테마 토큰만) 준수. <code>python tools/validate_all.py</code> ERROR 0.
 </div>
+
+<h3>후속 — 성능 회귀 긴급 수정: 라이브 필터 → 정적 마스크</h3>
+<p>배포 직후 <strong>화면이 극심하게 느려짐</strong>(사용자 제보). Playwright 실측으로 <code>#!search</code> IDLE <strong>5 FPS</strong>(최대 프레임 간격 367ms)를 확인했다. 원인은 애니메이션이 아니라 <strong>먹 웅덩이·자취에 건 라이브 SVG <code>filter</code>(<code>feTurbulence</code>+<code>feDisplacementMap</code>)가 매 프레임 재래스터</strong>되는 것 — 바로 위 레이어의 앰비언트 게임 <code>&lt;canvas&gt;</code>가 계속 리페인트해 필터 결과 캐시를 무효화하고, 4개의 대형 turbulence 필터가 프레임마다 재계산됐다. 필터를 통째로 제거하면 60 FPS로 돌아오는 것으로 원인을 못박았다.</p>
+<ul>
+    <li><strong>해법 — turbulence를 라이브 <code>filter</code>에서 정적 <code>mask-image</code>로 이전.</strong> 같은 프랙탈 노이즈 왜곡을 <strong>데이터 URI SVG 마스크</strong>(<code>--ink-mask</code>/<code>--ink-mask2</code>, seed 2종)에 <strong>구워</strong> 브라우저가 <strong>1회만 래스터</strong>하게 했다. 먹 웅덩이·커서 스탬프는 이제 평범한 <code>&lt;div&gt;</code>/<code>&lt;span&gt;</code>으로, 모양·번짐은 마스크 알파에서 오고 색은 <code>background: var(--accent)</code>/<code>var(--accent-ink)</code>가 마스크로 드러나 <strong>테마 대응 유지</strong>. 애니는 <code>transform</code>/<code>opacity</code>만 써 컴포지터가 처리한다(<code>breathe</code>의 <code>filter</code> 펄스도 제거 — CSS 필터 애니는 서브트리를 매 프레임 재래스터하므로).</li>
+    <li><strong>결과</strong>: Playwright 실측 <strong>IDLE·커서 이동 중 모두 60 FPS</strong>(롱프레임 0). 비주얼은 오히려 더 섬유질적인 먹 번짐으로 수묵 질감이 살았고, 낮/밤·reduced-motion·터치 가드·호버 각성 모두 그대로. 인라인 SVG <code>filter</code>가 사라져 Safari 필터 호환 리스크도 소멸(<code>-webkit-mask</code> 병기).</li>
+    <li>구조: <code>svg.search-ink</code>(라이브 필터) → <code>div.search-ink</code> + <code>span.ink-blob</code>×4 + <code>.ink-trail</code>. 커서 스탬프는 <code>startSearchInk()</code>가 <code>span.ink-stamp</code> 풀을 만들어 WAAPI로 <code>transform</code>/<code>opacity</code>만 재생. 자산 <code>?v</code> 재상향 <code>style.css 23→24</code>·<code>search.js 4→5</code>.</li>
+</ul>
