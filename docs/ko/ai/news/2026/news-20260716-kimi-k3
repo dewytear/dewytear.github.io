@@ -129,6 +129,7 @@
     </tbody>
 </table>
 </div>
+<p class="scn-sub">모든 모델은 최대 추론 강도(max/xhigh) 기준. 원본 표 주석: Fable 5 결과는 잠재적 폴백 포함, GPT-5.6 Sol 결과는 잠재적 사이버가드 포함.</p>
 
 <h4>사람들이 직접 뽑은 1위: 웹 화면 만들기</h4>
 <p><strong>LMArena</strong>는 특이한 시험장입니다. 문제를 주고 두 모델의 답을 <strong>이름을 가린 채 나란히 보여준 뒤, 사람이 더 나은 쪽에 투표</strong>합니다. 그 승패를 체스 랭킹처럼 점수(Elo)로 쌓죠. 웹 화면(프런트엔드)을 만들어 보이는 <strong>Frontend Code Arena</strong>에서 K3는 <strong>1,679점으로 1위</strong> — Claude Fable 5를 제쳤습니다. 전작 K2.6이 18위였으니 <strong>한 세대 만에 17계단</strong>을 뛰었고, 7개 세부 분야 중 6개에서 1위(게임 분야만 Fable 5에 이어 2위)였습니다. 같은 문제로 맞붙었을 때 K3의 답이 뽑힌 비율(승률)은 평균 <strong>76%</strong> — 100번 붙으면 76번 이겼다는 뜻입니다.</p>
@@ -164,19 +165,41 @@
 </ul>
 
 <h4>커널 최적화 — 자기 몸을 이루는 코드를 스스로 빠르게</h4>
-<p>쇼케이스 중 개발자들이 가장 주목한 것은 <strong>GPU 커널 최적화</strong>입니다. 커널이란 GPU에서 도는 <strong>작고 핵심적인 계산 프로그램</strong>으로, AI 모델의 속도는 결국 이 커널들이 얼마나 빠른가로 결정됩니다. 실험 설계는 이렇습니다 — 여러 모델을 <strong>똑같은 샌드박스</strong>에 넣고, AttnRes·KDA·MLA 등 <strong>커널 4종</strong>을 <strong>최대 24시간 동안 스스로</strong> 프로파일링·재작성·벤치마크하게 했습니다(NVIDIA H200 등). AttnRes 과제에서 K3는 기준 구현보다 <strong>59.7% 빠른 커널</strong>을 만들어 Claude Fable 5(57.1%)를 근소하게 앞섰고, 순전파+역전파 1회가 <strong>283.6ms → 114.4ms</strong>로 줄었습니다. 자기 아키텍처(AttnRes·KDA)를 이루는 코드를 자기가 최적화한 셈입니다.</p>
+<p>쇼케이스 중 개발자들이 가장 주목한 것은 <strong>GPU 커널 최적화</strong>입니다. 커널이란 GPU에서 도는 <strong>작고 핵심적인 계산 프로그램</strong>으로, AI 모델의 속도는 결국 이 커널들이 얼마나 빠른가로 결정됩니다. 실험 설계는 이렇습니다 — 각 모델을 <strong>똑같은 샌드박스</strong>에 넣고, <strong>커널 과제 4종</strong>(AttnRes·DSA·512-head MLA·KDA)을 <strong>최대 24시간 동안 스스로</strong> 프로파일링·재작성·벤치마크하게 했습니다(NVIDIA H200과 타사 GPGPU). 결과는 <strong>4개 과제 중 3개에서 K3가 1위</strong>, DSA에서만 Claude Fable 5가 1위였습니다. 특히 AttnRes 과제에서는 순전파+역전파 1회가 <strong>283.6ms → 114.4ms</strong>로 줄었습니다 — 자기 아키텍처(AttnRes·KDA)를 이루는 코드를 자기가 최적화한 셈입니다.</p>
 
 <div class="tbl-wrap cmp">
 <table>
-    <thead><tr><th>모델</th><th>AttnRes 커널 — 베이스라인 대비 속도 향상</th><th>비고</th></tr></thead>
+    <thead><tr><th>모델</th><th>AttnRes</th><th>DSA</th><th>MLA-512</th><th>KDA-GPGPU</th></tr></thead>
     <tbody>
-        <tr><td><strong>Kimi K3</strong></td><td><span class="cmp-bar"><span class="cmp-fill accent" style="--w:96.3%"></span></span><strong>+59.7%</strong></td><td>순전파+역전파 283.6ms &rarr; 114.4ms — 15시간 자율 반복의 결과</td></tr>
-        <tr><td>Claude Fable 5</td><td><span class="cmp-bar"><span class="cmp-fill" style="--w:92.1%"></span></span>+57.1%</td><td>K3와 접전 (격차 +2.6%p)</td></tr>
-        <tr><td>Opus 4.8 · GPT-5.6 Sol · GPT-5.5</td><td>세부 수치 비공개</td><td>두 모델을 뚜렷이 하회</td></tr>
+        <tr><td><strong>Kimi K3</strong></td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>+59.7%</strong></td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:96.2%"></span></span>+55.1%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>518 TF</strong></td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>+73.6%</strong></td></tr>
+        <tr><td>Claude Fable 5</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:95.6%"></span></span>+57.1%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>+57.3%</strong></td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:95.2%"></span></span>493 TF</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:76.8%"></span></span>+56.5%</td></tr>
+        <tr><td>GPT-5.6 Sol</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:29%"></span></span>+17.3%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:85.3%"></span></span>+48.9%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:69.9%"></span></span>362 TF</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:90.6%"></span></span>+66.7%</td></tr>
+        <tr><td>Claude Opus 4.8</td>
+            <td>—</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:76.1%"></span></span>+43.6%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:76.1%"></span></span>394 TF</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:77.4%"></span></span>+57.0%</td></tr>
+        <tr><td>GPT-5.5</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:51.6%"></span></span>+30.8%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:66.7%"></span></span>+38.2%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:74.5%"></span></span>386 TF</td>
+            <td>—</td></tr>
     </tbody>
 </table>
 </div>
-<p class="scn-sub">커널 4종(AttnRes·KDA·512-head MLA) · 동일 샌드박스 · 최대 24시간 자율 최적화 · NVIDIA H200 외 — 막대는 표가 나타날 때 차오르고, 행에 마우스를 올리면 밝아집니다. 별도로 오픈소스로 풀린 FlashKDA 커널은 H20 GPU에서 프리필 <strong>1.72~2.22배</strong> 가속을 보였습니다.</p>
+<p class="scn-sub">수치는 Moonshot 공식 테크블로그의 인터랙티브 차트(Active hours별 신기록 궤적) 최종 기록을 그대로 옮긴 것. AttnRes·DSA·KDA-GPGPU는 <strong>FLA Triton 베이스라인 대비 속도 향상(%)</strong>, MLA-512는 <strong>달성 TFLOPS(순+역전파)</strong>, KDA-GPGPU는 비NVIDIA 타사 GPGPU에서 측정. &lsquo;—&rsquo;는 원본 차트에 미표기. 막대는 과제(열)별 1위 대비 비율이며 표가 나타날 때 차오릅니다. 별도로 오픈소스로 풀린 FlashKDA 커널은 H20 GPU에서 프리필 <strong>1.72~2.22배</strong> 가속을 보였습니다.</p>
 <div class="note">
     <span class="nh">읽는 법</span>
     위 사례는 모두 <strong>Moonshot 자사 홍보용 쇼케이스</strong>입니다. 산출물이 실제로 공개돼 있긴 하지만 제3자가 재현·검증한 결과는 아니므로, &ldquo;이런 방향의 일(오래 걸리는 자율 작업)을 시킬 수 있게 됐다&rdquo; 정도로 읽는 것이 정확합니다.</div>
