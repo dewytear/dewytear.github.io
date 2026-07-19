@@ -27,3 +27,13 @@
     <li><strong>결과</strong>: Playwright 실측 <strong>IDLE·커서 이동 중 모두 60 FPS</strong>(롱프레임 0). 비주얼은 오히려 더 섬유질적인 먹 번짐으로 수묵 질감이 살았고, 낮/밤·reduced-motion·터치 가드·호버 각성 모두 그대로. 인라인 SVG <code>filter</code>가 사라져 Safari 필터 호환 리스크도 소멸(<code>-webkit-mask</code> 병기).</li>
     <li>구조: <code>svg.search-ink</code>(라이브 필터) → <code>div.search-ink</code> + <code>span.ink-blob</code>×4 + <code>.ink-trail</code>. 커서 스탬프는 <code>startSearchInk()</code>가 <code>span.ink-stamp</code> 풀을 만들어 WAAPI로 <code>transform</code>/<code>opacity</code>만 재생. 자산 <code>?v</code> 재상향 <code>style.css 23→24</code>·<code>search.js 4→5</code>.</li>
 </ul>
+
+<h3>문서 이미지 자산 체계 도입 (.doc-img)</h3>
+<p>위키에 처음으로 본문 이미지(사진·래스터)가 필요해져(Kimi K3 아티클 서두 비주얼), 일회성 삽입 대신 <strong>재사용 가능한 이미지 자산 체계</strong>를 설계해 도입했다.</p>
+<ul>
+    <li><strong>저장 위치</strong> — <code>assets/&lt;docs 상대경로&gt;/&lt;문서 name&gt;/&lt;역할&gt;.webp</code> (첫 사례: <code>assets/ai/news/2026/news-20260716-kimi-k3/hero.webp</code>). <code>docs/</code> 안에 두면 <code>validate_routes</code>가 문서로 오인(orphan-file)하므로 자산 트리를 분리하되, 경로는 문서 트리를 미러해 대응이 한눈에 보이게. 언어 중립이라 ko/en 번역이 같은 이미지를 공유.</li>
+    <li><strong>표준 컴포넌트</strong> — <code>&lt;figure class="doc-img"&gt;&lt;img …&gt;&lt;figcaption&gt;캡션 — 출처&lt;/figcaption&gt;&lt;/figure&gt;</code>. 도식(<code>.diagram</code>+<code>.d-cap</code>)과 대칭인 래스터 대응물. <code>width/height</code> 명시로 레이아웃 점프 방지, 출처는 figcaption에 항상 표기, 외부 URL 핫링크 금지(파일 커밋).</li>
+    <li><strong>스타일·규칙화</strong> — <code>style.css</code>에 <code>.doc-img</code> 신설(전폭·12px 라운드·<code>var(--border)</code> 테두리, 밤 테마 눈부심 완화 <code>brightness(.9)</code>), <code>?v</code> 24→25. CLAUDE.md 디자인 규칙에 이미지 규칙 항목 추가(위치·컴포넌트·출처 표기·핫링크 금지·webp 권장).</li>
+    <li><strong>적용·검증</strong> — Kimi K3 아티클 서두에 철가루 자기장 &lsquo;3&rsquo; 비주얼(1440&times;659 webp, 66KB), 아키텍처 절에 공식 도해 크롭(1205&times;1080 webp) 적용. 낮/밤 렌더 확인, <code>validate_all</code> ERROR 0, <code>check_cachebuster</code> 통과.</li>
+    <li><strong><code>.d-reveal</code> 도식 유틸 추가</strong> — 도식 안 주석 텍스트를 평소 숨기고 <strong>호버 시 드러내는</strong> 클래스(디자인 언어 &lsquo;호버 시 깨어남&rsquo;의 도식판). 지오메트리는 정적(opacity만 전환)이라 도식 경계 게이트에 영향 없음, <code>hover: none</code>(터치)에선 항상 표시. 첫 사례: Kimi K3 커널 최적화 비교 막대의 상세 수치 콜아웃.</li>
+</ul>

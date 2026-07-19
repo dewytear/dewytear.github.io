@@ -2859,7 +2859,26 @@
            per-theme colours (not var()/color-mix) — some browsers (older Safari)
            don't resolve CSS variables inside SVG presentation and fall back to
            black, which made the diagrams unreadable. */
+        /* ---- Document image (photo/figure) — the raster counterpart of
+           .diagram. Assets live under assets/<docs-relative-path>/<doc-name>/
+           (never inside docs/ — validators treat those files as documents).
+           Night theme dims bright photos slightly to avoid glare. ---- */
+        article .doc-img{ margin: 4px 0 20px; }
+        article .doc-img img{
+            display: block; width: 100%; height: auto;
+            border-radius: 12px; border: 1px solid var(--border);
+        }
+        article .doc-img figcaption{
+            text-align: center; color: var(--muted); font-size: 12px; margin-top: 6px;
+        }
+        body:not(.day) article .doc-img img{ filter: brightness(.9); }
         article .diagram{ margin: 18px 0 20px; overflow-x: auto; }
+        /* Hover-revealed annotation inside a diagram — the wiki's "quiet by
+           default, wakes on hover" language applied to data callouts. Static
+           geometry (opacity only), so diagram bounds checks are unaffected. */
+        .diagram .d-reveal{ opacity: 0; transition: opacity .45s ease; }
+        .diagram:hover .d-reveal, .diagram:focus-within .d-reveal{ opacity: 1; }
+        @media (hover: none){ .diagram .d-reveal{ opacity: 1; } }
         article .diagram svg{ display: block; max-width: 100%; height: auto; margin: 0 auto; }
 
         /* Dark theme (default) */
