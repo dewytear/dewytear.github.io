@@ -861,36 +861,24 @@
             0%, 100%{ transform: scale(1); }
             50%{      transform: scale(1.045); }
         }
-        /* 먹 웅덩이. 모양·번짐은 정적 mask-image(--ink-mask)에서 오고, 색은 flat
-           background가 마스크 알파로 드러난다(테마 대응). drift/breathe는 transform만
-           써 컴포지터가 처리 — 라이브 필터가 없어 60fps. */
+        /* 먹 웅덩이(대·중·소 3개). 모양·번짐은 정적 mask-image(--ink-mask)에서 오고,
+           색은 flat background가 마스크 알파로 드러난다(테마 대응). 이동·진하기 변화는
+           startInkDrift()가 WAAPI로 랜덤 부여(transform/opacity만 → 컴포지터, 60fps).
+           아래 opacity는 정적 폴백(reduced-motion 등 애니 없을 때) — WAAPI가 돌면 덮인다. */
         .ink-blob{
             position: absolute;
             background: var(--accent);
             -webkit-mask: var(--ink-mask) center / 100% 100% no-repeat;
             mask: var(--ink-mask) center / 100% 100% no-repeat;
-            will-change: transform;
-            transition: opacity 0.6s ease;
+            will-change: transform, opacity;
         }
-        /* 네 개의 코너 웅덩이 — 위치·크기·색·마스크시드·드리프트를 각기 다르게. */
-        .ink-blob.ib1{ left: -6%;  top: -4%;  width: 44vmax; height: 44vmax; opacity: 0.62; animation: ink-drift-a 38s ease-in-out infinite; }
-        .ink-blob.ib2{ left: 62%;  top: -2%;  width: 34vmax; height: 34vmax; opacity: 0.50; background: var(--accent-ink); -webkit-mask-image: var(--ink-mask2); mask-image: var(--ink-mask2); animation: ink-drift-b 46s ease-in-out infinite; }
-        .ink-blob.ib3{ left: 8%;   top: 48%;  width: 50vmax; height: 50vmax; opacity: 0.46; animation: ink-drift-c 52s ease-in-out infinite; }
-        .ink-blob.ib4{ left: 64%;  top: 50%;  width: 34vmax; height: 34vmax; opacity: 0.42; background: var(--accent-ink); -webkit-mask-image: var(--ink-mask2); mask-image: var(--ink-mask2); animation: ink-drift-d 42s ease-in-out infinite; }
-        /* 호버 시 먹이 짙어지며 배경이 깨어난다. */
-        .search-screen:hover .ink-blob.ib1{ opacity: 0.76; }
-        .search-screen:hover .ink-blob.ib2{ opacity: 0.64; }
-        .search-screen:hover .ink-blob.ib3{ opacity: 0.60; }
-        .search-screen:hover .ink-blob.ib4{ opacity: 0.56; }
+        .ink-blob.ib1{ left: -8%;  top: 26%; width: 56vmax; height: 56vmax; opacity: 0.48; }                                                              /* 대 */
+        .ink-blob.ib2{ left: 58%;  top: -8%; width: 40vmax; height: 40vmax; opacity: 0.52; background: var(--accent-ink); -webkit-mask-image: var(--ink-mask2); mask-image: var(--ink-mask2); }  /* 중 */
+        .ink-blob.ib3{ left: 44%;  top: 52%; width: 26vmax; height: 26vmax; opacity: 0.56; }                                                              /* 소 */
         /* Light theme: pale orange on white is faint, so give the pools more presence. */
-        body.day .ink-blob.ib1{ opacity: 0.70; }
+        body.day .ink-blob.ib1{ opacity: 0.56; }
         body.day .ink-blob.ib2{ opacity: 0.60; }
-        body.day .ink-blob.ib3{ opacity: 0.56; }
-        body.day .ink-blob.ib4{ opacity: 0.52; }
-        body.day .search-screen:hover .ink-blob.ib1{ opacity: 0.84; }
-        body.day .search-screen:hover .ink-blob.ib2{ opacity: 0.74; }
-        body.day .search-screen:hover .ink-blob.ib3{ opacity: 0.70; }
-        body.day .search-screen:hover .ink-blob.ib4{ opacity: 0.66; }
+        body.day .ink-blob.ib3{ opacity: 0.64; }
         /* 커서 자취 스탬프 — 같은 정적 마스크. left/top(%)은 JS가 커서로 세팅하고,
            WAAPI가 transform(translate(-50%,-50%) + scale)·opacity만 재생(컴포지터). */
         .ink-stamp{
@@ -904,32 +892,6 @@
             will-change: transform, opacity;
         }
         .ink-stamp.alt{ -webkit-mask-image: var(--ink-mask2); mask-image: var(--ink-mask2); }
-        /* Ink drift: each pool wanders a small, slow loop and swells gently — like
-           ink settling on paper. transform-only so it stays on the compositor. */
-        @keyframes ink-drift-a{
-            0%,100%{ transform: translate(0,0) scale(1); }
-            25%{ transform: translate(1.5vmax,-1vmax) scale(1.05); }
-            55%{ transform: translate(3vmax,1vmax) scale(1.10); }
-            80%{ transform: translate(1vmax,1.5vmax) scale(1.03); }
-        }
-        @keyframes ink-drift-b{
-            0%,100%{ transform: translate(0,0) scale(1); }
-            30%{ transform: translate(-1.5vmax,1vmax) scale(1.04); }
-            60%{ transform: translate(-3vmax,-1vmax) scale(1.09); }
-            82%{ transform: translate(-1vmax,-1.5vmax) scale(1.02); }
-        }
-        @keyframes ink-drift-c{
-            0%,100%{ transform: translate(0,0) scale(1); }
-            28%{ transform: translate(1.5vmax,-1vmax) scale(0.96); }
-            58%{ transform: translate(3vmax,0) scale(0.91); }
-            80%{ transform: translate(1vmax,1vmax) scale(0.98); }
-        }
-        @keyframes ink-drift-d{
-            0%,100%{ transform: translate(0,0) scale(1); }
-            32%{ transform: translate(-1.5vmax,-1vmax) scale(1.09); }
-            62%{ transform: translate(-3vmax,1vmax) scale(1.15); }
-            84%{ transform: translate(-1vmax,1.5vmax) scale(1.04); }
-        }
         .search-core{
             position: relative;
             z-index: 1;
