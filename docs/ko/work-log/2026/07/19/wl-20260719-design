@@ -37,12 +37,3 @@
     <li><strong>적용·검증</strong> — Kimi K3 아티클 서두에 철가루 자기장 &lsquo;3&rsquo; 비주얼(1440&times;659 webp, 66KB), 아키텍처 절에 공식 도해 크롭(1205&times;1080 webp) 적용. 낮/밤 렌더 확인, <code>validate_all</code> ERROR 0, <code>check_cachebuster</code> 통과.</li>
     <li><strong>역동적 비교표 컴포넌트(<code>.tbl-wrap.cmp</code>) 추가</strong> — 표 셀 안에 값 비례 막대(<code>.cmp-bar</code>/<code>.cmp-fill</code>, <code>--w</code> 변수)를 넣고, <strong>표가 나타날 때 막대가 차오르고</strong>(프래그먼트가 라우트마다 재삽입되므로 방문마다 재생) <strong>행 호버 시 밝아지는</strong> 동적 표. 색은 <code>var(--accent)</code>/<code>color-mix</code>만 사용(테마 대응), <code>prefers-reduced-motion</code>이면 정적. 첫 사례: Kimi K3 커널 최적화 모델 비교(K3 +59.7% vs Fable 5 +57.1%).</li>
 </ul>
-
-<h3>후속 — 웅덩이 대·중·소 3개 + 랜덤 경로·진하기 변화</h3>
-<p>사용자 요청으로 배경 먹 웅덩이를 <strong>4개 → 대·중·소 3개</strong>로 줄이고(<code>ib1</code> ~56vmax·<code>ib2</code> ~40vmax·<code>ib3</code> ~26vmax), 고정 CSS 키프레임 궤적 대신 <strong>랜덤한 경로로 천천히 흐르며 진하기(opacity)도 서서히 반복 변화</strong>하게 했다.</p>
-<ul>
-    <li><strong>랜덤 경로·진하기</strong> — 새 <code>startInkDrift()</code>(search.js)가 웅덩이마다 <code>Math.random()</code>으로 5개 웨이포인트(각 <code>transform: translate(±7vmax) scale(0.94~1.12)</code> + <code>opacity</code>, 마지막=처음으로 매끄러운 순환)를 만들어 <strong>WAAPI</strong>로 <code>iterations: Infinity</code>·<code>duration 50~90s</code>·<code>ease-in-out</code> 재생. 웅덩이마다 궤적·속도·진하기 리듬이 달라 서로 다르게 흐르고 숨쉰다. 진하기 범위는 테마·크기별로(밤 0.30~0.62·낮 0.42~0.72, 대는 낮게·소는 또렷하게).</li>
-    <li><strong>성능</strong> — 이동·진하기 모두 <code>transform</code>/<code>opacity</code>만 애니(WAAPI, 컴포지터 처리, RAF 없음)라 정적 마스크 웅덩이 위에서도 <strong>IDLE 59~60fps</strong> 유지(Playwright 실측, 시간차로 위치·opacity 변화 확인). 기존 CSS <code>@keyframes ink-drift-a~d</code>·<code>ib4</code>·개별 <code>:hover</code> opacity 규칙은 제거(사망코드·WAAPI가 opacity를 덮음). 호버 각성은 컨테이너 <code>.search-ink</code> opacity로 처리, <code>reduced-motion</code>이면 WAAPI 미부착·CSS 기본 opacity로 정적.</li>
-    <li>자산 <code>?v</code> 재상향 <code>style.css 25→26</code>·<code>search.js 5→6</code>.</li>
-    <li><strong>개별 숨쉬기 되살림(후속)</strong> — 대·중·소로 바꾸며 개별 웅덩이의 뚜렷한 숨쉬기가 느린 랜덤 스케일로 흡수됐다는 지적에 따라, 드리프트 <code>transform</code>에서 <code>scale</code>을 빼 <strong>위치만</strong> 담당하게 하고, 크기 맥동은 <strong>독립 <code>scale:</code> 속성</strong>에 별도 WAAPI(<code>1↔1.03~1.06</code>, <code>6~10s</code>, 음수 <code>delay</code>로 위상 어긋냄)로 걸었다. <code>transform</code>(이동)과 <code>scale</code>(숨쉬기)이 다른 채널이라 곱해져 합성 — 웅덩이마다 제 리듬으로 숨쉰다(Playwright로 <code>scale</code> 맥동·위상차 확인, IDLE 60fps). <code>search.js 6→7</code>.</li>
-</ul>
