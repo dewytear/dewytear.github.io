@@ -246,8 +246,9 @@ function showSearch(){
       // 색은 background: var(--accent)가 마스크 알파로 드러나 테마 대응, 애니는
       // transform/opacity만이라 컴포지터가 처리(60fps).
       +   '<div class="search-ink" aria-hidden="true">'
+      // 대·중·소 세 웅덩이. 이동·진하기 변화는 startInkDrift()가 WAAPI로 랜덤 부여.
       +     '<span class="ink-blob ib1"></span><span class="ink-blob ib2"></span>'
-      +     '<span class="ink-blob ib3"></span><span class="ink-blob ib4"></span>'
+      +     '<span class="ink-blob ib3"></span>'
       // 커서 자취 — startSearchInk()가 pointermove 때 이 안의 스탬프 풀을 재사용.
       +     '<div class="ink-trail"></div>'
       +   '</div>'
@@ -303,6 +304,7 @@ function showSearch(){
     setArticle(html);
     ensureTextIndex();   // start fetching doc bodies in the background
     startSearchGame();   // ambient mini game behind the field
+    startInkDrift();     // 웅덩이(대·중·소)가 랜덤 경로로 흐르고 진하기가 변한다
     startSearchInk();    // 수묵 커서 자취(호버 시 배경이 깨어남)
     enableSearchPaddle();   // drag the field left/right like a paddle
     // new+ 버튼: 새 글이 있을 때만 배경색(app.js의 anyNewDocs).
@@ -392,5 +394,40 @@ function startSearchInk(){
             { opacity: op, offset: 0.22 },
             { transform: 'translate(-50%,-50%) scale(' + peak.toFixed(2) + ')', opacity: 0 }
         ], { duration: dur, easing: 'ease-out' });
+    });
+}
+
+// ---- 웅덩이 랜덤 드리프트 + 진하기 변화 ----
+// 대·중·소 세 웅덩이가 각기 다른 '랜덤 경로'로 천천히 흐르고, 진하기(opacity)도
+// 서서히 짙어졌다 옅어지길 반복한다. transform/opacity만 애니(WAAPI, 컴포지터 처리 —
+// RAF 없음)라 마스크 웅덩이 위에서도 60fps. 앰비언트라 hover/터치 무관하게 돌되,
+// prefers-reduced-motion이면 정적(CSS 기본 opacity로 남는다).
+function startInkDrift(){
+    var layer = document.querySelector('.search-ink');
+    if(!layer){ return; }
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ return; }
+    var blobs = layer.querySelectorAll('.ink-blob');
+    if(!blobs.length || !blobs[0].animate){ return; }
+    var day = document.body.classList.contains('day');
+    function rnd(a, b){ return a + Math.random() * (b - a); }
+    blobs.forEach(function(el, i){
+        // 대(ib1)는 크므로 진하기를 살짝 낮게, 소(ib3)는 조금 높게.
+        var opLo = day ? 0.42 : 0.30, opHi = day ? 0.72 : 0.62;
+        if(i === 0){ opLo -= 0.06; opHi -= 0.10; }        // 대: 은은하게
+        if(i === 2){ opLo += 0.04; opHi += 0.04; }        // 소: 또렷하게
+        var steps = 5, frames = [];
+        for(var s = 0; s <= steps; s++){
+            // 마지막 프레임 = 처음과 같게 → 매끄러운 무한 순환.
+            if(s === steps){ frames.push(frames[0]); break; }
+            frames.push({
+                transform: 'translate(' + rnd(-7, 7).toFixed(1) + 'vmax,' + rnd(-7, 7).toFixed(1) + 'vmax) scale(' + rnd(0.94, 1.12).toFixed(3) + ')',
+                opacity: rnd(opLo, opHi).toFixed(3)
+            });
+        }
+        el.animate(frames, {
+            duration: rnd(50000, 90000),   // 50~90초 — 천천히
+            iterations: Infinity,
+            easing: 'ease-in-out'
+        });
     });
 }
