@@ -397,11 +397,13 @@ function startSearchInk(){
     });
 }
 
-// ---- 웅덩이 랜덤 드리프트 + 진하기 변화 ----
-// 대·중·소 세 웅덩이가 각기 다른 '랜덤 경로'로 천천히 흐르고, 진하기(opacity)도
-// 서서히 짙어졌다 옅어지길 반복한다. transform/opacity만 애니(WAAPI, 컴포지터 처리 —
-// RAF 없음)라 마스크 웅덩이 위에서도 60fps. 앰비언트라 hover/터치 무관하게 돌되,
-// prefers-reduced-motion이면 정적(CSS 기본 opacity로 남는다).
+// ---- 웅덩이 랜덤 드리프트 + 진하기 변화 + 개별 숨쉬기 ----
+// 대·중·소 세 웅덩이가 각기 다른 '랜덤 경로'로 천천히 흐르고(transform: translate),
+// 진하기(opacity)도 서서히 변하며, 그 위에 각자 리듬의 '숨쉬기'(독립 scale: 속성)가
+// 겹친다 — 이동은 transform, 숨쉬기는 scale로 채널을 분리해 서로 곱해져 합성된다.
+// 모두 transform/scale/opacity만 애니(WAAPI, 컴포지터 처리 — RAF 없음)라 마스크
+// 웅덩이 위에서도 60fps. 앰비언트라 hover/터치 무관하게 돌되, prefers-reduced-motion
+// 이면 정적(CSS 기본 opacity로 남는다).
 function startInkDrift(){
     var layer = document.querySelector('.search-ink');
     if(!layer){ return; }
@@ -415,12 +417,13 @@ function startInkDrift(){
         var opLo = day ? 0.42 : 0.30, opHi = day ? 0.72 : 0.62;
         if(i === 0){ opLo -= 0.06; opHi -= 0.10; }        // 대: 은은하게
         if(i === 2){ opLo += 0.04; opHi += 0.04; }        // 소: 또렷하게
+        // 드리프트: 위치(translate)만 랜덤 경로로. 크기는 아래 숨쉬기가 전담.
         var steps = 5, frames = [];
         for(var s = 0; s <= steps; s++){
             // 마지막 프레임 = 처음과 같게 → 매끄러운 무한 순환.
             if(s === steps){ frames.push(frames[0]); break; }
             frames.push({
-                transform: 'translate(' + rnd(-7, 7).toFixed(1) + 'vmax,' + rnd(-7, 7).toFixed(1) + 'vmax) scale(' + rnd(0.94, 1.12).toFixed(3) + ')',
+                transform: 'translate(' + rnd(-7, 7).toFixed(1) + 'vmax,' + rnd(-7, 7).toFixed(1) + 'vmax)',
                 opacity: rnd(opLo, opHi).toFixed(3)
             });
         }
@@ -428,6 +431,18 @@ function startInkDrift(){
             duration: rnd(50000, 90000),   // 50~90초 — 천천히
             iterations: Infinity,
             easing: 'ease-in-out'
+        });
+        // 숨쉬기: 독립 scale 속성으로 각자 리듬(6~10초)·위상(음수 delay)으로 부풀었다
+        // 줄어든다. transform과 다른 채널이라 드리프트와 충돌 없이 겹쳐진다.
+        el.animate([
+            { scale: '1' },
+            { scale: rnd(1.03, 1.06).toFixed(3) },
+            { scale: '1' }
+        ], {
+            duration: rnd(6000, 10000),
+            iterations: Infinity,
+            easing: 'ease-in-out',
+            delay: -rnd(0, 5000)          // 위상 어긋내기 — 제각각 숨쉬게
         });
     });
 }
