@@ -1,0 +1,21 @@
+<h2>2026-07-20 · 디자인 — 통합검색 웅덩이 대·중·소 · 랜덤 이동 · 개별 숨쉬기</h2>
+<p>전날 도입한 통합검색 수묵 배경(<a href="#!wl-20260719-design">07-19 로그</a>)의 먹 웅덩이를 다듬었다. 개수·크기를 <strong>대·중·소 3개</strong>로 바꾸고, 고정 궤적 대신 <strong>랜덤한 경로로 천천히 흐르며 진하기가 변하고</strong>, 그 위에 웅덩이마다 <strong>제 리듬의 숨쉬기</strong>가 겹치게 했다. 성능 원칙(라이브 필터 없이 <code>transform</code>/<code>scale</code>/<code>opacity</code>만 = 컴포지터 처리, 60fps)을 그대로 지켰다.</p>
+
+<h3>대·중·소 3개 + 랜덤 경로 + 진하기 변화</h3>
+<ul>
+    <li><strong>대·중·소</strong> — 웅덩이를 4개에서 3개로 줄이고 크기를 확연히 다르게 뒀다(<code>ib1</code> 대 ~56vmax·<code>ib2</code> 중 ~40vmax·<code>ib3</code> 소 ~26vmax). 색은 테마 토큰(<code>var(--accent)</code>/<code>var(--accent-ink)</code>), 마스크 시드 2종 교차.</li>
+    <li><strong>랜덤 경로·진하기</strong> — 새 <code>startInkDrift()</code>(search.js)가 웅덩이마다 <code>Math.random()</code>으로 5개 웨이포인트(각 <code>transform: translate(±7vmax)</code> + <code>opacity</code>, 마지막=처음으로 매끄러운 순환)를 만들어 <strong>WAAPI</strong>로 <code>iterations: Infinity</code>·<code>duration 50~90s</code>·<code>ease-in-out</code> 재생. 궤적·속도·진하기 리듬이 웅덩이마다 달라 서로 다르게 흐른다. 진하기 범위는 테마·크기별(밤 0.30~0.62·낮 0.42~0.72, 대는 낮게·소는 또렷하게).</li>
+    <li><strong>성능·정리</strong> — 이동·진하기 모두 <code>transform</code>/<code>opacity</code>만 애니(RAF 없음)라 정적 마스크 웅덩이 위에서도 <strong>IDLE 59~60fps</strong>(Playwright 실측). 기존 CSS <code>@keyframes ink-drift-a~d</code>·<code>ib4</code>·개별 <code>:hover</code> opacity 규칙은 제거(사망코드·WAAPI가 opacity를 덮음). 호버 각성은 컨테이너 <code>.search-ink</code> opacity로. <code>reduced-motion</code>이면 정적. 자산 <code>?v</code> <code>style.css 25→26</code>·<code>search.js 5→6</code>.</li>
+</ul>
+
+<h3>개별 웅덩이 숨쉬기 되살리기</h3>
+<p>대·중·소로 바꾸며 개별 웅덩이의 뚜렷한 숨쉬기가 느린 랜덤 스케일에 흡수됐다는 지적에 따라 되살렸다. 이동과 숨쉬기를 <strong>다른 속성 채널로 분리</strong>한 게 핵심이다.</p>
+<ul>
+    <li>드리프트 <code>transform</code>에서 <code>scale</code>을 빼 <strong>위치(translate)만</strong> 담당시키고, 크기 맥동은 <strong>독립 <code>scale:</code> 속성</strong>에 별도 WAAPI(<code>1↔1.03~1.06</code>, <code>6~10s</code>, 음수 <code>delay</code>로 위상 어긋냄)로 걸었다. <code>transform</code>(이동)·<code>scale</code>(숨쉬기)이 다른 채널이라 곱해져 합성 — 충돌 없이 겹치고, 웅덩이마다 제 리듬·위상으로 숨쉰다. 레이어 전체 숨쉬기(<code>.search-ink</code>의 <code>breathe</code> 5s)도 유지.</li>
+    <li>여전히 컴포지터 처리(<code>transform</code>/<code>scale</code>/<code>opacity</code>만) — Playwright로 웅덩이별 <code>scale</code> 맥동·위상차 실측, IDLE 60fps 확인. 자산 <code>?v</code> <code>search.js 6→7</code>.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">변경 유형 · 로그 날짜</span>
+    <strong>ENGINE + STYLE</strong>. 이 두 갈래는 <strong>07-20 KST</strong> 작업이라 07-19 로그에서 분리해 이 날짜 로그로 옮겼다(파일명·폴더 날짜는 KST 기준 — 자정 전후 전날 로그 유입 방지, CLAUDE.md 규칙). 07-19 로그에는 그날(수묵 원본·커서 자취·성능 회귀 수정) 작업만 남긴다.
+</div>
