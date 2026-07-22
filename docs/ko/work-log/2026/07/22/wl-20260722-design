@@ -1,0 +1,12 @@
+<h2>2026-07-22 · 디자인 — 최근문서 행이 아이패드에서 글자 단위로 깨지던 버그 (뷰포트 → 컨테이너 쿼리)</h2>
+<p>아이패드 세로 제보: "최근 문서"(그리고 태그·새 글 목록) 행의 제목이 <strong>글자 하나 폭까지 눌려 세로로 줄바꿈</strong>됐다. 원인은 행이 좌우 flex(<code>.more-list li a</code>, <code>justify-content:space-between</code>)이고 메타(<code>.more-meta</code>)가 <code>white-space:nowrap</code>(경로·날짜, 최대 ~490px)이라, 콘텐츠 열이 좁으면 제목 열이 0폭 가까이 굶는 것. 세로 2줄로 접는 폴백이 <code>@media(max-width:800px)</code>에만 있어 <strong>아이폰(≤800)만</strong> 적용되고 <strong>아이패드 세로(820·834·1024px)</strong>는 좌우 2열로 남았다.</p>
+<h3>수정 — 뷰포트가 아니라 목록 자신의 폭에 반응</h3>
+<ul>
+    <li><strong>왜 뷰포트 브레이크포인트로는 부족한가</strong> — <code>max-width: N</code>은 매직넘버라, N을 넘는 폼팩터(더 큰 태블릿 세로, 사이드바로 콘텐츠 열만 좁아진 데스크톱, 스플릿뷰)에서 또 굶는다. "어떤 경우에도 안 깨지게"가 목표라 <strong>CSS 컨테이너 쿼리</strong>로 전환.</li>
+    <li><strong>구현</strong> — <code>.more-list</code>에 <code>container-type: inline-size</code>를 선언하고, <code>@container (max-width: 800px)</code>에서 행을 세로로 접는다(<code>flex-direction:column</code>·<code>align-items:flex-start</code>·<code>.more-meta{white-space:normal}</code>). 이제 <strong>목록 자신의 실제 폭</strong>이 좁아지면 — 뷰포트·기기·사이드바 상태와 무관하게 — 무조건 2줄로 접힌다. 좌우 2열은 목록이 넉넉히 넓을 때(제목 ≥ ~300px 확보)만 유지. 구형 엔진(Safari&lt;16, 컨테이너 쿼리 미지원)은 기존 <code>@media(max-width:800px)</code> 폴백이 폰을 계속 커버.</li>
+    <li><strong>검증</strong>(Playwright) — 사이드바 펼침(제보 조건)에서 아이패드 세로 768·820·834·1024px 모두 <code>column</code>(목록폭 468~728), 데스크톱(목록폭 ≥960)은 <code>row</code> 유지. <strong>폼팩터 증명</strong>: 뷰포트 1600px이라도 목록 폭을 460px로 좁히면 <code>column</code>으로 접힘 — 뷰포트가 아닌 목록 폭에 반응함을 확인. <code>.more-list</code>는 최근문서·태그·새 글이 공유하므로 세 화면 모두 함께 고쳐졌다.</li>
+</ul>
+<div class="note">
+    <span class="nh">변경 유형 · 검증</span>
+    <strong>STYLE</strong>. 자산 <code>?v</code> <code>style.css 26→27</code>. <code>validate_all</code> ERROR 0 · <code>check_cachebuster</code> 통과. CSS만 변경(JS·인덱스 무관).
+</div>

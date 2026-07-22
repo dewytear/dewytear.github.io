@@ -1965,6 +1965,11 @@
             list-style: none;
             margin: 0;
             padding: 0;
+            /* Query container: the recent/tag/new rows below stack based on THIS
+               list's own width (see @container rule), so they degrade correctly
+               on any form factor — not a viewport breakpoint that a wider device
+               (or a narrowed content column) could slip past. */
+            container-type: inline-size;
         }
         .more-list li{
             border-bottom: 1px solid var(--border);
@@ -2623,6 +2628,24 @@
             }
             article .carousel-stage{
                 height: 400px;
+            }
+        }
+        /* Form-factor-proof stack: the ≤800px rule above covers phones on every
+           engine, but iPad portrait (820–1024), iPad split-view, or a desktop
+           whose content column is narrowed by the sidebar all keep the row and
+           starve the title. Query the LIST's own width instead of the viewport —
+           whenever the list is too narrow to hold title + the ~490px nowrap meta
+           with a comfortable title (≥~300px), stack. Reacts to the real available
+           width on ANY device, present or future — including iPad portrait with
+           the sidebar expanded (narrower content). (container-type on .more-list.) */
+        @container (max-width: 800px){
+            .more-list li a{
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+            .more-meta{
+                white-space: normal;
             }
         }
 
