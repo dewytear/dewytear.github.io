@@ -1,0 +1,16 @@
+<h2>2026-07-24 · 콘텐츠 — SNU Catch 이재욱 교수 대담 아티클</h2>
+<p>서울대 공식 채널 <strong>SNU Catch 시즌 2</strong>의 이재욱 교수(컴퓨터공학부·AI연구원장) 대담 — &ldquo;미래에 인간은 손으로 코딩하지 않게 되는가&rdquo; — 를 <em>AI &gt; News &amp; Articles &gt; 2026</em> 아티클로 정리해 등록했다. 대담 전사록의 논지를 구조화하고, 등장하는 주장·수치를 <strong>웹검색 교차검증으로 보강</strong>해 대담 발언과 외부 사실을 구분 표기했다.</p>
+
+<h3>추가된 문서</h3>
+<ul>
+    <li><strong>손으로 코딩하는 시대의 끝? — 서울대 이재욱 교수가 본 개발자의 미래</strong> (<code>ai/news/2026/news-20260724-snucatch-ai-coding</code>) — 구현은 거의 100% 자동화·정의와 비평이 남는다는 핵심 논지, 개발자가 첫 타깃이 된 세 이유, 바이브코딩의 힘(광진구청 사례)과 95%의 함정, 케이퍼빌리티 오버행, 학생이 &lsquo;배달부&rsquo;가 되는 교육 문제와 AI 네이티브 커리큘럼·비평 훈련, 제번스 역설 vs 완전 자동화와 ATM·텔러의 역사, 신입 문턱 상승, &ldquo;다시 스무 살이어도 하겠다&rdquo;(The Great Equalizer)까지. 인라인 SVG 도식 2개(개발 루프의 역할 이동, 배달부 문제 대비).</li>
+</ul>
+
+<h3>등록·검증</h3>
+<ul>
+    <li><strong>교차검증한 외부 수치</strong> — 카파시 인용 2건(2023-01-24 &ldquo;영어가 가장 뜨거운 언어&rdquo;·2025-02 바이브코딩), 구글 AI 코드 비중 25→30→75%(실적 발표 발언 기준임을 명시), 스탠퍼드·ADP 신입 개발자 −20%/고노출 직군 22~25세 상대 −13%, METR RCT 실측 19% 느림 vs 체감 20% 빠름(METR의 historical 단서 병기), 베선의 ATM·텔러(지점당 21→13명·도시 지점 +43%). 대담 자체의 공개일은 특정하지 못해 본문에 날짜를 적지 않음.</li>
+    <li><strong><code>list</code>·인덱스</strong> — News 2026 트리에 노드 추가(<code>label_en</code>·<code>tags_en</code>·model 기록), <code>tools/doc-entries.ko.json</code> 엔트리 추가 후 <code>build_index.py</code> 재생성(+<code>--check</code>). 개념은 기존 어휘 재사용(코딩에이전트·자동화·학습) + 본문 실재 신규(바이브코딩·문제정의·비평·제번스역설·개발자일자리).</li>
+    <li><strong>관계(relations) 5타입 검토</strong> — 선행지식·구현·사례·근거·대체를 본문과 대조한 결과 기존 문서와의 실재 관계 없음(대담 정리 아티클) — 억지 링크 없이 개념 엣지로만 연결되게 둠.</li>
+    <li><code>node tools/check_diagram_bounds.mjs</code>로 신규 도식 2개 실렌더 경계 검사, <code>python tools/validate_all.py</code> ERROR 0. 커밋 후 <code>build_dates.py</code> 재생성 amend.</li>
+    <li><strong>WARN 검토</strong> — 문서 추가로 낡은 <code>ai-map</code> fallback 수치(News 편수 10→11, 전체 101편·322개→102편·327개)를 ko·en 모두 보정. 신규 문서의 <code>wrong-cluster</code> WARN은 검토 결과 자연스러운 상태로 유지 — 개념(바이브코딩·문제정의 등)이 본문에 실재하는 정직한 어휘이고 News 클러스터 소속(아티클)도 맞으며, 연결을 만들려고 개념을 억지로 넣지 않는다는 규칙을 따름.</li>
+</ul>
