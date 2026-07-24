@@ -15,3 +15,11 @@
     <li><strong>WARN 검토</strong> — 문서 추가로 낡은 <code>ai-map</code> fallback 수치(News 편수 10→11, 전체 101편·322개→102편·327개)를 ko·en 모두 보정. 신규 문서의 <code>wrong-cluster</code> WARN은 검토 결과 자연스러운 상태로 유지 — 개념(바이브코딩·문제정의 등)이 본문에 실재하는 정직한 어휘이고 News 클러스터 소속(아티클)도 맞으며, 연결을 만들려고 개념을 억지로 넣지 않는다는 규칙을 따름.</li>
     <li><strong>후속 보정 — Work Log 날짜 폴더 순서</strong> — 이 작업에서 <code>list</code>에 &lsquo;24일&rsquo; 폴더를 추가할 때 &lsquo;20일&rsquo; 바로 뒤에 끼워 넣어, 이미 있던 &lsquo;22일&rsquo;(아이패드 줄바꿈 수정 로그)이 24일 <em>아래</em>에 표시되는 순서 오류를 만들었다(사용자 제보). 사이드바는 <code>list</code> 노드 순서를 그대로 그리므로, 22일 블록을 24일 앞으로 옮겨 20→22→24로 정정. 교훈: 날짜 노드를 추가할 때는 형제 폴더의 <strong>기존 순서를 확인하고 날짜 위치에 맞게</strong> 삽입할 것.</li>
 </ul>
+
+<h3>CLAUDE.md의 10계명 문서 등록</h3>
+<p>사용자 요청으로 구글드라이브 보관 자료 — <strong>&lsquo;CLAUDE.md의 10계명&rsquo; 인포그래픽</strong>(941&times;1672 PNG)과 같은 폴더의 <strong>범용 CLAUDE.md 원문</strong> — 를 <em>AI &gt; Claude &gt; Code</em> 트리의 <strong>Introduction 폴더 바로 앞</strong>에 문서로 등록했다(<code>ai/claude/code/claude-md-commandments</code>).</p>
+<ul>
+    <li><strong>구성</strong> — 인포그래픽(webp 변환 230KB, <code>assets/ai/claude/code/claude-md-commandments/hero.webp</code>, <code>.doc-img</code> 컴포넌트) + 10계명 한눈표(계명·한 줄 주문·막는 사고) + <strong>영어 원문 전문</strong>(복사해 바로 쓰는 <code>&lt;pre&gt;</code> 블록) + <strong>한국어 번역 전문</strong> + 활용법을 &lsquo;AI 신입사원 온보딩 문서&rsquo; 비유로 쉽게(3분 설치 3단계·효과 확인 신호·재량 조항 주의).</li>
+    <li><strong>등재</strong> — <code>list</code> 노드(Code 자식 첫 번째, Introduction 앞), <code>doc-entries</code> 엔트리 + <code>build_index</code> 재생성(114 docs). 관계 5타입 검토 결과 <strong>example-of → ccb-claudemd</strong> 1건 실재(작업 지침 파일 해설의 실전 사례) — 나머지 타입은 본문에 대응 없음.</li>
+    <li><strong>새 섹션 등록·WARN 검토</strong> — 문서가 폴더가 아닌 <em>Code 바로 아래</em> 놓이며 새 섹션 <code>AI · Claude · Code</code>가 생겨 <code>cluster-coverage</code> ERROR — <code>tools/clusters.json</code>에 <strong>Code 공통/Code Essentials</strong> 클러스터를 ko·en 등록하고 ai-map의 data-topics·클러스터 표 fallback(새 행)·총계(103편·329개)·Skill 허브 드리프트(skl-strengths→skl-overview)까지 갱신. 신규 문서의 <code>wrong-cluster</code> WARN(1편짜리 클러스터라 자체 개념 공유 0)은 자연스러운 상태로 유지 — 억지 개념 추가 금지 규칙.</li>
+</ul>
