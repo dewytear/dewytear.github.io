@@ -14,7 +14,7 @@ related[]: rarity-weighted (idf) concept overlap. Two docs sharing rare concepts
 rank higher than docs sharing common ones. Docs with little concept overlap are
 topped up with same-folder neighbours (via: "folder") so every doc gets 2-4.
 """
-import glob, json, math, os, sys
+import glob, json, math, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LIST = os.path.join(ROOT, 'list')
@@ -41,6 +41,26 @@ def entries_path(lang):
 
 def out_path(lang):
     return os.path.join(ROOT, 'data', 'knowledge-index.%s.json' % lang)
+
+
+# In-body internal links (same pattern as validate_routes.py) — the source of
+# the computed citedBy backlinks below.
+LINK_RE = re.compile(r'href="#!([^"]*)"')
+
+
+def load_paths():
+    """name -> fragment path under docs/<lang>/, in nav order (from `list`)."""
+    tree = json.load(open(LIST, encoding='utf-8'))
+    paths = {}
+
+    def walk(nodes):
+        for n in nodes:
+            if n.get('children'):
+                walk(n['children'])
+            elif n.get('name') and n.get('path'):
+                paths[n['name']] = n['path']
+    walk(tree if isinstance(tree, list) else tree.get('children', tree))
+    return paths
 
 
 def load_sections():
@@ -131,6 +151,32 @@ def build(lang='ko'):
                 if len(rel) >= 3:
                     break
         d['related'] = rel
+
+    # citedBy: 본문 `#!` 링크의 역인덱스(백링크). 인덱스에 든 문서만 인용자로
+    # 세고(Work Log 저널은 자연히 제외), 자기 링크·인덱스 밖 대상은 버린다.
+    # 본문에 실재하는 링크만 쓰므로 개념 정직성 규칙과 정합. additive 계산
+    # 필드 — 인용이 없으면 키 자체를 생략한다(related 계산과는 완전 독립).
+    paths = load_paths()
+    nav_pos = {nm: i for i, nm in enumerate(paths)}
+    cited = {}
+    for d in docs:
+        rel_path = paths.get(d['name'])
+        if not rel_path:
+            continue
+        fp = os.path.join(ROOT, 'docs', lang, rel_path)
+        if not os.path.exists(fp):
+            fp = os.path.join(ROOT, 'docs', 'ko', rel_path)   # 번역 폴백 계층
+        try:
+            body = open(fp, encoding='utf-8').read()
+        except OSError:
+            continue
+        for target in set(LINK_RE.findall(body)):
+            if target != d['name'] and target in by_name:
+                cited.setdefault(target, []).append(d['name'])
+    for d in docs:
+        citers = cited.get(d['name'])
+        if citers:
+            d['citedBy'] = sorted(citers, key=lambda nm: nav_pos.get(nm, 1 << 30))
 
     labels = CLUSTER_LABELS_BY_LANG.get(lang, CLUSTER_LABELS)
     stats = build_stats(docs, labels)
