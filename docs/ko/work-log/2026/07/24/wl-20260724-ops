@@ -1,0 +1,7 @@
+<h2>2026-07-24 · 운영 — Work Log 날짜 폴더 순서 게이트 (worklog-date-order)</h2>
+<p>같은 날 발생한 <strong>날짜 폴더 순서 사고</strong>(&lsquo;24일&rsquo;을 &lsquo;20일&rsquo; 뒤에 끼워 넣어 기존 &lsquo;22일&rsquo;이 아래로 밀림 — <a href="#!wl-20260724-content">콘텐츠 로그의 후속 보정</a> 참조)를 데이터 정정으로 끝내지 않고, <strong>재발을 기계적으로 막는 게이트</strong>로 만들었다. 반복 사고는 규칙이 아니라 게이트로 막는다는 이 위키의 원칙(<code>check_cachebuster</code>·<code>check_worklog</code>의 탄생 배경과 동일)을 따른 것.</p>
+<ul>
+    <li><strong><code>tools/validate_routes.py</code>에 검사 4c <code>worklog-date-order</code> 추가</strong> — Work Log 트리의 날짜 폴더(<code>YYYY</code>·<code>NN월</code>·<code>NN일</code>)는 형제끼리 <strong>오름차순</strong>이어야 한다. 사이드바가 <code>list</code> 노드 순서를 그대로 그리기 때문. 숫자 제목 폴더만 보는 결정적 검사라 오탐이 없어 <strong>ERROR</strong>(머지 차단)로 강제 — <code>validate_all</code>(push·PR CI)에 자동 포함된다.</li>
+    <li><strong>검증</strong> — 정상 <code>list</code> 통과 확인 + 사고 상황(24일을 22일 앞으로) 재현 시 <code>[ERROR] worklog-date-order | 2026 &gt; 07월 | '24일'가 '22일'보다 앞에 있음</code>으로 정확히 차단됨을 확인.</li>
+    <li><strong>TOOL 변경 체크</strong>(변경 유형표) — 플러그인 번들 동기(<code>check_plugin_sync --fix</code>, validate_routes.py 1건 복원) + <code>plugin.json</code> version <code>0.8.0 → 0.8.1</code> 상향.</li>
+</ul>
