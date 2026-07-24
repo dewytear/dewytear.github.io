@@ -171,6 +171,31 @@ def run(root):
             findings.append(_f('WARN', 'worklog-day-split', day,
                                 'work-log %s에 로그 %d개 — 빅 프레임(콘텐츠/기능/디자인/운영) 병합 검토' % (day, count)))
 
+    # 4c. worklog-date-order: Work Log 트리의 날짜 폴더(YYYY / NN월 / NN일)는
+    # 형제끼리 오름차순이어야 한다. 사이드바는 list 노드 순서를 그대로 그리므로,
+    # 날짜 폴더를 형제 순서 확인 없이 끼워 넣으면 달력이 어긋난다(2026-07-24
+    # 실사고: '24일'을 '20일' 뒤에 삽입해 기존 '22일'이 그 아래로 밀림).
+    # 숫자 제목 폴더만 보는 결정적 검사라 오탐이 없어 ERROR로 강제한다.
+    def _date_key(title):
+        m = re.fullmatch(r'(\d{4})|(\d{1,2})월|(\d{1,2})일', title or '')
+        if not m:
+            return None
+        return int(m.group(1) or m.group(2) or m.group(3))
+    def _check_date_order(nodes, crumb):
+        keyed = [(n, _date_key(n.get('title')))
+                 for n in nodes if isinstance(n, dict) and 'children' in n]
+        dated = [(n, k) for n, k in keyed if k is not None]
+        for (a, ka), (b, kb) in zip(dated, dated[1:]):
+            if ka > kb:
+                findings.append(_f('ERROR', 'worklog-date-order', crumb or 'Work Log',
+                                    "'%s'가 '%s'보다 앞에 있음 — list의 날짜 폴더는 오름차순 (사이드바가 노드 순서를 그대로 그림)"
+                                    % (a.get('title'), b.get('title'))))
+        for n, _k in keyed:
+            _check_date_order(n['children'], (crumb + ' > ' if crumb else '') + (n.get('title') or ''))
+    for section in (tree or []):
+        if isinstance(section, dict) and section.get('title') == 'Work Log':
+            _check_date_order(section.get('children', []), '')
+
     # 5. broken-link: href="#!..." targets that resolve to nothing.
     names = {n['name'] for n in docs}
     for lang, base in (('ko', ko_dir), ('en', en_dir)):
