@@ -551,6 +551,7 @@ function fetchPage(filename){
             injectDocDate(filename);
             injectRelations();
             injectRelated();
+            injectCitedBy();   // 반드시 injectRelated 뒤 (related 가드 충돌 방지)
             hydrateAiMap();
     })
 }
@@ -657,6 +658,32 @@ function injectRelations(){
     if(!html){ return; }
     var wrap = document.createElement('div');
     wrap.innerHTML = html;
+    art.appendChild(wrap.firstChild);
+}
+
+// ---- 인용 백링크 (citedBy — build_index가 본문 #!링크를 역인덱스한 계산 필드) ----
+// "이 문서를 인용한 문서" 목록. 마크업은 .related 계열을 재사용해(스타일·
+// '연관 숨기기' 설정 상속) 인용자의 계층 경로를 근거 자리에 보여준다.
+// 반드시 injectRelated 뒤에 불러야 한다 — related 블록의 중복 가드가
+// '.related' 존재로 판정하므로, citedby(related citedby)가 먼저 붙으면
+// 진짜 연관 블록이 건너뛰어진다.
+function injectCitedBy(){
+    if(!KNOWLEDGE || !CURRENT_DOC){ return; }
+    var art = document.getElementById('article');
+    if(!art || art.querySelector('.citedby')){ return; }
+    var info = KNOWLEDGE[CURRENT_DOC];
+    if(!info || !info.citedBy || !info.citedBy.length){ return; }
+    var items = info.citedBy.map(function(n){
+        var o = KNOWLEDGE[n] || {};
+        var why = o.section
+                ? '<span class="rel-why"><span class="rel-why-plain">' + escapeHtml(o.section) + '</span></span>' : '';
+        return '<li><a href="#!' + encodeURIComponent(n) + '">'
+             + escapeHtml(o.title || n) + '</a>' + why + '</li>';
+    }).join('');
+    var wrap = document.createElement('div');
+    wrap.innerHTML = '<nav class="related citedby" aria-label="' + STR('citedBy') + '">'
+                   + '<h3 class="related-title">' + STR('citedBy') + '</h3>'
+                   + '<ul class="related-list">' + items + '</ul></nav>';
     art.appendChild(wrap.firstChild);
 }
 
@@ -1876,6 +1903,7 @@ window.__loadKnowledge.then(function(idx){
     buildConceptIndex();
     injectRelations();
     injectRelated();
+    injectCitedBy();   // 반드시 injectRelated 뒤 (related 가드 충돌 방지)
     hydrateAiMap();
     // Concepts now available — re-rank any in-progress search.
     var box = document.getElementById('search-input');

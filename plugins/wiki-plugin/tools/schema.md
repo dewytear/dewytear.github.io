@@ -77,6 +77,16 @@
 - 원본은 `doc-entries.<lang>.json`(비-ko는 ko에서 상속). 자동 추론 금지 — 본문에 실재하는
   관계만(정직성 규칙). 검증은 `validate_graph.py`의 `relations-*` 체크.
 
+**`citedBy` (선택 필드 — 계산된 인용 백링크, 2026-07-24 additive 추가):** 본문 안
+`href="#!name"` 내부 링크의 **역인덱스**. build_index.py가 각 문서의 프래그먼트를 파싱해
+"이 문서를 인용한 문서" name 배열(내비 순서 정렬)로 계산한다 — 직접 쓰지 말 것.
+```jsonc
+"citedBy": ["kgs-edges", "claude-md-commandments"]   // 인용이 없으면 키 생략
+```
+- 인용자는 **인덱스에 든 문서만** 센다(Work Log 저널의 링크는 제외). 자기 링크·인덱스 밖
+  대상은 버린다. `related`(개념 중복)·`relations`(큐레이트 선언)와 **독립인 세 번째 연결층** —
+  본문에 실재하는 링크에서만 나오므로 정직성 규칙과 정합.
+
 ### 1.2 `stats` — 집계
 
 ```jsonc

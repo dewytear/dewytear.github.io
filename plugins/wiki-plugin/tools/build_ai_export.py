@@ -101,6 +101,8 @@ def build_graph():
             'route': BASE + '#!' + d['name'],
             'related': d['related'],
             'relations': d.get('relations', []),
+            # 본문 #!링크의 역인덱스(백링크) — 인덱스와 동일한 계산 필드 통과.
+            'citedBy': d.get('citedBy', []),
         })
     return {
         'schemaVersion': 2,
