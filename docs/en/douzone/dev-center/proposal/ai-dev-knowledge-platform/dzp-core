@@ -1,0 +1,68 @@
+<h2>The Core of the Proposal — The Development Flow Stays as It Is, AI Does the Knowledge Work</h2>
+<p>The purpose of this proposal is not to build a simple company Wiki. It is to build a platform where AI continuously analyzes the development results accumulating in GitLab, extracts knowledge from them, and compares it with existing knowledge to decide whether to <strong>create, update, or retire</strong>. An employee's workflow stays exactly as it is today — writing wiki pages, editing Markdown, registering Tags, classifying documents, organizing knowledge: <strong>none of it is asked of them</strong>. Employees only search and read the knowledge that finally gets produced.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 196" role="img" aria-label="Employees develop, commit, and merge as before, and AI collects, analyzes, and judges the merged result and publishes it to the wiki — a two-row pipeline">
+    <text class="d-sub" x="8" y="14" text-anchor="start">Employee — existing dev flow, unchanged</text>
+    <rect class="d-box" x="8" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="56" y="46" text-anchor="middle">Develop</text>
+    <rect class="d-box" x="118" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="166" y="46" text-anchor="middle">Commit</text>
+    <rect class="d-box" x="228" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="276" y="46" text-anchor="middle">Push</text>
+    <rect class="d-box" x="338" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="386" y="46" text-anchor="middle">Merge Request</text>
+    <rect class="d-box" x="448" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="496" y="46" text-anchor="middle">Review</text>
+    <rect class="d-box accent" x="558" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="606" y="46" text-anchor="middle">Merge</text>
+    <line class="d-edge" x1="104" y1="42" x2="110" y2="42"/><polygon class="d-arrow" points="110,37 110,47 118,42"/>
+    <line class="d-edge" x1="214" y1="42" x2="220" y2="42"/><polygon class="d-arrow" points="220,37 220,47 228,42"/>
+    <line class="d-edge" x1="324" y1="42" x2="330" y2="42"/><polygon class="d-arrow" points="330,37 330,47 338,42"/>
+    <line class="d-edge" x1="434" y1="42" x2="440" y2="42"/><polygon class="d-arrow" points="440,37 440,47 448,42"/>
+    <line class="d-edge" x1="544" y1="42" x2="550" y2="42"/><polygon class="d-arrow" points="550,37 550,47 558,42"/>
+
+    <path class="d-edge" d="M606 62 C606 80, 592 90, 572 90 H106 C88 90, 72 98, 72 112 V128"/>
+    <polygon class="d-arrow" points="67,127 77,127 72,134"/>
+    <polygon class="d-arrow" points="338,85 338,95 328,90"/>
+
+    <text class="d-sub" x="672" y="126" text-anchor="end">AI — automatic knowledge pipeline</text>
+    <rect class="d-box" x="12" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="72" y="153" text-anchor="middle">① Collect changes</text>
+    <text class="d-sub" x="72" y="169" text-anchor="middle">Diff · MR · SHA</text>
+    <rect class="d-box" x="147" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="207" y="153" text-anchor="middle">② Analyze context</text>
+    <text class="d-sub" x="207" y="169" text-anchor="middle">Pull in related code</text>
+    <rect class="d-box" x="282" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="342" y="153" text-anchor="middle">③ Value judgment</text>
+    <text class="d-sub" x="342" y="169" text-anchor="middle">Is it knowledge?</text>
+    <rect class="d-box" x="417" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="477" y="153" text-anchor="middle">④ New·Edit·Retire</text>
+    <text class="d-sub" x="477" y="169" text-anchor="middle">Compare with wiki</text>
+    <rect class="d-box accent" x="552" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="612" y="153" text-anchor="middle">⑤ Portal deploy</text>
+    <text class="d-sub" x="612" y="169" text-anchor="middle">Read-Only</text>
+    <line class="d-edge" x1="132" y1="157" x2="139" y2="157"/><polygon class="d-arrow" points="139,152 139,162 147,157"/>
+    <line class="d-edge" x1="267" y1="157" x2="274" y2="157"/><polygon class="d-arrow" points="274,152 274,162 282,157"/>
+    <line class="d-edge" x1="402" y1="157" x2="409" y2="157"/><polygon class="d-arrow" points="409,152 409,162 417,157"/>
+    <line class="d-edge" x1="537" y1="157" x2="544" y2="157"/><polygon class="d-arrow" points="544,152 544,162 552,157"/>
+</svg>
+<div class="d-cap">The employee's role ends with the top row. The entire bottom row is AI's share.</div>
+</div>
+
+<div class="note">
+    <span class="nh">The core concept — Event Stream and Knowledge State</span>
+    GitLab is the <strong>Event Stream</strong> of development changes, and the Wiki is the <strong>Knowledge State</strong> that is valid at the present moment. Commits, MRs, and Releases keep piling up in GitLab in time order, but the Wiki is not a list of history like "changes on 7/1, changes on 7/2…" — it is refined and maintained as the <strong>knowledge structure the organization needs to know right now</strong> (Architecture · Rule Engine · state systems · channel policies · Troubleshooting …).
+</div>
+
+<h3>What Knowledge State Really Is — A Deterministically Built Index</h3>
+<p>"The currently valid state of knowledge" must not be an abstract slogan but a <strong>mechanically reproducible artifact</strong>. The Reference Wiki has already demonstrated this: the metadata of every document (title · summary · concepts · relations) becomes a knowledge index JSON through a <a href="#!kgs-overview">deterministic build</a> from a single curation file, and <strong>the same input always yields the same output</strong>. That is why a single <code>--check</code> can decide, byte for byte, whether "the stored state has diverged from the source", and a merge is impossible while it has diverged (<a href="#!kgs-gates">drift gate</a>). A structure where <strong>a machine, not discipline</strong>, prevents the Knowledge State from falling behind the Event Stream or contradicting the source — this is the substance of the state management the company platform will inherit.</p>
+
+<h3>The Road the Industry Is Already On</h3>
+<ul>
+    <li><strong>Documents next to the code</strong> — Spotify runs more than 5,000 documentation sites with <a href="https://backstage.io/blog/2020/09/08/announcing-tech-docs/" target="_blank" rel="noopener">Backstage TechDocs</a>, which keeps documents in the same repository as the code and builds them in CI, and GitLab is famous for the <a href="https://handbook.gitlab.com/handbook/company/culture/all-remote/handbook-first/" target="_blank" rel="noopener">handbook-first culture</a> of its public handbook of more than 2,700 pages. docs-as-code is an approach already proven in large organizations.</li>
+    <li><strong>Automating document synchronization</strong> — <a href="https://swimm.io/blog/how-does-swimm-s-auto-sync-feature-work" target="_blank" rel="noopener">Swimm</a> commercialized "Continuous Documentation" with an Auto-sync that compares code changes against documents on every PR and updates them automatically.</li>
+    <li><strong>Automatic knowledge extraction from code</strong> — Cognition's <a href="https://cognition.com/blog/deepwiki" target="_blank" rel="noopener">DeepWiki (2025)</a> analyzes a repository and automatically generates a wiki containing architecture diagrams and module documents, and has indexed more than 50,000 top public repositories. GitHub made <a href="https://github.blog/changelog/2025-09-24-copilot-spaces-is-now-generally-available/" target="_blank" rel="noopener">Copilot Spaces</a>, which injects repository knowledge at all times, generally available, and Claude Code's <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">CLAUDE.md</a> and AGENTS.md turned "machine-read knowledge files inside the repository" into an industry convention.</li>
+    <li><strong>Rapid growth of the knowledge search market</strong> — <a href="https://futurumgroup.com/insights/glean-doubles-arr-to-200m-can-its-knowledge-graph-beat-copilot/" target="_blank" rel="noopener">Glean, an enterprise-wide AI knowledge search, passed $200M in ARR</a>, and Atlassian bundled <a href="https://www.atlassian.com/software/rovo" target="_blank" rel="noopener">Rovo</a> into its cloud plans by default.</li>
+</ul>
+<p>In short, <strong>"AI-driven automatic knowledge generation from GitLab development results" is the application of automatic extraction technology commercialized since 2025 to organizational knowledge management, on top of the proven foundation of docs-as-code</strong>.</p>

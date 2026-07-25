@@ -134,6 +134,11 @@ def run(root):
                                 "docs/en/%s has no docs/ko/%s twin" % (rel, rel)))
 
     # 2 & 3: label_en <-> en body presence.
+    # 2026-07-26 승격: 인덱스 문서 전체(115편)의 영어 본문이 갖춰졌으므로
+    # label-without-en-body를 INFO -> ERROR로 올린다 — 라벨만 영어로 달고
+    # 본문을 빼면 영어 사용자에게 "영어인 척하는 한국어 문서"가 되기 때문.
+    # 워크로그(work-log/)는 영어 병행 대상이 아니라 라벨만 영어이고 본문은
+    # ko로 폴백하는 것이 정상이므로 이 게이트에서 제외한다(i18n.md 정책).
     for n in docs:
         rel = n.get('path', n['name'])
         has_body = rel in en_files
@@ -141,9 +146,10 @@ def run(root):
         if has_body and not has_label:
             findings.append(_f('WARN', 'en-body-without-label', n['name'],
                                 "docs/en/%s exists but list node has no label_en" % rel))
-        if has_label and not has_body:
-            findings.append(_f('INFO', 'label-without-en-body', n['name'],
-                                "list node has label_en but docs/en/%s is missing" % rel))
+        if has_label and not has_body and not rel.startswith('work-log/'):
+            findings.append(_f('ERROR', 'label-without-en-body', n['name'],
+                                "list node has label_en but docs/en/%s is missing "
+                                "(신규 문서는 영어 본문 동반이 규칙 — tools/i18n.md)" % rel))
 
     # 4. en-entry-orphan: doc-entries.en.json entries must reference a real
     # ko entry name that also has an en body.

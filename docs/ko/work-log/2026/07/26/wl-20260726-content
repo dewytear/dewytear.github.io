@@ -75,3 +75,19 @@
     <li><strong>동반 데이터</strong> — 12편 <code>label_en</code>+<code>tags_en</code>, <code>doc-entries.en.json</code> 92&rarr;104편. <code>en-body-without-label</code> 검토 신호가 23&rarr;12건으로 줄었다.</li>
 </ul>
 <p>누적: 영어 본문 <strong>104/115편</strong>(90%). 남은 소급 번역 11편(Douzone).</p>
+
+<h3>배치⑧ — Douzone 11편 + 지식지도 영어판, 그리고 <strong>소급 번역 완료</strong></h3>
+<p>마지막 배치. 사내 제안서 두 묶음(<a href="#!dzp-overview">AI 개발 지식 플랫폼</a> 8편·<a href="#!sne-overview">AI 알림 발송엔진</a> 3편)과 <strong><a href="#!dz-map">Douzone 지식지도 영어판</a></strong>을 신설해 <strong>인덱스 문서 115편 전부가 영어 본문을 갖췄다</strong>. Opus 5 에이전트 4기 병렬.</p>
+<ul>
+    <li><strong>지식지도 en 신설의 규칙</strong> — <code>ai-map</code> 영어판 선례를 그대로 따랐다: <code>id="km-*"</code> 하이드레이션 훅·<code>data-section-prefix</code>·정적 폴백 수치는 손대지 않고, <code>data-topics</code> 키만 <code>clusters.json</code>의 <strong>en 라벨</strong>과 일치시켰다. 개념 이름(<code>지식플랫폼</code>·<code>AI큐레이터</code>)은 <strong>언어 공유 인덱스 키</strong>라 영어판에서도 한국어 그대로 둔다(억지 번역 시 그래프 조인이 깨진다).</li>
+    <li><strong>용어집을 먼저 고정</strong> — 제안서 3편은 같은 도메인 용어가 반복되므로 발송엔진/발송요청/시점 유형(Immediate·Delayed·Recurring·Transition)/확정·재처리·회수 같은 대응을 문서 간 통일했다. 제품·시스템·필드명(OmniEsol·SCM·<code>SO_STS_CD</code>)은 원형.</li>
+    <li><strong>검증</strong> — 잔존 한글 0(제안서 11편), 도식 ko/en 2패스 <strong>159렌더</strong> 통과, 구조 동일성(태그·지오메트리·href 카운트) 기계 대조 통과.</li>
+</ul>
+
+<h4>마감 3종 — 임시 상태를 걷어내고 게이트를 조였다</h4>
+<ul>
+    <li><strong>설정의 &ldquo;English — 준비 중&rdquo; 제거</strong>(ko/en 양쪽) — 이제 영어는 준비 중이 아니라 <strong>완비된 선택지</strong>다. <code>i18n.js ?v=15</code>.</li>
+    <li><strong><code>label-without-en-body</code> INFO &rarr; ERROR 승격</strong> — 전 문서 번역이 끝나 0건이 된 지금이 조일 수 있는 시점이다. 라벨만 영어로 달고 본문을 빼면 영어 사용자에게 &ldquo;영어인 척하는 한국어 문서&rdquo;가 되므로 머지를 막는다. 단 <strong>워크로그는 예외</strong>(병행 대상이 아니라 라벨만 영어·본문 ko 폴백이 정상). 부정 케이스(en 본문 삭제) 재현으로 차단을 확인했다.</li>
+    <li><strong>현황 문서 갱신</strong> — <code>tools/i18n.md</code>의 &ldquo;남은 번역 작업&rdquo; 절을 <strong>완료 + 유지 규칙</strong>으로 다시 썼고, CLAUDE.md 다국어 규칙에 ERROR 게이트와 완료 사실을 반영했다.</li>
+</ul>
+<p><strong>결과: 영어 본문 115/115편(100%)</strong> — 워크로그 저널만 ko 전용(자동 폴백). 비한국어 브라우저로 처음 오면 영어로 열리고, 내비·본문·태그·검색·설정·지식지도·지식그래프가 모두 영어다(en/ko 회귀 통과, 페이지 오류·404 0건). 8배치·98편을 하루에 옮긴 셈인데, 이는 <strong>인프라를 먼저 깐 순서</strong> 덕이 컸다 — 도식 게이트가 ko/en을 함께 보고, 동반물 누락을 게이트가 잡아주니 배치마다 사람이 확인할 것은 &ldquo;번역 품질&rdquo; 하나로 줄었다.</p>
