@@ -37,10 +37,16 @@
     표시명을 색인에 &ldquo;덧붙이는&rdquo; 첫 구현은 매칭 인덱스가 원본 배열 범위를 넘어가 검색 칩에 <code>undefined</code>가 찍혔다. 색인을 <code>{key, 검색문자열}</code> 쌍 배열로 바꿔 <strong>어느 쪽으로 맞아도 키를 되찾도록</strong> 고쳤다 — CDP 실렌더로 ko/en × 3질의 재확인.
 </div>
 
+<h3>후속 — 검색 화면 미니게임</h3>
+<p>같은 규약이 빠진 곳이 하나 더 있었다: 통합검색 화면의 <strong>개념 별똥별</strong>이 인덱스의 개념 키를 그대로 뿌려, 영어 모드에서도 한국어 별이 떨어졌다(지식 2048은 이미 ko/en 사다리를 갖고 있었다). 별똥별도 <code>conceptLabel()</code>을 타게 하고, <strong>잡았을 때 검색창에 들어가는 글자도 화면에서 본 그 단어</strong>로 맞췄다 — 검색이 키·표시명 양쪽으로 매칭하니 결과는 동일하다. 인덱스가 늦게 오는 순간을 대비한 씨앗 목록은 키로 두되 그릴 때 라벨을 입힌다.</p>
+
 <h3>검증</h3>
 <ul>
     <li><code>validate_all</code> ERROR 0(<code>validate_i18n</code> 0/0/0) · <code>build_index</code>·<code>build_ai_export</code>·<code>build_prerender</code> <code>--check</code> 무드리프트</li>
     <li>CDP ko/en 회귀: 태그·연관 칩·인용 경로·관계 근거·폴더 제목·검색 제안 전부 언어 일치, <strong>한국어 모드 무변경</strong></li>
-    <li>캐시버스터 6종 상향(app 33 · i18n 16 · search 8 · cosmos 7 · cosmos2 3 · graphviews 3), 플러그인 번들 동기 + version 0.12.0</li>
+    <li>캐시버스터 7종 상향(app 33 · i18n 16 · search 8 · cosmos 7 · cosmos2 3 · graphviews 3 · games 3), 플러그인 번들 동기 + version 0.12.0</li>
 </ul>
-<p><strong>남은 데이터 이슈 하나</strong>: <code>클로드코드</code>(omc-intro 1편)와 <code>Claude Code</code>(4편)가 같은 뜻의 별개 키로 존재해, 개념 그래프에서 &ldquo;Claude Code&rdquo; 노드가 둘로 보인다. 이건 표시가 아니라 <strong>원본 데이터 중복</strong>이고, 개념 병합은 df 파급(연관 엣지 변동) 검토가 선행돼야 하는 사안이라 <a href="#!wl-backlog">Backlog</a>의 &ldquo;개념 별칭 정규화&rdquo; 항목에 구체 사례로 붙였다.</p>
+
+<h3>제기됐다가 접힌 것 — 개념 키 병합</h3>
+<p>작업 중 <code>클로드코드</code>(omc-intro 1편)와 <code>Claude Code</code>(4편)가 별개 키로 존재하는 것을 발견해 <strong>별칭 중복이 아닌지</strong> 물었다. 사용자 판단은 <strong>&ldquo;내용이 다른 것이라 그대로 둔다&rdquo;</strong> — 같은 제품을 가리키더라도 한쪽은 OMC가 얹히는 대상으로서의 맥락이라 별개 개념으로 유지한다. <a href="#!wl-backlog">Backlog</a>의 &ldquo;개념 별칭 정규화&rdquo;에는 <em>후보에서 제외</em>로 기록했다.</p>
+<p>규칙으로 남길 것: <strong>키가 다르면 표시명도 달라야 한다</strong>. 표시명 사전 안에서는 유일성을 기계 검증했지만, 라틴 문자 개념(<code>Claude Code</code>처럼 사전에 등재되지 않고 그대로 표시되는 키)과의 충돌은 그 검사에 걸리지 않는다 — 지금은 두 키가 한 화면에 함께 나오는 지점이 검색 제안뿐이라 그대로 두되, 개념이 늘면 이 축도 검사에 넣는 게 맞다.</p>

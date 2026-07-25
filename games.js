@@ -419,13 +419,21 @@ SEARCH_GAMES.breakout = function(canvas){
 // catch one with the paddle and it searches itself. Play = explore.
 SEARCH_GAMES.concept = function(canvas){
     var st = gameStage(canvas);
+    // 인덱스가 아직 안 왔을 때 뿌릴 씨앗 — 값은 개념 **키**(한국어 canonical).
+    // 화면에 그릴 때는 아래 label()이 현지화 표시명으로 바꾼다.
     var FALLBACK = ['스킬', '하네스', '오케스트레이터', '서브에이전트',
                     '세컨드브레인', '벡터검색', '지식그래프', 'CLAUDE.md'];
+    // 개념 표시명 규약(i18n.conceptLabel)을 게임에도 적용 — 영어 모드에서
+    // 한국어 별똥별이 떨어지지 않게. 잡았을 때 검색창에 넣는 것도 화면에서
+    // 본 그 글자다(검색은 키·표시명 양쪽으로 매칭하므로 결과는 동일).
+    function label(c){
+        return (typeof conceptLabel === 'function') ? conceptLabel(c) : c;
+    }
     var words = [], pops = [], lastSpawn = 0, caught = 0;
     function spawn(now){
         var pool = ALL_CONCEPTS.length ? ALL_CONCEPTS : FALLBACK;
         words.push({
-            text: pool[Math.floor(Math.random() * pool.length)],
+            text: label(pool[Math.floor(Math.random() * pool.length)]),
             x: 40 + Math.random() * Math.max(1, st.W - 80),
             y: -16, vy: 0.35 + Math.random() * 0.4,
             sway: Math.random() * 6.2832,
