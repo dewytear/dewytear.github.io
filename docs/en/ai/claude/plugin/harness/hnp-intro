@@ -1,0 +1,62 @@
+<h2>Harness Plugin — Introduction</h2>
+<p>The <strong>Harness plugin</strong> is a Claude Code plugin that <strong>"lays out the setup so that, once you give it only a goal (an intent), several AIs form a team and work on their own for a long time."</strong> Instead of throwing prompts one at a time, if I just say <em>"what I want"</em>, the plugin composes and runs the <strong>agent team · skills · orchestrator</strong> on my behalf.</p>
+
+<h3>The big picture on one page</h3>
+<p>What the Harness plugin does comes down to the flow below. People step in only at <strong>the very front (the intent)</strong> and <strong>the very back (review and decision-making)</strong>, and the AI team takes on the repetitive work in the middle.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 132" role="img" aria-label="Harness flow: enter intent → form the team → autonomous parallel execution → verified output">
+    <!-- boxes -->
+    <rect class="d-box accent" x="5" y="30" width="150" height="66" rx="10"/>
+    <text class="d-label" x="80" y="58" text-anchor="middle">① Enter intent</text>
+    <text class="d-sub" x="80" y="78" text-anchor="middle">"I want to ~"</text>
+
+    <rect class="d-box" x="185" y="30" width="150" height="66" rx="10"/>
+    <text class="d-label" x="260" y="58" text-anchor="middle">② Form the team</text>
+    <text class="d-sub" x="260" y="78" text-anchor="middle">Design agents · skills</text>
+
+    <rect class="d-box" x="365" y="30" width="150" height="66" rx="10"/>
+    <text class="d-label" x="440" y="58" text-anchor="middle">③ Autonomous run</text>
+    <text class="d-sub" x="440" y="78" text-anchor="middle">Parallel · long</text>
+
+    <rect class="d-box accent" x="545" y="30" width="150" height="66" rx="10"/>
+    <text class="d-label" x="620" y="58" text-anchor="middle">④ Verified output</text>
+    <text class="d-sub" x="620" y="78" text-anchor="middle">Sources · QA included</text>
+
+    <!-- arrows -->
+    <line class="d-edge" x1="157" y1="63" x2="178" y2="63"/>
+    <polygon class="d-arrow" points="178,58 186,63 178,68"/>
+    <line class="d-edge" x1="337" y1="63" x2="358" y2="63"/>
+    <polygon class="d-arrow" points="358,58 366,63 358,68"/>
+    <line class="d-edge" x1="517" y1="63" x2="538" y2="63"/>
+    <polygon class="d-arrow" points="538,58 546,63 538,68"/>
+
+    <!-- human involvement labels -->
+    <text class="d-accent" x="80" y="118" text-anchor="middle" font-size="11">Human: instruct</text>
+    <text class="d-accent" x="620" y="118" text-anchor="middle" font-size="11">Human: review · decide</text>
+</svg>
+<div class="d-cap">People handle only the front (intent) and the back (review); the AI team takes the repetitive work in the middle.</div>
+</div>
+
+<h3>Why "harness" — from prompts to the harness</h3>
+<p>The way we handle AI has evolved as below. The harness is the stage of designing <strong>not one model but "the whole environment surrounding the model."</strong> Even with the same model, the quality of the output differs greatly depending on <strong>which setup (harness) you put it on</strong>.</p>
+
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Stage</th><th>Core</th><th>Analogy</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Prompt engineering</strong></td><td>Asking questions well</td><td>Phrasing a single remark well</td></tr>
+            <tr><td><strong>Context engineering</strong></td><td>Feeding in the needed materials and context well</td><td>Putting the materials into their hands</td></tr>
+            <tr><td><strong>Harness engineering</strong></td><td>Designing <strong>the whole system</strong> in which the AI works</td><td>Fitting a horse with a <strong>harness</strong> so it runs well for a long time</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>Why it fits ERP customization well</h3>
+<p>Customization work for a client usually chains <strong>several stages in order</strong> — requirement (CR) analysis → grasping the standard source and impact → design → development → regression verification. This is a prime example of work that <strong>takes a long time if you do it alone in sequence, but is far faster if you split the roles and go in parallel</strong>. The harness hands each of these stages to <strong>a responsible agent</strong> and lets the orchestrator coordinate them.</p>
+<ul>
+    <li><strong>Minimizing damage to the standard</strong> — the analysis agent first points out "where this customization affects the standard package."</li>
+    <li><strong>Automated regression verification</strong> — after development, the QA agent cross-checks that the standard features have not broken.</li>
+    <li><strong>Standardized deliverables</strong> — the specification, impact analysis, tests, and migration guide are all left together in <code>_workspace</code>.</li>
+</ul>
+<p class="scn-sub">※ A concrete example (a sales/order credit-limit customization) is followed step by step in <a href="#!hnp-first-run">First harness run</a>.</p>

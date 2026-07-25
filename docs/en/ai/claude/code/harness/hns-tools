@@ -1,0 +1,44 @@
+<h2>Extending the Tools and Wrap-up</h2>
+
+<h3>Claude Code vs Gemini (Antigravity)</h3>
+<p>AI tools advance by leapfrogging each other. Right now Claude Code is the best, but the instructor also uses <strong>Antigravity CLI</strong> (the <code>agy</code> command) alongside it.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Item</th><th>Claude Code</th><th>Antigravity (Gemini 3.5 Flash)</th></tr></thead>
+        <tbody>
+            <tr><td>Generation speed</td><td>About 50&ndash;60 tokens per second</td><td>About 4 times faster</td></tr>
+            <tr><td>Image generation</td><td>Not possible with the model itself (possible via the codex-image skill)</td><td>Possible (Nano Banana)</td></tr>
+            <tr><td>Output quality</td><td>Comes out prettier in the instructor's impression</td><td>Fast, but needs polishing</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>You can compare performance · speed · price by model on the <strong>Artificial Analysis</strong> site. (Opus and GPT 5.5 are on the expensive side.)</p>
+
+<div class="note">
+    <span class="nh">About the numbers</span>
+    The "about 4 times faster" in the table is not a public benchmark but the instructor's own experience. For reference, the speedup of a parallel agent configuration is reported as anywhere from about 2 times up to 10 times depending on how independent the tasks are (Anthropic reported a 90% cut in elapsed time on complex queries).
+</div>
+
+<h3>Second-pass verification with Codex CLI</h3>
+<p>Since verification by a single model can be biased, you can attach second-pass verification to the QA agent with a skill that connects <strong>Codex CLI (GPT 5.5)</strong>.</p>
+<pre><code><span class="c"># when the composition needs to change, instruct with /harness</span>
+/harness Modify the QA agent so that it verifies using Codex CLI</code></pre>
+<ul>
+    <li>The QA agent is updated to a <strong>double verification protocol</strong> &mdash; a first pass with Claude, a second pass with Codex CLI, and the two opinions combined.</li>
+    <li>Since it has to know the workflow, the <strong>orchestrator</strong> is updated along with it.</li>
+    <li>This kind of harness composition change history is recorded in <strong><code>CLAUDE.md</code></strong>.</li>
+</ul>
+
+<h3>Agent 1:1 (one-on-one)</h3>
+<p>There is also a feature that lets you talk with a specific agent as if having a <strong>coffee chat</strong> and redesign it. When you pick a counterpart from the agent list, that agent explains its own role and principles and asks "which part shall we modify?".</p>
+
+<h3>Wrap-up — what people should focus on</h3>
+<p>At the entrance to an era where agents do much of the work for us, people should focus on the following: <strong>setting goals, contextual judgment, quality standards, responsibility · ethics, good questions, systems thinking, domain expertise, evaluation · feedback, and AI collaboration.</strong></p>
+
+<div class="note">
+    <span class="nh">Q&amp;A points</span>
+    · If an agent does not show up in <code>/agents</code>, only the list is missing; restarting loads it (when dynamic loading fails it sometimes shows up as an ordinary subagent).<br>
+    · <strong>Auto mode</strong> &mdash; switch between auto/accept/plan modes with <code>Shift+Tab</code>. Auto mode does not ask for permission every time, so it operates more autonomously (you can switch at any point in the middle). If you do not see it, Claude Code needs to be updated (a native install updates automatically, an npm install manually).<br>
+    · Agents · skills are created in the <strong>per-project <code>.claude</code></strong>, so share them with Git; <strong>plugins are installed separately on each environment (PC)</strong>.<br>
+    · In real work, unlike in a demo, giving <strong>detailed requirements and data</strong> together (in markdown if long) makes the intent land reliably.
+</div>

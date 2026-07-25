@@ -1,0 +1,26 @@
+<h2>Installing the Meta-Harness Skill (Hands-on)</h2>
+<p>Composing a harness by hand every time (preparing each agent · skill one by one) is a hassle. So the instructor developed a <strong>"meta-harness" skill that composes the harness for you when you only give it a goal</strong>, released it on GitHub, and got a lot of user reviews and stars. Today's hands-on session starts with installing this skill.</p>
+
+<h3>Method 1 — two lines of commands</h3>
+<pre><code><span class="c"># 1) Add the harness marketplace</span>
+/plugin marketplace add lev-factory/harness
+<span class="c"># 2) Install the harness plugin</span>
+/plugin install harness</code></pre>
+
+<h3>Method 2 — the /plugin UI</h3>
+<ol>
+    <li>Enter <code>/plugin</code> → move <strong>right</strong> with the arrow keys and select the <strong>Marketplace</strong> tab.</li>
+    <li>In <strong>Add Marketplace</strong>, enter <code>lev-factory/harness</code> → Enter (it downloads from GitHub).</li>
+    <li>Enter on the plugin install screen → if you install it at <strong>User scope</strong>, you can use it in any project.</li>
+</ol>
+
+<h3>After installing — reload and check</h3>
+<p>When the install finishes, a notice tells you to "reload". After <code>/reload</code> (reload plugins), if <code>/harness</code> shows up, it was installed correctly.</p>
+<pre><code>/reload
+<span class="c"># If the following autocompletes/runs, the install succeeded</span>
+/harness</code></pre>
+
+<div class="note warn">
+    <span class="nh">Check the marketplace path</span>
+    The marketplace handle (<code>lev-factory/harness</code>) is carried over from the value mentioned in the talk, so when you actually install it, <strong>check the exact repository path</strong> on the instructor's GitHub (for example, search for <strong>"Harness 100"</strong>). If the plugin install does not go well, try the UI way and the command way alternately.
+</div>
