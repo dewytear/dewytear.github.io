@@ -1211,7 +1211,7 @@ function getPassword(){
 // Show/hide top-level nav categories by title (hidden = list of titles).
 function applyCategoryVisibility(hidden){
     hidden = hidden || [];
-    document.querySelectorAll('#navigation > ul > li.nav-branch[data-cat]').forEach(function(li){
+    document.querySelectorAll('#navigation li.nav-branch[data-cat]').forEach(function(li){
         var off = hidden.indexOf(li.getAttribute('data-cat')) !== -1;
         li.style.display = off ? 'none' : '';
     });
@@ -1395,7 +1395,7 @@ function showSettings(){
         return '<option value="' + val + '"' + (val === cur ? ' selected' : '') + '>' + label + '</option>';
     }
     var cats = [].map.call(
-        document.querySelectorAll('#navigation > ul > li.nav-branch[data-cat]'),
+        document.querySelectorAll('#navigation li.nav-branch[data-cat]'),
         function(li){ return li.getAttribute('data-cat'); });
     // Working state for the category transfer list (left=전체, right=노출).
     SETTINGS_CATS = { all: cats,
@@ -1885,7 +1885,13 @@ App.data.loadList().then(function(tree){
           +     '<path d="m7 4 5 5 5-5"/><path d="m7 20 5-5 5 5"/>'
           +   '</svg>' + STR('collapseAll') + '</button>'
           + '</div>'
-          + renderNodes(tree, []);
+          // Pinned header: top-level route-only entries (e.g. ❖ Knowledge
+          // Graph) stay fixed with the profile/tools; the tree below gets
+          // its own scroll area (#nav-scroll) so scrolling never hides them.
+          + renderNodes(tree.filter(function(n){ return n.route && !n.children; }), [])
+          + '<div id="nav-scroll">'
+          + renderNodes(tree.filter(function(n){ return !(n.route && !n.children); }), [])
+          + '</div>';
         applyCategoryVisibility(loadSettings().hiddenCats);   // nav now exists
         document.querySelector('#more').innerHTML = renderMore();
         refreshRecentDocs();   // reorder by last-modified once dates load
