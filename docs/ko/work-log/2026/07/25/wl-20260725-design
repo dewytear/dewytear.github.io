@@ -1,0 +1,9 @@
+<h2>2026-07-25 · 디자인 — 사이드바 프로필 사진 교체</h2>
+<p>사이드바 상단 프로필 사진(<code>profile.jpg</code>)을 사용자가 제공한 흑백 산행 사진(스틱을 짚고 바위 능선을 오르는 뒷모습, 480&times;640 세로)으로 교체했다.</p>
+<ul>
+    <li><strong>교체 방식</strong> — 파일명은 <code>profile.jpg</code> 그대로 유지(오류 시 <code>profile.svg</code> 폴백 로직 불변).</li>
+    <li><strong>세로 길이·구도 조정(3회 왕복)</strong> — ①<code>aspect-ratio: 3/2</code> 중앙 크롭: 전신(370px)이 3:2 창(320px)에 물리적으로 안 들어가 다리 잘림 → ②파일을 전신 기준(480&times;395)으로 크롭: 전신은 나오나 배경 상실 → ③최종: <strong>원본 프레임 전체를 축소 표시</strong> — <code>#profile img</code>를 <code>width:62% + margin:auto</code>로 줄여 가운데 정렬, 같은 컴팩트 높이에서 인물 전신과 배경(수풀·바위 능선)까지 모두 노출. <code>style.css ?v</code> 28→29, <code>profile.jpg ?v</code> →4.</li>
+    <li><strong>EXIF 제거</strong> — 원본에 카메라 기종·촬영일 등 EXIF 메타데이터가 있어 공개 저장소 커밋 전에 픽셀만 재저장해 제거(132KB→100KB).</li>
+    <li><strong>캐시버스트</strong> — <code>index.html</code>의 이미지 src를 <code>profile.jpg?v=2</code>로 — 같은 파일명 교체라 재방문 브라우저가 옛 사진을 계속 쓰는 것을 방지(<code>?v</code> 자산 목록에 신규 편입).</li>
+    <li><strong>검증</strong> — 낮/밤 테마 실렌더로 사이드바 표시 확인, <code>validate_all</code> ERROR 0.</li>
+</ul>
