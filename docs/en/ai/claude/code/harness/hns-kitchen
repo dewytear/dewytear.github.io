@@ -1,0 +1,64 @@
+<h2>Understanding the Harness Through a Kitchen Metaphor</h2>
+<p>Harness engineering is easy to understand when likened to <strong>running a kitchen</strong>.</p>
+
+<h3>Solo chef vs. multi-agent</h3>
+
+<div class="diagram">
+<svg viewBox="0 0 680 168" role="img" aria-label="A solo chef handles ordering, cooking, checking and dishwashing alone in sequence so a bottleneck appears, while a multi-agent kitchen splits the roles and processes them in parallel">
+    <line class="d-edge dash" x1="332" y1="14" x2="332" y2="152"/>
+
+    <rect class="d-box soft" x="34" y="20" width="252" height="32" rx="8"/>
+    <text class="d-label sm" x="160" y="41" text-anchor="middle">Solo chef</text>
+    <rect class="d-box" x="30" y="78" width="56" height="34" rx="7"/>
+    <text class="d-sub" x="58" y="99" text-anchor="middle">Order</text>
+    <rect class="d-box" x="96" y="78" width="56" height="34" rx="7"/>
+    <text class="d-sub" x="124" y="99" text-anchor="middle">Cook</text>
+    <rect class="d-box" x="162" y="78" width="56" height="34" rx="7"/>
+    <text class="d-sub" x="190" y="99" text-anchor="middle">Check</text>
+    <rect class="d-box" x="228" y="78" width="58" height="34" rx="7"/>
+    <text class="d-sub" x="257" y="99" text-anchor="middle">Dishes</text>
+    <line class="d-edge" x1="86" y1="95" x2="96" y2="95"/><polygon class="d-arrow" points="88,90 96,95 88,100"/>
+    <line class="d-edge" x1="152" y1="95" x2="162" y2="95"/><polygon class="d-arrow" points="154,90 162,95 154,100"/>
+    <line class="d-edge" x1="218" y1="95" x2="228" y2="95"/><polygon class="d-arrow" points="220,90 228,95 220,100"/>
+    <text class="d-sub" x="160" y="138" text-anchor="middle">Sequential alone → bottleneck</text>
+
+    <rect class="d-box soft" x="380" y="20" width="270" height="32" rx="8"/>
+    <text class="d-label sm" x="515" y="41" text-anchor="middle">Multi-agent kitchen</text>
+    <rect class="d-box accent" x="376" y="78" width="60" height="42" rx="8"/>
+    <text class="d-sub" x="406" y="103" text-anchor="middle">Order</text>
+    <rect class="d-box accent" x="444" y="78" width="60" height="42" rx="8"/>
+    <text class="d-sub" x="474" y="103" text-anchor="middle">Prep</text>
+    <rect class="d-box accent" x="512" y="78" width="60" height="42" rx="8"/>
+    <text class="d-sub" x="542" y="103" text-anchor="middle">Cook</text>
+    <rect class="d-box accent" x="580" y="78" width="60" height="42" rx="8"/>
+    <text class="d-sub" x="610" y="103" text-anchor="middle">Check</text>
+    <text class="d-accent" x="515" y="138" text-anchor="middle" font-size="12">Roles split → parallel</text>
+</svg>
+<div class="d-cap">A solo chef is fast but a <strong>bottleneck</strong> appears, while a multi-agent kitchen splits the roles and works <strong>long while keeping the quality</strong>.</div>
+</div>
+<ul>
+    <li><strong>Solo chef</strong> &mdash; ordering, cooking, checking and dishwashing all alone. Fast at first, but once orders pile up a <strong>bottleneck</strong> appears and it is hard to work for long.</li>
+    <li><strong>Multi-agent</strong> &mdash; <strong>separate the roles</strong> into ordering, prep, cooking and checking. In parallel at the same time, each focusing on what it does well → it works <strong>long while keeping the quality</strong>.</li>
+</ul>
+
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Configuration</th><th>Upside</th><th>Downside</th></tr></thead>
+        <tbody>
+            <tr><td>Single agent</td><td>Fast and economical</td><td>Limits in scaling · stability</td></tr>
+            <tr><td>Multi-agent</td><td>Stable, highly scalable</td><td>Costs more</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>It is not a cure-all. There are tasks for which a one-person kitchen is enough, and separately there are tasks where multi shines.</p>
+
+<h3>Harness = running the whole kitchen</h3>
+<p>Who does what and when is designed in advance, and agents · skills · orchestration are tightly connected. <strong>Managing that workflow and those rules well overall</strong> is harness engineering.</p>
+
+<h3>Quality has to be refined continuously</h3>
+<p>You have to <strong>review and give feedback both midway and at the end</strong> &mdash; whether the ingredients are fresh (the intermediate outputs) and whether the final dish is fine. Even with a harness, <strong>a finished product does not come out in one shot.</strong> Treat what comes out as a draft, and keep refining the agents to raise it to high quality.</p>
+
+<div class="note warn">
+    <span class="nh">Token usage</span>
+    Because you run it multi, token usage goes up. It grows especially when <strong>the agents talk to each other</strong>, and in measurements there were cases of using <strong>about 30% more</strong>.
+</div>

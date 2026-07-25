@@ -1,4 +1,4 @@
-<h2>2026-07-26 · 콘텐츠 — 영어 병행 소급 번역 (배치① 19편 · 배치② 12편 · 배치③ 12편)</h2>
+<h2>2026-07-26 · 콘텐츠 — 영어 병행 소급 번역 (배치① 19편 · ② 12편 · ③ 12편 · ④ 12편)</h2>
 
 <h3>배치① — 지식 체계 6 · CLAUDE.md 10계명 · 기초강의 12편</h3>
 <p>글로벌 도달 프로젝트의 소급 번역 첫 배치. <a href="#!wl-20260726-features">같은 날 기능 로그</a>에서 깐 인프라(자동 언어·en 도식 게이트·hreflang·병행 게이트) 위에서, 미번역 110편 중 <strong>19편의 영어 본문</strong>을 올렸다 — 영어권 방문자가 처음 닿는 관문(기초강의)과 이 위키 자체를 설명하는 자기기술 문서(지식 체계)를 우선했다. 번역 수행은 <strong>Claude Opus 5 서브에이전트 5기 병렬</strong>. 변경 유형: <strong>CONTENT</strong>.</p>
@@ -31,3 +31,15 @@
     <li><strong>동반 데이터</strong> — 12편 <code>label_en</code>+<code>tags_en</code>, <code>doc-entries.en.json</code> 37&rarr;49편. 에이전트들이 공유 메타 파일을 보고 형제 문서의 제목 표기(문장형)와 링크 텍스트를 스스로 맞췄다.</li>
 </ul>
 <p>누적: 영어 본문 <strong>49/115편</strong>(43%). 남은 소급 번역 66편(Harness 9·PlugIn Harness 10·OMC 13·LLM Wiki 11·News 12·Douzone 11).</p>
+
+<h3>배치④ — 하네스 엔지니어링 나머지 9편 + 하네스 플러그인 3편</h3>
+<p><a href="#!hns-install">하네스 강의</a>를 12편 전부 완결하고, <a href="#!hnp-intro">하네스 플러그인</a> 강의의 도입 3편을 옮겼다. Opus 5 에이전트 4기 병렬.</p>
+<ul>
+    <li><strong>실습 흐름 도식의 100px 박스</strong> — 의도 전달&rarr;도메인 분석&rarr;팀 제안&rarr;사람 검토&rarr;승인 파이프라인처럼 좁은 박스가 연달아 있는 도식이 많아, 형제 문서(en <code>hns-anatomy</code>)의 표현을 재사용해 용어를 통일하면서 폭을 맞췄다. ko/en 2패스 <strong>124렌더 통과</strong>.</li>
+    <li><strong>동반 데이터</strong> — 12편 <code>label_en</code>+<code>tags_en</code>, <code>doc-entries.en.json</code> 49&rarr;61편. 태그가 ko에서 <code>Harness</code>·<code>하네스</code>로 겹치던 <code>hnp-intro</code>는 영어에서 중복이 되지 않게 <code>Harness</code>·<code>Harness engineering</code>으로 갈랐다.</li>
+</ul>
+
+<h4>사고와 대응: 공유 메타 파일 덮어쓰기</h4>
+<p>배치②·③에서 잘 작동한 &ldquo;메타를 파일에 append&rdquo; 방식이 이번 배치에서 <strong>깨졌다</strong>. 한 에이전트가 마무리로 파일의 <em>빈 줄 서식을 정리</em>하면서 파일 전체를 다시 썼고, 그 사이 다른 에이전트들이 쓴 블록이 사라졌다(7&rarr;3블록). 번역 본문은 각자 다른 파일이라 무사했고, 없어진 메타는 배치①에서 쓴 방식(en 본문의 첫 <code>&lt;h2&gt;</code> + ko 요약에서 도출)으로 복원해 12/12를 채웠다.</p>
+<p>교훈: <strong>병렬 작업자에게 하나의 파일을 공유시키면 append만 하도록 지시해도 안전하지 않다</strong>(전체 재작성 유혹이 항상 있다). 다음 배치부터 <strong>에이전트별 메타 파일</strong>(<code>meta-&lt;배치&gt;-&lt;에이전트&gt;.txt</code>)로 분리해 경합을 원천 제거한다 — 파일이 겹치지 않으면 지침을 어겨도 남의 작업을 지울 수 없다.</p>
+<p>누적: 영어 본문 <strong>61/115편</strong>(53%). 남은 소급 번역 54편(PlugIn Harness 7·OMC 13·LLM Wiki 11·News 12·Douzone 11).</p>
