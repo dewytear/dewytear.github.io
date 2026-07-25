@@ -4,5 +4,6 @@
     <li><strong>구조(ENGINE)</strong> — 내비 부팅 시 최상위 <code>route</code> 단독 노드(❖ Knowledge Graph)를 고정 헤더로 분리 렌더하고, 나머지 트리를 <code>#nav-scroll</code> 래퍼에 담아 내부 스크롤로 전환. <code>app.js ?v</code> 29→30.</li>
     <li><strong>스타일(STYLE)</strong> — 데스크톱·모바일 드로어 모두 <code>#sidebar</code>를 <code>overflow:hidden</code>으로 바꾸고 <code>#nav-scroll</code>이 스크롤(스크롤바 숨김 유지). 기존 <code>#navigation &gt; ul</code> 셀렉터들은 <code>:is(#navigation, #nav-scroll) &gt; ul</code>로 확장해 고정부·스크롤부 양쪽에 적용, Work Log 하단 싱크 규칙은 <code>#nav-scroll &gt; ul</code>로 이전. 고정부(<code>.nav-tools</code>·고정 ul)는 <code>flex:none</code>으로 수축 방지. <code>style.css ?v</code> 30→31.</li>
     <li><strong>JS 질의 정합</strong> — <code>'#navigation &gt; ul &gt; li.nav-branch[data-cat]'</code> 2곳을 자손 셀렉터로 완화(카테고리 표시/숨김·설정 화면 정상 동작 확인).</li>
+    <li><strong>고정 영역 여백 압축</strong> — 고정부가 커진 만큼 사이 간격을 절약: <code>#profile</code> 상하 패딩 16/14→10/8, 태그라인 위 11→6, <code>#navigation</code> 상단 20→10, 도구 아래 10→6, 고정 Knowledge Graph 링크 리듬 12/10→4/2. 스크롤 영역이 약 30px 넓어짐.</li>
     <li><strong>검증</strong> — CDP 실렌더: <code>expandAll()</code> 후 <code>#nav-scroll.scrollTop=600</code> 상태에서 프로필·도구·Knowledge Graph 고정 + 트리만 스크롤 + 하단 푸터 유지 확인. <code>validate_all</code> ERROR 0.</li>
 </ul>

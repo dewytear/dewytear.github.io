@@ -325,7 +325,9 @@
             border-right: 1px solid var(--border);
         }
         #profile{
-            padding: 16px 6px 14px;   /* slim sides: the photo hugs the menu width */
+            /* Slim sides (photo hugs the menu width) and tight rows — the
+               pinned header grew, so every gap here is kept minimal. */
+            padding: 10px 6px 8px;
             border-bottom: 1px dashed var(--border);
         }
         /* The whole profile block (photo + tagline) links to the About page. */
@@ -345,7 +347,7 @@
         }
         /* Playful line under the photo, with an arrow that keeps flying up-right. */
         #profile-tagline{
-            margin: 11px 2px 0;
+            margin: 6px 2px 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1441,7 +1443,7 @@
 
         /* ---- Navigation tree ---- */
         #navigation{
-            padding: 20px 20px 20px 12px;   /* tighter left edge */
+            padding: 10px 20px 20px 12px;   /* tight top: pinned header economy */
             /* Fill the space above the sticky footer so the Work Log
                branch can sink to the very bottom of the menu area. */
             flex: 1 1 auto;
@@ -1453,6 +1455,11 @@
            link) stays fixed; only the tree below scrolls, scrollbar hidden. */
         #navigation > ul{
             flex: none;   /* the pinned Knowledge Graph row keeps its height */
+        }
+        /* Pinned Knowledge Graph link: tighter rhythm than the tree's
+           top-level rows — the fixed header should spend pixels sparingly. */
+        #navigation > ul > li > a{
+            margin: 4px 0 2px;
         }
         #nav-scroll{
             flex: 1 1 auto;
@@ -1675,7 +1682,7 @@
             flex: none;   /* pinned header row — never squeezed by #navigation's flex */
             /* Sit just inside the category dividers' span, centered. */
             width: calc(100% - 16px);
-            margin: 0 auto 10px;   /* +first-row 12px = the original 22px gap */
+            margin: 0 auto 6px;
             border: 1px solid var(--border);
             border-radius: 8px;
             background: color-mix(in srgb, var(--bg-alt) 72%, transparent);
