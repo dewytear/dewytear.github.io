@@ -340,6 +340,10 @@
         #profile img{
             display: block;
             width: 100%;
+            /* Fixed landscape ratio: any photo (portrait included) center-crops
+               to the same sidebar height instead of stretching it vertically. */
+            aspect-ratio: 3 / 2;
+            object-fit: cover;
             border-radius: 10px;
             border: 1px solid var(--border);
         }
