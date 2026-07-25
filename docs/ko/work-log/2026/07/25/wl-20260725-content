@@ -10,3 +10,13 @@
 
 <h3>후속 — 출처 표기 중립화·작성 모델 정정</h3>
 <p>사용자 요청으로 <strong>본문·요약·이 로그에서 특정 리뷰 매체를 지목하는 표기를 걷어냈다</strong>. 주장 자체는 그대로 두고 문구만 &ldquo;출시 직후 리뷰 반응&rdquo;류의 중립 표현으로 바꿨으며, 사실검증 노트의 <strong>검증/미확인 구분은 유지</strong>했다(미확인 항목은 계속 미확인으로 표시). 출처 공개만이 목적이던 사실검증 노트 마지막 항목은 삭제. 함께 <code>list</code>의 <code>model</code>을 <strong>Claude Opus 5</strong>로 정정했다(이 글을 쓴 모델). 파생물(<code>knowledge-index</code>·<code>knowledge-graph.json</code>·<code>llms.txt</code>)은 요약 변경분을 재생성해 반영.</p>
+
+<h3>후속 — 이미지 2장·영상 임베드</h3>
+<p>사용자가 준 자료를 본문 중간에서 바로 보게 넣었다. 문서 이미지 규칙대로 자산은 <code>assets/ai/news/2026/news-20260724-claude-opus-5/</code>에 두고(폭 1440px webp로 리사이즈, <code>docs/</code> 밖), <code>&lt;figure class="doc-img"&gt;</code> 표준 컴포넌트로 삽입했다.</p>
+<ul>
+    <li><strong>히어로</strong> <code>hero.webp</code> — 알 도판들이 모여 &lsquo;5&rsquo;를 이루는 공개 비주얼, 제목 바로 아래(Kimi K3 기사와 같은 자리).</li>
+    <li><strong>공식 차트</strong> <code>fig-frontier-bench.webp</code> — Frontier-Bench v0.1 &ldquo;비용 대비 점수&rdquo; 그래프를 벤치마크 표 바로 뒤에. 캡션에 <strong>읽는 법</strong>(왼쪽 위 = 싸고 잘한다)과 원 각주(mini-SWE-agent 하네스 내부 실행, 분류기 거부 시 Opus 4.8 폴백)를 함께 적어, 본문의 세이프가드 단락과도 이어지게 했다.</li>
+    <li><strong>영상 임베드</strong> — 신규 컴포넌트 <code>.doc-video</code>(style.css)를 <code>.doc-img</code>와 같은 figure 문법으로 추가: 16:9 <code>aspect-ratio</code> 박스 + <code>loading="lazy"</code> iframe(<code>youtube-nocookie</code>), 캡션은 같은 스타일. 임베드가 차단된 환경(회사망·Safari 크로스사이트 추적 방지)을 위해 캡션에 <strong>&lsquo;YouTube에서 열기&rsquo; 링크</strong>를 함께 뒀다 — 배경음악 버튼의 차단 안내와 같은 취지. 데모 3종 도식 뒤에 배치.</li>
+    <li>변경 유형 <strong>CONTENT + STYLE</strong> — 캐시버스터 <code>style.css 27→28</code>. 외부 URL 핫링크 없이 이미지는 저장소에 커밋(규칙 준수), 영상만 임베드.</li>
+</ul>
+

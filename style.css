@@ -2857,6 +2857,21 @@
             text-align: center; color: var(--muted); font-size: 12px; margin-top: 6px;
         }
         body:not(.day) article .doc-img img{ filter: brightness(.9); }
+        /* ---- Embedded video (YouTube) — same figure grammar as .doc-img,
+           16:9 box so it scales with the column. The iframe is lazy so a page
+           with a video costs nothing until it scrolls into view. ---- */
+        article .doc-video{ margin: 4px 0 20px; }
+        article .doc-video .dv-frame{
+            position: relative; aspect-ratio: 16 / 9; width: 100%;
+            border-radius: 12px; border: 1px solid var(--border); overflow: hidden;
+            background: var(--code-bg, rgba(127, 127, 127, .12));
+        }
+        article .doc-video iframe{
+            position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
+        }
+        article .doc-video figcaption{
+            text-align: center; color: var(--muted); font-size: 12px; margin-top: 6px;
+        }
         article .diagram{ margin: 18px 0 20px; overflow-x: auto; }
         /* Dynamic comparison table — bars fill in when the table appears
            (fragments are re-inserted per route, so it replays per visit)

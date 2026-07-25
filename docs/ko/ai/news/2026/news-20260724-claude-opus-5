@@ -1,5 +1,11 @@
 <h2>Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다</h2>
 
+<figure class="doc-img">
+    <img src="assets/ai/news/2026/news-20260724-claude-opus-5/hero.webp" width="1440" height="810"
+         alt="빈티지 조류 알 도판들이 모여 숫자 5 모양을 이룬 Claude Opus 5 공개 비주얼">
+    <figcaption>낱낱의 알들이 모여 &lsquo;5&rsquo;를 이룬다 — Claude Opus 5 공개 비주얼 (이미지: Anthropic)</figcaption>
+</figure>
+
 <p>2026년 7월 24일, Anthropic이 <strong>Claude Opus 5</strong>를 공개했습니다. 한 줄 요약 — <strong>&ldquo;최상위 모델 Fable 5에 바짝 붙는 성능을, 절반 가격에.&rdquo;</strong> 두 달 사이 네 번째 모델 출시라는 속도전 속에서 나온 이번 발표에 리뷰어들이 술렁인 이유는 단순합니다: 벤치마크 여러 곳에서 <strong>자사 최상위 모델을 이기는 수치</strong>가 찍혀 나왔기 때문입니다. 이 글은 <strong>공식 발표와 복수 언론 보도로 교차검증한 사실</strong>을 뼈대로, 출시 직후의 리뷰 반응에서 나온 이야기를 함께 정리한 것입니다 — 검증된 사실과 미확인 반응은 구분해 표기했습니다.</p>
 
 <div class="note">
@@ -69,6 +75,12 @@
 </table>
 </div>
 
+<figure class="doc-img">
+    <img src="assets/ai/news/2026/news-20260724-claude-opus-5/fig-frontier-bench.webp" width="1440" height="810"
+         alt="Frontier-Bench v0.1 공식 차트: 가로축은 시도당 비용(로그 스케일), 세로축은 점수. Opus 5 곡선이 Fable 5보다 왼쪽 위에 있고 GPT-5.6 Sol보다 높으며 Opus 4.8은 맨 아래에 있다">
+    <figcaption>공식 <strong>Frontier-Bench v0.1</strong> 차트 — 가로축 <strong>시도당 비용</strong>(로그), 세로축 점수. <strong>왼쪽 위로 갈수록 &lsquo;싸고 잘한다&rsquo;</strong>는 뜻이고, Opus 5(주황)는 Fable 5(노랑)의 왼쪽 위에 통째로 올라앉아 있습니다. 각주에 따르면 이 수치는 mini-SWE-agent 하네스 기반 내부 실행이며, 안전 분류기가 거부한 건은 Opus 4.8로 폴백해 집계했습니다 (이미지: Anthropic)</figcaption>
+</figure>
+
 <p>리뷰 반응의 관전평도 이 지점입니다 — &ldquo;Fable 대 Opus 구도보다 <strong>4.8에서 5로의 점프</strong>가 진짜 뉴스&rdquo;라는 것. 전작 대비 전 항목이 큰 폭으로 올랐고, 다중 학제 추론(툴 없이)·법률·의료 등 일부 항목에서만 Fable 5가 우위를 지켰습니다(그마저 툴 사용 시 역전된다는 게 리뷰들의 관찰).</p>
 
 <h3>달라진 손재주 — 데모 3종</h3>
@@ -103,6 +115,15 @@
 </svg>
 <div class="d-cap">원본 데모 영상들은 <a href="https://www.anthropic.com/news/claude-opus-5" target="_blank" rel="noopener">공식 발표 페이지</a>에서 볼 수 있다 — 여기서는 구도만 도식으로 옮겼다.</div>
 </div>
+
+<figure class="doc-video">
+    <div class="dv-frame">
+        <iframe src="https://www.youtube-nocookie.com/embed/4WQd-8d5j4k" title="Claude Opus 5 관련 영상"
+                loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <figcaption>움직이는 결과물로 보는 편이 빠릅니다 — Claude Opus 5 관련 영상 (<a href="https://youtu.be/4WQd-8d5j4k" target="_blank" rel="noopener">YouTube에서 열기</a>)</figcaption>
+</figure>
 
 <h3>백미 — &ldquo;보지 못하면, 볼 방법을 만든다&rdquo;</h3>
 <p>이번 발표에서 가장 회자되는 사례입니다. Opus 5에게 <strong>기계 부품 도면 하나</strong>를 주고 &ldquo;이걸 3D CAD 모델로 재구성하는 코드를 짜라&rdquo;고 했는데 — <strong>도면을 열어 볼 수단은 일부러 주지 않았습니다.</strong> 목표만 있고 방법이 막힌 상황. Opus 5는 포기하는 대신 <strong>컴퓨터 비전 파이프라인을 스스로 작성해</strong> 이미지 픽셀에서 도형 기하를 추출했고, 그걸로 부품 전체를 FreeCAD 3D 모델로 재구성해 냈습니다. 같은 조건의 경쟁 모델들은 <strong>5번 시도에서 전부 실패</strong>했습니다.</p>
