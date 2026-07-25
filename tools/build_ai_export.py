@@ -106,6 +106,16 @@ def doc_url(name, paths):
     return BASE + 'docs/' + LANG + '/' + paths[name] if name in paths else ''
 
 
+# 번역 파일 존재 여부 — en 본문이 있는 문서만 sitemap hreflang·llms 표기에
+# 편입된다(부분 번역 상태에서 없는 URL을 광고하지 않는다).
+def _has_lang(rel_path, lang):
+    return os.path.isfile(os.path.join(ROOT, 'docs', lang, rel_path))
+
+
+def doc_url_lang(name, paths, lang):
+    return BASE + 'docs/' + lang + '/' + paths[name] if name in paths else ''
+
+
 def _site_meta():
     cfg = _config()
     title = cfg.get('title') or 'Wiki'
@@ -185,6 +195,10 @@ def build_llms():
     lines.append('- [지식 인덱스](%sdata/knowledge-index.%s.json) · [내비 트리](%slist) · '
                  '[문서 날짜](%sdata/doc-dates.json) · [Atom 피드](%sfeed.xml)'
                  % (BASE, LANG, BASE, BASE, BASE))
+    en_count = sum(1 for n in by_name if n in paths and _has_lang(paths[n], 'en'))
+    if en_count:
+        lines.append('- English: %d/%d개 문서에 영어 본문이 있다 — 아래 목록의 [EN] 링크, '
+                     '경로는 docs/en/<같은 상대 경로>.' % (en_count, st['docCount']))
     lines.append('')
 
     # Docs grouped by System, in the map's cluster order; leftover sections after.
@@ -207,7 +221,9 @@ def build_llms():
             d = by_name[n]
             url = doc_url(n, paths)
             summ = d['summary'].replace('\n', ' ').strip()
-            lines.append('- [%s](%s): %s' % (d['title'], url, summ))
+            en = (' · [EN](%s)' % doc_url_lang(n, paths, 'en')
+                  if n in paths and _has_lang(paths[n], 'en') else '')
+            lines.append('- [%s](%s): %s%s' % (d['title'], url, summ, en))
         lines.append('')
 
     # Hubs are the most-referenced docs — a good analysis entry point.
@@ -396,12 +412,30 @@ def build_sitemap():
                 order.append(n['name'])
     walk(tree if isinstance(tree, list) else tree.get('children', tree))
 
-    locs = [BASE, BASE + 'llms.txt', BASE + 'llms-full.txt',
-            BASE + 'feed.xml', BASE + 'data/knowledge-graph.json']
-    locs += [BASE + 'docs/' + LANG + '/' + paths[n] for n in order if n in paths]
-    body = ''.join('  <url><loc>%s</loc></url>\n' % u for u in locs)
+    body = ''
+    for u in [BASE, BASE + 'llms.txt', BASE + 'llms-full.txt',
+              BASE + 'feed.xml', BASE + 'data/knowledge-graph.json']:
+        body += '  <url><loc>%s</loc></url>\n' % u
+    # 문서 URL: en 번역이 있으면 ko/en 두 URL을 모두 싣고, 각각에
+    # hreflang alternate(ko·en·x-default=원본 ko)를 단다 — 검색엔진이
+    # 언어별 원문을 정확히 매칭하게(부분 번역 상태 안전).
+    for n in order:
+        if n not in paths:
+            continue
+        ko = doc_url_lang(n, paths, 'ko')
+        if _has_lang(paths[n], 'en'):
+            en = doc_url_lang(n, paths, 'en')
+            alts = ('    <xhtml:link rel="alternate" hreflang="ko" href="%s"/>\n'
+                    '    <xhtml:link rel="alternate" hreflang="en" href="%s"/>\n'
+                    '    <xhtml:link rel="alternate" hreflang="x-default" href="%s"/>\n'
+                    % (ko, en, ko))
+            body += '  <url><loc>%s</loc>\n%s  </url>\n' % (ko, alts)
+            body += '  <url><loc>%s</loc>\n%s  </url>\n' % (en, alts)
+        else:
+            body += '  <url><loc>%s</loc></url>\n' % ko
     return ('<?xml version="1.0" encoding="UTF-8"?>\n'
-            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n'
+            '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
             + body + '</urlset>\n')
 
 

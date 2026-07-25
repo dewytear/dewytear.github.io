@@ -171,5 +171,5 @@
 | `llms-full.txt` | 전체 코퍼스 덤프. 헤더(라이선스·문서/개념 수) 뒤 문서마다 `# 제목` / `Section:` / `URL:` / 본문 평문. 본문은 태그 제거·엔티티 unescape·행별 공백 접기(케이스 보존), 인라인 SVG는 `<text>` 라벨만 남긴다. 순서는 llms.txt와 동일한 순회. |
 | `feed.xml` | Atom 피드. 인덱스 문서를 `doc-dates.json`의 `c` 내림차순 상위 30편. entry: title·link(해시 라우트)·id(프래그먼트 URL)·published=`c`·updated=`u`·summary·category(section). 채널 `<updated>`=포함 문서의 max `u` — **빌드 시각 금지**(결정론). |
 | `robots.txt` | 생성물(수작업 금지). `User-agent: *` Allow + `AI_CRAWLERS` 명시 환영 + 라이선스 주석 + Sitemap + AI 진입점 주석(llms·llms-full·graph·feed·순회 가이드). |
-| `sitemap.xml` | 홈 + 기계 파일(llms·llms-full·feed·graph) + 전 문서 프래그먼트 URL(내비 순서). `<lastmod>` 없음(--check 결정론). |
+| `sitemap.xml` | 홈 + 기계 파일(llms·llms-full·feed·graph) + 전 문서 프래그먼트 URL(내비 순서). en 본문이 있는 문서는 ko/en 두 URL + `xhtml:link` hreflang(ko·en·x-default=ko). `<lastmod>` 없음(--check 결정론). |
 | `data/knowledge-graph.json` | 자기완결 그래프(§1의 docs + `url`/`route` 인라인 + stats). 소비: 외부 AI가 한 번의 fetch로 전체 순회. |
