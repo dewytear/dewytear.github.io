@@ -1,0 +1,83 @@
+<h2>The five levels at a glance</h2>
+<p>Second Brains divide into five levels by <strong>"how well you find and recall"</strong>. Each level answers a <strong>different question</strong>. The ladder below means <strong>smarter search as you go up</strong>, but it also means <strong>more complexity and higher cost</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 300" role="img" aria-label="The five-level Second Brain ladder: level 1 exact search → level 2 grouping by topic → level 3 semantic search → level 4 connecting relationships → level 5 autonomous brain">
+    <!-- connecting up arrows -->
+    <line class="d-edge accent" x1="130" y1="214" x2="150" y2="196"/><polygon class="d-arrow accent" points="150,201 156,192 145,193"/>
+    <line class="d-edge accent" x1="258" y1="178" x2="278" y2="160"/><polygon class="d-arrow accent" points="278,165 284,156 273,157"/>
+    <line class="d-edge accent" x1="386" y1="142" x2="406" y2="124"/><polygon class="d-arrow accent" points="406,129 412,120 401,121"/>
+    <line class="d-edge accent" x1="514" y1="106" x2="534" y2="88"/><polygon class="d-arrow accent" points="534,93 540,84 529,85"/>
+
+    <!-- L1 -->
+    <rect class="d-box" x="12" y="214" width="124" height="46" rx="9"/>
+    <text class="d-label sm" x="74" y="234" text-anchor="middle">Level 1 · Exact</text>
+    <text class="d-sub" x="74" y="250" text-anchor="middle">Words · filenames</text>
+    <!-- L2 -->
+    <rect class="d-box" x="140" y="178" width="124" height="46" rx="9"/>
+    <text class="d-label sm" x="202" y="198" text-anchor="middle">Level 2 · Topics</text>
+    <text class="d-sub" x="202" y="214" text-anchor="middle">Wiki · memory</text>
+    <!-- L3 -->
+    <rect class="d-box" x="268" y="142" width="124" height="46" rx="9"/>
+    <text class="d-label sm" x="330" y="162" text-anchor="middle">Level 3 · Meaning</text>
+    <text class="d-sub" x="330" y="178" text-anchor="middle">Vector · embedding</text>
+    <!-- L4 -->
+    <rect class="d-box" x="396" y="106" width="124" height="46" rx="9"/>
+    <text class="d-label sm" x="458" y="126" text-anchor="middle">Level 4 · Relations</text>
+    <text class="d-sub" x="458" y="142" text-anchor="middle">Knowledge graph</text>
+    <!-- L5 — deliberately NOT accented: the ladder has no "goal" step;
+         the page's point is picking the level that fits you -->
+    <rect class="d-box" x="524" y="70" width="150" height="46" rx="9"/>
+    <text class="d-label sm" x="599" y="90" text-anchor="middle">Level 5 · Autonomous</text>
+    <text class="d-sub" x="599" y="106" text-anchor="middle">Always-on</text>
+
+    <!-- axis hints -->
+    <text class="d-sub" x="12" y="30" text-anchor="start">↑ Smarter · more complex · more costly</text>
+    <text class="d-sub" x="12" y="286" text-anchor="start">↓ Simpler · cheaper and faster</text>
+</svg>
+<div class="d-cap">Higher up is more powerful, but "powerful" does not mean "needed".</div>
+</div>
+
+<h3>The question each level answers</h3>
+<div class="scn-board">
+    <div class="scn-card">
+        <h4>Find exactly</h4>
+        <div class="scn-meta"><span class="scn-pill lv1">Level 1</span><span class="scn-pill">Files · routing</span></div>
+        <p class="scn-body"><strong>"That word or file I wrote &mdash; where is it?"</strong> &mdash; you point straight at it with a <code>CLAUDE.md</code> acting as a router plus a folder structure.</p>
+        <p class="scn-sub">When &mdash; when you re-explain often and search by exact name</p>
+    </div>
+    <div class="scn-card">
+        <h4>Group by topic</h4>
+        <div class="scn-meta"><span class="scn-pill lv2">Level 2</span><span class="scn-pill">Wiki · memory</span></div>
+        <p class="scn-body"><strong>"Gather everything about this topic."</strong> &mdash; you walk down the LLM wiki's index and weave the related notes together.</p>
+        <p class="scn-sub">When &mdash; 30+ notes and you keep forgetting what you had</p>
+    </div>
+    <div class="scn-card">
+        <h4>Find by meaning</h4>
+        <div class="scn-meta"><span class="scn-pill lv3">Level 3</span><span class="scn-pill">Vector · embedding</span></div>
+        <p class="scn-body"><strong>"Find something close in meaning even if the words differ."</strong> &mdash; semantic search (a vector DB) looks at similarity by meaning.</p>
+        <p class="scn-sub">When &mdash; when notes that exist get missed over word mismatches</p>
+    </div>
+    <div class="scn-card">
+        <h4>Connect by relationship</h4>
+        <div class="scn-meta"><span class="scn-pill lv4">Level 4</span><span class="scn-pill">Knowledge graph</span></div>
+        <p class="scn-body"><strong>"Start at X and follow the connections to A."</strong> &mdash; you trace chains of relationships through a knowledge graph of entities and relations.</p>
+        <p class="scn-sub">When &mdash; when "who is tangled with what, and how" matters</p>
+    </div>
+    <div class="scn-card">
+        <h4>Autonomous brain OS</h4>
+        <div class="scn-meta"><span class="scn-pill lv5">Level 5</span><span class="scn-pill">always-on</span></div>
+        <p class="scn-body"><strong>"Stay updated on your own without me minding it."</strong> &mdash; an always-on brain that keeps absorbing meetings, mail, and memos automatically (cron).</p>
+        <p class="scn-sub">When &mdash; when offline agents or bulk data need constant syncing</p>
+    </div>
+</div>
+
+<div class="note warn">
+    <span class="nh">The most important principle</span>
+    Choose <strong>the lowest level that matches your pain</strong>. If nothing is uncomfortable right now, there is no reason to climb. And <strong>the level may differ from folder to folder even within a single project</strong> &mdash; meeting minutes at level 3, the project folder at level 1, for instance.
+</div>
+
+<div class="note">
+    <span class="nh">Next</span>
+    Now we look at each level in detail, one at a time. Start with <a href="#!sb-level1">Level 1 &mdash; find exactly</a>. Choosing the level that fits your situation is covered in <a href="#!sb-choose">finding your level</a>.
+</div>

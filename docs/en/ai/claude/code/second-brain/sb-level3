@@ -1,0 +1,132 @@
+<h2>Level 3 · Searching by meaning (semantic search, vector DB)</h2>
+<p>Levels 1 and 2 mostly need <strong>the words to match</strong>. But we often search with <strong>words different from the ones we remember</strong>. So Level 3 <strong>searches by meaning.</strong> That is <strong>semantic search</strong>, and its engine is the <strong>vector database</strong>.</p>
+
+<h3>Keyword search vs semantic search</h3>
+<p>The biggest difference is <strong>"is it the same word (=)"</strong> versus <strong>"is the meaning close (≈)"</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 210" role="img" aria-label="Keyword search finds only exactly matching words, while semantic search also finds things that are close in meaning">
+    <!-- left: keyword -->
+    <rect class="d-box soft" x="20" y="16" width="300" height="176" rx="12"/>
+    <text class="d-label" x="170" y="44" text-anchor="middle">Keyword search  ·  X = X</text>
+    <rect class="d-box" x="130" y="66" width="80" height="34" rx="7"/>
+    <text class="d-label sm" x="170" y="88" text-anchor="middle">"feedback"</text>
+    <rect class="d-box accent" x="130" y="130" width="80" height="34" rx="7"/>
+    <text class="d-label sm" x="170" y="152" text-anchor="middle">"feedback"</text>
+    <line class="d-edge" x1="170" y1="100" x2="170" y2="128"/><polygon class="d-arrow" points="165,122 170,130 175,122"/>
+    <text class="d-sub" x="170" y="182" text-anchor="middle">only exact word matches</text>
+
+    <!-- right: semantic -->
+    <rect class="d-box soft" x="360" y="16" width="300" height="176" rx="12"/>
+    <text class="d-label" x="510" y="44" text-anchor="middle">Semantic search  ·  X ≈ X,Y,Z</text>
+    <rect class="d-box" x="470" y="60" width="80" height="30" rx="7"/>
+    <text class="d-label sm" x="510" y="80" text-anchor="middle">"feedback"</text>
+    <rect class="d-box accent" x="386" y="120" width="98" height="30" rx="7"/>
+    <text class="d-label sm" x="435" y="140" text-anchor="middle">test results</text>
+    <rect class="d-box accent" x="500" y="120" width="70" height="30" rx="7"/>
+    <text class="d-label sm" x="535" y="140" text-anchor="middle">reviews</text>
+    <rect class="d-box accent" x="584" y="120" width="60" height="30" rx="7"/>
+    <text class="d-label sm" x="614" y="140" text-anchor="middle">fixes</text>
+    <line class="d-edge accent" x1="510" y1="90" x2="435" y2="118"/><polygon class="d-arrow accent" points="431.3,110 434.3,120 440.3,112"/>
+    <line class="d-edge accent" x1="510" y1="90" x2="535" y2="118"/><polygon class="d-arrow accent" points="529.5,112 536.5,120 539.5,111"/>
+    <line class="d-edge accent" x1="510" y1="90" x2="614" y2="118"/><polygon class="d-arrow accent" points="607.5,112 614.5,120 617.5,111"/>
+    <text class="d-sub" x="510" y="182" text-anchor="middle">caught even if the words differ</text>
+</svg>
+<div class="d-cap">Keyword search finds only <strong>the X that equals X</strong>; semantic search also finds <strong>the Y and Z close in meaning to X</strong>.</div>
+</div>
+
+<h3>How does it search by "meaning" — embeddings and chunking</h3>
+<p>The principle goes like this. A document is split into <strong>small pieces (chunks)</strong>, and each piece goes into an <strong>embedding model</strong>. The embedding model turns that piece into <strong>a coordinate (vector) in "meaning space."</strong> <strong>Pieces close in meaning</strong> gather near each other.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 180" role="img" aria-label="Vectorization pipeline: a document is split into chunks, fed to an embedding model, and becomes vectors in meaning space where similar ones gather">
+    <rect class="d-box" x="16" y="62" width="96" height="52" rx="9"/>
+    <text class="d-label sm" x="64" y="86" text-anchor="middle">Document</text>
+    <text class="d-sub" x="64" y="101" text-anchor="middle">subs · minutes</text>
+
+    <g>
+    <rect class="d-box soft" x="156" y="50" width="86" height="24" rx="5"/>
+    <rect class="d-box soft" x="156" y="78" width="86" height="24" rx="5"/>
+    <rect class="d-box soft" x="156" y="106" width="86" height="24" rx="5"/>
+    <text class="d-sub" x="199" y="66" text-anchor="middle">Chunk 1</text>
+    <text class="d-sub" x="199" y="94" text-anchor="middle">Chunk 2</text>
+    <text class="d-sub" x="199" y="122" text-anchor="middle">Chunk 3</text>
+    </g>
+
+    <rect class="d-box" x="286" y="62" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="346" y="86" text-anchor="middle">Embedding model</text>
+    <text class="d-sub" x="346" y="101" text-anchor="middle">meaning → coords</text>
+
+    <rect class="d-box accent" x="452" y="24" width="212" height="130" rx="12"/>
+    <text class="d-sub" x="558" y="44" text-anchor="middle">meaning space (vectors)</text>
+    <circle class="d-node" cx="500" cy="72" r="6"/>
+    <circle class="d-node" cx="518" cy="86" r="6"/>
+    <circle class="d-node" cx="486" cy="92" r="6"/>
+    <circle class="d-node b" cx="600" cy="70" r="6"/>
+    <circle class="d-node b" cx="616" cy="86" r="6"/>
+    <circle class="d-node c" cx="560" cy="128" r="6"/>
+    <circle class="d-node c" cx="578" cy="134" r="6"/>
+    <text class="d-sub" x="500" y="118" text-anchor="middle">similar sense</text>
+
+    <line class="d-edge" x1="112" y1="88" x2="154" y2="88"/><polygon class="d-arrow" points="148,83 156,88 148,93"/>
+    <line class="d-edge" x1="242" y1="88" x2="284" y2="88"/><polygon class="d-arrow" points="278,83 286,88 278,93"/>
+    <line class="d-edge accent" x1="406" y1="88" x2="450" y2="88"/><polygon class="d-arrow accent" points="444,83 452,88 444,93"/>
+</svg>
+<div class="d-cap">Pieces about the company sit over here, pieces about finance over there — meaning decides the <strong>spot</strong>. The cluster view in a tool like <strong>Qdrant</strong> is a visualization of that mass of coordinates.</div>
+</div>
+
+<div class="note">
+    <span class="nh">Term note — Qdrant</span>
+    A leading <strong>vector DB</strong> that stores and searches vectors is <strong>Qdrant</strong>. It groups images and text by <strong>semantic similarity</strong> and shows them as clusters (that demo where "similar pictures bunch together"). Beyond it, <strong>Pinecone and Supabase</strong> are also used to implement semantic search.
+</div>
+
+<h3>The decisive limit — a chunk cannot see the "whole context"</h3>
+<p>People mistake a vector DB for <strong>"magic that pulls out anything exactly."</strong> <strong>That is not true.</strong> Search only pulls in <strong>a few similar chunks</strong>, so it is weak on <strong>questions that require seeing everything</strong>.</p>
+
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Situation</th><th>What vector search does</th><th>Why it is wrong</th></tr></thead>
+        <tbody>
+            <tr><td>"<strong>Summarize</strong> the March 5 meeting"</td><td>Retrieves only <strong>5 chunks</strong> similar to "March 5 meeting summary"</td><td>If the meeting was split into 20 chunks, it never sees the other 15, so <strong>key points go missing</strong></td></tr>
+            <tr><td>"Which was the <strong>highest-revenue week</strong>?"</td><td>Looks at only some chunks (say week 6) and answers "week 6 was the best"</td><td>In reality weeks 14 and 19 were higher, but it <strong>never looked</strong> at those chunks</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 680 150" role="img" aria-label="Vector search sees only part of the range and mistakes week 6 for the peak, while weeks 14 and 19 are actually higher">
+    <line class="d-edge" x1="30" y1="120" x2="660" y2="120"/>
+    <!-- bars -->
+    <rect class="d-box soft" x="40" y="92" width="24" height="28" rx="2"/>
+    <rect class="d-box soft" x="80" y="80" width="24" height="40" rx="2"/>
+    <!-- highlighted (looked-at) chunk -->
+    <rect class="d-box accent" x="120" y="60" width="24" height="60" rx="2"/>
+    <rect class="d-box accent" x="160" y="66" width="24" height="54" rx="2"/>
+    <rect class="d-box accent" x="200" y="72" width="24" height="48" rx="2"/>
+    <text class="d-sub" x="172" y="52" text-anchor="middle">↑ span the search saw → thinks "week 6 is the max"</text>
+    <rect class="d-box soft" x="300" y="86" width="24" height="34" rx="2"/>
+    <!-- true max -->
+    <rect class="d-node" x="470" y="30" width="24" height="90" rx="2"/>
+    <rect class="d-node" x="600" y="42" width="24" height="78" rx="2"/>
+    <text class="d-sub" x="482" y="22" text-anchor="middle">Week 14</text>
+    <text class="d-sub" x="612" y="34" text-anchor="middle">Week 19 (true max)</text>
+</svg>
+<div class="d-cap">For questions that need the whole thing, it is more accurate to <strong>read that markdown in full</strong> and answer from it.</div>
+</div>
+
+<div class="note warn">
+    <span class="nh">So when do vectors shine</span>
+    When you pull <strong>a very specific snippet out of a huge body of text</strong>. Example: there are 1,000 rules and you ask <strong>"what was rule 17 again?"</strong> — no need to read everything, just hand over the chunks around number 17. To push accuracy higher, attach <strong>metadata</strong> or use the <strong>hybrid search</strong> below.
+</div>
+
+<h3>Raising accuracy — hybrid search and reranking (one step further)</h3>
+<ul>
+    <li><strong>Hybrid search</strong> — combines semantic (meaning) and <strong>BM25</strong> (keyword) scores so each covers the other's weakness. (BM25 also comes up in <a href="#!llmw-ingest-query-lint">the LLM Wiki's Query</a>.)</li>
+    <li><strong>Reranking</strong> — after candidates are picked, a more precise model <strong>reorders</strong> them.</li>
+    <li><strong>Chunking strategy</strong> — how finely you split and how much you overlap drives the quality of the results.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">Not everything has to be vectors</span>
+    You do not need to turn <strong>the whole</strong> Second Brain into vectors. For instance you can keep <strong>only the YouTube subtitle folder</strong> in a vector DB and leave <code>context/</code>, <code>projects/</code>, and <code>decisions.md</code> as plain markdown. Pick <strong>a different approach per folder depending on the kind of data and how it is used</strong>. Next comes <a href="#!sb-level4">Level 4 — linking by relationship</a>.
+</div>
