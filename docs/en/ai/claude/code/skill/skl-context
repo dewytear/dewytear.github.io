@@ -1,0 +1,24 @@
+<h2>The Context Window and the Tool Problem</h2>
+<p>To understand how skills work, you have to start with the <strong>context window</strong>.</p>
+
+<h3>The context window</h3>
+<p>The context window is the <strong>size of the input</strong> fed into an LLM. (Because the output goes back into the input as things continue, it includes the output too.) It holds not only the user's question but all of the following.</p>
+<ul>
+    <li>Basic information (who you are, what today's date is, what you should do and what you must not do)</li>
+    <li>Instructions · few-shot examples · output format · context · memory</li>
+    <li><strong>Tool</strong> definitions · the chat history (which keeps getting added to as it grows longer)</li>
+</ul>
+<p>Older LLMs had contexts of only 2K to 8K (GPT-3 about 2K, early GPT-4 8K), but the models used in Claude Code today take 200K by default, and some models (Sonnet 4.6, Opus 4.6 and later) take up to <strong>1M (a million) tokens</strong>. Bigger is not simply better, though. <strong>Once the context starts filling up the LLM gets anxious</strong>, and it will refuse to do the work or wrap it up strangely.</p>
+
+<div class="note">
+    <span class="nh">clear · compact — clearing your desk</span>
+    Claude Code's <code>/clear</code>·<code>/compact</code> are commands that shrink or empty the current context to get ready for new work. Think of it as the difference between working at a desk that is a mess and <strong>tidying it up completely before you start</strong>.
+</div>
+
+<h3>Tools eat up the context</h3>
+<p>A skill is, in the end, a kind of tool. But open up a single tool and it is a <strong>complex JSON spec</strong> listing the function, its arguments, when to use it, units, and so on. Each one is fairly large, so <strong>the context is ready to burst once you get past just a few tools</strong>. This is why "you cannot connect any more" comes up when you hook up several MCP servers and connectors.</p>
+
+<div class="note">
+    <span class="nh">The trunk analogy</span>
+    Tools are like a car <strong>trunk</strong>. Its size is limited, so you cannot fit all of your camping gear in. There are two options — buy a bigger trunk, or cut the load down as much as you can. Coding agents took the latter route, solving the problem by <strong>cutting down to six tools and handing over an execution environment along with them</strong>, and <strong>skills</strong> emerged on top of that.
+</div>

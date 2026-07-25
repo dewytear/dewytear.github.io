@@ -1,0 +1,45 @@
+<h2>SKILL.md Structure and the Description</h2>
+<p>The center of a skill folder is the <code>SKILL.md</code> file, and alongside it sit bundled files such as <code>reference</code>, <code>examples</code>, and <code>scripts</code>.</p>
+
+<h3>Front matter (metadata)</h3>
+<div class="diagram">
+<svg viewBox="0 0 640 210" role="img" aria-label="Anatomy of SKILL.md: the front matter (name and description) is always loaded, the body (instructions) is loaded on call">
+    <rect class="d-box" x="110" y="12" width="320" height="182" rx="10"/>
+    <text class="d-label" x="270" y="35" text-anchor="middle">SKILL.md</text>
+
+    <rect class="d-box accent" x="130" y="46" width="280" height="56" rx="9"/>
+    <text class="d-label" x="270" y="72" text-anchor="middle">Front matter</text>
+    <text class="d-sub" x="270" y="90" text-anchor="middle">name · description</text>
+
+    <rect class="d-box soft" x="130" y="118" width="280" height="60" rx="9"/>
+    <text class="d-label" x="270" y="144" text-anchor="middle">Body (instructions)</text>
+    <text class="d-sub" x="270" y="162" text-anchor="middle">markdown · how to use</text>
+
+    <line class="d-edge dash" x1="430" y1="74" x2="470" y2="74"/>
+    <text class="d-accent" x="478" y="78" text-anchor="start">always loaded</text>
+    <line class="d-edge dash" x1="430" y1="148" x2="470" y2="148"/>
+    <text class="d-accent" x="478" y="152" text-anchor="start">loaded on call</text>
+</svg>
+<div class="d-cap">Within a single file the front matter is always loaded, while the body is loaded when the skill is invoked.</div>
+</div>
+<p>At the very top of <code>SKILL.md</code> there is YAML <strong>front matter</strong>. For a PDF skill, for example:</p>
+<pre><code><span class="c"># SKILL.md front matter (the part that is always loaded)</span>
+name: pdf
+description: Toolkit for extracting text/tables from PDFs, merging, splitting, and so on</code></pre>
+<p>On the first load only this <strong>front matter</strong> comes in, and the actual manual (the body) is loaded <strong>when the skill is invoked</strong>.</p>
+
+<h3>Writing the description matters</h3>
+<p>A skill can be <strong>invoked explicitly</strong> with <code>/skill-name</code>, and it can also <strong>fire automatically</strong> on the basis of its front matter when you say something like "extract the text from this PDF." That is why the <code>description</code> has to be written well.</p>
+<ul>
+    <li><strong>When it does not get invoked</strong> — for example, if it has a PDF editing capability but the description only says "used for reading," it may not be invoked when you ask for an edit.</li>
+    <li><strong>When it gets invoked unnecessarily</strong> — it suddenly fires on something that has nothing to do with PDFs.</li>
+</ul>
+<p>So <strong>test</strong> whether it gets invoked when it should and whether it fires when it should not, and when you build one yourself write the description <strong>with care</strong>.</p>
+
+<h3>Referencing files from the instructions</h3>
+<p>Inside the body (markdown) instructions you can write references to other files, such as <strong>"in this case, look at this file."</strong> Unlike the JSON tool specs we saw earlier, this amounts to writing something like "how to run the command" <strong>in natural language, as if you were telling a person</strong>.</p>
+
+<div class="note">
+    <span class="nh">Why read/execute alone is enough</span>
+    Coding agents come with <strong>file read, write, edit, and search</strong> tools built in, so they handle the file system freely. That is why the agent loads a file on its own even when the instructions only say "read this file." It is easier to grasp if you picture <strong>how</strong> a skill's content and the coding agent's tools <strong>interact as it reads</strong>.
+</div>

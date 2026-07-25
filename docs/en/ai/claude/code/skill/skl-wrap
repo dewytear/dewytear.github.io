@@ -1,0 +1,27 @@
+<h2>Wrap-up &mdash; Engineering Layers and Q&A</h2>
+
+<h3>The layers of engineering</h3>
+<p>Sort what we have learned so far by purpose and, instead of "it's all engineering," the distinct grain of each becomes visible.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Engineering</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td>Prompt engineering</td><td>Making the LLM <strong>smart</strong></td></tr>
+            <tr><td>Context engineering</td><td><strong>Raising the odds</strong> that the context is right</td></tr>
+            <tr><td>Agentic engineering</td><td>Making the AI <strong>do the work well</strong></td></tr>
+            <tr><td>Harness engineering</td><td>Making it something you can <strong>trust and delegate to</strong></td></tr>
+        </tbody>
+    </table>
+</div>
+<p>A <a href="#!hns-overview">harness</a> can be seen as a <strong>meta skill loaded with skills + subagents</strong>. With the concept of skills in hand, you can look at a harness understanding that it is complex inside even though it looks easy on the surface.</p>
+
+<h3>MCP vs skills</h3>
+<p>MCP is a <strong>protocol</strong> &mdash; a convention for connecting external tools with agents, so its loading and usage differ from skills. <strong>They are not competitors</strong>: if a skill needs an external connection it can use MCP, so MCP can live inside a skill. That said, skills are so powerful that cases of <strong>replacing MCP with skills</strong> are increasing too.</p>
+
+<div class="note">
+    <span class="nh">Q&amp;A takeaways</span>
+    · Downloading <strong>open skills</strong> carelessly is not safe &mdash; only vetted ones.<br>
+    · When there is <strong>an MCP function and a skill with the same name</strong>, which one wins depends on the situation, so <strong>be explicit</strong> ("use this skill") or separate them with namespaces.<br>
+    · <strong>Evaluating skill performance</strong> &mdash; decide metrics first, such as whether it triggers well and whether the result is useful, then check with an LLM judge and by eye.<br>
+    · <strong>Tokens</strong> &mdash; Claude Code uses more than regular Claude, but it can be more useful if it gets you the result you want in one go. Do not look at tokens alone; choose holistically.
+</div>
