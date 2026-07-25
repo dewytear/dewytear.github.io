@@ -209,7 +209,7 @@
                 flex: none;
                 height: 100vh;
                 height: 100dvh;
-                overflow-y: auto;
+                overflow: hidden;   /* the tree scrolls inside #nav-scroll */
                 padding: 10px 8px 0 24px;
                 border-right: none;   /* the card border does the separating */
                 transition: margin-left 0.3s cubic-bezier(0.22, 1, 0.36, 1),
@@ -325,7 +325,7 @@
             border-right: 1px solid var(--border);
         }
         #profile{
-            padding: 20px 18px;
+            padding: 16px 6px 14px;   /* slim sides: the photo hugs the menu width */
             border-bottom: 1px dashed var(--border);
         }
         /* The whole profile block (photo + tagline) links to the About page. */
@@ -1444,14 +1444,30 @@
             padding: 20px 20px 20px 12px;   /* tighter left edge */
             /* Fill the space above the sticky footer so the Work Log
                branch can sink to the very bottom of the menu area. */
-            flex: 1 0 auto;
+            flex: 1 1 auto;
+            min-height: 0;
             display: flex;
             flex-direction: column;
         }
+        /* Everything above #nav-scroll (nav tools + pinned Knowledge Graph
+           link) stays fixed; only the tree below scrolls, scrollbar hidden. */
         #navigation > ul{
+            flex: none;   /* the pinned Knowledge Graph row keeps its height */
+        }
+        #nav-scroll{
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+        #nav-scroll::-webkit-scrollbar{
+            display: none;
+        }
+        #nav-scroll > ul{
             flex: 1;
             display: flex;
             flex-direction: column;
+            min-height: 100%;
         }
         /* Backdrop behind the mobile drawer (only shown on small screens). */
         #nav-backdrop{
@@ -1476,7 +1492,7 @@
            bottom), so their margins no longer collapse with the titles' —
            zero them and let the title margins (10 + 12) carry the original
            22px rhythm. */
-        #navigation > ul > li{
+        :is(#navigation, #nav-scroll) > ul > li{
             margin: 0;
         }
         #navigation li a{
@@ -1558,7 +1574,7 @@
            the very bottom of the menu area, just above the day/night foot.
            When the tree grows past the viewport the auto margin collapses
            and the padding keeps a minimum gap. */
-        #navigation > ul > li.nav-branch[data-cat="Work Log"]{
+        :is(#navigation, #nav-scroll) > ul > li.nav-branch[data-cat="Work Log"]{
             margin-top: auto;
             padding-top: 24px;
         }
@@ -1608,7 +1624,7 @@
         }
         /* Top-level standalone links (e.g. 지식 코스모스) read like the
            category titles beside them. */
-        #navigation > ul > li > a{
+        :is(#navigation, #nav-scroll) > ul > li > a{
             display: block;
             /* 12px top: the nav ul is a flex column (Work Log pinning), so
                margins no longer collapse — 12 + the previous row's 10px
@@ -1631,7 +1647,7 @@
         }
         /* Level-0 category titles: the only prominent tier. (12px top —
            see the top-level link rule above for the flex/no-collapse math.) */
-        #navigation > ul > li.nav-branch > .nav-title{
+        :is(#navigation, #nav-scroll) > ul > li.nav-branch > .nav-title{
             margin: 12px 0 10px;
             padding: 0 0 8px;
             border-bottom: var(--nav-line-width) var(--nav-line-style) var(--border);
@@ -1643,11 +1659,11 @@
         }
         /* Monochrome intensity ramp — folder titles fade as they nest deeper,
            so each level reads clearly (size stays uniform; L3+ uses the base). */
-        #navigation > ul > li > ul > li.nav-branch > .nav-title{            /* L1 */
+        :is(#navigation, #nav-scroll) > ul > li > ul > li.nav-branch > .nav-title{            /* L1 */
             color: var(--text);
             font-weight: 700;
         }
-        #navigation > ul > li > ul > li > ul > li.nav-branch > .nav-title{  /* L2 */
+        :is(#navigation, #nav-scroll) > ul > li > ul > li > ul > li.nav-branch > .nav-title{  /* L2 */
             color: color-mix(in srgb, var(--text) 58%, var(--muted));
             font-weight: 700;
         }
@@ -1656,6 +1672,7 @@
            rest, wakes on hover, accent ink on the active segment. */
         .nav-tools{
             display: flex;
+            flex: none;   /* pinned header row — never squeezed by #navigation's flex */
             /* Sit just inside the category dividers' span, centered. */
             width: calc(100% - 16px);
             margin: 0 auto 10px;   /* +first-row 12px = the original 22px gap */
@@ -2583,7 +2600,7 @@
                 max-width: 80%;
                 background: var(--bg);
                 border-right: 1px solid var(--border);
-                overflow-y: auto;
+                overflow: hidden;   /* the tree scrolls inside #nav-scroll */
                 transform: translateX(-100%);
                 transition: transform 0.25s ease;
                 z-index: 1000;
