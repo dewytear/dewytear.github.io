@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>고급 도구</title>
+<meta name="description" content="LSP·AST Grep·Python REPL 등 정밀 코드 분석 도구군을 소개한다.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/omc-tools/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/omc-tools/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/omc-tools/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/omc-tools/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "고급 도구",
+ "description": "LSP·AST Grep·Python REPL 등 정밀 코드 분석 도구군을 소개한다.",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/omc-tools/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!omc-tools",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T12:15:44+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!omc-tools");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!omc-tools">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/omc-tools/" hreflang="en">English</a>
+</p>
+<article>
+<h2>고급 도구</h2>
+<p>OMC는 코드를 더 정확히 다루기 위한 도구군을 제공합니다. 텍스트 검색보다 정밀한 분석이 필요할 때 유용합니다.</p>
+
+<div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr><th>도구군</th><th>대표 기능</th><th>활용 목적</th><th>주의사항</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>LSP</strong></td><td>lsp_hover, lsp_goto_definition, lsp_find_references, lsp_diagnostics</td><td>정확한 심볼 탐색, 타입 오류 확인, 참조 검색</td><td>typescript-language-server, pyright, rust-analyzer 등 언어별 서버 필요</td></tr>
+            <tr><td><strong>AST Grep</strong></td><td>ast_grep_search, ast_grep_replace</td><td>문법 구조 기반 검색·치환</td><td>텍스트 grep보다 정밀하지만 패턴 작성 역량 필요</td></tr>
+            <tr><td><strong>Python REPL</strong></td><td>pandas, numpy, matplotlib 기반 분석</td><td>CSV·로그·통계 분석</td><td>데이터 파일 접근 권한과 패키지 가용성 확인 필요</td></tr>
+            <tr><td><strong>Ask / Team CLI</strong></td><td>omc ask, omc team, omc session search</td><td>외부 CLI 워커와 세션 검색</td><td>플러그인 설치 흐름과 CLI/runtime 경로 구분 필요</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">LSP 보충 설명</span>
+    LSP(Language Server Protocol)는 코드 편집기가 "이 변수의 정의는 어디?", "여기 타입 오류가 있나?"를 정확히 알아내도록 돕는 표준입니다. 단, 해당 언어의 언어 서버가 설치돼 있어야 정상 동작합니다.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · PlugIn · OMC &middot; <span class="pr-k">생성일자</span> 2026-07-03 &middot; <span class="pr-k">수정일자</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/omc-doctor/">설치 진단</a></li><li><a href="/p/welcome/">Welcome</a></li></ul>
+</nav>
+</body>
+</html>

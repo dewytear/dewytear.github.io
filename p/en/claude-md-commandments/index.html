@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Ten Commandments of CLAUDE.md — Ten Promises for Taming Your AI Pair Programmer</title>
+<meta name="description" content="A general-purpose CLAUDE.md guideline aimed at ten habitual LLM coding mistakes, presented as an infographic with the English original, a Korean translation, and usage notes — a careful start (think first, the three artifacts), coding principles (simplicity, surgical changes, Korean headers, no colons, test before done), and verification and wrap-up (goal-first, semantic commits, read errors closely), plus how to install it at the project root and the signals that show it works">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/claude-md-commandments/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/claude-md-commandments/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/claude-md-commandments/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/claude-md-commandments/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "The Ten Commandments of CLAUDE.md — Ten Promises for Taming Your AI Pair Programmer",
+ "description": "A general-purpose CLAUDE.md guideline aimed at ten habitual LLM coding mistakes, presented as an infographic with the English original, a Korean translation, and usage notes — a careful start (think first, the three artifacts), coding principles (simplicity, surgical changes, Korean headers, no colons, test before done), and verification and wrap-up (goal-first, semantic commits, read errors closely), plus how to install it at the project root and the signals that show it works",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/claude-md-commandments/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!claude-md-commandments",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-24T20:19:18+09:00",
+ "dateModified": "2026-07-24T20:53:48+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!claude-md-commandments");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!claude-md-commandments">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/claude-md-commandments/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>The Ten Commandments of CLAUDE.md &mdash; Ten Promises for Taming Your AI Pair Programmer</h2>
+
+<p>Anyone who has had an AI write code has lived through it &mdash; the moment it builds a feature nobody asked for, &ldquo;improves&rdquo; perfectly healthy code next door, and shouts &ldquo;All done!&rdquo; without ever running the tests. <strong>CLAUDE.md is the project instruction file that prevents those accidents.</strong> Claude Code reads it automatically at the start of every conversation, so think of it as <strong>the onboarding document you leave on your AI new hire's desk</strong>. This document introduces one especially well-organized set of them &mdash; the <strong>&lsquo;Ten Commandments&rsquo; CLAUDE.md</strong> &mdash; as an infographic, the English original, and a full translation, and covers how best to put it to work.</p>
+
+<figure class="doc-img">
+    <img src="assets/ai/claude/code/claude-md/claude-md-commandments/hero.webp" width="941" height="1672"
+         alt="Smart coding guidelines told by a baby AI robot: the Ten Commandments of CLAUDE.md, drawn as a three-stage infographic — a careful start (think first, the three artifacts), code-writing principles (simplicity, surgical changes, Korean headers, no closing colons, test before done), and verification and wrap-up (goal-driven, semantic commits, read the error log)">
+    <figcaption>The Ten Commandments of CLAUDE.md, told by a baby AI robot &mdash; a 3-stage × 10-commandment infographic (made by dewytear)</figcaption>
+</figure>
+
+<h3>Summary in Three Lines</h3>
+<ul>
+    <li>CLAUDE.md is <strong>a set of behavioral guidelines Claude Code reads automatically every session</strong> &mdash; the ten commandments introduced here are general-purpose guidelines that <strong>take direct aim at the ten mistakes LLMs make most often</strong> when they write code.</li>
+    <li>The structure has three stages &mdash; <strong>a careful start</strong> (think first; plan/checklist/context notes), <strong>code-writing principles</strong> (simplicity, surgical changes, header comments, punctuation, tests), and <strong>verification and wrap-up</strong> (goal-driven, semantic commits, reading errors closely).</li>
+    <li>Using it is simple &mdash; <strong>save the original below at your project root as <code>CLAUDE.md</code></strong>, then add your project's own instructions. You confirm the effect by watching your diffs get cleaner.</li>
+</ul>
+
+<h3>How to Use It &mdash; Three Minutes to Install, a Lifetime of Nagging</h3>
+<p>Here is the analogy. A new hire who is highly skilled but whose <strong>working habits are still a blank page</strong> shows up fresh every morning (an AI's memory resets each session). Instead of teaching them out loud every time, you <strong>post ten house rules on their desk</strong> &mdash; that is CLAUDE.md.</p>
+<ul>
+    <li><strong>Step 1 &middot; Paste it in</strong> &mdash; copy the entire English original below and save it at your repository root under the name <code>CLAUDE.md</code>. That's all. Claude Code will read it on its own from the next conversation onward. (To use it as a personal global rule, put it in <code>~/.claude/CLAUDE.md</code> and it applies to every project &mdash; for the scope story, see <a href="/p/en/ccb-claudemd/">CLAUDE.md &mdash; The Instruction File</a>.)</li>
+    <li><strong>Step 2 &middot; Add your project's flavor</strong> &mdash; the original says right in its first line to merge it with project-specific instructions. Append your team's rules below: build commands, coding conventions, things that are off-limits. If the ten commandments are the &lsquo;constitution&rsquo;, project instructions are the &lsquo;enforcement decree&rsquo;.</li>
+    <li><strong>Step 3 &middot; Spread it to the team</strong> &mdash; commit the file to the repository and every teammate's AI becomes <strong>a colleague working by the same rules</strong>. You'll hear less grumbling in review along the lines of &ldquo;the AI touched the neighboring code again&rdquo;.</li>
+    <li><strong>How to tell it's listening</strong> &mdash; exactly by the criteria at the end of the original. If (1) <strong>unnecessary changes in diffs go down</strong>, (2) rewrites caused by overcomplication go down, and (3) <strong>questions arrive before mistakes</strong>, the guidelines are doing their job.</li>
+    <li><strong>One spoonful of caution</strong> &mdash; as the original admits itself, these guidelines <strong>lean toward caution over speed</strong>. Demanding the three artifacts even for trivial work like a one-off script can be stifling, so in those cases trust the &ldquo;judgment&rdquo; clause and travel light.</li>
+</ul>
+
+<h3>The Ten Commandments at a Glance</h3>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Commandment</th><th>One-line mantra</th><th>The accident it prevents</th></tr></thead>
+    <tbody>
+        <tr><td><strong>1. Think before coding</strong></td><td>&ldquo;State your assumptions; when it's ambiguous, ask&rdquo;</td><td>Guessing on its own and delivering the wrong thing</td></tr>
+        <tr><td><strong>2. Simplicity first</strong></td><td>&ldquo;Only the minimum code that solves the problem&rdquo;</td><td>Unrequested features, over-abstraction, 200 lines where 50 would do</td></tr>
+        <tr><td><strong>3. Surgical changes</strong></td><td>&ldquo;Touch only what has to be touched&rdquo;</td><td>The meddling that &lsquo;improves&rsquo; perfectly healthy code next door</td></tr>
+        <tr><td><strong>4. Goal-driven execution</strong></td><td>&ldquo;Success criteria first, then loop until they pass&rdquo;</td><td>Blurry goals at the level of &ldquo;make it work&rdquo; and endless ping-pong</td></tr>
+        <tr><td><strong>5. No closing colons</strong></td><td>&ldquo;End Korean sentences with a period&rdquo;</td><td>Awkward Korean output where English habits leaked through</td></tr>
+        <tr><td><strong>6. Korean file headers</strong></td><td>&ldquo;One line on the first line of every new file&rdquo;</td><td>The waste of the next session (human or AI) re-reading the whole file</td></tr>
+        <tr><td><strong>7. Plan + checklist + context notes</strong></td><td>&ldquo;No coding without the three artifacts&rdquo;</td><td>Reasons for decisions evaporating, so the next session puzzles it all out again</td></tr>
+        <tr><td><strong>8. Test before done</strong></td><td>&ldquo;Run it yourself before &lsquo;all done&rsquo;&rdquo;</td><td>The step LLMs skip most often &mdash; reporting completion with a broken build</td></tr>
+        <tr><td><strong>9. Semantic commits</strong></td><td>&ldquo;If one sentence describes it, commit&rdquo;</td><td>Twenty edits tangled into one lump commit you can't roll back</td></tr>
+        <tr><td><strong>10. Read the error log closely</strong></td><td>&ldquo;Don't guess &mdash; read it to the end&rdquo;</td><td>The disaster where a &lsquo;common fix&rsquo; slapped on from keywords alone turns a one-line bug into a three-file refactor</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>The English Original &mdash; Copy It and Use It As Is</h3>
+<p>Below is the full original. Just copy the whole code block and save it as <code>CLAUDE.md</code>.</p>
+<pre><code># CLAUDE.md
+
+Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+
+**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+
+## 1. Think Before Coding
+
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
+
+Before implementing:
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+
+## 2. Simplicity First
+
+**Minimum code that solves the problem. Nothing speculative.**
+
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+## 3. Surgical Changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
+
+When your changes create orphans:
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
+
+## 4. Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
+
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+## 5. No Closing Colons (Korean Output)
+
+**End Korean sentences with a period, not a colon.**
+
+When the user writes in Korean, your output is also Korean:
+- Don't end sentences with `:` even if the next line is a list or example.
+- LLMs trained on English docs leak the colon habit into Korean. Catch it.
+- The test: every Korean sentence terminator should be `.`, `?`, or `!` — not `:`.
+- Colons are fine inside code, key-value pairs, or labels. Not as sentence enders.
+
+## 6. File Header Comments in Korean
+
+**First line of every new source file: a one-line Korean comment stating its role.**
+
+When creating a new file:
+- TypeScript/JavaScript: `// 사용자 인증 상태를 관리하는 Context Provider`
+- Python: `# KIS API 호출을 비동기로 래핑하는 클라이언트`
+- SQL: `-- 일별 집계 결과를 저장하는 머티리얼라이즈드 뷰`
+- Place it directly under required directives (`'use client'`, `'use server'`, shebang).
+- Skip config files (`*.config.ts`, `package.json`, etc.).
+
+Why: agents read files selectively, not whole codebases. A one-line Korean header gives instant context so the next session (human or agent) can navigate without re-reading the entire file.
+
+## 7. Plan + Checklist + Context Notes
+
+**Before any non-trivial task, produce three artifacts. Don't start coding without them.**
+
+- **Plan** — what we're building and why.
+- **Checklist** (`checklist.md`) — concrete tasks as checkboxes. Tick as you go.
+- **Context Notes** (`context-notes.md`) — decisions made during the work and the reasoning behind them. Append continuously.
+
+If the user gives only a plan and asks you to start coding, stop and ask: "Should I create the checklist and context notes first?" The next session — yours or someone else's — needs the notes to pick up where you left off without re-deriving every decision.
+
+## 8. Run Tests Before Marking Complete
+
+**If you touched code, run the tests before saying "done".**
+
+- `npm test`, `pytest`, `cargo test`, whatever the project uses — run it.
+- If tests pass, report results. If they fail, fix and re-run.
+- No test setup? At minimum, verify the project builds/compiles.
+- Run tests proactively, before the user signals "끝", "완료", "다 됐어" — not after.
+
+This is the step LLMs skip most often. Treat it as non-negotiable.
+
+## 9. Semantic Commits
+
+**Commit when one logical change is complete. Don't wait for the user to ask.**
+
+- The test: "Can I describe this commit in one sentence?" If yes, commit. If no, the changes are still mixed — split them.
+- Good: "auth 미들웨어 추가". Bad: "auth 추가하고 UI도 고치고 버그도 수정" (split into 3).
+- Don't accumulate 20 unrelated edits and lose the ability to roll back individually.
+- Don't commit just to commit — meaningful units only.
+
+Note: For solo prototypes or throwaway scripts, group commits loosely if it slows you down. The point is reversibility, not ceremony.
+
+## 10. Read Errors, Don't Guess
+
+**Read the actual error/log line. Don't pattern-match from memory.**
+
+When something fails:
+- Read the full error message and stack trace.
+- Check the actual log output, not what you assume it should say.
+- Don't apply a "common fix" before confirming the cause.
+- If unclear, add a print/log to verify state — then fix.
+
+This is the step LLMs skip most often after "run tests". They guess from error keywords and apply the most-recent-pattern fix. That's how a one-line bug becomes a three-file refactor.
+
+---
+
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.</code></pre>
+
+<h3>The Full Translation, Section by Section</h3>
+<p><em>Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.</em></p>
+<p><strong>Tradeoff:</strong> These guidelines lean toward caution over speed. For trivial tasks, use your judgment.</p>
+
+<h4>1. Think Before Coding</h4>
+<p><strong>Don't assume. Don't hide confusion. Surface the tradeoffs.</strong></p>
+<ul>
+    <li>State your assumptions explicitly. If uncertain, ask.</li>
+    <li>If multiple interpretations exist, present them &mdash; don't pick one silently.</li>
+    <li>If a simpler approach exists, say so. Push back when warranted.</li>
+    <li>If something is unclear, stop, name what is confusing, and ask.</li>
+</ul>
+
+<h4>2. Simplicity First</h4>
+<p><strong>The minimum code that solves the problem. No speculative code.</strong></p>
+<ul>
+    <li>Don't build features you weren't asked for.</li>
+    <li>Don't create abstractions for single-use code.</li>
+    <li>Don't add &ldquo;flexibility&rdquo; or &ldquo;configurability&rdquo; nobody requested.</li>
+    <li>Don't write error handling for scenarios that can't happen.</li>
+    <li>If you wrote 200 lines and it looks like 50 would do, rewrite it.</li>
+</ul>
+<p>Ask yourself &mdash; &ldquo;Would a senior engineer look at this and call it overcomplicated?&rdquo; If so, simplify.</p>
+
+<h4>3. Surgical Changes</h4>
+<p><strong>Touch only what you must. Clean up only your own mess.</strong></p>
+<ul>
+    <li>Don't &ldquo;improve&rdquo; adjacent code, comments, or formatting.</li>
+    <li>Don't refactor things that aren't broken.</li>
+    <li>Match the existing style, even if it isn't your taste.</li>
+    <li>If you find unrelated dead code, only mention it &mdash; don't delete it.</li>
+    <li>Remove the orphans your own changes created (imports, variables, functions now unused), but don't touch pre-existing dead code unless asked.</li>
+</ul>
+<p>The test &mdash; <strong>every changed line should trace directly back to the user's request.</strong></p>
+
+<h4>4. Goal-Driven Execution</h4>
+<p><strong>Define the success criteria, then loop until they are verified.</strong></p>
+<ul>
+    <li>&ldquo;Add validation&rdquo; &rarr; &ldquo;Write tests for invalid inputs, then make them pass&rdquo;</li>
+    <li>&ldquo;Fix the bug&rdquo; &rarr; &ldquo;Write a test that reproduces it, then make it pass&rdquo;</li>
+    <li>&ldquo;Refactor X&rdquo; &rarr; &ldquo;Ensure tests pass before and after&rdquo;</li>
+</ul>
+<p>For a multi-step task, state a short plan in the form &ldquo;step &rarr; how to verify&rdquo; first. <strong>Strong success criteria let the AI keep rolling on its own; weak criteria (&ldquo;make it work&rdquo;) invite endless back-and-forth.</strong></p>
+
+<h4>5. No Closing Colons &mdash; Korean Output</h4>
+<p><strong>End Korean sentences with a period, not a colon.</strong></p>
+<ul>
+    <li>Don't end a sentence with <code>:</code> even when the next line is a list or an example.</li>
+    <li>LLMs trained on English documents leak the colon habit into Korean. Catch it yourself.</li>
+    <li>The test &mdash; a Korean sentence must end in one of <code>.</code> <code>?</code> <code>!</code>.</li>
+    <li>Colons inside code, key-value pairs, or labels are fine. The rule is only about sentence enders.</li>
+</ul>
+
+<h4>6. File Header Comments in Korean</h4>
+<p><strong>On the first line of every new source file, one line of Korean comment stating that file's role.</strong></p>
+<ul>
+    <li>Use <code>//</code> for TS/JS, <code>#</code> for Python, <code>--</code> for SQL &mdash; e.g. <code>// 사용자 인증 상태를 관리하는 Context Provider</code>.</li>
+    <li>Place it directly under required directives such as <code>'use client'</code> or a shebang. Skip config files (<code>*.config.ts</code>, <code>package.json</code>, etc.).</li>
+</ul>
+<p>Why &mdash; agents <strong>read files selectively</strong>, not whole codebases. A one-line Korean header gives instant context so the next session (human or agent) can find its way without re-reading the entire file.</p>
+
+<h4>7. Plan + Checklist + Context Notes</h4>
+<p><strong>For any non-trivial task, produce three artifacts first. Don't start coding without them.</strong></p>
+<ul>
+    <li><strong>Plan</strong> &mdash; what we're building and why.</li>
+    <li><strong>Checklist</strong> (<code>checklist.md</code>) &mdash; concrete tasks as checkboxes. Tick them off as you go.</li>
+    <li><strong>Context notes</strong> (<code>context-notes.md</code>) &mdash; decisions made during the work and the reasoning behind them. Keep appending.</li>
+</ul>
+<p>If the user gives only a plan and tells you to start coding, stop and ask &mdash; &ldquo;Should I create the checklist and context notes first?&rdquo; The next session (yours or someone else's) needs these notes so it doesn't have to re-derive every decision from scratch.</p>
+
+<h4>8. Run Tests Before Marking Complete</h4>
+<p><strong>If you touched code, run the tests before saying &ldquo;done&rdquo;.</strong></p>
+<ul>
+    <li><code>npm test</code>, <code>pytest</code>, <code>cargo test</code> &mdash; run whatever the project uses.</li>
+    <li>If they pass, report the results; if they fail, fix and run them again.</li>
+    <li>If there are no tests, at least verify that the project builds/compiles.</li>
+    <li>Run them proactively, <strong>before</strong> the user says &ldquo;끝&rdquo; or &ldquo;완료&rdquo;.</li>
+</ul>
+<p>This is the step LLMs skip most often. <strong>Treat it as non-negotiable.</strong></p>
+
+<h4>9. Semantic Commits</h4>
+<p><strong>Commit when one logical change is complete. Don't wait for the user to ask.</strong></p>
+<ul>
+    <li>The test &mdash; &ldquo;Can I describe this commit in one sentence?&rdquo; If yes, commit; if not, the changes are still mixed, so split them.</li>
+    <li>Good: &ldquo;auth 미들웨어 추가&rdquo;. Bad: &ldquo;auth 추가하고 UI도 고치고 버그도 수정&rdquo; (split into three).</li>
+    <li>Don't pile up 20 unrelated edits and lose the ability to roll back individually. Don't commit just to commit either &mdash; meaningful units only.</li>
+</ul>
+<p>Note &mdash; for a solo prototype or a throwaway script, grouping commits loosely for speed is fine. The point is not ceremony but <strong>reversibility</strong>.</p>
+
+<h4>10. Read Errors, Don't Guess</h4>
+<p><strong>Read the actual error/log line. Don't pattern-match it against memory.</strong></p>
+<ul>
+    <li>Read the error message and stack trace all the way through.</li>
+    <li>Check the actual log output, not what you assume it should say.</li>
+    <li>Don't reach for a &ldquo;common fix&rdquo; before confirming the cause.</li>
+    <li>If it's unclear, add a print/log to verify the state, then fix.</li>
+</ul>
+<p>After &ldquo;run the tests&rdquo;, this is the step LLMs skip most often. They look at error keywords alone and apply the fix from the most recent pattern they saw &mdash; <strong>that is how a one-line bug becomes a three-file refactor.</strong></p>
+
+<p><em>Evidence that these guidelines are working &mdash; fewer unnecessary changes in diffs, fewer rewrites caused by overcomplication, and clarifying questions arriving before implementation rather than after a mistake.</em></p>
+
+<div class="note">
+    <span class="nh">Sources</span>
+    · Infographic: <strong>made by dewytear</strong> &mdash; the original CLAUDE.md visualized as 3 stages × 10 commandments · Original: general-purpose CLAUDE.md behavioral guidelines (archived by dewytear, Google Drive)<br>
+    · For CLAUDE.md's scope (the four global/project layers) and general authoring guidance, see <a href="/p/en/ccb-claudemd/">CLAUDE.md &mdash; The Instruction File</a>
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · CLAUDE.md &middot; <span class="pr-k">Created</span> 2026-07-24 &middot; <span class="pr-k">Updated</span> 2026-07-24</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/news-20260724-snucatch-ai-coding/">The End of Coding by Hand? — The Future of Developers as Seen by SNU&#x27;s Prof. Jaewook Lee</a></li><li><a href="/p/en/ccb-claudemd/">CLAUDE.md — The Instruction File</a></li></ul>
+</nav>
+</body>
+</html>

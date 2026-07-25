@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scenario Board</title>
+<meta name="description" content="Gathers customization scenarios and recommended team setups by ERP module.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/hnp-scenarios/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hnp-scenarios/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hnp-scenarios/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hnp-scenarios/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Scenario Board",
+ "description": "Gathers customization scenarios and recommended team setups by ERP module.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/hnp-scenarios/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hnp-scenarios",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-04T08:51:27+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!hnp-scenarios");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hnp-scenarios">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/hnp-scenarios/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Scenario Board</h2>
+<p>We gathered, module by module, the <strong>situations in ERP client customization where a harness is worth attaching</strong>. Read each card in the order <strong>module · difficulty · situation · recommended team · expected effect</strong>. Pick a similar situation and try running it by changing only the <a href="/p/en/hnp-first-run/">intent sentence</a>.</p>
+
+<div class="note">
+    <span class="nh">Difficulty markers</span>
+    <span class="scn-pill lv1">Beginner</span> standalone, small-scale customization · <span class="scn-pill lv2">Intermediate</span> affects the standard · <span class="scn-pill lv3">Advanced</span> multiple modules, data, consistency risk. The higher the difficulty, the more weight you should give to <strong>regression verification and human review</strong>.
+</div>
+
+<div class="scn-board">
+
+    <div class="scn-card">
+        <h4>Auto-holding orders that exceed the credit limit</h4>
+        <div class="scn-meta"><span class="scn-pill mod">Sales · orders</span><span class="scn-pill lv2">Intermediate</span></div>
+        <p class="scn-body">Automatically hold orders that go over the credit limit for each credit rating and notify the person in charge. Impact analysis of the standard credit and order logic is essential.</p>
+        <div class="scn-sub">Recommended team</div>
+        <div class="scn-team"><span>Impact analyst</span><span>Customization designer</span><span>Development</span><span>Regression QA</span></div>
+        <p class="scn-body"><strong>Effect</strong> — blocks over-the-limit mistakes · standardizes the approval flow</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>Distribution center location (bin) management add-on</h4>
+        <div class="scn-meta"><span class="scn-pill mod">Inventory · logistics</span><span class="scn-pill lv2">Intermediate</span></div>
+        <p class="scn-body">An add-on that puts cell- and location-level receiving and shipping in the client's warehouse on top of standard inventory. Inventory receipt-and-issue consistency is the crux.</p>
+        <div class="scn-sub">Recommended team</div>
+        <div class="scn-team"><span>Inventory flow analyst</span><span>Data designer</span><span>Development</span><span>Receipt-issue consistency QA</span></div>
+        <p class="scn-body"><strong>Effect</strong> — visibility of actual stock per location · fewer mis-shipments</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>Client-specific allowance · deduction rules</h4>
+        <div class="scn-meta"><span class="scn-pill mod">Payroll · HR</span><span class="scn-pill lv2">Intermediate</span></div>
+        <p class="scn-body">Reflect allowance and deduction formulas tailored to the client's employment rules in payroll calculation. The effect on the four major insurances and year-end tax settlement has to be checked.</p>
+        <div class="scn-sub">Recommended team</div>
+        <div class="scn-team"><span>Payroll rule analyst</span><span>Formula designer</span><span>Development</span><span>Payslip consistency QA</span></div>
+        <p class="scn-body"><strong>Effect</strong> — higher accuracy in reflecting the rules↑ · fewer payroll error inquiries</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>Account mapping · auto-journalizing customization</h4>
+        <div class="scn-meta"><span class="scn-pill mod">Accounting · closing</span><span class="scn-pill lv3">Advanced</span></div>
+        <p class="scn-body">Customize the automatic journalizing rules for slips to match the client's chart of accounts. The risk to closing and financial-statement consistency is large.</p>
+        <div class="scn-sub">Recommended team</div>
+        <div class="scn-team"><span>Chart-of-accounts analyst</span><span>Journalizing rule designer</span><span>Development</span><span>Balance · closing QA</span></div>
+        <p class="scn-body"><strong>Effect</strong> — less manual journalizing · shorter closing lead time</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>BOM · process routing customization</h4>
+        <div class="scn-meta"><span class="scn-pill mod">Production</span><span class="scn-pill lv3">Advanced</span></div>
+        <p class="scn-body">Customize BOM explosion and process routing to match the client's production method. Analysis of the chain effects on requirement and cost calculation is needed.</p>
+        <div class="scn-sub">Recommended team</div>
+        <div class="scn-team"><span>Production flow analyst</span><span>BOM designer</span><span>Development</span><span>Cost · requirement QA</span></div>
+        <p class="scn-body"><strong>Effect</strong> — reflects the actual process · smaller plan-vs-actual gap</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>Adding an electronic approval step for purchase orders</h4>
+        <div class="scn-meta"><span class="scn-pill mod">Purchasing · POs</span><span class="scn-pill lv1">Beginner</span></div>
+        <p class="scn-body">Add approval steps by amount bracket to the standard purchase order flow. A relatively localized customization.</p>
+        <div class="scn-sub">Recommended team</div>
+        <div class="scn-team"><span>Approval flow analyst</span><span>Development</span><span>Regression QA</span></div>
+        <p class="scn-body"><strong>Effect</strong> — stronger approval control · regulatory compliance</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>Developing a tailored management report format</h4>
+        <div class="scn-meta"><span class="scn-pill mod">Reports</span><span class="scn-pill lv1">Beginner</span></div>
+        <p class="scn-body">Produce a management report with the metrics and layout the client wants out of standard data. Since it only queries standard data, the risk is low.</p>
+        <div class="scn-sub">Recommended team</div>
+        <div class="scn-team"><span>Metric definition analyst</span><span>Report development</span><span>Numerical consistency QA</span></div>
+        <p class="scn-body"><strong>Effect</strong> — shorter report writing time · metric consistency</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>Legacy → ERP initial migration</h4>
+        <div class="scn-meta"><span class="scn-pill mod">Data migration</span><span class="scn-pill lv3">Advanced</span></div>
+        <p class="scn-body">Migrate the masters and balances of the old system into the ERP. Since mapping, consistency, and verification are large volumes of repetitive work, splitting the load across a team pays off a lot.</p>
+        <div class="scn-sub">Recommended team</div>
+        <div class="scn-team"><span>Mapping analyst</span><span>Conversion development</span><span>Consistency verification</span><span>Migration QA</span></div>
+        <p class="scn-body"><strong>Effect</strong> — migration errors detected in advance · automated reconciliation</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>Standard package bug analysis · patch</h4>
+        <div class="scn-meta"><span class="scn-pill mod">Maintenance</span><span class="scn-pill lv2">Intermediate</span></div>
+        <p class="scn-body">Pin down the cause of a standard defect whose reproduction path is unclear using logs and source, and propose a minimal patch. Grasping the scope of impact is the key.</p>
+        <div class="scn-sub">Recommended team</div>
+        <div class="scn-team"><span>Reproduction · cause analyst</span><span>Patch design</span><span>Development</span><span>Regression QA</span></div>
+        <p class="scn-body"><strong>Effect</strong> — shorter time to pin down the cause · prevents recurrence</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>Developing interfaces to external systems</h4>
+        <div class="scn-meta"><span class="scn-pill mod">Integration · I/F</span><span class="scn-pill lv3">Advanced</span></div>
+        <p class="scn-body">Develop integration (messages/API) with bank, logistics, and group affiliate systems. The design burden for exceptions, reprocessing, and consistency is large.</p>
+        <div class="scn-sub">Recommended team</div>
+        <div class="scn-team"><span>Integration spec analyst</span><span>I/F designer</span><span>Development</span><span>Exception · reprocessing QA</span></div>
+        <p class="scn-body"><strong>Effect</strong> — removes manual integration · automates error reprocessing</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>Auto-generating regression test scenarios</h4>
+        <div class="scn-meta"><span class="scn-pill mod">Quality · QA</span><span class="scn-pill lv1">Beginner</span></div>
+        <p class="scn-body">Automatically derive the standard and custom scenarios to check after a customization is applied, and organize them into a checklist.</p>
+        <div class="scn-sub">Recommended team</div>
+        <div class="scn-team"><span>Impact scope analyst</span><span>Scenario writing</span><span>Verification</span></div>
+        <p class="scn-body"><strong>Effect</strong> — prevents missed verification · shorter QA preparation time</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>CR impact · effort estimation</h4>
+        <div class="scn-meta"><span class="scn-pill mod">Analysis · planning</span><span class="scn-pill lv1">Beginner</span></div>
+        <p class="scn-body">Estimate in advance the effect a customer change request (CR) has on the standard and on existing customizations along with the expected effort, and reflect it in the quote and schedule.</p>
+        <div class="scn-sub">Recommended team</div>
+        <div class="scn-team"><span>Requirement analyst</span><span>Impact analyst</span><span>Effort estimation</span></div>
+        <p class="scn-body"><strong>Effect</strong> — prevents under- and over-quoting · early risk identification</p>
+    </div>
+
+</div>
+
+<div class="note">
+    <span class="nh">To find a similar setup quickly</span>
+    It is faster to find a similar setup in <strong>Harness100</strong>, which bundles cases like these into 100 in advance, and <strong>customize</strong> it → <a href="/p/en/hnp-hundred/">Harness100 · performance</a>. The commands used to run it are organized in <a href="/p/en/hnp-commands/">Commands · quick reference</a>.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · PlugIn · Harness &middot; <span class="pr-k">Created</span> 2026-07-04 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/hnp-agents-skills/">Designing Agents and Skills</a></li><li><a href="/p/en/hnp-first-run/">First Harness Run — Sales/Order Customization</a></li></ul>
+</nav>
+</body>
+</html>

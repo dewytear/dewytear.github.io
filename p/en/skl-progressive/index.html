@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Progressive Loading (the Core Principle of Skills)</title>
+<meta name="description" content="Explains the three-level principle of progressive loading, where only the metadata is loaded up front.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/skl-progressive/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/skl-progressive/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/skl-progressive/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/skl-progressive/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Progressive Loading (the Core Principle of Skills)",
+ "description": "Explains the three-level principle of progressive loading, where only the metadata is loaded up front.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/skl-progressive/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!skl-progressive",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:20:26+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!skl-progressive");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!skl-progressive">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/skl-progressive/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Progressive Loading (the Core Principle of Skills)</h2>
+<p>The most essential principle behind skills is <strong>progressive loading (progressive disclosure)</strong>. Rather than putting the whole skill into the context, <strong>only the metadata</strong> is loaded up front and the rest is pulled out when it is needed.</p>
+
+<h3>The library book cover analogy</h3>
+<p>Only the <strong>metadata (name + description, 3 to 4 lines, about 100 tokens per skill)</strong> of a registered skill goes into the context. It is like a library where the books are lined up on the shelves and you only skim the <strong>covers (title and short description)</strong>, pulling one out to read when you need it. The metadata is so small that even <strong>more than 100</strong> of them barely take up any context. (In contrast to JSON tools, whose full schema occupies the context up front so that the burden grows as their number rises — which is why Claude Code lazy-loads MCP tool schemas too.)</p>
+
+<h3>Three-level loading</h3>
+<div class="diagram">
+<svg viewBox="0 0 640 252" role="img" aria-label="Three-level progressive loading of a skill: metadata always, the instruction body when invoked, resources and scripts only when needed">
+    <rect class="d-box accent" x="20" y="12" width="300" height="60" rx="10"/>
+    <text class="d-label" x="170" y="38" text-anchor="middle">① Metadata</text>
+    <text class="d-sub" x="170" y="56" text-anchor="middle">name + description · about 100 tokens</text>
+
+    <rect class="d-box" x="20" y="96" width="300" height="60" rx="10"/>
+    <text class="d-label" x="170" y="122" text-anchor="middle">② Instruction body</text>
+    <text class="d-sub" x="170" y="140" text-anchor="middle">the SKILL.md body</text>
+
+    <rect class="d-box soft" x="20" y="180" width="300" height="60" rx="10"/>
+    <text class="d-label" x="170" y="206" text-anchor="middle">③ Resources · scripts</text>
+    <text class="d-sub" x="170" y="224" text-anchor="middle">bundled files · templates</text>
+
+    <line class="d-edge" x1="170" y1="72" x2="170" y2="94"/><polygon class="d-arrow" points="165,90 175,90 170,96"/>
+    <line class="d-edge" x1="170" y1="156" x2="170" y2="178"/><polygon class="d-arrow" points="165,174 175,174 170,180"/>
+
+    <line class="d-edge dash" x1="320" y1="42" x2="356" y2="42"/>
+    <text class="d-accent" x="364" y="46" text-anchor="start">always loaded</text>
+    <line class="d-edge dash" x1="320" y1="126" x2="356" y2="126"/>
+    <text class="d-accent" x="364" y="130" text-anchor="start">loaded when invoked</text>
+    <line class="d-edge dash" x1="320" y1="210" x2="356" y2="210"/>
+    <text class="d-accent" x="364" y="214" text-anchor="start">loaded only when needed</text>
+</svg>
+<div class="d-cap">The higher up, the more it is always loaded; the lower down, the more it is only when needed — the moment of loading gets later at each level.</div>
+</div>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Level</th><th>Content</th><th>When it loads</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td><strong>Metadata</strong> (the name and description in SKILL.md)</td><td><strong>Always</strong> loaded (about 100 tokens per skill)</td></tr>
+            <tr><td>2</td><td><strong>Instructions</strong> (the SKILL.md body, usage in markdown)</td><td>When that skill <strong>is invoked</strong></td></tr>
+            <tr><td>3</td><td><strong>Resources · scripts · templates</strong> (bundled files)</td><td><strong>Only when needed</strong> (scripts are only executed, never loaded)</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>Bundled files are not mandatory. If words (markdown) alone are enough you can do without files, and if you need an executable script or a template you include one. The more files there are, the more <strong>deterministic the result</strong> you get. For reference, the official guide recommends keeping the <code>SKILL.md</code> body <strong>under 5K tokens</strong> and splitting long content out into bundled files.</p>
+
+<div class="note">
+    <span class="nh">The manual analogy (flat-pack products · the Matrix helicopter)</span>
+    When you buy a flat-pack product online you skip the manual and assemble it from the photo of the finished item, and only <strong>the moment a screw is left out</strong> do you pull the manual out. A skill's instructions are likewise <strong>pulled out exactly when it fires</strong> and left alone the rest of the time. It feels like the scene in the film The Matrix where they <strong>load a manual in an instant</strong> in front of a helicopter and fly it.
+</div>
+
+<div class="note">
+    <span class="nh">A tip for checking</span>
+    Typing <code>/context</code> in Claude Code shows what percentage the system prompt, custom tools, skills, and so on each take up. You can confirm that even a large number of installed skills uses barely any tokens.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Skill &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/skl-structure/">SKILL.md Structure and the Description</a></li><li><a href="/p/en/skl-context/">The Context Window and the Tool Problem</a></li><li><a href="/p/en/skl-strengths/">The Strengths of Skills</a></li></ul>
+</nav>
+</body>
+</html>

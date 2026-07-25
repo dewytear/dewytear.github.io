@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다</title>
+<meta name="description" content="2026-07-24 Anthropic Claude Opus 5 공개를 공식 발표·복수 언론 보도 교차검증으로 정리 — $5/$25에 CursorBench 3.2 max에서 Fable 5 피크 0.5% 이내·태스크당 절반 비용, Frontier-Bench 43.3%·OSWorld 2.0 ⅓ 예산·ARC-AGI 3 3배, 도면을 볼 수 없자 CV 파이프라인을 자작해 FreeCAD 3D를 재구성한 장기 에이전틱 데모, Fable 5 세이프가드 오탐 논란의 맥락과 미확인 주장 구분">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/news-20260724-claude-opus-5/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260724-claude-opus-5/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260724-claude-opus-5/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260724-claude-opus-5/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다",
+ "description": "2026-07-24 Anthropic Claude Opus 5 공개를 공식 발표·복수 언론 보도 교차검증으로 정리 — $5/$25에 CursorBench 3.2 max에서 Fable 5 피크 0.5% 이내·태스크당 절반 비용, Frontier-Bench 43.3%·OSWorld 2.0 ⅓ 예산·ARC-AGI 3 3배, 도면을 볼 수 없자 CV 파이프라인을 자작해 FreeCAD 3D를 재구성한 장기 에이전틱 데모, Fable 5 세이프가드 오탐 논란의 맥락과 미확인 주장 구분",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/news-20260724-claude-opus-5/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260724-claude-opus-5",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-25T13:36:03+09:00",
+ "dateModified": "2026-07-25T21:29:58+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!news-20260724-claude-opus-5");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260724-claude-opus-5">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/news-20260724-claude-opus-5/" hreflang="en">English</a>
+</p>
+<article>
+<h2>Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다</h2>
+
+<figure class="doc-img">
+    <img src="assets/ai/news/2026/news-20260724-claude-opus-5/hero.webp" width="1440" height="810"
+         alt="빈티지 조류 알 도판들이 모여 숫자 5 모양을 이룬 Claude Opus 5 공개 비주얼">
+    <figcaption>낱낱의 알들이 모여 &lsquo;5&rsquo;를 이룬다 — Claude Opus 5 공개 비주얼 (이미지: Anthropic)</figcaption>
+</figure>
+
+<p>2026년 7월 24일, Anthropic이 <strong>Claude Opus 5</strong>를 공개했습니다. 한 줄 요약 — <strong>&ldquo;최상위 모델 Fable 5에 바짝 붙는 성능을, 절반 가격에.&rdquo;</strong> 두 달 사이 네 번째 모델 출시라는 속도전 속에서 나온 이번 발표에 리뷰어들이 술렁인 이유는 단순합니다: 벤치마크 여러 곳에서 <strong>자사 최상위 모델을 이기는 수치</strong>가 찍혀 나왔기 때문입니다. 이 글은 <strong>공식 발표와 복수 언론 보도로 교차검증한 사실</strong>을 뼈대로, 출시 직후의 리뷰 반응에서 나온 이야기를 함께 정리한 것입니다 — 검증된 사실과 미확인 반응은 구분해 표기했습니다.</p>
+
+<div class="note">
+    <span class="nh">기사 정보 (출처)</span>
+    · 대상: <strong>Anthropic Claude Opus 5 공개</strong> (2026-07-24)<br>
+    · 정리: <strong>공식 발표·복수 언론 보도 교차검증</strong>(2026-07-25) · 참고: 출시 직후 리뷰 반응<br>
+    · 공식 원문: <a href="https://www.anthropic.com/news/claude-opus-5" target="_blank" rel="noopener">Introducing Claude Opus 5 (anthropic.com)</a> · 문서 말미에 출처 목록
+</div>
+
+<h3>세 줄 요약</h3>
+<ul>
+    <li>Opus 5는 <strong>$5/$25</strong>(입력/출력, 100만 토큰당) — 전작 Opus 4.8과 같은 가격인데, 성능은 <strong>Fable 5($10/$50)의 턱밑</strong>이거나 일부 벤치마크에선 <strong>그 위</strong>입니다.</li>
+    <li>진짜 뉴스는 Fable과의 대결만이 아닙니다 — <strong>Opus 4.8 → 5의 세대 점프</strong>가 전 항목에 걸쳐 크고, 특히 <strong>&ldquo;스스로 검증하며 끝까지 가는&rdquo; 장기 에이전틱 작업</strong>이 눈에 띄게 좋아졌습니다(도면을 볼 수 없자 CV 파이프라인을 직접 짜서 3D CAD를 재구성한 데모가 상징).</li>
+    <li>실사용 관심사는 <strong>세이프가드</strong> — Fable 5는 7월 초부터 안전 분류기가 보안·디버깅 작업까지 오탐하는 논란이 있었는데, Opus 5는 그 제약이 훨씬 느슨하다는 게 리뷰의 관전 포인트입니다.</li>
+</ul>
+
+<h3>용어 세 개만 알고 가기</h3>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>용어</th><th>쉬운 설명</th></tr></thead>
+    <tbody>
+        <tr><td><strong>effort<br>(생각 강도)</strong></td><td>모델이 답 하나에 <strong>얼마나 오래 생각할지</strong> 조절하는 다이얼. high → xhigh → max로 올릴수록 점수는 오르지만 토큰(=돈)을 더 씁니다. 이번 비교의 핵심 축입니다.</td></tr>
+        <tr><td><strong>토큰 효율</strong></td><td>같은 결과를 <strong>얼마나 적은 토큰으로</strong> 내느냐. 단가가 싸도 말이 길면 비싸집니다 — Opus 5는 단가도 절반이고 토큰도 적게 쓰는 편이라 &lsquo;태스크당 비용&rsquo;이 크게 떨어집니다.</td></tr>
+        <tr><td><strong>장기 에이전틱 작업</strong></td><td>한 번에 답하고 끝나는 게 아니라, <strong>목표를 주면 시도→검증→수정을 수십 번 반복</strong>해 완성하는 일. 코딩 에이전트·컴퓨터 사용 같은 실전 작업이 다 여기 속합니다.</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>벤치마크 — &ldquo;max에서만 Fable이 이긴다&rdquo;</h3>
+<p>출시 직후 리뷰들이 가장 흥분한 대목입니다. 코딩 실전 벤치마크 <strong>CursorBench 3.2</strong>에서, effort를 끝까지 올린 <strong>max 구간에서만 Fable 5가 근소하게 앞서고</strong>(피크 대비 <strong>0.5% 이내</strong>), 대부분의 사용자가 실제로 쓰는 <strong>high·xhigh 구간에서는 사실상 같은 출력</strong>이 나옵니다 — 그런데 태스크당 비용은 <strong>절반</strong>입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="CursorBench 3.2 개념도: effort를 high, xhigh, max로 올릴 때 Opus 5와 Fable 5의 점수 곡선이 거의 겹치고 max에서만 Fable 5가 0.5% 이내로 앞서며, Opus 4.8은 그 아래에 있다">
+    <text class="d-label" x="360" y="26" text-anchor="middle">CursorBench 3.2 — effort별 점수 (개념도)</text>
+    <line class="d-edge" x1="90" y1="240" x2="660" y2="240"/>
+    <line class="d-edge" x1="90" y1="240" x2="90" y2="50"/>
+    <text class="d-sub" x="200" y="262" text-anchor="middle">high</text>
+    <text class="d-sub" x="390" y="262" text-anchor="middle">xhigh</text>
+    <text class="d-sub" x="580" y="262" text-anchor="middle">max</text>
+    <text class="d-sub" x="76" y="150" text-anchor="end">점수</text>
+    <path class="d-edge" d="M200 150 C300 122, 480 102, 580 88" fill="none"/>
+    <circle class="d-node" cx="200" cy="150" r="6"/><circle class="d-node" cx="390" cy="112" r="6"/><circle class="d-node" cx="580" cy="88" r="6"/>
+    <text class="d-label sm" x="644" y="84">Fable 5</text>
+    <path class="d-edge accent" d="M200 152 C300 126, 480 108, 580 96" fill="none"/>
+    <circle class="d-node" cx="200" cy="152" r="6"/><circle class="d-node" cx="390" cy="116" r="6"/><circle class="d-node" cx="580" cy="96" r="6"/>
+    <text class="d-label sm" x="644" y="104">Opus 5</text>
+    <path class="d-edge dash" d="M200 196 C300 178, 480 166, 580 158" fill="none"/>
+    <circle class="d-node dim" cx="200" cy="196" r="6"/><circle class="d-node dim" cx="390" cy="170" r="6"/><circle class="d-node dim" cx="580" cy="158" r="6"/>
+    <text class="d-label sm" x="644" y="162">Opus 4.8</text>
+    <text class="d-sub" x="360" y="290" text-anchor="middle">max에서만 0.5% 이내 차이 — high·xhigh는 사실상 동급, 태스크당 비용은 절반</text>
+</svg>
+<div class="d-cap">공식 차트의 구도를 옮긴 개념도(실측 축척 아님). 두 곡선이 거의 포개진다는 것 — 그게 이번 발표의 그림 한 장이다.</div>
+</div>
+
+<p>다른 벤치마크에서는 아예 <strong>Fable 5를 앞서는</strong> 결과도 나왔습니다. 교차검증된 수치만 추리면 이렇습니다.</p>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>벤치마크</th><th>결과</th><th>의미</th></tr></thead>
+    <tbody>
+        <tr><td><strong>CursorBench 3.2</strong> (코딩)</td><td>max effort에서 Fable 5 피크 대비 <strong>−0.5% 이내</strong>, 태스크당 비용 <strong>½</strong></td><td>&ldquo;사실상 같은 성능, 절반 가격&rdquo;의 근거</td></tr>
+        <tr><td><strong>Frontier-Bench</strong> (에이전틱 코딩)</td><td><strong>43.3%</strong> vs GPT-5.6 Sol 34.4%</td><td>타사 최상위도 앞섬</td></tr>
+        <tr><td><strong>OSWorld 2.0</strong> (컴퓨터 사용)</td><td>모든 가격대에서 우위, Fable 5 피크를 <strong>약 ⅓ 예산</strong>으로 돌파</td><td>에이전트 실전에서 비용 우위가 가장 큼</td></tr>
+        <tr><td><strong>Zapier AutomationBench</strong> (업무 자동화)</td><td>동비용 기준 차순위 모델의 <strong>~1.5배</strong> 통과율</td><td>지식 노동·자동화 강세</td></tr>
+        <tr><td><strong>ARC-AGI 3</strong> (추상 추론)</td><td>차순위 모델의 <strong>3배</strong> 점수</td><td>세대 점프의 상징 수치</td></tr>
+    </tbody>
+</table>
+</div>
+
+<figure class="doc-img">
+    <img src="assets/ai/news/2026/news-20260724-claude-opus-5/fig-frontier-bench.webp" width="1440" height="810"
+         alt="Frontier-Bench v0.1 공식 차트: 가로축은 시도당 비용(로그 스케일), 세로축은 점수. Opus 5 곡선이 Fable 5보다 왼쪽 위에 있고 GPT-5.6 Sol보다 높으며 Opus 4.8은 맨 아래에 있다">
+    <figcaption>공식 <strong>Frontier-Bench v0.1</strong> 차트 — 가로축 <strong>시도당 비용</strong>(로그), 세로축 점수. <strong>왼쪽 위로 갈수록 &lsquo;싸고 잘한다&rsquo;</strong>는 뜻이고, Opus 5(주황)는 Fable 5(노랑)의 왼쪽 위에 통째로 올라앉아 있습니다. 각주에 따르면 이 수치는 mini-SWE-agent 하네스 기반 내부 실행이며, 안전 분류기가 거부한 건은 Opus 4.8로 폴백해 집계했습니다 (이미지: Anthropic)</figcaption>
+</figure>
+
+<p>리뷰 반응의 관전평도 이 지점입니다 — &ldquo;Fable 대 Opus 구도보다 <strong>4.8에서 5로의 점프</strong>가 진짜 뉴스&rdquo;라는 것. 전작 대비 전 항목이 큰 폭으로 올랐고, 다중 학제 추론(툴 없이)·법률·의료 등 일부 항목에서만 Fable 5가 우위를 지켰습니다(그마저 툴 사용 시 역전된다는 게 리뷰들의 관찰).</p>
+
+<h3>달라진 손재주 — 데모 3종</h3>
+<p>Claude는 이미지 생성 모델이 없어 &ldquo;그림을 못 그리는 AI&rdquo;라는 약점이 있었는데, Opus 5는 <strong>코드로 그리는 시각물</strong>(SVG·HTML·3D 인터랙티브)이 눈에 띄게 좋아졌습니다. 공식 발표에 실린 데모 3가지를 도식으로 옮기면 이렇습니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="Opus 5 공식 데모 3종: 윈드터널 기류 시각화, 인터랙티브 세포 일러스트, 도면에서 3D CAD 재구성">
+    <text class="d-label" x="360" y="24" text-anchor="middle">공개 데모 3종 — 코드로 그리는 시각물</text>
+    <rect class="d-box" x="24" y="44" width="212" height="160" rx="10"/>
+    <text class="d-label sm" x="130" y="66" text-anchor="middle">윈드터널 기류</text>
+    <path class="d-edge accent" d="M44 110 C90 100, 120 96, 216 92" fill="none"/>
+    <path class="d-edge accent" d="M44 130 C86 128, 110 118, 216 112" fill="none"/>
+    <path class="d-edge accent" d="M44 150 C90 152, 130 158, 216 166" fill="none"/>
+    <circle class="d-node" cx="118" cy="132" r="16"/>
+    <text class="d-sub" x="130" y="192" text-anchor="middle">물체 위 공기 흐름 렌더</text>
+    <rect class="d-box" x="254" y="44" width="212" height="160" rx="10"/>
+    <text class="d-label sm" x="360" y="66" text-anchor="middle">인터랙티브 세포</text>
+    <circle class="d-node dim" cx="360" cy="128" r="42"/>
+    <circle class="d-node" cx="352" cy="120" r="13"/>
+    <circle class="d-node dim" cx="384" cy="140" r="7"/><circle class="d-node dim" cx="336" cy="148" r="6"/><circle class="d-node dim" cx="380" cy="106" r="5"/>
+    <text class="d-sub" x="360" y="192" text-anchor="middle">클릭해 탐험하는 3D 일러스트</text>
+    <rect class="d-box accent" x="484" y="44" width="212" height="160" rx="10"/>
+    <text class="d-label sm" x="590" y="66" text-anchor="middle">도면 → 3D CAD 재구성</text>
+    <rect class="d-box soft" x="504" y="84" width="74" height="56" rx="6"/>
+    <text class="d-sub" x="541" y="116" text-anchor="middle">부품 도면</text>
+    <line class="d-edge" x1="578" y1="112" x2="602" y2="112"/><polygon class="d-arrow" points="602,107 610,112 602,117"/>
+    <rect class="d-box soft" x="610" y="84" width="66" height="56" rx="6"/>
+    <text class="d-sub" x="643" y="110" text-anchor="middle">3D 부품</text>
+    <text class="d-sub" x="643" y="126" text-anchor="middle">(FreeCAD)</text>
+    <text class="d-sub" x="590" y="168" text-anchor="middle">아래 상세 — 이번 발표의 백미</text>
+    <text class="d-sub" x="360" y="238" text-anchor="middle">셋 다 &ldquo;이미지 생성&rdquo;이 아니라 코드(SVG·HTML·CAD 스크립트)로 그린 결과물</text>
+</svg>
+<div class="d-cap">원본 데모 영상들은 <a href="https://www.anthropic.com/news/claude-opus-5" target="_blank" rel="noopener">공식 발표 페이지</a>에서 볼 수 있다 — 여기서는 구도만 도식으로 옮겼다.</div>
+</div>
+
+<figure class="doc-video">
+    <div class="dv-frame">
+        <iframe src="https://www.youtube-nocookie.com/embed/4WQd-8d5j4k" title="Claude Opus 5 관련 영상"
+                loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <figcaption>움직이는 결과물로 보는 편이 빠릅니다 — Claude Opus 5 관련 영상 (<a href="https://youtu.be/4WQd-8d5j4k" target="_blank" rel="noopener">YouTube에서 열기</a>)</figcaption>
+</figure>
+
+<h3>백미 — &ldquo;보지 못하면, 볼 방법을 만든다&rdquo;</h3>
+<p>이번 발표에서 가장 회자되는 사례입니다. Opus 5에게 <strong>기계 부품 도면 하나</strong>를 주고 &ldquo;이걸 3D CAD 모델로 재구성하는 코드를 짜라&rdquo;고 했는데 — <strong>도면을 열어 볼 수단은 일부러 주지 않았습니다.</strong> 목표만 있고 방법이 막힌 상황. Opus 5는 포기하는 대신 <strong>컴퓨터 비전 파이프라인을 스스로 작성해</strong> 이미지 픽셀에서 도형 기하를 추출했고, 그걸로 부품 전체를 FreeCAD 3D 모델로 재구성해 냈습니다. 같은 조건의 경쟁 모델들은 <strong>5번 시도에서 전부 실패</strong>했습니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 240" role="img" aria-label="CAD 재구성 데모 흐름: 부품 도면을 볼 수 없는 상태에서 Opus 5가 스스로 컴퓨터 비전 파이프라인을 작성해 픽셀에서 기하를 추출하고 FreeCAD 3D 모델로 재구성, 검증하며 반복">
+    <text class="d-label" x="360" y="26" text-anchor="middle">&ldquo;도면을 볼 수 없다&rdquo; → 스스로 눈을 만든 과정</text>
+    <rect class="d-box soft" x="26" y="70" width="150" height="70" rx="10"/>
+    <text class="d-label sm" x="101" y="98" text-anchor="middle">부품 도면 이미지</text>
+    <text class="d-sub" x="101" y="120" text-anchor="middle">볼 수단 없음 🚫</text>
+    <line class="d-edge" x1="176" y1="105" x2="204" y2="105"/><polygon class="d-arrow" points="204,100 212,105 204,110"/>
+    <rect class="d-box accent" x="212" y="62" width="216" height="86" rx="10"/>
+    <text class="d-label sm" x="320" y="90" text-anchor="middle">CV 파이프라인 자작</text>
+    <text class="d-sub" x="320" y="112" text-anchor="middle">픽셀 → 윤곽·치수 기하 추출</text>
+    <text class="d-sub" x="320" y="132" text-anchor="middle">(시키지 않은 방법을 발명)</text>
+    <line class="d-edge" x1="428" y1="105" x2="456" y2="105"/><polygon class="d-arrow" points="456,100 464,105 456,110"/>
+    <rect class="d-box soft" x="464" y="70" width="230" height="70" rx="10"/>
+    <text class="d-label sm" x="579" y="98" text-anchor="middle">FreeCAD 3D 모델 재구성</text>
+    <text class="d-sub" x="579" y="120" text-anchor="middle">경쟁 모델은 5회 시도 전부 실패</text>
+    <path class="d-edge dash" d="M579 140 C579 196, 320 196, 320 148"/><polygon class="d-arrow" points="315,154 320,144 325,154"/>
+    <text class="d-sub" x="450" y="212" text-anchor="middle">결과를 목표와 대조 → 될 때까지 수정 (검증하며 반복)</text>
+</svg>
+<div class="d-cap">&ldquo;목표(북극성)만 주면 방법을 찾아 끝까지 간다&rdquo; — Opus 4.8 대비 가장 크게 좋아졌다는 <strong>장기 에이전틱 능력</strong>의 상징 사례.</div>
+</div>
+
+<p>이게 왜 중요할까요? 실무에서 AI에게 시키는 일의 대부분은 원샷이 아니라 <strong>루프</strong>입니다 — 목표를 주고, 결과를 검증하고, 다시 고치게 하는 반복. Anthropic이 &ldquo;작업을 검증하고 신중하게 반복하는 능력이 강해졌다&rdquo;고 강조한 것이 바로 이 지점이고, 위 사례는 그 능력이 &ldquo;방법의 발명&rdquo;까지 간다는 시연입니다.</p>
+
+<h3>세이프가드 — Fable 5 오탐 논란의 맥락</h3>
+<p>리뷰 반응이 &ldquo;현실적으로 제일 반가운 변화&rdquo;로 꼽은 대목입니다. 배경이 있습니다 — <strong>Fable 5는 7월 초 안전 분류기가 강화된 뒤</strong>, 보안 코드 리뷰나 평범한 디버깅까지 위험 요청으로 오탐해 <strong>하위 모델(Opus 4.8)로 강등</strong>시키는 문제가 공론화됐습니다(GitHub 이슈 다수, 디버깅 벤치마크 급락 보도). Opus 5는 같은 분류기 체계를 쓰되 <strong>훨씬 덜 민감하게</strong> 걸리도록 조정됐다는 것이 발표·리뷰의 공통 관찰입니다. 일부 리뷰는 &ldquo;Fable 대비 트리거 확률 85% 감소&rdquo;라는 수치를 언급했는데, 이 구체 수치는 공식 문서에서 확인하지 못해 아래 사실검증 노트에 별도 표기했습니다.</p>
+<p>또 하나 — 정렬(alignment) 평가에서 문제 행동 점수가 전작들보다 낮고(낮을수록 좋음), 오픈소스 코드의 <strong>취약점·익스플로잇 발굴 능력은 크게 올랐다</strong>는 것도 리뷰 반응의 관찰입니다. 자세한 수치는 <a href="https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf" target="_blank" rel="noopener">공식 시스템 카드(PDF)</a>가 1차 출처입니다.</p>
+
+<h3>가격 — 이 발표의 본체</h3>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>모델</th><th>입력 $/1M</th><th>출력 $/1M</th><th>비고</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Claude Opus 5</strong></td><td><strong>$5</strong></td><td><strong>$25</strong></td><td>Opus 4.8과 동일 — 성능만 점프</td></tr>
+        <tr><td>Claude Fable 5</td><td>$10</td><td>$50</td><td>max effort 피크는 여전히 최상</td></tr>
+        <tr><td>Claude Opus 4.8</td><td>$5</td><td>$25</td><td>전작</td></tr>
+    </tbody>
+</table>
+</div>
+<p>단가가 절반인 데다 <strong>토큰 효율(같은 일에 쓰는 토큰 양)도 좋은 편</strong>이라, 벤치마크들이 보여준 &lsquo;태스크당 비용&rsquo; 격차는 단가 차이보다 더 벌어집니다(OSWorld에서 ⅓ 예산으로 Fable 피크 돌파가 그 예). 출시 즉시 Claude.ai·API·Claude Code·Cowork에서 쓸 수 있고, <strong>Claude Max 요금제의 기본 모델</strong>이 됐습니다.</p>
+
+<h3>사실검증 노트</h3>
+<ul>
+    <li><strong>교차검증 통과(본문 수치)</strong> — 출시일(7/24)·가격($5/$25, Fable $10/$50)·CursorBench 3.2(max에서 0.5% 이내·태스크당 절반 비용)·Frontier-Bench 43.3% vs 34.4%·OSWorld ⅓ 예산·AutomationBench ~1.5배·ARC-AGI 3 3배·데모 3종·CAD 사례(경쟁 모델 5회 전패)는 공식 발표와 복수 독립 보도가 일치.</li>
+    <li><strong>리뷰 반응 주장(공식 수치 미확인)</strong> — ①세이프가드 트리거 &ldquo;85% 감소&rdquo;: 방향(완화)은 공식·보도로 확인되나 85%라는 수치는 확인 실패. ②&ldquo;Sonnet 5가 태스크당 가장 비싼 모델&rdquo;: 리뷰어의 계산 주장으로, 독립 검증 없음. ③정렬 평가·취약점 발굴 수치: 시스템 카드가 1차 출처이며 본문엔 방향만 서술.</li>
+    <li><strong>도식은 개념도</strong> — CursorBench 곡선·데모 패널은 공식 차트·공개 데모의 구도를 옮긴 것으로 축척 실측이 아님(수치는 표 기준).</li>
+    <li><strong>벤치마크 수치를 읽는 법</strong> — 같은 모델도 어떤 <a href="/p/hns-what/">하네스</a>(도구·컨텍스트·재시도 설정)에 태우느냐로 점수가 크게 달라집니다. 자체 발표 수치와 독립 재현 수치가 벌어지는 사례는 <a href="/p/news-20260716-kimi-k3/">Kimi K3 기사</a>에서 실제로 확인했습니다 — 위 표도 &lsquo;순위&rsquo;보다 &lsquo;비용당 성능의 구도&rsquo;로 읽는 편이 안전합니다.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">출처</span>
+    · 공식: <a href="https://www.anthropic.com/news/claude-opus-5" target="_blank" rel="noopener">Introducing Claude Opus 5</a> · <a href="https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf" target="_blank" rel="noopener">System Card (PDF)</a><br>
+    · 보도: <a href="https://thenextweb.com/news/anthropic-claude-opus-5-launch-frontier-bench-coding" target="_blank" rel="noopener">TNW</a> · <a href="https://decrypt.co/374305/claude-opus-5-outscores-fable-5-most-benchmarks-half-price" target="_blank" rel="noopener">Decrypt</a> · <a href="https://venturebeat.com/orchestration/anthropic-launches-claude-opus-5-a-cheaper-ai-model-for-coding-agents-and-enterprise-workflows" target="_blank" rel="noopener">VentureBeat</a> · <a href="https://interestingengineering.com/culture/anthropic-claude-opus-5-coding-performance" target="_blank" rel="noopener">Interesting Engineering</a> · <a href="https://qz.com/anthropic-claude-opus-5-fable-5-price-072426" target="_blank" rel="noopener">Quartz</a><br>
+    · Fable 5 분류기 맥락: <a href="https://www.techtimes.com/articles/319576/20260702/claude-fable-5-debugging-scores-drop-70-safety-classifier-reroutes-tasks-weaker-fallback-model.htm" target="_blank" rel="noopener">TechTimes</a> · <a href="https://github.com/anthropics/claude-code/issues/67246" target="_blank" rel="noopener">claude-code#67246</a>
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">생성일자</span> 2026-07-25 &middot; <span class="pr-k">수정일자</span> 2026-07-25</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/news-20260716-kimi-k3/">Kimi K3 — 2.8조 파라미터 오픈웨이트, 프런티어에 닿다</a></li><li><a href="/p/news-20260709-thariq-fable5-unknowns/">Fable 5 시대의 병목은 모델이 아니라 인간인가 — 타릭의 지도와 영토 프레임</a></li><li><a href="/p/news-20260622-mythos-looped/">앤트로픽 미소스와 루프드 트랜스포머 — 하이젠버그 기고 읽기</a></li><li><a href="/p/welcome/">Welcome</a></li></ul>
+</nav>
+</body>
+</html>

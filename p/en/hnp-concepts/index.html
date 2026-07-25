@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Core Concepts Made Easy</title>
+<meta name="description" content="Explains the five harness elements simply by likening them to a company team.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/hnp-concepts/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hnp-concepts/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hnp-concepts/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hnp-concepts/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Core Concepts Made Easy",
+ "description": "Explains the five harness elements simply by likening them to a company team.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/hnp-concepts/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hnp-concepts",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-04T08:51:27+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!hnp-concepts");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hnp-concepts">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/hnp-concepts/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Core Concepts Made Easy</h2>
+<p>A harness is made up of five elements. It feels hard, but it maps one-to-one onto <strong>a team working at a company</strong> — one PM, several people in charge, a manual for each of them, inspection, and a shared work folder.</p>
+
+<div class="note">
+    <span class="nh">Where the name comes from — the tack of a carriage horse</span>
+    "Harness" originally means <strong>the tack you put on a horse</strong>. No matter how good the horse (= the AI model) is, depending on <strong>how you strap it up and drive it</strong> it may run well or just spin in place. Harness engineering is exactly the work of designing that <strong>"setup that drives it"</strong>.
+</div>
+
+<h3>Structure — how the elements interlock</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 288" role="img" aria-label="Harness structure: the orchestrator coordinates the analysis, development, and verification agents, and all of them leave deliverables in _workspace">
+    <!-- orchestrator -->
+    <rect class="d-box accent" x="240" y="8" width="220" height="48" rx="10"/>
+    <text class="d-label" x="350" y="30" text-anchor="middle">Orchestrator (PM)</text>
+    <text class="d-sub" x="350" y="47" text-anchor="middle">Workflow planning · coordination</text>
+
+    <!-- bus from orchestrator to agents -->
+    <line class="d-edge" x1="350" y1="56" x2="350" y2="80"/>
+    <line class="d-edge" x1="115" y1="80" x2="585" y2="80"/>
+    <line class="d-edge" x1="115" y1="80" x2="115" y2="96"/>
+    <polygon class="d-arrow" points="110,95 120,95 115,102"/>
+    <line class="d-edge" x1="350" y1="80" x2="350" y2="96"/>
+    <polygon class="d-arrow" points="345,95 355,95 350,102"/>
+    <line class="d-edge" x1="585" y1="80" x2="585" y2="96"/>
+    <polygon class="d-arrow" points="580,95 590,95 585,102"/>
+
+    <!-- agents -->
+    <rect class="d-box" x="15" y="102" width="200" height="58" rx="10"/>
+    <text class="d-label" x="115" y="128" text-anchor="middle">Analysis agent</text>
+    <text class="d-sub" x="115" y="146" text-anchor="middle">Standard source · impact</text>
+
+    <rect class="d-box" x="250" y="102" width="200" height="58" rx="10"/>
+    <text class="d-label" x="350" y="128" text-anchor="middle">Development agent</text>
+    <text class="d-sub" x="350" y="146" text-anchor="middle">Custom implementation</text>
+
+    <rect class="d-box" x="485" y="102" width="200" height="58" rx="10"/>
+    <text class="d-label" x="585" y="128" text-anchor="middle">Verification agent (QA)</text>
+    <text class="d-sub" x="585" y="146" text-anchor="middle">Regression · consistency</text>
+
+    <!-- agents to workspace -->
+    <line class="d-edge dash" x1="115" y1="160" x2="115" y2="204"/>
+    <polygon class="d-arrow" points="110,203 120,203 115,210"/>
+    <line class="d-edge dash" x1="350" y1="160" x2="350" y2="204"/>
+    <polygon class="d-arrow" points="345,203 355,203 350,210"/>
+    <line class="d-edge dash" x1="585" y1="160" x2="585" y2="204"/>
+    <polygon class="d-arrow" points="580,203 590,203 585,210"/>
+
+    <!-- workspace -->
+    <rect class="d-box soft" x="15" y="210" width="670" height="52" rx="10"/>
+    <text class="d-label sm" x="350" y="233" text-anchor="middle">Artifacts · memory &#160;(&#160;_workspace folder&#160;)</text>
+    <text class="d-sub" x="350" y="251" text-anchor="middle">Intermediate deliverables · evidence sources · QA reports pile up here</text>
+
+    <!-- skills note -->
+    <text class="d-sub" x="350" y="282" text-anchor="middle">Each agent pulls out and uses the &lt;skills · tools&gt; it needs</text>
+</svg>
+<div class="d-cap">The orchestrator coordinates the team, and every deliverable is left in the shared <code>_workspace</code>.</div>
+</div>
+
+<h3>The five elements</h3>
+<ul>
+    <li><strong>Agent</strong> — an AI worker taking on a specific role. It is a <strong>"job description" written in natural language, not in code</strong> (role · principles · inputs and outputs · how to collaborate · what to do on errors). <em>e.g. "sales standard-source analyst"</em></li>
+    <li><strong>Skill</strong> — a <strong>manual</strong> that holds a repetitive task. It consists of <code>name + description + procedure · checklist</code>. <em>e.g. the "credit-limit verification procedure" skill</em></li>
+    <li><strong>Orchestrator</strong> — the <strong>PM</strong> that coordinates the team. There is always exactly one, and before starting it <strong>plans the work order (the workflow) in advance</strong>. (Similar to Claude Code's plan mode)</li>
+    <li><strong>Evaluation · tests</strong> — the <strong>inspection</strong> that makes the results trustworthy. It cross-checks not typos but <strong>claim–evidence consistency, numerical consistency, and regression of standard features</strong>.</li>
+    <li><strong>Artifacts · memory</strong> — the <strong>shared work folder <code>_workspace</code></strong> created when it runs. Intermediate deliverables are left together with the <strong>evidence sources</strong>, so you can later trace "why it was done this way" and hallucinations (plausible falsehoods) are reduced as well.</li>
+</ul>
+
+<h3>Likened to a company team</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Harness element</th><th>Company analogy</th><th>ERP customization example</th></tr></thead>
+        <tbody>
+            <tr><td>Orchestrator</td><td>PM / team lead</td><td>The leader who lays out the CR handling order</td></tr>
+            <tr><td>Agent</td><td>The practitioner in charge</td><td>Standard-source analyst · developer · regression QA</td></tr>
+            <tr><td>Skill</td><td>Work manual</td><td>"Impact analysis procedure", "regression test checklist"</td></tr>
+            <tr><td>Evaluation · tests</td><td>Inspector</td><td>Checking for broken standard features · numerical consistency</td></tr>
+            <tr><td>Artifacts · memory</td><td>Shared drive</td><td><code>_workspace</code>: specification · impact · tests · migration guide</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">The minimum setup is three things</span>
+    At first it is enough to understand just three — <strong>agent · skill · orchestrator</strong>. Evaluation · tests and artifacts · memory are <strong>attached for you</strong> by the Harness plugin. In the next documents we <a href="/p/en/hnp-install/">install</a> it and <a href="/p/en/hnp-first-run/">run it ourselves</a>.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · PlugIn · Harness &middot; <span class="pr-k">Created</span> 2026-07-04 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/hns-review/">Reviewing the Generated Result — Agents · Skills · Orchestrator</a></li><li><a href="/p/en/hnp-intro/">Harness Plugin — Introduction</a></li><li><a href="/p/en/hnp-agents-skills/">Designing Agents and Skills</a></li><li><a href="/p/en/hns-anatomy/">Harness Composition and Effects</a></li></ul>
+</nav>
+</body>
+</html>

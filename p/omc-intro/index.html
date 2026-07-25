@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OMC 소개</title>
+<meta name="description" content="OMC 플러그인이 클로드 코드에 더하는 자율 실행·멀티 에이전트·자동 검증을 소개한다.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/omc-intro/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/omc-intro/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/omc-intro/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/omc-intro/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "OMC 소개",
+ "description": "OMC 플러그인이 클로드 코드에 더하는 자율 실행·멀티 에이전트·자동 검증을 소개한다.",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/omc-intro/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!omc-intro",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T12:15:44+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!omc-intro");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!omc-intro">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/omc-intro/" hreflang="en">English</a>
+</p>
+<article>
+<h2>OMC 소개</h2>
+<p><strong>oh-my-claudecode(이하 OMC)</strong>는 Claude Code에 자율 실행, 멀티 에이전트 협업, 자동 검증 기능을 더해주는 플러그인입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 180" role="img" aria-label="Claude Code에 플러그인을 더한 OMC가 자율 실행 멀티 에이전트 자동 검증을 추가한다">
+    <rect class="d-box soft" x="12" y="58" width="128" height="50" rx="10"/>
+    <text class="d-label sm" x="76" y="80" text-anchor="middle">Claude Code</text>
+    <text class="d-sub" x="76" y="96" text-anchor="middle">터미널 CLI</text>
+    <text class="d-label" x="158" y="89" text-anchor="middle">+</text>
+    <rect class="d-box soft" x="176" y="58" width="112" height="50" rx="10"/>
+    <text class="d-label sm" x="232" y="80" text-anchor="middle">플러그인</text>
+    <text class="d-sub" x="232" y="96" text-anchor="middle">기능 확장팩</text>
+    <text class="d-label" x="306" y="89" text-anchor="middle">=</text>
+
+    <rect class="d-box accent" x="324" y="52" width="128" height="62" rx="12"/>
+    <text class="d-label" x="388" y="80" text-anchor="middle">OMC</text>
+    <text class="d-sub" x="388" y="98" text-anchor="middle">oh-my-claudecode</text>
+
+    <rect class="d-box soft" x="486" y="22" width="182" height="34" rx="8"/>
+    <text class="d-label sm" x="577" y="43" text-anchor="middle">끝까지 자율 실행</text>
+    <rect class="d-box soft" x="486" y="72" width="182" height="34" rx="8"/>
+    <text class="d-label sm" x="577" y="93" text-anchor="middle">멀티 에이전트 분담</text>
+    <rect class="d-box soft" x="486" y="122" width="182" height="34" rx="8"/>
+    <text class="d-label sm" x="577" y="143" text-anchor="middle">작업 후 자동 검증</text>
+
+    <path class="d-edge accent" d="M452 83 C468 83, 470 44, 484 39"/><polygon class="d-arrow accent" points="478,35 486,38 480,44"/>
+    <line class="d-edge accent" x1="452" y1="85" x2="484" y2="89"/><polygon class="d-arrow accent" points="478,84 486,89 478,94"/>
+    <path class="d-edge accent" d="M452 87 C468 87, 470 134, 484 139"/><polygon class="d-arrow accent" points="478,135 486,138 480,144"/>
+</svg>
+<div class="d-cap">OMC는 Claude Code에 <strong>자율 실행·멀티 에이전트·자동 검증</strong>을 명령어 한 줄로 더합니다.</div>
+</div>
+
+<h3>세 가지 개념</h3>
+<ul>
+    <li><strong>Claude Code란</strong> — 터미널이나 IDE에서 Claude에게 코딩 작업을 맡기는 CLI 도구입니다. 파일을 읽고 수정하고, 명령을 실행하며 개발을 돕습니다.</li>
+    <li><strong>플러그인이란</strong> — Claude Code에 새 기능을 더하는 확장팩입니다. 한 번 설치하면 전용 명령어와 동작이 추가됩니다.</li>
+    <li><strong>OMC가 더하는 것</strong> — "끝까지 알아서 구현", "여러 작업자가 분담", "작업 후 자동 검증" 같은 고급 작업 방식을 명령어 한 줄로 쓰게 해줍니다.</li>
+</ul>
+
+<p>이 문서는 로컬 환경에서 직접 설치해 <strong>일부 검증</strong> 및 공식 문서·릴리스 노트·플러그인 문서를 대조해 작성한 요약본입니다. <strong>Windows PowerShell, WSL2, macOS, Linux</strong>에 따라 일부 명령어와 동작이 달라질 수 있어, 환경에 의존적인 항목은 별도로 구분해 표시했습니다. 기준 버전은 <strong>v4.15.2</strong>(2026-07-05 확인)입니다. 릴리스가 월 3~5회로 잦은 편이라, 세부 동작은 읽는 시점의 최신 릴리스 노트와 다를 수 있습니다.</p>
+
+<div class="note">
+    <span class="nh">기준 자료</span>
+    공식 GitHub README, 공식 Reference(REFERENCE.md), 공식 Releases, Claude Code Plugin 공식 문서.
+    <br>· 공식 GitHub: github.com/Yeachan-Heo/oh-my-claudecode
+    <br>· 공식 Reference: /blob/main/docs/REFERENCE.md
+    <br>· 공식 Releases: /releases
+    <br>· Claude Code Plugin 문서: code.claude.com/docs/en/discover-plugins
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · PlugIn · OMC &middot; <span class="pr-k">생성일자</span> 2026-07-03 &middot; <span class="pr-k">수정일자</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/omc-concepts/">핵심 용어</a></li><li><a href="/p/omc-install/">설치</a></li><li><a href="/p/omc-doctor/">설치 진단</a></li></ul>
+</nav>
+</body>
+</html>

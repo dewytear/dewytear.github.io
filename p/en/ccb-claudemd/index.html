@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CLAUDE.md — The Instruction File</title>
+<meta name="description" content="The four scopes of the CLAUDE.md instruction file and how to write one">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/ccb-claudemd/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/ccb-claudemd/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/ccb-claudemd/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/ccb-claudemd/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "CLAUDE.md — The Instruction File",
+ "description": "The four scopes of the CLAUDE.md instruction file and how to write one",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/ccb-claudemd/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!ccb-claudemd",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T20:36:07+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!ccb-claudemd");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!ccb-claudemd">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/ccb-claudemd/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>CLAUDE.md &mdash; The Instruction File</h2>
+<p>Claude Code uses a Markdown file called <code>CLAUDE.md</code> as the file it always refers to. Think of it as <strong>a file that is always included with whatever command you give the AI</strong>. That is why it should hold the important content clearly, <strong>without getting too long</strong>.</p>
+
+<h3>The four layers</h3>
+<div class="diagram">
+<svg viewBox="0 0 680 236" role="img" aria-label="The four scope layers of CLAUDE.md: enterprise → user global → project → project local, with priority rising as you go down">
+    <rect class="d-box" x="52" y="8" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="30" text-anchor="middle">Enterprise (managed)</text>
+    <text class="d-sub" x="262" y="46" text-anchor="middle">Applies to every member of the org</text>
+
+    <rect class="d-box" x="52" y="64" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="86" text-anchor="middle">User global</text>
+    <text class="d-sub" x="262" y="102" text-anchor="middle">~/.claude · all of my projects</text>
+
+    <rect class="d-box" x="52" y="120" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="142" text-anchor="middle">Project</text>
+    <text class="d-sub" x="262" y="158" text-anchor="middle">CLAUDE.md · shared with teammates</text>
+
+    <rect class="d-box accent" x="52" y="176" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="198" text-anchor="middle">Project local</text>
+    <text class="d-sub" x="262" y="214" text-anchor="middle">Not shared · my PC only</text>
+
+    <line class="d-edge" x1="262" y1="52" x2="262" y2="62"/><polygon class="d-arrow" points="257,58 267,58 262,64"/>
+    <line class="d-edge" x1="262" y1="108" x2="262" y2="118"/><polygon class="d-arrow" points="257,114 267,114 262,120"/>
+    <line class="d-edge" x1="262" y1="164" x2="262" y2="174"/><polygon class="d-arrow" points="257,170 267,170 262,176"/>
+
+    <text class="d-sub" x="588" y="20" text-anchor="middle">Lower priority</text>
+    <line class="d-edge accent" x1="588" y1="30" x2="588" y2="204"/><polygon class="d-arrow accent" points="583,204 593,204 588,212"/>
+    <text class="d-accent" x="588" y="230" text-anchor="middle" font-size="11">Higher priority</text>
+</svg>
+<div class="d-cap">The same CLAUDE.md has a different scope depending on where it sits, and lower layers take precedence.</div>
+</div>
+<p>The same <code>CLAUDE.md</code> has a different scope depending on where you put it.</p>
+<ul>
+    <li><strong>Enterprise (managed)</strong> &mdash; applies to every member inside the company.</li>
+    <li><strong>User global</strong> &mdash; always applies on my PC, whatever project I'm working on.</li>
+    <li><strong>Project</strong> &mdash; applies only in that project (shared with teammates).</li>
+    <li><strong>Project local</strong> &mdash; instructions inside the project that are <strong>not shared, just for my own PC</strong>.</li>
+</ul>
+
+<h3>Practice &mdash; creating instructions</h3>
+<p>Run <code>claude</code> in a new folder, then ask for this to create a <code>CLAUDE.md</code>.</p>
+<pre><code>Create a CLAUDE.md file in this folder.
+Instructions: always write answers in Korean,
+and always append _new to the names of new files you create.</code></pre>
+<p>Once the file is created, the instructions you just gave ("write in Korean", "append _new to new files") are recorded inside it. Every later task <strong>always follows these instructions underneath this folder.</strong> For example, if you say "save a short poem as a text file", the result is written in Korean and the filename carries <code>_new</code>.</p>
+
+<h3>What is worth putting in</h3>
+<ul>
+    <li>Rules that keep original files from being modified</li>
+    <li>Rules to follow when writing code (Python, for example)</li>
+    <li>Output format &middot; how files are saved</li>
+    <li>Tone &middot; language of what gets written</li>
+</ul>
+
+<div class="note">
+    <span class="nh">Tip</span>
+    You can have the AI create <code>CLAUDE.md</code>, or open and edit it yourself. On Windows, line breaks in a prompt may not work well, but writing it <strong>all on one line without breaks</strong> is perfectly fine.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/claude-md-commandments/">The Ten Commandments of CLAUDE.md — Ten Promises for Taming Your AI Pair Programmer</a></li><li><a href="/p/en/ccb-overview/">Course Overview and Goals</a></li><li><a href="/p/en/ccb-what/">What Is Claude Code</a></li></ul>
+</nav>
+</body>
+</html>

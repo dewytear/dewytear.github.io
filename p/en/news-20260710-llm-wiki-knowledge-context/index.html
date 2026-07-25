@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM Wiki and Knowledge Context — Team Knowledge Compiled at Write Time</title>
+<meta name="description" content="Analyzes a seminar talk, with original-source checks and diagrams, covering Karpathy&#x27;s LLM Wiki (write-time compilation vs RAG), the promotion flow of an Obsidian+Git team implementation, OpenViking&#x27;s layered loading, and human/agent governance.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/news-20260710-llm-wiki-knowledge-context/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260710-llm-wiki-knowledge-context/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260710-llm-wiki-knowledge-context/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260710-llm-wiki-knowledge-context/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "LLM Wiki and Knowledge Context — Team Knowledge Compiled at Write Time",
+ "description": "Analyzes a seminar talk, with original-source checks and diagrams, covering Karpathy's LLM Wiki (write-time compilation vs RAG), the promotion flow of an Obsidian+Git team implementation, OpenViking's layered loading, and human/agent governance.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/news-20260710-llm-wiki-knowledge-context/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260710-llm-wiki-knowledge-context",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-10T09:13:02+09:00",
+ "dateModified": "2026-07-10T09:13:02+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!news-20260710-llm-wiki-knowledge-context");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260710-llm-wiki-knowledge-context">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/news-20260710-llm-wiki-knowledge-context/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>LLM Wiki and Knowledge Context — Team Knowledge Compiled at Write Time</h2>
+<p>This document analyzes a seminar talk on the topic of LLM Wiki. The talk starts from <strong>Andrej Karpathy's LLM Wiki proposal</strong>, then covers the <strong>&ldquo;Knowledge Context&rdquo;</strong> implementation (an Obsidian vault + a Git repository) that the presenter's team actually runs, the <strong>index explosion problem they hit as it grew and their adoption of OpenViking</strong>, and finally the <strong>governance that split the roles of humans and agents</strong>. Rather than simply transcribing the talk, we <strong>checked the original sources of the tools and proposals it mentioned (Karpathy's gist, GitHub repositories, official docs) on the web to back up the claims</strong>, and laid out the core processes as diagrams.</p>
+
+<div class="note">
+    <span class="nh">What this covers, and how it was verified</span>
+    · Subject: the internal seminar talk &ldquo;LLM Wiki and Knowledge Context&rdquo; (2026-07)<br>
+    · Supporting evidence: Karpathy's LLM Wiki gist, <strong>volcengine/OpenViking</strong> (GitHub, official docs), and <strong>kepano/obsidian-skills</strong> (GitHub) were checked directly — links are in the Sources section at the end.<br>
+    · This document belongs to the same topic lineage as this wiki's <a href="/p/en/llmw-overview/">LLM Wiki — Overview</a> course series and <a href="/p/en/sb-level2/">Second Brain Level 2</a>.
+</div>
+
+<h3>① The problem — the knowledge exists, but you explain it again every time</h3>
+<p>The starting point the talk pointed at is a familiar scene. A team's knowledge is scattered across chat logs, documents, and personal notes, so every time a new member joins or an agent is given a task, you <strong>explain the same context from scratch again</strong>. Shared documents multiply into &ldquo;final&rdquo; and &ldquo;really_final&rdquo; copies until nobody knows which one is current (Google Docs-style copy proliferation), and the most valuable thing of all — <strong>tacit knowledge</strong> about why a decision was made and which attempts failed — is never recorded and stays only inside people's heads. In the LLM era this cost is also <strong>billed in tokens</strong>: every time you call an agent, you pour the same background explanation into the context all over again.</p>
+
+<h3>② RAG and LLM Wiki — retrieval at read time vs. compilation at write time</h3>
+<p>The usual answer to this problem is RAG (retrieval-augmented generation). You split documents into pieces (chunks), embed them, and <strong>the moment a question arrives</strong> you find similar pieces and slot them into the context — in other words, you defer organizing knowledge to <strong>read (query) time</strong>. The LLM Wiki that Karpathy proposed flips the direction. If an LLM reads, organizes, and consolidates material <strong>at the moment it comes in</strong>, turning it into wiki documents that humans can read, then at query time you can <strong>just read that document</strong> with no retrieval pipeline. Karpathy compares this to a compiler — the original material is source code, the LLM is the compiler, and the wiki is the build output; if RAG is an interpreter that digs through the source on every run, LLM Wiki is the side that <strong>compiles ahead of time</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 330" role="img" aria-label="RAG retrieves chunks at query time and injects them, while LLM Wiki compiles a wiki at write time and simply reads it at query time">
+    <text class="d-label sm" x="360" y="26" text-anchor="middle">RAG — retrieval at read (query) time</text>
+    <rect class="d-box soft" x="16" y="44" width="110" height="48" rx="9"/><text class="d-label sm" x="71" y="65" text-anchor="middle">Source docs</text><text class="d-sub" x="71" y="81" text-anchor="middle">stored as-is</text>
+    <line class="d-edge" x1="126" y1="68" x2="150" y2="68"/><polygon class="d-arrow" points="150,63 158,68 150,73"/>
+    <rect class="d-box" x="158" y="44" width="110" height="48" rx="9"/><text class="d-label sm" x="213" y="65" text-anchor="middle">Chunk &amp; embed</text><text class="d-sub" x="213" y="81" text-anchor="middle">index only</text>
+    <line class="d-edge" x1="268" y1="68" x2="292" y2="68"/><polygon class="d-arrow" points="292,63 300,68 292,73"/>
+    <rect class="d-box" x="300" y="44" width="110" height="48" rx="9"/><text class="d-label sm" x="355" y="65" text-anchor="middle">Ask &#8594; retrieve</text><text class="d-sub" x="355" y="81" text-anchor="middle">top-K similar</text>
+    <line class="d-edge" x1="410" y1="68" x2="434" y2="68"/><polygon class="d-arrow" points="434,63 442,68 434,73"/>
+    <rect class="d-box" x="442" y="44" width="110" height="48" rx="9"/><text class="d-label sm" x="497" y="65" text-anchor="middle">Inject context</text><text class="d-sub" x="497" y="81" text-anchor="middle">chunks stitched</text>
+    <line class="d-edge" x1="552" y1="68" x2="576" y2="68"/><polygon class="d-arrow" points="576,63 584,68 576,73"/>
+    <rect class="d-box soft" x="584" y="44" width="110" height="48" rx="9"/><text class="d-label sm" x="639" y="65" text-anchor="middle">Answer</text><text class="d-sub" x="639" y="81" text-anchor="middle">again every query</text>
+    <text class="d-sub" x="360" y="118" text-anchor="middle">Organizing is deferred to query time — fragmented context, a pipeline always required</text>
+
+    <line class="d-edge dash" x1="30" y1="146" x2="690" y2="146"/>
+
+    <text class="d-label sm" x="360" y="180" text-anchor="middle">LLM Wiki — compilation at write time</text>
+    <rect class="d-box soft" x="16" y="198" width="110" height="48" rx="9"/><text class="d-label sm" x="71" y="219" text-anchor="middle">Source material</text><text class="d-sub" x="71" y="235" text-anchor="middle">kept immutable</text>
+    <line class="d-edge accent" x1="126" y1="222" x2="150" y2="222"/><polygon class="d-arrow accent" points="150,217 158,222 150,227"/>
+    <rect class="d-box accent" x="158" y="198" width="110" height="48" rx="9"/><text class="d-label sm" x="213" y="219" text-anchor="middle">LLM compiles</text><text class="d-sub" x="213" y="235" text-anchor="middle">sort · merge · link</text>
+    <line class="d-edge accent" x1="268" y1="222" x2="292" y2="222"/><polygon class="d-arrow accent" points="292,217 300,222 292,227"/>
+    <rect class="d-box" x="300" y="198" width="110" height="48" rx="9"/><text class="d-label sm" x="355" y="219" text-anchor="middle">Wiki docs</text><text class="d-sub" x="355" y="235" text-anchor="middle">readable *.md</text>
+    <line class="d-edge" x1="410" y1="222" x2="434" y2="222"/><polygon class="d-arrow" points="434,217 442,222 434,227"/>
+    <rect class="d-box" x="442" y="198" width="110" height="48" rx="9"/><text class="d-label sm" x="497" y="219" text-anchor="middle">Ask &#8594; read</text><text class="d-sub" x="497" y="235" text-anchor="middle">no search needed</text>
+    <line class="d-edge" x1="552" y1="222" x2="576" y2="222"/><polygon class="d-arrow" points="576,217 584,222 576,227"/>
+    <rect class="d-box soft" x="584" y="198" width="110" height="48" rx="9"/><text class="d-label sm" x="639" y="219" text-anchor="middle">Answer</text><text class="d-sub" x="639" y="235" text-anchor="middle">already sorted</text>
+    <text class="d-sub" x="360" y="272" text-anchor="middle">Organizing finishes at write time — you pay the compile cost once, reading stays cheap</text>
+    <text class="d-sub" x="360" y="306" text-anchor="middle">Karpathy's analogy: material = source code · LLM = compiler · wiki = build output · lint = tests</text>
+</svg>
+<div class="d-cap">Same knowledge, different moment — RAG looks things up <strong>on every query</strong>, LLM Wiki organizes them <strong>once, on the way in</strong>.</div>
+</div>
+
+<div class="tbl-wrap"><table>
+    <thead><tr><th></th><th>RAG (retrieval at read time)</th><th>LLM Wiki (compilation at write time)</th></tr></thead>
+    <tbody>
+        <tr><td>When organizing happens</td><td>At query time (ad hoc)</td><td>When material arrives (once, up front)</td></tr>
+        <tr><td>Query cost</td><td>Retrieval pipeline + chunk injection, repeated</td><td>Reading a document (no pipeline needed)</td></tr>
+        <tr><td>Shape of knowledge</td><td>Chunks — hard for humans to read</td><td>Consolidated documents — shared by humans and LLMs</td></tr>
+        <tr><td>Consistency</td><td>Contradictions between chunks are hard to detect</td><td>Consolidated and checked in the compile and lint stages</td></tr>
+        <tr><td>Where it fits</td><td>Vast, rarely used material where quoting the original matters</td><td>Living knowledge the team uses over and over</td></tr>
+    </tbody>
+</table></div>
+<p class="scn-sub">The two are not mutually exclusive — the talk itself assumes they run side by side: &ldquo;compile the core knowledge you use often into the wiki, and leave the vast original texts to retrieval.&rdquo;</p>
+
+<h3>③ Karpathy's LLM Wiki — a three-layer structure with index.md and log.md</h3>
+<p>The skeleton of the proposal Karpathy published as a gist is a <strong>three-layer structure</strong>. At the bottom sit the <strong>original sources</strong> (incoming material kept verbatim and immutable); above them is the <strong>wiki layer</strong>, which the LLM maintains as concept-level markdown by reading the originals (humans are read-only — if you want a change, you put material into the source layer and have it recompiled); and on top of it all is the <strong>schema layer</strong> (CLAUDE.md / AGENTS.md-style conventions: document format, naming, and linking rules). Two management files are attached to this — <code>index.md</code>, a table of contents of every entry, and <code>log.md</code>, which is only ever appended to in the form <code>## [date] action | target</code>. The operations boil down to three: <strong>ingest</strong> (compile new material), <strong>query</strong> (answer questions), and <strong>lint</strong> (check the whole wiki for contradictions and broken links).</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 320" role="img" aria-label="Karpathy's three-layer LLM Wiki: an LLM ingests original sources to compile the wiki layer, schema conventions govern it, index.md and log.md carry the table of contents and history, lint checks consistency, and query reads it">
+    <rect class="d-box soft" x="60" y="20" width="250" height="44" rx="9"/><text class="d-label sm" x="185" y="39" text-anchor="middle">Query — human or agent</text><text class="d-sub" x="185" y="55" text-anchor="middle">query: read the wiki and answer</text>
+    <line class="d-edge" x1="185" y1="106" x2="185" y2="72"/><polygon class="d-arrow" points="181,74 185,66 189,74"/>
+    <rect class="d-box accent" x="60" y="106" width="250" height="76" rx="12"/><text class="d-label" x="185" y="138" text-anchor="middle">Wiki layer (*.md)</text><text class="d-sub" x="185" y="158" text-anchor="middle">concept-level · LLM-maintained</text><text class="d-sub" x="185" y="172" text-anchor="middle">read-only for humans</text>
+    <path class="d-edge accent" d="M60 128 C18 132, 18 162, 58 160"/><polygon class="d-arrow accent" points="64,156 56,161 63,166"/>
+    <text class="d-sub" x="30" y="196" text-anchor="middle">lint check</text>
+    <line class="d-edge accent" x1="185" y1="240" x2="185" y2="190"/><polygon class="d-arrow accent" points="181,192 185,184 189,192"/>
+    <text class="d-sub" x="248" y="220" text-anchor="middle">ingest — LLM compiles</text>
+    <rect class="d-box soft" x="60" y="240" width="250" height="56" rx="9"/><text class="d-label sm" x="185" y="263" text-anchor="middle">Original sources (sources/)</text><text class="d-sub" x="185" y="281" text-anchor="middle">verbatim · immutable · added by humans</text>
+
+    <rect class="d-box" x="440" y="106" width="240" height="76" rx="12"/><text class="d-label" x="560" y="138" text-anchor="middle">Schema layer</text><text class="d-sub" x="560" y="158" text-anchor="middle">CLAUDE.md · AGENTS.md rules</text><text class="d-sub" x="560" y="172" text-anchor="middle">format · naming · linking rules</text>
+    <line class="d-edge dash" x1="440" y1="144" x2="318" y2="144"/><polygon class="d-arrow" points="320,140 312,144 320,148"/>
+    <text class="d-sub" x="379" y="134" text-anchor="middle">rules govern</text>
+
+    <rect class="d-box" x="440" y="216" width="115" height="52" rx="9"/><text class="d-label sm" x="497" y="238" text-anchor="middle">index.md</text><text class="d-sub" x="497" y="256" text-anchor="middle">full index</text>
+    <rect class="d-box" x="565" y="216" width="115" height="52" rx="9"/><text class="d-label sm" x="622" y="238" text-anchor="middle">log.md</text><text class="d-sub" x="622" y="256" text-anchor="middle">append-only log</text>
+    <line class="d-edge dash" x1="497" y1="216" x2="330" y2="168"/><polygon class="d-arrow" points="335,164 322,166 331,172"/>
+    <text class="d-sub" x="560" y="296" text-anchor="middle">every action recorded as &#35;&#35; [date] action | target</text>
+</svg>
+<div class="d-cap">The three layers: <strong>sources stay immutable</strong>, <strong>the LLM manages the wiki</strong>, <strong>the schema enforces the conventions</strong> — with index.md and log.md carrying the table of contents and the history.</div>
+</div>
+
+<div class="note">
+    <span class="nh">How this wiki connects</span>
+    The wiki you are reading right now is exactly a variant of this structure — the body text (HTML fragments) is the wiki layer, <code>list</code> and the knowledge index play the role of index.md, the Work Log plays the role of log.md, and the CLAUDE.md rules plus the validate gates play the role of schema and lint. The course series <a href="/p/en/llmw-overview/">LLM Wiki — Overview</a> walks through the same concepts step by step.
+</div>
+
+<h3>④ Knowledge Context — transplanted to a team with an Obsidian vault + Git</h3>
+<p>The heart of the talk is a real implementation that moves Karpathy's personal proposal to <strong>team scale</strong>. A single repository is the team's knowledge context, and physically it is <strong>both an Obsidian vault and a Git repository</strong> — non-developers write notes in the Obsidian UI, and developers send PRs through Git. They are just two doors onto the same files. The folder structure is also the permission structure:</p>
+<ul>
+    <li><code>context/</code> — the <strong>team shared layer</strong>. The team's official context, which only knowledge that has passed verification enters.</li>
+    <li><code>members/&lt;name&gt;/</code> — the <strong>personal working layer</strong>. Each person's drafts, experiments, and notes. Anything goes here.</li>
+    <li><code>agents/</code> — agent settings and skills. It <strong>exists in both</strong> the shared layer and the personal layer, so a skill someone builds gets promoted to a team skill after verification. <code>AGENTS.md</code> serves as the team's <strong>official system prompt</strong>.</li>
+    <li><code>_private/</code> — an area <strong>excluded</strong> from sync. There is no promotion path at all.</li>
+</ul>
+<p>The core process is the <strong>promotion flow</strong> by which personal knowledge becomes team knowledge. To lift a note from the personal layer into the shared layer you open a PR, which goes through automated verification (format, links, frontmatter) and an AI review (duplication, convention violations, conflicts with existing documents), and <strong>only after a human approves it at the end</strong> is it merged into <code>context/</code>. Frontmatter (metadata) is enforced at input time by Obsidian Templates, and Git history automatically keeps a record of everything.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 240" role="img" aria-label="Promotion flow: a draft in the personal layer goes up as a Git PR, passes automated verification and AI review, and after human approval is merged into the team shared layer context/. _private is excluded from sync and has no promotion path">
+    <rect class="d-box soft" x="10" y="60" width="102" height="60" rx="9"/><text class="d-label sm" x="61" y="83" text-anchor="middle">members/</text><text class="d-sub" x="61" y="99" text-anchor="middle">personal draft</text><text class="d-sub" x="61" y="112" text-anchor="middle">write freely</text>
+    <line class="d-edge" x1="112" y1="90" x2="122" y2="90"/><polygon class="d-arrow" points="122,85 130,90 122,95"/>
+    <rect class="d-box" x="130" y="60" width="102" height="60" rx="9"/><text class="d-label sm" x="181" y="83" text-anchor="middle">Git PR</text><text class="d-sub" x="181" y="99" text-anchor="middle">asks promotion</text><text class="d-sub" x="181" y="112" text-anchor="middle">Obsidian or Git</text>
+    <line class="d-edge" x1="232" y1="90" x2="242" y2="90"/><polygon class="d-arrow" points="242,85 250,90 242,95"/>
+    <rect class="d-box" x="250" y="60" width="102" height="60" rx="9"/><text class="d-label sm" x="301" y="83" text-anchor="middle">Auto checks</text><text class="d-sub" x="301" y="99" text-anchor="middle">format · links</text><text class="d-sub" x="301" y="112" text-anchor="middle">frontmatter</text>
+    <line class="d-edge" x1="352" y1="90" x2="362" y2="90"/><polygon class="d-arrow" points="362,85 370,90 362,95"/>
+    <rect class="d-box" x="370" y="60" width="102" height="60" rx="9"/><text class="d-label sm" x="421" y="83" text-anchor="middle">AI review</text><text class="d-sub" x="421" y="99" text-anchor="middle">dupes · rules</text><text class="d-sub" x="421" y="112" text-anchor="middle">clash with docs</text>
+    <line class="d-edge" x1="472" y1="90" x2="482" y2="90"/><polygon class="d-arrow" points="482,85 490,90 482,95"/>
+    <rect class="d-box accent" x="490" y="60" width="102" height="60" rx="9"/><text class="d-label sm" x="541" y="83" text-anchor="middle">Human approval</text><text class="d-sub" x="541" y="99" text-anchor="middle">final gate</text><text class="d-sub" x="541" y="112" text-anchor="middle">merge rights</text>
+    <line class="d-edge accent" x1="592" y1="90" x2="602" y2="90"/><polygon class="d-arrow accent" points="602,85 610,90 602,95"/>
+    <rect class="d-box accent" x="610" y="60" width="100" height="60" rx="9"/><text class="d-label sm" x="660" y="83" text-anchor="middle">context/</text><text class="d-sub" x="660" y="99" text-anchor="middle">team shared</text><text class="d-sub" x="660" y="112" text-anchor="middle">official layer</text>
+    <text class="d-sub" x="360" y="36" text-anchor="middle">Promotion flow from personal to team knowledge — machines and AI verify, humans are accountable</text>
+    <rect class="d-box" x="10" y="160" width="102" height="44" rx="9" stroke-dasharray="5 4"/><text class="d-label sm" x="61" y="179" text-anchor="middle">_private/</text><text class="d-sub" x="61" y="195" text-anchor="middle">not synced</text>
+    <line class="d-edge dash" x1="112" y1="182" x2="180" y2="182"/>
+    <text class="d-sub" x="250" y="186">No promotion path — never meant to be shared</text>
+    <text class="d-sub" x="360" y="228" text-anchor="middle">agents/ (skills, agent settings) is promoted personal &#8594; team the same way · AGENTS.md = the team's official system prompt</text>
+</svg>
+<div class="d-cap">It is not only knowledge — <strong>skills pass through the same gate</strong>, the path by which a good personal skill becomes a team asset.</div>
+</div>
+
+<p>The talk listed four effects. (1) Instead of background explanations, <strong>a single note link</strong> conveys the context; (2) you stop pouring the same explanation into agents over and over, which <strong>saves tokens</strong>; (3) personal skills and prompts ride the promotion flow and <strong>spread across the whole team</strong>; and (4) because the official context is a single repository, <strong>the &ldquo;final_really_final&rdquo; copy problem disappears structurally</strong>. Tacit knowledge such as the background to a decision also accumulates in PR descriptions and notes.</p>
+
+<h3>⑤ The wall of scale — markdown explosion and OpenViking</h3>
+<p>Once operations settled in, a different problem arrived. As notes grew into the thousands, the <strong>index files swelled to 20&ndash;30 files of 1,000&ndash;3,000 lines each</strong>, and an agent reading nothing but the indexes to get its bearings already burned a sizable share of the context — the tokens saved by compiling at write time were being eaten back by the <strong>cost of finding things</strong>. The solution the presenter's team adopted is <strong>OpenViking</strong>, released by ByteDance: a &ldquo;context database&rdquo; that unifies an agent's memory, knowledge (RAG), and skills into <strong>a single filesystem paradigm</strong>, in which every piece of knowledge has a <code>viking://</code> path. The key is <strong>layered loading</strong> — every node carries three levels of summary, <strong>L0 (one-line summary), L1 (overview), and L2 (full text)</strong>, and the agent skims everything cheaply with L0, plans using the L1 of the candidates, and only pulls down L2 <strong>for the documents it really needs</strong>. Recursive directory-level search (narrowing the location with a folder's L0 and L1, then drilling down into it) replaces the giant indexes.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="OpenViking layered loading: an agent skims the whole viking:// tree with L0 one-line summaries, plans with the L1 overviews of candidate folders, and loads only the documents it needs as L2 full text">
+    <rect class="d-box soft" x="16" y="20" width="180" height="44" rx="9"/><text class="d-label sm" x="106" y="39" text-anchor="middle">viking://context/</text><text class="d-sub" x="106" y="55" text-anchor="middle">knowledge tree root</text>
+    <line class="d-edge" x1="60" y1="64" x2="60" y2="240"/>
+    <line class="d-edge" x1="60" y1="96" x2="84" y2="96"/><rect class="d-box soft" x="88" y="80" width="130" height="32" rx="7"/><text class="d-label sm" x="153" y="100" text-anchor="middle">resources/</text>
+    <line class="d-edge" x1="60" y1="144" x2="84" y2="144"/><rect class="d-box soft" x="88" y="128" width="130" height="32" rx="7"/><text class="d-label sm" x="153" y="148" text-anchor="middle">evidence/</text>
+    <line class="d-edge" x1="60" y1="192" x2="84" y2="192"/><rect class="d-box soft" x="88" y="176" width="130" height="32" rx="7"/><text class="d-label sm" x="153" y="196" text-anchor="middle">skills/</text>
+    <line class="d-edge" x1="60" y1="240" x2="84" y2="240"/><rect class="d-box soft" x="88" y="224" width="130" height="32" rx="7"/><text class="d-label sm" x="153" y="244" text-anchor="middle">memory/</text>
+    <text class="d-sub" x="117" y="284" text-anchor="middle">memory, knowledge, skills in one tree</text>
+
+    <rect class="d-box" x="300" y="20" width="150" height="44" rx="9"/><text class="d-label sm" x="375" y="39" text-anchor="middle">Agent query</text><text class="d-sub" x="375" y="55" text-anchor="middle">what do I need?</text>
+    <line class="d-edge accent" x1="375" y1="64" x2="375" y2="86"/><polygon class="d-arrow accent" points="371,88 375,96 379,88"/>
+    <rect class="d-box accent" x="280" y="96" width="190" height="48" rx="9"/><text class="d-label sm" x="375" y="117" text-anchor="middle">L0 — one-line summary</text><text class="d-sub" x="375" y="133" text-anchor="middle">skim every node cheaply</text>
+    <line class="d-edge accent" x1="375" y1="144" x2="375" y2="166"/><polygon class="d-arrow accent" points="371,168 375,176 379,168"/>
+    <rect class="d-box accent" x="280" y="176" width="190" height="48" rx="9"/><text class="d-label sm" x="375" y="197" text-anchor="middle">L1 — overview</text><text class="d-sub" x="375" y="213" text-anchor="middle">plan from candidate folders</text>
+    <line class="d-edge accent" x1="375" y1="224" x2="375" y2="246"/><polygon class="d-arrow accent" points="371,248 375,256 379,248"/>
+    <rect class="d-box" x="280" y="256" width="190" height="36" rx="9"/><text class="d-label sm" x="375" y="279" text-anchor="middle">L2 — full text, as needed</text>
+
+    <line class="d-edge dash" x1="218" y1="112" x2="278" y2="112"/>
+    <text class="d-sub" x="595" y="120" text-anchor="middle">narrow down with folder summaries</text>
+    <text class="d-sub" x="595" y="138" text-anchor="middle">then drill down recursively</text>
+    <text class="d-sub" x="595" y="200" text-anchor="middle">token cost rises as you go down</text>
+    <text class="d-sub" x="595" y="218" text-anchor="middle">&#8594; no giant index files needed</text>
+    <text class="d-sub" x="595" y="279" text-anchor="middle">self-evolving: use refines summaries</text>
+</svg>
+<div class="d-cap">Do not read it all — climb down <strong>the ladder of summaries</strong>: progressive L0 &#8594; L1 &#8594; L2 loading replaces the index explosion.</div>
+</div>
+
+<p>The talk also introduced a mapping of existing folders onto OpenViking's types — reference material to <code>resources</code>, the rationale behind decisions and meeting notes to <code>evidence</code>, agent skills to <code>skills</code>, conversation and work memory to <code>memory</code>, with anything not yet classified left as unindexed and folded in gradually. Another reason cited for adopting it was <strong>observability</strong>: you can see which paths search and loading read, and how much of them.</p>
+
+<h3>⑥ Governance — what humans hold on to, what is handed to agents</h3>
+<p>&ldquo;Agents manage the wiki&rdquo; does not mean &ldquo;hand them everything.&rdquo; The presenter's team's principle is an inverted whitelist: <strong>agents by default, with humans specifying the exceptions</strong>:</p>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>Who</th><th>Responsible for</th><th>Why</th></tr></thead>
+    <tbody>
+        <tr><td rowspan="3"><strong>Humans only</strong></td><td>the <code>_private/</code> area</td><td>There is no sync or promotion path at all — no reason for a machine to reach in</td></tr>
+        <tr><td>Deletion</td><td>Removing knowledge is hard to undo and requires judgment about context</td></tr>
+        <tr><td>Sensitive permissions, final approval</td><td>Responsibility for merges into the shared layer rests with people</td></tr>
+        <tr><td><strong>Agents</strong></td><td>Everything else</td><td>Machines are more diligent at repetitive work — organizing, consolidating, linking, summarizing, reviewing</td></tr>
+    </tbody>
+</table></div>
+<p>Three mechanisms hold this up — frontmatter is <strong>enforced at input time by Obsidian Templates</strong>, which cuts down after-the-fact corrections; <strong>Git history</strong> keeps a complete record of who (human or agent) changed what and when; and the <strong>human approval gate</strong> in the promotion flow guards the quality floor of the shared layer. It is the same philosophy as the &ldquo;leave the development flow alone, let AI turn it into knowledge&rdquo; stance taken by this wiki's <a href="/p/en/dzp-core/">Douzone knowledge platform proposal</a>.</p>
+
+<h3>⑦ The tool ecosystem — agents have started handling Obsidian</h3>
+<p>The last signal the talk pointed to is on the tooling side. Obsidian CEO Steph Ango (kepano) has released <strong>obsidian-skills</strong>, <strong>five SKILL.md files in the Agent Skills format</strong> that teach coding agents like Claude Code to correctly read and write Obsidian's file formats (wikilinks and callouts in .md, .base databases, .canvas canvases). Obsidian has also started shipping a CLI, which means the arrangement described in this article — &ldquo;humans through the Obsidian UI, agents through files, the CLI, and skills&rdquo; on the same vault — is now <strong>backed by official tooling</strong>. For teams that, like Knowledge Context, have chosen markdown + Git, it means the agent-side door is being standardized.</p>
+
+<h3>In summary — in three sentences</h3>
+<ul>
+    <li>Move organizing knowledge <strong>from query time (RAG) to write time (wiki compilation)</strong> and you get a single context that the team and the agents both read.</li>
+    <li>At team scale, structure is governance — <strong>separating the personal, shared, and private layers plus a promotion PR flow</strong> is what creates quality and accountability.</li>
+    <li>As knowledge grows, the cost of finding becomes the bottleneck — <strong>layered summaries (L0, L1, L2) and recursive drill-down</strong> are the next step beyond giant indexes.</li>
+</ul>
+
+<h3>Sources</h3>
+<p class="scn-sub"><strong>Original sources checked</strong></p>
+<ul>
+    <li>Andrej Karpathy, the &ldquo;LLM Wiki&rdquo; proposal gist — <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noopener">gist.github.com/karpathy</a> — the original text on the three-layer structure, index.md, log.md, and the compiler analogy.</li>
+    <li>OpenViking (released by ByteDance's volcengine) — <a href="https://github.com/volcengine/OpenViking" target="_blank" rel="noopener">github.com/volcengine/OpenViking</a> · docs at <a href="https://docs.openviking.ai" target="_blank" rel="noopener">docs.openviking.ai</a> — &ldquo;Self-evolving Context Database for AI Agents&rdquo;, viking:// paths, L0/L1/L2 layered loading, recursive directory search.</li>
+    <li>Steph Ango (kepano), obsidian-skills — <a href="https://github.com/kepano/obsidian-skills" target="_blank" rel="noopener">github.com/kepano/obsidian-skills</a> — five SKILL.md files for .md/.base/.canvas, in the Agent Skills format.</li>
+    <li>Obsidian — <a href="https://obsidian.md" target="_blank" rel="noopener">obsidian.md</a></li>
+</ul>
+<p class="scn-sub"><strong>Related documents in this wiki</strong> — <a href="/p/en/llmw-overview/">the LLM Wiki course series</a> · <a href="/p/en/sb-level2/">Second Brain Level 2 (LLM Wiki + memory)</a> · <a href="/p/en/dzp-core/">the Douzone knowledge platform proposal</a></p>
+
+<div class="note">
+    <span class="nh">The stance of this document</span>
+    Karpathy's proposal, OpenViking, and obsidian-skills were <strong>confirmed to exist through public repositories and documentation</strong>. The operational experience of &ldquo;Knowledge Context&rdquo; (the folder structure, the explosion to 20&ndash;30 index files, the mapping, and so on), on the other hand, is <strong>the presenter's case report</strong>, so its numbers and effects should be read in that team's context.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">Created</span> 2026-07-10 &middot; <span class="pr-k">Updated</span> 2026-07-10</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/llmw-overview/">LLM Wiki — Overview</a></li><li><a href="/p/en/sb-level2/">Level 2 · Grouping by topic (LLM wiki + memory)</a></li><li><a href="/p/en/dzp-knowledge/">Knowledge Management System — Assessment · Structure · Connection · Tracking · Trust · Lifecycle</a></li><li><a href="/p/en/skl-what/">What Is a Skill</a></li></ul>
+</nav>
+</body>
+</html>

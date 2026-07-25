@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Designing Agents and Skills</title>
+<meta name="description" content="Covers the design principles of agent job descriptions and skill manuals.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/hnp-agents-skills/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hnp-agents-skills/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hnp-agents-skills/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hnp-agents-skills/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Designing Agents and Skills",
+ "description": "Covers the design principles of agent job descriptions and skill manuals.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/hnp-agents-skills/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hnp-agents-skills",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-04T08:51:27+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!hnp-agents-skills");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hnp-agents-skills">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/hnp-agents-skills/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Designing Agents and Skills</h2>
+<p>The harness forms the team automatically, but <strong>if you know the principles you can direct it more precisely</strong>, and you can also <strong>tune the generated team yourself</strong>. There are two key things — <strong>agents</strong> (who) and <strong>skills</strong> (how).</p>
+
+<h3>An agent = a "job description" written in natural language</h3>
+<p>An agent is not code but <strong>writing</strong>. It holds the following four things.</p>
+<ul>
+    <li><strong>Role · principles</strong> — what it is responsible for, the rules it must keep.</li>
+    <li><strong>Input · output</strong> — what it takes in and what it puts out (the protocol).</li>
+    <li><strong>Collaboration</strong> — which agents it exchanges what with.</li>
+    <li><strong>Re-invocation · behavior on errors</strong> — what to do when it gets stuck.</li>
+</ul>
+<pre><code><span class="c"># e.g. sales standard-source analyst (excerpt from an agent definition)</span>
+Role: Analyze the credit and order flow of ERP sales/order, and
+      identify the scope of impact this customization has on standard features.
+Principles: Always put minimizing damage to the standard · upgrade compatibility first.
+Input: client request (CR), standard specification/source references
+Output: impact report (list of affected screens, features, data)
+Collaboration: pass the impact to the designer, request re-investigation when information is lacking
+Errors: if the evidence cannot be found, mark it "needs checking" and do not let it pass</code></pre>
+
+<h3>A skill = a "manual" that holds a repetitive task</h3>
+<p>A skill consists of <code>name + description + procedure · checklist</code>. A well-made skill gets <strong>reused</strong> by several agents.</p>
+<pre><code><span class="c"># e.g. the "regression test checklist" skill</span>
+name: regression-checklist
+description: Check that the standard sales/order features are not broken after the customization is applied
+procedure:
+  1. Check that standard order creation/modification/cancellation works normally
+  2. Check that orders within the normal credit limit range are not blocked
+  3. Check the customization (hold on exceeding the limit) behavior
+  4. Check the notification dispatch and the logs
+  5. Cross-check numerical consistency (order amount · limit)</code></pre>
+
+<div class="note">
+    <span class="nh">The 5 steps of skill design (beginner tip)</span>
+    ① Find a task that repeats often → ② split it so it carries <strong>only one responsibility</strong> → ③ decide the input/output → ④ write down the exception handling → ⑤ connect it to the agent that will use it.
+</div>
+
+<h3>The sales/order team — a data flow example</h3>
+<div class="diagram">
+<svg viewBox="0 0 680 168" role="img" aria-label="Sales/order customization team data flow: CR → analyst → designer → developer → regression QA, reworking back to the developer when QA fails">
+    <rect class="d-box accent" x="6" y="26" width="124" height="56" rx="10"/>
+    <text class="d-label" x="68" y="50" text-anchor="middle">CR input</text>
+    <text class="d-sub" x="68" y="67" text-anchor="middle">Client request</text>
+
+    <rect class="d-box" x="140" y="26" width="124" height="56" rx="10"/>
+    <text class="d-label" x="202" y="50" text-anchor="middle">Analyst</text>
+    <text class="d-sub" x="202" y="67" text-anchor="middle">Impact analysis</text>
+
+    <rect class="d-box" x="274" y="26" width="124" height="56" rx="10"/>
+    <text class="d-label" x="336" y="50" text-anchor="middle">Designer</text>
+    <text class="d-sub" x="336" y="67" text-anchor="middle">Compatible design</text>
+
+    <rect class="d-box" x="408" y="26" width="124" height="56" rx="10"/>
+    <text class="d-label" x="470" y="50" text-anchor="middle">Developer</text>
+    <text class="d-sub" x="470" y="67" text-anchor="middle">Implementation</text>
+
+    <rect class="d-box accent" x="542" y="26" width="124" height="56" rx="10"/>
+    <text class="d-label" x="604" y="50" text-anchor="middle">Regression QA</text>
+    <text class="d-sub" x="604" y="67" text-anchor="middle">Regression check</text>
+
+    <!-- forward arrows -->
+    <line class="d-edge" x1="130" y1="54" x2="138" y2="54"/><polygon class="d-arrow" points="132,49 140,54 132,59"/>
+    <line class="d-edge" x1="264" y1="54" x2="272" y2="54"/><polygon class="d-arrow" points="266,49 274,54 266,59"/>
+    <line class="d-edge" x1="398" y1="54" x2="406" y2="54"/><polygon class="d-arrow" points="400,49 408,54 400,59"/>
+    <line class="d-edge" x1="532" y1="54" x2="540" y2="54"/><polygon class="d-arrow" points="534,49 542,54 534,59"/>
+
+    <!-- feedback loop QA -> developer -->
+    <path class="d-edge accent dash" d="M604 82 V124 H470 V84"/>
+    <polygon class="d-arrow accent" points="465,90 475,90 470,84"/>
+    <text class="d-accent" x="537" y="140" text-anchor="middle" font-size="11">QA fail → rework loop</text>
+</svg>
+<div class="d-cap">Each agent uses its own skills, and when it is blocked at QA it goes back to the developer.</div>
+</div>
+
+<h3>Beginner principles for forming a good team</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Principle</th><th>Why</th><th>ERP example</th></tr></thead>
+        <tbody>
+            <tr><td>Keep roles <strong>narrow</strong></td><td>If one agent does many jobs, quality drops ↓</td><td>Separate "analysis" from "development"</td></tr>
+            <tr><td>Make input/output <strong>clear</strong></td><td>So the next person picks it up right away</td><td>Impact report → design input</td></tr>
+            <tr><td>Keep <strong>QA separate</strong></td><td>If the maker inspects their own work, they miss things</td><td>Regression QA as an independent agent</td></tr>
+            <tr><td><strong>Flag</strong> it and stop when stuck</td><td>So it does not make up what it does not know</td><td>A "needs checking" flag</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">Touching up the generated team</span>
+    If you do not like the agents the harness made, you can just <strong>ask for changes in natural language</strong>. e.g. <code>/harness Modify the QA agent so that it must also verify the standard order cancellation scenario</code>. How solid you make the verification is what decides how much you can trust the result → <a href="/p/en/hnp-verify/">Verification · quality</a>.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · PlugIn · Harness &middot; <span class="pr-k">Created</span> 2026-07-04 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/hns-core/">The Three Core Elements and How They Work</a></li><li><a href="/p/en/hnp-concepts/">Core Concepts Made Easy</a></li><li><a href="/p/en/hnp-first-run/">First Harness Run — Sales/Order Customization</a></li><li><a href="/p/en/hnp-scenarios/">Scenario Board</a></li></ul>
+</nav>
+</body>
+</html>

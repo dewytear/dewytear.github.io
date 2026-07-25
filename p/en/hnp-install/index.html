@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Installation and Setup</title>
+<meta name="description" content="Guides registering the Harness plugin marketplace and the 3-step installation.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/hnp-install/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hnp-install/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hnp-install/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hnp-install/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Installation and Setup",
+ "description": "Guides registering the Harness plugin marketplace and the 3-step installation.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/hnp-install/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hnp-install",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-04T08:51:27+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!hnp-install");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hnp-install">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/hnp-install/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Installation and Setup</h2>
+<p>The harness is distributed in the form of a <strong>Claude Code plugin</strong>. Once you register the marketplace and install it, you can use the <code>/harness</code> command.</p>
+
+<div class="note">
+    <span class="nh">What you need first</span>
+    <strong>Claude Code must be installed</strong> (see <a href="/p/en/install/">Install &amp; Start</a>). In the terminal, move to the project folder you will work in, run <code>claude</code>, and then enter the slash commands below.
+</div>
+
+<h3>Installation in 3 steps</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="Installation flow: add the marketplace → install the plugin → reload and verify">
+    <rect class="d-box" x="10" y="24" width="196" height="48" rx="10"/>
+    <text class="d-label" x="108" y="46" text-anchor="middle">① Add marketplace</text>
+    <text class="d-sub" x="108" y="63" text-anchor="middle">marketplace add</text>
+
+    <rect class="d-box" x="252" y="24" width="196" height="48" rx="10"/>
+    <text class="d-label" x="350" y="46" text-anchor="middle">② Install plugin</text>
+    <text class="d-sub" x="350" y="63" text-anchor="middle">install harness</text>
+
+    <rect class="d-box accent" x="494" y="24" width="196" height="48" rx="10"/>
+    <text class="d-label" x="592" y="46" text-anchor="middle">③ Reload · verify</text>
+    <text class="d-sub" x="592" y="63" text-anchor="middle">/reload → /harness</text>
+
+    <line class="d-edge" x1="208" y1="48" x2="248" y2="48"/>
+    <polygon class="d-arrow" points="244,43 252,48 244,53"/>
+    <line class="d-edge" x1="450" y1="48" x2="490" y2="48"/>
+    <polygon class="d-arrow" points="486,43 494,48 486,53"/>
+</svg>
+</div>
+
+<h3>Method 1 — two command lines (recommended)</h3>
+<pre><code><span class="c"># 1) Add the harness marketplace</span>
+/plugin marketplace add lev-factory/harness
+<span class="c"># 2) Install the harness plugin</span>
+/plugin install harness</code></pre>
+<p>When the install screen appears, install with <strong>User scope</strong> (used across my whole account). If you want to use it only in a specific project, choose project scope.</p>
+
+<h3>Method 2 — from the /plugin screen</h3>
+<ol>
+    <li>Enter <code>/plugin</code> → move to the <strong>Marketplace</strong> tab with the <strong>right arrow key</strong>.</li>
+    <li>Enter <code>lev-factory/harness</code> in <strong>Add Marketplace</strong> → Enter.</li>
+    <li>Select <strong>harness</strong> from the list → Enter on the install screen → install with <strong>User scope</strong>.</li>
+</ol>
+
+<h3>After installing — reload and verify</h3>
+<pre><code><span class="c"># Apply the plugin to the current session</span>
+/reload
+<span class="c"># If the following autocompletes/runs, the install succeeded</span>
+/harness</code></pre>
+<p>If autocomplete pops up when you type <code>/harness</code>, you are ready. Now move on to <a href="/p/en/hnp-first-run/">First harness run</a>.</p>
+
+<div class="note warn">
+    <span class="nh">Caution — check the marketplace address</span>
+    The <code>lev-factory/harness</code> above is <strong>an example value mentioned in the lecture</strong>. For an actual install, check the publisher's <strong>GitHub repository path</strong> and enter that (search term: <strong>"하네스 100"</strong>). If the install does not work, try alternating between <strong>the command approach ↔ the /plugin screen approach</strong>.
+</div>
+
+<div class="note">
+    <span class="nh">Tip for in-house environments</span>
+    In an in-house network or proxy environment, GitHub access may be restricted. If adding the marketplace fails, first check the <strong>network/proxy policy</strong> and <strong>Git access permissions</strong>. The plugin must be <strong>installed separately on each machine</strong> (agent definitions can be shared via Git, but the plugin itself is a personal install).
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · PlugIn · Harness &middot; <span class="pr-k">Created</span> 2026-07-04 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/hns-install/">Installing the Meta-Harness Skill (Hands-on)</a></li><li><a href="/p/en/omc-install/">Installation</a></li><li><a href="/p/en/ccb-plugins/">Plugins · the marketplace</a></li><li><a href="/p/en/hnp-commands/">Commands · Quick Reference</a></li></ul>
+</nav>
+</body>
+</html>

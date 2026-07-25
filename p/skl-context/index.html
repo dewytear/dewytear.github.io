@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>컨텍스트 윈도우와 도구의 문제</title>
+<meta name="description" content="컨텍스트 윈도우 한계와 도구가 컨텍스트를 소모하는 문제를 설명한다.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/skl-context/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/skl-context/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/skl-context/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/skl-context/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "컨텍스트 윈도우와 도구의 문제",
+ "description": "컨텍스트 윈도우 한계와 도구가 컨텍스트를 소모하는 문제를 설명한다.",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/skl-context/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!skl-context",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:20:26+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!skl-context");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!skl-context">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/skl-context/" hreflang="en">English</a>
+</p>
+<article>
+<h2>컨텍스트 윈도우와 도구의 문제</h2>
+<p>스킬의 원리를 이해하려면 <strong>컨텍스트 윈도우</strong>부터 알아야 합니다.</p>
+
+<h3>컨텍스트 윈도우</h3>
+<p>컨텍스트 윈도우는 LLM에 입력되는 <strong>입력의 크기</strong>입니다. (출력이 다시 입력에 들어가며 이어지는 구조라 출력도 포함됩니다.) 여기에는 사용자 질문뿐 아니라 다음이 모두 담깁니다.</p>
+<ul>
+    <li>기본 정보(너는 누구고, 오늘 며칠이고, 무엇을 하고 무엇은 하면 안 되는지)</li>
+    <li>지시문 · 퓨샷 예시 · 출력 형식 · 맥락 · 메모리</li>
+    <li><strong>도구</strong> 정의 · 채팅 기록(길어질수록 계속 추가)</li>
+</ul>
+<p>예전 LLM은 컨텍스트가 2K~8K(GPT-3 약 2K, GPT-4 초기 8K)에 불과했지만, 지금 Claude Code에서 쓰는 모델은 기본 200K, 일부 모델(Sonnet 4.6·Opus 4.6 이후 등)은 <strong>1M(백만) 토큰</strong>까지 받습니다. 하지만 크다고 마냥 좋은 게 아닙니다. <strong>컨텍스트가 차기 시작하면 LLM이 불안</strong>해져, 일을 안 하려 하거나 이상하게 끝내 버립니다.</p>
+
+<div class="note">
+    <span class="nh">clear · compact — 책상 정리</span>
+    Claude Code의 <code>/clear</code>·<code>/compact</code> 는 지금의 컨텍스트를 줄이거나 비워 새 작업을 준비하는 명령입니다. 책상이 어질러진 채 일하는 것과 <strong>싹 정리하고 시작</strong>하는 것의 차이라고 보면 됩니다.
+</div>
+
+<h3>도구가 컨텍스트를 잡아먹는다</h3>
+<p>스킬도 결국 도구의 일종입니다. 그런데 도구 하나를 열어 보면 함수·인자·사용 시점·단위 등이 적힌 <strong>복잡한 JSON 스펙</strong>입니다. 이게 하나하나 꽤 커서, <strong>도구가 몇 개만 넘어가도 컨텍스트가 터지려</strong> 합니다. MCP·커넥터를 여러 개 연결하다 보면 "더 이상 연결할 수 없습니다"가 뜨는 이유가 이것입니다.</p>
+
+<div class="note">
+    <span class="nh">트렁크 비유</span>
+    도구는 자동차 <strong>트렁크</strong>와 같습니다. 크기가 제한적이라 캠핑 도구를 다 넣을 수 없습니다. 선택지는 둘 — 더 큰 트렁크를 사거나, 짐을 최대한 줄이거나. 코딩 에이전트는 후자를 택해 <strong>도구를 여섯 개로 줄이고 실행 환경을 함께 주는</strong> 방식으로 문제를 풀었고, 그 위에서 <strong>스킬</strong>이 등장했습니다.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · Code · Skill &middot; <span class="pr-k">생성일자</span> 2026-07-03 &middot; <span class="pr-k">수정일자</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/skl-progressive/">점진적 로딩 (스킬의 핵심 원리)</a></li><li><a href="/p/skl-wrap/">정리 — 엔지니어링 계층과 Q&amp;A</a></li><li><a href="/p/skl-strengths/">스킬의 특장점</a></li></ul>
+</nav>
+</body>
+</html>

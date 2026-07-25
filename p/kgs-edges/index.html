@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>문서는 어떻게 이어지는가 — 개념 큐레이션과 idf가중치 엣지</title>
+<meta name="description" content="개념 큐레이션과 희소성(idf) 가중 공유 개념 엣지 — 판정 규칙·실제 엣지 해부·경계값 파급과 정직성 원칙">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/kgs-edges/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/kgs-edges/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/kgs-edges/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/kgs-edges/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "문서는 어떻게 이어지는가 — 개념 큐레이션과 idf가중치 엣지",
+ "description": "개념 큐레이션과 희소성(idf) 가중 공유 개념 엣지 — 판정 규칙·실제 엣지 해부·경계값 파급과 정직성 원칙",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/kgs-edges/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!kgs-edges",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-11T19:47:53+09:00",
+ "dateModified": "2026-07-24T22:16:42+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!kgs-edges");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!kgs-edges">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/kgs-edges/" hreflang="en">English</a>
+</p>
+<article>
+<h2>문서는 어떻게 이어지는가 — 개념 큐레이션과 idf가중치 엣지</h2>
+<p>지식그래프의 품질은 결국 <strong>"두 문서가 관련 있다"를 무엇으로 판정하느냐</strong>에 달려 있습니다. 이 위키는 임베딩·통계 추출 같은 블랙박스 대신, <strong>사람이 읽고 남긴 개념(concepts)</strong>을 재료로 <strong>검증 가능한 규칙</strong>으로 엣지를 계산합니다. 이 문서는 그 규칙을 실제 수치와 실제 엣지로 끝까지 해부합니다.</p>
+
+<h3>재료 — 개념은 추출이 아니라 큐레이션</h3>
+<p>모든 문서는 등재될 때 <strong>핵심 개념 5~6개</strong>를 큐레이션받습니다(<a href="/p/kgs-overview/">앞 편</a>의 파이프라인 ③). 여기에 한 가지 원칙이 있습니다: <strong>개념은 본문에 실재하는 것만 적는다</strong>. 연결을 만들고 싶다고 본문에 없는 개념을 넣으면 그래프가 "실제 지식의 지도"이기를 멈추기 때문입니다. 그래서 이 그래프의 엣지는 수가 적은 대신, <strong>하나하나가 근거(공유 개념)를 제시할 수 있습니다</strong>.</p>
+
+<h3>저울 — 희귀한 개념일수록 강한 연결</h3>
+<p>두 문서가 개념을 공유하면 연결 후보가 됩니다. 그런데 모든 개념이 같은 무게일 수는 없습니다. 108편 중 <strong>22편</strong>에 나오는 '스킬'을 공유하는 것은 우연에 가깝지만, 단 <strong>2편</strong>에만 나오는 '벡터검색'을 공유하는 것은 강한 신호입니다. 그래서 개념마다 <strong>희소성 가중치(idf)</strong> — 대략 "전체 문서 수 ÷ 그 개념이 나오는 문서 수"의 로그 — 를 부여합니다:</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 176" role="img" aria-label="idf 저울: 스킬은 21편에 나와 가중치 1.54로 가볍고, 벡터검색은 2편에만 나와 3.89로 무겁다">
+    <rect class="d-box" x="30" y="24" width="300" height="60" rx="10"/>
+    <text class="d-label" x="180" y="49" text-anchor="middle">'스킬' — 21편에 등장</text>
+    <text class="d-sub" x="180" y="70" text-anchor="middle">흔한 개념 → 가중치 log(98/21) ≈ 1.54</text>
+    <rect class="d-box accent" x="390" y="24" width="300" height="60" rx="10"/>
+    <text class="d-label" x="540" y="49" text-anchor="middle">'벡터검색' — 2편에만 등장</text>
+    <text class="d-sub" x="540" y="70" text-anchor="middle">희귀 개념 → 가중치 log(98/2) ≈ 3.89</text>
+    <line class="d-edge" x1="180" y1="84" x2="180" y2="116"/>
+    <line class="d-edge accent" x1="540" y1="84" x2="540" y2="116"/>
+    <text class="d-sub" x="180" y="138" text-anchor="middle">공유해도 약한 연결 신호</text>
+    <text class="d-label" x="540" y="138" text-anchor="middle">공유하면 강한 연결 신호</text>
+    <text class="d-sub" x="360" y="166" text-anchor="middle">같은 "공유 1개"라도 무게가 2.5배 이상 다르다</text>
+</svg>
+<div class="d-cap">희소성 저울 — 흔한 개념의 공유는 가볍게, 희귀한 개념의 공유는 무겁게 칩니다.</div>
+</div>
+
+<h3>실제 엣지 해부 — Welcome ↔ "Claude Code란 무엇인가"</h3>
+<p>실제 그래프의 엣지 하나를 뜯어 보면: <a href="/p/welcome/">Welcome</a>과 <a href="/p/ccb-what/">Claude Code란 무엇인가</a>는 <strong>'Claude Code'(가중치 3.20)와 '터미널'(3.20)</strong> 두 개념을 공유합니다. 점수는 두 가중치의 합 <strong>≈ 6.40</strong> — 후보들 가운데 최상위라 Welcome의 연관 문서 1순위가 됩니다. 문서 하단의 "연관 문서"에서 이 근거 개념이 그대로 칩으로 표시되므로, <strong>왜 이어졌는지</strong>를 언제나 확인할 수 있습니다.</p>
+
+<h3>판정 규칙 — 세 갈래</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 234" role="img" aria-label="엣지 판정: 공유 2개 이상이면 연결, 공유 1개면 그 개념이 3편 이하일 때만 연결, 그 외엔 폴더 보완">
+    <rect class="d-box" x="230" y="14" width="260" height="46" rx="9"/>
+    <text class="d-label" x="360" y="42" text-anchor="middle">두 문서의 공유 개념은?</text>
+    <line class="d-edge" x1="290" y1="60" x2="128" y2="96"/>
+    <line class="d-edge" x1="360" y1="60" x2="360" y2="96"/>
+    <line class="d-edge" x1="430" y1="60" x2="592" y2="96"/>
+    <rect class="d-box accent" x="24" y="100" width="210" height="58" rx="9"/>
+    <text class="d-label" x="129" y="124" text-anchor="middle">2개 이상 공유</text>
+    <text class="d-sub" x="129" y="144" text-anchor="middle">연결 (via:concept)</text>
+    <rect class="d-box accent" x="254" y="100" width="212" height="58" rx="9"/>
+    <text class="d-label" x="360" y="124" text-anchor="middle">1개 공유 + 3편 이하</text>
+    <text class="d-sub" x="360" y="144" text-anchor="middle">희귀 개념만 인정 (concept)</text>
+    <rect class="d-box soft" x="486" y="100" width="210" height="58" rx="9"/>
+    <text class="d-label" x="591" y="124" text-anchor="middle">그 외 (0~1개 공유)</text>
+    <text class="d-sub" x="591" y="144" text-anchor="middle">연결하지 않음</text>
+    <line class="d-edge dash" x1="591" y1="158" x2="591" y2="188"/>
+    <text class="d-sub" x="360" y="208" text-anchor="middle">개념 연결이 2개 미만인 문서는 같은 System 이웃으로 보완 (via:folder) — 모든 문서가 2~4개 연결을 가짐</text>
+</svg>
+<div class="d-cap">판정 플로우 — 우연한 1개 공유는 버리되, 희귀 개념(3편 이하)의 1개 공유는 인정합니다.</div>
+</div>
+
+<ul>
+    <li><strong>공유 2개 이상</strong> → 연결. 서로 다른 개념 두 개가 겹치는 것은 우연이기 어렵습니다.</li>
+    <li><strong>공유 1개 + 그 개념이 3편 이하에만 등장</strong> → 연결. 실례: Welcome ↔ <a href="/p/commands/">일상 사용</a>은 '자연어' 하나만 공유하지만, '자연어'가 워낙 희귀해 인정됩니다. 반대로 '스킬' 하나만 공유한 쌍은 연결되지 않습니다 — 22편이 공유하는 개념 1개는 근거가 못 되기 때문입니다.</li>
+    <li><strong>그 외</strong> → 개념으로는 연결하지 않습니다. 대신 개념 연결이 2개가 안 되는 문서는 <strong>같은 System의 이웃</strong>(예: <a href="/p/ccb-claudemd/">CLAUDE.md 편</a> → 같은 Tutorial의 앞뒤 강의)으로 보완해, <strong>모든 문서가 최소 2~4개의 연결</strong>을 갖게 합니다. 현재 비율은 개념 연결 179개(79%) · 폴더 보완 49개(21%)입니다.</li>
+</ul>
+
+<h3>경계값의 파급 — 왜 함부로 개념을 못 늘리나</h3>
+<p>"3편 이하" 규칙에는 미묘한 파급이 있습니다. 어떤 희귀 개념이 지금 3편에 등장하는데, 새 문서가 그 개념을 하나 더 쓰면 <strong>4편이 되는 순간</strong> 그 개념 하나로 이어져 있던 기존 엣지가 <strong>자격을 잃고 끊어집니다</strong>. 그래서 이 위키의 규칙집(CLAUDE.md)은 "고립을 없애려 본문에 없는 개념을 추가하는 것"을 금지합니다 — 억지 연결 하나가 옆 문서의 진짜 연결을 끊을 수 있기 때문입니다. 연결이 옅은 문서는 결함이 아니라 <strong>검토 신호</strong>로만 다룹니다. 이것이 이 그래프의 <strong>정직성 원칙</strong>입니다: 엣지는 늘 실제 본문에 근거하고, 큐레이션은 그래프를 좋게 보이게 하는 도구가 아닙니다.</p>
+
+<h3>큐레이션으로 잇는 관계 — 방향 있는 타입 엣지</h3>
+<p>지금까지의 엣지(<code>related</code>)는 <strong>기계가 공유 개념으로 자동 계산한 대칭 관계</strong>입니다 — A와 B가 이어지면 방향도 종류도 없이 "서로 관련 있다"일 뿐입니다. 그런데 지식에는 <strong>방향과 종류가 있는 관계</strong>도 있습니다: "이걸 읽으려면 저게 먼저", "이 개념을 저 문서가 구현한다", "이 기사가 저 주장의 근거다". 이런 관계는 개념 공유만으로는 잡히지 않아, 이 위키는 <code>related</code>와 <strong>별개의 컬렉션</strong>으로 <strong>작업자가 큐레이션으로 선언하는 타입 관계(<code>relations</code>)</strong>를 따로 답니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 140" role="img" aria-label="방향 있는 타입 관계: '지식은 어떻게 쌓이는가'가 '문서는 어떻게 이어지는가'의 선행지식(prerequisite)이다">
+    <rect class="d-box accent" x="44" y="40" width="252" height="60" rx="10"/>
+    <text class="d-label" x="170" y="66" text-anchor="middle">지식은 어떻게 쌓이는가</text>
+    <text class="d-sub" x="170" y="86" text-anchor="middle">선행 문서 · kgs-overview</text>
+    <text class="d-label" x="361" y="58" text-anchor="middle">선행지식</text>
+    <line class="d-edge" x1="296" y1="70" x2="416" y2="70"/>
+    <polygon class="d-arrow" points="416,64 426,70 416,76"/>
+    <text class="d-sub" x="361" y="90" text-anchor="middle">prerequisite</text>
+    <rect class="d-box" x="430" y="40" width="248" height="60" rx="10"/>
+    <text class="d-label" x="554" y="66" text-anchor="middle">문서는 어떻게 이어지는가</text>
+    <text class="d-sub" x="554" y="86" text-anchor="middle">이 문서 · kgs-edges</text>
+</svg>
+<div class="d-cap">방향 있는 타입 엣지 — 큐레이션으로 "이 문서를 읽으려면 저 문서가 먼저"라고 선언합니다(역방향은 자동 유도).</div>
+</div>
+
+<p>어휘는 다섯 가지입니다 — <strong>선행지식</strong>(prerequisite)·<strong>구현</strong>(implements)·<strong>사례</strong>(example-of)·<strong>근거</strong>(evidence-for)·<strong>대체</strong>(supersedes). 각 관계는 <strong>방향</strong>(A→대상)과 <strong>한 줄 근거</strong>(어디서 성립하는지)를 함께 답니다. 저장은 정방향 한 번뿐이고, 반대 방향("이 문서로 들어오는 관계")은 전 문서를 훑어 자동으로 유도합니다. 문서 하단의 <strong>"지식 관계"</strong> 블록에서 나가는·들어오는 관계를 타입 뱃지와 함께 볼 수 있습니다.</p>
+<p>선언은 이렇게 생겼습니다 — 실제 데이터에서 한 건을 그대로 가져오면(기사가 지식 문서의 <strong>근거</strong>가 되는 관계):</p>
+
+<pre><code>{ "target": "sb-level4",              // 이 관계가 향하는 문서
+  "type": "evidence-for",             // 관계의 종류: 근거
+  "evidenceRef": "Neo4j 짐 웨버 원문(2024-06-04) 정리 —
+                  sb-level4 지식 그래프 접근의 전문가 근거",
+  "source": "human" }                 // 큐레이션 출처 (사람 승인 — 자동 제안 아님)</code></pre>
+
+<p>현재 위키에 선언된 관계는 <strong>110건</strong>이고, 전부 이 형식입니다. 대부분은 강의형 시스템과 AI 2040 뉴스 시리즈의 <strong>읽기 순서 prerequisite 체인</strong>(앞 문서 → 다음 문서)이고, 나머지는 시스템을 가로지르는 implements·example-of·evidence-for·교차 prerequisite입니다. 타입별 실례:</p>
+<ul>
+    <li><strong>선행지식(prerequisite)</strong> — 이 시리즈 자체가 체인입니다: <a href="/p/kgs-overview/">쌓이는가</a> → 이 문서 → <a href="/p/kgs-views/">7가지 눈</a> → <a href="/p/kgs-ai-layer/">AI가 읽는 법</a> → <a href="/p/kgs-plugin/">플러그인화</a>. 각 편이 다음 편의 선행지식으로 선언돼 있어 "무엇을 먼저 읽어야 하는지"를 그래프가 압니다. <a href="/p/welcome/">Welcome</a> → <a href="/p/install/">설치와 시작</a>도 같은 타입.</li>
+    <li><strong>구현(implements)</strong> — <a href="/p/kgs-plugin/">위키 엔진의 플러그인화</a>가 이 시리즈가 설명한 엔진을 <em>구현</em>합니다. 하네스 개념 문서 → 플러그인 아키텍처 문서도 같은 계보. World를 가로지르는 다리도 있습니다 — <a href="/p/dzp-security/">Douzone 지식 플랫폼 제안</a>이 "Reference Wiki(이 위키)"를 복제해 <a href="/p/kgs-overview/">이 등재 파이프라인</a>을 <em>구현</em>하겠다고 선언합니다.</li>
+    <li><strong>사례(example-of)</strong> — <a href="/p/skl-examples/">스킬 예제 모음</a>은 <a href="/p/skl-what/">스킬이란 무엇인가</a>의 "재사용 작업 패키지" 정의의 <em>실사례</em>입니다. <a href="/p/llmw-overview/">LLM Wiki</a>도 <a href="/p/sb-level2/">세컨드 브레인 레벨 2</a>(주제로 묶기)의 구체 사례로 붙습니다.</li>
+    <li><strong>근거(evidence-for)</strong> — 위의 JSON처럼, 외부 원문을 확인한 <a href="/p/news-20260711-neo4j-rdf-vs-property-graph/">기사</a>가 <a href="/p/sb-level4/">Second Brain 4단계</a> 주장의 <em>외부 근거</em>로 붙습니다. <a href="/p/news-20260709-thariq-fable5-unknowns/">타릭의 Fable 필드가이드 정리</a>도 <a href="/p/hns-what/">하네스 엔지니어링</a>의 "모델보다 환경이 결과를 좌우한다"는 주장을 받칩니다 — 기사 4편이 이 타입으로 지식 문서를 받칩니다.</li>
+</ul>
+
+<p>여기에 <strong>세 번째 연결층</strong>이 하나 더 있습니다 — <strong>인용 백링크(<code>citedBy</code>)</strong>. 문서 본문에서 다른 문서로 건 <code>#!</code> 내부 링크를 인덱스 빌드가 <strong>역방향으로 모아</strong>, 인용받은 문서 하단에 &ldquo;이 문서를 인용한 문서&rdquo;로 자동 표시합니다. 개념 공유(<code>related</code>)도 선언(<code>relations</code>)도 아닌, <strong>글을 쓰다 실제로 참조한 흔적</strong>에서 나오는 연결이라 정직성 규칙과 자연히 정합하고 — 많이 인용되는 문서가 허브임이 저절로 드러납니다. 인용자는 지식 인덱스에 든 문서만 세므로 Work Log 같은 저널의 링크는 섞이지 않습니다.</p>
+
+<p>세 레이어는 성격이 다릅니다. <code>related</code>는 <strong>기계·대칭·개념 기반</strong>이라 넓게 깔리고, <code>citedBy</code>는 <strong>기계·방향·본문 링크 기반</strong>이며, <code>relations</code>는 <strong>큐레이션·방향·타입</strong>이라 적지만 의미가 진합니다. 그리고 같은 정직성 원칙을 따릅니다 — <strong>본문에 실재하는 관계만</strong> 답니다. 실제로 "구버전을 남긴 채 신버전이 대체"하는 <code>대체</code>(supersedes) 사례가 현 위키엔 없어(문서를 제자리에서 고치므로), 어휘·검증·UI는 갖추되 그 타입은 <strong>비워 두었습니다</strong> — 관계를 채우려 억지 쌍을 만들지 않습니다. 선언된 관계는 검증기가 지킵니다: 존재하지 않는 대상(<code>relations-dangling-ref</code>)과 5어휘 밖 타입(<code>relations-unknown-type</code>)은 ERROR로 머지가 막히고, 근거 누락과 상충 선언은 WARN으로 검토 신호가 됩니다.</p>
+
+<div class="note">
+    <span class="nh">한눈 요약</span>
+    개념은 <strong>큐레이션</strong>(본문 실재만) → 엣지는 <strong>희소성 가중 공유</strong>(2개↑ 또는 희귀 1개) → 부족하면 <strong>폴더 보완</strong> → 모든 문서 2~4연결·고아 0. 그 위에 본문 <code>#!</code> 링크의 역인덱스인 <strong>인용 백링크(<code>citedBy</code>)</strong>와, 큐레이션으로 선언하는 <strong>방향 있는 타입 관계(<code>relations</code>)</strong>를 별도로 얹습니다. 많이 참조되는 문서가 <strong>허브</strong>가 되어 그래프의 중심을 이룹니다(<a href="/p/kgs-views/">다음 편</a>).
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">생성일자</span> 2026-07-11 &middot; <span class="pr-k">수정일자</span> 2026-07-24</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/kgs-overview/">지식은 어떻게 쌓이는가</a></li><li><a href="/p/kgs-views/">그래프를 읽는 9가지 눈</a></li></ul>
+</nav>
+</body>
+</html>

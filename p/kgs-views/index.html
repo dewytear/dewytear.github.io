@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>그래프를 읽는 9가지 눈 — 뷰마다 다른 질문에 답한다</title>
+<meta name="description" content="성좌·궤도계·스트라타(3D)·번들링·코드·패킹·개념·아크·매트릭스 — 뷰마다 답하는 질문과 허브·브리지로 그래프 중심을 읽는 법">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/kgs-views/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/kgs-views/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/kgs-views/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/kgs-views/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "그래프를 읽는 9가지 눈 — 뷰마다 다른 질문에 답한다",
+ "description": "성좌·궤도계·스트라타(3D)·번들링·코드·패킹·개념·아크·매트릭스 — 뷰마다 답하는 질문과 허브·브리지로 그래프 중심을 읽는 법",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/kgs-views/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!kgs-views",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-11T19:47:53+09:00",
+ "dateModified": "2026-07-26T00:14:01+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!kgs-views");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!kgs-views">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/kgs-views/" hreflang="en">English</a>
+</p>
+<article>
+<h2>그래프를 읽는 9가지 눈 — 뷰마다 다른 질문에 답한다</h2>
+<p>같은 지식그래프라도 <strong>무엇이 궁금한지</strong>에 따라 맞는 시각화가 다릅니다. <a href="/p/cosmos/">Knowledge Graph</a> 화면의 독은 먼저 <strong>3D · 2D</strong>를 고르고 그 안의 뷰를 고르는 2단이며(기본은 3D), 전부 <strong>9가지 뷰</strong>가 있습니다. 각각은 서로 다른 질문 하나에 답하도록 고른 것입니다. 이 문서는 "이 뷰에서 무엇을 보면 되는지"를 정리합니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="9가지 뷰: Constellation, Orbits, Strata는 윗줄(3D), Bundling, Chord, Packing은 가운뎃줄, Concepts, Arc, Matrix는 아랫줄">
+    <rect class="d-box accent" x="16" y="16" width="220" height="76" rx="10"/>
+    <text class="d-label" x="126" y="46" text-anchor="middle">Constellation</text>
+    <text class="d-sub" x="126" y="66" text-anchor="middle">전체 모양·클러스터</text>
+    <rect class="d-box accent" x="250" y="16" width="220" height="76" rx="10"/>
+    <text class="d-label" x="360" y="46" text-anchor="middle">Orbits</text>
+    <text class="d-sub" x="360" y="66" text-anchor="middle">항성·행성·위성의 계보</text>
+    <rect class="d-box accent" x="484" y="16" width="220" height="76" rx="10"/>
+    <text class="d-label" x="594" y="46" text-anchor="middle">Strata</text>
+    <text class="d-sub" x="594" y="66" text-anchor="middle">4계층을 층으로 관통</text>
+    <rect class="d-box" x="16" y="106" width="220" height="76" rx="10"/>
+    <text class="d-label" x="126" y="136" text-anchor="middle">Bundling</text>
+    <text class="d-sub" x="126" y="156" text-anchor="middle">문서↔문서 연결 다발</text>
+    <rect class="d-box" x="250" y="106" width="220" height="76" rx="10"/>
+    <text class="d-label" x="360" y="136" text-anchor="middle">Chord</text>
+    <text class="d-sub" x="360" y="156" text-anchor="middle">System 간 결합 강도</text>
+    <rect class="d-box" x="484" y="106" width="220" height="76" rx="10"/>
+    <text class="d-label" x="594" y="136" text-anchor="middle">Packing</text>
+    <text class="d-sub" x="594" y="156" text-anchor="middle">규모·부피 비교</text>
+    <rect class="d-box" x="16" y="196" width="220" height="76" rx="10"/>
+    <text class="d-label" x="126" y="226" text-anchor="middle">Concepts</text>
+    <text class="d-sub" x="126" y="246" text-anchor="middle">개념 동시출현 지도</text>
+    <rect class="d-box" x="250" y="196" width="220" height="76" rx="10"/>
+    <text class="d-label" x="360" y="226" text-anchor="middle">Arc</text>
+    <text class="d-sub" x="360" y="246" text-anchor="middle">가까운/먼 연결 구분</text>
+    <rect class="d-box" x="484" y="196" width="220" height="76" rx="10"/>
+    <text class="d-label" x="594" y="226" text-anchor="middle">Matrix</text>
+    <text class="d-sub" x="594" y="246" text-anchor="middle">블록(밀집/공백) 구조</text>
+    <text class="d-sub" x="360" y="290" text-anchor="middle">윗줄 셋이 3D 그룹, 아래 여섯이 2D 그룹 — 데이터는 하나입니다</text>
+</svg>
+<div class="d-cap">9가지 눈 — 모두 같은 인덱스에서 그려지므로, 어느 뷰든 데이터는 하나입니다.</div>
+</div>
+</div>
+
+<h3>뷰별 "이 질문에 이 뷰"</h3>
+<div class="tbl-wrap"><table>
+<thead><tr><th>뷰</th><th>답하는 질문</th><th>읽는 법</th></tr></thead>
+<tbody>
+<tr><td><strong>Constellation</strong> (성좌 · 3D)</td><td>지식 전체가 어떤 모양인가?</td><td>둥근 공 위에서 <strong>색 = World/System</strong>. 같은 색 패치가 한 주제 클러스터이고, 패치를 가로지르는 선이 주제 간 다리입니다. 설정에서 둥글기(0~100)를 조절할 수 있습니다.</td></tr>
+<tr><td><strong>Orbits</strong> (궤도계 · 3D)</td><td>한 System에 어떤 문서들이 매여 있나?</td><td>World가 <strong>항성</strong>, System이 그 둘레를 도는 <strong>행성</strong>, 문서가 행성을 도는 <strong>위성</strong>입니다. 궤도면이 서로 기울어 있어 소속이 한눈에 갈리고, 실제로 공전하므로 정지 화면보다 계보가 잘 읽힙니다. 문서를 누르면 그 문서의 <strong>이웃만 남기고</strong> 카드가 열립니다.</td></tr>
+<tr><td><strong>Strata</strong> (스트라타 · 3D)</td><td>4계층이 실제로 어떻게 이어지나?</td><td>World → Domain → System → Document를 <strong>네 장의 유리판</strong>으로 쌓고 계보선을 위아래로 관통시킵니다. 이 위키의 계층 모델 자체를 눈으로 확인하는 뷰이고, 맨 아래 문서층에는 개념 엣지가 낮은 호로 깔립니다.</td></tr>
+<tr><td><strong>Bundling</strong></td><td>어떤 문서들이 서로 당기나?</td><td>원 둘레에 문서가 System 순서로 놓이고, 개념 연결이 중심으로 휘어 다발을 이룹니다. <strong>굵은 다발 = 강하게 얽힌 주제 쌍</strong>.</td></tr>
+<tr><td><strong>Chord</strong></td><td>System끼리 얼마나 결합돼 있나?</td><td>호의 길이 = 그 System의 대외 연결량, 리본 굵기 = 두 System 사이의 연결 수. <strong>가장 굵은 리본</strong>이 지식의 실질적 이웃 관계입니다.</td></tr>
+<tr><td><strong>Packing</strong></td><td>어디에 지식이 많이 쌓였나?</td><td>World 원 안에 System 원, 그 안에 문서 점. <strong>원의 크기 = 문서 수</strong> — 성장 편차가 한눈에 보입니다.</td></tr>
+<tr><td><strong>Concepts</strong></td><td>개념들은 서로 어떻게 붙어 다니나?</td><td>노드가 문서가 아니라 <strong>개념</strong>인 유일한 뷰. 함께 등장하는 개념끼리 이어져, 어휘 수준의 지식 지형(예: '스킬' 주변에 무엇이 모이나)을 보여 줍니다.</td></tr>
+<tr><td><strong>Arc</strong></td><td>연결이 이웃 안인가, 멀리 가나?</td><td>문서를 한 줄로 놓고 연결을 호로 그립니다. <strong>낮은 호 = 같은 주제 안</strong>, <strong>높은 호 = 주제를 건너뛰는 다리</strong>.</td></tr>
+<tr><td><strong>Matrix</strong></td><td>어느 블록이 밀집이고 어디가 공백인가?</td><td>문서×문서 격자에 연결을 점으로. System 순서로 정렬돼 <strong>대각 블록 = 내부 결속</strong>, <strong>블록 밖 점 = 교차 연결</strong>, 빈 영역 = 아직 잇지 않은 지식.</td></tr>
+</tbody>
+</table></div>
+
+<h3>허브와 브리지 — 그래프의 중심을 찾는 법</h3>
+<p>뷰가 무엇이든, 분석의 진입점은 두 가지입니다:</p>
+<ul>
+    <li><strong>허브(hub)</strong> — 다른 문서들이 가장 많이 참조하는 문서. 현재 1위는 <a href="/p/hns-anatomy/">하네스의 구성과 효과</a>(피참조 11회)이고, <a href="/p/llmw-overview/">LLM Wiki 개요</a>·<a href="/p/llmw-vaults/">볼트 체계</a>가 각 8회로 뒤를 잇습니다. 어떤 주제를 처음 파악할 때는 그 클러스터의 허브부터 읽는 것이 가장 빠릅니다.</li>
+    <li><strong>브리지(bridge)</strong> — 여러 System에 걸쳐 등장하는 개념. '스킬'은 <strong>7개 System</strong>에 걸쳐 있는 최대 브리지이고, '슬래시명령어'·'서브에이전트'가 각 5개 System을 잇습니다. 브리지 개념을 따라가면 <strong>주제와 주제가 실제로 만나는 지점</strong>이 드러납니다.</li>
+</ul>
+<p>허브·브리지·System별 집계는 <a href="/p/ai-map/">지식지도</a>가 표로 보여 주며, 문서가 추가될 때마다 라이브로 다시 계산됩니다. 요컨대 — <strong>지식지도는 "요약된 표", 7가지 뷰는 "같은 데이터의 시각화"</strong>이고, 이 문서 시리즈는 그 데이터가 만들어지는 원리(<a href="/p/kgs-edges/">앞 편</a>)와 소비되는 방식(<a href="/p/kgs-ai-layer/">다음 편</a>)을 설명합니다.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">생성일자</span> 2026-07-11 &middot; <span class="pr-k">수정일자</span> 2026-07-26</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/kgs-edges/">문서는 어떻게 이어지는가</a></li><li><a href="/p/kgs-overview/">지식은 어떻게 쌓이는가</a></li><li><a href="/p/kgs-ai-layer/">AI가 이 위키를 읽는 법</a></li></ul>
+</nav>
+</body>
+</html>

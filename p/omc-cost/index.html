@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>비용 · 성능</title>
+<meta name="description" content="병렬·자율 실행이 속도와 토큰 비용에 미치는 영향과 균형을 설명한다.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/omc-cost/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/omc-cost/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/omc-cost/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/omc-cost/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "비용 · 성능",
+ "description": "병렬·자율 실행이 속도와 토큰 비용에 미치는 영향과 균형을 설명한다.",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/omc-cost/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!omc-cost",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T12:15:44+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!omc-cost");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!omc-cost">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/omc-cost/" hreflang="en">English</a>
+</p>
+<article>
+<h2>비용 · 성능</h2>
+<p>OMC의 핵심은 작업을 여러 에이전트로 나눠 동시에 처리하는 것입니다. 그래서 전체 작업 시간은 줄일 수 있지만, 동시에 여러 작업자가 돌면 그만큼 AI 사용량(토큰)이 늘어 비용은 커질 수 있습니다. <strong>속도와 비용은 함께 움직인다</strong>고 이해하면 됩니다.</p>
+
+<h3>왜 비용이 달라지나</h3>
+<p>OMC의 비용은 고정값이 아니라 작업 방식에 따라 크게 달라집니다. 아래 요인들이 비용을 좌우합니다.</p>
+<ul>
+    <li><strong>병렬화 가능 여부</strong> — 작업을 여러 개로 쪼갤 수 있으면 빨라지지만, 동시에 여러 작업자가 돌기 때문에 같은 시간에 쓰는 토큰이 늘어납니다.</li>
+    <li><strong>재시도 횟수</strong> — 검증에 실패하면 에이전트가 다시 시도합니다. 재시도가 많을수록 그만큼 토큰을 추가로 소모합니다.</li>
+    <li><strong>모델 단가와 문맥 크기</strong> — 더 큰 모델을 쓰거나 한 번에 다루는 문맥(코드·문서)이 길수록, 호출 1회당 드는 비용이 올라갑니다.</li>
+    <li><strong>빌드·테스트 실패</strong> — 빌드나 테스트가 자주 실패하면 고치기 위한 재작업이 반복되고, 반복되는 만큼 토큰이 더 쓰입니다.</li>
+    <li><strong>외부 CLI 워커 사용</strong> — Codex, Gemini 같은 외부 모델을 함께 부르는 모드(CCG 등)는 모델 호출 자체가 늘어 비용이 추가됩니다.</li>
+    <li><strong>작업 규모</strong> — 큰 작업을 자율 모드로 끝까지 돌리면 누적 사용량이 커집니다. 작은 수정 작업과는 비용 차이가 큽니다.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">한 줄 정리</span>
+    빠르다고 해서 항상 저렴한 것은 아닙니다. 작은 작업은 일반 대화로 가볍게 처리하고, 병렬·자율 모드는 그만한 가치가 있는 큰 작업에만 쓰는 식으로 조절하면 속도와 비용의 균형을 맞출 수 있습니다.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · PlugIn · OMC &middot; <span class="pr-k">생성일자</span> 2026-07-03 &middot; <span class="pr-k">수정일자</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/omc-quickref/">빠른 참조 카드</a></li><li><a href="/p/sne-scope/">발송엔진 구현 요청 사항</a></li></ul>
+</nav>
+</body>
+</html>

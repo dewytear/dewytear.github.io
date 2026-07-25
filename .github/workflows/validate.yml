@@ -23,6 +23,9 @@ jobs:
       # AI 소비 계층(llms.txt·data/knowledge-graph.json·sitemap.xml)이 인덱스와
       # 어긋나면 실패 — 문서 추가/수정 후 build_ai_export.py 재실행을 강제 (stateless)
       - run: python tools/build_ai_export.py --check
+      # 프리렌더 스냅샷(/p/<name>/·404.html)도 같은 원칙 — 문서를 고치고
+      # 재생성하지 않으면 실패(옛 스냅샷 잔존 stale까지 검사)
+      - run: python tools/build_prerender.py --check
       # 동봉 플러그인 tools 스냅샷이 source of truth(tools/)와 어긋나면 실패
       # (push·PR 양쪽 — stateless 정합 검사라 base diff 불필요)
       - if: github.event_name != 'pull_request'

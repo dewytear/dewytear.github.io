@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not Found</title>
+<script>
+// /p/<name>/ (or /p/en/<name>/) -> the SPA route for that document;
+// anything else -> the wiki home.
+var m = location.pathname.match(/\/p\/(?:[a-z]{2}\/)?([A-Za-z0-9._-]+)\/?$/);
+location.replace(m ? "/#!" + m[1] : "/");
+</script>
+</head>
+<body>
+<p><a href="/">Aaron's Claude Wiki</a></p>
+</body>
+</html>

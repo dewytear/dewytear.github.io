@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Packaging the Wiki Engine as a Plugin — wiki-plugin and Sync Discipline</title>
+<meta name="description" content="Packaging the knowledge system as wiki-plugin — four skills, a tool snapshot, the sync gate, version discipline, and dogfooding">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/kgs-plugin/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/kgs-plugin/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/kgs-plugin/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/kgs-plugin/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Packaging the Wiki Engine as a Plugin — wiki-plugin and Sync Discipline",
+ "description": "Packaging the knowledge system as wiki-plugin — four skills, a tool snapshot, the sync gate, version discipline, and dogfooding",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/kgs-plugin/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!kgs-plugin",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-11T19:47:53+09:00",
+ "dateModified": "2026-07-11T23:17:32+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!kgs-plugin");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!kgs-plugin">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/kgs-plugin/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Packaging the Wiki Engine as a Plugin — wiki-plugin and Sync Discipline</h2>
+<p>This knowledge system is not exclusive to this site. The structure, the pipeline, and the validation gates are packaged as a <strong>Claude Code plugin (wiki-plugin)</strong>, so that <strong>any repository can bootstrap the same knowledge system</strong>. This document explains what was made into a plugin and why, and what discipline is in place so that the original and the copy never drift apart.</p>
+
+<h3>Why — Separating Engine from Content</h3>
+<p>This wiki is made of two layers: the <strong>engine</strong> (the four-level structure, the registration pipeline, the index builder, the validation gates, the viewer) and the <strong>content</strong> (the documents, the curated concepts, the cluster names). Every principle the previous four parts described is a property of the engine, so it is <strong>reusable</strong> — install this engine when you start knowledge management for a new project, and the same knowledge graph grows from the moment you drop in a document. Content, by contrast (this site's <code>doc-entries</code> and cluster labels), is a site-specific asset and is therefore <strong>excluded from the bundle</strong>.</p>
+
+<h3>Composition — Four Skills plus a Tool Snapshot</h3>
+<p>The plugin installs from the marketplace in two lines (<code>/plugin marketplace add</code> → <code>/plugin install</code>). Once installed, the four phases of running a wiki arrive as <strong>skills</strong>:</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Skill</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>wiki-init</code></td><td>Bootstraps a new wiki project — structure, nav tree, index pipeline, validation gates, and CI, all at once.</td></tr>
+<tr><td><code>add-doc</code></td><td>Enforces the whole workflow for adding a document — file → tree registration → curation → index → Work Log → validation.</td></tr>
+<tr><td><code>index</code></td><td>Regenerates the knowledge index, document dates, and the AI consumption layer, in compliance with the schema contract.</td></tr>
+<tr><td><code>validate</code></td><td>Runs the quality validators in one batch and interprets ERROR/WARN — down to "what is a defect and what is a review signal."</td></tr>
+</tbody>
+</table></div>
+<p>Along with the skills, a <strong>snapshot of the operational tools</strong> — the index builder, the validators, and so on — is enclosed. If the project has its own <code>tools/</code>, that one takes precedence (the dogfooding path); if not, the copy bundled with the plugin is used. The SPA viewer (the screens) needs no separate bundle: because adding the marketplace clones the entire repository, the latest real thing is always present locally.</p>
+
+<h3>Discipline — a Snapshot Must Match the Original</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 168" role="img" aria-label="Sync discipline: the original tools directory is the source of truth, the plugin bundle is a snapshot, and the CI gate blocks drift and forces a version bump">
+    <rect class="d-box accent" x="20" y="30" width="230" height="62" rx="10"/>
+    <text class="d-label" x="135" y="56" text-anchor="middle">Original tools/</text>
+    <text class="d-sub" x="135" y="76" text-anchor="middle">source of truth</text>
+    <line class="d-edge" x1="250" y1="61" x2="296" y2="61"/>
+    <polygon class="d-arrow" points="296,56 304,61 296,66"/>
+    <text class="d-sub" x="276" y="46" text-anchor="middle">copy</text>
+    <rect class="d-box" x="306" y="30" width="230" height="62" rx="10"/>
+    <text class="d-label" x="421" y="56" text-anchor="middle">Plugin bundle tools/</text>
+    <text class="d-sub" x="421" y="76" text-anchor="middle">snapshot at that version</text>
+    <line class="d-edge dash" x1="536" y1="61" x2="582" y2="61"/>
+    <polygon class="d-arrow" points="582,56 590,61 582,66"/>
+    <rect class="d-box soft" x="592" y="18" width="116" height="88" rx="10"/>
+    <text class="d-label" x="650" y="48" text-anchor="middle">CI gate</text>
+    <text class="d-sub" x="650" y="68" text-anchor="middle">fail on mismatch</text>
+    <text class="d-sub" x="650" y="86" text-anchor="middle">must bump version</text>
+    <text class="d-sub" x="364" y="140" text-anchor="middle">Edit the original and the same PR must resync the copy and bump the plugin version (now 0.4.0) — or no merge</text>
+</svg>
+<div class="d-cap">Sync discipline — CI, not human memory, guarantees that original and copy match.</div>
+</div>
+
+<p>The weakness of the snapshot approach is <strong>drift</strong> (fixing only the original and forgetting the copy). So a dedicated gate <strong>compares the original <code>tools/</code> with the bundle byte for byte</strong> and fails CI if they differ. On top of that, a PR that changes the bundle passes only if it comes with a <strong>plugin version bump</strong> — a release discipline that lets installers track "when what changed" by version. The gate itself and the site-specific data (cluster labels, curation entries) are on the bundle exclusion list.</p>
+
+<h3>Dogfooding — the First User Is This Wiki Itself</h3>
+<p>This wiki is wiki-plugin's <strong>first user and reference implementation</strong>. The daily operation of this site — adding documents, regenerating the index, validating — is itself the plugin's integration test, and gaps found in operation (a missing guide, a hole in a gate) feed back as plugin improvements. Every principle from the previous four parts — <a href="/p/en/kgs-overview/">how knowledge accumulates</a>, <a href="/p/en/kgs-edges/">the rules that connect it</a>, <a href="/p/en/kgs-views/">the views that read it</a>, <a href="/p/en/kgs-ai-layer/">AI consumption</a> — lives inside this plugin, so this series doubles as a design commentary on wiki-plugin.</p>
+
+<div class="note">
+    <span class="nh">Installation</span>
+    <code>/plugin marketplace add dewytear/dewytear.github.io</code> → <code>/plugin install wiki-plugin@dewytear-wiki</code>. Skill details and the sync policy are in <code>plugins/wiki-plugin/README.md</code> in the repository. The gates and automation that keep this sync from drifting are covered in <a href="/p/en/kgs-gates/">the next part</a>.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">Created</span> 2026-07-11 &middot; <span class="pr-k">Updated</span> 2026-07-11</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/ccb-plugins/">Plugins · the marketplace</a></li><li><a href="/p/en/omc-install/">Installation</a></li><li><a href="/p/en/hns-install/">Installing the Meta-Harness Skill (Hands-on)</a></li><li><a href="/p/en/ccb-overview/">Course Overview and Goals</a></li></ul>
+</nav>
+</body>
+</html>

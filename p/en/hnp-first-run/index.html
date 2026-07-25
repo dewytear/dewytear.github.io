@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>First Harness Run — Sales/Order Customization</title>
+<meta name="description" content="A hands-on run of the harness, giving an ERP sales/order CR as an intent.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/hnp-first-run/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hnp-first-run/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hnp-first-run/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hnp-first-run/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "First Harness Run — Sales/Order Customization",
+ "description": "A hands-on run of the harness, giving an ERP sales/order CR as an intent.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/hnp-first-run/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hnp-first-run",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-04T08:51:27+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!hnp-first-run");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hnp-first-run">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/hnp-first-run/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>First Harness Run — Sales/Order Customization</h2>
+<p>Let us actually run it once. The example is a situation where a client request (CR) is reflected into the <strong>ERP sales/order module</strong>. There is exactly one key point — <strong>you give an "intent", not a "command"</strong>.</p>
+
+<div class="note">
+    <span class="nh">Today's example (CR)</span>
+    Client request: <strong>"Automatically put orders that exceed the credit limit for the account's credit grade on hold, and send a notification to the sales rep."</strong> Because it is a customization that touches the standard package, <strong>impact analysis and regression tests</strong> are essential.
+</div>
+
+<h3>The run lifecycle — what happens in order</h3>
+<div class="diagram">
+<svg viewBox="0 0 620 330" role="img" aria-label="Harness run lifecycle: enter the intent → domain analysis → team proposal → approval with go ahead → parallel execution → verified deliverables">
+    <rect class="d-box accent" x="150" y="8" width="320" height="40" rx="9"/>
+    <text class="d-label" x="310" y="26" text-anchor="middle">① Enter your intent with /harness</text>
+    <text class="d-sub" x="310" y="41" text-anchor="middle">"we would like to customize ~"</text>
+
+    <rect class="d-box" x="150" y="62" width="320" height="40" rx="9"/>
+    <text class="d-label" x="310" y="80" text-anchor="middle">② Domain analysis</text>
+    <text class="d-sub" x="310" y="95" text-anchor="middle">Requirements · standard source · impact scope</text>
+
+    <rect class="d-box" x="150" y="116" width="320" height="40" rx="9"/>
+    <text class="d-label" x="310" y="134" text-anchor="middle">③ Agent team proposal</text>
+    <text class="d-sub" x="310" y="149" text-anchor="middle">Analysis · development · regression QA lineup</text>
+
+    <rect class="d-box accent" x="150" y="170" width="320" height="40" rx="9"/>
+    <text class="d-label" x="310" y="188" text-anchor="middle">④ Approve with "go ahead"</text>
+    <text class="d-sub" x="310" y="203" text-anchor="middle">One word after a human reviews the team</text>
+
+    <rect class="d-box" x="150" y="224" width="320" height="40" rx="9"/>
+    <text class="d-label" x="310" y="242" text-anchor="middle">⑤ Parallel autonomous execution</text>
+    <text class="d-sub" x="310" y="257" text-anchor="middle">Development ↔ QA rework loop repeats</text>
+
+    <rect class="d-box accent" x="150" y="278" width="320" height="44" rx="9"/>
+    <text class="d-label" x="310" y="298" text-anchor="middle">⑥ Verified deliverables</text>
+    <text class="d-sub" x="310" y="313" text-anchor="middle">_workspace: spec · impact · tests · migration guide</text>
+
+    <!-- arrows -->
+    <g>
+        <line class="d-edge" x1="310" y1="48" x2="310" y2="61"/><polygon class="d-arrow" points="305,56 315,56 310,62"/>
+        <line class="d-edge" x1="310" y1="102" x2="310" y2="115"/><polygon class="d-arrow" points="305,110 315,110 310,116"/>
+        <line class="d-edge" x1="310" y1="156" x2="310" y2="169"/><polygon class="d-arrow" points="305,164 315,164 310,170"/>
+        <line class="d-edge accent" x1="310" y1="210" x2="310" y2="223"/><polygon class="d-arrow accent" points="305,218 315,218 310,224"/>
+        <line class="d-edge" x1="310" y1="264" x2="310" y2="277"/><polygon class="d-arrow" points="305,272 315,272 310,278"/>
+    </g>
+    <!-- human gate marker -->
+    <text class="d-accent" x="484" y="193" font-size="11">← Human review</text>
+</svg>
+<div class="d-cap">The only points where a person steps in are <strong>① the intent</strong> and <strong>④ the approval</strong>.</div>
+</div>
+
+<h3>Step 1 — writing the intent sentence</h3>
+<p>This is the most important habit. Write it not as <strong>"do this for me" (a command)</strong> but as <strong>"we would like to do this" (an intent)</strong>. Only then does the harness have room to design the team itself. After typing <code>/harness</code>, autocomplete with <span class="kbd">Tab</span> and then append your request.</p>
+<pre><code>/harness In the ERP sales/order module, we would like to proceed with a client
+customization that automatically puts orders exceeding the credit limit per the
+account's credit grade on hold and sends a notification to the sales rep.
+Please include standard source impact analysis and regression tests as well.</code></pre>
+
+<div class="note">
+    <span class="nh">Tips for giving a good intent (essential for beginners)</span>
+    If you pack ① the <strong>goal</strong> (what) · ② the <strong>target module</strong> (where) · ③ the <strong>constraints</strong> (minimize damage to the standard · upgrade compatibility) · ④ the <strong>deliverables you want</strong> (impact · tests) into a single sentence, the team composition comes out accurate. For detailed background see <a href="/p/en/hnp-agents-skills/">Agent · skill design</a>.
+</div>
+
+<h3>Steps 2–3 — domain analysis &amp; team proposal</h3>
+<p>When you press Enter, the harness <strong>analyzes the domain</strong> and along the way asks you to choose between things like <strong>"build the full harness / build only the harness"</strong>. If you have a standard specification or requirements document to refer to, you can feed it in at this point (it handles even hundreds-of-pages PDFs). Right after that it proposes a <strong>draft agent team</strong>. For example:</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Proposed agent</th><th>Role</th></tr></thead>
+        <tbody>
+            <tr><td>Sales standard-source analyst</td><td>Grasps the credit and order flow and the scope of impact of the customization</td></tr>
+            <tr><td>Customization designer</td><td>Designs an extension approach that does not modify the standard directly (e.g. an add-on)</td></tr>
+            <tr><td>Development agent</td><td>Implements the hold handling and notification logic</td></tr>
+            <tr><td>Regression QA agent</td><td>Verifies that the standard order and credit features are not broken</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>Step 4 — review, then "go ahead"</h3>
+<p>Here <strong>a person steps in</strong>. You look at whether the proposed team is appropriate, and if it falls short you ask for changes. If it is fine, you approve with one word.</p>
+<pre><code>go ahead</code></pre>
+<p>From this moment the work <strong>leaves human hands</strong> and proceeds in the order the orchestrator planned.</p>
+
+<h3>Step 5 — parallel autonomous execution (observing)</h3>
+<ul>
+    <li>The agents work <strong>in parallel</strong>. With <span class="kbd">Shift + arrow keys</span> you can peek into what each agent is doing (an agent that is working is marked with color).</li>
+    <li>If you want to run another task at the same time, open <strong>one more terminal window</strong> and run a separate harness.</li>
+    <li>The <strong>loop</strong> of development → QA → (when a problem is found) rework turns automatically.</li>
+</ul>
+
+<h3>Step 6 — checking the deliverables</h3>
+<p>When it finishes, a <code>_workspace</code> folder appears in the project and documents like the ones below pile up (the names are examples to aid understanding; in reality the harness names them as planned).</p>
+<ul>
+    <li><strong>Requirements write-up</strong> — organizes the CR into a developable specification</li>
+    <li><strong>Standard source impact</strong> — which standard features and screens are affected</li>
+    <li><strong>Customization design</strong> — an extension approach that does not modify the standard directly, with upgrade compatibility considered</li>
+    <li><strong>List of implementation changes</strong> — what was changed and how</li>
+    <li><strong>Regression test results</strong> — classified as critical / major / minor</li>
+    <li><strong>Migration guide</strong> — the procedure and cautions for applying it to production</li>
+</ul>
+
+<div class="note">
+    <span class="nh">Remember — it is a draft</span>
+    A harness result is <strong>not a finished product but a well-prepared draft</strong>. For ERP customization in particular, <strong>a person must always review the standard impact and the regression results</strong> before applying it. Ways to make verification more solid are covered in <a href="/p/en/hnp-verify/">Verification · quality</a>. For what happened inside, see <a href="/p/en/hnp-architecture/">how it works</a>.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · PlugIn · Harness &middot; <span class="pr-k">Created</span> 2026-07-04 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/hnp-intro/">Harness Plugin — Introduction</a></li><li><a href="/p/en/hns-run/">Running the Harness (Hands-on)</a></li><li><a href="/p/en/hnp-agents-skills/">Designing Agents and Skills</a></li><li><a href="/p/en/hnp-scenarios/">Scenario Board</a></li></ul>
+</nav>
+</body>
+</html>
