@@ -42,3 +42,14 @@
     <li>변경 유형 <strong>ENGINE + STYLE + CONTENT</strong> — 캐시버스터 <code>style.css</code>·<code>cosmos.js</code>·<code>i18n.js</code> 상향, 신규 자산 <code>cosmos2.js?v=1</code> 추가.</li>
     <li>검증: 낮·밤 렌더 확인(세 뷰), 포커스 카드 동작(이웃 6건·개념 칩·문서 열기), 도크 2단 전환·그룹별 마지막 뷰 복원, 소프트웨어 GL 환경에서도 47~48fps(실기기 GPU에서는 상한 60), 도식 경계 게이트·<code>validate_all</code> ERROR 0.</li>
 </ul>
+
+<h3>후속 — 배경 효과 통일 · 숨쉬기 실효화 · 모바일 겹침</h3>
+<ul>
+    <li><strong>궤도계·스트라타에 성좌의 배경 문법 이식</strong> — ①장면을 감싸는 구면에 <strong>별먼지</strong>(데스크톱 650·좁은 화면 360)를 뿌려 카메라 회전에 따라 패럴랙스로 흐르고 각자 위상으로 반짝인다(셰이더 <code>aTwk</code>=위상·각속도 속성, 먼지가 아닌 드로는 상수 (0,0)으로 통과 — 프로그램은 하나 유지) ②System마다 <strong>성운</strong> 한 장(궤도계는 행성 자리, 스트라타는 문서 무리 중심) ③문서마다 <strong>헤일로 + 숨쉬기</strong>(성좌와 같은 위상·주기 규약).</li>
+    <li><strong>실제 결함 하나</strong>도 함께 고쳤다 — 코로나·헤일로·본체를 한 버퍼에 담아 <code>uKind=1</code>(구체)로만 그리고 있어 셰이더의 부드러운 무리(<code>uKind=0</code>)가 한 번도 안 쓰였다. <code>dynSoft</code>/<code>dynBody</code> 두 버퍼로 나눠 각각 한 번씩 그린다(드로콜 +1) — 항성 코로나가 &lsquo;반투명 원반&rsquo;에서 진짜 발광으로 바뀌었다.</li>
+    <li><strong>성좌 숨쉬기가 사실상 안 보이던 문제</strong>(사파리 제보) — 계측해 보니 회전을 멈춘 상태에서 화면 전체 밝기 변동이 <strong>0.06%</strong>였다. 원인은 브라우저가 아니라 <strong>헤일로에만</strong> 숨쉬기를 걸었고 그 헤일로가 절반 해상도 층에서 옅게 합성되기 때문. 코어(단색 원)에도 같은 위상을 걸어 <strong>반지름 ±13%·밝기 ±22%</strong>, 헤일로는 ±30%로 키웠다 → 별 위치 국소 밝기 변동 <strong>8~16%</strong>(실측)로 눈에 들어온다. 주기 4~7초·<code>reduced-motion</code> 정지는 그대로.</li>
+    <li><strong>모바일에서 설명과 선택 영역이 겹치던 문제</strong> — 제목·부제(<code>.cosmos-hud</code>)와 도크가 각각 절대 위치라 부제가 두 줄이 되면 도크를 덮었다. 둘을 <code>.cosmos-top</code> 한 세로 흐름에 넣어 <strong>구조적으로 겹칠 수 없게</strong> 바꿨다(390px에서 도크가 부제 아래 10px, 전 뷰 확인). 2D 스테이지 상단 여백도 도크의 실제 화면 위치(<code>getBoundingClientRect</code>)로 계산하도록 정정.</li>
+    <li><strong>세로 화면 프레이밍</strong> — 종횡비가 좁으면 수평 화각이 좁아 장면이 옆으로 잘리던 것을, 기준 종횡비(1.35)보다 좁은 만큼 카메라를 뒤로 물려 해결(사용자 줌 값은 불변).</li>
+    <li><strong>성능</strong> — 같은 소프트웨어 GL 하네스로 전/후 비교: 궤도계 44→43fps, 스트라타 33→28fps(둘 다 GPU 없는 경로의 fill 비용). 하드웨어 GPU에서는 상한 유지. 헤일로가 뭉쳐 하얗게 타는 것을 막으려 알파를 낮춘 것이 성능에도 도움이 됐다. 캐시버스터 <code>cosmos2.js 1→2</code>·<code>cosmos.js</code>·<code>style.css</code> 상향.</li>
+</ul>
+

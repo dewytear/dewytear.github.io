@@ -87,9 +87,12 @@
         'void main(){ gl_FragColor = vec4(vC, vA); }';
     var BILL_V =
         'attribute vec3 aC; attribute vec2 aO; attribute float aS; attribute vec3 aCol;' +
-        'attribute float aA; uniform mat4 uVP; uniform vec3 uR, uU;' +
+        'attribute float aA; attribute vec2 aTwk;' +
+        'uniform mat4 uVP; uniform vec3 uR, uU; uniform float uTime;' +
         'varying vec2 vO; varying vec3 vC; varying float vA;' +
-        'void main(){ vO = aO; vC = aCol; vA = aA;' +
+        'void main(){ vO = aO; vC = aCol;' +
+        // aTwk = (위상, 각속도) — 별먼지만 반짝이고, 나머지 드로는 상수 (0,0)이라 그대로.
+        '  vA = aA * (aTwk.y > 0.0 ? (0.72 + 0.28 * sin(uTime * aTwk.y + aTwk.x)) : 1.0);' +
         '  gl_Position = uVP * vec4(aC + (uR * aO.x + uU * aO.y) * aS, 1.0); }';
     // uKind 0 = 부드러운 무리(성운·코로나), 1 = 구체(행성·문서), 2 = 별(코어+헤일로)
     var BILL_F =
@@ -230,6 +233,34 @@
         gl.bufferData(gl.ARRAY_BUFFER, this.a.subarray(0, n * 6), gl.DYNAMIC_DRAW);
     };
 
+    // 성좌(cosmos.js)의 별먼지를 3D 공간판으로 이식 — 장면을 감싸는 큰 구면에
+    // 흩뿌려 카메라 회전에 따라 패럴랙스로 흐르고, 각자 위상으로 반짝인다.
+    function buildDust(gl, pal, radius, count) {
+        var C = [], O = [], S = [], CL = [], A = [], T = [];
+        var corners = [[-1, -1], [1, -1], [1, 1], [-1, -1], [1, 1], [-1, 1]];
+        for (var i = 0; i < count; i++) {
+            var u = rnd(i * 3.1 + 1) * 2 - 1, th = rnd(i * 7.7 + 2) * 6.2832;
+            var rr = Math.sqrt(Math.max(0, 1 - u * u));
+            var R = radius * (0.75 + rnd(i * 11.3 + 3) * 0.5);
+            var x = rr * Math.cos(th) * R, y = u * R * 0.8, z = rr * Math.sin(th) * R;
+            var g = rnd(i * 5.5 + 4);
+            var size = radius * (0.0016 + g * g * 0.0042);
+            var al = (pal.day ? 0.16 : 0.42) * (0.35 + rnd(i * 2.2 + 5) * 0.65);
+            var ph = rnd(i * 6.6 + 6) * 6.2832, tw = 0.35 + rnd(i * 4.2 + 7) * 0.8;
+            for (var k = 0; k < 6; k++) {
+                C.push(x, y, z);
+                O.push(corners[k][0], corners[k][1]);
+                S.push(size);
+                CL.push(pal.ink[0], pal.ink[1], pal.ink[2]);
+                A.push(al);
+                T.push(ph, tw);
+            }
+        }
+        return { c: staticBuf(gl, C), o: staticBuf(gl, O), s: staticBuf(gl, S),
+                 col: staticBuf(gl, CL), a: staticBuf(gl, A), twk: staticBuf(gl, T),
+                 n: count * 6 };
+    }
+
     function hasWebGL() {
         try {
             var c = document.createElement('canvas');
@@ -282,8 +313,11 @@
         var have = {};
         names.forEach(function (n) { have[n] = 1; });
         var nodes = names.map(function (n) {
+            var h = hash(n);
             return { name: n, title: K[n].title || n, sec: K[n].section || '',
                      concepts: K[n].concepts || [], ref: indeg[n] || 0,
+                     bph: rnd((h % 8191) + 11) * 6.2832,
+                     btw: 0.9 + rnd((h % 6143) + 17) * 0.7,
                      rel: (K[n].related || []).filter(function (r) { return have[r.name]; })
                             .map(function (r) { return r.name; }),
                      x: 0, y: 0, z: 0, sx: 0, sy: 0, sw: 1 };
@@ -453,8 +487,22 @@
                       pal.day ? 0.14 : 0.15, 12);
             });
         });
+        // System마다 문서 무리 중심에 성운 한 장 — 성좌의 클러스터 성운과 같은 역할.
+        var nebula = [];
+        model.sections.forEach(function (sec) {
+            var docs = model.nodes.filter(function (n) { return n.sec === sec; });
+            if (!docs.length) { return; }
+            var c = [0, 0, 0];
+            docs.forEach(function (n) { c[0] += n.x; c[1] += n.y; c[2] += n.z; });
+            c = [c[0] / docs.length, c[1] / docs.length, c[2] / docs.length];
+            var rad = 0.4;
+            docs.forEach(function (n) {
+                rad = Math.max(rad, Math.hypot(n.x - c[0], n.y - c[1], n.z - c[2]));
+            });
+            nebula.push({ p: c, col: pal.sec[sec], size: rad * 1.5 + 0.55 });
+        });
         return { kind: 'strata', solid: uploadSolid(gl, S), lines: uploadLines(gl, L),
-                 marks: marks, camTarget: [0, 2.1, 0], camDist: 16.5,
+                 marks: marks, nebula: nebula, camTarget: [0, 2.1, 0], camDist: 16.5,
                  camPitch: -0.3, camYaw: 0.6 };
     }
 
@@ -499,8 +547,13 @@
 
         var pal = palette(model);
         var scene = kind === 'strata' ? sceneStrata(gl, model, pal) : sceneOrbit(gl, model, pal);
-        var dyn = new Dyn(gl, model.nodes.length + model.sections.length * 2 +
-                               model.worlds.length * 3 + 40);
+        // 부드러운 무리(uKind 0)와 구체(uKind 1)를 따로 모아 각각 한 번씩 그린다 —
+        // 한 버퍼에 섞으면 코로나·성운·헤일로가 '원반'으로 그려진다(초기 버그).
+        var softMax = model.nodes.length + model.sections.length * 3 + model.worlds.length * 3 + 40;
+        var dynSoft = new Dyn(gl, softMax);
+        var dynBody = new Dyn(gl, softMax);
+        var dustN = (window.innerWidth < 800 ? 360 : 650);
+        var dust = buildDust(gl, pal, Math.max(14, scene.camDist * 1.6), dustN);
         var focusLines = new Lines();   // 포커스 시에만 채우는 동적 라인
 
         // HUD 오버레이(라벨·카드) — 캔버스와 같은 부모에 얹는다.
@@ -513,7 +566,8 @@
                   && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         RUN = { gl: gl, canvas: canvas, overlay: overlay, model: model, pal: pal, scene: scene,
-                dyn: dyn, pS: pS, pB: pB, pL: pL, kind: scene.kind, dead: false,
+                dynSoft: dynSoft, dynBody: dynBody, dust: dust, dustN: dustN,
+                pS: pS, pB: pB, pL: pL, kind: scene.kind, dead: false,
                 yaw: scene.camYaw, pitch: scene.camPitch, dist: scene.camDist,
                 target: scene.camTarget.slice(), wantTarget: scene.camTarget.slice(),
                 wantDist: scene.camDist, drag: null, moved: 0, lastTouch: 0, auto: !reduce,
@@ -682,6 +736,7 @@
             R.pal = palette(R.model);
             R.scene = R.kind === 'strata' ? sceneStrata(R.gl, R.model, R.pal)
                                           : sceneOrbit(R.gl, R.model, R.pal);
+            R.dust = buildDust(R.gl, R.pal, Math.max(14, R.scene.camDist * 1.6), R.dustN);
         }
         var gl = R.gl, pal = R.pal, t = ms / 1000;
         if (!R.t0) { R.t0 = t; }
@@ -696,9 +751,14 @@
             R.auto = true;
             R.yaw += 0.0015;
         }
-        var eye = [R.target[0] + Math.cos(R.pitch) * Math.sin(R.yaw) * R.dist,
-                   R.target[1] + Math.sin(-R.pitch) * R.dist,
-                   R.target[2] + Math.cos(R.pitch) * Math.cos(R.yaw) * R.dist];
+        // 세로로 긴 화면(모바일)은 수평 화각이 좁아 장면이 옆으로 잘린다 —
+        // 종횡비가 기준(1.35)보다 좁으면 그만큼 카메라를 뒤로 물린다(줌 값은 그대로).
+        var aspect = R.canvas.width / R.canvas.height;
+        var fit = Math.max(1, 1.35 / Math.max(0.3, aspect));
+        var dist = R.dist * fit;
+        var eye = [R.target[0] + Math.cos(R.pitch) * Math.sin(R.yaw) * dist,
+                   R.target[1] + Math.sin(-R.pitch) * dist,
+                   R.target[2] + Math.cos(R.pitch) * Math.cos(R.yaw) * dist];
         var V = look(eye, R.target, [0, 1, 0]);
         var VP = mul(persp(Math.PI / 4.4, R.canvas.width / R.canvas.height, 0.1, 240), V);
         var right = [V[0], V[4], V[8]], up = [V[1], V[5], V[9]];
@@ -710,8 +770,15 @@
         gl.enable(gl.BLEND);
         var addBlend = pal.day ? gl.ONE_MINUS_SRC_ALPHA : gl.ONE;
 
-        R.dyn.reset();
+        R.dynSoft.reset();
+        R.dynBody.reset();
         var labels = [];
+        // 성좌와 같은 규약의 숨쉬기 — 노드마다 위상·주기가 다르다.
+        function breath(n) {
+            return R.reduce ? 1 : (1 + 0.22 * Math.sin(age * n.btw + n.bph));
+        }
+        var nebA = pal.day ? 0.045 : 0.085;    // 성운
+        var haloA = pal.day ? 0.18 : 0.3;      // 노드 헤일로(뭉치면 하얗게 타므로 낮게)
         var dim = R.focus ? (pal.day ? 0.22 : 0.16) : 1;
         var tmp = [0, 0, 0];
 
@@ -727,8 +794,8 @@
 
         if (R.kind === 'orbit') {
             R.scene.suns.forEach(function (s) {
-                R.dyn.add(s.p, 1.15, s.col, pal.day ? 0.1 : 0.2);
-                R.dyn.add(s.p, 0.42, s.col, R.focus ? dim : 1);
+                R.dynSoft.add(s.p, 1.6, s.col, pal.day ? 0.12 : 0.24);
+                R.dynBody.add(s.p, 0.42, s.col, R.focus ? dim : 1);
                 var sc = screenOf(s.p);
                 if (sc) { labels.push({ cls: 'world', text: s.label, x: sc[0], y: sc[1] - 26, w: sc[2] }); }
             });
@@ -736,7 +803,9 @@
                 var a = sy.ph + age * sy.spd;
                 var p = orbitPoint(sy.cx, 0, sy.cz, sy.r, sy.tilt, sy.yaw, a);
                 sy.pos = p;
-                R.dyn.add(p, sy.size * 2.1, sy.col, (pal.day ? 0.07 : 0.14) * (R.focus ? 0.4 : 1));
+                // 행성 자리에 성운 한 장 — 위성 궤도를 감싸는 크기.
+                R.dynSoft.add(p, sy.nebula, sy.col, nebA * (R.focus ? 0.4 : 1));
+                R.dynSoft.add(p, sy.size * 2.2, sy.col, (pal.day ? 0.08 : 0.16) * (R.focus ? 0.4 : 1));
                 var sc = screenOf(p);
                 if (sc) { labels.push({ cls: 'sys', text: sy.label, x: sc[0], y: sc[1] - 16, w: sc[2] }); }
                 sy.docs.forEach(function (d) {
@@ -744,8 +813,9 @@
                     var q = orbitPoint(p[0], p[1], p[2], d.orb, d.tilt, d.yaw, b);
                     var n = d.node;
                     n.x = q[0]; n.y = q[1]; n.z = q[2];
-                    var al = nodeAlpha(n);
-                    R.dyn.add(q, d.size, n.col || sy.col, al);
+                    var al = nodeAlpha(n), br = breath(n);
+                    R.dynSoft.add(q, d.size * 2.8 * br, n.col || sy.col, haloA * al * br);
+                    R.dynBody.add(q, d.size * (1 + 0.1 * (br - 1)), n.col || sy.col, al);
                     var s2 = screenOf(q);
                     n.vis = !!s2;
                     if (s2) {
@@ -760,21 +830,24 @@
                     }
                 });
             });
-            // 행성 본체는 구체 스타일로 한 번 더(코어) — 위성보다 크게.
+            // 행성 본체는 구체 스타일로 — 위성보다 크게.
             R.scene.systems.forEach(function (sy) {
                 if (!sy.pos) { return; }
-                R.dyn.add(sy.pos, sy.size, sy.col, R.focus ? 0.5 : 1);
+                R.dynBody.add(sy.pos, sy.size, sy.col, R.focus ? 0.5 : 1);
             });
         } else {
+            (R.scene.nebula || []).forEach(function (nb) {
+                R.dynSoft.add(nb.p, nb.size, nb.col, nebA * (R.focus ? 0.4 : 1));
+            });
             R.scene.marks.forEach(function (mk) {
                 if (mk.kind === 'tier') {
                     var s0 = screenOf(mk.p);
                     if (s0) { labels.push({ cls: 'tier', text: mk.label, x: s0[0], y: s0[1], w: s0[2] }); }
                     return;
                 }
-                R.dyn.add(mk.p, mk.size * (mk.kind === 'world' ? 2.6 : 1.9), mk.col,
-                          (pal.day ? 0.1 : 0.2) * (R.focus ? 0.4 : 1));
-                R.dyn.add(mk.p, mk.size, mk.col, R.focus ? 0.55 : 1);
+                R.dynSoft.add(mk.p, mk.size * (mk.kind === 'world' ? 3.4 : 2.4), mk.col,
+                              (pal.day ? 0.12 : 0.24) * (R.focus ? 0.4 : 1));
+                R.dynBody.add(mk.p, mk.size, mk.col, R.focus ? 0.55 : 1);
                 var sc = screenOf(mk.p);
                 if (sc) {
                     labels.push({ cls: mk.kind === 'world' ? 'world' : 'sys', text: mk.label,
@@ -783,7 +856,9 @@
             });
             R.model.nodes.forEach(function (n) {
                 var p = [n.x, n.y, n.z];
-                R.dyn.add(p, 0.075 + n.ref * 0.016, n.col || pal.sec[n.sec], nodeAlpha(n));
+                var size = 0.075 + n.ref * 0.016, al2 = nodeAlpha(n), br2 = breath(n);
+                R.dynSoft.add(p, size * 2.8 * br2, n.col || pal.sec[n.sec], haloA * al2 * br2);
+                R.dynBody.add(p, size * (1 + 0.1 * (br2 - 1)), n.col || pal.sec[n.sec], al2);
                 var sc = screenOf(p);
                 n.vis = !!sc;
                 if (sc) {
@@ -799,15 +874,19 @@
             });
         }
 
-        // --- 그리기: 정적 지오메트리 → 동적 빌보드 → 포커스 라인
+        // --- 그리기: 별먼지 → 성운·발광(soft) → 정적 지오메트리 → 본체 → 포커스 라인
+        gl.blendFunc(gl.SRC_ALPHA, addBlend);
+        drawBill(gl, R.pB, R.dust, VP, right, up, 0, pal.day, age);
+        R.dynSoft.flush();
+        drawDyn(gl, R.pB, R.dynSoft, VP, right, up, 0, pal.day, age);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         if (R.scene.solid) { drawSolid(gl, R.pS, R.scene.solid, VP); }
         if (R.scene.lines) {
-            drawLines(gl, R.pL, R.scene.lines, VP, t, 0, R.focus ? 0.35 : 1);
+            drawLines(gl, R.pL, R.scene.lines, VP, age, 0, R.focus ? 0.35 : 1);
         }
         gl.blendFunc(gl.SRC_ALPHA, addBlend);
-        R.dyn.flush();
-        drawDyn(gl, R.pB, R.dyn, VP, right, up, R.kind === 'orbit' ? 1 : 1, pal.day);
+        R.dynBody.flush();
+        drawDyn(gl, R.pB, R.dynBody, VP, right, up, 1, pal.day, age);
         if (R.focus) {
             var FL = R.focusLines;
             FL.P.length = 0; FL.C.length = 0; FL.A.length = 0; FL.T.length = 0;
@@ -823,7 +902,7 @@
             if (FL.P.length) {
                 var fb = uploadLines(gl, FL);
                 gl.blendFunc(gl.SRC_ALPHA, addBlend);
-                drawLines(gl, R.pL, fb, VP, t, 1, 1);
+                drawLines(gl, R.pL, fb, VP, age, 1, 1);
                 gl.deleteBuffer(fb.p); gl.deleteBuffer(fb.c);
                 gl.deleteBuffer(fb.a); gl.deleteBuffer(fb.t);
             }
@@ -855,16 +934,38 @@
         attr(gl, p, 'aA', l.a, 1); attr(gl, p, 'aT', l.t, 1);
         gl.drawArrays(gl.LINES, 0, l.n);
     }
-    function drawDyn(gl, p, d, VP, right, up, kind, day) {
+    function billUniforms(gl, p, VP, right, up, kind, day, time) {
         gl.useProgram(p);
         gl.uniformMatrix4fv(gl.getUniformLocation(p, 'uVP'), false, VP);
         gl.uniform3fv(gl.getUniformLocation(p, 'uR'), right);
         gl.uniform3fv(gl.getUniformLocation(p, 'uU'), up);
         gl.uniform1i(gl.getUniformLocation(p, 'uKind'), kind);
         gl.uniform1i(gl.getUniformLocation(p, 'uDay'), day ? 1 : 0);
+        gl.uniform1f(gl.getUniformLocation(p, 'uTime'), time);
+    }
+    // 트윙클 속성이 없는 드로는 상수 (0,0)을 공급 — 셰이더가 1.0으로 통과시킨다.
+    function noTwinkle(gl, p) {
+        var l = gl.getAttribLocation(p, 'aTwk');
+        if (l < 0) { return; }
+        gl.disableVertexAttribArray(l);
+        gl.vertexAttrib2f(l, 0, 0);
+    }
+    function drawDyn(gl, p, d, VP, right, up, kind, day, time) {
+        if (!d.n) { return; }
+        billUniforms(gl, p, VP, right, up, kind, day, time);
         attr(gl, p, 'aC', d.bc, 3); attr(gl, p, 'aO', d.bo, 2); attr(gl, p, 'aS', d.bs, 1);
         attr(gl, p, 'aCol', d.bcol, 3); attr(gl, p, 'aA', d.ba, 1);
+        noTwinkle(gl, p);
         gl.drawArrays(gl.TRIANGLES, 0, d.n * 6);
+    }
+    // 정적 빌보드(별먼지) — 자체 트윙클 버퍼를 함께 바인딩한다.
+    function drawBill(gl, p, b, VP, right, up, kind, day, time) {
+        if (!b || !b.n) { return; }
+        billUniforms(gl, p, VP, right, up, kind, day, time);
+        attr(gl, p, 'aC', b.c, 3); attr(gl, p, 'aO', b.o, 2); attr(gl, p, 'aS', b.s, 1);
+        attr(gl, p, 'aCol', b.col, 3); attr(gl, p, 'aA', b.a, 1);
+        attr(gl, p, 'aTwk', b.twk, 2);
+        gl.drawArrays(gl.TRIANGLES, 0, b.n);
     }
 
     // HTML 라벨 — 캔버스 텍스트 대신 DOM으로 그려 테마 토큰·폰트를 그대로 쓴다.

@@ -481,11 +481,22 @@
             cursor: grab;
             touch-action: none;   /* drags rotate; they don't scroll */
         }
-        .cosmos-hud{
+        /* 제목·부제·도크를 한 세로 흐름에 둔다 — 좁은 화면에서 부제가 두세 줄로
+           늘어나도 도크가 그 아래로 밀려 겹치지 않는다(절대 top 고정이 원인이었음). */
+        .cosmos-top{
             position: absolute;
             top: 20px;
             left: 0;
             right: 0;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .cosmos-hud{
+            max-width: min(680px, calc(100% - 32px));
             text-align: center;
             pointer-events: none;
         }
@@ -3361,11 +3372,7 @@
            뷰를 **한 줄**에 두고, 사이를 가는 구분선으로만 가른다. 캡슐(필) 배경
            없이 글자만 — 배경 그래프를 가리지 않는 가장 조용한 형태. */
         .gv-dock{
-            position: absolute;
-            top: 76px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 5;
+            pointer-events: auto;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
@@ -3480,7 +3487,6 @@
         }
         @media (max-width: 800px){
             .gv-dock{
-                top: 70px;
                 gap: 1px 8px;
             }
             .gv-dock button{
@@ -3497,7 +3503,6 @@
            place — otherwise the dock/legend/graph sit far below an empty title
            gap. Stage padding then places the legend just under the dock. */
         .cosmos-screen.gv-2d .cosmos-hud{ display: none; }
-        .cosmos-screen.gv-2d .gv-dock{ top: 20px; }
         .cosmos-screen.gv-2d .gv-stage{ padding-top: 72px; }
         @media (max-width: 800px){
             .cosmos-screen.gv-2d .gv-stage{ padding-top: 92px; }
