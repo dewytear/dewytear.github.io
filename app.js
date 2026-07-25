@@ -574,8 +574,9 @@ function searchConcept(el){
     location.hash = '#!search';
 }
 function conceptBtn(c){
+    // data-c=canonical 개념 키(클릭 시 그 키로 검색) / 표시는 현지화 라벨.
     return '<button type="button" class="rel-c" data-c="' + escapeHtml(c)
-         + '" onclick="searchConcept(this)">' + escapeHtml(c) + '</button>';
+         + '" onclick="searchConcept(this)">' + escapeHtml(conceptLabel(c)) + '</button>';
 }
 function renderRelatedHTML(rel){
     var items = rel.map(function(r){
@@ -675,8 +676,10 @@ function injectCitedBy(){
     if(!info || !info.citedBy || !info.citedBy.length){ return; }
     var items = info.citedBy.map(function(n){
         var o = KNOWLEDGE[n] || {};
-        var why = o.section
-                ? '<span class="rel-why"><span class="rel-why-plain">' + escapeHtml(o.section) + '</span></span>' : '';
+        // 경로는 표시용 현지화본(sectionL)을 우선 — canonical section은 조인 키라 ko 고정.
+        var path = o.sectionL || o.section;
+        var why = path
+                ? '<span class="rel-why"><span class="rel-why-plain">' + escapeHtml(path) + '</span></span>' : '';
         return '<li><a href="#!' + encodeURIComponent(n) + '">'
              + escapeHtml(o.title || n) + '</a>' + why + '</li>';
     }).join('');
@@ -734,7 +737,7 @@ function hydrateAiMap(){
     el = document.getElementById('km-bridges');
     if(el){
         el.innerHTML = s.bridges.map(function(b){
-            return '<tr><td><strong>' + escapeHtml(b.c) + '</strong></td>'
+            return '<tr><td><strong>' + escapeHtml(conceptLabel(b.c)) + '</strong></td>'
                  + '<td>' + STRF('kmBridgeN', { n: b.clusters.length }) + b.clusters.map(escapeHtml).join(' · ') + '</td>'
                  + '<td>' + STRF('kmDocsN', { n: b.n }) + '</td></tr>';
         }).join('');
@@ -917,8 +920,11 @@ function newBlock(dir){
 // bodies, with a jump-to table of contents. No tags / model badge.
 function showFolder(section){
     var docs = FOLDER_DOCS[section] || [];
-    var parts = section.split(' · ');
-    var title = parts[parts.length - 1] || section;
+    // 라우팅 키는 canonical section, 화면 표기는 그 폴더 문서의 sectionL
+    // (내비 트리에서 title_<lang>으로 만든 현지화 경로).
+    var disp = (docs[0] && docs[0].sectionL) || section;
+    var parts = disp.split(' · ');
+    var title = parts[parts.length - 1] || disp;
     if(!docs.length){
         setArticle('<h2>' + escapeHtml(title) + '</h2>'
                  + '<p class="empty">' + STR('folderEmpty') + '</p>');
@@ -926,7 +932,7 @@ function showFolder(section){
     }
     var toc = '<div class="folder-head">'
             + '<h2>' + escapeHtml(title) + '</h2>'
-            + '<p class="folder-sub">' + escapeHtml(section)
+            + '<p class="folder-sub">' + escapeHtml(disp)
             + ' · ' + STRF('folderCount', { n: docs.length }) + '</p>'
             + '<ol class="folder-toc">';
     docs.forEach(function(d, i){
@@ -1921,7 +1927,9 @@ App.data.loadList().then(function(tree){
 // Load the AI knowledge index (summaries·concepts·related). Non-blocking:
 // if a doc is already shown when it arrives, inject its related block.
 // The current language's index is preferred; missing → Korean fallback.
-window.__loadKnowledge = App.data.loadIndex(currentLang());
+window.__loadKnowledge = loadConceptLabels().then(function(){
+    return App.data.loadIndex(currentLang());
+});
 window.__loadKnowledge.then(function(idx){
     KNOWLEDGE = {};
     (idx.docs || []).forEach(function(d){ KNOWLEDGE[d.name] = d; });
@@ -1972,7 +1980,7 @@ function poShow(a, name){
     card.setAttribute('role', 'tooltip');
     card.innerHTML =
         '<p class="po-title">' + escapeHtml(doc.title || name) + '</p>'
-      + (doc.section ? '<p class="po-path">' + escapeHtml(doc.section) + '</p>' : '')
+      + (doc.sectionL || doc.section ? '<p class="po-path">' + escapeHtml(doc.sectionL || doc.section) + '</p>' : '')
       + '<p class="po-sum">' + escapeHtml(doc.summary) + '</p>';
     document.body.appendChild(card);
     var r = a.getBoundingClientRect();

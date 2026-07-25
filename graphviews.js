@@ -34,6 +34,11 @@
   function strings(P) {
     return (P && P.strings) || {};
   }
+  // 개념 표시명 — 키(조인용)는 그대로, 화면 글자만 언어별로.
+  function clabel(P, c) {
+    var m = (P && P.conceptLabels) || {};
+    return m[c] || c;
+  }
 
   // Clamp v into [lo, hi]; if the range is inverted (box too small to hold
   // both margins) fall back to the midpoint instead of producing NaN/garbage.
@@ -526,7 +531,8 @@
     // past the viewBox edges, whatever the box's aspect ratio.
     var maxNameLen = 0;
     for (i = 0; i < nodes.length; i++) {
-      if (nodes[i].length > maxNameLen) maxNameLen = nodes[i].length;
+      var nlen = clabel(P, nodes[i]).length;
+      if (nlen > maxNameLen) maxNameLen = nlen;
     }
     var PADX = clampRange(Math.max(50, maxNameLen * 4 + 20), 24, Math.max(24, W / 2 - 20));
     var PADTOP = 40;
@@ -604,14 +610,14 @@
       s.push(
         '<circle cx="' + pos[0].toFixed(1) + '" cy="' + pos[1].toFixed(1) + '" r="' + r.toFixed(1) +
         '" fill="' + clusters[dom].color + '" stroke="' + ink.surface + '" stroke-width="2"><title>' +
-        escapeHtml(cn2) + ' · ' + escapeHtml(fmt(st.conceptIn || '{n}편에 등장', df[cn2])) + '</title></circle>'
+        escapeHtml(clabel(P, cn2)) + ' · ' + escapeHtml(fmt(st.conceptIn || '{n}편에 등장', df[cn2])) + '</title></circle>'
       );
       var nHalfW = Math.max(8, cn2.length * 4);
       var nlx = clampRange(pos[0], nHalfW + 4, W - nHalfW - 4);
       var nly = clampRange(pos[1] - r - 5, 12, H - 8);
       s.push(
         '<text x="' + nlx.toFixed(1) + '" y="' + nly.toFixed(1) + '" fill="' + ink.text +
-        '" font-size="12" font-weight="600" text-anchor="middle">' + escapeHtml(cn2) + '</text>'
+        '" font-size="12" font-weight="600" text-anchor="middle">' + escapeHtml(clabel(P, cn2)) + '</text>'
       );
     }
     return svg(W, H, s);

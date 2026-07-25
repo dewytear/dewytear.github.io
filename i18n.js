@@ -46,6 +46,23 @@ function tagsFor(node){
     var l = currentLang();
     return (l !== 'ko' && node['tags_' + l]) || node.tags || [];
 }
+// ---- 개념(concepts) 표시명 ----
+// 개념은 문서를 잇는 **조인 키**라 언어별로 바꾸지 않는다(바꾸면 related 계산·
+// 검색·그래프가 갈라진다). 대신 화면에 그릴 때만 언어별 표시명으로 바꾼다:
+// tools/concepts.<lang>.json = {labels: {"<ko 키>": "<표시명>"}}. 매핑이 없거나
+// 한국어 모드면 키 자체를 그대로 보여 준다(라틴 문자 개념은 애초에 매핑 없음).
+var CONCEPT_LABELS = null;
+function loadConceptLabels(){
+    var l = currentLang();
+    if(l === 'ko'){ CONCEPT_LABELS = {}; return Promise.resolve({}); }
+    return fetch('tools/concepts.' + l + '.json', { cache: 'no-cache' })
+        .then(function(r){ return r.ok ? r.json() : { labels: {} }; })
+        .then(function(j){ CONCEPT_LABELS = j.labels || {}; return CONCEPT_LABELS; })
+        .catch(function(){ CONCEPT_LABELS = {}; return CONCEPT_LABELS; });
+}
+function conceptLabel(c){
+    return (CONCEPT_LABELS && CONCEPT_LABELS[c]) || c;
+}
 // 화면 문구 사전 — 언어가 준비되면 STRINGS.<lang>을 채운다.
 var STRINGS = {
     ko: {

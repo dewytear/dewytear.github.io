@@ -175,7 +175,7 @@ def build_llms():
     """Root llms.txt — sign-post + machine pointers + docs grouped by System."""
     bi = _load_build_index()
     idx = bi.build(LANG)
-    _, folder_docs = bi.load_sections()
+    _, folder_docs, _secl = bi.load_sections()
     paths = load_paths()
     by_name = {d['name']: d for d in idx['docs']}
     title, desc = _site_meta()
@@ -301,7 +301,7 @@ def build_llms_full():
     read as summary/full versions of the same walk."""
     bi = _load_build_index()
     idx = bi.build(LANG)
-    _, folder_docs = bi.load_sections()
+    _, folder_docs, _secl = bi.load_sections()
     paths = load_paths()
     by_name = {d['name']: d for d in idx['docs']}
     title, desc = _site_meta()
