@@ -293,6 +293,9 @@ function gvModel(){
     return { docs: docs, edges: edges, clusters: clusters, ink: ink,
              strings: { docsN: STR('gvDocsN'), conceptIn: STR('gvConceptIn'),
                         linksN: STR('gvLinksN'), crossN: STR('gvCrossN') },
+             // 개념 키 → 현지화 표시명(2D concepts 뷰의 노드 라벨용).
+             // 키는 그대로 두고 그리는 글자만 바꾼다.
+             conceptLabels: (typeof CONCEPT_LABELS !== 'undefined' && CONCEPT_LABELS) || {},
              onDocClick: function(name){ location.hash = '#!' + name; } };
 }
 function startCosmos(){

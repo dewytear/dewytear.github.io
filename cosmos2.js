@@ -704,7 +704,8 @@
               + S('c2Nbr', '이웃') + ' ' + names.length) + '</div>'
           + (node.concepts.length
               ? '<div class="c2-concepts">' + node.concepts.slice(0, 6).map(function (c) {
-                    return '<span>' + esc(c) + '</span>';
+                    // 개념 키는 조인용으로 불변, 표시만 현지화(i18n.conceptLabel).
+                    return '<span>' + esc(typeof conceptLabel === 'function' ? conceptLabel(c) : c) + '</span>';
                 }).join('') + '</div>'
               : '')
           + (items ? '<ul class="c2-links">' + items + '</ul>' : '')

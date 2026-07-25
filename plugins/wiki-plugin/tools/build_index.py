@@ -63,23 +63,36 @@ def load_paths():
     return paths
 
 
-def load_sections():
-    """section path + nav order + folder groupings, from the `list` tree."""
-    tree = json.load(open(LIST, encoding='utf-8'))
-    sec_of, order = {}, []
+def load_sections(lang='ko'):
+    """section path + nav order + folder groupings, from the `list` tree.
 
-    def walk(nodes, path):
+    Returns (sec_of, folder_docs, secl_of). `section` is CANONICAL — always
+    built from the Korean folder titles, because it keys folder groupings,
+    tools/clusters.json and the galaxy split. `secl_of` is its localized twin
+    (folder `title_<lang>`, falling back to the Korean title) and exists only
+    for display: breadcrumbs, citedBy paths, folder digests. Mixing the two
+    would either break the joins or show Korean to English readers."""
+    tree = json.load(open(LIST, encoding='utf-8'))
+    sec_of, secl_of, order = {}, {}, []
+
+    def title_l(n):
+        return (lang != 'ko' and n.get('title_' + lang)) or n.get('title')
+
+    def walk(nodes, path, lpath):
         for n in nodes:
             if n.get('children'):
-                walk(n['children'], path + [n['title']] if n.get('title') else path)
+                walk(n['children'],
+                     path + [n['title']] if n.get('title') else path,
+                     lpath + [title_l(n)] if n.get('title') else lpath)
             elif n.get('name') and not n.get('route'):
                 sec_of[n['name']] = ' · '.join(path)
+                secl_of[n['name']] = ' · '.join(lpath)
                 order.append(n['name'])
-    walk(tree if isinstance(tree, list) else tree.get('children', tree), [])
+    walk(tree if isinstance(tree, list) else tree.get('children', tree), [], [])
     folder_docs = {}
     for nm in order:
         folder_docs.setdefault(sec_of.get(nm, ''), []).append(nm)
-    return sec_of, folder_docs
+    return sec_of, folder_docs, secl_of
 
 
 def build(lang='ko'):
@@ -90,8 +103,21 @@ def build(lang='ko'):
     entries = json.load(open(entries_path('ko'), encoding='utf-8'))
     if lang != 'ko':
         overlay = {e['name']: e for e in json.load(open(entries_path(lang), encoding='utf-8'))}
-        entries = [dict(base, **{k: v for k, v in overlay.get(base['name'], {}).items() if k != 'name'})
+        entries = [dict(base, **{k: v for k, v in overlay.get(base['name'], {}).items()
+                                 if k not in ('name', 'relations')})
                    for base in entries]
+        # relations는 통째로 덮지 않는다 — target·type·source는 구조(언어 무관)라
+        # ko가 정본이고, 화면에 보이는 근거 문구(evidenceRef)만 번역본으로 갈아끼운다.
+        # 오버레이 형식: "relations": [{"target": "…", "evidenceRef": "…"}] (부분 가능).
+        for e in entries:
+            ov = overlay.get(e['name'], {})
+            ev_by_target = {r.get('target'): r.get('evidenceRef')
+                            for r in ov.get('relations', []) if r.get('evidenceRef')}
+            if not ev_by_target or not e.get('relations'):
+                continue
+            e['relations'] = [dict(r, evidenceRef=ev_by_target[r['target']])
+                              if r.get('target') in ev_by_target else r
+                              for r in e['relations']]
     docs = [{'name': e['name'], 'title': e['title'].strip(),
              'summary': e['summary'].strip(),
              'concepts': [c.strip() for c in e['concepts'] if c.strip()],
@@ -101,9 +127,13 @@ def build(lang='ko'):
              **({'relations': e['relations']} if e.get('relations') else {})}
             for e in entries]
 
-    sec_of, folder_docs = load_sections()
+    sec_of, folder_docs, secl_of = load_sections(lang)
     for d in docs:
         d['section'] = sec_of.get(d['name'], '')
+        # 표시용 현지화 경로(additive) — canonical section은 조인 키로 불변.
+        secl = secl_of.get(d['name'], '')
+        if secl and secl != d['section']:
+            d['sectionL'] = secl
 
     # idf: rarer concepts weigh more when scoring shared-concept overlap.
     df = {}

@@ -61,7 +61,15 @@ function searchDocs(query){
         if(!isSearchableDoc(d)){ return; }
         var info = KNOWLEDGE ? KNOWLEDGE[d.name] : null;
         var concepts = (info && info.concepts) || [];
-        var conceptsLow = concepts.map(function(c){ return c.toLowerCase(); });
+        // 개념은 키(canonical)와 현지화 표시명 **둘 다로** 매칭한다 — 영어로
+        // 'knowledge graph'를 쳐도 '지식그래프' 키를 가진 문서가 잡히게. 다만
+        // 결과 칩에 담는 것은 언제나 키(표시는 렌더 시 conceptLabel이 맡는다).
+        var conceptHay = [];
+        concepts.forEach(function(c){
+            conceptHay.push({ key: c, s: c.toLowerCase() });
+            var cl = conceptLabel(c);
+            if(cl !== c){ conceptHay.push({ key: c, s: cl.toLowerCase() }); }
+        });
         var label = d.label.toLowerCase();
         var section = d.section.toLowerCase();
         var tagsLow = d.tags.join(' ').toLowerCase();
@@ -70,10 +78,10 @@ function searchDocs(query){
         var score = 0, matched = [], ok = true;
         terms.forEach(function(t){
             var s = 0;
-            for(var i = 0; i < conceptsLow.length; i++){
-                if(conceptsLow[i].indexOf(t) !== -1){
-                    s = Math.max(s, conceptsLow[i] === t ? 8 : 5);
-                    if(matched.indexOf(concepts[i]) === -1){ matched.push(concepts[i]); }
+            for(var i = 0; i < conceptHay.length; i++){
+                if(conceptHay[i].s.indexOf(t) !== -1){
+                    s = Math.max(s, conceptHay[i].s === t ? 8 : 5);
+                    if(matched.indexOf(conceptHay[i].key) === -1){ matched.push(conceptHay[i].key); }
                 }
             }
             if(label.indexOf(t) !== -1){ s = Math.max(s, 4); }
@@ -104,8 +112,11 @@ function conceptSuggestions(query){
     var q = query.trim().toLowerCase();
     if(!q || !ALL_CONCEPTS.length){ return []; }
     return ALL_CONCEPTS.filter(function(c){
-        var cl = c.toLowerCase();
-        return cl.indexOf(q) !== -1 && cl !== q;   // skip the exact-typed one
+        var cl = c.toLowerCase(), ll = conceptLabel(c).toLowerCase();
+        if(cl === q || ll === q){ return false; }   // skip the exact-typed one
+        // 개념 키(한국어)와 표시명(영어) 어느 쪽으로 쳐도 잡히게 — 영어 사용자가
+        // 화면에 보이는 라벨을 그대로 입력하는 것이 자연스럽다.
+        return cl.indexOf(q) !== -1 || ll.indexOf(q) !== -1;
     }).slice(0, 6);
 }
 function pickConcept(el){
@@ -187,7 +198,7 @@ function renderSearchResults(query){
         suggests.forEach(function(c){
             suggestHtml += '<button type="button" class="sh-suggest" data-c="'
                         +  escapeHtml(c) + '" onclick="pickConcept(this)">'
-                        +  escapeHtml(c) + '</button>';
+                        +  escapeHtml(conceptLabel(c)) + '</button>';
         });
         suggestHtml += '</div>';
     }
@@ -207,7 +218,7 @@ function renderSearchResults(query){
         if(h.concepts.length){
             html += '<span class="sh-concepts">';
             h.concepts.slice(0, 3).forEach(function(c){
-                html += '<span class="sh-concept">' + escapeHtml(c) + '</span>';
+                html += '<span class="sh-concept">' + escapeHtml(conceptLabel(c)) + '</span>';
             });
             html += '</span>';
         }

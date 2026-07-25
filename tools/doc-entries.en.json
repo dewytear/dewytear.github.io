@@ -2,27 +2,61 @@
  {
   "name": "kgs-overview",
   "title": "How Knowledge Accumulates — The Four-Level Hierarchy and the Registration Pipeline",
-  "summary": "The World→Domain→System→Document hierarchy and the document registration pipeline — immutable IDs, physical paths, and deterministic index builds"
+  "summary": "The World→Domain→System→Document hierarchy and the document registration pipeline — immutable IDs, physical paths, and deterministic index builds",
+  "relations": [
+   {
+    "target": "kgs-edges",
+    "evidenceRef": "Defines the four-level hierarchy and the registration pipeline — a prerequisite for understanding the concepts and edge determination in edges"
+   }
+  ]
  },
  {
   "name": "kgs-edges",
   "title": "How Documents Connect — Concept Curation and idf-Weighted Edges",
-  "summary": "Concept curation and rarity(idf)-weighted shared-concept edges — the selection rules, an anatomy of real edges, threshold ripple effects, and the honesty principle"
+  "summary": "Concept curation and rarity(idf)-weighted shared-concept edges — the selection rules, an anatomy of real edges, threshold ripple effects, and the honesty principle",
+  "relations": [
+   {
+    "target": "kgs-views",
+    "evidenceRef": "Concept curation and edge determination rules — precedes reading hubs and bridges in views"
+   }
+  ]
  },
  {
   "name": "kgs-views",
   "title": "Nine Ways to Read the Graph — Each View Answers a Different Question",
-  "summary": "Constellation, Orbits, Strata (3D), Bundling, Chord, Packing, Concepts, Arc, and Matrix — the question each view answers and how hubs and bridges reveal the center of the graph"
+  "summary": "Constellation, Orbits, Strata (3D), Bundling, Chord, Packing, Concepts, Arc, and Matrix — the question each view answers and how hubs and bridges reveal the center of the graph",
+  "relations": [
+   {
+    "target": "kgs-ai-layer",
+    "evidenceRef": "The nine views, hubs and bridges — precedes understanding traversal and consumption in ai-layer"
+   }
+  ]
  },
  {
   "name": "kgs-ai-layer",
   "title": "How AI Reads This Wiki — the Machine-Readable Layer and Graph Traversal",
-  "summary": "The machine-readable layer — llms.txt, a self-contained graph JSON, and a traversal contract — that lets an external AI analyze this wiki by following its relations"
+  "summary": "The machine-readable layer — llms.txt, a self-contained graph JSON, and a traversal contract — that lets an external AI analyze this wiki by following its relations",
+  "relations": [
+   {
+    "target": "kgs-plugin",
+    "evidenceRef": "The machine-readable layer — a prerequisite for understanding the engine packaging in plugin"
+   }
+  ]
  },
  {
   "name": "kgs-plugin",
   "title": "Packaging the Wiki Engine as a Plugin — wiki-plugin and Sync Discipline",
-  "summary": "Packaging the knowledge system as wiki-plugin — four skills, a tool snapshot, the sync gate, version discipline, and dogfooding"
+  "summary": "Packaging the knowledge system as wiki-plugin — four skills, a tool snapshot, the sync gate, version discipline, and dogfooding",
+  "relations": [
+   {
+    "target": "kgs-overview",
+    "evidenceRef": "Implements the wiki engine described in the previous four parts as wiki-plugin (4 skills · a tools snapshot)"
+   },
+   {
+    "target": "kgs-gates",
+    "evidenceRef": "Engine packaging and sync discipline — a prerequisite for understanding the bundle gates and version discipline in gates"
+   }
+  ]
  },
  {
   "name": "kgs-gates",
@@ -32,27 +66,61 @@
  {
   "name": "welcome",
   "title": "Welcome",
-  "summary": "Meet Claude Code — it reads, edits, runs, and commits from your terminal"
+  "summary": "Meet Claude Code — it reads, edits, runs, and commits from your terminal",
+  "relations": [
+   {
+    "target": "install",
+    "evidenceRef": "Introduces what Claude Code is — precedes installation, running and authentication in install"
+   }
+  ]
  },
  {
   "name": "install",
   "title": "Install & Start",
-  "summary": "Install with the native installer, then run and authenticate in your project"
+  "summary": "Install with the native installer, then run and authenticate in your project",
+  "relations": [
+   {
+    "target": "commands",
+    "evidenceRef": "Reading order after “Install & Start” — builds on this document and leads into “Everyday Use”"
+   },
+   {
+    "target": "hnp-install",
+    "evidenceRef": "Plugin installation assumes the base install — \"Claude Code must be installed (see Install & Start)\""
+   }
+  ]
  },
  {
   "name": "commands",
   "title": "Everyday Use",
-  "summary": "Drive sessions with natural-language prompts and slash commands"
+  "summary": "Drive sessions with natural-language prompts and slash commands",
+  "relations": [
+   {
+    "target": "skills",
+    "evidenceRef": "Reading order after “Everyday Use” — builds on this document and leads into “Skills”"
+   }
+  ]
  },
  {
   "name": "skills",
   "title": "Skills",
-  "summary": "Reusable packaged capabilities and workflows for specific tasks"
+  "summary": "Reusable packaged capabilities and workflows for specific tasks",
+  "relations": [
+   {
+    "target": "mcp",
+    "evidenceRef": "Reading order after “Skills” — builds on this document and leads into “MCP Servers”"
+   }
+  ]
  },
  {
   "name": "mcp",
   "title": "MCP Servers",
-  "summary": "Connect external tools and data sources through the MCP standard"
+  "summary": "Connect external tools and data sources through the MCP standard",
+  "relations": [
+   {
+    "target": "hooks",
+    "evidenceRef": "Reading order after “MCP Servers” — builds on this document and leads into “Hooks”"
+   }
+  ]
  },
  {
   "name": "hooks",
@@ -62,62 +130,138 @@
  {
   "name": "ccb-overview",
   "title": "Course Overview and Goals",
-  "summary": "The goals of the course and the big picture of making a book with a harness"
+  "summary": "The goals of the course and the big picture of making a book with a harness",
+  "relations": [
+   {
+    "target": "ccb-what",
+    "evidenceRef": "Reading order after “Course Overview and Goals” — builds on this document and leads into “What Is Claude Code”"
+   },
+   {
+    "target": "hns-overview",
+    "evidenceRef": "The Harness course states it comes \"following the previous Claude Code Basics course\" — it assumes the basics course (Tutorial)"
+   }
+  ]
  },
  {
   "name": "ccb-what",
   "title": "What Is Claude Code",
-  "summary": "What Claude Code is and how it differs — an agent that works directly on local files"
+  "summary": "What Claude Code is and how it differs — an agent that works directly on local files",
+  "relations": [
+   {
+    "target": "ccb-terminal",
+    "evidenceRef": "Reading order after “What Is Claude Code” — builds on this document and leads into “Basic Terminal Commands”"
+   }
+  ]
  },
  {
   "name": "ccb-terminal",
   "title": "Basic Terminal Commands",
-  "summary": "The basics of pwd, cd and mkdir to create a folder and launch claude"
+  "summary": "The basics of pwd, cd and mkdir to create a folder and launch claude",
+  "relations": [
+   {
+    "target": "ccb-claudemd",
+    "evidenceRef": "Reading order after “Basic Terminal Commands” — builds on this document and leads into “CLAUDE.md — The Instruction File”"
+   }
+  ]
  },
  {
   "name": "claude-md-commandments",
   "title": "The Ten Commandments of CLAUDE.md — Ten Promises for Taming Your AI Pair Programmer",
-  "summary": "A general-purpose CLAUDE.md guideline aimed at ten habitual LLM coding mistakes, presented as an infographic with the English original, a Korean translation, and usage notes — a careful start (think first, the three artifacts), coding principles (simplicity, surgical changes, Korean headers, no colons, test before done), and verification and wrap-up (goal-first, semantic commits, read errors closely), plus how to install it at the project root and the signals that show it works"
+  "summary": "A general-purpose CLAUDE.md guideline aimed at ten habitual LLM coding mistakes, presented as an infographic with the English original, a Korean translation, and usage notes — a careful start (think first, the three artifacts), coding principles (simplicity, surgical changes, Korean headers, no colons, test before done), and verification and wrap-up (goal-first, semantic commits, read errors closely), plus how to install it at the project root and the signals that show it works",
+  "relations": [
+   {
+    "target": "ccb-claudemd",
+    "evidenceRef": "A hands-on example of the instruction file (CLAUDE.md) explained in ccb-claudemd — a complete set of instructions you can copy and use, and how to apply it"
+   }
+  ]
  },
  {
   "name": "ccb-claudemd",
   "title": "CLAUDE.md — The Instruction File",
-  "summary": "The four scopes of the CLAUDE.md instruction file and how to write one"
+  "summary": "The four scopes of the CLAUDE.md instruction file and how to write one",
+  "relations": [
+   {
+    "target": "ccb-research-web",
+    "evidenceRef": "Reading order after “CLAUDE.md — The Instruction File” — builds on this document and leads into “Hands-on: Web research → file → website”"
+   }
+  ]
  },
  {
   "name": "ccb-research-web",
   "title": "Hands-on: Web research → file → website",
-  "summary": "Hands-on practice from web research through saving to a file, generating a website, and editing the design"
+  "summary": "Hands-on practice from web research through saving to a file, generating a website, and editing the design",
+  "relations": [
+   {
+    "target": "ccb-design-system",
+    "evidenceRef": "Reading order after “Hands-on: Web research → file → website” — builds on this document and leads into “Extracting a design system”"
+   }
+  ]
  },
  {
   "name": "ccb-design-system",
   "title": "Extracting a design system",
-  "summary": "Pulling design elements out of a finished site to build a design system"
+  "summary": "Pulling design elements out of a finished site to build a design system",
+  "relations": [
+   {
+    "target": "ccb-papers",
+    "evidenceRef": "Reading order after “Extracting a design system” — builds on this document and leads into “Organizing web material — Hugging Face papers”"
+   }
+  ]
  },
  {
   "name": "ccb-papers",
   "title": "Organizing web material — Hugging Face papers",
-  "summary": "Collecting and categorizing abstracts from Hugging Face Daily Papers into a file"
+  "summary": "Collecting and categorizing abstracts from Hugging Face Daily Papers into a file",
+  "relations": [
+   {
+    "target": "ccb-skills",
+    "evidenceRef": "Reading order after “Organizing web material — Hugging Face papers” — builds on this document and leads into “Creating a Skill”"
+   }
+  ]
  },
  {
   "name": "ccb-skills",
   "title": "Creating a Skill",
-  "summary": "How to turn repeated tasks into reusable Skills and handle @ references and permissions"
+  "summary": "How to turn repeated tasks into reusable Skills and handle @ references and permissions",
+  "relations": [
+   {
+    "target": "ccb-plugins",
+    "evidenceRef": "Reading order after “Creating a Skill” — builds on this document and leads into “Plugins · the marketplace”"
+   }
+  ]
  },
  {
   "name": "ccb-plugins",
   "title": "Plugins · the marketplace",
-  "summary": "Installing and verifying the document-skills plugin from the marketplace"
+  "summary": "Installing and verifying the document-skills plugin from the marketplace",
+  "relations": [
+   {
+    "target": "ccb-agents",
+    "evidenceRef": "Reading order after “Plugins · the marketplace” — builds on this document and leads into “Building an Agent”"
+   }
+  ]
  },
  {
   "name": "ccb-agents",
   "title": "Building an Agent",
-  "summary": "Build a specialized paper-analysis agent and analyze PDFs in parallel"
+  "summary": "Build a specialized paper-analysis agent and analyze PDFs in parallel",
+  "relations": [
+   {
+    "target": "ccb-manage",
+    "evidenceRef": "Reading order after “Building an Agent” — builds on this document and leads into “Managing Usage · Context · Sessions”"
+   }
+  ]
  },
  {
   "name": "ccb-manage",
   "title": "Managing Usage · Context · Sessions",
-  "summary": "Manage token usage, context, and sessions to control quality and cost"
+  "summary": "Manage token usage, context, and sessions to control quality and cost",
+  "relations": [
+   {
+    "target": "ccb-tips",
+    "evidenceRef": "Reading order after “Managing Usage · Context · Sessions” — builds on this document and leads into “Useful Features and Wrap-up”"
+   }
+  ]
  },
  {
   "name": "ccb-tips",
@@ -127,57 +271,131 @@
  {
   "name": "skl-overview",
   "title": "Skill Deep Dive — Overview",
-  "summary": "Introduces the overall structure of the Skill Deep Dive course and why it is worth learning."
+  "summary": "Introduces the overall structure of the Skill Deep Dive course and why it is worth learning.",
+  "relations": [
+   {
+    "target": "skl-coding-agent",
+    "evidenceRef": "Reading order after “Skill Deep Dive — Overview” — builds on this document and leads into “The Background of Skills — the Birth of the Coding Agent”"
+   },
+   {
+    "target": "hns-overview",
+    "evidenceRef": "The Skill overview points to the next course as 'the harness that comes next' — the Harness assumes an understanding of Skills"
+   }
+  ]
  },
  {
   "name": "skl-coding-agent",
   "title": "The Background of Skills — the Birth of the Coding Agent",
-  "summary": "Explains the background of how skills emerged on top of the coding agent."
+  "summary": "Explains the background of how skills emerged on top of the coding agent.",
+  "relations": [
+   {
+    "target": "skl-what",
+    "evidenceRef": "Reading order after “The Background of Skills — the Birth of the Coding Agent” — builds on this document and leads into “What Is a Skill”"
+   }
+  ]
  },
  {
   "name": "skl-what",
   "title": "What Is a Skill",
-  "summary": "Explains that a skill is a reusable work package giving an organization consistent quality."
+  "summary": "Explains that a skill is a reusable work package giving an organization consistent quality.",
+  "relations": [
+   {
+    "target": "skl-strengths",
+    "evidenceRef": "Reading order after “What Is a Skill” — builds on this document and leads into “The Strengths of Skills”"
+   }
+  ]
  },
  {
   "name": "skl-strengths",
   "title": "The Strengths of Skills",
-  "summary": "Summarizes the advantages of skills such as reusability, progressive loading, and deterministic execution."
+  "summary": "Summarizes the advantages of skills such as reusability, progressive loading, and deterministic execution.",
+  "relations": [
+   {
+    "target": "skl-context",
+    "evidenceRef": "Reading order after “The Strengths of Skills” — builds on this document and leads into “The Context Window and the Tool Problem”"
+   }
+  ]
  },
  {
   "name": "skl-context",
   "title": "The Context Window and the Tool Problem",
-  "summary": "Explains the limits of the context window and the problem of tools consuming context."
+  "summary": "Explains the limits of the context window and the problem of tools consuming context.",
+  "relations": [
+   {
+    "target": "skl-progressive",
+    "evidenceRef": "Reading order after “The Context Window and the Tool Problem” — builds on this document and leads into “Progressive Loading (the Core Principle of Skills)”"
+   }
+  ]
  },
  {
   "name": "skl-progressive",
   "title": "Progressive Loading (the Core Principle of Skills)",
-  "summary": "Explains the three-level principle of progressive loading, where only the metadata is loaded up front."
+  "summary": "Explains the three-level principle of progressive loading, where only the metadata is loaded up front.",
+  "relations": [
+   {
+    "target": "skl-structure",
+    "evidenceRef": "Reading order after “Progressive Loading (the Core Principle of Skills)” — builds on this document and leads into “SKILL.md Structure and the Description”"
+   }
+  ]
  },
  {
   "name": "skl-structure",
   "title": "SKILL.md Structure and the Description",
-  "summary": "Covers the front matter structure of SKILL.md and why writing a good description matters."
+  "summary": "Covers the front matter structure of SKILL.md and why writing a good description matters.",
+  "relations": [
+   {
+    "target": "skl-examples",
+    "evidenceRef": "Reading order after “SKILL.md Structure and the Description” — builds on this document and leads into “A Tour of Example Skills”"
+   }
+  ]
  },
  {
   "name": "skl-examples",
   "title": "A Tour of Example Skills",
-  "summary": "Tours real example skill collections from Anthropic, science research, and Korea-focused sets."
+  "summary": "Tours real example skill collections from Anthropic, science research, and Korea-focused sets.",
+  "relations": [
+   {
+    "target": "skl-what",
+    "evidenceRef": "The collection of about 140 Anthropic base and science skills is a real example of skl-what's definition of a reusable work package"
+   },
+   {
+    "target": "skl-install",
+    "evidenceRef": "Reading order after “A Tour of Example Skills” — builds on this document and leads into “Installing and Using Skills (Hands-on)”"
+   }
+  ]
  },
  {
   "name": "skl-install",
   "title": "Installing and Using Skills (Hands-on)",
-  "summary": "Walks through the hands-on way to install skills and invoke them."
+  "summary": "Walks through the hands-on way to install skills and invoke them.",
+  "relations": [
+   {
+    "target": "skl-security",
+    "evidenceRef": "Reading order after “Installing and Using Skills (Hands-on)” — builds on this document and leads into “Security Precautions”"
+   }
+  ]
  },
  {
   "name": "skl-security",
   "title": "Security Precautions",
-  "summary": "Covers the security risks that come with skills holding execution permission, and how to handle them."
+  "summary": "Covers the security risks that come with skills holding execution permission, and how to handle them.",
+  "relations": [
+   {
+    "target": "skl-creating",
+    "evidenceRef": "Reading order after “Security Precautions” — builds on this document and leads into “Creating Skills (Skill Engineering)”"
+   }
+  ]
  },
  {
   "name": "skl-creating",
   "title": "Creating Skills (Skill Engineering)",
-  "summary": "Explains the engineering of building skills with skill-creator and the two categories of skills."
+  "summary": "Explains the engineering of building skills with skill-creator and the two categories of skills.",
+  "relations": [
+   {
+    "target": "skl-wrap",
+    "evidenceRef": "Reading order after “Creating Skills (Skill Engineering)” — builds on this document and leads into “Wrap-up — Engineering Layers and Q&A”"
+   }
+  ]
  },
  {
   "name": "skl-wrap",
@@ -187,42 +405,90 @@
  {
   "name": "sb-intro",
   "title": "What is a Second Brain",
-  "summary": "Introduces the definition of a Second Brain, the data moat, and the big picture of the five levels."
+  "summary": "Introduces the definition of a Second Brain, the data moat, and the big picture of the five levels.",
+  "relations": [
+   {
+    "target": "sb-levels",
+    "evidenceRef": "Reading order after “What is a Second Brain” — builds on this document and leads into “The five levels at a glance”"
+   }
+  ]
  },
  {
   "name": "sb-levels",
   "title": "The five levels at a glance",
-  "summary": "Surveys the five Second Brain levels ranked by search and recall ability."
+  "summary": "Surveys the five Second Brain levels ranked by search and recall ability.",
+  "relations": [
+   {
+    "target": "sb-level1",
+    "evidenceRef": "Reading order after “The five levels at a glance” — builds on this document and leads into “Level 1 · Find exactly (CLAUDE.md as a router)”"
+   }
+  ]
  },
  {
   "name": "sb-level1",
   "title": "Level 1 · Find exactly (CLAUDE.md as a router)",
-  "summary": "Explains level 1 exact search, using CLAUDE.md as a router."
+  "summary": "Explains level 1 exact search, using CLAUDE.md as a router.",
+  "relations": [
+   {
+    "target": "sb-level2",
+    "evidenceRef": "Reading order after “Level 1 · Find exactly (CLAUDE.md as a router)” — builds on this document and leads into “Level 2 · Grouping by topic (LLM wiki + memory)”"
+   }
+  ]
  },
  {
   "name": "sb-level2",
   "title": "Level 2 · Grouping by topic (LLM wiki + memory)",
-  "summary": "Explains Level 2, where topics are grouped with an LLM wiki and memory."
+  "summary": "Explains Level 2, where topics are grouped with an LLM wiki and memory.",
+  "relations": [
+   {
+    "target": "sb-level3",
+    "evidenceRef": "Reading order after “Level 2 · Grouping by topic (LLM wiki + memory)” — builds on this document and leads into “Level 3 · Searching by meaning (semantic search, vector DB)”"
+   }
+  ]
  },
  {
   "name": "sb-level3",
   "title": "Level 3 · Searching by meaning (semantic search, vector DB)",
-  "summary": "Explains embedding- and chunking-based semantic search and its limits."
+  "summary": "Explains embedding- and chunking-based semantic search and its limits.",
+  "relations": [
+   {
+    "target": "sb-level4",
+    "evidenceRef": "Reading order after “Level 3 · Searching by meaning (semantic search, vector DB)” — builds on this document and leads into “Level 4 · Linking by relationship (knowledge graph)”"
+   }
+  ]
  },
  {
   "name": "sb-level4",
   "title": "Level 4 · Linking by relationship (knowledge graph)",
-  "summary": "Explains Level 4, the knowledge graph that links things through entities and relationships."
+  "summary": "Explains Level 4, the knowledge graph that links things through entities and relationships.",
+  "relations": [
+   {
+    "target": "sb-level5",
+    "evidenceRef": "Reading order after “Level 4 · Linking by relationship (knowledge graph)” — builds on this document and leads into “Level 5 · The Always-On Brain OS”"
+   }
+  ]
  },
  {
   "name": "sb-level5",
   "title": "Level 5 · The Always-On Brain OS",
-  "summary": "Explains the autonomous brain OS that keeps refreshing itself automatically with cron."
+  "summary": "Explains the autonomous brain OS that keeps refreshing itself automatically with cron.",
+  "relations": [
+   {
+    "target": "sb-context-connections",
+    "evidenceRef": "Reading order after “Level 5 · The Always-On Brain OS” — builds on this document and leads into “What to Ingest and What to Leave (Context vs Connections)”"
+   }
+  ]
  },
  {
   "name": "sb-context-connections",
   "title": "What to Ingest and What to Leave (Context vs Connections)",
-  "summary": "Uses the 4C framework to separate data worth ingesting from data you should only reach into."
+  "summary": "Uses the 4C framework to separate data worth ingesting from data you should only reach into.",
+  "relations": [
+   {
+    "target": "sb-choose",
+    "evidenceRef": "Reading order after “What to Ingest and What to Leave (Context vs Connections)” — builds on this document and leads into “Find Your Level · The Team Second Brain”"
+   }
+  ]
  },
  {
   "name": "sb-choose",
@@ -232,57 +498,123 @@
  {
   "name": "hns-overview",
   "title": "Harness Engineering — Overview and Recap",
-  "summary": "Introduces the harness engineering course and recaps the Claude Code basics."
+  "summary": "Introduces the harness engineering course and recaps the Claude Code basics.",
+  "relations": [
+   {
+    "target": "hns-what",
+    "evidenceRef": "Reading order after “Harness Engineering — Overview and Recap” — builds on this document and leads into “What Is Harness Engineering?”"
+   }
+  ]
  },
  {
   "name": "hns-what",
   "title": "What Is Harness Engineering?",
-  "summary": "Defines the harness concept as designing the entire system in which AI works."
+  "summary": "Defines the harness concept as designing the entire system in which AI works.",
+  "relations": [
+   {
+    "target": "hns-anatomy",
+    "evidenceRef": "Reading order after “What Is Harness Engineering?” — builds on this document and leads into “Harness Composition and Effects”"
+   }
+  ]
  },
  {
   "name": "hns-anatomy",
   "title": "Harness Composition and Effects",
-  "summary": "Explains the core harness components and how the operating loop raises productivity."
+  "summary": "Explains the core harness components and how the operating loop raises productivity.",
+  "relations": [
+   {
+    "target": "hns-install",
+    "evidenceRef": "Reading order after “Harness Composition and Effects” — builds on this document and leads into “Installing the Meta-Harness Skill (Hands-on)”"
+   }
+  ]
  },
  {
   "name": "hns-install",
   "title": "Installing the Meta-Harness Skill (Hands-on)",
-  "summary": "A hands-on walkthrough of installing the meta-harness plugin from the marketplace."
+  "summary": "A hands-on walkthrough of installing the meta-harness plugin from the marketplace.",
+  "relations": [
+   {
+    "target": "hns-run",
+    "evidenceRef": "Reading order after “Installing the Meta-Harness Skill (Hands-on)” — builds on this document and leads into “Running the Harness (Hands-on)”"
+   }
+  ]
  },
  {
   "name": "hns-run",
   "title": "Running the Harness (Hands-on)",
-  "summary": "Hands-on practice in composing and running an agent team by conveying only the intent."
+  "summary": "Hands-on practice in composing and running an agent team by conveying only the intent.",
+  "relations": [
+   {
+    "target": "hns-review",
+    "evidenceRef": "Reading order after “Running the Harness (Hands-on)” — builds on this document and leads into “Reviewing the Generated Result — Agents · Skills · Orchestrator”"
+   }
+  ]
  },
  {
   "name": "hns-review",
   "title": "Reviewing the Generated Result — Agents · Skills · Orchestrator",
-  "summary": "Reviews the agent, skill, and orchestrator structure the harness generated."
+  "summary": "Reviews the agent, skill, and orchestrator structure the harness generated.",
+  "relations": [
+   {
+    "target": "hns-kitchen",
+    "evidenceRef": "Reading order after “Reviewing the Generated Result — Agents · Skills · Orchestrator” — builds on this document and leads into “Understanding the Harness Through a Kitchen Metaphor”"
+   }
+  ]
  },
  {
   "name": "hns-kitchen",
   "title": "Understanding the Harness Through a Kitchen Metaphor",
-  "summary": "Uses a restaurant kitchen to make the difference between single and multi-agent setups clear."
+  "summary": "Uses a restaurant kitchen to make the difference between single and multi-agent setups clear.",
+  "relations": [
+   {
+    "target": "hns-team",
+    "evidenceRef": "Reading order after “Understanding the Harness Through a Kitchen Metaphor” — builds on this document and leads into “Agent Teams and Context Management”"
+   }
+  ]
  },
  {
   "name": "hns-team",
   "title": "Agent Teams and Context Management",
-  "summary": "Covers isolated subagents, communicating agent teams, and context management."
+  "summary": "Covers isolated subagents, communicating agent teams, and context management.",
+  "relations": [
+   {
+    "target": "hns-core",
+    "evidenceRef": "Reading order after “Agent Teams and Context Management” — builds on this document and leads into “The Three Core Elements and How They Work”"
+   }
+  ]
  },
  {
   "name": "hns-core",
   "title": "The Three Core Elements and How They Work",
-  "summary": "Explains the three elements — agent, skill, orchestrator — and the six-stage composition."
+  "summary": "Explains the three elements — agent, skill, orchestrator — and the six-stage composition.",
+  "relations": [
+   {
+    "target": "hns-usecases",
+    "evidenceRef": "Reading order after “The Three Core Elements and How They Work” — builds on this document and leads into “Use Cases — From Content to Research”"
+   }
+  ]
  },
  {
   "name": "hns-usecases",
   "title": "Use Cases — From Content to Research",
-  "summary": "Introduces a range of harness use cases, from novels and webtoons to research."
+  "summary": "Introduces a range of harness use cases, from novels and webtoons to research.",
+  "relations": [
+   {
+    "target": "hns-hundred",
+    "evidenceRef": "Reading order after “Use Cases — From Content to Research” — builds on this document and leads into “Harness 100 · Practice Ideas · Performance”"
+   }
+  ]
  },
  {
   "name": "hns-hundred",
   "title": "Harness 100 · Practice Ideas · Performance",
-  "summary": "Introduces the Harness 100 collection, practice ideas, and performance measurements."
+  "summary": "Introduces the Harness 100 collection, practice ideas, and performance measurements.",
+  "relations": [
+   {
+    "target": "hns-tools",
+    "evidenceRef": "Reading order after “Harness 100 · Practice Ideas · Performance” — builds on this document and leads into “Extending the Tools and Wrap-up”"
+   }
+  ]
  },
  {
   "name": "hns-tools",
@@ -292,47 +624,113 @@
  {
   "name": "hnp-intro",
   "title": "Harness Plugin — Introduction",
-  "summary": "Introduces the Harness plugin concept and why it fits ERP customization."
+  "summary": "Introduces the Harness plugin concept and why it fits ERP customization.",
+  "relations": [
+   {
+    "target": "hnp-concepts",
+    "evidenceRef": "Reading order after “Harness Plugin — Introduction” — builds on this document and leads into “Core Concepts Made Easy”"
+   }
+  ]
  },
  {
   "name": "hnp-concepts",
   "title": "Core Concepts Made Easy",
-  "summary": "Explains the five harness elements simply by likening them to a company team."
+  "summary": "Explains the five harness elements simply by likening them to a company team.",
+  "relations": [
+   {
+    "target": "hnp-install",
+    "evidenceRef": "Reading order after “Core Concepts Made Easy” — builds on this document and leads into “Installation and Setup”"
+   },
+   {
+    "target": "hns-anatomy",
+    "evidenceRef": "The five elements of the Harness plugin implement hns-anatomy's core components (agent · skill · orchestrator · verification · memory)"
+   }
+  ]
  },
  {
   "name": "hnp-install",
   "title": "Installation and Setup",
-  "summary": "Guides registering the Harness plugin marketplace and the 3-step installation."
+  "summary": "Guides registering the Harness plugin marketplace and the 3-step installation.",
+  "relations": [
+   {
+    "target": "hnp-first-run",
+    "evidenceRef": "Reading order after “Installation and Setup” — builds on this document and leads into “First Harness Run — Sales/Order Customization”"
+   }
+  ]
  },
  {
   "name": "hnp-first-run",
   "title": "First Harness Run — Sales/Order Customization",
-  "summary": "A hands-on run of the harness, giving an ERP sales/order CR as an intent."
+  "summary": "A hands-on run of the harness, giving an ERP sales/order CR as an intent.",
+  "relations": [
+   {
+    "target": "hns-run",
+    "evidenceRef": "A first run given an ERP sales/order CR as its intent — an ERP example of hns-run's convey-only-the-intent team formation and execution"
+   },
+   {
+    "target": "hnp-architecture",
+    "evidenceRef": "Reading order after “First Harness Run — Sales/Order Customization” — builds on this document and leads into “How It Works and the 6 Stages”"
+   }
+  ]
  },
  {
   "name": "hnp-architecture",
   "title": "How It Works and the 6 Stages",
-  "summary": "Explains the 6-stage team formation and the operating loop that follow the go-ahead approval."
+  "summary": "Explains the 6-stage team formation and the operating loop that follow the go-ahead approval.",
+  "relations": [
+   {
+    "target": "hns-core",
+    "evidenceRef": "The proceed button → 6-stage team formation loop implements hns-core's three elements and 6-stage structure as a plugin"
+   },
+   {
+    "target": "hnp-agents-skills",
+    "evidenceRef": "Reading order after “How It Works and the 6 Stages” — builds on this document and leads into “Designing Agents and Skills”"
+   }
+  ]
  },
  {
   "name": "hnp-agents-skills",
   "title": "Designing Agents and Skills",
-  "summary": "Covers the design principles of agent job descriptions and skill manuals."
+  "summary": "Covers the design principles of agent job descriptions and skill manuals.",
+  "relations": [
+   {
+    "target": "hnp-verify",
+    "evidenceRef": "Reading order after “Designing Agents and Skills” — builds on this document and leads into “Verification · Quality and _workspace”"
+   }
+  ]
  },
  {
   "name": "hnp-verify",
   "title": "Verification · Quality and _workspace",
-  "summary": "Secures quality through the QA agent's verification loop and evidence records."
+  "summary": "Secures quality through the QA agent's verification loop and evidence records.",
+  "relations": [
+   {
+    "target": "hnp-scenarios",
+    "evidenceRef": "Reading order after “Verification · Quality and _workspace” — builds on this document and leads into “Scenario Board”"
+   }
+  ]
  },
  {
   "name": "hnp-scenarios",
   "title": "Scenario Board",
-  "summary": "Gathers customization scenarios and recommended team setups by ERP module."
+  "summary": "Gathers customization scenarios and recommended team setups by ERP module.",
+  "relations": [
+   {
+    "target": "hnp-hundred",
+    "evidenceRef": "Reading order after “Scenario Board” — builds on this document and leads into “Harness100 · Performance”"
+   }
+  ]
  },
  {
   "name": "hnp-hundred",
   "title": "Harness100 · Performance",
-  "summary": "Introduces how to swap Harness100 cases over to ERP customization, and its performance."
+  "summary": "Introduces how to swap Harness100 cases over to ERP customization, and its performance.",
+  "relations": [
+   {
+    "target": "hnp-commands",
+    "evidenceRef": "Reading order after “Harness100 · Performance” — builds on this document and leads into “Commands · Quick Reference”"
+   }
+  ]
  },
  {
   "name": "hnp-commands",
@@ -342,52 +740,116 @@
  {
   "name": "llmw-overview",
   "title": "LLM Wiki — Overview",
-  "summary": "Introduces the overall concept and structure of the Obsidian-based LLM wiki proposed by Karpathy."
+  "summary": "Introduces the overall concept and structure of the Obsidian-based LLM wiki proposed by Karpathy.",
+  "relations": [
+   {
+    "target": "llmw-vaults",
+    "evidenceRef": "Reading order after “LLM Wiki — Overview” — builds on this document and leads into “The Vault System — Main Vault and Wiki Vault”"
+   },
+   {
+    "target": "sb-level2",
+    "evidenceRef": "sb-level2 states that 'the LLM wiki = Level 2 grouping by topic' ('Level 2 is exactly that world') — LLM Wiki is the concrete example"
+   }
+  ]
  },
  {
   "name": "llmw-vaults",
   "title": "The Vault System — Main Vault and Wiki Vault",
-  "summary": "Explains the two-vault structure that separates knowledge into a main vault and a wiki vault."
+  "summary": "Explains the two-vault structure that separates knowledge into a main vault and a wiki vault.",
+  "relations": [
+   {
+    "target": "llmw-capture",
+    "evidenceRef": "Reading order after “The Vault System — Main Vault and Wiki Vault” — builds on this document and leads into “What Goes In — Knowledge Capture”"
+   }
+  ]
  },
  {
   "name": "llmw-capture",
   "title": "What Goes In — Knowledge Capture",
-  "summary": "Covers why and how to capture knowledge you are interested in, as a forward base for learning."
+  "summary": "Covers why and how to capture knowledge you are interested in, as a forward base for learning.",
+  "relations": [
+   {
+    "target": "llmw-metadata",
+    "evidenceRef": "Reading order after “What Goes In — Knowledge Capture” — builds on this document and leads into “Note Structure — Metadata and Progressive Disclosure”"
+   }
+  ]
  },
  {
   "name": "llmw-metadata",
   "title": "Note Structure — Metadata and Progressive Disclosure",
-  "summary": "Optimizes context through YAML front matter metadata and progressive disclosure."
+  "summary": "Optimizes context through YAML front matter metadata and progressive disclosure.",
+  "relations": [
+   {
+    "target": "llmw-links",
+    "evidenceRef": "Reading order after “Note Structure — Metadata and Progressive Disclosure” — builds on this document and leads into “Links and Cross-Vault References”"
+   }
+  ]
  },
  {
   "name": "llmw-links",
   "title": "Links and Cross-Vault References",
-  "summary": "Connects a knowledge graph through links between notes and markdown links that cross vaults."
+  "summary": "Connects a knowledge graph through links between notes and markdown links that cross vaults.",
+  "relations": [
+   {
+    "target": "llmw-cards",
+    "evidenceRef": "Reading order after “Links and Cross-Vault References” — builds on this document and leads into “Kinds of Wiki Cards and Raw Sources”"
+   }
+  ]
  },
  {
   "name": "llmw-cards",
   "title": "Kinds of Wiki Cards and Raw Sources",
-  "summary": "Ingest raw sources to build concept, entity, guide, and map wiki cards."
+  "summary": "Ingest raw sources to build concept, entity, guide, and map wiki cards.",
+  "relations": [
+   {
+    "target": "llmw-system",
+    "evidenceRef": "Reading order after “Kinds of Wiki Cards and Raw Sources” — builds on this document and leads into “System Files and rules”"
+   }
+  ]
  },
  {
   "name": "llmw-system",
   "title": "System Files and rules",
-  "summary": "Explains the system files that govern AI behavior and the .claude/rules conventions."
+  "summary": "Explains the system files that govern AI behavior and the .claude/rules conventions.",
+  "relations": [
+   {
+    "target": "llmw-onboard",
+    "evidenceRef": "Reading order after “System Files and rules” — builds on this document and leads into “Onboarding (Hands-on)”"
+   }
+  ]
  },
  {
   "name": "llmw-onboard",
   "title": "Onboarding (Hands-on)",
-  "summary": "A hands-on walkthrough of getting the release, setting up the wiki vault with /onboard, and opening it in Obsidian."
+  "summary": "A hands-on walkthrough of getting the release, setting up the wiki vault with /onboard, and opening it in Obsidian.",
+  "relations": [
+   {
+    "target": "llmw-ingest-query-lint",
+    "evidenceRef": "Reading order after “Onboarding (Hands-on)” — builds on this document and leads into “Three Core Actions — Ingest · Query · Lint”"
+   }
+  ]
  },
  {
   "name": "llmw-ingest-query-lint",
   "title": "Three Core Actions — Ingest · Query · Lint",
-  "summary": "Run a knowledge base on the three axes of ingest, query, and lint with staged search methods."
+  "summary": "Run a knowledge base on the three axes of ingest, query, and lint with staged search methods.",
+  "relations": [
+   {
+    "target": "llmw-clipper-query",
+    "evidenceRef": "Reading order after “Three Core Actions — Ingest · Query · Lint” — builds on this document and leads into “Web Clipper, the Inbox, and Query in Practice”"
+   }
+  ]
  },
  {
   "name": "llmw-clipper-query",
   "title": "Web Clipper, the Inbox, and Query in Practice",
-  "summary": "Collect material into the inbox with the Web Clipper, sort and ingest it, then retrieve it with queries."
+  "summary": "Collect material into the inbox with the Web Clipper, sort and ingest it, then retrieve it with queries.",
+  "relations": [
+   {
+    "target": "llmw-philosophy",
+    "evidenceRef": "Reading order after “Web Clipper, the Inbox, and Query in Practice” — builds on this document and leads into “Use and Philosophy — Reading Ability and Running Two Vaults”"
+   }
+  ]
  },
  {
   "name": "llmw-philosophy",
@@ -397,62 +859,134 @@
  {
   "name": "omc-intro",
   "title": "Introducing OMC",
-  "summary": "Introduces the autonomous execution, multi-agent work, and automatic verification that the OMC plugin adds to Claude Code."
+  "summary": "Introduces the autonomous execution, multi-agent work, and automatic verification that the OMC plugin adds to Claude Code.",
+  "relations": [
+   {
+    "target": "omc-concepts",
+    "evidenceRef": "Reading order after “Introducing OMC” — builds on this document and leads into “Core Terminology”"
+   }
+  ]
  },
  {
   "name": "omc-concepts",
   "title": "Core Terminology",
-  "summary": "Organizes the basic OMC terms such as slash commands, agents, skills, and hooks."
+  "summary": "Organizes the basic OMC terms such as slash commands, agents, skills, and hooks.",
+  "relations": [
+   {
+    "target": "omc-install",
+    "evidenceRef": "Reading order after “Core Terminology” — builds on this document and leads into “Installation”"
+   }
+  ]
  },
  {
   "name": "omc-install",
   "title": "Installation",
-  "summary": "Walks through the three OMC installation methods — the plugin marketplace, --local, and the npm CLI."
+  "summary": "Walks through the three OMC installation methods — the plugin marketplace, --local, and the npm CLI.",
+  "relations": [
+   {
+    "target": "omc-doctor",
+    "evidenceRef": "Reading order after “Installation” — builds on this document and leads into “Installation Diagnosis”"
+   }
+  ]
  },
  {
   "name": "omc-doctor",
   "title": "Installation Diagnosis",
-  "summary": "Covers how to diagnose the installation and configuration state with the omc-doctor command."
+  "summary": "Covers how to diagnose the installation and configuration state with the omc-doctor command.",
+  "relations": [
+   {
+    "target": "omc-modes",
+    "evidenceRef": "Reading order after “Installation Diagnosis” — builds on this document and leads into “Execution Modes”"
+   }
+  ]
  },
  {
   "name": "omc-modes",
   "title": "Execution Modes",
-  "summary": "Explains in detail the execution modes by intensity — autopilot, ralph, ultrawork, team and more."
+  "summary": "Explains in detail the execution modes by intensity — autopilot, ralph, ultrawork, team and more.",
+  "relations": [
+   {
+    "target": "omc-agents",
+    "evidenceRef": "Reading order after “Execution Modes” — builds on this document and leads into “Agents · Skills”"
+   }
+  ]
  },
  {
   "name": "omc-agents",
   "title": "Agents · Skills",
-  "summary": "Explains the structure in which the conductor Claude delegates to specialist agents by role, and skills."
+  "summary": "Explains the structure in which the conductor Claude delegates to specialist agents by role, and skills.",
+  "relations": [
+   {
+    "target": "omc-hooks",
+    "evidenceRef": "Reading order after “Agents · Skills” — builds on this document and leads into “Hook · Memory”"
+   }
+  ]
  },
  {
   "name": "omc-hooks",
   "title": "Hook · Memory",
-  "summary": "Explains OMC's hook events and its memory mechanisms such as notepad and project-memory."
+  "summary": "Explains OMC's hook events and its memory mechanisms such as notepad and project-memory.",
+  "relations": [
+   {
+    "target": "omc-tools",
+    "evidenceRef": "Reading order after “Hook · Memory” — builds on this document and leads into “Advanced Tools”"
+   }
+  ]
  },
  {
   "name": "omc-tools",
   "title": "Advanced Tools",
-  "summary": "Introduces the family of precise code-analysis tools — LSP, AST Grep, Python REPL and more."
+  "summary": "Introduces the family of precise code-analysis tools — LSP, AST Grep, Python REPL and more.",
+  "relations": [
+   {
+    "target": "omc-workflows",
+    "evidenceRef": "Reading order after “Advanced Tools” — builds on this document and leads into “Workflows by Real-World Scenario”"
+   }
+  ]
  },
  {
   "name": "omc-workflows",
   "title": "Workflows by Real-World Scenario",
-  "summary": "Lays out eight real-world workflows — kickoff, adding a feature, refactoring, and more — with examples."
+  "summary": "Lays out eight real-world workflows — kickoff, adding a feature, refactoring, and more — with examples.",
+  "relations": [
+   {
+    "target": "omc-windows",
+    "evidenceRef": "Reading order after “Workflows by Real-World Scenario” — builds on this document and leads into “Windows Cautions”"
+   }
+  ]
  },
  {
   "name": "omc-windows",
   "title": "Windows Cautions",
-  "summary": "Covers native Windows Hook support, the psmux alternative, and the WSL2 alternative path."
+  "summary": "Covers native Windows Hook support, the psmux alternative, and the WSL2 alternative path.",
+  "relations": [
+   {
+    "target": "omc-cost",
+    "evidenceRef": "Reading order after “Windows Cautions” — builds on this document and leads into “Cost · Performance”"
+   }
+  ]
  },
  {
   "name": "omc-cost",
   "title": "Cost · Performance",
-  "summary": "Explains how parallel and autonomous execution affect speed and token cost, and how to balance them."
+  "summary": "Explains how parallel and autonomous execution affect speed and token cost, and how to balance them.",
+  "relations": [
+   {
+    "target": "omc-commands",
+    "evidenceRef": "Reading order after “Cost · Performance” — builds on this document and leads into “Command Collection”"
+   }
+  ]
  },
  {
   "name": "omc-commands",
   "title": "Command Collection",
-  "summary": "Organizes the OMC slash commands you use often, from install through execution and cancellation, into a table."
+  "summary": "Organizes the OMC slash commands you use often, from install through execution and cancellation, into a table.",
+  "relations": [
+   {
+    "target": "omc-quickref",
+    "evidenceRef": "Reading order after “Command Collection” — builds on this document and leads into “Quick Reference Card”"
+   }
+  ]
  },
  {
   "name": "omc-quickref",
@@ -462,52 +996,128 @@
  {
   "name": "dzp-overview",
   "title": "Proposal Overview — A GitLab-Based AI Development Knowledge Platform",
-  "summary": "An overview of the proposal for a Read-Only platform where AI automatically accumulates GitLab development results as organizational knowledge, and of its virtuous cycle — stated as an extension of the engine proven in the Reference Wiki"
+  "summary": "An overview of the proposal for a Read-Only platform where AI automatically accumulates GitLab development results as organizational knowledge, and of its virtuous cycle — stated as an extension of the engine proven in the Reference Wiki",
+  "relations": [
+   {
+    "target": "sb-choose",
+    "evidenceRef": "A proposal that accumulates development output as organizational knowledge automatically — an in-house example of sb-choose's team Second Brain extension"
+   },
+   {
+    "target": "dzp-why",
+    "evidenceRef": "Reading order after “Proposal Overview — A GitLab-Based AI Development Knowledge Platform” — builds on this document and leads into “Why Now — Development Knowledge That Scatters and Disappears”"
+   }
+  ]
  },
  {
   "name": "dzp-why",
   "title": "Why Now — Development Knowledge That Scatters and Disappears",
-  "summary": "A problem definition that grounds the cost of scattered and vanishing development knowledge in industry statistics"
+  "summary": "A problem definition that grounds the cost of scattered and vanishing development knowledge in industry statistics",
+  "relations": [
+   {
+    "target": "dzp-core",
+    "evidenceRef": "Reading order after “Why Now — Development Knowledge That Scatters and Disappears” — builds on this document and leads into “The Core of the Proposal — The Development Flow Stays as It Is, AI Does the Knowledge Work”"
+   }
+  ]
  },
  {
   "name": "dzp-core",
   "title": "The Core of the Proposal — The Development Flow Stays as It Is, AI Does the Knowledge Work",
-  "summary": "The development flow stays as it is and AI does the knowledge work — separating Event Stream (GitLab) from Knowledge State (Wiki), the substance of that state as a deterministically built index, and industry cases"
+  "summary": "The development flow stays as it is and AI does the knowledge work — separating Event Stream (GitLab) from Knowledge State (Wiki), the substance of that state as a deterministically built index, and industry cases",
+  "relations": [
+   {
+    "target": "dzp-architecture",
+    "evidenceRef": "Reading order after “The Core of the Proposal — The Development Flow Stays as It Is, AI Does the Knowledge Work” — builds on this document and leads into “Platform Architecture”"
+   }
+  ]
  },
  {
   "name": "dzp-architecture",
   "title": "Platform Architecture",
-  "summary": "A seven-layer pipeline sourced from GitLab — knowledge generation triggers, SHA-based incremental analysis, Context expansion, a knowledge integrity gate layer separate from the trigger, and real-time plus reconciliation redundancy"
+  "summary": "A seven-layer pipeline sourced from GitLab — knowledge generation triggers, SHA-based incremental analysis, Context expansion, a knowledge integrity gate layer separate from the trigger, and real-time plus reconciliation redundancy",
+  "relations": [
+   {
+    "target": "dzp-core",
+    "evidenceRef": "Implements dzp-core's principles (no change to the employee flow · Event/Knowledge separation) as a 7-layer pipeline"
+   },
+   {
+    "target": "dzp-knowledge",
+    "evidenceRef": "Reading order after “Platform Architecture” — builds on this document and leads into “Knowledge Management System — Assessment · Structure · Connection · Tracking · Trust · Lifecycle”"
+   }
+  ]
  },
  {
   "name": "dzp-knowledge",
   "title": "Knowledge Management System — Assessment · Structure · Connection · Tracking · Trust · Lifecycle",
-  "summary": "The atomic structure of knowledge (a proven index core plus identifiers·sources·trust extensions) and two layers of connection (computed related, five declared relations, the ai-proposed approval flow) — value assessment, cumulative updates, Identifier search, Provenance, trust levels, and the supersedes lifecycle"
+  "summary": "The atomic structure of knowledge (a proven index core plus identifiers·sources·trust extensions) and two layers of connection (computed related, five declared relations, the ai-proposed approval flow) — value assessment, cumulative updates, Identifier search, Provenance, trust levels, and the supersedes lifecycle",
+  "relations": [
+   {
+    "target": "dzp-security",
+    "evidenceRef": "Reading order after “Knowledge Management System — Assessment · Structure · Connection · Tracking · Trust · Lifecycle” — builds on this document and leads into “Asset Reuse and Security”"
+   },
+   {
+    "target": "kgs-edges",
+    "evidenceRef": "'Two layers of connection' adopts and implements kgs-edges' computed-edge + typed-relation model as the company platform structure"
+   }
+  ]
  },
  {
   "name": "dzp-security",
   "title": "Asset Reuse and Security",
-  "summary": "Reusing the validated Reference Wiki engine — wiki-plugin packaging (18 tools, 4 skills), the mandatory registration procedure, the llms.txt and graph JSON AI consumption layer, and four security grades with separated repositories"
+  "summary": "Reusing the validated Reference Wiki engine — wiki-plugin packaging (18 tools, 4 skills), the mandatory registration procedure, the llms.txt and graph JSON AI consumption layer, and four security grades with separated repositories",
+  "relations": [
+   {
+    "target": "dzp-value",
+    "evidenceRef": "Reading order after “Asset Reuse and Security” — builds on this document and leads into “Added Value and Use Scenarios”"
+   },
+   {
+    "target": "kgs-overview",
+    "evidenceRef": "The mandatory procedure for cloning the Reference Wiki (this wiki) and adding documents reproduces and implements kgs-overview's registration pipeline"
+   }
+  ]
  },
  {
   "name": "dzp-value",
   "title": "Added Value and Use Scenarios — Beyond the Development Organization",
-  "summary": "Added value from growing per-audience views on one Knowledge State with grade filters — automatic API specification updates (FACT, identifiers, supersedes), use by employees, partners, customers, and AI agents, the substance of the virtuous cycle that loads the knowledge graph as prior knowledge for AI coding, and trust grades widening the non-developer readership"
+  "summary": "Added value from growing per-audience views on one Knowledge State with grade filters — automatic API specification updates (FACT, identifiers, supersedes), use by employees, partners, customers, and AI agents, the substance of the virtuous cycle that loads the knowledge graph as prior knowledge for AI coding, and trust grades widening the non-developer readership",
+  "relations": [
+   {
+    "target": "dzp-roadmap",
+    "evidenceRef": "Reading order after “Added Value and Use Scenarios” — builds on this document and leads into “the Rollout Roadmap”"
+   }
+  ]
  },
  {
   "name": "dzp-roadmap",
   "title": "Rollout Roadmap — 4 Phases and the First PoC",
-  "summary": "A four-phase rollout (porting wiki-plugin → company PoC → center-wide expansion → company-wide) and the first PoC on OmniEsol ERP SCM — four axes of validation KPIs measured by gates"
+  "summary": "A four-phase rollout (porting wiki-plugin → company PoC → center-wide expansion → company-wide) and the first PoC on OmniEsol ERP SCM — four axes of validation KPIs measured by gates",
+  "relations": [
+   {
+    "target": "kgs-plugin",
+    "evidenceRef": "Phase 1 bootstraps the knowledge system by installing wiki-plugin (wiki-init · add-doc · validate)"
+   }
+  ]
  },
  {
   "name": "sne-overview",
   "title": "Send Engine Implementation Request — Overview and Responsibility Boundary",
-  "summary": "AI Notification owns everything up to creating the send request, while the send engine owns the sending, timing, reprocessing, and status that follow — the overview and responsibility boundary of the Kafka-based send engine implementation request."
+  "summary": "AI Notification owns everything up to creating the send request, while the send engine owns the sending, timing, reprocessing, and status that follow — the overview and responsibility boundary of the Kafka-based send engine implementation request.",
+  "relations": [
+   {
+    "target": "sne-scope",
+    "evidenceRef": "Builds on the overview and the responsibility boundary, leading into the concrete requirements the engine must implement"
+   }
+  ]
  },
  {
   "name": "sne-scope",
   "title": "Send Engine Implementation Requirements",
-  "summary": "Requirements for channel sending, idempotency, delivery guarantee and DLQ, plus timing for the four timing types, a latest lookup at send time, recurring batch lifecycle, and a send status screen."
+  "summary": "Requirements for channel sending, idempotency, delivery guarantee and DLQ, plus timing for the four timing types, a latest lookup at send time, recurring batch lifecycle, and a send status screen.",
+  "relations": [
+   {
+    "target": "sne-interface",
+    "evidenceRef": "Builds on the requirements, leading into the interface and alignment items to settle first"
+   }
+  ]
  },
  {
   "name": "sne-interface",
@@ -522,27 +1132,57 @@
  {
   "name": "news-20260709-thariq-fable5-unknowns",
   "title": "Is the Bottleneck of the Fable 5 Era the Human Rather Than the Model — Thariq Shihipar's \"Map and Territory\" Frame",
-  "summary": "Drawing on Thariq's Fable 5 experience, it analyzes capability overhang, map and territory, managing unknowns, and six hands-on techniques, checked against the facts and outside research."
+  "summary": "Drawing on Thariq's Fable 5 experience, it analyzes capability overhang, map and territory, managing unknowns, and six hands-on techniques, checked against the facts and outside research.",
+  "relations": [
+   {
+    "target": "hns-what",
+    "evidenceRef": "Thariq's original 'A Field Guide to Fable' and the Claude Code architecture paper checked — evidence for hns-what's claim that the harness, more than the model, decides the outcome"
+   }
+  ]
  },
  {
   "name": "news-20260710-llm-wiki-knowledge-context",
   "title": "LLM Wiki and Knowledge Context — Team Knowledge Compiled at Write Time",
-  "summary": "Analyzes a seminar talk, with original-source checks and diagrams, covering Karpathy's LLM Wiki (write-time compilation vs RAG), the promotion flow of an Obsidian+Git team implementation, OpenViking's layered loading, and human/agent governance."
+  "summary": "Analyzes a seminar talk, with original-source checks and diagrams, covering Karpathy's LLM Wiki (write-time compilation vs RAG), the promotion flow of an Obsidian+Git team implementation, OpenViking's layered loading, and human/agent governance.",
+  "relations": [
+   {
+    "target": "llmw-overview",
+    "evidenceRef": "Karpathy's LLM Wiki gist, OpenViking and other primary sources checked — backs the course concepts of llmw-overview"
+   }
+  ]
  },
  {
   "name": "news-20260710-oracle-ontology-property-graph",
   "title": "Oracle Ontology and Property Graphs — Turning Tables into a Map of Knowledge",
-  "summary": "Organizes Oracle's ontology and property graph approach — RDF vs property graphs, building a graph as a metadata view, PGQL and SQL/PGQ multi-hop and cycle queries, graph algorithms, and Select AI natural-language querying, explained with official-doc verification, diagrams, and a glossary."
+  "summary": "Organizes Oracle's ontology and property graph approach — RDF vs property graphs, building a graph as a metadata view, PGQL and SQL/PGQ multi-hop and cycle queries, graph algorithms, and Select AI natural-language querying, explained with official-doc verification, diagrams, and a glossary.",
+  "relations": [
+   {
+    "target": "sb-level4",
+    "evidenceRef": "Oracle's official blog and ISO SQL:2023 checked — external evidence for sb-level4's claim that knowledge is linked by relationship"
+   }
+  ]
  },
  {
   "name": "news-20260711-neo4j-rdf-vs-property-graph",
   "title": "RDF or Property Graph — Two Models for a Knowledge Graph (Neo4j)",
-  "summary": "A write-up of Neo4j's Jim Webber on 'RDF vs property graphs' (2024) — a knowledge graph's entities, relationships, and organizing principle; the limits of RDF triples and the semantic web (relationships not first-class, SPARQL termination, ontology upkeep); the property graph's advantages with the NASA, Basecamp, and Novo Nordisk cases; ISO GQL; and the conclusion \"property graph by default + an ontology layer when needed\"."
+  "summary": "A write-up of Neo4j's Jim Webber on 'RDF vs property graphs' (2024) — a knowledge graph's entities, relationships, and organizing principle; the limits of RDF triples and the semantic web (relationships not first-class, SPARQL termination, ontology upkeep); the property graph's advantages with the NASA, Basecamp, and Novo Nordisk cases; ISO GQL; and the conclusion \"property graph by default + an ontology layer when needed\".",
+  "relations": [
+   {
+    "target": "sb-level4",
+    "evidenceRef": "A digest of the Neo4j original by Jim Webber (2024-06-04) — expert evidence for sb-level4's knowledge-graph approach"
+   }
+  ]
  },
  {
   "name": "news-20260716-kimi-k3",
   "title": "Kimi K3 — a 2.8-trillion-parameter open-weight model reaches the frontier",
-  "summary": "A web-search cross-checked roundup of Moonshot AI's Kimi K3 launch (2.8T total with ~50B active MoE, KDA and AttnRes) — benchmarks such as 3rd on the AA index and 1st in Frontend Arena, $3/$15 pricing, long-horizon autonomous demos like chip design and gravitational-wave analysis, and the self-reported vs independently reproduced gap alongside cyber risk and market fallout."
+  "summary": "A web-search cross-checked roundup of Moonshot AI's Kimi K3 launch (2.8T total with ~50B active MoE, KDA and AttnRes) — benchmarks such as 3rd on the AA index and 1st in Frontend Arena, $3/$15 pricing, long-horizon autonomous demos like chip design and gravitational-wave analysis, and the self-reported vs independently reproduced gap alongside cyber risk and market fallout.",
+  "relations": [
+   {
+    "target": "hns-what",
+    "evidenceRef": "Terminal-Bench 2.1 with its own harness (KimiCode) 88.3 vs Vals' independent reproduction ~80.9 — measured evidence for hns-what's argument that the harness and its configuration decide the outcome"
+   }
+  ]
  },
  {
   "name": "news-20260724-snucatch-ai-coding",
@@ -557,17 +1197,35 @@
  {
   "name": "news-20260709-ai-2040-plan-a",
   "title": "AI 2040: Plan A — Overview (the normative scenario that says delay superintelligence until 2040)",
-  "summary": "The overview and hub of a commentary series on the follow-up normative scenario from the authors of AI 2027 (AI Futures Project) — a recommendation rather than a prediction, covering the core idea of delaying superintelligence to 2040 through a US-China agreement, the one-line gist, an interactive timeline and a comparison with AI 2027, and pointing to the three installments on the scenario, the policy and the reactions"
+  "summary": "The overview and hub of a commentary series on the follow-up normative scenario from the authors of AI 2027 (AI Futures Project) — a recommendation rather than a prediction, covering the core idea of delaying superintelligence to 2040 through a US-China agreement, the one-line gist, an interactive timeline and a comparison with AI 2027, and pointing to the three installments on the scenario, the policy and the reactions",
+  "relations": [
+   {
+    "target": "news-20260709-ai-2040-scenario",
+    "evidenceRef": "Overview and hub — it sets up the four-part structure and the background (a recommendation, not a forecast), so it precedes the year-by-year scenario detail"
+   }
+  ]
  },
  {
   "name": "news-20260709-ai-2040-scenario",
   "title": "AI 2040: Plan A — the year-by-year scenario (2027 → 2040)",
-  "summary": "The world Plan A paints year by year — 2027 two workforces (humans + AI agents), 2028 the election and data center costs, 2029 the US-China agreement, 2030 averting full automation, 2030-35 expansion to expert level, 2035 a pause to keep control, 2040 the release and superintelligence, stated explicitly as a recommendation rather than a prediction"
+  "summary": "The world Plan A paints year by year — 2027 two workforces (humans + AI agents), 2028 the election and data center costs, 2029 the US-China agreement, 2030 averting full automation, 2030-35 expansion to expert level, 2035 a pause to keep control, 2040 the release and superintelligence, stated explicitly as a recommendation rather than a prediction",
+  "relations": [
+   {
+    "target": "news-20260709-ai-2040-policy",
+    "evidenceRef": "Assumes the year-by-year world the scenario draws, then reads the policy and verification that hold it up (body: 'Next — policy and verification')"
+   }
+  ]
  },
  {
   "name": "news-20260709-ai-2040-policy",
   "title": "AI 2040: Plan A — Policy and Verification",
-  "summary": "The mechanisms that hold the deal together — total research transparency, the verification protocol (network taps and partial recomputation), SL5 security, relocated data centers (US to Mongolia, China to Canada), mutually assured compute destruction, the model spec and third-party oversight; the original's interactive Supplements explorer is carried here only as a static summary"
+  "summary": "The mechanisms that hold the deal together — total research transparency, the verification protocol (network taps and partial recomputation), SL5 security, relocated data centers (US to Mongolia, China to Canada), mutually assured compute destruction, the model spec and third-party oversight; the original's interactive Supplements explorer is carried here only as a static summary",
+  "relations": [
+   {
+    "target": "news-20260709-ai-2040-reactions",
+    "evidenceRef": "After understanding the policy and verification machinery, read the support and criticism it drew (body: 'Next — Reactions and critiques')"
+   }
+  ]
  },
  {
   "name": "news-20260709-ai-2040-reactions",
