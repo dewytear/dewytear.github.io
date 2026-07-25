@@ -1,0 +1,20 @@
+<h2>Plugins &middot; the marketplace</h2>
+<p>You can bundle several Skills together and distribute them as a <strong>Plugin</strong>. Since papers are mostly PDFs, let's install the <strong>official document Skills (document-skills)</strong> plugin, which contains a Skill that reads PDFs well.</p>
+
+<h3>1) Adding the marketplace</h3>
+<p>Type <code>/plugin</code> in Claude Code and press Enter to bring up the plugin screen. Use the arrow keys to select <strong>marketplace</strong> &rarr; then <strong>Add Marketplace</strong> to add Anthropic's official marketplace.</p>
+<pre><code><span class="c"># If GitHub access is blocked or the UI is awkward, run it directly as a command</span>
+/plugin marketplace add anthropics/skills</code></pre>
+
+<h3>2) Installing document-skills</h3>
+<p>The marketplace you added (Anthropic's official one) has several plugins; install only <strong>document-skills</strong> among them. Select it in the list with <strong>Space</strong> and install with <strong>Enter</strong>. A command works too.</p>
+<pre><code>/plugin install document-skills</code></pre>
+<p>This Skill lets Claude Code read documents such as <strong>PDF, PPT (pptx), and Excel</strong>.</p>
+
+<h3>3) Restart and verify</h3>
+<p>If it does not take effect after installing, leave Claude Code with <code>/exit</code> and run it again. Then type <code>/pdf</code> or <code>/pptx</code>; if the command shows up, <strong>the install succeeded</strong>. If it does not, try adding the marketplace and installing again.</p>
+
+<div class="note">
+    <span class="nh">When the install gets stuck (GitHub errors, etc.)</span>
+    Search Google for <strong>"anthropic skills github"</strong> and go to the official repository — the install commands are partway through the README. Copy the <code>plugin marketplace add ...</code> line and the <code>plugin install document-skills</code> line separately, paste each into Claude Code, and run them.
+</div>

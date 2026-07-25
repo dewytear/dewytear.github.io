@@ -1,0 +1,42 @@
+<h2>How AI Reads This Wiki — the Machine-Readable Layer and Graph Traversal</h2>
+<p>One of this wiki's ultimate goals is to make AI <strong>look here first when you hand it a task</strong>, and to have it <strong>analyze along the relationships</strong> rather than searching page by page. That is why, separately from the human-facing screens, there is a <strong>machine-readable layer</strong> that an external AI can discover and traverse on its own. The foundation of this layer is that document bodies are static fragments fetched straight from a URL without JS (<a href="#!kgs-overview">Part 1</a>).</p>
+
+<h3>Three Doors — Cover · Graph · Contract</h3>
+<ul>
+    <li><strong><code>llms.txt</code> (the cover)</strong> — the AI-facing front door at the site root. It lays out the wiki's purpose, where the machine files live, and <strong>the title, summary, and URL of every document</strong>, organized by System. Because it follows the AI ecosystem's convention (llms.txt), it is the first file a newly arrived agent reads.</li>
+    <li><strong><code>data/knowledge-graph.json</code> (the self-contained graph)</strong> — <strong>fetch this one file</strong> and you can traverse the entire graph. Every node (document) inlines its title, summary, concepts, <strong>related edges (<code>related</code>)</strong>, and <strong>directed typed relations (<code>relations</code>)</strong>, and <strong>even the URL of the source document</strong>, so there is nothing to join against another file.</li>
+    <li><strong><a href="#!ai-guide">AI Traversal Guide</a> (the contract)</strong> — the document that spells out "what a node is, how to interpret an edge, and in what order to fetch." The schema and the rules are pinned here, so every agent reads the wiki the same way.</li>
+</ul>
+
+<p>Alongside these, <strong>supporting entry points that back up the three doors</strong> are generated as well. <strong><code>llms-full.txt</code></strong> is a full-corpus dump that packs the plain-text body of every document into a single file, so one fetch loads the whole wiki into context; <strong><code>feed.xml</code> (an Atom feed)</strong> announces the 30 most recent documents in chronological order so human RSS readers and crawlers can subscribe to new posts; and <strong><code>robots.txt</code></strong> names the major AI crawlers (GPTBot, ClaudeBot, PerplexityBot, and others) to welcome them explicitly and advertises the entry points above. The content license is <strong>CC BY 4.0</strong> — robots.txt, llms.txt, the feed, and the site footer consistently declare the same legal signal, "cite and reuse freely as long as you credit the source," so AI systems can quote this wiki with confidence.</p>
+
+<h3>How Traversal Flows</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 150" role="img" aria-label="AI traversal order: read the llms.txt cover, traverse the graph with a single knowledge-graph.json fetch, then fetch and analyze the source URLs you need">
+    <rect class="d-box" x="14" y="36" width="196" height="58" rx="10"/>
+    <text class="d-label" x="112" y="60" text-anchor="middle">① llms.txt</text>
+    <text class="d-sub" x="112" y="80" text-anchor="middle">Cover — what is where</text>
+    <line class="d-edge" x1="210" y1="65" x2="244" y2="65"/>
+    <polygon class="d-arrow" points="244,60 252,65 244,70"/>
+    <rect class="d-box accent" x="254" y="36" width="220" height="58" rx="10"/>
+    <text class="d-label" x="364" y="60" text-anchor="middle">② One fetch of graph JSON</text>
+    <text class="d-sub" x="364" y="80" text-anchor="middle">All nodes, edges, concepts, URLs</text>
+    <line class="d-edge" x1="474" y1="65" x2="508" y2="65"/>
+    <polygon class="d-arrow" points="508,60 516,65 508,70"/>
+    <rect class="d-box" x="518" y="36" width="188" height="58" rx="10"/>
+    <text class="d-label" x="612" y="60" text-anchor="middle">③ Fetch &amp; analyze</text>
+    <text class="d-sub" x="612" y="80" text-anchor="middle">only the url of nodes you need</text>
+    <text class="d-sub" x="364" y="128" text-anchor="middle">Expand 1 hop, then 2 hops along related — shared concepts ground why they connect</text>
+</svg>
+<div class="d-cap">Single-fetch traversal — plan from one graph file, and pull only the source documents you need.</div>
+</div>
+
+<p>Take a real two-hop traversal as an example: starting from the hub <a href="#!hns-anatomy">Anatomy and Effects of the Harness</a>, one hop reaches 4 neighbors, and two hops reach <strong>13 documents</strong>. From the set of documents reached this way, AI can analyze while explaining "why these documents belong together," grounded in the <strong>shared concepts (shared)</strong> — a <strong>relationship-based</strong> reading that page-by-page search cannot achieve. Add <code>relations</code> and it goes beyond a bare "these are related" to read <strong>the type and direction of the relationship, such as prerequisite, implements, or evidence</strong>, so it can pin down "what to read first" and "which document is the evidence for which claim" in its analysis.</p>
+
+<h3>Never Out of Sync — the Drift Gate</h3>
+<p>A machine-readable file that has drifted from the actual knowledge is worse than none at all. So these files are not written by hand; they are <strong>generated automatically from the knowledge index</strong> (robots.txt and the feed are generated artifacts too), and CI's <code>--check</code> gate enforces "no merge if you add or edit a document without regenerating." Even the timestamps in the feed come from git history (<code>doc-dates.json</code>) rather than the build time, so regenerating never shakes the result. The outcome: <strong>the moment a document is added, llms.txt, llms-full.txt, the feed, the graph JSON, and the sitemap are always brought up to date together</strong>. At validation time we mechanically confirmed that the URLs of all 97 nodes match real files and that broken references (dangling) number 0.</p>
+
+<div class="note">
+    <span class="nh">When you hand a task to AI</span>
+    One line in the prompt is enough — <em>"Read dewytear.github.io/llms.txt first, then analyze by following the relationships in knowledge-graph.json (related, relations, concepts)."</em> Schema details and traversal rules are guaranteed as a contract by the <a href="#!ai-guide">AI Traversal Guide</a>. Thanks to this knowledge-management structure, the bigger the wiki grows, the wider AI's analysis radius automatically grows with it.
+</div>

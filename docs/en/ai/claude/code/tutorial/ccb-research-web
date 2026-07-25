@@ -1,0 +1,55 @@
+<h2>Hands-on: Web research &rarr; file &rarr; website</h2>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="Pipeline: web research (WebSearch, WebFetch) → save to a file → build a website → edit the design">
+    <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="85" y="46" text-anchor="middle">① Web research</text>
+    <text class="d-sub" x="85" y="63" text-anchor="middle">WebSearch·WebFetch</text>
+
+    <rect class="d-box" x="180" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="255" y="46" text-anchor="middle">② Save to file</text>
+    <text class="d-sub" x="255" y="63" text-anchor="middle">with sources</text>
+
+    <rect class="d-box" x="350" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="425" y="46" text-anchor="middle">③ Build a site</text>
+    <text class="d-sub" x="425" y="63" text-anchor="middle">text &rarr; site</text>
+
+    <rect class="d-box accent" x="520" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="595" y="46" text-anchor="middle">④ Edit design</text>
+    <text class="d-sub" x="595" y="63" text-anchor="middle">theme &middot; branding</text>
+
+    <line class="d-edge" x1="160" y1="48" x2="176" y2="48"/><polygon class="d-arrow" points="172,43 180,48 172,53"/>
+    <line class="d-edge" x1="330" y1="48" x2="346" y2="48"/><polygon class="d-arrow" points="342,43 350,48 342,53"/>
+    <line class="d-edge" x1="500" y1="48" x2="516" y2="48"/><polygon class="d-arrow" points="512,43 520,48 512,53"/>
+</svg>
+<div class="d-cap">Save what you researched on the web to a file, then build and polish a site from that file.</div>
+</div>
+<p>Claude Code ships with several built-in tools. Among them, the <strong>web search (WebSearch) and web fetch (WebFetch)</strong> tools let it research the task you give it on the web and bring the results back. Let's run research &rarr; save to a file &rarr; build a website as a single flow.</p>
+
+<h3>1) Research and save to a file</h3>
+<pre><code>Research the Mythos model and save the related content to a file.</code></pre>
+<p>Claude Code gathers material with web search and organizes it into a file, including source links. (If there is a CLAUDE.md instruction, it is written in Korean and <code>_new</code> is appended to the file name.)</p>
+
+<h3>2) Build a website from the research</h3>
+<pre><code>Based on the research you just did, build a sleek, modern website.
+Add a background with heavy animation effects and interactive elements.</code></pre>
+<p>Give it a single text file and Claude Code figures out the intent and finishes the site. Once it is done, say "open it in the browser" and it brings it right up.</p>
+
+<h3>3) Editing the design &middot; branding</h3>
+<p>You can keep changing the site after it is built.</p>
+<pre><code><span class="c"># Change the theme</span>
+Switch it to a white theme.
+<span class="c"># Naming a brand yields a better design</span>
+Rework it in the style of Apple's site, in white.</code></pre>
+<p>When you <strong>mention a familiar brand</strong>, as in "the style of Apple's site," it tends to produce a more polished design.</p>
+
+<h3>Handy controls while it works</h3>
+<ul>
+    <li><strong>ESC</strong> — cancel the task in progress at any time.</li>
+    <li>If you type something while it is working, it is <strong>queued as the next task</strong> and carried out when the AI can get to it.</li>
+    <li>Even when an error occurs, saying "keep going" — or simply waiting — often lets Claude Code resolve it on its own.</li>
+</ul>
+
+<div class="note warn">
+    <span class="nh">Watch your tokens</span>
+    Big jobs like generating a website can burn through tokens (usage) quickly. You may hit your plan's limit partway through the exercises, so run heavy jobs only when you need them. (For managing usage, see "Usage, context, and session management" later on.)
+</div>
