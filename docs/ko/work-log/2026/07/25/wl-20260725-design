@@ -7,3 +7,6 @@
     <li><strong>캐시버스트</strong> — <code>index.html</code>의 이미지 src를 <code>profile.jpg?v=2</code>로 — 같은 파일명 교체라 재방문 브라우저가 옛 사진을 계속 쓰는 것을 방지(<code>?v</code> 자산 목록에 신규 편입).</li>
     <li><strong>검증</strong> — 낮/밤 테마 실렌더로 사이드바 표시 확인, <code>validate_all</code> ERROR 0.</li>
 </ul>
+
+<h3>메뉴 좌우 여백 대칭화</h3>
+<p>메뉴 영역의 좌측 여백이 우측보다 크던 비대칭을 모든 모드에서 동일하게 정리했다. 데스크톱은 <code>#sidebar</code> 패딩 좌24/우8 + <code>#navigation</code> 좌12/우20의 이중 비대칭(합계 좌36/우28), 모바일 드로어는 반대 방향(좌12/우20)이었다 — <code>#sidebar</code>를 14/14, <code>#navigation</code>을 12/12로 맞춰 CDP 실측 기준 <strong>데스크톱 사진 20/20·트리 26/26, 모바일 사진 6/6·트리 12/12</strong>(드로어 테두리 1px 제외)로 대칭 확인. <code>style.css ?v</code> 31→32.</p>
