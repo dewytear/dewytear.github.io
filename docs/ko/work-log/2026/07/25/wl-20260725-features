@@ -1,4 +1,4 @@
-<h2>2026-07-25 · 기능 — 사이드바 상단 고정 스크롤 (프로필~지식그래프)</h2>
+<h2>2026-07-25 · 기능 — 사이드바 고정 스크롤 · 지식그래프 3D 뷰(궤도계·스트라타)</h2>
 <p>메뉴를 스크롤해도 <strong>프로필 사진·펼치기/접기 도구·❖ Knowledge Graph 링크는 고정</strong>되고, 그 아래 문서 트리만 스크롤되도록 사이드바 스크롤 구조를 바꿨다.</p>
 <ul>
     <li><strong>구조(ENGINE)</strong> — 내비 부팅 시 최상위 <code>route</code> 단독 노드(❖ Knowledge Graph)를 고정 헤더로 분리 렌더하고, 나머지 트리를 <code>#nav-scroll</code> 래퍼에 담아 내부 스크롤로 전환. <code>app.js ?v</code> 29→30.</li>
@@ -7,4 +7,37 @@
     <li><strong>고정 영역 여백 압축</strong> — 고정부가 커진 만큼 사이 간격을 절약: <code>#profile</code> 상하 패딩 16/14→10/8, 태그라인 위 11→6, <code>#navigation</code> 상단 20→10, 도구 아래 10→6. 스크롤 영역이 약 30px 넓어짐.</li>
     <li><strong>후속 — 간격 균질화·봉합 여백 제거</strong>: 처음 넣은 고정 KG 링크 마진 오버라이드(4/2)가 <strong>뒤에 오는 공유 <code>:is()</code> 규칙(12/10)에 밀려 무효</strong>였던 것을 CDP 계산 스타일로 확인(도구→KG 18px로 벌어짐). 오버라이드를 공유 규칙 뒤로 이동해 발효시키고(2/0), 첫 트리 항목의 12px 상단 리듬도 스크롤 첫 행에서만 2px로 — 도구→KG 6px(타 간격과 동일), 스크롤 하단 봉합 20→8px, 푸터 밀착 0px. <code>style.css ?v</code> →33. 이어서 태그라인 상/하 여백 균형(6/9px), 전체 펼침 시 항목 간격 압축(<code>li</code> 8→4px·서브폴더 제목 12/6→8/4·대분류 12/10→10/8) — 같은 높이에 더 많은 항목이 보이되 계층 가독성 유지.</li>
     <li><strong>검증</strong> — CDP 실렌더: <code>expandAll()</code> 후 <code>#nav-scroll.scrollTop=600</code> 상태에서 프로필·도구·Knowledge Graph 고정 + 트리만 스크롤 + 하단 푸터 유지 확인. <code>validate_all</code> ERROR 0.</li>
+</ul>
+
+<h3>지식그래프 3D 뷰 둘 신설(궤도계·스트라타) + 성좌 발광·성운</h3>
+<p>지식그래프 화면(<a href="#!cosmos">Knowledge Graph</a>)에 <strong>기존 3D와 표현 문법 자체가 다른 3D 뷰 두 개</strong>를 새로 넣고, 기존 3D에는 부드러운 발광·성운을 입혔다. 사용자 요청은 &ldquo;Opus 5로 표현하면 지식그래프가 얼마나 더 인터랙티브하고 웅장할 수 있는지&rdquo; — 그래서 점·선을 더 예쁘게 그리는 방향이 아니라 <strong>은유 자체를 바꾼</strong> 두 뷰를 만들었다. 목업 3안(도시·궤도계·스트라타)을 실제 데이터로 렌더해 보여 주고 확정했다(도시안은 이번 범위에서 제외).</p>
+<h3>신규 <code>cosmos2.js</code> — WebGL 뷰 엔진</h3>
+<ul>
+    <li><strong>궤도계</strong> — World가 <strong>항성</strong>, System이 그 둘레를 도는 <strong>행성</strong>, 문서가 행성을 도는 <strong>위성</strong>. 궤도마다 경사(tilt)와 승교점(yaw)을 달리 줘 궤도면이 서로 어긋나므로 소속이 한눈에 갈리고, 실제로 공전한다.</li>
+    <li><strong>스트라타</strong> — World → Domain → System → Document를 <strong>네 장의 유리판</strong>으로 쌓고 계보선을 상하로 관통시킨다. 이 위키의 4계층 모델을 그대로 눈으로 확인하는 뷰이며, 문서층에는 개념 엣지가 낮은 호로 깔린다.</li>
+    <li><strong>공통</strong> — 관성 오빗·휠 줌·유휴 5초 후 자동 회전(기존 3D 규칙 동일), <strong>클릭 = 포커스</strong>(이웃만 남기고 나머지 디밍 + 이웃 엣지에 빛 펄스 + 카드), <strong>더블클릭 = 문서 이동</strong>, <code>Esc</code>·배경 클릭으로 해제. 카드에는 계층 경로·피참조/이웃 수·개념 칩·이웃 목록·&lsquo;문서 열기&rsquo;가 들어간다.</li>
+    <li><strong>라벨은 DOM</strong>(<code>.c2-label</code>) — 캔버스 텍스트 대신 오버레이라 테마 토큰·Pretendard가 그대로 적용되고 DPR에 무관하게 선명하다. 화면 격자 충돌 검사로 겹치면 낮은 우선순위(문서 &lt; System &lt; World)부터 감춘다.</li>
+    <li><strong>구현 원칙</strong> — 외부 라이브러리·빌드 0(인라인 GLSL), 빌보드 쿼드만 써서 <code>gl_PointSize</code> 상한 문제 회피, 동적 버퍼는 사전 할당(프레임당 GC 0), 색은 기존 3D와 <strong>같은 accent 파생 규약</strong>(World 137.5° · System ±11°)이라 세 뷰의 색이 일치한다.</li>
+    <li><strong>가드</strong> — WebGL 미지원이면 도크에서 두 뷰를 아예 빼고 저장된 선택도 성좌로 되돌린다. <code>prefers-reduced-motion</code>이면 공전·자동회전 정지, DPR ≤ 2, 캔버스가 DOM에서 빠지면 RAF 종료(기존 패턴). 설정의 <code>hiddenCats</code>·<code>cosmosLabelMin</code>을 따르고, 구면 전용 값인 <code>cosmosRoundness</code>는 두 뷰에서 의미가 없어 무시한다.</li>
+</ul>
+
+<h3>기존 3D(성좌)에 발광 · 성운</h3>
+<ul>
+    <li>색별 <strong>소프트 스프라이트를 한 번만 오프스크린에 굽고</strong> <code>drawImage</code>로 재사용한다 — 프레임마다 그라디언트를 새로 만들지 않는 것이 핵심(수묵 배경 성능 회귀에서 얻은 원칙).</li>
+    <li>별마다 헤일로(허브일수록 크게, 호버 시 확대), System별 화면 중심에 큰 <strong>성운</strong> 무리, 별먼지 120 → 200, 연결선 가시성 상향. 밤 테마는 <code>lighter</code> 합성, 낮 테마는 일반 합성. <strong>눈부심 억제</strong>가 기준이라 스프라이트는 중심부터 반투명으로 시작해 완만히 사라지고(또렷한 코어는 별 원이 담당), 헤일로는 더 넓고 더 옅게 잡았다 — 첫 시안이 번쩍여서 한 단계 낮춘 결과.</li>
+    <li><strong>별의 숨쉬기</strong>(약하게) — 별마다 위상·주기(4~7초)가 달라 헤일로의 크기·밝기가 ±12%만 흔들린다. 별 자체 크기는 고정이라 &lsquo;반짝임&rsquo;이 아니라 은은한 호흡으로 읽힌다. <code>reduced-motion</code>이면 정지.</li>
+    <li><strong>성능</strong> — 전면 캔버스에 큰 반투명 스프라이트를 수십 장 겹치자 소프트웨어 래스터 기준 <strong>61 → 37fps</strong>로 떨어졌다(실측). 발광·성운을 <strong>절반 해상도 오프스크린 층</strong>에 모아 <strong>프레임당 한 번만</strong> 합성하도록 바꿔 <strong>60fps로 회복</strong> — 뿌연 층이라 해상도를 낮춰도 눈에 보이는 차이가 없다. 수묵 배경 회귀(라이브 필터 → 정적 마스크)와 같은 교훈의 재적용.</li>
+</ul>
+
+<h3>도크를 2단으로 — 뷰가 아홉이 됐으므로</h3>
+<ul>
+    <li>한 줄에 아홉 개는 번잡해서 <strong>차원(3D · 2D) → 그 그룹의 뷰</strong> 2단 구조로 바꿨다(사용자 요청). 기본은 <strong>3D</strong>이고, 그룹을 오갈 때는 그 그룹에서 <strong>마지막으로 보던 뷰</strong>로 돌아간다(<code>graphView3d</code>·<code>graphView2d</code>).</li>
+    <li>3D 뷰 이름도 번호 대신 성격을 담았다 — <strong>성좌 · 궤도계 · 스트라타</strong>(en: Constellation · Orbits · Strata). 부제(조작 안내)도 뷰에 따라 바뀐다. 문구는 전부 <code>STR()</code> 키(ko/en).</li>
+</ul>
+
+<h3>지식 체계 반영·검증</h3>
+<ul>
+    <li>자기기술 문서 <a href="#!kgs-views">그래프를 읽는 9가지 눈</a>을 7뷰 → <strong>9뷰</strong>로 갱신(제목·도입·도식 3×3 재구성·표에 궤도계/스트라타 행). <code>ai-map</code>의 &lsquo;7뷰&rsquo; 서술도 ko/en 함께 보정.</li>
+    <li>변경 유형 <strong>ENGINE + STYLE + CONTENT</strong> — 캐시버스터 <code>style.css</code>·<code>cosmos.js</code>·<code>i18n.js</code> 상향, 신규 자산 <code>cosmos2.js?v=1</code> 추가.</li>
+    <li>검증: 낮·밤 렌더 확인(세 뷰), 포커스 카드 동작(이웃 6건·개념 칩·문서 열기), 도크 2단 전환·그룹별 마지막 뷰 복원, 소프트웨어 GL 환경에서도 47~48fps(실기기 GPU에서는 상한 60), 도식 경계 게이트·<code>validate_all</code> ERROR 0.</li>
 </ul>
