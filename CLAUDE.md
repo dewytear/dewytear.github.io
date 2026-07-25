@@ -35,6 +35,7 @@
 
 ## 다국어 규칙
 - **번역·언어 관련 작업은 반드시 `tools/i18n.md` 체크리스트를 따른다** — 구조(폴백 계층)·핵심 원칙·추가 순서·검증 목록이 거기 있다. 특히: 문서의 `label_<lang>`·`tags_<lang>`·인덱스 오버레이는 **그 문서의 본문 번역과 같은 PR에서만** 갱신하고, 새 UI 문구는 하드코딩 대신 `STR()` 키 + `STRINGS` 사전으로 넣는다.
+- **신규 문서는 영어 본문 동반이 규칙** (2026-07-26 결정, 워크로그 제외·뉴스 포함): 새 인덱스 문서를 등재하는 PR은 `docs/en/<같은 상대 경로>` 번역과 `label_en`/`tags_en`·`doc-entries.en.json` 오버레이를 함께 싣는다 — PR CI의 `tools/check_translation.py`가 기계 강제. 영어 도식은 `validate_design`·`check_diagram_bounds`가 ko와 같은 게이트로 검사하니 라벨 폭(대문자≈0.7·소문자≈0.5×폰트)을 선검토한다. 첫 방문 언어는 자동 감지(`navigator.language`가 ko*가 아니면 en) — 설정에서 고르면 그 값이 우선.
 
 ## 배포
 - GitHub Pages는 `master`를 배포한다. 머지 후 "pages build and deployment" 워크플로가 일시 오류로 실패하면(간헐적) master에 빈 커밋을 푸시해 재트리거한다.

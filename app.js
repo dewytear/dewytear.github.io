@@ -1183,7 +1183,10 @@ function saveSettings(s){
 // working when config.json carries no defaults block.
 var SITE_DEFAULTS = {};
 var HARD_DEFAULTS = { navLineStyle: 'dashed', navLineWidth: '1px',
-                      searchGame: 'g2048', music: '', lang: 'ko',
+                      // lang의 기본은 ''(자동 감지) — 'ko'로 두면 비한국어
+                      // 브라우저 사용자가 설정에서 한국어를 '명시'해도 setOrClear가
+                      // 기본값과 같다며 지워 자동 감지(en)로 되돌아가는 버그가 된다.
+                      searchGame: 'g2048', music: '', lang: '',
                       hideRecent: false, hideRelated: false, newDays: 7,
                       cosmosRoundness: 100, cosmosLabelMin: 5 };
 // Effective settings = site defaults overlaid with personal values.
@@ -1255,7 +1258,7 @@ function applySettings(){
     // Background-music track (site default or personal pick).
     if(window.setMusicVideo){ window.setMusicVideo(s.music || ''); }
     // Document language for a11y / search engines.
-    document.documentElement.setAttribute('lang', s.lang || 'ko');
+    document.documentElement.setAttribute('lang', currentLang());
     // Static chrome attributes follow the language too.
     var sl = document.getElementById('settings-link');
     if(sl){ sl.title = STR('settings'); sl.setAttribute('aria-label', STR('settings')); }
@@ -1396,7 +1399,7 @@ function showSettings(){
     var curNavStyle = s.navLineStyle || 'dashed';
     var curNavWidth = s.navLineWidth || '1px';
     var curGame = s.searchGame || 'breakout';
-    var curLang = s.lang || 'ko';
+    var curLang = s.lang || currentLang();   // 자동 감지 언어가 선택돼 보이게
     var hiddenCats = s.hiddenCats || [];
     function opt(val, label, cur){
         return '<option value="' + val + '"' + (val === cur ? ' selected' : '') + '>' + label + '</option>';
@@ -1871,8 +1874,18 @@ function jumpRecentWorklog(ev){
     location.hash = target;
 }
 
+// 첫 방문 자동 언어 — 저장된 값(개인·사이트 기본)이 없으면 브라우저 언어로
+// 정한다: 한국어 계열(ko*)이 아니면 영어. LANGS_READY에 en이 있어야 발동.
+function detectLang(){
+    try{
+        var nav = (navigator.language || '').toLowerCase();
+        if(nav && nav.slice(0, 2) !== 'ko' && LANGS_READY.indexOf('en') !== -1){ return 'en'; }
+    }catch(e){}
+    return 'ko';
+}
 // i18n에 언어 provider 등록 — effSettings는 같은 스크립트의 호이스팅 함수.
-i18nSetLangProvider(function(){ return effSettings().lang || 'ko'; });
+// 설정에서 고른 값이 항상 우선하고, 없을 때만 자동 감지가 채운다.
+i18nSetLangProvider(function(){ return effSettings().lang || detectLang(); });
 
 // ---- Boot ----
 window.addEventListener('hashchange', route);

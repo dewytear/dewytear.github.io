@@ -61,16 +61,23 @@ def iter_doc_nodes(tree):
     yield from walk(tree if isinstance(tree, list) else tree.get('children', tree))
 
 
+# 검사 대상 언어 — 영어 라벨은 한글보다 길어지기 쉬워 en 본문(존재분)도
+# 같은 도식 게이트를 통과해야 한다. 번역 파일이 없으면 그냥 건너뛴다.
+LANGS = ['ko', 'en']
+
+
 def load_doc_bodies(root, doc_nodes):
     bodies = {}
     for n in doc_nodes:
         if not n.get('path'):
             continue
-        fpath = os.path.join(root, 'docs', 'ko', n['path'])
-        if not os.path.isfile(fpath):
-            continue
-        with open(fpath, encoding='utf-8') as f:
-            bodies[n['name']] = f.read()
+        for lang in LANGS:
+            fpath = os.path.join(root, 'docs', lang, n['path'])
+            if not os.path.isfile(fpath):
+                continue
+            key = n['name'] if lang == 'ko' else n['name'] + ' [' + lang + ']'
+            with open(fpath, encoding='utf-8') as f:
+                bodies[key] = f.read()
     return bodies
 
 

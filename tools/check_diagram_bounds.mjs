@@ -24,14 +24,20 @@ const CDP = process.env.CDP_PORT || '9333';
 const HTTP = process.env.HTTP_PORT || '8799';
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
-function diagramRoutes() {
+// Languages under test: en labels tend to run longer than the Korean
+// originals, so every translated body must pass the same bounds gate.
+// A doc is checked in a language only when that language's file exists
+// and contains a diagram (missing translations are simply skipped).
+const LANGS = ['ko', 'en'];
+
+function diagramRoutes(lang) {
   const list = JSON.parse(fs.readFileSync(path.join(ROOT, 'list'), 'utf8'));
   const out = [];
   const walk = (nodes) => {
     for (const n of nodes) {
       if (n.children) walk(n.children);
       else if (n.name && n.path) {
-        const f = path.join(ROOT, 'docs', 'ko', n.path);
+        const f = path.join(ROOT, 'docs', lang, n.path);
         if (fs.existsSync(f) && fs.readFileSync(f, 'utf8').includes('class="diagram"')) out.push(n.name);
       }
     }
@@ -41,7 +47,7 @@ function diagramRoutes() {
 }
 
 async function main() {
-  const routes = process.argv.slice(2).length ? process.argv.slice(2) : diagramRoutes();
+  const cli = process.argv.slice(2);
   const targets = await (await fetch(`http://127.0.0.1:${CDP}/json`)).json();
   const page = targets.find((t) => t.type === 'page');
   if (!page) throw new Error('no page target — is Chromium running with --remote-debugging-port?');
@@ -61,11 +67,21 @@ async function main() {
   await send('Network.enable');
   await send('Network.setCacheDisabled', { cacheDisabled: true });
   await send('Emulation.setDeviceMetricsOverride', { width: 1100, height: 900, deviceScaleFactor: 1, mobile: false });
-  await send('Page.navigate', { url: `http://127.0.0.1:${HTTP}/index.html#!welcome` });
-  await new Promise((r) => setTimeout(r, 2500));
 
   const findings = [];
-  for (const route of routes) {
+  let checked = 0;
+  for (const lang of LANGS) {
+    const all = diagramRoutes(lang);
+    const routes = cli.length ? cli.filter((r) => all.includes(r)) : all;
+    if (!routes.length) continue;
+    // Pin the render language explicitly — the site auto-detects the browser
+    // language on first visit, so an unpinned headless run would render en.
+    await send('Page.navigate', { url: `http://127.0.0.1:${HTTP}/index.html#!welcome` });
+    await new Promise((r) => setTimeout(r, 1200));
+    await ev(`localStorage.setItem('wikiSettings', JSON.stringify({lang:'${lang}'})); location.reload(); 'ok'`);
+    await new Promise((r) => setTimeout(r, 2500));
+    checked += routes.length;
+    for (const route of routes) {
     const hits = await ev(`(async()=>{
       location.hash='#!${route}';
       for(let i=0;i<40;i++){ await new Promise(r=>setTimeout(r,60)); if(document.querySelector('#article .diagram svg')) break; }
@@ -87,11 +103,13 @@ async function main() {
       });
       return out;
     })()`);
-    for (const h of (hits || [])) findings.push({ route, ...h });
-    process.stdout.write(findings.some((f) => f.route === route) ? 'X' : '.');
+    const tag = lang === 'ko' ? route : `${route} [${lang}]`;
+    for (const h of (hits || [])) findings.push({ route: tag, ...h });
+    process.stdout.write(findings.some((f) => f.route === tag) ? 'X' : '.');
+    }
   }
   ws.close();
-  console.log(`\n${routes.length} diagram docs checked.`);
+  console.log(`\n${checked} diagram doc renders checked (${LANGS.join('/')}).`);
   if (findings.length) {
     console.log(`\n${findings.length} OVERFLOW(S):`);
     for (const f of findings) console.log(`  [${f.kind}] ${f.route} #${f.di}: ${f.what}`);
