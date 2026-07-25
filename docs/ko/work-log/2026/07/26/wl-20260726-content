@@ -1,4 +1,4 @@
-<h2>2026-07-26 · 콘텐츠 — 영어 병행 소급 번역 (배치① 19편 · 배치② 12편)</h2>
+<h2>2026-07-26 · 콘텐츠 — 영어 병행 소급 번역 (배치① 19편 · 배치② 12편 · 배치③ 12편)</h2>
 
 <h3>배치① — 지식 체계 6 · CLAUDE.md 10계명 · 기초강의 12편</h3>
 <p>글로벌 도달 프로젝트의 소급 번역 첫 배치. <a href="#!wl-20260726-features">같은 날 기능 로그</a>에서 깐 인프라(자동 언어·en 도식 게이트·hreflang·병행 게이트) 위에서, 미번역 110편 중 <strong>19편의 영어 본문</strong>을 올렸다 — 영어권 방문자가 처음 닿는 관문(기초강의)과 이 위키 자체를 설명하는 자기기술 문서(지식 체계)를 우선했다. 번역 수행은 <strong>Claude Opus 5 서브에이전트 5기 병렬</strong>. 변경 유형: <strong>CONTENT</strong>.</p>
@@ -22,3 +22,12 @@
 <h3>덤: 라벨의 HTML 엔티티 정정 (배치①·② 공통)</h3>
 <p>배치② 렌더 확인에서 내비에 <code>&amp;amp;</code>가 <strong>글자 그대로 보이는</strong> 것을 발견했다. 원인은 명확했다 — <code>renderNodes()</code>가 라벨을 <code>escapeHtml()</code>로 이스케이프해 넣으므로 라벨·제목에는 <strong>엔티티가 아니라 실제 문자</strong>를 저장해야 한다(저장소 기존 관례도 <code>Install &amp; Start</code>·<code>News &amp; Articles</code>·ko <code>엔지니어링 계층과 Q&amp;A</code>처럼 평문). 배치①에서 이미 머지된 2건(<code>ccb-plugins</code>·<code>ccb-tips</code>)까지 포함해 <code>list</code> 6건·<code>doc-entries.en.json</code> 3건의 <code>&amp;amp;</code>·<code>&amp;mdash;</code>를 실제 문자로 정정하고, CDP로 정상 렌더를 재확인했다.</p>
 <p>누적: 영어 본문 <strong>37/115편</strong>. 남은 소급 번역 78편(Second Brain 9·Harness 12·PlugIn Harness 10·OMC 13·LLM Wiki 11·News 12·Douzone 11).</p>
+
+<h3>배치③ — 세컨드 브레인 9편 + 하네스 엔지니어링 3편</h3>
+<p>가장 분량이 큰 <a href="#!sb-intro">세컨드 브레인</a> 시리즈 전체(9편, 65KB)와 <a href="#!hns-overview">하네스 엔지니어링</a> 도입 3편을 옮겼다. Opus 5 에이전트 4기 병렬(3편씩).</p>
+<ul>
+    <li><strong>레벨 사다리·도식이 많은 시리즈</strong> — 세컨드 브레인은 5단계 레벨(정확히 찾기&rarr;주제로 묶기&rarr;의미로 찾기&rarr;관계로 잇기&rarr;자율 브레인 OS) 도식이 촘촘해 라벨 압박이 가장 컸다. 좁은 박스에는 짧은 표현을 골라 넣었다(98px <code>라이브 테스트 결과</code> &rarr; <em>test results</em>, 70px <code>평가·리뷰</code> &rarr; <em>reviews</em>, 220px <code>에버그린: 분기 목표·결정·히스토리</code> &rarr; <em>Evergreen: goals · decisions · history</em>). ko/en 2패스 <strong>115렌더 통과</strong>.</li>
+    <li><strong>엔티티 규칙이 자리 잡았다</strong> — 배치②에서 발견한 <code>&amp;amp;</code> 표시 버그를 프롬프트 규칙("라벨·제목은 실제 문자")으로 못 박은 결과, 이번 배치는 <strong>엔티티 잔존 0</strong>으로 들어왔다. 메타 파일 회수율도 12/12.</li>
+    <li><strong>동반 데이터</strong> — 12편 <code>label_en</code>+<code>tags_en</code>, <code>doc-entries.en.json</code> 37&rarr;49편. 에이전트들이 공유 메타 파일을 보고 형제 문서의 제목 표기(문장형)와 링크 텍스트를 스스로 맞췄다.</li>
+</ul>
+<p>누적: 영어 본문 <strong>49/115편</strong>(43%). 남은 소급 번역 66편(Harness 9·PlugIn Harness 10·OMC 13·LLM Wiki 11·News 12·Douzone 11).</p>

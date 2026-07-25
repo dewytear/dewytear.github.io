@@ -1,0 +1,135 @@
+<h2>What is a Second Brain</h2>
+<p>A <strong>Second Brain</strong> is a personal knowledge store where the knowledge, experience, and material in your head is <strong>moved out into an external system</strong> and organized so that <strong>AI can pull it back out accurately</strong> later. It is not some grand piece of software &mdash; it is nothing more than <strong>markdown files and folders organized by rules you understand</strong>. And the key is making those rules <strong>understandable to your AI agent in the same way</strong>.</p>
+
+<div class="note">
+    <span class="nh">One-sentence definition</span>
+    A system that stores your notes, meeting minutes, and conversation threads so that when you later say <strong>"find that again for me"</strong>, the AI finds it exactly, <strong>without wandering</strong> &mdash; that is a Second Brain.
+</div>
+
+<h3>Why a Second Brain now &mdash; data is the moat</h3>
+<p>The reason the same AI model gives different results is that the <strong>data you hand the model</strong> is different. Your work context, your customers, your decision history &mdash; this is <strong>your own asset (IP)</strong> that nobody else has, and it is your <strong>moat</strong> in competition. The problem is <strong>how you organize it</strong>. If the organization is a mess, the AI produces <strong>hallucinations (plausible falsehoods)</strong>, or wastes <strong>time and tokens</strong> digging through material.</p>
+
+<h3>How data grows</h3>
+<p>As you pile information into the system, the <strong>shape</strong> of the data changes. At first it is scattered fragments, but once relationships start to attach it becomes <strong>clusters</strong>, and finally a <strong>relationship network</strong> in which you can see <strong>how things connect to each other</strong>. This evolution is the outline of the <strong>five levels</strong> explained later.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 210" role="img" aria-label="Three stages of data evolution: scattered information → clusters form → relationships mapped">
+    <!-- panel dividers -->
+    <line class="d-edge dash" x1="230" y1="20" x2="230" y2="165"/>
+    <line class="d-edge dash" x1="455" y1="20" x2="455" y2="165"/>
+
+    <!-- Panel A: scattered -->
+    <line class="d-edge" x1="70" y1="120" x2="120" y2="92"/>
+    <circle class="d-node dim" cx="60" cy="60" r="6"/>
+    <circle class="d-node dim" cx="150" cy="52" r="6"/>
+    <circle class="d-node dim" cx="70" cy="120" r="6"/>
+    <circle class="d-node dim" cx="175" cy="128" r="6"/>
+    <circle class="d-node" cx="120" cy="92" r="7"/>
+    <text class="d-label sm" x="120" y="188" text-anchor="middle">① Scattered info</text>
+    <text class="d-sub" x="120" y="204" text-anchor="middle">Fragmented files</text>
+
+    <!-- Panel B: clusters -->
+    <!-- cluster 1 (accent/teal-orange) -->
+    <line class="d-edge" x1="290" y1="58" x2="320" y2="52"/>
+    <line class="d-edge" x1="290" y1="58" x2="305" y2="82"/>
+    <circle class="d-node" cx="290" cy="58" r="6"/>
+    <circle class="d-node" cx="320" cy="52" r="6"/>
+    <circle class="d-node" cx="305" cy="82" r="6"/>
+    <!-- cluster 2 (amber) -->
+    <line class="d-edge" x1="400" y1="60" x2="425" y2="72"/>
+    <line class="d-edge" x1="400" y1="60" x2="415" y2="46"/>
+    <circle class="d-node b" cx="400" cy="60" r="6"/>
+    <circle class="d-node b" cx="425" cy="72" r="6"/>
+    <circle class="d-node b" cx="415" cy="46" r="6"/>
+    <!-- cluster 3 (violet) -->
+    <line class="d-edge" x1="330" y1="122" x2="352" y2="132"/>
+    <line class="d-edge" x1="330" y1="122" x2="345" y2="105"/>
+    <circle class="d-node c" cx="330" cy="122" r="6"/>
+    <circle class="d-node c" cx="352" cy="132" r="6"/>
+    <circle class="d-node c" cx="345" cy="105" r="6"/>
+    <text class="d-label sm" x="345" y="188" text-anchor="middle">② Clusters form</text>
+    <text class="d-sub" x="345" y="204" text-anchor="middle">Grouped by topic</text>
+
+    <!-- Panel C: relationship map -->
+    <line class="d-edge" x1="505" y1="60" x2="550" y2="48"/>
+    <line class="d-edge" x1="550" y1="48" x2="600" y2="62"/>
+    <line class="d-edge" x1="600" y1="62" x2="638" y2="52"/>
+    <line class="d-edge accent" x1="525" y1="98" x2="575" y2="105"/>
+    <line class="d-edge" x1="575" y1="105" x2="620" y2="96"/>
+    <line class="d-edge" x1="550" y1="48" x2="575" y2="105"/>
+    <line class="d-edge accent" x1="600" y1="62" x2="620" y2="96"/>
+    <line class="d-edge" x1="525" y1="98" x2="555" y2="142"/>
+    <line class="d-edge" x1="575" y1="105" x2="605" y2="140"/>
+    <circle class="d-node d" cx="505" cy="60" r="6"/>
+    <circle class="d-node" cx="550" cy="48" r="7"/>
+    <circle class="d-node b" cx="600" cy="62" r="6"/>
+    <circle class="d-node d" cx="638" cy="52" r="6"/>
+    <circle class="d-node c" cx="525" cy="98" r="6"/>
+    <circle class="d-node" cx="575" cy="105" r="7"/>
+    <circle class="d-node b" cx="620" cy="96" r="6"/>
+    <circle class="d-node c" cx="555" cy="142" r="6"/>
+    <circle class="d-node d" cx="605" cy="140" r="6"/>
+    <text class="d-label sm" x="575" y="188" text-anchor="middle">③ Relations mapped</text>
+    <text class="d-sub" x="575" y="204" text-anchor="middle">How things connect</text>
+</svg>
+<div class="d-cap">It is not merely that files link to each other &mdash; it grows into a stage where <strong>what connects to what, and how</strong> becomes visible.</div>
+</div>
+
+<h3>The most important question &mdash; "can you find it again?"</h3>
+<p>There is exactly one criterion for judging whether your Second Brain works.</p>
+<div class="note">
+    <span class="nh">The core test</span>
+    <strong>"Can my agent find it again? And can I find it too?"</strong> &mdash; if the answer is "no", the content is not what is lacking; your <strong>organization (routing) and folder structure</strong> is wrong.
+</div>
+
+<h3>Design it backwards &mdash; the hoop and the ball</h3>
+<p>Before you start organizing, first decide <strong>"how will I pull this data back out later"</strong>. The way you take it out determines <strong>the way you put it in</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 520 240" role="img" aria-label="Reverse-design analogy: a round ball sized for the hoop drops straight through, but a square ball of the same size jams on the rim because tilting makes its diagonal longer than the opening">
+    <!-- left: the hoop-sized round ball drops clean through -->
+    <text class="d-sub" x="150" y="18" text-anchor="middle">Round ball · shaped for the hoop</text>
+    <circle class="d-node" cx="150" cy="64" r="36"/>
+    <ellipse class="d-box accent" cx="150" cy="140" rx="46" ry="14"/>
+    <path class="d-edge accent dash" d="M150 104 V172" fill="none"/>
+    <polygon class="d-arrow accent" points="145,172 155,172 150,180"/>
+    <text class="d-accent" x="150" y="212" text-anchor="middle" font-size="12">Drops right through ✓</text>
+
+    <!-- the hoop = the question you'll ask later -->
+    <text class="d-sub" x="265" y="144" text-anchor="middle">Hoop = question</text>
+
+    <!-- right: same size as the ball, but tilted its diagonal outgrows
+         the rim (72 x sqrt2 = 102 > opening 92) and it jams tip-first -->
+    <text class="d-sub" x="380" y="18" text-anchor="middle">Square ball · same size as round ball</text>
+    <ellipse class="d-box" cx="380" cy="140" rx="46" ry="14"/>
+    <rect class="d-node dim" x="344" y="54" width="72" height="72" rx="6" transform="rotate(45 380 90)"/>
+    <line class="d-edge dash" x1="329" y1="90" x2="431" y2="90"/>
+    <text class="d-sub" x="380" y="212" text-anchor="middle">Tilted, the longer diagonal jams ✕</text>
+</svg>
+<div class="d-cap">Look at the hoop (the question you will ask) first, then decide the ball (how you store the data). Do it in the reverse order and you will suffer later.</div>
+</div>
+
+<h3>Five levels &mdash; the lowest level may be the right answer</h3>
+<p>Second Brains divide into five levels by <strong>search and recall ability</strong>. For now we only look at the <strong>big picture</strong> (for details, see <a href="#!sb-levels">The five levels at a glance</a>).</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Level</th><th>One-line summary</th><th>Question it answers</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Level 1</strong></td><td>Find by exact word or filename (router <code>CLAUDE.md</code>)</td><td>"Where is that file?"</td></tr>
+            <tr><td><strong>Level 2</strong></td><td>Group by topic (LLM wiki + memory)</td><td>"Gather everything on this topic"</td></tr>
+            <tr><td><strong>Level 3</strong></td><td>Find by meaning (semantic search, vector DB)</td><td>"Something close in meaning even if the words differ"</td></tr>
+            <tr><td><strong>Level 4</strong></td><td>Connect by relationship (knowledge graph)</td><td>"Follow the connections from X to A"</td></tr>
+            <tr><td><strong>Level 5</strong></td><td>An always-on autonomous brain OS</td><td>"Stay updated on your own"</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note warn">
+    <span class="nh">Don't misunderstand &mdash; higher is not better</span>
+    Level 5 is not "the best". The right answer is <strong>the lowest level that matches the pain you feel right now</strong>. If nothing is uncomfortable, there is no reason to climb to a more complex structure &mdash; <strong>if there is no pain, don't build more.</strong> Even within a single project, <strong>the level may differ from folder to folder</strong>.
+</div>
+
+<div class="note">
+    <span class="nh">How this material flows</span>
+    It runs in this order: <a href="#!sb-levels">the five levels overview</a> → each level (<a href="#!sb-level1">1</a>·<a href="#!sb-level2">2</a>·<a href="#!sb-level3">3</a>·<a href="#!sb-level4">4</a>·<a href="#!sb-level5">5</a>) → <a href="#!sb-context-connections">what to put in and what to leave out</a> → <a href="#!sb-choose">finding your level and scaling to a team</a>. For reference, <strong>Level 2</strong> connects directly to the <a href="#!llmw-overview">LLM Wiki</a> already covered in this wiki.
+</div>
