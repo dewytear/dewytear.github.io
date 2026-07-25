@@ -1,0 +1,65 @@
+<h2>Commands · Quick Reference</h2>
+<p>The commands, controls, and settings you look up most often while using the harness, gathered in one place.</p>
+
+<h3>Core commands</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+            <tr><td><code>/plugin marketplace add &lt;repo&gt;</code></td><td>Registers the harness marketplace (e.g. <code>lev-factory/harness</code>)</td></tr>
+            <tr><td><code>/plugin install harness</code></td><td>Installs the Harness plugin</td></tr>
+            <tr><td><code>/reload</code></td><td>Applies the installed plugin to the current session</td></tr>
+            <tr><td><code>/harness &lt;intent&gt;</code></td><td>Gives an intent and runs the harness (starts forming the team)</td></tr>
+            <tr><td><code>Proceed</code></td><td>Approves execution after reviewing the proposed team</td></tr>
+            <tr><td><code>/agents</code></td><td>Checks the list of created agents</td></tr>
+            <tr><td><code>/exit</code></td><td>Ends the session (to re-enter when agents are not showing)</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>Controls · shortcuts</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Control</th><th>What it does</th></tr></thead>
+        <tbody>
+            <tr><td><span class="kbd">Tab</span></td><td>Autocompletes after typing <code>/harness</code></td></tr>
+            <tr><td><span class="kbd">Shift + arrow keys</span></td><td>Peeks into the work of each running agent</td></tr>
+            <tr><td><span class="kbd">Shift + Tab</span></td><td>Switches mode (auto / accept / plan)</td></tr>
+            <tr><td>A new terminal window</td><td>Runs another harness at the same time (parallel work)</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>Settings · where the deliverables live</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Item</th><th>Content</th></tr></thead>
+        <tbody>
+            <tr><td>Turning on agent teams</td><td><code>"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"</code> in <code>env</code> of <code>~/.claude/settings.json</code></td></tr>
+            <tr><td>Deliverables folder</td><td><code>_workspace</code> — analysis · design · implementation · QA reports · evidence sources</td></tr>
+            <tr><td>Agent · skill definitions</td><td>Under <code>.claude</code> (shareable via Git)</td></tr>
+            <tr><td>Configuration change history</td><td><code>CLAUDE.md</code></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>Cheat sheet by situation</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Situation</th><th>Do this</th></tr></thead>
+        <tbody>
+            <tr><td>First install</td><td><code>/plugin marketplace add …</code> → <code>/plugin install harness</code> → <code>/reload</code> → check <code>/harness</code></td></tr>
+            <tr><td>First run</td><td><code>/harness</code> + the intent <strong>"I want to ~"</strong> → review the team → <code>Proceed</code></td></tr>
+            <tr><td>Watching progress</td><td>Check the agents with <span class="kbd">Shift + arrow keys</span></td></tr>
+            <tr><td>Strengthening verification</td><td><code>/harness Modify the QA agent to cross-verify with Codex CLI</code></td></tr>
+            <tr><td>Modifying the team</td><td><code>/harness Modify &lt;agent&gt; to also verify/handle &lt;condition&gt;</code></td></tr>
+            <tr><td>Agents not showing</td><td>Re-enter after <code>/exit</code> → check <code>/agents</code></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">Intent sentence template (copy and use)</span>
+    <code>/harness I want to proceed with a client customization in ERP &lt;module&gt; that does &lt;what&gt;. Please include impact analysis of the standard source and regression testing as well.</code>
+    <br>For the various <a href="#!hnp-scenarios">scenarios</a>, you only need to swap <strong>&lt;module&gt; and &lt;what&gt;</strong> in this template.
+</div>

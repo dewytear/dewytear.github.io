@@ -1,0 +1,57 @@
+<h2>Web Clipper, the Inbox, and Query in Practice</h2>
+
+<div class="diagram">
+<svg viewBox="0 0 660 188" role="img" aria-label="The clipping pipeline: web article, Web Clipper, inbox folder, /inbox sorting, ingest, /query">
+    <rect class="d-box" x="8" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="42" text-anchor="middle">① Web article</text>
+    <text class="d-sub" x="108" y="59" text-anchor="middle">An article you read</text>
+    <rect class="d-box" x="223" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="42" text-anchor="middle">② Web Clipper</text>
+    <text class="d-sub" x="323" y="59" text-anchor="middle">Chrome extension</text>
+    <rect class="d-box" x="438" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="42" text-anchor="middle">③ Inbox folder</text>
+    <text class="d-sub" x="538" y="59" text-anchor="middle">0.2 inbox/article</text>
+
+    <rect class="d-box" x="8" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="134" text-anchor="middle">④ /inbox sorting</text>
+    <text class="d-sub" x="108" y="151" text-anchor="middle">Group by topic</text>
+    <rect class="d-box" x="223" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="134" text-anchor="middle">⑤ Ingest</text>
+    <text class="d-sub" x="323" y="151" text-anchor="middle">Creates wiki cards</text>
+    <rect class="d-box accent" x="438" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="134" text-anchor="middle">⑥ /query</text>
+    <text class="d-sub" x="538" y="151" text-anchor="middle">Retrieve and use</text>
+
+    <line class="d-edge" x1="208" y1="46" x2="221" y2="46"/><polygon class="d-arrow" points="215,41 223,46 215,51"/>
+    <line class="d-edge" x1="423" y1="46" x2="436" y2="46"/><polygon class="d-arrow" points="430,41 438,46 430,51"/>
+    <path class="d-edge" d="M538 72 C538 87, 523 92, 505 92 H141 C123 92, 108 97, 108 110" fill="none"/><polygon class="d-arrow" points="103,106 113,106 108,112"/><polygon class="d-arrow" points="328,87 328,97 318,92"/>
+    <line class="d-edge" x1="208" y1="138" x2="221" y2="138"/><polygon class="d-arrow" points="215,133 223,138 215,143"/>
+    <line class="d-edge accent" x1="423" y1="138" x2="436" y2="138"/><polygon class="d-arrow accent" points="430,133 438,138 430,143"/>
+</svg>
+<div class="d-cap">Collect web articles into the <strong>inbox</strong> with the clipper, sort them with <code>/inbox</code>, ingest them, then retrieve them with <code>/query</code>.</div>
+</div>
+
+<h3>Obsidian Web Clipper</h3>
+<p>Clip web articles with the Chrome extension <strong>Obsidian Web Clipper</strong> and put them into the vault's <strong>inbox</strong>. The instructor has placed the capture rules (a JSON template) in the wiki vault.</p>
+<ul>
+    <li>Register your vault names under <strong>vault storage</strong> in Settings → General options, and you can specify which vault to send to.</li>
+    <li>Import the template (JSON) and move the <strong>Web Article</strong> template to the very top (it fires first). There are also templates triggered by address, such as <code>x.com</code> or <code>youtube</code>.</li>
+    <li>When you capture, it is saved to a folder you designated in advance, such as <code>0.2 inbox/article</code>.</li>
+</ul>
+
+<h3>The inbox skill — collect, then analyze</h3>
+<pre><code>/inbox        <span class="c"># analyzes the material collected in the inbox and proposes topic-wise bundles</span></code></pre>
+<p>Collect several items in advance and run <code>/inbox</code>, and it proposes them <strong>split up by topic</strong>, like "3 of the 5 have the same grain, shall we ingest them together?"</p>
+
+<h3>Token tip — scrape the original</h3>
+<p>If you only give a link when ingesting, the AI has to <strong>scrape</strong> the original before it can start, which costs more tokens. <strong>Scraping in advance with the Web Clipper</strong> to secure the original before you start saves tokens.</p>
+
+<h3>Query in practice</h3>
+<pre><code>/query Summarize the academic value of the LLM wiki vault.
+I am going to cite the bibliographic information with a reference manager later.</code></pre>
+<p>If the wiki vault is not enough, it is set up to search all the way into the <strong>main vault</strong> and bring things back, and how I asked the question is recorded along with it. The result includes not just the answer but even recommendations on <strong>how best to design Obsidian metadata (author, created, source, category, and so on)</strong>.</p>
+
+<div class="note">
+    <span class="nh">Do not put a whole paper in</span>
+    Rather than ingesting the entire full text of a paper, it is better to let it learn just the basic concepts from something like the <strong>abstract</strong> and to leave behind <strong>the location of the full text</strong>. Have it read only the important key papers in full, and it is more useful if you put your own commentary and experimental context in alongside.
+</div>
