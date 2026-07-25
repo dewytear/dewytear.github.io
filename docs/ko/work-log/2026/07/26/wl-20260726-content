@@ -1,4 +1,4 @@
-<h2>2026-07-26 · 콘텐츠 — 영어 병행 소급 번역 (배치① 19 · ② 12 · ③ 12 · ④ 12 · ⑤ 18 · ⑥ 13편)</h2>
+<h2>2026-07-26 · 콘텐츠 — 영어 병행 소급 번역 (배치① 19 · ② 12 · ③ 12 · ④ 12 · ⑤ 18 · ⑥ 13 · ⑦ 12편)</h2>
 
 <h3>배치① — 지식 체계 6 · CLAUDE.md 10계명 · 기초강의 12편</h3>
 <p>글로벌 도달 프로젝트의 소급 번역 첫 배치. <a href="#!wl-20260726-features">같은 날 기능 로그</a>에서 깐 인프라(자동 언어·en 도식 게이트·hreflang·병행 게이트) 위에서, 미번역 110편 중 <strong>19편의 영어 본문</strong>을 올렸다 — 영어권 방문자가 처음 닿는 관문(기초강의)과 이 위키 자체를 설명하는 자기기술 문서(지식 체계)를 우선했다. 번역 수행은 <strong>Claude Opus 5 서브에이전트 5기 병렬</strong>. 변경 유형: <strong>CONTENT</strong>.</p>
@@ -63,3 +63,15 @@
     <li><strong>동반 데이터</strong> — 13편 <code>label_en</code>+<code>tags_en</code>, <code>doc-entries.en.json</code> 79&rarr;92편. 캐러셀·표 구조와 <code>&amp;larr;</code>/<code>&amp;rarr;</code> 엔티티도 그대로 보존됐다.</li>
 </ul>
 <p>누적: 영어 본문 <strong>92/115편</strong>(80%). 남은 소급 번역 23편(News 12·Douzone 11).</p>
+
+<h3>배치⑦ — 뉴스·기사 12편 완결 (256KB, 최대 분량)</h3>
+<p>가장 무거운 구간. 문서 하나가 49KB(<a href="#!news-20260709-thariq-fable5-unknowns">타릭의 지도와 영토</a>)·37KB(<a href="#!news-20260716-kimi-k3">Kimi K3</a>)·34KB(<a href="#!news-20260710-oracle-ontology-property-graph">Oracle 온톨로지</a>)에 달해 <strong>Opus 5 에이전트 6기</strong>로 잘게 나눠 병렬 처리했고, 대형 기사에는 &ldquo;순차 패스로 끝까지, 요약 금지&rdquo;를 명시했다. AI 2040 4부작도 함께 마쳤다.</p>
+<ul>
+    <li><strong>구조 동일성을 기계로 확인</strong> — 뉴스는 표·도식·figure·주석이 얽혀 분량이 크므로, 에이전트들이 <strong>ko/en 태그 시퀀스와 SVG 지오메트리 속성을 스크립트로 대조</strong>해 보고했다(예: 태그 1,082 vs 1,082 동일·지오메트리 속성 206개 바이트 동일·요소 카운트 h3 27·td 123 일치). 번역 누락·구조 변형이 없음을 사람 눈이 아니라 데이터로 확인한 첫 배치.</li>
+    <li><strong>수치·가격은 손대지 않는다</strong> — 벤치마크 표(<code>.cmp</code> 비교표의 <code>--w</code> 변수 포함)·가격·모델명은 재계산·반올림 없이 원문 유지를 지시했고, 대조에서 일치를 확인했다.</li>
+    <li><strong>사람 이름 표기 통일</strong> — 한국 인명은 <em>Given Family</em> 순(예: 이재욱 교수 &rarr; <em>Prof. Jaewook Lee</em>)으로 <code>ccb-overview</code> 선례를 따랐다. 그 결과 기존 내비 라벨이 Family-Given(<em>Prof. Lee Jae-wook</em>)으로 어긋나 있어 <strong>라벨도 본문 표기에 맞춰 정정</strong>했다.</li>
+    <li><strong>도식 라벨 압박이 가장 컸다</strong> — 원형 노드(r=11~34)와 좁은 필이 많아 <em>Not on the map</em>·<em>Cheap failure</em>·<em>one edge away</em>·<em>CREATE PROPERTY GRAPH</em>처럼 축약했다. 지오메트리 불변, ko/en 2패스 <strong>150렌더 통과</strong>.</li>
+    <li><strong>번역이 사실을 바꾸는 지점 처리</strong> — 한 기사의 출처 노트에 &ldquo;원문을 <em>한국어로</em> 정리했다&rdquo;는 서술이 있었는데, 영어 본문에서는 그 말이 거짓이 되므로 &ldquo;원문 논지를 요약·정리(발췌 반영)&rdquo;로 바꿨다. 내용 보존과 사실 정합이 충돌할 때의 판단 사례.</li>
+    <li><strong>동반 데이터</strong> — 12편 <code>label_en</code>+<code>tags_en</code>, <code>doc-entries.en.json</code> 92&rarr;104편. <code>en-body-without-label</code> 검토 신호가 23&rarr;12건으로 줄었다.</li>
+</ul>
+<p>누적: 영어 본문 <strong>104/115편</strong>(90%). 남은 소급 번역 11편(Douzone).</p>

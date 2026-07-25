@@ -1,0 +1,184 @@
+<h2>Claude Opus 5 — A Near-Fable at Half the Price Has Arrived</h2>
+
+<figure class="doc-img">
+    <img src="assets/ai/news/2026/news-20260724-claude-opus-5/hero.webp" width="1440" height="810"
+         alt="Claude Opus 5 launch visual in which vintage bird-egg plates gather into the shape of the numeral 5">
+    <figcaption>Individual eggs gather to form a &lsquo;5&rsquo; — the Claude Opus 5 launch visual (image: Anthropic)</figcaption>
+</figure>
+
+<p>On July 24, 2026, Anthropic unveiled <strong>Claude Opus 5</strong>. In one line — <strong>&ldquo;performance right up against the top-tier Fable 5, at half the price.&rdquo;</strong> This announcement came amid a sprint of four model releases in two months, and the reason reviewers were buzzing is simple: on several benchmarks the numbers came out <strong>beating Anthropic&rsquo;s own top-tier model</strong>. This article is built on the <strong>facts cross-verified against the official announcement and multiple press reports</strong>, together with what came up in the review reactions right after launch — verified facts and unconfirmed reactions are marked separately.</p>
+
+<div class="note">
+    <span class="nh">About this article (sources)</span>
+    · Subject: <strong>Anthropic&rsquo;s Claude Opus 5 launch</strong> (2026-07-24)<br>
+    · Compiled: <strong>cross-verified against the official announcement and multiple press reports</strong> (2026-07-25) · Reference: review reactions right after launch<br>
+    · Official source: <a href="https://www.anthropic.com/news/claude-opus-5" target="_blank" rel="noopener">Introducing Claude Opus 5 (anthropic.com)</a> · full source list at the end of this document
+</div>
+
+<h3>Three-line summary</h3>
+<ul>
+    <li>Opus 5 is <strong>$5/$25</strong> (input/output, per million tokens) — the same price as its predecessor Opus 4.8, yet the performance is <strong>right on the heels of Fable 5 ($10/$50)</strong>, or <strong>above it</strong> on some benchmarks.</li>
+    <li>The real news is not only the duel with Fable — the <strong>generational jump from Opus 4.8 to 5</strong> is large across every category, and in particular <strong>long-horizon agentic work that &ldquo;verifies itself and sees things through&rdquo;</strong> got noticeably better (symbolized by the demo where, unable to view a drawing, it wrote a CV pipeline itself and rebuilt the part as 3D CAD).</li>
+    <li>The practical concern is <strong>safeguards</strong> — since early July there has been controversy over Fable 5&rsquo;s safety classifier false-positiving even on security and debugging work, and the point reviewers are watching is that Opus 5 is far looser about that constraint.</li>
+</ul>
+
+<h3>Just three terms to know going in</h3>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Term</th><th>Plain explanation</th></tr></thead>
+    <tbody>
+        <tr><td><strong>effort<br>(thinking intensity)</strong></td><td>The dial that controls <strong>how long the model thinks</strong> about a single answer. The higher you push it — high → xhigh → max — the higher the score, but the more tokens (= money) it spends. It is the key axis of this comparison.</td></tr>
+        <tr><td><strong>token efficiency</strong></td><td><strong>How few tokens</strong> it takes to produce the same result. Even a cheap unit price gets expensive if the model is long-winded — Opus 5 has both half the unit price and a tendency to use fewer tokens, so the &lsquo;cost per task&rsquo; drops sharply.</td></tr>
+        <tr><td><strong>long-horizon agentic work</strong></td><td>Work that is not answered once and done, but completed by <strong>repeating attempt → verification → revision dozens of times</strong> once a goal is given. Real-world tasks like coding agents and computer use all belong here.</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>Benchmarks — &ldquo;Fable only wins at max&rdquo;</h3>
+<p>This is the part the post-launch reviews were most excited about. On the practical coding benchmark <strong>CursorBench 3.2</strong>, <strong>Fable 5 leads only narrowly in the max range</strong> where effort is pushed all the way up (<strong>within 0.5%</strong> of the peak), and in the <strong>high and xhigh ranges that most users actually use, the output is effectively the same</strong> — yet the cost per task is <strong>half</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="CursorBench 3.2 conceptual chart: as effort rises through high, xhigh and max, the score curves of Opus 5 and Fable 5 nearly overlap and Fable 5 leads only at max by within 0.5%, while Opus 4.8 sits below them">
+    <text class="d-label" x="360" y="26" text-anchor="middle">CursorBench 3.2 — score by effort (conceptual)</text>
+    <line class="d-edge" x1="90" y1="240" x2="660" y2="240"/>
+    <line class="d-edge" x1="90" y1="240" x2="90" y2="50"/>
+    <text class="d-sub" x="200" y="262" text-anchor="middle">high</text>
+    <text class="d-sub" x="390" y="262" text-anchor="middle">xhigh</text>
+    <text class="d-sub" x="580" y="262" text-anchor="middle">max</text>
+    <text class="d-sub" x="76" y="150" text-anchor="end">Score</text>
+    <path class="d-edge" d="M200 150 C300 122, 480 102, 580 88" fill="none"/>
+    <circle class="d-node" cx="200" cy="150" r="6"/><circle class="d-node" cx="390" cy="112" r="6"/><circle class="d-node" cx="580" cy="88" r="6"/>
+    <text class="d-label sm" x="644" y="84">Fable 5</text>
+    <path class="d-edge accent" d="M200 152 C300 126, 480 108, 580 96" fill="none"/>
+    <circle class="d-node" cx="200" cy="152" r="6"/><circle class="d-node" cx="390" cy="116" r="6"/><circle class="d-node" cx="580" cy="96" r="6"/>
+    <text class="d-label sm" x="644" y="104">Opus 5</text>
+    <path class="d-edge dash" d="M200 196 C300 178, 480 166, 580 158" fill="none"/>
+    <circle class="d-node dim" cx="200" cy="196" r="6"/><circle class="d-node dim" cx="390" cy="170" r="6"/><circle class="d-node dim" cx="580" cy="158" r="6"/>
+    <text class="d-label sm" x="644" y="162">Opus 4.8</text>
+    <text class="d-sub" x="360" y="290" text-anchor="middle">Within 0.5% only at max — high and xhigh are effectively equal, at half the cost per task</text>
+</svg>
+<div class="d-cap">A conceptual chart tracing the composition of the official one (not to measured scale). That the two curves almost lie on top of each other — that is the one picture of this announcement.</div>
+</div>
+
+<p>On other benchmarks, results came out that <strong>beat Fable 5</strong> outright. Taking only the cross-verified numbers, here they are.</p>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Benchmark</th><th>Result</th><th>Meaning</th></tr></thead>
+    <tbody>
+        <tr><td><strong>CursorBench 3.2</strong> (coding)</td><td>At max effort, <strong>within −0.5%</strong> of Fable 5&rsquo;s peak, at <strong>½</strong> the cost per task</td><td>The basis for &ldquo;effectively the same performance, half the price&rdquo;</td></tr>
+        <tr><td><strong>Frontier-Bench</strong> (agentic coding)</td><td><strong>43.3%</strong> vs GPT-5.6 Sol 34.4%</td><td>Ahead of another vendor&rsquo;s top model too</td></tr>
+        <tr><td><strong>OSWorld 2.0</strong> (computer use)</td><td>Ahead at every price point, clearing Fable 5&rsquo;s peak on <strong>about ⅓ the budget</strong></td><td>The cost advantage is largest in real agent work</td></tr>
+        <tr><td><strong>Zapier AutomationBench</strong> (work automation)</td><td><strong>~1.5×</strong> the pass rate of the next-best model at equal cost</td><td>Strong on knowledge work and automation</td></tr>
+        <tr><td><strong>ARC-AGI 3</strong> (abstract reasoning)</td><td><strong>3×</strong> the score of the next-best model</td><td>The number that symbolizes the generational jump</td></tr>
+    </tbody>
+</table>
+</div>
+
+<figure class="doc-img">
+    <img src="assets/ai/news/2026/news-20260724-claude-opus-5/fig-frontier-bench.webp" width="1440" height="810"
+         alt="Official Frontier-Bench v0.1 chart: the horizontal axis is cost per attempt (log scale) and the vertical axis is score. The Opus 5 curve sits up and to the left of Fable 5 and above GPT-5.6 Sol, with Opus 4.8 at the very bottom">
+    <figcaption>The official <strong>Frontier-Bench v0.1</strong> chart — horizontal axis <strong>cost per attempt</strong> (log), vertical axis score. <strong>The further up and to the left, the more it means &lsquo;cheap and good&rsquo;</strong>, and Opus 5 (orange) sits entirely up and to the left of Fable 5 (yellow). Per the footnote, these numbers come from internal runs on a mini-SWE-agent harness, and cases the safety classifier refused were counted by falling back to Opus 4.8 (image: Anthropic)</figcaption>
+</figure>
+
+<p>The commentary in the review reactions lands on this same point — that &ldquo;more than the Fable-versus-Opus framing, <strong>the jump from 4.8 to 5</strong> is the real news.&rdquo; Every category rose substantially over the predecessor, and Fable 5 kept its edge only in a few areas such as multidisciplinary reasoning (without tools), law and medicine (and even there it flips once tools are used, is the reviewers&rsquo; observation).</p>
+
+<h3>Changed dexterity — three demos</h3>
+<p>Claude has carried the weakness of being &ldquo;an AI that cannot draw&rdquo; because it has no image generation model, but with Opus 5 the <strong>visuals drawn with code</strong> (SVG, HTML, 3D interactive) got noticeably better. Redrawn as a diagram, the three demos in the official announcement look like this.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="Three official Opus 5 demos: wind tunnel airflow visualization, an interactive cell illustration, and a 3D CAD rebuild from a drawing">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Three public demos — visuals drawn with code</text>
+    <rect class="d-box" x="24" y="44" width="212" height="160" rx="10"/>
+    <text class="d-label sm" x="130" y="66" text-anchor="middle">Wind tunnel airflow</text>
+    <path class="d-edge accent" d="M44 110 C90 100, 120 96, 216 92" fill="none"/>
+    <path class="d-edge accent" d="M44 130 C86 128, 110 118, 216 112" fill="none"/>
+    <path class="d-edge accent" d="M44 150 C90 152, 130 158, 216 166" fill="none"/>
+    <circle class="d-node" cx="118" cy="132" r="16"/>
+    <text class="d-sub" x="130" y="192" text-anchor="middle">Airflow rendered over a body</text>
+    <rect class="d-box" x="254" y="44" width="212" height="160" rx="10"/>
+    <text class="d-label sm" x="360" y="66" text-anchor="middle">Interactive cell</text>
+    <circle class="d-node dim" cx="360" cy="128" r="42"/>
+    <circle class="d-node" cx="352" cy="120" r="13"/>
+    <circle class="d-node dim" cx="384" cy="140" r="7"/><circle class="d-node dim" cx="336" cy="148" r="6"/><circle class="d-node dim" cx="380" cy="106" r="5"/>
+    <text class="d-sub" x="360" y="192" text-anchor="middle">A 3D illustration you click to explore</text>
+    <rect class="d-box accent" x="484" y="44" width="212" height="160" rx="10"/>
+    <text class="d-label sm" x="590" y="66" text-anchor="middle">Drawing → 3D CAD rebuild</text>
+    <rect class="d-box soft" x="504" y="84" width="74" height="56" rx="6"/>
+    <text class="d-sub" x="541" y="116" text-anchor="middle">Part drawing</text>
+    <line class="d-edge" x1="578" y1="112" x2="602" y2="112"/><polygon class="d-arrow" points="602,107 610,112 602,117"/>
+    <rect class="d-box soft" x="610" y="84" width="66" height="56" rx="6"/>
+    <text class="d-sub" x="643" y="110" text-anchor="middle">3D part</text>
+    <text class="d-sub" x="643" y="126" text-anchor="middle">(FreeCAD)</text>
+    <text class="d-sub" x="590" y="168" text-anchor="middle">More below — the launch&rsquo;s highlight</text>
+    <text class="d-sub" x="360" y="238" text-anchor="middle">All three are drawn with code (SVG, HTML, CAD scripts), not by &ldquo;image generation&rdquo;</text>
+</svg>
+<div class="d-cap">The original demo videos can be watched on the <a href="https://www.anthropic.com/news/claude-opus-5" target="_blank" rel="noopener">official announcement page</a> — here only the composition has been redrawn as a diagram.</div>
+</div>
+
+<figure class="doc-video">
+    <div class="dv-frame">
+        <iframe src="https://www.youtube-nocookie.com/embed/4WQd-8d5j4k" title="Video about Claude Opus 5"
+                loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <figcaption>It is quicker to see it as a moving result — a video about Claude Opus 5 (<a href="https://youtu.be/4WQd-8d5j4k" target="_blank" rel="noopener">open on YouTube</a>)</figcaption>
+</figure>
+
+<h3>The highlight — &ldquo;If it cannot see, it builds a way to see&rdquo;</h3>
+<p>This is the case from the announcement that gets talked about most. Opus 5 was given <strong>a single mechanical part drawing</strong> and told to &ldquo;write code that rebuilds this as a 3D CAD model&rdquo; — but <strong>it was deliberately given no means of opening and viewing the drawing.</strong> A situation with a goal but the method blocked. Instead of giving up, Opus 5 <strong>wrote a computer vision pipeline itself</strong> to extract the shape geometry from the image pixels, and with it rebuilt the whole part as a FreeCAD 3D model. Competing models under the same conditions <strong>failed on all five attempts</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 240" role="img" aria-label="CAD rebuild demo flow: unable to view the part drawing, Opus 5 writes a computer vision pipeline itself, extracts geometry from pixels, rebuilds it as a FreeCAD 3D model, and iterates while verifying">
+    <text class="d-label" x="360" y="26" text-anchor="middle">&ldquo;I cannot see the drawing&rdquo; → how it built its own eyes</text>
+    <rect class="d-box soft" x="26" y="70" width="150" height="70" rx="10"/>
+    <text class="d-label sm" x="101" y="98" text-anchor="middle">Part drawing image</text>
+    <text class="d-sub" x="101" y="120" text-anchor="middle">No way to view it 🚫</text>
+    <line class="d-edge" x1="176" y1="105" x2="204" y2="105"/><polygon class="d-arrow" points="204,100 212,105 204,110"/>
+    <rect class="d-box accent" x="212" y="62" width="216" height="86" rx="10"/>
+    <text class="d-label sm" x="320" y="90" text-anchor="middle">Built its own CV pipeline</text>
+    <text class="d-sub" x="320" y="112" text-anchor="middle">Pixels → outline &amp; size geometry</text>
+    <text class="d-sub" x="320" y="132" text-anchor="middle">(invented a method nobody asked for)</text>
+    <line class="d-edge" x1="428" y1="105" x2="456" y2="105"/><polygon class="d-arrow" points="456,100 464,105 456,110"/>
+    <rect class="d-box soft" x="464" y="70" width="230" height="70" rx="10"/>
+    <text class="d-label sm" x="579" y="98" text-anchor="middle">FreeCAD 3D model rebuild</text>
+    <text class="d-sub" x="579" y="120" text-anchor="middle">Rival models failed all 5 attempts</text>
+    <path class="d-edge dash" d="M579 140 C579 196, 320 196, 320 148"/><polygon class="d-arrow" points="315,154 320,144 325,154"/>
+    <text class="d-sub" x="450" y="212" text-anchor="middle">Compare output to the goal → fix until it works (verify and repeat)</text>
+</svg>
+<div class="d-cap">&ldquo;Give it only the goal (the north star) and it finds a method and sees it through&rdquo; — the emblematic case of the <strong>long-horizon agentic ability</strong> said to have improved most over Opus 4.8.</div>
+</div>
+
+<p>Why does this matter? Most of what we ask AI to do in practice is not one-shot but a <strong>loop</strong> — give a goal, verify the result, have it fix things again. This is exactly the point Anthropic stressed when it said the model &ldquo;has become stronger at verifying its work and iterating carefully,&rdquo; and the case above is a demonstration that this ability extends as far as &ldquo;inventing the method.&rdquo;</p>
+
+<h3>Safeguards — the context of the Fable 5 false-positive controversy</h3>
+<p>This is the part the review reactions picked as &ldquo;realistically the most welcome change.&rdquo; There is a backstory — <strong>after Fable 5&rsquo;s safety classifier was strengthened in early July</strong>, the problem of it false-positiving even security code review or ordinary debugging as dangerous requests and <strong>downgrading them to a lower model (Opus 4.8)</strong> became a public issue (numerous GitHub issues, reports of debugging benchmarks plunging). Opus 5 uses the same classifier system but has been tuned so it trips <strong>far less sensitively</strong> — that is the common observation of the announcement and the reviews. Some reviews mentioned a figure of &ldquo;an 85% reduction in trigger probability versus Fable,&rdquo; but that specific number could not be confirmed in official documents, so it is flagged separately in the fact-check notes below.</p>
+<p>One more thing — that problem-behavior scores in alignment evaluations are lower than in the predecessors (lower is better), and that the <strong>ability to find vulnerabilities and exploits in open source code has risen substantially</strong>, are also observations from the review reactions. For detailed numbers, the <a href="https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf" target="_blank" rel="noopener">official system card (PDF)</a> is the primary source.</p>
+
+<h3>Pricing — the body of this announcement</h3>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Model</th><th>Input $/1M</th><th>Output $/1M</th><th>Notes</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Claude Opus 5</strong></td><td><strong>$5</strong></td><td><strong>$25</strong></td><td>Same as Opus 4.8 — only the performance jumped</td></tr>
+        <tr><td>Claude Fable 5</td><td>$10</td><td>$50</td><td>Its max-effort peak is still the best</td></tr>
+        <tr><td>Claude Opus 4.8</td><td>$5</td><td>$25</td><td>The predecessor</td></tr>
+    </tbody>
+</table>
+</div>
+<p>On top of the unit price being half, <strong>token efficiency (the number of tokens spent on the same job) is also on the good side</strong>, so the &lsquo;cost per task&rsquo; gap the benchmarks showed widens further than the unit-price difference (clearing Fable&rsquo;s peak on ⅓ the budget in OSWorld is an example). It is usable on Claude.ai, the API, Claude Code and Cowork right at launch, and it has become <strong>the default model of the Claude Max plan</strong>.</p>
+
+<h3>Fact-check notes</h3>
+<ul>
+    <li><strong>Passed cross-verification (numbers in the body)</strong> — the launch date (7/24), pricing ($5/$25, Fable $10/$50), CursorBench 3.2 (within 0.5% at max, half the cost per task), Frontier-Bench 43.3% vs 34.4%, OSWorld ⅓ budget, AutomationBench ~1.5×, ARC-AGI 3 3×, the three demos, and the CAD case (competing models losing all five attempts) match between the official announcement and multiple independent reports.</li>
+    <li><strong>Claims from review reactions (official numbers unconfirmed)</strong> — ① the &ldquo;85% reduction&rdquo; in safeguard triggers: the direction (loosening) is confirmed by the official announcement and by reporting, but the figure of 85% could not be confirmed. ② &ldquo;Sonnet 5 is the most expensive model per task&rdquo;: a reviewer&rsquo;s calculation claim, with no independent verification. ③ Alignment evaluation and vulnerability-finding numbers: the system card is the primary source, and the body describes only the direction.</li>
+    <li><strong>The diagrams are conceptual</strong> — the CursorBench curves and the demo panels trace the composition of the official chart and the public demos, and are not to measured scale (the numbers follow the tables).</li>
+    <li><strong>How to read benchmark numbers</strong> — even the same model scores very differently depending on which <a href="#!hns-what">harness</a> (tools, context, retry settings) it is run on. A case where self-announced numbers and independently reproduced numbers diverge was actually confirmed in the <a href="#!news-20260716-kimi-k3">Kimi K3 article</a> — the table above, too, is safer read as &lsquo;the shape of performance per cost&rsquo; than as a &lsquo;ranking&rsquo;.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">Sources</span>
+    · Official: <a href="https://www.anthropic.com/news/claude-opus-5" target="_blank" rel="noopener">Introducing Claude Opus 5</a> · <a href="https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf" target="_blank" rel="noopener">System Card (PDF)</a><br>
+    · Reporting: <a href="https://thenextweb.com/news/anthropic-claude-opus-5-launch-frontier-bench-coding" target="_blank" rel="noopener">TNW</a> · <a href="https://decrypt.co/374305/claude-opus-5-outscores-fable-5-most-benchmarks-half-price" target="_blank" rel="noopener">Decrypt</a> · <a href="https://venturebeat.com/orchestration/anthropic-launches-claude-opus-5-a-cheaper-ai-model-for-coding-agents-and-enterprise-workflows" target="_blank" rel="noopener">VentureBeat</a> · <a href="https://interestingengineering.com/culture/anthropic-claude-opus-5-coding-performance" target="_blank" rel="noopener">Interesting Engineering</a> · <a href="https://qz.com/anthropic-claude-opus-5-fable-5-price-072426" target="_blank" rel="noopener">Quartz</a><br>
+    · Fable 5 classifier context: <a href="https://www.techtimes.com/articles/319576/20260702/claude-fable-5-debugging-scores-drop-70-safety-classifier-reroutes-tasks-weaker-fallback-model.htm" target="_blank" rel="noopener">TechTimes</a> · <a href="https://github.com/anthropics/claude-code/issues/67246" target="_blank" rel="noopener">claude-code#67246</a>
+</div>
