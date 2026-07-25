@@ -1,0 +1,57 @@
+<h2>What Is Claude Code</h2>
+<p>Think of Claude Code as <strong>an AI agent that runs in your local environment (your own PC)</strong>. Unlike web chat, it reads and edits the files on your computer directly and runs commands to get work done. You work by <strong>creating one folder per project and staying inside that folder</strong>. On Windows you normally run it from the <strong>PowerShell</strong> terminal.</p>
+
+<h3>How it differs from existing services</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr><th>Form</th><th>Characteristics</th><th>Freedom</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Web browser (Claude &middot; ChatGPT &middot; Gemini)</td><td>Using AI inside the browser's constrained environment. You have to upload files one by one</td><td>Most limited</td></tr>
+            <tr><td>Claude desktop app</td><td>Runs locally, but has constraints compared to the terminal</td><td>Medium</td></tr>
+            <tr><td><strong>Claude Code (terminal)</strong></td><td>Direct access to the files in the folder you launched it from. Work as freely as you like</td><td>Most free</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>Get just a little comfortable with the terminal environment and you can use it far more freely, much as you would use ordinary AI chat.</p>
+
+<h3>Demo &mdash; Three Meeting Notes into One Report</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="Demo flow: explore folder → read files → analyze → write report">
+    <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="85" y="46" text-anchor="middle">① Explore folder</text>
+    <text class="d-sub" x="85" y="63" text-anchor="middle">search</text>
+
+    <rect class="d-box" x="180" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="255" y="46" text-anchor="middle">② Read files</text>
+    <text class="d-sub" x="255" y="63" text-anchor="middle">Read one by one</text>
+
+    <rect class="d-box" x="350" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="425" y="46" text-anchor="middle">③ Analyze</text>
+    <text class="d-sub" x="425" y="63" text-anchor="middle">Grasp the content</text>
+
+    <rect class="d-box accent" x="520" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="595" y="46" text-anchor="middle">④ Write report</text>
+    <text class="d-sub" x="595" y="63" text-anchor="middle">Produce the output</text>
+
+    <line class="d-edge" x1="160" y1="48" x2="176" y2="48"/><polygon class="d-arrow" points="172,43 180,48 172,53"/>
+    <line class="d-edge" x1="330" y1="48" x2="346" y2="48"/><polygon class="d-arrow" points="342,43 350,48 342,53"/>
+    <line class="d-edge" x1="500" y1="48" x2="516" y2="48"/><polygon class="d-arrow" points="512,43 520,48 512,53"/>
+</svg>
+<div class="d-cap">Without being told the file list, it explores, reads, and analyzes on its own to produce the report.</div>
+</div>
+<p>Run Claude Code in a folder holding three meeting-note files and ask for this.</p>
+<pre><code>Combine these three meeting notes and summarize them into a single report. In Korean.</code></pre>
+<p>The key point here is that <strong>you never told it which files exist</strong>. With web chat you would have to upload the files yourself, but Claude Code</p>
+<ul>
+    <li>first <strong>explores (searches) which files are in the current folder</strong>,</li>
+    <li><strong>reads those files one by one</strong>,</li>
+    <li>and after <strong>analyzing</strong> the content, produces the result (the report).</li>
+</ul>
+<p>In other words, "the folder you launched it from" becomes the workspace, and it handles the files inside on its own.</p>
+
+<div class="note">
+    <span class="nh">Worth remembering</span>
+    Claude Code has <strong>access to the entire folder</strong> in which you ran <code>claude</code>. That is why it matters to split folders per project and make a habit of launching inside the folder you want to work in.
+</div>
