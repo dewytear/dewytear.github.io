@@ -1,0 +1,73 @@
+<h2>Knowledge Map — Douzone</h2>
+<p>This page is a knowledge map that consolidates the <strong>DOUZONE World</strong> (work and organizational knowledge). Knowledge in this wiki is organized in four levels, <strong>World → Domain → System → Document</strong>, and this map covers the DOUZONE World among them. It shows <strong>which System each company knowledge document belongs to and how they connect to one another</strong>. Each document's summary, key concepts, and related documents come from the structural knowledge index an AI built (<code>knowledge-index.json</code>), and you can explore these relations as a 3D graph plus six 2D representations in the <a href="#!cosmos"><strong>Knowledge Graph</strong></a>. Course and learning knowledge is aggregated with the same structure by the <a href="#!ai-map"><strong>AI Knowledge Map</strong></a>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 760 312" role="img" aria-label="Knowledge hierarchy: World (AI·DOUZONE) → Domain (knowledge areas) → System (topic groups) → Document"><text class="d-label" x="16" y="52" text-anchor="start">World</text><text class="d-sub" x="16" y="70" text-anchor="start">Top-level knowledge worlds</text><text class="d-label" x="16" y="126" text-anchor="start">Domain</text><text class="d-sub" x="16" y="144" text-anchor="start">Knowledge areas</text><text class="d-label" x="16" y="206" text-anchor="start">System</text><text class="d-sub" x="16" y="224" text-anchor="start">Concrete systems &amp; topics</text><text class="d-label" x="16" y="278" text-anchor="start">Document</text><text class="d-sub" x="16" y="296" text-anchor="start">Individual documents</text><rect class="d-box" x="168" y="30" width="188" height="44" rx="9"/><text class="d-label" x="262" y="57" text-anchor="middle">AI</text><rect class="d-box accent" x="472" y="30" width="188" height="44" rx="9"/><text class="d-label" x="566" y="57" text-anchor="middle">DOUZONE</text><line class="d-edge" x1="262" y1="74" x2="262" y2="104"/><line class="d-edge" x1="566" y1="74" x2="566" y2="104"/><rect class="d-box" x="168" y="104" width="188" height="44" rx="9"/><text class="d-label sm" x="262" y="131" text-anchor="middle">Claude · Code / PlugIn</text><rect class="d-box" x="472" y="104" width="188" height="44" rx="9"/><text class="d-label sm" x="566" y="131" text-anchor="middle">dev.Center · Proposal</text><line class="d-edge" x1="262" y1="148" x2="262" y2="178"/><line class="d-edge" x1="566" y1="148" x2="566" y2="178"/><rect class="d-box soft" x="104" y="178" width="316" height="56" rx="10"/><text class="d-sub" x="262" y="200" text-anchor="middle">Introduction · Tutorial · Skill · Second Brain</text><text class="d-sub" x="262" y="218" text-anchor="middle">LLM Wiki · Harness · OMC</text><rect class="d-box soft" x="472" y="178" width="188" height="56" rx="10"/><text class="d-sub" x="566" y="209" text-anchor="middle">AI Dev Knowledge Platform</text><line class="d-edge" x1="262" y1="234" x2="262" y2="256"/><line class="d-edge" x1="566" y1="234" x2="566" y2="256"/><rect class="d-box soft" x="104" y="256" width="556" height="40" rx="10"/><text class="d-sub" x="382" y="280" text-anchor="middle">Individual documents — ordered as a series under each System</text></svg>
+<div class="d-cap">Two Worlds — learning knowledge (AI) and work knowledge (DOUZONE) connect on the same index.</div>
+</div>
+
+<h3>Systems at a glance</h3>
+<p>The &ldquo;hub doc&rdquo; is the gateway document of a branch, the one other documents point to most often as related. <span class="scn-sub">Numbers in the table are aggregated live from <code>knowledge-index.json</code>, and a new System appears automatically once its documents are registered.</span></p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>System</th><th>Docs</th><th>Main topics</th><th>Hub doc</th></tr></thead>
+        <tbody id="km-clusters" data-section-prefix="Douzone" data-topics='{"AI Dev Knowledge Platform":"Auto-knowledge platform from GitLab output","AI Notification Send Engine":"Kafka-based send engine implementation request"}'>
+            <tr><td><strong>AI Dev Knowledge Platform</strong></td><td>8</td><td>Auto-knowledge platform from GitLab output</td><td><a href="#!dzp-overview">Proposal Overview</a></td></tr>
+            <tr><td><strong>AI Notification Send Engine</strong></td><td>3</td><td>Kafka-based send engine implementation request</td><td><a href="#!sne-scope">Implementation Requirements</a></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>System details — what's inside, and in what order to read</h3>
+
+<h4>AI Dev Knowledge Platform — a GitLab-based automatic knowledge proposal (8 docs)</h4>
+<p>A proposal series for a Read-Only Engineering Knowledge Platform in which an AI analyses the development output accumulating in GitLab and <strong>automatically converts and accumulates it as organizational knowledge</strong>. Read in the order below and it runs as one flow from problem definition to execution plan.</p>
+<ul>
+    <li><a href="#!dzp-overview">Proposal overview</a> — the one-sentence summary and the virtuous cycle (development output → organizational knowledge → the next development). The gateway document of the series.</li>
+    <li><a href="#!dzp-why">Why now</a> — a problem definition that grounds the cost of scattered, vanishing development knowledge in industry statistics.</li>
+    <li><a href="#!dzp-core">The core of the proposal</a> — the development flow stays as it is, the AI does the knowledge work. Separating the Event Stream (GitLab) from the Knowledge State (Wiki).</li>
+    <li><a href="#!dzp-architecture">Platform architecture</a> — the seven layers, the knowledge-generation Trigger, SHA incremental analysis, the knowledge integrity gate, operational redundancy.</li>
+    <li><a href="#!dzp-knowledge">Knowledge management system</a> — value judgement · the atomic structure of knowledge (proven schema + extension fields) · two layers of connection (related · relations) · Identifier search · provenance tracking · FACT/INFERRED/DECISION confidence grades · the supersedes lifecycle.</li>
+    <li><a href="#!dzp-security">Using the assets, and security</a> — reusing the Reference Wiki engine (wiki-plugin packaging · the mandatory-procedure diagram · the AI consumption layer) and the PUBLIC~RESTRICTED grades with access separation.</li>
+    <li><a href="#!dzp-value">Added value and use scenarios</a> — automatically updated API specifications, views per audience (employees, partners, customers, AI) built with grade filters, prior knowledge for AI coding, use by non-development roles.</li>
+    <li><a href="#!dzp-roadmap">Roadmap</a> — a four-phase rollout (starting with porting wiki-plugin), the first PoC (OmniEsol ERP · SCM domain), and validation KPIs measured by gates.</li>
+</ul>
+
+<h4>AI Notification Send Engine — a Kafka-based send engine implementation request (3 docs)</h4>
+<p>A proposal series asking the Platform team to implement, as a <strong>Kafka-based shared send engine</strong>, the actual sending, timing, reprocessing, and status that follow once AI Notification has finished <strong>creating the send request</strong>. It is organized conceptually; the concrete design is settled through discussion.</p>
+<ul>
+    <li><a href="#!sne-overview">Overview and responsibility boundary</a> — the boundary that puts AI Notification up to creating the send request, and the send engine on the sending, timing, reprocessing, and status that follow.</li>
+    <li><a href="#!sne-scope">Implementation requirements</a> — channel sending · idempotency · delivery guarantee · DLQ, timing for the four timing types (immediate · delayed · recurring · transition), the latest lookup at the moment of sending, recurring batch lifecycle, the send status screen.</li>
+    <li><a href="#!sne-interface">Interface and alignment</a> — finalize the interface before the engine so the work runs in parallel. The send request delivery, send-time finalization, and result return interfaces, plus phase priorities.</li>
+</ul>
+
+<h4>Planned Systems — places where only the slot is ready</h4>
+<p>The three Systems below have only a folder prepared in the navigation. Once documents are added to those folders and registered in the knowledge index, they appear automatically in the table above and in the <a href="#!cosmos">Knowledge Graph</a>.</p>
+<ul>
+    <li><strong>Architecture</strong> — where architecture knowledge will accumulate: the system structure, layer design, and inter-module integration of the OmniEsol ERP·SCM area.</li>
+    <li><strong>Development Guide</strong> — where the development guides a team shares will gather: development standards, common patterns, code review criteria.</li>
+    <li><strong>Project</strong> — where project-level knowledge will be recorded: the business Rules, decisions, and incident experience of individual projects.</li>
+</ul>
+
+<h3>Recommended reading paths</h3>
+<ul>
+    <li><strong>Reading the proposal for the first time?</strong> — <a href="#!dzp-overview">Proposal overview</a> → <a href="#!dzp-why">Why now</a> → <a href="#!dzp-core">The core of the proposal</a>. That much is the "what and why".</li>
+    <li><strong>Here for a technical review?</strong> — <a href="#!dzp-architecture">Platform architecture</a> → <a href="#!dzp-knowledge">Knowledge management system</a> → <a href="#!dzp-security">Using the assets, and security</a>. These cover the "how".</li>
+    <li><strong>Deciding whether to go ahead?</strong> — check the phases, PoC, and KPIs in the <a href="#!dzp-roadmap">Roadmap</a>, and go back to the overview if you need the background.</li>
+</ul>
+
+<h3>Bridges that link knowledge — bridge concepts</h3>
+<p>Concepts that appear in <strong>several Systems at once</strong> become &ldquo;bridges&rdquo; across branches. The two Systems of the DOUZONE World (the proposal series) <strong>share no key concept yet, so no bridge is aggregated</strong> — once a concept spans three or more Systems it appears here automatically. For now, concepts such as <strong>지식플랫폼 · AI큐레이터 · 지식관리</strong> connect by topic to the AI World (the Second Brain and LLM Wiki Systems), which makes them candidate bridges across Worlds.</p>
+
+<h3>Hub docs — the most connected gateways</h3>
+<p>The documents other documents most often cite as <strong>related docs</strong>. The current gateway is the <a href="#!dzp-overview">Proposal overview</a> (4 links); once a document reaches the common hub threshold (6 or more) it is aggregated here automatically.</p>
+
+<h3>Most covered concepts</h3>
+<p>The top concepts that recur across the DOUZONE World. Click a concept to open a <strong>unified search</strong> for it.</p>
+<p class="scn-sub" id="km-top">지식플랫폼 6</p>
+<p class="scn-sub" id="km-totals">11 knowledge docs · 46 unique concepts.</p>
+
+<div class="note">
+    <span class="nh">A living map</span>
+    This map and <code>knowledge-index.json</code> are <strong>auto-generated</strong> by an AI reading the documents. Related docs are computed by <strong>rarity-weighted concept overlap</strong> (rarer concepts weigh more), topped up with <strong>same-folder neighbours</strong> when overlap is thin. When documents are added or changed, the index is rebuilt and the map refreshes.
+</div>

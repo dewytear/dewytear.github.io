@@ -1,0 +1,48 @@
+<h2>Proposal Overview — A GitLab-Based AI Development Knowledge Platform</h2>
+<p>Developers keep doing exactly what they do now — landing their work in GitLab — while <strong>AI analyzes those results and automatically converts and accumulates them as organizational knowledge</strong>. This proposes a <strong>Read-Only Engineering Knowledge Platform</strong>. It is not a wiki that people write; it is a structure in which <strong>the development artifacts themselves are the source of knowledge</strong>.</p>
+
+<div class="note">
+    <span class="nh">In one sentence</span>
+    A <strong>Read-Only Engineering Knowledge Platform</strong> in which AI continuously analyzes the development artifacts accumulating in GitLab and converts them into the organization's <strong>currently valid development knowledge</strong>.
+</div>
+
+<p>And this is not a blank-sheet design. The knowledge storage, indexing, and linking engine of this proposal is <strong>already implemented and proven in the Reference Wiki</strong> that runs as an advance validation — as of 2026-07, measured: 107 documents · 337 unique concepts · 349 automatic related edges · 107 human-declared typed knowledge relations, all running on top of a <a href="#!kgs-overview">deterministic registration pipeline</a>. The <a href="#!dzp-knowledge">Knowledge Management</a> and <a href="#!dzp-security">Asset Utilization</a> installments of this series cover how that engine scales to company size. In other words, this proposal is not imagining "what could be built" but describing <strong>"how to connect a proven engine already in operation to GitLab"</strong>.</p>
+
+<h3>The Final Picture — A Virtuous Cycle</h3>
+<p>The goal is not the wiki itself. It is a <strong>virtuous cycle</strong> in which development results become knowledge, and the accumulated knowledge in turn raises the productivity of the next development. A wiki written by people demanded the extra labor of "develop → write a document → register it in the Wiki" and never lasted; in this structure development experience becomes an organizational asset, repeated analysis shrinks, experience is reused across projects, onboarding gets faster, design intent is preserved, and AI tools such as Claude Code use organizational knowledge as Context.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 140" role="img" aria-label="The virtuous cycle: development results become organizational knowledge, pass through AI Retrieval, are reused in the next development, and come back as development results">
+    <rect class="d-box" x="8" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="78" y="43" text-anchor="middle">Development Output</text>
+    <text class="d-sub" x="78" y="60" text-anchor="middle">GitLab Merge</text>
+    <rect class="d-box accent" x="178" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="248" y="43" text-anchor="middle">Org Knowledge</text>
+    <text class="d-sub" x="248" y="60" text-anchor="middle">Wiki · Index</text>
+    <rect class="d-box" x="348" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="418" y="43" text-anchor="middle">AI Retrieval</text>
+    <text class="d-sub" x="418" y="60" text-anchor="middle">Search on demand</text>
+    <rect class="d-box" x="518" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="588" y="43" text-anchor="middle">Next Development</text>
+    <text class="d-sub" x="588" y="60" text-anchor="middle">Claude Code · Agent</text>
+    <line class="d-edge" x1="148" y1="48" x2="170" y2="48"/><polygon class="d-arrow" points="170,43 170,53 178,48"/>
+    <line class="d-edge" x1="318" y1="48" x2="340" y2="48"/><polygon class="d-arrow" points="340,43 340,53 348,48"/>
+    <line class="d-edge" x1="488" y1="48" x2="510" y2="48"/><polygon class="d-arrow" points="510,43 510,53 518,48"/>
+    <path class="d-edge" d="M588 74 C588 96, 572 104, 552 104 H114 C94 104, 78 96, 78 84"/>
+    <polygon class="d-arrow" points="73,82 83,82 78,74"/>
+    <polygon class="d-arrow" points="338,99 338,109 328,104"/>
+    <text class="d-sub" x="330" y="126" text-anchor="middle">Accumulated knowledge raises the productivity of the next development</text>
+</svg>
+<div class="d-cap">A structure where the organization gets smarter the more it develops — this is the final direction of this proposal.</div>
+</div>
+
+<h3>How This Series Is Organized</h3>
+<ul>
+    <li><a href="#!dzp-why"><strong>Why Now</strong></a> — development knowledge that scatters and disappears, and the evidence for its cost</li>
+    <li><a href="#!dzp-core"><strong>The Core of the Proposal</strong></a> — the development flow stays as it is, AI does the knowledge work. Event Stream and Knowledge State</li>
+    <li><a href="#!dzp-architecture"><strong>Platform Architecture</strong></a> — the seven layers, knowledge-generation Triggers, incremental analysis, knowledge-integrity gates, operational stability</li>
+    <li><a href="#!dzp-knowledge"><strong>Knowledge Management</strong></a> — value judgment · the atomic structure of knowledge (proven schema + extensions) · two layers of linking · Identifier search · provenance tracking · trust grades · lifecycle</li>
+    <li><a href="#!dzp-security"><strong>Asset Utilization and Security</strong></a> — reuse of the proven Reference Wiki engine (wiki-plugin), AI consumers, knowledge grades and access separation</li>
+    <li><a href="#!dzp-value"><strong>Added Value and Use Scenarios</strong></a> — automatic API specification updates, per-audience views for employees, partners, customers, and AI, prior knowledge for AI coding, use by non-development roles</li>
+    <li><a href="#!dzp-roadmap"><strong>Roadmap</strong></a> — 4 Phases, the first PoC (OmniEsol ERP · SCM domain), verification KPIs instrumented by gates</li>
+</ul>

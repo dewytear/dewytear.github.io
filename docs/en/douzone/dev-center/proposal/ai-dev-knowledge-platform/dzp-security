@@ -1,0 +1,66 @@
+<h2>Asset Reuse and Security</h2>
+
+<h3>We do not build it from scratch</h3>
+<p>We start the PoC by cloning the features already provided by the <strong>Reference Wiki</strong> that is running for pre-validation (the very wiki explained by the <a href="#!kgs-overview">How Knowledge Accumulates</a> series), and we grow the validated features into the company platform. Scope proven as of 2026-07: HTML Fragment documents, SPA Web UI, JSON Navigation Tree (immutable IDs separated from physical paths), unified/Tag/Concept search, Knowledge Index (deterministic build + <code>--check</code> drift gate), automatic related-document recommendation (<code>related</code>) and <strong>five typed knowledge relations (<code>relations</code>)</strong>, Knowledge Map · 3D/2D knowledge graph, <strong>an AI consumption layer (llms.txt · self-contained graph JSON)</strong>, a four-layer CI validation gate, Work Log, and Git History based document history.</p>
+
+<p>Reuse here is not merely "referring to the code." This engine is already <strong>packaged as wiki-plugin (v0.7.0)</strong> — it carries 18 registration/index/validation tools and 4 skills (add-doc · index · validate · wiki-init), so installing it in a new repository instantly bootstraps the same knowledge system (<a href="#!kgs-plugin">Packaging the Wiki Engine as a Plugin</a>). The Reference Wiki itself runs as the first dogfooding user of this plugin, so "we do not build it from scratch" is not a slogan but an <strong>installation procedure</strong>.</p>
+
+<p>In particular, in this Reference Wiki, <strong>reflecting the knowledge system is mandated as a rule whenever AI writes or edits a document</strong> (enforced by the repository's AI guideline document). When a single document is added, navigation registration → knowledge index entry (including concepts and a <strong>multi-angle review of the five relation types</strong> — a missed review is surfaced by a non-blocking review signal) → deterministic index build → automatic reflection in the knowledge map, graph, and search → Work Log record all move together within the <strong>same unit of change (PR)</strong>. In other words, the company platform's operating discipline of a "knowledge reflection rate" is already being validated at small scale.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 196" role="img" aria-label="The mandatory document-addition procedure of the Reference Wiki: write the document, register the list node, write the index entry, then a deterministic index build reflects it automatically in the map, graph, and search, and the Work Log is recorded within the same unit of change">
+    <text class="d-sub" x="8" y="14" text-anchor="start">Adding a document — the mandatory procedure AI performs</text>
+    <rect class="d-box" x="8" y="22" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="108" y="41" text-anchor="middle">① Write the document</text>
+    <text class="d-sub" x="108" y="57" text-anchor="middle">HTML Fragment · domain tree</text>
+    <rect class="d-box" x="240" y="22" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="340" y="41" text-anchor="middle">② Register nav (list) node</text>
+    <text class="d-sub" x="340" y="57" text-anchor="middle">name · path · label · tags · model</text>
+    <rect class="d-box accent" x="472" y="22" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="572" y="41" text-anchor="middle">③ Write index entry</text>
+    <text class="d-sub" x="572" y="57" text-anchor="middle">title · summary · concepts</text>
+    <line class="d-edge" x1="208" y1="45" x2="232" y2="45"/><polygon class="d-arrow" points="232,40 232,50 240,45"/>
+    <line class="d-edge" x1="440" y1="45" x2="464" y2="45"/><polygon class="d-arrow" points="464,40 464,50 472,45"/>
+
+    <path class="d-edge" d="M572 68 C572 88, 556 98, 536 98 H144 C124 98, 108 106, 108 118 V126"/>
+    <polygon class="d-arrow" points="103,125 113,125 108,132"/>
+    <polygon class="d-arrow" points="348,93 348,103 338,98"/>
+
+    <text class="d-sub" x="672" y="122" text-anchor="end">Knowledge system updated automatically — same PR</text>
+    <rect class="d-box" x="8" y="134" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="108" y="153" text-anchor="middle">④ Deterministic Index Build</text>
+    <text class="d-sub" x="108" y="169" text-anchor="middle">Rebuild · --check verify</text>
+    <rect class="d-box" x="240" y="134" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="340" y="153" text-anchor="middle">⑤ Map · graph · search sync</text>
+    <text class="d-sub" x="340" y="169" text-anchor="middle">Knowledge Index JSON</text>
+    <rect class="d-box accent" x="472" y="134" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="572" y="153" text-anchor="middle">⑥ Record Work Log</text>
+    <text class="d-sub" x="572" y="169" text-anchor="middle">Logged in the topic document</text>
+    <line class="d-edge" x1="208" y1="157" x2="232" y2="157"/><polygon class="d-arrow" points="232,152 232,162 240,157"/>
+    <line class="d-edge" x1="440" y1="157" x2="464" y2="157"/><polygon class="d-arrow" points="464,152 464,162 472,157"/>
+</svg>
+<div class="d-cap">As documents grow, the knowledge system is updated with them — mandated by rule, so it does not break even when nobody looks after it.</div>
+</div>
+
+<ul>
+    <li>Along the path of <strong>Reference Wiki → feature experiment → validation → company PoC → stabilization → organizational rollout</strong>, nothing unvalidated is introduced to the organization directly.</li>
+    <li>Documents are operated <strong>HTML-first</strong>, making use of tables · dashboards · SVG diagrams · <code>&lt;details&gt;</code> · status badges · warning boxes · architecture flows · DB structure visualizations.</li>
+    <li>The increase in AI tokens caused by HTML is minimized by <strong>Knowledge Index based retrieval</strong>, which does not read whole documents. This also aligns with the <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">pattern officially recommended by Anthropic</a>, which turns organizational knowledge into AI context through the CLAUDE.md hierarchy and MCP integration.</li>
+</ul>
+
+<h3>The AI consumption layer — three doors machines read</h3>
+<p>The promise that "AI uses organizational knowledge as context" also already exists in physical form in the Reference Wiki (<a href="#!kgs-ai-layer">How AI Reads This Wiki</a>). External AI comes in through three doors: ① <code>llms.txt</code> — exposes the cover page of the whole knowledge (what is where) following the llmstxt.org convention → ② <code>knowledge-graph.json</code> — a self-contained file that delivers the entire graph (nodes · related links · typed relations · concepts · each document's URL) in <strong>a single fetch</strong> → ③ fetching only the individual documents that are needed. It is a structure in which AI follows relations and reads only as much as it needs, without embedding the whole corpus or crawling every time; these files are generated automatically from the index, and the <code>--check</code> gate prevents them from being deployed stale. Connecting the company platform to Claude Code and AI agents is a matter of moving this same contract onto intranet URLs.</p>
+
+<h3>Security and access structure</h3>
+<p>Company development knowledge may include internal architecture, customer project information, DB structures, incident analyses, security settings, and authentication-related information. Knowledge grades are therefore separated, and repositories and access are separated as well.</p>
+<ul>
+    <li><strong>PUBLIC</strong> — general knowledge readable by all employees</li>
+    <li><strong>INTERNAL</strong> — technical knowledge within the scope of the development organization</li>
+    <li><strong>CONFIDENTIAL</strong> — knowledge containing customer/project sensitive information</li>
+    <li><strong>RESTRICTED</strong> — security knowledge accessible only to restricted organizations</li>
+</ul>
+
+<div class="note warn">
+    <span class="nh">Do not mix it all into one public wiki</span>
+    The recommended structure separates repositories and access into <strong>General Wiki (all employees) · Engineering Wiki (development organization) · Restricted Knowledge (restricted organizations)</strong>. All security grades are not mixed into a single public wiki, and employees search and read only within the scope of their own permissions.
+</div>
