@@ -1261,6 +1261,13 @@ function applySettings(){
     if(sl){ sl.title = STR('settings'); sl.setAttribute('aria-label', STR('settings')); }
     var tsw = document.getElementById('theme-switch');
     if(tsw){ tsw.title = STR('themeSwitch'); }
+    // Footer meta row (RSS · for AI · license) — labels are language-neutral,
+    // only the explanatory title/aria follow the language.
+    [['feed-link', 'feedTitle'], ['forai-link', 'forAiTitle'],
+     ['license-link', 'licenseTitle']].forEach(function(p){
+        var el = document.getElementById(p[0]);
+        if(el){ el.title = STR(p[1]); el.setAttribute('aria-label', STR(p[1])); }
+    });
     var mbtn = document.getElementById('music-btn');
     if(mbtn){ mbtn.title = STR('musicTitle'); mbtn.setAttribute('aria-label', STR('musicAria')); }
     // 새 글 기간(newDays)·언어 변경 등이 반영되도록 nav 새 글 표시를 다시 단다.

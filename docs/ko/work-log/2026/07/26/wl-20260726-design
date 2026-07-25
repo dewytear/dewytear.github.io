@@ -1,0 +1,9 @@
+<h2>2026-07-26 · 디자인 — 사이드바 푸터 메타 라인 (RSS · for AI · CC BY 4.0)</h2>
+<p>글로벌 도달 프로젝트의 트랙 B. <a href="#!wl-20260726-ops">같은 날 운영 로그</a>에서 만든 AI 이용성 진입점(피드·llms.txt·라이선스)을 <strong>사람 눈에 보이는 자리</strong>에 노출했다 — 사이드바 하단 고정 푸터를 2단으로 개편해, 기존 Tags·테마 토글·설정 줄 위에 <strong>메타 라인</strong>을 얹었다. 변경 유형: <strong>ENGINE + STYLE</strong>.</p>
+<ul>
+    <li><strong>마크업</strong> — <code>#sidebar-foot</code>을 <code>flex-direction: column</code>으로 바꾸고 두 줄을 각각 <code>.sf-row</code>로 감쌌다. 새 상단 줄(<code>.sf-meta</code>): <strong>RSS</strong>(feed.xml)·<strong>for AI</strong>(llms.txt)·<strong>CC BY 4.0</strong>(라이선스 딥링크, 한국어 deed). 라벨 자체는 언어 중립 고유명이라 그대로 두고, 설명은 title/aria로 제공.</li>
+    <li><strong>디자인 언어 준수</strong> — 기존 푸터 리듬 유지(패딩 8/14, 줄 사이 6px), 아이콘은 <code>.settings-ico</code> 규약, 색은 평소 <code>var(--muted)</code>의 낮은 존재감 → 호버 시 <code>var(--accent-ink)</code>로 깨어남(사이드바 <code>.nav-tools</code>와 동일 패턴). 메타 줄은 본 줄보다 작게(12.5px)해 위계를 만들었다.</li>
+    <li><strong>i18n</strong> — 새 문구는 하드코딩 대신 <code>STR()</code> 키 3종(<code>feedTitle</code>·<code>forAiTitle</code>·<code>licenseTitle</code>)을 ko/en 양쪽 <code>STRINGS</code>에 추가(패리티 게이트 충족), <code>applySettings()</code>에서 title/aria 주입 — 언어 전환 시 즉시 따라온다.</li>
+    <li><strong>캐시버스터</strong> — style.css <code>?v=37&rarr;38</code>, i18n.js <code>13&rarr;14</code>, app.js <code>30&rarr;31</code>.</li>
+    <li><strong>CDP 실측 검증</strong> — 낮/밤 두 테마에서 푸터 바닥 밀착(gap 0)·두 줄 간격 6px·세 링크 정렬을 실렌더로 확인, <code>lang=en</code> 주입 시 영어 title 적용 확인.</li>
+</ul>
