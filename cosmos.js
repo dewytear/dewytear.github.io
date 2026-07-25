@@ -8,14 +8,16 @@
 function showCosmos(){
     var html =
         '<div class="cosmos-screen">'
-      +   '<div class="cosmos-hud">'
-      +     '<h2 class="cosmos-head">&#10022; Knowledge Graph</h2>'
-      +     '<p class="cosmos-sub">' + escapeHtml(cosmosSubFor(gvCurrentKind())) + '</p>'
-      +   '</div>'
-      +   '<div class="gv-dock" role="group" aria-label="' + escapeHtml(STR('gvDockAria')) + '">'
-      +     '<div class="gv-groups" role="group" aria-label="'
-      +       escapeHtml(STR('gvGroupAria')) + '"></div>'
-      +     '<div class="gv-kinds"></div>'
+      +   '<div class="cosmos-top">'
+      +     '<div class="cosmos-hud">'
+      +       '<h2 class="cosmos-head">&#10022; Knowledge Graph</h2>'
+      +       '<p class="cosmos-sub">' + escapeHtml(cosmosSubFor(gvCurrentKind())) + '</p>'
+      +     '</div>'
+      +     '<div class="gv-dock" role="group" aria-label="' + escapeHtml(STR('gvDockAria')) + '">'
+      +       '<div class="gv-groups" role="group" aria-label="'
+      +         escapeHtml(STR('gvGroupAria')) + '"></div>'
+      +       '<div class="gv-kinds"></div>'
+      +     '</div>'
       +   '</div>'
       + '</div>';
     setArticle(html);
@@ -190,7 +192,11 @@ function gvRender(stage, kind){
     // padding-top guess can fall short and let it cover the legend.
     // Measure the real dock bottom and start the stage content there.
     var dock = stage.parentElement && stage.parentElement.querySelector('.gv-dock');
-    if(dock){ stage.style.paddingTop = (dock.offsetTop + dock.offsetHeight + 14) + 'px'; }
+    if(dock){
+        var dr = dock.getBoundingClientRect();
+        var sr = stage.parentElement.getBoundingClientRect();
+        stage.style.paddingTop = Math.round(dr.bottom - sr.top + 14) + 'px';
+    }
     var model = gvModel();
     var legend = '<div class="gv-legend">' + model.clusters.map(function(c){
         return '<span class="lg" style="color:' + c.color + '"><i></i>'
@@ -781,9 +787,11 @@ function startCosmos(){
         for(var gl2 = 0; gl2 < order.length; gl2++){
             var ndg = nodes[order[gl2]];
             var rg = Math.max(2, (2.6 + ndg.ref / maxRef * 5.5) * ndg.ss);
-            // 숨쉬기 — 헤일로의 크기·밝기를 ±12%만 흔든다(별 자체 크기는 고정).
+            // 숨쉬기 — 헤일로를 ±30%로 흔든다. 처음엔 ±12%였는데 헤일로가 절반
+            // 해상도 층에서 옅게 합성돼 화면 밝기 변동이 0.06%(실측)에 그쳐 사실상
+            // 보이지 않았다 → 진폭을 키우고, 아래 별 코어에도 같은 위상을 건다.
             // 계산은 프레임당 sin 한 번뿐이라 그리기 비용은 그대로다.
-            var br = dustReduced ? 1 : (1 + 0.12 * Math.sin(tNow * ndg.btw + ndg.bph));
+            var br = dustReduced ? 1 : (1 + 0.3 * Math.sin(tNow * ndg.btw + ndg.bph));
             // 별 주위 발광 — 허브일수록 크고 진하게, 호버 시 확 밝아진다.
             drawGlow(colOf(ndg), ndg.sx, ndg.sy,
                      rg * (order[gl2] === hover ? 5.4 : 4.2) * br,
@@ -798,8 +806,12 @@ function startCosmos(){
         ctx.globalAlpha = 1;
         for(var o = 0; o < order.length; o++){
             var nd2 = nodes[order[o]];
-            var r2 = Math.max(2, (2.6 + nd2.ref / maxRef * 5.5) * nd2.ss);
-            ctx.globalAlpha = Math.max(0.18, Math.min(0.9, 0.25 + nd2.ss * 0.5));
+            // 코어도 같은 위상으로 숨쉰다 — 반지름 ±13%, 밝기 ±22%.
+            // 헤일로만으론 눈에 안 띄어(0.06% 변동) 코어까지 함께 흔든다.
+            var bs = dustReduced ? 1 : Math.sin(tNow * nd2.btw + nd2.bph);
+            var r2 = Math.max(2, (2.6 + nd2.ref / maxRef * 5.5) * nd2.ss * (1 + 0.13 * bs));
+            ctx.globalAlpha = Math.max(0.16, Math.min(0.98,
+                (0.25 + nd2.ss * 0.5) * (1 + 0.22 * bs)));
             ctx.fillStyle = colOf(nd2);
             ctx.beginPath(); ctx.arc(nd2.sx, nd2.sy, r2, 0, 6.2832); ctx.fill();
             if(order[o] === hover){
