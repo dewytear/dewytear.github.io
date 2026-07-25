@@ -1,0 +1,18 @@
+<h2>Cost · Performance</h2>
+<p>The core of OMC is splitting work across several agents and handling it at the same time. That is why total working time can go down, but when several workers run at once the AI usage (tokens) grows accordingly, so the cost can go up. It helps to understand that <strong>speed and cost move together</strong>.</p>
+
+<h3>Why the cost varies</h3>
+<p>OMC's cost is not a fixed number — it varies greatly depending on how you work. The factors below drive the cost.</p>
+<ul>
+    <li><strong>Whether it can be parallelized</strong> — if the work can be split into several pieces it gets faster, but because several workers run at once the tokens spent in the same amount of time increase.</li>
+    <li><strong>Number of retries</strong> — if verification fails, the agent tries again. The more retries, the more tokens are consumed on top.</li>
+    <li><strong>Model unit price and context size</strong> — the bigger the model you use, or the longer the context (code · documents) handled at once, the higher the cost per call.</li>
+    <li><strong>Build · test failures</strong> — if builds or tests fail often, rework to fix them repeats, and the more it repeats the more tokens are used.</li>
+    <li><strong>Using external CLI workers</strong> — modes that also call external models such as Codex or Gemini (CCG and the like) increase the model calls themselves, adding cost.</li>
+    <li><strong>Scale of the work</strong> — running a large task all the way through in autonomous mode makes cumulative usage large. The cost difference from a small fix job is big.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">In one line</span>
+    Being fast does not always mean being cheap. If you handle small jobs lightly in an ordinary conversation and use parallel and autonomous modes only for large jobs that are worth it, you can strike a balance between speed and cost.
+</div>

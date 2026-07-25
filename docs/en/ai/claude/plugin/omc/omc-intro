@@ -1,0 +1,49 @@
+<h2>Introducing OMC</h2>
+<p><strong>oh-my-claudecode (hereafter OMC)</strong> is a plugin that adds autonomous execution, multi-agent collaboration, and automatic verification to Claude Code.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 180" role="img" aria-label="OMC, Claude Code plus a plugin, adds autonomous execution, multi-agent work, and automatic verification">
+    <rect class="d-box soft" x="12" y="58" width="128" height="50" rx="10"/>
+    <text class="d-label sm" x="76" y="80" text-anchor="middle">Claude Code</text>
+    <text class="d-sub" x="76" y="96" text-anchor="middle">Terminal CLI</text>
+    <text class="d-label" x="158" y="89" text-anchor="middle">+</text>
+    <rect class="d-box soft" x="176" y="58" width="112" height="50" rx="10"/>
+    <text class="d-label sm" x="232" y="80" text-anchor="middle">Plugin</text>
+    <text class="d-sub" x="232" y="96" text-anchor="middle">Extension pack</text>
+    <text class="d-label" x="306" y="89" text-anchor="middle">=</text>
+
+    <rect class="d-box accent" x="324" y="52" width="128" height="62" rx="12"/>
+    <text class="d-label" x="388" y="80" text-anchor="middle">OMC</text>
+    <text class="d-sub" x="388" y="98" text-anchor="middle">oh-my-claudecode</text>
+
+    <rect class="d-box soft" x="486" y="22" width="182" height="34" rx="8"/>
+    <text class="d-label sm" x="577" y="43" text-anchor="middle">Autonomous run to the end</text>
+    <rect class="d-box soft" x="486" y="72" width="182" height="34" rx="8"/>
+    <text class="d-label sm" x="577" y="93" text-anchor="middle">Multi-agent work split</text>
+    <rect class="d-box soft" x="486" y="122" width="182" height="34" rx="8"/>
+    <text class="d-label sm" x="577" y="143" text-anchor="middle">Auto verification after work</text>
+
+    <path class="d-edge accent" d="M452 83 C468 83, 470 44, 484 39"/><polygon class="d-arrow accent" points="478,35 486,38 480,44"/>
+    <line class="d-edge accent" x1="452" y1="85" x2="484" y2="89"/><polygon class="d-arrow accent" points="478,84 486,89 478,94"/>
+    <path class="d-edge accent" d="M452 87 C468 87, 470 134, 484 139"/><polygon class="d-arrow accent" points="478,135 486,138 480,144"/>
+</svg>
+<div class="d-cap">OMC adds <strong>autonomous execution, multi-agent work, and automatic verification</strong> to Claude Code with a single command.</div>
+</div>
+
+<h3>Three concepts</h3>
+<ul>
+    <li><strong>What Claude Code is</strong> — a CLI tool that lets you hand coding work to Claude from a terminal or an IDE. It reads and edits files, runs commands, and helps you develop.</li>
+    <li><strong>What a plugin is</strong> — an extension pack that adds new features to Claude Code. Install it once and dedicated commands and behaviors are added.</li>
+    <li><strong>What OMC adds</strong> — it lets you use advanced ways of working such as "implement it all the way through on its own", "several workers split the job", and "verify automatically after the work" with a single command.</li>
+</ul>
+
+<p>This document is a summary written by installing it directly in a local environment for <strong>partial verification</strong> and by cross-checking the official documentation, release notes, and plugin documentation. Some commands and behaviors may differ depending on <strong>Windows PowerShell, WSL2, macOS, or Linux</strong>, so environment-dependent items are marked separately. The reference version is <strong>v4.15.2</strong> (checked 2026-07-05). Since releases are fairly frequent at 3–5 per month, the details may differ from the latest release notes at the time you read this.</p>
+
+<div class="note">
+    <span class="nh">Reference material</span>
+    Official GitHub README, official Reference (REFERENCE.md), official Releases, and the official Claude Code Plugin documentation.
+    <br>· Official GitHub: github.com/Yeachan-Heo/oh-my-claudecode
+    <br>· Official Reference: /blob/main/docs/REFERENCE.md
+    <br>· Official Releases: /releases
+    <br>· Claude Code Plugin docs: code.claude.com/docs/en/discover-plugins
+</div>

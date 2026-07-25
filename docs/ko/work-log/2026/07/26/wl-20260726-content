@@ -1,4 +1,4 @@
-<h2>2026-07-26 · 콘텐츠 — 영어 병행 소급 번역 (배치① 19 · ② 12 · ③ 12 · ④ 12 · ⑤ 18편)</h2>
+<h2>2026-07-26 · 콘텐츠 — 영어 병행 소급 번역 (배치① 19 · ② 12 · ③ 12 · ④ 12 · ⑤ 18 · ⑥ 13편)</h2>
 
 <h3>배치① — 지식 체계 6 · CLAUDE.md 10계명 · 기초강의 12편</h3>
 <p>글로벌 도달 프로젝트의 소급 번역 첫 배치. <a href="#!wl-20260726-features">같은 날 기능 로그</a>에서 깐 인프라(자동 언어·en 도식 게이트·hreflang·병행 게이트) 위에서, 미번역 110편 중 <strong>19편의 영어 본문</strong>을 올렸다 — 영어권 방문자가 처음 닿는 관문(기초강의)과 이 위키 자체를 설명하는 자기기술 문서(지식 체계)를 우선했다. 번역 수행은 <strong>Claude Opus 5 서브에이전트 5기 병렬</strong>. 변경 유형: <strong>CONTENT</strong>.</p>
@@ -54,3 +54,12 @@
     <li><strong>동반 데이터</strong> — 18편 <code>label_en</code>+<code>tags_en</code>, <code>doc-entries.en.json</code> 61&rarr;79편.</li>
 </ul>
 <p>누적: 영어 본문 <strong>79/115편</strong>(69%). 남은 소급 번역 36편(OMC 13·News 12·Douzone 11).</p>
+
+<h3>배치⑥ — OMC(oh-my-claudecode) 13편 완결</h3>
+<p><a href="#!omc-intro">OMC 강의</a> 전체를 옮겼다(소개·용어·설치·진단·실행 모드·에이전트·훅·도구·워크플로·Windows 주의·비용·명령어·퀵레퍼런스). Opus 5 에이전트 4기 병렬. 남은 36편은 분량 편차가 커서(뉴스만 256KB) <strong>OMC &rarr; News &rarr; Douzone</strong> 세 배치로 다시 쪼갰다.</p>
+<ul>
+    <li><strong>번역하지 말아야 할 한국어</strong> — 이 시리즈에는 <em>데이터로서의 한국어</em>가 섞여 있다. <code>"랄프"</code>·<code>"오토파일럿"</code>·<code>"울트라워크"</code>·<code>"코드 리뷰"</code>처럼 사용자가 그대로 입력해 모드를 트리거하는 <strong>매직 키워드</strong>는 번역하면 기능이 깨지므로 한국어를 유지했다(<code>하네스 100</code> 검색어를 유지한 배치④·⑤ 판단과 같은 원칙). 반면 프롬프트 문장·주석은 번역했다.</li>
+    <li><strong>도식 라벨</strong> — 118px 스펙트럼 필에는 짧은 형태로(<em>Single query</em>·<em>Planning</em>·<em>Autonomous run</em>·<em>Loop until done</em>·<em>Team + loop</em>), 150px 그룹 박스에는 <em>Explore · analyze</em>·<em>Implement · fix</em> 식으로. 지오메트리 불변, ko/en 2패스 <strong>142렌더 통과</strong>.</li>
+    <li><strong>동반 데이터</strong> — 13편 <code>label_en</code>+<code>tags_en</code>, <code>doc-entries.en.json</code> 79&rarr;92편. 캐러셀·표 구조와 <code>&amp;larr;</code>/<code>&amp;rarr;</code> 엔티티도 그대로 보존됐다.</li>
+</ul>
+<p>누적: 영어 본문 <strong>92/115편</strong>(80%). 남은 소급 번역 23편(News 12·Douzone 11).</p>
