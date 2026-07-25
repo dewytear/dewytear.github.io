@@ -1,0 +1,298 @@
+<h2>Kimi K3 — a 2.8-trillion-parameter open-weight model reaches the frontier</h2>
+
+<figure class="doc-img">
+    <img src="assets/ai/news/2026/news-20260716-kimi-k3/hero.webp" width="1440" height="659"
+         alt="Kimi K3 launch visual in which iron filings line up along a magnetic field and trace the numeral 3 in the center">
+    <figcaption>A &lsquo;3&rsquo; drawn by iron filings inside a magnetic field — the Kimi K3 launch visual (image: Moonshot AI)</figcaption>
+</figure>
+
+<p>On July 16, 2026, the Chinese AI company <strong>Moonshot AI</strong> unveiled its new AI model <strong>Kimi K3</strong>. In one line: <strong>&ldquo;for the first time, an open model anyone can download has come right up under the chin of the world&rsquo;s top paid models.&rdquo;</strong> Every figure printed here was <strong>cross-checked against multiple independent sources via web search</strong>, and anything corrected or filtered out during that check is collected separately in the &ldquo;fact-check notes&rdquo; at the end.</p>
+
+<div class="note">
+    <span class="nh">Article info (sources)</span>
+    · Subject: <strong>Moonshot AI&rsquo;s Kimi K3 launch</strong> (2026-07-16)<br>
+    · Verification: <strong>cross-checked by web search on 2026-07-19</strong> — only facts on which multiple mutually independent sources agree appear in the body<br>
+    · Official original: <a href="https://www.kimi.com/blog/kimi-k3" target="_blank" rel="noopener">Kimi K3 Tech Blog (kimi.com/blog/kimi-k3)</a> · a source list by category appears at the end of the document
+</div>
+
+<h3>Three-line summary</h3>
+<ul>
+    <li>Kimi K3 is the <strong>largest open (open-weight) model ever</strong> — a brain size (parameter count) of 2.8 trillion.</li>
+    <li>On several public tests (benchmarks) it sits <strong>third, just below Claude Fable 5 and GPT-5.6</strong>, and in some areas such as building web screens it is <strong>first</strong>.</li>
+    <li>Yet its price is <strong>a tier cheaper</strong> than the top-ranked models. Because it broke the received wisdom that &ldquo;open models trail American paid models by six months to a year,&rdquo; the industry was thrown into a stir.</li>
+</ul>
+
+<h3>Five terms to learn first</h3>
+<p>Know just these five and everything below reads.</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Term</th><th>Plain explanation</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Parameter</strong></td><td>The <strong>number of adjustment screws</strong> inside a model. During training these screws turn little by little, and knowledge and ability get engraved into them. The more there are, the more the model can hold — at the cost of higher expense to build and run.</td></tr>
+        <tr><td><strong>Token</strong></td><td>The <strong>smallest piece</strong> of text as an AI reads and writes. Roughly one word is 1&ndash;2 tokens. AI usage fees are also billed by token count.</td></tr>
+        <tr><td><strong>Context window</strong></td><td>How much a model can <strong>hold in mind and work on at once</strong>. K3 has 1 million tokens — big enough to hand it several thick books whole and say &ldquo;read all of this and answer.&rdquo;</td></tr>
+        <tr><td><strong>Open weights</strong></td><td>Releasing the finished model&rsquo;s <strong>&lsquo;brain file&rsquo; (the weights) in its entirety</strong>. Anyone can download it, run it on their own server, and modify it. The opposite is closed — the OpenAI/Anthropic approach of hiding the file and selling only access.</td></tr>
+        <tr><td><strong>Benchmark</strong></td><td>A <strong>report card from giving many models the same exam and grading it</strong>. There are many kinds — coding tests, general-knowledge tests, real-work tests — and every ranking in this article is a benchmark ranking.</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>What happened</h3>
+<ul>
+    <li><strong>Launch</strong>: 2026-07-16, Moonshot AI (Beijing). Usable right away through the app and the API (the paid access channel for developers).</li>
+    <li><strong>Size</strong>: <strong>2.8 trillion</strong> parameters — the largest in the history of open models.</li>
+    <li><strong>Memory</strong>: a <strong>1 million token</strong> context window, multimodality that also understands drawings and photos, and a three-level reasoning mode that dials thinking deeper or shallower.</li>
+    <li><strong>Caution</strong>: although announced as &ldquo;open weights,&rdquo; the brain file itself is <strong>scheduled for release on 2026-07-27</strong>. As of this writing it is still usable only through the app and API.</li>
+</ul>
+
+<h3>Secret ① — Calling only 16 of 896 experts (MoE)</h3>
+<p>&ldquo;Wouldn&rsquo;t running 2.8 trillion parameters cost a fortune?&rdquo; — it would. That is why K3 uses a structure called <strong>MoE (Mixture of Experts)</strong>. Picture a large general hospital. There are 896 specialists, but not all 896 examine a single patient. The front desk looks at the symptoms and calls in <strong>only the 16 who are actually needed</strong>.</p>
+<p>K3 works exactly like that. Every time one piece of text (a token) comes in, the <strong>router</strong> (the front desk) picks <strong>only 16</strong> of the 896 expert neural networks and puts them to work. So while the whole knowledge warehouse is a huge 2.8 trillion, the part actually working at any moment is only <strong>about 50 billion (50B)</strong> — an elephant&rsquo;s knowledge with a cheetah&rsquo;s stride.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 320" role="img" aria-label="Kimi K3 block structure: input tokens pass through KDA attention and the router, only 16 of the 896-expert pool activate and lead to the output, and AttnRes selectively recovers residuals across layers">
+    <text class="d-label" x="360" y="26" text-anchor="middle">Kimi K3 block — 2.8T total · ~50B active</text>
+    <rect class="d-box soft" x="14" y="126" width="92" height="44" rx="9"/><text class="d-label sm" x="60" y="152" text-anchor="middle">Input token</text>
+    <line class="d-edge" x1="106" y1="148" x2="132" y2="148"/><polygon class="d-arrow" points="132,143 140,148 132,153"/>
+    <rect class="d-box" x="140" y="118" width="130" height="60" rx="9"/><text class="d-label sm" x="205" y="142" text-anchor="middle">KDA attention</text><text class="d-sub" x="205" y="162" text-anchor="middle">linear · 6.3× decode</text>
+    <line class="d-edge" x1="270" y1="148" x2="290" y2="148"/><polygon class="d-arrow" points="290,143 298,148 290,153"/>
+    <rect class="d-box" x="298" y="126" width="90" height="44" rx="9"/><text class="d-label sm" x="343" y="152" text-anchor="middle">Router</text>
+    <text class="d-sub" x="343" y="192" text-anchor="middle">Quantile Balancing</text>
+    <line class="d-edge accent" x1="388" y1="148" x2="422" y2="148"/><polygon class="d-arrow accent" points="422,143 430,148 422,153"/>
+    <rect class="d-box accent" x="430" y="64" width="190" height="192" rx="12"/>
+    <text class="d-label sm" x="525" y="86" text-anchor="middle">Expert pool · 896</text>
+    <circle class="d-node" cx="456" cy="108" r="8"/><circle class="d-node dim" cx="478" cy="108" r="8"/><circle class="d-node dim" cx="500" cy="108" r="8"/><circle class="d-node" cx="522" cy="108" r="8"/><circle class="d-node dim" cx="544" cy="108" r="8"/><circle class="d-node dim" cx="566" cy="108" r="8"/><circle class="d-node dim" cx="588" cy="108" r="8"/><circle class="d-node" cx="610" cy="108" r="8"/>
+    <circle class="d-node dim" cx="456" cy="130" r="8"/><circle class="d-node dim" cx="478" cy="130" r="8"/><circle class="d-node" cx="500" cy="130" r="8"/><circle class="d-node dim" cx="522" cy="130" r="8"/><circle class="d-node dim" cx="544" cy="130" r="8"/><circle class="d-node" cx="566" cy="130" r="8"/><circle class="d-node dim" cx="588" cy="130" r="8"/><circle class="d-node dim" cx="610" cy="130" r="8"/>
+    <circle class="d-node dim" cx="456" cy="152" r="8"/><circle class="d-node" cx="478" cy="152" r="8"/><circle class="d-node dim" cx="500" cy="152" r="8"/><circle class="d-node dim" cx="522" cy="152" r="8"/><circle class="d-node" cx="544" cy="152" r="8"/><circle class="d-node dim" cx="566" cy="152" r="8"/><circle class="d-node dim" cx="588" cy="152" r="8"/><circle class="d-node dim" cx="610" cy="152" r="8"/>
+    <circle class="d-node dim" cx="456" cy="174" r="8"/><circle class="d-node dim" cx="478" cy="174" r="8"/><circle class="d-node dim" cx="500" cy="174" r="8"/><circle class="d-node" cx="522" cy="174" r="8"/><circle class="d-node dim" cx="544" cy="174" r="8"/><circle class="d-node dim" cx="566" cy="174" r="8"/><circle class="d-node" cx="588" cy="174" r="8"/><circle class="d-node dim" cx="610" cy="174" r="8"/>
+    <circle class="d-node" cx="456" cy="196" r="8"/><circle class="d-node dim" cx="478" cy="196" r="8"/><circle class="d-node dim" cx="500" cy="196" r="8"/><circle class="d-node dim" cx="522" cy="196" r="8"/><circle class="d-node" cx="544" cy="196" r="8"/><circle class="d-node dim" cx="566" cy="196" r="8"/><circle class="d-node dim" cx="588" cy="196" r="8"/><circle class="d-node dim" cx="610" cy="196" r="8"/>
+    <circle class="d-node dim" cx="456" cy="218" r="8"/><circle class="d-node" cx="478" cy="218" r="8"/><circle class="d-node dim" cx="500" cy="218" r="8"/><circle class="d-node dim" cx="522" cy="218" r="8"/><circle class="d-node dim" cx="544" cy="218" r="8"/><circle class="d-node" cx="566" cy="218" r="8"/><circle class="d-node dim" cx="588" cy="218" r="8"/><circle class="d-node" cx="610" cy="218" r="8"/>
+    <circle class="d-node dim" cx="456" cy="240" r="8"/><circle class="d-node dim" cx="478" cy="240" r="8"/><circle class="d-node" cx="500" cy="240" r="8"/><circle class="d-node dim" cx="522" cy="240" r="8"/><circle class="d-node dim" cx="544" cy="240" r="8"/><circle class="d-node dim" cx="566" cy="240" r="8"/><circle class="d-node" cx="588" cy="240" r="8"/><circle class="d-node dim" cx="610" cy="240" r="8"/>
+    <text class="d-sub" x="525" y="276" text-anchor="middle">only 16 active per token (diagram shows 56)</text>
+    <line class="d-edge accent" x1="620" y1="148" x2="640" y2="148"/><polygon class="d-arrow accent" points="640,143 648,148 640,153"/>
+    <rect class="d-box soft" x="648" y="126" width="62" height="44" rx="9"/><text class="d-label sm" x="679" y="152" text-anchor="middle">Output</text>
+    <path class="d-edge accent dash" d="M205 178 C205 296, 679 296, 679 174"/><polygon class="d-arrow accent" points="674,180 679,170 684,180"/>
+    <text class="d-sub" x="360" y="312" text-anchor="middle">AttnRes — selective residual recovery across layers</text>
+</svg>
+<div class="d-cap">In hospital terms: the front desk (router) calls in <strong>only 16</strong> of 896 specialists. The knowledge warehouse is 2.8 trillion, but only ~50B works at any moment.</div>
+</div>
+
+<h3>Secret ② — Reads long, and does not forget as it deepens (KDA · AttnRes)</h3>
+<p>These are the other two improvements Moonshot described on its official blog. The names are hard, but what they do is simple.</p>
+<ul>
+    <li><strong>Kimi Delta Attention (KDA)</strong> — while an AI reads text it keeps computing &ldquo;which word should I focus on&rdquo; (this is called <strong>attention</strong>), and the longer the text, the more this computation snowballs. KDA is a way of making that computation lighter, raising the speed of writing answers over long 1-million-token documents by <strong>up to 6.3×</strong>. It is like reading with a well-organized summary memo in hand instead of underlining the whole book.</li>
+    <li><strong>Attention Residuals (AttnRes)</strong> — an AI model refines its thinking as it passes through dozens to hundreds of layers, and as the layers get deeper there is a problem: <strong>important information seen earlier gradually fades</strong>. AttnRes is a device that <strong>picks out and pulls back</strong> information from earlier layers when it is needed. It is similar to re-checking the original note partway through a game of telephone so the message does not get distorted.</li>
+</ul>
+<p>Thanks to these structural improvements, Moonshot explains, K3&rsquo;s <strong>&lsquo;fuel efficiency&rsquo; improved about 2.5×</strong> over its predecessor K2. That does not mean &ldquo;2.5× smarter&rdquo;; it means it <strong>extracts 2.5× more ability from the same amount of compute and training data</strong>.</p>
+
+<p>In the official diagram Moonshot published, three things fit into one picture — <strong>Stable LatentMoE</strong>, which selects and uses experts, <strong>KDA</strong>, which reads long text lightly, and <strong>AttnRes</strong>, which pulls important information back across the blocks (the horizontal lines on the right).</p>
+
+<figure class="doc-img">
+    <img src="assets/ai/news/2026/news-20260716-kimi-k3/fig-architecture.webp" width="1205" height="1080"
+         alt="Official Kimi K3 architecture diagram: the shared and routed experts and the router of Stable LatentMoE at upper left, the Kimi Delta Attention module at lower left, and on the right the Attention Residuals backbone linking the KDA, Gated MLA, and Stable LatentMoE blocks">
+    <figcaption>Official Kimi K3 architecture diagram — the Stable LatentMoE and KDA modules (left) and the AttnRes backbone recovering residuals across the blocks (right) (image: Moonshot AI tech blog)</figcaption>
+</figure>
+
+<h3>The report card — how good is it</h3>
+<h4>Overall score: right under the top spot</h4>
+<p>On the <strong>Artificial Analysis Intelligence Index</strong> (an average of 9 tests, a sort of &lsquo;mock-exam total&rsquo;) that adds many test results into one, K3 scored <strong>57.1</strong>. That is <strong>third</strong>, behind first-place Claude Fable 5 Max (59.9) and second-place GPT-5.6 Sol Max (58.9). The score gap is under 3 points — as the figure below shows, they are essentially shoulder to shoulder.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 230" role="img" aria-label="Top three models on the Artificial Analysis Intelligence Index v4.1: Claude Fable 5 Max at 59.9, GPT-5.6 Sol Max at 58.9, and Kimi K3 Max at 57.1, a narrow spread">
+    <line class="d-edge" x1="190" y1="40" x2="190" y2="178"/>
+    <text class="d-label sm" x="178" y="65" text-anchor="end">Claude Fable 5 Max</text>
+    <rect class="d-box" x="190" y="48" width="411" height="26" rx="5"/>
+    <text class="d-sub" x="609" y="65">59.9</text>
+    <text class="d-label sm" x="178" y="110" text-anchor="end">GPT-5.6 Sol Max</text>
+    <rect class="d-box" x="190" y="93" width="404" height="26" rx="5"/>
+    <text class="d-sub" x="602" y="110">58.9</text>
+    <text class="d-label sm" x="178" y="155" text-anchor="end">Kimi K3 Max</text>
+    <rect class="d-box accent" x="190" y="138" width="392" height="26" rx="5"/>
+    <text class="d-label sm" x="590" y="155">57.1</text>
+    <text class="d-sub" x="190" y="194">0</text>
+    <text class="d-sub" x="360" y="216" text-anchor="middle">Artificial Analysis Intelligence Index v4.1 · bars scaled from 0</text>
+</svg>
+<div class="d-cap">The two above are <strong>closed and paid</strong>, K3 is an <strong>open (soon-to-be-released) model</strong> — this narrow gap is the heart of this launch.</div>
+</div>
+
+<h4>Coding tests: first place in some</h4>
+<p>Coding has been seen as the area where Anthropic and OpenAI are furthest ahead, yet here too K3 is fighting for first and second.</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Benchmark (kind of test)</th><th>K3 score</th><th>Rank</th><th>Comparison</th></tr></thead>
+    <tbody>
+        <tr><td>ProgramBench (writing programs)</td><td>77.8</td><td><strong>1st</strong></td><td>GPT-5.6 Sol 77.6 · Fable 5 76.8</td></tr>
+        <tr><td>SWE-Marathon (long-haul coding stamina)</td><td>42.0</td><td><strong>1st</strong></td><td>—</td></tr>
+        <tr><td>FrontierSWE (fixing real software)</td><td>81.2</td><td>2nd</td><td>Fable 5 86.6 · GPT-5.6 Sol 71.3</td></tr>
+        <tr><td>Terminal-Bench 2.1 (terminal work · self-reported)</td><td>88.3</td><td>2nd</td><td>GPT-5.6 Sol 88.8</td></tr>
+        <tr><td>DeepSWE leaderboard (official coding ranking)</td><td>67.3</td><td>—</td><td>on the mini-SWE-agent basis</td></tr>
+    </tbody>
+</table>
+</div>
+<p class="scn-sub">All models are on maximum reasoning effort (max/xhigh). Notes from the original table: the Fable 5 results include potential fallback, and the GPT-5.6 Sol results include potential cyberguard.</p>
+
+<h4>First place chosen by people themselves: building web screens</h4>
+<p><strong>LMArena</strong> is an unusual testing ground. It poses a question, <strong>shows two models&rsquo; answers side by side with the names hidden, and has people vote for the better one</strong>. Those wins and losses pile up as a score (Elo), like a chess ranking. In <strong>Frontend Code Arena</strong>, where models build web screens (frontends), K3 took <strong>first place with 1,679 points</strong> — beating Claude Fable 5. Since its predecessor K2.6 was 18th, it jumped <strong>17 places in a single generation</strong>, and it was first in 6 of the 7 subcategories (only in the games category was it second, behind Fable 5). When they faced off on the same question, the rate at which K3&rsquo;s answer was chosen (its win rate) averaged <strong>76%</strong> — meaning it won 76 out of 100 matchups.</p>
+<p>It is strong at writing too. On one writing leaderboard that blind-grades real scripts (run by Louie), it took <strong>first place with 2,840 Elo</strong>, the first time an open model has taken the top spot on that board (its predecessor was 21st). On the <strong>Vals Index</strong>, which evaluates mainly practical work tasks, it was <strong>second (74.7%)</strong> out of 38 models.</p>
+
+<h3>Hold on — you should not take self-measured scores at face value</h3>
+<div class="note warn">
+    <span class="nh">Same model, same test, a 7-point difference</span>
+    The Terminal-Bench score of 88.3 in the table above is a number <strong>Moonshot measured itself</strong>. Yet when the evaluation firm Vals <strong>re-measured it independently, it came out around 80.9</strong>. Rather than trickery, this is because what tools the model was handed and what settings it was tested under — that is, the <strong>&lsquo;harness&rsquo; (the execution environment wrapped around the model)</strong> — differed. It is like the same driver posting a different lap time in a different car. The lesson: <strong>an AI report card must always be read together with &ldquo;who measured it, under what conditions.&rdquo;</strong>
+</div>
+
+<h3>Price — why everyone is talking about &ldquo;value for money&rdquo;</h3>
+<p>An AI model&rsquo;s API is <strong>metered by the number of tokens</strong> you pay for. The question (input) and the answer (output) are each priced.</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Item</th><th>Price (per million tokens)</th></tr></thead>
+    <tbody>
+        <tr><td>Input</td><td>$3.00</td></tr>
+        <tr><td>Input — cache hit</td><td>$0.30 <span class="scn-sub">(an automatic 90% discount when the same content is sent repeatedly)</span></td></tr>
+        <tr><td>Output</td><td>$15.00</td></tr>
+    </tbody>
+</table>
+</div>
+<p>What this price means only becomes visible through comparison. As the industry sums it up, <strong>&ldquo;Opus 4.8-class performance at Sonnet 5 prices&rdquo;</strong> — that is, it sells a top-tier model&rsquo;s ability at the price of the tier below (Latent.space). On top of that, there is <strong>no surcharge</strong> even when you feed in a 1-million-token document. There is an opposite reading too: since it costs far more than its predecessor K2, some read it as a signal that &ldquo;<strong>the era of ultra-cheap Chinese AI is over</strong>&rdquo; (The Decoder). Both are two sides of the same fact — <strong>it is cheaper than the top tier and more expensive than the Chinese open models of the past.</strong></p>
+
+<h3>What can you build with it — the official demos</h3>
+<p>Moonshot&rsquo;s showcase focuses less on &ldquo;jobs that finish in one go&rdquo; and more on <strong>long-horizon autonomous work</strong> — the mode where a person hands over a task and walks away while the model plans, builds, checks results, and fixes on its own for hours or days.</p>
+<ul>
+    <li><strong>Semiconductor chip design</strong> — running alone for 24&ndash;48 hours, it designed and even verified a small AI-dedicated chip with open design tools (4mm² of area, processing 8,700 tokens per second in simulation). In effect, an AI designed &ldquo;a chip to run AI on.&rdquo;</li>
+    <li><strong>Scientific data analysis</strong> — it analyzed 391 gravitational-wave observation events (ripples in spacetime made by things like black hole collisions) by commanding more than 20 <strong>subagents</strong> (helper AI workers the main model directs) at once, and produced 7 kinds of visualizations plus summaries of more than 10 papers.</li>
+    <li><strong>Games and 3D</strong> — a wuxia open-world RPG, a colosseum, a fighting game, a Game Boy emulator, a 3D typewriter that disassembles into parts, a black hole simulation and more, all built for the browser. Notably it uses a feedback loop — the same one human developers use — of <strong>taking screenshots of the screens it built, checking them with its own eyes, and fixing them</strong>.</li>
+    <li><strong>Motion graphics and video</strong> — because one model handles text, images, and video together, it also produced things like an animated video explaining its own architecture.</li>
+</ul>
+
+<h4>Kernel optimization — speeding up the code that makes up its own body</h4>
+<p>What developers paid the most attention to in the showcase was <strong>GPU kernel optimization</strong>. A kernel is a <strong>small, core computation program</strong> that runs on the GPU, and an AI model&rsquo;s speed is ultimately decided by how fast these kernels are. The experiment was designed like this — each model was put in <strong>the same sandbox</strong> and made to profile, rewrite, and benchmark <strong>4 kinds of kernel tasks</strong> (AttnRes, DSA, 512-head MLA, KDA) <strong>on its own for up to 24 hours</strong> (on an NVIDIA H200 and a third-party GPGPU). The result: <strong>K3 was first in 3 of the 4 tasks</strong>, with Claude Fable 5 first only on DSA. On the AttnRes task in particular, one forward + backward pass fell from <strong>283.6ms to 114.4ms</strong> — in effect, it optimized the code that makes up its own architecture (AttnRes, KDA).</p>
+
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>Model</th><th>AttnRes</th><th>DSA</th><th>MLA-512</th><th>KDA-GPGPU</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Kimi K3</strong></td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>+59.7%</strong></td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:96.2%"></span></span>+55.1%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>518 TF</strong></td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>+73.6%</strong></td></tr>
+        <tr><td>Claude Fable 5</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:95.6%"></span></span>+57.1%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>+57.3%</strong></td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:95.2%"></span></span>493 TF</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:76.8%"></span></span>+56.5%</td></tr>
+        <tr><td>GPT-5.6 Sol</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:29%"></span></span>+17.3%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:85.3%"></span></span>+48.9%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:69.9%"></span></span>362 TF</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:90.6%"></span></span>+66.7%</td></tr>
+        <tr><td>Claude Opus 4.8</td>
+            <td>—</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:76.1%"></span></span>+43.6%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:76.1%"></span></span>394 TF</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:77.4%"></span></span>+57.0%</td></tr>
+        <tr><td>GPT-5.5</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:51.6%"></span></span>+30.8%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:66.7%"></span></span>+38.2%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:74.5%"></span></span>386 TF</td>
+            <td>—</td></tr>
+    </tbody>
+</table>
+</div>
+<p class="scn-sub">The figures are transcribed as-is from the final records in the interactive chart (the record trajectory by active hours) on Moonshot&rsquo;s official tech blog. AttnRes, DSA, and KDA-GPGPU are <strong>speedups (%) versus the FLA Triton baseline</strong>, MLA-512 is <strong>TFLOPS achieved (forward + backward)</strong>, and KDA-GPGPU was measured on a non-NVIDIA third-party GPGPU. &lsquo;—&rsquo; means not listed in the original chart. Bars are the ratio to first place within each task (column) and fill in as the table appears. Separately, the FlashKDA kernel released as open source showed a <strong>1.72&ndash;2.22×</strong> prefill speedup on H20 GPUs.</p>
+<div class="note">
+    <span class="nh">How to read this</span>
+    All of the cases above are <strong>Moonshot&rsquo;s own promotional showcase</strong>. The outputs are indeed public, but they are not results reproduced or verified by a third party, so it is more accurate to read them as &ldquo;work in this direction (long-running autonomous tasks) has become possible to assign.&rdquo;</div>
+
+<h3>How the world reacted</h3>
+<ul>
+    <li><strong>&ldquo;The era of catching up is over&rdquo;</strong> — OpenAI researcher roon commented, &ldquo;the era in which Chinese labs were far behind is over. Kimi is at least on par with today&rsquo;s leading open models.&rdquo; He added the caveat, though, that &ldquo;some people who actually use it will find it less useful than today&rsquo;s report card suggests.&rdquo;</li>
+    <li><strong>Safety worries</strong> — with a closed model the company can cut off access if something goes wrong, but <strong>once open weights are out, they cannot be recalled</strong>. So &ldquo;should a model this strong be released at all, and in particular how good is it at hacking (cyberattacks)?&rdquo; instantly became a point of contention. Along with the observation that the cyber capability test (CyberGym) score is <strong>missing</strong> from the released report card, voices called for independent evaluation by bodies such as the UK AI Safety Institute (AISI), and there was also a counterargument that &ldquo;excessive fear is unnecessary&rdquo; (Transformer).</li>
+    <li><strong>Even the stock market wobbled</strong> — reports followed that semiconductor and AI-related shares, which stood on the outlook that &ldquo;money will pour into expensive paid models and giant infrastructure,&rdquo; plunged right after the launch. It is being called a replay of the &lsquo;DeepSeek shock,&rsquo; when the cheap Chinese model DeepSeek shook the market in early 2025.</li>
+</ul>
+
+<h3>Appendix — usability seen through price: compared with ChatGPT and Claude</h3>
+<p>What you actually feel in use comes down to two prices — the <strong>API fee</strong> developers pay (per token) and the <strong>app subscription</strong> ordinary users pay (monthly). These figures are as of 2026-07-19, cross-checked against each company&rsquo;s official pricing documents and multiple price-tracking sites.</p>
+
+<h4>API fees (per million tokens, USD)</h4>
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>Model</th><th>Input</th><th>Output <span class="scn-sub">(bar: shorter is cheaper)</span></th><th>Notes</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Kimi K3</strong></td><td>$3.00</td><td><span class="cmp-bar"><span class="cmp-fill accent" style="--w:30%"></span></span><strong>$15.00</strong></td><td>cache-hit input $0.30 · <strong>no surcharge</strong> for the 1M-token context</td></tr>
+        <tr><td>Claude Sonnet 5</td><td>$2.00*</td><td><span class="cmp-bar"><span class="cmp-fill" style="--w:20%"></span></span>$10.00*</td><td>*limited-time price until 2026-08-31, $3/$15 thereafter</td></tr>
+        <tr><td>Claude Opus 4.8</td><td>$5.00</td><td><span class="cmp-bar"><span class="cmp-fill" style="--w:50%"></span></span>$25.00</td><td>—</td></tr>
+        <tr><td>GPT-5.6 Sol</td><td>$5.00</td><td><span class="cmp-bar"><span class="cmp-fill" style="--w:60%"></span></span>$30.00</td><td>requests over 272K of input are surcharged to $10/$45</td></tr>
+        <tr><td>Claude Fable 5</td><td>$10.00</td><td><span class="cmp-bar"><span class="cmp-fill" style="--w:100%"></span></span>$50.00</td><td>—</td></tr>
+    </tbody>
+</table>
+</div>
+<p>How to read it: K3&rsquo;s output rate is <strong>half of GPT-5.6 Sol&rsquo;s and 30% of Claude Fable 5&rsquo;s</strong>, and it is <strong>exactly the same as the standard price ($3/$15)</strong> of Claude&rsquo;s mid-tier model Sonnet 5 — this is where the industry line &ldquo;Opus-class performance at Sonnet prices&rdquo; comes from. On long-document work the gap widens further: K3 keeps the same rate up to 1 million tokens, while GPT-5.6 Sol nearly doubles its price for requests beyond 272K.</p>
+
+<h4>App subscriptions (monthly, USD)</h4>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Service</th><th>Free</th><th>Standard</th><th>Higher tiers</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Kimi</strong></td><td>Adagio — <strong>includes K3</strong>, unlimited standard chat and deep research</td><td>Moderato $19 · Allegretto $39</td><td>Allegro $99 · Vivace $199</td></tr>
+        <tr><td>ChatGPT (OpenAI)</td><td>free tier</td><td>Go $8 · Plus $20</td><td>Pro $100 · Pro $200 (includes Sora and Operator)</td></tr>
+        <tr><td>Claude (Anthropic)</td><td>free tier</td><td>Pro $20</td><td>Max $100 (5× Pro) · Max $200 (20×)</td></tr>
+    </tbody>
+</table>
+</div>
+<div class="note">
+    <span class="nh">Caution when comparing</span>
+    It is hard to declare &ldquo;who is cheaper&rdquo; from price tables alone. Each tier differs in <strong>usage limits, concurrent-request caps, and extra features</strong> (video generation, agents, coding CLIs and so on), Sonnet 5 is on a limited-time price, and subscriptions are billed separately from the API. The direction is clear, though — Kimi&rsquo;s lineup, which <strong>includes the latest flagship (K3) in the free tier</strong>, is the most aggressive of the three companies, and this completes this launch&rsquo;s narrative of &ldquo;price destruction for frontier-class intelligence.&rdquo;
+</div>
+
+<h3>Fact-check notes — what was corrected or excluded</h3>
+<div class="note warn">
+    <span class="nh">Claims spread in early reviews and the community that were corrected or excluded</span>
+    · <strong>&ldquo;3 trillion parameters&rdquo;</strong> → the figure on which official and press sources agree is <strong>2.8 trillion (2.8T)</strong> (reflected in the body)<br>
+    · <strong>&ldquo;the weights are already public on the web&rdquo;</strong> → release is <strong>scheduled</strong> (2026-07-27); at the time of writing, API only<br>
+    · <strong>&ldquo;GDPval is a benchmark OpenAI built&rdquo;</strong> → what this article cites is the variant operated by Artificial Analysis (<strong>GDPval-AA v2</strong>)<br>
+    · <strong>Excluded (failed cross-check)</strong>: one user&rsquo;s &ldquo;CSGO clone for $324&rdquo; case, the &ldquo;$0.94 per unit of intelligence vs Opus $1.80&rdquo; cost metric, the mention of Meta&rsquo;s &ldquo;Muse Spark,&rdquo; the 58% win-rate figure for competing models, and individual tweets about debugging failures — these were not confirmed by multiple independent sources, so they are not included.
+</div>
+
+<h3>Sources</h3>
+<p class="scn-sub"><strong>Official</strong></p>
+<ul>
+    <li>Moonshot AI, &ldquo;Kimi K3 Tech Blog: Open Frontier Intelligence&rdquo; — <a href="https://www.kimi.com/blog/kimi-k3" target="_blank" rel="noopener">kimi.com/blog/kimi-k3</a></li>
+    <li>Kimi API Platform — K3 quickstart and pricing — <a href="https://platform.kimi.ai/docs/guide/kimi-k3-quickstart" target="_blank" rel="noopener">platform.kimi.ai (quickstart)</a> · <a href="https://platform.kimi.ai/docs/pricing/chat" target="_blank" rel="noopener">platform.kimi.ai (pricing)</a></li>
+    <li>Kimi_Moonshot, the official X thread on KDA and AttnRes — <a href="https://x.com/Kimi_Moonshot/status/2077830234955816983" target="_blank" rel="noopener">x.com/Kimi_Moonshot</a></li>
+</ul>
+<p class="scn-sub"><strong>Indexes and leaderboards</strong></p>
+<ul>
+    <li>Artificial Analysis, &ldquo;Kimi K3 achieves #3 in the Artificial Analysis Intelligence Index&rdquo; — <a href="https://artificialanalysis.ai/articles/kimi-k3-achieves-3-in-the-artificial-analysis-intelligence-index-comparable-to-opus-4-8-and-gpt-5-5" target="_blank" rel="noopener">artificialanalysis.ai</a> · <a href="https://artificialanalysis.ai/models/kimi-k3" target="_blank" rel="noopener">model page</a></li>
+    <li>Arena.ai, the Frontend Code Arena first-place announcement and the 76% win rate — <a href="https://x.com/arena/status/2077824029126504525" target="_blank" rel="noopener">x.com/arena (1st place)</a> · <a href="https://x.com/arena/status/2077893862778183737" target="_blank" rel="noopener">x.com/arena (win rate)</a></li>
+    <li>NxCode, &ldquo;Kimi K3 Benchmarks Explained&rdquo; — Vals&rsquo;s independent reproduction and a roundup of coding benchmarks — <a href="https://www.nxcode.io/resources/news/kimi-k3-benchmarks-coding-agent-evaluation-guide-2026" target="_blank" rel="noopener">nxcode.io</a></li>
+</ul>
+<p class="scn-sub"><strong>Press and analysis</strong></p>
+<ul>
+    <li>VentureBeat — <a href="https://venturebeat.com/technology/chinas-moonshot-ai-releases-kimi-k3-the-largest-open-source-model-ever-rivaling-top-u-s-systems" target="_blank" rel="noopener">the largest open-source model ever released</a></li>
+    <li>Fortune — <a href="https://fortune.com/2026/07/16/moonshots-kimi-k3-pushes-chinese-ai-into-fable-level-territory/" target="_blank" rel="noopener">Chinese AI enters Fable-level territory</a></li>
+    <li>Tom&rsquo;s Hardware — <a href="https://www.tomshardware.com/tech-industry/artificial-intelligence/moonshot-releases-2-8-trillion-parameter-kimi-k3" target="_blank" rel="noopener">2.8T parameters and routing around compute constraints</a></li>
+    <li>The Decoder — <a href="https://the-decoder.com/kimis-open-model-k3-nears-gpt-5-6-sol-and-fable-5-while-signaling-the-end-of-super-cheap-chinese-ai/" target="_blank" rel="noopener">the end of ultra-cheap Chinese AI</a></li>
+    <li>Latent.space AINews — <a href="https://www.latent.space/p/ainews-kimi-k3-28t-a50b-the-largest" target="_blank" rel="noopener">2.8T-A50B and the writing benchmark</a></li>
+    <li>Simon Willison — <a href="https://simonwillison.net/2026/Jul/16/kimi-k3/" target="_blank" rel="noopener">Kimi K3 notes</a></li>
+    <li>Ken Huang — <a href="https://kenhuangus.substack.com/p/demystifying-kimi-k3-how-chinas-28t" target="_blank" rel="noopener">Demystifying Kimi K3 (details of the kernel optimization experiment)</a></li>
+    <li>WCCFTech — <a href="https://wccftech.com/kimi-k3-built-a-chip-in-48-hours-over-8700-tokens-s-as-china-delivers-2-8-trillion-ai-model/" target="_blank" rel="noopener">the 48-hour chip design demo</a></li>
+</ul>
+<p class="scn-sub"><strong>Pricing (appendix comparison tables)</strong></p>
+<ul>
+    <li>Anthropic official pricing documents — <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">platform.claude.com (API)</a> · <a href="https://claude.com/pricing" target="_blank" rel="noopener">claude.com/pricing (subscriptions)</a></li>
+    <li>OpenAI GPT-5.6 pricing — <a href="https://openrouter.ai/openai/gpt-5.6-sol" target="_blank" rel="noopener">OpenRouter (Sol)</a> · <a href="https://benchlm.ai/openai/api-pricing" target="_blank" rel="noopener">BenchLM roundup</a> · <a href="https://www.aipricing.guru/chatgpt-subscription-pricing/" target="_blank" rel="noopener">subscription tier roundup</a></li>
+    <li>Kimi membership and API — <a href="https://www.kimi.com/help/membership/membership-pricing" target="_blank" rel="noopener">kimi.com (official membership)</a> · <a href="https://www.eesel.ai/blog/kimi-k3-pricing" target="_blank" rel="noopener">eesel (tier roundup)</a></li>
+</ul>
+<p class="scn-sub"><strong>Reactions and fallout</strong></p>
+<ul>
+    <li>prinz (X) — pointing out the missing CyberGym score — <a href="https://x.com/deredleritt3r/status/2077846199768424785" target="_blank" rel="noopener">x.com/deredleritt3r</a></li>
+    <li>Dan McAteer (X) — assessing cyber risk — <a href="https://x.com/daniel_mac8/status/2077861850868322645" target="_blank" rel="noopener">x.com/daniel_mac8</a></li>
+    <li>Transformer — <a href="https://www.transformernews.ai/p/kimi-k3-is-no-reason-for-china-panic-export-controls-xi-jingping" target="_blank" rel="noopener">the counterargument that &ldquo;China panic is unnecessary&rdquo;</a></li>
+    <li>Yahoo Finance — <a href="https://finance.yahoo.com/technology/ai/articles/china-kimi-k3-hits-us-225728395.html" target="_blank" rel="noopener">the US stock market&rsquo;s reaction</a> · BankInfoSecurity — <a href="https://www.bankinfosecurity.com/chinas-kimi-k3-triggers-chip-stocks-into-bear-market-a-32263" target="_blank" rel="noopener">chip-related shares plunge</a></li>
+</ul>
+
+<div class="note">
+    <span class="nh">This document&rsquo;s stance</span>
+    Every figure printed here was cross-checked in the sources above, and where self-reporting and independent reproduction differ (Terminal-Bench) <strong>both are written side by side</strong>. This document itself was written by search cross-checking in an environment where the original pages could not be opened directly, so when citing detailed figures we recommend checking the linked originals once more.
+</div>

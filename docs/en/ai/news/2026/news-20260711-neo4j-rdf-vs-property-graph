@@ -1,0 +1,187 @@
+<h2>RDF or Property Graph — Two Models for a Knowledge Graph (Neo4j)</h2>
+<p>A document that organizes <strong>Jim Webber</strong>'s article <strong>&ldquo;RDF vs. property graphs: Choosing the right approach for implementing a knowledge graph&rdquo;</strong> (2024-06-04), written by Neo4j's chief scientist. As generative AI drives demand for <strong>knowledge graphs</strong> up again, it compares, following the author's argument, the fundamental choice you face when <strong>actually implementing</strong> a knowledge graph — <strong>RDF (triples)</strong> from the 1990s semantic web, or the <strong>property graph</strong> of modern graph databases. If this wiki's <a href="#!news-20260710-oracle-ontology-property-graph">Oracle ontology and property graphs</a> takes the Oracle (SQL/PGQ) view, this article looks at the same question from the <strong>Neo4j and semantic web view</strong>.</p>
+
+<div class="note">
+    <span class="nh">Source</span>
+    · Original: Jim Webber (Neo4j Chief Scientist), &ldquo;RDF vs. property graphs: Choosing the right approach for implementing a knowledge graph&rdquo; (2024-06-04) — <a href="https://neo4j.com/blog/knowledge-graph/rdf-vs-property-graphs-knowledge-graphs/" target="_blank" rel="noopener">neo4j.com/blog/…/rdf-vs-property-graphs</a><br>
+    · This document is a <strong>summary and write-up</strong> of the original's argument (with excerpts reflected). Read it bearing in mind that the author works at Neo4j, so the view is friendly to property graphs.<br>
+    · Lineage: a &ldquo;link knowledge by relationships&rdquo; document continuing from <a href="#!sb-level4">Second Brain Level 4 · Knowledge Graph</a> and <a href="#!news-20260710-oracle-ontology-property-graph">Oracle property graphs</a>.
+</div>
+
+<h3>Why Knowledge Graphs Now</h3>
+<p>As the generative AI market exploded (<strong>3,600% year over year</strong> by O'Reilly's count), demand for knowledge graphs came back to life. Knowledge graphs are strong on <strong>highly connected, heterogeneous data</strong>, so they are a good fit for <strong>grounding LLMs in facts</strong>. Independent research from data.world and Microsoft also pointed out the benefits of using knowledge graphs for <strong>RAG</strong>. Yet <strong>building and operating</strong> a knowledge graph brings countless design decisions, and the first fork in the road is RDF or property graph.</p>
+
+<h3>What a Knowledge Graph Is — Entities · Relationships · Organizing Principle</h3>
+<p>A knowledge graph is a <strong>semantically rich data model</strong> for storing, organizing, and understanding <strong>connected entities</strong>. It consists of three elements.</p>
+<ul>
+    <li><strong>Entities</strong> — the data of the organization or domain.</li>
+    <li><strong>Relationships</strong> — how entities interact with and relate to each other. They give the data <strong>context</strong>.</li>
+    <li><strong>Organizing principle</strong> — meta-information about the core concepts. It acts as a <strong>contract (meta layer)</strong> between the data and its users.</li>
+</ul>
+<p>The key is <strong>picking the complexity of the organizing principle to fit the job</strong>. The author says that range is wide, going from <strong>simple labels (node labels + named relationships) → a product hierarchy (Product Line → Category → Product) → a full ontology (the entire business vocabulary)</strong> — a heavy ontology is not always the right answer.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 210" role="img" aria-label="The complexity spectrum of the organizing principle: from simple labels through a product hierarchy to a full ontology, pick the level that fits the job">
+    <text class="d-label sm" x="360" y="24" text-anchor="middle">Organizing principle — pick the complexity that fits the job</text>
+    <rect class="d-box soft" x="24" y="58" width="188" height="72" rx="10"/><text class="d-label sm" x="118" y="88" text-anchor="middle">Simple labels</text><text class="d-sub" x="118" y="107" text-anchor="middle">node labels + named relations</text>
+    <line class="d-edge" x1="212" y1="94" x2="252" y2="94"/><polygon class="d-arrow" points="252,89 260,94 252,99"/>
+    <rect class="d-box soft" x="266" y="58" width="188" height="72" rx="10"/><text class="d-label sm" x="360" y="88" text-anchor="middle">Product hierarchy</text><text class="d-sub" x="360" y="107" text-anchor="middle">Line &#8594; Category &#8594; Product</text>
+    <line class="d-edge" x1="454" y1="94" x2="494" y2="94"/><polygon class="d-arrow" points="494,89 502,94 494,99"/>
+    <rect class="d-box accent" x="508" y="58" width="188" height="72" rx="10"/><text class="d-label sm" x="602" y="88" text-anchor="middle">Full ontology</text><text class="d-sub" x="602" y="107" text-anchor="middle">entire business vocabulary</text>
+    <text class="d-sub" x="360" y="164" text-anchor="middle">light · fast &#8592;&#8594; expressive · inference</text>
+    <text class="d-sub" x="360" y="188" text-anchor="middle">A heavy ontology is not always the answer — choose the level that fits the job</text>
+</svg>
+<div class="d-cap">A knowledge graph's &ldquo;organizing principle&rdquo; is a <strong>spectrum</strong> — from simple labels to a full ontology, only as much as you need.</div>
+</div>
+
+<h3>RDF — Triples and the Semantic Web</h3>
+<p><strong>RDF</strong> (Resource Description Framework) is a <strong>W3C standard</strong> for exchanging data on the web. Its basic unit is the <strong>triple</strong> — a sentence made of three parts, <strong>subject, predicate, and object</strong>, each identified by a <strong>URI</strong>. The subject is a resource (node) of the graph, the predicate is an edge (relationship), and the object is either another node or a literal value.</p>
+<div class="note">
+    <span class="nh">The dream of the semantic web, and triple stores</span>
+    RDF became known together with the <strong>semantic web</strong> — the dream of putting machine-readable data with well-defined meaning onto the public web so that software agents could treat the web like one enormous distributed data structure. The idea was to combine metadata (ontologies) with a query language (<strong>SPARQL</strong>) and infer knowledge from web data. That dream never came true, and the technology flowed into <strong>&ldquo;triple stores&rdquo;</strong> applied to local databases. Pushed aside back then because SQL was dominant, triple stores were re-marketed as &ldquo;a kind of graph database&rdquo; along with the rise of graph DBs. Their query language is SPARQL, which reasons over triples according to ontology rules.
+</div>
+
+<h3>RDF's Practical Limits</h3>
+<p>RDF <strong>was not designed with database systems in mind</strong>, so implementation is awkward. The essentials the author points out:</p>
+<ul>
+    <li><strong>It cannot distinguish unique relationships of the same type</strong> — even when two nodes are connected several times by relationships of the same type, RDF collapses them into <strong>a single triple</strong>. Expressiveness is limited.</li>
+    <li><strong>Relationships are not first-class citizens</strong> — relationships are hidden inside triples, so to attach properties to a relationship or express multiple relationships of the same type you have to <strong>create more nodes and triples</strong> (the same detour as a <strong>join table</strong> in a relational DB). Example: to store mutual-follow multiple relationships in a social network, triples keep multiplying. The model gets verbose and complex, and maintenance becomes a chore.</li>
+    <li><strong>SPARQL is not guaranteed to terminate</strong> — an ontology makes the data &ldquo;smart&rdquo;, but there is <strong>no guarantee the query will finish</strong>, so a user may wait indefinitely for an answer.</li>
+</ul>
+<p>There are three practical burdens of the ontology-driven approach itself, too.</p>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>Burden</th><th>Detail</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Skill barrier</strong></td><td>Acquiring the expertise to build a standard ontology takes great time and effort, and it is so specialized that it is <strong>hard to transfer</strong> within an organization.</td></tr>
+        <tr><td><strong>Resource intensive</strong></td><td>Building an ontology takes a long time and you can only <strong>deploy once it is finished</strong>, so time to business value is greatly delayed.</td></tr>
+        <tr><td><strong>Lagging reality</strong></td><td>The business moves faster than the ontology is updated, so the ontology is always behind → the knowledge graph reflects &ldquo;<strong>the business of the past</strong>&rdquo;.</td></tr>
+    </tbody>
+</table></div>
+<p>Even so, RDF does have places where it fits — an ontology as a bridge for <strong>exchanging information between two well-understood local domains</strong>. And the author adds: since <strong>an ontology is ultimately a graph</strong>, it can be used <strong>outside</strong> the semantic web stack as well.</p>
+
+<h3>The Property Graph — Store It the Way You Draw It</h3>
+<p>A property graph organizes information as <strong>nodes, relationships, and properties</strong>.</p>
+<ul>
+    <li><strong>Node</strong> — marks its role with one or more <strong>labels</strong> and holds arbitrary <strong>properties (key-value)</strong>.</li>
+    <li><strong>Relationship</strong> — a <strong>directed, named connection</strong> between two nodes. It always has a direction, a type, a start node, and an end node, and like nodes it <strong>can have properties</strong>. Even though it is directed, it is <strong>traversed efficiently in both directions</strong>.</li>
+    <li><strong>Property</strong> — a key-value attached to <strong>both</strong> nodes and relationships.</li>
+</ul>
+<p>The design principle is to <strong>store it in a form as close as possible to the logical model</strong> — exactly the picture you drew on the whiteboard. In a native property graph like Neo4j, the <strong>physical storage model is isomorphic to the logical model</strong>: <strong>&ldquo;what you draw is what you store&rdquo;</strong>. The query language is <strong>GQL</strong>, the ISO standard for property graphs, and the most widely used implementation is <strong>Cypher</strong>. Unlike SPARQL, Cypher and GQL are declarative languages focused on <strong>pattern matching rather than inference</strong>, so queries usually <strong>finish in time proportional to the size of the graph</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="When attaching a property to a relationship, the property graph puts it right on the relationship, while RDF, where relationships are not first-class, expresses it by adding a new node and triples">
+    <text class="d-label sm" x="180" y="24" text-anchor="middle">Property graph — right on the relationship</text>
+    <circle class="d-node" cx="66" cy="118" r="26"/><text class="d-node-label" x="66" y="122" text-anchor="middle">Sunita</text>
+    <circle class="d-node" cx="300" cy="118" r="26"/><text class="d-node-label" x="300" y="122" text-anchor="middle">Volvo</text>
+    <line class="d-edge accent" x1="94" y1="118" x2="266" y2="118"/><polygon class="d-arrow accent" points="266,113 276,118 266,123"/>
+    <rect class="d-box accent" x="120" y="66" width="122" height="40" rx="9"/><text class="d-label sm" x="181" y="84" text-anchor="middle">DRIVES</text><text class="d-sub" x="181" y="99" text-anchor="middle">since=2011</text>
+    <line class="d-edge accent dash" x1="181" y1="106" x2="181" y2="116"/>
+    <text class="d-sub" x="180" y="176" text-anchor="middle">properties and multiple relationships just go on it</text>
+    <text class="d-sub" x="180" y="196" text-anchor="middle">(a)-[:DRIVES {since:2011}]-&gt;(b)</text>
+
+    <line class="d-edge dash" x1="380" y1="44" x2="380" y2="230"/>
+
+    <text class="d-label sm" x="550" y="24" text-anchor="middle">RDF — relationships are not first-class</text>
+    <circle class="d-node" cx="448" cy="76" r="22"/><text class="d-node-label" x="448" y="80" text-anchor="middle">Sunita</text>
+    <circle class="d-node" cx="662" cy="76" r="22"/><text class="d-node-label" x="662" y="80" text-anchor="middle">Volvo</text>
+    <rect class="d-box" x="500" y="146" width="110" height="40" rx="9"/><text class="d-label sm" x="555" y="164" text-anchor="middle">Drive event</text><text class="d-sub" x="555" y="179" text-anchor="middle">(extra node)</text>
+    <line class="d-edge" x1="466" y1="92" x2="522" y2="144"/><text class="d-sub" x="470" y="136" text-anchor="middle">subject</text>
+    <line class="d-edge" x1="644" y1="92" x2="588" y2="144"/><text class="d-sub" x="640" y="136" text-anchor="middle">object</text>
+    <line class="d-edge" x1="555" y1="186" x2="555" y2="212"/><polygon class="d-arrow" points="551,212 559,212 555,218"/>
+    <rect class="d-box soft" x="502" y="220" width="106" height="26" rx="7"/><text class="d-sub" x="555" y="237" text-anchor="middle">since=2011</text>
+</svg>
+<div class="d-cap">The same &ldquo;property on a relationship&rdquo;: the property graph puts it <strong>on the relationship in one go</strong>, while RDF, where relationships are not first-class, expresses it by <strong>adding a new node and triples</strong>.</div>
+</div>
+
+<h3>Advantages of the Property Graph</h3>
+<p>The property graph was designed not as a data exchange format but as a <strong>DB model for applications and analytics</strong>. Unlike RDF it handles <strong>many-to-many and multiple relationships of the same type</strong> with ease, and because it is not locked into a predetermined structure you can <strong>grow the knowledge graph incrementally</strong>. Four advantages the author lists:</p>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>Advantage</th><th>Detail</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Simplicity</strong></td><td>Stand it up and use it fast — low complexity for beginners and experts alike.</td></tr>
+        <tr><td><strong>Detailed</strong></td><td>Holding data <strong>on both nodes and relationships</strong> so entities and connections reflect the business accurately.</td></tr>
+        <tr><td><strong>Interoperable</strong></td><td>Neo4j <strong>consumes and produces RDF</strong> to work with existing triple stores, and also integrates with modern systems such as relational and document DBs.</td></tr>
+        <tr><td><strong>Standards</strong></td><td>With ISO <strong>GQL</strong>, graphs get the same confidence relational DBs enjoyed with ISO SQL.</td></tr>
+    </tbody>
+</table></div>
+
+<h3>Cases — What the Property Graph Achieved</h3>
+<ul>
+    <li><strong>NASA</strong> — project data going back to the late 1950s lay buried in organizational silos, so it moved its DB to a property graph holding <strong>millions of historical documents</strong>. Engineers find trends and lessons in past projects to prevent disasters — saving <strong>millions of dollars and years of R&amp;D</strong> in preparing the &ldquo;Mars mission&rdquo;.</li>
+    <li><strong>Basecamp Research</strong> — built the world's largest knowledge graph of Earth's biodiversity with Neo4j. Linking biological, chemical, and environmental data, it <strong>expanded known proteins by 50%</strong> and recorded <strong>more than 5 billion biological relationships</strong> — an excellent resource for protein design and generative AI.</li>
+    <li><strong>Novo Nordisk</strong> — drives <strong>StudyBuilder</strong> with a Neo4j-based knowledge graph to streamline clinical data collection and reporting. Navigating tangled data standards such as CDISC, SNOMED, and UCUM, it secured end-to-end consistency, compliance, automation, and reuse (released as open source).</li>
+</ul>
+
+<h3>What Goes into My Knowledge Graph — Feature Comparison</h3>
+<p>The feature matrix presented by the author (● strong/supported natively · ◑ partial · ○ weak/unsupported).</p>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>Item</th><th>Property graph</th><th>RDF</th></tr></thead>
+    <tbody>
+        <tr><td>Stored as a native graph</td><td>●</td><td>○</td></tr>
+        <tr><td>Efficient, low-friction modeling</td><td>●</td><td>○</td></tr>
+        <tr><td>Easy to start · incremental change</td><td>●</td><td>○</td></tr>
+        <tr><td>Query efficiency for entity→property and relationship→property</td><td>●</td><td>○</td></tr>
+        <tr><td>Query language</td><td>Cypher / GQL</td><td>SPARQL</td></tr>
+        <tr><td>Speed · performance</td><td>●</td><td>◑</td></tr>
+        <tr><td>Analysis and enrichment with data science</td><td>●</td><td>○</td></tr>
+        <tr><td>Native storage of transactional data</td><td>●</td><td>○</td></tr>
+        <tr><td>Native storage of semantic data</td><td>○</td><td>●</td></tr>
+        <tr><td>Use of off-the-shelf ontologies</td><td>○</td><td>●</td></tr>
+    </tbody>
+</table></div>
+
+<h3>Conclusion — Property Graph by Default, RDF's Organizing Principle Layered On When Needed</h3>
+<p>Model choice depends on the situation, but <strong>if you can choose freely, you will usually pick the property graph for its simplicity and agility</strong> — the ecosystem of tools, literature, training, people, and ISO standards is broad too. Graphs have advanced greatly since the semantic web era, and modern best practice takes from <strong>both schools</strong>. The author's recommendation is clear:</p>
+<div class="note">
+    <span class="nh">The author's recommendation</span>
+    <strong>Keep the property graph as the default, and when the system needs it,</strong> <strong>layer on</strong> the organizing principles of the RDF world (<strong>taxonomies and ontologies</strong>) — not as a technical precondition.
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 720 200" role="img" aria-label="The recommended flow: keep the property graph as the default and, when needed, layer RDF taxonomies and ontologies on as an organizing principle layer">
+    <rect class="d-box accent" x="40" y="72" width="200" height="60" rx="11"/><text class="d-label sm" x="140" y="98" text-anchor="middle">Property graph (default)</text><text class="d-sub" x="140" y="116" text-anchor="middle">simple · agile · fast · ISO GQL</text>
+    <line class="d-edge accent" x1="240" y1="102" x2="290" y2="102"/><polygon class="d-arrow accent" points="290,97 298,102 290,107"/>
+    <text class="d-sub" x="360" y="70" text-anchor="middle">only when needed</text>
+    <rect class="d-box soft" x="300" y="72" width="200" height="60" rx="11"/><text class="d-label sm" x="400" y="98" text-anchor="middle">+ organizing principle layer</text><text class="d-sub" x="400" y="116" text-anchor="middle">taxonomy · ontology (RDF)</text>
+    <line class="d-edge" x1="500" y1="102" x2="550" y2="102"/><polygon class="d-arrow" points="550,97 558,102 550,107"/>
+    <rect class="d-box" x="560" y="72" width="132" height="60" rx="11"/><text class="d-label sm" x="626" y="98" text-anchor="middle">Knowledge graph</text><text class="d-sub" x="626" y="116" text-anchor="middle">the right level</text>
+    <text class="d-sub" x="360" y="170" text-anchor="middle">An ontology is not a &ldquo;technical precondition&rdquo; but a layer added when needed — take from both schools</text>
+</svg>
+<div class="d-cap">It is not either/or — <strong>the property graph as the default</strong>, RDF's organizing principle as <strong>a layer added when needed</strong>.</div>
+</div>
+
+<h3>Glossary</h3>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Knowledge graph</strong></td><td>A semantic data model that stores and makes sense of data connected by entities, relationships, and an organizing principle.</td></tr>
+        <tr><td><strong>Organizing principle</strong></td><td>Meta-information about core concepts — from simple labels to an ontology. A contract between data and users.</td></tr>
+        <tr><td><strong>RDF · triple · URI</strong></td><td>A W3C standard for exchanging data on the web. Subject–predicate–object triples, each element identified by a URI.</td></tr>
+        <tr><td><strong>Triple store</strong></td><td>A store applying RDF/semantic web technology to a local DB. Queried with SPARQL.</td></tr>
+        <tr><td><strong>SPARQL</strong></td><td>The W3C query language for RDF. Reasons on top of ontology rules — with no termination guarantee.</td></tr>
+        <tr><td><strong>Property graph</strong></td><td>Made of nodes (labels), relationships (direction, type, properties), and properties. Logical = physical, isomorphic.</td></tr>
+        <tr><td><strong>Cypher · GQL</strong></td><td>Property graph query languages. GQL is the ISO standard, Cypher the representative implementation. Centered on pattern matching.</td></tr>
+        <tr><td><strong>Ontology · taxonomy</strong></td><td>Systems of concepts, vocabulary, and classification. Can be layered onto a property graph as an &ldquo;organizing principle layer&rdquo;.</td></tr>
+    </tbody>
+</table></div>
+
+<h3>Summary — In Three Sentences</h3>
+<ul>
+    <li>A knowledge graph is made of <strong>entities, relationships, and an organizing principle</strong>, and the complexity of the organizing principle is chosen <strong>to fit the job</strong>.</li>
+    <li>RDF is strong on standards, interoperability, off-the-shelf ontologies, and semantic data, but <strong>relationships are not first-class</strong> (triples and nodes multiply for multiple relationships and relationship properties) and it carries the burdens of SPARQL's lack of a termination guarantee and the cost of maintaining ontologies.</li>
+    <li>The author's recommendation is to use <strong>the property graph as the default</strong> and, when needed, <strong>layer RDF's taxonomies and ontologies on as an organizing principle</strong> — not as a precondition.</li>
+</ul>
+
+<h3>Sources</h3>
+<ul>
+    <li>Jim Webber (Neo4j), &ldquo;RDF vs. property graphs: Choosing the right approach for implementing a knowledge graph&rdquo; (2024-06-04) — <a href="https://neo4j.com/blog/knowledge-graph/rdf-vs-property-graphs-knowledge-graphs/" target="_blank" rel="noopener">neo4j.com</a> (the original)</li>
+    <li>ISO/IEC 39075 GQL (Graph Query Language) — <a href="https://www.iso.org/standard/76120.html" target="_blank" rel="noopener">iso.org</a></li>
+    <li>W3C RDF · SPARQL · OWL standards — <a href="https://www.w3.org/RDF/" target="_blank" rel="noopener">w3.org/RDF</a></li>
+    <li>Cases: NASA · Basecamp Research · Novo Nordisk StudyBuilder (see the links inside the original)</li>
+</ul>
+<p class="scn-sub"><strong>Related documents in this wiki</strong> — <a href="#!news-20260710-oracle-ontology-property-graph">Oracle ontology and property graphs</a> · <a href="#!sb-level4">Second Brain Level 4 · Knowledge Graph</a> · <a href="#!dzp-core">Douzone Knowledge Platform Proposal</a></p>
+
+<div class="note">
+    <span class="nh">This document's stance</span>
+    This article takes the view of an <strong>author who works at Neo4j</strong>, siding with the property graph — the feature matrix and the &ldquo;property graph by default&rdquo; conclusion reflect that position. RDF's strengths (standards, interoperability, formal semantics, inference) are acknowledged within the document as well, and the actual choice depends on the workload and interoperability requirements. Check the full original at the link above.
+</div>
