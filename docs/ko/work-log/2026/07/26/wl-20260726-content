@@ -1,4 +1,4 @@
-<h2>2026-07-26 · 콘텐츠 — 영어 병행 소급 번역 (배치① 19편 · ② 12편 · ③ 12편 · ④ 12편)</h2>
+<h2>2026-07-26 · 콘텐츠 — 영어 병행 소급 번역 (배치① 19 · ② 12 · ③ 12 · ④ 12 · ⑤ 18편)</h2>
 
 <h3>배치① — 지식 체계 6 · CLAUDE.md 10계명 · 기초강의 12편</h3>
 <p>글로벌 도달 프로젝트의 소급 번역 첫 배치. <a href="#!wl-20260726-features">같은 날 기능 로그</a>에서 깐 인프라(자동 언어·en 도식 게이트·hreflang·병행 게이트) 위에서, 미번역 110편 중 <strong>19편의 영어 본문</strong>을 올렸다 — 영어권 방문자가 처음 닿는 관문(기초강의)과 이 위키 자체를 설명하는 자기기술 문서(지식 체계)를 우선했다. 번역 수행은 <strong>Claude Opus 5 서브에이전트 5기 병렬</strong>. 변경 유형: <strong>CONTENT</strong>.</p>
@@ -43,3 +43,14 @@
 <p>배치②·③에서 잘 작동한 &ldquo;메타를 파일에 append&rdquo; 방식이 이번 배치에서 <strong>깨졌다</strong>. 한 에이전트가 마무리로 파일의 <em>빈 줄 서식을 정리</em>하면서 파일 전체를 다시 썼고, 그 사이 다른 에이전트들이 쓴 블록이 사라졌다(7&rarr;3블록). 번역 본문은 각자 다른 파일이라 무사했고, 없어진 메타는 배치①에서 쓴 방식(en 본문의 첫 <code>&lt;h2&gt;</code> + ko 요약에서 도출)으로 복원해 12/12를 채웠다.</p>
 <p>교훈: <strong>병렬 작업자에게 하나의 파일을 공유시키면 append만 하도록 지시해도 안전하지 않다</strong>(전체 재작성 유혹이 항상 있다). 다음 배치부터 <strong>에이전트별 메타 파일</strong>(<code>meta-&lt;배치&gt;-&lt;에이전트&gt;.txt</code>)로 분리해 경합을 원천 제거한다 — 파일이 겹치지 않으면 지침을 어겨도 남의 작업을 지울 수 없다.</p>
 <p>누적: 영어 본문 <strong>61/115편</strong>(53%). 남은 소급 번역 54편(PlugIn Harness 7·OMC 13·LLM Wiki 11·News 12·Douzone 11).</p>
+
+<h3>배치⑤ — 하네스 플러그인 7편 완결 + LLM Wiki 11편 완결</h3>
+<p>두 시리즈를 한 번에 끝낸 최대 배치(18편). <a href="#!hnp-first-run">하네스 플러그인</a>은 첫 실행·아키텍처·에이전트 설계·검증·시나리오까지 10편 완결, <a href="#!llmw-overview">LLM Wiki</a>는 볼트·캡처·메타데이터·링크·카드·온보딩·수집/질의/린트·클리퍼까지 11편 완결. Opus 5 에이전트 4기 병렬(3~6편씩).</p>
+<ul>
+    <li><strong>에이전트별 메타 파일이 통했다</strong> — 배치④ 사고 대응으로 <code>meta-c6-a~d.txt</code>를 각자에게 배정했다. 결과: <strong>18/18 블록 무손실</strong>, 서로의 작업을 지울 방법 자체가 없어졌다. 재도출 작업 0.</li>
+    <li><strong>형제 문서 용어 정렬</strong> — 에이전트들이 이미 번역된 en 형제(<code>hnp-concepts</code>·<code>hnp-verify</code>·<code>hns-run</code>·지식지도)의 표현을 참조해 <em>영업·수주 &rarr; sales/order</em>, <em>여신한도 &rarr; credit limit</em>, <em>진행시켜 &rarr; go ahead</em> 등을 일관되게 맞췄다.</li>
+    <li><strong>좁은 박스 대응</strong> — 200px 박스의 <code>자연어 직무기술서</code>는 <em>Natural-language job spec</em>, 124px의 <code>표준호환 설계</code>는 <em>Compatible design</em>, 112px의 <code>(선택) 2차 검증</code>은 <em>(Opt.) 2nd check</em>로. 지오메트리는 전부 불변.</li>
+    <li><strong>게이트 실행 갭을 오케스트레이터가 메웠다</strong> — 한 에이전트가 자기 환경에서 헤드리스 브라우저를 못 띄워 <code>check_diagram_bounds</code>를 문자폭 계산으로 대체했다고 보고했다. 그 자체로는 근거가 약하므로 <strong>세션에서 전수 재실행</strong>해 ko/en <strong>137렌더 통과</strong>를 확인했다(계산과 실렌더가 일치).</li>
+    <li><strong>동반 데이터</strong> — 18편 <code>label_en</code>+<code>tags_en</code>, <code>doc-entries.en.json</code> 61&rarr;79편.</li>
+</ul>
+<p>누적: 영어 본문 <strong>79/115편</strong>(69%). 남은 소급 번역 36편(OMC 13·News 12·Douzone 11).</p>

@@ -1,0 +1,69 @@
+<h2>Three Core Actions — Ingest · Query · Lint</h2>
+<p>These are the three important actions of the LLM wiki. (A concept put forward by Karpathy.)</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 252" role="img" aria-label="On the left the Ingest, Query, and Lint loop; on the right the query escalation rising from BM25 to vectors to hypothesis checking">
+    <line class="d-edge dash" x1="350" y1="8" x2="350" y2="244"/>
+
+    <rect class="d-box" x="100" y="20" width="140" height="44" rx="10"/>
+    <text class="d-label sm" x="170" y="41" text-anchor="middle">Ingest</text>
+    <text class="d-sub" x="170" y="56" text-anchor="middle">Digest, absorb</text>
+    <rect class="d-box" x="180" y="140" width="140" height="44" rx="10"/>
+    <text class="d-label sm" x="250" y="161" text-anchor="middle">Query</text>
+    <text class="d-sub" x="250" y="176" text-anchor="middle">Retrieve and use</text>
+    <rect class="d-box" x="20" y="140" width="140" height="44" rx="10"/>
+    <text class="d-label sm" x="90" y="161" text-anchor="middle">Lint</text>
+    <text class="d-sub" x="90" y="176" text-anchor="middle">Stay current</text>
+
+    <line class="d-edge" x1="200" y1="64" x2="250" y2="140"/>
+    <polygon class="d-arrow" points="250,140 241.8,134.7 248.4,130.3"/>
+    <line class="d-edge" x1="180" y1="162" x2="160" y2="162"/>
+    <polygon class="d-arrow" points="160,162 168,157 168,167"/>
+    <line class="d-edge" x1="90" y1="140" x2="140" y2="64"/>
+    <polygon class="d-arrow" points="140,64 138.4,73.7 131.8,69.3"/>
+    <text class="d-sub" x="175" y="232" text-anchor="middle">① Ingest · Query · Lint loop</text>
+
+    <rect class="d-box" x="380" y="180" width="260" height="44" rx="10"/>
+    <text class="d-label sm" x="510" y="201" text-anchor="middle">BM25 (keyword)</text>
+    <text class="d-sub" x="510" y="216" text-anchor="middle">Explicit words</text>
+    <rect class="d-box" x="400" y="110" width="240" height="44" rx="10"/>
+    <text class="d-label sm" x="520" y="131" text-anchor="middle">Vector (meaning)</text>
+    <text class="d-sub" x="520" y="146" text-anchor="middle">Similar concepts too</text>
+    <rect class="d-box accent" x="420" y="40" width="220" height="44" rx="10"/>
+    <text class="d-label sm" x="530" y="61" text-anchor="middle">Hypothesis check</text>
+    <text class="d-sub" x="530" y="76" text-anchor="middle">Reinterpret question</text>
+
+    <path class="d-edge accent dash" d="M510 180 V158" fill="none"/>
+    <polygon class="d-arrow accent" points="510,154 505,162 515,162"/>
+    <path class="d-edge accent dash" d="M522 110 V88" fill="none"/>
+    <polygon class="d-arrow accent" points="522,84 517,92 527,92"/>
+    <text class="d-sub" x="530" y="240" text-anchor="middle">② Query escalation (slower further along)</text>
+</svg>
+<div class="d-cap">The three actions <strong>loop</strong>, and queries grow stronger step by step from <strong>BM25 → vector → hypothesis check</strong>.</div>
+</div>
+
+<h3>1) Ingest — digest and absorb</h3>
+<p>This is the work of <strong>splitting</strong> a single article or concept <strong>into chunks</strong> and turning it into <strong>cards</strong> that both AI and people find easy to read. Hand over raw material and <strong>source-based</strong> wiki cards are generated.</p>
+<pre><code>/ingest        <span class="c"># raw sources into wiki cards</span></code></pre>
+
+<h3>2) Query — retrieving and using</h3>
+<p>Merely piling things up is useless, so you retrieve them with queries. An ordinary agent searches only with <strong>regular expressions (word frequency and matching)</strong>, but here three kinds of search are used in stages through the <strong>QMD (markdown query) MCP</strong>.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Method</th><th>When</th></tr></thead>
+        <tbody>
+            <tr><td><strong>BM25</strong> (lexicon)</td><td>When the user states an explicit word — searching by high-frequency words.</td></tr>
+            <tr><td><strong>Vector search</strong></td><td>When it is vague — it brings in similar concepts too ("I want to drink water" → water glass).</td></tr>
+            <tr><td><strong>Hypothesis check (hypothetical)</strong></td><td>When the user's level is below the level of the knowledge — the LLM reinterprets the question, makes keywords, and searches again.</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>Each step further along takes more time. If you know the file exactly, giving its address directly is fastest. Results are organized in the <strong>query folder</strong>, and they are kept <strong>source-based</strong> so you can pull them out again knowing what purpose the document was made for.</p>
+
+<h3>3) Lint — maintenance</h3>
+<p>This is maintenance work. On a new ingest, if an existing note (concept A, say) is related to a new note (A′) and has gone stale, it gets updated along with it. Run overall maintenance with <code>/lint</code> to keep things <strong>current</strong> enough to cite at any time. (The audit <code>audit</code> and verify <code>verify</code> skills come along too.)</p>
+
+<div class="note">
+    <span class="nh">Summary</span>
+    <strong>Ingest</strong> (raw material → cards) · <strong>Query</strong> (retrieving with BM25, vectors, and hypothesis checking) · <strong>Lint</strong> (staying current) — these three axes keep a living knowledge base running.
+</div>
