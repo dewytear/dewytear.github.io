@@ -11,6 +11,17 @@ Outputs:
   - llms.txt                     root sign-post (llmstxt.org convention) — the
                                  wiki's purpose, machine-file pointers, and every
                                  document grouped by System with title/summary/URL.
+  - llms-full.txt                full-corpus dump (llms.txt companion): every
+                                 indexed doc's title/section/URL + plain-text body
+                                 in one fetch, so an agent can load the whole wiki
+                                 into context without crawling.
+  - feed.xml                     Atom feed of the newest indexed docs. All dates
+                                 come from data/doc-dates.json (git-derived, so
+                                 the build stays deterministic — never "now").
+  - robots.txt                   generated (BASE from config.json — no hardcoded
+                                 host): explicit welcome for AI crawlers, the
+                                 content license, and pointers to every machine
+                                 entry point above.
   - data/knowledge-graph.json    self-contained graph: each node carries
                                  {name,title,summary,concepts,section,url,route,
                                  related} — index fields + the doc's fetchable URL
@@ -19,15 +30,34 @@ Outputs:
 Usage:  python3 tools/build_ai_export.py           # build + write
         python3 tools/build_ai_export.py --check    # verify outputs match on disk
 """
+import html as _html
 import importlib.util
 import json
 import os
+import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LIST = os.path.join(ROOT, 'list')
 LANG = 'ko'   # source-of-truth language; the graph is fetched from ko docs.
 GUIDE_NAME = 'ai-guide'   # the public traversal-contract doc (nonum meta page).
+
+# Content license — the legal signal that lets people and AI systems quote,
+# index, and reuse the wiki with confidence. Declared in robots.txt, llms.txt,
+# llms-full.txt and the site footer; keep the four in sync via this constant.
+LICENSE_NAME = 'CC BY 4.0'
+LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/'
+
+# AI/LLM crawlers we explicitly welcome in robots.txt. `User-agent: *` already
+# allows everyone; naming the big ones is a deliberate, machine-visible
+# invitation (some operators treat an explicit Allow as a stronger signal).
+AI_CRAWLERS = [
+    'GPTBot', 'OAI-SearchBot', 'ChatGPT-User',
+    'ClaudeBot', 'Claude-Web', 'Claude-User', 'anthropic-ai',
+    'PerplexityBot', 'Perplexity-User',
+    'Google-Extended', 'Applebot-Extended',
+    'CCBot', 'meta-externalagent', 'Bytespider', 'Amazonbot',
+]
 
 
 def _config():
@@ -140,14 +170,21 @@ def build_llms():
                  % (st['docCount'], st['conceptCount']))
     lines.append('')
 
+    lines.append('License: %s (%s) — 출처를 밝히면 자유롭게 인용·재사용할 수 있다.'
+                 % (LICENSE_NAME, LICENSE_URL))
+    lines.append('')
+
     lines.append('## 기계 판독용 (Machine-readable — AI는 여기부터)')
     lines.append('- [지식 그래프 (단일 파일)](%sdata/knowledge-graph.json): 모든 노드(문서)와 '
                  '엣지(related)·개념·문서 URL·통계를 담은 자기완결 JSON. **먼저 이 파일을 '
                  'fetch해 그래프를 순회하라.**' % BASE)
+    lines.append('- [전체 코퍼스 llms-full.txt](%sllms-full.txt): 모든 문서의 본문 텍스트를 '
+                 '한 파일에 담은 덤프 — fetch 한 번으로 위키 전체를 컨텍스트에 적재.' % BASE)
     lines.append('- [AI 순회 가이드](%sdocs/%s/ai/map/%s): 그래프를 어떻게 질의·순회·분석하는지의 '
                  '계약(노드·엣지·개념 조인·계층).' % (BASE, LANG, GUIDE_NAME))
     lines.append('- [지식 인덱스](%sdata/knowledge-index.%s.json) · [내비 트리](%slist) · '
-                 '[문서 날짜](%sdata/doc-dates.json)' % (BASE, LANG, BASE, BASE))
+                 '[문서 날짜](%sdata/doc-dates.json) · [Atom 피드](%sfeed.xml)'
+                 % (BASE, LANG, BASE, BASE, BASE))
     lines.append('')
 
     # Docs grouped by System, in the map's cluster order; leftover sections after.
@@ -184,6 +221,164 @@ def build_llms():
     return '\n'.join(lines).rstrip() + '\n'
 
 
+def _doc_dates():
+    """name -> {'c','u'} from data/doc-dates.json (git-derived, committed —
+    deterministic across builds, unlike wall-clock time)."""
+    p = os.path.join(ROOT, 'data', 'doc-dates.json')
+    try:
+        return json.load(open(p, encoding='utf-8')).get('docs', {})
+    except (OSError, ValueError):
+        return {}
+
+
+_TAG_RE = re.compile(r'<[^>]+>')
+
+
+def _doc_text(rel_path):
+    """HTML fragment -> readable plain text (tags stripped, entities unescaped,
+    whitespace collapsed per line). Unlike validate_docs.normalize_text this
+    keeps case and line structure — it feeds humans-and-LLMs, not comparators."""
+    fp = os.path.join(ROOT, 'docs', LANG, rel_path)
+    try:
+        raw = open(fp, encoding='utf-8').read()
+    except OSError:
+        return ''
+    # Block-ish tags become line breaks so headings/list items stay separated.
+    raw = re.sub(r'</(p|li|h[1-6]|tr|figcaption|blockquote|div)>', '\n', raw)
+    raw = re.sub(r'<(br|hr)\s*/?>', '\n', raw)
+    # Inline SVG diagrams: keep only their text labels (geometry is noise).
+    raw = re.sub(r'<svg[^>]*>.*?</svg>',
+                 lambda m: ' '.join(re.findall(r'<text[^>]*>([^<]*)</text>', m.group(0))),
+                 raw, flags=re.S)
+    text = _html.unescape(_TAG_RE.sub('', raw))
+    lines = [re.sub(r'[ \t]+', ' ', ln).strip() for ln in text.splitlines()]
+    out, blank = [], False
+    for ln in lines:
+        if ln:
+            out.append(ln)
+            blank = False
+        elif not blank:
+            out.append('')
+            blank = True
+    return '\n'.join(out).strip()
+
+
+def build_llms_full():
+    """llms-full.txt — the whole indexed corpus in one plain-text file.
+
+    Order mirrors llms.txt (cluster order, then leftovers) so the two files
+    read as summary/full versions of the same walk."""
+    bi = _load_build_index()
+    idx = bi.build(LANG)
+    _, folder_docs = bi.load_sections()
+    paths = load_paths()
+    by_name = {d['name']: d for d in idx['docs']}
+    title, desc = _site_meta()
+    st = idx['stats']
+
+    cluster_order = [s for s, _ in bi.CLUSTER_LABELS]
+    ordered_sections = [s for s in cluster_order if s in folder_docs]
+    for s in folder_docs:
+        if s and s not in ordered_sections:
+            ordered_sections.append(s)
+
+    lines = []
+    lines.append('# %s — full corpus (llms-full.txt)' % title)
+    lines.append('')
+    lines.append('> %s' % desc)
+    lines.append('> License: %s (%s) — cite the source when quoting.' % (LICENSE_NAME, LICENSE_URL))
+    lines.append('> %d documents · %d concepts. Summary/index version: %sllms.txt · '
+                 'Knowledge graph: %sdata/knowledge-graph.json'
+                 % (st['docCount'], st['conceptCount'], BASE, BASE))
+    for section in ordered_sections:
+        names = [n for n in folder_docs.get(section, []) if n in by_name]
+        for n in names:
+            d = by_name[n]
+            body = _doc_text(paths.get(n, n))
+            lines.append('')
+            lines.append('---')
+            lines.append('')
+            lines.append('# %s' % d['title'])
+            lines.append('Section: %s' % d['section'])
+            lines.append('URL: %s' % doc_url(n, paths))
+            lines.append('')
+            lines.append(body)
+    return '\n'.join(lines).rstrip() + '\n'
+
+
+def build_feed():
+    """feed.xml (Atom) — newest indexed docs by creation date.
+
+    Every timestamp comes from data/doc-dates.json; the channel <updated> is
+    the max doc `u`, never the build clock, so --check stays deterministic."""
+    bi = _load_build_index()
+    idx = bi.build(LANG)
+    paths = load_paths()
+    dates = _doc_dates()
+    title, desc = _site_meta()
+
+    docs = [d for d in idx['docs'] if d['name'] in dates]
+    docs.sort(key=lambda d: dates[d['name']]['c'], reverse=True)
+    docs = docs[:30]
+    if not docs:
+        return ''
+    feed_updated = max(dates[d['name']]['u'] for d in docs)
+
+    def esc(s):
+        return (s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'))
+
+    e = []
+    e.append('<?xml version="1.0" encoding="utf-8"?>')
+    e.append('<feed xmlns="http://www.w3.org/2005/Atom">')
+    e.append('  <title>%s</title>' % esc(title))
+    e.append('  <subtitle>%s</subtitle>' % esc(desc))
+    e.append('  <link href="%s"/>' % BASE)
+    e.append('  <link rel="self" href="%sfeed.xml"/>' % BASE)
+    e.append('  <id>%s</id>' % BASE)
+    e.append('  <updated>%s</updated>' % feed_updated)
+    e.append('  <rights>%s — %s</rights>' % (LICENSE_NAME, LICENSE_URL))
+    e.append('  <author><name>dewytear</name></author>')
+    for d in docs:
+        n = d['name']
+        e.append('  <entry>')
+        e.append('    <title>%s</title>' % esc(d['title']))
+        e.append('    <link href="%s#!%s"/>' % (BASE, n))
+        e.append('    <id>%s</id>' % doc_url(n, paths))
+        e.append('    <published>%s</published>' % dates[n]['c'])
+        e.append('    <updated>%s</updated>' % dates[n]['u'])
+        e.append('    <summary>%s</summary>' % esc(d['summary']))
+        e.append('    <category term="%s"/>' % esc(d['section']))
+        e.append('  </entry>')
+    e.append('</feed>')
+    return '\n'.join(e) + '\n'
+
+
+def build_robots():
+    """robots.txt — generated so BASE lives in config.json only.
+
+    Everyone is allowed; the named AI crawlers are an explicit, machine-visible
+    welcome, and the license line tells them reuse-with-attribution is fine."""
+    lines = []
+    lines.append('# All crawlers welcome — including AI/LLM crawlers (explicitly below).')
+    lines.append('# License: %s (%s) — quote and reuse with attribution.' % (LICENSE_NAME, LICENSE_URL))
+    lines.append('User-agent: *')
+    lines.append('Allow: /')
+    lines.append('')
+    for ua in AI_CRAWLERS:
+        lines.append('User-agent: %s' % ua)
+    lines.append('Allow: /')
+    lines.append('')
+    lines.append('Sitemap: %ssitemap.xml' % BASE)
+    lines.append('')
+    lines.append('# AI/LLM entry points')
+    lines.append('# Sign-post (llmstxt.org):        %sllms.txt' % BASE)
+    lines.append('# Full corpus (one fetch):        %sllms-full.txt' % BASE)
+    lines.append('# Self-contained knowledge graph: %sdata/knowledge-graph.json' % BASE)
+    lines.append('# Atom feed (newest docs):        %sfeed.xml' % BASE)
+    lines.append('# Traversal guide:                %sdocs/%s/ai/map/%s' % (BASE, LANG, GUIDE_NAME))
+    return '\n'.join(lines) + '\n'
+
+
 def build_sitemap():
     """sitemap.xml — homepage + machine files + every doc's raw fragment URL.
 
@@ -201,7 +396,8 @@ def build_sitemap():
                 order.append(n['name'])
     walk(tree if isinstance(tree, list) else tree.get('children', tree))
 
-    locs = [BASE, BASE + 'llms.txt', BASE + 'data/knowledge-graph.json']
+    locs = [BASE, BASE + 'llms.txt', BASE + 'llms-full.txt',
+            BASE + 'feed.xml', BASE + 'data/knowledge-graph.json']
     locs += [BASE + 'docs/' + LANG + '/' + paths[n] for n in order if n in paths]
     body = ''.join('  <url><loc>%s</loc></url>\n' % u for u in locs)
     return ('<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -232,5 +428,8 @@ if __name__ == '__main__':
     ok = True
     ok = _emit('data/knowledge-graph.json', _dump(build_graph()), check) and ok
     ok = _emit('llms.txt', build_llms(), check) and ok
+    ok = _emit('llms-full.txt', build_llms_full(), check) and ok
+    ok = _emit('feed.xml', build_feed(), check) and ok
+    ok = _emit('robots.txt', build_robots(), check) and ok
     ok = _emit('sitemap.xml', build_sitemap(), check) and ok
     sys.exit(0 if ok else 1)

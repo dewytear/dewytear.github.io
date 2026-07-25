@@ -155,3 +155,21 @@
   `mark`(번호 대신 기호), 브랜치 노드는 `title`(+`title_<lang>`)·`children`.
 
 검증: `python3 tools/validate_all.py` — name/path 계약·고아·깨진 링크를 ERROR로 강제.
+
+---
+
+## 4. AI 내보내기 산출물 (`tools/build_ai_export.py`)
+
+생성: `python3 tools/build_ai_export.py` (입력: knowledge-index + `list` + `data/doc-dates.json`
++ `config.json`). **결정적 빌드** — 같은 입력이면 같은 출력(`--check`가 CI에서 드리프트 차단).
+공통: 절대 URL의 호스트는 `config.json`의 `url`에서만 온다(하드코딩 금지). 라이선스는
+스크립트 상수 `LICENSE_NAME`/`LICENSE_URL`(CC BY 4.0) 한 곳에서 4개 산출물로 퍼진다.
+
+| 산출물 | 계약 |
+| --- | --- |
+| `llms.txt` | llmstxt.org 사인포스트. 위키 소개 + 라이선스 + 기계 파일 포인터 + System(클러스터 순) 그룹의 문서 목록(title·summary·원문 URL). |
+| `llms-full.txt` | 전체 코퍼스 덤프. 헤더(라이선스·문서/개념 수) 뒤 문서마다 `# 제목` / `Section:` / `URL:` / 본문 평문. 본문은 태그 제거·엔티티 unescape·행별 공백 접기(케이스 보존), 인라인 SVG는 `<text>` 라벨만 남긴다. 순서는 llms.txt와 동일한 순회. |
+| `feed.xml` | Atom 피드. 인덱스 문서를 `doc-dates.json`의 `c` 내림차순 상위 30편. entry: title·link(해시 라우트)·id(프래그먼트 URL)·published=`c`·updated=`u`·summary·category(section). 채널 `<updated>`=포함 문서의 max `u` — **빌드 시각 금지**(결정론). |
+| `robots.txt` | 생성물(수작업 금지). `User-agent: *` Allow + `AI_CRAWLERS` 명시 환영 + 라이선스 주석 + Sitemap + AI 진입점 주석(llms·llms-full·graph·feed·순회 가이드). |
+| `sitemap.xml` | 홈 + 기계 파일(llms·llms-full·feed·graph) + 전 문서 프래그먼트 URL(내비 순서). `<lastmod>` 없음(--check 결정론). |
+| `data/knowledge-graph.json` | 자기완결 그래프(§1의 docs + `url`/`route` 인라인 + stats). 소비: 외부 AI가 한 번의 fetch로 전체 순회. |

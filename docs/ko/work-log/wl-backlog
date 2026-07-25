@@ -49,13 +49,13 @@
 <h4>⑤ 독자 UX — 외부 위키 사례 조사(2026-07-11: gwern·simonw/til·Maggie Appleton·Quartz 등 7곳) 유래</h4>
 <p class="scn-sub">쓰는 사람·AI 인프라는 상위권, 격차는 <strong>읽는 사람을 위한 신호·마이크로 UX</strong>라는 진단. 기각분(임베딩 유사추천 — 개념 정직성 충돌·sliding panes — SPA 대수술·PARA 재편 — 계층 충돌)은 조사 리포트에 사유 기록.</p>
 <ul>
-    <li><code>LATER</code> <strong>RSS/Atom 피드</strong> — doc-dates.json+doc-entries 기반 빌드타임 feed.xml 생성(해시 라우트 URL). simonw/til·Quartz 전례. 새 글의 구독 배달 — 공유·정착률 장치.</li>
     <li><code>LATER</code> <strong>외부 링크 부패 검사</strong> — 주기 CI(주 1회 등, PR 게이트 아님 — 네트워크 오탐 방지)로 외부 href 404 리포트. 내부 <code>#!</code>는 <code>validate_routes</code>가 이미 ERROR로 차단, 외부만 무방비. gwern 전면 아카이빙은 과잉이라 기각, 검사만 축소 수용.</li>
 </ul>
 
 <h3>최근 완료</h3>
 <p class="scn-sub">완료 항목을 ✅ + Work Log 링크와 함께 잠시 여기 둡니다. 오래되면 걷어냅니다(원본은 해당 로그에).</p>
 <ul>
+    <li>&#9989; [독자 UX·AI] RSS/Atom 피드 + AI 이용성 확장 — <code>build_ai_export</code>가 feed.xml(doc-dates 기반, 빌드시각 무사용)·llms-full.txt(전체 코퍼스 덤프)·robots.txt(생성물 승격 + AI 크롤러 명시 환영)를 생성, 콘텐츠 라이선스 <strong>CC BY 4.0</strong> 선언(robots·llms·피드·JSON-LD 일관) <a href="#!wl-20260726-ops">wl-20260726 운영</a></li>
     <li>&#9989; [그래프] 본문 인용 백링크(<code>citedBy</code>) — build_index가 본문 <code>#!</code> 링크를 역인덱스해 &ldquo;이 문서를 인용한 문서&rdquo; 자동 표시(52/114 문서에 백링크, 기존 related·relations diff 0). schema.md·kgs-edges 동반 갱신 <a href="#!wl-20260724-features">wl-20260724 기능</a></li>
     <li>(정리) &ldquo;[메타] 3축+신선도 파일럿&rdquo; 제거 — READY 3건 검토에서 사용자 결정(2026-07-24): 독자가 사실상 본인뿐인 현 단계에선 라벨 유지비 대비 효용 낮음. 설계는 <a href="#!wl-20260711-ops">박제 명세</a>에 남아 있어 필요 시 되살림.</li>
     <li>(정리) &ldquo;[보안] 사설 위키 부트스트랩 실증&rdquo; 제거 — 같은 검토에서 사용자 결정(2026-07-24): 더존 실증 트랙 미착수 상태라 지금은 불필요(사설 repo 준비물도 미충족). 재개 시 wiki-plugin 경로 그대로 유효.</li>
