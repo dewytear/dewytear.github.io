@@ -6,6 +6,7 @@
     <li><strong>JS 질의 정합</strong> — <code>'#navigation &gt; ul &gt; li.nav-branch[data-cat]'</code> 2곳을 자손 셀렉터로 완화(카테고리 표시/숨김·설정 화면 정상 동작 확인).</li>
     <li><strong>고정 영역 여백 압축</strong> — 고정부가 커진 만큼 사이 간격을 절약: <code>#profile</code> 상하 패딩 16/14→10/8, 태그라인 위 11→6, <code>#navigation</code> 상단 20→10, 도구 아래 10→6. 스크롤 영역이 약 30px 넓어짐.</li>
     <li><strong>후속 — 간격 균질화·봉합 여백 제거</strong>: 처음 넣은 고정 KG 링크 마진 오버라이드(4/2)가 <strong>뒤에 오는 공유 <code>:is()</code> 규칙(12/10)에 밀려 무효</strong>였던 것을 CDP 계산 스타일로 확인(도구→KG 18px로 벌어짐). 오버라이드를 공유 규칙 뒤로 이동해 발효시키고(2/0), 첫 트리 항목의 12px 상단 리듬도 스크롤 첫 행에서만 2px로 — 도구→KG 6px(타 간격과 동일), 스크롤 하단 봉합 20→8px, 푸터 밀착 0px. <code>style.css ?v</code> →33. 이어서 태그라인 상/하 여백 균형(6/9px), 전체 펼침 시 항목 간격 압축(<code>li</code> 8→4px·서브폴더 제목 12/6→8/4·대분류 12/10→10/8) — 같은 높이에 더 많은 항목이 보이되 계층 가독성 유지. 하단 고정 영역(<code>#sidebar-foot</code>) 패딩도 14/18→8/14로 슬림화(높이 ~52→40px, 바닥 밀착 유지). <code>style.css ?v</code> →34.</li>
+    <li><strong>여백 전수 점검(CDP 실측)</strong> — 최종 체계: 항목 간 4px · 소간격(사진→태그라인, 구분선→도구, 도구→KG) 6px · 대분류 섹션 제목 위 10px(공통 리듬) · 스크롤 봉합·푸터 밀착 0px · 바깥 프레임 상단 20px(의도 유지) · 좌우 대칭(사진 20/20·트리 26/26). 특이도에 밀려 무효였던 first-child 오버라이드 잔여 규칙은 드리프트 방지 차원에서 제거.</li>
     <li><strong>검증</strong> — CDP 실렌더: <code>expandAll()</code> 후 <code>#nav-scroll.scrollTop=600</code> 상태에서 프로필·도구·Knowledge Graph 고정 + 트리만 스크롤 + 하단 푸터 유지 확인. <code>validate_all</code> ERROR 0.</li>
 </ul>
 
