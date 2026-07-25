@@ -24,8 +24,13 @@ Outputs:
                                  entry point above.
   - data/knowledge-graph.json    self-contained graph: each node carries
                                  {name,title,summary,concepts,section,url,route,
-                                 related} — index fields + the doc's fetchable URL
-                                 inlined, so one fetch is enough to traverse.
+                                 page,related} — index fields + the doc's fetchable
+                                 URL and its static snapshot page inlined, so one
+                                 fetch is enough to traverse.
+
+Sitemap note: documents are advertised as prerendered snapshot pages
+(/p/<name>/, built by tools/build_prerender.py) because those are real indexable
+pages; the raw fragments stay reachable through the graph's `url` field.
 
 Usage:  python3 tools/build_ai_export.py           # build + write
         python3 tools/build_ai_export.py --check    # verify outputs match on disk
@@ -116,6 +121,12 @@ def doc_url_lang(name, paths, lang):
     return BASE + 'docs/' + lang + '/' + paths[name] if name in paths else ''
 
 
+# 프리렌더 스냅샷 주소(tools/build_prerender.py가 생성) — 사람·검색엔진이
+# JS 없이 읽는 정식 페이지. 사이트맵이 광고하는 URL이자 그래프 노드의 page.
+def page_url(name, lang='ko'):
+    return BASE + 'p/' + ('' if lang == 'ko' else lang + '/') + name + '/'
+
+
 def _site_meta():
     cfg = _config()
     title = cfg.get('title') or 'Wiki'
@@ -139,6 +150,8 @@ def build_graph():
             'concepts': d['concepts'],
             'url': doc_url(d['name'], paths),
             'route': BASE + '#!' + d['name'],
+            # 정적 스냅샷(JS 없이 읽히는 페이지) — url(원문 조각)·route(SPA)와 병존.
+            'page': page_url(d['name']),
             'related': d['related'],
             'relations': d.get('relations', []),
             # 본문 #!링크의 역인덱스(백링크) — 인덱스와 동일한 계산 필드 통과.
@@ -190,6 +203,8 @@ def build_llms():
                  'fetch해 그래프를 순회하라.**' % BASE)
     lines.append('- [전체 코퍼스 llms-full.txt](%sllms-full.txt): 모든 문서의 본문 텍스트를 '
                  '한 파일에 담은 덤프 — fetch 한 번으로 위키 전체를 컨텍스트에 적재.' % BASE)
+    lines.append('- 정적 스냅샷 `%sp/<name>/`(영어는 `%sp/en/<name>/`): JS 없이 읽히는 '
+                 '문서 페이지 — 그래프 노드의 `page` 필드가 같은 주소를 가리킨다.' % (BASE, BASE))
     lines.append('- [AI 순회 가이드](%sdocs/%s/ai/map/%s): 그래프를 어떻게 질의·순회·분석하는지의 '
                  '계약(노드·엣지·개념 조인·계층).' % (BASE, LANG, GUIDE_NAME))
     lines.append('- [지식 인덱스](%sdata/knowledge-index.%s.json) · [내비 트리](%slist) · '
@@ -396,10 +411,14 @@ def build_robots():
 
 
 def build_sitemap():
-    """sitemap.xml — homepage + machine files + every doc's raw fragment URL.
+    """sitemap.xml — homepage + machine files + every doc's snapshot page.
 
-    Built from `list` (all leaf paths, incl. nonum meta pages) in nav order, so
-    new docs appear automatically. No <lastmod> (would churn --check daily)."""
+    Documents are advertised as their prerendered pages (/p/<name>/), not the
+    raw fragments: a snapshot is a real indexable page with title, description
+    and canonical, whereas the fragment is a body-less HTML chunk. Machines
+    that want the raw text still get it from llms-full.txt and the graph's
+    `url` field. Built from `list` in nav order, so new docs appear
+    automatically. No <lastmod> (would churn --check daily)."""
     paths = load_paths()
     tree = json.load(open(LIST, encoding='utf-8'))
     order = []
@@ -422,9 +441,9 @@ def build_sitemap():
     for n in order:
         if n not in paths:
             continue
-        ko = doc_url_lang(n, paths, 'ko')
+        ko = page_url(n, 'ko')
         if _has_lang(paths[n], 'en'):
-            en = doc_url_lang(n, paths, 'en')
+            en = page_url(n, 'en')
             alts = ('    <xhtml:link rel="alternate" hreflang="ko" href="%s"/>\n'
                     '    <xhtml:link rel="alternate" hreflang="en" href="%s"/>\n'
                     '    <xhtml:link rel="alternate" hreflang="x-default" href="%s"/>\n'

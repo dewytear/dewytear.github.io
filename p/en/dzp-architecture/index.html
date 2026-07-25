@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Platform Architecture</title>
+<meta name="description" content="A seven-layer pipeline sourced from GitLab — knowledge generation triggers, SHA-based incremental analysis, Context expansion, a knowledge integrity gate layer separate from the trigger, and real-time plus reconciliation redundancy">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/dzp-architecture/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/dzp-architecture/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/dzp-architecture/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/dzp-architecture/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Platform Architecture",
+ "description": "A seven-layer pipeline sourced from GitLab — knowledge generation triggers, SHA-based incremental analysis, Context expansion, a knowledge integrity gate layer separate from the trigger, and real-time plus reconciliation redundancy",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/dzp-architecture/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!dzp-architecture",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-06T02:35:24+09:00",
+ "dateModified": "2026-07-13T21:31:39+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!dzp-architecture");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!dzp-architecture">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/dzp-architecture/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Platform Architecture</h2>
+<p>The entire platform is built as a one-way pipeline whose source is GitLab.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 702 356" role="img" aria-label="Seven layers: Developer → GitLab → Knowledge Collector → Change Analyzer → AI Knowledge Curator → Wiki Repository → Knowledge Portal">
+    <rect class="d-box" x="170" y="8" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="31" text-anchor="middle">Developer</text>
+    <text class="d-sub" x="522" y="31" text-anchor="start">Java · SQL · Mapper · API · Test</text>
+    <rect class="d-box" x="170" y="58" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="81" text-anchor="middle">GitLab</text>
+    <text class="d-sub" x="522" y="81" text-anchor="start">Project · Commit · MR · Pipeline</text>
+    <rect class="d-box" x="170" y="108" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="131" text-anchor="middle">Knowledge Collector</text>
+    <text class="d-sub" x="522" y="131" text-anchor="start">SHA · Diff · MR collection</text>
+    <rect class="d-box" x="170" y="158" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="181" text-anchor="middle">Change Analyzer</text>
+    <text class="d-sub" x="522" y="181" text-anchor="start">Diff + related Source Context</text>
+    <rect class="d-box accent" x="170" y="208" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="231" text-anchor="middle">AI Knowledge Curator</text>
+    <text class="d-sub" x="522" y="231" text-anchor="start">Judge · Find · Update · Retire</text>
+    <rect class="d-box" x="170" y="258" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="281" text-anchor="middle">Company Wiki Repository</text>
+    <text class="d-sub" x="522" y="281" text-anchor="start">HTML · Index · Provenance</text>
+    <rect class="d-box soft" x="170" y="308" width="340" height="36" rx="9"/>
+    <text class="d-label sm" x="340" y="331" text-anchor="middle">Company Knowledge Portal</text>
+    <text class="d-sub" x="522" y="331" text-anchor="start">Employee Read-Only</text>
+    <line class="d-edge" x1="340" y1="44" x2="340" y2="51"/><polygon class="d-arrow" points="335,51 345,51 340,58"/>
+    <line class="d-edge" x1="340" y1="94" x2="340" y2="101"/><polygon class="d-arrow" points="335,101 345,101 340,108"/>
+    <line class="d-edge" x1="340" y1="144" x2="340" y2="151"/><polygon class="d-arrow" points="335,151 345,151 340,158"/>
+    <line class="d-edge" x1="340" y1="194" x2="340" y2="201"/><polygon class="d-arrow" points="335,201 345,201 340,208"/>
+    <line class="d-edge" x1="340" y1="244" x2="340" y2="251"/><polygon class="d-arrow" points="335,251 345,251 340,258"/>
+    <line class="d-edge" x1="340" y1="294" x2="340" y2="301"/><polygon class="d-arrow" points="335,301 345,301 340,308"/>
+</svg>
+<div class="d-cap">Development output flows downward and becomes knowledge. The only layers employees touch are the very top (development) and the very bottom (reading).</div>
+</div>
+
+<h3>Knowledge Generation Trigger — Only Changes Accepted as Done</h3>
+<p>Not every Commit is turned into knowledge immediately. During development, unfinished implementations, failed attempts, and temporary fixes are all mixed in. Only what passes the gate the organization accepts as done &mdash; <strong>a change that has gone through Review, been Merged into a baseline Branch, and whose Pipeline succeeded</strong> &mdash; becomes a target for analysis. Deciding what inside a completed change is knowledge and what is not (the criteria that exclude mechanical Refactoring, typos, and the like) is handled by the value assessment in <a href="/p/en/dzp-knowledge/">the knowledge management system</a>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 120" role="img" aria-label="Knowledge generation trigger: work on a feature branch goes through a merge request and review, and once it is merged into a baseline branch and the pipeline succeeds, the Curator runs">
+    <rect class="d-box" x="8" y="18" width="124" height="50" rx="9"/>
+    <text class="d-label sm" x="70" y="38" text-anchor="middle">Feature Branch</text>
+    <text class="d-sub" x="70" y="55" text-anchor="middle">In development</text>
+    <rect class="d-box" x="143" y="18" width="124" height="50" rx="9"/>
+    <text class="d-label sm" x="205" y="38" text-anchor="middle">Merge Request</text>
+    <text class="d-sub" x="205" y="55" text-anchor="middle">Code review</text>
+    <rect class="d-box" x="278" y="18" width="124" height="50" rx="9"/>
+    <text class="d-label sm" x="340" y="38" text-anchor="middle">Baseline Merge</text>
+    <text class="d-sub" x="340" y="55" text-anchor="middle">master · release/*</text>
+    <rect class="d-box" x="413" y="18" width="124" height="50" rx="9"/>
+    <text class="d-label sm" x="475" y="38" text-anchor="middle">Pipeline Success</text>
+    <text class="d-sub" x="475" y="55" text-anchor="middle">Quality gate</text>
+    <rect class="d-box accent" x="548" y="18" width="124" height="50" rx="9"/>
+    <text class="d-label sm" x="610" y="38" text-anchor="middle">Curator Runs</text>
+    <text class="d-sub" x="610" y="55" text-anchor="middle">Analysis begins</text>
+    <line class="d-edge" x1="132" y1="43" x2="136" y2="43"/><polygon class="d-arrow" points="136,38 136,48 143,43"/>
+    <line class="d-edge" x1="267" y1="43" x2="271" y2="43"/><polygon class="d-arrow" points="271,38 271,48 278,43"/>
+    <line class="d-edge" x1="402" y1="43" x2="406" y2="43"/><polygon class="d-arrow" points="406,38 406,48 413,43"/>
+    <line class="d-edge" x1="537" y1="43" x2="541" y2="43"/><polygon class="d-arrow" points="541,38 541,48 548,43"/>
+    <text class="d-sub" x="340" y="104" text-anchor="middle">A per-project knowledgeBranches setting analyzes only "changes accepted as done"</text>
+</svg>
+</div>
+
+<h3>Incremental Analysis — Never Reading Everything Again</h3>
+<p>Each project keeps the SHA of the last processed Commit, and GitLab Compare collects only the files changed since then, expanding the analysis to the related Context. Reduced AI Token usage, shorter processing time, no duplicate analysis, and reprocessing after a failure all come out of this state management.</p>
+<pre><code><span class="c"># per-project knowledge trigger·sync state (example)</span>
+{
+  "project": "scm/sales-order",
+  "knowledgeBranches": ["master", "release/*"],
+  "lastProcessedSha": "abc123def456",
+  "lastProcessedAt": "2026-07-06T14:32:00+09:00",
+  "status": "success"
+}</code></pre>
+
+<h3>Context-based Analysis, Not a Plain Diff</h3>
+<p>You cannot judge a business policy from the single line <code>if ("CREDIT_HOLD".equals(soStatus))</code>. On top of the change Diff, an Impact Expansion reads <strong>the entire Class · its callers · the related Mapper and SQL · the related Test · the related Config · the existing Wiki</strong> together, so what is extracted is real development knowledge rather than a plain code summary.</p>
+
+<h3>Knowledge Integrity Gates — A Layer Separate from the Trigger</h3>
+<p>Pipeline success is the gate at the <strong>entrance</strong> &mdash; it only decides "is this change qualified to be analyzed". The integrity of the knowledge repository <strong>itself</strong> is guarded by a separate gate layer, and that layer is inherited as-is from what the Reference Wiki already runs in CI (<a href="/p/en/kgs-gates/">How the Wiki Guards Itself</a>):</p>
+<ul>
+    <li><strong>State validation</strong> &mdash; broken links, duplicate IDs, orphan documents, missing index entries, and diagram bounds overflow are checked exhaustively on every commit (ERROR 0 is the merge condition).</li>
+    <li><strong>Drift validation (<code>--check</code>)</strong> &mdash; decides whether the index, graph, <code>llms.txt</code>, and sitemap match a deterministic rebuild byte for byte. The machine blocks the accident where the AI Curator fixes only the document and forgets to reflect it in the index.</li>
+    <li><strong>Companion gates</strong> &mdash; enforce, from the diff, the rule that "if you changed a document, the record (Work Log) and the knowledge-system update belong in the same change unit". The company KPI "knowledge reflection rate per Merge" is exactly this gate's pass rate (<a href="/p/en/dzp-roadmap/">Roadmap</a>).</li>
+    <li><strong>Review signals (non-blocking)</strong> &mdash; for judgment areas a machine cannot enforce (for example, whether knowledge relations were reviewed from multiple angles), a checklist is raised instead of a block, inviting human review.</li>
+</ul>
+<p>What the <strong>Index</strong> and <strong>Provenance</strong> of the Wiki Repository layer look like in concrete terms &mdash; which fields are already proven in practice and which fields are extended for company use &mdash; is covered by the next part, <a href="/p/en/dzp-knowledge/">the knowledge management system</a>.</p>
+
+<h3>Operational Stability — Duplication of Real-time and Reconciliation</h3>
+<p>Rather than relying only on real-time Webhook processing (Merge → Queue → Curator), a periodic Batch compares the current SHA in the Project Registry against the sync-state and reprocesses missed changes. It is a structure that copes with Webhook failures, Network errors, Queue drops, Curator outages, and transient API failures.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼 &middot; <span class="pr-k">Created</span> 2026-07-06 &middot; <span class="pr-k">Updated</span> 2026-07-13</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/dzp-core/">The Core of the Proposal — The Development Flow Stays as It Is, AI Does the Knowledge Work</a></li><li><a href="/p/en/dzp-overview/">Proposal Overview — A GitLab-Based AI Development Knowledge Platform</a></li><li><a href="/p/en/dzp-roadmap/">Rollout Roadmap — 4 Phases and the First PoC</a></li></ul>
+</nav>
+</body>
+</html>

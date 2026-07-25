@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install &amp; Start</title>
+<meta name="description" content="Install with the native installer, then run and authenticate in your project">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/install/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/install/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/install/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/install/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Install & Start",
+ "description": "Install with the native installer, then run and authenticate in your project",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/install/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!install",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-02T08:31:42+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!install");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!install">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/install/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Install &amp; Start</h2>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="Install flow: install with the native installer, go to your project, run claude, then authenticate">
+    <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="85" y="46" text-anchor="middle">① Install</text>
+    <text class="d-sub" x="85" y="63" text-anchor="middle">native installer</text>
+
+    <rect class="d-box" x="180" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="255" y="46" text-anchor="middle">② Go to project</text>
+    <text class="d-sub" x="255" y="63" text-anchor="middle">cd your-project</text>
+
+    <rect class="d-box" x="350" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="425" y="46" text-anchor="middle">③ Run claude</text>
+    <text class="d-sub" x="425" y="63" text-anchor="middle">claude</text>
+
+    <rect class="d-box accent" x="520" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="595" y="46" text-anchor="middle">④ Authenticate</text>
+    <text class="d-sub" x="595" y="63" text-anchor="middle">log in · API key</text>
+
+    <line class="d-edge" x1="160" y1="48" x2="176" y2="48"/><polygon class="d-arrow" points="172,43 180,48 172,53"/>
+    <line class="d-edge" x1="330" y1="48" x2="346" y2="48"/><polygon class="d-arrow" points="342,43 350,48 342,53"/>
+    <line class="d-edge" x1="500" y1="48" x2="516" y2="48"/><polygon class="d-arrow" points="512,43 520,48 512,53"/>
+</svg>
+</div>
+            <p>
+
+                The fastest way to get started is the native installer &mdash; a single command with no dependencies, and it keeps Claude Code updated automatically.
+                <ul>
+                    <li>macOS / Linux / WSL: <code>curl -fsSL https://claude.ai/install.sh | bash</code></li>
+                    <li>Windows (PowerShell): <code>irm https://claude.ai/install.ps1 | iex</code></li>
+                    <li>Go to your project: <code>cd your-project</code></li>
+                    <li>Launch it: <code>claude</code></li>
+                </ul>
+                Homebrew (<code>brew install --cask claude-code</code>) and WinGet are also supported. Installing with npm (<code>npm install -g @anthropic-ai/claude-code</code>, requires Node.js 22 or newer) still works and installs the same native binary.
+                On first launch, Claude Code walks you through authentication &mdash; you can log in with a Claude account (Pro/Max plan) or an Anthropic API key. After that, just describe what you want in plain language, for example: <em>"explain the auth flow"</em> or <em>"add a dark mode toggle and run the tests"</em>.
+                A few handy startup flags:
+                <ul>
+                    <li><code>claude</code> &mdash; start an interactive session</li>
+                    <li><code>claude "your prompt"</code> &mdash; run a one-off task</li>
+                    <li><code>claude -c</code> &mdash; continue the most recent conversation</li>
+                    <li><code>claude --help</code> &mdash; list all options</li>
+                </ul>
+
+            </p>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Introduction &middot; <span class="pr-k">Created</span> 2026-07-02 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/omc-install/">Installation</a></li><li><a href="/p/en/ccb-terminal/">Basic Terminal Commands</a></li></ul>
+</nav>
+</body>
+</html>

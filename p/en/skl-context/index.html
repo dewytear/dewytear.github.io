@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Context Window and the Tool Problem</title>
+<meta name="description" content="Explains the limits of the context window and the problem of tools consuming context.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/skl-context/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/skl-context/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/skl-context/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/skl-context/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "The Context Window and the Tool Problem",
+ "description": "Explains the limits of the context window and the problem of tools consuming context.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/skl-context/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!skl-context",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:20:26+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!skl-context");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!skl-context">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/skl-context/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>The Context Window and the Tool Problem</h2>
+<p>To understand how skills work, you have to start with the <strong>context window</strong>.</p>
+
+<h3>The context window</h3>
+<p>The context window is the <strong>size of the input</strong> fed into an LLM. (Because the output goes back into the input as things continue, it includes the output too.) It holds not only the user's question but all of the following.</p>
+<ul>
+    <li>Basic information (who you are, what today's date is, what you should do and what you must not do)</li>
+    <li>Instructions · few-shot examples · output format · context · memory</li>
+    <li><strong>Tool</strong> definitions · the chat history (which keeps getting added to as it grows longer)</li>
+</ul>
+<p>Older LLMs had contexts of only 2K to 8K (GPT-3 about 2K, early GPT-4 8K), but the models used in Claude Code today take 200K by default, and some models (Sonnet 4.6, Opus 4.6 and later) take up to <strong>1M (a million) tokens</strong>. Bigger is not simply better, though. <strong>Once the context starts filling up the LLM gets anxious</strong>, and it will refuse to do the work or wrap it up strangely.</p>
+
+<div class="note">
+    <span class="nh">clear · compact — clearing your desk</span>
+    Claude Code's <code>/clear</code>·<code>/compact</code> are commands that shrink or empty the current context to get ready for new work. Think of it as the difference between working at a desk that is a mess and <strong>tidying it up completely before you start</strong>.
+</div>
+
+<h3>Tools eat up the context</h3>
+<p>A skill is, in the end, a kind of tool. But open up a single tool and it is a <strong>complex JSON spec</strong> listing the function, its arguments, when to use it, units, and so on. Each one is fairly large, so <strong>the context is ready to burst once you get past just a few tools</strong>. This is why "you cannot connect any more" comes up when you hook up several MCP servers and connectors.</p>
+
+<div class="note">
+    <span class="nh">The trunk analogy</span>
+    Tools are like a car <strong>trunk</strong>. Its size is limited, so you cannot fit all of your camping gear in. There are two options — buy a bigger trunk, or cut the load down as much as you can. Coding agents took the latter route, solving the problem by <strong>cutting down to six tools and handing over an execution environment along with them</strong>, and <strong>skills</strong> emerged on top of that.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Skill &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/skl-progressive/">Progressive Loading (the Core Principle of Skills)</a></li><li><a href="/p/en/skl-wrap/">Wrap-up — Engineering Layers and Q&amp;A</a></li><li><a href="/p/en/skl-strengths/">The Strengths of Skills</a></li></ul>
+</nav>
+</body>
+</html>

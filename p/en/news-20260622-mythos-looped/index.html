@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anthropic’s Mythos and the Looped Transformer — reading the Heisenberg column</title>
+<meta name="description" content="Reads the Heisenberg column and sorts out what a Looped Transformer is, separating confirmed fact from conjecture in the claims about Mythos and the upside for Korean companies.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/news-20260622-mythos-looped/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260622-mythos-looped/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260622-mythos-looped/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260622-mythos-looped/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Anthropic’s Mythos and the Looped Transformer — reading the Heisenberg column",
+ "description": "Reads the Heisenberg column and sorts out what a Looped Transformer is, separating confirmed fact from conjecture in the claims about Mythos and the upside for Korean companies.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/news-20260622-mythos-looped/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260622-mythos-looped",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-07T22:59:48+09:00",
+ "dateModified": "2026-07-07T22:59:48+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!news-20260622-mythos-looped");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260622-mythos-looped">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/news-20260622-mythos-looped/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Anthropic&rsquo;s Mythos and the Looped Transformer — reading the Heisenberg column</h2>
+<p>Starting from &ldquo;Why Anthropic&rsquo;s Mythos Is Good News for Korean Companies,&rdquo; a column contributed to the science and technology outlet <strong>Heisenberg</strong>, this document sorts out what the core technology the article points to — the <strong>Looped Transformer</strong> — actually is, and how far the claim that it is &ldquo;good news for Korean companies&rdquo; is <strong>confirmed fact</strong> and where it becomes <strong>conjecture</strong>. Because the purpose of this piece is not to mix fact with conjecture, what is verified and what is commentary or conjecture are marked section by section.</p>
+
+<div class="note">
+    <span class="nh">Article info (sources)</span>
+    · Title: <strong>Why Anthropic&rsquo;s Mythos Is Good News for Korean Companies</strong><br>
+    · Outlet: <strong>Heisenberg</strong> (heisenberg.kr) · Author: <strong>DION</strong> · Published: <strong>2026-06-22</strong><br>
+    · Original: <a href="https://heisenberg.kr/claude-mythos/" target="_blank" rel="noopener">heisenberg.kr/claude-mythos</a> — the body is behind a paid membership; the quotation below is excerpted from the publicly available &ldquo;one-minute summary.&rdquo;
+</div>
+
+<h3>The article&rsquo;s argument</h3>
+<p>The article holds that inside &ldquo;Mythos&rdquo; — Anthropic&rsquo;s top-end model, parts of which were sealed off because it was too powerful — there is a <strong>Looped Transformer</strong>, and that because of the efficiency of that structure, <strong>top-grade AI that runs directly on a device without the cloud</strong> becomes possible, which is an opportunity for Korean companies strong in device manufacturing. The key passage of the public summary reads as follows (quoted verbatim).</p>
+<blockquote>&ldquo;The technology said to be hidden inside it is the &lsquo;Looped Transformer.&rsquo; Where existing AI solves problems by writing its intermediate thoughts down as text, this structure writes nothing down and chews over the same circuit dozens of times purely in its head. That makes it faster and cuts token costs too. In particular, one recent paper proved mathematically for the first time that with this approach a model with half the parameters nearly reaches the level of an ordinary model. Half the size for the same performance means top-level AI can run directly, without the cloud.&rdquo;</blockquote>
+<p class="scn-sub">— Heisenberg, &ldquo;Why Anthropic&rsquo;s Mythos Is Good News for Korean Companies,&rdquo; one-minute summary (2026-06-22)</p>
+
+<h3>What a Looped Transformer is — a structure that repeats one block</h3>
+<p>An ordinary transformer creates depth by <strong>stacking N layers, each with different weights</strong>. A Looped Transformer does the opposite: it <strong>repeats a single weight-sharing block N times</strong>, feeding that block&rsquo;s output back in as its input. Instead of stacking new layers it passes through the same circuit many times, so <strong>computational depth is decoupled from parameter count</strong> — a small model can imitate a far deeper stack.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 342" role="img" aria-label="A standard transformer stacks layers with different weights, while a Looped Transformer repeats one weight-sharing block many times">
+    <text class="d-label sm" x="180" y="24" text-anchor="middle">Standard — stacking distinct layers</text>
+    <rect class="d-box soft" x="105" y="286" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="305" text-anchor="middle">Input embedding</text>
+    <line class="d-edge" x1="180" y1="286" x2="180" y2="272"/><polygon class="d-arrow" points="176,274 180,268 184,274"/>
+    <rect class="d-box" x="105" y="240" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="259" text-anchor="middle">Layer &#952;&#8321;</text>
+    <line class="d-edge" x1="180" y1="240" x2="180" y2="226"/><polygon class="d-arrow" points="176,228 180,222 184,228"/>
+    <rect class="d-box" x="105" y="194" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="213" text-anchor="middle">Layer &#952;&#8322;</text>
+    <line class="d-edge" x1="180" y1="194" x2="180" y2="180"/><polygon class="d-arrow" points="176,182 180,176 184,182"/>
+    <rect class="d-box" x="105" y="148" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="167" text-anchor="middle">Layer &#952;&#8323;</text>
+    <line class="d-edge" x1="180" y1="148" x2="180" y2="134"/><polygon class="d-arrow" points="176,136 180,130 184,136"/>
+    <rect class="d-box" x="105" y="102" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="121" text-anchor="middle">Layer &#952;&#8324;</text>
+    <line class="d-edge" x1="180" y1="102" x2="180" y2="88"/><polygon class="d-arrow" points="176,90 180,84 184,90"/>
+    <rect class="d-box soft" x="105" y="56" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="75" text-anchor="middle">Output</text>
+    <text class="d-sub" x="180" y="332" text-anchor="middle">depth = parameter count (a different &#952; per layer)</text>
+
+    <line class="d-edge dash" x1="360" y1="50" x2="360" y2="300"/>
+
+    <text class="d-label sm" x="540" y="24" text-anchor="middle">Looped — repeating one block</text>
+    <rect class="d-box soft" x="465" y="286" width="150" height="30" rx="8"/><text class="d-label sm" x="540" y="305" text-anchor="middle">Embedding (prelude)</text>
+    <line class="d-edge accent" x1="540" y1="286" x2="540" y2="246"/><polygon class="d-arrow accent" points="536,248 540,242 544,248"/>
+    <rect class="d-box accent" x="470" y="150" width="140" height="94" rx="12"/><text class="d-label" x="540" y="192" text-anchor="middle">Shared block R</text><text class="d-sub" x="540" y="212" text-anchor="middle">same &#952; reused</text>
+    <path class="d-edge accent" d="M610 172 C672 168, 672 226, 612 224"/><polygon class="d-arrow accent" points="618,220 610,225 617,230"/>
+    <text class="d-sub" x="686" y="200" text-anchor="middle" transform="rotate(90 686 200)">&#215;N loops</text>
+    <line class="d-edge accent" x1="540" y1="150" x2="540" y2="112"/><polygon class="d-arrow accent" points="536,114 540,108 544,114"/>
+    <rect class="d-box soft" x="465" y="80" width="150" height="30" rx="8"/><text class="d-label sm" x="540" y="99" text-anchor="middle">Output (coda)</text>
+    <text class="d-sub" x="540" y="332" text-anchor="middle">depth &#8800; parameter count · looping in latent space</text>
+</svg>
+<div class="d-cap">The standard stacks <strong>different layers once each</strong>; the looped version passes through <strong>the same single block many times</strong>.</div>
+</div>
+
+<p>The operation laid out by recent research (the <em>Huginn</em> line in the sources below) has three stages: <strong>Prelude → Recurrent Block → Coda</strong>. The prelude embeds the input into latent space (<code>e</code>), the recurrent block updates the latent state <code>s</code> several times <strong>while mixing the input <code>e</code> back in at every iteration</strong>, and the coda turns the final state back into output. The number of iterations is not fixed but <strong>can vary with the difficulty of the input</strong> (adaptive depth), so the harder the problem, the longer it &ldquo;chews things over&rdquo; internally.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="How a Looped Transformer works: the prelude embeds the input, the recurrent block updates the latent state several times while re-injecting the input at each iteration, and then the coda produces the output">
+    <rect class="d-box soft" x="16" y="104" width="96" height="44" rx="9"/><text class="d-label sm" x="64" y="130" text-anchor="middle">Input token</text>
+    <line class="d-edge" x1="112" y1="126" x2="146" y2="126"/><polygon class="d-arrow" points="146,121 154,126 146,131"/>
+    <rect class="d-box" x="154" y="104" width="104" height="44" rx="9"/><text class="d-label sm" x="206" y="124" text-anchor="middle">P · Prelude</text><text class="d-sub" x="206" y="140" text-anchor="middle">embedding e</text>
+    <line class="d-edge accent" x1="258" y1="126" x2="300" y2="126"/><polygon class="d-arrow accent" points="300,121 308,126 300,131"/>
+    <rect class="d-box accent" x="308" y="78" width="164" height="96" rx="12"/><text class="d-label" x="390" y="118" text-anchor="middle">R · Recurrent block</text><text class="d-sub" x="390" y="138" text-anchor="middle">latent state s&#7522; loops</text>
+    <path class="d-edge accent" d="M472 100 C524 92, 524 60, 400 60 C360 60, 344 68, 340 76"/><polygon class="d-arrow accent" points="336,70 340,80 346,73"/>
+    <text class="d-sub" x="418" y="52" text-anchor="middle">&#215;N · weight sharing</text>
+    <path class="d-edge accent dash" d="M206 148 C206 200, 300 200, 340 174"/><polygon class="d-arrow accent" points="334,170 342,172 336,180"/>
+    <text class="d-sub" x="250" y="212" text-anchor="middle">input e re-injected each loop</text>
+    <line class="d-edge dash" x1="472" y1="150" x2="472" y2="196"/><polygon class="d-arrow" points="468,190 472,198 476,190"/>
+    <text class="d-sub" x="560" y="200" text-anchor="middle">stop if KL &lt; &#949; (adaptive depth)</text>
+    <line class="d-edge accent" x1="472" y1="118" x2="512" y2="118"/><polygon class="d-arrow accent" points="512,113 520,118 512,123"/>
+    <rect class="d-box" x="520" y="96" width="96" height="44" rx="9"/><text class="d-label sm" x="568" y="116" text-anchor="middle">C · Coda</text><text class="d-sub" x="568" y="132" text-anchor="middle">output</text>
+    <line class="d-edge" x1="616" y1="118" x2="650" y2="118"/><polygon class="d-arrow" points="650,113 658,118 650,123"/>
+    <rect class="d-box soft" x="658" y="96" width="54" height="44" rx="9"/><text class="d-label sm" x="685" y="122" text-anchor="middle">Next</text>
+</svg>
+<div class="d-cap">Looping in latent space (<code>s</code>) — chewing thoughts over internally <strong>without writing them down as text (tokens)</strong>. The harder it is, the more it loops.</div>
+</div>
+
+<p>This is the point the article means by &ldquo;it does not write its intermediate thoughts down as text.&rdquo; Unlike today&rsquo;s reasoning models, which spell their thinking out at length as <strong>text (a chain of thought)</strong>, the looped approach refines a <strong>continuous latent state</strong> by repetition. As a result, reported advantages are that (1) it emits fewer output tokens, cutting <strong>token cost</strong>, (2) it does not need separate chain-of-thought training data, and (3) deep reasoning is possible even with a small <strong>context window</strong>. The article&rsquo;s phrase &ldquo;similar performance with half the parameters&rdquo; also connects to the results of this line of research: weights are shared to save parameters, while the effective depth is made up for by repetition.</p>
+
+<h3>Why is it &lsquo;good news for Korean companies&rsquo; <span class="scn-sub">— the article&rsquo;s argument (commentary and conjecture)</span></h3>
+<p>The article&rsquo;s chain of inference goes like this: similar performance with half the parameters → top-grade AI can run <strong>directly on the device (on-device)</strong> without a heavy cloud → this favors Korea (Samsung, LG, Hyundai), which is strong at <strong>making</strong> smartphones, cars, and robots. The view is that Korea can play to its strengths on the <strong>device</strong> side rather than in the competition over cloud infrastructure.</p>
+<div class="note warn">
+    <span class="nh">This part is &lsquo;commentary&rsquo;</span>
+    &ldquo;Good news for Korean companies&rdquo; is not Anthropic&rsquo;s official position but <strong>the article&rsquo;s interpretation</strong>. In fact, the point that the top-performing model (Fable 5) has become <strong>generally available on the major clouds</strong> — AWS, Google Cloud, Microsoft and others — so that any company can use it, together with the close Korea&ndash;Anthropic ties in the &ldquo;confirmed facts&rdquo; below, can be seen as grounds for this argument. On the other hand, <strong>no official material supporting on-device deployment of a Mythos-class model has been confirmed.</strong>
+</div>
+
+<h3>Confirmed facts</h3>
+<ul>
+    <li><strong>Claude Fable 5 and Mythos 5 released</strong> (2026-06-09) — the two are the <strong>same model</strong>, except that Mythos relaxes some dual-use (cyber, bio) safeguards and is provided <strong>only to a small number of vetted organizations</strong> (Project Glasswing). Fable 5 is generally available through the API and the major clouds.</li>
+    <li><strong>Export controls and their lifting</strong> — on 2026-06-12 the United States applied export controls to Fable 5 and Mythos 5, halting them for about 19 days; the controls were lifted and redistribution resumed on 2026-06-30&ndash;07-01.</li>
+    <li><strong>Samsung Electronics and SK hynix invest in Anthropic&rsquo;s Series H</strong> (reported late May 2026) — participating as strategic infrastructure partners.</li>
+    <li><strong>Samsung Foundry in talks to manufacture Anthropic&rsquo;s custom AI chip</strong> (reported 2026-07-03) — covering a 2nm process and advanced packaging.</li>
+</ul>
+<p class="scn-sub">→ The <strong>firmest grounds</strong> for the &ldquo;good news for Korean companies&rdquo; argument are these actual partnership and investment flows, rather than the on-device hypothesis.</p>
+
+<h3>How far is it fact <span class="scn-sub">— conjecture and unconfirmed</span></h3>
+<div class="note warn">
+    <span class="nh">&ldquo;Mythos = Looped Transformer&rdquo; is not officially confirmed</span>
+    Anthropic has never disclosed that Mythos uses a <strong>recurrent-depth (looped) structure</strong>. This connection is a <strong>hypothesis</strong> that came out of things like <strong>OpenMythos</strong> (Kye Gomez), a community project that <strong>conjecturally reconstructs</strong> the Mythos architecture from public literature, and those reports themselves state that it is &ldquo;unconfirmed.&rdquo; The article&rsquo;s premise (that there is a looped structure inside Mythos) should therefore be read as <strong>interesting conjecture</strong>, while <strong>the Looped Transformer technology itself is verified as real by the papers below</strong>.
+</div>
+
+<h3>Sources</h3>
+<p class="scn-sub"><strong>Articles and news</strong></p>
+<ul>
+    <li>Heisenberg, &ldquo;Why Anthropic&rsquo;s Mythos Is Good News for Korean Companies&rdquo; (DION, 2026-06-22) — <a href="https://heisenberg.kr/claude-mythos/" target="_blank" rel="noopener">heisenberg.kr/claude-mythos</a></li>
+    <li>Anthropic, &ldquo;Claude Fable 5 and Claude Mythos 5&rdquo; (2026-06-09) — <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank" rel="noopener">anthropic.com</a></li>
+    <li>CNBC, report on the lifting of export controls (2026-06-30) — <a href="https://www.cnbc.com/2026/06/30/anthropic-says-trump-admin-has-lifted-export-controls-on-claude-fable-5-and-mythos-5.html" target="_blank" rel="noopener">cnbc.com</a></li>
+    <li>Korea Herald, Samsung and SK hynix investing in Anthropic — <a href="https://www.koreaherald.com/article/10758856" target="_blank" rel="noopener">koreaherald.com</a></li>
+    <li>KED Global, Samsung Foundry and Anthropic in custom chip talks (2026-07-03) — <a href="https://www.kedglobal.com/artificial-intelligence/newsView/ked202607030001" target="_blank" rel="noopener">kedglobal.com</a></li>
+</ul>
+<p class="scn-sub"><strong>Looped Transformer — verified academic material</strong></p>
+<ul>
+    <li>Geiping et al., &ldquo;Scaling up Test-Time Compute with Latent Reasoning: A Recurrent Depth Approach&rdquo; (Huginn, 2025) — <a href="https://arxiv.org/abs/2502.05171" target="_blank" rel="noopener">arXiv:2502.05171</a></li>
+    <li>Yang, Lee, Nowak, Papailiopoulos, &ldquo;Looped Transformers are Better at Learning Learning Algorithms&rdquo; (2023/24) — <a href="https://arxiv.org/abs/2311.12424" target="_blank" rel="noopener">arXiv:2311.12424</a></li>
+    <li>Giannou et al., &ldquo;Looped Transformers as Programmable Computers&rdquo; (2023) — <a href="https://arxiv.org/abs/2301.13196" target="_blank" rel="noopener">arXiv:2301.13196</a></li>
+    <li>&ldquo;Looped Transformers for Length Generalization&rdquo; (2024) — <a href="https://arxiv.org/abs/2409.15647" target="_blank" rel="noopener">arXiv:2409.15647</a></li>
+    <li>Dehghani et al., &ldquo;Universal Transformers&rdquo; (ICLR 2019, the ancestor) — <a href="https://arxiv.org/abs/1807.03819" target="_blank" rel="noopener">arXiv:1807.03819</a></li>
+</ul>
+<p class="scn-sub"><strong>Mythos architecture conjecture (community, unconfirmed)</strong></p>
+<ul>
+    <li>OpenMythos (Kye Gomez) — a conjectural reconstruction of the Mythos structure from public literature — <a href="https://github.com/kyegomez/OpenMythos" target="_blank" rel="noopener">github.com/kyegomez/OpenMythos</a></li>
+</ul>
+
+<div class="note">
+    <span class="nh">This document&rsquo;s stance</span>
+    The <strong>technology</strong> called the Looped Transformer is confirmed to be real by papers, and the <strong>partnership and investment</strong> between Anthropic and Korean companies are facts too. But it is more accurate to read &ldquo;Mythos uses that technology&rdquo; and &ldquo;therefore it is good news for Korea&rdquo; separately, as <strong>conjecture and commentary rather than official confirmation</strong>.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">Created</span> 2026-07-07 &middot; <span class="pr-k">Updated</span> 2026-07-07</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/news-20260724-claude-opus-5/">Claude Opus 5 — A Near-Fable at Half the Price Has Arrived</a></li><li><a href="/p/en/news-20260716-kimi-k3/">Kimi K3 — a 2.8-trillion-parameter open-weight model reaches the frontier</a></li><li><a href="/p/en/welcome/">Welcome</a></li></ul>
+</nav>
+</body>
+</html>

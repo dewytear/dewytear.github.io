@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reviewing the Generated Result — Agents · Skills · Orchestrator</title>
+<meta name="description" content="Reviews the agent, skill, and orchestrator structure the harness generated.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/hns-review/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hns-review/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hns-review/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hns-review/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Reviewing the Generated Result — Agents · Skills · Orchestrator",
+ "description": "Reviews the agent, skill, and orchestrator structure the harness generated.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/hns-review/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hns-review",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:09:56+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!hns-review");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hns-review">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/hns-review/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Reviewing the Generated Result — Agents · Skills · Orchestrator</h2>
+<div class="diagram">
+<svg viewBox="0 0 680 220" role="img" aria-label="The generated .claude architecture: the orchestrator on top coordinates the agents below it, skills are injected, and the outputs collect in the shared _workspace">
+    <rect class="d-box accent" x="255" y="10" width="170" height="46" rx="10"/>
+    <text class="d-label" x="340" y="38" text-anchor="middle">Orchestrator</text>
+
+    <rect class="d-box" x="44" y="96" width="160" height="52" rx="10"/>
+    <text class="d-label sm" x="124" y="126" text-anchor="middle">Agent A</text>
+
+    <rect class="d-box" x="260" y="96" width="160" height="52" rx="10"/>
+    <text class="d-label sm" x="340" y="126" text-anchor="middle">Agent B</text>
+
+    <rect class="d-box" x="476" y="96" width="160" height="52" rx="10"/>
+    <text class="d-label sm" x="556" y="126" text-anchor="middle">Agent C</text>
+
+    <line class="d-edge" x1="340" y1="56" x2="124" y2="94"/><polygon class="d-arrow" points="119,88 129,88 124,95"/>
+    <line class="d-edge" x1="340" y1="56" x2="340" y2="94"/><polygon class="d-arrow" points="335,88 345,88 340,95"/>
+    <line class="d-edge" x1="340" y1="56" x2="556" y2="94"/><polygon class="d-arrow" points="551,88 561,88 556,95"/>
+
+    <circle class="d-node c" cx="212" cy="112" r="5"/>
+    <circle class="d-node c" cx="212" cy="132" r="5"/>
+    <circle class="d-node c" cx="428" cy="112" r="5"/>
+    <circle class="d-node c" cx="428" cy="132" r="5"/>
+    <circle class="d-node c" cx="644" cy="112" r="5"/>
+    <circle class="d-node c" cx="644" cy="132" r="5"/>
+    <text class="d-sub" x="124" y="86" text-anchor="middle">● Injected skills</text>
+
+    <rect class="d-box soft" x="200" y="168" width="280" height="44" rx="10"/>
+    <text class="d-label sm" x="340" y="195" text-anchor="middle">_workspace (shared outputs)</text>
+
+    <line class="d-edge dash" x1="124" y1="148" x2="232" y2="168"/><polygon class="d-arrow" points="229.8,157 239.8,162 228.8,168"/>
+    <line class="d-edge dash" x1="340" y1="148" x2="340" y2="166"/><polygon class="d-arrow" points="335,162 345,162 340,168"/>
+    <line class="d-edge dash" x1="556" y1="148" x2="448" y2="168"/><polygon class="d-arrow" points="451.9,157 440.9,162 450.9,168"/>
+</svg>
+<div class="d-cap">The orchestrator coordinates the agents, skills get injected, and the outputs collect in _workspace.</div>
+</div>
+<p>Let's look at what gets created once the harness is composed. Claude Code creates the agents, skills, and so on <strong>under the <code>.claude</code> folder</strong>.</p>
+
+<h3>The agents that were created (example)</h3>
+<p>For the "national R&D budget · post-PBS" task, this was the team that got composed.</p>
+<ul>
+    <li><strong>Quantitative R&D budget analyst</strong> &mdash; breaks the budget allocation · adjustment plan down by ministry · program · year, and tracks changes in the government/government-funded ratio.</li>
+    <li><strong>Governance · finance expert for government-funded institutions</strong> &mdash; derives the strategy for the transition from PBS to a mission-oriented system.</li>
+    <li><strong>National R&D policy researcher</strong> &mdash; researches budget · policy documents · press releases · NIS/NSTC agenda items and the like from primary sources.</li>
+    <li><strong>Report writing agent</strong> &mdash; gathers the preceding outputs and writes them up as a report.</li>
+    <li><strong>QA reviewer</strong> &mdash; cross-checks not simple typos but <strong>claim–source consistency, numerical consistency, and the logical connection of the recommendations</strong>.</li>
+</ul>
+
+<h3>The skills that get injected</h3>
+<p>Agents alone are not enough, so specialized <strong>skills</strong> are created and injected. For example: a quantitative budget analysis method (standard forms · calculation rules · checklist), citation verification for policy reports (verification axes · priorities), and a government policy report writing format (table of contents).</p>
+
+<h3>Orchestrator (always one)</h3>
+<p>It is the <strong>PM role</strong> that coordinates the agents so they do not wander off. It does not look into the detailed work; it only watches "are the agents doing their jobs well". From Phase 0 on, <strong>the workflow is planned in advance</strong> as to which agent each stage needs. (It feels similar to Claude Code's plan mode.)</p>
+
+<h3>Review and getting ready to run</h3>
+<ul>
+    <li>The review step is mandatory. If you give <strong>feedback</strong> like "add more agents", "this does not match the intent, fix it", or "revise the harness", agents/skills are newly created or reinforced.</li>
+    <li>There is an issue where agents <strong>are not loaded dynamically</strong>. If you do not see them in <code>/agents</code>, they load once you <code>/exit</code> and come back in.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">The _workspace folder</span>
+    When you run with the harness, a <code>_workspace</code> folder appears where the <strong>intermediate outputs</strong> the agents produced collect &mdash; the first-pass research, the budget analysis, the QA report (critical · major · minor issues) and its fixes, the limitations, and even the <strong>supporting sources</strong>. Because it is source-based, hallucination is greatly reduced.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Harness &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/hnp-concepts/">Core Concepts Made Easy</a></li><li><a href="/p/en/hnp-verify/">Verification · Quality and _workspace</a></li><li><a href="/p/en/hns-anatomy/">Harness Composition and Effects</a></li><li><a href="/p/en/hns-usecases/">Use Cases — From Content to Research</a></li></ul>
+</nav>
+</body>
+</html>

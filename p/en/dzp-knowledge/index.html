@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knowledge Management System — Assessment · Structure · Connection · Tracking · Trust · Lifecycle</title>
+<meta name="description" content="The atomic structure of knowledge (a proven index core plus identifiers·sources·trust extensions) and two layers of connection (computed related, five declared relations, the ai-proposed approval flow) — value assessment, cumulative updates, Identifier search, Provenance, trust levels, and the supersedes lifecycle">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/dzp-knowledge/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/dzp-knowledge/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/dzp-knowledge/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/dzp-knowledge/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Knowledge Management System — Assessment · Structure · Connection · Tracking · Trust · Lifecycle",
+ "description": "The atomic structure of knowledge (a proven index core plus identifiers·sources·trust extensions) and two layers of connection (computed related, five declared relations, the ai-proposed approval flow) — value assessment, cumulative updates, Identifier search, Provenance, trust levels, and the supersedes lifecycle",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/dzp-knowledge/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!dzp-knowledge",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-06T02:35:24+09:00",
+ "dateModified": "2026-07-13T21:31:39+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!dzp-knowledge");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!dzp-knowledge">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/dzp-knowledge/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Knowledge Management System — Assessment · Structure · Connection · Tracking · Trust · Lifecycle</h2>
+<p>If the pipeline is what produces knowledge, this part covers <strong>what structure that knowledge is held in, how it is connected, and how it keeps its trustworthiness</strong>. The structure described here is not imagination &mdash; the Reference Wiki built for advance validation runs at a scale of 107 documents · 337 unique concepts · 349 automatic related edges · 107 typed knowledge relations as of 2026-07, and its <strong>schema, verified in real operation</strong>, is taken as the core, extended backward-compatibly (additive) with only the fields the company's development knowledge needs.</p>
+
+<h3>Value Assessment — Reuse Value, Not Change Volume</h3>
+<ul>
+    <li><strong>Turned into knowledge</strong> &mdash; a new Architecture or business Rule, a change in the meaning of a DB Table or Column, an API addition or change, a state transition change, an external system integration, a repeatable incident resolution, a common development pattern, a performance improvement case, a security policy or Dependency change, a change to an existing design policy</li>
+    <li><strong>Excluded by default</strong> &mdash; variable renames, simple Null Checks, typos, comments and Formatting, plain Log additions, Test Data, one-off Debug code, mechanical Refactoring</li>
+</ul>
+
+<h3>The Atomic Structure of Knowledge — Extending a Proven Schema</h3>
+<p>A single piece of knowledge exists as three layers of attributes. The first layer is <strong>node attributes</strong> &mdash; in the Reference Wiki's navigation tree, every document node holds <code>name</code> (the immutable logical ID, which is also the route) and <code>path</code> (the physical location) as separate things. Even when a file moves inside the domain tree, only <code>path</code> changes while <code>name</code> stays immutable, so <strong>accumulated links, relations, and search do not break when files are rearranged</strong>. On top of that sit the display <code>label</code> (plus per-language variants), <code>tags</code>, and the authoring <code>model</code> (<a href="/p/en/kgs-overview/">How Knowledge Accumulates</a>). The second layer is the <strong>index entry</strong> &mdash; the upper part of the example below is the proven core, the lower part the company extension. The third layer (connections) is covered in the next section.</p>
+<pre><code><span class="c"># Knowledge Index entry — proven core + company extension (example)</span>
+{
+  <span class="c">// ── proven core: fields the Reference Wiki runs across 107 documents ──</span>
+  "name": "dz-erp-so-status-transition",   <span class="c">// immutable logical ID = route</span>
+  "title": "Sales order status transition policy",
+  "summary": "The sales order status scheme and the shipment·revenue transition conditions",
+  "concepts": ["order status transition", "credit check", "partial shipment"],  <span class="c">// only concepts really in the body</span>
+  "section": "Douzone · OmniEsol · SCM",   <span class="c">// computed automatically from the tree position</span>
+  "related": [ … ],                        <span class="c">// computed automatically — never hand-edited</span>
+  "relations": [ … ],                      <span class="c">// declared typed relations (next section)</span>
+
+  <span class="c">// ── company extension (proposed): follows schema v2's additive rule — adding fields is backward-compatible ──</span>
+  "kind": "policy",  "status": "active",  "trust": "DECISION",
+  "product": "OmniEsol",  "domain": "SCM",  "project": "sales-order",
+  "identifiers": ["SD_SO_HDR", "SD_SO_ITEM", "SO_STS_CD", "CREDIT_CHK_YN"],
+  "sources": [{
+    "project": "scm/sales-order",
+    "commit": "abc123",  "mergeRequest": 382,
+    "paths": ["src/.../SalesOrderService.java", "mapper/.../SalesOrderMapper.xml"]
+  }]
+}</code></pre>
+<p>The point is that the extension does not encroach on the core. The Reference Wiki's schema contract states that "adding a field is backward-compatible, changing a meaning requires a version bump", so even when company fields such as <code>identifiers</code>, <code>sources</code>, and <code>trust</code> are added, <strong>existing consumers &mdash; validators, build, graph, search &mdash; keep working unchanged</strong>. All that is newly built is the fields themselves and the search layer that reads them.</p>
+
+<h3>Two Layers of Connection — Computed Relatedness and Declared Relations</h3>
+<p>Knowledge should be a graph, not isolated cards. The Reference Wiki proved connections in <strong>two layers</strong>, and the company platform inherits them as they are (<a href="/p/en/kgs-edges/">How Documents Connect</a>):</p>
+<ul>
+    <li><strong>ⓐ Computed relatedness (<code>related</code>)</strong> &mdash; symmetric connections the machine computes automatically from shared concepts. The more common a concept the lower its weight, the rarer the concept the higher (rarity · idf), and an edge is drawn only when <strong>two or more concepts are shared</strong> or when <strong>one rare concept (in three documents or fewer overall) is shared</strong>. Where connections are short, the same folder (System) fills the gap, guaranteeing <strong>2&ndash;4 connections for every document and zero orphans</strong>. It is the layer that keeps the graph intact even when nobody adds links by hand &mdash; which matters especially for company knowledge that AI generates in bulk.</li>
+    <li><strong>ⓑ Declared relations (<code>relations</code>)</strong> &mdash; five typed relations that carry a direction and a kind: <strong>prerequisite · implements · example-of · evidence-for · supersedes</strong>. Each relation has a direction (A→target), a one-line rationale (<code>evidenceRef</code>), and a <strong>declaring party (<code>source</code>)</strong>. It is stored only once, in the forward direction; the reverse direction ("relations coming into this document") is derived automatically on the consuming side.</li>
+</ul>
+<p>The exact point where the company platform and the schema mesh is the <code>source</code> field. The proven schema has already reserved <code>human · ai-proposed · imported · rule-derived</code> as the vocabulary for the declaring party (all 107 relations in the Reference Wiki are <code>human</code>). On the company platform, <strong>the AI Curator proposes a relation as <code>ai-proposed</code>, and once a person approves it, it is promoted to <code>human</code></strong> &mdash; a structure that reconciles, in a single field, the speed of automation with the honesty principle of "declare only relations that really exist in the body". The machine guards integrity: a relation pointing at a target that does not exist, or a type outside the five-word vocabulary, <strong>blocks the merge as an ERROR</strong>, while a missing rationale or a conflicting declaration surfaces as a review signal (WARN).</p>
+
+<h3>Cumulative Updates — Density of Knowledge, Not Document Count</h3>
+<p>Finding new knowledge does not always mean creating a new document. The Knowledge Index is searched first, and if a related document exists, <strong>the existing document is extended</strong>. For instance, when a document on the "sales order status transition scheme" already exists and a partial-shipment status is added, extending the existing document is considered before creating a new one. That is why the Wiki stays a <strong>continuously refined state of current knowledge</strong> rather than a collection of change history.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 172" role="img" aria-label="Cumulative update branch: after new knowledge is found the index is searched, and if a related document exists the existing document is updated, otherwise a new document is created">
+    <rect class="d-box" x="8" y="66" width="150" height="48" rx="9"/>
+    <text class="d-label sm" x="83" y="86" text-anchor="middle">New knowledge found</text>
+    <text class="d-sub" x="83" y="102" text-anchor="middle">Merge analysis result</text>
+    <rect class="d-box" x="186" y="66" width="140" height="48" rx="9"/>
+    <text class="d-label sm" x="256" y="86" text-anchor="middle">Index search</text>
+    <text class="d-sub" x="256" y="102" text-anchor="middle">Find related docs</text>
+    <polygon class="d-box" points="412,58 476,90 412,122 348,90"/>
+    <text class="d-label sm" x="412" y="94" text-anchor="middle">Related doc?</text>
+    <rect class="d-box accent" x="536" y="28" width="136" height="44" rx="9"/>
+    <text class="d-label sm" x="604" y="46" text-anchor="middle">Update existing doc</text>
+    <text class="d-sub" x="604" y="62" text-anchor="middle">Cumulative growth</text>
+    <rect class="d-box" x="536" y="108" width="136" height="44" rx="9"/>
+    <text class="d-label sm" x="604" y="126" text-anchor="middle">Create new doc</text>
+    <text class="d-sub" x="604" y="142" text-anchor="middle">New knowledge card</text>
+    <line class="d-edge" x1="158" y1="90" x2="178" y2="90"/><polygon class="d-arrow" points="178,85 178,95 186,90"/>
+    <line class="d-edge" x1="326" y1="90" x2="340" y2="90"/><polygon class="d-arrow" points="340,85 340,95 348,90"/>
+    <path class="d-edge" d="M476 90 H500 C510 90, 514 84, 514 74 V64 C514 56, 518 54, 526 54 H528"/>
+    <polygon class="d-arrow" points="528,45 528,55 536,50"/>
+    <text class="d-sub" x="498" y="80" text-anchor="middle">YES</text>
+    <path class="d-edge" d="M476 90 H500 C510 90, 514 96, 514 106 V116 C514 124, 518 126, 526 126 H528"/>
+    <polygon class="d-arrow" points="528,125 528,135 536,130"/>
+    <text class="d-sub" x="498" y="112" text-anchor="middle">NO</text>
+</svg>
+<div class="d-cap">Extending an existing document is always considered first &mdash; it grows the density of knowledge, not the number of documents.</div>
+</div>
+
+<h3>Development Identifier Search</h3>
+<p>Developers search by <strong>Table name · Column name · Rule ID · Class name · Method name · API name · Mapper ID · Error Code</strong> more often than in natural language. The extension field <code>identifiers</code> above becomes the primary key of this search, and the search priority is built as <strong>① exact Identifier match (extension field) → ② title → ③ concepts → ④ summary → ⑤ tags → ⑥ related documents (related) → ⑦ same project</strong> &mdash; ② through ⑥ all run on top of proven core fields, so the only search logic the company builds anew is ① and ⑦. A single <code>SO_STS_CD</code> encountered in the source should be enough to reach the relevant policy document.</p>
+
+<h3>Source Tracking (Provenance)</h3>
+<p>Every piece of knowledge must be traceable back to <strong>which project → which Commit → which MR → which Source File</strong> it came from, as in the extension field <code>sources</code>. In the Reference Wiki this principle was proven at small scale by deriving each document's creation and modification dates from Git history, and the company platform extends the unit of tracking to GitLab coordinates (commit · MR · paths). Growing knowledge through retrieval while keeping its sources is the approach established by RAG research: it is demonstrated that combining external knowledge produces more factual and source-traceable generation (<a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">Lewis et al., NeurIPS 2020</a>) and greatly reduces hallucination (<a href="https://arxiv.org/abs/2104.07567" target="_blank" rel="noopener">Shuster et al., 2021</a>).</p>
+
+<h3>Trust Level — FACT · INFERRED · DECISION</h3>
+<p>Nothing is settled as official policy merely because it was found in code. Even recent research reports cases where the best-performing LLMs misjudge the quality and accuracy of code summaries (<a href="https://arxiv.org/abs/2507.16587" target="_blank" rel="noopener">arXiv 2507.16587, 2025</a>), and NIST's generative AI profile requires <strong>Content Provenance</strong> tracking and the management of "confidently stated errors (confabulation)" as core risk controls (<a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf" target="_blank" rel="noopener">NIST AI 600-1</a>). The trust level is recorded in the extension field <code>trust</code>.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Level</th><th>Meaning</th><th>Example</th><th>Publication policy</th></tr></thead>
+        <tbody>
+            <tr><td><strong>FACT</strong></td><td>Directly verifiable in code</td><td>Table · Column · API · Class relationships</td><td>High chance of automatic publication</td></tr>
+            <tr><td><strong>INFERRED</strong></td><td>Inferred from code structure</td><td>Presumed retry purpose, presumed duplicate prevention</td><td>Published with the inference stated</td></tr>
+            <tr><td><strong>DECISION</strong></td><td>A business or Architecture decision</td><td>Why GUID was chosen, deciding when the credit check runs</td><td>Published after extra evidence such as the MR or design docs is confirmed</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>Lifecycle — Superseded, Not Deleted</h3>
+<p>Past knowledge is not deleted just because a policy changed. For example, when "credit check → at sales order save" becomes "sales order save + re-verification at shipment", the existing document is switched to <code>superseded</code> and linked to the new policy document, so that <strong>the current policy and the change history</strong> are tracked at the same time. That link is exactly the <strong>supersedes</strong> type among the five relations &mdash; <code>new document -[supersedes]-&gt; old document</code>. Interestingly, in the Reference Wiki documents are revised in place, so this type is honestly empty at <strong>zero instances</strong> (the vocabulary, validation, and UI are all in place, but no forced pairs were created). Company development knowledge, where policy changes really do happen, is <strong>the environment where this type goes into real use for the first time</strong>, and the "supersede" transition in the state machine below is precisely the creation of a supersedes relation.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 176" role="img" aria-label="Knowledge lifecycle: draft becomes active; when it loses validity it becomes deprecated, and when a new policy replaces it, it becomes superseded and stays linked to the new active document">
+    <rect class="d-box" x="8" y="72" width="110" height="44" rx="9"/>
+    <text class="d-label sm" x="63" y="90" text-anchor="middle">draft</text>
+    <text class="d-sub" x="63" y="106" text-anchor="middle">In progress</text>
+    <rect class="d-box accent" x="152" y="72" width="120" height="44" rx="9"/>
+    <text class="d-label sm" x="212" y="90" text-anchor="middle">active</text>
+    <text class="d-sub" x="212" y="106" text-anchor="middle">Currently valid</text>
+    <rect class="d-box" x="332" y="32" width="150" height="44" rx="9"/>
+    <text class="d-label sm" x="407" y="50" text-anchor="middle">deprecated</text>
+    <text class="d-sub" x="407" y="66" text-anchor="middle">No longer valid</text>
+    <rect class="d-box" x="332" y="112" width="150" height="44" rx="9"/>
+    <text class="d-label sm" x="407" y="130" text-anchor="middle">superseded</text>
+    <text class="d-sub" x="407" y="146" text-anchor="middle">Replaced by new policy</text>
+    <rect class="d-box accent" x="552" y="112" width="120" height="44" rx="9"/>
+    <text class="d-label sm" x="612" y="130" text-anchor="middle">New active doc</text>
+    <text class="d-sub" x="612" y="146" text-anchor="middle">Link kept</text>
+    <line class="d-edge" x1="118" y1="94" x2="144" y2="94"/><polygon class="d-arrow" points="144,89 144,99 152,94"/>
+    <path class="d-edge" d="M272 94 H296 C306 94, 310 88, 310 78 V68 C310 60, 314 58, 322 58 H324"/>
+    <polygon class="d-arrow" points="324,49 324,59 332,54"/>
+    <text class="d-sub" x="296" y="84" text-anchor="middle">retire</text>
+    <path class="d-edge" d="M272 94 H296 C306 94, 310 100, 310 110 V120 C310 128, 314 130, 322 130 H324"/>
+    <polygon class="d-arrow" points="324,125 324,135 332,130"/>
+    <text class="d-sub" x="296" y="116" text-anchor="middle">supersede</text>
+    <line class="d-edge dash accent" x1="482" y1="134" x2="544" y2="134"/><polygon class="d-arrow accent" points="544,129 544,139 552,134"/>
+</svg>
+<div class="d-cap">A superseded document stays linked to the new one by a supersedes relation &mdash; "why it changed" is preserved along with it.</div>
+</div>
+
+<div class="note">
+    <span class="nh">An Inherited Principle — Honesty</span>
+    Only the concepts and relations that <strong>really exist in the body</strong> are declared. Adding a concept that is not there, or forcing a relation, in order to increase connections distorts the graph &mdash; it is a principle the Reference Wiki has nailed down as a rule and operated by, and the validators' WARNs are not "a list of things to fix" but <strong>"a list for a human to look at once"</strong>. At company scale, where AI generates knowledge in bulk, this principle matters even more &mdash; the <code>ai-proposed</code> → human approval flow and the non-blocking review signals are the safeguards.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼 &middot; <span class="pr-k">Created</span> 2026-07-06 &middot; <span class="pr-k">Updated</span> 2026-07-13</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/news-20260710-llm-wiki-knowledge-context/">LLM Wiki and Knowledge Context — Team Knowledge Compiled at Write Time</a></li><li><a href="/p/en/dzp-core/">The Core of the Proposal — The Development Flow Stays as It Is, AI Does the Knowledge Work</a></li><li><a href="/p/en/sb-level2/">Level 2 · Grouping by topic (LLM wiki + memory)</a></li></ul>
+</nav>
+</body>
+</html>

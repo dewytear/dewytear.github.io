@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workflows by Real-World Scenario</title>
+<meta name="description" content="Lays out eight real-world workflows — kickoff, adding a feature, refactoring, and more — with examples.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/omc-workflows/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/omc-workflows/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/omc-workflows/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/omc-workflows/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Workflows by Real-World Scenario",
+ "description": "Lays out eight real-world workflows — kickoff, adding a feature, refactoring, and more — with examples.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/omc-workflows/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!omc-workflows",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T12:15:44+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!omc-workflows");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!omc-workflows">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/omc-workflows/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Workflows by Real-World Scenario</h2>
+<p>We have organized how modes, agents, and tools are woven together in real situations into eight scenarios. Use the number buttons or the previous/next buttons below to look through the scenarios one at a time.</p>
+
+<div class="carousel">
+    <div class="carousel-stage">
+
+        <div class="scn active">
+            <h3>Scenario 1 — kicking off a new project</h3>
+            <p>When you start an empty project for the first time — proceed in the order documentation → design consensus → requirement clarification → team implementation.</p>
+            <pre><code><span class="c"># 1. Document the project structure</span>
+/oh-my-claudecode:deepinit
+<span class="c"># 2. Architecture consensus (based on expert consensus)</span>
+ralplan: design the overall system architecture (Next.js, PostgreSQL, Redis)
+<span class="c"># 3. Clarify the core requirements</span>
+/deep-interview "a SaaS app with social login"
+<span class="c"># 4. Implement the basic features with a team</span>
+team ralph: implement all of the basic CRUD features</code></pre>
+        </div>
+
+        <div class="scn">
+            <h3>Scenario 2 — adding a feature</h3>
+            <p>If the requirements are clear, go straight to autopilot; if they are vague, refine them with deep-interview first and then implement.</p>
+            <pre><code><span class="c"># When the requirements are clear</span>
+autopilot: add email notification features (signup welcome, password reset, order confirmation)
+<span class="c"># When the requirements are vague — clarify first</span>
+/deep-interview "add a notification feature"
+<span class="c"># → implement with the clarified requirements</span>
+autopilot: implement with [the clarified requirements]</code></pre>
+        </div>
+
+        <div class="scn">
+            <h3>Scenario 3 — refactoring legacy code</h3>
+            <p>Proceed safely in four steps: grasp the current state → plan → parallel conversion → verification.</p>
+            <pre><code><span class="c"># 1. Grasp the current state (technical debt analysis)</span>
+deep-analyze: identify the technical debt in this codebase
+<span class="c"># 2. Migration plan</span>
+/oh-my-claudecode:plan JavaScript → TypeScript migration
+<span class="c"># 3. Convert several files in parallel</span>
+ulw: convert all 15 of these files to TypeScript
+<span class="c"># 4. Verification</span>
+review code
+fix build</code></pre>
+        </div>
+
+        <div class="scn">
+            <h3>Scenario 4 — tracking down and fixing a bug</h3>
+            <p>If you paste the error message as-is, the debugger analyzes the stack and finds the root cause.</p>
+            <pre><code><span class="c"># Paste the error message as-is</span>
+deep-analyze:
+  Error: Cannot read property 'user' of undefined
+  at AuthMiddleware (middleware.ts:45)
+<span class="c"># → the debugger analyzes the stack → identifies the root cause → proposes a fix</span>
+<span class="c"># Apply the fix</span>
+fix build</code></pre>
+        </div>
+
+        <div class="scn">
+            <h3>Scenario 5 — code review before deployment</h3>
+            <p>Run the quality and security reviews in turn, then fix the problems found all at once with ralph.</p>
+            <pre><code><span class="c"># 1. Comprehensive code review (logic · anti-patterns · performance)</span>
+review code
+<span class="c"># 2. Check for security vulnerabilities</span>
+security review
+<span class="c"># 3. Fix every problem found in one batch</span>
+ralph: fix every problem found in the code review</code></pre>
+        </div>
+
+        <div class="scn">
+            <h3>Scenario 6 — TDD development</h3>
+            <p>It automatically repeats the flow of writing tests first and implementing afterwards (Red → Green → Refactor).</p>
+            <pre><code><span class="c"># Tests first, implementation later</span>
+tdd: develop the user authentication service
+<span class="c"># → 1) write test cases  2) failing tests (Red)</span>
+<span class="c"># → 3) delegate implementation  4) confirm they pass (Green)  5) refactor</span></code></pre>
+        </div>
+
+        <div class="scn">
+            <h3>Scenario 7 — data analysis work</h3>
+            <p>Several analysis agents run Python (pandas · matplotlib) in parallel to produce a comprehensive report.</p>
+            <pre><code><span class="c"># Analyzing log and CSV data</span>
+/sciomc analyze this CSV file:
+  - user behavior patterns
+  - churn cause analysis
+  - features with a high contribution to revenue</code></pre>
+        </div>
+
+        <div class="scn">
+            <h3>Scenario 8 — automating Git work</h3>
+            <p>You can delegate commit tidying, writing the PR description, and even branch strategy to git-master.</p>
+            <pre><code><span class="c"># Tidy the changed files into commits by meaningful unit</span>
+delegate to git-master: tidy the changed files into commits by meaningful unit
+<span class="c"># Write the PR description (in Korean, including why · what · tests)</span>
+git-master: write the PR description for these changes
+<span class="c"># Branch strategy</span>
+git-master: work on the feature/auth branch, then prepare a squash merge into main</code></pre>
+        </div>
+
+    </div>
+
+    <div class="carousel-dots">
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button>7</button>
+        <button>8</button>
+    </div>
+    <div class="carousel-nav">
+        <button class="arrow-btn prev">&larr; Prev</button>
+        <span class="cn-label">1 / 8</span>
+        <button class="arrow-btn next">Next &rarr;</button>
+    </div>
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · PlugIn · OMC &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/omc-modes/">Execution Modes</a></li><li><a href="/p/en/omc-intro/">Introducing OMC</a></li><li><a href="/p/en/omc-concepts/">Core Terminology</a></li></ul>
+</nav>
+</body>
+</html>

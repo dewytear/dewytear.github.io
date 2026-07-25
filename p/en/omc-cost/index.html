@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cost · Performance</title>
+<meta name="description" content="Explains how parallel and autonomous execution affect speed and token cost, and how to balance them.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/omc-cost/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/omc-cost/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/omc-cost/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/omc-cost/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Cost · Performance",
+ "description": "Explains how parallel and autonomous execution affect speed and token cost, and how to balance them.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/omc-cost/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!omc-cost",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T12:15:44+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!omc-cost");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!omc-cost">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/omc-cost/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Cost · Performance</h2>
+<p>The core of OMC is splitting work across several agents and handling it at the same time. That is why total working time can go down, but when several workers run at once the AI usage (tokens) grows accordingly, so the cost can go up. It helps to understand that <strong>speed and cost move together</strong>.</p>
+
+<h3>Why the cost varies</h3>
+<p>OMC's cost is not a fixed number — it varies greatly depending on how you work. The factors below drive the cost.</p>
+<ul>
+    <li><strong>Whether it can be parallelized</strong> — if the work can be split into several pieces it gets faster, but because several workers run at once the tokens spent in the same amount of time increase.</li>
+    <li><strong>Number of retries</strong> — if verification fails, the agent tries again. The more retries, the more tokens are consumed on top.</li>
+    <li><strong>Model unit price and context size</strong> — the bigger the model you use, or the longer the context (code · documents) handled at once, the higher the cost per call.</li>
+    <li><strong>Build · test failures</strong> — if builds or tests fail often, rework to fix them repeats, and the more it repeats the more tokens are used.</li>
+    <li><strong>Using external CLI workers</strong> — modes that also call external models such as Codex or Gemini (CCG and the like) increase the model calls themselves, adding cost.</li>
+    <li><strong>Scale of the work</strong> — running a large task all the way through in autonomous mode makes cumulative usage large. The cost difference from a small fix job is big.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">In one line</span>
+    Being fast does not always mean being cheap. If you handle small jobs lightly in an ordinary conversation and use parallel and autonomous modes only for large jobs that are worth it, you can strike a balance between speed and cost.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · PlugIn · OMC &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/omc-quickref/">Quick Reference Card</a></li><li><a href="/p/en/sne-scope/">Send Engine Implementation Requirements</a></li></ul>
+</nav>
+</body>
+</html>

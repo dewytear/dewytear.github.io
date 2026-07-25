@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>제안 개요 — GitLab 기반 AI 개발 지식 플랫폼</title>
+<meta name="description" content="GitLab 개발 결과를 AI가 조직 지식으로 자동 축적하는 Read-Only 플랫폼 제안의 개요와 선순환 — Reference Wiki에서 검증된 엔진의 확장임을 명시">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/dzp-overview/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/dzp-overview/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/dzp-overview/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/dzp-overview/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "제안 개요 — GitLab 기반 AI 개발 지식 플랫폼",
+ "description": "GitLab 개발 결과를 AI가 조직 지식으로 자동 축적하는 Read-Only 플랫폼 제안의 개요와 선순환 — Reference Wiki에서 검증된 엔진의 확장임을 명시",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/dzp-overview/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!dzp-overview",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-06T02:35:24+09:00",
+ "dateModified": "2026-07-13T22:28:27+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!dzp-overview");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!dzp-overview">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/dzp-overview/" hreflang="en">English</a>
+</p>
+<article>
+<h2>제안 개요 — GitLab 기반 AI 개발 지식 플랫폼</h2>
+<p>개발자는 지금처럼 GitLab에 개발 결과를 반영하기만 하고, <strong>AI가 그 결과를 분석해 조직 지식으로 자동 변환·축적</strong>하는 <strong>Read-Only Engineering Knowledge Platform</strong>을 제안한다. 사람이 문서를 쓰는 위키가 아니라, <strong>개발 결과물이 곧 지식의 원천</strong>이 되는 구조다.</p>
+
+<div class="note">
+    <span class="nh">한 문장 요약</span>
+    GitLab에 축적되는 개발 결과물을 AI가 지속적으로 분석하여, 조직의 <strong>현재 유효한 개발 지식</strong>으로 변환·축적하는 <strong>Read-Only Engineering Knowledge Platform</strong>.
+</div>
+
+<p>그리고 이것은 백지 설계가 아니다. 이 제안의 지식 저장·인덱싱·연결 엔진은 사전 검증용으로 운영 중인 <strong>Reference Wiki에서 이미 구현·검증된 것</strong>이다 — 2026-07 기준 실측으로 문서 107편 · 고유 개념 337개 · 자동 연관 엣지 349개 · 사람이 선언한 타입 지식관계 107건이 <a href="/p/kgs-overview/">결정적 등재 파이프라인</a> 위에서 돌고 있다. 이 시리즈의 <a href="/p/dzp-knowledge/">지식 관리 체계</a>·<a href="/p/dzp-security/">자산 활용</a> 편이 그 엔진을 어떻게 회사 규모로 확장하는지 다룬다. 즉 본 제안은 "만들 수 있는 것"의 상상이 아니라 <strong>"운영 중인 검증된 엔진을 GitLab에 연결하는 법"</strong>의 서술이다.</p>
+
+<h3>최종 그림 — 선순환</h3>
+<p>목표는 위키 그 자체가 아니다. 개발 결과가 지식이 되고, 축적된 지식이 다시 다음 개발의 생산성을 높이는 <strong>선순환 구조</strong>다. 사람이 쓰는 위키는 "개발 → 문서 작성 → Wiki 등록"의 추가 노동을 요구해 지속되지 못했지만, 이 구조에서는 개발 경험이 조직 자산이 되고, 반복 분석이 줄고, 프로젝트 간 경험이 재사용되며, 온보딩이 빨라지고, 설계 의도가 보존되고, Claude Code 같은 AI 도구가 조직 지식을 Context로 활용하게 된다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 140" role="img" aria-label="선순환 구조: 개발 결과가 조직 지식이 되고, AI Retrieval을 거쳐 다음 개발에 재사용되어 다시 개발 결과로 이어진다">
+    <rect class="d-box" x="8" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="78" y="43" text-anchor="middle">개발 결과</text>
+    <text class="d-sub" x="78" y="60" text-anchor="middle">GitLab Merge</text>
+    <rect class="d-box accent" x="178" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="248" y="43" text-anchor="middle">조직 지식</text>
+    <text class="d-sub" x="248" y="60" text-anchor="middle">Wiki · Index</text>
+    <rect class="d-box" x="348" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="418" y="43" text-anchor="middle">AI Retrieval</text>
+    <text class="d-sub" x="418" y="60" text-anchor="middle">필요할 때 검색</text>
+    <rect class="d-box" x="518" y="22" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="588" y="43" text-anchor="middle">다음 개발</text>
+    <text class="d-sub" x="588" y="60" text-anchor="middle">Claude Code · Agent</text>
+    <line class="d-edge" x1="148" y1="48" x2="170" y2="48"/><polygon class="d-arrow" points="170,43 170,53 178,48"/>
+    <line class="d-edge" x1="318" y1="48" x2="340" y2="48"/><polygon class="d-arrow" points="340,43 340,53 348,48"/>
+    <line class="d-edge" x1="488" y1="48" x2="510" y2="48"/><polygon class="d-arrow" points="510,43 510,53 518,48"/>
+    <path class="d-edge" d="M588 74 C588 96, 572 104, 552 104 H114 C94 104, 78 96, 78 84"/>
+    <polygon class="d-arrow" points="73,82 83,82 78,74"/>
+    <polygon class="d-arrow" points="338,99 338,109 328,104"/>
+    <text class="d-sub" x="330" y="126" text-anchor="middle">축적된 지식이 다음 개발의 생산성을 높인다</text>
+</svg>
+<div class="d-cap">개발할수록 조직이 똑똑해지는 구조 — 이것이 본 제안의 최종 방향이다.</div>
+</div>
+
+<h3>이 시리즈의 구성</h3>
+<ul>
+    <li><a href="/p/dzp-why/"><strong>왜 지금인가</strong></a> — 흩어지고 사라지는 개발 지식, 그 비용의 근거</li>
+    <li><a href="/p/dzp-core/"><strong>제안의 핵심</strong></a> — 개발 흐름은 그대로, 지식화는 AI가. Event Stream과 Knowledge State</li>
+    <li><a href="/p/dzp-architecture/"><strong>플랫폼 아키텍처</strong></a> — 7계층 구성, 지식 생성 Trigger, 증분 분석, 지식 무결성 게이트, 운영 안정성</li>
+    <li><a href="/p/dzp-knowledge/"><strong>지식 관리 체계</strong></a> — 가치 판정 · 지식의 원자 구조(실증 스키마+확장) · 두 겹의 연결 · Identifier 검색 · 출처 추적 · 신뢰 등급 · 수명주기</li>
+    <li><a href="/p/dzp-security/"><strong>자산 활용과 보안</strong></a> — 검증된 Reference Wiki 엔진(wiki-plugin)의 재사용, AI 소비층, 지식 등급과 접근 분리</li>
+    <li><a href="/p/dzp-value/"><strong>부가가치와 활용 시나리오</strong></a> — API 명세서 자동 갱신, 직원·파트너·고객사·AI의 대상별 뷰, AI 코딩의 사전지식, 비개발 직군 활용</li>
+    <li><a href="/p/dzp-roadmap/"><strong>추진 로드맵</strong></a> — 4 Phase, 1차 PoC(OmniEsol ERP · SCM 도메인), 게이트로 계측하는 검증 KPI</li>
+</ul>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼 &middot; <span class="pr-k">생성일자</span> 2026-07-06 &middot; <span class="pr-k">수정일자</span> 2026-07-13</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/dzp-value/">부가가치와 활용 시나리오</a></li><li><a href="/p/dzp-architecture/">플랫폼 아키텍처</a></li><li><a href="/p/dzp-core/">제안의 핵심 — 개발 흐름은 그대로, 지식화는 AI가</a></li><li><a href="/p/dzp-roadmap/">추진 로드맵 — 4 Phase와 1차 PoC</a></li></ul>
+</nav>
+</body>
+</html>

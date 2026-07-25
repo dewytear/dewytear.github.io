@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Installing the Meta-Harness Skill (Hands-on)</title>
+<meta name="description" content="A hands-on walkthrough of installing the meta-harness plugin from the marketplace.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/hns-install/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hns-install/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hns-install/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hns-install/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Installing the Meta-Harness Skill (Hands-on)",
+ "description": "A hands-on walkthrough of installing the meta-harness plugin from the marketplace.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/hns-install/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hns-install",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:09:56+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!hns-install");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hns-install">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/hns-install/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Installing the Meta-Harness Skill (Hands-on)</h2>
+<p>Composing a harness by hand every time (preparing each agent · skill one by one) is a hassle. So the instructor developed a <strong>"meta-harness" skill that composes the harness for you when you only give it a goal</strong>, released it on GitHub, and got a lot of user reviews and stars. Today's hands-on session starts with installing this skill.</p>
+
+<h3>Method 1 — two lines of commands</h3>
+<pre><code><span class="c"># 1) Add the harness marketplace</span>
+/plugin marketplace add lev-factory/harness
+<span class="c"># 2) Install the harness plugin</span>
+/plugin install harness</code></pre>
+
+<h3>Method 2 — the /plugin UI</h3>
+<ol>
+    <li>Enter <code>/plugin</code> → move <strong>right</strong> with the arrow keys and select the <strong>Marketplace</strong> tab.</li>
+    <li>In <strong>Add Marketplace</strong>, enter <code>lev-factory/harness</code> → Enter (it downloads from GitHub).</li>
+    <li>Enter on the plugin install screen → if you install it at <strong>User scope</strong>, you can use it in any project.</li>
+</ol>
+
+<h3>After installing — reload and check</h3>
+<p>When the install finishes, a notice tells you to "reload". After <code>/reload</code> (reload plugins), if <code>/harness</code> shows up, it was installed correctly.</p>
+<pre><code>/reload
+<span class="c"># If the following autocompletes/runs, the install succeeded</span>
+/harness</code></pre>
+
+<div class="note warn">
+    <span class="nh">Check the marketplace path</span>
+    The marketplace handle (<code>lev-factory/harness</code>) is carried over from the value mentioned in the talk, so when you actually install it, <strong>check the exact repository path</strong> on the instructor's GitHub (for example, search for <strong>"Harness 100"</strong>). If the plugin install does not go well, try the UI way and the command way alternately.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Harness &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/hnp-install/">Installation and Setup</a></li><li><a href="/p/en/omc-install/">Installation</a></li><li><a href="/p/en/ccb-plugins/">Plugins · the marketplace</a></li><li><a href="/p/en/hnp-commands/">Commands · Quick Reference</a></li></ul>
+</nav>
+</body>
+</html>

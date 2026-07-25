@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nine Ways to Read the Graph — Each View Answers a Different Question</title>
+<meta name="description" content="Constellation, Orbits, Strata (3D), Bundling, Chord, Packing, Concepts, Arc, and Matrix — the question each view answers and how hubs and bridges reveal the center of the graph">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/kgs-views/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/kgs-views/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/kgs-views/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/kgs-views/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Nine Ways to Read the Graph — Each View Answers a Different Question",
+ "description": "Constellation, Orbits, Strata (3D), Bundling, Chord, Packing, Concepts, Arc, and Matrix — the question each view answers and how hubs and bridges reveal the center of the graph",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/kgs-views/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!kgs-views",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-11T19:47:53+09:00",
+ "dateModified": "2026-07-26T00:14:01+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!kgs-views");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!kgs-views">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/kgs-views/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Nine Ways to Read the Graph — Each View Answers a Different Question</h2>
+<p>Even for the same knowledge graph, the right visualization depends on <strong>what you are curious about</strong>. The dock on the <a href="/p/en/cosmos/">Knowledge Graph</a> screen is two-stage — you first pick <strong>3D · 2D</strong> and then a view inside it (3D is the default) — and there are <strong>nine views</strong> in total. Each was chosen to answer one distinct question. This document lays out "what to look for in each view".</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="Nine views: Constellation, Orbits, and Strata on the top row (3D); Bundling, Chord, and Packing in the middle row; Concepts, Arc, and Matrix on the bottom row">
+    <rect class="d-box accent" x="16" y="16" width="220" height="76" rx="10"/>
+    <text class="d-label" x="126" y="46" text-anchor="middle">Constellation</text>
+    <text class="d-sub" x="126" y="66" text-anchor="middle">overall shape · clusters</text>
+    <rect class="d-box accent" x="250" y="16" width="220" height="76" rx="10"/>
+    <text class="d-label" x="360" y="46" text-anchor="middle">Orbits</text>
+    <text class="d-sub" x="360" y="66" text-anchor="middle">star · planet · moon lineage</text>
+    <rect class="d-box accent" x="484" y="16" width="220" height="76" rx="10"/>
+    <text class="d-label" x="594" y="46" text-anchor="middle">Strata</text>
+    <text class="d-sub" x="594" y="66" text-anchor="middle">four tiers as stacked layers</text>
+    <rect class="d-box" x="16" y="106" width="220" height="76" rx="10"/>
+    <text class="d-label" x="126" y="136" text-anchor="middle">Bundling</text>
+    <text class="d-sub" x="126" y="156" text-anchor="middle">doc↔doc edge bundles</text>
+    <rect class="d-box" x="250" y="106" width="220" height="76" rx="10"/>
+    <text class="d-label" x="360" y="136" text-anchor="middle">Chord</text>
+    <text class="d-sub" x="360" y="156" text-anchor="middle">coupling between Systems</text>
+    <rect class="d-box" x="484" y="106" width="220" height="76" rx="10"/>
+    <text class="d-label" x="594" y="136" text-anchor="middle">Packing</text>
+    <text class="d-sub" x="594" y="156" text-anchor="middle">size · volume comparison</text>
+    <rect class="d-box" x="16" y="196" width="220" height="76" rx="10"/>
+    <text class="d-label" x="126" y="226" text-anchor="middle">Concepts</text>
+    <text class="d-sub" x="126" y="246" text-anchor="middle">concept co-occurrence map</text>
+    <rect class="d-box" x="250" y="196" width="220" height="76" rx="10"/>
+    <text class="d-label" x="360" y="226" text-anchor="middle">Arc</text>
+    <text class="d-sub" x="360" y="246" text-anchor="middle">near vs. far connections</text>
+    <rect class="d-box" x="484" y="196" width="220" height="76" rx="10"/>
+    <text class="d-label" x="594" y="226" text-anchor="middle">Matrix</text>
+    <text class="d-sub" x="594" y="246" text-anchor="middle">block (dense/empty) structure</text>
+    <text class="d-sub" x="360" y="290" text-anchor="middle">the top three are the 3D group, the six below are 2D — the data is one</text>
+</svg>
+<div class="d-cap">Nine ways of seeing — all drawn from the same index, so whichever view you pick, the data is one.</div>
+</div>
+</div>
+
+<h3>"For this question, this view"</h3>
+<div class="tbl-wrap"><table>
+<thead><tr><th>View</th><th>Question it answers</th><th>How to read it</th></tr></thead>
+<tbody>
+<tr><td><strong>Constellation</strong> (3D)</td><td>What shape does the knowledge as a whole have?</td><td>On a rounded sphere, <strong>color = World/System</strong>. A patch of one color is a topic cluster, and lines crossing patches are bridges between topics. You can adjust the roundness (0–100) in settings.</td></tr>
+<tr><td><strong>Orbits</strong> (3D)</td><td>Which documents are bound to one System?</td><td>A World is a <strong>star</strong>, a System is a <strong>planet</strong> circling it, and a document is a <strong>moon</strong> circling the planet. The orbital planes are tilted against each other so membership separates at a glance, and because they actually revolve, lineage reads better than in a still image. Tap a document and a card opens, <strong>leaving only that document's neighbors</strong>.</td></tr>
+<tr><td><strong>Strata</strong> (3D)</td><td>How do the four tiers actually connect?</td><td>World → Domain → System → Document are stacked as <strong>four sheets of glass</strong>, with lineage lines running through them vertically. This is the view for seeing this wiki's own hierarchy model with your eyes, and on the bottom document layer the concept edges are laid out as low arcs.</td></tr>
+<tr><td><strong>Bundling</strong></td><td>Which documents pull on each other?</td><td>Documents are placed around a circle in System order, and concept connections curve toward the center to form bundles. <strong>A thick bundle = a strongly entangled pair of topics</strong>.</td></tr>
+<tr><td><strong>Chord</strong></td><td>How tightly are Systems coupled?</td><td>Arc length = that System's outward connection volume; ribbon thickness = the number of connections between two Systems. <strong>The thickest ribbon</strong> is the substantive neighbor relation in the knowledge.</td></tr>
+<tr><td><strong>Packing</strong></td><td>Where has knowledge piled up most?</td><td>System circles inside World circles, with document dots inside those. <strong>Circle size = number of documents</strong> — growth imbalance is visible at a glance.</td></tr>
+<tr><td><strong>Concepts</strong></td><td>How do concepts stick together?</td><td>The only view whose nodes are <strong>concepts</strong> rather than documents. Concepts that appear together are linked, showing the knowledge terrain at the vocabulary level (e.g. what gathers around 'skills').</td></tr>
+<tr><td><strong>Arc</strong></td><td>Do connections stay among neighbors, or reach far?</td><td>Documents are placed in a single row and connections drawn as arcs. <strong>A low arc = within the same topic</strong>, <strong>a high arc = a bridge that jumps across topics</strong>.</td></tr>
+<tr><td><strong>Matrix</strong></td><td>Which blocks are dense and where are the gaps?</td><td>Connections as dots on a document × document grid. Sorted in System order, so <strong>diagonal blocks = internal cohesion</strong>, <strong>dots outside the blocks = cross connections</strong>, and empty areas = knowledge not yet connected.</td></tr>
+</tbody>
+</table></div>
+
+<h3>Hubs and Bridges — How to Find the Center of the Graph</h3>
+<p>Whatever the view, there are two entry points for analysis:</p>
+<ul>
+    <li><strong>Hub</strong> — the document other documents refer to most. The current number one is <a href="/p/en/hns-anatomy/">Anatomy and Effects of a Harness</a> (referenced 11 times), followed by <a href="/p/en/llmw-overview/">LLM Wiki Overview</a> and <a href="/p/en/llmw-vaults/">the vault system</a> at 8 each. When getting to grips with a topic for the first time, reading that cluster's hub first is the fastest route.</li>
+    <li><strong>Bridge</strong> — a concept that appears across multiple Systems. 'Skills' is the largest bridge, spanning <strong>7 Systems</strong>, with 'slash commands' and 'subagents' each linking 5 Systems. Following bridge concepts reveals <strong>the points where topics actually meet</strong>.</li>
+</ul>
+<p>Hubs, bridges, and per-System aggregates are shown as tables on the <a href="/p/en/ai-map/">knowledge map</a>, recalculated live whenever a document is added. In short — <strong>the knowledge map is "the summarized table", the seven views are "visualizations of the same data"</strong> — and this document series explains the principles by which that data is made (<a href="/p/en/kgs-edges/">previous part</a>) and the way it is consumed (<a href="/p/en/kgs-ai-layer/">next part</a>).</p>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">Created</span> 2026-07-11 &middot; <span class="pr-k">Updated</span> 2026-07-26</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/kgs-edges/">How Documents Connect — Concept Curation and idf-Weighted Edges</a></li><li><a href="/p/en/kgs-overview/">How Knowledge Accumulates — The Four-Level Hierarchy and the Registration Pipeline</a></li><li><a href="/p/en/kgs-ai-layer/">How AI Reads This Wiki — the Machine-Readable Layer and Graph Traversal</a></li></ul>
+</nav>
+</body>
+</html>

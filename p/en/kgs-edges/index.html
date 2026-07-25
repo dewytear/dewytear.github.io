@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Documents Connect — Concept Curation and idf-Weighted Edges</title>
+<meta name="description" content="Concept curation and rarity(idf)-weighted shared-concept edges — the selection rules, an anatomy of real edges, threshold ripple effects, and the honesty principle">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/kgs-edges/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/kgs-edges/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/kgs-edges/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/kgs-edges/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "How Documents Connect — Concept Curation and idf-Weighted Edges",
+ "description": "Concept curation and rarity(idf)-weighted shared-concept edges — the selection rules, an anatomy of real edges, threshold ripple effects, and the honesty principle",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/kgs-edges/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!kgs-edges",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-11T19:47:53+09:00",
+ "dateModified": "2026-07-24T22:16:42+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!kgs-edges");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!kgs-edges">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/kgs-edges/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>How Documents Connect — Concept Curation and idf-Weighted Edges</h2>
+<p>The quality of a knowledge graph ultimately depends on <strong>what decides that "two documents are related"</strong>. Instead of black boxes such as embeddings or statistical extraction, this wiki computes edges with <strong>verifiable rules</strong>, using <strong>the concepts a human read and left behind</strong> as the material. This document dissects those rules all the way through, with real numbers and a real edge.</p>
+
+<h3>The Material — Concepts Are Curated, Not Extracted</h3>
+<p>Every document has <strong>five or six key concepts</strong> curated for it when it is registered (step ③ of the pipeline in the <a href="/p/en/kgs-overview/">previous part</a>). One principle governs this: <strong>write only concepts that actually exist in the body</strong>. If you add a concept that is not in the body because you want a connection, the graph stops being "a map of real knowledge". So the edges of this graph are fewer in number, but <strong>each one can present its evidence (the shared concepts)</strong>.</p>
+
+<h3>The Scale — The Rarer the Concept, the Stronger the Connection</h3>
+<p>When two documents share a concept, they become a connection candidate. But not every concept can weigh the same. Sharing 'skills', which appears in <strong>22</strong> of 108 documents, is close to coincidence, while sharing 'vector search', which appears in only <strong>2</strong>, is a strong signal. So each concept is given a <strong>rarity weight (idf)</strong> — roughly the log of "total number of documents ÷ number of documents containing that concept":</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 176" role="img" aria-label="The idf scale: 'skills' appears in 21 docs with a light weight of 1.54, while 'vector search' appears in only 2 docs with a heavy weight of 3.89">
+    <rect class="d-box" x="30" y="24" width="300" height="60" rx="10"/>
+    <text class="d-label" x="180" y="49" text-anchor="middle">'skills' — appears in 21 docs</text>
+    <text class="d-sub" x="180" y="70" text-anchor="middle">common concept → weight log(98/21) ≈ 1.54</text>
+    <rect class="d-box accent" x="390" y="24" width="300" height="60" rx="10"/>
+    <text class="d-label" x="540" y="49" text-anchor="middle">'vector search' — only 2 docs</text>
+    <text class="d-sub" x="540" y="70" text-anchor="middle">rare concept → weight log(98/2) ≈ 3.89</text>
+    <line class="d-edge" x1="180" y1="84" x2="180" y2="116"/>
+    <line class="d-edge accent" x1="540" y1="84" x2="540" y2="116"/>
+    <text class="d-sub" x="180" y="138" text-anchor="middle">sharing it is a weak signal</text>
+    <text class="d-label" x="540" y="138" text-anchor="middle">sharing it is a strong signal</text>
+    <text class="d-sub" x="360" y="166" text-anchor="middle">the same "one shared concept" can differ 2.5× or more in weight</text>
+</svg>
+<div class="d-cap">The rarity scale — sharing a common concept counts light, sharing a rare one counts heavy.</div>
+</div>
+
+<h3>Dissecting a Real Edge — Welcome ↔ "What Is Claude Code"</h3>
+<p>Take one edge from the actual graph apart: <a href="/p/en/welcome/">Welcome</a> and <a href="/p/en/ccb-what/">What Is Claude Code</a> share two concepts, <strong>'Claude Code' (weight 3.20) and 'terminal' (3.20)</strong>. The score is the sum of the two weights, <strong>≈ 6.40</strong> — the highest among the candidates, which makes it Welcome's number-one related document. The "Related docs" block at the bottom of a document shows these evidence concepts as chips, so you can always check <strong>why</strong> two documents were connected.</p>
+
+<h3>The Decision Rule — Three Branches</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 234" role="img" aria-label="Edge decision: two or more shared concepts means connect, one shared concept connects only if it appears in 3 or fewer docs, otherwise folder top-up">
+    <rect class="d-box" x="230" y="14" width="260" height="46" rx="9"/>
+    <text class="d-label" x="360" y="42" text-anchor="middle">Shared concepts of the two docs?</text>
+    <line class="d-edge" x1="290" y1="60" x2="128" y2="96"/>
+    <line class="d-edge" x1="360" y1="60" x2="360" y2="96"/>
+    <line class="d-edge" x1="430" y1="60" x2="592" y2="96"/>
+    <rect class="d-box accent" x="24" y="100" width="210" height="58" rx="9"/>
+    <text class="d-label" x="129" y="124" text-anchor="middle">2 or more shared</text>
+    <text class="d-sub" x="129" y="144" text-anchor="middle">connect (via:concept)</text>
+    <rect class="d-box accent" x="254" y="100" width="212" height="58" rx="9"/>
+    <text class="d-label" x="360" y="124" text-anchor="middle">1 shared + in ≤3 docs</text>
+    <text class="d-sub" x="360" y="144" text-anchor="middle">rare concepts only (concept)</text>
+    <rect class="d-box soft" x="486" y="100" width="210" height="58" rx="9"/>
+    <text class="d-label" x="591" y="124" text-anchor="middle">otherwise (0–1 shared)</text>
+    <text class="d-sub" x="591" y="144" text-anchor="middle">no connection</text>
+    <line class="d-edge dash" x1="591" y1="158" x2="591" y2="188"/>
+    <text class="d-sub" x="360" y="208" text-anchor="middle">docs with fewer than 2 concept edges get same-System neighbors (via:folder) — every doc has 2–4 edges</text>
+</svg>
+<div class="d-cap">The decision flow — a coincidental single share is discarded, but a single share of a rare concept (in 3 or fewer docs) counts.</div>
+</div>
+
+<ul>
+    <li><strong>2 or more shared</strong> → connect. Two different concepts overlapping is unlikely to be coincidence.</li>
+    <li><strong>1 shared + that concept appears in 3 or fewer documents</strong> → connect. A real case: Welcome ↔ <a href="/p/en/commands/">Everyday Use</a> share only 'natural language', but 'natural language' is rare enough to count. Conversely, a pair sharing only 'skills' is not connected — one concept shared by 22 documents cannot serve as evidence.</li>
+    <li><strong>Otherwise</strong> → no connection by concept. Instead, a document that does not reach two concept connections is topped up with <strong>neighbors in the same System</strong> (e.g. the <a href="/p/en/ccb-claudemd/">CLAUDE.md lesson</a> → the lessons before and after it in the same Tutorial), so that <strong>every document has at least 2 to 4 connections</strong>. The current ratio is 179 concept connections (79%) · 49 folder top-ups (21%).</li>
+</ul>
+
+<h3>The Ripple of a Threshold — Why You Cannot Add Concepts Casually</h3>
+<p>The "3 or fewer" rule has a subtle ripple. Suppose a rare concept currently appears in 3 documents and a new document uses that concept once more: <strong>the moment it becomes 4</strong>, an existing edge that hung on that single concept <strong>loses its qualification and is cut</strong>. That is why this wiki's rulebook (CLAUDE.md) forbids "adding a concept that is not in the body in order to remove an isolation" — one forced connection can cut a neighboring document's real connection. A document with thin connections is treated not as a defect but only as a <strong>review signal</strong>. This is this graph's <strong>honesty principle</strong>: edges are always grounded in the actual body, and curation is not a tool for making the graph look good.</p>
+
+<h3>Relations Declared by Curation — Directed, Typed Edges</h3>
+<p>The edges so far (<code>related</code>) are <strong>symmetric relations a machine computed automatically from shared concepts</strong> — if A and B are connected, it simply means "they are related", with no direction and no kind. But knowledge also has <strong>relations with direction and kind</strong>: "to read this, read that first", "this document implements that concept", "this article is the evidence for that claim". Such relations cannot be captured by shared concepts alone, so this wiki attaches <strong>typed relations declared by curation (<code>relations</code>)</strong> in <strong>a collection separate from</strong> <code>related</code>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 140" role="img" aria-label="A directed typed relation: 'How Knowledge Accumulates' is a prerequisite of 'How Documents Connect'">
+    <rect class="d-box accent" x="44" y="40" width="252" height="60" rx="10"/>
+    <text class="d-label" x="170" y="66" text-anchor="middle">How Knowledge Accumulates</text>
+    <text class="d-sub" x="170" y="86" text-anchor="middle">prior doc · kgs-overview</text>
+    <text class="d-label" x="361" y="58" text-anchor="middle">Prerequisite</text>
+    <line class="d-edge" x1="296" y1="70" x2="416" y2="70"/>
+    <polygon class="d-arrow" points="416,64 426,70 416,76"/>
+    <text class="d-sub" x="361" y="90" text-anchor="middle">prerequisite</text>
+    <rect class="d-box" x="430" y="40" width="248" height="60" rx="10"/>
+    <text class="d-label" x="554" y="66" text-anchor="middle">How Documents Connect</text>
+    <text class="d-sub" x="554" y="86" text-anchor="middle">this doc · kgs-edges</text>
+</svg>
+<div class="d-cap">A directed typed edge — curation declares "to read this document, read that one first" (the reverse direction is derived automatically).</div>
+</div>
+
+<p>There are five terms in the vocabulary — <strong>prerequisite</strong>·<strong>implements</strong>·<strong>example-of</strong>·<strong>evidence-for</strong>·<strong>supersedes</strong>. Each relation carries a <strong>direction</strong> (A → target) together with a <strong>one-line justification</strong> (where it holds). It is stored only once in the forward direction; the reverse direction ("relations coming into this document") is derived automatically by scanning all documents. The <strong>"Knowledge relations"</strong> block at the bottom of a document shows outgoing and incoming relations with type badges.</p>
+<p>A declaration looks like this — taking one record straight from the real data (an article serving as the <strong>evidence</strong> for a knowledge document):</p>
+
+<pre><code>{ "target": "sb-level4",              // the document this relation points to
+  "type": "evidence-for",             // kind of relation: evidence
+  "evidenceRef": "Notes on Jim Webber's Neo4j original (2024-06-04) —
+                  expert evidence for sb-level4's knowledge-graph approach",
+  "source": "human" }                 // curation origin (human-approved — not an auto suggestion)</code></pre>
+
+<p>The wiki currently declares <strong>110 relations</strong>, all in this form. Most of them are <strong>reading-order prerequisite chains</strong> (previous document → next document) in the lecture-style Systems and the AI 2040 news series; the rest are implements, example-of, evidence-for, and cross prerequisites that cut across Systems. Real cases by type:</p>
+<ul>
+    <li><strong>prerequisite</strong> — this very series is a chain: <a href="/p/en/kgs-overview/">How Knowledge Accumulates</a> → this document → <a href="/p/en/kgs-views/">Seven Views</a> → <a href="/p/en/kgs-ai-layer/">How AI Reads It</a> → <a href="/p/en/kgs-plugin/">Packaging as a Plugin</a>. Each part is declared a prerequisite of the next, so the graph knows "what to read first". <a href="/p/en/welcome/">Welcome</a> → <a href="/p/en/install/">Install &amp; Start</a> is the same type.</li>
+    <li><strong>implements</strong> — <a href="/p/en/kgs-plugin/">Packaging the Wiki Engine as a Plugin</a> <em>implements</em> the engine this series describes. Harness concept document → plugin architecture document belongs to the same line. There are bridges across Worlds too — the <a href="/p/en/dzp-security/">Douzone Knowledge Platform proposal</a> declares that it will clone the "Reference Wiki (this wiki)" and <em>implement</em> <a href="/p/en/kgs-overview/">this registration pipeline</a>.</li>
+    <li><strong>example-of</strong> — <a href="/p/en/skl-examples/">the collection of skill examples</a> is a <em>concrete case</em> of the "reusable task package" definition in <a href="/p/en/skl-what/">What Is a Skill</a>. <a href="/p/en/llmw-overview/">LLM Wiki</a> also attaches as a concrete case of <a href="/p/en/sb-level2/">Second Brain level 2</a> (grouping by topic).</li>
+    <li><strong>evidence-for</strong> — as in the JSON above, an <a href="/p/en/news-20260711-neo4j-rdf-vs-property-graph/">article</a> that checked the external original attaches as <em>external evidence</em> for the claims of <a href="/p/en/sb-level4/">Second Brain level 4</a>. <a href="/p/en/news-20260709-thariq-fable5-unknowns/">Notes on Thariq's Fable field guide</a> likewise backs the claim in <a href="/p/en/hns-what/">harness engineering</a> that "the environment, more than the model, decides the outcome" — four articles back knowledge documents with this type.</li>
+</ul>
+
+<p>On top of this there is <strong>a third connection layer</strong> — <strong>citation backlinks (<code>citedBy</code>)</strong>. The index build <strong>gathers in reverse</strong> the internal <code>#!</code> links a document body makes to other documents, and automatically shows them at the bottom of the cited document as &ldquo;documents that cite this one&rdquo;. Being neither shared concepts (<code>related</code>) nor declarations (<code>relations</code>), but a connection derived from <strong>traces of actually referring to something while writing</strong>, it fits the honesty rule naturally — and heavily cited documents reveal themselves as hubs on their own. Only documents in the knowledge index are counted as citers, so links from journals such as the Work Log are not mixed in.</p>
+
+<p>The three layers differ in character. <code>related</code> is <strong>machine-made, symmetric, concept-based</strong>, so it spreads broadly; <code>citedBy</code> is <strong>machine-made, directed, body-link-based</strong>; and <code>relations</code> is <strong>curated, directed, typed</strong>, so it is sparse but dense in meaning. And they follow the same honesty principle — <strong>only relations that actually exist in the body</strong> are attached. In fact, since the current wiki has no case of "a new version superseding an old one that was kept" (documents are fixed in place), the <code>supersedes</code> type is <strong>left empty</strong> even though the vocabulary, validation, and UI are all in place — no forced pairs are made just to fill relations. Declared relations are guarded by the validators: a non-existent target (<code>relations-dangling-ref</code>) and a type outside the five-term vocabulary (<code>relations-unknown-type</code>) are ERRORs that block the merge, while missing justifications and conflicting declarations become WARN review signals.</p>
+
+<div class="note">
+    <span class="nh">In a nutshell</span>
+    Concepts are <strong>curated</strong> (body-real only) → edges come from <strong>rarity-weighted sharing</strong> (2 or more, or one rare concept) → shortfalls are made up by <strong>folder top-up</strong> → every document has 2–4 connections and there are no orphans. On top of that, <strong>citation backlinks (<code>citedBy</code>)</strong>, the reverse index of body <code>#!</code> links, and <strong>directed typed relations (<code>relations</code>)</strong> declared by curation are layered separately. Heavily referenced documents become <strong>hubs</strong> and form the center of the graph (<a href="/p/en/kgs-views/">next part</a>).
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">Created</span> 2026-07-11 &middot; <span class="pr-k">Updated</span> 2026-07-24</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/kgs-overview/">How Knowledge Accumulates — The Four-Level Hierarchy and the Registration Pipeline</a></li><li><a href="/p/en/kgs-views/">Nine Ways to Read the Graph — Each View Answers a Different Question</a></li></ul>
+</nav>
+</body>
+</html>

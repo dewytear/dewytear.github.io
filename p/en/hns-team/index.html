@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Teams and Context Management</title>
+<meta name="description" content="Covers isolated subagents, communicating agent teams, and context management.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/hns-team/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hns-team/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hns-team/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hns-team/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Agent Teams and Context Management",
+ "description": "Covers isolated subagents, communicating agent teams, and context management.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/hns-team/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hns-team",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:09:56+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!hns-team");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hns-team">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/hns-team/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Agent Teams and Context Management</h2>
+<p>How you make several agents collaborate, and how you manage context, decide the quality of a harness.</p>
+
+<h3>Isolated subagents → a team that communicates</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 172" role="img" aria-label="Comparison of isolated subagents (cannot talk to each other) vs an agent team (they communicate with each other)">
+    <line class="d-edge dash" x1="350" y1="6" x2="350" y2="150"/>
+
+    <rect class="d-box" x="110" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="170" y="31" text-anchor="middle">Orchestrator</text>
+    <rect class="d-box soft" x="40" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="95" y="104" text-anchor="middle">Agent A</text>
+    <rect class="d-box soft" x="190" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="245" y="104" text-anchor="middle">Agent B</text>
+    <line class="d-edge" x1="140" y1="44" x2="100" y2="78"/><polygon class="d-arrow" points="96,72 104,80 90,80"/>
+    <line class="d-edge" x1="200" y1="44" x2="240" y2="78"/><polygon class="d-arrow" points="244,72 250,80 236,80"/>
+    <text class="d-sub" x="170" y="105" text-anchor="middle">✕</text>
+    <text class="d-sub" x="170" y="140" text-anchor="middle">Cannot talk to each other</text>
+    <text class="d-label sm" x="170" y="162" text-anchor="middle">Isolated subagents</text>
+
+    <rect class="d-box accent" x="470" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="530" y="31" text-anchor="middle">Orchestrator</text>
+    <rect class="d-box" x="400" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="455" y="104" text-anchor="middle">Agent C</text>
+    <rect class="d-box" x="550" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="605" y="104" text-anchor="middle">Agent D</text>
+    <line class="d-edge" x1="500" y1="44" x2="460" y2="78"/><polygon class="d-arrow" points="456,72 464,80 450,80"/>
+    <line class="d-edge" x1="560" y1="44" x2="600" y2="78"/><polygon class="d-arrow" points="604,72 610,80 596,80"/>
+    <line class="d-edge accent" x1="512" y1="100" x2="548" y2="100"/>
+    <polygon class="d-arrow accent" points="542,95 550,100 542,105"/>
+    <polygon class="d-arrow accent" points="518,95 510,100 518,105"/>
+    <text class="d-accent" x="530" y="140" text-anchor="middle" font-size="11">↔ Talk to each other</text>
+    <text class="d-label sm" x="530" y="162" text-anchor="middle">Agent team</text>
+</svg>
+<div class="d-cap">Isolated subagents only return a result, but an agent team wakes each other back up and collaborates.</div>
+</div>
+<ul>
+    <li><strong>The existing way</strong> &mdash; subagents each work in an <strong>isolated environment</strong> and only return the result (in parallel). There was no way for them to talk to each other.</li>
+    <li><strong>Agent team</strong> &mdash; the agents work <strong>while communicating</strong>, so they behave more smartly.</li>
+</ul>
+<p>For example, suppose a research agent finished its investigation and terminated, then an analysis agent was spawned, and during the analysis it finds <strong>a part where the research is lacking</strong> &mdash; instead of doing the research itself, it <strong>wakes the research agent back up</strong> and asks for additional investigation.</p>
+
+<h3>Enabling agent teams</h3>
+<p>This feature is an <strong>experimental version</strong>, so it is disabled by default. Turn on the environment variable in <code>~/.claude/settings.json</code> in your user folder.</p>
+<pre><code><span class="c"># env in ~/.claude/settings.json</span>
+"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"</code></pre>
+<ul>
+    <li>Only when this value is on do the agents talk to each other and act as a team.</li>
+    <li>When an agent <strong>succeeds at dynamic loading</strong>, team mode turns on properly; when it fails, it often comes up as an isolated ordinary subagent. (A bug of the experimental version.)</li>
+    <li>For reference, agent-to-agent communication has also been added to Gemini's <strong>Antigravity CLI</strong>.</li>
+</ul>
+
+<h3>Context = the kitchen counter</h3>
+<p>Context is like the <strong>counter</strong> on which you make a dish. It is tidy when only things related to that dish are on it, but once unrelated things get mixed in, there is room for mistakes (like sugar being in the salt shaker). In practice, when a conversation gets long the thinking before and after can end up <strong>contradictory</strong>, and if you give it work in that state the AI gets confused about "is A right or is B right". That is why <strong>context management</strong> matters.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Harness &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/hnp-architecture/">How It Works and the 6 Stages</a></li><li><a href="/p/en/hnp-intro/">Harness Plugin — Introduction</a></li><li><a href="/p/en/hns-run/">Running the Harness (Hands-on)</a></li><li><a href="/p/en/omc-agents/">Agents · Skills</a></li></ul>
+</nav>
+</body>
+</html>

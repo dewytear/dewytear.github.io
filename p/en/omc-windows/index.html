@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Windows Cautions</title>
+<meta name="description" content="Covers native Windows Hook support, the psmux alternative, and the WSL2 alternative path.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/omc-windows/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/omc-windows/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/omc-windows/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/omc-windows/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Windows Cautions",
+ "description": "Covers native Windows Hook support, the psmux alternative, and the WSL2 alternative path.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/omc-windows/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!omc-windows",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T12:15:44+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!omc-windows");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!omc-windows">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/omc-windows/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Windows Cautions</h2>
+<p>The Windows PowerShell environment needs some separate attention. The key point is that <strong>tmux-dependent features are solved with psmux (no WSL needed), and WSL2 is an alternative path</strong>.</p>
+
+<ul>
+    <li>v4.14.4 included a fix related to the Native Windows Hook manifest (removing the sh invocation), and since then the Native Windows Hook can be used as is. The "WSL2 recommended" guidance in older documents is outdated — the current official README presents WSL2 only as an alternative path.</li>
+    <li>Features that need <code>tmux</code> (the <code>omc team</code> CLI, parallel execution of some external AI workers) may have limitations with Native Windows PowerShell alone. The official README presents <strong>psmux</strong> (<code>winget install psmux</code>), a native tmux-compatible tool for Windows, and when you use psmux, WSL is not needed.</li>
+    <li>Plugin installation · setup · doctor · using skills inside a session all work as is on Native Windows. If problems keep recurring in your environment, there is also the alternative path of switching to WSL2.</li>
+    <li>Even if <code>npm view</code> · <code>npm ping</code> work fine in PowerShell, the Claude Code plugin installation flow and the npm CLI installation flow are separate things.</li>
+</ul>
+
+<div class="note warn">
+    <span class="nh">Things to check beforehand</span>
+    1. Whether your actual environment is Windows Native PowerShell or WSL2<br>
+    2. Whether you will use OMC as a Claude Code plugin or as the npm CLI/runtime<br>
+    3. Whether you plan to also use multi-AI features that need tmux, such as <code>/omc-teams</code>
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · PlugIn · OMC &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/ccb-terminal/">Basic Terminal Commands</a></li><li><a href="/p/en/omc-intro/">Introducing OMC</a></li><li><a href="/p/en/omc-concepts/">Core Terminology</a></li></ul>
+</nav>
+</body>
+</html>

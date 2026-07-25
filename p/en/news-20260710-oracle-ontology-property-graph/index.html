@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oracle Ontology and Property Graphs — Turning Tables into a Map of Knowledge</title>
+<meta name="description" content="Organizes Oracle&#x27;s ontology and property graph approach — RDF vs property graphs, building a graph as a metadata view, PGQL and SQL/PGQ multi-hop and cycle queries, graph algorithms, and Select AI natural-language querying, explained with official-doc verification, diagrams, and a glossary.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/news-20260710-oracle-ontology-property-graph/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260710-oracle-ontology-property-graph/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260710-oracle-ontology-property-graph/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260710-oracle-ontology-property-graph/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Oracle Ontology and Property Graphs — Turning Tables into a Map of Knowledge",
+ "description": "Organizes Oracle's ontology and property graph approach — RDF vs property graphs, building a graph as a metadata view, PGQL and SQL/PGQ multi-hop and cycle queries, graph algorithms, and Select AI natural-language querying, explained with official-doc verification, diagrams, and a glossary.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/news-20260710-oracle-ontology-property-graph/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260710-oracle-ontology-property-graph",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-10T12:23:47+09:00",
+ "dateModified": "2026-07-10T15:55:10+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!news-20260710-oracle-ontology-property-graph");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260710-oracle-ontology-property-graph">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/news-20260710-oracle-ontology-property-graph/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Oracle Ontology and Property Graphs — Turning Tables into a Map of Knowledge</h2>
+<p>A document that organizes Oracle's <strong>ontology and property graph</strong> approach. It compares the two branches of graphs, <strong>RDF and the property graph</strong>, covers <strong>how to link scattered relational tables (RDB) by entities and relationships into a &ldquo;map of knowledge&rdquo; (an ontology in the broad sense)</strong>, and follows the flow from querying that inside Oracle DB with <strong>PGQL and SQL/PGQ</strong> all the way to natural-language questions with <strong>Select AI</strong>. The technologies (Oracle Graph, PGQL, SQL/PGQ, Graph Studio, Select AI) were <strong>grounded by checking the official documentation</strong>, and terms you may be hearing for the first time are unpacked in each section and in the <strong>glossary</strong> at the end.</p>
+
+<div class="note">
+    <span class="nh">What is covered and how it was verified</span>
+    · Topic: Oracle ontology · property graphs (RDF · PGQL · SQL/PGQ · Select AI)<br>
+    · Evidence: Oracle's official blogs and docs (SQL/PGQ · PGQL · Graph Server/PGX · Graph Studio · Select AI), the ISO SQL:2023 standard, oracle/pgql-lang — links are in the Sources section at the end of the document.<br>
+    · This document belongs to the same &ldquo;link knowledge by relationships&rdquo; lineage as this wiki's <a href="/p/en/sb-level4/">Second Brain Level 4 · Knowledge Graph</a> and <a href="/p/en/dzp-core/">Douzone Knowledge Platform Proposal</a>.
+</div>
+
+<h3>① Two Branches of Graphs — RDF vs the Property Graph</h3>
+<p>The starting point is putting <strong>RDF</strong> and the <strong>property graph</strong> side by side. Both are graphs that see data as &ldquo;dots and lines&rdquo; (entities and relationships), but they have different characters.</p>
+<div class="note">
+    <span class="nh">Term — RDF and the triple</span>
+    <strong>RDF</strong> (Resource Description Framework) is a standard that expresses every fact strictly as three pieces — <strong>subject–predicate–object</strong>, that is, a <strong>triple</strong> (e.g., &ldquo;Wine1 – origin – France&rdquo;). It is closer to a <strong>vocabulary or lexicon</strong> that defines rules and concepts, so it is strong at reasoning about meaning formally (inference).
+</div>
+<p>The property graph is more flexible. It expresses data as three things: <strong>nodes, edges, and properties</strong>.</p>
+<ul>
+    <li><strong>Node (= vertex)</strong> — a single subject. An <strong>entity</strong> such as a person, event, or thing. (e.g., &lsquo;Lee Mong-ryong&rsquo;, &lsquo;Seong Chun-hyang&rsquo;)</li>
+    <li><strong>Edge</strong> — the <strong>relationship</strong> that connects one node to another. (e.g., &lsquo;married&rsquo;)</li>
+    <li><strong>Property</strong> — an <strong>attribute</strong> attached to a node or edge. Unlike RDF, a flexible value that <strong>may or may not be present</strong>. (e.g., gender=male, age=20)</li>
+    <li><strong>Label</strong> — a <strong>name tag</strong> (type) attached to a node or edge. (e.g., the node label &lsquo;Person&rsquo;)</li>
+</ul>
+<p>The key difference is <strong>where you put the attributes</strong>. To express the same wine table, RDF pulls <strong>every single column — type, importer, vintage, origin, price — out as an edge</strong>, so five lines hang off one node; as the data grows it becomes sharply more complex and heavier. The property graph puts the values that need no traversal, such as vintage and price, <strong>inside the node as properties</strong>, and leaves <strong>only the values to be shared and traversed, such as origin and importer, as edges</strong>. As a result the number of lines (edges) drops, which is cleaner, and <strong>connection traversal gets faster</strong> for questions like &ldquo;only French wines&rdquo; or &ldquo;only wines from the same importer&rdquo;.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 360" role="img" aria-label="For the same wine table, RDF pulls every column out as an edge so five lines hang off one node, while the property graph leaves only the values to be traversed as edges and puts the rest inside the node as properties">
+    <text class="d-label sm" x="360" y="22" text-anchor="middle">The same wine data, two representations</text>
+    <rect class="d-box soft" x="190" y="38" width="340" height="30" rx="7"/><text class="d-label sm" x="360" y="57" text-anchor="middle">RDB table: wine · type · importer · vintage · origin · price</text>
+
+    <text class="d-label sm" x="180" y="98" text-anchor="middle">RDF — every column as an edge</text>
+    <circle class="d-node" cx="180" cy="180" r="26"/><text class="d-node-label" x="180" y="184" text-anchor="middle">Wine1</text>
+    <line class="d-edge" x1="158" y1="164" x2="96" y2="132"/><rect class="d-box soft" x="40" y="118" width="60" height="24" rx="6"/><text class="d-sub" x="70" y="134" text-anchor="middle">type</text>
+    <line class="d-edge" x1="154" y1="180" x2="96" y2="180"/><rect class="d-box soft" x="34" y="168" width="62" height="24" rx="6"/><text class="d-sub" x="65" y="184" text-anchor="middle">importer</text>
+    <line class="d-edge" x1="158" y1="196" x2="96" y2="228"/><rect class="d-box soft" x="38" y="216" width="62" height="24" rx="6"/><text class="d-sub" x="69" y="232" text-anchor="middle">vintage</text>
+    <line class="d-edge" x1="202" y1="164" x2="250" y2="136"/><rect class="d-box soft" x="248" y="122" width="62" height="24" rx="6"/><text class="d-sub" x="279" y="138" text-anchor="middle">origin</text>
+    <line class="d-edge" x1="206" y1="192" x2="250" y2="220"/><rect class="d-box soft" x="248" y="210" width="52" height="24" rx="6"/><text class="d-sub" x="274" y="226" text-anchor="middle">price</text>
+    <text class="d-sub" x="180" y="284" text-anchor="middle">1 node, 5 edges — complex and heavy as it grows</text>
+
+    <line class="d-edge dash" x1="360" y1="100" x2="360" y2="300"/>
+
+    <text class="d-label sm" x="545" y="98" text-anchor="middle">Property graph — properties inside the node</text>
+    <rect class="d-box accent" x="470" y="150" width="150" height="80" rx="12"/><text class="d-label sm" x="545" y="172" text-anchor="middle">Wine1</text><text class="d-sub" x="545" y="192" text-anchor="middle">vintage=2018</text><text class="d-sub" x="545" y="208" text-anchor="middle">price=₩</text>
+    <line class="d-edge accent" x1="470" y1="176" x2="438" y2="150"/><rect class="d-box soft" x="376" y="136" width="62" height="24" rx="6"/><text class="d-sub" x="407" y="152" text-anchor="middle">origin</text>
+    <line class="d-edge accent" x1="470" y1="204" x2="438" y2="230"/><rect class="d-box soft" x="376" y="220" width="62" height="24" rx="6"/><text class="d-sub" x="407" y="236" text-anchor="middle">importer</text>
+    <line class="d-edge accent" x1="620" y1="162" x2="634" y2="162"/><polygon class="d-arrow accent" points="634,158 642,162 634,166"/><rect class="d-box soft" x="642" y="150" width="72" height="24" rx="6"/><text class="d-sub" x="678" y="166" text-anchor="middle">France?</text><text class="d-sub" x="678" y="200" text-anchor="middle">one edge away</text>
+    <text class="d-sub" x="545" y="284" text-anchor="middle">Fewer edges · better for traversal</text>
+</svg>
+<div class="d-cap">The difference is <strong>where the properties sit</strong> — RDF pulls them all out as edges, which is strict but heavy; the property graph leaves <strong>only what must be traversed as an edge</strong> and stays light.</div>
+</div>
+
+<h3>② Why the Property Graph — Following Connections Instead of Joins</h3>
+<p>The usefulness of the property graph shows up in <strong>relationship traversal</strong>. Two representative examples:</p>
+<ul>
+    <li><strong>Bank transfers</strong> — given an account table and a transfer table, to see &ldquo;is account 1 connected to account 833?&rdquo; in an RDB you have to follow the transfer records with <strong>repeated joins</strong> in SQL. With a graph, making accounts nodes and transfers edges lets you <strong>visualize the path as it is</strong>, so which accounts it passed through is intuitively visible.</li>
+    <li><strong>Retail orders</strong> — asking &ldquo;what else did customers who bought chocolate buy?&rdquo; across customer, order, and product tables takes several joins in SQL, but a graph sweeps product→customer→product straight <strong>along the edges</strong>.</li>
+</ul>
+<p>What they have in common is that they are <strong>&ldquo;questions where connection matters&rdquo;</strong>. Uses by industry: <strong>finance</strong> (fraudulent transfer and money-laundering detection), <strong>retail</strong> (purchase-pattern clustering and recommendation), <strong>hospitals</strong> (movement paths of similar patients), <strong>manufacturing</strong> (part hierarchies, failure propagation, supply-chain impact), <strong>networks</strong> (fault routing in telecom, traffic, and road networks; root-cause tracing of cloud outages). Anywhere data is <strong>connected and interdependent</strong> is a fit.</p>
+
+<h3>③ What Is an Ontology — Broadly, a &lsquo;Map of Knowledge&rsquo;</h3>
+<p>This is the conceptual center of the article: there is no need to view <strong>ontology</strong> in the difficult sense of &ldquo;semantics and the OWL standard&rdquo; only.</p>
+<div class="note">
+    <span class="nh">Term — ontology (broad sense vs narrow sense)</span>
+    <strong>Narrow sense</strong>: a system that formally defines the <strong>grammar, vocabulary, and semantics</strong> of concepts with the W3C standard <strong>OWL</strong> (Web Ontology Language) and even performs <strong>inference</strong> — the rigorous ontology of the RDF family.<br>
+    <strong>Broad sense</strong>: <strong>the graph itself, which links the entities and relationships of scattered tables</strong>, is also seen as a &ldquo;layer of knowledge&rdquo; and called an ontology. (Much of what Palantir calls an &ldquo;ontology&rdquo; is this connectedness too.) <strong>What matters is not the formal standard but the fact that distributed business data becomes one map of knowledge.</strong>
+</div>
+<p>In practice, then, the <strong>broad sense</strong> is the useful one. Most workflows and business tasks are managed as <strong>tables (entities)</strong>, and if you explicitly link the <strong>relationships between those entities</strong>, what was fragmented table by table becomes a <strong>map of knowledge you can view as interconnected</strong>. If you do not need RDF/OWL's formal inference, a property graph alone gives you a practical &ldquo;knowledge layer&rdquo;. (When formal semantics and inference really are required, RDF/OWL has the advantage — the two approaches are not mutually exclusive.)</p>
+
+<h3>④ Building the Graph — With Metadata, Without Copying Data</h3>
+<p>The most practical part. A property graph <strong>does not physically copy the data</strong>. It lays a <strong>graph &lsquo;view&rsquo; made purely of metadata</strong> on top of existing RDB tables. With a <code>CREATE PROPERTY GRAPH</code> statement, you:</p>
+<ul>
+    <li>designate the <strong>tables that will become nodes</strong> and pick the key (account number, etc.) and the <strong>properties</strong> you need (e.g., bank account → node, key=id, properties=name·balance).</li>
+    <li>designate the <strong>tables that will become relationships</strong> as <strong>edge tables (&ldquo;H tables&rdquo;)</strong> and decide, via source key and destination key, which node connects to which node (e.g., bank transfer → edge, source=sending account, destination=receiving account).</li>
+</ul>
+<div class="note warn">
+    <span class="nh">Term — the edge table (H table) and &ldquo;no FK needed&rdquo;</span>
+    A separate table that holds relationships is commonly called an <strong>H table</strong> (edge table). A traditional RDB expresses relationships between tables with a <strong>foreign key (FK)</strong>, but the source/destination keys of a property graph <strong>can be designated even without a PK–FK constraint in place.</strong> In other words, you can lay a graph on top even if FKs are not tidied up in the existing schema.
+</div>
+<p>A practical tip: writing edge (H) tables by hand is tedious, but if you hand over the table information and the existing relationships, <strong>an AI such as ChatGPT or Claude will suggest &ldquo;build it like this&rdquo;</strong>. On Oracle <strong>Autonomous DB</strong> there is even a feature that, given schema (ERD) information, helps <strong>automatically</strong> generate the graph.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 260" role="img" aria-label="The account table in the RDB is designated as nodes and the transfer table as an edge H table, so a CREATE PROPERTY GRAPH statement makes a graph view with no physical copying">
+    <rect class="d-box soft" x="20" y="40" width="150" height="60" rx="9"/><text class="d-label sm" x="95" y="62" text-anchor="middle">Bank Account</text><text class="d-sub" x="95" y="80" text-anchor="middle">RDB table · accounts</text><text class="d-sub" x="95" y="93" text-anchor="middle">key=id, name, balance</text>
+    <rect class="d-box soft" x="20" y="150" width="150" height="60" rx="9"/><text class="d-label sm" x="95" y="172" text-anchor="middle">Bank Transfer</text><text class="d-sub" x="95" y="190" text-anchor="middle">RDB table · transfers</text><text class="d-sub" x="95" y="203" text-anchor="middle">src · dst · amount</text>
+    <line class="d-edge" x1="170" y1="70" x2="214" y2="100"/><polygon class="d-arrow" points="209,94 216,102 207,100"/>
+    <text class="d-sub" x="192" y="66" text-anchor="middle">as nodes</text>
+    <line class="d-edge" x1="170" y1="180" x2="214" y2="150"/><polygon class="d-arrow" points="207,150 216,148 209,156"/>
+    <text class="d-sub" x="188" y="200" text-anchor="middle">as edges (H)</text>
+    <rect class="d-box accent" x="222" y="96" width="196" height="58" rx="11"/><text class="d-label sm" x="320" y="120" text-anchor="middle">CREATE PROPERTY GRAPH</text><text class="d-sub" x="320" y="140" text-anchor="middle">metadata only — no data copied</text>
+    <line class="d-edge accent" x1="418" y1="125" x2="462" y2="125"/><polygon class="d-arrow accent" points="462,120 470,125 462,130"/>
+    <rect class="d-box accent" x="470" y="88" width="230" height="74" rx="12"/><text class="d-label" x="585" y="116" text-anchor="middle">Property graph view</text><text class="d-sub" x="585" y="136" text-anchor="middle">accounts=nodes · transfers=edges</text><text class="d-sub" x="585" y="150" text-anchor="middle">linked by src/dst keys, no FK</text>
+    <text class="d-sub" x="320" y="196" text-anchor="middle">AI suggests the edge (H) table · ADB generates it from the ERD</text>
+    <text class="d-sub" x="585" y="196" text-anchor="middle">Like RDF — a view, not physical data</text>
+</svg>
+<div class="d-cap">A graph is <strong>not a new store but a view over existing tables</strong> — designate the node tables plus the edge (H) tables and you are done.</div>
+</div>
+
+<h3>⑤ Querying the Graph — PGQL, SQL/PGQ, and the &lsquo;Hop&rsquo;</h3>
+<p>There are two languages for putting questions to the graph you built. Both are <strong>SQL-based</strong>, so you use <code>SELECT</code> and <code>WHERE</code> as they are and write the <strong>graph pattern in a <code>MATCH</code> clause</strong>.</p>
+<div class="note">
+    <span class="nh">Terms — PGQL · SQL/PGQ · hop</span>
+    <strong>PGQL</strong> (Property Graph Query Language): an open graph query language created with Oracle's participation. Strong when running algorithms on the graph analytics engine (PGX).<br>
+    <strong>SQL/PGQ</strong>: the graph query feature folded into the <strong>ISO SQL:2023 standard</strong> (Part 16). It uses the <code>GRAPH_TABLE(...)</code> operator plus a <code>MATCH</code> pattern. <strong>It runs directly on the SQL engine, so it is faster.</strong><br>
+    <strong>Pattern notation</strong>: nodes in <code>(parentheses)</code>, relationships in <code>[brackets]</code>, <code>-&gt;</code> when directed and <code>-</code> when not.<br>
+    <strong>Hop</strong>: crossing a relationship once. <code>{1,3}</code> means a path &ldquo;connected even by way of 1 to 3 crossings&rdquo; — it finds transfers that went through several intermediate accounts too.
+</div>
+<p>Thanks to this &lsquo;hop&rsquo;, <strong>complex connection analysis</strong> is expressed in a single line. Three representative financial queries:</p>
+<ul>
+    <li><strong>Direct transfer</strong> — return accounts that transferred even once (source→destination, 1 hop).</li>
+    <li><strong>Multi-step transfer</strong> — <code>{1,3}</code> hops: even paths transferred through 1 to 3 intermediate accounts. Used for <strong>money-laundering</strong> detection.</li>
+    <li><strong>Cycle (loop) detection</strong> — accounts where the start and the end are the same (e.g., money that came back to me after 5 hops). The core of detecting laundering rings.</li>
+</ul>
+<p>Written in traditional SQL the same query balloons into <strong>countless joins and unions</strong>, but SQL/PGQ needs only one <code>MATCH</code> line — this is the core value of graph queries (expressing complex connections concisely and intuitively).</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="On an account graph it shows a 1-hop direct transfer, a 1-to-3-hop multi-step transfer for money laundering, and cycle loop detection where the start and end are the same">
+    <text class="d-label sm" x="120" y="26" text-anchor="middle">1 hop — direct transfer</text>
+    <circle class="d-node" cx="50" cy="90" r="20"/><text class="d-node-label" x="50" y="94" text-anchor="middle">A1</text>
+    <line class="d-edge accent" x1="70" y1="90" x2="168" y2="90"/><polygon class="d-arrow accent" points="168,85 178,90 168,95"/>
+    <circle class="d-node" cx="198" cy="90" r="20"/><text class="d-node-label" x="198" y="94" text-anchor="middle">A2</text>
+    <text class="d-sub" x="120" y="140" text-anchor="middle">MATCH (a)-[t]-&gt;(b)</text>
+
+    <line class="d-edge dash" x1="252" y1="30" x2="252" y2="210"/>
+
+    <text class="d-label sm" x="360" y="26" text-anchor="middle">{1,3} hops — multi-step laundering</text>
+    <circle class="d-node" cx="292" cy="90" r="18"/><text class="d-node-label" x="292" y="94" text-anchor="middle">A1</text>
+    <line class="d-edge accent" x1="310" y1="90" x2="336" y2="90"/><polygon class="d-arrow accent" points="336,86 344,90 336,94"/>
+    <circle class="d-node" cx="362" cy="90" r="18"/><text class="d-node-label" x="362" y="94" text-anchor="middle">mid</text>
+    <line class="d-edge accent" x1="380" y1="90" x2="406" y2="90"/><polygon class="d-arrow accent" points="406,86 414,90 406,94"/>
+    <circle class="d-node" cx="432" cy="90" r="18"/><text class="d-node-label" x="432" y="94" text-anchor="middle">A9</text>
+    <text class="d-sub" x="360" y="140" text-anchor="middle">MATCH (a)-[t]-&gt;{1,3}(b)</text>
+
+    <line class="d-edge dash" x1="486" y1="30" x2="486" y2="210"/>
+
+    <text class="d-label sm" x="605" y="26" text-anchor="middle">Cycle — loop detection</text>
+    <circle class="d-node" cx="605" cy="70" r="18"/><text class="d-node-label" x="605" y="74" text-anchor="middle">A1</text>
+    <circle class="d-node" cx="545" cy="140" r="16"/><circle class="d-node" cx="665" cy="140" r="16"/>
+    <line class="d-edge accent" x1="592" y1="83" x2="556" y2="126"/><polygon class="d-arrow accent" points="553,120 555,130 561,124"/>
+    <line class="d-edge accent" x1="559" y1="148" x2="651" y2="148"/><polygon class="d-arrow accent" points="651,143 660,148 651,153"/>
+    <line class="d-edge accent" x1="656" y1="127" x2="617" y2="84"/><polygon class="d-arrow accent" points="622,84 614,80 620,90"/>
+    <text class="d-sub" x="605" y="186" text-anchor="middle">start=end account (back in 5 hops)</text>
+    <text class="d-sub" x="360" y="232" text-anchor="middle">Traditional SQL: countless joins and unions → SQL/PGQ: one MATCH line</text>
+</svg>
+<div class="d-cap">One hop notation opens up <strong>direct→multi-step→cycle</strong> analysis — money-laundering detection is the representative case.</div>
+</div>
+
+<h3>⑥ Graph Algorithms — Some 80 Built-in Analytics</h3>
+<p>Graphs go beyond &ldquo;finding&rdquo; to &ldquo;analyzing&rdquo;. Oracle DB has <strong>about 80 graph algorithms</strong> built in, covering nearly all the famous ones. Four broad branches:</p>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>Branch</th><th>What it finds</th><th>Use</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Community detection</strong></td><td>Tightly connected groups (clusters)</td><td>Clustering retail customers with similar purchases</td></tr>
+        <tr><td><strong>Centrality</strong></td><td>The key, influential nodes of a network</td><td>Identifying influencers and hub accounts</td></tr>
+        <tr><td><strong>Structure identification</strong></td><td>Recurring patterns</td><td>Detecting fraud and money-laundering patterns</td></tr>
+        <tr><td><strong>Pathfinding</strong></td><td>Connecting paths between two nodes</td><td>Fund tracing · shortest path</td></tr>
+    </tbody>
+</table></div>
+<p>Drawing out <strong>insights hidden inside patterns</strong>, beyond simple connections, is the greatest value of the property graph. That said, algorithmic analysis (especially at large volume) runs in parallel on a separately stood-up in-memory <strong>graph server (PGX)</strong>, so it takes more time than a simple lookup.</p>
+
+<h3>⑦ Select AI — Asking the Graph in Natural Language</h3>
+<p>The key direction: rather than users <strong>writing PGQL or SQL/PGQ themselves, let AI generate it automatically</strong>. Oracle's <strong>Select AI</strong> provides this built into the DB. It turns natural language into a graph query, and the key to it is <strong>metadata</strong>.</p>
+<div class="note">
+    <span class="nh">Terms — Select AI · AI profile</span>
+    <strong>Select AI</strong>: a feature where you put in natural language, as in <code>SELECT AI &lt;natural language&gt;</code>, and the DB converts it to SQL (tables) or SQL/PGQ (graphs) and runs it.<br>
+    <strong>AI profile</strong>: since Oracle does not provide its own LLM, you register in a profile which <strong>model</strong> to use and which <strong>schemas and objects</strong> to target. At query time that object's metadata (DDL for tables, the <code>CREATE PROPERTY GRAPH</code> statement for graphs) is <strong>passed to the LLM automatically</strong> so it produces an accurate query.
+</div>
+<p>The flow is <strong>natural language → (AI profile: model + target metadata) → the LLM generates a GRAPH_TABLE query → the SQL engine executes → results</strong>. Supported actions: <strong>runsql</strong> (run it right away) · <strong>showsql</strong> (see the generated query) · <strong>explainsql</strong> (why it came out that way) · <strong>narrate</strong> (put the results into words) · <strong>showprompt</strong> (the prompt that actually went to the LLM — the <code>CREATE PROPERTY GRAPH</code> statement goes in there verbatim).</p>
+<div class="note warn">
+    <span class="nh">Feature scope and limits (mind the point in time)</span>
+    Natural-language generation <strong>supports SQL/PGQ only</strong> (PGQL is not covered) → another reason to go with SQL/PGQ. Generating synthetic (fake) test data, or <strong>combining graphs and tables in one query</strong>, is still limited. For natural language to produce good queries, tables and columns must carry <strong>comments (descriptions)</strong>, and handling Korean and synonyms is supplemented with <strong>description properties</strong> and <strong>AI agents</strong>. (Select AI features are updated quickly, so re-check the latest docs when adopting.)
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 720 240" role="img" aria-label="The Select AI pipeline: a natural language question goes through the AI profile to the LLM together with the target graph metadata, the LLM generates a GRAPH_TABLE SQL/PGQ query, the SQL engine runs it, and narrate puts the results into words">
+    <rect class="d-box soft" x="14" y="94" width="120" height="52" rx="9"/><text class="d-label sm" x="74" y="116" text-anchor="middle">Natural language</text><text class="d-sub" x="74" y="134" text-anchor="middle">&ldquo;is 1→330 linked?&rdquo;</text>
+    <line class="d-edge accent" x1="134" y1="120" x2="164" y2="120"/><polygon class="d-arrow accent" points="164,115 172,120 164,125"/>
+    <rect class="d-box accent" x="172" y="80" width="140" height="80" rx="11"/><text class="d-label sm" x="242" y="104" text-anchor="middle">AI profile</text><text class="d-sub" x="242" y="124" text-anchor="middle">model choice +</text><text class="d-sub" x="242" y="138" text-anchor="middle">target graph metadata</text>
+    <line class="d-edge accent" x1="242" y1="80" x2="242" y2="52"/><polygon class="d-arrow accent" points="238,58 242,50 246,58"/>
+    <rect class="d-box soft" x="152" y="20" width="180" height="30" rx="7"/><text class="d-sub" x="242" y="39" text-anchor="middle">CREATE PROPERTY GRAPH</text>
+    <line class="d-edge accent" x1="312" y1="120" x2="342" y2="120"/><polygon class="d-arrow accent" points="342,115 350,120 342,125"/>
+    <rect class="d-box" x="350" y="94" width="110" height="52" rx="9"/><text class="d-label sm" x="405" y="116" text-anchor="middle">LLM</text><text class="d-sub" x="405" y="134" text-anchor="middle">generates query</text>
+    <line class="d-edge accent" x1="460" y1="120" x2="490" y2="120"/><polygon class="d-arrow accent" points="490,115 498,120 490,125"/>
+    <rect class="d-box" x="498" y="94" width="122" height="52" rx="9"/><text class="d-label sm" x="559" y="112" text-anchor="middle">GRAPH_TABLE</text><text class="d-sub" x="559" y="132" text-anchor="middle">SQL/PGQ engine</text>
+    <line class="d-edge accent" x1="620" y1="120" x2="650" y2="120"/><polygon class="d-arrow accent" points="650,115 658,120 650,125"/>
+    <rect class="d-box soft" x="658" y="94" width="54" height="52" rx="9"/><text class="d-label sm" x="685" y="116" text-anchor="middle">Result</text><text class="d-sub" x="685" y="134" text-anchor="middle">narrate</text>
+    <text class="d-sub" x="360" y="196" text-anchor="middle">action: runsql · showsql · explainsql · narrate · showprompt</text>
+    <text class="d-sub" x="360" y="216" text-anchor="middle">Natural language covers SQL/PGQ only — target metadata (comments · descriptions) decides accuracy</text>
+</svg>
+<div class="d-cap">The user only throws natural language, and <strong>an LLM loaded with the metadata</strong> writes the graph query instead — the key to accuracy is &ldquo;a schema with descriptions&rdquo;.</div>
+</div>
+
+<h3>⑧ Tools and Editions — What to Use When</h3>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>Tool</th><th>What</th><th>Condition</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Graph Server &amp; Client</strong></td><td>In-memory graph query and analytics engine (PGX) + visualization and CLI</td><td>Included by default on DB <strong>12.2+</strong> <strong>with no extra license</strong></td></tr>
+        <tr><td><strong>Enterprise Edition</strong></td><td>Parallel architecture (large-volume algorithmic analysis)</td><td>Parallel processing requires <strong>EE or above</strong> (not available on SE)</td></tr>
+        <tr><td><strong>Graph Studio</strong></td><td>Integrated environment with notebooks, automatic modeling, and visualization</td><td>Immediately, once provisioned on Autonomous DB (cloud)</td></tr>
+    </tbody>
+</table></div>
+<p>In practice, the natural order is to focus for now on the <strong>core (building a graph and querying it in natural language)</strong> and extend to visualization, advanced algorithms, and the cloud (ADB) when needed. Above all, <strong>defining &ldquo;the business task (question) you want to solve&rdquo; first</strong> is the starting point of graph design — because a graph is not a storage structure but a <strong>view you build per question</strong>.</p>
+
+<h3>Glossary</h3>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+    <tbody>
+        <tr><td><strong>RDF · triple</strong></td><td>A standard that expresses every fact strictly as 3 pieces: subject–predicate–object. Strong at defining rules and vocabulary.</td></tr>
+        <tr><td><strong>Property graph</strong></td><td>A flexible graph model that expresses data as nodes, edges, and properties. Strong at connection traversal.</td></tr>
+        <tr><td><strong>Node · vertex</strong></td><td>An entity (person, thing, event). Two names for the same thing.</td></tr>
+        <tr><td><strong>Edge</strong></td><td>The relationship connecting one node to another. May or may not be directed.</td></tr>
+        <tr><td><strong>Property</strong></td><td>An attribute (key–value) attached to a node or edge. May or may not be present.</td></tr>
+        <tr><td><strong>Label</strong></td><td>A name tag (type) attached to a node or edge.</td></tr>
+        <tr><td><strong>Ontology</strong></td><td>(Narrowly) formalizing the meaning and inference of concepts with OWL. (Broadly) the map of knowledge itself, linking entities and relationships.</td></tr>
+        <tr><td><strong>OWL</strong></td><td>Web Ontology Language. A W3C standard providing formal semantics and inference on top of RDF.</td></tr>
+        <tr><td><strong>Edge table (H table)</strong></td><td>A separate table holding relationships. Becomes the graph's edges. Can be designated even without a PK–FK constraint.</td></tr>
+        <tr><td><strong>PGQL</strong></td><td>An SQL-based graph query language Oracle took part in. Strong on the analytics engine (PGX).</td></tr>
+        <tr><td><strong>SQL/PGQ</strong></td><td>Graph querying in the ISO SQL:2023 standard. GRAPH_TABLE+MATCH. Runs directly on the SQL engine (fast).</td></tr>
+        <tr><td><strong>GRAPH_TABLE</strong></td><td>The SQL/PGQ operator that returns graph pattern matching results like a relational table.</td></tr>
+        <tr><td><strong>MATCH</strong></td><td>The clause where you write the graph pattern to find. Nodes (), relationships [], direction -&gt;.</td></tr>
+        <tr><td><strong>Hop</strong></td><td>Crossing a relationship once. {1,3}=paths connected up to 1–3 steps.</td></tr>
+        <tr><td><strong>Graph algorithms</strong></td><td>Some 80 built in, including community detection, centrality, structure identification, and pathfinding.</td></tr>
+        <tr><td><strong>Graph Server (PGX)</strong></td><td>An in-memory parallel graph analytics engine. For large-volume algorithms.</td></tr>
+        <tr><td><strong>Select AI · AI profile</strong></td><td>Converts natural language to SQL/PGQ. Register the model and target schema in a profile to pass metadata to the LLM.</td></tr>
+    </tbody>
+</table></div>
+
+<h3>Summary — In Three Sentences</h3>
+<ul>
+    <li>A <strong>property graph</strong> links scattered tables by entities and relationships into a &ldquo;map of knowledge&rdquo; (an ontology in the broad sense), but lays it on as a <strong>metadata view</strong> without copying data.</li>
+    <li>Questions where connection matters (money laundering, recommendation, outage tracing) take one line of <strong><code>MATCH</code> and hops</strong> instead of SQL joins — <strong>SQL/PGQ</strong> is both the standard and the fast path.</li>
+    <li>Do not write queries by hand; generate them from natural language with <strong>Select AI</strong> — the key is &ldquo;<strong>metadata with descriptions</strong>&rdquo;.</li>
+</ul>
+
+<h3>Sources</h3>
+<p class="scn-sub"><strong>Oracle official · standards</strong></p>
+<ul>
+    <li>Oracle, &ldquo;Property Graphs in Oracle Database 23ai: The SQL/PGQ Standard&rdquo; — <a href="https://blogs.oracle.com/database/property-graphs-in-oracle-database-23ai-the-sql-pgq-standard" target="_blank" rel="noopener">blogs.oracle.com</a></li>
+    <li>Oracle, &ldquo;Discover connections with SQL Property Graphs in Oracle Autonomous Database&rdquo; — <a href="https://blogs.oracle.com/database/sql-property-graphs-in-oracle-autonomous-database" target="_blank" rel="noopener">blogs.oracle.com</a></li>
+    <li>ISO SQL:2023 · SQL/PGQ (Part 16), GRAPH_TABLE·MATCH — ORACLE-BASE write-up — <a href="https://oracle-base.com/articles/23/sql-property-graphs-and-sql-pgq-23" target="_blank" rel="noopener">oracle-base.com</a></li>
+    <li>PGQL language and specification — <a href="https://pgql-lang.org/" target="_blank" rel="noopener">pgql-lang.org</a> · <a href="https://github.com/oracle/pgql-lang" target="_blank" rel="noopener">github.com/oracle/pgql-lang</a></li>
+    <li>Oracle Graph Server &amp; Client (PGX), 80+ algorithms · parallel — <a href="https://www.oracle.com/database/technologies/spatialandgraph/property-graph-features/graph-server-and-client.html" target="_blank" rel="noopener">oracle.com</a></li>
+    <li>Introducing Graph Studio (Autonomous DB) — <a href="https://blogs.oracle.com/database/introducing-graph-studio-with-oracle-autonomous-database" target="_blank" rel="noopener">blogs.oracle.com</a></li>
+    <li>Select AI for Property Graphs (natural language→PGQ, GRAPH_TABLE) — <a href="https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/graph-autonomous-database.html" target="_blank" rel="noopener">docs.oracle.com</a></li>
+</ul>
+<p class="scn-sub"><strong>RDF vs property graph · ontology background</strong></p>
+<ul>
+    <li>Neo4j, &ldquo;RDF triple stores vs. property graphs&rdquo; — <a href="https://neo4j.com/blog/knowledge-graph/rdf-vs-property-graphs-knowledge-graphs/" target="_blank" rel="noopener">neo4j.com</a></li>
+    <li>Atlan, &ldquo;Ontology vs Knowledge Graph&rdquo; — <a href="https://atlan.com/know/ai-agent/knowledge-graph/ontology-vs-knowledge-graph/" target="_blank" rel="noopener">atlan.com</a></li>
+</ul>
+<p class="scn-sub"><strong>Related documents in this wiki</strong> — <a href="/p/en/sb-level4/">Second Brain Level 4 · Knowledge Graph</a> · <a href="/p/en/dzp-core/">Douzone Knowledge Platform Proposal</a> · <a href="/p/en/dzp-architecture/">Platform Architecture</a></p>
+
+<div class="note">
+    <span class="nh">This document's stance</span>
+    Oracle's graph technologies (SQL/PGQ · PGQL · PGX · Graph Studio · Select AI) were <strong>confirmed to exist against official docs and standards</strong>. That said, the <strong>feature scope and limits (synthetic data, merging graphs and tables, etc.)</strong> are an <strong>area that updates quickly</strong>, so when actually adopting them it is more accurate to re-check the latest Oracle documentation.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">Created</span> 2026-07-10 &middot; <span class="pr-k">Updated</span> 2026-07-10</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/news-20260711-neo4j-rdf-vs-property-graph/">RDF or Property Graph — Two Models for a Knowledge Graph (Neo4j)</a></li><li><a href="/p/en/sb-level4/">Level 4 · Linking by relationship (knowledge graph)</a></li></ul>
+</nav>
+</body>
+</html>

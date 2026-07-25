@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Creating a Skill</title>
+<meta name="description" content="How to turn repeated tasks into reusable Skills and handle @ references and permissions">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/ccb-skills/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/ccb-skills/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/ccb-skills/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/ccb-skills/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Creating a Skill",
+ "description": "How to turn repeated tasks into reusable Skills and handle @ references and permissions",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/ccb-skills/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!ccb-skills",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T20:36:07+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!ccb-skills");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!ccb-skills">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/ccb-skills/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Creating a Skill</h2>
+<p>A <strong>Skill</strong> is a unit of functionality that stores a task you will repeat at least once so you can keep reusing it. Turn the design system you built earlier into a Skill and you can easily stamp out many sites with the same design later on.</p>
+
+<h3>@ (the at sign) — referencing files and folders</h3>
+<p>To have it work from an existing file, type <code>@</code>. Typing <code>@</code> brings up a file picker; choose the file you want and confirm it with <strong>Tab</strong>.</p>
+<pre><code><span class="c"># Turn the design system file into a Skill</span>
+@design-system_new.html Turn this design system into a "my-design" skill.</code></pre>
+<p>A file or folder after <code>@</code> means "work from this content." You can point to folders as well as files.</p>
+
+<h3>Permission requests</h3>
+<p>When it is about to do something to a particular folder mid-task, <strong>options asking for permission</strong> appear.</p>
+<ul>
+    <li><strong>Option 1</strong> — allow just this once.</li>
+    <li><strong>Option 2</strong> — stop asking for the same kind of task.</li>
+</ul>
+
+<h3>Where Skills are stored</h3>
+<ul>
+    <li><strong>Project-only</strong> — created under the project in <code>.claude/skills/</code> (available only in that project).</li>
+    <li><strong>Global</strong> — under your user folder at <code>~/.claude/skills/</code> (on Windows, <code>Users\&lt;user&gt;\.claude\skills</code>). Usable no matter which folder you run from.</li>
+</ul>
+<p>Once the Skill is created, its content (for example, the Apple-toned white design system) is recorded under <code>~/.claude/skills/my-design/</code>.</p>
+
+<h3>Building another site with the Skill</h3>
+<pre><code>@papers_new.md Based on this paper content, use the my-design skill
+to build a paper showcase website with the same design.</code></pre>
+<p>This gives you a paper showcase site with the <strong>same design</strong> as the Mythos site you built earlier.</p>
+
+<div class="note">
+    <span class="nh">More Skills</span>
+    Creating Skills works much the same way every time. For example, give it the developer documentation URL for OpenAI's <strong>GPT Image 2</strong> and say "turn this into a GPT image skill," and you get an infographic generation skill. Formats that are not officially supported, such as <strong>HWP</strong>, can also be turned into a Skill yourself and reused.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/ccb-design-system/">Extracting a design system</a></li><li><a href="/p/en/skills/">Skills</a></li><li><a href="/p/en/skl-overview/">Skill Deep Dive — Overview</a></li><li><a href="/p/en/skl-strengths/">The Strengths of Skills</a></li></ul>
+</nav>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Note Structure — Metadata and Progressive Disclosure</title>
+<meta name="description" content="Optimizes context through YAML front matter metadata and progressive disclosure.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/llmw-metadata/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/llmw-metadata/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/llmw-metadata/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/llmw-metadata/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Note Structure — Metadata and Progressive Disclosure",
+ "description": "Optimizes context through YAML front matter metadata and progressive disclosure.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/llmw-metadata/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!llmw-metadata",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:38:08+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!llmw-metadata");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!llmw-metadata">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/llmw-metadata/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Note Structure — Metadata and Progressive Disclosure</h2>
+<p>Open a wiki note and it is laid out as <strong>title → metadata → body</strong>. If the body starts on line 38, for instance, then the <strong>37 lines before it are all metadata</strong>.</p>
+
+<h3>YAML front matter is the heart of it</h3>
+<p>The point where Obsidian is most valuable as a markdown editor is exactly this <strong>YAML front matter</strong> metadata field. It works on the same principle as the <strong>progressive disclosure</strong> we learned about in Claude Code.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 520 268" role="img" aria-label="Note structure: progressive disclosure running from the title to the YAML front matter (metadata) and then to the body">
+    <rect class="d-box" x="130" y="18" width="260" height="44" rx="10"/>
+    <text class="d-label" x="260" y="45" text-anchor="middle">Title</text>
+
+    <line class="d-edge" x1="260" y1="62" x2="260" y2="90"/>
+    <polygon class="d-arrow" points="260,90 255,82 265,82"/>
+
+    <rect class="d-box accent" x="110" y="92" width="300" height="66" rx="12"/>
+    <text class="d-label" x="260" y="124" text-anchor="middle">YAML front matter</text>
+    <text class="d-sub" x="260" y="143" text-anchor="middle">Metadata — concise, in English</text>
+
+    <line class="d-edge" x1="260" y1="158" x2="260" y2="186"/>
+    <polygon class="d-arrow" points="260,186 255,178 265,178"/>
+
+    <rect class="d-box soft" x="110" y="188" width="300" height="66" rx="12"/>
+    <text class="d-label" x="260" y="220" text-anchor="middle">Body</text>
+    <text class="d-sub" x="260" y="239" text-anchor="middle">Full content — only when needed</text>
+
+    <text class="d-accent" x="462" y="128" text-anchor="middle" font-size="11">① First</text>
+    <text class="d-accent" x="462" y="224" text-anchor="middle" font-size="11">② If needed</text>
+    <path class="d-edge dash accent" d="M462 138 V206" fill="none"/>
+    <polygon class="d-arrow accent" points="462,210 457,202 467,202"/>
+</svg>
+<div class="d-cap">The agent reads the <strong>metadata (front matter) first</strong>, and opens the <strong>body</strong> only when it needs to.</div>
+</div>
+
+<ul>
+    <li>The context window is limited (at most a million tokens), so it cannot open everything.</li>
+    <li>That is why only the important content is put at the very top (the metadata), stated <strong>concisely</strong>.</li>
+    <li>Agents like Claude Code read this <strong>metadata first</strong>. Compared with the whole, it is the tip of the iceberg, but by skimming just these tips they quickly grasp what the content relates to.</li>
+</ul>
+
+<h3>Writing good titles and descriptions (in English)</h3>
+<p>Just like a skill's <code>description</code>, it matters to write a note's <strong>title and description fields</strong> well. We are Korean, but <strong>artificial intelligence reads English faster and better</strong>, so it pays to write the metadata in English.</p>
+
+<div class="note">
+    <span class="nh">Context optimization</span>
+    A big advantage of Obsidian is that instead of packing everything into one file, you can point to the address of another file — <strong>"for tastes, see tastes.md," "for the expert persona, look here."</strong> That way only the files needed for the work at hand get opened, which <strong>optimizes context</strong>. Borrowing Karpathy's idea, the speaker built a set of commands and skills that automate writing this metadata.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · LLM Wiki &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/skl-structure/">SKILL.md Structure and the Description</a></li><li><a href="/p/en/llmw-overview/">LLM Wiki — Overview</a></li><li><a href="/p/en/llmw-vaults/">The Vault System — Main Vault and Wiki Vault</a></li></ul>
+</nav>
+</body>
+</html>

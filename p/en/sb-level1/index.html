@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Level 1 · Find exactly (CLAUDE.md as a router)</title>
+<meta name="description" content="Explains level 1 exact search, using CLAUDE.md as a router.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/sb-level1/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/sb-level1/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/sb-level1/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/sb-level1/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Level 1 · Find exactly (CLAUDE.md as a router)",
+ "description": "Explains level 1 exact search, using CLAUDE.md as a router.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/sb-level1/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!sb-level1",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-04T10:06:25+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!sb-level1");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!sb-level1">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/sb-level1/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Level 1 · Find exactly (CLAUDE.md as a router)</h2>
+<p>Every Second Brain <strong>starts here</strong>. You need exactly two things &mdash; <strong>a single <code>CLAUDE.md</code></strong> and <strong>a few folders and files</strong>. The question at this level is simple. <strong>"That word or file I wrote &mdash; where is it?"</strong></p>
+
+<div class="note">
+    <span class="nh">What CLAUDE.md is</span>
+    It is a file that is <strong>read automatically</strong> when you open the project folder. It works like the <strong>system prompt</strong> for that session (see <a href="/p/en/ccb-claudemd/">CLAUDE.md instructions</a> for details). The key point here is using this file as a <strong>"router (a signpost)"</strong>.
+</div>
+
+<h3>CLAUDE.md = role introduction + routing rules</h3>
+<p>In <code>CLAUDE.md</code> you write not only "who you are and what matters" but also <strong>"which information lives in which folder"</strong>. These are the <strong>routing rules</strong>.</p>
+<pre><code><span class="c"># CLAUDE.md — example routing rules (signposts)</span>
+- If you need personal info about me  → read context/about-me.md
+- If you wonder about the stack/env   → read context/stack.md
+- Q1 priorities for this year         → they are in projects/2026-q1.md
+- Big decisions and their reasons     → context/decisions.md (decision log)</code></pre>
+
+<div class="diagram">
+<svg viewBox="0 0 680 250" role="img" aria-label="Structure in which the router CLAUDE.md directs a request to the right folder by its kind">
+    <rect class="d-box accent" x="250" y="14" width="180" height="52" rx="10"/>
+    <text class="d-label" x="340" y="36" text-anchor="middle">CLAUDE.md</text>
+    <text class="d-sub" x="340" y="54" text-anchor="middle">Router · auto-loaded</text>
+
+    <!-- targets -->
+    <rect class="d-box soft" x="20" y="150" width="150" height="60" rx="9"/>
+    <text class="d-label sm" x="95" y="176" text-anchor="middle">context/</text>
+    <text class="d-sub" x="95" y="194" text-anchor="middle">about-me · stack</text>
+
+    <rect class="d-box soft" x="190" y="150" width="150" height="60" rx="9"/>
+    <text class="d-label sm" x="265" y="176" text-anchor="middle">projects/</text>
+    <text class="d-sub" x="265" y="194" text-anchor="middle">Active projects</text>
+
+    <rect class="d-box soft" x="360" y="150" width="150" height="60" rx="9"/>
+    <text class="d-label sm" x="435" y="176" text-anchor="middle">decisions.md</text>
+    <text class="d-sub" x="435" y="194" text-anchor="middle">Decision log (by date)</text>
+
+    <rect class="d-box soft" x="530" y="150" width="130" height="60" rx="9"/>
+    <text class="d-label sm" x="595" y="176" text-anchor="middle">clients/</text>
+    <text class="d-sub" x="595" y="194" text-anchor="middle">By client</text>
+
+    <!-- routing edges -->
+    <path class="d-edge accent" d="M300 66 C260 110, 130 110, 95 148"/><polygon class="d-arrow accent" points="89.7,141 95.7,150 98.7,139"/>
+    <path class="d-edge accent" d="M330 66 C300 110, 270 118, 265 148"/><polygon class="d-arrow accent" points="260,142 266,151 270,141"/>
+    <path class="d-edge accent" d="M350 66 C390 110, 420 118, 433 148"/><polygon class="d-arrow accent" points="428,141 436,150 439,140"/>
+    <path class="d-edge accent" d="M380 66 C440 108, 560 112, 595 148"/><polygon class="d-arrow accent" points="590,141 598,150 601,140"/>
+
+    <text class="d-sub" x="340" y="118" text-anchor="middle">Routes each request to the right place</text>
+</svg>
+<div class="d-cap">With routing in place, the AI does not ask back "I don't know what you mean" &mdash; it goes <strong>straight to that folder</strong>.</div>
+</div>
+
+<h3>Why routing is needed &mdash; AI cannot find what it does not know the location of</h3>
+<p>You have surely had the experience of the AI asking back <strong>"please give me more information"</strong> even though the file is clearly in the project. That is usually because <strong>you never told it the file was there</strong>.</p>
+<div class="note warn">
+    <span class="nh">The misconception &mdash; "it will dig through everything on its own"</span>
+    AI does <strong>not automatically dig through the whole codebase</strong> (doing that would only waste time and tokens). If it <strong>does not know</strong> something is somewhere, <strong>it cannot find it.</strong> With routing done right, <strong>you no longer need to repeat the same explanation</strong> &mdash; you just speak, and it knows where to look.
+</div>
+
+<h3>Folders the way you understand them</h3>
+<p>There is <strong>still no settled standard</strong> for the correct folder structure. The way someone else does it is not the only right answer. There is one criterion &mdash; <strong>does it make sense to you, and does it make sense to your AI too.</strong></p>
+<pre><code><span class="c"># Folder example (can also be organized by date)</span>
+context/
+  about-me.md          <span class="c"># Me and how I work (background that is always true)</span>
+  stack.md
+  decisions.md         <span class="c"># Decision log — add an entry with the date on big changes</span>
+projects/
+  youtube/2026-05-30-top50.md
+  clients/acme.md</code></pre>
+
+<h3>A drill-down example &mdash; you should be able to find it without AI</h3>
+<p>A good structure is one <strong>a human can walk down by hand too.</strong> If you are looking for "the slide deck for the May 30 video":</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 92" role="img" aria-label="Drill-down path: narrowing step by step from projects to youtube to the date to the slide deck">
+    <rect class="d-box" x="8" y="26" width="120" height="44" rx="9"/>
+    <text class="d-label sm" x="68" y="52" text-anchor="middle">projects/</text>
+    <rect class="d-box" x="166" y="26" width="120" height="44" rx="9"/>
+    <text class="d-label sm" x="226" y="52" text-anchor="middle">youtube/</text>
+    <rect class="d-box" x="324" y="26" width="140" height="44" rx="9"/>
+    <text class="d-label sm" x="394" y="48" text-anchor="middle">2026-05-30</text>
+    <text class="d-sub" x="394" y="63" text-anchor="middle">That day's video</text>
+    <rect class="d-box accent" x="502" y="26" width="160" height="44" rx="9"/>
+    <text class="d-label sm" x="582" y="52" text-anchor="middle">tier-list-deck.html</text>
+
+    <line class="d-edge" x1="128" y1="48" x2="164" y2="48"/><polygon class="d-arrow" points="158,43 166,48 158,53"/>
+    <line class="d-edge" x1="286" y1="48" x2="322" y2="48"/><polygon class="d-arrow" points="316,43 324,48 316,53"/>
+    <line class="d-edge" x1="464" y1="48" x2="500" y2="48"/><polygon class="d-arrow" points="494,43 502,48 494,53"/>
+</svg>
+<div class="d-cap">Because I understand the rules I can find it by hand, and <strong>an agent</strong> that knows the same rules finds it too.</div>
+</div>
+
+<div class="note">
+    <span class="nh">Limits and the next step</span>
+    Level 1 is generally based on <strong>exact words and names</strong>. As files pile up it gets messy and things are easily missed. That is when you move on to <a href="/p/en/sb-level2/">Level 2 &mdash; the LLM wiki and memory</a>, which <strong>groups by topic</strong>. (Note: copying <code>CLAUDE.md</code> into an <code>AGENTS.md</code> for Codex lets you keep using it even when you switch tools, and this <strong>tool independence</strong> is covered at level 2.)
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Second Brain &middot; <span class="pr-k">Created</span> 2026-07-04 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/sb-levels/">The five levels at a glance</a></li><li><a href="/p/en/sb-intro/">What is a Second Brain</a></li><li><a href="/p/en/sb-level2/">Level 2 · Grouping by topic (LLM wiki + memory)</a></li></ul>
+</nav>
+</body>
+</html>

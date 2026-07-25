@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Advanced Tools</title>
+<meta name="description" content="Introduces the family of precise code-analysis tools — LSP, AST Grep, Python REPL and more.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/omc-tools/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/omc-tools/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/omc-tools/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/omc-tools/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Advanced Tools",
+ "description": "Introduces the family of precise code-analysis tools — LSP, AST Grep, Python REPL and more.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/omc-tools/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!omc-tools",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T12:15:44+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!omc-tools");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!omc-tools">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/omc-tools/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Advanced Tools</h2>
+<p>OMC provides a family of tools for handling code more precisely. They are useful when you need analysis more precise than a text search.</p>
+
+<div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr><th>Tool family</th><th>Representative features</th><th>What it is used for</th><th>Cautions</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>LSP</strong></td><td>lsp_hover, lsp_goto_definition, lsp_find_references, lsp_diagnostics</td><td>Accurate symbol navigation, checking type errors, searching references</td><td>Requires a per-language server such as typescript-language-server, pyright, or rust-analyzer</td></tr>
+            <tr><td><strong>AST Grep</strong></td><td>ast_grep_search, ast_grep_replace</td><td>Search · replace based on syntactic structure</td><td>More precise than a text grep, but you need the skill to write the patterns</td></tr>
+            <tr><td><strong>Python REPL</strong></td><td>Analysis based on pandas, numpy, matplotlib</td><td>CSV · log · statistical analysis</td><td>You need to check access permissions for the data files and package availability</td></tr>
+            <tr><td><strong>Ask / Team CLI</strong></td><td>omc ask, omc team, omc session search</td><td>External CLI workers and session search</td><td>You need to distinguish the plugin installation flow from the CLI/runtime path</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">A note on LSP</span>
+    LSP (Language Server Protocol) is a standard that helps a code editor accurately work out "where is this variable defined?" and "is there a type error here?". Note, though, that the language server for the language in question must be installed for it to work properly.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · PlugIn · OMC &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/omc-doctor/">Installation Diagnosis</a></li><li><a href="/p/en/welcome/">Welcome</a></li></ul>
+</nav>
+</body>
+</html>

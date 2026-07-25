@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Is the Bottleneck of the Fable 5 Era the Human Rather Than the Model — Thariq Shihipar’s “Map and Territory” Frame</title>
+<meta name="description" content="Drawing on Thariq&#x27;s Fable 5 experience, it analyzes capability overhang, map and territory, managing unknowns, and six hands-on techniques, checked against the facts and outside research.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/news-20260709-thariq-fable5-unknowns/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260709-thariq-fable5-unknowns/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260709-thariq-fable5-unknowns/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260709-thariq-fable5-unknowns/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Is the Bottleneck of the Fable 5 Era the Human Rather Than the Model — Thariq Shihipar’s “Map and Territory” Frame",
+ "description": "Drawing on Thariq's Fable 5 experience, it analyzes capability overhang, map and territory, managing unknowns, and six hands-on techniques, checked against the facts and outside research.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/news-20260709-thariq-fable5-unknowns/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260709-thariq-fable5-unknowns",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-09T00:55:15+09:00",
+ "dateModified": "2026-07-10T08:09:15+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!news-20260709-thariq-fable5-unknowns");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260709-thariq-fable5-unknowns">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/news-20260709-thariq-fable5-unknowns/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Is the Bottleneck of the Fable 5 Era the Human Rather Than the Model — Thariq Shihipar&rsquo;s &ldquo;Map and Territory&rdquo; Frame</h2>
+
+<p><strong>Thariq Shihipar</strong>, who works on Anthropic&rsquo;s Claude Code team, says he ran into the same problem again and again while working with Fable 5. The model carries out far longer tasks than before, uses tools, explores codebases, and decides a fair amount that the user never wrote down. And precisely because of that, the result can diverge from expectations. <strong>Not because the model is weak, but because the map the user handed over did not capture enough of the actual territory.</strong></p>
+
+<p>This article cross-reads Thariq&rsquo;s public write-up <em>A Field Guide to Fable: Finding Your Unknowns</em>, the 11 hands-on HTML artifacts he published himself, Anthropic&rsquo;s official Fable 5 announcement and model documentation, and research on long-horizon agents and coding agents. To state the conclusion first, Thariq&rsquo;s argument is not a simple &ldquo;write better prompts.&rdquo; It is the claim that <strong>in the era of strong agents, the new bottleneck is not the ability to implement but the ability to discover unknowns, leave a record of the reasoning behind decisions, and understand the result</strong>.</p>
+
+<div class="note">
+    <span class="nh">Source tiers</span>
+    <strong>Primary sources</strong>: Thariq Shihipar&rsquo;s public write-up and the 11 artifacts he published himself.<br>
+    <strong>Official sources</strong>: Anthropic&rsquo;s Fable 5 announcement and the Claude model documentation.<br>
+    <strong>Supporting sources</strong>: AI Engineer talk recaps and coverage, plus research on long-horizon tasks and coding agents.<br>
+    Metrics that shift with time, such as view counts, and personal anecdotes from the talk are flagged separately and never mixed with official company facts.
+</div>
+
+<h3>1. First, a correction — the original text is verifiable</h3>
+
+<p>Thariq&rsquo;s core text is <strong><em>A Field Guide to Fable: Finding Your Unknowns</em></strong>, published on X. Its opening sentence starts from the observation that working with Fable 5 makes him relearn an old lesson. <strong>&ldquo;The map is not the territory.&rdquo;</strong> It means the world the user described in prompts, specs, and documents is not the same as the actual code, data, organization, and user behavior.</p>
+
+<div class="note">
+    <span class="nh">Primary sources</span>
+    · <a href="https://x.com/trq212/status/2073100352921215386" target="_blank" rel="noopener">Thariq Shihipar, A Field Guide to Fable: Finding Your Unknowns</a><br>
+    · <a href="https://thariqs.github.io/html-effectiveness/unknowns/" target="_blank" rel="noopener">Know your unknowns — Thariq&rsquo;s 11 hands-on HTML artifacts</a>
+</div>
+
+<p>The second link in particular leaves little room for interpretation. The companion guide Thariq published himself lays out the hands-on patterns explicitly as <strong>8 before implementation, 1 during, and 2 after — 11 in total</strong>. So introducing this merely as &ldquo;six prompting tips&rdquo; helps compress the core, but it does not convey the published material in full.</p>
+
+<h3>2. What kind of model is Fable 5 — the officially confirmed scope</h3>
+
+<p>Anthropic announced Claude Fable 5 on <strong>June 9, 2026</strong>. The official announcement introduces it as a generally available Mythos-class model, emphasizing capability beyond the models generally available at the time and an <strong>edge on longer, more complex tasks</strong>. Anthropic&rsquo;s model documentation likewise describes Fable 5 as next-generation intelligence for <strong>long-running agents</strong>.</p>
+
+<p>What matters in the official documentation is not the raw benchmark numbers. Fable 5 is designed to work autonomously for longer, keep its own notes across long contexts, and carry compound tasks forward. Thariq&rsquo;s discussion of unknowns connects directly to that capability. <strong>The longer an agent works, the more decisions the user never personally reviewed can accumulate.</strong></p>
+
+<div class="note">
+    <span class="nh">Anthropic official sources</span>
+    · <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank" rel="noopener">Introducing Claude Fable 5</a>, 2026-06-09.<br>
+    · <a href="https://platform.claude.com/docs/en/intro" target="_blank" rel="noopener">Claude Platform Docs — model overview</a>
+</div>
+
+<h3>3. Thariq&rsquo;s first argument — capability overhang: the ability is there, but nobody knows how to use it</h3>
+
+<p>The first concept running through Thariq&rsquo;s talk is <strong>capability overhang</strong>. A capability already exists in the model, but users and product teams have not yet discovered how to draw it out. Evaluating a new model only with the same prompts, the same system prompt, and the same tool contracts as the previous one can lead you to underestimate its real capability.</p>
+
+<p>The Pokémon example he gives is intuitive. Ask a general chat model to find every item among a huge list of names that satisfies a particular string condition, and it can get it wrong working from memory and reasoning alone. An agent like Claude Code, however, can fetch the data, write a script, and run a filter to verify the answer. The performance gain here comes not from &ldquo;having memorized more&rdquo; but from <strong>reshaping the problem into a form that tools can attack</strong>.</p>
+
+<div class="note">
+    <span class="nh">Practical reading</span>
+    A <strong>model</strong> and a <strong>model plus tools plus permissions plus context plus a verification loop</strong> are not the same system. Before concluding that AI cannot do something, check first whether there is a harness that would reveal the capability.
+</div>
+
+<p>A 2026 architectural analysis of Claude Code reinforces this view. The study treats the surrounding systems — shell tools, permissions, context management, MCP, plugins, skills, hooks, subagents — as an important design space rather than a simple model-call loop. Put in Thariq&rsquo;s terms, there is a <strong>gap between the ceiling of the model&rsquo;s capability and the capability an actual product draws out of it</strong>.</p>
+
+<h3>4. Unhobbling Claude — do not bind a strong model with the previous model&rsquo;s rules</h3>
+
+<p>Thariq frames making good use of a new model less as plain prompt engineering and more as a problem of <strong>unhobbling</strong> — releasing the constraints tied around the model&rsquo;s ankles. There are two important cases here.</p>
+
+<h4>4-1. The claim that the system prompt was cut down</h4>
+
+<p>According to write-ups summarizing Thariq&rsquo;s public talk, the Claude Code team stripped out a substantial portion of the system prompt as the model got stronger, and the figure <strong>about 80%</strong> was mentioned in the talk. The reason is paradoxical. The lists of prohibitions and examples that helped a weak model can, on a strong model, act as a boundary on the solutions it will consider.</p>
+
+<p>That said, this <strong>80%</strong> is not confirmed as an official change figure stated in Anthropic&rsquo;s product documentation. So it is right to treat it as <strong>a claim made in Thariq&rsquo;s public talk</strong> rather than assert it as a precise official company metric. Even so, the point stands. If you adopt a new model while keeping intact the rules you piled up to prevent past failures, you can inherit the old model&rsquo;s limits in the new one.</p>
+
+<h4>4-2. Even the same question-asking tool behaved differently across model generations</h4>
+
+<p>Thariq cites the tool for asking the user questions as an example. By his account, on the previous generation of models it took a lot of fiddling to get the tool called reliably; on later models, instructing them to ask about the spec produced something that behaved like a real interview; and with Fable it went as far as organizing the questions and results into a more structured form.</p>
+
+<p>The point is not which version wins. <strong>Even with an identical tool spec, the interaction pattern changes when the model changes.</strong> A model upgrade is therefore not a drop-in swap but a system change in which prompts, tool descriptions, permissions, and verification methods all have to be re-experimented with.</p>
+
+<h3>5. The core frame — the map is not the territory</h3>
+
+<p>The <strong>map</strong> is the representation the user handed to the AI. Prompts, PRDs, specs, CLAUDE.md, example code, design guides, meeting notes, and tickets all belong here. The <strong>territory</strong> is the reality where the work actually happens. Legacy code, hidden data constraints, deployment environments, customer behavior, an organization&rsquo;s tacit rules, incident history, and legal limits are the territory.</p>
+
+<p>The problem is that the map is always incomplete. People do not write down everything they know, they obviously cannot write what they do not know, and what they never considered does not even become a question. An agent does not stop every time it hits one of those blanks. <strong>It forms an assumption and keeps going.</strong> The stronger the model, the farther it can travel on top of that assumption.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 760 400" role="img" aria-label="Diagram contrasting the tidy map on the left with the complex real territory on the right, marking the gap between them as unknowns">
+    <rect class="d-box soft" x="20" y="46" width="300" height="320" rx="16"/>
+    <text class="d-label" x="40" y="76">MAP · Representation handed over</text>
+    <text class="d-sub" x="40" y="96">Prompt · PRD · CLAUDE.md · Spec</text>
+    <rect class="d-box" x="40" y="112" width="120" height="50" rx="10"/><text class="d-label sm" x="100" y="142" text-anchor="middle">Goals &amp; features</text>
+    <rect class="d-box" x="180" y="112" width="120" height="50" rx="10"/><text class="d-label sm" x="240" y="142" text-anchor="middle">API contract</text>
+    <rect class="d-box" x="40" y="182" width="120" height="50" rx="10"/><text class="d-label sm" x="100" y="212" text-anchor="middle">Example code</text>
+    <rect class="d-box" x="180" y="182" width="120" height="50" rx="10"/><text class="d-label sm" x="240" y="212" text-anchor="middle">Design guide</text>
+    <path class="d-edge dash" d="M160 137 L170 172 M180 137 L170 172 M160 207 L170 172 M180 207 L170 172"/>
+    <circle class="d-box accent" cx="170" cy="172" r="20"/><text class="d-label sm" x="170" y="176" text-anchor="middle">Plan</text>
+    <text class="d-sub" x="170" y="342" text-anchor="middle">What a person wrote in words and handed over</text>
+
+    <path class="d-edge accent" d="M320 204 H330"/>
+    <rect class="d-box accent" x="330" y="176" width="100" height="56" rx="12"/>
+    <text class="d-label sm" x="380" y="198" text-anchor="middle">UNKNOWNS</text>
+    <text class="d-sub" x="380" y="216" text-anchor="middle">Not on the map</text>
+    <path class="d-edge accent" d="M430 204 H436"/><polygon class="d-arrow accent" points="434,199 442,204 434,209"/>
+
+    <rect class="d-box" x="440" y="46" width="300" height="320" rx="16"/>
+    <text class="d-label" x="460" y="76">TERRITORY · Actual reality</text>
+    <text class="d-sub" x="460" y="96">Codebase · Data · Users · Ops · Constraints</text>
+    <circle class="d-node" cx="470" cy="132" r="7"/><text class="d-label sm" x="486" y="136">Legacy exceptions</text>
+    <circle class="d-node b" cx="470" cy="170" r="7"/><text class="d-label sm" x="486" y="174">Incident history</text>
+    <circle class="d-node c" cx="470" cy="208" r="7"/><text class="d-label sm" x="486" y="212">Implicit rules</text>
+    <circle class="d-node d" cx="470" cy="246" r="7"/><text class="d-label sm" x="486" y="250">Regulation · permissions</text>
+    <circle class="d-node dim" cx="470" cy="284" r="7"/><text class="d-label sm" x="486" y="288">Real-data spread</text>
+    <text class="d-sub" x="590" y="342" text-anchor="middle">Reality scattered across code, data, and orgs</text>
+</svg>
+<div class="d-cap">The map is the tidy representation in prompts and documents; the territory is the reality where code, data, operations, and organizational constraints are tangled together. The unknowns in the center are the decision vacuum between the two.</div>
+</div>
+
+<div class="note">
+    <span class="nh">Thariq&rsquo;s paradox</span>
+    A weak model gets stuck early, so a human steps in. A strong model can route around the obstacle on its own and run all the way to the end. That is why <strong>the stronger the model, the greater the risk that a wrong assumption propagates farther</strong>.
+</div>
+
+<h3>6. Four kinds of unknown — the most expensive is &ldquo;what you don&rsquo;t know you don&rsquo;t know&rdquo;</h3>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Category</th><th>Meaning</th><th>Project example</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Known knowns</strong></td><td>You know it, and you know that you know</td><td>Stated goals, features, schedule, API contracts</td></tr>
+        <tr><td><strong>Known unknowns</strong></td><td>You know that you do not know</td><td>The database, auth method, and deployment strategy not yet chosen</td></tr>
+        <tr><td><strong>Unknown knowns</strong></td><td>You know it, but it was too obvious to write down</td><td>Team conventions, approval procedures, tacit exception handling</td></tr>
+        <tr><td><strong>Unknown unknowns</strong></td><td>You never even considered it</td><td>Regulatory, performance, data, and compatibility constraints found late</td></tr>
+    </tbody>
+</table>
+</div>
+
+<p>Thariq&rsquo;s hands-on guide is machinery for discovering these four cells — especially <strong>unknown unknowns</strong> — cheaply. It pulls problems that would force an architecture rewrite if found late in a project up to the front, through questions, prototypes, and references before implementation.</p>
+
+<h3>7. The &ldquo;six techniques&rdquo; are a summary; the primary source has 11 artifacts</h3>
+
+<p>In videos and secondhand summaries, Thariq&rsquo;s method is often compressed into six items: <strong>Blind Spot, Prototype, Interview, Reference, Implementation Notes, Quiz</strong>. That summary is useful for grasping the main flow. But Thariq&rsquo;s own companion guide breaks it down further and publishes it as <strong>11 independent HTML artifacts</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 760 450" role="img" aria-label="Process diagram in which 8 patterns before implementation, 1 during, and 2 after cycle around to turn unknowns into knowns">
+    <rect class="d-box soft" x="20" y="40" width="460" height="270" rx="16"/>
+    <text class="d-label" x="40" y="66">BEFORE · pre-implementation</text>
+    <rect class="d-box" x="40" y="86" width="92" height="56" rx="10"/><text class="d-label sm" x="86" y="106" text-anchor="middle">1 · Blindspot</text><text class="d-sub" x="86" y="124" text-anchor="middle">Unasked limits</text>
+    <rect class="d-box" x="142" y="86" width="92" height="56" rx="10"/><text class="d-label sm" x="188" y="106" text-anchor="middle">2 · Teach</text><text class="d-sub" x="188" y="124" text-anchor="middle">Learn its terms</text>
+    <rect class="d-box" x="244" y="86" width="92" height="56" rx="10"/><text class="d-label sm" x="290" y="106" text-anchor="middle">3 · 4 directions</text><text class="d-sub" x="290" y="124" text-anchor="middle">Surface taste</text>
+    <rect class="d-box" x="346" y="86" width="92" height="56" rx="10"/><text class="d-label sm" x="392" y="106" text-anchor="middle">4 · Mock first</text><text class="d-sub" x="392" y="124" text-anchor="middle">Cheap failure</text>
+    <rect class="d-box" x="40" y="150" width="92" height="56" rx="10"/><text class="d-label sm" x="86" y="170" text-anchor="middle">5 · Brainstorm</text><text class="d-sub" x="86" y="188" text-anchor="middle">Widen options</text>
+    <rect class="d-box" x="142" y="150" width="92" height="56" rx="10"/><text class="d-label sm" x="188" y="170" text-anchor="middle">6 · Interview</text><text class="d-sub" x="188" y="188" text-anchor="middle">Big calls first</text>
+    <rect class="d-box" x="244" y="150" width="92" height="56" rx="10"/><text class="d-label sm" x="290" y="170" text-anchor="middle">7 · Reference</text><text class="d-sub" x="290" y="188" text-anchor="middle">Semantics map</text>
+    <rect class="d-box" x="346" y="150" width="92" height="56" rx="10"/><text class="d-label sm" x="392" y="170" text-anchor="middle">8 · Tweakable</text><text class="d-sub" x="392" y="188" text-anchor="middle">Check choices</text>
+    <text class="d-sub" x="250" y="292" text-anchor="middle">8 up-front patterns — widen blind spots, taste, and solution space early</text>
+
+    <path class="d-edge accent" d="M480 175 H498"/><polygon class="d-arrow accent" points="494,170 502,175 494,180"/>
+    <rect class="d-box accent" x="500" y="40" width="110" height="270" rx="16"/>
+    <text class="d-label sm" x="512" y="66">DURING</text>
+    <rect class="d-box soft" x="510" y="130" width="90" height="90" rx="10"/>
+    <text class="d-label sm" x="555" y="155" text-anchor="middle">9 · Impl.</text><text class="d-label sm" x="555" y="172" text-anchor="middle">notes</text>
+    <text class="d-sub" x="555" y="196" text-anchor="middle">Log deviations</text>
+
+    <path class="d-edge accent" d="M610 175 H628"/><polygon class="d-arrow accent" points="624,170 632,175 624,180"/>
+    <rect class="d-box" x="630" y="40" width="110" height="270" rx="16"/>
+    <text class="d-label sm" x="642" y="66">AFTER</text>
+    <rect class="d-box soft" x="640" y="110" width="90" height="70" rx="10"/><text class="d-label sm" x="685" y="140" text-anchor="middle">10 · Buy-in</text><text class="d-sub" x="685" y="158" text-anchor="middle">Team buy-in</text>
+    <rect class="d-box soft" x="640" y="200" width="90" height="70" rx="10"/><text class="d-label sm" x="685" y="230" text-anchor="middle">11 · Quiz me</text><text class="d-sub" x="685" y="248" text-anchor="middle">User&rsquo;s grasp</text>
+
+    <rect class="d-box" x="210" y="326" width="340" height="60" rx="14"/>
+    <text class="d-label sm" x="380" y="352" text-anchor="middle">Unknown → Decision → Record → Shared Context</text>
+    <text class="d-sub" x="380" y="374" text-anchor="middle">First task&rsquo;s unknowns become the next task&rsquo;s knowns</text>
+
+    <path class="d-edge accent dash" d="M685 310 C 700 400, 460 430, 250 410 C 150 400, 90 360, 62 312"/>
+    <polygon class="d-arrow accent" points="55,314 63,306 68,320"/>
+</svg>
+<div class="d-cap">The 11 patterns are a loop, not a checklist. Deviations that arise during implementation get recorded, and after implementation they pass through sharing and learning to come back as up-front context for the next task.</div>
+</div>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Stage</th><th>Artifact Thariq published</th><th>Purpose</th></tr></thead>
+    <tbody>
+        <tr><td>Before implementation</td><td><strong>1. Blindspot pass</strong></td><td>Find hidden constraints in the codebase and domain</td></tr>
+        <tr><td>Before implementation</td><td><strong>2. Teach me my unknowns</strong></td><td>Learn the vocabulary and judgment criteria of an unfamiliar area</td></tr>
+        <tr><td>Before implementation</td><td><strong>3. Four design directions</strong></td><td>Externalize preferences you cannot put into words via radically different options</td></tr>
+        <tr><td>Before implementation</td><td><strong>4. Mock before you wire</strong></td><td>Validate with a cheap prototype before touching the real app</td></tr>
+        <tr><td>Before implementation</td><td><strong>5. Brainstorm the intervention</strong></td><td>Explore intervention points broadly and compare them by cost</td></tr>
+        <tr><td>Before implementation</td><td><strong>6. The interview</strong></td><td>Confirm the questions that most change the design first, one at a time</td></tr>
+        <tr><td>Before implementation</td><td><strong>7. Point at a reference</strong></td><td>Convey the semantics and invariants of a working reference instead of explaining</td></tr>
+        <tr><td>Before implementation</td><td><strong>8. The tweakable plan</strong></td><td>Review the plan by separating easily changed decisions from mechanical work</td></tr>
+        <tr><td>During implementation</td><td><strong>9. Implementation notes</strong></td><td>Record deviations from the plan, assumptions, and conservative choices</td></tr>
+        <tr><td>After implementation</td><td><strong>10. Buy-in doc</strong></td><td>Package the demo, spec, and implementation notes into a decision document</td></tr>
+        <tr><td>After implementation</td><td><strong>11. Quiz me before I merge</strong></td><td>Verify that the user actually understands the change</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>8. Pattern 1 — Blindspot pass: do not implement right away; find the blind spots first</h3>
+
+<p>In an unfamiliar codebase, the most dangerous move is for the person who does not know it to lock down a detailed spec first. Thariq&rsquo;s first pattern has the agent read the codebase before implementation and find <strong>the problems the user has not yet been able to ask about</strong>.</p>
+
+<div class="note">
+    <span class="nh">Prompt pattern — rendered in English while preserving the sense of the original</span>
+    I want to add a new SSO auth provider to Acme, but I have never worked in the auth module. Do not implement it yet — run a blindspot pass. Find what I do not know I do not know about this area of the codebase, explain each item, and then tell me how to write a better prompt for the implementation.
+</div>
+
+<p>This pattern is not &ldquo;give me the answer&rdquo; but <strong>&ldquo;find the flaws in my question.&rdquo;</strong> It is especially strong in systems like ERP, where business rules are spread across code and data. Constraints absent from the request form — state transitions, cancellation rules, accounting close, customer-specific extension columns — can surface before implementation.</p>
+
+<h3>9. Pattern 2 — Teach me my unknowns: start by learning the language of the area you do not know</h3>
+
+<p>The second artifact is sharper when the subject of the work is not code. Thariq uses color grading as an example. If you do not know the terminology and the judgment criteria, you cannot ask precisely for the result you want. So instead of telling the AI to produce the result, you ask it to <strong>first teach you the axes and vocabulary an expert sees</strong>.</p>
+
+<div class="note">
+    <span class="nh">Key point</span>
+    To write a good prompt, you first have to know what distinctions matter in that field. Before it is an executor, AI can be <strong>a tutor for building your questions</strong>.
+</div>
+
+<h3>10. Pattern 3 — Four design directions: do not explain your preference; find it by making options collide</h3>
+
+<p>Users often know good from bad once they see the result, yet cannot put their taste into words before starting. Thariq has the model build not four subtly different options but <strong>four directions with sharply different premises</strong>, in real HTML. The user reacts and chooses, and the choice becomes a constraint on the next iteration.</p>
+
+<div class="note">
+    <span class="nh">Prompt pattern</span>
+    I cannot describe my visual taste for this screen precisely. Instead of four similar variations, build four design directions with different philosophies on a single HTML page and show me. I will compare and react.
+</div>
+
+<p>This is a way to find <strong>unknown knowns</strong>. The user already holds the preference but cannot articulate it. The prototype pulls that tacit criterion out into the open.</p>
+
+<h3>11. Pattern 4 — Mock before you wire: buy cheap failure before touching the real system</h3>
+
+<p>Thariq&rsquo;s fourth pattern builds a <strong>single-file HTML mock</strong> before wiring into the real app. It validates the flow and the screens before entering expensive work such as data contracts, backend connections, and state management.</p>
+
+<p>The important part is not &ldquo;also build a prototype.&rdquo; It is <strong>discover the user&rsquo;s hidden criteria before the irreversible cost grows</strong>. A 30-minute failure before implementation can prevent a three-day rework after it.</p>
+
+<h3>12. Pattern 5 — Brainstorm the intervention: widen the intervention points before picking one solution</h3>
+
+<p>When users spot a problem, they commonly write the solution that occurred to them straight into the prompt. But at that moment the solution space narrows. Thariq has the model read the codebase first and find <strong>10 possible intervention points</strong>, laid out from the cheapest to the most ambitious.</p>
+
+<div class="note">
+    <span class="nh">Practical meaning</span>
+    &ldquo;Explore the intervention points that could reduce this problem&rdquo; comes before &ldquo;modify this function.&rdquo; It is the step that verifies whether the location the user picked really is the optimal place to change.
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 760 380" role="img" aria-label="Diagram comparing the straight single-solution path on the left with the approach on the right that explores several design directions and intervention points before converging">
+    <rect class="d-box" x="20" y="40" width="340" height="280" rx="16"/>
+    <text class="d-label" x="40" y="66">A · Lock the fix first</text>
+    <text class="d-sub" x="40" y="86">Converge on the first change point you think of</text>
+    <circle class="d-node dim" cx="110" cy="140" r="6"/><circle class="d-node dim" cx="230" cy="150" r="6"/><circle class="d-node dim" cx="250" cy="235" r="6"/>
+    <text class="d-sub" x="190" y="118" text-anchor="middle">Alternatives never seen</text>
+    <circle class="d-box accent" cx="70" cy="190" r="20"/><text class="d-label sm" x="70" y="194" text-anchor="middle">Issue</text>
+    <circle class="d-box accent" cx="170" cy="190" r="20"/><text class="d-label sm" x="170" y="194" text-anchor="middle">Fix</text>
+    <circle class="d-box accent" cx="290" cy="190" r="24"/><text class="d-label sm" x="290" y="194" text-anchor="middle">Build</text>
+    <path class="d-edge accent" d="M92 190 H148 M192 190 H264"/>
+    <polygon class="d-arrow accent" points="144,185 152,190 144,195"/><polygon class="d-arrow accent" points="260,185 268,190 260,195"/>
+    <text class="d-sub" x="190" y="290" text-anchor="middle">Fast, but the wrong spot means costly rework</text>
+
+    <rect class="d-box accent" x="380" y="40" width="360" height="280" rx="16"/>
+    <text class="d-label" x="400" y="66">B · Explore, then converge</text>
+    <text class="d-sub" x="400" y="86">Lay out different directions and intervention points first</text>
+    <circle class="d-box accent" cx="430" cy="190" r="20"/><text class="d-label sm" x="430" y="194" text-anchor="middle">Issue</text>
+    <circle class="d-node b" cx="510" cy="150" r="15"/><text class="d-label sm" x="510" y="154" text-anchor="middle">A</text>
+    <circle class="d-node c" cx="520" cy="190" r="15"/><text class="d-label sm" x="520" y="194" text-anchor="middle">B</text>
+    <circle class="d-node d" cx="510" cy="230" r="15"/><text class="d-label sm" x="510" y="234" text-anchor="middle">C</text>
+    <circle class="d-node dim" cx="600" cy="130" r="11"/><text class="d-sub" x="600" y="133" text-anchor="middle">UI</text>
+    <circle class="d-node dim" cx="615" cy="190" r="11"/><text class="d-sub" x="615" y="193" text-anchor="middle">API</text>
+    <circle class="d-node dim" cx="600" cy="250" r="11"/><text class="d-sub" x="600" y="253" text-anchor="middle">Rule</text>
+    <path class="d-edge accent" d="M450 178 L495 155 M450 190 L505 190 M450 202 L495 225"/>
+    <path class="d-edge" d="M525 148 L589 132 M535 190 L604 190 M525 232 L589 248"/>
+    <path class="d-edge accent" d="M611 132 L668 178 M626 190 L668 190 M611 248 L668 202"/>
+    <circle class="d-box accent" cx="690" cy="190" r="34"/>
+    <text class="d-label sm" x="690" y="186" text-anchor="middle">Grounded</text><text class="d-label sm" x="690" y="200" text-anchor="middle">converge</text>
+    <text class="d-sub" x="560" y="286" text-anchor="middle"><tspan x="560" dy="0">Slightly more up-front cost, but</tspan><tspan x="560" dy="14">unknowns surface cheaply and rework drops</tspan></text>
+</svg>
+<div class="d-cap">On the left, the first solution that came to mind is implemented straight away. On the right, different directions and intervention points are laid out first, unknowns are discovered, and only then does it converge. That is the difference Thariq called &ldquo;searching the space and moving forward.&rdquo;</div>
+</div>
+
+<p>This contrast shows why Four design directions, Mock, Brainstorm, and Reference belong to the same family. All four ask the model not for an immediate answer but to <strong>externalize a searchable space so the human can react to it.</strong> In other words, they raise the <strong>quality of the search space</strong> before the performance of answer generation.</p>
+
+<h3>13. Pattern 6 — The interview: the AI interviews the user</h3>
+
+<p>Once a direction is set, you have the model ask the questions instead. What matters here is not &ldquo;any questions?&rdquo; Thariq&rsquo;s pattern asks <strong>one at a time</strong>, lets the user&rsquo;s answer change the next question, and asks <strong>the questions that most change the architecture first</strong>.</p>
+
+<div class="note">
+    <span class="nh">Prompt pattern</span>
+    Interview me before implementing. Ask one question at a time and change your follow-ups based on my answers. Order the questions so the ones whose answers most change the architecture come first. When you have enough, summarize with what is decided, what is undecided, and what you assumed kept separate.
+</div>
+
+<p>The goal of this approach is not to increase the number of questions. It is <strong>to move the questions with high information value earlier</strong>. Decisions that are expensive to reverse — who authenticates, who owns the data, the multi-company scope, consistency during outages — get settled first.</p>
+
+<h3>14. Pattern 7 — Point at a reference: give a working map rather than an explanation</h3>
+
+<p>If the behavior you want is hard to describe precisely in words, hand over an implementation that already works. Thariq&rsquo;s published example is the situation of <strong>reimplementing the semantics of a Rust crate in TypeScript</strong>. It does not matter that the languages differ. You build a semantics map first, confirm what must be preserved, and then port it.</p>
+
+<p>A good reference carries more information than dozens of sentences, because error handling, ordering, boundary conditions, invariants, and the feel of the API are all present in the actual behavior. But copying is not the answer. You have to <strong>separate the semantics to preserve from the surface to adapt to the current environment</strong>.</p>
+
+<h3>15. Pattern 8 — The tweakable plan: put the changeable decisions at the front of the plan</h3>
+
+<p>This is an important pattern that is easily dropped from Thariq&rsquo;s companion guide. Rather than making the implementation plan a plain task list, it puts <strong>the decisions the user can adjust</strong> up front. Items whose direction has large downstream impact — the data model, type interfaces, user-facing behavior — are shown first, and mechanical refactoring is pushed to the back.</p>
+
+<div class="note">
+    <span class="nh">Why it matters</span>
+    What a human needs to review is not every line of code. It is the <strong>decision space</strong>. When a plan document is packed with mechanical work, the design decisions that actually need changing get missed.
+</div>
+
+<h3>16. Pattern 9 — Implementation notes: do not hide deviations from the plan</h3>
+
+<p>No matter how well you prepare, reality collides with the plan during implementation. The danger with a strong agent is not deviating from the plan itself but <strong>rationalizing the deviation on its own and continuing without making it visible</strong>. Thariq has it maintain a separate implementation-notes file.</p>
+
+<div class="note">
+    <span class="nh">Prompt pattern</span>
+    Maintain an implementation notes file. If an edge case forces you off the plan, take the more conservative of the available options and record under Deviations what changed, why, and what you assumed. Unless it is a fatal blocker, keep going.
+</div>
+
+<p>These notes mean more than a log. They are <strong>the mechanism for updating the map</strong>, turning the first task&rsquo;s unknowns into the next task&rsquo;s knowns. With long-horizon agents in particular, you have to leave behind decision provenance, not just the result.</p>
+
+<h3>17. Pattern 10 — Buy-in doc: turn the implementation result into a unit of organizational decision-making</h3>
+
+<p>This is the second most frequently dropped item of the 11 Thariq published. When implementation is done, the prototype, spec, and implementation notes are not left scattered but packaged into <strong>a single buy-in document you can share straight to Slack</strong>. And the demo leads, ahead of the explanation.</p>
+
+<p>This is the step that converts individual productivity into organizational productivity. A result the AI produced quickly has no value if the team never adopts it. Binding the demo, the reasons for the decisions, the scope of the change, and the remaining risks into one document lowers <strong>the cost of review and agreement</strong>.</p>
+
+<h3>18. Pattern 11 — Quiz me before I merge: code you cannot explain is not yet your code</h3>
+
+<p>The last one is a quiz. Thariq has the model build an HTML report from the diff that explains the context of the change, the intuition, and what was actually implemented, then has it check with a quiz whether the user understood.</p>
+
+<div class="note">
+    <span class="nh">Prompt pattern</span>
+    Based on this diff, build an HTML report that lets me fully understand the change. Explain the context, the core intuition, and what you actually did, and add a quiz at the end. Re-explain anything I get wrong and give me a variation of the question. Do not consider it done before I understand it well enough.
+</div>
+
+<p>This is no educational gimmick. As AI-generated code grows, <strong>&ldquo;do the tests pass?&rdquo;</strong> alone is not enough as the review question. Ownership only appears once you also confirm <strong>&ldquo;can the operator explain the failure modes and how to recover?&rdquo;</strong></p>
+
+<h3>19. Compressed back into six large flows</h3>
+
+<p>In practice, the 11 artifacts can be compressed into the following six flows. That is why introducing them as &ldquo;six techniques&rdquo; in secondhand content is not entirely wrong. But the table below is the <strong>summary layer</strong>, and you have to keep in mind that the primary material has 11 items.</p>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Large flow</th><th>Included artifacts, of the 11</th><th>Gap it looks for</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Blind Spot</strong></td><td>Blindspot pass, Teach me my unknowns</td><td>What you could not ask because you do not know the domain itself</td></tr>
+        <tr><td><strong>Explore &amp; Prototype</strong></td><td>Four design directions, Mock before you wire, Brainstorm the intervention</td><td>Hidden preferences and the space of alternatives</td></tr>
+        <tr><td><strong>Interview</strong></td><td>The interview, The tweakable plan</td><td>Undecided items and irreversible decisions</td></tr>
+        <tr><td><strong>Reference</strong></td><td>Point at a reference</td><td>Behavioral semantics and invariants that words let slip</td></tr>
+        <tr><td><strong>Implementation Memory</strong></td><td>Implementation notes</td><td>The points where reality collided with the plan</td></tr>
+        <tr><td><strong>Ownership</strong></td><td>Buy-in doc, Quiz me before I merge</td><td>Gaps in organizational agreement and user understanding</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>20. Thariq&rsquo;s second big message — when the cost of production drops, the trade-offs have to be recalculated</h3>
+
+<p>The latter part of Thariq&rsquo;s talk goes beyond prompting technique. He recalls that while running a startup in the past he always had to pick one thing. Polish the app, or experiment with a new feature — doing one meant deferring the other. Because the cost of making software was high.</p>
+
+<p>When a strong coding agent like Fable drives the cost of work down sharply, you have to ask again whether keeping the old priority scheme intact is rational. Thariq&rsquo;s stance is closer to <strong>&ldquo;do not believe too quickly that there is a trade-off.&rdquo;</strong> Before choosing one of two, check whether you can try both, and which experiments used to be expensive but are cheap now.</p>
+
+<p>At this point his &ldquo;be unreasonable&rdquo; is different from recklessness. It is the claim that <strong>you should not accept old constraints as facts once the cost function has changed</strong>.</p>
+
+<h3>21. &ldquo;I loved coding, but I cannot go back&rdquo; — mourning the change</h3>
+
+<p>Thariq does not only celebrate the productivity of coding agents. He says he loved writing code by hand, rotating a codebase in his head, and debugging late into the night. At the same time he remembers the cost of failing for weeks on end and of most projects not going the way he wanted.</p>
+
+<p>So the conclusion is not a simple &ldquo;AI replaces developers.&rdquo; <strong>The feeling of losing part of a way of working you loved is real, but going back to the past after the mode of production has changed is not the answer.</strong> The message is that you have to pass through the change itself and build new forms of ownership and understanding.</p>
+
+<h3>22. How far does outside research reinforce Thariq&rsquo;s argument</h3>
+
+<h4>22-1. Agents are advancing toward performing longer tasks</h4>
+
+<p>Research in the METR line reports a trend in which the time horizon of tasks frontier AI can complete successfully is growing fast. You cannot generalize that result directly to every real-world project, but it does reinforce Thariq&rsquo;s concern that <strong>models autonomously explore longer task paths</strong>.</p>
+
+<h4>22-2. Agent performance cannot be explained by model performance alone</h4>
+
+<p>The architectural analysis of Claude Code shows that tools, permissions, context, extension mechanisms, and subagents are core elements of the system&rsquo;s capability. This connects directly to the capability overhang and unhobbling arguments. <strong>What a model can do and what a product actually permits and encourages are different things.</strong></p>
+
+<h4>22-3. Productivity metrics and value metrics have to be kept apart</h4>
+
+<p>Research on coding-agent adoption observes an increase in development output but warns that the number of merged PRs does not by itself mean customer value or maintenance quality. Thariq&rsquo;s message lands on the same point. <strong>Even when the cost of building comes down, the cost of judging what to build does not disappear.</strong></p>
+
+<div class="note">
+    <span class="nh">Supporting research</span>
+    · <a href="https://arxiv.org/abs/2503.14499" target="_blank" rel="noopener">Kwa et al., Measuring AI Ability to Complete Long Tasks</a>.<br>
+    · <a href="https://arxiv.org/abs/2604.14228" target="_blank" rel="noopener">Liu et al., Dive into Claude Code: The Design Space of Today&rsquo;s and Future AI Agent Systems</a>.<br>
+    · <a href="https://arxiv.org/abs/2607.01418" target="_blank" rel="noopener">Murphy-Hill et al., Adoption and Impact of Command-Line AI Coding Agents</a>.<br>
+    · <a href="https://arxiv.org/abs/2605.25438" target="_blank" rel="noopener">Quispe, Coding Beyond Your Training</a>.
+</div>
+
+<h3>23. Fact check — what is confirmed, what is a claim from the talk, and what is still hard to verify</h3>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Item</th><th>Verdict</th><th>Basis and interpretation</th></tr></thead>
+    <tbody>
+        <tr><td>Existence of Thariq&rsquo;s original <em>A Field Guide to Fable</em></td><td><strong>Primary source confirmed</strong></td><td>Thariq&rsquo;s own post on X</td></tr>
+        <tr><td>The hands-on patterns number 8 before, 1 during, and 2 after — 11 in total</td><td><strong>Primary source confirmed</strong></td><td>Stated explicitly in Thariq&rsquo;s own companion guide</td></tr>
+        <tr><td>The 2026-06-09 official announcement of Fable 5</td><td><strong>Officially confirmed</strong></td><td>Anthropic&rsquo;s official announcement</td></tr>
+        <tr><td>The description of Fable 5 as centered on long-horizon, compound agent tasks</td><td><strong>Officially confirmed</strong></td><td>Anthropic&rsquo;s announcement and model documentation</td></tr>
+        <tr><td>The direction that tools, harness, and context matter to performance on strong models</td><td><strong>Reinforced by research</strong></td><td>Claude Code architecture research</td></tr>
+        <tr><td>About 80% of the Claude Code system prompt deleted</td><td><strong>A claim from Thariq&rsquo;s public talk</strong></td><td>Confirmed in talk recaps, but not treated as an official change figure in Anthropic&rsquo;s product documentation</td></tr>
+        <tr><td>The comparison that the question-asking tool behaved differently across model generations</td><td><strong>Thariq&rsquo;s hands-on experience</strong></td><td>A product team&rsquo;s account; not a controlled experiment</td></tr>
+        <tr><td>2.8 million views on the original post</td><td><strong>Time-dependent; independent verification withheld</strong></td><td>View metrics can fluctuate and are not used as an argument in this article</td></tr>
+        <tr><td>The talk deck built in about four hours the night before</td><td><strong>Personal anecdote</strong></td><td>Treated as self-reported in the talk, kept apart from independently verifiable claims</td></tr>
+        <tr><td>Weeks of work on an old codebase cut to hours</td><td><strong>Personal anecdote</strong></td><td>Thariq&rsquo;s own account; not generalized into a general productivity figure</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>24. Applied to Principal Researcher Youngjin Kwak&rsquo;s GitHub WIKI and Douzone&rsquo;s development organization</h3>
+
+<p>Thariq&rsquo;s frame applies more to <strong>organizational knowledge systems</strong> than to individual prompting technique. ERP development in particular is a place where reading the code alone will not tell you the territory, because business rules, customer-specific exceptions, DB state, deployment history, incident response, and the judgment of the person in charge are scattered across many systems and people.</p>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Thariq&rsquo;s pattern</th><th>Applied to ERP and the development organization</th><th>Turned into a WIKI asset</th></tr></thead>
+    <tbody>
+        <tr><td>Blindspot pass</td><td>Explore existing rules, states, DB, customer extensions, and incident history before filing a development request</td><td>List of unconfirmed constraints</td></tr>
+        <tr><td>Teach me my unknowns</td><td>Learn the core terminology and decision axes of an unfamiliar business domain</td><td>Domain Primer</td></tr>
+        <tr><td>Design directions / Mock</td><td>Compare shared UI and Agent screens quickly under several premises</td><td>Prototype Decision</td></tr>
+        <tr><td>Brainstorm intervention</td><td>Compare rule, API, DB, batch, and UI intervention points beyond the requested edit location</td><td>Option Map</td></tr>
+        <tr><td>Interview</td><td>Confirm with consultants, PMs, and developers starting from the questions with the largest architectural impact</td><td>Decision Record</td></tr>
+        <tr><td>Reference</td><td>Compare existing customer implementations, standard modules, and other products&rsquo; behavior at the level of semantics</td><td>Semantic Reference</td></tr>
+        <tr><td>Tweakable plan</td><td>Separate the data model, state scheme, and API contracts from mechanical edits</td><td>Reviewable Plan</td></tr>
+        <tr><td>Implementation notes</td><td>Record deviations from the plan, production data exceptions, and conservative choices</td><td>Deviation Log</td></tr>
+        <tr><td>Buy-in doc</td><td>Package the demo, decisions, and risks for sharing with the executive, PM, and related Units</td><td>Decision Brief</td></tr>
+        <tr><td>Quiz</td><td>Have the responsible developer explain an AI-generated change down to the incident and recovery view</td><td>Ownership Check</td></tr>
+    </tbody>
+</table>
+</div>
+
+<p>Here the GitHub WIKI becomes not a mere document repository but <strong>a mechanism for promoting unknowns into knowns</strong>. An exception discovered in implementation notes gets documented, the document&rsquo;s core concepts get linked into the Knowledge Graph, and the next agent reads that map again. Then the trial and error of the first project becomes up-front context for the next one.</p>
+
+<div class="note">
+    <span class="nh">The most important conclusion from this wiki&rsquo;s point of view</span>
+    <strong>A good knowledge graph is not only about connecting facts you already know. It has to make the unknowns discovered in past work reusable as known context for the next piece of work.</strong>
+</div>
+
+<h3>25. An operating protocol for practice — start the next agent task like this</h3>
+
+<ol>
+    <li><strong>A Blindspot pass before giving instructions</strong> — find the constraints you missed in the code, documents, and history first.</li>
+    <li><strong>Teach me my unknowns for an unfamiliar domain</strong> — learn the terminology and the axes of judgment.</li>
+    <li><strong>Four directions and a mock when preferences are vague</strong> — do not force the spec into words.</li>
+    <li><strong>Explore intervention points before locking a solution</strong> — compare change locations broadly.</li>
+    <li><strong>Interview starting from the questions with the largest architectural impact</strong> — one at a time, changing the next question based on the answer.</li>
+    <li><strong>A semantics map when a good existing implementation exists</strong> — port the semantics and invariants, not the surface.</li>
+    <li><strong>Plans with tweakable decisions first</strong> — put the decisions a human can change up front.</li>
+    <li><strong>Record deviations during implementation</strong> — do not hide departures from the plan or assumptions.</li>
+    <li><strong>A buy-in doc when done</strong> — put the demo, decisions, and risks into one document.</li>
+    <li><strong>A quiz before merge</strong> — the owner must be able to explain the failure modes and the recovery path.</li>
+</ol>
+
+<h3>26. Final reading — what &ldquo;the bottleneck is the human&rdquo; really means</h3>
+
+<p>Reading Thariq&rsquo;s argument as &ldquo;if the AI output is bad, it is the user&rsquo;s fault&rdquo; misses the point. It is rather the opposite. It is an argument that redefines what scarce resource is left to the human as models get better.</p>
+
+<ul>
+    <li>The ability to judge which problems are worth solving</li>
+    <li>The ability to discover what you do not know</li>
+    <li>The ability to externalize unspoken preferences and tacit rules</li>
+    <li>The ability to track an agent&rsquo;s deviations from the plan and its assumptions</li>
+    <li>The ability to understand and own the generated result well enough to operate it</li>
+</ul>
+
+<p>A strong model goes farther on fewer instructions. So making the prompt longer is not enough on its own. What is needed is <strong>a workflow that deliberately exposes the difference between the map and the territory</strong>. Thariq&rsquo;s 11 artifacts are concrete machinery for finding that difference before, during, and after implementation.</p>
+
+<div class="note">
+    <span class="nh">Compressed into one sentence</span>
+    <strong>On your next project, do not put the AI straight to work — start by saying &ldquo;let&rsquo;s first find out together what I do not know.&rdquo;</strong>
+</div>
+
+<h3>Sources and references</h3>
+
+<ul>
+    <li><strong>Primary source</strong> — <a href="https://x.com/trq212/status/2073100352921215386" target="_blank" rel="noopener">Thariq Shihipar, A Field Guide to Fable: Finding Your Unknowns</a>.</li>
+    <li><strong>Primary source</strong> — <a href="https://thariqs.github.io/html-effectiveness/unknowns/" target="_blank" rel="noopener">Thariq Shihipar, Know your unknowns — 11 self-contained HTML artifacts</a>.</li>
+    <li><strong>Official</strong> — <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank" rel="noopener">Anthropic, Introducing Claude Fable 5</a>, 2026-06-09.</li>
+    <li><strong>Official</strong> — <a href="https://platform.claude.com/docs/en/intro" target="_blank" rel="noopener">Anthropic Claude Platform Docs — model overview</a>.</li>
+    <li><strong>Secondary coverage</strong> — <a href="https://the-decoder.com/anthropic-developer-shares-prompting-tips-for-fable-5-that-focus-on-finding-your-own-blind-spots-first/" target="_blank" rel="noopener">THE DECODER, Anthropic developer shares prompting tips for Fable 5 that focus on finding your own blind spots first</a>, 2026-07-04.</li>
+    <li><strong>Talk supporting material</strong> — <a href="https://explainx.ai/blog/field-guide-to-fable-thariq-shihipar-anthropic-ai-engineer-2026" target="_blank" rel="noopener">Field Guide to Fable — Thariq Shihipar talk recap</a>.</li>
+    <li><a href="https://arxiv.org/abs/2503.14499" target="_blank" rel="noopener">Kwa et al., Measuring AI Ability to Complete Long Tasks</a>, 2025.</li>
+    <li><a href="https://arxiv.org/abs/2604.14228" target="_blank" rel="noopener">Liu et al., Dive into Claude Code: The Design Space of Today&rsquo;s and Future AI Agent Systems</a>, 2026.</li>
+    <li><a href="https://arxiv.org/abs/2607.01418" target="_blank" rel="noopener">Murphy-Hill et al., Adoption and Impact of Command-Line AI Coding Agents</a>, 2026.</li>
+    <li><a href="https://arxiv.org/abs/2605.25438" target="_blank" rel="noopener">Quispe, Coding Beyond Your Training</a>, 2026.</li>
+</ul>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">Created</span> 2026-07-09 &middot; <span class="pr-k">Updated</span> 2026-07-10</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/news-20260716-kimi-k3/">Kimi K3 — a 2.8-trillion-parameter open-weight model reaches the frontier</a></li><li><a href="/p/en/news-20260724-claude-opus-5/">Claude Opus 5 — A Near-Fable at Half the Price Has Arrived</a></li></ul>
+</nav>
+</body>
+</html>

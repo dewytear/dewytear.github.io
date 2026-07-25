@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harness Engineering — Overview and Recap</title>
+<meta name="description" content="Introduces the harness engineering course and recaps the Claude Code basics.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/hns-overview/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hns-overview/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hns-overview/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hns-overview/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Harness Engineering — Overview and Recap",
+ "description": "Introduces the harness engineering course and recaps the Claude Code basics.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/hns-overview/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hns-overview",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:09:56+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!hns-overview");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hns-overview">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/hns-overview/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Harness Engineering — Overview and Recap</h2>
+<p>This material organizes the <strong>"Harness Engineering / Minho Hwang"</strong> hands-on course part by part in the order of the video. Following the previous <a href="/p/en/ccb-overview/">Claude Code Basics</a> course, this topic is <strong>Harness Engineering</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 188" role="img" aria-label="The human gives only the intent, and the agent team the harness assembles works on its own for a long time to produce a verified result">
+    <rect class="d-box soft" x="12" y="66" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="82" y="88" text-anchor="middle">Instruct once</text>
+    <text class="d-sub" x="82" y="104" text-anchor="middle">Intent only</text>
+    <line class="d-edge accent" x1="152" y1="92" x2="206" y2="92"/>
+    <polygon class="d-arrow accent" points="206,87 214,92 206,97"/>
+
+    <rect class="d-box accent" x="214" y="42" width="252" height="100" rx="12"/>
+    <text class="d-label" x="340" y="68" text-anchor="middle">Harness</text>
+    <circle class="d-node" cx="286" cy="102" r="8"/>
+    <circle class="d-node" cx="340" cy="102" r="8"/>
+    <circle class="d-node" cx="394" cy="102" r="8"/>
+    <line class="d-edge accent" x1="294" y1="102" x2="332" y2="102"/>
+    <line class="d-edge accent" x1="348" y1="102" x2="386" y2="102"/>
+    <text class="d-sub" x="340" y="130" text-anchor="middle">Agent team works long on its own</text>
+
+    <line class="d-edge accent" x1="466" y1="92" x2="518" y2="92"/>
+    <polygon class="d-arrow accent" points="518,87 526,92 518,97"/>
+    <rect class="d-box" x="526" y="66" width="142" height="52" rx="10"/>
+    <text class="d-label sm" x="597" y="88" text-anchor="middle">Verified output</text>
+    <text class="d-sub" x="597" y="104" text-anchor="middle">QA passed</text>
+</svg>
+<div class="d-cap">The human gives only the intent, and the <strong>agent team</strong> the harness assembles works on its own for a long time to produce a verified result.</div>
+</div>
+
+<div class="note">
+    <span class="nh">First, keep this in mind</span>
+    Because a harness is a structure that <strong>does a lot of work over a long time without human intervention</strong>, it may not feel like a hands-on exercise. Instead, it becomes a chance to see for yourself that "I asked once and the AI worked for a long time and made a good result."
+</div>
+
+<h3>Recap of the previous basics course</h3>
+<ul>
+    <li>AI tools come not only as the web but also as a <strong>desktop app and a terminal (Claude Code)</strong>.</li>
+    <li>Terminal basics &mdash; <code>pwd</code> · <code>cd</code> · <code>mkdir</code>, and running <code>claude</code> in a folder.</li>
+    <li>Research → file → building a website, and applying design with the <strong>design system skill</strong>.</li>
+    <li>Creating an <strong>agent</strong> to analyze papers, and <strong>parallel processing</strong> with multiple agents.</li>
+    <li>The <strong>importance of context</strong> when working with AI, and managing token usage.</li>
+</ul>
+
+<h3>About the instructor — FDE</h3>
+<p>The instructor belongs to Kakao's <strong>FDE (Forward Deployed Engineer)</strong> organization. FDE is a role that started with Palantir and is now widely hired at OpenAI · Anthropic as well; FDEs are deployed on site at a client (or an internal organization), <strong>rapidly build</strong> the systems needed <strong>with AI</strong>, and help with AX (AI transformation) training and adoption.</p>
+
+<div class="note">
+    <span class="nh">Source</span>
+    This document set organizes and restructures, in order, the content of the hands-on course "Harness Engineering / Minho Hwang". The course is a follow-up session to Claude Code Basics.
+    <br>· Video: <a href="https://www.youtube.com/live/iqoPgoYBVaM" target="_blank" rel="noopener">youtube.com/live/iqoPgoYBVaM</a>
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Harness &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/hns-run/">Running the Harness (Hands-on)</a></li><li><a href="/p/en/hnp-first-run/">First Harness Run — Sales/Order Customization</a></li><li><a href="/p/en/hnp-intro/">Harness Plugin — Introduction</a></li><li><a href="/p/en/hns-anatomy/">Harness Composition and Effects</a></li></ul>
+</nav>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Knowledge Accumulates — The Four-Level Hierarchy and the Registration Pipeline</title>
+<meta name="description" content="The World→Domain→System→Document hierarchy and the document registration pipeline — immutable IDs, physical paths, and deterministic index builds">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/kgs-overview/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/kgs-overview/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/kgs-overview/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/kgs-overview/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "How Knowledge Accumulates — The Four-Level Hierarchy and the Registration Pipeline",
+ "description": "The World→Domain→System→Document hierarchy and the document registration pipeline — immutable IDs, physical paths, and deterministic index builds",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/kgs-overview/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!kgs-overview",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-11T19:47:53+09:00",
+ "dateModified": "2026-07-15T19:59:42+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!kgs-overview");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!kgs-overview">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/kgs-overview/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>How Knowledge Accumulates — The Four-Level Hierarchy and the Registration Pipeline</h2>
+<p>This part explains <strong>the wiki itself</strong>. The goal of the wiki is not a mere collection of articles, but a <strong>knowledge graph whose connections grow as the documents grow</strong>. For that to happen, knowledge must not pile up <em>just anywhere</em>: it has to accumulate through a <strong>fixed structure</strong> (where) and a <strong>fixed procedure</strong> (how). This document follows that structure and procedure all the way through, using one real document (<a href="/p/en/welcome/">Welcome</a>) as the example.</p>
+
+<h3>Structure — World → Domain → System → Document</h3>
+<p>Every document has its place inside a four-level <strong>knowledge hierarchy</strong>. At the top, <strong>World</strong> is a knowledge world (learning knowledge <code>AI</code> · work knowledge <code>Douzone</code>), <strong>Domain</strong> is an area within it, <strong>System</strong> is a concrete body of topics, and <strong>Document</strong> is the individual page. For instance, the address of the <a href="/p/en/welcome/">Welcome</a> document reads like this:</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 128" role="img" aria-label="The four-level address of the Welcome document: World AI, Domain Claude·Code, System Introduction, Document welcome">
+    <rect class="d-box accent" x="14" y="34" width="120" height="46" rx="9"/>
+    <text class="d-label" x="74" y="55" text-anchor="middle">AI</text>
+    <text class="d-sub" x="74" y="72" text-anchor="middle">World</text>
+    <line class="d-edge" x1="134" y1="57" x2="166" y2="57"/>
+    <polygon class="d-arrow" points="166,52 174,57 166,62"/>
+    <rect class="d-box" x="176" y="34" width="150" height="46" rx="9"/>
+    <text class="d-label" x="251" y="55" text-anchor="middle">Claude · Code</text>
+    <text class="d-sub" x="251" y="72" text-anchor="middle">Domain</text>
+    <line class="d-edge" x1="326" y1="57" x2="358" y2="57"/>
+    <polygon class="d-arrow" points="358,52 366,57 358,62"/>
+    <rect class="d-box" x="368" y="34" width="150" height="46" rx="9"/>
+    <text class="d-label" x="443" y="55" text-anchor="middle">Introduction</text>
+    <text class="d-sub" x="443" y="72" text-anchor="middle">System</text>
+    <line class="d-edge" x1="518" y1="57" x2="550" y2="57"/>
+    <polygon class="d-arrow" points="550,52 558,57 550,62"/>
+    <rect class="d-box soft" x="560" y="34" width="146" height="46" rx="9"/>
+    <text class="d-label" x="633" y="55" text-anchor="middle">welcome</text>
+    <text class="d-sub" x="633" y="72" text-anchor="middle">Document</text>
+</svg>
+<div class="d-cap">Welcome's four-level address — as a section string, <code>AI · Claude · Code · Introduction</code>.</div>
+</div>
+
+<p>This hierarchy is not a separate database: it is derived from <strong>the nesting of the navigation tree (the <code>list</code> file) itself</strong>. The folder structure you see in the sidebar <em>is</em> the knowledge hierarchy, so the mismatch of "menu over here, taxonomy over there" cannot arise in the first place. Documents in the same System (a leaf folder) are treated as a <strong>series with a reading order</strong>, and this folder membership also serves as the safety net (folder top-up) for the related-document calculation we will see later.</p>
+
+<h3>A Document's Two Names — Immutable ID and Physical Path</h3>
+<p>A leaf (document) node in the tree has two key fields:</p>
+<ul>
+    <li><strong><code>name</code> — the immutable logical ID</strong>: both the hash route (<code>#!welcome</code>) and the node key in the knowledge graph. Once set it never changes, so moving a document to another folder <strong>never breaks existing links or edges</strong>.</li>
+    <li><strong><code>path</code> — the physical path</strong>: the actual file location under <code>docs/ko/</code> (e.g. <code>ai/claude/code/introduction/welcome</code>). It follows the domain tree, so the folder alone tells you the knowledge hierarchy.</li>
+</ul>
+<p>A document body is a <strong>static HTML fragment</strong> (no skeleton — just <code>&lt;h2&gt;…&lt;p&gt;…</code>). With no build tool, no server, and no JS rendering, it is <strong>fetched as-is by URL</strong>, so a human's browser and an AI read exactly the same source — a property that becomes the foundation of the <a href="/p/en/kgs-ai-layer/">AI consumption layer</a>.</p>
+
+<h3>Three Markers — How Labels, Tags, and Concepts Divide the Work</h3>
+<p>When a document is registered, <strong>three markers</strong> are recorded alongside its name. The three look alike, but <strong>where they are recorded and where they are used are completely different</strong> — knowing this division prevents confusion such as "I added a tag, so why isn't it in the graph?"</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Marker</th><th>Recorded in</th><th>Used for</th><th>Welcome's actual values</th></tr></thead>
+<tbody>
+<tr><td><strong>Label</strong> (label)</td><td><code>list</code> node</td><td>The <strong>display name</strong> in the sidebar and lists (per language, <code>label_en</code>)</td><td>&ldquo;Welcome&rdquo;</td></tr>
+<tr><td><strong>Tags</strong> (tags)</td><td><code>list</code> node</td><td><strong>Doors you browse in through</strong> — chips at the bottom of a document, the <a href="/p/en/tags/">Tags index</a>, search assistance</td><td><code>claude-code · Introduction · CLI · Terminal · AI</code></td></tr>
+<tr><td><strong>Concepts</strong> (concepts)</td><td><code>doc-entries</code> (curated)</td><td><strong>Material for connecting</strong> — the raw input for knowledge-graph edge calculation, the highest weight in search</td><td><code>Claude Code · Terminal · CLI · coding agent · natural language · Anthropic</code></td></tr>
+</tbody>
+</table>
+</div>
+
+<p><strong>Tags are a browsing device.</strong> They are shown as chips at the bottom of a document body, and tapping a chip takes you to the list of documents carrying that tag (straight to the document if there is only one). The <a href="/p/en/tags/">Tags index</a> spreads all tags out like a dictionary — Korean tags are bucketed by initial consonant (ㄱ·ㄴ·ㄷ…) and English ones alphabetically, with the ten most-used tags shown first as a band. Tags also earn points when they match in unified search, but their weight is lower than concepts (tags 3 &lt; concepts 5). Switch the language and the per-language tags such as <code>tags_en</code> are shown instead. Note that Work Log documents are deliberately left with <code>tags: []</code> — so that work records do not clutter the knowledge tag index.</p>
+<p><strong>Concepts are a graph device.</strong> A human (or AI) reads the document and curates <strong>only the key concepts that actually exist in the body</strong>, and the related-document (related) calculation we will see in the <a href="/p/en/kgs-edges/">next part</a> starts entirely from these concepts. In other words, <strong>no matter how many tags you attach, not a single graph edge is created</strong> — what the 3D knowledge graph and the 2D views read is concepts alone. Conversely, concepts do not appear on the index page. Because the same document's "door for finding" and "material for connecting" are separated, you can add tags for browsing convenience without shaking the honesty of the knowledge graph (the principle that a concept must exist in the body).</p>
+
+<h3>Procedure — The Pipeline That Registers One Document</h3>
+<p>New knowledge always goes through the same procedure. The core of it is step 3, where <strong>a human (or AI) actually reads the document and leaves a curated summary and concepts</strong> — this is where the material of the knowledge graph is made.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 210" role="img" aria-label="Registration pipeline: write the body, register in list, curate doc-entries, rebuild with build_index, then automatic propagation to the graph, map, and AI layer">
+    <rect class="d-box" x="14" y="18" width="200" height="52" rx="9"/>
+    <text class="d-label" x="114" y="40" text-anchor="middle">① Write the body</text>
+    <text class="d-sub" x="114" y="58" text-anchor="middle">docs/ko/&lt;domain tree&gt;</text>
+    <rect class="d-box" x="258" y="18" width="200" height="52" rx="9"/>
+    <text class="d-label" x="358" y="40" text-anchor="middle">② Register in list</text>
+    <text class="d-sub" x="358" y="58" text-anchor="middle">name (immutable) + path (physical)</text>
+    <rect class="d-box accent" x="502" y="18" width="204" height="52" rx="9"/>
+    <text class="d-label" x="604" y="40" text-anchor="middle">③ Curation</text>
+    <text class="d-sub" x="604" y="58" text-anchor="middle">summary + 5–6 key concepts</text>
+    <line class="d-edge" x1="214" y1="44" x2="250" y2="44"/>
+    <polygon class="d-arrow" points="250,39 258,44 250,49"/>
+    <line class="d-edge" x1="458" y1="44" x2="494" y2="44"/>
+    <polygon class="d-arrow" points="494,39 502,44 494,49"/>
+    <line class="d-edge" x1="604" y1="70" x2="604" y2="102"/>
+    <polygon class="d-arrow" points="599,102 604,110 609,102"/>
+    <rect class="d-box" x="258" y="110" width="448" height="52" rx="9"/>
+    <text class="d-label" x="482" y="132" text-anchor="middle">④ Rebuild the index (deterministic build)</text>
+    <text class="d-sub" x="482" y="150" text-anchor="middle">same input → always the same result · --check blocks drift</text>
+    <line class="d-edge" x1="482" y1="162" x2="482" y2="184"/>
+    <polygon class="d-arrow" points="477,184 482,192 487,184"/>
+    <text class="d-sub" x="482" y="206" text-anchor="middle">propagates automatically to graph · map · search · AI layer</text>
+</svg>
+<div class="d-cap">The registration pipeline — humans do ①–③; from ④ on, machines reproduce the same result.</div>
+</div>
+
+<ol>
+    <li><strong>Write the body</strong> — save it as an HTML fragment at its place in the domain tree.</li>
+    <li><strong>Register in <code>list</code></strong> — add <code>name</code>, <code>path</code>, label, and tags to the tree. At this moment the document gains a place in the navigation and in the knowledge hierarchy.</li>
+    <li><strong>Curation</strong> — read the document and record <strong>a one-line summary + key concepts (six on average)</strong> in <code>doc-entries</code>. The rule is to write only concepts that actually exist in the body (the honesty principle of the <a href="/p/en/kgs-edges/">next part</a>).</li>
+    <li><strong>Rebuild the index</strong> — the build tool <strong>computes related documents (related)</strong> from the hierarchy of ② and the concepts of ③, and regenerates the knowledge index. This build is <strong>deterministic</strong> (same input → always the same output), so CI's <code>--check</code> mechanically enforces "if the index diverges from the source, it cannot be merged".</li>
+</ol>
+
+<p>As a result, adding a single document <strong>automatically updates every surface at once</strong> — navigation, the knowledge map, the 3D knowledge graph, search, and even the <a href="/p/en/kgs-ai-layer/">graph file for AI</a>. This is why the state so common in knowledge management — "I organized it, but I can't find it" — cannot arise structurally here.</p>
+
+<div class="note">
+    <span class="nh">Current scale</span>
+    The knowledge accumulated through this procedure currently stands at <strong>108 documents · 338 unique concepts · 228 connections</strong> (3.3 per document on average), with <strong>110 typed relations</strong> declared through curation layered on top. Orphan documents (zero connections) number 0 — every document is inside the graph. The numbers are aggregated live on the <a href="/p/en/ai-map/">knowledge map</a>.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">Created</span> 2026-07-11 &middot; <span class="pr-k">Updated</span> 2026-07-15</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/kgs-edges/">How Documents Connect — Concept Curation and idf-Weighted Edges</a></li><li><a href="/p/en/kgs-ai-layer/">How AI Reads This Wiki — the Machine-Readable Layer and Graph Traversal</a></li></ul>
+</nav>
+</body>
+</html>

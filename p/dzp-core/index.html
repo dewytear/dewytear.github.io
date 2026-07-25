@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>제안의 핵심 — 개발 흐름은 그대로, 지식화는 AI가</title>
+<meta name="description" content="개발 흐름은 그대로, 지식화는 AI가 — Event Stream(GitLab)과 Knowledge State(Wiki)의 분리, 결정적으로 빌드되는 인덱스라는 상태의 실체, 업계 사례">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/dzp-core/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/dzp-core/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/dzp-core/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/dzp-core/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "제안의 핵심 — 개발 흐름은 그대로, 지식화는 AI가",
+ "description": "개발 흐름은 그대로, 지식화는 AI가 — Event Stream(GitLab)과 Knowledge State(Wiki)의 분리, 결정적으로 빌드되는 인덱스라는 상태의 실체, 업계 사례",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/dzp-core/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!dzp-core",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-06T02:35:24+09:00",
+ "dateModified": "2026-07-13T21:31:39+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!dzp-core");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!dzp-core">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/dzp-core/" hreflang="en">English</a>
+</p>
+<article>
+<h2>제안의 핵심 — 개발 흐름은 그대로, 지식화는 AI가</h2>
+<p>본 제안의 목적은 단순한 회사 Wiki 구축이 아니다. GitLab에 축적되는 개발 결과를 AI가 지속적으로 분석해 지식을 추출하고, 기존 지식과 비교해 <strong>신규 생성·갱신·폐기</strong>를 판단하는 플랫폼을 만드는 것이다. 직원의 업무 흐름은 지금과 완전히 같다 — Wiki 작성, Markdown 편집, Tag 등록, 문서 분류, 지식 정리를 <strong>아무것도 추가로 요구하지 않는다</strong>. 직원은 최종 생성된 지식을 검색하고 읽기만 한다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 196" role="img" aria-label="직원은 기존처럼 개발·커밋·머지하고, 머지된 결과를 AI가 수집·분석·판정해 위키로 배포하는 2단 파이프라인">
+    <text class="d-sub" x="8" y="14" text-anchor="start">직원 — 기존 개발 흐름 그대로</text>
+    <rect class="d-box" x="8" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="56" y="46" text-anchor="middle">개발</text>
+    <rect class="d-box" x="118" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="166" y="46" text-anchor="middle">Commit</text>
+    <rect class="d-box" x="228" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="276" y="46" text-anchor="middle">Push</text>
+    <rect class="d-box" x="338" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="386" y="46" text-anchor="middle">Merge Request</text>
+    <rect class="d-box" x="448" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="496" y="46" text-anchor="middle">Review</text>
+    <rect class="d-box accent" x="558" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="606" y="46" text-anchor="middle">Merge</text>
+    <line class="d-edge" x1="104" y1="42" x2="110" y2="42"/><polygon class="d-arrow" points="110,37 110,47 118,42"/>
+    <line class="d-edge" x1="214" y1="42" x2="220" y2="42"/><polygon class="d-arrow" points="220,37 220,47 228,42"/>
+    <line class="d-edge" x1="324" y1="42" x2="330" y2="42"/><polygon class="d-arrow" points="330,37 330,47 338,42"/>
+    <line class="d-edge" x1="434" y1="42" x2="440" y2="42"/><polygon class="d-arrow" points="440,37 440,47 448,42"/>
+    <line class="d-edge" x1="544" y1="42" x2="550" y2="42"/><polygon class="d-arrow" points="550,37 550,47 558,42"/>
+
+    <path class="d-edge" d="M606 62 C606 80, 592 90, 572 90 H106 C88 90, 72 98, 72 112 V128"/>
+    <polygon class="d-arrow" points="67,127 77,127 72,134"/>
+    <polygon class="d-arrow" points="338,85 338,95 328,90"/>
+
+    <text class="d-sub" x="672" y="126" text-anchor="end">AI — 자동 지식화 파이프라인</text>
+    <rect class="d-box" x="12" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="72" y="153" text-anchor="middle">① 변경 수집</text>
+    <text class="d-sub" x="72" y="169" text-anchor="middle">Diff · MR · SHA</text>
+    <rect class="d-box" x="147" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="207" y="153" text-anchor="middle">② Context 분석</text>
+    <text class="d-sub" x="207" y="169" text-anchor="middle">관련 소스 확장</text>
+    <rect class="d-box" x="282" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="342" y="153" text-anchor="middle">③ 가치 판정</text>
+    <text class="d-sub" x="342" y="169" text-anchor="middle">지식인가?</text>
+    <rect class="d-box" x="417" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="477" y="153" text-anchor="middle">④ 생성·갱신·폐기</text>
+    <text class="d-sub" x="477" y="169" text-anchor="middle">기존 위키와 비교</text>
+    <rect class="d-box accent" x="552" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="612" y="153" text-anchor="middle">⑤ Portal 배포</text>
+    <text class="d-sub" x="612" y="169" text-anchor="middle">Read-Only</text>
+    <line class="d-edge" x1="132" y1="157" x2="139" y2="157"/><polygon class="d-arrow" points="139,152 139,162 147,157"/>
+    <line class="d-edge" x1="267" y1="157" x2="274" y2="157"/><polygon class="d-arrow" points="274,152 274,162 282,157"/>
+    <line class="d-edge" x1="402" y1="157" x2="409" y2="157"/><polygon class="d-arrow" points="409,152 409,162 417,157"/>
+    <line class="d-edge" x1="537" y1="157" x2="544" y2="157"/><polygon class="d-arrow" points="544,152 544,162 552,157"/>
+</svg>
+<div class="d-cap">직원의 역할은 위 행에서 끝난다. 아래 행 전체가 AI의 몫이다.</div>
+</div>
+
+<div class="note">
+    <span class="nh">핵심 개념 — Event Stream과 Knowledge State</span>
+    GitLab은 개발 변경의 <strong>Event Stream</strong>이고, Wiki는 현재 시점에 유효한 <strong>Knowledge State</strong>다. GitLab에는 Commit·MR·Release가 시간 순서로 계속 쌓이지만, Wiki는 "7/1 수정사항, 7/2 수정사항…" 같은 이력의 나열이 아니라 <strong>조직이 지금 알아야 하는 지식 구조</strong>(Architecture · Rule Engine · 상태 체계 · 채널 정책 · Troubleshooting …)로 정제되어 유지된다.
+</div>
+
+<h3>Knowledge State의 실체 — 결정적으로 빌드되는 인덱스</h3>
+<p>"현재 유효한 지식 상태"는 추상적 구호가 아니라 <strong>기계적으로 재현 가능한 산출물</strong>이어야 한다. Reference Wiki가 이를 이미 실증했다: 모든 문서의 메타데이터(제목·요약·개념·관계)는 큐레이션 파일 하나에서 <a href="/p/kgs-overview/">결정적 빌드</a>로 지식 인덱스 JSON이 되고, <strong>같은 입력은 언제나 같은 출력</strong>을 낸다. 그래서 <code>--check</code> 한 번으로 "저장된 상태가 소스와 어긋났는가"를 바이트 단위로 판정할 수 있고, 어긋난 채로는 머지가 불가능하다(<a href="/p/kgs-gates/">드리프트 게이트</a>). Knowledge State가 Event Stream보다 뒤처지거나 소스와 모순되는 것을 <strong>규율이 아니라 기계가</strong> 막는 구조 — 이것이 회사 플랫폼이 물려받을 상태 관리의 실체다.</p>
+
+<h3>업계가 이미 가고 있는 길</h3>
+<ul>
+    <li><strong>문서를 코드 곁에</strong> — Spotify는 문서를 코드와 같은 저장소에 두고 CI로 빌드하는 <a href="https://backstage.io/blog/2020/09/08/announcing-tech-docs/" target="_blank" rel="noopener">Backstage TechDocs</a>로 5,000개 이상의 문서 사이트를 운영하고, GitLab은 2,700페이지가 넘는 공개 핸드북의 <a href="https://handbook.gitlab.com/handbook/company/culture/all-remote/handbook-first/" target="_blank" rel="noopener">handbook-first 문화</a>로 유명하다. docs-as-code는 대규모 조직에서 이미 검증된 접근이다.</li>
+    <li><strong>문서 동기화의 자동화</strong> — <a href="https://swimm.io/blog/how-does-swimm-s-auto-sync-feature-work" target="_blank" rel="noopener">Swimm</a>은 모든 PR마다 코드 변경과 문서를 대조해 자동 갱신하는 Auto-sync로 "Continuous Documentation"을 상용화했다.</li>
+    <li><strong>코드에서 지식 자동 추출</strong> — Cognition의 <a href="https://cognition.com/blog/deepwiki" target="_blank" rel="noopener">DeepWiki(2025)</a>는 저장소를 분석해 아키텍처 다이어그램과 모듈 문서가 포함된 위키를 자동 생성하며 상위 공개 저장소 5만 개 이상을 인덱싱했다. GitHub은 저장소 지식을 상시 주입하는 <a href="https://github.blog/changelog/2025-09-24-copilot-spaces-is-now-generally-available/" target="_blank" rel="noopener">Copilot Spaces</a>를 GA했고, Claude Code의 <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">CLAUDE.md</a>·AGENTS.md는 "저장소 안의 기계가 읽는 지식 파일"을 업계 관례로 만들었다.</li>
+    <li><strong>지식 검색 시장의 급성장</strong> — 전사 AI 지식 검색의 <a href="https://futurumgroup.com/insights/glean-doubles-arr-to-200m-can-its-knowledge-graph-beat-copilot/" target="_blank" rel="noopener">Glean은 ARR $200M</a>을 넘겼고, Atlassian은 <a href="https://www.atlassian.com/software/rovo" target="_blank" rel="noopener">Rovo</a>를 클라우드 요금제에 기본 탑재했다.</li>
+</ul>
+<p>즉 <strong>"GitLab 개발 결과의 AI 자동 지식화"는 docs-as-code의 검증된 토대 위에, 2025년 이후 상용화된 자동 추출 기술을 조직 지식 관리에 적용하는 것</strong>이다.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼 &middot; <span class="pr-k">생성일자</span> 2026-07-06 &middot; <span class="pr-k">수정일자</span> 2026-07-13</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/dzp-architecture/">플랫폼 아키텍처</a></li><li><a href="/p/dzp-overview/">제안 개요 — GitLab 기반 AI 개발 지식 플랫폼</a></li><li><a href="/p/dzp-roadmap/">추진 로드맵 — 4 Phase와 1차 PoC</a></li><li><a href="/p/dzp-knowledge/">지식 관리 체계 — 판정·갱신·추적·신뢰·수명주기</a></li></ul>
+</nav>
+</body>
+</html>

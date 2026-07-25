@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Managing Usage · Context · Sessions</title>
+<meta name="description" content="Manage token usage, context, and sessions to control quality and cost">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/ccb-manage/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/ccb-manage/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/ccb-manage/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/ccb-manage/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Managing Usage · Context · Sessions",
+ "description": "Manage token usage, context, and sessions to control quality and cost",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/ccb-manage/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!ccb-manage",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T20:36:07+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!ccb-manage");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!ccb-manage">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/ccb-manage/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Managing Usage · Context · Sessions</h2>
+<p>To use Claude Code well, you need to know how to manage <strong>usage (tokens)</strong>, <strong>context</strong>, and <strong>sessions (conversational state)</strong>. Tokens have become extremely important.</p>
+
+<h3>Usage — /usage</h3>
+<ul>
+    <li><code>/usage</code> — shows your current session and this week's usage.</li>
+    <li><strong>Session limit</strong>: budgeted in <strong>5-hour</strong> blocks counted from when you first started. If you burn through 100% within those 5 hours, you have to wait until the block ends.</li>
+    <li>There is also a <strong>weekly limit</strong>. It is the limit developers find most painful, so spending <strong>frugally</strong> is the key.</li>
+</ul>
+
+<h3>Context — /context</h3>
+<p><code>/context</code> visualizes what is currently loaded into Claude Code. The size of the context window <strong>depends on the model</strong> — most default to 200,000 (200K) tokens, while the latest models (Fable 5 · Sonnet 5 · Sonnet 4.6, and Opus 4.6 onward) support <strong>1,000,000 (1M) tokens</strong>. On the Max · Team · Enterprise plans Opus is automatically upgraded to the 1M context, and you can also pick it yourself by adding the <code>[1m]</code> suffix, as in <code>/model opus[1m]</code>.</p>
+<ul>
+    <li>The system prompt, tool definitions, and the like take up part of it, and it fills up a little more with every task you assign.</li>
+    <li>Once it is fairly full, a <strong>compact</strong> kicks in and the contents are compressed and shrunk.</li>
+    <li>When a compact happens, <strong>some data is lost</strong>, so performance can drop slightly.</li>
+    <li>So rather than waiting until it is completely full, it is recommended to <strong>compact manually</strong> with <code>/compact</code> at a sensible point.</li>
+</ul>
+<p>Making use of agents lets you conserve the main context while keeping quality up.</p>
+
+<h3>Managing sessions (conversational state)</h3>
+<p>Unlike a web chat, Claude Code loses its context once you leave with <code>/exit</code>. Use the following commands to pick it back up.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+            <tr><td><code>claude --continue</code></td><td>Resumes the most recent session exactly where it left off</td></tr>
+            <tr><td><code>claude --resume</code></td><td>Pick from a list of past sessions and return to that context</td></tr>
+            <tr><td><code>/clear</code></td><td>Clears the context without exiting and starts a new session</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>Session records are saved per project and per session <strong>under your user folder in <code>~/.claude/projects/</code></strong>. That means even work from long ago can be revived with <code>--resume</code>. Note, however, that these records are stored <strong>locally only</strong>, so they do not exist on another PC.</p>
+
+<div class="note warn">
+    <span class="nh">Watch out for caching</span>
+    AI has caching, so when you continue a request you are billed only for the new portion. But caching has a <strong>time to live</strong>, so if you come back later and request again with <code>--resume</code>, everything accumulated is sent over again and you get no caching benefit. In that case, opening a <strong>new session</strong> may work out better.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/commands/">Everyday Use</a></li><li><a href="/p/en/omc-hooks/">Hook · Memory</a></li></ul>
+</nav>
+</body>
+</html>

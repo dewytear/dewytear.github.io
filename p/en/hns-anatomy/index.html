@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harness Composition and Effects</title>
+<meta name="description" content="Explains the core harness components and how the operating loop raises productivity.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/hns-anatomy/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hns-anatomy/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hns-anatomy/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hns-anatomy/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Harness Composition and Effects",
+ "description": "Explains the core harness components and how the operating loop raises productivity.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/hns-anatomy/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hns-anatomy",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:09:56+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<script>if(!location.search.includes("static")){location.replace("/#!hns-anatomy");}</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hns-anatomy">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/hns-anatomy/" hreflang="ko">한국어</a>
+</p>
+<article>
+<h2>Harness Composition and Effects</h2>
+<p>Many elements are needed to build a harness, but the core ones are as follows. Some people call <strong>everything surrounding the model, excluding the LLM model itself</strong>, the harness.</p>
+
+<h3>Core components</h3>
+<ul>
+    <li><strong>Agent</strong> &mdash; an AI worker with a defined role.</li>
+    <li><strong>Skills · tools</strong> &mdash; the capabilities and connecting tools an agent uses while working.</li>
+    <li><strong>Orchestrator</strong> &mdash; the PM role that coordinates the agents so they work well.</li>
+    <li><strong>Evaluation · tests</strong> &mdash; verify the output and keep the quality up.</li>
+    <li><strong>Artifacts · memory</strong> &mdash; continuously manage the deliverables and the context.</li>
+</ul>
+
+<h3>How productivity goes up</h3>
+<div class="diagram">
+<svg viewBox="0 0 680 150" role="img" aria-label="Operating loop: decompose the goal → run in parallel → verify with tests → loop back if there is an issue, and finish if it passes">
+    <rect class="d-box" x="6" y="70" width="110" height="48" rx="10"/>
+    <text class="d-label sm" x="61" y="98" text-anchor="middle">Decompose goal</text>
+
+    <rect class="d-box" x="146" y="70" width="110" height="48" rx="10"/>
+    <text class="d-label sm" x="201" y="98" text-anchor="middle">Run in parallel</text>
+
+    <rect class="d-box" x="286" y="70" width="112" height="48" rx="10"/>
+    <text class="d-label sm" x="342" y="98" text-anchor="middle">Verify by tests</text>
+
+    <polygon class="d-box" points="470,66 512,94 470,122 428,94"/>
+    <text class="d-label sm" x="470" y="98" text-anchor="middle">Issue?</text>
+
+    <rect class="d-box accent" x="548" y="70" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="608" y="98" text-anchor="middle">Done</text>
+
+    <line class="d-edge" x1="116" y1="94" x2="144" y2="94"/><polygon class="d-arrow" points="138,89 146,94 138,99"/>
+    <line class="d-edge" x1="256" y1="94" x2="284" y2="94"/><polygon class="d-arrow" points="278,89 286,94 278,99"/>
+    <line class="d-edge" x1="398" y1="94" x2="426" y2="94"/><polygon class="d-arrow" points="420,89 428,94 420,99"/>
+    <line class="d-edge" x1="512" y1="94" x2="546" y2="94"/><polygon class="d-arrow" points="540,89 548,94 540,99"/>
+    <text class="d-sub" x="530" y="84" text-anchor="middle">Pass</text>
+
+    <path class="d-edge" d="M470 66 C470 46, 458 27, 436 27 H235 C214 27, 201 43, 201 68"/><polygon class="d-arrow" points="196,64 206,64 201,70"/><polygon class="d-arrow" points="340,22 340,32 330,27"/>
+    <text class="d-sub" x="430" y="20" text-anchor="middle">Loop back on issue</text>
+</svg>
+<div class="d-cap">If there is an issue it goes back to parallel execution, and if it passes it is done.</div>
+</div>
+<p>The operating structure flows roughly like this.</p>
+<ol>
+    <li><strong>Decompose</strong> the goal and <strong>divide it up</strong> among the agents.</li>
+    <li><strong>Run</strong> the divided tasks <strong>in parallel</strong>.</li>
+    <li><strong>Verify</strong> the results <strong>with tests</strong>, and feed back what is wrong.</li>
+    <li>Repeat the verification <strong>loop</strong>.</li>
+</ol>
+<p>Thanks to this operating structure, <strong>human intervention is minimized</strong>, the AI works autonomously for longer and quickly in parallel, and <strong>quality is secured</strong> by test-based verification.</p>
+
+<h3>Big-tech cases and surging interest</h3>
+<ul>
+    <li>Starting with <strong>Anthropic</strong> last November, cases began pouring out.</li>
+    <li>In January <strong>OpenAI</strong> published on its blog that "agents alone developed 5 million lines of code over six months without human intervention" → a big talking point.</li>
+    <li>Research and attempts around "how should we compose a harness" exploded, led by Silicon Valley developers. It was also found that <strong>multi-agent</strong> setups do better than one.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">The bottleneck is not the model but the structure</span>
+    Model performance has already risen high enough (Gemini 3.5 Flash, GPT 5.5/5.6, Opus 4.8, and Claude Mythos, whose release is limited over security concerns, among others). The current bottleneck is <strong>the structure that wraps the model (the harness)</strong>. People can now focus on <strong>design · verification · decision-making</strong>.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Harness &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/hns-kitchen/">Understanding the Harness Through a Kitchen Metaphor</a></li><li><a href="/p/en/hns-run/">Running the Harness (Hands-on)</a></li><li><a href="/p/en/hns-review/">Reviewing the Generated Result — Agents · Skills · Orchestrator</a></li><li><a href="/p/en/ccb-overview/">Course Overview and Goals</a></li></ul>
+</nav>
+</body>
+</html>

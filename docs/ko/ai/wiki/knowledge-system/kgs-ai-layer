@@ -10,6 +10,14 @@
 
 <p>여기에 <strong>세 개의 문을 보조하는 진입로</strong>가 함께 생성됩니다. <strong><code>llms-full.txt</code></strong>는 모든 문서의 본문 평문을 한 파일에 담은 전체 코퍼스 덤프라 fetch 한 번으로 위키 전체를 컨텍스트에 적재할 수 있고, <strong><code>feed.xml</code>(Atom 피드)</strong>은 최신 문서 30편을 시간순으로 알려 사람의 RSS 리더와 크롤러가 새 글을 구독하게 하며, <strong><code>robots.txt</code></strong>는 주요 AI 크롤러(GPTBot·ClaudeBot·PerplexityBot 등)를 이름 붙여 명시적으로 환영하고 위 진입점들을 광고합니다. 콘텐츠 라이선스는 <strong>CC BY 4.0</strong> — "출처를 밝히면 자유롭게 인용·재사용해도 된다"는 법적 신호를 robots.txt·llms.txt·피드·사이트 푸터가 일관되게 선언해, AI 시스템이 안심하고 이 위키를 인용하게 합니다.</p>
 
+<h3>JS를 실행하지 않는 손님을 위한 문 — 정적 스냅샷</h3>
+<p>지금까지의 진입로는 <strong>기계에게 데이터를 주는</strong> 길이었습니다. 그런데 일반 검색엔진은 데이터가 아니라 <strong>페이지</strong>를 색인합니다. 이 위키는 해시 라우팅 SPA라, JS를 실행하지 않는 크롤러가 <code>#!welcome</code>에 오면 <strong>빈 껍데기</strong>를 봅니다. 문서 조각(<code>docs/ko/…</code>)은 본문이지만 제목·설명·정규주소가 없는 HTML 파편이라 페이지로 삼기엔 부족합니다.</p>
+<p>그래서 문서마다 <strong>정적 스냅샷</strong>을 함께 냅니다 — <code>/p/&lt;name&gt;/</code>(영어는 <code>/p/en/&lt;name&gt;/</code>). 본문을 그대로 담되 <code>&lt;title&gt;</code>(첫 h2)·설명(요약)·<code>canonical</code>·언어 상호링크(hreflang)·Article JSON-LD(라이선스·생성일 포함)를 얹은 <strong>진짜 페이지</strong>입니다. 본문 안의 <code>#!</code> 링크도 스냅샷끼리 이어 두어, JS 없는 크롤러가 <strong>링크만 따라 위키 전체를 순회</strong>할 수 있습니다. 사람이 열면 스크립트가 곧바로 SPA 라우트로 보내므로, 읽는 경험은 언제나 원래의 위키입니다.</p>
+<div class="note">
+    <span class="nh">같은 지식의 세 표면</span>
+    한 문서는 세 주소를 갖습니다 — <code>url</code>(원문 조각, 기계 파싱용) · <code>route</code>(SPA, 사람용) · <code>page</code>(정적 스냅샷, 검색엔진·JS 없는 크롤러용). 그래프 노드에 셋이 함께 들어 있어 소비자가 목적에 맞는 표면을 고르면 됩니다. 사이트맵이 광고하는 것은 <code>page</code>입니다.
+</div>
+
 <h3>순회는 이렇게 흘러간다</h3>
 <div class="diagram">
 <svg viewBox="0 0 720 150" role="img" aria-label="AI 순회 순서: llms.txt 표지를 읽고, knowledge-graph.json 한 파일로 그래프를 순회하고, 필요한 원문 URL을 fetch해 분석한다">
@@ -34,7 +42,7 @@
 <p>실제 2홉 순회를 예로 들면: 허브 <a href="#!hns-anatomy">하네스의 구성과 효과</a>에서 출발하면 1홉에 이웃 4편, 2홉이면 <strong>13편</strong>에 닿습니다. AI는 이렇게 도달한 문서 집합에서 <strong>공유 개념(shared)</strong>을 근거로 "이 문서들이 왜 한 묶음인지"를 설명하며 분석할 수 있습니다 — 낱장 검색으로는 불가능한, <strong>관계 기반</strong> 독해입니다. 여기에 <code>relations</code>가 더해지면 단순히 "관련 있다"를 넘어 <strong>선행·구현·근거 같은 관계의 종류와 방향</strong>까지 읽어, "무엇을 먼저 읽어야 하는지"·"어느 문서가 어느 주장의 근거인지"를 짚어 분석할 수 있습니다.</p>
 
 <h3>절대 어긋나지 않게 — 드리프트 게이트</h3>
-<p>기계판독 파일이 실제 지식과 어긋나면 없느니만 못합니다. 그래서 이 파일들은 손으로 쓰지 않고 <strong>지식 인덱스에서 자동 생성</strong>되며(robots.txt·피드까지 전부 생성물), CI의 <code>--check</code> 게이트가 "문서를 추가·수정하고 재생성하지 않으면 머지 불가"를 강제합니다. 피드의 시각조차 빌드 시각이 아니라 git 이력(<code>doc-dates.json</code>)에서 오므로 재생성해도 결과가 흔들리지 않습니다. 결과: <strong>문서가 늘어나는 순간 llms.txt·llms-full.txt·피드·그래프 JSON·sitemap이 항상 함께 최신</strong>이 됩니다. 검증 시점에는 97개 노드의 URL이 전부 실제 파일과 일치하고, 끊어진 참조(dangling)가 0임을 기계적으로 확인했습니다.</p>
+<p>기계판독 파일이 실제 지식과 어긋나면 없느니만 못합니다. 그래서 이 파일들은 손으로 쓰지 않고 <strong>지식 인덱스에서 자동 생성</strong>되며(robots.txt·피드까지 전부 생성물), CI의 <code>--check</code> 게이트가 "문서를 추가·수정하고 재생성하지 않으면 머지 불가"를 강제합니다. 피드의 시각조차 빌드 시각이 아니라 git 이력(<code>doc-dates.json</code>)에서 오므로 재생성해도 결과가 흔들리지 않습니다. 결과: <strong>문서가 늘어나는 순간 llms.txt·llms-full.txt·피드·그래프 JSON·sitemap·정적 스냅샷이 항상 함께 최신</strong>이 됩니다. 스냅샷 게이트는 한 걸음 더 나아가 <strong>더 이상 생성되지 않는 옛 스냅샷(stale)</strong>까지 잡습니다 — 문서 이름이 바뀌면 옛 페이지가 유령처럼 남아 검색엔진에 계속 노출되기 때문입니다. 검증 시점에는 97개 노드의 URL이 전부 실제 파일과 일치하고, 끊어진 참조(dangling)가 0임을 기계적으로 확인했습니다.</p>
 
 <div class="note">
     <span class="nh">AI에게 일을 시킬 때</span>

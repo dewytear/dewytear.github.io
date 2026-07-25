@@ -1,4 +1,6 @@
-<h2>2026-07-26 · 기능 — 번역 인프라: 첫 방문 자동 언어 · 영어 게이트 · hreflang · 병행 파이프라인</h2>
+<h2>2026-07-26 · 기능 — 번역 인프라 · 정적 스냅샷(프리렌더)</h2>
+
+<h3>번역 인프라: 첫 방문 자동 언어 · 영어 게이트 · hreflang · 병행 파이프라인</h3>
 <p>글로벌 도달 프로젝트의 트랙 C1. 영어 전면 병행(워크로그 제외 110편, 배치 진행 예정)에 앞서 <strong>엔진·게이트·광고(SEO)·규칙</strong>의 네 인프라를 먼저 깔았다 — 소급 번역이 시작되기 전에 게이트가 서 있어야 "번역이 늘수록 검증도 함께 커지는" 구조가 된다. 변경 유형: <strong>ENGINE + TOOL + SCHEMA</strong>.</p>
 <ul>
     <li><strong>첫 방문 자동 언어(ENGINE)</strong> — 저장된 언어(개인·사이트 기본)가 없으면 <code>navigator.language</code>로 정한다: 한국어 계열(ko*)이 아니면 <code>en</code>(<code>app.js detectLang()</code>, provider 앞단). 설정에서 고른 값은 항상 우선. 이를 위해 <code>HARD_DEFAULTS.lang</code>을 <code>'ko' &rarr; ''</code>(자동)로 바꿨다 — 'ko'로 두면 비한국어 브라우저 사용자가 <strong>명시적으로 한국어를 선택해도</strong> setOrClear가 "기본값과 같다"며 지워 자동 감지(en)로 되돌아가는 버그가 된다. <code>&lt;html lang&gt;</code>·설정 select도 감지 언어를 따른다. CDP 실측: 저장값 없음(en-US 브라우저) &rarr; 영어 UI, 명시 ko 저장 &rarr; 한국어 UI.</li>
@@ -9,3 +11,17 @@
     <li><strong>TOOL 변경 체크</strong> — 플러그인 번들 동기 6파일 + 신규 1파일(check_translation.py), <code>plugin.json</code> version <code>0.8.3 &rarr; 0.9.0</code>(신규 게이트 = 기능 추가). app.js 캐시버스터 <code>31 &rarr; 32</code>.</li>
 </ul>
 <p>다음: 소급 번역 6배치(C2~C7, 섹션 묶음별 PR — Tutorial부터)와 프리렌더(D). 마지막 배치에서 설정 select의 "English — 준비 중" 문구 제거와 <code>label-without-en-body</code> ERROR 승격을 수행한다.</p>
+
+<h3>정적 스냅샷(프리렌더) — JS 없는 손님에게 &lsquo;페이지&rsquo;를 내주다</h3>
+<p>글로벌 도달 프로젝트의 마지막 트랙. AI 소비 계층은 <strong>데이터</strong>를 주는 길이었지만, 일반 검색엔진이 색인하는 것은 <strong>페이지</strong>다. 해시 라우팅 SPA라 JS를 실행하지 않는 크롤러는 <code>#!welcome</code>에서 <strong>빈 껍데기</strong>를 보고, 문서 조각(<code>docs/ko/…</code>)은 본문이긴 해도 제목·설명·정규주소가 없어 페이지로 삼기 어렵다. 이 간극만 메우는 것이 이번 작업이다. 변경 유형: <strong>TOOL + SCHEMA + ENGINE</strong>.</p>
+<ul>
+    <li><strong><code>tools/build_prerender.py</code> 신설</strong> — 문서마다 <code>/p/&lt;name&gt;/index.html</code>(ko)과 <code>/p/en/&lt;name&gt;/index.html</code>(en 본문이 있는 것만)을 생성한다. <strong>230쪽</strong>(115×2). 각 페이지: <code>&lt;title&gt;</code>=본문 첫 h2, <code>meta description</code>=인덱스 요약, <code>canonical</code>+hreflang(ko·en·x-default), Article JSON-LD(CC BY 4.0·생성/수정일), 본문 인라인.</li>
+    <li><strong>링크를 스냅샷끼리 잇는다</strong> — 본문의 <code>href=&quot;#!&lt;name&gt;&quot;</code>을 같은 언어의 스냅샷 주소로 재작성해, JS 없는 크롤러가 <strong>링크만 따라 위키 전체를 순회</strong>할 수 있다. 사람이 열면 스크립트가 즉시 SPA 라우트로 보낸다(<code>?static</code>을 붙이면 정적 유지 — 검증·디버깅용).</li>
+    <li><strong>호스트에 묶이지 않게</strong> — 검증 중 로컬 서버에서 리다이렉트가 운영 도메인으로 튀어 확인이 끊겼다. 페이지 내 이동(리다이렉트·본문 링크·CSS)은 <strong>루트 상대 경로</strong>로, 규격상 절대 URL이 필요한 canonical·hreflang·JSON-LD만 절대 주소로 갈랐다. 프리뷰 배포·로컬에서도 그대로 동작한다.</li>
+    <li><strong>광고 주소 전환(SCHEMA)</strong> — sitemap의 문서 URL을 조각에서 <strong>스냅샷</strong>으로 바꾸고(hreflang 유지), 그래프 노드에 <code>page</code> 필드를 additive로 추가했다. 한 문서가 <strong>세 표면</strong>을 갖는다: <code>url</code>(조각·기계 파싱) · <code>route</code>(SPA·사람) · <code>page</code>(스냅샷·검색엔진).</li>
+    <li><strong><code>404.html</code> 신설</strong> — <code>/p/&lt;name&gt;/</code> 형태면 해당 문서의 SPA 라우트로, 그 외에는 홈으로 보낸다(문서 이름이 바뀌어도 죽은 링크가 안 되게).</li>
+    <li><strong>게이트</strong> — <code>--check</code>를 CI(push·PR)에 추가. 드리프트뿐 아니라 <strong>stale</strong>(더 이상 생성되지 않는 옛 스냅샷)까지 잡는다 — 문서명이 바뀌면 옛 페이지가 유령처럼 남아 검색엔진에 계속 노출되기 때문. 재생성 시 자동 삭제한다.</li>
+    <li><strong>자기기술 문서 반영</strong> — <code>schema.md</code> §4.1 계약 절, <a href="#!kgs-ai-layer">kgs-ai-layer</a>에 "세 표면" 절, <a href="#!ai-guide">AI 순회 가이드</a>에 <code>page</code> 안내. <strong>ko·en 양쪽</strong> 동시 갱신(영어 병행 규칙 적용 첫 사례).</li>
+    <li><strong>검증</strong> — 스냅샷 4종을 실제 HTTP로 확인(제목·설명·canonical·hreflang 4개·JSON-LD 라이선스·본문 612~5,429자), 사람 방문 시 <code>/#!welcome</code>으로 이동·<code>?static</code>이면 정적 유지·본문 링크가 <code>/p/en/…</code>로 이어짐을 CDP로 확인. 도식 ko/en 159렌더·<code>validate_all</code> ERROR 0. 플러그인 번들 동기(신규 1파일) + version <code>0.11.0</code>.</li>
+</ul>
+<p>이로써 글로벌 도달 프로젝트 4트랙(AI 이용성·푸터·영어 전면 병행·프리렌더)이 모두 끝났다.</p>
