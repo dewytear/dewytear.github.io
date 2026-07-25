@@ -379,7 +379,7 @@
             align-items: center;
             justify-content: space-between;   /* Tags | toggle | settings, equal gaps */
             gap: 12px;
-            padding: 14px 18px;
+            padding: 8px 14px;   /* match the sidebar's tightened rhythm */
             background: var(--bg);
             border-top: 1px solid var(--border);
         }
@@ -1443,7 +1443,7 @@
 
         /* ---- Navigation tree ---- */
         #navigation{
-            padding: 4px 12px 8px;   /* equal gutters, tight top/bottom */
+            padding: 6px 12px 8px;   /* 6px top = the tools' gap below (uniform rhythm) */
             /* Fill the space above the sticky footer so the Work Log
                branch can sink to the very bottom of the menu area. */
             flex: 1 1 auto;
@@ -1645,9 +1645,6 @@
            rules on purpose — equal specificity, later wins.) */
         #navigation > ul > li > a{
             margin: 2px 0 0;
-        }
-        #nav-scroll > ul > li:first-child > .nav-title{
-            margin-top: 2px;
         }
 
         /* Knowledge Graph / Map entries: identical to every other menu item —
