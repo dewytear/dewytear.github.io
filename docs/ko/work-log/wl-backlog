@@ -34,11 +34,6 @@
     <li><code>LATER</code> <strong>100만 편+</strong>: 검색 백엔드 + 자동 큐레이션 파이프라인(정적 위키의 연장이 아닌 별도 플랫폼) — dzp Phase 1과 통합 검토.</li>
 </ul>
 
-<h4>③ 현지화</h4>
-<ul>
-    <li><code>WATCH</code> 영문 커버리지 갭 — 실측 89편·~480KB 미번역(전체 현지화 프로젝트). <em>관찰 지표: 해외 유입 비중·영문 문서 요청·플러그인 외부 사용자.</em> 착수 시 관문 문서부터, 본문 번역과 같은 PR에서 오버레이 갱신(i18n 규칙). (2026-07-10 보류 결정)</li>
-</ul>
-
 <h4>④ 플러그인</h4>
 <ul>
     <li><code>WATCH</code> 뷰어 정식 템플릿화 — 브랜딩 파라미터화 + <strong>Fresh-install CI 스모크</strong>(빈 디렉터리→init→샘플 문서→build→validate — wiki-init의 스크립트화가 선행이라 템플릿화와 한 몸). <em>관찰: 플러그인 외부 사용자 등장.</em> (설계 검토 G1 · 자동화 분석 2026-07-11)</li>
@@ -55,6 +50,8 @@
 <h3>최근 완료</h3>
 <p class="scn-sub">완료 항목을 ✅ + Work Log 링크와 함께 잠시 여기 둡니다. 오래되면 걷어냅니다(원본은 해당 로그에).</p>
 <ul>
+    <li>&#9989; [현지화] <strong>영어 전면 병행 완료</strong> — 인덱스 문서 <strong>115편 전부</strong> 영어 본문+라벨+태그+오버레이(8배치, Opus 5 병렬), 지식지도 2종 en, 비한국어 브라우저 첫 방문 자동 en. 게이트 신설·승격(<code>check_translation</code>, <code>label-without-en-body</code> ERROR)으로 앞으로도 신규 문서는 en 동반이 강제된다 <a href="#!wl-20260726-content">wl-20260726 콘텐츠</a> · <a href="#!wl-20260726-features">기능</a></li>
+    <li>&#9989; [독자 UX·AI] <strong>정적 스냅샷(프리렌더)</strong> — 문서마다 <code>/p/&lt;name&gt;/</code>(ko·en 230쪽)에 제목·설명·canonical·hreflang·Article JSON-LD를 얹은 실페이지 생성, sitemap을 스냅샷으로 전환·그래프에 <code>page</code> 필드, 404 라우팅. JS 없는 검색엔진·크롤러도 본문을 읽고 링크로 순회한다 <a href="#!wl-20260726-features">wl-20260726 기능</a></li>
     <li>&#9989; [독자 UX·AI] RSS/Atom 피드 + AI 이용성 확장 — <code>build_ai_export</code>가 feed.xml(doc-dates 기반, 빌드시각 무사용)·llms-full.txt(전체 코퍼스 덤프)·robots.txt(생성물 승격 + AI 크롤러 명시 환영)를 생성, 콘텐츠 라이선스 <strong>CC BY 4.0</strong> 선언(robots·llms·피드·JSON-LD 일관) <a href="#!wl-20260726-ops">wl-20260726 운영</a></li>
     <li>&#9989; [그래프] 본문 인용 백링크(<code>citedBy</code>) — build_index가 본문 <code>#!</code> 링크를 역인덱스해 &ldquo;이 문서를 인용한 문서&rdquo; 자동 표시(52/114 문서에 백링크, 기존 related·relations diff 0). schema.md·kgs-edges 동반 갱신 <a href="#!wl-20260724-features">wl-20260724 기능</a></li>
     <li>(정리) &ldquo;[메타] 3축+신선도 파일럿&rdquo; 제거 — READY 3건 검토에서 사용자 결정(2026-07-24): 독자가 사실상 본인뿐인 현 단계에선 라벨 유지비 대비 효용 낮음. 설계는 <a href="#!wl-20260711-ops">박제 명세</a>에 남아 있어 필요 시 되살림.</li>
