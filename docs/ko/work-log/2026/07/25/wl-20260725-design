@@ -1,0 +1,8 @@
+<h2>2026-07-25 · 디자인 — 사이드바 프로필 사진 교체</h2>
+<p>사이드바 상단 프로필 사진(<code>profile.jpg</code>)을 사용자가 제공한 흑백 산행 사진(스틱을 짚고 바위 능선을 오르는 뒷모습, 480&times;640 세로)으로 교체했다.</p>
+<ul>
+    <li><strong>교체 방식</strong> — 파일명은 <code>profile.jpg</code> 그대로 유지(오류 시 <code>profile.svg</code> 폴백 로직 불변). 기존 <code>#profile img</code> 스타일(<code>width:100%</code>·라운드·<code>var(--border)</code> 테두리)이 세로 사진도 그대로 수용해 CSS 변경 없음.</li>
+    <li><strong>EXIF 제거</strong> — 원본에 카메라 기종·촬영일 등 EXIF 메타데이터가 있어 공개 저장소 커밋 전에 픽셀만 재저장해 제거(132KB→100KB).</li>
+    <li><strong>캐시버스트</strong> — <code>index.html</code>의 이미지 src를 <code>profile.jpg?v=2</code>로 — 같은 파일명 교체라 재방문 브라우저가 옛 사진을 계속 쓰는 것을 방지(<code>?v</code> 자산 목록에 신규 편입).</li>
+    <li><strong>검증</strong> — 낮/밤 테마 실렌더로 사이드바 표시 확인, <code>validate_all</code> ERROR 0.</li>
+</ul>
