@@ -370,18 +370,40 @@
             50%{ transform: translate(3px, -3px); }
         }
 
-        /* ---- Sidebar footer: Tags, theme toggle, settings on one row, pinned to the bottom ---- */
+        /* ---- Sidebar footer: two rows pinned to the bottom —
+               meta row (RSS · for AI · license) over the Tags/toggle/settings row ---- */
         #sidebar-foot{
             position: sticky;
             bottom: 0;
             margin-top: auto;   /* pin to the very bottom of the sidebar */
             display: flex;
-            align-items: center;
-            justify-content: space-between;   /* Tags | toggle | settings, equal gaps */
-            gap: 12px;
+            flex-direction: column;
+            gap: 6px;           /* between the two rows — footer rhythm */
             padding: 8px 14px;   /* match the sidebar's tightened rhythm */
             background: var(--bg);
             border-top: 1px solid var(--border);
+        }
+        .sf-row{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;   /* three items, equal gaps */
+            gap: 12px;
+        }
+        /* Meta row: quieter than the main row — wakes up on hover. */
+        .sf-meta a{
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--muted);
+            font-size: 12.5px;
+            line-height: 1;
+        }
+        .sf-meta a:hover{
+            color: var(--accent-ink);
+            text-decoration: none;
+        }
+        .sf-meta .settings-ico{
+            font-size: 13px;
         }
         #tags-link,
         #settings-link{
