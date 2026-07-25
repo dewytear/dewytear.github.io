@@ -3268,40 +3268,138 @@
             }
         }
 
+        /* ---- 3D-2 / 3D-3 (WebGL views) overlay: labels + focus card ----
+           The canvas draws geometry only; text stays in the DOM so it uses the
+           theme tokens and Pretendard directly (crisp at any DPR). Same quiet-
+           glass vocabulary as .gv-dock — low presence, wakes on interaction. */
+        .c2-overlay{
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 3;
+        }
+        .c2-label{
+            position: absolute;
+            transform: translate(-50%, -100%);
+            white-space: nowrap;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text);
+            text-shadow: 0 1px 6px var(--bg), 0 0 4px var(--bg);
+        }
+        .c2-label.world{
+            font-size: 20px; font-weight: 800; letter-spacing: 0.14em; color: var(--muted);
+        }
+        .c2-label.sys{
+            font-size: 12px; font-weight: 700; letter-spacing: 0.05em; color: var(--muted);
+        }
+        .c2-label.tier{
+            font-size: 11px; font-weight: 700; letter-spacing: 0.18em; color: var(--muted);
+            transform: translate(0, -50%);
+        }
+        .c2-label.doc{ font-size: 12.5px; font-weight: 700; }
+        .c2-label.doc.on{ font-size: 13.5px; font-weight: 800; color: var(--accent-ink); }
+        .c2-card{
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: min(280px, calc(100% - 40px));
+            padding: 16px 18px 14px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: color-mix(in srgb, var(--bg-alt) 82%, transparent);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            pointer-events: auto;
+        }
+        .c2-close{
+            position: absolute; top: 8px; right: 10px;
+            border: 0; background: transparent; color: var(--muted);
+            font-size: 18px; line-height: 1; cursor: pointer; padding: 2px 4px;
+        }
+        .c2-close:hover{ color: var(--text); }
+        .c2-eyebrow{
+            font-size: 11px; letter-spacing: 0.06em; color: var(--muted);
+        }
+        .c2-title{
+            margin: 6px 28px 4px 0; border: 0; padding: 0;
+            font-size: 16px; line-height: 1.35; font-weight: 800;
+        }
+        .c2-meta{ font-size: 11.5px; color: var(--muted); }
+        .c2-concepts{ display: flex; flex-wrap: wrap; gap: 4px; margin: 10px 0 2px; }
+        .c2-concepts span{
+            padding: 2px 8px; border: 1px solid var(--border); border-radius: 999px;
+            font-size: 11px; color: var(--muted);
+        }
+        .c2-links{ margin: 10px 0 12px; padding: 0; list-style: none; font-size: 12.5px; }
+        .c2-links li{ border-top: 1px solid var(--border); }
+        .c2-links a{
+            display: block; padding: 5px 0; color: var(--muted);
+            text-decoration: none; overflow: hidden; text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .c2-links a:hover{ color: var(--accent-ink); }
+        .c2-open{
+            display: block; text-align: center; padding: 8px 0;
+            border: 1px solid var(--border); border-radius: 999px;
+            background: color-mix(in srgb, var(--accent) 18%, transparent);
+            color: var(--text); font-size: 12.5px; font-weight: 700; text-decoration: none;
+        }
+        .c2-open:hover{ background: color-mix(in srgb, var(--accent) 30%, transparent); }
+        @media (max-width: 800px){
+            .c2-card{
+                right: 12px; left: 12px; top: auto; bottom: 12px;
+                width: auto; transform: none;
+            }
+            .c2-label.world{ font-size: 16px; }
+        }
+
         /* ---- Graph views (cosmos 2D representations) ---- */
         /* View switcher — same quiet-glass vocabulary as the search screen's
            game dock: translucent pill at rest, wakes on hover/focus. Sits
            centered under the cosmos title/subtitle (.cosmos-hud) and above
            whichever stage (3D canvas or 2D svg) is currently showing. */
+        /* 뷰가 아홉이라 이름만 늘어놓으면 번잡하다 — 차원(3D/2D)과 그 그룹의
+           뷰를 **한 줄**에 두고, 사이를 가는 구분선으로만 가른다. 캡슐(필) 배경
+           없이 글자만 — 배경 그래프를 가리지 않는 가장 조용한 형태. */
         .gv-dock{
             position: absolute;
-            top: 78px;
+            top: 76px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 5;
             display: flex;
             flex-wrap: wrap;
+            align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 2px 10px;
             max-width: calc(100% - 24px);
-            padding: 5px;
-            background: color-mix(in srgb, var(--bg-alt) 72%, transparent);
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            opacity: 0.55;
+            opacity: 0.66;
             transition: opacity 0.25s ease;
+        }
+        .gv-groups,
+        .gv-kinds{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2px;
+        }
+        .gv-kinds{
+            padding-left: 10px;
+            border-left: 1px solid var(--border);
+        }
+        .gv-groups button{
+            letter-spacing: 0.06em;
         }
         .gv-dock:hover,
         .gv-dock:focus-within{
             opacity: 1;
         }
         .gv-dock button{
-            padding: 6px 14px;
+            padding: 4px 8px;
             background: transparent;
             border: none;
-            border-radius: 999px;
             color: var(--muted);
             font-family: inherit;
             font-size: 12.5px;
@@ -3314,12 +3412,10 @@
         }
         .gv-dock button:hover{
             color: var(--text);
-            background: color-mix(in srgb, var(--text) 8%, transparent);
-            transform: translateY(-1px);
         }
         .gv-dock button.active{
-            background: color-mix(in srgb, var(--accent) 20%, transparent);
             color: var(--accent-ink);
+            font-weight: 800;
         }
         .gv-dock button:focus-visible{
             outline: 2px solid var(--accent);
@@ -3388,13 +3484,13 @@
         @media (max-width: 800px){
             .gv-dock{
                 top: 70px;
-                gap: 2px;
-                padding: 4px;
+                gap: 1px 8px;
             }
             .gv-dock button{
-                padding: 5px 10px;
+                padding: 4px 6px;
                 font-size: 11.5px;
             }
+            .gv-kinds{ padding-left: 8px; }
             .gv-stage{
                 padding: 116px 12px 20px;
             }

@@ -6,63 +6,141 @@
 // sphere; related[] links are the connecting lines. Drag to
 // rotate, wheel to zoom, click a star to open that doc.
 function showCosmos(){
-    var kinds = ['3d'].concat(window.GraphViews ? GraphViews.KINDS : []);
-    var lbl = { '3d': STR('gvView3d'), bundling: STR('gvBundling'),
-                chord: STR('gvChord'), packing: STR('gvPacking'),
-                concepts: STR('gvConcepts'), arc: STR('gvArc'),
-                matrix: STR('gvMatrix') };
-    var dock = '<div class="gv-dock" role="group" aria-label="' + escapeHtml(STR('gvDockAria')) + '">'
-             + kinds.map(function(k){
-                   return '<button type="button" data-gv="' + k + '">'
-                        + escapeHtml(lbl[k] || k) + '</button>';
-               }).join('')
-             + '</div>';
     var html =
         '<div class="cosmos-screen">'
       +   '<div class="cosmos-hud">'
       +     '<h2 class="cosmos-head">&#10022; Knowledge Graph</h2>'
-      +     '<p class="cosmos-sub">' + escapeHtml(STR('cosmosSub')) + '</p>'
+      +     '<p class="cosmos-sub">' + escapeHtml(cosmosSubFor(gvCurrentKind())) + '</p>'
       +   '</div>'
-      +   dock
+      +   '<div class="gv-dock" role="group" aria-label="' + escapeHtml(STR('gvDockAria')) + '">'
+      +     '<div class="gv-groups" role="group" aria-label="'
+      +       escapeHtml(STR('gvGroupAria')) + '"></div>'
+      +     '<div class="gv-kinds"></div>'
+      +   '</div>'
       + '</div>';
     setArticle(html);
     var screen = document.querySelector('.cosmos-screen');
-    screen.querySelectorAll('.gv-dock button').forEach(function(b){
-        b.addEventListener('click', function(){
-            gvSelect(screen, b.getAttribute('data-gv'));
-        });
-    });
     gvSelect(screen, gvCurrentKind());
 }
 
-// ---- Graph views: the same index in six 2D representations ----
-// The 3D scene stays the default; the dock swaps in a 2D svg built
-// by graphviews.js. Choice sticks per browser.
+// ---- Graph views: the same index in nine representations ----
+// 뷰가 아홉이라 한 줄에 다 늘어놓으면 번잡하다 — 먼저 **차원(3D/2D)** 을 고르고
+// 그 그룹의 뷰만 아래 줄에 보여 준다. 기본값은 3D. 선택은 브라우저에 남는다.
 var GV_LS_KEY = 'graphView';
+var GV_LS_LAST = { '3d': 'graphView3d', '2d': 'graphView2d' };
 var GV_OBS = null;   // theme watcher while a 2D view is mounted
 var GV_RO = null;    // resize watcher while a 2D view is mounted
+
+// 궤도계·스트라타는 WebGL 뷰(cosmos2.js)다 — 지원하지 않는 브라우저에서는
+// 도크에서 아예 빼고, 저장된 선택도 기존 3D(성좌)로 되돌린다.
+function COSMOS2_KINDS(){
+    return (window.Cosmos2 && Cosmos2.supported()) ? ['3d2', '3d3'] : [];
+}
+
+function gvKindsOf(group){
+    if(group === '2d'){ return window.GraphViews ? GraphViews.KINDS.slice() : []; }
+    return ['3d'].concat(COSMOS2_KINDS());
+}
+
+function gvGroupOf(kind){
+    return gvKindsOf('3d').indexOf(kind) !== -1 ? '3d' : '2d';
+}
+
+function gvLabel(kind){
+    var lbl = { '3d': STR('gvView3d'), '3d2': STR('gvView3d2'), '3d3': STR('gvView3d3'),
+                bundling: STR('gvBundling'), chord: STR('gvChord'), packing: STR('gvPacking'),
+                concepts: STR('gvConcepts'), arc: STR('gvArc'), matrix: STR('gvMatrix') };
+    return lbl[kind] || kind;
+}
 
 function gvCurrentKind(){
     var v = null;
     try{ v = localStorage.getItem(GV_LS_KEY); }catch(e){}
-    return (window.GraphViews && GraphViews.KINDS.indexOf(v) !== -1) ? v : '3d';
+    if(gvKindsOf('3d').indexOf(v) !== -1 || gvKindsOf('2d').indexOf(v) !== -1){ return v; }
+    return '3d';
+}
+
+// 그룹 버튼을 누르면 그 그룹에서 마지막으로 보던 뷰로 돌아간다.
+function gvLastOf(group){
+    var v = null;
+    try{ v = localStorage.getItem(GV_LS_LAST[group]); }catch(e){}
+    var kinds = gvKindsOf(group);
+    return kinds.indexOf(v) !== -1 ? v : kinds[0];
+}
+
+// 뷰마다 조작법이 다르므로 부제도 따라간다(하드코딩 금지 — STR 키).
+function cosmosSubFor(kind){
+    if(kind === '3d2'){ return STR('cosmosSub3d2'); }
+    if(kind === '3d3'){ return STR('cosmosSub3d3'); }
+    return STR('cosmosSub');
+}
+
+// 도크 두 줄(차원 · 그 그룹의 뷰)을 현재 선택 기준으로 다시 그린다.
+function gvPaintDock(screen, kind){
+    var group = gvGroupOf(kind);
+    var groups = screen.querySelector('.gv-groups');
+    var kindsRow = screen.querySelector('.gv-kinds');
+    if(!groups || !kindsRow){ return; }
+    groups.innerHTML = ['3d', '2d'].filter(function(g){ return gvKindsOf(g).length; })
+        .map(function(g){
+            return '<button type="button" data-gvg="' + g + '"'
+                 + (g === group ? ' class="active" aria-pressed="true"' : ' aria-pressed="false"')
+                 + '>' + escapeHtml(STR(g === '3d' ? 'gvGroup3d' : 'gvGroup2d')) + '</button>';
+        }).join('');
+    kindsRow.innerHTML = gvKindsOf(group).map(function(k){
+        return '<button type="button" data-gv="' + k + '"'
+             + (k === kind ? ' class="active"' : '') + '>'
+             + escapeHtml(gvLabel(k)) + '</button>';
+    }).join('');
+    groups.querySelectorAll('button').forEach(function(b){
+        b.addEventListener('click', function(){
+            var g = b.getAttribute('data-gvg');
+            if(g === group){ return; }
+            gvSelect(screen, gvLastOf(g));
+        });
+    });
+    kindsRow.querySelectorAll('button').forEach(function(b){
+        b.addEventListener('click', function(){
+            gvSelect(screen, b.getAttribute('data-gv'));
+        });
+    });
 }
 
 function gvSelect(screen, kind){
-    try{ localStorage.setItem(GV_LS_KEY, kind); }catch(e){}
-    screen.querySelectorAll('.gv-dock button').forEach(function(b){
-        b.classList.toggle('active', b.getAttribute('data-gv') === kind);
-    });
+    var is3D = gvGroupOf(kind) === '3d';
+    try{
+        localStorage.setItem(GV_LS_KEY, kind);
+        localStorage.setItem(GV_LS_LAST[is3D ? '3d' : '2d'], kind);
+    }catch(e){}
+    gvPaintDock(screen, kind);
     // 2D views hide the cosmos title/subtitle and pull the dock up.
-    screen.classList.toggle('gv-2d', kind !== '3d');
+    screen.classList.toggle('gv-2d', !is3D);
+    var sub = screen.querySelector('.cosmos-sub');
+    if(sub){ sub.textContent = cosmosSubFor(kind); }
     // Tear down whichever stage is up. Removing the canvas ends the
     // 3D loop (its frame() bails when the canvas leaves the DOM).
+    if(window.Cosmos2){ Cosmos2.stop(); }
     var old = screen.querySelector('.cosmos-canvas');
     if(old){ old.remove(); }
     var st = screen.querySelector('.gv-stage');
     if(st){ st.remove(); }
     if(GV_OBS){ GV_OBS.disconnect(); GV_OBS = null; }
     if(GV_RO){ GV_RO.disconnect(); GV_RO = null; }
+    if(COSMOS2_KINDS().indexOf(kind) !== -1){
+        var c2 = document.createElement('canvas');
+        c2.className = 'cosmos-canvas';
+        screen.insertBefore(c2, screen.firstChild);
+        // 데이터가 아직 안 왔거나 WebGL이 죽으면 기존 3D로 조용히 폴백.
+        if(Cosmos2.start(c2, kind === '3d3' ? 'strata' : 'orbit')){ return; }
+        if(!KNOWLEDGE){
+            setTimeout(function(){
+                if(c2.isConnected){ gvSelect(screen, kind); }
+            }, 300);
+            return;
+        }
+        c2.remove();
+        kind = '3d';
+    }
     if(kind === '3d' || !window.GraphViews){
         var canvas = document.createElement('canvas');
         canvas.className = 'cosmos-canvas';
@@ -217,12 +295,21 @@ function startCosmos(){
     var ctx = canvas.getContext('2d');
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     var W = 0, H = 0;
+    // 발광·성운은 본래 뿌연 층이라 절반 해상도로 그려도 눈으로 차이가 없다.
+    // 전면 캔버스에 직접 큰 반투명 스프라이트를 수십 장 겹치면 소프트웨어
+    // 래스터에서 프레임이 반토막 나므로(실측 61→37fps), 이 층에서만 합성해
+    // 한 번에 올린다(실측 회복). 수묵 배경 회귀와 같은 교훈의 재적용.
+    var GLOW_SCALE = 0.5;
+    var glowCv = document.createElement('canvas');
+    var glowCtx = glowCv.getContext('2d');
     function resize(){
         var r = canvas.parentNode.getBoundingClientRect();
         W = r.width; H = r.height;
         canvas.width = W * dpr; canvas.height = H * dpr;
         canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        glowCv.width = Math.max(1, Math.round(W * GLOW_SCALE));
+        glowCv.height = Math.max(1, Math.round(H * GLOW_SCALE));
     }
     window.addEventListener('resize', resize);
     // The stage also changes size without a window resize — the
@@ -238,7 +325,7 @@ function startCosmos(){
     // 배경 더스트 — 그래프 뒤에서 끊임없이 흐르는 희미한 입자층.
     // 위치는 0..1 정규화 좌표(리사이즈에 안전), 드리프트는 감쇠 없이
     // 상시 유지, 알파는 개별 위상의 사인 트윙클로 은은하게 숨쉰다.
-    var DUST_N = 120;
+    var DUST_N = 200;
     var dustReduced = window.matchMedia
                    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var dust = [];
@@ -278,6 +365,47 @@ function startCosmos(){
             ctx.fill();
         }
         ctx.globalAlpha = 1;
+    }
+
+    // ---- 발광(글로우)·성운 스프라이트 ----
+    // 별마다 매 프레임 그라디언트를 새로 만들면 비싸므로, 색별로 소프트
+    // 스프라이트를 한 번만 오프스크린에 굽고 drawImage로 재사용한다
+    // (수묵 배경의 성능 회귀에서 배운 원칙 — 프레임당 재래스터 금지).
+    var SPRITES = {};
+    function withAlpha(color, a){
+        return color.replace(')', ', ' + a + ')').replace('hsl', 'hsla');
+    }
+    function softSprite(color, hardness){
+        var key = color + '|' + hardness;
+        if(SPRITES[key]){ return SPRITES[key]; }
+        var S = 64, cv2 = document.createElement('canvas');
+        cv2.width = S; cv2.height = S;
+        var c2 = cv2.getContext('2d');
+        var g = c2.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
+        // 눈부시지 않게 — 중심도 반투명에서 시작해 완만하게 사라진다(코어의
+        // 또렷함은 별 자체를 그리는 원이 담당하고, 이 스프라이트는 그 둘레의
+        // 부드러운 빛만 맡는다).
+        if(hardness){
+            g.addColorStop(0, withAlpha(color, 0.5));
+            g.addColorStop(0.3, withAlpha(color, 0.2));
+            g.addColorStop(0.62, withAlpha(color, 0.06));
+        } else {
+            g.addColorStop(0, withAlpha(color, 0.42));
+            g.addColorStop(0.5, withAlpha(color, 0.14));
+            g.addColorStop(0.78, withAlpha(color, 0.04));
+        }
+        g.addColorStop(1, withAlpha(color, 0));
+        c2.fillStyle = g;
+        c2.fillRect(0, 0, S, S);
+        SPRITES[key] = cv2;
+        return cv2;
+    }
+    // 좌표·반경은 화면 px로 받아 레이어 축척으로 환산해 그린다.
+    function drawGlow(color, x, y, r, alpha, hardness){
+        var sp = softSprite(color, hardness);
+        var k = GLOW_SCALE;
+        glowCtx.globalAlpha = alpha;
+        glowCtx.drawImage(sp, (x - r) * k, (y - r) * k, r * 2 * k, r * 2 * k);
     }
 
     // Deterministic per-doc placement (stable across visits).
@@ -420,7 +548,10 @@ function startCosmos(){
                      x: dir[0] + j[0] * 0.2,
                      y: dir[1] + j[1] * 0.2,
                      z: dir[2] + j[2] * 0.2,
-                     ref: indeg[n] || 0, sx: 0, sy: 0, ss: 1, sz: 0 };
+                     ref: indeg[n] || 0, sx: 0, sy: 0, ss: 1, sz: 0,
+                     // 숨쉬기(약하게) — 별마다 위상·주기가 달라 리듬이 겹치지 않는다.
+                     bph: rnd((h1 % 8191) + 11) * 6.2832,
+                     btw: 0.9 + rnd((h1 % 6143) + 17) * 0.7 };
         });
         var byName = {};
         nodes.forEach(function(nd, i){ byName[nd.name] = i; });
@@ -598,6 +729,27 @@ function startCosmos(){
             o.ss = pr; o.sz = z2;
         }
         for(var i = 0; i < nodes.length; i++){ project(nodes[i]); }
+        // 성운 — System별 화면 중심에 큰 소프트 무리를 깔아 클러스터가
+        // "색의 구름"으로 먼저 읽히게 한다. 스프라이트 1장을 재사용하므로
+        // 프레임 비용은 drawImage 십수 번(≈클러스터 수)뿐이다.
+        var isDay = document.body.classList.contains('day');
+        glowCtx.setTransform(1, 0, 0, 1, 0, 0);
+        glowCtx.clearRect(0, 0, glowCv.width, glowCv.height);
+        glowCtx.globalCompositeOperation = 'lighter';
+        var neb = {};
+        for(var nb = 0; nb < nodes.length; nb++){
+            var nn = nodes[nb];
+            var acc = neb[nn.sec] || (neb[nn.sec] = [0, 0, 0, 0, 0]);
+            acc[0] += nn.sx; acc[1] += nn.sy; acc[2] += nn.ss; acc[3]++;
+            acc[4] = Math.max(acc[4], Math.hypot(nn.sx - acc[0] / acc[3], nn.sy - acc[1] / acc[3]));
+        }
+        for(var nk in neb){
+            var ac = neb[nk];
+            if(ac[3] < 2){ continue; }
+            var rad = Math.max(90, ac[4] * 1.9 + 60) * (0.6 + ac[2] / ac[3] * 0.6);
+            drawGlow(secColor[nk] || col, ac[0] / ac[3], ac[1] / ac[3], rad,
+                     isDay ? 0.4 : 0.6, 0);
+        }
         // Name plates — dim, behind everything. World(대분류) plates
         // read bigger than the System plates inside them.
         ctx.textAlign = 'center';
@@ -619,12 +771,31 @@ function startCosmos(){
         for(var e2 = 0; e2 < edges.length; e2++){
             var a = nodes[edges[e2][0]], b = nodes[edges[e2][1]];
             var hi = hover >= 0 && (edges[e2][0] === hover || edges[e2][1] === hover);
-            ctx.globalAlpha = (hi ? 0.6 : 0.1) * ((a.ss + b.ss) / 2) * edges[e2][2];
+            ctx.globalAlpha = (hi ? 0.7 : 0.15) * ((a.ss + b.ss) / 2) * edges[e2][2];
             ctx.strokeStyle = hi ? colOf(nodes[hover]) : mut;
             ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
         }
         var order = nodes.map(function(_, k){ return k; })
             .sort(function(p, q){ return nodes[q].sz - nodes[p].sz; });   // far → near
+        var tNow = dustReduced ? 0 : performance.now() / 1000;
+        for(var gl2 = 0; gl2 < order.length; gl2++){
+            var ndg = nodes[order[gl2]];
+            var rg = Math.max(2, (2.6 + ndg.ref / maxRef * 5.5) * ndg.ss);
+            // 숨쉬기 — 헤일로의 크기·밝기를 ±12%만 흔든다(별 자체 크기는 고정).
+            // 계산은 프레임당 sin 한 번뿐이라 그리기 비용은 그대로다.
+            var br = dustReduced ? 1 : (1 + 0.12 * Math.sin(tNow * ndg.btw + ndg.bph));
+            // 별 주위 발광 — 허브일수록 크고 진하게, 호버 시 확 밝아진다.
+            drawGlow(colOf(ndg), ndg.sx, ndg.sy,
+                     rg * (order[gl2] === hover ? 5.4 : 4.2) * br,
+                     (order[gl2] === hover ? 0.9 : 1) * Math.max(0.3, ndg.ss) * br, 1);
+        }
+        // 모아 둔 발광·성운 층을 한 번에 얹는다 — 전면 합성은 프레임당 1회.
+        ctx.save();
+        ctx.globalCompositeOperation = isDay ? 'source-over' : 'lighter';
+        ctx.globalAlpha = isDay ? 0.16 : 0.26;
+        ctx.drawImage(glowCv, 0, 0, W, H);
+        ctx.restore();
+        ctx.globalAlpha = 1;
         for(var o = 0; o < order.length; o++){
             var nd2 = nodes[order[o]];
             var r2 = Math.max(2, (2.6 + nd2.ref / maxRef * 5.5) * nd2.ss);
