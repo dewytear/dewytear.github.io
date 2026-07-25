@@ -327,7 +327,7 @@
         #profile{
             /* Slim sides (photo hugs the menu width) and tight rows — the
                pinned header grew, so every gap here is kept minimal. */
-            padding: 10px 6px 8px;
+            padding: 10px 6px 4px;
             border-bottom: 1px dashed var(--border);
         }
         /* The whole profile block (photo + tagline) links to the About page. */
@@ -1443,7 +1443,7 @@
 
         /* ---- Navigation tree ---- */
         #navigation{
-            padding: 10px 12px 20px;   /* equal gutters left/right, tight top */
+            padding: 4px 12px 8px;   /* equal gutters, tight top/bottom */
             /* Fill the space above the sticky footer so the Work Log
                branch can sink to the very bottom of the menu area. */
             flex: 1 1 auto;
@@ -1455,11 +1455,6 @@
            link) stays fixed; only the tree below scrolls, scrollbar hidden. */
         #navigation > ul{
             flex: none;   /* the pinned Knowledge Graph row keeps its height */
-        }
-        /* Pinned Knowledge Graph link: tighter rhythm than the tree's
-           top-level rows — the fixed header should spend pixels sparingly. */
-        #navigation > ul > li > a{
-            margin: 4px 0 2px;
         }
         #nav-scroll{
             flex: 1 1 auto;
@@ -1493,7 +1488,7 @@
             border-left: var(--nav-line-width) var(--nav-line-style) color-mix(in srgb, var(--border) 65%, transparent);
         }
         #navigation li{
-            margin: 8px 0;
+            margin: 4px 0;
         }
         /* Top-level rows are flex items (the ul pins Work Log to the
            bottom), so their margins no longer collapse with the titles' —
@@ -1545,7 +1540,7 @@
             align-items: center;
             gap: 6px;
             width: 100%;
-            margin: 12px 0 6px;
+            margin: 8px 0 4px;
             padding: 0;
             background: transparent;
             border: none;
@@ -1644,6 +1639,17 @@
             letter-spacing: 0.05em;
             color: var(--text);
         }
+        /* Pinned-header economy: the fixed Knowledge Graph row and the first
+           scrolled row drop the tree's 12px top rhythm so the pinned area
+           and the scroll seam carry no dead space. (After the shared :is
+           rules on purpose — equal specificity, later wins.) */
+        #navigation > ul > li > a{
+            margin: 2px 0 0;
+        }
+        #nav-scroll > ul > li:first-child > .nav-title{
+            margin-top: 2px;
+        }
+
         /* Knowledge Graph / Map entries: identical to every other menu item —
            only the leading glyph (✦ / ❖, the first letter) carries the accent,
            the quietest possible cue. Both maps (AI · DOUZONE) match. */
@@ -1655,8 +1661,8 @@
         /* Level-0 category titles: the only prominent tier. (12px top —
            see the top-level link rule above for the flex/no-collapse math.) */
         :is(#navigation, #nav-scroll) > ul > li.nav-branch > .nav-title{
-            margin: 12px 0 10px;
-            padding: 0 0 8px;
+            margin: 10px 0 8px;
+            padding: 0 0 6px;
             border-bottom: var(--nav-line-width) var(--nav-line-style) var(--border);
             font-size: 15px;
             font-weight: 700;
@@ -1682,7 +1688,7 @@
             flex: none;   /* pinned header row — never squeezed by #navigation's flex */
             /* Sit just inside the category dividers' span, centered. */
             width: calc(100% - 16px);
-            margin: 0 auto 6px;
+            margin: 0 auto 4px;
             border: 1px solid var(--border);
             border-radius: 8px;
             background: color-mix(in srgb, var(--bg-alt) 72%, transparent);
