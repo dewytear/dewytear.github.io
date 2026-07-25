@@ -1,0 +1,77 @@
+<h2>Agents · Skills</h2>
+<p>The core of OMC is <strong>delegation</strong>. The main Claude takes the conductor role and splits the work among specialist agents with fixed roles. Each agent is automatically assigned a model matching the difficulty of the task (a high-performance model for design and analysis, a lightweight model for simple lookups), so it is more accurate and faster than having one person handle everything.</p>
+<p>Agents fall broadly into four groups by role. Below are the main agents in each group and what each of them does.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 200" role="img" aria-label="Delegation org chart: the main Claude (conductor) delegates to the exploration and analysis, implementation and fixing, verification and quality, and documentation, design, and data groups">
+    <rect class="d-box accent" x="250" y="14" width="180" height="52" rx="12"/>
+    <text class="d-label" x="340" y="38" text-anchor="middle">Main Claude</text>
+    <text class="d-sub" x="340" y="55" text-anchor="middle">Conductor (delegation)</text>
+
+    <path class="d-edge" d="M340 66 V100" fill="none"/>
+    <path class="d-edge" d="M83 100 H597" fill="none"/>
+    <path class="d-edge" d="M83 100 V126" fill="none"/><polygon class="d-arrow" points="78,126 88,126 83,132"/>
+    <path class="d-edge" d="M253 100 V126" fill="none"/><polygon class="d-arrow" points="248,126 258,126 253,132"/>
+    <path class="d-edge" d="M427 100 V126" fill="none"/><polygon class="d-arrow" points="422,126 432,126 427,132"/>
+    <path class="d-edge" d="M597 100 V126" fill="none"/><polygon class="d-arrow" points="592,126 602,126 597,132"/>
+
+    <rect class="d-box" x="8" y="132" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="83" y="156" text-anchor="middle">Explore · analyze</text>
+    <text class="d-sub" x="83" y="173" text-anchor="middle">explore·architect</text>
+    <rect class="d-box" x="178" y="132" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="253" y="156" text-anchor="middle">Implement · fix</text>
+    <text class="d-sub" x="253" y="173" text-anchor="middle">executor·debugger</text>
+    <rect class="d-box" x="352" y="132" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="427" y="156" text-anchor="middle">Verify · quality</text>
+    <text class="d-sub" x="427" y="173" text-anchor="middle">qa·reviewer</text>
+    <rect class="d-box" x="522" y="132" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="597" y="156" text-anchor="middle">Docs · design · data</text>
+    <text class="d-sub" x="597" y="173" text-anchor="middle">writer·designer</text>
+</svg>
+<div class="d-cap">The main Claude, as the <strong>conductor</strong>, splits the work among <strong>specialist agent groups</strong> with fixed roles.</div>
+</div>
+
+<h3>Exploration · analysis</h3>
+<ul>
+    <li><strong>explore</strong> — skims the codebase and finds the files and structures relevant to the task.</li>
+    <li><strong>analyst</strong> — analyzes code or requirements and lays out the essentials and the points at issue.</li>
+    <li><strong>architect</strong> — sets the overall structure and design direction, and verifies that the result matches the design.</li>
+    <li><strong>planner</strong> — breaks the work into executable steps and builds a plan.</li>
+    <li><strong>critic</strong> — critically reviews a plan or a result to find missing parts and risks.</li>
+    <li><strong>tracer</strong> — traces the cause of a bug or failure by following the code flow.</li>
+</ul>
+
+<h3>Implementation · fixing</h3>
+<ul>
+    <li><strong>executor</strong> — writes and modifies the actual code according to the plan. It is divided into lightweight, standard, and high-performance tiers depending on the difficulty of the task.</li>
+    <li><strong>debugger</strong> — finds the cause of a bug and fixes it.</li>
+    <li><strong>code-simplifier</strong> — tidies up tangled, complicated code into something simpler and easier to read (refactoring).</li>
+</ul>
+
+<h3>Verification · quality</h3>
+<ul>
+    <li><strong>qa-tester</strong> — tests whether a feature works as intended and gathers evidence of completion.</li>
+    <li><strong>test-engineer</strong> — writes and configures automated test code.</li>
+    <li><strong>code-reviewer</strong> — reviews code quality and style.</li>
+    <li><strong>security-reviewer</strong> — checks for security vulnerabilities.</li>
+</ul>
+
+<h3>Documentation · design · data</h3>
+<ul>
+    <li><strong>writer</strong> — writes documents and explanatory text.</li>
+    <li><strong>document-specialist</strong> — finds, checks, and organizes external library and API documentation.</li>
+    <li><strong>designer</strong> — handles screen UI/UX design.</li>
+    <li><strong>vision</strong> — analyzes images such as screen captures or diagrams.</li>
+    <li><strong>scientist</strong> — analyzes data.</li>
+    <li><strong>git-master</strong> — handles Git work such as branches, commits, and merges.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">In one line</span>
+    You do not need to pick agents yourself. Modes like autopilot grasp the intent of the work and place the needed agents for you, so normally you only have to say "what to do".
+</div>
+
+<h3>skillify — turning repetitive work into a skill</h3>
+<p><code>/oh-my-claudecode:skillify</code> is the command that extracts work patterns that were effective in one session into reusable skills. Organize a flow you repeat often just once, and you can call it up right away in your next task. The former name <code>learner</code> is a deprecated (support to be discontinued) compatibility alias, so use skillify in new documents and training.</p>
+<pre><code><span class="c"># Extract patterns that were effective in the session into reusable skills</span>
+/oh-my-claudecode:skillify</code></pre>

@@ -1,0 +1,62 @@
+<h2>Installation</h2>
+<p>There are two ways to install it. <strong>Ordinary users should apply the plugin marketplace approach</strong> first.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 218" role="img" aria-label="Installation decision tree: depending on how you want to install, it branches three ways into the plugin marketplace, --local, and the npm CLI">
+    <polygon class="d-box" points="340,14 412,54 340,94 268,54"/>
+    <text class="d-label sm" x="340" y="58" text-anchor="middle">How to install?</text>
+
+    <path class="d-edge" d="M340 94 L115 129 Q103 132 103 138" fill="none"/>
+    <polygon class="d-arrow" points="98,132 108,132 103,140"/>
+    <line class="d-edge" x1="340" y1="94" x2="340" y2="132"/>
+    <polygon class="d-arrow" points="335,132 345,132 340,140"/>
+    <path class="d-edge" d="M340 94 L565 129 Q573 132 573 138" fill="none"/>
+    <polygon class="d-arrow" points="568,132 578,132 573,140"/>
+
+    <text class="d-accent" x="195" y="112" text-anchor="middle" font-size="11">Recommended</text>
+    <text class="d-sub" x="352" y="122" text-anchor="middle">Project</text>
+    <text class="d-sub" x="500" y="112" text-anchor="middle">Terminal</text>
+
+    <rect class="d-box accent" x="8" y="140" width="190" height="62" rx="11"/>
+    <text class="d-label sm" x="103" y="166" text-anchor="middle">Plugin marketplace</text>
+    <text class="d-sub" x="103" y="184" text-anchor="middle">General users · slash commands</text>
+    <rect class="d-box" x="243" y="140" width="190" height="62" rx="11"/>
+    <text class="d-label sm" x="338" y="166" text-anchor="middle">--local</text>
+    <text class="d-sub" x="338" y="184" text-anchor="middle">Project config · global kept</text>
+    <rect class="d-box" x="478" y="140" width="190" height="62" rx="11"/>
+    <text class="d-label sm" x="573" y="166" text-anchor="middle">npm CLI</text>
+    <text class="d-sub" x="573" y="184" text-anchor="middle">Terminal omc command</text>
+</svg>
+<div class="d-cap">From "How to install?" it splits three ways into the <strong>plugin marketplace (recommended)</strong> · <code>--local</code> · <code>npm CLI</code>.</div>
+</div>
+
+<h3>1) Recommended — the plugin marketplace</h3>
+<p>Add the marketplace inside Claude Code, then install the OMC plugin. Run the two lines below one after another in the input box. <strong>Pasting both lines at once fails, so you must run them one line at a time</strong> (stated in the official README).</p>
+<pre><code><span class="c"># Step 1: register the plugin repository (marketplace)</span>
+/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
+<span class="c"># Step 2: install the OMC plugin from the registered repository</span>
+/plugin install oh-my-claudecode</code></pre>
+
+<h3>2) Project configuration (--local recommended)</h3>
+<p>After installing, per-project configuration is recommended. Adding <code>--local</code> is safe because it does not overwrite your existing global <code>CLAUDE.md</code>.</p>
+<pre><code><span class="c"># Apply the OMC configuration only to the current project — the global configuration is preserved as is</span>
+/oh-my-claudecode:omc-setup --local</code></pre>
+<p>Use the command below only when you really need a global configuration. However, you should check in advance whether it affects your existing <code>~/.claude/CLAUDE.md</code>.</p>
+<pre><code><span class="c"># Applied commonly to all projects — you need to check whether it affects the existing global CLAUDE.md</span>
+/oh-my-claudecode:omc-setup</code></pre>
+
+<div class="note">
+    <span class="nh">Recommendation for company dev PCs · shared projects</span>
+    Project-local configuration (<code>--local</code>) is recommended over global configuration. It prevents the global <code>CLAUDE.md</code> from getting mixed in when rules differ per project.
+</div>
+
+<h3>3) npm installation — the official alternative path for CLI/runtime use</h3>
+<p>The plugin approach above is enough for ordinary users, but <strong>npm installation is a separate, officially supported path</strong> as well. Its purpose is different, though. The plugin installation is for using slash commands (<code>/autopilot</code> and so on) inside a Claude Code session, while the npm installation is for using the <code>omc</code> CLI commands (<code>omc doctor</code>, <code>omc team</code>, <code>omc ask</code>, and so on) in a terminal.</p>
+<pre><code><span class="c"># Only when you need the terminal CLI (the omc command) — the npm package name is oh-my-claude-sisyphus</span>
+npm i -g oh-my-claude-sisyphus@latest</code></pre>
+<p>The thing to watch out for is that <strong>the npm package name differs from the repository name</strong>. The project brand is oh-my-claudecode, but the package name published on npm is <code>oh-my-claude-sisyphus</code>. Installing it registers both the <code>oh-my-claudecode</code> and <code>omc</code> commands together. You may see a <code>deprecated prebuild-install</code> warning during installation, but it is a known warning originating from an upstream dependency and does not mean the installation failed. Installation via a curl script is not in the official documentation, so do not use it.</p>
+
+<div class="note warn">
+    <span class="nh">Installation · updates</span>
+    When using the plugin approach, handle installation and updates through Claude Code's plugin management features. If marketplace auto-update is off, first sync the latest version with <code>/plugin marketplace update omc</code>, then run <code>/oh-my-claudecode:omc-setup</code> again to apply the latest configuration.
+</div>

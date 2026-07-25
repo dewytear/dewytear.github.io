@@ -1,0 +1,164 @@
+<h2>Execution Modes</h2>
+<p>OMC offers several execution modes to match the nature of the work. Think of each mode as a way of deciding "how the work will proceed". Modes are easiest to understand as an intensity spectrum, from light one-off tasks to large, autonomous ones.</p>
+
+<p><strong>Intensity spectrum (weak → strong):</strong> conversation (single query) → plan (drawing up a plan) → autopilot (autonomous execution) → ralph (repeat until done) → team ralph (team + repetition)</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 134" role="img" aria-label="Intensity spectrum: conversation → plan → autopilot → ralph → team ralph, the further right the more autonomous and stronger">
+    <rect class="d-box" x="8" y="30" width="118" height="48" rx="10"/>
+    <text class="d-label sm" x="67" y="52" text-anchor="middle">Conversation</text>
+    <text class="d-sub" x="67" y="68" text-anchor="middle">Single query</text>
+    <rect class="d-box" x="138" y="30" width="118" height="48" rx="10"/>
+    <text class="d-label sm" x="197" y="52" text-anchor="middle">plan</text>
+    <text class="d-sub" x="197" y="68" text-anchor="middle">Planning</text>
+    <rect class="d-box" x="268" y="30" width="118" height="48" rx="10"/>
+    <text class="d-label sm" x="327" y="52" text-anchor="middle">autopilot</text>
+    <text class="d-sub" x="327" y="68" text-anchor="middle">Autonomous run</text>
+    <rect class="d-box" x="398" y="30" width="118" height="48" rx="10"/>
+    <text class="d-label sm" x="457" y="52" text-anchor="middle">ralph</text>
+    <text class="d-sub" x="457" y="68" text-anchor="middle">Loop until done</text>
+    <rect class="d-box accent" x="528" y="30" width="118" height="48" rx="10"/>
+    <text class="d-label sm" x="587" y="52" text-anchor="middle">team ralph</text>
+    <text class="d-sub" x="587" y="68" text-anchor="middle">Team + loop</text>
+
+    <line class="d-edge" x1="126" y1="54" x2="132" y2="54"/><polygon class="d-arrow" points="130,49 138,54 130,59"/>
+    <line class="d-edge" x1="256" y1="54" x2="262" y2="54"/><polygon class="d-arrow" points="260,49 268,54 260,59"/>
+    <line class="d-edge" x1="386" y1="54" x2="392" y2="54"/><polygon class="d-arrow" points="390,49 398,54 390,59"/>
+    <line class="d-edge accent" x1="516" y1="54" x2="522" y2="54"/><polygon class="d-arrow accent" points="520,49 528,54 520,59"/>
+    <text class="d-sub" x="340" y="120" text-anchor="middle">← lighter · one-off    |    more autonomy · intensity →</text>
+</svg>
+<div class="d-cap">The left side is <strong>light one-off work</strong>; the further right you go, the more <strong>autonomous and stronger</strong> the execution mode.</div>
+</div>
+
+<h3>The four core modes — a closer look</h3>
+<p>These are the four modes you will use most often in practice. How they work, and when to use them and when not to, are laid out based on the official skill definitions. Switch pages with the mode-name buttons or the previous / next buttons below.</p>
+
+<div class="carousel">
+    <div class="carousel-stage">
+
+        <div class="scn active">
+            <h4>Autopilot — <code>/oh-my-claudecode:autopilot &lt;task&gt;</code></h4>
+            <p><strong>Give it just a 2–3 line idea and it autonomously finishes the whole process — requirements analysis → design → parallel implementation → QA → multi-angle verification</strong>. The deliverable is "code that works and has been verified". (For reference, the current official README puts team forward as the representative mode — see the Team page.)</p>
+            <p><strong>How it works</strong> — it goes through five phases (Phase 0–4) in order, and the next phase only starts once the previous one is finished. In the expansion phase it unfolds a short request into a detailed specification (<code>.omc/autopilot/spec.md</code>), a critic verifies the plan, and in the execution phase it internally uses ralph + ultrawork so that executors matched to each difficulty level implement in parallel.</p>
+            <ul>
+                <li><strong>Suitable</strong> — when the requirements are reasonably clear and you want to hand over, from start to finish, a feature that needs several stages of planning · coding · testing · verification.</li>
+                <li><strong>Not suitable</strong> — exploring options · brainstorming (→ plan), a quick single fix (→ ordinary conversation), or cases where the requirements are vague (→ deep-interview first). If the input is too vague, autopilot may itself recommend deep-interview first.</li>
+                <li><strong>Stopping · resuming</strong> — you can stop it at any time with <code>/oh-my-claudecode:cancel</code>, and progress is preserved so you can pick it up and resume.</li>
+            </ul>
+            <pre><code><span class="c"># the slash command or natural-language keywords ("autopilot:", "오토파일럿") both work</span>
+/oh-my-claudecode:autopilot add an order cancellation API (including storing the cancellation reason and restoring stock)</code></pre>
+        </div>
+
+        <div class="scn">
+            <h4>Ralph — <code>/oh-my-claudecode:ralph &lt;task&gt;</code></h4>
+            <p><strong>A completion-guarantee mode that prevents the false report "it's done"</strong>. It structures the work into user stories and repeats without stopping until every story passes and reviewer verification is finished as well.</p>
+            <p><strong>How it works</strong> — at the start it automatically structures the work into <code>prd.json</code> (a list of completion conditions per story), then repeats until each story passes (<code>passes: true</code>) one by one. What it learns during the loop accumulates in <code>progress.txt</code> and is used in the next iteration, and before declaring completion a reviewer (architect by default) must verify against the completion conditions. So that the session does not end on its own whim, a persistent-mode Hook blocks the Stop event, and the internal execution uses the ultrawork parallel engine.</p>
+            <ul>
+                <li><strong>--critic=architect|critic|codex</strong> — you can swap the reviewer that handles completion verification (architect by default).</li>
+                <li><strong>Suitable</strong> — work where "partial completion is not allowed", such as migrations or fixing all the points raised in a review at once.</li>
+                <li><strong>Caution</strong> — when verification fails, retries repeat and token cost grows accordingly. The more concretely you write the completion conditions, the fewer iterations there are.</li>
+            </ul>
+            <pre><code><span class="c"># also triggered by the magic keywords "don't stop", "until done", or Korean "랄프"</span>
+/oh-my-claudecode:ralph fix all 12 points raised in the code review (until the build and tests pass)</code></pre>
+        </div>
+
+        <div class="scn">
+            <h4>Ultrawork — <code>/oh-my-claudecode:ultrawork &lt;task&gt;</code> · <code>ulw</code></h4>
+            <p><strong>A parallel execution engine that distributes independent tasks to several agents at the same time</strong>. Use it when speed is the top priority.</p>
+            <p><strong>How it works</strong> — it first grasps the intent of the work, gathers the relevant context in parallel, then weighs dependencies to compose bundles of tasks that can run simultaneously (parallel waves). Independent tasks never wait in sequence — they are fired off at once — and a model tier matching each task's difficulty is assigned automatically. Builds and tests that take more than 30 seconds are run in the background.</p>
+            <ul>
+                <li>ultrawork is <strong>a "part" with no persistence and no verification loop</strong>. Managing whether things are done is up to you, so if you need a completion guarantee use ralph (which has ultrawork built in).</li>
+                <li><strong>Suitable</strong> — bulk conversion · modification of many files with no dependencies on each other (e.g. converting all 15 files).</li>
+                <li><strong>Caution</strong> — because several workers run at the same time, it uses the most tokens within the same span of time.</li>
+            </ul>
+            <pre><code><span class="c"># short keywords ulw / uw / "울트라워크"</span>
+ulw: add unit tests to all 12 independent utility classes in the src/legacy folder</code></pre>
+        </div>
+
+        <div class="scn">
+            <h4>Team — <code>/oh-my-claudecode:team &lt;N&gt;:&lt;agent&gt; &lt;task&gt;</code></h4>
+            <p><strong>A mode that assigns roles to N agents and has them collaborate in a staged pipeline</strong>. team ralph, which combines it with ralph, is the strongest execution intensity in OMC. The current official README puts team forward as OMC's canonical mode (the repository description is also "Teams-first Multi-agent orchestration").</p>
+            <p><strong>How it works</strong> — it proceeds as a staged pipeline: team planning (team-plan) → requirements documentation (team-prd) → divided execution (team-exec) → verification (team-verify) → fix loop (team-fix). For example, <code>/team 3:executor "fix all TypeScript errors"</code> has 3 executors split the work between them.</p>
+            <ul>
+                <li><strong>Precondition</strong> — the environment variable <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> must be set in <code>~/.claude/settings.json</code>. If it is off, it warns and then falls back to non-team execution as far as possible.</li>
+                <li><strong>Distinction</strong> — <code>/team</code> inside a session (the native team workflow) and <code>omc team</code> in the terminal (which brings up actual claude · codex · gemini CLI workers in tmux windows) are different runtimes.</li>
+                <li><strong>Caution</strong> — being the strongest mode, its token cost is also the largest. Use it only for big work that genuinely needs task decomposition and role division.</li>
+            </ul>
+            <pre><code><span class="c"># for the role (agent), specify an agent name such as executor or architect</span>
+/oh-my-claudecode:team 3:executor fix all the TypeScript errors breaking the build</code></pre>
+        </div>
+
+    </div>
+
+    <div class="carousel-dots">
+        <button class="active">Autopilot</button>
+        <button>Ralph</button>
+        <button>Ultrawork</button>
+        <button>Team</button>
+    </div>
+    <div class="carousel-nav">
+        <button class="arrow-btn prev">&larr; Prev</button>
+        <span class="cn-label">1 / 4</span>
+        <button class="arrow-btn next">Next &rarr;</button>
+    </div>
+</div>
+
+<div class="note">
+    <span class="nh">The containment relation of the three modes — autopilot ⊃ ralph ⊃ ultrawork</span>
+    ultrawork is a part that handles only parallel execution, ralph puts persistent execution · story tracking · completion verification on top of it, and autopilot puts the whole pipeline of requirements analysis · design · QA · multi-angle verification on top of that again. So you can choose with <strong>"ulw if you only need parallelism, ralph if you need a completion guarantee, autopilot if you want to hand it over from start to finish"</strong>.
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 520 232" role="img" aria-label="Containment relation: a nested structure in which autopilot wraps ralph and ralph wraps ultrawork">
+    <rect class="d-box accent" x="40" y="20" width="440" height="196" rx="14"/>
+    <text class="d-label" x="260" y="44" text-anchor="middle">autopilot</text>
+    <text class="d-sub" x="260" y="61" text-anchor="middle">Requirements · design · QA · multi-angle verification</text>
+
+    <rect class="d-box" x="90" y="74" width="340" height="128" rx="12"/>
+    <text class="d-label sm" x="260" y="96" text-anchor="middle">ralph</text>
+    <text class="d-sub" x="260" y="112" text-anchor="middle">Persistent run · completion verification</text>
+
+    <rect class="d-box soft" x="150" y="126" width="220" height="60" rx="10"/>
+    <text class="d-label sm" x="260" y="152" text-anchor="middle">ultrawork</text>
+    <text class="d-sub" x="260" y="170" text-anchor="middle">Parallel execution engine</text>
+</svg>
+<div class="d-cap"><strong>autopilot ⊃ ralph ⊃ ultrawork</strong> — the further out, the more stages it wraps.</div>
+</div>
+
+<h3>autopilot's five-phase progression (in detail)</h3>
+<p>When autopilot receives a request it automatically goes through the following five phases. Each phase only starts once the previous one is finished, and parallel processing happens inside the execution and verification phases.</p>
+<ol>
+    <li><strong>Expansion</strong> — the analyst and architect unfold the short request into a detailed specification (spec.md). If it is vague, they recommend deep-interview first.</li>
+    <li><strong>Planning</strong> — the architect draws up an implementation plan and a critic verifies the missing parts and the risks.</li>
+    <li><strong>Execution</strong> — with ralph + ultrawork, executors matched to each difficulty level implement in parallel.</li>
+    <li><strong>QA</strong> — build · lint · test are repeated up to 5 times. If the same error repeats 3 times, it treats it as a root problem and stops and reports.</li>
+    <li><strong>Verification</strong> — approval from all three of architect · security-reviewer · code-reviewer is required, and rejected items are re-verified after being fixed.</li>
+</ol>
+
+<h3>Supporting modes</h3>
+<p>These are the modes that complement the four core modes. They back up the before and after of execution — the planning stage, organizing requirements, root-cause analysis.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr><th>Mode</th><th>Purpose</th><th>Usage example</th><th>Recommended situation</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Plan</strong></td><td>Draw up a plan before execution and get user approval</td><td><code>/oh-my-claudecode:plan &lt;task&gt;</code></td><td>When you want to settle the steps and the scope before implementing (omc-plan is a compatibility alias)</td></tr>
+            <tr><td><strong>Ralplan</strong></td><td>Consensus-based planning — an alias of <code>plan --consensus</code>, in which planner · architect · critic refine the plan until they agree</td><td><code>/oh-my-claudecode:ralplan &lt;description&gt;</code></td><td>Reviewing high-risk designs such as architecture · DB · security (<code>--deliberate</code> for high-risk deliberation mode)</td></tr>
+            <tr><td><strong>Deep Interview</strong></td><td>Clarify vague requirements with Socratic questioning</td><td><code>/deep-interview &lt;idea&gt;</code></td><td>When the requirements are abstract or the scope is unclear — autopilot takes over and uses the resulting specification</td></tr>
+            <tr><td><strong>UltraQA</strong></td><td>Repeat the diagnose · fix cycle until build · lint · test pass</td><td><code>/oh-my-claudecode:ultraqa &lt;goal&gt;</code></td><td>When implementation is finished and only the quality gates need to be run repeatedly</td></tr>
+            <tr><td><strong>Trace</strong></td><td>Several tracers form hypotheses in parallel and track the cause on an evidence basis</td><td><code>/oh-my-claudecode:trace</code></td><td>Root-cause analysis of outages, bugs, performance degradation</td></tr>
+            <tr><td><strong>CCG</strong></td><td>Synthesize the results of the three models Claude · Codex · Gemini</td><td><code>/oh-my-claudecode:ccg &lt;task&gt;</code></td><td>Reviews · analyses that need multiple model perspectives</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note warn">
+    <span class="nh">Practical selection criteria</span>
+    For a single bug or a single-file fix, ordinary conversation is enough. If you have to change several files use <code>autopilot</code>, if there are many independent tasks <code>ultrawork</code>, if a completion guarantee matters <code>ralph</code>, and if the requirements themselves are vague, using <code>deep-interview</code> first is the realistic approach. If implementation is finished and you only want to run the quality gates, use <code>ultraqa</code>; for big work that needs role division you can go all the way up to <code>team</code> — but remember that as the intensity rises the cost rises with it.
+</div>
+
+<div class="note">
+    <span class="nh">Korean keyword support</span>
+    The latest version also recognizes Korean magic keywords. If you use Korean expressions such as "랄프", "오토파일럿", "울트라워크", "코드 리뷰", "보안 리뷰", or "딥 분석" in your prompt, the same mode as the English keyword is switched on automatically. However, the Korean aliases are matched as substrings, so a mode may switch on unintentionally, and the cancel keywords (<code>stopomc</code> / <code>cancelomc</code>) only work in English.
+</div>
