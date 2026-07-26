@@ -29,3 +29,23 @@
     <li><strong>카드 레이어</strong> — 밤 테마 <code>#1b2230</code> 기준 대각 그라디언트 배경 + 좌측·하단 CSS 셰이드로 깊이·대비 확보. 텍스트는 이전 버전의 오렌지 색감(eyebrow <code>#ffbe8f</code>·h1 그라디언트 <code>#ff8a3d&rarr;#ff6600</code>·칩 강조 <code>#ff9d55</code>)과 2줄 서브타이틀(29px, "gated by validators" 포함)을 사용자 선택으로 확정.</li>
     <li><strong>검증</strong> — CDP 1200&times;630 실렌더로 구가 프레임 안에 온전·문구 폭(894px) 여백 확보·결정론(바이트 동일)을 확인. 참조 경로(<code>index.html</code> og:image·프리렌더 OG 폴백)는 불변. 카드가 플러그인 번들 스냅샷에도 포함돼 <code>check_plugin_sync --fix</code> 동기화 + plugin.json <code>0.13.0&rarr;0.13.1</code>.</li>
 </ul>
+
+<h3>후속 — 마스트헤드가 숨 쉴 자리</h3>
+<p>&ldquo;메뉴 여는 버튼과 타이틀, 타이틀 문구가 바짝 붙어 있다&rdquo;는 지적. 실측해 보니 정확했다 — <strong>햄버거 버튼 상자가 끝나는 자리에서 제목이 곧바로 시작</strong>해, 실제 여백은 아이콘 자신의 내부 패딩 8px뿐이었다. 제목과 문구 사이도 <code>margin: 2px</code>(줄상자 포함 8.7px)라 두 줄이 한 덩어리로 뭉쳐 보였다. 변경 유형: <strong>STYLE</strong>.</p>
+<ul>
+    <li><strong>버튼&rarr;제목 8px &rarr; 32.5px</strong> — 마스트헤드 <code>padding-left</code>를 데스크톱 52px·모바일 56px에서 <strong>양쪽 80px</strong>로 통일했다(버튼 위치는 그대로 <code>left: 12px</code>). 두 폭에서 간격이 서로 달랐던 것도 이참에 맞췄다.</li>
+    <li><strong>제목&rarr;문구 8.7px &rarr; 13.7px</strong> — <code>#tagline</code>의 위 여백을 2px&rarr;7px. 두 줄 사이에 확실한 박자가 생긴다.</li>
+    <li><strong>버튼을 크게</strong> — 글리프 24&rarr;30px, 히트 영역 40&rarr;48px. 21px 굵은 제목 옆에서 아이콘이 작아 보였다(두 번에 나눠 키웠다 &mdash; 27px에서 한 번 보고 더 키웠다). 터치 목표도 함께 커졌다.</li>
+    <li><strong>제목 광택(sheen)을 더 느리게·더 자주</strong> — 빛줄기가 5초 주기 중 1.8초 만에 휙 지나가고 3.2초를 쉬었다. <strong>2.6초에 걸쳐 건너가고 1.4초 쉬는 4초 주기</strong>로 바꿨다(키프레임 36%&rarr;65%, duration 5s&rarr;4s). 천천히 지나가니 &lsquo;빛이 스치는&rsquo; 느낌이 살고, 쉬는 시간이 짧아 더 자주 눈에 든다. <code>prefers-reduced-motion</code>에서 정지하는 것은 그대로.</li>
+</ul>
+<h4>같이 손본 것 — 전면 화면 높이 상수</h4>
+<p>통합검색·지식그래프 화면은 <code>calc(100dvh - N)</code>으로 마스트헤드 높이를 빼는데, 이번에 마스트헤드가 5px 자라 <strong>그 상수도 함께 움직여야</strong> 화면이 넘치지 않는다(데스크톱 102&rarr;107px). 그런데 확인하는 김에 보니 <strong>모바일 상수는 원래부터 틀려 있었다</strong> — 82px로 잡혀 있었지만 실제 모바일 마스트헤드는 85.7px이라 홈 화면이 늘 4px 스크롤됐다. 실측값(91px)으로 바로잡아 <strong>0으로 만들었다</strong>. 데스크톱·아이패드·모바일 &times; 홈·지식그래프 여섯 조합에서 세로·가로 넘침 0, 게임 독이 화면 안에 들어오는 것까지 실렌더로 확인했다.</p>
+
+<h4>같은 결로 — 사이드바 푸터 위쪽 여백</h4>
+<p>&ldquo;메뉴 하단 고정부의 위쪽 여백이 크다&rdquo;는 지적. 재어 보니 <strong>세 군데가 겹쳐</strong> 20px가 쌓여 있었다: <code>#navigation</code>의 <code>padding-bottom</code> 8px + 푸터의 <code>padding-top</code> 8px + <strong>방문자 수 줄이 물려받은 줄간격</strong>(11.5px 글자에 사이드바의 27px <code>line-height</code>가 걸려 위아래로 4px씩). 마지막 것이 범인인 줄 모르고 패딩만 만졌으면 계속 어색했을 것이다.</p>
+<ul>
+    <li><code>#navigation</code> 아래 패딩 8&rarr;2px — 바닥 여백은 고정 푸터가 대는 게 맞다</li>
+    <li>푸터 위 패딩 8&rarr;5px</li>
+    <li><code>.sf-visits</code>에 <code>line-height: 1</code> — 줄 높이 21.5&rarr;13.5px, 옆줄(<code>.sf-meta</code> 13px)과 리듬이 맞는다</li>
+</ul>
+<p>결과: 메뉴 마지막 항목과 방문자 수 줄 사이 <strong>20px &rarr; 7px</strong>, 푸터 전체 높이 86.3&rarr;75.3px. 줄어든 11px은 그대로 메뉴 영역이 가져가 잘려 보이던 마지막 항목이 온전히 들어온다.</p>
