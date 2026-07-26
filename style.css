@@ -399,6 +399,10 @@
             color: var(--muted);
             letter-spacing: .01em;
         }
+        /* .sf-row sets display:flex, and an author rule outranks the UA's
+           [hidden]{display:none} — so say it explicitly or the empty row
+           still takes part in layout before the counts arrive. */
+        .sf-visits[hidden]{ display: none; }
         .sf-visits .vc-k{ opacity: .75; }
         .sf-visits b{ font-weight: 600; color: var(--text); opacity: .8; }
         .sf-visits .vc-sep{ opacity: .45; margin: 0 2px; }

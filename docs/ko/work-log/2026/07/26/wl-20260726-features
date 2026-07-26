@@ -101,3 +101,13 @@
     <li><strong>조회수를 붙이는 범위</strong> — 저작 모델 배지가 있는 등재 문서만이다. Work Log·About처럼 메타줄이 없는 문서는 대상이 아니다(데브 저널의 조회수는 읽는 사람에게 의미가 없다).</li>
     <li><strong>검증</strong> — 실제 엔드포인트는 이 환경에서 막혀 <strong>서버 구현과 같은 계약</strong>(자릿수 구분자 문자열 · 집계 0건이면 404 · CORS 헤더)의 스텁으로 확인했다. 낮·밤 × ko/en 렌더, 390px 폭에서 가로 넘침 0, Work Log·About에서 조회수 미표시·에러 0, 403 응답에서 두 표시 모두 조용히 숨김, 문서 하나당 요청 1건. 캐시버스터 <code>app.js</code>·<code>i18n.js</code>·<code>style.css</code> 상향.</li>
 </ul>
+
+<h4>후속 — 안 뜨던 원인: 집계 설정, 그리고 이유를 알 수 있게</h4>
+<p>배포 후 &ldquo;방문자 수가 안 뜬다&rdquo;는 제보. <strong>원인은 GoatCounter 설정의 <em>Allow adding visitor counts on your website</em>가 실제로는 저장돼 있지 않았던 것</strong>이었다 — 엔드포인트를 브라우저에서 직접 열어 403을 확인하고, 설정을 다시 켜 저장하니 바로 떴다.</p>
+<p>여기서 배운 것은 <strong>조용한 실패는 원인 규명도 조용히 막는다</strong>는 것이다. 실패를 숨기도록 만들어 둔 탓에 &ldquo;안 뜬다&rdquo;에서 원인까지 가는 길이 없었다. 방문자에게 오류를 보이지 않는다는 원칙은 유지하되, <code>console.warn</code>으로 실패한 URL과 사유를 한 줄 남기게 했다 — 설정 꺼짐·차단기·네트워크를 콘솔에서 구분할 수 있다.</p>
+<p>범인을 좁힐 때 쓴 근거 둘(서버 소스 <code>handlers/vcounter.go</code>·<code>hit_list.go</code>):</p>
+<ul>
+    <li>합계 질의는 <code>coalesce(sum(total), 0)</code>이라 <strong>데이터가 없어도 200 + <code>{"count":"0"}</code></strong>가 온다(경로별과 달리 404가 나지 않는다). 그래서 <strong>&ldquo;아무것도 안 뜬다&rdquo;는 곧 응답 자체를 못 읽었다는 뜻</strong>이고, 집계 데이터 부족은 후보에서 제외됐다.</li>
+    <li>설정이 꺼져 있으면 403인데 <strong>그 오류 경로에는 <code>Access-Control-Allow-Origin</code>이 붙지 않는다</strong>(CORS 헤더는 JSON 성공 응답에서만 설정). 브라우저가 본문조차 못 읽으니 우리 쪽에는 구분 없는 실패로만 보인다 — 이래서 <em>사람이 URL을 직접 열어 보는</em> 확인이 필요했다.</li>
+</ul>
+<p>함께 고친 것: <code>.sf-visits</code>가 <code>.sf-row</code>의 <code>display:flex</code>를 물려받아 <strong><code>hidden</code> 속성이 먹지 않던</strong> 문제(작성자 규칙이 UA의 <code>[hidden]</code>을 이긴다) — <code>.sf-visits[hidden]{display:none}</code>로 명시했다. 빈 행이라 눈에는 안 띄었지만 레이아웃에는 참여하고 있었다.</p>

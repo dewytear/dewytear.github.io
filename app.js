@@ -1799,13 +1799,24 @@ function gcCount(path, start){
     if(GC_COUNTS[url]){ return GC_COUNTS[url]; }
     GC_COUNTS[url] = fetch(url, { mode: 'cors' })
         // 집계가 0건이면 404로 오지만 본문은 정상 JSON이라 상태코드는 안 본다.
+        // 다만 403(집계 설정 꺼짐)은 본문이 JSON이 아니고 CORS 헤더도 없어서
+        // 여기까지 오지 못하거나 파싱에서 걸린다 — 아래 catch가 이유를 남긴다.
         .then(function(r){ return r.json(); })
         .then(function(j){
             // count는 자릿수 구분자(가는 공백·쉼표)가 들어간 문자열이다.
             var n = parseInt(String((j && j.count) || '').replace(/\D/g, ''), 10);
             return isNaN(n) ? null : n;
         })
-        .catch(function(){ return null; });
+        .catch(function(e){
+            // 화면에는 아무것도 띄우지 않되(방문자에게 보일 오류가 아니다),
+            // 왜 안 뜨는지 확인할 단서는 콘솔에 남긴다. 흔한 원인 셋:
+            //   ① GoatCounter 설정의 "Allow adding visitor counts on your
+            //      website"가 꺼져 있음(403 + CORS 헤더 없음)
+            //   ② 광고·추적 차단기가 goatcounter.com을 막음
+            //   ③ 오프라인·일시적 네트워크 오류
+            try{ console.warn('[visit-counter] ' + url + ' — ' + e); }catch(_){}
+            return null;
+        });
     return GC_COUNTS[url];
 }
 
