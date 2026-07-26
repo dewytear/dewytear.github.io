@@ -89,7 +89,7 @@
            like light catching foil. Refined, periodic, not a constant sweep. */
         @keyframes titleSheen{
             0%{   background-position: 120% 50%; }
-            36%{  background-position: -20% 50%; }   /* glint crosses over ~1.8s */
+            65%{  background-position: -20% 50%; }   /* glint crosses over ~2.6s */
             100%{ background-position: -20% 50%; }   /* then holds on solid --text */
         }
         #navigation li a,
@@ -123,8 +123,8 @@
             left: 12px;
             top: 50%;                       /* vertically center within the masthead */
             transform: translateY(-50%);
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             padding: 0;
             align-items: center;
             justify-content: center;
@@ -139,7 +139,10 @@
             background: color-mix(in srgb, var(--muted) 12%, transparent);
             color: var(--text);
         }
-        #nav-toggle svg{ display: block; }
+        /* The glyph carries the button — a 24px icon read as small next to a
+           21px bold title. The hit area grew with it, so touch targets are
+           still comfortable. */
+        #nav-toggle svg{ display: block; width: 30px; height: 30px; }
         #masthead h1{
             margin: 0;
             font-size: 21px;
@@ -163,13 +166,13 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
             will-change: background-position;
-            animation: titleSheen 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            animation: titleSheen 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
         #masthead h1 a:hover{
             text-decoration: none;
         }
         #tagline{
-            margin: 2px 0 0;
+            margin: 7px 0 0;
             color: var(--muted);
             font-size: 13.5px;
         }
@@ -263,7 +266,7 @@
             }
             #masthead{
                 flex: none;
-                padding-left: 52px;   /* room for the hamburger */
+                padding-left: 80px;   /* the hamburger + a clear gap before the title */
                 border-bottom: none;  /* seamless title→body inside the card */
             }
             #content-scroll{
@@ -275,11 +278,11 @@
                 display: flex;
             }
             /* Full-bleed screens fill the card pane (100vh - card margins
-               20px - masthead 82px). */
+               20px - masthead 87px). */
             .search-screen,
             .cosmos-screen{
-                min-height: calc(100vh - 102px);
-                min-height: calc(100dvh - 102px);
+                min-height: calc(100vh - 107px);
+                min-height: calc(100dvh - 107px);
             }
         }
         /* Sidebar scrolls without showing a scrollbar */
@@ -379,7 +382,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;           /* between the two rows — footer rhythm */
-            padding: 8px 14px;   /* match the sidebar's tightened rhythm */
+            padding: 5px 14px 8px;   /* match the sidebar's tightened rhythm */
             background: var(--bg);
             border-top: 1px solid var(--border);
         }
@@ -396,6 +399,7 @@
             gap: 5px;
             padding-bottom: 2px;
             font-size: 11.5px;
+            line-height: 1;     /* 11.5px text carried the sidebar's 27px leading */
             color: var(--muted);
             letter-spacing: .01em;
         }
@@ -592,8 +596,12 @@
         }
         .search-screen{
             position: static;   /* let bg/canvas anchor to #content instead */
-            min-height: calc(100vh - 82px);   /* fill the pane below the slim masthead */
-            min-height: calc(100dvh - 82px);  /* follow the URL bar on mobile/tablet */
+            /* Only ≤800px reaches this (wider screens use the card rule above),
+               where the masthead is the taller mobile one — 91px measured, not
+               the 82px this carried before, which left the home screen 4px
+               scrollable. */
+            min-height: calc(100vh - 91px);   /* fill the pane below the slim masthead */
+            min-height: calc(100dvh - 91px);  /* follow the URL bar on mobile/tablet */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -1501,7 +1509,8 @@
 
         /* ---- Navigation tree ---- */
         #navigation{
-            padding: 6px 12px 8px;   /* 6px top = the tools' gap below (uniform rhythm) */
+            padding: 6px 12px 2px;   /* 6px top = the tools' gap below (uniform rhythm);
+                                        the sticky footer supplies the bottom air */
             /* Fill the space above the sticky footer so the Work Log
                branch can sink to the very bottom of the menu area. */
             flex: 1 1 auto;
@@ -2672,7 +2681,7 @@
                 top: 0;
                 z-index: 800;
                 background: var(--bg);
-                padding-left: 56px;   /* room for the hamburger */
+                padding-left: 80px;   /* the hamburger + a clear gap before the title */
             }
             /* The window scrolls here and the masthead (86px) is sticky, so
                TOC jumps must clear it or the doc's title hides underneath. */
