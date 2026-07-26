@@ -19,3 +19,13 @@
 
 <h3>사이트 기본값 변경 — 다크 모드 · 3D 둥글기 55%</h3>
 <p>사용자 결정으로 <code>config.json</code>의 방문자 기본값 두 가지를 바꿨다: <strong>테마 기본 <code>day &rarr; night</code>(다크 모드)</strong>, <strong>3D 지식그래프 둥글기 <code>40 &rarr; 55%</code></strong>. 개인이 설정에서 고른 값(localStorage)은 계속 우선하므로, 이 변경은 <em>저장값이 없는 방문자</em>의 첫인상만 바꾼다. 부팅 스크립트가 개인 저장값만 보고 첫 페인트를 칠하는 구조라, 첫 방문에는 config 적용 전 밝은 화면이 잠깐 비칠 수 있다(기존 동작 — 재방문부터는 문제 없음).</p>
+
+<h3>OG 공유카드 개편 — 실제 cosmos 렌더러가 그리는 별자리 카드</h3>
+<p>링크 공유 시 보이는 <code>og-image.png</code>를 개편했다. 언퍼러(Slack·카카오톡 등)는 JS를 실행하지 않아 인터랙티브 카드는 불가능하므로, 대신 <strong>정적 이미지가 위키의 실체를 담게</strong> 했다 — 4안을 실렌더 이미지로 비교해 <strong>A안(실제 지식그래프)</strong>을 선택한 뒤, 임의 산점도가 아니라 <strong>사이트의 3D 지식그래프 렌더러(cosmos.js)를 그대로 재사용</strong>했다. 이후 사용자 피드백으로 두 번 다듬었다: 그래프 안 글자·복잡도는 <strong>빼고 단순화</strong>(호기심을 자극하는 성긴 별자리), 텍스트 색감·문구는 <strong>이전 오렌지 버전 유지</strong>. 변경 유형: <strong>STYLE</strong>.</p>
+<ul>
+    <li><strong>렌더러 재사용</strong> — <code>tools/og-card.html</code>이 심(shim) 5개(<code>KNOWLEDGE</code>·<code>KNOWLEDGE_STATS</code>·<code>effSettings()</code>·<code>STR()</code>·<code>GAME_FONT</code>)만 채워 <code>startCosmos()</code>를 단독 구동한다 — 엔진 코드는 무수정. 55% 라운드 구·섹션별 성운·별 헤일로·더스트 별밭까지 실제 뷰와 같은 질감.</li>
+    <li><strong>단순화</strong> — 115노드 전부는 카드 크기에서 복잡하게만 읽혀, <strong>피참조 상위 허브 40개만</strong> 추려 성긴 별자리로 그린다(선정도 데이터에서만 나와 결정론 유지). 그래프 안 글자(문서 라벨·World/System 명판)는 <code>fillText</code> 무력화로 전부 제거 — 점·엣지·성운·별밭만 남는다.</li>
+    <li><strong>결정론 고정</strong> — cosmos.js 레이아웃은 원래 무작위원이 없고(FNV 해시 + Fibonacci 구), 카드 쪽에서 ①<code>prefers-reduced-motion</code> 강제로 트윙클·브리딩의 시간의존을 끄고 ②<code>requestAnimationFrame</code>을 3프레임에서 멈춰 카메라(rotY)를 고정 — 같은 데이터면 같은 그림(2회 캡처 바이트 동일 확인).</li>
+    <li><strong>카드 레이어</strong> — 밤 테마 <code>#1b2230</code> 기준 대각 그라디언트 배경 + 좌측·하단 CSS 셰이드로 깊이·대비 확보. 텍스트는 이전 버전의 오렌지 색감(eyebrow <code>#ffbe8f</code>·h1 그라디언트 <code>#ff8a3d&rarr;#ff6600</code>·칩 강조 <code>#ff9d55</code>)과 2줄 서브타이틀(29px, "gated by validators" 포함)을 사용자 선택으로 확정.</li>
+    <li><strong>검증</strong> — CDP 1200&times;630 실렌더로 구가 프레임 안에 온전·문구 폭(894px) 여백 확보·결정론(바이트 동일)을 확인. 참조 경로(<code>index.html</code> og:image·프리렌더 OG 폴백)는 불변. 카드가 플러그인 번들 스냅샷에도 포함돼 <code>check_plugin_sync --fix</code> 동기화 + plugin.json <code>0.13.0&rarr;0.13.1</code>.</li>
+</ul>
