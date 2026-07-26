@@ -68,6 +68,7 @@ var STRINGS = {
     ko: {
         recent: '최근 문서', related: '연관 문서',
         expandAll: '모두 펼치기', collapseAll: '모두 접기',
+        expandAllTitle: '모두 펼치기 — Work Log는 그대로 둡니다(날짜 트리가 길어 목록을 덮습니다)',
         worklogRecent: '최근 로그로', worklogBack: '이전 페이지로',
         searchPh: '제목 · 태그 · 개념 · 본문을 검색…',
         cosmosSub: '지식 연관 관계를 3D 그래프로 — 드래그 회전 · 휠 확대 · 점 클릭 시 문서로',
@@ -173,6 +174,7 @@ var STRINGS = {
     en: {
         recent: 'Recent Docs', related: 'Related Docs',
         expandAll: 'Expand all', collapseAll: 'Collapse all',
+        expandAllTitle: 'Expand all — Work Log is left as is (its date tree would bury the list)',
         worklogRecent: 'Latest log', worklogBack: 'Back',
         searchPh: 'Search titles · tags · concepts · full text…',
         cosmosSub: 'Knowledge as a 3D graph — drag to rotate · wheel to zoom · click to open',
