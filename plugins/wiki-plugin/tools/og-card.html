@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" as="style" crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:1200px; height:630px; }
+  body {
+    background:#1b2230;
+    font-family:Pretendard, system-ui, sans-serif;
+    color:#e6e8eb;
+    position:relative;
+    overflow:hidden;
+  }
+  /* Constellation motif — the wiki's own 3D graph view, flattened. */
+  #g { position:absolute; inset:0; }
+  .wrap {
+    position:relative; z-index:2;
+    height:100%; display:flex; flex-direction:column; justify-content:center;
+    padding:0 86px;
+  }
+  .eyebrow {
+    font-size:22px; letter-spacing:.16em; text-transform:uppercase;
+    color:#4db6ac; font-weight:600; margin-bottom:26px;
+  }
+  h1 { font-size:74px; font-weight:800; letter-spacing:-.02em; line-height:1.08; }
+  h1 .accent { color:#4db6ac; }
+  .sub { margin-top:26px; font-size:31px; color:#9aa4b2; line-height:1.45; font-weight:400; }
+  .foot {
+    position:absolute; left:86px; right:86px; bottom:52px; z-index:2;
+    display:flex; align-items:center; gap:18px;
+    font-size:22px; color:#9aa4b2;
+  }
+  .foot .dot { width:5px; height:5px; border-radius:50%; background:#3a4353; }
+  .rule {
+    position:absolute; left:0; top:0; bottom:0; width:10px; z-index:2;
+    background:linear-gradient(180deg,#4db6ac,#2f7f78);
+  }
+</style>
+</head>
+<body>
+<canvas id="g" width="1200" height="630"></canvas>
+<div class="rule"></div>
+<div class="wrap">
+  <p class="eyebrow">Second Brain &middot; Knowledge Graph</p>
+  <h1>Aaron's <span class="accent">Claude</span> Wiki</h1>
+  <p class="sub">Claude Code &middot; Plugins &middot; Harness &middot; LLM Wiki<br>
+     116 documents, in Korean and English &mdash; built to be read by people <em>and</em> AI.</p>
+</div>
+<div class="foot">
+  <span>dewytear.github.io</span><span class="dot"></span>
+  <span>llms.txt &middot; knowledge-graph.json</span><span class="dot"></span>
+  <span>CC BY 4.0</span>
+</div>
+<script>
+// Deterministic starfield + edges: the same seed every build so the committed
+// PNG is byte-stable and never shows up as spurious diff noise.
+var seed = 20260726;
+function rnd(){ seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; }
+var c = document.getElementById('g'), x = c.getContext('2d');
+var pts = [];
+for (var i = 0; i < 90; i++) {
+  pts.push({ x: rnd() * 1200, y: rnd() * 630, r: 0.8 + rnd() * 2.4, a: 0.12 + rnd() * 0.5 });
+}
+// Edges between near neighbours — the graph, not just a starfield.
+x.lineWidth = 1;
+for (var i = 0; i < pts.length; i++) {
+  for (var j = i + 1; j < pts.length; j++) {
+    var dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+    var d = Math.sqrt(dx * dx + dy * dy);
+    if (d < 130) {
+      x.strokeStyle = 'rgba(77,182,172,' + (0.16 * (1 - d / 130)).toFixed(3) + ')';
+      x.beginPath(); x.moveTo(pts[i].x, pts[i].y); x.lineTo(pts[j].x, pts[j].y); x.stroke();
+    }
+  }
+}
+pts.forEach(function(p){
+  var g = x.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 5);
+  g.addColorStop(0, 'rgba(120,220,210,' + p.a.toFixed(3) + ')');
+  g.addColorStop(1, 'rgba(120,220,210,0)');
+  x.fillStyle = g; x.beginPath(); x.arc(p.x, p.y, p.r * 5, 0, 6.2832); x.fill();
+  x.fillStyle = 'rgba(200,240,236,' + Math.min(0.9, p.a + 0.2).toFixed(3) + ')';
+  x.beginPath(); x.arc(p.x, p.y, p.r, 0, 6.2832); x.fill();
+});
+// Darken the left half so the headline always has contrast.
+var lg = x.createLinearGradient(0, 0, 900, 0);
+lg.addColorStop(0, 'rgba(27,34,48,0.94)');
+lg.addColorStop(1, 'rgba(27,34,48,0.10)');
+x.fillStyle = lg; x.fillRect(0, 0, 1200, 630);
+</script>
+</body>
+</html>

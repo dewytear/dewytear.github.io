@@ -535,6 +535,13 @@ function fetchPage(filename){
             // 지식 문서만 표시(About 등 미등재 특수 페이지는 모델 표기 없음).
             // Work Log는 사람/AI가 함께 큐레이트하는 데브 저널이라 저작-모델 배지를
             // 달지 않는다(list 노드에 model 없음 → DOC_MODEL 폴백으로 오표기되던 것 차단).
+            // 본문이 실제로 들어온 지금이 제목을 가장 정확히 아는 순간이다 —
+            // 라벨은 내비게이션용 축약이라 문서의 진짜 제목(h2)과 다를 수 있다.
+            var h2 = art && art.querySelector('h2');
+            if(h2 && h2.textContent.trim()){
+                setPageMeta(h2.textContent.trim(),
+                            (KNOWLEDGE && KNOWLEDGE[filename] || {}).summary);
+            }
             var isWorklog = doc && doc.section && doc.section.indexOf('Work Log') === 0;
             var label = (doc && !isWorklog) ? (doc.model || DOC_MODEL) : '';
             if(art && label){
@@ -1237,8 +1244,13 @@ function applySettings(){
     if(s.title){
         var h = document.querySelector('#masthead h1 a');
         if(h){ h.textContent = s.title; }
+        SITE_TITLE = s.title;              // setPageMeta suffixes every route with it
         document.title = s.title;
     }
+    // <html lang> follows the reading language — screen readers, translation
+    // prompts and search engines all key off it, and it was fixed at "ko"
+    // even for a visitor reading the whole wiki in English.
+    document.documentElement.lang = currentLang();
     if(s.tagline != null){
         var t = document.getElementById('tagline');
         if(t){ t.textContent = s.tagline; }
@@ -1306,6 +1318,7 @@ function applyRepoConfig(){
         if(cfg.title){
             var h = document.querySelector('#masthead h1 a');
             if(h){ h.textContent = cfg.title; }
+            SITE_TITLE = cfg.title;
             document.title = cfg.title;
         }
         if(cfg.tagline != null){
@@ -1858,11 +1871,48 @@ function injectDocViews(name){
     });
 }
 
+// ---- 화면 제목 (탭·북마크·공유) ----
+// 해시 라우팅이라 문서를 옮겨 다녀도 브라우저가 페이지를 새로 열지 않는다 —
+// 그래서 `document.title`을 우리가 직접 갈아 끼우지 않으면 모든 문서가 탭에도
+// 북마크에도 방문기록에도 똑같은 사이트 이름으로 남는다.
+// og:*도 함께 갱신하지만, 링크를 펼쳐 보여 주는 쪽(X·Slack 등)은 JS를 돌리지
+// 않으므로 그 값은 정적 스냅샷(/p/<name>/)이 담당한다. 여기 갱신은 브라우저
+// 확장·인앱 브라우저처럼 실제 DOM을 읽는 소비자를 위한 것.
+var SITE_TITLE = '';
+function setPageMeta(title, desc){
+    var site = SITE_TITLE || document.title;
+    document.title = title ? (title + ' — ' + site) : site;
+    var set = function(sel, val){
+        var el = document.querySelector(sel);
+        if(el && val){ el.setAttribute('content', val); }
+    };
+    set('meta[property="og:title"]', document.title);
+    set('meta[name="twitter:title"]', document.title);
+    if(desc){
+        set('meta[property="og:description"]', desc);
+        set('meta[name="twitter:description"]', desc);
+    }
+}
+
+// 현재 라우트의 화면 이름 — 문서면 그 라벨(현지화), 특수 화면이면 그 화면 이름.
+// 라벨 앞의 장식 글리프(✦·§·⤓ 등)는 탭 제목에선 소음이라 떼고 쓴다. 문서를
+// 실제로 그린 뒤에는 fetchPage가 본문 h2로 더 정확히 덮어쓴다.
+function routeTitle(path){
+    var doc = DOC_BY_NAME[path];
+    if(doc){ return String(labelFor(doc) || '').replace(/^[\s❖✦§·⤓\-–—•*#>:]+/, ''); }
+    if(path.indexOf('folder:') === 0){ return decodeURIComponent(path.substr(7)); }
+    var screens = { cosmos: 'cosmosTitle', tags: 'tagsTitle', settings: 'settings',
+                    'new': 'newPageHead', about: 'aboutTitle' };
+    if(screens[path]){ return STR(screens[path]); }
+    return '';   // 홈·검색은 사이트 이름 그대로
+}
+
 function route(){
     document.body.classList.remove('nav-open');   // close mobile drawer
     var h = location.hash;
     var path = h ? h.substr(2) : '';               // strip "#!"
     countPageview(path === 'search' ? '' : path);  // 홈·검색은 한 경로로 합친다
+    setPageMeta(routeTitle(path), (KNOWLEDGE && KNOWLEDGE[path] || {}).summary);
     // Left the jumped Work Log page → restore the ⤓ icon to default.
     // (On the jump's own navigation, hash === target, so it stays active.)
     if(worklogJumpReturn !== null && h !== worklogJumpTarget){ clearWorklogJump(); }
@@ -1983,6 +2033,13 @@ function jumpRecentWorklog(ev){
 // 첫 방문 자동 언어 — 저장된 값(개인·사이트 기본)이 없으면 브라우저 언어로
 // 정한다: 한국어 계열(ko*)이 아니면 영어. LANGS_READY에 en이 있어야 발동.
 function detectLang(){
+    // `?lang=en` — 링크 하나로 언어를 지정할 수 있어야 한다. 영어 스냅샷
+    // (/p/en/<name>/)이 사라졌을 때 404가 이 형태로 SPA에 넘겨주고, 영어권
+    // 독자에게 링크를 보낼 때도 쓴다. 브라우저 감지보다 우선, 저장된 설정보다는 뒤.
+    try{
+        var q = (location.search || '').match(/[?&]lang=([a-z]{2})\b/);
+        if(q && LANGS_READY.indexOf(q[1]) !== -1){ return q[1]; }
+    }catch(e){}
     try{
         var nav = (navigator.language || '').toLowerCase();
         if(nav && nav.slice(0, 2) !== 'ko' && LANGS_READY.indexOf('en') !== -1){ return 'en'; }

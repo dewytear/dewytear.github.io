@@ -11,6 +11,17 @@
     <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/kgs-ai-layer/">
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/kgs-ai-layer/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How AI Reads This Wiki — the Machine-Readable Layer and Graph Traversal">
+<meta property="og:description" content="The machine-readable layer — llms.txt, a self-contained graph JSON, and a traversal contract — that lets an external AI analyze this wiki by following its relations">
+<meta property="og:url" content="https://dewytear.github.io/p/en/kgs-ai-layer/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How AI Reads This Wiki — the Machine-Readable Layer and Graph Traversal">
+<meta name="twitter:description" content="The machine-readable layer — llms.txt, a self-contained graph JSON, and a traversal contract — that lets an external AI analyze this wiki by following its relations">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="stylesheet" href="/style.css">
 <script type="application/ld+json">
 {
@@ -32,11 +43,10 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-07-26T08:00:53+09:00"
+ "dateModified": "2026-07-26T17:06:29+09:00"
 }
 </script>
-<script>if(!location.search.includes("static")){location.replace("/#!kgs-ai-layer");}</script>
-<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}</style>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
 </head>
 <body class="day prerender">
 <p class="pr-live"><a href="/#!kgs-ai-layer">This is a static snapshot — open it in the wiki &#8599;</a>
@@ -57,7 +67,8 @@
 
 <h3>A door for visitors that do not run JavaScript — static snapshots</h3>
 <p>Every entry point so far hands machines <strong>data</strong>. Ordinary search engines, however, index <strong>pages</strong>, not data. This wiki is a hash-routed SPA, so a crawler that does not execute JavaScript arrives at <code>#!welcome</code> and sees an <strong>empty shell</strong>. The document fragments (<code>docs/en/…</code>) are the body text, but they are HTML chunks without a title, description, or canonical address — not quite pages.</p>
-<p>So each document also ships a <strong>static snapshot</strong> — <code>/p/&lt;name&gt;/</code> (English at <code>/p/en/&lt;name&gt;/</code>). It carries the same body, topped with a <code>&lt;title&gt;</code> (the first h2), a description (the summary), a <code>canonical</code> address, language cross-links (hreflang), and Article JSON-LD including the license and dates — a <strong>real page</strong>. The <code>#!</code> links inside the body are rewired to sibling snapshots, so a JS-less crawler can <strong>traverse the entire wiki by following links</strong>. When a person opens one, a script sends them straight to the SPA route, so the reading experience is always the wiki itself.</p>
+<p>So each document also ships a <strong>static snapshot</strong> — <code>/p/&lt;name&gt;/</code> (English at <code>/p/en/&lt;name&gt;/</code>). It carries the same body, topped with a <code>&lt;title&gt;</code> (the first h2), a description (the summary), a <code>canonical</code> address, language cross-links (hreflang), and Article JSON-LD including the license and dates — a <strong>real page</strong>. The <code>#!</code> links inside the body are rewired to sibling snapshots, so a JS-less crawler can <strong>traverse the entire wiki by following links</strong>, and the <strong>hub pages</strong> at <code>/p/</code> and <code>/p/en/</code> are where that walk starts (the home page builds its navigation in JavaScript, so its raw HTML contains no document links at all — a <code>&lt;noscript&gt;</code> link to the hub removes that dead end).</p>
+<p>A snapshot is <strong>a page people are meant to land on</strong>. An earlier version bounced human visitors to the SPA, which threw away the very thing the snapshots exist to provide: a <strong>stable per-document address</strong>. Someone arriving from a search result or a shared link watched the URL turn into <code>/#!name</code>, so bookmarking or re-sharing no longer pointed at that document. It no longer redirects; there is just an &ldquo;open it in the wiki&rdquo; link at the top. Snapshots also carry <strong>Open Graph and Twitter card</strong> tags, so a shared link unfurls with its title, summary and image — the services that build those previews do not run JavaScript, which makes this <strong>something only the static pages can do</strong>.</p>
 <div class="note">
     <span class="nh">Three surfaces of the same knowledge</span>
     A document has three addresses — <code>url</code> (the raw fragment, for machine parsing), <code>route</code> (the SPA, for people), and <code>page</code> (the static snapshot, for search engines and JS-less crawlers). All three sit in the graph node, so a consumer picks the surface that fits its purpose. What the sitemap advertises is <code>page</code>.

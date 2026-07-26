@@ -10,17 +10,27 @@ the head — so the wiki is discoverable without JS while the SPA stays the
 canonical reading experience for people.
 
 Outputs (deterministic — same inputs, same bytes; CI verifies with --check):
+  p/index.html               Korean hub — every snapshot, grouped by section
+  p/en/index.html            English hub
   p/<name>/index.html        Korean snapshot of every indexed document
   p/en/<name>/index.html     English snapshot (only where docs/en/<path> exists)
 
 Each snapshot:
   - <title> = the document's first <h2>, <meta name="description"> = its summary
   - <link rel="canonical"> to itself + hreflang alternates (ko / en / x-default)
+  - Open Graph + Twitter card so a shared link unfurls with title, summary and
+    an image (the document's own hero when it has one, else the site card)
   - Article JSON-LD with the CC BY 4.0 license and the doc's dates
   - the document fragment inlined, with #! links rewritten to sibling snapshots
-  - a visible "this is a snapshot -> open the live wiki" link, and a JS redirect
-    to the SPA route so a human who lands here gets the real thing
-    (crawlers without JS keep the static text; noscript keeps the link visible)
+  - a visible "open it in the wiki" link to the SPA route
+
+The snapshot deliberately does NOT bounce visitors to the SPA. An earlier
+version put `location.replace('/#!name')` in the head, which threw away the
+very thing this script exists to create: a stable per-document URL. Someone
+arriving from a search result or a shared link would watch the address turn
+into `/#!name`, so bookmarking or re-sharing lost the page identity, and a
+crawler's JS-rendering pass saw a redirect where the raw fetch saw an article.
+The snapshot is now a real landing page; the wiki is one click away.
 
 Usage:  python3 tools/build_prerender.py          # build + write
         python3 tools/build_prerender.py --check   # verify outputs on disk
@@ -40,6 +50,25 @@ OUT_DIR = 'p'
 
 LICENSE_NAME = 'CC BY 4.0'
 LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/'
+# Default share card (1200×630). A document with its own hero image uses that
+# instead — see hero_for(). Kept at the site root so index.html can reuse it.
+OG_IMAGE = 'og-image.png'
+
+# Pages that are not `list` documents but are worth a crawlable, shareable URL.
+# `about` is the one page an international visitor most wants to land on, and
+# it already has a full English translation — it just never had a page.
+EXTRA_PAGES = {
+    'about': {
+        'path': 'about',
+        'section': {'ko': '소개', 'en': 'About'},
+        'summary': {
+            'ko': '곽영진 — 더존비즈온 책임연구원. 복잡한 일을 구조화하고 반복된 경험을 '
+                  '시스템과 지식으로 바꾸는 일을 합니다.',
+            'en': 'Youngjin Kwak — Principal Researcher at Douzone Bizon. I structure '
+                  'complex work and turn repeated experience into systems and knowledge.',
+        },
+    },
+}
 
 # UI strings for the snapshot chrome, per language (kept tiny on purpose —
 # the snapshot is a reading fallback, not a second implementation of the app).
@@ -51,6 +80,10 @@ STR = {
         'updated': '수정일자',
         'related': '연관 문서',
         'other_lang': 'English',
+        'hub_title': '문서 전체 목록',
+        'hub_desc': '이 위키의 모든 문서를 한 페이지에 — 분류별 목록.',
+        'hub_lead': '위키의 모든 문서입니다. 각 링크는 JS 없이 읽히는 정적 페이지로 이어집니다.',
+        'home': '위키 홈',
     },
     'en': {
         'live': 'This is a static snapshot — open it in the wiki',
@@ -59,6 +92,10 @@ STR = {
         'updated': 'Updated',
         'related': 'Related documents',
         'other_lang': '한국어',
+        'hub_title': 'All documents',
+        'hub_desc': 'Every document in this wiki on one page, grouped by section.',
+        'hub_lead': 'Every document in the wiki. Each link is a static page that reads without JavaScript.',
+        'home': 'Wiki home',
     },
 }
 
@@ -105,6 +142,24 @@ def load_paths():
     return paths
 
 
+def list_order():
+    """Document names in nav order, with the EXTRA_PAGES appended.
+
+    The hub lists documents the way the sidebar does, so a reader (and a
+    crawler) meets them in the order the wiki intends."""
+    tree = json.load(open(LIST, encoding='utf-8'))
+    order = []
+
+    def walk(nodes):
+        for n in nodes:
+            if n.get('children'):
+                walk(n['children'])
+            elif n.get('name') and n.get('path') and not n.get('route'):
+                order.append(n['name'])
+    walk(tree if isinstance(tree, list) else tree.get('children', tree))
+    return order + [n for n in EXTRA_PAGES if n not in order]
+
+
 def _doc_dates():
     p = os.path.join(ROOT, 'data', 'doc-dates.json')
     try:
@@ -146,6 +201,53 @@ def route_path(name):
     return BASE_PATH + '#!' + name
 
 
+def hub_url(lang):
+    return BASE + OUT_DIR + '/' + ('' if lang == KO else lang + '/')
+
+
+def hub_path(lang):
+    return BASE_PATH + OUT_DIR + '/' + ('' if lang == KO else lang + '/')
+
+
+def hero_for(rel_path):
+    """A document's own share image, if it committed one.
+
+    Doc images live at assets/<the doc's path>/<role>.webp (language-neutral),
+    so a hero is a plain file check — no index lookup, no guessing."""
+    if not rel_path:
+        return None
+    rel = os.path.join('assets', rel_path, 'hero.webp')
+    return rel if os.path.isfile(os.path.join(ROOT, rel)) else None
+
+
+def social_tags(title, desc, url, image, lang, kind='article'):
+    """Open Graph + Twitter card.
+
+    Without these a shared link renders as a bare grey URL everywhere that
+    unfurls (X, Slack, Discord, LinkedIn, KakaoTalk) — and unfurlers do not
+    run JavaScript, so the SPA cannot supply them at share time. Only the
+    static pages can, which is the other half of why they exist."""
+    site, _ = _site_title_desc()
+    return [
+        '<meta property="og:type" content="%s">' % kind,
+        '<meta property="og:title" content="%s">' % esc(title),
+        '<meta property="og:description" content="%s">' % esc(desc),
+        '<meta property="og:url" content="%s">' % esc(url),
+        '<meta property="og:image" content="%s">' % esc(image),
+        '<meta property="og:site_name" content="%s">' % esc(site),
+        '<meta property="og:locale" content="%s">' % ('ko_KR' if lang == KO else 'en_US'),
+        '<meta name="twitter:card" content="summary_large_image">',
+        '<meta name="twitter:title" content="%s">' % esc(title),
+        '<meta name="twitter:description" content="%s">' % esc(desc),
+        '<meta name="twitter:image" content="%s">' % esc(image),
+    ]
+
+
+def _site_title_desc():
+    cfg = _config()
+    return (cfg.get('title') or 'Wiki'), (cfg.get('description') or '')
+
+
 def rewrite_links(body, lang):
     """`href="#!other"` -> the sibling snapshot, so a JS-less crawler can walk
     the whole wiki through static pages. Same-language target; unknown targets
@@ -155,6 +257,21 @@ def rewrite_links(body, lang):
         target = m.group(1)
         return 'href="%s"' % snapshot_path(target, lang)
     return re.sub(r'href="#!([A-Za-z0-9._-]+)"', sub, body)
+
+
+def page_style():
+    """Snapshot chrome. The page loads the site's style.css for the body, so
+    this only positions the wrapper and the small metadata lines."""
+    return ('<style>'
+            'body{max-width:760px;margin:0 auto;padding:24px 18px 64px;'
+            'font-family:Pretendard,system-ui,sans-serif;line-height:1.7}'
+            '.pr-live{font-size:13px;margin:0 0 18px}'
+            '.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}'
+            '.pr-k{color:#999;margin-right:4px}'
+            '.pr-rel{margin-top:40px;font-size:14px}'
+            '.pr-hub h3{margin:28px 0 6px;font-size:15px}'
+            '.pr-hub ul{margin:0;padding-left:20px;font-size:14px}'
+            '</style>')
 
 
 def page_html(name, lang, meta, body, dates, paths, has_en):
@@ -224,21 +341,13 @@ def page_html(name, lang, meta, body, dates, paths, has_en):
     out.append('<meta name="robots" content="index, follow">')
     out.extend(alts)
     out.append('    <link rel="license" href="%s">' % LICENSE_URL)
+    hero = hero_for(meta.get('rel_path'))
+    out.extend(social_tags(title, desc, self_url, BASE + (hero or OG_IMAGE), lang))
     out.append('<link rel="stylesheet" href="%sstyle.css">' % BASE_PATH)
     out.append('<script type="application/ld+json">')
     out.append(json.dumps(ld, ensure_ascii=False, indent=1))
     out.append('</script>')
-    # Humans get the interactive wiki; crawlers (no JS) keep the static text.
-    out.append('<script>if(!location.search.includes("static")){'
-               'location.replace(%s);}</script>' % json.dumps(route))
-    out.append('<style>'
-               'body{max-width:760px;margin:0 auto;padding:24px 18px 64px;'
-               'font-family:Pretendard,system-ui,sans-serif;line-height:1.7}'
-               '.pr-live{font-size:13px;margin:0 0 18px}'
-               '.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}'
-               '.pr-k{color:#999;margin-right:4px}'
-               '.pr-rel{margin-top:40px;font-size:14px}'
-               '</style>')
+    out.append(page_style())
     out.append('</head>')
     out.append('<body class="day prerender">')
     out.append('<p class="pr-live"><a href="%s">%s &#8599;</a>' % (route, esc(s['live'])))
@@ -255,33 +364,116 @@ def page_html(name, lang, meta, body, dates, paths, has_en):
     return '\n'.join(out) + '\n'
 
 
+def hub_html(lang, entries, has_en_hub):
+    """The one page that makes the whole wiki walkable without JavaScript.
+
+    index.html is an empty SPA shell: a crawler that reads the raw HTML finds
+    no link to any document, so the snapshots were reachable only through the
+    sitemap. This hub is a plain <ul> of every one of them, linked from the
+    home page, so discovery no longer depends on the sitemap being read."""
+    s = STR[lang]
+    self_url = hub_url(lang)
+    title, _ = _site_title_desc()
+    head_title = '%s — %s' % (s['hub_title'], title)
+
+    alts = ['    <link rel="canonical" href="%s">' % self_url,
+            '    <link rel="alternate" hreflang="ko" href="%s">' % hub_url(KO)]
+    if has_en_hub:
+        alts.append('    <link rel="alternate" hreflang="en" href="%s">' % hub_url('en'))
+    alts.append('    <link rel="alternate" hreflang="x-default" href="%s">' % hub_url(KO))
+
+    out = []
+    out.append('<!doctype html>')
+    out.append('<html lang="%s">' % lang)
+    out.append('<head>')
+    out.append('<meta charset="utf-8">')
+    out.append('<meta name="viewport" content="width=device-width, initial-scale=1">')
+    out.append('<title>%s</title>' % esc(head_title))
+    out.append('<meta name="description" content="%s">' % esc(s['hub_desc']))
+    out.append('<meta name="robots" content="index, follow">')
+    out.extend(alts)
+    out.append('    <link rel="license" href="%s">' % LICENSE_URL)
+    out.extend(social_tags(head_title, s['hub_desc'], self_url,
+                           BASE + OG_IMAGE, lang, kind='website'))
+    out.append('<link rel="stylesheet" href="%sstyle.css">' % BASE_PATH)
+    out.append(page_style())
+    out.append('</head>')
+    out.append('<body class="day prerender">')
+    out.append('<p class="pr-live"><a href="%s">%s &#8599;</a>'
+               % (BASE_PATH, esc(s['home'])))
+    if has_en_hub:
+        ol = 'en' if lang == KO else KO
+        out.append('  &middot; <a href="%s" hreflang="%s">%s</a>'
+                   % (hub_path(ol), ol, esc(s['other_lang'])))
+    out.append('</p>')
+    out.append('<h2>%s</h2>' % esc(s['hub_title']))
+    out.append('<p>%s</p>' % esc(s['hub_lead']))
+    out.append('<div class="pr-hub">')
+    for section, items in entries:
+        out.append('<h3>%s</h3>' % esc(section))
+        out.append('<ul>')
+        for name, doc_title in items:
+            out.append('<li><a href="%s">%s</a></li>'
+                       % (snapshot_path(name, lang), esc(doc_title)))
+        out.append('</ul>')
+    out.append('</div>')
+    out.append('</body>')
+    out.append('</html>')
+    return '\n'.join(out) + '\n'
+
+
+def _extra_meta(name, lang, raw):
+    """Meta for a non-`list` page (see EXTRA_PAGES) — no index entry to read."""
+    x = EXTRA_PAGES[name]
+    return {
+        'title': first_h2(raw) or name,
+        'summary': x['summary'].get(lang, x['summary'][KO]),
+        'section': x['section'].get(lang, x['section'][KO]),
+        'related': [],
+        'rel_path': x['path'],
+    }
+
+
 def build_pages():
-    """rel_path -> html for every snapshot page."""
+    """rel_path -> html for every snapshot page (hubs included)."""
     bi = _load_build_index()
     paths = load_paths()
     dates = _doc_dates()
     pages = {}
+    order = list_order()
     for lang in LANGS:
         idx = bi.build(lang)
         by_name = {d['name']: d for d in idx['docs']}
-        for name, doc in by_name.items():
-            rel = paths.get(name)
-            if not rel:
+        hub = []            # [(section, [(name, title), …])] in nav order
+        for name in order:
+            doc = by_name.get(name)
+            rel = paths.get(name) or (EXTRA_PAGES.get(name) or {}).get('path')
+            if not rel or (doc is None and name not in EXTRA_PAGES):
                 continue
             src = os.path.join(ROOT, 'docs', lang, rel)
             if not os.path.isfile(src):
                 continue          # untranslated in this language — no snapshot
             raw = open(src, encoding='utf-8').read()
             has_en = os.path.isfile(os.path.join(ROOT, 'docs', 'en', rel))
-            meta = {
-                'title': first_h2(raw) or doc['title'],
-                'summary': doc['summary'],
-                'section': doc['section'],
-                'related': doc.get('related', []),
-            }
+            if doc is None:
+                meta = _extra_meta(name, lang, raw)
+            else:
+                meta = {
+                    'title': first_h2(raw) or doc['title'],
+                    'summary': doc['summary'],
+                    'section': doc['section'],
+                    'related': doc.get('related', []),
+                    'rel_path': rel,
+                }
             out_rel = os.path.join(OUT_DIR, '' if lang == KO else lang, name, 'index.html')
             pages[out_rel] = page_html(name, lang, meta, rewrite_links(raw, lang),
                                        dates, paths, has_en)
+            sec = meta['section'] or STR[lang]['hub_title']
+            if not hub or hub[-1][0] != sec:
+                hub.append((sec, []))
+            hub[-1][1].append((name, meta['title']))
+        pages[os.path.join(OUT_DIR, '' if lang == KO else lang, 'index.html')] = \
+            hub_html(lang, hub, True)
     return pages
 
 
@@ -297,9 +489,12 @@ def build_404():
         '<title>Not Found</title>\n'
         '<script>\n'
         '// /p/<name>/ (or /p/en/<name>/) -> the SPA route for that document;\n'
-        '// anything else -> the wiki home.\n'
-        'var m = location.pathname.match(/\\/p\\/(?:[a-z]{2}\\/)?([A-Za-z0-9._-]+)\\/?$/);\n'
-        'location.replace(m ? "/#!" + m[1] : "/");\n'
+        '// anything else -> the wiki home. A dead /p/en/ URL keeps its\n'
+        '// language by asking the SPA for English (?lang=en), so an English\n'
+        '// reader whose bookmark rotted does not land in Korean.\n'
+        'var m = location.pathname.match(/\\/p\\/(?:([a-z]{2})\\/)?([A-Za-z0-9._-]+)\\/?$/);\n'
+        'var q = m && m[1] && m[1] !== "ko" ? "?lang=" + m[1] : "";\n'
+        'location.replace(m ? "/" + q + "#!" + m[2] : "/");\n'
         '</script>\n</head>\n<body>\n'
         '<p><a href="/">Aaron\'s Claude Wiki</a></p>\n'
         '</body>\n</html>\n')

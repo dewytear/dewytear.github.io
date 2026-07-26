@@ -83,6 +83,16 @@ def _base():
 BASE = _base()
 
 
+def _load_prerender():
+    """The snapshot builder owns the list of extra (non-`list`) pages —
+    load it rather than restating it here, so the two can't drift."""
+    path = os.path.join(ROOT, 'tools', 'build_prerender.py')
+    spec = importlib.util.spec_from_file_location('build_prerender_ref', path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
 def _load_build_index():
     """Reuse build_index.build()/load_sections()/CLUSTER_LABELS without running its CLI."""
     path = os.path.join(ROOT, 'tools', 'build_index.py')
@@ -127,11 +137,13 @@ def page_url(name, lang='ko'):
     return BASE + 'p/' + ('' if lang == 'ko' else lang + '/') + name + '/'
 
 
-def _site_meta():
+def _site_meta(lang=LANG):
     cfg = _config()
     title = cfg.get('title') or 'Wiki'
     # One-line description from config (mirrors index.html <meta description>).
     desc = cfg.get('description') or (title + ' — AI 지식 그래프 위키.')
+    if lang != LANG:
+        desc = cfg.get('description_' + lang) or desc
     return title, desc
 
 
@@ -337,18 +349,28 @@ def build_llms_full():
     return '\n'.join(lines).rstrip() + '\n'
 
 
-def build_feed():
-    """feed.xml (Atom) — newest indexed docs by creation date.
+def build_feed(lang=LANG):
+    """feed.xml / feed.en.xml (Atom) — newest indexed docs by creation date.
+
+    Entries link to the **snapshot page** (/p/<name>/), not the hash route.
+    Feed readers and aggregators do not run JavaScript, so `#!name` handed
+    them the empty SPA shell — the feed advertised the wiki and then showed
+    nothing. The snapshot is a real page with the body in it.
 
     Every timestamp comes from data/doc-dates.json; the channel <updated> is
     the max doc `u`, never the build clock, so --check stays deterministic."""
     bi = _load_build_index()
-    idx = bi.build(LANG)
+    idx = bi.build(lang)
     paths = load_paths()
     dates = _doc_dates()
-    title, desc = _site_meta()
+    title, desc = _site_meta(lang)
+    fname = 'feed.xml' if lang == LANG else 'feed.%s.xml' % lang
 
-    docs = [d for d in idx['docs'] if d['name'] in dates]
+    docs = [d for d in idx['docs'] if d['name'] in dates and d['name'] in paths]
+    if lang != LANG:
+        # Only advertise entries that really have a page in this language —
+        # a partly translated wiki must not link to snapshots that don't exist.
+        docs = [d for d in docs if _has_lang(paths[d['name']], lang)]
     docs.sort(key=lambda d: dates[d['name']]['c'], reverse=True)
     docs = docs[:30]
     if not docs:
@@ -360,12 +382,14 @@ def build_feed():
 
     e = []
     e.append('<?xml version="1.0" encoding="utf-8"?>')
-    e.append('<feed xmlns="http://www.w3.org/2005/Atom">')
+    e.append('<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="%s">' % lang)
     e.append('  <title>%s</title>' % esc(title))
     e.append('  <subtitle>%s</subtitle>' % esc(desc))
     e.append('  <link href="%s"/>' % BASE)
-    e.append('  <link rel="self" href="%sfeed.xml"/>' % BASE)
-    e.append('  <id>%s</id>' % BASE)
+    e.append('  <link rel="self" href="%s%s"/>' % (BASE, fname))
+    # Atom <id> is the feed's permanent identity — the Korean feed keeps the
+    # one it has always had so existing subscribers are not handed a "new" feed.
+    e.append('  <id>%s</id>' % (BASE if lang == LANG else BASE + fname))
     e.append('  <updated>%s</updated>' % feed_updated)
     e.append('  <rights>%s — %s</rights>' % (LICENSE_NAME, LICENSE_URL))
     e.append('  <author><name>dewytear</name></author>')
@@ -373,8 +397,8 @@ def build_feed():
         n = d['name']
         e.append('  <entry>')
         e.append('    <title>%s</title>' % esc(d['title']))
-        e.append('    <link href="%s#!%s"/>' % (BASE, n))
-        e.append('    <id>%s</id>' % doc_url(n, paths))
+        e.append('    <link href="%s"/>' % page_url(n, lang))
+        e.append('    <id>%s</id>' % doc_url_lang(n, paths, lang))
         e.append('    <published>%s</published>' % dates[n]['c'])
         e.append('    <updated>%s</updated>' % dates[n]['u'])
         e.append('    <summary>%s</summary>' % esc(d['summary']))
@@ -405,7 +429,8 @@ def build_robots():
     lines.append('# Sign-post (llmstxt.org):        %sllms.txt' % BASE)
     lines.append('# Full corpus (one fetch):        %sllms-full.txt' % BASE)
     lines.append('# Self-contained knowledge graph: %sdata/knowledge-graph.json' % BASE)
-    lines.append('# Atom feed (newest docs):        %sfeed.xml' % BASE)
+    lines.append('# Atom feed (newest docs):        %sfeed.xml  (English: %sfeed.en.xml)' % (BASE, BASE))
+    lines.append('# All documents, one page:        %sp/  (English: %sp/en/)' % (BASE, BASE))
     lines.append('# Traversal guide:                %sdocs/%s/ai/map/%s' % (BASE, LANG, GUIDE_NAME))
     return '\n'.join(lines) + '\n'
 
@@ -420,6 +445,7 @@ def build_sitemap():
     `url` field. Built from `list` in nav order, so new docs appear
     automatically. No <lastmod> (would churn --check daily)."""
     paths = load_paths()
+    pr = _load_prerender()
     tree = json.load(open(LIST, encoding='utf-8'))
     order = []
 
@@ -430,10 +456,16 @@ def build_sitemap():
             elif n.get('name') and n.get('path') and not n.get('route'):
                 order.append(n['name'])
     walk(tree if isinstance(tree, list) else tree.get('children', tree))
+    # Pages that live outside `list` but still get a snapshot (About, …).
+    for extra, cfg in pr.EXTRA_PAGES.items():
+        if extra not in paths:
+            paths[extra] = cfg['path']
+            order.append(extra)
 
     body = ''
-    for u in [BASE, BASE + 'llms.txt', BASE + 'llms-full.txt',
-              BASE + 'feed.xml', BASE + 'data/knowledge-graph.json']:
+    for u in [BASE, BASE + 'p/', BASE + 'p/en/', BASE + 'llms.txt',
+              BASE + 'llms-full.txt', BASE + 'feed.xml', BASE + 'feed.en.xml',
+              BASE + 'data/knowledge-graph.json']:
         body += '  <url><loc>%s</loc></url>\n' % u
     # 문서 URL: en 번역이 있으면 ko/en 두 URL을 모두 싣고, 각각에
     # hreflang alternate(ko·en·x-default=원본 ko)를 단다 — 검색엔진이
@@ -483,6 +515,7 @@ if __name__ == '__main__':
     ok = _emit('llms.txt', build_llms(), check) and ok
     ok = _emit('llms-full.txt', build_llms_full(), check) and ok
     ok = _emit('feed.xml', build_feed(), check) and ok
+    ok = _emit('feed.en.xml', build_feed('en'), check) and ok
     ok = _emit('robots.txt', build_robots(), check) and ok
     ok = _emit('sitemap.xml', build_sitemap(), check) and ok
     sys.exit(0 if ok else 1)

@@ -1,5 +1,30 @@
 # Aaron's Claude Wiki
 
+**[dewytear.github.io](https://dewytear.github.io)** — a personal wiki about Claude Code,
+plugins, harnesses, LLM wikis and second brains. Written in Korean, published in
+**Korean and English** (116 documents, both languages), CC BY 4.0.
+
+![Aaron's Claude Wiki](og-image.png)
+
+It is also an experiment in building a wiki that **AI systems can read as easily as
+people can**. Every document carries a summary, a set of concepts and typed relations,
+and the whole thing is exported as a self-contained knowledge graph:
+
+| For people | For machines |
+|---|---|
+| [The wiki](https://dewytear.github.io) — hash-routed SPA, no build step | [`llms.txt`](https://dewytear.github.io/llms.txt) — sign-post ([llmstxt.org](https://llmstxt.org)) |
+| [All documents](https://dewytear.github.io/p/en/) — static pages, no JS needed | [`llms-full.txt`](https://dewytear.github.io/llms-full.txt) — the whole corpus in one fetch |
+| [Knowledge Graph](https://dewytear.github.io/#!cosmos) — nine views over one index | [`knowledge-graph.json`](https://dewytear.github.io/data/knowledge-graph.json) — nodes, concepts, relations |
+| [About the author](https://dewytear.github.io/p/en/about/) | [`feed.en.xml`](https://dewytear.github.io/feed.en.xml) — Atom, newest first |
+
+Things that might be worth stealing: the **nine graph views** over a single index
+(`graphviews.js`, `cosmos.js`, `cosmos2.js` — WebGL, zero dependencies), the
+**validator gates** that refuse a document until its metadata is consistent
+(`tools/validate_*.py`, run in CI), and the **Work Log** discipline that keeps one
+curated entry per topic per day instead of a commit dump.
+
+---
+
 Claude Code · 플러그인 · 하네스 · LLM Wiki · 세컨드 브레인을 다루는 한글 위키입니다.
 `fetch()` API로 문서를 동적으로 불러오는 싱글 페이지(SPA) 방식으로 동작하며,
 GitHub Pages로 배포됩니다: https://dewytear.github.io
