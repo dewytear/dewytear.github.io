@@ -415,9 +415,7 @@
             color: var(--accent-ink);
             text-decoration: none;
         }
-        .sf-meta .settings-ico{
-            font-size: 13px;
-        }
+        .sf-meta .sf-ico{ width: 13px; height: 13px; }
         #tags-link,
         #settings-link{
             display: flex;
@@ -431,10 +429,17 @@
             color: var(--accent-ink);
             text-decoration: none;
         }
-        .settings-ico{
-            font-size: 16px;
-            line-height: 1;
+        /* Footer glyphs are inline SVG line icons, not emoji — same stroke
+           language as the sidebar's expand/collapse tools and the masthead
+           toggle, and they follow the theme through currentColor. Quiet by
+           default, full strength on hover (the footer's own hover rules give
+           the link its accent colour and the icon rides along). */
+        .sf-ico{
+            flex: 0 0 auto;
+            opacity: .72;
+            transition: opacity .18s ease;
         }
+        #sidebar-foot a:hover .sf-ico{ opacity: 1; }
 
         /* ---- Day/Night toggle switch (sits at the end of the footer row) ---- */
         #theme-switch{
@@ -449,9 +454,12 @@
         }
         /* Colored celestial icons flanking the switch. */
         .theme-ico{
-            font-size: 15px;
+            display: flex;
             line-height: 1;
         }
+        /* The one place colour is deliberate: gold moon / warm sun make it
+           obvious at a glance which way the switch goes. */
+        .theme-ico .sf-ico{ width: 15px; height: 15px; opacity: .85; }
         .theme-ico.moon{ color: #f4d35e; }   /* moonlit gold */
         .theme-ico.sun{  color: #f39c3d; }   /* warm sun orange */
         #theme-switch input{

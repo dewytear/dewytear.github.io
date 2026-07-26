@@ -7,3 +7,12 @@
     <li><strong>캐시버스터</strong> — style.css <code>?v=37&rarr;38</code>, i18n.js <code>13&rarr;14</code>, app.js <code>30&rarr;31</code>.</li>
     <li><strong>CDP 실측 검증</strong> — 낮/밤 두 테마에서 푸터 바닥 밀착(gap 0)·두 줄 간격 6px·세 링크 정렬을 실렌더로 확인, <code>lang=en</code> 주입 시 영어 title 적용 확인.</li>
 </ul>
+
+<h3>후속 — 푸터 글리프를 이모지에서 라인 아이콘으로</h3>
+<p>위 개편에서 아이콘은 기존 <code>.settings-ico</code> 규약(이모지 문자)을 그대로 따랐는데, 방문자 수 줄이 붙으면서 푸터를 다시 보니 <strong>이모지만 도드라졌다</strong> — 📡·🤖·🏷·⚙는 OS가 그리는 <strong>컬러 그림</strong>이라 테마 토큰을 안 따르고, 같은 사이드바 위쪽의 &ldquo;모두 펼치기/접기&rdquo;·마스트헤드 토글이 쓰는 <strong>stroke 1.8 라인 아이콘</strong>과 언어가 어긋난다. 게다가 기기·OS마다 모양이 달라 디자인이 우리 손을 떠난다. 네 안(라인 아이콘 · 글자+달/해 · 글자만 · 유지)을 실제로 렌더해 비교한 뒤 <strong>라인 아이콘</strong>으로 정했다. 변경 유형: <strong>STYLE</strong>.</p>
+<ul>
+    <li><strong>교체</strong> — RSS(전파 호)·for AI(칩)·Tags(태그)·설정(슬라이더) 넷을 인라인 SVG로 바꿨다. 설정은 처음에 톱니(원+방사 선)로 그렸다가 14px에서 <strong>해처럼 보여</strong> 슬라이더 두 줄로 교체했다 — 옆에 실제 해 아이콘이 있으니 더 헷갈린다.</li>
+    <li><strong>테마를 따른다</strong> — 전부 <code>stroke="currentColor"</code>라 낮/밤과 호버(<code>--accent-ink</code>)를 링크 색 그대로 물려받는다. 새 <code>.sf-ico</code>는 평소 <code>opacity .72</code>, 호버 시 1 — 푸터의 &ldquo;낮은 존재감 → 각성&rdquo; 규칙과 같은 결.</li>
+    <li><strong>색을 남긴 한 곳</strong> — 낮/밤 토글의 달·해는 <strong>금·주황을 유지</strong>했다(<code>#f4d35e</code>·<code>#f39c3d</code>). 스위치가 어느 쪽으로 가는지 한눈에 알려 주는 유일한 신호라, 여기서만 색이 기능이다.</li>
+    <li><strong>검증</strong> — 낮·밤 실렌더에서 SVG 6개 적용·푸터에 이모지 잔여 0·줄 높이 변화 없음(푸터 86px 그대로)·콘솔 에러 0. 캐시버스터 <code>style.css</code> 상향(<code>index.html</code>은 버전 대상이 아니라 그대로).</li>
+</ul>
