@@ -54,13 +54,13 @@
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
     <!-- ?v= cache-buster: bump on any change to these files so browsers
          (esp. iOS Safari, which caches past max-age) fetch the new version. -->
-    <link rel="stylesheet" href="style.css?v=38">
+    <link rel="stylesheet" href="style.css?v=39">
     <link rel="stylesheet" href="folder-dates.css?v=2">
     <script src="colors.js?v=2"></script>
     <script src="graphviews.js?v=3"></script>
     <script src="core.js?v=3"></script>
     <script src="utils.js?v=1"></script>
-    <script src="i18n.js?v=16"></script>
+    <script src="i18n.js?v=17"></script>
     <script src="cosmos2.js?v=3"></script>
     <script src="cosmos.js?v=7"></script>
     <script src="search.js?v=8"></script>
@@ -80,14 +80,16 @@
             </div>
             <nav id="navigation"></nav>
             <div id="sidebar-foot">
+                <!-- 방문자 수(오늘 · 전체). 집계를 못 읽으면 조용히 숨긴 채로 둔다. -->
+                <div class="sf-row sf-visits" id="visit-counter" hidden></div>
                 <div class="sf-row sf-meta">
                     <a id="feed-link" href="feed.xml" target="_blank" rel="alternate"
                        title="RSS 피드 — 새 문서 구독" aria-label="RSS 피드 — 새 문서 구독">
-                        <span class="settings-ico">&#128225;</span>RSS
+                        <svg class="sf-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1.4" fill="currentColor" stroke="none"/></svg>RSS
                     </a>
                     <a id="forai-link" href="llms.txt" target="_blank"
                        title="AI용 진입점 — llms.txt" aria-label="AI용 진입점 — llms.txt">
-                        <span class="settings-ico">&#129302;</span>for AI
+                        <svg class="sf-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2.5"/><path d="M10 2.5v3M14 2.5v3M10 18.5v3M14 18.5v3M2.5 10h3M2.5 14h3M18.5 10h3M18.5 14h3"/></svg>for AI
                     </a>
                     <a id="license-link" href="https://creativecommons.org/licenses/by/4.0/deed.ko"
                        target="_blank" rel="license noopener"
@@ -97,16 +99,16 @@
                 </div>
                 <div class="sf-row">
                     <a id="tags-link" href="#!tags">
-                        <span class="settings-ico">&#127991;</span>Tags
+                        <svg class="sf-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0l-7.2-7.2A2 2 0 0 1 2.8 12V4.8A2 2 0 0 1 4.8 2.8H12a2 2 0 0 1 1.4.6l7.2 7.2a2 2 0 0 1 0 2.8Z"/><circle cx="7.5" cy="7.5" r="1.3" fill="currentColor" stroke="none"/></svg>Tags
                     </a>
                     <label id="theme-switch" title="Day / Night 전환">
-                        <span class="theme-ico moon">&#9790;</span>
+                        <span class="theme-ico moon"><svg class="sf-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg></span>
                         <input type="checkbox" id="theme-toggle" onchange="nightDayHandler(this);">
                         <span class="switch-track"><span class="switch-thumb"></span></span>
-                        <span class="theme-ico sun">&#9728;</span>
+                        <span class="theme-ico sun"><svg class="sf-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.5 1.5M17.6 17.6l1.5 1.5M2 12h2M20 12h2M4.9 19.1l1.5-1.5M17.6 6.4l1.5-1.5"/></svg></span>
                     </label>
                     <a id="settings-link" href="#!settings" title="설정" aria-label="설정">
-                        <span class="settings-ico">&#9881;</span>
+                        <svg class="sf-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8h16M3.5 16h16"/><circle cx="9" cy="8" r="2.3"/><circle cx="15" cy="16" r="2.3"/></svg>
                     </a>
                 </div>
             </div>
@@ -161,7 +163,7 @@
     <script data-goatcounter="https://dewytear.goatcounter.com/count"
             data-goatcounter-settings='{"no_onload": true}'
             async src="//gc.zgo.at/count.js"></script>
-    <script src="app.js?v=34"></script>
+    <script src="app.js?v=35"></script>
     <script src="folder-dates.js?v=1"></script>
     <script src="music.js?v=2"></script>
 </body>
