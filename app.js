@@ -1960,10 +1960,21 @@ function toggleBranch(btn){
     btn.parentNode.classList.toggle('collapsed');
 }
 
+// Work Log는 날짜 트리(연/월/일)라 다 펴면 수십 줄이 쏟아져 나머지 대분류를
+// 화면 밖으로 밀어낸다 — 읽으려고 편 것이 오히려 안 보이게 만든다. 그래서
+// '모두 펼치기'는 이 가지를 **건드리지 않고 지나간다**(접지도, 펴지도 않음):
+// 직접 열어 둔 상태면 그대로 남고, 최근 로그는 ⤓ 점프 버튼이 따로 담당한다.
+function isWorklogBranch(li){
+    var root = li.closest ? li.closest('.nav-branch[data-cat]') : null;
+    var cat = (root && root.getAttribute('data-cat')) || '';
+    return cat.indexOf('Work Log') === 0;
+}
+
 function setAllBranches(collapsed){
     // '모두 접기'에서도 최상위 대분류(data-cat)는 접지 않고 열어둔다 — 이 결과가
     // 기본 레이아웃(최상위 열림·하위 접힘)과 같다. '모두 펼치기'는 전부 편다.
     document.querySelectorAll('#navigation .nav-branch').forEach(function(li){
+        if(!collapsed && isWorklogBranch(li)){ return; }   // 펼치기에선 Work Log 제외
         if(collapsed && li.hasAttribute('data-cat')){ li.classList.remove('collapsed'); return; }
         li.classList.toggle('collapsed', collapsed);
     });
@@ -2059,7 +2070,8 @@ App.data.loadList().then(function(tree){
         buildIndexes(tree);
         document.querySelector('#navigation').innerHTML =
             '<div class="nav-tools">'
-          + '<button type="button" class="nav-tool" onclick="expandAll()">'
+          + '<button type="button" class="nav-tool" onclick="expandAll()"'
+          +   ' title="' + STR('expandAllTitle') + '">'
           +   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
           +     '<path d="m7 9 5-5 5 5"/><path d="m7 15 5 5 5-5"/>'
           +   '</svg>' + STR('expandAll') + '</button>'
