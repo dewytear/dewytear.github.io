@@ -9,3 +9,23 @@
     <li><strong>TOOL 변경 체크</strong>(변경 유형표) — 플러그인 번들 동기(<code>check_plugin_sync --fix</code>: build_ai_export.py·schema.md) + <code>plugin.json</code> version <code>0.8.2 → 0.8.3</code> 상향. Backlog의 "RSS/Atom 피드" 항목은 최근 완료로 이동.</li>
 </ul>
 <p>후속 트랙(같은 프로젝트): 사이드바 푸터에 RSS·for AI·라이선스 라인(디자인), 영어 전면 병행 + 비한국어 브라우저 자동 en(기능·콘텐츠), 프리렌더 스냅샷(기능). 각각 별도 PR로 진행한다.</p>
+
+<h3>후속 트랙 — 찾아오게 만들기 (발견·공유)</h3>
+<p>&ldquo;유입 작업을 많이 했는데 전세계 방문자가 실제로 오지 않는다&rdquo;라는 제보로 전체를 다시 감사했다. 결론은 명확했다: <strong>이 프로젝트의 네 트랙은 모두 &ldquo;찾아온 사람·AI가 잘 읽게&rdquo; 하는 작업이었고, &ldquo;찾아오게 만드는&rdquo; 트랙은 아예 없었다.</strong> 잘 차려 놓고 간판을 안 걸었던 셈이다. 변경 유형: <strong>ENGINE + TOOL + STYLE + CONTENT</strong>.</p>
+<p>감사에서 나온 구멍은 일곱이었고, 그중 <strong>계정이 필요 없는 여섯</strong>을 이번에 닫았다(나머지 검색엔진 등록·커뮤니티 포스팅은 <a href="#!wl-backlog">Backlog</a>의 &ldquo;지금 할 일&rdquo;로 등재 — 사이트가 아니라 사람이 해야 하는 절차라 코드로 대신할 수 없다).</p>
+<ul>
+    <li><strong>문서마다 제목이 없었다</strong> — <code>document.title</code>을 사이트 이름으로 두 번 설정하고 라우트가 바뀌어도 그대로 뒀다. 115편이 탭·북마크·방문기록·공유 제목에서 모두 &ldquo;Aaron's Claude Wiki&rdquo; 하나였다. 이제 라우트마다 <code>&lt;제목&gt; — &lt;사이트&gt;</code>로 바뀐다: 진입 즉시 <code>list</code> 라벨(장식 글리프 제거)로 잡고, 본문이 도착하면 <strong>실제 h2로 덮어써</strong> 가장 정확한 이름을 쓴다. <code>&lt;html lang&gt;</code>도 읽는 언어를 따라가게 했다 — 영어로 읽는 방문자에게도 <code>ko</code>로 고정돼 있었다.</li>
+    <li><strong>공유 카드가 없었다</strong> — <code>og:*</code>·<code>twitter:*</code>가 저장소 전체에 0개라, 어디에 링크를 붙여도 회색 맨 URL이었다. 홈에는 정적 기본값을, <strong>스냅샷에는 문서별</strong> 제목·요약·이미지를 넣었다. 이미지는 문서가 <code>hero.webp</code>를 가졌으면 그것을, 아니면 새로 만든 사이트 카드(<code>og-image.png</code>, 1200&times;630)를 쓴다. 카드 원본은 <code>tools/og-card.html</code>로 함께 커밋했다 — 결정적 시드의 성좌 배경이라 다시 만들어도 같은 그림이 나온다. <strong>미리보기를 만드는 쪽은 JS를 돌리지 않으므로 SPA로는 불가능하고 정적 페이지만 할 수 있는 일</strong>이다.</li>
+    <li><strong>홈에서 크롤러가 갈 곳이 없었다</strong> — 내비게이션을 JS로 그리니 원본 HTML에 문서 링크가 <strong>하나도</strong> 없었고, 230개 스냅샷은 사이트맵을 읽어 줘야만 닿을 수 있었다. <code>/p/</code>·<code>/p/en/</code>에 <strong>전체 목록 허브</strong>를 만들고(내비게이션 순서대로 분류별 <code>&lt;ul&gt;</code>), 홈의 <code>&lt;noscript&gt;</code>에서 링크했다.</li>
+    <li><strong>스냅샷이 자기 URL을 지웠다</strong> — <code>head</code>의 <code>location.replace('/#!name')</code>이 사람을 SPA로 보냈는데, 그러면 프리렌더 트랙이 만든 <strong>문서별 고정 주소가 사라진다</strong>. 검색 결과로 들어온 사람은 주소가 바뀌는 것을 보고, 북마크·재공유는 그 문서를 못 가리킨다. 리다이렉트를 없애고 스냅샷을 <strong>진짜 착지 페이지</strong>로 뒀다(맨 위 &ldquo;위키에서 열기&rdquo; 링크는 유지). 부수 효과로 크롤러의 렌더링 단계가 리다이렉트 대신 본문을 보게 된다.</li>
+    <li><strong>피드가 한국어 전용 + 해시 링크였다</strong> — 영어 전면 병행을 다 해놓고 배포 경로에는 안 실려 있었다. <code>feed.en.xml</code>을 새로 내고, 두 피드의 항목 링크를 <strong>해시 라우트에서 스냅샷 주소로</strong> 바꿨다(피드 리더·애그리게이터는 JS를 안 돌려 <code>#!name</code>에선 빈 껍데기만 봤다). 한국어 피드의 Atom <code>&lt;id&gt;</code>는 그대로 둬 기존 구독자에게 &ldquo;새 피드&rdquo;로 보이지 않게 했다.</li>
+    <li><strong>영문 소개가 크롤 불가였고 README가 막다른 길이었다</strong> — 잘 쓰인 <code>docs/en/about</code>은 <code>list</code> 밖이라 스냅샷도 사이트맵도 없었다. 스냅샷 빌더에 <code>EXTRA_PAGES</code>를 두어 <code>/p/about/</code>·<code>/p/en/about/</code>를 내고, 사이트맵은 그 목록을 <strong>빌더에서 가져다 쓴다</strong>(두 곳에 적으면 어긋난다). 저장소는 국제 방문자의 자연스러운 진입점인데 README가 한국어 유지보수 문서뿐이라, 상단에 영문 소개와 사람용·기계용 진입점 표를 얹었다.</li>
+</ul>
+<h4>검증</h4>
+<ul>
+    <li>스냅샷: 주소가 유지되고(리다이렉트 0) 본문 4,459자·og:image가 문서 hero로 잡히는지, 콘솔 에러 0 — 실렌더 확인</li>
+    <li><strong>JS를 끈 브라우저</strong>(크롤러 시점)로 홈 → <code>noscript</code> 허브 링크가 원본 HTML에 존재 → 허브의 116개 링크 → 첫 링크 200 응답까지 실제 순회</li>
+    <li>SPA: ko/en 각각 문서 제목·<code>&lt;html lang&gt;</code>·og:title 갱신, 화면 전환(Knowledge Graph) 제목, <code>?lang=en</code> 진입 확인</li>
+    <li><code>validate_all</code> ERROR 0 · <code>build_ai_export</code>·<code>build_prerender</code>·<code>build_index</code> <code>--check</code> 무드리프트 · 플러그인 번들 동기 + version 0.13.0</li>
+</ul>
+<p>솔직한 한계도 적어 둔다. <strong>이 여섯 가지는 유입의 필요조건이지 충분조건이 아니다.</strong> 백링크가 0인 새 도메인은 색인이 잡혀도 몇 달간 어떤 검색어에도 뜨지 않고, 영문 튜토리얼은 Anthropic 공식 문서와 같은 검색어에서 경쟁해 이길 수 없다. 실제 지렛대는 <strong>이 사이트만 가진 것</strong>(하나의 인덱스를 9가지 뷰로 읽는 그래프 · 검증 게이트 · AI 층)을 커뮤니티에 직접 올리는 것이고, 그건 Backlog에 사람 몫으로 남겼다.</p>

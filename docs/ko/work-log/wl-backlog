@@ -13,7 +13,14 @@
 </div>
 
 <h3>지금 할 일</h3>
-<p class="scn-sub">지금 열린 항목 없음. 새 할 일이 생기면 여기에 추가한다.</p>
+<p class="scn-sub">지금 열린 항목은 전부 <strong>사람(계정 보유자)만 할 수 있는 일</strong>이다 — 사이트 쪽 준비는 <a href="#!wl-20260726-ops">2026-07-26 운영 로그</a>에서 끝냈고, 남은 것은 외부 서비스에 로그인해야 하는 절차뿐이다. 유입이 없다는 문제의 <strong>실제 병목이 여기</strong>라 최우선으로 둔다.</p>
+<ul>
+    <li><strong>[유입] Google Search Console 등록 + 사이트맵 제출</strong> — <a href="https://search.google.com/search-console" target="_blank" rel="noopener">search.google.com/search-console</a>에서 <code>https://dewytear.github.io/</code>를 URL 접두어로 추가하고, 인증(HTML 파일 업로드가 가장 간단 — 받은 파일을 저장소 루트에 커밋)한 뒤 <code>sitemap.xml</code>을 제출한다. <strong>지금까지 검색엔진에 이 사이트의 존재를 알린 적이 한 번도 없다</strong> — 백링크 0인 새 도메인은 제출 없이는 몇 달이 걸린다. 등록 후 <em>색인 생성 범위</em>에서 <code>/p/</code> 페이지가 실제로 색인되는지 확인하는 것이 다음 판단의 근거가 된다.</li>
+    <li><strong>[유입] Bing Webmaster Tools 등록</strong> — <a href="https://www.bing.com/webmasters" target="_blank" rel="noopener">bing.com/webmasters</a>. Search Console에서 가져오기(import)를 지원하므로 위 항목을 먼저 끝내면 몇 번의 클릭으로 끝난다. ChatGPT 검색·Copilot이 Bing 색인을 쓰므로 AI 쪽 노출에도 직결된다.</li>
+    <li><strong>[유입] 커뮤니티에 개별 문서 올리기</strong> — 검색은 몇 달짜리 씨앗이고, 지금 당장 사람이 오는 유일한 경로다. <strong>&ldquo;내 위키&rdquo;가 아니라 이 사이트만 가진 것</strong>을 걸어야 한다 — 하나의 인덱스를 <a href="#!kgs-views">9가지 뷰</a>로 읽는 그래프, 문서 등재를 막는 <a href="#!kgs-gates">검증 게이트</a>, <a href="#!kgs-ai-layer">AI가 읽는 층</a>(llms.txt·knowledge-graph.json). 설치·명령어 튜토리얼은 공식 문서와 같은 검색어에서 경쟁하므로 홍보 대상이 아니다. 후보: Hacker News(Show HN) · r/ClaudeAI · lobste.rs · X. <em>선행: 아래 OG 카드가 배포된 뒤에 — 안 그러면 맨 URL로 나간다(2026-07-26 해결됨).</em></li>
+    <li><strong>[유입] IndexNow 키 발급·핑</strong> — Bing·Yandex·Naver·Seznam에 변경을 즉시 알리는 규약. 키 파일(<code>&lt;key&gt;.txt</code>)을 루트에 두고 배포 워크플로에서 URL 목록을 POST하면 된다. 구글은 미지원이라 위 두 항목보다 우선순위가 낮고, CI에서 외부 호출이 실패해도 배포를 막지 않도록 비차단으로 붙여야 한다.</li>
+    <li><strong>[유입] 커스텀 도메인 검토</strong> — <code>github.io</code> 서브도메인은 도메인 권위가 GitHub에 묶여 개인 사이트로 축적되지 않는다. 옮기면 초기에 색인이 잠시 흔들리므로, <strong>Search Console 등록으로 현재 상태를 관측한 뒤</strong> 판단하는 것이 맞다. <em>트리거: 색인·유입이 실제로 잡히기 시작한 뒤.</em></li>
+</ul>
 
 <h3>아이디어 · 나중에</h3>
 <p class="scn-sub">주제 트랙별로 묶고, 필요(우선순위)가 읽히는 순서로 둔다. 상태 칩: <code>READY</code> 설계 완료·착수 결정 대기 · <code>WATCH</code> 지표 관찰 중 · <code>LATER</code> 장기. 상세 설계는 <a href="#!wl-20260711-ops">확정 명세(07-11 운영 로그)</a>에 박제 — 보드는 요지만.</p>

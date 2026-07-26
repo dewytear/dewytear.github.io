@@ -6,9 +6,12 @@
 <title>Not Found</title>
 <script>
 // /p/<name>/ (or /p/en/<name>/) -> the SPA route for that document;
-// anything else -> the wiki home.
-var m = location.pathname.match(/\/p\/(?:[a-z]{2}\/)?([A-Za-z0-9._-]+)\/?$/);
-location.replace(m ? "/#!" + m[1] : "/");
+// anything else -> the wiki home. A dead /p/en/ URL keeps its
+// language by asking the SPA for English (?lang=en), so an English
+// reader whose bookmark rotted does not land in Korean.
+var m = location.pathname.match(/\/p\/(?:([a-z]{2})\/)?([A-Za-z0-9._-]+)\/?$/);
+var q = m && m[1] && m[1] !== "ko" ? "?lang=" + m[1] : "";
+location.replace(m ? "/" + q + "#!" + m[2] : "/");
 </script>
 </head>
 <body>
