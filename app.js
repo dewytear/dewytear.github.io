@@ -1759,10 +1759,32 @@ function markActiveNav(name){
 }
 
 // ---- Router ----
+// ---- 방문 집계 (GoatCounter) ----
+// 이 위키는 해시 라우팅이라 문서를 옮겨 다녀도 브라우저에겐 '같은 페이지'다 —
+// count.js의 자동 집계(onload)는 index.html에서 꺼 두고, 라우터가 문서 단위로
+// 직접 센다(`#!kgs-views` → `/kgs-views`, 홈·검색은 `/`). 쿠키를 쓰지 않는다.
+var GC_TIMER = null;
+function countPageview(path){
+    var p = '/' + (path || '');
+    try{ p = decodeURIComponent(p); }catch(e){}
+    if(GC_TIMER){ clearTimeout(GC_TIMER); GC_TIMER = null; }
+    var tries = 0;
+    (function send(){
+        if(window.goatcounter && typeof goatcounter.count === 'function'){
+            goatcounter.count({ path: p });
+            return;
+        }
+        // 스크립트가 async라 첫 진입엔 아직 안 떠 있을 수 있다 — 잠깐 기다렸다 재시도
+        // (그 사이 다른 문서로 이동하면 위에서 타이머를 지워 낡은 경로는 안 보낸다).
+        if(tries++ < 20){ GC_TIMER = setTimeout(send, 250); }
+    })();
+}
+
 function route(){
     document.body.classList.remove('nav-open');   // close mobile drawer
     var h = location.hash;
     var path = h ? h.substr(2) : '';               // strip "#!"
+    countPageview(path === 'search' ? '' : path);  // 홈·검색은 한 경로로 합친다
     // Left the jumped Work Log page → restore the ⤓ icon to default.
     // (On the jump's own navigation, hash === target, so it stays active.)
     if(worklogJumpReturn !== null && h !== worklogJumpTarget){ clearWorklogJump(); }
