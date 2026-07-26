@@ -78,3 +78,14 @@
 <h4>제기됐다가 접힌 것 — 개념 키 병합</h4>
 <p>작업 중 <code>클로드코드</code>(omc-intro 1편)와 <code>Claude Code</code>(4편)가 별개 키로 존재하는 것을 발견해 <strong>별칭 중복이 아닌지</strong> 물었다. 사용자 판단은 <strong>&ldquo;내용이 다른 것이라 그대로 둔다&rdquo;</strong> — 같은 제품을 가리키더라도 한쪽은 OMC가 얹히는 대상으로서의 맥락이라 별개 개념으로 유지한다. <a href="#!wl-backlog">Backlog</a>의 &ldquo;개념 별칭 정규화&rdquo;에는 <em>후보에서 제외</em>로 기록했다.</p>
 <p>규칙으로 남길 것: <strong>키가 다르면 표시명도 달라야 한다</strong>. 표시명 사전 안에서는 유일성을 기계 검증했지만, 라틴 문자 개념(<code>Claude Code</code>처럼 사전에 등재되지 않고 그대로 표시되는 키)과의 충돌은 그 검사에 걸리지 않는다 — 지금은 두 키가 한 화면에 함께 나오는 지점이 검색 제안뿐이라 그대로 두되, 개념이 늘면 이 축도 검사에 넣는 게 맞다.</p>
+
+<h3>방문자 집계(GoatCounter) 연결</h3>
+<p>&ldquo;방문자를 파악하고 싶다 — 무료·사용법이 쉬운·집계에 특화된 것&rdquo;이라는 요청으로 <strong>GoatCounter</strong>를 붙였다. 후보(GoatCounter · Umami Cloud · Cloudflare Web Analytics · GA4) 중 고른 이유는 셋 — ①개인 사이트 <strong>무료</strong>·오픈소스 ②설정할 게 사실상 없고 지표도 방문자·페이지·유입경로·국가/브라우저로 딱 필요한 만큼 ③<strong>쿠키 미사용</strong>이라 동의 배너가 필요 없고 스크립트가 ~3KB다. 변경 유형: <strong>ENGINE</strong>.</p>
+<ul>
+    <li><strong>해시 라우팅의 함정</strong> — 이 위키는 <code>#!문서이름</code> 라우팅이라 문서를 옮겨 다녀도 브라우저에겐 같은 페이지다. 기본 스니펫을 그대로 붙이면 <strong>첫 진입 1회만</strong> 집계되고 문서별 조회수는 영영 안 잡힌다. 그래서 <code>index.html</code>에서 <code>data-goatcounter-settings='{"no_onload": true}'</code>로 <strong>자동 집계를 끄고</strong>, <code>app.js</code>의 <code>route()</code>가 문서 단위로 직접 센다 — <code>#!kgs-views</code> → <code>/kgs-views</code>, 홈(빈 해시)과 <code>#!search</code>는 같은 화면이라 <code>/</code> 하나로 합쳤다.</li>
+    <li><strong>async 경합</strong> — 스크립트가 <code>async</code>라 첫 진입 시점엔 아직 로드 전일 수 있어 250ms 간격 최대 20회 재시도하되, <strong>그 사이 다른 문서로 이동하면 이전 타이머를 취소</strong>해 낡은 경로가 기록되지 않게 했다.</li>
+    <li><strong>검증</strong> — 실제 <code>count.js</code>는 이 환경에서 외부 접근이 막혀 <strong>같은 계약의 스텁</strong>으로 우리 쪽 호출을 검증했다. 홈 → welcome → kgs-views → cosmos → tags → search → about 순회 결과 <code>["/","/welcome","/kgs-views","/cosmos","/tags","/","/about"]</code> — 중복·누락 0, 콘솔 에러 0. 캐시버스터 <code>app.js</code> 상향.</li>
+    <li><strong>정적 스냅샷(<code>/p/…</code>)</strong>은 사람 방문 시 즉시 SPA 라우트로 보내므로 그쪽에서 집계된다 — 스냅샷 자체에는 집계 스크립트를 넣지 않았다(크롤러 방문을 방문자로 세지 않기 위해서도 그 편이 맞다).</li>
+    <li><strong>운영 메모</strong> — 대시보드 <code>dewytear.goatcounter.com</code>(기본 비공개). 광고 차단기가 <code>gc.zgo.at</code>를 막으면 그 방문은 빠지므로 <strong>절대값보다 추세</strong>로 읽는다. 사이트에 &ldquo;오늘/전체 방문자&rdquo;를 표시하려면 설정에서 <em>Allow adding visitor counts on your website</em>를 켜고 <code>/counter/TOTAL.json</code>(<code>?start=today</code>)을 읽으면 된다 — 후속 과제.</li>
+</ul>
+
