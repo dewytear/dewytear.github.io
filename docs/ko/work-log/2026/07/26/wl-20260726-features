@@ -86,6 +86,18 @@
     <li><strong>async 경합</strong> — 스크립트가 <code>async</code>라 첫 진입 시점엔 아직 로드 전일 수 있어 250ms 간격 최대 20회 재시도하되, <strong>그 사이 다른 문서로 이동하면 이전 타이머를 취소</strong>해 낡은 경로가 기록되지 않게 했다.</li>
     <li><strong>검증</strong> — 실제 <code>count.js</code>는 이 환경에서 외부 접근이 막혀 <strong>같은 계약의 스텁</strong>으로 우리 쪽 호출을 검증했다. 홈 → welcome → kgs-views → cosmos → tags → search → about 순회 결과 <code>["/","/welcome","/kgs-views","/cosmos","/tags","/","/about"]</code> — 중복·누락 0, 콘솔 에러 0. 캐시버스터 <code>app.js</code> 상향.</li>
     <li><strong>정적 스냅샷(<code>/p/…</code>)</strong>은 사람 방문 시 즉시 SPA 라우트로 보내므로 그쪽에서 집계된다 — 스냅샷 자체에는 집계 스크립트를 넣지 않았다(크롤러 방문을 방문자로 세지 않기 위해서도 그 편이 맞다).</li>
-    <li><strong>운영 메모</strong> — 대시보드 <code>dewytear.goatcounter.com</code>(기본 비공개). 광고 차단기가 <code>gc.zgo.at</code>를 막으면 그 방문은 빠지므로 <strong>절대값보다 추세</strong>로 읽는다. 사이트에 &ldquo;오늘/전체 방문자&rdquo;를 표시하려면 설정에서 <em>Allow adding visitor counts on your website</em>를 켜고 <code>/counter/TOTAL.json</code>(<code>?start=today</code>)을 읽으면 된다 — 후속 과제.</li>
+    <li><strong>운영 메모</strong> — 대시보드 <code>dewytear.goatcounter.com</code>(기본 비공개). 광고 차단기가 <code>gc.zgo.at</code>를 막으면 그 방문은 빠지므로 <strong>절대값보다 추세</strong>로 읽는다. 사이트에 &ldquo;오늘/전체 방문자&rdquo;를 표시하려면 설정에서 <em>Allow adding visitor counts on your website</em>를 켜고 <code>/counter/TOTAL.json</code>을 읽으면 된다 — 아래 후속에서 구현했다.</li>
 </ul>
 
+
+<h3>후속 — 방문자 수·문서 조회수를 화면에 표시</h3>
+<p>집계만 쌓고 대시보드에서만 보던 것을 <strong>위키 화면에 직접</strong> 올렸다. 위치는 세 안(홈 검색창 아래 · 사이드바 푸터 · 문서 메타줄)을 실제로 렌더해 비교한 뒤 <strong>사이드바 푸터</strong>로 정했다 — 모든 화면에서 항상 보이고, RSS·Tags·테마가 모인 메타 구역이라 이질감이 없으며, 사이드바를 접으면 자연히 사라진다. 여기에 사용자 요청으로 <strong>문서별 조회수</strong>를 메타줄의 생성일자 바로 앞에 덧붙였다.</p>
+<ul>
+    <li><strong>엔드포인트</strong> — <code>/counter/&lt;경로&gt;.json</code>. 사이트 합계는 <code>TOTAL</code>, 문서는 그 문서의 라우트 이름을 쓴다. 응답은 <code>{"count":"3 481"}</code>처럼 <strong>자릿수 구분자가 들어간 문자열</strong>이라 숫자만 뽑아 쓴다. JSON 응답에는 <code>Access-Control-Allow-Origin: *</code>가 붙어 브라우저에서 바로 읽을 수 있다.</li>
+    <li><strong>&ldquo;오늘&rdquo;의 경계는 UTC</strong> — <code>start</code>는 <code>week</code>·<code>month</code>·<code>year</code> 또는 <code>YYYY-MM-DD</code>만 받고(<code>today</code> 같은 키워드는 없다), 합계 집계 자체가 UTC 기준이다. 그래서 오늘 값은 UTC 날짜로 물어 <strong>집계 쪽과 같은 기준</strong>을 쓴다 — KST로 물으면 경계가 어긋나 숫자가 안 맞는다.</li>
+    <li><strong>부하</strong> — 서버가 응답을 4시간 캐시하고(<code>Expires</code>·<code>Cache-Control: public</code>) 앞단에 캐시가 한 겹 더 있다. 우리 쪽도 같은 URL은 세션당 한 번만 부르고 프라미스를 재사용하므로, 문서를 옮겨 다녀도 <strong>문서당 최대 1회</strong>·수십 바이트다. 대신 <strong>수치는 최대 4시간 늦다</strong> — 내 글을 열어도 조회수가 바로 안 움직이는 건 정상이다.</li>
+    <li><strong>레이아웃이 밀리지 않게</strong> — 메타줄 오른쪽을 <code>.doc-meta-r</code> 한 그룹으로 묶어 오른쪽 정렬했다. 그룹이 왼쪽으로 자라므로 늦게 도착한 조회수가 끼어들어도 <strong>생성일자는 제자리</strong>다(자리를 미리 잡는 자리표시자가 필요 없다).</li>
+    <li><strong>실패는 조용히</strong> — 집계 설정이 꺼져 있거나(403) 광고 차단기·오프라인으로 못 읽으면 <code>null</code>을 돌려 아무것도 그리지 않는다. 방문자 줄은 <code>hidden</code>인 채로 남고 조회수는 아예 붙지 않는다 — 에러 문구를 띄우지 않는다.</li>
+    <li><strong>조회수를 붙이는 범위</strong> — 저작 모델 배지가 있는 등재 문서만이다. Work Log·About처럼 메타줄이 없는 문서는 대상이 아니다(데브 저널의 조회수는 읽는 사람에게 의미가 없다).</li>
+    <li><strong>검증</strong> — 실제 엔드포인트는 이 환경에서 막혀 <strong>서버 구현과 같은 계약</strong>(자릿수 구분자 문자열 · 집계 0건이면 404 · CORS 헤더)의 스텁으로 확인했다. 낮·밤 × ko/en 렌더, 390px 폭에서 가로 넘침 0, Work Log·About에서 조회수 미표시·에러 0, 403 응답에서 두 표시 모두 조용히 숨김, 문서 하나당 요청 1건. 캐시버스터 <code>app.js</code>·<code>i18n.js</code>·<code>style.css</code> 상향.</li>
+</ul>

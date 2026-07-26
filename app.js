@@ -509,8 +509,10 @@ function injectDocDate(name){
         // 메타 라인(.doc-meta)이 있으면 그 오른쪽(모델 브랜드 옆)에, 없으면
         // crumb/제목 뒤에 폴백(About 등 미등록 문서).
         var meta = art.querySelector('.doc-meta');
+        var right = art.querySelector('.doc-meta-r');
         var crumb = art.querySelector('.doc-crumb');
-        if(meta){ meta.appendChild(p); }
+        if(right){ right.appendChild(p); }   // 조회수 뒤에 날짜 (오른쪽 정렬 그룹)
+        else if(meta){ meta.appendChild(p); }
         else if(crumb){ crumb.insertAdjacentElement('afterend', p); }
         else if(h2){ h2.insertAdjacentElement('afterend', p); }
         else { art.insertAdjacentElement('afterbegin', p); }
@@ -542,12 +544,17 @@ function fetchPage(filename){
                 span.className = 'doc-model';
                 span.textContent = label;
                 meta.appendChild(span);
+                // 오른쪽 정렬 그룹 — 조회수와 생성일자가 여기에 차례로 들어온다.
+                var right = document.createElement('span');
+                right.className = 'doc-meta-r';
+                meta.appendChild(right);
                 var anchor = art.querySelector('.doc-crumb') || art.querySelector('h2');
                 if(anchor){ anchor.insertAdjacentElement('afterend', meta); }
                 else { art.insertAdjacentElement('afterbegin', meta); }
             }
             // AI 연관 문서 추천 (knowledge-index.json). May arrive after
             // this render, so injectRelated re-runs when the index loads.
+            injectDocViews(filename);
             injectDocDate(filename);
             injectRelations();
             injectRelated();
@@ -1780,6 +1787,66 @@ function countPageview(path){
     })();
 }
 
+// ---- 방문자 수 표시 (GoatCounter visitor counter) ----
+// `/counter/<경로>.json`은 CORS를 허용하고(`Access-Control-Allow-Origin: *`)
+// 서버가 4시간 캐시한다 — 그래서 (a) 수치는 최대 4시간 늦고 (b) 자주 부를
+// 이유가 없다. 같은 URL은 이 세션에서 한 번만 부르고 프라미스를 재사용한다.
+// 집계 설정이 꺼져 있거나(403) 네트워크가 막히면 null → 화면에 아무것도 안 띄운다.
+var GC_HOST = 'https://dewytear.goatcounter.com';
+var GC_COUNTS = {};
+function gcCount(path, start){
+    var url = GC_HOST + '/counter/' + path + '.json' + (start ? '?start=' + start : '');
+    if(GC_COUNTS[url]){ return GC_COUNTS[url]; }
+    GC_COUNTS[url] = fetch(url, { mode: 'cors' })
+        // 집계가 0건이면 404로 오지만 본문은 정상 JSON이라 상태코드는 안 본다.
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+            // count는 자릿수 구분자(가는 공백·쉼표)가 들어간 문자열이다.
+            var n = parseInt(String((j && j.count) || '').replace(/\D/g, ''), 10);
+            return isNaN(n) ? null : n;
+        })
+        .catch(function(){ return null; });
+    return GC_COUNTS[url];
+}
+
+// 사이드바 푸터: "오늘 n · 전체 n". 오늘의 경계는 **UTC** — 집계 쪽 합계가
+// UTC 기준(SiteTotalUTC)이라 같은 기준으로 물어야 숫자가 어긋나지 않는다.
+function renderVisitCounter(){
+    var box = document.getElementById('visit-counter');
+    if(!box || !window.fetch){ return; }
+    var today = new Date().toISOString().slice(0, 10);
+    Promise.all([gcCount('TOTAL', today), gcCount('TOTAL', '')]).then(function(r){
+        if(r[1] === null){ return; }   // 전체조차 못 읽으면 그대로 숨겨 둔다
+        box.innerHTML =
+              '<span class="vc-k">' + escapeHtml(STR('visitsToday')) + '</span>'
+            + '<b>' + (r[0] === null ? '–' : r[0].toLocaleString()) + '</b>'
+            + '<span class="vc-sep">·</span>'
+            + '<span class="vc-k">' + escapeHtml(STR('visitsTotal')) + '</span>'
+            + '<b>' + r[1].toLocaleString() + '</b>';
+        box.title = STR('visitsTitle');
+        box.hidden = false;
+    });
+}
+
+// 문서 메타 라인: 생성일자 **바로 앞**에 이 문서의 조회수를 붙인다.
+// `.doc-meta-r`은 오른쪽 정렬 그룹이라 앞에 끼워 넣어도 날짜는 제자리 —
+// 숫자가 늦게 도착해도 레이아웃이 밀리지 않는다.
+function injectDocViews(name){
+    var art = document.getElementById('article');
+    var right = art && art.querySelector('.doc-meta-r');
+    if(!right || right.querySelector('.doc-views')){ return; }
+    gcCount(encodeURIComponent(name), '').then(function(n){
+        if(n === null || CURRENT_DOC !== name){ return; }
+        if(right.querySelector('.doc-views')){ return; }
+        var el = document.createElement('span');
+        el.className = 'doc-views';
+        el.title = STR('docViewsTitle');
+        el.innerHTML = '<span class="dv-k">' + escapeHtml(STR('docViews')) + '</span>'
+                     + '<b>' + n.toLocaleString() + '</b>';
+        right.insertBefore(el, right.querySelector('.doc-date'));
+    });
+}
+
 function route(){
     document.body.classList.remove('nav-open');   // close mobile drawer
     var h = location.hash;
@@ -1944,6 +2011,7 @@ App.data.loadList().then(function(tree){
         document.querySelector('#more').innerHTML = renderMore();
         refreshRecentDocs();   // reorder by last-modified once dates load
         route();   // render the initial page once indexes exist
+        renderVisitCounter();   // 사이드바 푸터의 오늘·전체 방문자 수
 })
 
 // Load the AI knowledge index (summaries·concepts·related). Non-blocking:
