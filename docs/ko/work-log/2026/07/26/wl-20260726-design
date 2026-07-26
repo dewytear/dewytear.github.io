@@ -16,3 +16,6 @@
     <li><strong>색을 남긴 한 곳</strong> — 낮/밤 토글의 달·해는 <strong>금·주황을 유지</strong>했다(<code>#f4d35e</code>·<code>#f39c3d</code>). 스위치가 어느 쪽으로 가는지 한눈에 알려 주는 유일한 신호라, 여기서만 색이 기능이다.</li>
     <li><strong>검증</strong> — 낮·밤 실렌더에서 SVG 6개 적용·푸터에 이모지 잔여 0·줄 높이 변화 없음(푸터 86px 그대로)·콘솔 에러 0. 캐시버스터 <code>style.css</code> 상향(<code>index.html</code>은 버전 대상이 아니라 그대로).</li>
 </ul>
+
+<h3>사이트 기본값 변경 — 다크 모드 · 3D 둥글기 55%</h3>
+<p>사용자 결정으로 <code>config.json</code>의 방문자 기본값 두 가지를 바꿨다: <strong>테마 기본 <code>day &rarr; night</code>(다크 모드)</strong>, <strong>3D 지식그래프 둥글기 <code>40 &rarr; 55%</code></strong>. 개인이 설정에서 고른 값(localStorage)은 계속 우선하므로, 이 변경은 <em>저장값이 없는 방문자</em>의 첫인상만 바꾼다. 부팅 스크립트가 개인 저장값만 보고 첫 페인트를 칠하는 구조라, 첫 방문에는 config 적용 전 밝은 화면이 잠깐 비칠 수 있다(기존 동작 — 재방문부터는 문제 없음).</p>
