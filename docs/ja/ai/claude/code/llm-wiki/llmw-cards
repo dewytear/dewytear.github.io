@@ -1,0 +1,57 @@
+<h2>ウィキカードの種類と生ソース</h2>
+<p>研究者は知識の<strong>出典</strong>を明示しなければなりません。だから raw の資料を<strong>生ソース（raw source）</strong>として入れ、どこから知識を持ってきたかを示します。（Zotero や Bookends のようなリファレンスマネージャーをつないだインデックス化・引用の自動化も予定されています。）</p>
+
+<h3>生ソース → ウィキカード</h3>
+<p>記事・報道・論文・<strong>YouTube の書き起こし</strong>などをボルトに入れると、LLM が読んで抽出し<strong>ウィキカード</strong>にします。ひとつの記事から学べることが五つあれば五枚のカードができますし、複数のソース（記事 3 本 + YouTube 2 本）を<strong>いっぺんにインジェスト</strong>して AI に勝手にコンパイルさせることもできます。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 660 200" role="img" aria-label="インジェストのパイプライン: 生ソースを LLM が抽出してウィキカードにし、カードは概念・エンティティ・ガイド・マップに分かれる">
+    <rect class="d-box" x="20" y="34" width="150" height="60" rx="11"/>
+    <text class="d-label sm" x="95" y="60" text-anchor="middle">生ソース</text>
+    <text class="d-sub" x="95" y="78" text-anchor="middle">字幕・記事・論文</text>
+
+    <rect class="d-box accent" x="255" y="34" width="150" height="60" rx="11"/>
+    <text class="d-label sm" x="330" y="60" text-anchor="middle">LLM が抽出</text>
+    <text class="d-sub" x="330" y="78" text-anchor="middle">読んでカード化</text>
+
+    <rect class="d-box" x="490" y="34" width="150" height="60" rx="11"/>
+    <text class="d-label sm" x="565" y="60" text-anchor="middle">ウィキカード</text>
+    <text class="d-sub" x="565" y="78" text-anchor="middle">出典ベース</text>
+
+    <line class="d-edge" x1="170" y1="64" x2="253" y2="64"/>
+    <polygon class="d-arrow" points="247,59 255,64 247,69"/>
+    <line class="d-edge accent" x1="405" y1="64" x2="488" y2="64"/>
+    <polygon class="d-arrow accent" points="482,59 490,64 482,69"/>
+
+    <line class="d-edge" x1="565" y1="94" x2="565" y2="116"/>
+    <polygon class="d-arrow" points="560,116 565,124 570,116"/>
+
+    <rect class="d-box soft" x="482" y="126" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="520" y="143" text-anchor="middle">概念</text>
+    <rect class="d-box soft" x="566" y="126" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="604" y="143" text-anchor="middle">実体</text>
+    <rect class="d-box soft" x="482" y="158" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="520" y="175" text-anchor="middle">ガイド</text>
+    <rect class="d-box soft" x="566" y="158" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="604" y="175" text-anchor="middle">マップ</text>
+</svg>
+<div class="d-cap">生ソースを <strong>LLM が読んで</strong>出典ベースの<strong>ウィキカード</strong>へ — 概念・実体・ガイド・マップに分かれます。</div>
+</div>
+
+<h3>カードの種類</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>種類</th><th>内容</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Concept</strong></td><td>基本の概念カード。</td></tr>
+            <tr><td><strong>Entity</strong></td><td>固有名詞・サービス名・人の名前など。</td></tr>
+            <tr><td><strong>Guide</strong></td><td>Concept・Entity を含むフレーズ —「これで何をする」といったやり方。</td></tr>
+            <tr><td><strong>Maps / Labs</strong></td><td>全体を網羅する概念カード。</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">キャプチャのコツ — 目的を残す</span>
+    知識をキャプチャするときは、つねに <strong>#（シャープ）のうしろに目的</strong>を書きます。あとで検索するためです。キャプチャしたきり二度と見ないことになりがちなので、<strong>未来の自分が検索でたどり着けるヒント</strong>を残しておくとよいです。インジェストを任せるときも「なぜ集めたのか / 何をしたいのか」を尋ねるようにしておけば、その意図を持ってメインボルトの過去の研究とつなげて推論してくれます。
+</div>

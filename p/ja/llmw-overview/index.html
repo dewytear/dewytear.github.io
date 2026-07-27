@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM Wiki — 概要</title>
+<meta name="description" content="Karpathy が提案した Obsidian ベースの LLM ウィキの、全体の考え方と構造を紹介する。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/llmw-overview/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/llmw-overview/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/llmw-overview/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/llmw-overview/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/llmw-overview/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLM Wiki — 概要">
+<meta property="og:description" content="Karpathy が提案した Obsidian ベースの LLM ウィキの、全体の考え方と構造を紹介する。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/llmw-overview/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LLM Wiki — 概要">
+<meta name="twitter:description" content="Karpathy が提案した Obsidian ベースの LLM ウィキの、全体の考え方と構造を紹介する。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "LLM Wiki — 概要",
+ "description": "Karpathy が提案した Obsidian ベースの LLM ウィキの、全体の考え方と構造を紹介する。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/llmw-overview/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!llmw-overview",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:38:08+09:00",
+ "dateModified": "2026-07-06T20:12:41+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!llmw-overview">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/llmw-overview/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/llmw-overview/" hreflang="en">English</a>
+</p>
+<article>
+<h2>LLM Wiki — 概要</h2>
+<p>この資料は<strong>「LLM Wiki（LLM ウィキ）/ ク・ヨハン」</strong>の講演を、順に段落ごとに整理したものです。人工知能の時代には、<strong>自分の資料をどこにどう整理しておくか</strong>がとても重要になります。私たちはすでに Claude Code の <code>CLAUDE.md</code>・<code>memory.md</code> のようなマークダウンで AI へ文脈を広げてきましたが、<strong>Obsidian</strong> はそのすべてをひとつの体系として文脈づけてくれるシステムです。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 190" role="img" aria-label="散らばった資料をボルトに入れると、地図と道しるべをたどって AI がライブで知識を探して参照する">
+    <rect class="d-box soft" x="12" y="30" width="122" height="34" rx="7"/>
+    <text class="d-label sm" x="73" y="51" text-anchor="middle">ノート・字幕</text>
+    <rect class="d-box soft" x="12" y="78" width="122" height="34" rx="7"/>
+    <text class="d-label sm" x="73" y="99" text-anchor="middle">議事録</text>
+    <rect class="d-box soft" x="12" y="126" width="122" height="34" rx="7"/>
+    <text class="d-label sm" x="73" y="147" text-anchor="middle">ウェブ切り抜き</text>
+
+    <path class="d-edge" d="M134 47 C180 60, 180 88, 210 94"/>
+    <path class="d-edge" d="M134 95 H210"/>
+    <path class="d-edge" d="M134 143 C180 130, 180 102, 210 96"/>
+    <polygon class="d-arrow" points="210,90 218,95 210,100"/>
+
+    <rect class="d-box accent" x="220" y="52" width="204" height="86" rx="12"/>
+    <text class="d-label" x="322" y="78" text-anchor="middle">知識ボルト(Vault)</text>
+    <circle class="d-node" cx="286" cy="106" r="5"/>
+    <circle class="d-node b" cx="322" cy="112" r="5"/>
+    <circle class="d-node c" cx="358" cy="104" r="5"/>
+    <line class="d-edge" x1="286" y1="106" x2="322" y2="112"/>
+    <line class="d-edge" x1="322" y1="112" x2="358" y2="104"/>
+    <text class="d-sub" x="322" y="130" text-anchor="middle">地図・道しるべでつなぐ</text>
+
+    <line class="d-edge accent" x1="424" y1="95" x2="466" y2="95"/>
+    <polygon class="d-arrow accent" points="466,90 474,95 466,100"/>
+    <rect class="d-box" x="474" y="64" width="194" height="60" rx="10"/>
+    <text class="d-label sm" x="571" y="88" text-anchor="middle">AI がナビゲート</text>
+    <text class="d-sub" x="571" y="106" text-anchor="middle">ライブ埋め込みで参照</text>
+</svg>
+<div class="d-cap">重い RAG も再コンパイルもなしに、ボルトの<strong>地図（道しるべ）</strong>をたどって AI がライブで知識を探しに行きます。</div>
+</div>
+
+<h3>LLM Wiki とは</h3>
+<p>Karpathy（カルパシー）が 2026 年 4 月の X の投稿（「LLM Knowledge Bases」）と 'llm-wiki' の gist を通じて提案した考え方で、<strong>ベクトル DB やグラフ DB を作る重い RAG も、継続的なコンパイルもなしに</strong>、ライブで埋め込んで人工知能が知識を参照できるようにするシステムです。Obsidian のボルトに知識ベースを築けば、AI が<strong>地図・ナビゲーション（道しるべ）</strong>を見て知識を探しに行きます。</p>
+
+<h3>この文書セットで扱うこと</h3>
+<ul>
+    <li>ボルト（Vault）の体系 — メインのボルト vs ウィキのボルト</li>
+    <li>何を入れるのか（知識のキャプチャ）と<strong>ノートのメタデータ</strong></li>
+    <li>ノートの<strong>つながり（links）</strong>と、ウィキカードの種類</li>
+    <li>システムファイルと rules、<strong>オンボーディング</strong>の実習</li>
+    <li>三つの中心的な動作 — <strong>Ingest · Query · Lint</strong></li>
+    <li>ウェブクリッパーとインボックス、そして活用の哲学</li>
+</ul>
+
+<div class="note">
+    <span class="nh">出典</span>
+    本文書セットは「LLM Wiki / ク・ヨハン」の講演の内容を順に整理・再構成したものです。講師は Obsidian をベースにした個人の知識管理システムを作って公開しています。
+    <br>· 映像: <a href="https://www.youtube.com/live/MRTQwBFURJs" target="_blank" rel="noopener">youtube.com/live/MRTQwBFURJs</a>
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · LLM Wiki &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/news-20260710-llm-wiki-knowledge-context/">LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식</a></li><li><a href="/p/ja/llmw-onboard/">オンボーディング（実習）</a></li><li><a href="/p/ja/llmw-vaults/">ボルトの体系 — メインボルトとウィキボルト</a></li><li><a href="/p/ja/sb-level2/">레벨 2 · 주제로 묶기 (LLM 위키 + 메모리)</a></li></ul>
+</nav>
+</body>
+</html>

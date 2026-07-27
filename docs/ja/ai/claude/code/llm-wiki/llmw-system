@@ -1,0 +1,20 @@
+<h2>システムファイルと rules</h2>
+<p>ボルトにはノートだけでなく、<strong>AI の動きを定めるシステムファイル</strong>も一緒に入ります。講師が念入りに削り出したこれらのファイルは、いちど通読してみる価値があります。</p>
+
+<h3>著者とモデルの明示</h3>
+<ul>
+    <li>メインボルトの主な著者は<strong>人（自分）</strong>です。</li>
+    <li>LLM ウィキには自分の名前とともに、<strong>どのモデルが書いたのか</strong>も明示します。例:「Opus 4.8 · effort X-high」「Fable」「Codex Fugu · Ultra」など。</li>
+    <li>どのモデルが作ったウィキかを記録して<strong>品質を比較・最適化</strong>します。インジェストはトークンと時間を多く使うので、<strong>本当に重要な資料だけ</strong>を集めるのがよいです。</li>
+</ul>
+
+<h3>メインボルトのシステムファイル</h3>
+<p>Claude が読む文書、ほかのエージェントが読む文書、CMDS（コンテキスト）に関する内容、ボルトのルール、執筆・フォーマットのルール、研究の主題、ペルソナ（brain dump）などが入ります。</p>
+
+<h3>LLM ウィキの core-context</h3>
+<p>LLM ウィキは<strong>どんな目的でウィキを使おうとしているのか</strong>を収めるコンテキストのファイルを使います。オンボーディングを始めると <code>core-context.md</code> を直しながら、名前・所属・部署・趣味・好みなどを埋めます。ここでもすべてを 1 ファイルに書かず、<strong>「好みは 好み.md、専門のペルソナはここ」</strong>のように住所を明示してコンテキストを最適化します。</p>
+
+<div class="note">
+    <span class="nh">.claude/rules — 憲法のように読まれるルール</span>
+    <code>.claude</code> フォルダの中の <strong><code>rules</code></strong> フォルダのマークダウンファイルは、Claude Code が<strong>セッション開始のすぐに先に読みます（憲法のように厳密に守る）</strong>。一方 <code>CLAUDE.md</code> はガイドとして参考にします。だから編集のルール・好み・重要な強制のルールは <code>rules</code> に入れておくとよいです。
+</div>
