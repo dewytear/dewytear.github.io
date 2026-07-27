@@ -1302,6 +1302,9 @@ function applySettings(){
     if(fl){ fl.href = currentLang() === 'ko' ? 'feed.xml' : 'feed.' + currentLang() + '.xml'; }
     var mbtn = document.getElementById('music-btn');
     if(mbtn){ mbtn.title = STR('musicTitle'); mbtn.setAttribute('aria-label', STR('musicAria')); }
+    // 프로필 링크 aria-label — index.html에 한국어로 하드코딩돼 있던 자리.
+    var plink = document.getElementById('profile-link');
+    if(plink){ plink.setAttribute('aria-label', STR('aboutAria')); }
     // 새 글 기간(newDays)·언어 변경 등이 반영되도록 nav 새 글 표시를 다시 단다.
     applyNavNewMarkers();
 }

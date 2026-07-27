@@ -18,7 +18,7 @@
 <meta property="og:url" content="https://dewytear.github.io/p/ja/kgs-gates/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ウィキはどうやって自分を守るのか — ゲートと自動化の体系">
 <meta name="twitter:description" content="決定論的ビルドと --check によるドリフト遮断、PR の同伴ゲート 4 種、--fix の自動復元、変更タイプの宣言 — 検証中心の自動化が知識体系の整合を保つ仕組み">
@@ -44,7 +44,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T23:17:32+09:00",
- "dateModified": "2026-07-28T02:16:48+09:00"
+ "dateModified": "2026-07-28T03:13:14+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -65,7 +65,7 @@
 <p>知識インデックス・グラフ JSON・<code>llms.txt</code>・sitemap・文書の日付 — サイトが読む生成物はすべて<strong>ツールが生成し、手では編集しません</strong>。ビルドは<strong>決定論的</strong>（同じ入力 → いつも同じ出力）なので、CI の <code>--check</code> モードが「いまリポジトリにある生成物」と「ソースから作りたての生成物」をバイトで比較できます。食い違えば（＝文書を直して再生成を忘れれば）<strong>マージが止まります</strong>。だから <a href="/p/ja/kgs-ai-layer/">AI が読むグラフファイル</a>が実際の知識と違う瞬間は、構造的に存在しません。</p>
 
 <h3>PR を守る同伴ゲート — 「A を変えたなら B も一緒に」</h3>
-<p>あるルールは生成物の比較では捕まえられません。「アセットを直したならキャッシュバスターも上げよ」のような<strong>同伴ルール</strong>は、PR の変更一覧（diff）を見て<strong>片割れも一緒に来たか</strong>を検査する必要があります。こうしたゲートが五つあり、すべて実際の事故や運用の必要から生まれました:</p>
+<p>あるルールは生成物の比較では捕まえられません。「アセットを直したならキャッシュバスターも上げよ」のような<strong>同伴ルール</strong>は、PR の変更一覧（diff）を見て<strong>片割れも一緒に来たか</strong>を検査する必要があります。こうしたゲートが六つあり、すべて実際の事故や運用の必要から生まれました:</p>
 
 <div class="tbl-wrap">
 <table>
@@ -75,6 +75,7 @@
 <tr><td><code>check_cachebuster</code></td><td>?v 付きアセット（app.js など）を直したら<strong>同じ PR で ?v を上げる</strong></td><td>2026-07-09 の実事故 — 直したのに再訪ブラウザで「反映されない」</td></tr>
 <tr><td><code>check_plugin_sync</code></td><td>プラグイン同梱のツールはルートの <code>tools/</code> と<strong>バイト一致</strong> + バンドル変更時は<strong>バージョン上げ</strong></td><td>2026-07-10 の実事故 — 検証機 190 行が古いまま配布された</td></tr>
 <tr><td><code>check_translation</code></td><td>新しい文書を載せるときは<strong>強制する言語の本文・ラベル・索引のオーバーレイを同伴</strong>（いまは en・ja）</td><td>「新規文書は翻訳を同伴」のルールが散文にしかなく漏れていた問題 — ワークログのゲートと同じ骨組みに移しました</td></tr>
+<tr><td><code>i18n-render</code></td><td>韓国語以外の言語の主要な画面を<strong>実際にレンダーして</strong>、韓国語が漏れていないか検査</td><td>2026-07-28 の実事故 — ファイル照合のゲートがすべて緑なのに日本語の画面に韓国語が出ていました</td></tr>
 <tr><td><code>diagram-bounds</code></td><td>図の文字が箱・viewBox を<strong>1px もはみ出さない</strong>ことをヘッドレスブラウザの実レンダーで検査</td><td>フォント幅の推定だけでは境界値のはみ出しを取りこぼしていた問題</td></tr>
 </tbody>
 </table>
@@ -128,10 +129,10 @@
 
 <div class="note">
     <span class="nh">ひと目でまとめ</span>
-    生成物は<strong>決定論的ビルド</strong>でのみ生成（直接編集は禁止）→ <code>--check</code> がドリフトを遮断 → 同伴ゲート 5 種が「片割れも一緒に来たか」を検査 → <strong>ERROR 0 がマージの条件</strong>。復元の労働は <code>--fix</code> が代行し、機械が判定できない記述やバージョンの判断は<strong>変更タイプの宣言</strong>で人が開始時点に押さえます。ゲートはすべて、実際の事故の再発防止として生まれました。
+    生成物は<strong>決定論的ビルド</strong>でのみ生成（直接編集は禁止）→ <code>--check</code> がドリフトを遮断 → 同伴ゲート 6 種が「片割れも一緒に来たか」を検査 → <strong>ERROR 0 がマージの条件</strong>。復元の労働は <code>--fix</code> が代行し、機械が判定できない記述やバージョンの判断は<strong>変更タイプの宣言</strong>で人が開始時点に押さえます。ゲートはすべて、実際の事故の再発防止として生まれました。
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-07-28</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Wiki · 知識体系 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-07-28</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
 <ul><li><a href="/p/ja/kgs-overview/">知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン</a></li><li><a href="/p/ja/kgs-edges/">文書はどうつながるのか — 概念キュレーションと idf 重みつきエッジ</a></li><li><a href="/p/ja/kgs-views/">グラフを読む 9 つの眼 — ビューごとに違う問いに答える</a></li></ul>

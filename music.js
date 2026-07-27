@@ -94,9 +94,12 @@ function parseYouTubeId(input){
         if(!btn || failed){ return; }
         btn.classList.toggle('playing', playing);
         btn.classList.toggle('idle', !playing);
-        btn.setAttribute('aria-label', playing ? '배경음악 정지' : '배경음악 재생');
+        // 라벨은 STRINGS에서 — 하드코딩 한글이 있던 자리라 영어·일본어 모드에서도
+        // 한국어가 떴다(2026-07-28). 재생/정지 두 상태 모두 키가 필요하다.
+        var S = (typeof STR === 'function') ? STR : function(k){ return k; };
+        btn.setAttribute('aria-label', playing ? S('musicAriaStop') : S('musicAria'));
         btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
-        btn.title = playing ? '배경음악 정지' : '배경음악 재생';
+        btn.title = playing ? S('musicTitleStop') : S('musicTitle');
     }
     window.toggleMusic = function(){
         // Blocked (e.g. Safari tracker prevention): open the track on

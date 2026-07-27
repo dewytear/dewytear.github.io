@@ -646,13 +646,17 @@ var G2048_LADDER = {
     ko: { 2:'태그',4:'개념',8:'노트',16:'문서',32:'볼트',64:'시스템',
           128:'도메인',256:'월드',512:'지식 지도',1024:'지식 그래프',2048:'세컨드 브레인' },
     en: { 2:'Tag',4:'Concept',8:'Note',16:'Document',32:'Vault',64:'System',
-          128:'Domain',256:'World',512:'Knowledge Map',1024:'Knowledge Graph',2048:'Second Brain' }
+          128:'Domain',256:'World',512:'Knowledge Map',1024:'Knowledge Graph',2048:'Second Brain' },
+    ja: { 2:'タグ',4:'概念',8:'ノート',16:'文書',32:'ボールト',64:'システム',
+          128:'ドメイン',256:'ワールド',512:'知識の地図',1024:'知識グラフ',2048:'セカンドブレイン' }
 };
 SEARCH_GAMES.g2048 = function(canvas){
     var screen = canvas.parentNode;   // .search-screen
     if(!screen){ return; }
     var lang = (typeof currentLang === 'function') ? currentLang() : 'ko';
-    var LAB = G2048_LADDER[lang] || G2048_LADDER.en;   // zh/ja → en labels
+    // 언어 사전이 없는 언어(zh 등)만 en으로 떨어진다 — 새 언어를 켤 때
+    // 여기 항목을 같이 채울 것(validate_i18n의 hidden-lang-dict가 잡는다).
+    var LAB = G2048_LADDER[lang] || G2048_LADDER.en;
     var N = 4, score = 0, won = false, over = false, animating = false, nextId = 1;
     var msgKind = null;                    // 'win' | 'over' while the overlay is up
     var SLIDE = 120;                       // ms; matches .g2048-tile transition
