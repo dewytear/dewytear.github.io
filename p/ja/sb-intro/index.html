@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>セカンドブレインとは何か</title>
+<meta name="description" content="セカンドブレインの定義、データという堀、そして 5 段階の全体像を紹介する。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/sb-intro/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/sb-intro/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/sb-intro/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/sb-intro/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/sb-intro/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="セカンドブレインとは何か">
+<meta property="og:description" content="セカンドブレインの定義、データという堀、そして 5 段階の全体像を紹介する。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/sb-intro/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="セカンドブレインとは何か">
+<meta name="twitter:description" content="セカンドブレインの定義、データという堀、そして 5 段階の全体像を紹介する。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "セカンドブレインとは何か",
+ "description": "セカンドブレインの定義、データという堀、そして 5 段階の全体像を紹介する。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/sb-intro/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!sb-intro",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-04T10:06:25+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!sb-intro">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/sb-intro/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/sb-intro/" hreflang="en">English</a>
+</p>
+<article>
+<h2>セカンドブレインとは何か</h2>
+<p><strong>セカンドブレイン（Second Brain）</strong>とは、自分の頭の中の知識・経験・資料を<strong>外のシステムへ移して</strong>、あとで<strong>AI が正確に取り出して使える</strong>ように整理しておく個人の知識の倉庫です。大げさなソフトウェアではなく、<strong>自分が理解しているルールで整理されたマークダウンのファイルとフォルダ</strong>がすべてです。そして、そのルールを<strong>AI のエージェントにも同じように理解させる</strong>ことが核心です。</p>
+
+<div class="note">
+    <span class="nh">一文での定義</span>
+    ノート・議事録・会話のスレッドを保存しておいて、あとで<strong>「あれ、もう一度探して」</strong>と言ったときに AI が<strong>迷わずに</strong>正確に見つけてくるシステム — それがセカンドブレインです。
+</div>
+
+<h3>なぜいまセカンドブレインなのか — データこそが堀（moat）</h3>
+<p>同じ AI モデルを使っても結果が違うのは、<strong>モデルに握らせたデータ</strong>が違うからです。自分の業務の文脈、自分の顧客、自分の意思決定の履歴 — これは他人が持てない<strong>自分だけの資産（IP）</strong>であり、競争における<strong>堀</strong>です。問題は<strong>それをどう整理しておくか</strong>です。整理がめちゃくちゃなら、AI は<strong>ハルシネーション（もっともらしい嘘）</strong>を出すか、資料を探し回って<strong>時間とトークン</strong>を無駄にします。</p>
+
+<h3>データはこう育つ</h3>
+<p>情報をシステムに積んでいくほど、データの<strong>かたち</strong>が変わります。はじめは散らばった断片ですが、関係が付きはじめると<strong>クラスタ</strong>になり、ついには互いに<strong>どうつながるのか</strong>が見える<strong>関係の網</strong>になります。この進化が、あとで説明する<strong>5 段階</strong>の下絵です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 210" role="img" aria-label="データの進化の 3 段階: 散らばった情報 → クラスタの形成 → 関係のマッピング">
+    <!-- panel dividers -->
+    <line class="d-edge dash" x1="230" y1="20" x2="230" y2="165"/>
+    <line class="d-edge dash" x1="455" y1="20" x2="455" y2="165"/>
+
+    <!-- Panel A: scattered -->
+    <line class="d-edge" x1="70" y1="120" x2="120" y2="92"/>
+    <circle class="d-node dim" cx="60" cy="60" r="6"/>
+    <circle class="d-node dim" cx="150" cy="52" r="6"/>
+    <circle class="d-node dim" cx="70" cy="120" r="6"/>
+    <circle class="d-node dim" cx="175" cy="128" r="6"/>
+    <circle class="d-node" cx="120" cy="92" r="7"/>
+    <text class="d-label sm" x="120" y="188" text-anchor="middle">① 散らばった情報</text>
+    <text class="d-sub" x="120" y="204" text-anchor="middle">断片化したファイル</text>
+
+    <!-- Panel B: clusters -->
+    <!-- cluster 1 (accent/teal-orange) -->
+    <line class="d-edge" x1="290" y1="58" x2="320" y2="52"/>
+    <line class="d-edge" x1="290" y1="58" x2="305" y2="82"/>
+    <circle class="d-node" cx="290" cy="58" r="6"/>
+    <circle class="d-node" cx="320" cy="52" r="6"/>
+    <circle class="d-node" cx="305" cy="82" r="6"/>
+    <!-- cluster 2 (amber) -->
+    <line class="d-edge" x1="400" y1="60" x2="425" y2="72"/>
+    <line class="d-edge" x1="400" y1="60" x2="415" y2="46"/>
+    <circle class="d-node b" cx="400" cy="60" r="6"/>
+    <circle class="d-node b" cx="425" cy="72" r="6"/>
+    <circle class="d-node b" cx="415" cy="46" r="6"/>
+    <!-- cluster 3 (violet) -->
+    <line class="d-edge" x1="330" y1="122" x2="352" y2="132"/>
+    <line class="d-edge" x1="330" y1="122" x2="345" y2="105"/>
+    <circle class="d-node c" cx="330" cy="122" r="6"/>
+    <circle class="d-node c" cx="352" cy="132" r="6"/>
+    <circle class="d-node c" cx="345" cy="105" r="6"/>
+    <text class="d-label sm" x="345" y="188" text-anchor="middle">② クラスタの形成</text>
+    <text class="d-sub" x="345" y="204" text-anchor="middle">主題ごとにまとまる</text>
+
+    <!-- Panel C: relationship map -->
+    <line class="d-edge" x1="505" y1="60" x2="550" y2="48"/>
+    <line class="d-edge" x1="550" y1="48" x2="600" y2="62"/>
+    <line class="d-edge" x1="600" y1="62" x2="638" y2="52"/>
+    <line class="d-edge accent" x1="525" y1="98" x2="575" y2="105"/>
+    <line class="d-edge" x1="575" y1="105" x2="620" y2="96"/>
+    <line class="d-edge" x1="550" y1="48" x2="575" y2="105"/>
+    <line class="d-edge accent" x1="600" y1="62" x2="620" y2="96"/>
+    <line class="d-edge" x1="525" y1="98" x2="555" y2="142"/>
+    <line class="d-edge" x1="575" y1="105" x2="605" y2="140"/>
+    <circle class="d-node d" cx="505" cy="60" r="6"/>
+    <circle class="d-node" cx="550" cy="48" r="7"/>
+    <circle class="d-node b" cx="600" cy="62" r="6"/>
+    <circle class="d-node d" cx="638" cy="52" r="6"/>
+    <circle class="d-node c" cx="525" cy="98" r="6"/>
+    <circle class="d-node" cx="575" cy="105" r="7"/>
+    <circle class="d-node b" cx="620" cy="96" r="6"/>
+    <circle class="d-node c" cx="555" cy="142" r="6"/>
+    <circle class="d-node d" cx="605" cy="140" r="6"/>
+    <text class="d-label sm" x="575" y="188" text-anchor="middle">③ 関係のマッピング</text>
+    <text class="d-sub" x="575" y="204" text-anchor="middle">互いにどうつながるか</text>
+</svg>
+<div class="d-cap">単にファイルが互いにリンクされたのではなく、<strong>何が何とどうつながるか</strong>が見えてくる段階へ進みます。</div>
+</div>
+
+<h3>いちばん大事な問い — 「また見つけられるか？」</h3>
+<p>セカンドブレインがうまくいったかを判断する基準は、たったひとつです。</p>
+<div class="note">
+    <span class="nh">判定の基準</span>
+    <strong>「自分のエージェントはそれをまた見つけられるか？ そして自分も見つけられるか？」</strong> — 答えが「いいえ」なら、内容が足りないのではなく<strong>整理（ルーティング）とフォルダ構造</strong>が間違っているのです。
+</div>
+
+<h3>逆から設計せよ — バスケットのゴールとボール</h3>
+<p>整理を始める前に、<strong>「このデータをあとでどう取り出すのか」</strong>から決めてください。取り出し方が<strong>入れ方</strong>を決めるからです。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 520 240" role="img" aria-label="逆設計のたとえ: ゴール（あとで投げる問い）に合う丸いボールはすっと通るが、同じ大きさの四角いボールは傾くと対角がゴールより長くなり縁に引っかかる">
+    <!-- left: the hoop-sized round ball drops clean through -->
+    <text class="d-sub" x="150" y="18" text-anchor="middle">丸いボール · ゴールに合う形式</text>
+    <circle class="d-node" cx="150" cy="64" r="36"/>
+    <ellipse class="d-box accent" cx="150" cy="140" rx="46" ry="14"/>
+    <path class="d-edge accent dash" d="M150 104 V172" fill="none"/>
+    <polygon class="d-arrow accent" points="145,172 155,172 150,180"/>
+    <text class="d-accent" x="150" y="212" text-anchor="middle" font-size="12">すっと入る ✓</text>
+
+    <!-- the hoop = the question you'll ask later -->
+    <text class="d-sub" x="265" y="144" text-anchor="middle">ゴール = 問い</text>
+
+    <!-- right: same size as the ball, but tilted its diagonal outgrows
+         the rim (72 x sqrt2 = 102 > opening 92) and it jams tip-first -->
+    <text class="d-sub" x="380" y="18" text-anchor="middle">四角いボール · 丸と同じ大きさ</text>
+    <ellipse class="d-box" cx="380" cy="140" rx="46" ry="14"/>
+    <rect class="d-node dim" x="344" y="54" width="72" height="72" rx="6" transform="rotate(45 380 90)"/>
+    <line class="d-edge dash" x1="329" y1="90" x2="431" y2="90"/>
+    <text class="d-sub" x="380" y="212" text-anchor="middle">傾くと対角が長く引っかかる ✕</text>
+</svg>
+<div class="d-cap">ゴール（あとで投げる問い）を先に見てから、ボール（データの入れ方）を決めます。順序が逆だと、あとで苦労します。</div>
+</div>
+
+<h3>5 段階 — いちばん低い段階が正解のこともある</h3>
+<p>セカンドブレインは<strong>検索・想起の力</strong>によって 5 段階に分かれます。まずは<strong>全体像</strong>だけ見ておきます（詳しくは<a href="/p/ja/sb-levels/">5 段階をひと目で</a>）。</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>段階</th><th>ひと言でいうと</th><th>答える問い</th></tr></thead>
+        <tbody>
+            <tr><td><strong>レベル 1</strong></td><td>正確な単語・ファイル名で探す（ルーター <code>CLAUDE.md</code>）</td><td>「あのファイルどこ？」</td></tr>
+            <tr><td><strong>レベル 2</strong></td><td>主題でまとめる（LLM ウィキ + メモリ）</td><td>「この主題を全部集めて」</td></tr>
+            <tr><td><strong>レベル 3</strong></td><td>意味で探す（セマンティック検索・ベクトル DB）</td><td>「書いた語と違っても意味の近いものを」</td></tr>
+            <tr><td><strong>レベル 4</strong></td><td>関係でつなぐ（知識グラフ）</td><td>「X から A までつながりをたどって」</td></tr>
+            <tr><td><strong>レベル 5</strong></td><td>つねに動いている自律ブレイン OS</td><td>「勝手に更新されつづけていて」</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note warn">
+    <span class="nh">誤解しないで — 高いほど良いのではない</span>
+    レベル 5 が「最高」ではありません。<strong>いま感じている痛み（pain）に合ういちばん低い段階</strong>が正解です。不便がないなら、わざわざ複雑な構造へ上がる理由はありません — <strong>痛みがなければ、これ以上つくらないでください。</strong>ひとつのプロジェクトの中でも<strong>フォルダごとにレベルが違って</strong>かまいません。
+</div>
+
+<div class="note">
+    <span class="nh">この資料の流れ</span>
+    <a href="/p/ja/sb-levels/">5 段階の概要</a> → 各レベル（<a href="/p/ja/sb-level1/">1</a>·<a href="/p/ja/sb-level2/">2</a>·<a href="/p/ja/sb-level3/">3</a>·<a href="/p/ja/sb-level4/">4</a>·<a href="/p/ja/sb-level5/">5</a>）→ <a href="/p/ja/sb-context-connections/">何を入れて何を置くか</a> → <a href="/p/ja/sb-choose/">自分のレベル探し・チームへの拡張</a>の順に続きます。ちなみに<strong>レベル 2</strong> は、このウィキですでに扱った <a href="/p/ja/llmw-overview/">LLM Wiki</a> にそのままつながります。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Second Brain &middot; <span class="pr-k">作成日</span> 2026-07-04 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/sb-levels/">5 段階をひと目で</a></li><li><a href="/p/ja/llmw-vaults/">ボルトの体系 — メインボルトとウィキボルト</a></li></ul>
+</nav>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）</title>
+<meta name="description" content="埋め込みとチャンク化にもとづくセマンティック検索と、その限界を説明する。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/sb-level3/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/sb-level3/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/sb-level3/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/sb-level3/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/sb-level3/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）">
+<meta property="og:description" content="埋め込みとチャンク化にもとづくセマンティック検索と、その限界を説明する。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/sb-level3/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）">
+<meta name="twitter:description" content="埋め込みとチャンク化にもとづくセマンティック検索と、その限界を説明する。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）",
+ "description": "埋め込みとチャンク化にもとづくセマンティック検索と、その限界を説明する。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/sb-level3/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!sb-level3",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-04T10:06:25+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!sb-level3">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/sb-level3/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/sb-level3/" hreflang="en">English</a>
+</p>
+<article>
+<h2>レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）</h2>
+<p>レベル 1・2 はおおむね<strong>単語が一致</strong>しないと見つかりません。けれど私たちは<strong>覚えている単語とは違う単語</strong>で検索しがちです。だからレベル 3 は<strong>意味で探します。</strong>これが<strong>セマンティック検索（semantic search）</strong>で、そのエンジンが<strong>ベクトルデータベース</strong>です。</p>
+
+<h3>キーワード検索 vs セマンティック検索</h3>
+<p>いちばん大きな違いは<strong>「同じ単語か（=）」</strong>と<strong>「意味が近いか（≈）」</strong>です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 210" role="img" aria-label="キーワード検索は正確に一致する単語だけ、セマンティック検索は意味の近いものまで見つける">
+    <!-- left: keyword -->
+    <rect class="d-box soft" x="20" y="16" width="300" height="176" rx="12"/>
+    <text class="d-label" x="170" y="44" text-anchor="middle">キーワード検索  ·  X = X</text>
+    <rect class="d-box" x="130" y="66" width="80" height="34" rx="7"/>
+    <text class="d-label sm" x="170" y="88" text-anchor="middle">「反応」</text>
+    <rect class="d-box accent" x="130" y="130" width="80" height="34" rx="7"/>
+    <text class="d-label sm" x="170" y="152" text-anchor="middle">「反応」</text>
+    <line class="d-edge" x1="170" y1="100" x2="170" y2="128"/><polygon class="d-arrow" points="165,122 170,130 175,122"/>
+    <text class="d-sub" x="170" y="182" text-anchor="middle">字面どおりある所だけ</text>
+
+    <!-- right: semantic -->
+    <rect class="d-box soft" x="360" y="16" width="300" height="176" rx="12"/>
+    <text class="d-label" x="510" y="44" text-anchor="middle">セマンティック検索  ·  X ≈ X,Y,Z</text>
+    <rect class="d-box" x="470" y="60" width="80" height="30" rx="7"/>
+    <text class="d-label sm" x="510" y="80" text-anchor="middle">「反応」</text>
+    <rect class="d-box accent" x="386" y="120" width="98" height="30" rx="7"/>
+    <text class="d-label sm" x="435" y="140" text-anchor="middle">実地テスト結果</text>
+    <rect class="d-box accent" x="500" y="120" width="70" height="30" rx="7"/>
+    <text class="d-label sm" x="535" y="140" text-anchor="middle">評価・批評</text>
+    <rect class="d-box accent" x="584" y="120" width="60" height="30" rx="7"/>
+    <text class="d-label sm" x="614" y="140" text-anchor="middle">改善点</text>
+    <line class="d-edge accent" x1="510" y1="90" x2="435" y2="118"/><polygon class="d-arrow accent" points="431.3,110 434.3,120 440.3,112"/>
+    <line class="d-edge accent" x1="510" y1="90" x2="535" y2="118"/><polygon class="d-arrow accent" points="529.5,112 536.5,120 539.5,111"/>
+    <line class="d-edge accent" x1="510" y1="90" x2="614" y2="118"/><polygon class="d-arrow accent" points="607.5,112 614.5,120 617.5,111"/>
+    <text class="d-sub" x="510" y="182" text-anchor="middle">単語が違っても意味が近ければ拾う</text>
+</svg>
+<div class="d-cap">キーワードは <strong>X とまったく同じ X</strong> だけ、セマンティックは <strong>X と意味の近い Y・Z</strong> まで見つけます。</div>
+</div>
+
+<h3>どうやって「意味」で探すのか — 埋め込みとチャンク化</h3>
+<p>原理はこうです。文書を<strong>小さなかけら（チャンク、chunk）</strong>に分け、それぞれを<strong>埋め込みモデル</strong>に入れます。埋め込みモデルはそのかけらを<strong>「意味の空間」の座標（ベクトル）</strong>に置き換えます。<strong>意味の近いかけらどうしが近くに</strong>集まります。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 180" role="img" aria-label="ベクトル化のパイプライン: 文書をチャンクに分けて埋め込みモデルに入れると意味の空間のベクトルになり、似たものどうしが集まる">
+    <rect class="d-box" x="16" y="62" width="96" height="52" rx="9"/>
+    <text class="d-label sm" x="64" y="86" text-anchor="middle">文書</text>
+    <text class="d-sub" x="64" y="101" text-anchor="middle">字幕・議事録</text>
+
+    <g>
+    <rect class="d-box soft" x="156" y="50" width="86" height="24" rx="5"/>
+    <rect class="d-box soft" x="156" y="78" width="86" height="24" rx="5"/>
+    <rect class="d-box soft" x="156" y="106" width="86" height="24" rx="5"/>
+    <text class="d-sub" x="199" y="66" text-anchor="middle">チャンク 1</text>
+    <text class="d-sub" x="199" y="94" text-anchor="middle">チャンク 2</text>
+    <text class="d-sub" x="199" y="122" text-anchor="middle">チャンク 3</text>
+    </g>
+
+    <rect class="d-box" x="286" y="62" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="346" y="86" text-anchor="middle">埋め込みモデル</text>
+    <text class="d-sub" x="346" y="101" text-anchor="middle">意味 → 座標</text>
+
+    <rect class="d-box accent" x="452" y="24" width="212" height="130" rx="12"/>
+    <text class="d-sub" x="558" y="44" text-anchor="middle">意味の空間 (ベクトル)</text>
+    <circle class="d-node" cx="500" cy="72" r="6"/>
+    <circle class="d-node" cx="518" cy="86" r="6"/>
+    <circle class="d-node" cx="486" cy="92" r="6"/>
+    <circle class="d-node b" cx="600" cy="70" r="6"/>
+    <circle class="d-node b" cx="616" cy="86" r="6"/>
+    <circle class="d-node c" cx="560" cy="128" r="6"/>
+    <circle class="d-node c" cx="578" cy="134" r="6"/>
+    <text class="d-sub" x="500" y="118" text-anchor="middle">似た意味どうし</text>
+
+    <line class="d-edge" x1="112" y1="88" x2="154" y2="88"/><polygon class="d-arrow" points="148,83 156,88 148,93"/>
+    <line class="d-edge" x1="242" y1="88" x2="284" y2="88"/><polygon class="d-arrow" points="278,83 286,88 278,93"/>
+    <line class="d-edge accent" x1="406" y1="88" x2="450" y2="88"/><polygon class="d-arrow accent" points="444,83 452,88 444,93"/>
+</svg>
+<div class="d-cap">会社の話のかけらはこちら、財務の話のかけらはあちら — 意味に応じて<strong>居場所</strong>が決まります。この座標のかたまりを可視化したのが <strong>Qdrant</strong> のようなツールのクラスタビューです。</div>
+</div>
+
+<div class="note">
+    <span class="nh">用語メモ — Qdrant</span>
+    ベクトルを保存・検索する代表的な<strong>ベクトル DB</strong> が <strong>Qdrant（クワドラント）</strong>です。画像やテキストを<strong>意味の近さ</strong>でまとめてクラスタとして見せます（「似た絵どうしが集まる」あのデモ）。このほか <strong>Pinecone・Supabase</strong> などでもセマンティック検索を実装します。
+</div>
+
+<h3>決定的な限界 — チャンクは「全体の文脈」を見られない</h3>
+<p>人はベクトル DB を<strong>「何でも正確に取り出してくれる魔法」</strong>と誤解します。<strong>そうではありません。</strong>検索は<strong>似たチャンクをいくつか</strong>引っぱってくるだけなので、<strong>全体を見なければならない問い</strong>には弱いのです。</p>
+
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>状況</th><th>ベクトル検索がすること</th><th>なぜ間違うのか</th></tr></thead>
+        <tbody>
+            <tr><td>「3 月 5 日の会議を<strong>要約</strong>して」</td><td>「3 月 5 日の会議の要約」に似た<strong>チャンク 5 個</strong>だけ回収</td><td>会議が 20 チャンクに割れていたら、残り 15 個を見られず<strong>要点が抜ける</strong></td></tr>
+            <tr><td>「売上が<strong>いちばん高い週</strong>は？」</td><td>一部のチャンク（例: 第 6 週）だけ見て「6 週が最高」と答える</td><td>実際は 14 週・19 週のほうが高かったのに、そのチャンクを<strong>見ていない</strong></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 680 150" role="img" aria-label="ベクトル検索が一部の区間だけ見て第 6 週を最高と勘違いするが、実際は 14 週・19 週のほうが高い">
+    <line class="d-edge" x1="30" y1="120" x2="660" y2="120"/>
+    <!-- bars -->
+    <rect class="d-box soft" x="40" y="92" width="24" height="28" rx="2"/>
+    <rect class="d-box soft" x="80" y="80" width="24" height="40" rx="2"/>
+    <!-- highlighted (looked-at) chunk -->
+    <rect class="d-box accent" x="120" y="60" width="24" height="60" rx="2"/>
+    <rect class="d-box accent" x="160" y="66" width="24" height="54" rx="2"/>
+    <rect class="d-box accent" x="200" y="72" width="24" height="48" rx="2"/>
+    <text class="d-sub" x="172" y="52" text-anchor="middle">↑ 検索が見た区間 →「6 週が最高」と勘違い</text>
+    <rect class="d-box soft" x="300" y="86" width="24" height="34" rx="2"/>
+    <!-- true max -->
+    <rect class="d-node" x="470" y="30" width="24" height="90" rx="2"/>
+    <rect class="d-node" x="600" y="42" width="24" height="78" rx="2"/>
+    <text class="d-sub" x="482" y="22" text-anchor="middle">14 週</text>
+    <text class="d-sub" x="612" y="34" text-anchor="middle">19 週 (実際の最高)</text>
+</svg>
+<div class="d-cap">全体が要る問いには、いっそ<strong>そのマークダウンをまるごと読んで</strong>答えるほうが正確です。</div>
+</div>
+
+<div class="note warn">
+    <span class="nh">ではベクトルが光るのはいつか</span>
+    <strong>膨大なテキストからごく具体的なスニペット</strong>を抜くときです。例: ルールが 1,000 個あって<strong>「17 番のルールは何だっけ？」</strong> — 全部を読む必要はなく、17 番の近くのチャンクだけつまんでくれればよいのです。精度をさらに上げたいなら<strong>メタデータ</strong>を付けるか、下の<strong>ハイブリッド検索</strong>を使います。
+</div>
+
+<h3>精度を上げる — ハイブリッド・再ランキング（もう一歩）</h3>
+<ul>
+    <li><strong>ハイブリッド検索</strong> — セマンティック（意味）と <strong>BM25</strong>（キーワード）のスコアを合わせて長所短所を補う。（BM25 は <a href="/p/ja/llmw-ingest-query-lint/">LLM Wiki の Query</a> でも扱っています。）</li>
+    <li><strong>再ランキング（reranking）</strong> — 候補を出したあと、より精密なモデルで<strong>順序を付け直す</strong>。</li>
+    <li><strong>チャンク化の戦略</strong> — どれだけ細かく分け、どれだけ重ねるかが結果の品質を左右する。</li>
+</ul>
+
+<div class="note">
+    <span class="nh">全部をベクトルにする必要はない</span>
+    セカンドブレイン<strong>全体</strong>をベクトルにする必要はありません。たとえば <strong>YouTube の字幕フォルダだけ</strong>をベクトル DB にして、<code>context/</code>・<code>projects/</code>・<code>decisions.md</code> はそのままマークダウンで置けます。<strong>データの種類と使い道に応じてフォルダごとに違うやり方</strong>を選んでください。次は<a href="/p/ja/sb-level4/">レベル 4 — 関係でつなぐ</a>。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Second Brain &middot; <span class="pr-k">作成日</span> 2026-07-04 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/sb-levels/">5 段階をひと目で</a></li><li><a href="/p/ja/llmw-ingest-query-lint/">三つの中心的な動作 — Ingest · Query · Lint</a></li></ul>
+</nav>
+</body>
+</html>

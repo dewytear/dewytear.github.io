@@ -87,4 +87,17 @@
     <li><strong>독자 전제도 옮겼다</strong>: 원문의 &ldquo;우리는 한국인이지만 AI는 영어를 더 잘 읽으므로&rdquo;는 일본어판에서 <code>私たちは日本語話者ですが</code>로 바꿨다 — 독자가 바뀌면 전제도 바뀐다.</li>
 </ul>
 <p><code>check_diagram_bounds</code> <strong>206개 전수 통과</strong>(ja 8편 신규). <code>validate_all</code> ERROR 0 · WARN 23 유지, 브라우저에서 11편 모두 일본어 h2 · ko/en 회귀 무변화 · pageerror 0.</p>
-<p><strong>다음</strong>: 배치 7 — 세컨드 브레인(sb-* 9편, 도식 15개로 최다).</p>
+<h3>일본어(ja) 배치 7 — 세컨드 브레인(sb-* 9편)</h3>
+<p>일곱 번째 배치. 문서 수는 9편으로 가장 적지만 <strong>도식이 15개로 최다</strong>였고, 그중 상당수가 <strong>박스 없는 자유 텍스트·다이어그램 라벨</strong>이라 viewBox 경계만 남는 판정이었다.</p>
+<ul>
+    <li><strong>본문 9편</strong> — <code>sb-intro·levels·level1〜5·context-connections·choose</code>.</li>
+    <li><strong>용어 정본</strong>: 세컨드 브레인→<code>セカンドブレイン</code> · 엔티티→<code>実体</code> · 청킹→<code>チャンク化</code> · 임베딩→<code>埋め込み</code> · 에버그린→<code>エバーグリーン</code> · 통증(pain)→<code>痛み</code> · 라우팅→<code>ルーティング</code>.</li>
+    <li><strong>&ldquo;레벨&rdquo;이 도식에서 폭 문제를 냈다</strong>: 한국어 &ldquo;레벨&rdquo;은 2자인데 일본어 <code>レベル</code>는 3자라, 124px 사다리 상자에서 여백이 확 줄었다. 뒤 문구를 줄여(&ldquo;정확 검색&rdquo;→<code>正確検索</code>, &ldquo;주제 묶기&rdquo;→<code>主題束ね</code>) 맞췄고, 결정 트리(<code>sb-choose</code>)의 오른쪽 칸은 <code>ルーター CLAUDE.md</code>→<code>ルーター</code>로 줄였다.</li>
+    <li><strong>고유명사는 원문 유지</strong>: Qdrant · LightRAG · Graphiti · GraphRAG · GBrain · Garry Tan · Hermes · OTAA. 강연에서 잘못 들린 표기(&ldquo;그래파이파이어&rdquo;)의 주석도 그대로 옮겨, 원 강연을 확인한 사람의 판단 근거를 남겼다.</li>
+</ul>
+<p><code>check_diagram_bounds</code> <strong>215개 전수 통과</strong>(ja 9편 신규). <code>validate_all</code> ERROR 0 · WARN 23 유지, 브라우저에서 9편 모두 일본어 h2 · ko/en 회귀 무변화 · pageerror 0.</p>
+<div class="note">
+    <span class="nh">번역 잔존 한글 전수 검사</span>
+    <code>docs/ja/</code> 전체를 <code>[가-힣]</code>로 훑어 <strong>12건</strong>이 나왔고, <strong>전부 의도된 것</strong>임을 확인했다 — About의 저자 한글 이름 2건, OMC가 실제로 인식하는 <strong>한국어 매직 키워드</strong> 10건. 번역 누락은 0건.
+</div>
+<p><strong>다음</strong>: 배치 8 — 스킬 강의(skl-* 11편) · CLAUDE.md 십계명.</p>

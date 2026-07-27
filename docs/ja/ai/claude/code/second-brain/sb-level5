@@ -1,0 +1,69 @@
+<h2>レベル 5 · つねに動いているブレイン OS</h2>
+<p>最後の段階は、ここまでのすべて（ルーティング・ウィキ・ベクトル・グラフ）に<strong>「always-on（つねに動いている）」</strong>を足したものです。自分が気にかけなくても<strong>自動で吸収と更新をつづける</strong><strong>自律ブレイン OS</strong>です。代表的な事例が <strong>GBrain</strong> です。</p>
+
+<div class="note">
+    <span class="nh">GBrain とは</span>
+    <strong>Y Combinator</strong> の代表・CEO である <strong>Garry Tan（ギャリー・タン）</strong>が作って<strong>オープンソースとして公開</strong>した、個人の知識／メモリの層です。彼が実際に自分のエージェント（OpenClaw・<strong>Hermes</strong>）を回している<strong>運用のシステム</strong>で、膨大なページ・人物・会社の情報を収めていると言われています。
+</div>
+
+<h3>GBrain は何を束ねるのか</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>構成</th><th>内容</th></tr></thead>
+        <tbody>
+            <tr><td>保存</td><td><strong>マークダウン優先</strong> + Postgres のバックエンド</td></tr>
+            <tr><td>関係</td><td><strong>自分で配線される（self-wiring）知識グラフ</strong> — ページを書くたびに実体を抽出し、<em>attended·works_at·invested_in·founded</em> のような<strong>型付きエッジ</strong>を生成（LLM の呼び出しなしで）</td></tr>
+            <tr><td>検索</td><td><strong>ベクトル + BM25（キーワード）+ RRF</strong>（順位の融合）+ <strong>再ランキング</strong>のハイブリッド</td></tr>
+            <tr><td>常時性</td><td><strong>cron（予約実行）</strong>が会議・メール・ツイート・音声メモを<strong>寝ているあいだも</strong>自動でインジェスト</td></tr>
+        </tbody>
+    </table>
+</div>
+<p class="scn-sub">※ 一緒に言及される <strong>GStack</strong> は、Claude Code を「AI のエンジニアリングチーム（CEO・デザイナー・リリースマネージャー・QA など）」のように使わせてくれるツール群です。</p>
+
+<h3>つねに動いているループ</h3>
+<p>核心は<strong>人が毎回入れなくても</strong>システムが自分で材料を集め、関係をつなぎ、次の応答の前に<strong>先に読み</strong>、応答のあとに<strong>また書く</strong>という点です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 660 200" role="img" aria-label="つねに動いているループ: ソースを自動収集してブレインへインジェストし、関係を配線し、エージェントが読んで書く">
+    <!-- sources -->
+    <rect class="d-box soft" x="16" y="20" width="120" height="30" rx="7"/>
+    <text class="d-sub" x="76" y="39" text-anchor="middle">会議・メール</text>
+    <rect class="d-box soft" x="16" y="58" width="120" height="30" rx="7"/>
+    <text class="d-sub" x="76" y="77" text-anchor="middle">ツイート・音声メモ</text>
+    <rect class="d-box soft" x="16" y="96" width="120" height="30" rx="7"/>
+    <text class="d-sub" x="76" y="115" text-anchor="middle">カレンダー・文書</text>
+
+    <!-- cron -->
+    <rect class="d-box accent" x="196" y="52" width="110" height="44" rx="10"/>
+    <text class="d-label sm" x="251" y="74" text-anchor="middle">cron で自動収集</text>
+    <text class="d-sub" x="251" y="89" text-anchor="middle">常時の実行</text>
+
+    <!-- brain -->
+    <rect class="d-box accent" x="360" y="42" width="140" height="64" rx="12"/>
+    <text class="d-label sm" x="430" y="68" text-anchor="middle">ブレイン</text>
+    <text class="d-sub" x="430" y="84" text-anchor="middle">インジェスト + 関係の配線</text>
+
+    <!-- agent -->
+    <rect class="d-box" x="540" y="52" width="104" height="44" rx="10"/>
+    <text class="d-label sm" x="592" y="74" text-anchor="middle">エージェント</text>
+    <text class="d-sub" x="592" y="89" text-anchor="middle">読んで → 答える</text>
+
+    <line class="d-edge" x1="136" y1="72" x2="194" y2="72"/><polygon class="d-arrow" points="188,67 196,72 188,77"/>
+    <line class="d-edge accent" x1="306" y1="74" x2="358" y2="74"/><polygon class="d-arrow accent" points="352,69 360,74 352,79"/>
+    <line class="d-edge accent" x1="500" y1="74" x2="538" y2="74"/><polygon class="d-arrow accent" points="532,69 540,74 532,79"/>
+    <!-- write back loop -->
+    <path class="d-edge dash" d="M592 96 V150 H430 V108"/><polygon class="d-arrow" points="425,114 435,114 430,106"/>
+    <text class="d-sub" x="505" y="144" text-anchor="middle">会話のあとブレインへ書き戻す</text>
+</svg>
+<div class="d-cap">人の介入なしに回る<strong>自己更新のループ</strong>が、レベル 5 の正体です。</div>
+</div>
+
+<div class="note warn">
+    <span class="nh">注意 — コンテキスト過剰のジレンマ</span>
+    「つねに動いている」には落とし穴があります。<strong>コンテキストが多くなりすぎると</strong>かえって邪魔になります — どこからが助けより害のほうが大きくなるのか？ だから多くの人は<strong>何を吸収するかを自分で制御する</strong>ほうを好みます（「今週の議事録だけ持ってきて。一緒にブレストしてから入れよう」）。自動化が<strong>ノイズの自動化</strong>にならないよう注意してください。
+</div>
+
+<div class="note">
+    <span class="nh">もう一度強調 — レベル 5 が最高ではない</span>
+    常時の同期は<strong>本当に必要なときだけ</strong>価値があります（オフラインのエージェントが多数、大量のデータ、チーム規模の自動パイプラインなど）。cron を自分で管理する負担も大きいです。<strong>何を入れて何を置くか</strong>のほうがむしろ大事になりますが、その判断の基準は<a href="#!sb-context-connections">コンテキスト vs コネクション</a>で整理します。
+</div>

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>レベル 1 · 正確に探す（ルーターとしての CLAUDE.md）</title>
+<meta name="description" content="CLAUDE.md をルーターとして使うレベル 1 の正確な検索を説明する。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/sb-level1/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/sb-level1/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/sb-level1/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/sb-level1/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/sb-level1/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="レベル 1 · 正確に探す（ルーターとしての CLAUDE.md）">
+<meta property="og:description" content="CLAUDE.md をルーターとして使うレベル 1 の正確な検索を説明する。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/sb-level1/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="レベル 1 · 正確に探す（ルーターとしての CLAUDE.md）">
+<meta name="twitter:description" content="CLAUDE.md をルーターとして使うレベル 1 の正確な検索を説明する。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "レベル 1 · 正確に探す（ルーターとしての CLAUDE.md）",
+ "description": "CLAUDE.md をルーターとして使うレベル 1 の正確な検索を説明する。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/sb-level1/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!sb-level1",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-04T10:06:25+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!sb-level1">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/sb-level1/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/sb-level1/" hreflang="en">English</a>
+</p>
+<article>
+<h2>レベル 1 · 正確に探す（ルーターとしての CLAUDE.md）</h2>
+<p>すべてのセカンドブレインは<strong>ここから始まります</strong>。用意するものはふたつだけ — <strong><code>CLAUDE.md</code> 一枚</strong>と<strong>いくつかのフォルダ・ファイル</strong>です。この段階の問いは単純です。<strong>「自分が書いたあの単語・ファイル、どこだっけ？」</strong></p>
+
+<div class="note">
+    <span class="nh">CLAUDE.md とは</span>
+    プロジェクトのフォルダを開いたときに<strong>自動で読まれるファイル</strong>です。そのセッションの<strong>システムプロンプト</strong>のように働きます（詳しくは <a href="/p/ja/ccb-claudemd/">CLAUDE.md の方針</a>を参照）。ここでの核心は、このファイルを<strong>「ルーター（道案内の看板）」</strong>として使うことです。
+</div>
+
+<h3>CLAUDE.md = 役割の紹介 + ルーティングのルール</h3>
+<p><code>CLAUDE.md</code> には「あなたは誰で、何が大事か」だけでなく、<strong>「どの情報がどのフォルダにあるのか」</strong>を書きます。これが<strong>ルーティングのルール</strong>です。</p>
+<pre><code><span class="c"># CLAUDE.md — ルーティングのルール(道案内)の例</span>
+- 自分に関する個人的な情報が要るなら → context/about-me.md を見よ
+- 技術スタック・環境が知りたいなら   → context/stack.md を見よ
+- 今年の第 1 四半期の優先順位は      → projects/2026-q1.md にある
+- 大きな決定とその理由は            → context/decisions.md (決定のログ)</code></pre>
+
+<div class="diagram">
+<svg viewBox="0 0 680 250" role="img" aria-label="ルーターである CLAUDE.md が、依頼の種類に応じてふさわしいフォルダへ案内する構造">
+    <rect class="d-box accent" x="250" y="14" width="180" height="52" rx="10"/>
+    <text class="d-label" x="340" y="36" text-anchor="middle">CLAUDE.md</text>
+    <text class="d-sub" x="340" y="54" text-anchor="middle">ルーター · 自動ロード</text>
+
+    <!-- targets -->
+    <rect class="d-box soft" x="20" y="150" width="150" height="60" rx="9"/>
+    <text class="d-label sm" x="95" y="176" text-anchor="middle">context/</text>
+    <text class="d-sub" x="95" y="194" text-anchor="middle">about-me · stack</text>
+
+    <rect class="d-box soft" x="190" y="150" width="150" height="60" rx="9"/>
+    <text class="d-label sm" x="265" y="176" text-anchor="middle">projects/</text>
+    <text class="d-sub" x="265" y="194" text-anchor="middle">進行中のプロジェクト</text>
+
+    <rect class="d-box soft" x="360" y="150" width="150" height="60" rx="9"/>
+    <text class="d-label sm" x="435" y="176" text-anchor="middle">decisions.md</text>
+    <text class="d-sub" x="435" y="194" text-anchor="middle">決定のログ(日付別)</text>
+
+    <rect class="d-box soft" x="530" y="150" width="130" height="60" rx="9"/>
+    <text class="d-label sm" x="595" y="176" text-anchor="middle">clients/</text>
+    <text class="d-sub" x="595" y="194" text-anchor="middle">顧客ごと</text>
+
+    <!-- routing edges -->
+    <path class="d-edge accent" d="M300 66 C260 110, 130 110, 95 148"/><polygon class="d-arrow accent" points="89.7,141 95.7,150 98.7,139"/>
+    <path class="d-edge accent" d="M330 66 C300 110, 270 118, 265 148"/><polygon class="d-arrow accent" points="260,142 266,151 270,141"/>
+    <path class="d-edge accent" d="M350 66 C390 110, 420 118, 433 148"/><polygon class="d-arrow accent" points="428,141 436,150 439,140"/>
+    <path class="d-edge accent" d="M380 66 C440 108, 560 112, 595 148"/><polygon class="d-arrow accent" points="590,141 598,150 601,140"/>
+
+    <text class="d-sub" x="340" y="118" text-anchor="middle">依頼の種類に応じてふさわしい場所へ案内</text>
+</svg>
+<div class="d-cap">ルーティングができていれば、AI は「どういう意味か分かりません」と聞き返さずに<strong>すぐそのフォルダ</strong>へ行きます。</div>
+</div>
+
+<h3>なぜルーティングが要るのか — AI は場所を知らなければ見つけられない</h3>
+<p>プロジェクトにファイルが確かにあるのに、AI に<strong>「もっと情報をください」</strong>と聞き返された経験があるはずです。それはたいてい<strong>そこにあると教えていないから</strong>です。</p>
+<div class="note warn">
+    <span class="nh">誤解 —「勝手に全部あさるだろう」</span>
+    AI は<strong>コードベース全体を自動であさりはしません</strong>（そんなことをすれば時間とトークンの無駄です）。どこかにあることを<strong>知らなければ見つけられません。</strong>ルーティングがきちんとしていれば<strong>同じ説明をくり返す必要がなくなります</strong> — 言うだけで、どこを見ればよいか分かるからです。
+</div>
+
+<h3>フォルダは自分が理解できるやり方で</h3>
+<p>正解のフォルダ構造は<strong>まだ決まった標準がありません。</strong>他人のやり方が唯一の正解ではありません。基準はひとつ — <strong>自分にとって筋が通り、自分の AI にとっても筋が通るか。</strong></p>
+<pre><code><span class="c"># フォルダの例 (日付で組むこともできる)</span>
+context/
+  about-me.md          <span class="c"># 自分・仕事のやり方(つねに真である背景)</span>
+  stack.md
+  decisions.md         <span class="c"># 決定のログ — 大きな変更のたびに日付とともに追加</span>
+projects/
+  youtube/2026-05-30-top50.md
+  clients/acme.md</code></pre>
+
+<h3>ドリルダウンの例 — AI なしでも自分で見つけられること</h3>
+<p>よい構造は<strong>人でも手でたどっていけます。</strong>「5 月 30 日の動画用のスライドデッキ」を探すなら:</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 92" role="img" aria-label="ドリルダウンの道筋: projects から youtube、日付、スライドデッキへと段階的に絞って探す">
+    <rect class="d-box" x="8" y="26" width="120" height="44" rx="9"/>
+    <text class="d-label sm" x="68" y="52" text-anchor="middle">projects/</text>
+    <rect class="d-box" x="166" y="26" width="120" height="44" rx="9"/>
+    <text class="d-label sm" x="226" y="52" text-anchor="middle">youtube/</text>
+    <rect class="d-box" x="324" y="26" width="140" height="44" rx="9"/>
+    <text class="d-label sm" x="394" y="48" text-anchor="middle">2026-05-30</text>
+    <text class="d-sub" x="394" y="63" text-anchor="middle">その日の動画</text>
+    <rect class="d-box accent" x="502" y="26" width="160" height="44" rx="9"/>
+    <text class="d-label sm" x="582" y="52" text-anchor="middle">tier-list-deck.html</text>
+
+    <line class="d-edge" x1="128" y1="48" x2="164" y2="48"/><polygon class="d-arrow" points="158,43 166,48 158,53"/>
+    <line class="d-edge" x1="286" y1="48" x2="322" y2="48"/><polygon class="d-arrow" points="316,43 324,48 316,53"/>
+    <line class="d-edge" x1="464" y1="48" x2="500" y2="48"/><polygon class="d-arrow" points="494,43 502,48 494,53"/>
+</svg>
+<div class="d-cap">自分がルールを理解しているから手でも見つけられ、同じルールを知る<strong>エージェントも</strong>見つけられます。</div>
+</div>
+
+<div class="note">
+    <span class="nh">限界と次の段階</span>
+    レベル 1 はたいてい<strong>正確な単語・名前</strong>が基準です。ファイルが増えると散らかり、取り逃がしやすくなります。そのときは<strong>主題でまとめる</strong><a href="/p/ja/sb-level2/">レベル 2 — LLM ウィキとメモリ</a>へ進みます。（参考: <code>CLAUDE.md</code> を Codex 用の <code>AGENTS.md</code> にコピーすれば、道具を変えてもそのまま使えます。この<strong>道具に依存しない性質</strong>はレベル 2 で扱います。）
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Second Brain &middot; <span class="pr-k">作成日</span> 2026-07-04 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/sb-levels/">5 段階をひと目で</a></li><li><a href="/p/ja/sb-intro/">セカンドブレインとは何か</a></li><li><a href="/p/ja/sb-level2/">レベル 2 · 主題でまとめる（LLM ウィキ + メモリ）</a></li></ul>
+</nav>
+</body>
+</html>

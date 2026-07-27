@@ -1,0 +1,81 @@
+<h2>何を入れて何を置くか（コンテキスト vs コネクション）</h2>
+<p>レベルを決めたら、次は本当に実務的な問いです。<strong>「すべてをセカンドブレインに入れるべきか？」</strong>答えは<strong>いいえ</strong>です。何を<strong>取り込み（ingest）</strong>、何を<strong>取り込まずアクセスできるだけにしておくか</strong>を分ける基準が要ります。</p>
+
+<h3>4C のうち、セカンドブレインは前のふたつ</h3>
+<p>AI のオペレーティングシステムは、よく <strong>4C</strong> で語られます。セカンドブレインで大事なのは主に<strong>前のふたつ</strong>です。</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>4C</th><th>意味</th><th>セカンドブレイン？</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Context</strong>（文脈）</td><td>自分のビジネスがやってきたこと — 四半期の目標・決定・履歴</td><td>✅ 中心の対象</td></tr>
+            <tr><td><strong>Connections</strong>（接続）</td><td>しょっちゅう変わる実データ — Slack・メール・顧客のデータ</td><td>△ 入れずにアクセスだけ</td></tr>
+            <tr><td>Capabilities（能力）</td><td>ツールやスキルでできること</td><td>— 別の領域</td></tr>
+            <tr><td>Cadence（周期）</td><td>いつ・どれくらいの頻度で回るか</td><td>— 別の領域</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>判定の基準 —「1 年後にも役に立つか？」</h3>
+<p>あるデータを<strong>入れるかどうか</strong>迷ったら、この一文でふるいにかけてください。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 660 180" role="img" aria-label="判定: 1 年後にも役立つなら入れ（エバーグリーン）、来週には変わるものは入れずアクセスだけ">
+    <polygon class="d-box accent" points="330,20 400,60 330,100 260,60"/>
+    <text class="d-label sm" x="330" y="56" text-anchor="middle">1 年後にも</text>
+    <text class="d-label sm" x="330" y="72" text-anchor="middle">役に立つ?</text>
+
+    <rect class="d-box" x="60" y="120" width="220" height="48" rx="10"/>
+    <text class="d-label sm" x="170" y="140" text-anchor="middle">はい → 入れる (Context)</text>
+    <text class="d-sub" x="170" y="156" text-anchor="middle">エバーグリーン: 目標・決定・履歴</text>
+
+    <rect class="d-box soft" x="380" y="120" width="220" height="48" rx="10"/>
+    <text class="d-label sm" x="490" y="140" text-anchor="middle">いいえ → 入れない (Connections)</text>
+    <text class="d-sub" x="490" y="156" text-anchor="middle">変動: Slack・メール → アクセスのみ</text>
+
+    <path class="d-edge accent" d="M300 78 C240 100, 200 104, 175 118"/><polygon class="d-arrow accent" points="169.9,110 175.9,120 180.9,111"/>
+    <path class="d-edge" d="M360 78 C420 100, 460 104, 485 118"/><polygon class="d-arrow" points="478.9,111 484.9,120 489.9,110"/>
+</svg>
+<div class="d-cap">エバーグリーンでなければノイズになり、毎月古いものを消すはめになります。変動するデータは<strong>入れずに、必要なときに見に行かせて</strong>ください。</div>
+</div>
+
+<div class="note">
+    <span class="nh">例 — 入れるもの vs 置いておくもの</span>
+    <strong>入れる（Context）:</strong>「今期の目標（OTAA）とその状態」「自分たちが下した決定とその理由」。<br>
+    <strong>置いておく（Connections）:</strong> 先週の John との Slack のやり取り、特定の顧客のリアルタイムのデータ — これはセカンドブレインが<strong>見に行ける</strong>ようにしておくだけで十分です。
+</div>
+
+<h3>あいまいな問いに答える方法 — 順に落ちていく参照</h3>
+<p>セカンドブレインの本当の力は、<strong>漠然とした問い</strong>にも<strong>どこをどの順で見るか</strong>を知っていることにあります。例: <em>「John と先週話した 7 番の目標の件、何だっけ？」</em></p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 176" role="img" aria-label="順に落ちていく参照: まず内部の目標ファイル、なければウィキと議事録、それでもなければリアルタイムのソースまで順に探す">
+    <rect class="d-box accent" x="14" y="60" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="89" y="84" text-anchor="middle">① 内部ファイル</text>
+    <text class="d-sub" x="89" y="100" text-anchor="middle">目標(OTAA)の文書</text>
+
+    <rect class="d-box" x="204" y="60" width="160" height="56" rx="10"/>
+    <text class="d-label sm" x="284" y="84" text-anchor="middle">② ウィキ · 議事録</text>
+    <text class="d-sub" x="284" y="100" text-anchor="middle">取り込んだ記録</text>
+
+    <rect class="d-box soft" x="404" y="60" width="160" height="56" rx="10"/>
+    <text class="d-label sm" x="484" y="84" text-anchor="middle">③ 実時間のソース</text>
+    <text class="d-sub" x="484" y="100" text-anchor="middle">ClickUp・Slack など</text>
+
+    <rect class="d-box" x="596" y="60" width="70" height="56" rx="10"/>
+    <text class="d-label sm" x="631" y="92" text-anchor="middle">回答</text>
+
+    <line class="d-edge accent" x1="164" y1="88" x2="202" y2="88"/><polygon class="d-arrow accent" points="196,83 204,88 196,93"/>
+    <text class="d-sub" x="183" y="78" text-anchor="middle">なければ</text>
+    <line class="d-edge" x1="364" y1="88" x2="402" y2="88"/><polygon class="d-arrow" points="396,83 404,88 396,93"/>
+    <text class="d-sub" x="383" y="78" text-anchor="middle">なければ</text>
+    <line class="d-edge" x1="564" y1="88" x2="594" y2="88"/><polygon class="d-arrow" points="588,83 596,88 588,93"/>
+
+    <text class="d-sub" x="340" y="150" text-anchor="middle">近い(安い)ところから → 必要なときだけ実時間まで降りる</text>
+</svg>
+<div class="d-cap">漠然と尋ねても<strong>どこをどの順で見るか</strong>を知っているなら、それがまさにセカンドブレインです。</div>
+</div>
+
+<div class="note">
+    <span class="nh">次へ</span>
+    ここからは自分の状況に合うレベルを選び、さらに<strong>チーム</strong>へ広げる方法まで — <a href="#!sb-choose">自分のレベル探し・チームのセカンドブレイン</a>で締めくくります。
+</div>
