@@ -1,0 +1,151 @@
+<h2>手でコーディングする時代の終わり？ — ソウル大学 イ・ジェウク教授が見る開発者の未来</h2>
+
+<p>&ldquo;未来には人間がもう自分の指でコーディングする必要がなくなる — この命題に同意されますか？&rdquo; ソウル大学校の公式チャンネルの知の対談番組 <strong>SNU Catch シーズン 2</strong>（進行はチェ・ソンウン）が、ソウル大の<strong>コンピュータ工学部 イ・ジェウク教授</strong>（ソウル大 AI 研究院の院長、AI インフラの研究）に投げた問いです。教授の答えは意外にも淡々としています — <strong>&ldquo;コードを書く部分はほぼ 100% まで自動化されうる。しかし何を作るかを定義する仕事は人間の領域として残る。&rdquo;</strong> この記事は対談の中心の論旨を整理し、出てくる主張を<strong>ウェブ検索で突き合わせて検証した数値・出典</strong>で補強したものです。</p>
+
+<div class="note">
+    <span class="nh">記事の情報（出典）</span>
+    · 対象: <strong>SNU Catch シーズン 2 — イ・ジェウク教授の対談</strong>（ソウル大学校の公式 YouTube、主題: AI 時代のコーディングとコンピュータ工学）<br>
+    · 補強: <strong>2026-07-24 のウェブ検索による突き合わせ検証</strong> — 対談の発言は発言として、外部の数値は独立した出典と照らして区別して表記<br>
+    · 文書の末尾に事実検証のノートと出典の一覧
+</div>
+
+<h3>三行の要約</h3>
+<ul>
+    <li>イ・ジェウク教授は<strong>&ldquo;コードを書くこと自体はほぼ 100% 自動化されるだろう&rdquo;</strong>と見ます。残るのは<strong>何を作るかを定義し、結果を読んで批評する仕事</strong> — つまり開発が&lsquo;エージェントを管理するマネージャーの仕事&rsquo;に変わります。</li>
+    <li>だから教育の焦点は&ldquo;学生が<strong>配達係</strong>になること&rdquo;です — 教授が出した問題を AI に渡して答だけ受け取ってくるなら、学習は起こりません。問題を<strong>自分で定義</strong>し、結果を<strong>批評</strong>する訓練へカリキュラムが変わらねばなりません。</li>
+    <li>雇用の見通しは<strong>&ldquo;パイが大きくなる&rdquo;（ジェヴォンズのパラドックス）と&ldquo;需要が消える&rdquo;のあいだ</strong>だ、というのが教授の診断 — ただし<strong>新卒（エントリーレベル）の敷居が上がることは、いま実際に起きていること</strong>であり、これは外部のデータでも確認できます（下の検証）。</li>
+</ul>
+
+<h3>用語を三つだけ知っておく</h3>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>用語</th><th>やさしい説明</th></tr></thead>
+    <tbody>
+        <tr><td><strong>バイブコーディング<br>(vibe coding)</strong></td><td>コードを一行ずつ書く代わりに、<strong>言葉で指示して結果だけ確かめながら</strong>ソフトウェアを作るやり方。AI 研究者のアンドレイ・カルパシー（Andrej Karpathy）が 2025 年 2 月に付けた名で、彼は&ldquo;コードが存在するという事実さえ忘れて雰囲気（vibe）に身をゆだねる&rdquo;と表しました。それより前の 2023 年 1 月には<strong>&ldquo;いちばん熱い新しいプログラミング言語は英語だ&rdquo;</strong>という有名な言葉を残しています。</td></tr>
+        <tr><td><strong>ジェヴォンズのパラドックス<br>(Jevons paradox)</strong></td><td>1865 年に経済学者ジェヴォンズが観察したこと — 蒸気機関の石炭の効率がよくなると、石炭の消費は減るどころか<strong>急増</strong>しました。安くなると使い道が増えるからです。&ldquo;コーディングが簡単になれば、コーディングの総量と開発の需要はむしろ増えうる&rdquo;という論拠に使われ、マイクロソフトの CEO サティア・ナデラも 2025 年の初めに &ldquo;Jevons paradox strikes again!&rdquo; と引きました。</td></tr>
+        <tr><td><strong>ケイパビリティ・オーバーハング<br>(capability overhang)</strong></td><td>AI モデルの能力は速く先へ進むのに、<strong>人がそれを使う力ははるかにゆっくりしか育たない</strong>という隔たり。教授が対談で挙げた概念で、同じ道具を使っても<strong>パワーユーザーと平均的な利用者の生産性の差</strong>が大きく開く理由です。</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>&ldquo;実装は自動化される — 残るのは定義と批評&rdquo;</h3>
+<p>教授自身がコーディングをする研究者として感じる変化が興味深いところです。以前は論文・コード・スライドなど<strong>&lsquo;書く仕事&rsquo;</strong>にエネルギーの大半が入っていたのに、いまは時間の大半を<strong>&lsquo;読んで批評する仕事&rsquo;</strong>に使います。アイデアを形にすることは簡単になり、作られたものを<strong>批判的に読む力</strong>が重くなった、ということです。</p>
+<p>だから&ldquo;手でコーディングしなくなるのか&rdquo;という問いへの彼の答えはふたつに分かれます — <strong>実装</strong>（implementation）は自動化の割合が増え続けてほぼ 100% に届きうるが、<strong>何を実装するのか・何を達成しようとするのかを定義する仕事</strong>は人間のぶんとして残る、と。彼はこの働き方を<strong>&ldquo;マネージャーの仕事&rdquo;</strong>にたとえます。AI と働くのはチームを管理するのと同じで、エージェントに役割を割り振って結果を判定しなければならないのですが — <strong>エンジニアリングの実務の経験なしによいエンジニアリングマネージャーになりにくいのと同じく</strong>、自分でコーディングした経験がなければ委任もうまくできない、というのです。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="AI 時代の開発のループ: 人が問題を定義し、AI が実装し、人が批評・検証してまた定義へ戻る循環の構造">
+    <text class="d-label" x="360" y="26" text-anchor="middle">AI 時代の開発 — 書くことから読み・批評へ</text>
+    <rect class="d-box soft" x="30" y="70" width="190" height="64" rx="10"/>
+    <text class="d-label sm" x="125" y="96" text-anchor="middle">問題の定義 · 方向づけ</text>
+    <text class="d-sub" x="125" y="118" text-anchor="middle">人 — 何を、なぜ</text>
+    <line class="d-edge" x1="220" y1="102" x2="252" y2="102"/><polygon class="d-arrow" points="252,97 260,102 252,107"/>
+    <rect class="d-box accent" x="260" y="70" width="190" height="64" rx="10"/>
+    <text class="d-label sm" x="355" y="96" text-anchor="middle">実装 · コードを書く</text>
+    <text class="d-sub" x="355" y="118" text-anchor="middle">AI — ほぼ 100% まで自動化</text>
+    <line class="d-edge" x1="450" y1="102" x2="482" y2="102"/><polygon class="d-arrow" points="482,97 490,102 482,107"/>
+    <rect class="d-box soft" x="490" y="70" width="190" height="64" rx="10"/>
+    <text class="d-label sm" x="585" y="96" text-anchor="middle">批評 · 検証 · 採用</text>
+    <text class="d-sub" x="585" y="118" text-anchor="middle">人 — 読んで判断</text>
+    <path class="d-edge dash" d="M585 134 C585 208, 125 208, 125 134"/><polygon class="d-arrow" points="120,140 125,130 130,140"/>
+    <text class="d-sub" x="360" y="228" text-anchor="middle">また定義・改善の指示 — エージェントを管理するマネージャーのループ</text>
+</svg>
+<div class="d-cap">実装の区間（真ん中）は自動化が広がり続けるが、両端の<strong>定義</strong>と<strong>批評</strong>は人の仕事として残る — イ・ジェウク教授の中心の論旨。</div>
+</div>
+
+<h3>なぜよりによって開発者が最初の的になったのか</h3>
+<p>&ldquo;AI がホワイトカラーを置き換える&rdquo;という予測はよくありましたが、<strong>&lsquo;開発者から&rsquo;</strong>だと見た人は多くありませんでした。教授は理由を三つに整理します。</p>
+<ul>
+    <li><strong>アーリーアダプターがすなわち開発者</strong> — AI をいちばん早く、いちばん多く使った集団がソフトウェア開発者自身でした。</li>
+    <li><strong>データが多く構造が論理的</strong> — インターネットにコードのデータが膨大に積まれており、コードは論理の構造が明確なので AI が学びやすいのです。</li>
+    <li><strong>実際に性能がよかった</strong> — 使ってみたら通じ、だからもっと使うという循環がかかりました。</li>
+</ul>
+<p>外部の数値もこれを裏づけます。Google の CEO スンダー・ピチャイは<strong>2024 年 10 月</strong>の決算発表で&ldquo;Google の新しいコードの<strong>25% 以上</strong>が AI 生成&rdquo;と明かし、<strong>2025 年 4 月</strong>には<strong>30% 以上</strong>、最近の発表では <strong>75%</strong>（エンジニアの検討・承認を経て反映）まで上がったと述べました。</p>
+
+<h3>バイブコーディングの力 — そして 95% の落とし穴</h3>
+<p>対談で教授が挙げた実例が印象的です。<strong>クァンジン区役所のある公務員</strong>が&ldquo;行政の規定が複雑すぎるから AI に探させよう&rdquo;と、法規を照らし合わせて答えてくれる<strong>チャットボット型のシステムを自分で作った</strong>というのです — 正式な開発の教育なしでも、バイブコーディングで実務に影響を与えるプロトタイプまでは十分に届きます。</p>
+<p>しかし<strong>&lsquo;完成したソフトウェア&rsquo;の基準は違います。</strong>95% の確率で動くコードは、専門の製品の基準では事実上動かないのと同じであり、<strong>99% でもゆるい基準</strong>でありえます — 10 億人が使うサービスで 1% が誤作動すれば<strong>1,000 万人</strong>が間違った結果を受け取るのですから。金融やセキュリティならなおさらです。バイブコーディングで何かを作った経験が<strong>自分の実力の過大評価</strong>につながりうる、という警告もここから出ます。</p>
+<p>この&lsquo;体感と実測の隔たり&rsquo;は実験でも確かめられています。AI の評価機関 <strong>METR のランダム化比較試験</strong>（2025 年 7 月）で、熟練したオープンソースの開発者 16 人に実際の課題 246 件をやらせたところ、AI の道具を使った側が<strong>むしろ 19% 遅かった</strong>のに、当人たちは<strong>&ldquo;20% 速くなった&rdquo;と体感</strong>していました。（METR 自身が&ldquo;当時の道具を基準にした過去の結果&rdquo;だと但し書きを付けましたが、<strong>感じだけで生産性を判断すると外しうる</strong>という教訓は有効です。）教授が挙げた<strong>ケイパビリティ・オーバーハング</strong> — 道具は先へ進むのに使う力が追いつかない隔たり — と正確に重なるところです。彼は&ldquo;AI をうまく使う&rdquo;の条件としてふたつを挙げます: <strong>何を成し遂げられるか（課題の範疇）を知ること</strong>、そして<strong>何ができないか（限界）を知ること</strong>。</p>
+
+<h3>教育 — &lsquo;配達係&rsquo;になった学生</h3>
+<p>教育者としての教授の心配は具体的です。教科書型の課題はいまや AI が 100% 正確に解いてしまうので学習の道具としての寿命を終えており、もっと悪いのは学生が<strong>&lsquo;仲介者&rsquo;</strong>になる構図です — 教授が問題を出し、学生はそれを AI に入れて答を受け取って提出します。問題を作ったのも解いたのも学生ではないので、<strong>学習が起こる場所がありません。</strong>彼の言い方を借りれば、学生が&ldquo;栄えある宅配便（glorified courier）&rdquo;の役をしているわけです。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="かつては教授が出した問題を学生が自分で解いて学習が起きたが、いまは学生が問題を AI に渡して答だけ受け取り提出する配達係になり、学習が空いている">
+    <text class="d-label" x="52" y="66" text-anchor="middle">過去</text>
+    <rect class="d-box soft" x="96" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="156" y="70" text-anchor="middle">問題の出題</text>
+    <line class="d-edge" x1="216" y1="66" x2="248" y2="66"/><polygon class="d-arrow" points="248,61 256,66 248,71"/>
+    <rect class="d-box accent" x="256" y="40" width="200" height="52" rx="9"/>
+    <text class="d-label sm" x="356" y="62" text-anchor="middle">学生が自分で解く</text>
+    <text class="d-sub" x="356" y="82" text-anchor="middle">学習はここで起きる</text>
+    <line class="d-edge" x1="456" y1="66" x2="488" y2="66"/><polygon class="d-arrow" points="488,61 496,66 488,71"/>
+    <rect class="d-box soft" x="496" y="40" width="96" height="52" rx="9"/>
+    <text class="d-label sm" x="544" y="70" text-anchor="middle">提出</text>
+    <text class="d-label" x="52" y="196" text-anchor="middle">いま</text>
+    <rect class="d-box soft" x="96" y="170" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="156" y="200" text-anchor="middle">問題の出題</text>
+    <line class="d-edge" x1="216" y1="196" x2="240" y2="196"/><polygon class="d-arrow" points="240,191 248,196 240,201"/>
+    <rect class="d-box" x="248" y="170" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="323" y="192" text-anchor="middle">学生 = 配達係</text>
+    <text class="d-sub" x="323" y="212" text-anchor="middle">渡すだけ、学習なし</text>
+    <line class="d-edge" x1="398" y1="196" x2="422" y2="196"/><polygon class="d-arrow" points="422,191 430,196 422,201"/>
+    <rect class="d-box accent" x="430" y="170" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="490" y="200" text-anchor="middle">AI が解く</text>
+    <line class="d-edge" x1="550" y1="196" x2="574" y2="196"/><polygon class="d-arrow" points="574,191 582,196 574,201"/>
+    <rect class="d-box soft" x="582" y="170" width="96" height="52" rx="9"/>
+    <text class="d-label sm" x="630" y="200" text-anchor="middle">提出</text>
+    <line class="d-edge dash" x1="60" y1="122" x2="660" y2="122"/>
+    <text class="d-sub" x="360" y="272" text-anchor="middle">学習は問題を定義するところ、または自分で解くところでしか起きない</text>
+</svg>
+<div class="d-cap">イ・ジェウク教授の言う&lsquo;仲介者（配達係）&rsquo;の問題 — 定義も解答も他人がやるなら、学生の場所に学習は残らない。</div>
+</div>
+
+<p>解き方もふた筋で示されます。</p>
+<ul>
+    <li><strong>基礎の概念はそのまま教える</strong> — 電卓があるからといって四則演算を教えないわけではないのと同じです。結果を解釈し評価するには越えるべき<strong>知識の敷居</strong>があり、その下の基礎は試験・小テストのような伝統的なやり方で確かめます。</li>
+    <li><strong>問題の定義を学生に渡す</strong> — 最小限の制約だけ与えて&ldquo;自分で設計してみろ&rdquo;と言う、正解のない課題で訓練します。さらにカリキュラムの全体を<strong>AI ネイティブ</strong>に設計し直して — すべての科目で AI の道具を使う前提に立ち、設計・問題のフレーミングの比重を上げ、<strong>プロジェクトを実際に世に出してみる経験</strong>と<strong>互いのコード・設計を批評するセッション</strong>を入れよう、というのです。</li>
+</ul>
+<p>職務の側でも同じ方向の変化を見ています — 企画者が上から課題を降ろし開発者が受けて実装する構図の代わりに、一人が企画から開発まで全部やる<strong>&lsquo;PM-開発者のハイブリッド&rsquo;</strong>が浮かび上がる、と。実際に最近の AI のコンテストの優勝者を見ると<strong>特定のドメイン（産業・職務）の問題を深く理解した人たち</strong>が多い、と彼は付け加えます。結局のところ価値は&ldquo;どんな問題を解くのか&rdquo;をうまく選ぶところから出るのです。</p>
+
+<h3>雇用 — ジェヴォンズのパラドックスと ATM の教訓、そして新卒の敷居</h3>
+<p>見通しはふたつの極端がぶつかります。一方は<strong>ジェヴォンズのパラドックス</strong> — コーディングが簡単になればコーディングの総量と産業のパイが大きくなり需要が増える、という側。もう一方は AI がコーディングを全部自動化して<strong>人間のコーディングの需要が消える</strong>という側。教授の診断は&ldquo;現実はその中間のどこか&rdquo;です。</p>
+<p>彼が例に挙げた <strong>ATM と銀行の窓口係</strong>の話は、実際の研究で確かめられた歴史です。経済学者ジェームズ・ベッセン（James Bessen）の分析によれば、ATM が広がった時期にアメリカの銀行の窓口係の数は減らず<strong>むしろ増えました</strong> — 支店あたりに必要な窓口係が 21 人から 13 人に減ると支店の運営費が安くなり、銀行が<strong>都市の支店を 43% 増やしたことで</strong>窓口係の総需要が大きくなったからです。窓口係の仕事は現金の取り扱いから相談・金融商品の販売へ移っていきました。（窓口係の雇用が実際に折れたのは 2010 年代の<strong>モバイルバンキング</strong> — 支店へ行くこと自体をなくした、より完全な自動化 — のあとだった、という点も示唆的です。）</p>
+<p>ただし教授が&ldquo;いま実際に起きていること&rdquo;として挙げた<strong>新卒の敷居の上昇</strong>はデータがはっきりしています。スタンフォードの研究陣（ブリニョルフソンほか）がアメリカ最大の給与処理会社 ADP のデータを分析した結果、生成 AI が広がったあと<strong>AI への露出が大きい職種の 22〜25 歳の雇用が相対的に 13% 減り</strong>、とくに<strong>22〜25 歳のソフトウェア開発者の雇用は 2022 年末のピークに比べて 2025 年 7 月までにおよそ 20% 減りました</strong>。若い層のほうが打撃を受ける理由として、研究陣は&ldquo;新卒が学校で学んだ知識が、LLM がすでに得意なこととよく重なるから&rdquo;という解釈を出しました — 対談の論旨と正確に重なります。</p>
+
+<h3>数値で見るいまの位置（突き合わせ検証したぶん）</h3>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>項目</th><th>数値</th><th>出典・時点</th></tr></thead>
+    <tbody>
+        <tr><td>Google の新しいコードのうち AI 生成の割合</td><td>25% 以上 → 30% 以上 → 75%（検討のうえ反映）</td><td>ピチャイの発言、2024-10 → 2025-04 → 2026</td></tr>
+        <tr><td>アメリカの 22〜25 歳の開発者の雇用</td><td>2022 年末のピーク比 <strong>およそ −20%</strong></td><td>スタンフォード・ADP のデータ、2025-07 時点</td></tr>
+        <tr><td>AI への露出が高い職種の 22〜25 歳の雇用</td><td>相対で <strong>−13%</strong></td><td>ブリニョルフソンほか、2025-08 発表</td></tr>
+        <tr><td>熟練した開発者 + AI の道具（RCT）</td><td>実測 <strong>19% 遅くなった</strong> / 体感&ldquo;20% 速くなった&rdquo;</td><td>METR、2025-07（開発者 16 人・課題 246 件）</td></tr>
+        <tr><td>ATM が広がった時期のアメリカの銀行の窓口係</td><td>支店あたり 21→13 人、都市の支店 <strong>+43%</strong> → 窓口係の総数は増加</td><td>ジェームズ・ベッセン、IMF F&amp;D 2015</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>&ldquo;もう一度 20 歳に戻ってもコンピュータ工学をやるか&rdquo;</h3>
+<p>進行役の意地悪な問い — &ldquo;先生がいま 20 歳、26 年入学だったら、もう一度コンピュータ工学を選びますか&rdquo; — に、教授は<strong>&ldquo;やります&rdquo;</strong>と答えます。理由が興味深いところです。AI がもたらした変化は<strong>経験者にとっても新卒にとっても同じく新しいもの</strong>なので出発線が公平になり（対談で引かれた表現では<strong>&ldquo;The Great Equalizer&rdquo;</strong>）、よいアイデアさえあれば誰でも革新を導ける、かつてないほど広い空間が開いた、というのです。</p>
+<p>最後に&ldquo;それでもなぜコンピュータ工学を学ぶべきか&rdquo;への彼の答えは、この学問の定義へ戻ります — コンピュータ工学はコーディングを教える学科ではなく、<strong>複雑な問題を抽象化して解ける形に変える思考法</strong>を教える学科だ、と。具体的には、複雑なことを単純な段階に分ける<strong>アルゴリズム的な思考</strong>と、データの分布から洞察を引き出す<strong>データにもとづく思考</strong> — このふたつの枠は、AI がどれだけ進歩しても結果を判断する側にずっと必要です。コードを書く量が減るほど、逆説的に<strong>思考の枠を育てる学科の価値はより大きくなりうる</strong>、というのが対談の結論です。</p>
+
+<h3>事実検証のノート</h3>
+<ul>
+    <li><strong>対談の発言と外部の事実を区別しました。</strong>クァンジン区役所のチャットボットの事例、ケイパビリティ・オーバーハングに関わる統計への言及、&ldquo;ほぼ 100% 自動化&rdquo;の見通しなどは<strong>イ・ジェウク教授の対談での発言</strong>として表記し、数値の表の項目はすべて独立した出典で突き合わせて検証しました。</li>
+    <li><strong>カルパシーの引用 2 件を確認</strong> — &ldquo;The hottest new programming language is English&rdquo; は 2023-01-24 のツイート、&lsquo;vibe coding&rsquo; は 2025-02 のツイートが原典です。</li>
+    <li><strong>Google の 75% という数値の文脈</strong> — &ldquo;AI が生成しエンジニアが検討・承認したコード&rdquo;を基準にした会社の発表の数値で、独立した監査の数値ではありません。25%（2024-10）・30%（2025-04）も同じく決算発表での発言です。</li>
+    <li><strong>METR の結果の時効</strong> — METR はのちに&ldquo;2025 年初めの道具・ワークフローを基準にした過去（historical）の結果&rdquo;と明記しました。本文では&lsquo;体感 vs 実測の隔たり&rsquo;という方法論の教訓としてのみ引きました。</li>
+    <li><strong>対談そのものの公開日・回の情報は特定できなかったので</strong>、本文に日付を書いていません（書き起こしをもとに整理）。</li>
+</ul>
+
+<div class="note">
+    <span class="nh">出典</span>
+    · 対談: ソウル大学校の公式 YouTube <strong>SNU Catch シーズン 2</strong> — イ・ジェウク（ソウル大 コンピュータ工学部 教授・AI 研究院 院長） &times; チェ・ソンウン<br>
+    · カルパシーの引用: <a href="https://x.com/karpathy/status/1617979122625712128" target="_blank" rel="noopener">Karpathy のツイート（2023-01-24）</a> · <a href="https://www.ibm.com/think/topics/vibe-coding" target="_blank" rel="noopener">IBM — What is Vibe Coding?</a><br>
+    · Google の AI コードの割合: <a href="https://thehill.com/policy/technology/4962336-google-ceo-says-more-than-25-percent-of-companys-new-code-written-by-ai/" target="_blank" rel="noopener">The Hill（2024-10, 25%）</a> · <a href="https://www.itpro.com/technology/artificial-intelligence/sundar-pichai-says-more-than-25-percent-of-googles-code-is-now-generated-by-ai-and-its-a-big-hint-at-the-future-of-software-development" target="_blank" rel="noopener">ITPro</a> · <a href="https://www.fastcompany.com/91531519/google-ceo-says-75-of-the-companys-code-is-ai-generated" target="_blank" rel="noopener">Fast Company（75%）</a><br>
+    · 新卒の雇用: <a href="https://time.com/7312205/ai-jobs-stanford/" target="_blank" rel="noopener">TIME — スタンフォードの分析</a> · <a href="https://www.forbes.com/sites/johnkoetsier/2025/08/26/ai-kills-jobs-says-stanford-study-at-least-in-these-circumstances/" target="_blank" rel="noopener">Forbes（2025-08）</a><br>
+    · METR の RCT: <a href="https://arxiv.org/abs/2507.09089" target="_blank" rel="noopener">arXiv:2507.09089</a> · <a href="https://metr.org/blog/2026-02-24-uplift-update/" target="_blank" rel="noopener">METR の続報</a><br>
+    · ATM と窓口係: <a href="https://www.imf.org/external/pubs/ft/fandd/2015/03/bessen.htm" target="_blank" rel="noopener">Bessen, IMF F&amp;D（2015）</a> · <a href="https://www.aei.org/economics/what-atms-bank-tellers-rise-robots-and-jobs/" target="_blank" rel="noopener">AEI</a><br>
+    · ジェヴォンズのパラドックス: <a href="https://www.npr.org/sections/planet-money/2025/02/04/g-s1-46018/ai-deepseek-economics-jevons-paradox" target="_blank" rel="noopener">NPR Planet Money（2025-02）</a>
+</div>

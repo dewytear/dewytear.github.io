@@ -1,0 +1,122 @@
+<h2>Anthropic Mythos とループド・トランスフォーマー — ハイゼンベルクの寄稿を読む</h2>
+<p>科学・技術メディア<strong>ハイゼンベルク</strong>に寄稿された「Anthropic Mythos が韓国企業にとって追い風である理由」を出発点に、記事が名指しした中心の技術<strong>ループド・トランスフォーマー（Looped Transformer）</strong>とは何か、そして&ldquo;韓国企業に追い風&rdquo;という主張がどこまで<strong>確認できた事実</strong>で、どこからが<strong>推定</strong>なのかを整理した文書です。事実と推定を混ぜないことがこの記事の目的なので、検証できたものと論評・推定を区間ごとに示しました。</p>
+
+<div class="note">
+    <span class="nh">記事の情報（出典）</span>
+    · 題: <strong>Anthropic Mythos が韓国企業にとって追い風である理由</strong>（原題は韓国語）<br>
+    · 媒体: <strong>ハイゼンベルク</strong>（heisenberg.kr） · 著者: <strong>DION</strong> · 掲載: <strong>2026-06-22</strong><br>
+    · 原文: <a href="https://heisenberg.kr/claude-mythos/" target="_blank" rel="noopener">heisenberg.kr/claude-mythos</a> — 本文はメンバーシップの有料。以下の引用は公開されている&ldquo;1 分要約&rdquo;からの抜粋。
+</div>
+
+<h3>記事の論旨</h3>
+<p>記事は、Anthropic が性能があまりに強力なため一部を封じた最上位のモデル&ldquo;Mythos&rdquo;の中に<strong>ループド・トランスフォーマー</strong>が入っていると見て、その構造の効率のおかげで<strong>クラウドなしに機器の上で直接動く最高級の AI</strong> が可能になるので、デバイスの製造に強い韓国企業に機会がある、と主張します。公開の要約の中心の一節は次のとおりです（原文を訳出）。</p>
+<blockquote>&ldquo;その中に隠れていると名指しされた技術が&lsquo;ループド・トランスフォーマー&rsquo;です。これまでの AI が途中の思考を文章に書きながら解くのに対し、この構造は何も書かずに同じ回路を何十回も頭の中だけで噛みしめます。こうすると速度も上がり、トークンの費用も減ります。とくに最近の論文が一本、この方式でパラメータが半分のモデルが通常のモデルの水準にほぼ届くことを、はじめて数学的に証明しました。半分の大きさで同じ性能なら、クラウドなしに最高水準の AI が直接動きうるという意味です。&rdquo;</blockquote>
+<p class="scn-sub">— ハイゼンベルク「Anthropic Mythos が韓国企業にとって追い風である理由」1 分要約（2026-06-22）</p>
+
+<h3>ループド・トランスフォーマーとは — 一つのブロックを繰り返す構造</h3>
+<p>ふつうのトランスフォーマーは<strong>それぞれ異なる重みを持つ層を N 個積んで</strong>深さを作ります。ループド・トランスフォーマーは逆に、<strong>重みを共有するブロック一つを N 回くり返して</strong>、そのブロックの出力をまた入力に入れます。層を新しく積む代わりに同じ回路を何度も通すわけで、<strong>計算の深さがパラメータ数から切り離されます</strong> — 小さなモデルがはるかに深いスタックを真似できるのです。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 342" role="img" aria-label="標準のトランスフォーマーは異なる層を積み、ループド・トランスフォーマーは重みを共有するブロック一つを何度も繰り返す">
+    <text class="d-label sm" x="180" y="24" text-anchor="middle">標準 — 異なる層を積む</text>
+    <rect class="d-box soft" x="105" y="286" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="305" text-anchor="middle">入力の埋め込み</text>
+    <line class="d-edge" x1="180" y1="286" x2="180" y2="272"/><polygon class="d-arrow" points="176,274 180,268 184,274"/>
+    <rect class="d-box" x="105" y="240" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="259" text-anchor="middle">層 &#952;&#8321;</text>
+    <line class="d-edge" x1="180" y1="240" x2="180" y2="226"/><polygon class="d-arrow" points="176,228 180,222 184,228"/>
+    <rect class="d-box" x="105" y="194" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="213" text-anchor="middle">層 &#952;&#8322;</text>
+    <line class="d-edge" x1="180" y1="194" x2="180" y2="180"/><polygon class="d-arrow" points="176,182 180,176 184,182"/>
+    <rect class="d-box" x="105" y="148" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="167" text-anchor="middle">層 &#952;&#8323;</text>
+    <line class="d-edge" x1="180" y1="148" x2="180" y2="134"/><polygon class="d-arrow" points="176,136 180,130 184,136"/>
+    <rect class="d-box" x="105" y="102" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="121" text-anchor="middle">層 &#952;&#8324;</text>
+    <line class="d-edge" x1="180" y1="102" x2="180" y2="88"/><polygon class="d-arrow" points="176,90 180,84 184,90"/>
+    <rect class="d-box soft" x="105" y="56" width="150" height="30" rx="8"/><text class="d-label sm" x="180" y="75" text-anchor="middle">出力</text>
+    <text class="d-sub" x="180" y="332" text-anchor="middle">深さ = パラメータ数（層ごとに違う &#952;）</text>
+
+    <line class="d-edge dash" x1="360" y1="50" x2="360" y2="300"/>
+
+    <text class="d-label sm" x="540" y="24" text-anchor="middle">ループド — 一つのブロックを反復</text>
+    <rect class="d-box soft" x="440" y="286" width="200" height="30" rx="8"/><text class="d-label sm" x="540" y="305" text-anchor="middle">入力の埋め込み（プレリュード）</text>
+    <line class="d-edge accent" x1="540" y1="286" x2="540" y2="246"/><polygon class="d-arrow accent" points="536,248 540,242 544,248"/>
+    <rect class="d-box accent" x="470" y="150" width="140" height="94" rx="12"/><text class="d-label" x="540" y="192" text-anchor="middle">共有ブロック R</text><text class="d-sub" x="540" y="212" text-anchor="middle">同じ &#952; を再利用</text>
+    <path class="d-edge accent" d="M610 172 C672 168, 672 226, 612 224"/><polygon class="d-arrow accent" points="618,220 610,225 617,230"/>
+    <text class="d-sub" x="686" y="200" text-anchor="middle" transform="rotate(90 686 200)">&#215;N 反復</text>
+    <line class="d-edge accent" x1="540" y1="150" x2="540" y2="112"/><polygon class="d-arrow accent" points="536,114 540,108 544,114"/>
+    <rect class="d-box soft" x="440" y="80" width="200" height="30" rx="8"/><text class="d-label sm" x="540" y="99" text-anchor="middle">出力（コーダ）</text>
+    <text class="d-sub" x="540" y="332" text-anchor="middle">深さ &#8800; パラメータ数 · 潜在空間で反復</text>
+</svg>
+<div class="d-cap">標準は<strong>異なる層を一度ずつ</strong>積み、ループドは<strong>同じブロック一つを何度も</strong>通す。</div>
+</div>
+
+<p>最近の研究（下の出典の <em>Huginn</em> 系）が整理した働きは、<strong>プレリュード（Prelude） → 循環ブロック（Recurrent Block） → コーダ（Coda）</strong>の 3 段階です。プレリュードが入力を潜在空間へ埋め込むと（<code>e</code>）、循環ブロックが潜在状態 <code>s</code> を<strong>反復のたびに入力 <code>e</code> を混ぜ直しながら</strong>何度も更新し、コーダが最後の状態を出力に戻します。反復の回数は固定ではなく<strong>入力の難しさによって変わりうる</strong>ので（適応的な深さ）、難しい問題ほど長く&ldquo;内心で噛みしめる&rdquo;わけです。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="ループド・トランスフォーマーの働き: プレリュードが入力を埋め込み、循環ブロックが潜在状態を反復のたびに入力を再注入しながら何度も更新し、コーダが出力する">
+    <rect class="d-box soft" x="16" y="104" width="96" height="44" rx="9"/><text class="d-label sm" x="64" y="130" text-anchor="middle">入力トークン</text>
+    <line class="d-edge" x1="112" y1="126" x2="146" y2="126"/><polygon class="d-arrow" points="146,121 154,126 146,131"/>
+    <rect class="d-box" x="154" y="104" width="104" height="44" rx="9"/><text class="d-label sm" x="206" y="124" text-anchor="middle">P · プレリュード</text><text class="d-sub" x="206" y="140" text-anchor="middle">埋め込み e</text>
+    <line class="d-edge accent" x1="258" y1="126" x2="300" y2="126"/><polygon class="d-arrow accent" points="300,121 308,126 300,131"/>
+    <rect class="d-box accent" x="308" y="78" width="164" height="96" rx="12"/><text class="d-label" x="390" y="118" text-anchor="middle">R · 循環ブロック</text><text class="d-sub" x="390" y="138" text-anchor="middle">潜在状態 s&#7522; を反復</text>
+    <path class="d-edge accent" d="M472 100 C524 92, 524 60, 400 60 C360 60, 344 68, 340 76"/><polygon class="d-arrow accent" points="336,70 340,80 346,73"/>
+    <text class="d-sub" x="418" y="52" text-anchor="middle">&#215;N · 重みを共有</text>
+    <path class="d-edge accent dash" d="M206 148 C206 200, 300 200, 340 174"/><polygon class="d-arrow accent" points="334,170 342,172 336,180"/>
+    <text class="d-sub" x="250" y="212" text-anchor="middle">反復のたびに入力 e を再注入</text>
+    <line class="d-edge dash" x1="472" y1="150" x2="472" y2="196"/><polygon class="d-arrow" points="468,190 472,198 476,190"/>
+    <text class="d-sub" x="560" y="200" text-anchor="middle">KL &lt; &#949; なら終了（適応的な深さ）</text>
+    <line class="d-edge accent" x1="472" y1="118" x2="512" y2="118"/><polygon class="d-arrow accent" points="512,113 520,118 512,123"/>
+    <rect class="d-box" x="520" y="96" width="96" height="44" rx="9"/><text class="d-label sm" x="568" y="116" text-anchor="middle">C · コーダ</text><text class="d-sub" x="568" y="132" text-anchor="middle">出力</text>
+    <line class="d-edge" x1="616" y1="118" x2="650" y2="118"/><polygon class="d-arrow" points="650,113 658,118 650,123"/>
+    <rect class="d-box soft" x="658" y="96" width="54" height="44" rx="9"/><text class="d-label sm" x="685" y="122" text-anchor="middle">次へ</text>
+</svg>
+<div class="d-cap">潜在空間（<code>s</code>）で反復 — 途中の思考を<strong>文章（トークン）に書かず</strong>に内心で噛みしめる。難しいほど多く反復。</div>
+</div>
+
+<p>記事の言う&ldquo;途中の思考を文章に書かない&rdquo;という箇所が、ここです。いまの推論モデルが考えを長く<strong>文章（思考の連鎖、chain-of-thought）</strong>に書き下すのとは違い、ループドの方式は<strong>連続した潜在状態</strong>を繰り返し磨きます。その結果、(1) 出力のトークンを吐く量が減って<strong>トークンの費用</strong>が下がり、(2) 別途の思考の連鎖の学習データがなくてもよく、(3) 小さな<strong>コンテキストウィンドウ</strong>でも深い推論ができる、という長所が報告されています。&ldquo;パラメータ半分で同じくらいの性能&rdquo;という記事の言い方も、重みを共有してパラメータを節約しつつ反復で実効の深さを補う、というこの系統の研究の結果と地続きです。</p>
+
+<h3>なぜ&lsquo;韓国企業に追い風&rsquo;なのか <span class="scn-sub">— 記事の論旨（論評・推定）</span></h3>
+<p>記事の推論の鎖はこうです: 半分のパラメータで似た性能 → 重いクラウドなしに<strong>機器の上で直接（オンデバイス）</strong>最高級の AI が動かせる → スマートフォン・自動車・ロボットを<strong>作る</strong>ことに強い韓国（サムスン・LG・現代）に有利。クラウドのインフラの競争よりも<strong>デバイス</strong>の側の強みを活かせる、という見方です。</p>
+<div class="note warn">
+    <span class="nh">ここは&lsquo;論評&rsquo;です</span>
+    &ldquo;韓国企業に追い風&rdquo;は Anthropic の公式の立場ではなく<strong>記事の解釈</strong>です。実際に最上位の性能のモデル（Fable 5）が AWS・Google Cloud・Microsoft など<strong>主要なクラウドで一般提供</strong>され、どの企業でも使えるようになった点、そして下の&ldquo;確認できた事実&rdquo;の韓国と Anthropic の密接さは、この論旨の根拠と見るに足ります。いっぽう Mythos 級のモデルの<strong>オンデバイスの配備を裏づける公式の資料は確認できていません。</strong>
+</div>
+
+<h3>確認できた事実</h3>
+<ul>
+    <li><strong>Claude Fable 5 · Mythos 5 の公開</strong>（2026-06-09） — 二つは<strong>同じモデル</strong>だが、Mythos は一部の二重用途（サイバー・生物）の安全装置を緩め、<strong>検証された少数の組織にのみ</strong>提供（プロジェクト Glasswing）。Fable 5 は API と主要なクラウドで一般提供。</li>
+    <li><strong>輸出規制とその解除</strong> — 2026-06-12 にアメリカが Fable 5・Mythos 5 に輸出規制をかけて約 19 日間の中断、2026-06-30〜07-01 に規制の解除・再配布。</li>
+    <li><strong>サムスン電子・SK ハイニックスの Anthropic シリーズ H への投資</strong>（2026-05 末の報道） — 戦略的なインフラのパートナーとして参加。</li>
+    <li><strong>サムスン・ファウンドリと Anthropic のカスタム AI チップの製造の協議</strong>（2026-07-03 の報道） — 2nm プロセス・先端のパッケージングが対象。</li>
+</ul>
+<p class="scn-sub">→ &ldquo;韓国企業に追い風&rdquo;という論旨の<strong>いちばん堅い根拠</strong>は、オンデバイスの仮説よりも、この実際の協力・投資の流れです。</p>
+
+<h3>どこまでが事実なのか <span class="scn-sub">— 推定・未確認</span></h3>
+<div class="note warn">
+    <span class="nh">&ldquo;Mythos = ループド・トランスフォーマー&rdquo;は公式の確認ではない</span>
+    Anthropic は、Mythos が<strong>循環する深さ（ループド）の構造</strong>を使っていると公開したことがありません。この結びつきは、公開の文献をもとに Mythos のアーキテクチャを<strong>推定して再構成した</strong>コミュニティのプロジェクト <strong>OpenMythos</strong>（Kye Gomez）などから出た<strong>仮説</strong>であり、その報道自体も&ldquo;確認されていない&rdquo;と明記しています。したがって記事の前提（Mythos の中にループドがある）は<strong>興味深い推定</strong>として読むべきで、ループド・トランスフォーマー<strong>という技術そのものは下の論文で実在が検証</strong>されています。
+</div>
+
+<h3>出典</h3>
+<p class="scn-sub"><strong>記事・ニュース</strong></p>
+<ul>
+    <li>ハイゼンベルク「Anthropic Mythos が韓国企業にとって追い風である理由」（DION, 2026-06-22） — <a href="https://heisenberg.kr/claude-mythos/" target="_blank" rel="noopener">heisenberg.kr/claude-mythos</a></li>
+    <li>Anthropic, &ldquo;Claude Fable 5 and Claude Mythos 5&rdquo;（2026-06-09） — <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank" rel="noopener">anthropic.com</a></li>
+    <li>CNBC, 輸出規制の解除の報道（2026-06-30） — <a href="https://www.cnbc.com/2026/06/30/anthropic-says-trump-admin-has-lifted-export-controls-on-claude-fable-5-and-mythos-5.html" target="_blank" rel="noopener">cnbc.com</a></li>
+    <li>Korea Herald, サムスン・SK ハイニックスの Anthropic への投資 — <a href="https://www.koreaherald.com/article/10758856" target="_blank" rel="noopener">koreaherald.com</a></li>
+    <li>KED Global, サムスン・ファウンドリと Anthropic のカスタムチップの協議（2026-07-03） — <a href="https://www.kedglobal.com/artificial-intelligence/newsView/ked202607030001" target="_blank" rel="noopener">kedglobal.com</a></li>
+</ul>
+<p class="scn-sub"><strong>ループド・トランスフォーマー — 検証された学術資料</strong></p>
+<ul>
+    <li>Geiping et al., &ldquo;Scaling up Test-Time Compute with Latent Reasoning: A Recurrent Depth Approach&rdquo;（Huginn, 2025） — <a href="https://arxiv.org/abs/2502.05171" target="_blank" rel="noopener">arXiv:2502.05171</a></li>
+    <li>Yang, Lee, Nowak, Papailiopoulos, &ldquo;Looped Transformers are Better at Learning Learning Algorithms&rdquo;（2023/24） — <a href="https://arxiv.org/abs/2311.12424" target="_blank" rel="noopener">arXiv:2311.12424</a></li>
+    <li>Giannou et al., &ldquo;Looped Transformers as Programmable Computers&rdquo;（2023） — <a href="https://arxiv.org/abs/2301.13196" target="_blank" rel="noopener">arXiv:2301.13196</a></li>
+    <li>&ldquo;Looped Transformers for Length Generalization&rdquo;（2024） — <a href="https://arxiv.org/abs/2409.15647" target="_blank" rel="noopener">arXiv:2409.15647</a></li>
+    <li>Dehghani et al., &ldquo;Universal Transformers&rdquo;（ICLR 2019、祖先にあたる） — <a href="https://arxiv.org/abs/1807.03819" target="_blank" rel="noopener">arXiv:1807.03819</a></li>
+</ul>
+<p class="scn-sub"><strong>Mythos のアーキテクチャの推定（コミュニティ、未確認）</strong></p>
+<ul>
+    <li>OpenMythos（Kye Gomez） — 公開の文献に基づく Mythos の構造の推定の再構成 — <a href="https://github.com/kyegomez/OpenMythos" target="_blank" rel="noopener">github.com/kyegomez/OpenMythos</a></li>
+</ul>
+
+<div class="note">
+    <span class="nh">この文書の態度</span>
+    ループド・トランスフォーマーという<strong>技術</strong>は論文で実在が確認でき、Anthropic と韓国企業の<strong>協力・投資</strong>も事実です。ただし&ldquo;Mythos がその技術を使っている&rdquo;と&ldquo;だから韓国に追い風&rdquo;は<strong>公式の確認ではない推定・論評</strong>だという点を、分けて読むのが正確です。
+</div>

@@ -1,0 +1,187 @@
+<h2>RDF かプロパティグラフか — ナレッジグラフのためのふたつのモデル（Neo4j）</h2>
+<p>Neo4j の主席科学者 <strong>ジム・ウェバー（Jim Webber）</strong>の記事 <strong>&ldquo;RDF vs. property graphs: Choosing the right approach for implementing a knowledge graph&rdquo;</strong>（2024-06-04）を整理した文書です。生成 AI で<strong>ナレッジグラフ</strong>の需要がふたたび高まるなか、ナレッジグラフを<strong>実際に実装する</strong>ときにぶつかる根本の選択 — 1990 年代のセマンティックウェブから来た <strong>RDF（トリプル）</strong>か、現代のグラフデータベースの<strong>プロパティグラフ</strong>か — を、著者の論旨のとおりに比べます。このウィキの<a href="#!news-20260710-oracle-ontology-property-graph">オラクルのオントロジー・プロパティグラフ</a>がオラクル（SQL/PGQ）の視点だとすれば、この記事は<strong>Neo4j・セマンティックウェブの視点</strong>から同じ問いを見ます。</p>
+
+<div class="note">
+    <span class="nh">出典</span>
+    · 原文: Jim Webber（Neo4j Chief Scientist）, &ldquo;RDF vs. property graphs: Choosing the right approach for implementing a knowledge graph&rdquo;（2024-06-04） — <a href="https://neo4j.com/blog/knowledge-graph/rdf-vs-property-graphs-knowledge-graphs/" target="_blank" rel="noopener">neo4j.com/blog/…/rdf-vs-property-graphs</a><br>
+    · この文書は原文の論旨を<strong>要約・整理</strong>したものです（抜粋を反映）。著者は Neo4j 所属なのでプロパティグラフに好意的な視点であることを踏まえて読んでください。<br>
+    · 系譜: <a href="#!sb-level4">セカンドブレイン レベル 4 · ナレッジグラフ</a>、<a href="#!news-20260710-oracle-ontology-property-graph">オラクルのプロパティグラフ</a>とつながる&ldquo;知識を関係でつなぐ&rdquo;文書。
+</div>
+
+<h3>なぜいまナレッジグラフなのか</h3>
+<p>生成 AI の市場が急増し（オライリーの集計で<strong>前年比 3,600%</strong>）、ナレッジグラフの需要がよみがえりました。ナレッジグラフは<strong>高度につながった異質なデータ</strong>に強く、<strong>LLM を事実に接地（grounding）</strong>させるのによく合います。data.world・Microsoft の独立した研究も <strong>RAG</strong> にナレッジグラフを使う利点を挙げました。ところがナレッジグラフを<strong>構築・運用</strong>するには数多くの設計の決定がついて回り、その最初の分かれ道が RDF かプロパティグラフか、です。</p>
+
+<h3>ナレッジグラフとは — エンティティ · 関係 · 組織の原理</h3>
+<p>ナレッジグラフは<strong>つながったエンティティ</strong>を保存・組織し理解するための<strong>意味論的に豊かなデータモデル</strong>です。三つの要素からできています。</p>
+<ul>
+    <li><strong>エンティティ（Entities）</strong> — 組織・ドメインのデータ。</li>
+    <li><strong>関係（Relationships）</strong> — エンティティが互いにどう相互作用・関連するか。データに<strong>文脈</strong>を与える。</li>
+    <li><strong>組織の原理（Organizing principle）</strong> — 中心となる概念についてのメタ情報。データと利用者のあいだの<strong>契約（メタのレイヤー）</strong>の役割。</li>
+</ul>
+<p>要は<strong>組織の原理の複雑さを、仕事に合わせて選ぶこと</strong>です。著者は、その幅が<strong>単純なラベル（ノードのラベル + 名前つきの関係） → 製品の階層（Product Line → Category → Product） → 完全なオントロジー（ビジネスの語彙の全体）</strong>まで広いと言います — 重いオントロジーがいつも正解なわけではありません。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 210" role="img" aria-label="組織の原理の複雑さのスペクトラム: 単純なラベルから製品の階層を経て完全なオントロジーまで、仕事に合う水準を選ぶ">
+    <text class="d-label sm" x="360" y="24" text-anchor="middle">組織の原理 — 仕事に合う複雑さを選ぶ</text>
+    <rect class="d-box soft" x="24" y="58" width="188" height="72" rx="10"/><text class="d-label sm" x="118" y="88" text-anchor="middle">単純なラベル</text><text class="d-sub" x="118" y="107" text-anchor="middle">ノードのラベル + 名前つき関係</text>
+    <line class="d-edge" x1="212" y1="94" x2="252" y2="94"/><polygon class="d-arrow" points="252,89 260,94 252,99"/>
+    <rect class="d-box soft" x="266" y="58" width="188" height="72" rx="10"/><text class="d-label sm" x="360" y="88" text-anchor="middle">製品の階層</text><text class="d-sub" x="360" y="107" text-anchor="middle">Line &#8594; Category &#8594; Product</text>
+    <line class="d-edge" x1="454" y1="94" x2="494" y2="94"/><polygon class="d-arrow" points="494,89 502,94 494,99"/>
+    <rect class="d-box accent" x="508" y="58" width="188" height="72" rx="10"/><text class="d-label sm" x="602" y="88" text-anchor="middle">完全なオントロジー</text><text class="d-sub" x="602" y="107" text-anchor="middle">ビジネスの語彙の全体</text>
+    <text class="d-sub" x="360" y="164" text-anchor="middle">軽い · 速い &#8592;&#8594; 表現力 · 推論</text>
+    <text class="d-sub" x="360" y="188" text-anchor="middle">重いオントロジーがいつも正解ではない — 仕事に合う水準を選ぶ</text>
+</svg>
+<div class="d-cap">ナレッジグラフの&ldquo;組織の原理&rdquo;は<strong>スペクトラム</strong> — 単純なラベルから完全なオントロジーまで、必要なぶんだけ。</div>
+</div>
+
+<h3>RDF — トリプルとセマンティックウェブ</h3>
+<p><strong>RDF</strong>（Resource Description Framework）はウェブでのデータの交換のための <strong>W3C 標準</strong>です。基本の単位は<strong>トリプル</strong> — <strong>主語（subject）・述語（predicate）・目的語（object）</strong>の三つからなる文であり、それぞれ <strong>URI</strong> で識別されます。主語はグラフの資源（ノード）、述語はエッジ（関係）、目的語はまた別のノードかリテラルの値です。</p>
+<div class="note">
+    <span class="nh">セマンティックウェブの夢、そしてトリプルストア</span>
+    RDF は<strong>セマンティックウェブ</strong>とともに知られました — よく定義された意味を持つ機械可読なデータを公開のウェブに載せ、ソフトウェアのエージェントがウェブを巨大な分散データ構造のように扱えるようにしよう、という夢。メタデータ（オントロジー）と問い合わせ言語（<strong>SPARQL</strong>）を組み合わせて、ウェブのデータから知識を推論するという構想でした。この夢は実現されず、その技術はローカルの DB に適用された<strong>&ldquo;トリプルストア&rdquo;</strong>へ流れていきます。当時は SQL が支配的で押されていましたが、グラフ DB の台頭とともにトリプルストアが&ldquo;グラフ DB の一種&rdquo;として再マーケティングされます。オントロジーの規則に従ってトリプルの上で推論する SPARQL が、その問い合わせ言語です。
+</div>
+
+<h3>RDF の実務上の限界</h3>
+<p>RDF は <strong>DB のシステムを念頭に設計されたわけではなく</strong>、実装が厄介です。著者が挙げる要点:</p>
+<ul>
+    <li><strong>同じ型の固有の関係を区別できない</strong> — ふたつのノードが同じ型の関係で何度つながっても、RDF では<strong>トリプル一つ</strong>に潰れます。表現力が制限されます。</li>
+    <li><strong>関係が一級市民ではない</strong> — 関係がトリプルの中に隠れているので、関係に属性をつけたり、同じ型の多重の関係を表したりするには<strong>新しいノードとトリプルをさらに作らなければ</strong>なりません（リレーショナル DB の<strong>結合テーブル</strong>と同じ迂回）。例: ソーシャルネットワークで互いにフォローする多重の関係を保存しようとすると、トリプルが増え続けます。モデルが冗長で複雑になり、保守が煩わしくなります。</li>
+    <li><strong>SPARQL は終了が保証されない</strong> — オントロジーがデータを&ldquo;賢く&rdquo;しますが、問い合わせが<strong>終わるという保証がなく</strong>、利用者がいつまでも答えを待つことがありえます。</li>
+</ul>
+<p>オントロジー主導のやり方そのものの現実的な負担も三つあります。</p>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>負担</th><th>内容</th></tr></thead>
+    <tbody>
+        <tr><td><strong>スキルの壁</strong></td><td>標準のオントロジーを作る専門性の習得に時間と労力がかかり、特殊性が高くて組織の中で<strong>移転（transfer）しにくい</strong>。</td></tr>
+        <tr><td><strong>資源の集約</strong></td><td>オントロジーの構築は長くかかり、<strong>完成しないと配備できない</strong>ので、ビジネスの価値までの時間が大きく遅れる。</td></tr>
+        <tr><td><strong>現実との遅れ</strong></td><td>ビジネスはオントロジーの更新より速く動くので、オントロジーが常に後れる → ナレッジグラフが&ldquo;<strong>過去のビジネス</strong>&rdquo;を映す。</td></tr>
+    </tbody>
+</table></div>
+<p>それでも RDF が合う場所はあります — <strong>互いによく理解されたふたつのローカルなドメインのあいだの情報の交換</strong>のための橋としてのオントロジー。そして著者は付け加えます: <strong>オントロジーは結局グラフ</strong>なので、セマンティックウェブのスタックの<strong>外でも</strong>使えます。</p>
+
+<h3>プロパティグラフ — 描いたとおりに保存する</h3>
+<p>プロパティグラフは情報を<strong>ノード・関係・属性</strong>で組織します。</p>
+<ul>
+    <li><strong>ノード（Node）</strong> — 一つ以上の<strong>ラベル</strong>で役割を示し、任意の<strong>属性（key-value）</strong>を持つ。</li>
+    <li><strong>関係（Relationship）</strong> — ふたつのノードのあいだの<strong>方向のある名前つきのつながり</strong>。つねに方向・型・始点のノード・終点のノードを持ち、ノードと同じく<strong>属性を持てる</strong>。方向があっても<strong>両方向に効率よく探索</strong>できる。</li>
+    <li><strong>属性（Property）</strong> — ノードと関係の<strong>両方</strong>につく key-value。</li>
+</ul>
+<p>設計の原則は<strong>論理モデルとできるだけ似た形で保存する</strong>こと — ホワイトボードに描いた絵そのままです。Neo4j のようなネイティブなプロパティグラフでは<strong>物理の保存モデルが論理モデルと同型（isomorphic）</strong>です: <strong>&ldquo;描いたとおりに保存する（what you draw is what you store）&rdquo;</strong>。問い合わせ言語はプロパティグラフの ISO 標準 <strong>GQL</strong> で、いちばん広く使われている実装が <strong>Cypher</strong> です。Cypher・GQL は SPARQL とは違い<strong>推論ではなくパターンマッチング</strong>に集中する宣言型なので、たいてい<strong>グラフの大きさに比例する時間で問い合わせが終わります</strong>。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="関係に属性をつけるとき、プロパティグラフは関係に直接属性を載せるが、RDF は関係が一級ではないので新しいノードとトリプルを足して表す">
+    <text class="d-label sm" x="180" y="24" text-anchor="middle">プロパティグラフ — 関係に直接</text>
+    <circle class="d-node" cx="66" cy="118" r="26"/><text class="d-node-label" x="66" y="122" text-anchor="middle">スニタ</text>
+    <circle class="d-node" cx="300" cy="118" r="26"/><text class="d-node-label" x="300" y="122" text-anchor="middle">ボルボ</text>
+    <line class="d-edge accent" x1="94" y1="118" x2="266" y2="118"/><polygon class="d-arrow accent" points="266,113 276,118 266,123"/>
+    <rect class="d-box accent" x="120" y="66" width="122" height="40" rx="9"/><text class="d-label sm" x="181" y="84" text-anchor="middle">運転(DRIVES)</text><text class="d-sub" x="181" y="99" text-anchor="middle">since=2011</text>
+    <line class="d-edge accent dash" x1="181" y1="106" x2="181" y2="116"/>
+    <text class="d-sub" x="180" y="176" text-anchor="middle">関係に属性・多重の関係をそのまま載せる</text>
+    <text class="d-sub" x="180" y="196" text-anchor="middle">(a)-[:DRIVES {since:2011}]-&gt;(b)</text>
+
+    <line class="d-edge dash" x1="380" y1="44" x2="380" y2="230"/>
+
+    <text class="d-label sm" x="550" y="24" text-anchor="middle">RDF — 関係が一級ではない</text>
+    <circle class="d-node" cx="448" cy="76" r="22"/><text class="d-node-label" x="448" y="80" text-anchor="middle">スニタ</text>
+    <circle class="d-node" cx="662" cy="76" r="22"/><text class="d-node-label" x="662" y="80" text-anchor="middle">ボルボ</text>
+    <rect class="d-box" x="500" y="146" width="110" height="40" rx="9"/><text class="d-label sm" x="555" y="164" text-anchor="middle">運転の出来事</text><text class="d-sub" x="555" y="179" text-anchor="middle">（追加ノード）</text>
+    <line class="d-edge" x1="466" y1="92" x2="522" y2="144"/><text class="d-sub" x="470" y="136" text-anchor="middle">subject</text>
+    <line class="d-edge" x1="644" y1="92" x2="588" y2="144"/><text class="d-sub" x="640" y="136" text-anchor="middle">object</text>
+    <line class="d-edge" x1="555" y1="186" x2="555" y2="212"/><polygon class="d-arrow" points="551,212 559,212 555,218"/>
+    <rect class="d-box soft" x="502" y="220" width="106" height="26" rx="7"/><text class="d-sub" x="555" y="237" text-anchor="middle">since=2011</text>
+</svg>
+<div class="d-cap">同じ&ldquo;関係に属性&rdquo;を、プロパティグラフは<strong>関係に一度で</strong>載せ、RDF は関係が一級ではないので<strong>新しいノード・トリプルを足して</strong>表す。</div>
+</div>
+
+<h3>プロパティグラフの長所</h3>
+<p>プロパティグラフはデータの交換のフォーマットではなく、<strong>アプリケーション・分析のための DB のモデル</strong>として設計されました。RDF とは違い<strong>多対多・同じ型の多重の関係</strong>を手軽に扱え、あらかじめ決められた構造に閉じ込められないので、ナレッジグラフを<strong>少しずつ育てて</strong>いけます。著者が挙げた長所は四つ:</p>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>長所</th><th>内容</th></tr></thead>
+    <tbody>
+        <tr><td><strong>単純さ（Simplicity）</strong></td><td>素早く立てて使う — 初心者も熟練者も低い複雑さ。</td></tr>
+        <tr><td><strong>詳しさ（Detailed）</strong></td><td>ノードと関係の<strong>両方にデータ</strong>を持たせ、エンティティとつながりがビジネスを正確に映す。</td></tr>
+        <tr><td><strong>相互運用（Interoperable）</strong></td><td>Neo4j は <strong>RDF を消費・生成</strong>して既存のトリプルストアと連携し、リレーショナル・ドキュメント DB など現代のシステムとも統合。</td></tr>
+        <tr><td><strong>標準への準拠（Standards）</strong></td><td>ISO <strong>GQL</strong> で、リレーショナル DB が ISO SQL で得ていたのと同じ信頼をグラフでも。</td></tr>
+    </tbody>
+</table></div>
+
+<h3>事例 — プロパティグラフの成果</h3>
+<ul>
+    <li><strong>NASA</strong> — 1950 年代の末からのプロジェクトのデータが組織のサイロに埋もれていたが、DB をプロパティグラフに移して<strong>数百万件の歴史の文書</strong>を収めた。エンジニアが過去のプロジェクトから傾向と教訓を見つけ、災害を予防する — &ldquo;火星ミッション&rdquo;の準備で<strong>数百万ドルと数年の R&amp;D</strong> を節約。</li>
+    <li><strong>Basecamp Research</strong> — Neo4j で地球の生物多様性の世界最大のナレッジグラフを構築。生物・化学・環境のデータをつないで<strong>知られたタンパク質を 50% 拡張</strong>し、<strong>50 億以上の生物学的な関係</strong>を記録 — タンパク質の設計・生成 AI の優れた資源。</li>
+    <li><strong>Novo Nordisk</strong> — Neo4j をもとにしたナレッジグラフで <strong>StudyBuilder</strong> を動かし、臨床データの収集・報告を簡素化。CDISC・SNOMED・UCUM など絡み合ったデータ標準を渡り歩きながら、縦断の一貫性・規制の順守・自動化・再利用を確保（オープンソースで公開）。</li>
+</ul>
+
+<h3>自分のナレッジグラフには何を — 機能の対比</h3>
+<p>著者が示した機能のマトリクスです（● 強い/標準で対応 · ◑ 部分的 · ○ 弱い/未対応）。</p>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>項目</th><th>プロパティグラフ</th><th>RDF</th></tr></thead>
+    <tbody>
+        <tr><td>ネイティブなグラフとして保存</td><td>●</td><td>○</td></tr>
+        <tr><td>効率がよく摩擦の少ないモデリング</td><td>●</td><td>○</td></tr>
+        <tr><td>始めやすさ · 少しずつの変更</td><td>●</td><td>○</td></tr>
+        <tr><td>エンティティ→属性・関係→属性の問い合わせの効率</td><td>●</td><td>○</td></tr>
+        <tr><td>問い合わせ言語</td><td>Cypher / GQL</td><td>SPARQL</td></tr>
+        <tr><td>速度・性能</td><td>●</td><td>◑</td></tr>
+        <tr><td>データサイエンスでの分析・補強</td><td>●</td><td>○</td></tr>
+        <tr><td>トランザクションのデータをネイティブに保存</td><td>●</td><td>○</td></tr>
+        <tr><td>セマンティックなデータをネイティブに保存</td><td>○</td><td>●</td></tr>
+        <tr><td>既製のオントロジーの活用</td><td>○</td><td>●</td></tr>
+    </tbody>
+</table></div>
+
+<h3>結論 — 基本はプロパティグラフ、必要なときに RDF の組織の原理を載せる</h3>
+<p>モデルの選択は状況に左右されますが、<strong>自由に選べるならたいてい単純さと機敏さのゆえにプロパティグラフを採ります</strong> — 道具・文献・教育・人材・ISO 標準の生態系も広いのです。グラフはセマンティックウェブの時代のあと大きく進み、現代のベストプラクティスは<strong>ふたつの学派の両方</strong>から採ります。著者の勧めははっきりしています:</p>
+<div class="note">
+    <span class="nh">著者の勧め</span>
+    <strong>既定はプロパティグラフに置き、システムが必要とするときに</strong> RDF の世界の組織の原理（<strong>タクソノミー・オントロジー</strong>）を<strong>レイヤーとして載せよ</strong> — 技術的な前提条件としてではなく。
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 720 200" role="img" aria-label="勧めの流れ: プロパティグラフを既定に置き、必要なときに RDF のタクソノミー・オントロジーを組織の原理のレイヤーとして載せる">
+    <rect class="d-box accent" x="40" y="72" width="200" height="60" rx="11"/><text class="d-label sm" x="140" y="98" text-anchor="middle">プロパティグラフ（既定）</text><text class="d-sub" x="140" y="116" text-anchor="middle">単純・機敏・性能 · ISO GQL</text>
+    <line class="d-edge accent" x1="240" y1="102" x2="290" y2="102"/><polygon class="d-arrow accent" points="290,97 298,102 290,107"/>
+    <text class="d-sub" x="360" y="70" text-anchor="middle">必要なときだけ</text>
+    <rect class="d-box soft" x="300" y="72" width="200" height="60" rx="11"/><text class="d-label sm" x="400" y="98" text-anchor="middle">+ 組織の原理のレイヤー</text><text class="d-sub" x="400" y="116" text-anchor="middle">タクソノミー・オントロジー</text>
+    <line class="d-edge" x1="500" y1="102" x2="550" y2="102"/><polygon class="d-arrow" points="550,97 558,102 550,107"/>
+    <rect class="d-box" x="560" y="72" width="132" height="60" rx="11"/><text class="d-label sm" x="626" y="98" text-anchor="middle">ナレッジグラフ</text><text class="d-sub" x="626" y="116" text-anchor="middle">仕事に合う水準</text>
+    <text class="d-sub" x="360" y="170" text-anchor="middle">オントロジーは&ldquo;技術的な前提&rdquo;ではなく必要なときに載せるレイヤー — ふたつの学派から採る</text>
+</svg>
+<div class="d-cap">二者択一ではない — <strong>プロパティグラフを基本</strong>に、RDF の組織の原理は<strong>必要なときに載せるレイヤー</strong>として。</div>
+</div>
+
+<h3>用語辞典</h3>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>用語</th><th>意味</th></tr></thead>
+    <tbody>
+        <tr><td><strong>ナレッジグラフ</strong></td><td>エンティティ・関係・組織の原理でつながったデータを保存し理解する意味論的なデータモデル。</td></tr>
+        <tr><td><strong>組織の原理</strong></td><td>中心となる概念のメタ情報 — 単純なラベルからオントロジーまで。データと利用者のあいだの契約。</td></tr>
+        <tr><td><strong>RDF · トリプル · URI</strong></td><td>ウェブのデータの交換のための W3C 標準。主語–述語–目的語のトリプル、各要素を URI で識別。</td></tr>
+        <tr><td><strong>トリプルストア</strong></td><td>RDF／セマンティックウェブの技術をローカルの DB に適用した保存庫。SPARQL で問い合わせる。</td></tr>
+        <tr><td><strong>SPARQL</strong></td><td>RDF 用の W3C 問い合わせ言語。オントロジーの規則の上で推論 — 終了の保証はない。</td></tr>
+        <tr><td><strong>プロパティグラフ</strong></td><td>ノード（ラベル）・関係（方向・型・属性）・属性で構成。論理 = 物理の同型。</td></tr>
+        <tr><td><strong>Cypher · GQL</strong></td><td>プロパティグラフの問い合わせ言語。GQL は ISO 標準、Cypher が代表の実装。パターンマッチング中心。</td></tr>
+        <tr><td><strong>オントロジー · タクソノミー</strong></td><td>概念・語彙・分類の体系。プロパティグラフの上に&ldquo;組織の原理のレイヤー&rdquo;として載せられる。</td></tr>
+    </tbody>
+</table></div>
+
+<h3>まとめ — 三つの文で</h3>
+<ul>
+    <li>ナレッジグラフは<strong>エンティティ・関係・組織の原理</strong>からなり、組織の原理の複雑さは<strong>仕事に合わせて</strong>選ぶ。</li>
+    <li>RDF は標準・相互運用・既製のオントロジー・セマンティックなデータに強いが、<strong>関係が一級ではなく</strong>（多重の関係・関係の属性にトリプルとノードが増える）、SPARQL の終了の保証やオントロジーの維持費の負担がある。</li>
+    <li>著者の勧めは<strong>プロパティグラフを基本</strong>に使い、必要なときに RDF のタクソノミー・オントロジーを<strong>組織の原理のレイヤーとして載せること</strong> — 前提条件としてではなく。</li>
+</ul>
+
+<h3>出典</h3>
+<ul>
+    <li>Jim Webber（Neo4j）, &ldquo;RDF vs. property graphs: Choosing the right approach for implementing a knowledge graph&rdquo;（2024-06-04） — <a href="https://neo4j.com/blog/knowledge-graph/rdf-vs-property-graphs-knowledge-graphs/" target="_blank" rel="noopener">neo4j.com</a>（原文）</li>
+    <li>ISO/IEC 39075 GQL（Graph Query Language） — <a href="https://www.iso.org/standard/76120.html" target="_blank" rel="noopener">iso.org</a></li>
+    <li>W3C RDF · SPARQL · OWL の標準 — <a href="https://www.w3.org/RDF/" target="_blank" rel="noopener">w3.org/RDF</a></li>
+    <li>事例: NASA · Basecamp Research · Novo Nordisk StudyBuilder（原文の中のリンクを参照）</li>
+</ul>
+<p class="scn-sub"><strong>このウィキの関連文書</strong> — <a href="#!news-20260710-oracle-ontology-property-graph">オラクルのオントロジー・プロパティグラフ</a> · <a href="#!sb-level4">セカンドブレイン レベル 4 · ナレッジグラフ</a> · <a href="#!dzp-core">Douzone ナレッジプラットフォームの提案</a></p>
+
+<div class="note">
+    <span class="nh">この文書の態度</span>
+    この記事は <strong>Neo4j 所属の著者</strong>がプロパティグラフの側に立つ視点です — 機能のマトリクスや&ldquo;基本はプロパティグラフ&rdquo;という結論は、その立場を反映します。RDF の強み（標準・相互運用・形式意味論・推論）は文書の中でも認められており、実際の選択はワークロードと相互運用の要求しだいです。原文の全体は上のリンクで確かめてください。
+</div>
