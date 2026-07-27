@@ -3,7 +3,7 @@
 <h3>はじめから作り直さない</h3>
 <p>事前の検証のために運用している <strong>Reference Wiki</strong>（<a href="#!kgs-overview">知識はどう積み上がるのか</a>のシリーズが解説する、あのウィキ）がすでに備えている機能を複製して PoC を始め、検証された機能を会社のプラットフォームへ育てる。2026-07 の時点で実証されている範囲: HTML Fragment の文書、SPA の Web UI、JSON の Navigation Tree（不変の ID と物理の経路の分離）、統合／Tag／Concept の検索、Knowledge Index（決定的なビルド + <code>--check</code> のドリフトのゲート）、自動の関連の推薦（<code>related</code>）と<strong>型つきの知識の関係 5 種（<code>relations</code>）</strong>、Knowledge Map · 3D/2D の知識グラフ、<strong>AI の消費の層（llms.txt · 自己完結のグラフ JSON）</strong>、4 層の CI の検証のゲート、Work Log、Git History にもとづく文書の履歴。</p>
 
-<p>再利用は「コードを参考にする」の水準ではない。このエンジンはすでに <strong>wiki-plugin（v0.7.0）としてパッケージ</strong>されている — 登録・索引・検証の道具 18 種とスキル 4 種（add-doc · index · validate · wiki-init）を収め、新しいリポジトリに入れれば同じ知識の体系をすぐに立ち上げる（<a href="#!kgs-plugin">ウィキのエンジンのプラグイン化</a>）。Reference Wiki 自身がこのプラグインの最初のドッグフーディングの利用者として運用しているので、「はじめから作り直さない」はスローガンではなく<strong>インストールの手順</strong>である。</p>
+<p>再利用は「コードを参考にする」の水準ではない。このエンジンはすでに <strong>wiki-plugin（v0.21.0）としてパッケージ</strong>されている — 登録・索引・検証の道具 18 種とスキル 4 種（add-doc · index · validate · wiki-init）を収め、新しいリポジトリに入れれば同じ知識の体系をすぐに立ち上げる（<a href="#!kgs-plugin">ウィキのエンジンのプラグイン化</a>）。Reference Wiki 自身がこのプラグインの最初のドッグフーディングの利用者として運用しているので、「はじめから作り直さない」はスローガンではなく<strong>インストールの手順</strong>である。</p>
 
 <p>とくにこの Reference Wiki では、<strong>AI が文書を作成・修正するときに知識の体系への反映が規則として義務づけられている</strong>（リポジトリの AI 向けの指針の文書で強制）。文書が一編加われば、ナビゲーションへの登録 → 知識の索引のエントリ（概念と<strong>関係の 5 型の多角的な検討</strong>を含む — 検討の抜けは、遮らないレビューの信号が知らせる） → 決定的な索引のビルド → 知識の地図・グラフ・検索への自動の反映 → Work Log への記録、までが<strong>同じ変更の単位（PR）</strong>で一緒に動く。会社のプラットフォームの「知識の反映率」という運用の規律が、すでに小さな規模で検証されているわけだ。</p>
 

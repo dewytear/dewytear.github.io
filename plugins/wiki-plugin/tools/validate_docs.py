@@ -492,6 +492,30 @@ def check_map_fallback_drift(root):
                 findings.append({'level': 'WARN', 'check': 'map-fallback-drift', 'name': name,
                     'message': f"인덱스 클러스터 '{label}'의 fallback 행이 없음"})
 
+        # Top-concepts line (#km-top). Hydration replaces it, so a reader with
+        # JS never sees it — but the prerendered snapshot ships it verbatim to
+        # crawlers, and it was **byte-identical Korean in all three languages**
+        # until 2026-07-28. Compare against the same source hydrateAiMap uses:
+        # topConcepts with n>=5, run through that language's display names.
+        m = re.search(r'id="km-top"[^>]*>(.*?)</', doc, re.DOTALL)
+        if m:
+            lang = rel.split('/')[0]
+            labels = {}
+            if lang != 'ko':
+                try:
+                    with open(os.path.join(root, 'tools', 'concepts.%s.json' % lang),
+                              encoding='utf-8') as f:
+                        labels = (json.load(f) or {}).get('labels') or {}
+                except (OSError, ValueError):
+                    labels = {}
+            top = [t for t in (g.get('topConcepts') or []) if t.get('n', 0) >= 5]
+            expect = ' · '.join('%s %d' % (labels.get(t['c'], t['c']), t['n']) for t in top)
+            got = ' '.join(re.sub(r'<[^>]+>', '', m.group(1)).split())
+            if top and got != expect:
+                findings.append({'level': 'WARN', 'check': 'map-fallback-drift', 'name': name,
+                    'message': "km-top fallback이 인덱스·표시명과 다름 — "
+                               "python3 tools/build_index.py 후 그 언어의 개념 표시명으로 갱신"})
+
         # Totals line: the two numbers in #km-totals (docs, then concepts).
         m = re.search(r'id="km-totals"[^>]*>([^<]*)<', doc)
         if m:

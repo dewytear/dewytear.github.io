@@ -170,3 +170,42 @@
 </ul>
 <p>그래서 면제를 <code>_worklog_body_optional(rel, lang_files)</code>로 바꿨다: <strong>번역 언어 어디에도 본문이 없으면 면제, 한 곳이라도 있으면 나머지 언어에도 있어야 한다.</strong> 이름 목록도 <code>TODO</code> 주석도 필요 없고, 앞으로 새 안내 문서가 생겨도 규칙이 저절로 맞는다. 양방향으로 역검증했다 &mdash; <code>wl-guide</code>의 ja 본문만 치우면 <strong>ERROR</strong>, en·ja를 둘 다 치우면 <strong>통과</strong>(대칭이므로).</p>
 <p class="scn-sub">교훈 하나 더: <strong>결정을 미루려고 만든 예외 목록이 규칙의 결함을 가리고 있었다.</strong> 미결 표시 자체는 정직했지만, 그 자리에 이름을 하나 적는 순간 &ldquo;왜 이름으로 가르고 있지?&rdquo;라는 질문을 건너뛰게 된다. 결정이 내려오자 규칙이 틀렸다는 게 바로 드러났다.</p>
+
+<h3>후속 — 사이트맵의 죽은 URL과 낡은 자기기술 수치</h3>
+<p>Backlog에 열어 뒀던 두 건을 함께 처리했다. 둘 다 <strong>일본어 병행 이전부터 있던 결함</strong>이고, 일본어는 그 결함을 3개 언어로 복제했을 뿐이다.</p>
+
+<h4>① 사이트맵의 죽은 URL — 두 생성기가 서로 다른 규칙으로 골랐다</h4>
+<p><code>build_sitemap</code>은 <code>list</code> 전체를 돌며 <code>/p/&lt;name&gt;/</code>를 적고, <code>build_prerender</code>는 <strong>지식 인덱스에 있는 문서만</strong> 스냅샷을 만든다. 규칙이 달라 <strong>74개 URL이 404인 채로 검색엔진에 제출</strong>되고 있었다. 그런데 그 74개를 열어 보니 성격이 정확히 둘로 갈렸다.</p>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>대상</th><th>수</th><th>판단</th></tr></thead>
+<tbody>
+<tr><td>워크로그</td><td>63편</td><td><strong>사이트맵에서 뺀다.</strong> 지식 인덱스에서 의도적으로 제외한 내부 기록이다 &mdash; 스냅샷을 만들 이유가 없다</td></tr>
+<tr><td><code>ai-map</code> · <code>ai-guide</code> · <code>dz-map</code></td><td>3편</td><td><strong>스냅샷을 만든다.</strong> 위키를 <em>읽는 법</em>을 설명하는 공개 목적지이고, 특히 <code>ai-guide</code>는 <code>llms.txt</code>가 &ldquo;AI 순회 가이드&rdquo;로 링크하는 <strong>계약 문서</strong>라 JS 없는 크롤러에게 실물 페이지여야 한다</td></tr>
+</tbody>
+</table>
+</div>
+<p>즉 &ldquo;사이트맵을 좁힐 것인가, 스냅샷을 넓힐 것인가&rdquo;의 답은 <strong>둘 다</strong>였다. 그리고 재발을 막기 위해 <strong>선택 규칙의 정본을 한 군데로 모았다</strong> &mdash; <code>build_prerender.snapshot_names()</code>가 스냅샷 대상을 돌려주고 사이트맵이 그것을 읽는다. 두 생성기가 각자 고르는 한 언제든 다시 어긋난다. 결과: <strong>432 &rarr; 367 URL · 죽은 URL 0</strong>.</p>
+
+<h4>② 낡은 수치 &mdash; 고치고 나서 기계가 보게 했다</h4>
+<p>실측으로 갈아 끼운 값들(3개 언어 전부):</p>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>문서</th><th>전</th><th>후</th></tr></thead>
+<tbody>
+<tr><td><code>kgs-overview</code></td><td>108편 · 338개념 · 228연결 · 3.3평균 · 110관계</td><td><strong>115 · 370 · 236 · 3.2 · 114</strong></td></tr>
+<tr><td><code>kgs-edges</code></td><td>108편 중 22편 · 개념 179(79%)/폴더 49(21%)</td><td><strong>115편 중 22편 · 182(77%)/54(23%)</strong></td></tr>
+<tr><td><code>kgs-plugin</code></td><td>플러그인 0.4.0</td><td><strong>0.21.0</strong></td></tr>
+<tr><td><code>dzp-knowledge</code>·<code>dzp-overview</code></td><td>107편 · 337개념 · 349엣지 · 107관계</td><td><strong>115 · 370 · 364 · 114</strong></td></tr>
+<tr><td><code>dzp-roadmap</code>·<code>dzp-security</code></td><td>wiki-plugin v0.7.0</td><td><strong>v0.21.0</strong></td></tr>
+</tbody>
+</table>
+</div>
+<p><code>kgs-overview</code>는 <strong>고유 쌍(236)</strong>을, <code>dzp-*</code>는 <strong>방향 포함 합계(364)</strong>를 쓰고 있었다 &mdash; 같은 그래프를 다른 방식으로 세는 것이라 둘 다 맞다. 문서마다 무엇을 세는지 확인하고 그 정의에 맞는 값을 넣었다. 워크로그의 옛 수치는 그 시점의 기록이므로 손대지 않았다.</p>
+
+<div class="note warn">
+    <span class="nh">지식지도 폴백이 세 언어 모두 한국어였다 &mdash; 그리고 이제 게이트가 본다</span>
+    <code>km-top</code>(핵심 개념 줄)은 하이드레이션이 덮어써서 <strong>JS가 있는 독자는 못 본다</strong>. 그런데 <strong>프리렌더 스냅샷에는 그대로 실려 크롤러에게 나간다</strong> &mdash; 세 언어가 바이트 동일한 한국어였다. 게다가 <code>dz-map</code>은 수치까지 낡아 있었다(<code>지식플랫폼 6</code> → 실제 7). 하이드레이션이 가리는 자리라 실렌더 검사로도 못 잡는다.
+    <br>그래서 기존 <code>map-fallback-drift</code>에 <strong>km-top 검사를 추가</strong>했다 &mdash; 인덱스의 <code>topConcepts</code>(n&ge;5)를 그 언어의 표시명으로 옮긴 것과 대조한다. 넣자마자 <code>dz-map</code> 3언어를 잡았고, ja를 한국어로 되돌려 보니 정확히 그 줄에서 걸렸다.
+</div>
+<p class="scn-sub">패턴이 반복된다: <strong>수치를 고치는 것만으로는 다시 낡는다.</strong> 이번에도 고친 값 옆에 그 값을 지키는 검사를 같이 뒀다 &mdash; 사이트맵은 정본을 하나로 모아서, km-top은 드리프트 검사를 늘려서.</p>

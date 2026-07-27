@@ -70,7 +70,60 @@ EXTRA_PAGES = {
                   'complex work and turn repeated experience into systems and knowledge.',
         },
     },
+    # 지도·순회 가이드 3편. `list`에는 있지만 doc-entries(지식 인덱스)에는
+    # 없다 — 인덱스 대상 콘텐츠가 아니라 위키를 **읽는 법**을 설명하는
+    # 메타 문서이기 때문이다. 그래서 2026-07-28까지 스냅샷이 없었는데,
+    # 사이트맵은 `list`를 보고 URL을 실었다 → /p/ai-guide/ 등 9개가 404.
+    # 특히 ai-guide는 llms.txt가 "AI 순회 가이드"로 링크하는 계약 문서라
+    # JS 없는 크롤러에게 반드시 실물 페이지여야 한다.
+    'ai-map': {
+        'path': 'ai/map/ai-map',
+        'section': {'ko': '지식지도', 'en': 'Knowledge Map', 'ja': '知識の地図'},
+        'summary': {
+            'ko': 'AI World의 지식 지도 — System별 문서 수·허브 문서와 '
+                  '여러 System을 잇는 브리지 개념을 한눈에.',
+            'en': 'The knowledge map of the AI World — documents and hub pages per '
+                  'System, plus the bridge concepts that span several Systems.',
+            'ja': 'AI World の知識の地図 — System ごとの文書の数・ハブ文書と、'
+                  'いくつもの System をつなぐ橋の概念を一目で。',
+        },
+    },
+    'ai-guide': {
+        'path': 'ai/map/ai-guide',
+        'section': {'ko': '지식지도', 'en': 'Knowledge Map', 'ja': '知識の地図'},
+        'summary': {
+            'ko': '외부 AI가 이 위키를 순회·분석하는 계약 — 어떤 파일을 어떤 '
+                  '순서로 fetch하고 노드·엣지·개념을 어떻게 읽는지.',
+            'en': 'The contract for an external AI traversing this wiki — which files '
+                  'to fetch in what order, and how to read nodes, edges and concepts.',
+            'ja': '外部の AI がこのウィキを巡回・分析するための契約 — どのファイルを'
+                  'どの順に fetch し、ノード・エッジ・概念をどう読むか。',
+        },
+    },
+    'dz-map': {
+        'path': 'douzone/map/dz-map',
+        'section': {'ko': '지식지도', 'en': 'Knowledge Map', 'ja': '知識の地図'},
+        'summary': {
+            'ko': 'Douzone World의 지식 지도 — 제안 시리즈별 문서 수·허브 문서와 '
+                  'AI World로 이어지는 개념 다리.',
+            'en': 'The knowledge map of the Douzone World — documents and hub pages per '
+                  'proposal series, and the concept bridges reaching into the AI World.',
+            'ja': 'Douzone World の知識の地図 — 提案のシリーズごとの文書の数・ハブ文書と、'
+                  'AI World へつながる概念の橋。',
+        },
+    },
 }
+
+
+def snapshot_names():
+    """스냅샷이 실제로 생성되는 문서 이름 — **사이트맵이 이 목록을 정본으로 읽는다.**
+
+    두 생성기가 서로 다른 규칙으로 문서를 고르면 사이트맵에 404가 실린다:
+    2026-07-28까지 build_sitemap은 `list` 전체를, 여기는 인덱스 문서만
+    대상으로 삼아 **워크로그 63편의 /p/<name>/ 가 죽은 URL로 제출되고
+    있었다**. 선택 규칙은 한 군데(여기)에만 둔다."""
+    bi = _load_build_index()
+    return {d['name'] for d in bi.build(KO)['docs']} | set(EXTRA_PAGES)
 
 # og:locale — 언어를 늘릴 때 STR와 함께 채운다(빠지면 그 언어 스냅샷이
 # en_US로 나간다: 2026-07-28까지 ja 116쪽이 그랬다).

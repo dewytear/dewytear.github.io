@@ -44,7 +44,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-07-24T22:16:42+09:00"
+ "dateModified": "2026-07-28T04:34:26+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -62,7 +62,7 @@
 <p>모든 문서는 등재될 때 <strong>핵심 개념 5~6개</strong>를 큐레이션받습니다(<a href="/p/kgs-overview/">앞 편</a>의 파이프라인 ③). 여기에 한 가지 원칙이 있습니다: <strong>개념은 본문에 실재하는 것만 적는다</strong>. 연결을 만들고 싶다고 본문에 없는 개념을 넣으면 그래프가 "실제 지식의 지도"이기를 멈추기 때문입니다. 그래서 이 그래프의 엣지는 수가 적은 대신, <strong>하나하나가 근거(공유 개념)를 제시할 수 있습니다</strong>.</p>
 
 <h3>저울 — 희귀한 개념일수록 강한 연결</h3>
-<p>두 문서가 개념을 공유하면 연결 후보가 됩니다. 그런데 모든 개념이 같은 무게일 수는 없습니다. 108편 중 <strong>22편</strong>에 나오는 '스킬'을 공유하는 것은 우연에 가깝지만, 단 <strong>2편</strong>에만 나오는 '벡터검색'을 공유하는 것은 강한 신호입니다. 그래서 개념마다 <strong>희소성 가중치(idf)</strong> — 대략 "전체 문서 수 ÷ 그 개념이 나오는 문서 수"의 로그 — 를 부여합니다:</p>
+<p>두 문서가 개념을 공유하면 연결 후보가 됩니다. 그런데 모든 개념이 같은 무게일 수는 없습니다. 115편 중 <strong>22편</strong>에 나오는 '스킬'을 공유하는 것은 우연에 가깝지만, 단 <strong>2편</strong>에만 나오는 '벡터검색'을 공유하는 것은 강한 신호입니다. 그래서 개념마다 <strong>희소성 가중치(idf)</strong> — 대략 "전체 문서 수 ÷ 그 개념이 나오는 문서 수"의 로그 — 를 부여합니다:</p>
 
 <div class="diagram">
 <svg viewBox="0 0 720 176" role="img" aria-label="idf 저울: 스킬은 21편에 나와 가중치 1.54로 가볍고, 벡터검색은 2편에만 나와 3.89로 무겁다">
@@ -110,7 +110,7 @@
 <ul>
     <li><strong>공유 2개 이상</strong> → 연결. 서로 다른 개념 두 개가 겹치는 것은 우연이기 어렵습니다.</li>
     <li><strong>공유 1개 + 그 개념이 3편 이하에만 등장</strong> → 연결. 실례: Welcome ↔ <a href="/p/commands/">일상 사용</a>은 '자연어' 하나만 공유하지만, '자연어'가 워낙 희귀해 인정됩니다. 반대로 '스킬' 하나만 공유한 쌍은 연결되지 않습니다 — 22편이 공유하는 개념 1개는 근거가 못 되기 때문입니다.</li>
-    <li><strong>그 외</strong> → 개념으로는 연결하지 않습니다. 대신 개념 연결이 2개가 안 되는 문서는 <strong>같은 System의 이웃</strong>(예: <a href="/p/ccb-claudemd/">CLAUDE.md 편</a> → 같은 Tutorial의 앞뒤 강의)으로 보완해, <strong>모든 문서가 최소 2~4개의 연결</strong>을 갖게 합니다. 현재 비율은 개념 연결 179개(79%) · 폴더 보완 49개(21%)입니다.</li>
+    <li><strong>그 외</strong> → 개념으로는 연결하지 않습니다. 대신 개념 연결이 2개가 안 되는 문서는 <strong>같은 System의 이웃</strong>(예: <a href="/p/ccb-claudemd/">CLAUDE.md 편</a> → 같은 Tutorial의 앞뒤 강의)으로 보완해, <strong>모든 문서가 최소 2~4개의 연결</strong>을 갖게 합니다. 현재 비율은 개념 연결 182개(77%) · 폴더 보완 54개(23%)입니다.</li>
 </ul>
 
 <h3>경계값의 파급 — 왜 함부로 개념을 못 늘리나</h3>
@@ -161,7 +161,7 @@
     개념은 <strong>큐레이션</strong>(본문 실재만) → 엣지는 <strong>희소성 가중 공유</strong>(2개↑ 또는 희귀 1개) → 부족하면 <strong>폴더 보완</strong> → 모든 문서 2~4연결·고아 0. 그 위에 본문 <code>#!</code> 링크의 역인덱스인 <strong>인용 백링크(<code>citedBy</code>)</strong>와, 큐레이션으로 선언하는 <strong>방향 있는 타입 관계(<code>relations</code>)</strong>를 별도로 얹습니다. 많이 참조되는 문서가 <strong>허브</strong>가 되어 그래프의 중심을 이룹니다(<a href="/p/kgs-views/">다음 편</a>).
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">분류</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">생성일자</span> 2026-07-11 &middot; <span class="pr-k">수정일자</span> 2026-07-24</p>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">생성일자</span> 2026-07-11 &middot; <span class="pr-k">수정일자</span> 2026-07-28</p>
 
 <nav class="pr-rel"><h2>연관 문서</h2>
 <ul><li><a href="/p/kgs-overview/">지식은 어떻게 쌓이는가</a></li><li><a href="/p/kgs-views/">그래프를 읽는 9가지 눈</a></li></ul>

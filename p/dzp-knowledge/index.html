@@ -44,7 +44,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-06T02:35:24+09:00",
- "dateModified": "2026-07-13T21:31:39+09:00"
+ "dateModified": "2026-07-28T04:34:26+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -56,7 +56,7 @@
 </p>
 <article>
 <h2>지식 관리 체계 — 판정 · 구조 · 연결 · 추적 · 신뢰 · 수명주기</h2>
-<p>파이프라인이 지식을 만든다면, 이 편은 그 지식이 <strong>어떤 구조로 담기고, 어떻게 이어지고, 어떻게 신뢰를 유지하는가</strong>를 다룬다. 여기 나오는 구조는 상상이 아니다 — 사전 검증용 Reference Wiki가 2026-07 기준 문서 107편 · 고유 개념 337개 · 자동 연관 엣지 349개 · 타입 지식관계 107건 규모로 <strong>실제 운영하며 검증한 스키마</strong>를 코어로 삼고, 회사 개발 지식에 필요한 필드만 하위호환(additive)으로 확장한다.</p>
+<p>파이프라인이 지식을 만든다면, 이 편은 그 지식이 <strong>어떤 구조로 담기고, 어떻게 이어지고, 어떻게 신뢰를 유지하는가</strong>를 다룬다. 여기 나오는 구조는 상상이 아니다 — 사전 검증용 Reference Wiki가 2026-07 기준 문서 115편 · 고유 개념 370개 · 자동 연관 엣지 364개 · 타입 지식관계 114건 규모로 <strong>실제 운영하며 검증한 스키마</strong>를 코어로 삼고, 회사 개발 지식에 필요한 필드만 하위호환(additive)으로 확장한다.</p>
 
 <h3>가치 판정 — 변경량이 아니라 재사용 가치</h3>
 <ul>
@@ -68,7 +68,7 @@
 <p>지식 한 편은 세 겹의 속성으로 존재한다. 첫째 겹은 <strong>노드 속성</strong>이다 — Reference Wiki의 내비게이션 트리에서 모든 문서 노드는 <code>name</code>(불변 논리 ID이자 라우트)과 <code>path</code>(물리 경로)를 분리해 갖는다. 파일이 도메인 트리 안에서 이동해도 <code>path</code>만 바뀌고 <code>name</code>은 불변이라, <strong>축적된 링크·관계·검색이 파일 재배치에 깨지지 않는다</strong>. 여기에 표시용 <code>label</code>(+언어별)·<code>tags</code>·저작 <code>model</code>이 얹힌다(<a href="/p/kgs-overview/">지식은 어떻게 쌓이는가</a>). 둘째 겹은 <strong>인덱스 엔트리</strong> — 아래 예시의 윗부분이 실증 코어, 아랫부분이 회사 확장이다. 셋째 겹(연결)은 다음 절에서 다룬다.</p>
 <pre><code><span class="c"># Knowledge Index 엔트리 — 실증 코어 + 회사 확장 (예시)</span>
 {
-  <span class="c">// ── 실증 코어: Reference Wiki가 107편 규모로 운영 중인 필드 ──</span>
+  <span class="c">// ── 실증 코어: Reference Wiki가 115편 규모로 운영 중인 필드 ──</span>
   "name": "dz-erp-so-status-transition",   <span class="c">// 불변 논리 ID = 라우트</span>
   "title": "수주 상태 전이 정책",
   "summary": "판매오더 상태 체계와 출고·매출 전이 조건",
@@ -95,7 +95,7 @@
     <li><strong>ⓐ 계산된 연관(<code>related</code>)</strong> — 기계가 공유 개념으로 자동 계산하는 대칭 연결. 흔한 개념일수록 낮게, 희귀한 개념일수록 높게 가중(희소성·idf)하고, <strong>개념 2개 이상 공유</strong>이거나 <strong>희귀 개념(전체 3편 이하) 1개 공유</strong>일 때만 잇는다. 연결이 부족하면 같은 폴더(System)로 보완해 <strong>모든 문서가 2~4개 연결·고아 0</strong>을 보장한다. 사람이 링크를 달지 않아도 그래프가 유지되는 층 — AI가 대량 생성하는 회사 지식에서 특히 중요하다.</li>
     <li><strong>ⓑ 선언된 관계(<code>relations</code>)</strong> — 방향과 종류가 있는 타입 관계 5종: <strong>선행지식(prerequisite) · 구현(implements) · 사례(example-of) · 근거(evidence-for) · 대체(supersedes)</strong>. 각 관계는 방향(A→대상)과 한 줄 근거(<code>evidenceRef</code>), 그리고 <strong>선언 주체(<code>source</code>)</strong>를 갖는다. 저장은 정방향 한 번뿐이고 역방향("이 문서로 들어오는 관계")은 소비 측이 자동 유도한다.</li>
 </ul>
-<p>여기서 회사 플랫폼과 스키마가 정확히 맞물리는 지점이 <code>source</code> 필드다. 실증 스키마는 선언 주체 어휘로 <code>human · ai-proposed · imported · rule-derived</code>를 이미 예약해 두었다(Reference Wiki의 107건은 전부 <code>human</code>). 회사 플랫폼에서는 <strong>AI Curator가 관계를 <code>ai-proposed</code>로 제안하고, 사람이 승인하면 <code>human</code>으로 승격</strong>한다 — 자동화의 속도와 "본문에 실재하는 관계만 단다"는 정직성 원칙을 한 필드로 양립시키는 구조다. 무결성은 기계가 지킨다: 존재하지 않는 대상을 가리키는 관계와 5어휘 밖 타입은 <strong>ERROR로 머지가 차단</strong>되고, 근거 누락·상충 선언은 검토 신호(WARN)로 떠오른다.</p>
+<p>여기서 회사 플랫폼과 스키마가 정확히 맞물리는 지점이 <code>source</code> 필드다. 실증 스키마는 선언 주체 어휘로 <code>human · ai-proposed · imported · rule-derived</code>를 이미 예약해 두었다(Reference Wiki의 114건은 전부 <code>human</code>). 회사 플랫폼에서는 <strong>AI Curator가 관계를 <code>ai-proposed</code>로 제안하고, 사람이 승인하면 <code>human</code>으로 승격</strong>한다 — 자동화의 속도와 "본문에 실재하는 관계만 단다"는 정직성 원칙을 한 필드로 양립시키는 구조다. 무결성은 기계가 지킨다: 존재하지 않는 대상을 가리키는 관계와 5어휘 밖 타입은 <strong>ERROR로 머지가 차단</strong>되고, 근거 누락·상충 선언은 검토 신호(WARN)로 떠오른다.</p>
 
 <h3>누적 갱신 — 문서 수가 아니라 지식의 밀도</h3>
 <p>새 지식이 발견됐다고 항상 새 문서를 만들지 않는다. Knowledge Index를 먼저 검색해 관련 문서가 있으면 <strong>기존 문서를 확장</strong>한다. 예컨대 "수주 상태 전이 체계" 문서가 있는 상태에서 부분출고 상태가 추가되면, 신규 문서 이전에 기존 문서 확장을 우선 판단한다. Wiki가 변경 이력의 집합이 아니라 <strong>지속적으로 정제된 현재 지식 상태</strong>로 유지되는 이유다.</p>
@@ -184,7 +184,7 @@
     개념(concepts)과 관계(relations)는 <strong>본문에 실재하는 것만</strong> 단다. 연결을 늘리려 없는 개념을 넣거나 억지 관계를 만드는 것은 그래프를 왜곡한다 — Reference Wiki가 규칙으로 못 박아 운영해 온 원칙이며, 검증기의 WARN은 "고쳐야 할 목록"이 아니라 <strong>"사람이 한번 볼 목록"</strong>이다. AI가 대량으로 지식을 생성하는 회사 규모에서는 이 원칙이 더 중요해진다 — <code>ai-proposed</code> → 사람 승인 흐름과 비차단 리뷰 신호가 그 안전장치다.
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">분류</span> Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼 &middot; <span class="pr-k">생성일자</span> 2026-07-06 &middot; <span class="pr-k">수정일자</span> 2026-07-13</p>
+<p class="pr-meta"><span class="pr-k">분류</span> Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼 &middot; <span class="pr-k">생성일자</span> 2026-07-06 &middot; <span class="pr-k">수정일자</span> 2026-07-28</p>
 
 <nav class="pr-rel"><h2>연관 문서</h2>
 <ul><li><a href="/p/news-20260710-llm-wiki-knowledge-context/">LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식</a></li><li><a href="/p/dzp-core/">제안의 핵심 — 개발 흐름은 그대로, 지식화는 AI가</a></li><li><a href="/p/sb-level2/">레벨 2 · 주제로 묶기 (LLM 위키 + 메모리)</a></li></ul>
