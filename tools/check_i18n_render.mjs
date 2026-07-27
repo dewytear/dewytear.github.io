@@ -55,6 +55,14 @@ const ALLOW = [
   ['월', 'wl-guide quotes the on-disk folder name `MM월`'],
   ['일', 'wl-guide quotes the on-disk folder name `DD일`'],
   //
+  // Work-log documents are Korean-only by policy (CLAUDE.md, 2026-07-28):
+  // neither their bodies nor their nav labels get translated, because a
+  // translated label over a Korean body only defers the disappointment. So
+  // this nav entry is CORRECTLY Korean in every language. The dated logs sit
+  // inside collapsed date folders and never render; wl-backlog sits at the
+  // top level of Work Log, so it is on screen at all times.
+  ['할 일 · Backlog', 'wl-backlog nav label — work logs are Korean-only by policy'],
+  //
   // Nothing else is exempt. The detector is live, not vacuous — running the
   // sweep against `ko` reports Korean on every screen.
   //
@@ -63,7 +71,11 @@ const ALLOW = [
   // behind a password prompt, so the sweep does not reach it today; add it
   // here WITH THIS REASON if the screen ever becomes reachable.
 ];
-const ALLOW_STRINGS = ALLOW.map((a) => a[0]);
+// Longest first. Stripping is sequential, so a short entry consumed earlier
+// can destroy a longer one: '일' would eat the 일 out of '할 일 · Backlog',
+// leaving '할' behind and reporting a leak that is actually exempt. Sorting by
+// length makes the list order-independent — entries can be added anywhere.
+const ALLOW_STRINGS = ALLOW.map((a) => a[0]).sort((a, b) => b.length - a.length);
 
 // THIRD-PARTY EMBEDS — excluded structurally, not by string.
 //
