@@ -39,3 +39,23 @@
 <p><code>check_diagram_bounds</code> <strong>237개 전수 통과</strong>(ja 9편 신규). <code>validate_all</code> ERROR 0 · WARN 23 유지. 브라우저에서 12편 모두 일본어 h2 · pageerror 0 · ko/en 회귀 무변화.</p>
 <p class="scn-sub">본문에 남는 한글은 이제 <strong>개념 칩뿐</strong>이다(지식플랫폼·조직지식·큐레이터…). <code>concepts.en.json</code>이 2건뿐인 데서 보듯 영어판도 같은 상태라 이번 배치가 만든 퇴행이 아니며, 개념 표시명 사전은 별도 주제로 다룰 일이다.</p>
 <p><strong>다음</strong>: 마감 PR — <code>ai-guide</code>·<code>ai-map</code> 번역, <code>check_translation.py</code>에 ja 강제 추가(사용자 결정 &ldquo;영어처럼 강제&rdquo;), <code>tools/i18n.md</code>·<code>CLAUDE.md</code>·README 갱신, 설정 드롭다운의 &ldquo;번역 진행 중&rdquo; 표기 제거.</p>
+
+<h3>일본어(ja) 마감 — 지도 2편 + 게이트 강제 + 규칙 문서</h3>
+<p>마지막. 남아 있던 <code>ai-map</code>·<code>ai-guide</code>를 옮겨 <strong>인덱스 문서 115편이 전부 일본어로 병행</strong>됐고(<code>docs/ja/</code> 미충족 0건), 이제 규칙을 <strong>기계가 강제</strong>하도록 게이트를 켰다. 대표님 결정 &ldquo;<strong>영어처럼 강제</strong>&rdquo;를 그대로 구현한 것이다. 변경 유형: <strong>CONTENT + TOOL + ENGINE</strong>.</p>
+<ul>
+    <li><strong>본문 2편</strong> — <code>ai-map</code>(지식지도, 도식 2개 · <code>data-topics</code> 키를 ja 클러스터 라벨로) · <code>ai-guide</code>(AI 순회 계약). ai-guide의 스냅샷 경로 설명에는 <code>/p/ja/&lt;name&gt;/</code>를 추가했다 — 일본어 스냅샷이 실재하는데 계약서에만 없으면 기계가 못 찾는다.</li>
+    <li><strong><code>check_translation.py</code>를 언어 목록 기반으로 일반화</strong> — <code>en</code> 하드코딩을 <code>ENFORCED_LANGS = ('en', 'ja')</code> 순회로 바꿨다. 다음 언어는 <strong>소급 번역을 끝낸 뒤</strong> 이 튜플에 한 줄 넣으면 되고, 끝나기 전에 켜면 모든 PR이 막힌다는 경고를 독스트링에 박았다.</li>
+    <li><strong>설정의 &ldquo;번역 진행 중&rdquo; 제거</strong> — <code>langJa</code>가 세 언어 사전에서 각각 <code>日本語 — 준비 중</code>/<code>— in progress</code>/<code>— 翻訳中</code>이었다. 이제 그냥 <code>日本語</code>(en 사전만 <code>日本語 (Japanese)</code>)이고, <code>zh</code>는 여전히 &ldquo;준비 중&rdquo;이다. <code>i18n.js?v=21→22</code>.</li>
+    <li><strong>규칙 문서 3종</strong> — <code>tools/i18n.md</code>(정책 절 제목을 &ldquo;전면 병행 정책 — en·ja&rdquo;로, 도식 게이트가 전 언어를 순회한다는 사실과 격자 도식에서는 넓히는 대신 부제를 줄인다는 실무 지침 추가, 현황 절에 ja 완료 기록), <code>CLAUDE.md</code> 다국어 규칙(en·ja 동반 + 일본어는 가나가 전각이라 글자 수가 늘기 쉽다는 주의), README(&ldquo;Korean and English&rdquo; → 3언어).</li>
+    <li><strong>Backlog</strong>의 &ldquo;최근 완료&rdquo;에 일본어 전면 병행을 올렸다.</li>
+</ul>
+<div class="note">
+    <span class="nh">브라우저에서 확인한 것</span>
+    ja·ko·en 각각에서 지도 2편의 h2가 그 언어이고 <strong>pageerror 0</strong>, 클러스터 표의 하이드레이션 첫 칸이 <code>知識体系</code>/<code>지식 체계</code>/<code>Knowledge System</code>으로 각 언어의 라벨을 집어 온다. 사이드바 RSS 링크도 <code>feed.ja.xml</code>/<code>feed.xml</code>/<code>feed.en.xml</code>로 갈린다. 설정 화면은 비밀번호 뒤라 셀렉트를 직접 못 여니 <strong>페이지 안에서 <code>STR('langJa')</code>를 호출해</strong> 세 사전 모두 &ldquo;진행 중&rdquo; 표기가 사라진 것을 확인했다.
+</div>
+<p><code>check_diagram_bounds</code> <strong>238개 전수 통과</strong> · <code>validate_all</code> ERROR 0 · WARN 23 유지 · <code>check_translation</code>이 <code>(en, ja)</code>로 통과.</p>
+<div class="note warn">
+    <span class="nh">솔직한 전제 — 이걸로 방문자가 늘지는 않는다</span>
+    영어 전면 병행이 유입을 늘리지 못했고, 일본어도 <strong>그 자체로는 사람을 데려오지 않는다</strong>. 검색 등록·커뮤니티 노출이 선행돼야 의미가 생기며, 그 항목들은 여전히 <a href="#!wl-backlog">Backlog</a>의 &ldquo;지금 할 일&rdquo;에 사람 몫으로 남아 있다. 이 작업의 값은 <strong>그 유입이 생겼을 때 일본어 독자가 폴백된 한국어를 만나지 않는다</strong>는 데 있다.
+</div>
+<p class="scn-sub"><strong>남은 것</strong>: 개념 표시명 사전(<code>concepts.ja.json</code> 미생성 — 개념 칩이 ko 키 그대로). <code>concepts.en.json</code>도 2건뿐이라 en과 같은 상태이므로, 별도 주제로 다룬다.</p>

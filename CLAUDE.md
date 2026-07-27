@@ -35,7 +35,7 @@
 
 ## 다국어 규칙
 - **번역·언어 관련 작업은 반드시 `tools/i18n.md` 체크리스트를 따른다** — 구조(폴백 계층)·핵심 원칙·추가 순서·검증 목록이 거기 있다. 특히: 문서의 `label_<lang>`·`tags_<lang>`·인덱스 오버레이는 **그 문서의 본문 번역과 같은 PR에서만** 갱신하고, 새 UI 문구는 하드코딩 대신 `STR()` 키 + `STRINGS` 사전으로 넣는다.
-- **신규 문서는 영어 본문 동반이 규칙** (2026-07-26 결정, 워크로그 제외·뉴스 포함): 새 인덱스 문서를 등재하는 PR은 `docs/en/<같은 상대 경로>` 번역과 `label_en`/`tags_en`·`doc-entries.en.json` 오버레이를 함께 싣는다 — PR CI의 `tools/check_translation.py`가 기계 강제하고, `validate_i18n`의 **`label-without-en-body`가 ERROR**라 라벨만 영어로 달고 본문을 빼도 막힌다(워크로그는 제외 — 라벨만 영어, 본문은 ko 폴백이 정상). 영어 도식은 `validate_design`·`check_diagram_bounds`가 ko와 같은 게이트로 검사하니 라벨 폭(대문자≈0.7·소문자≈0.5×폰트)을 선검토한다. 첫 방문 언어는 자동 감지(`navigator.language`가 ko*가 아니면 en) — 설정에서 고르면 그 값이 우선. **소급 번역은 2026-07-26 완료**(인덱스 문서 115편 전부 en 병행).
+- **신규 문서는 영어·일본어 본문 동반이 규칙** (en 2026-07-26 · ja 2026-07-28 결정, 워크로그 제외·뉴스 포함): 새 인덱스 문서를 등재하는 PR은 `docs/en/<같은 상대 경로>`·`docs/ja/<같은 상대 경로>` 번역과 `label_en`/`tags_en`·`label_ja`/`tags_ja`·`doc-entries.{en,ja}.json` 오버레이를 함께 싣는다 — PR CI의 `tools/check_translation.py`가 `ENFORCED_LANGS`를 순회해 기계 강제하고, `validate_i18n`의 **`label-without-<lang>-body`가 ERROR**라 라벨만 달고 본문을 빼도 막힌다(워크로그는 제외 — 라벨만 번역, 본문은 ko 폴백이 정상). 번역 도식은 `validate_design`·`check_diagram_bounds`가 **`docs/` 아래 모든 언어**를 ko와 같은 게이트로 검사하니 라벨 폭을 선검토한다 — 영어는 대문자≈0.7·소문자≈0.5×폰트, 일본어는 가나가 전각이라 같은 뜻이라도 글자 수가 늘기 쉽다(레벨 2자 → `レベル` 3자). 첫 방문 언어는 `navigator.language`로 자동 감지(`LANGS_READY` 기반 분기) — 설정에서 고르면 그 값이 우선. **소급 번역은 en 2026-07-26 · ja 2026-07-28 완료**(인덱스 문서 115편 전부 en·ja 병행). 다음 언어를 켤 때는 소급 번역을 끝낸 뒤 `ENFORCED_LANGS`에 넣는다 — 먼저 켜면 모든 PR이 막힌다.
 
 ## 배포
 - GitHub Pages는 `master`를 배포한다. 머지 후 "pages build and deployment" 워크플로가 일시 오류로 실패하면(간헐적) master에 빈 커밋을 푸시해 재트리거한다.

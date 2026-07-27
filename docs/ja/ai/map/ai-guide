@@ -1,0 +1,52 @@
+<h2>AI 巡回ガイド — このウィキを機械で読む方法</h2>
+<p>このページは、<strong>外部の AI がこのウィキを仕事の最初の参照先として、情報の関連にしたがって分析する</strong>ことを助ける<strong>契約（contract）</strong>です。人が読む <a href="#!ai-map"><strong>Knowledge Map</strong></a> や <a href="#!cosmos"><strong>Knowledge Graph</strong></a> と同じデータを使いますが、ここでは<strong>どのファイルをどの順に fetch し、どう巡回して分析するか</strong>を定めます。</p>
+
+<h3>まず読むもの — たったひとつのファイル</h3>
+<p>ルートの <a href="https://dewytear.github.io/llms.txt"><code>llms.txt</code></a> が表紙であり、実際の巡回は下の<strong>自己完結のグラフのファイルひとつ</strong>で足ります:</p>
+<ul>
+    <li><strong><a href="https://dewytear.github.io/data/knowledge-graph.json"><code>data/knowledge-graph.json</code></a></strong> — すべての<strong>ノード（文書）</strong>と<strong>エッジ（related）</strong>・<strong>概念</strong>・<strong>原文の URL</strong>・統計をひとつのファイルに収めています。ほかのファイルを結合しなくても、グラフの全体を巡回できます。</li>
+</ul>
+<p>補助のファイル（必要なとき）: <a href="https://dewytear.github.io/data/knowledge-index.ko.json"><code>knowledge-index.ko.json</code></a>（同じグラフの元の索引） · <a href="https://dewytear.github.io/list"><code>list</code></a>（ナビのツリー・文書の経路） · <a href="https://dewytear.github.io/data/doc-dates.json"><code>doc-dates.json</code></a>（作成日・更新日）。</p>
+<p><strong>本文の全体が一度に要るなら</strong> <a href="https://dewytear.github.io/llms-full.txt"><code>llms-full.txt</code></a> — すべての文書の平文の本文をひとつのファイルに収めたコーパスの全体のダンプだ（グラフを巡回せずまるごと文脈へ載せるとき）。<strong>新しい文書を購読するなら</strong> <a href="https://dewytear.github.io/feed.xml"><code>feed.xml</code></a>（Atom、最新の 30 編）。コンテンツのライセンスは <strong>CC BY 4.0</strong> — 出典を示せば自由に引用し再利用できる。</p>
+
+<h3>ノードのスキーマ</h3>
+<p><code>knowledge-graph.json</code> の <code>nodes[]</code> の各要素:</p>
+<pre><code>{
+  "name": "welcome",                     // 不変の論理 ID（ノードのキー）
+  "title": "Welcome",
+  "summary": "ターミナルでコードを読み、編集・実行・コミットする Claude Code の紹介",
+  "section": "AI · Claude · Code · Introduction",   // World · Domain · System · …
+  "concepts": ["Claude Code","ターミナル","CLI", "..."],  // 結合のキー（人がキュレート）
+  "url":   "https://dewytear.github.io/docs/ko/ai/claude/code/introduction/welcome",
+  "route": "https://dewytear.github.io/#!welcome",   // 人向けの SPA のビュー
+  "page":  "https://dewytear.github.io/p/welcome/",  // 静的なスナップショット（JS なしで読めるページ）
+  "related": [
+    { "name":"ccb-what", "title":"...", "shared":["Claude Code","ターミナル"], "via":"concept" },
+    { "name":"install",  "title":"...", "shared":[],                          "via":"folder" }
+  ],
+  "relations": [                          // (任意) キュレートされた方向のある意味の関係 — related(計算)とは別
+    { "target":"kgs-edges", "type":"prerequisite", "evidenceRef":"...", "source":"human" }
+  ]
+}</code></pre>
+
+<h3>巡回と分析の規則</h3>
+<ul>
+    <li><strong>ノード = 文書</strong>（<code>name</code> がキー）、<strong>エッジ = <code>related</code></strong>。エッジは二種類ある — <code>via:"concept"</code> は<strong>希少性で重みづけした共有の概念</strong>でつながった<em>意味</em>の関係（<code>shared</code> が根拠の概念）、<code>via:"folder"</code> は同じ System の中での<strong>隣接による補完</strong>の関係（すべての文書が最低 2〜4 のエッジを持つように）。</li>
+    <li><strong>型のある関係 = <code>relations</code></strong>（任意）。<code>related</code> が<em>対称で計算された</em>エッジなのに対し、<code>relations</code> は人がキュレートした<strong>方向のある意味の関係</strong>だ — <code>type</code> は <code>prerequisite</code>（先行）・<code>implements</code>（実装）・<code>example-of</code>（事例）・<code>evidence-for</code>（根拠）・<code>supersedes</code>（置換）で、<code>evidenceRef</code> が根拠。方向はこのノード → <code>target</code> であり、逆の関係は全ノードを走査して導く（保存は正方向に一度だけ）。<code>related</code> と重ならない別の信号なので、<strong>両方</strong>を活かせ。</li>
+    <li><strong>概念（<code>concepts</code>）が結合のキー</strong>だ。ふたつの文書が同じ概念を共有すれば関連する。まれな概念ほど強い信号（idf の重み）。ある概念で関連する文書を集めたければ <code>concepts</code> を逆索引せよ。</li>
+    <li><strong>原文は <code>url</code> でそのまま fetch</strong> — JS のレンダリングなしに、静的な HTML の断片（<code>&lt;h2&gt;…&lt;/h2&gt;&lt;p&gt;…</code>）がそのまま来る。本文の分析はこの断片をパースすればよい。題・要約・作成日・ライセンスが<strong>メタデータとして付いた完成したページ</strong>が要るなら <code>page</code>（<code>/p/&lt;name&gt;/</code>、英語は <code>/p/en/&lt;name&gt;/</code>、日本語は <code>/p/ja/&lt;name&gt;/</code>）を使え — 同じ本文に <code>&lt;title&gt;</code>・description・canonical・hreflang・Article の JSON-LD が載っており、本文の内部のリンクもスナップショットどうしでつながっていて、JS なしに巡回できる。</li>
+    <li><strong>階層は <code>section</code></strong>（<code>"World · Domain · System · Document"</code> の上位 3 階層）と <strong><code>stats.clusters</code></strong>（System ごとの文書の数・ハブ）でつかむ。最初のセグメントが World（例: <code>AI</code>, <code>Douzone</code>）。</li>
+    <li><strong>入口</strong>: <code>stats.hubs</code>（いちばん多く参照される文書）から始めて <code>related</code> をたどって広げれば、主題の中心から周辺へ分析が広がる。<code>stats.bridges</code> はいくつもの System をつなぐ橋の概念だ。</li>
+</ul>
+
+<h3>巡回の例（2 ホップ）</h3>
+<pre><code>1) fetch https://dewytear.github.io/data/knowledge-graph.json
+2) 問いの主題と重なる concepts を持つノードを選ぶ（または stats.hubs から始める）
+3) そのノードの related[].name で 1 ホップの隣人、さらにその隣人の related で 2 ホップへ拡張
+4) 関心のあるノードの url を fetch して原文（HTML の断片）を読み分析する
+5) shared[] の根拠の概念で「なぜつながったのか」を説明に活かす</code></pre>
+
+<h3>正直さの原則</h3>
+<p>概念と要約は<strong>人／AI が文書を読んでキュレート</strong>したものであり、本文から無差別に抽出したものではない。だからエッジは少ないが信頼度が高い — <strong>つながりが薄いことは欠陥ではなく</strong>、World が違えば（例: AI ↔ DOUZONE）そのあいだが疎なのは正常だ。分析では <code>via</code> と <code>shared</code> を根拠にして、<strong>実在する関係だけ</strong>を使え。</p>
+
+<p>これらのファイルは文書が加わるたびに自動で再生成され、いつも現在のグラフと一致する（<code>tools/build_ai_export.py</code>）。</p>

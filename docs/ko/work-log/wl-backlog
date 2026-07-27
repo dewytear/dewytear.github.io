@@ -57,6 +57,7 @@
 <h3>최근 완료</h3>
 <p class="scn-sub">완료 항목을 ✅ + Work Log 링크와 함께 잠시 여기 둡니다. 오래되면 걷어냅니다(원본은 해당 로그에).</p>
 <ul>
+    <li>&#9989; [현지화] <strong>일본어 전면 병행 완료</strong> — 인덱스 문서 <strong>115편 전부</strong> 일본어 본문+라벨+태그+오버레이(11배치), 지식지도 2종·AI 순회 가이드 ja, 폴더 구조 라벨 <code>title_ja</code> 29개, <code>feed.ja.xml</code>. 브라우저 언어 자동 감지가 <code>LANGS_READY</code> 기반으로 일반화돼 <strong>일본어 브라우저는 첫 방문에 일본어</strong>로 들어온다. <code>check_translation.py</code>의 <code>ENFORCED_LANGS</code>에 ja가 들어가 신규 문서는 en·ja 동반이 강제된다 <a href="#!wl-20260727-content">wl-20260727 콘텐츠</a> · <a href="#!wl-20260728-content">wl-20260728 콘텐츠</a></li>
     <li>&#9989; [현지화] <strong>영어 전면 병행 완료</strong> — 인덱스 문서 <strong>115편 전부</strong> 영어 본문+라벨+태그+오버레이(8배치, Opus 5 병렬), 지식지도 2종 en, 비한국어 브라우저 첫 방문 자동 en. 게이트 신설·승격(<code>check_translation</code>, <code>label-without-en-body</code> ERROR)으로 앞으로도 신규 문서는 en 동반이 강제된다 <a href="#!wl-20260726-content">wl-20260726 콘텐츠</a> · <a href="#!wl-20260726-features">기능</a></li>
     <li>&#9989; [독자 UX·AI] <strong>정적 스냅샷(프리렌더)</strong> — 문서마다 <code>/p/&lt;name&gt;/</code>(ko·en 230쪽)에 제목·설명·canonical·hreflang·Article JSON-LD를 얹은 실페이지 생성, sitemap을 스냅샷으로 전환·그래프에 <code>page</code> 필드, 404 라우팅. JS 없는 검색엔진·크롤러도 본문을 읽고 링크로 순회한다 <a href="#!wl-20260726-features">wl-20260726 기능</a></li>
     <li>&#9989; [독자 UX·AI] RSS/Atom 피드 + AI 이용성 확장 — <code>build_ai_export</code>가 feed.xml(doc-dates 기반, 빌드시각 무사용)·llms-full.txt(전체 코퍼스 덤프)·robots.txt(생성물 승격 + AI 크롤러 명시 환영)를 생성, 콘텐츠 라이선스 <strong>CC BY 4.0</strong> 선언(robots·llms·피드·JSON-LD 일관) <a href="#!wl-20260726-ops">wl-20260726 운영</a></li>
