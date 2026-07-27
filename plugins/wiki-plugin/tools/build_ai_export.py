@@ -102,6 +102,17 @@ def _load_build_index():
     return mod
 
 
+def translated_langs():
+    """LANG(원본) 외의 번역 언어들 — 정본은 스냅샷 빌더의 LANGS."""
+    return [l for l in _load_prerender().LANGS if l != LANG]
+
+
+def langs_with_body(rel_path):
+    """이 문서가 실제 본문을 가진 번역 언어들. 부분 번역 상태에서 없는 URL을
+    광고하지 않기 위해 파일 존재로만 판정한다."""
+    return [l for l in translated_langs() if _has_lang(rel_path, l)]
+
+
 def load_paths():
     """name -> physical path under docs/<lang>/, from the `list` tree (leaf nodes)."""
     tree = json.load(open(LIST, encoding='utf-8'))
@@ -248,8 +259,8 @@ def build_llms():
             d = by_name[n]
             url = doc_url(n, paths)
             summ = d['summary'].replace('\n', ' ').strip()
-            en = (' · [EN](%s)' % doc_url_lang(n, paths, 'en')
-                  if n in paths and _has_lang(paths[n], 'en') else '')
+            en = ''.join(' · [%s](%s)' % (l.upper(), doc_url_lang(n, paths, l))
+                         for l in (langs_with_body(paths[n]) if n in paths else []))
             lines.append('- [%s](%s): %s%s' % (d['title'], url, summ, en))
         lines.append('')
 
@@ -429,8 +440,12 @@ def build_robots():
     lines.append('# Sign-post (llmstxt.org):        %sllms.txt' % BASE)
     lines.append('# Full corpus (one fetch):        %sllms-full.txt' % BASE)
     lines.append('# Self-contained knowledge graph: %sdata/knowledge-graph.json' % BASE)
-    lines.append('# Atom feed (newest docs):        %sfeed.xml  (English: %sfeed.en.xml)' % (BASE, BASE))
-    lines.append('# All documents, one page:        %sp/  (English: %sp/en/)' % (BASE, BASE))
+    langs = [l for l in translated_langs()
+             if os.path.isdir(os.path.join(ROOT, 'docs', l))]
+    feeds = ''.join('  (%s: %sfeed.%s.xml)' % (l, BASE, l) for l in langs)
+    hubs = ''.join('  (%s: %sp/%s/)' % (l, BASE, l) for l in langs)
+    lines.append('# Atom feed (newest docs):        %sfeed.xml%s' % (BASE, feeds))
+    lines.append('# All documents, one page:        %sp/%s' % (BASE, hubs))
     lines.append('# Traversal guide:                %sdocs/%s/ai/map/%s' % (BASE, LANG, GUIDE_NAME))
     return '\n'.join(lines) + '\n'
 
@@ -463,9 +478,14 @@ def build_sitemap():
             order.append(extra)
 
     body = ''
-    for u in [BASE, BASE + 'p/', BASE + 'p/en/', BASE + 'llms.txt',
-              BASE + 'llms-full.txt', BASE + 'feed.xml', BASE + 'feed.en.xml',
-              BASE + 'data/knowledge-graph.json']:
+    fixed = [BASE, BASE + 'p/']
+    live = [l for l in translated_langs()
+            if any(_has_lang(paths[n], l) for n in order if n in paths)]
+    fixed += [BASE + 'p/' + l + '/' for l in live]
+    fixed += [BASE + 'llms.txt', BASE + 'llms-full.txt', BASE + 'feed.xml']
+    fixed += [BASE + 'feed.%s.xml' % l for l in live]
+    fixed += [BASE + 'data/knowledge-graph.json']
+    for u in fixed:
         body += '  <url><loc>%s</loc></url>\n' % u
     # 문서 URL: en 번역이 있으면 ko/en 두 URL을 모두 싣고, 각각에
     # hreflang alternate(ko·en·x-default=원본 ko)를 단다 — 검색엔진이
@@ -474,14 +494,15 @@ def build_sitemap():
         if n not in paths:
             continue
         ko = page_url(n, 'ko')
-        if _has_lang(paths[n], 'en'):
-            en = page_url(n, 'en')
-            alts = ('    <xhtml:link rel="alternate" hreflang="ko" href="%s"/>\n'
-                    '    <xhtml:link rel="alternate" hreflang="en" href="%s"/>\n'
-                    '    <xhtml:link rel="alternate" hreflang="x-default" href="%s"/>\n'
-                    % (ko, en, ko))
-            body += '  <url><loc>%s</loc>\n%s  </url>\n' % (ko, alts)
-            body += '  <url><loc>%s</loc>\n%s  </url>\n' % (en, alts)
+        others = langs_with_body(paths[n])
+        if others:
+            alts = '    <xhtml:link rel="alternate" hreflang="ko" href="%s"/>\n' % ko
+            for l in others:
+                alts += ('    <xhtml:link rel="alternate" hreflang="%s" href="%s"/>\n'
+                         % (l, page_url(n, l)))
+            alts += '    <xhtml:link rel="alternate" hreflang="x-default" href="%s"/>\n' % ko
+            for u in [ko] + [page_url(n, l) for l in others]:
+                body += '  <url><loc>%s</loc>\n%s  </url>\n' % (u, alts)
         else:
             body += '  <url><loc>%s</loc></url>\n' % ko
     return ('<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -515,7 +536,10 @@ if __name__ == '__main__':
     ok = _emit('llms.txt', build_llms(), check) and ok
     ok = _emit('llms-full.txt', build_llms_full(), check) and ok
     ok = _emit('feed.xml', build_feed(), check) and ok
-    ok = _emit('feed.en.xml', build_feed('en'), check) and ok
+    for l in translated_langs():
+        text = build_feed(l)
+        if text.strip():
+            ok = _emit('feed.%s.xml' % l, text, check) and ok
     ok = _emit('robots.txt', build_robots(), check) and ok
     ok = _emit('sitemap.xml', build_sitemap(), check) and ok
     sys.exit(0 if ok else 1)
