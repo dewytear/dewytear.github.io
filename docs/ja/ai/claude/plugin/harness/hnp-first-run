@@ -1,0 +1,102 @@
+<h2>はじめてのハーネス実行 — 営業・受注のカスタマイズ</h2>
+<p>実際に一度回してみます。例は <strong>ERP の営業・受注モジュール</strong>に顧客からの要望（CR）を反映する場面です。核心はひとつだけ — <strong>「命令」ではなく「意図」を渡す</strong>ということです。</p>
+
+<div class="note">
+    <span class="nh">今日の例（CR）</span>
+    顧客からの要望: <strong>「取引先の信用等級ごとの与信限度（信用限度）を超える注文は自動で保留（hold）にし、営業担当者へ通知を送ってほしい。」</strong>標準パッケージに手を入れるカスタマイズなので、<strong>影響範囲の分析と回帰テスト</strong>が必ず要ります。
+</div>
+
+<h3>実行のライフサイクル — 何が順に起きるのか</h3>
+<div class="diagram">
+<svg viewBox="0 0 620 330" role="img" aria-label="ハーネス実行のライフサイクル: 意図の入力 → ドメイン分析 → チーム案 → 「進めて」で承認 → 並列実行 → 検証済みの成果物">
+    <rect class="d-box accent" x="150" y="8" width="320" height="40" rx="9"/>
+    <text class="d-label" x="310" y="26" text-anchor="middle">① /harness で意図を入力</text>
+    <text class="d-sub" x="310" y="41" text-anchor="middle">「〜をカスタマイズしたいです」</text>
+
+    <rect class="d-box" x="150" y="62" width="320" height="40" rx="9"/>
+    <text class="d-label" x="310" y="80" text-anchor="middle">② ドメイン分析</text>
+    <text class="d-sub" x="310" y="95" text-anchor="middle">要件 · 標準ソース · 影響範囲の把握</text>
+
+    <rect class="d-box" x="150" y="116" width="320" height="40" rx="9"/>
+    <text class="d-label" x="310" y="134" text-anchor="middle">③ エージェントチーム案</text>
+    <text class="d-sub" x="310" y="149" text-anchor="middle">分析 · 開発 · 回帰 QA の構成</text>
+
+    <rect class="d-box accent" x="150" y="170" width="320" height="40" rx="9"/>
+    <text class="d-label" x="310" y="188" text-anchor="middle">④「進めて」で承認</text>
+    <text class="d-sub" x="310" y="203" text-anchor="middle">人がチームを見てからひと言</text>
+
+    <rect class="d-box" x="150" y="224" width="320" height="40" rx="9"/>
+    <text class="d-label" x="310" y="242" text-anchor="middle">⑤ 並列の自律実行</text>
+    <text class="d-sub" x="310" y="257" text-anchor="middle">開発 ↔ QA の手戻りループ</text>
+
+    <rect class="d-box accent" x="150" y="278" width="320" height="44" rx="9"/>
+    <text class="d-label" x="310" y="298" text-anchor="middle">⑥ 検証済みの成果物</text>
+    <text class="d-sub" x="310" y="313" text-anchor="middle">_workspace: 仕様 · 影響範囲 · テスト · 移行ガイド</text>
+
+    <!-- arrows -->
+    <g>
+        <line class="d-edge" x1="310" y1="48" x2="310" y2="61"/><polygon class="d-arrow" points="305,56 315,56 310,62"/>
+        <line class="d-edge" x1="310" y1="102" x2="310" y2="115"/><polygon class="d-arrow" points="305,110 315,110 310,116"/>
+        <line class="d-edge" x1="310" y1="156" x2="310" y2="169"/><polygon class="d-arrow" points="305,164 315,164 310,170"/>
+        <line class="d-edge accent" x1="310" y1="210" x2="310" y2="223"/><polygon class="d-arrow accent" points="305,218 315,218 310,224"/>
+        <line class="d-edge" x1="310" y1="264" x2="310" y2="277"/><polygon class="d-arrow" points="305,272 315,272 310,278"/>
+    </g>
+    <!-- human gate marker -->
+    <text class="d-accent" x="484" y="193" font-size="11">← 人の検討</text>
+</svg>
+<div class="d-cap">人が関わる地点は<strong>①の意図</strong>と<strong>④の承認</strong>のふたつだけです。</div>
+</div>
+
+<h3>ステップ 1 — 意図の文を書く</h3>
+<p>いちばん大事な習慣です。<strong>「〜して」（命令）</strong>ではなく<strong>「〜したいと思っています」（意図）</strong>と書きます。そうしてはじめて、ハーネスが自分でチームを設計する余地が生まれます。<code>/harness</code> と入力してから <span class="kbd">Tab</span> で補完し、依頼を続けて書きます。</p>
+<pre><code>/harness ERP の営業・受注モジュールで、取引先の信用等級ごとの与信限度を
+超える注文を自動で保留にし、営業担当者へ通知を送る顧客向けカスタマイズを
+進めたいと思っています。標準ソースの影響範囲の分析と
+回帰テストまで含めてください。</code></pre>
+
+<div class="note">
+    <span class="nh">意図をうまく渡すコツ（初級の必須）</span>
+    ①<strong>目標</strong>（何を）·②<strong>対象モジュール</strong>（どこを）·③<strong>制約</strong>（標準の毀損を最小化・アップグレード互換）·④<strong>ほしい成果物</strong>（影響範囲・テスト）をひとつの文に入れると、チーム編成が正確になります。詳しい背景は<a href="#!hnp-agents-skills">エージェント・スキルの設計</a>を参照。
+</div>
+
+<h3>ステップ 2〜3 — ドメイン分析 &amp; チーム案</h3>
+<p>Enter を押すとハーネスが<strong>ドメインを分析</strong>し、途中で<strong>「ハーネスをフル構築 / ハーネスだけ構築」</strong>のような選択を尋ねてきます。参考にする標準仕様や要件の文書があれば、このときに渡せます（数百ページの PDF も処理できます）。ほどなく<strong>エージェントチームの草案</strong>を提案します。例:</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>提案されたエージェント</th><th>役割</th></tr></thead>
+        <tbody>
+            <tr><td>営業の標準ソース分析担当</td><td>与信・注文の流れとカスタムの影響範囲を把握</td></tr>
+            <tr><td>カスタマイズ設計担当</td><td>標準を直接いじらない拡張の方式（例: アドオン）を設計</td></tr>
+            <tr><td>開発エージェント</td><td>保留処理・通知のロジックを実装</td></tr>
+            <tr><td>回帰 QA エージェント</td><td>標準の注文・与信の機能が壊れていないかを検証</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>ステップ 4 — 検討して「進めて」</h3>
+<p>ここで<strong>人が関わり</strong>ます。提案されたチームが適切かを見て、足りなければ修正を頼みます。よければひと言で承認します。</p>
+<pre><code>進めて</code></pre>
+<p>この瞬間から作業は<strong>人の手を離れ</strong>、オーケストレーターの立てた順序どおりに進みます。</p>
+
+<h3>ステップ 5 — 並列の自律実行（観察）</h3>
+<ul>
+    <li>エージェントたちが<strong>並列で</strong>働きます。<span class="kbd">Shift + 方向キー</span>で、それぞれのエージェントが何をしているかをのぞけます（作業中のエージェントは色で表示）。</li>
+    <li>ほかの作業も同時に回したいときは、<strong>新しいターミナル窓</strong>をもうひとつ開いて別のハーネスを実行します。</li>
+    <li>開発 → QA →（問題が見つかれば）手戻り、という<strong>ループ</strong>が自動で回ります。</li>
+</ul>
+
+<h3>ステップ 6 — 成果物の確認</h3>
+<p>終わるとプロジェクトに <code>_workspace</code> フォルダができ、下のような文書が積み上がります（名前は理解を助けるための例で、実際はハーネスが計画どおりに命名します）。</p>
+<ul>
+    <li><strong>要件の整理</strong> — CR を開発できる仕様に整理</li>
+    <li><strong>標準ソースの影響範囲</strong> — どの標準機能・画面に影響が及ぶか</li>
+    <li><strong>カスタマイズの設計</strong> — 標準を直接いじらない拡張の方式、アップグレード互換への配慮</li>
+    <li><strong>実装した変更の一覧</strong> — 何をどう変えたか</li>
+    <li><strong>回帰テストの結果</strong> — クリティカル / メジャー / マイナーに分類</li>
+    <li><strong>移行ガイド</strong> — 本番反映の手順・注意事項</li>
+</ul>
+
+<div class="note">
+    <span class="nh">覚えておいてください — これは下書きです</span>
+    ハーネスの結果は<strong>完成品ではなく、よく準備された下書き</strong>です。とくに ERP のカスタムは<strong>標準への影響範囲と回帰の結果を人が必ず検討した</strong>うえで反映してください。検証をより固くする方法は<a href="#!hnp-verify">検証・品質</a>で扱います。中で何が起きていたのかは<a href="#!hnp-architecture">動作の構造</a>で確認してください。
+</div>

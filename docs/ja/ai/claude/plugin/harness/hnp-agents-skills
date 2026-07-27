@@ -1,0 +1,91 @@
+<h2>エージェントとスキルの設計</h2>
+<p>ハーネスがチームを自動で組んでくれますが、<strong>原理が分かればより正確に指示</strong>できますし、生成されたチームを<strong>自分で手直し</strong>することもできます。核心はふたつ — <strong>エージェント</strong>（誰が）と<strong>スキル</strong>（どうやって）です。</p>
+
+<h3>エージェント = 自然言語で書いた「職務記述書」</h3>
+<p>エージェントはコードではなく<strong>文章</strong>です。次の四つを入れます。</p>
+<ul>
+    <li><strong>役割・原則</strong> — 何に責任を持ち、どんなルールを守るか。</li>
+    <li><strong>入力・出力</strong> — 何を受け取り何を出すか（プロトコル）。</li>
+    <li><strong>協業</strong> — どのエージェントと何をやり取りするか。</li>
+    <li><strong>再呼び出し・エラー時のふるまい</strong> — 詰まったらどうするか。</li>
+</ul>
+<pre><code><span class="c"># 例: 営業の標準ソース分析担当（エージェント定義の抜粋）</span>
+役割: ERP 営業・受注の与信・注文の流れを分析し、
+      今回のカスタムが標準機能に及ぼす影響範囲を特定する。
+原則: 標準の毀損を最小化 · アップグレード互換をつねに優先する。
+入力: 顧客要望(CR)、標準仕様/ソースの参照
+出力: 影響範囲レポート(影響する画面·機能·データの一覧)
+協業: 設計担当へ影響範囲を渡し、情報が足りなければ再調査を依頼
+エラー: 根拠が見つからなければ「要確認」と記し、素通りさせない</code></pre>
+
+<h3>スキル = くり返し作業を収めた「マニュアル」</h3>
+<p>スキルは <code>名前 + 説明 + 手順・チェックリスト</code>でできています。よくできたスキルは複数のエージェントが<strong>再利用</strong>します。</p>
+<pre><code><span class="c"># 例:「回帰テストのチェックリスト」スキル</span>
+name: regression-checklist
+description: カスタム反映後、標準の営業・受注機能が壊れていないか点検
+手順:
+  1. 標準の注文の作成/修正/取消が正常に動くか確認
+  2. 与信限度の正常な範囲の注文がブロックされないか確認
+  3. カスタム(限度超過で保留)の動作を確認
+  4. 通知の送信とログを確認
+  5. 数値の整合性(注文金額·限度)をクロスチェック</code></pre>
+
+<div class="note">
+    <span class="nh">スキル設計の 5 ステップ（初級のコツ）</span>
+    ① よくくり返される作業を見つける → ②<strong>ひとつの責務</strong>だけを持つように切り分ける → ③ 入力／出力を決める → ④ 例外処理を書く → ⑤ どのエージェントが使うかをつなぐ。
+</div>
+
+<h3>営業・受注のチーム — データの流れの例</h3>
+<div class="diagram">
+<svg viewBox="0 0 680 168" role="img" aria-label="営業・受注のカスタムチームのデータの流れ: CR → 分析担当 → 設計担当 → 開発担当 → 回帰 QA、QA が不合格なら開発担当へ手戻り">
+    <rect class="d-box accent" x="6" y="26" width="124" height="56" rx="10"/>
+    <text class="d-label" x="68" y="50" text-anchor="middle">CR 入力</text>
+    <text class="d-sub" x="68" y="67" text-anchor="middle">顧客からの依頼</text>
+
+    <rect class="d-box" x="140" y="26" width="124" height="56" rx="10"/>
+    <text class="d-label" x="202" y="50" text-anchor="middle">分析担当</text>
+    <text class="d-sub" x="202" y="67" text-anchor="middle">影響範囲の分析</text>
+
+    <rect class="d-box" x="274" y="26" width="124" height="56" rx="10"/>
+    <text class="d-label" x="336" y="50" text-anchor="middle">設計担当</text>
+    <text class="d-sub" x="336" y="67" text-anchor="middle">標準互換の設計</text>
+
+    <rect class="d-box" x="408" y="26" width="124" height="56" rx="10"/>
+    <text class="d-label" x="470" y="50" text-anchor="middle">開発担当</text>
+    <text class="d-sub" x="470" y="67" text-anchor="middle">実装</text>
+
+    <rect class="d-box accent" x="542" y="26" width="124" height="56" rx="10"/>
+    <text class="d-label" x="604" y="50" text-anchor="middle">回帰 QA</text>
+    <text class="d-sub" x="604" y="67" text-anchor="middle">回帰チェック</text>
+
+    <!-- forward arrows -->
+    <line class="d-edge" x1="130" y1="54" x2="138" y2="54"/><polygon class="d-arrow" points="132,49 140,54 132,59"/>
+    <line class="d-edge" x1="264" y1="54" x2="272" y2="54"/><polygon class="d-arrow" points="266,49 274,54 266,59"/>
+    <line class="d-edge" x1="398" y1="54" x2="406" y2="54"/><polygon class="d-arrow" points="400,49 408,54 400,59"/>
+    <line class="d-edge" x1="532" y1="54" x2="540" y2="54"/><polygon class="d-arrow" points="534,49 542,54 534,59"/>
+
+    <!-- feedback loop QA -> 開発担当 -->
+    <path class="d-edge accent dash" d="M604 82 V124 H470 V84"/>
+    <polygon class="d-arrow accent" points="465,90 475,90 470,84"/>
+    <text class="d-accent" x="537" y="140" text-anchor="middle" font-size="11">QA 不合格 → 手戻りループ</text>
+</svg>
+<div class="d-cap">各エージェントは自分のスキルを使い、QA で止まれば開発担当へ戻ります。</div>
+</div>
+
+<h3>チームをうまく組む初級の原則</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>原則</th><th>理由</th><th>ERP での例</th></tr></thead>
+        <tbody>
+            <tr><td>役割は<strong>狭く</strong></td><td>ひとつのエージェントが何役もやると品質が落ちる</td><td>「分析」と「開発」を分ける</td></tr>
+            <tr><td>入出力を<strong>明確に</strong></td><td>次の人がそのまま引き継げるように</td><td>影響範囲レポート → 設計の入力</td></tr>
+            <tr><td><strong>QA は別に</strong></td><td>作った人が自分のものを検収すると見落とす</td><td>回帰 QA を独立したエージェントに</td></tr>
+            <tr><td>詰まったら<strong>印を付けて</strong>止まる</td><td>知らないことを作り話にしないため</td><td>「要確認」のフラグ</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">生成されたチームの手直し</span>
+    ハーネスが作ったエージェントが気に入らなければ、<strong>自然言語で修正を頼む</strong>だけです。例: <code>/harness QA エージェントは標準の注文取消のシナリオも必ず検証するように修正</code>。検証をどれだけ固くするかが、結果の信頼度を左右します → <a href="#!hnp-verify">検証・品質</a>。
+</div>

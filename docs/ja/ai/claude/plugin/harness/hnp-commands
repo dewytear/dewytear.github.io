@@ -1,0 +1,65 @@
+<h2>コマンド・クイックリファレンス</h2>
+<p>ハーネスを使っていてよく探すことになるコマンド・操作・設定を一か所にまとめました。</p>
+
+<h3>主なコマンド</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>コマンド</th><th>やること</th></tr></thead>
+        <tbody>
+            <tr><td><code>/plugin marketplace add &lt;repo&gt;</code></td><td>ハーネスのマーケットプレイスを登録（例: <code>lev-factory/harness</code>）</td></tr>
+            <tr><td><code>/plugin install harness</code></td><td>ハーネスプラグインをインストール</td></tr>
+            <tr><td><code>/reload</code></td><td>入れたプラグインを現在のセッションに反映</td></tr>
+            <tr><td><code>/harness &lt;意図&gt;</code></td><td>意図を渡してハーネスを実行（チーム編成の開始）</td></tr>
+            <tr><td><code>進めて</code></td><td>提案されたチームを検討したうえで実行を承認</td></tr>
+            <tr><td><code>/agents</code></td><td>生成されたエージェントの一覧を確認</td></tr>
+            <tr><td><code>/exit</code></td><td>セッションの終了（エージェントが見えないときの入り直し用）</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>操作・ショートカット</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>操作</th><th>やること</th></tr></thead>
+        <tbody>
+            <tr><td><span class="kbd">Tab</span></td><td><code>/harness</code> を入力したあとの補完</td></tr>
+            <tr><td><span class="kbd">Shift + 方向キー</span></td><td>実行中の各エージェントの作業をのぞく</td></tr>
+            <tr><td><span class="kbd">Shift + Tab</span></td><td>モードの切り替え（auto / accept / plan）</td></tr>
+            <tr><td>新しいターミナル窓</td><td>別のハーネスを同時に実行（並列の作業）</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>設定・成果物の場所</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>項目</th><th>内容</th></tr></thead>
+        <tbody>
+            <tr><td>エージェントチームを有効化</td><td><code>~/.claude/settings.json</code> の <code>env</code> に <code>"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"</code></td></tr>
+            <tr><td>成果物のフォルダ</td><td><code>_workspace</code> — 分析・設計・実装・QA レポート・根拠の出典</td></tr>
+            <tr><td>エージェント・スキルの定義</td><td><code>.claude</code> の下（Git で共有できます）</td></tr>
+            <tr><td>構成の変更履歴</td><td><code>CLAUDE.md</code></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>場面別のチートシート</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>場面</th><th>こうする</th></tr></thead>
+        <tbody>
+            <tr><td>はじめてのインストール</td><td><code>/plugin marketplace add …</code> → <code>/plugin install harness</code> → <code>/reload</code> → <code>/harness</code> で確認</td></tr>
+            <tr><td>はじめての実行</td><td><code>/harness</code> + <strong>「〜したいと思っています」</strong>という意図 → チームを検討 → <code>進めて</code></td></tr>
+            <tr><td>進行の観察</td><td><span class="kbd">Shift + 方向キー</span>でエージェントを確認</td></tr>
+            <tr><td>検証の強化</td><td><code>/harness QA エージェントは Codex CLI で交差検証するように修正</code></td></tr>
+            <tr><td>チームの修正</td><td><code>/harness &lt;エージェント&gt; は &lt;条件&gt; も検証/処理するように修正</code></td></tr>
+            <tr><td>エージェントが見えない</td><td><code>/exit</code> して入り直す → <code>/agents</code> で確認</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">意図の文のテンプレート（コピーして使う）</span>
+    <code>/harness ERP の &lt;モジュール&gt; で &lt;何を&gt; する顧客向けカスタマイズを進めたいと思っています。標準ソースの影響範囲の分析と回帰テストまで含めてください。</code>
+    <br>いろいろな<a href="#!hnp-scenarios">シナリオ</a>で、このテンプレートの<strong>&lt;モジュール&gt;・&lt;何を&gt;</strong>だけを入れ替えれば大丈夫です。
+</div>

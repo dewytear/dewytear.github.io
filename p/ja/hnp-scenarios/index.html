@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>シナリオ集</title>
+<meta name="description" content="ERP のモジュール別にカスタマイズのシナリオとおすすめのチーム構成を集める。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/hnp-scenarios/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hnp-scenarios/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hnp-scenarios/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/hnp-scenarios/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hnp-scenarios/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="シナリオ集">
+<meta property="og:description" content="ERP のモジュール別にカスタマイズのシナリオとおすすめのチーム構成を集める。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/hnp-scenarios/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="シナリオ集">
+<meta name="twitter:description" content="ERP のモジュール別にカスタマイズのシナリオとおすすめのチーム構成を集める。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "シナリオ集",
+ "description": "ERP のモジュール別にカスタマイズのシナリオとおすすめのチーム構成を集める。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/hnp-scenarios/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hnp-scenarios",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-04T08:51:27+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hnp-scenarios">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/hnp-scenarios/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/hnp-scenarios/" hreflang="en">English</a>
+</p>
+<article>
+<h2>シナリオ集</h2>
+<p>ERP の顧客向けカスタマイズで<strong>ハーネスを当てられそうな場面</strong>をモジュール別に集めました。各カードは<strong>モジュール · 難易度 · 状況 · おすすめのチーム構成 · 期待できる効果</strong>の順に読んでください。似た状況を選んで、<a href="/p/ja/hnp-first-run/">意図の文</a>だけ差し替えて実行してみてください。</p>
+
+<div class="note">
+    <span class="nh">難易度の表示</span>
+    <span class="scn-pill lv1">初級</span> 単独・小規模のカスタム · <span class="scn-pill lv2">中級</span> 標準への影響あり · <span class="scn-pill lv3">上級</span> 複数モジュール・データ・整合性のリスク。難易度が上がるほど<strong>回帰の検証と人の検討</strong>の比重を大きくしてください。
+</div>
+
+<div class="scn-board">
+
+    <div class="scn-card">
+        <h4>与信限度を超える注文の自動保留</h4>
+        <div class="scn-meta"><span class="scn-pill mod">営業・受注</span><span class="scn-pill lv2">中級</span></div>
+        <p class="scn-body">信用等級ごとの与信限度を超える注文を自動で保留し、担当者へ通知。標準の与信・注文ロジックへの影響範囲の分析が必須。</p>
+        <div class="scn-sub">おすすめのチーム</div>
+        <div class="scn-team"><span>影響範囲の分析担当</span><span>カスタム設計担当</span><span>開発</span><span>回帰 QA</span></div>
+        <p class="scn-body"><strong>効果</strong> — 限度超過のミスを遮断 · 承認の流れを標準化</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>物流センターのロケーション(Bin)管理アドオン</h4>
+        <div class="scn-meta"><span class="scn-pill mod">在庫・物流</span><span class="scn-pill lv2">中級</span></div>
+        <p class="scn-body">顧客の倉庫のセル・ロケーション単位の入出庫を標準在庫の上に載せるアドオン。在庫受払の整合性が肝。</p>
+        <div class="scn-sub">おすすめのチーム</div>
+        <div class="scn-team"><span>在庫の流れの分析担当</span><span>データ設計担当</span><span>開発</span><span>受払整合 QA</span></div>
+        <p class="scn-body"><strong>効果</strong> — ロケーション別の実在庫を可視化 · 誤出庫の減少</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>顧客ごとの特殊な手当・控除のルール</h4>
+        <div class="scn-meta"><span class="scn-pill mod">給与・人事</span><span class="scn-pill lv2">中級</span></div>
+        <p class="scn-body">顧客の就業規則に合わせた手当・控除の計算式を給与計算に反映。社会保険・年末調整への影響の確認が必要。</p>
+        <div class="scn-sub">おすすめのチーム</div>
+        <div class="scn-team"><span>給与ルールの分析担当</span><span>計算式の設計担当</span><span>開発</span><span>明細整合 QA</span></div>
+        <p class="scn-body"><strong>効果</strong> — ルール反映の正確さ↑ · 給与の誤りに関する問い合わせの減少</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>勘定科目のマッピング・自動仕訳のカスタム</h4>
+        <div class="scn-meta"><span class="scn-pill mod">会計・決算</span><span class="scn-pill lv3">上級</span></div>
+        <p class="scn-body">顧客の勘定体系に合わせて伝票の自動仕訳ルールをカスタム。決算・財務諸表の整合性のリスクが大きい。</p>
+        <div class="scn-sub">おすすめのチーム</div>
+        <div class="scn-team"><span>勘定体系の分析担当</span><span>仕訳ルールの設計担当</span><span>開発</span><span>貸借・決算 QA</span></div>
+        <p class="scn-body"><strong>効果</strong> — 手仕訳の減少 · 決算のリードタイム短縮</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>BOM・工程ルーティングのカスタム</h4>
+        <div class="scn-meta"><span class="scn-pill mod">生産</span><span class="scn-pill lv3">上級</span></div>
+        <p class="scn-body">顧客の生産方式に合わせた BOM 展開・工程ルーティングのカスタム。所要量・原価計算への連鎖的な影響の分析が必要。</p>
+        <div class="scn-sub">おすすめのチーム</div>
+        <div class="scn-team"><span>生産の流れの分析担当</span><span>BOM 設計担当</span><span>開発</span><span>原価・所要量 QA</span></div>
+        <p class="scn-body"><strong>効果</strong> — 実際の工程を反映 · 計画と実績の誤差を縮小</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>発注承認に電子決裁の段階を追加</h4>
+        <div class="scn-meta"><span class="scn-pill mod">購買・発注</span><span class="scn-pill lv1">初級</span></div>
+        <p class="scn-body">金額の区分ごとの決裁段階を標準の発注の流れに追加。比較的、局所的なカスタム。</p>
+        <div class="scn-sub">おすすめのチーム</div>
+        <div class="scn-team"><span>決裁フローの分析担当</span><span>開発</span><span>回帰 QA</span></div>
+        <p class="scn-body"><strong>効果</strong> — 承認の統制を強化 · 規程の順守</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>オーダーメイドの経営レポート様式の開発</h4>
+        <div class="scn-meta"><span class="scn-pill mod">レポート</span><span class="scn-pill lv1">初級</span></div>
+        <p class="scn-body">顧客が求める指標・レイアウトの経営レポートを標準データから算出。標準データの参照なのでリスクは低い。</p>
+        <div class="scn-sub">おすすめのチーム</div>
+        <div class="scn-team"><span>指標定義の分析担当</span><span>レポート開発</span><span>数値整合 QA</span></div>
+        <p class="scn-body"><strong>効果</strong> — レポート作成時間の短縮 · 指標の一貫性</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>レガシー → ERP への初期移行</h4>
+        <div class="scn-meta"><span class="scn-pill mod">データ移行</span><span class="scn-pill lv3">上級</span></div>
+        <p class="scn-body">旧システムのマスター・残高を ERP へ移行。マッピング・整合性・検証の大量のくり返し作業なので、チーム分担の効果が大きい。</p>
+        <div class="scn-sub">おすすめのチーム</div>
+        <div class="scn-team"><span>マッピングの分析担当</span><span>変換の開発</span><span>整合性の検証</span><span>移行 QA</span></div>
+        <p class="scn-body"><strong>効果</strong> — 移行のエラーを事前に検出 · 突合の自動化</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>標準パッケージの不具合の分析・パッチ</h4>
+        <div class="scn-meta"><span class="scn-pill mod">保守</span><span class="scn-pill lv2">中級</span></div>
+        <p class="scn-body">再現の道筋があいまいな標準の欠陥を、ログとソースから原因究明し、最小のパッチを提案。影響範囲の把握が核心。</p>
+        <div class="scn-sub">おすすめのチーム</div>
+        <div class="scn-team"><span>再現・原因の分析担当</span><span>パッチ設計</span><span>開発</span><span>回帰 QA</span></div>
+        <p class="scn-body"><strong>効果</strong> — 原因究明の時間短縮 · 再発の防止</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>外部システムとのインターフェース開発</h4>
+        <div class="scn-meta"><span class="scn-pill mod">連携・I/F</span><span class="scn-pill lv3">上級</span></div>
+        <p class="scn-body">銀行・物流・グループ会社のシステムとの連携（電文/API）の開発。例外・再処理・整合性の設計の負担が大きい。</p>
+        <div class="scn-sub">おすすめのチーム</div>
+        <div class="scn-team"><span>連携仕様の分析担当</span><span>I/F 設計担当</span><span>開発</span><span>例外・再処理 QA</span></div>
+        <p class="scn-body"><strong>効果</strong> — 手作業の連携を排除 · エラーの再処理を自動化</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>回帰テストのシナリオの自動生成</h4>
+        <div class="scn-meta"><span class="scn-pill mod">品質・QA</span><span class="scn-pill lv1">初級</span></div>
+        <p class="scn-body">カスタムの反映後に点検すべき標準・カスタムのシナリオを自動で導き、チェックリストに整理。</p>
+        <div class="scn-sub">おすすめのチーム</div>
+        <div class="scn-team"><span>影響範囲の分析担当</span><span>シナリオの作成</span><span>検証</span></div>
+        <p class="scn-body"><strong>効果</strong> — 検証の抜けを防止 · QA の準備時間の短縮</p>
+    </div>
+
+    <div class="scn-card">
+        <h4>CR の影響範囲・工数の見積り</h4>
+        <div class="scn-meta"><span class="scn-pill mod">分析・企画</span><span class="scn-pill lv1">初級</span></div>
+        <p class="scn-body">顧客の変更要望（CR）が標準や既存のカスタムに与える影響と、想定される工数を事前に見積もって、見積書・日程に反映。</p>
+        <div class="scn-sub">おすすめのチーム</div>
+        <div class="scn-team"><span>要件の分析担当</span><span>影響範囲の分析担当</span><span>工数の見積り</span></div>
+        <p class="scn-body"><strong>効果</strong> — 過小・過大な見積りの防止 · リスクの早期発見</p>
+    </div>
+
+</div>
+
+<div class="note">
+    <span class="nh">似た構成をすばやく見つけるには</span>
+    こうした事例をあらかじめ 100 種にまとめた<strong>ハーネス 100</strong> から似た構成を見つけて<strong>カスタマイズ</strong>するほうが速いです → <a href="/p/ja/hnp-hundred/">ハーネス 100・性能</a>。実行に使うコマンドは<a href="/p/ja/hnp-commands/">コマンド・クイックリファレンス</a>にまとめてあります。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · PlugIn · Harness &middot; <span class="pr-k">作成日</span> 2026-07-04 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/hnp-agents-skills/">エージェントとスキルの設計</a></li><li><a href="/p/ja/hnp-first-run/">はじめてのハーネス実行 — 営業・受注のカスタマイズ</a></li></ul>
+</nav>
+</body>
+</html>

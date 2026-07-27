@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harness プラグイン — 紹介</title>
+<meta name="description" content="Harness プラグインの考え方と、ERP のカスタマイズに向く理由を紹介する。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/hnp-intro/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hnp-intro/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hnp-intro/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/hnp-intro/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hnp-intro/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Harness プラグイン — 紹介">
+<meta property="og:description" content="Harness プラグインの考え方と、ERP のカスタマイズに向く理由を紹介する。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/hnp-intro/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Harness プラグイン — 紹介">
+<meta name="twitter:description" content="Harness プラグインの考え方と、ERP のカスタマイズに向く理由を紹介する。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Harness プラグイン — 紹介",
+ "description": "Harness プラグインの考え方と、ERP のカスタマイズに向く理由を紹介する。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/hnp-intro/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hnp-intro",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-04T08:51:27+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hnp-intro">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/hnp-intro/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/hnp-intro/" hreflang="en">English</a>
+</p>
+<article>
+<h2>Harness プラグイン — 紹介</h2>
+<p><strong>ハーネス（Harness）プラグイン</strong>は、<strong>「目標（意図）を渡すだけで、複数の AI がチームを組んで自律的に長く働ける場を整えてくれる」</strong>Claude Code のプラグインです。プロンプトをひとつずつ投げる代わりに、<em>「何がほしいのか」</em>だけを言えば、プラグインが<strong>エージェントチーム・スキル・オーケストレーター</strong>を代わりに組み立てて実行します。</p>
+
+<h3>一枚で見る全体像</h3>
+<p>ハーネスプラグインがやることは、つまるところ下の流れです。人は<strong>いちばん前（意図）</strong>と<strong>いちばん後ろ（検討・意思決定）</strong>にだけ関わり、真ん中のくり返し作業は AI のチームが引き受けます。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 132" role="img" aria-label="ハーネスの動作の流れ: 意図の入力 → チーム構成 → 並列の自律実行 → 検証済みの成果物">
+    <!-- boxes -->
+    <rect class="d-box accent" x="5" y="30" width="150" height="66" rx="10"/>
+    <text class="d-label" x="80" y="58" text-anchor="middle">① 意図の入力</text>
+    <text class="d-sub" x="80" y="78" text-anchor="middle">「〜したいです」</text>
+
+    <rect class="d-box" x="185" y="30" width="150" height="66" rx="10"/>
+    <text class="d-label" x="260" y="58" text-anchor="middle">② チーム構成</text>
+    <text class="d-sub" x="260" y="78" text-anchor="middle">エージェント・スキル</text>
+
+    <rect class="d-box" x="365" y="30" width="150" height="66" rx="10"/>
+    <text class="d-label" x="440" y="58" text-anchor="middle">③ 自律実行</text>
+    <text class="d-sub" x="440" y="78" text-anchor="middle">並列 · 長く</text>
+
+    <rect class="d-box accent" x="545" y="30" width="150" height="66" rx="10"/>
+    <text class="d-label" x="620" y="58" text-anchor="middle">④ 検証済み成果物</text>
+    <text class="d-sub" x="620" y="78" text-anchor="middle">出典・QA を含む</text>
+
+    <!-- arrows -->
+    <line class="d-edge" x1="157" y1="63" x2="178" y2="63"/>
+    <polygon class="d-arrow" points="178,58 186,63 178,68"/>
+    <line class="d-edge" x1="337" y1="63" x2="358" y2="63"/>
+    <polygon class="d-arrow" points="358,58 366,63 358,68"/>
+    <line class="d-edge" x1="517" y1="63" x2="538" y2="63"/>
+    <polygon class="d-arrow" points="538,58 546,63 538,68"/>
+
+    <!-- human involvement labels -->
+    <text class="d-accent" x="80" y="118" text-anchor="middle" font-size="11">人: 指示</text>
+    <text class="d-accent" x="620" y="118" text-anchor="middle" font-size="11">人: 検討・決定</text>
+</svg>
+<div class="d-cap">人は前（意図）と後ろ（検討）だけ、真ん中のくり返し作業は AI のチームが引き受けます。</div>
+</div>
+
+<h3>なぜ「ハーネス」なのか — プロンプトからハーネスへ</h3>
+<p>AI を扱うやり方は、下のように発展してきました。ハーネスは<strong>モデルひとつではなく「モデルを取り囲む環境全体」</strong>を設計する段階です。同じモデルでも、<strong>どんな場（ハーネス）に載せるか</strong>で成果物の品質は大きく変わります。</p>
+
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>段階</th><th>核心</th><th>たとえ</th></tr></thead>
+        <tbody>
+            <tr><td><strong>プロンプトエンジニアリング</strong></td><td>問いをうまく投げる</td><td>ひと言をうまく言う</td></tr>
+            <tr><td><strong>コンテキストエンジニアリング</strong></td><td>必要な資料・文脈をうまく入れる</td><td>資料を手に握らせる</td></tr>
+            <tr><td><strong>ハーネスエンジニアリング</strong></td><td>AI が働く<strong>システム全体</strong>を設計</td><td>馬に<strong>馬具（ハーネス）</strong>を着けて長く走らせる</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>ERP のカスタマイズになぜ向くのか</h3>
+<p>顧客ごとのカスタマイズ業務は、ふつう<strong>いくつもの段階が順番に</strong>つながります — 要件（CR）の分析 → 標準ソース・影響範囲の把握 → 設計 → 開発 → 回帰検証。これは<strong>ひとりで順にやると時間がかかるが、役割を分けて並列にやるとずっと速い</strong>典型的な仕事です。ハーネスはこの段階を<strong>それぞれ担当のエージェント</strong>に任せ、オーケストレーターが整えます。</p>
+<ul>
+    <li><strong>標準の毀損を最小化</strong> — 「このカスタムが標準パッケージのどこに影響するか」を分析エージェントが先に押さえます。</li>
+    <li><strong>回帰検証の自動化</strong> — 開発のあと、QA エージェントが標準の機能が壊れていないかを突き合わせて確認します。</li>
+    <li><strong>成果物の標準化</strong> — 仕様・影響範囲・テスト・移行ガイドが <code>_workspace</code> にまとめて残ります。</li>
+</ul>
+<p class="scn-sub">※ 具体的な例（営業・受注の与信限度のカスタム）は<a href="/p/ja/hnp-first-run/">はじめてのハーネス実行</a>で段階を追って試します。</p>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · PlugIn · Harness &middot; <span class="pr-k">作成日</span> 2026-07-04 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/hnp-first-run/">はじめてのハーネス実行 — 営業・受注のカスタマイズ</a></li><li><a href="/p/ja/hns-run/">ハーネスを実行する（実習）</a></li><li><a href="/p/ja/hnp-concepts/">核心の概念をやさしく</a></li><li><a href="/p/ja/hnp-commands/">コマンド・クイックリファレンス</a></li></ul>
+</nav>
+</body>
+</html>
