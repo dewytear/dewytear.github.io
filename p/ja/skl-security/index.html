@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>セキュリティ上の注意</title>
+<meta name="description" content="実行の権限を持つスキルにともなうセキュリティのリスクと、その扱い方を扱う。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/skl-security/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/skl-security/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/skl-security/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/skl-security/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/skl-security/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="セキュリティ上の注意">
+<meta property="og:description" content="実行の権限を持つスキルにともなうセキュリティのリスクと、その扱い方を扱う。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/skl-security/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="セキュリティ上の注意">
+<meta name="twitter:description" content="実行の権限を持つスキルにともなうセキュリティのリスクと、その扱い方を扱う。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "セキュリティ上の注意",
+ "description": "実行の権限を持つスキルにともなうセキュリティのリスクと、その扱い方を扱う。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/skl-security/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!skl-security",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:20:26+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!skl-security">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/skl-security/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/skl-security/" hreflang="en">English</a>
+</p>
+<article>
+<h2>セキュリティ上の注意</h2>
+<p>スキルは強力なぶん、<strong>セキュリティのリスク</strong>も大きくなります。必ず押さえておくべきところです。</p>
+
+<h3>他人のスキルを軽々しく使わない</h3>
+<p>スキルの中には<strong>スクリプト</strong>が入っていて、このスクリプトは<strong>自分の PC（ノート）を実行させる権限</strong>をそのまま持ちます。だから、他人が作ったスキルを検証なしに持ってきて使うのは危険です。</p>
+<ul>
+    <li>スキルの中に危険なコードが隠れていることがあり、実際に <strong>API キーの漏洩・セキュリティ事故</strong>の事例が多くあります（MCP のハブから取ったものなど）。</li>
+    <li><strong>認証・検証されたスキル</strong>だけを使い、できれば<strong>社内で検証されたスキル</strong>だけを使います。</li>
+    <li>検査のツールもありますが、そのツールを<strong>どこまで信頼するか</strong>がまた問題です。結局、コードやガイドラインを自分で確かめる慎重さが要ります。</li>
+    <li>危険なスキルを「上からかぶせて」補うより、<strong>参考にして自分で作る</strong>ほうが安全です。</li>
+</ul>
+
+<h3>権限とサンドボックス</h3>
+<ul>
+    <li>スキルごとに<strong>読み取りのみ／書き込み・編集も可</strong>など、権限の制約を設けられます。</li>
+    <li>ノート PC で何気なく「はい」と答えるとシステムが壊れることもあるので、危険な作業は<strong>サンドボックス（VM）</strong>で別に回すほうが安全です。</li>
+    <li>機関の内部なら<strong>閉域網・オンプレミス</strong>の環境で動かすことを勧めます。（モデルも社内／オープンなモデルを選ぶ）</li>
+</ul>
+
+<div class="note warn">
+    <span class="nh">ひと言でいうと</span>
+    スキルは<strong>自分のコンピュータを実行する権限</strong>を持ちます。出どころのはっきりしないスキルは、絶対に軽々しく入れないでください。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Skill &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/skl-coding-agent/">スキルの背景 — コーディングエージェントの誕生</a></li><li><a href="/p/ja/skl-overview/">スキル深掘り — 概要</a></li><li><a href="/p/ja/skl-what/">スキルとは何か</a></li></ul>
+</nav>
+</body>
+</html>

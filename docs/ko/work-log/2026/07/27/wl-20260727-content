@@ -100,4 +100,16 @@
     <span class="nh">번역 잔존 한글 전수 검사</span>
     <code>docs/ja/</code> 전체를 <code>[가-힣]</code>로 훑어 <strong>12건</strong>이 나왔고, <strong>전부 의도된 것</strong>임을 확인했다 — About의 저자 한글 이름 2건, OMC가 실제로 인식하는 <strong>한국어 매직 키워드</strong> 10건. 번역 누락은 0건.
 </div>
-<p><strong>다음</strong>: 배치 8 — 스킬 강의(skl-* 11편) · CLAUDE.md 십계명.</p>
+<h3>일본어(ja) 배치 8 — 스킬 강의(skl-* 12편) + CLAUDE.md 십계명</h3>
+<p>여덟 번째 배치. 스킬 강의 12편에 <strong>CLAUDE.md 십계명</strong>(20.8KB, 이 위키에서 가장 긴 단일 문서 중 하나)을 얹었다.</p>
+<ul>
+    <li><strong>본문 13편</strong> — <code>skl-*</code> 12편(도식 5개) + <code>claude-md-commandments</code>.</li>
+    <li><strong>용어 정본</strong>: 점진적 로딩→<code>段階的な読み込み</code> · 프론트매터→<code>フロントマター</code> · 코딩 에이전트→<code>コーディングエージェント</code> · 조직 내재화 스킬→<code>組織に根づくスキル</code> · 수술적 변경→<code>外科的な変更</code> · 의미 단위 커밋→<code>意味の単位でコミット</code>.</li>
+</ul>
+<div class="note warn">
+    <span class="nh">십계명의 영어 원문은 손대지 않았다</span>
+    이 문서의 핵심은 &ldquo;<strong>이 코드블록을 통째로 복사해 <code>CLAUDE.md</code>로 저장하라</strong>&rdquo;는 것이다. 그러니 <strong>영어 원문 5.7KB는 한 글자도 번역하지 않고 그대로</strong> 두었다 — 번역하면 복사해도 쓸모가 없어진다. 대신 그 앞뒤(설명·표·&ldquo;한국어 번역 전문&rdquo; 절)를 일본어로 옮겼다.<br>
+    같은 이유로 <strong>5·6계명의 &ldquo;한국어&rdquo;도 그대로</strong> 뒀다. 이 지침은 실제로 <strong>한국어 출력</strong>을 겨냥해 쓰인 것이라, 일본어판이라고 &ldquo;일본어 문장은…&rdquo;으로 바꾸면 원문에 없는 규칙을 지어내는 셈이다(영어판도 같은 처리). 예시 주석 <code>// 사용자 인증 상태를 관리하는 Context Provider</code>도 원문 그대로다.
+</div>
+<p><code>check_diagram_bounds</code> <strong>220개 전수 통과</strong>(ja 5편 신규). 십계명 페이지는 도식이 아니라 <strong>래스터 히어로 이미지</strong>라, 브라우저에서 <code>naturalWidth=941</code>로 실제 로드되는 것과 영어 코드블록 첫 줄이 <code># CLAUDE.md</code>로 온전한 것을 따로 확인했다. <code>validate_all</code> ERROR 0 · WARN 23 유지 · ko/en 회귀 무변화 · pageerror 0.</p>
+<p><strong>다음</strong>: 배치 9 — News &amp; Articles 12편(기사 묶음, 최대 50KB짜리 포함).</p>

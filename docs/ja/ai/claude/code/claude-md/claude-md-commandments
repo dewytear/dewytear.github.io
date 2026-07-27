@@ -1,0 +1,286 @@
+<h2>CLAUDE.md の十戒 — AI ペアプログラマーを飼いならす十の約束</h2>
+
+<p>AI にコーディングをさせたことのある人なら誰でも経験します — 頼んでもいない機能を作ってきて、なんともない隣のコードを&ldquo;改善&rdquo;しておいて、テストも走らせずに&ldquo;全部できました！&rdquo;と叫ぶ瞬間を。<strong>CLAUDE.md はそういう事故を防ぐプロジェクトの方針ファイル</strong>です。Claude Code が会話を始めるたびに自動で読むので、いわば <strong>AI の新入社員の机に置いておくオンボーディング文書</strong>です。この文書では、そのなかでもよく整理された一式 — <strong>&lsquo;十戒&rsquo; CLAUDE.md</strong> — をインフォグラフィック・英語原文・日本語訳で紹介し、どう使えばよいかまで収めました。</p>
+
+<figure class="doc-img">
+    <img src="assets/ai/claude/code/claude-md/claude-md-commandments/hero.webp" width="941" height="1672"
+         alt="AI の赤ちゃんロボットが語る賢いコーディングの方針: CLAUDE.md の十戒 — 慎重な出だし（まず考える・三つのアーティファクト）、コードを書く原則（単純さ・外科的な変更・韓国語ヘッダー・コロン禁止・完了前のテスト）、検証と締めくくり（目標中心・意味の単位でコミット・エラーログの熟読）を 3 段階で描いたインフォグラフィック">
+    <figcaption>AI の赤ちゃんロボットが語る CLAUDE.md の十戒 — 3 段階 × 十戒のインフォグラフィック（制作: dewytear）</figcaption>
+</figure>
+
+<h3>三行まとめ</h3>
+<ul>
+    <li>CLAUDE.md は<strong>Claude Code が毎セッション自動で読む行動の方針</strong>です — ここで紹介する十戒は、LLM がコーディングのときにやらかす<strong>定番の失敗 10 個を正面から狙った</strong>汎用の方針です。</li>
+    <li>構造は 3 段階 — <strong>慎重な出だし</strong>（まず考える・計画/チェックリスト/文脈ノート）、<strong>コードを書く原則</strong>（単純さ・外科的な変更・ヘッダーのコメント・句読点・テスト）、<strong>検証と締めくくり</strong>（目標中心・意味の単位でコミット・エラーの熟読）。</li>
+    <li>使い方は簡単です — <strong>下の原文をプロジェクトのルートに <code>CLAUDE.md</code> として保存</strong>し、プロジェクト固有の方針を足すだけ。効き目は diff がすっきりすることで確かめます。</li>
+</ul>
+
+<h3>こう活用してください — 3 分の導入、一生の小言</h3>
+<p>たとえるなら、こうです。実力はあるのに<strong>仕事の習慣はまだ白紙</strong>の新入社員が、毎朝あらためて出勤してきます（AI はセッションごとに記憶がリセットされるので）。毎回口で教える代わりに、<strong>机の上に勤務の心得を十行</strong>貼っておくこと — それが CLAUDE.md です。</p>
+<ul>
+    <li><strong>ステップ 1 · 貼り付け</strong> — 下の英語原文をまるごとコピーして、リポジトリのルートに <code>CLAUDE.md</code> という名前で保存します。それで終わりです。Claude Code が次の会話から勝手に読みます。（個人のグローバルなルールとして使うなら <code>~/.claude/CLAUDE.md</code> に置けば、すべてのプロジェクトに適用されます — 適用範囲の話は<a href="#!ccb-claudemd">CLAUDE.md — 作業方針のファイル</a>の文書を参照。）</li>
+    <li><strong>ステップ 2 · 自分のプロジェクトの味を足す</strong> — 原文の一行目から「プロジェクト固有の方針と統合して使え」と書いてあります。ビルドのコマンド、コーディング規約、禁止事項といった自分たちのチームのルールを下に足してください。十戒が&lsquo;憲法&rsquo;なら、プロジェクトの方針は&lsquo;施行令&rsquo;です。</li>
+    <li><strong>ステップ 3 · チームへ広げる</strong> — ファイルをリポジトリにコミットすれば、チーム全員の AI が<strong>同じルールで働く同僚</strong>になります。レビューのときに「AI がまた隣のコードを触ったな」といった小言が減ります。</li>
+    <li><strong>効いているか確かめる方法</strong> — 原文の末尾の基準のとおりです。① diff の<strong>不要な変更が減り</strong>、② 過剰設計による作り直しが減り、③ <strong>質問が失敗より先に</strong>来れば、方針が働いています。</li>
+    <li><strong>注意をひとさじ</strong> — 原文が自ら断っているとおり、この方針は<strong>速さより慎重さ</strong>に寄っています。使い捨てのスクリプトのような些細なことにまで三つのアーティファクトを求めると窮屈なので、そんなときは &ldquo;judgment（裁量）&rdquo; の条項を信じて軽く行ってください。</li>
+</ul>
+
+<h3>十戒をひと目で</h3>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>戒</th><th>ひと言の呪文</th><th>こんな事故を防ぐ</th></tr></thead>
+    <tbody>
+        <tr><td><strong>1. コーディング前に考える</strong></td><td>&ldquo;前提を言え、あいまいなら訊け&rdquo;</td><td>ひとりで推測して見当違いのものを作ってくる事故</td></tr>
+        <tr><td><strong>2. 単純さを優先</strong></td><td>&ldquo;問題を解く最小限のコードだけ&rdquo;</td><td>頼んでいない機能・過剰な抽象化・50 行で済む 200 行</td></tr>
+        <tr><td><strong>3. 外科的な変更</strong></td><td>&ldquo;触るべきところだけ触れ&rdquo;</td><td>なんともない隣のコードを&lsquo;改善&rsquo;してしまうお節介</td></tr>
+        <tr><td><strong>4. 目標中心の実行</strong></td><td>&ldquo;成功の基準を先に、通るまで&rdquo;</td><td>&ldquo;動くようにして&rdquo;程度のぼんやりした目標と無限の往復</td></tr>
+        <tr><td><strong>5. 文末のコロン禁止</strong></td><td>&ldquo;韓国語の文は句点で&rdquo;</td><td>英語の癖が漏れ出た不自然な韓国語の出力</td></tr>
+        <tr><td><strong>6. 韓国語のファイルヘッダー</strong></td><td>&ldquo;新しいファイルの一行目に役割を一行&rdquo;</td><td>次のセッション（人でも AI でも）がファイルをまるごと読み直す無駄</td></tr>
+        <tr><td><strong>7. 計画+チェックリスト+文脈ノート</strong></td><td>&ldquo;三つのアーティファクトなしにコーディング開始は禁止&rdquo;</td><td>決めた理由が蒸発して、次のセッションが一から悩み直す</td></tr>
+        <tr><td><strong>8. 完了の前にテスト</strong></td><td>&ldquo;&lsquo;できました&rsquo;の前に自分で走らせろ&rdquo;</td><td>LLM がいちばんよく飛ばす段階 — ビルドが壊れたまま完了の報告</td></tr>
+        <tr><td><strong>9. 意味の単位でコミット</strong></td><td>&ldquo;一文で説明できるならコミット&rdquo;</td><td>修正 20 個が絡まって戻せない塊のコミット</td></tr>
+        <tr><td><strong>10. エラーログを熟読</strong></td><td>&ldquo;推測せず最後まで読め&rdquo;</td><td>キーワードだけ見て&lsquo;よくある修正&rsquo;を当てはめ、一行のバグが三ファイルのリファクタに広がる惨事</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>英語の原文 — そのままコピーして使ってください</h3>
+<p>下が原文の全文です。コードブロックをまるごとコピーして <code>CLAUDE.md</code> として保存すれば大丈夫です。</p>
+<pre><code># CLAUDE.md
+
+Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+
+**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+
+## 1. Think Before Coding
+
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
+
+Before implementing:
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+
+## 2. Simplicity First
+
+**Minimum code that solves the problem. Nothing speculative.**
+
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+## 3. Surgical Changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
+
+When your changes create orphans:
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
+
+## 4. Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
+
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+## 5. No Closing Colons (Korean Output)
+
+**End Korean sentences with a period, not a colon.**
+
+When the user writes in Korean, your output is also Korean:
+- Don't end sentences with `:` even if the next line is a list or example.
+- LLMs trained on English docs leak the colon habit into Korean. Catch it.
+- The test: every Korean sentence terminator should be `.`, `?`, or `!` — not `:`.
+- Colons are fine inside code, key-value pairs, or labels. Not as sentence enders.
+
+## 6. File Header Comments in Korean
+
+**First line of every new source file: a one-line Korean comment stating its role.**
+
+When creating a new file:
+- TypeScript/JavaScript: `// 사용자 인증 상태를 관리하는 Context Provider`
+- Python: `# KIS API 호출을 비동기로 래핑하는 클라이언트`
+- SQL: `-- 일별 집계 결과를 저장하는 머티리얼라이즈드 뷰`
+- Place it directly under required directives (`'use client'`, `'use server'`, shebang).
+- Skip config files (`*.config.ts`, `package.json`, etc.).
+
+Why: agents read files selectively, not whole codebases. A one-line Korean header gives instant context so the next session (human or agent) can navigate without re-reading the entire file.
+
+## 7. Plan + Checklist + Context Notes
+
+**Before any non-trivial task, produce three artifacts. Don't start coding without them.**
+
+- **Plan** — what we're building and why.
+- **Checklist** (`checklist.md`) — concrete tasks as checkboxes. Tick as you go.
+- **Context Notes** (`context-notes.md`) — decisions made during the work and the reasoning behind them. Append continuously.
+
+If the user gives only a plan and asks you to start coding, stop and ask: "Should I create the checklist and context notes first?" The next session — yours or someone else's — needs the notes to pick up where you left off without re-deriving every decision.
+
+## 8. Run Tests Before Marking Complete
+
+**If you touched code, run the tests before saying "done".**
+
+- `npm test`, `pytest`, `cargo test`, whatever the project uses — run it.
+- If tests pass, report results. If they fail, fix and re-run.
+- No test setup? At minimum, verify the project builds/compiles.
+- Run tests proactively, before the user signals "끝", "완료", "다 됐어" — not after.
+
+This is the step LLMs skip most often. Treat it as non-negotiable.
+
+## 9. Semantic Commits
+
+**Commit when one logical change is complete. Don't wait for the user to ask.**
+
+- The test: "Can I describe this commit in one sentence?" If yes, commit. If no, the changes are still mixed — split them.
+- Good: "auth 미들웨어 추가". Bad: "auth 추가하고 UI도 고치고 버그도 수정" (split into 3).
+- Don't accumulate 20 unrelated edits and lose the ability to roll back individually.
+- Don't commit just to commit — meaningful units only.
+
+Note: For solo prototypes or throwaway scripts, group commits loosely if it slows you down. The point is reversibility, not ceremony.
+
+## 10. Read Errors, Don't Guess
+
+**Read the actual error/log line. Don't pattern-match from memory.**
+
+When something fails:
+- Read the full error message and stack trace.
+- Check the actual log output, not what you assume it should say.
+- Don't apply a "common fix" before confirming the cause.
+- If unclear, add a print/log to verify state — then fix.
+
+This is the step LLMs skip most often after "run tests". They guess from error keywords and apply the most-recent-pattern fix. That's how a one-line bug becomes a three-file refactor.
+
+---
+
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.</code></pre>
+<h3>日本語訳 全文</h3>
+<p><em>よくある LLM のコーディングの失敗を減らすための行動の方針。必要に応じてプロジェクト固有の方針と統合して使う。</em></p>
+<p><strong>トレードオフ:</strong> この方針は速さより慎重さに寄っている。些細な作業では裁量で判断せよ。</p>
+
+<h4>1. コーディングの前に考えよ (Think Before Coding)</h4>
+<p><strong>推測するな。混乱を隠すな。トレードオフを表に出せ。</strong></p>
+<ul>
+    <li>前提を明示的に述べよ。不確かなら訊け。</li>
+    <li>解釈が分かれるなら提示せよ — 黙ってひとつを選ぶな。</li>
+    <li>もっと単純な方法があるなら言え。必要なら反論せよ。</li>
+    <li>何かが不明確なら止まり、何が分からないのかを指して訊け。</li>
+</ul>
+
+<h4>2. 単純さを優先 (Simplicity First)</h4>
+<p><strong>問題を解く最小限のコード。当て推量のコードは禁止。</strong></p>
+<ul>
+    <li>頼まれていない機能は作るな。</li>
+    <li>一度しか使わないコードに抽象化を作るな。</li>
+    <li>頼まれていない&ldquo;柔軟性&rdquo;・&ldquo;設定可能性&rdquo;を入れるな。</li>
+    <li>起こりえないシナリオのエラー処理を作るな。</li>
+    <li>200 行書いて 50 行で済みそうなら、書き直せ。</li>
+</ul>
+<p>自問せよ — &ldquo;シニアのエンジニアが見たら過剰設計だと言うだろうか？&rdquo; そうなら単純にせよ。</p>
+
+<h4>3. 外科的な変更 (Surgical Changes)</h4>
+<p><strong>どうしても必要なところだけ触れ。片づけるのは自分が散らかしたものだけ。</strong></p>
+<ul>
+    <li>隣接するコード・コメント・整形を&ldquo;改善&rdquo;するな。</li>
+    <li>壊れていないものをリファクタリングするな。</li>
+    <li>自分の好みと違っても、既存のスタイルに合わせよ。</li>
+    <li>無関係な死んだコードを見つけたら言及だけせよ — 消すな。</li>
+    <li>自分の変更が生んだ孤児（使われなくなった import・変数・関数）は取り除き、もともとあった死んだコードは頼まれない限り触るな。</li>
+</ul>
+<p>見分け方 — <strong>変わったすべての行が、利用者の依頼までまっすぐさかのぼれること。</strong></p>
+
+<h4>4. 目標中心の実行 (Goal-Driven Execution)</h4>
+<p><strong>成功の基準を定義し、検証されるまでくり返せ。</strong></p>
+<ul>
+    <li>&ldquo;バリデーションを足して&rdquo; → &ldquo;不正な入力のテストを書き、通せ&rdquo;</li>
+    <li>&ldquo;バグを直して&rdquo; → &ldquo;バグを再現するテストを書き、通せ&rdquo;</li>
+    <li>&ldquo;X をリファクタリングして&rdquo; → &ldquo;前後でテストが通ることを保証せよ&rdquo;</li>
+</ul>
+<p>複数の段階がある作業なら、&ldquo;段階 → 検証の方法&rdquo;という形の短い計画を先に述べよ。<strong>強い成功の基準は AI がひとりでも回れるようにし、弱い基準（&ldquo;動くようにして&rdquo;）は果てしない訊き返しを呼ぶ。</strong></p>
+
+<h4>5. 文末のコロン禁止 — 韓国語の出力 (No Closing Colons)</h4>
+<p><strong>韓国語の文はコロンではなく句点で終えよ。</strong></p>
+<ul>
+    <li>次の行が箇条書きや例であっても、文を <code>:</code> で終えるな。</li>
+    <li>英語の文書で学習した LLM はコロンの癖を韓国語へ漏らす。自分で捕まえよ。</li>
+    <li>見分け方 — 韓国語の文の終わりは <code>.</code> <code>?</code> <code>!</code> のいずれかであるべき。</li>
+    <li>コード・キーと値・ラベルの中のコロンは問題ない。文の終わりに使うなという話。</li>
+</ul>
+
+<h4>6. 韓国語のファイルヘッダーのコメント (File Header Comments in Korean)</h4>
+<p><strong>新しく作るすべてのソースファイルの一行目に、そのファイルの役割を説明する韓国語のコメントを一行。</strong></p>
+<ul>
+    <li>TS/JS は <code>//</code>、Python は <code>#</code>、SQL は <code>--</code> のコメントで — 例: <code>// 사용자 인증 상태를 관리하는 Context Provider</code>。</li>
+    <li><code>'use client'</code> や shebang のような必須の指示のすぐ下に置け。設定ファイル（<code>*.config.ts</code>・<code>package.json</code> など）は省く。</li>
+</ul>
+<p>理由 — エージェントはコードベース全体ではなく<strong>ファイルを選んで読む</strong>。一行のヘッダーが即座に文脈を与えるので、次のセッション（人でもエージェントでも）がファイルをまるごと読み直さずに道を見つけられる。</p>
+
+<h4>7. 計画 + チェックリスト + 文脈ノート (Plan + Checklist + Context Notes)</h4>
+<p><strong>些細でない作業なら、三つの成果物から。これなしにコーディングを始めるな。</strong></p>
+<ul>
+    <li><strong>計画（Plan）</strong> — 何を、なぜ作るのか。</li>
+    <li><strong>チェックリスト</strong>（<code>checklist.md</code>） — 具体の作業をチェックボックスで。進めながら消していく。</li>
+    <li><strong>文脈ノート</strong>（<code>context-notes.md</code>） — 作業中に下した決定と、その理由。書き足しつづける。</li>
+</ul>
+<p>利用者が計画だけ渡してコーディングを頼んだら、止まって訊け — &ldquo;チェックリストと文脈ノートを先に作りましょうか？&rdquo; 次のセッションは（自分のものでも他人のものでも）すべての決定を一から導き直さずに済むよう、このノートを必要とする。</p>
+
+<h4>8. 完了を宣言する前にテストを実行 (Run Tests Before Marking Complete)</h4>
+<p><strong>コードを触ったなら、&ldquo;できました&rdquo;と言う前にテストを走らせよ。</strong></p>
+<ul>
+    <li><code>npm test</code>・<code>pytest</code>・<code>cargo test</code> — プロジェクトが使っているものを実行せよ。</li>
+    <li>通ったら結果を報告し、落ちたら直してもう一度走らせよ。</li>
+    <li>テストがないなら、少なくともビルド/コンパイルは確認せよ。</li>
+    <li>利用者が&ldquo;終わり&rdquo;・&ldquo;完了&rdquo;と言う<strong>前に</strong>、先に自分から走らせよ。</li>
+</ul>
+<p>LLM がいちばんよく飛ばす段階だ。<strong>交渉不可の条項として扱え。</strong></p>
+
+<h4>9. 意味の単位でコミット (Semantic Commits)</h4>
+<p><strong>ひとつの論理的な変更が終わったらコミットせよ。利用者に言われるまで待つな。</strong></p>
+<ul>
+    <li>見分け方 — &ldquo;このコミットを一文で説明できるか？&rdquo; できるならコミット、できないならまだ混ざっているので分けよ。</li>
+    <li>良い例:「auth ミドルウェアの追加」。悪い例:「auth を追加して UI も直してバグも修正」（3 つに分ける）。</li>
+    <li>無関係な修正を 20 個ため込んで、個別に戻せる力を失うな。コミットのためのコミットもするな — 意味のある単位だけ。</li>
+</ul>
+<p>参考 — ひとりでやるプロトタイプや使い捨てのスクリプトなら、速さのためにゆるくまとめてもよい。核心は形式ではなく<strong>戻せること</strong>だ。</p>
+
+<h4>10. エラーは読め、当てるな (Read Errors, Don't Guess)</h4>
+<p><strong>実際のエラー/ログの行を読め。記憶の中のパターンに当てはめるな。</strong></p>
+<ul>
+    <li>エラーメッセージとスタックトレースを最後まで読め。</li>
+    <li>&ldquo;こう出ているはず&rdquo;ではなく、実際のログの出力を確認せよ。</li>
+    <li>原因を確かめる前に&ldquo;よくある修正&rdquo;から当てはめるな。</li>
+    <li>不明確なら print/log を仕込んで状態を確かめてから直せ。</li>
+</ul>
+<p>&ldquo;テストの実行&rdquo;の次に LLM がよく飛ばす段階だ。エラーのキーワードだけ見て、いちばん最近見たパターンの修正を当てはめる — <strong>そうして一行のバグが三ファイルのリファクタになる。</strong></p>
+
+<p><em>この方針が働いている証拠 — diff の不要な変更が減り、過剰設計による作り直しが減り、明確化のための質問が失敗のあとではなく実装の前に来る。</em></p>
+
+<div class="note">
+    <span class="nh">出典</span>
+    · インフォグラフィック: <strong>dewytear が自作</strong> — 原文の CLAUDE.md を 3 段階 × 十戒として可視化 · 原文: 汎用の CLAUDE.md 行動方針（dewytear が保管、Google ドライブ）<br>
+    · CLAUDE.md の適用範囲（グローバル/プロジェクトの 4 階層）と書き方の一般論は<a href="#!ccb-claudemd">CLAUDE.md — 作業方針のファイル</a>を参照
+</div>
