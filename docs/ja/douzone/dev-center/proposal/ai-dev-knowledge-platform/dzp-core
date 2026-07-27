@@ -1,0 +1,68 @@
+<h2>提案の要 — 開発の流れはそのまま、知識化は AI が</h2>
+<p>本提案の目的は、単なる会社の Wiki の構築ではない。GitLab に積み上がる開発の成果を AI が継続して分析して知識を取り出し、既存の知識と比べて<strong>新規の生成・更新・破棄</strong>を判断するプラットフォームを作ることだ。社員の業務の流れはいまとまったく同じである — Wiki の作成、Markdown の編集、Tag の登録、文書の分類、知識の整理を<strong>何ひとつ追加で求めない</strong>。社員は最終的に生成された知識を検索して読むだけだ。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 196" role="img" aria-label="社員はこれまでどおり開発・コミット・マージし、マージされた成果を AI が収集・分析・判定してウィキへ配布する 2 段のパイプライン">
+    <text class="d-sub" x="8" y="14" text-anchor="start">社員 — これまでの開発の流れのまま</text>
+    <rect class="d-box" x="8" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="56" y="46" text-anchor="middle">開発</text>
+    <rect class="d-box" x="118" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="166" y="46" text-anchor="middle">Commit</text>
+    <rect class="d-box" x="228" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="276" y="46" text-anchor="middle">Push</text>
+    <rect class="d-box" x="338" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="386" y="46" text-anchor="middle">Merge Request</text>
+    <rect class="d-box" x="448" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="496" y="46" text-anchor="middle">Review</text>
+    <rect class="d-box accent" x="558" y="22" width="96" height="40" rx="9"/>
+    <text class="d-label sm" x="606" y="46" text-anchor="middle">Merge</text>
+    <line class="d-edge" x1="104" y1="42" x2="110" y2="42"/><polygon class="d-arrow" points="110,37 110,47 118,42"/>
+    <line class="d-edge" x1="214" y1="42" x2="220" y2="42"/><polygon class="d-arrow" points="220,37 220,47 228,42"/>
+    <line class="d-edge" x1="324" y1="42" x2="330" y2="42"/><polygon class="d-arrow" points="330,37 330,47 338,42"/>
+    <line class="d-edge" x1="434" y1="42" x2="440" y2="42"/><polygon class="d-arrow" points="440,37 440,47 448,42"/>
+    <line class="d-edge" x1="544" y1="42" x2="550" y2="42"/><polygon class="d-arrow" points="550,37 550,47 558,42"/>
+
+    <path class="d-edge" d="M606 62 C606 80, 592 90, 572 90 H106 C88 90, 72 98, 72 112 V128"/>
+    <polygon class="d-arrow" points="67,127 77,127 72,134"/>
+    <polygon class="d-arrow" points="338,85 338,95 328,90"/>
+
+    <text class="d-sub" x="672" y="126" text-anchor="end">AI — 自動の知識化のパイプライン</text>
+    <rect class="d-box" x="12" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="72" y="153" text-anchor="middle">① 変更の収集</text>
+    <text class="d-sub" x="72" y="169" text-anchor="middle">Diff · MR · SHA</text>
+    <rect class="d-box" x="147" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="207" y="153" text-anchor="middle">② Context 分析</text>
+    <text class="d-sub" x="207" y="169" text-anchor="middle">関連ソースの拡張</text>
+    <rect class="d-box" x="282" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="342" y="153" text-anchor="middle">③ 価値の判定</text>
+    <text class="d-sub" x="342" y="169" text-anchor="middle">知識か?</text>
+    <rect class="d-box" x="417" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="477" y="153" text-anchor="middle">④ 生成・更新・破棄</text>
+    <text class="d-sub" x="477" y="169" text-anchor="middle">既存のウィキと比較</text>
+    <rect class="d-box accent" x="552" y="134" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="612" y="153" text-anchor="middle">⑤ Portal へ配布</text>
+    <text class="d-sub" x="612" y="169" text-anchor="middle">Read-Only</text>
+    <line class="d-edge" x1="132" y1="157" x2="139" y2="157"/><polygon class="d-arrow" points="139,152 139,162 147,157"/>
+    <line class="d-edge" x1="267" y1="157" x2="274" y2="157"/><polygon class="d-arrow" points="274,152 274,162 282,157"/>
+    <line class="d-edge" x1="402" y1="157" x2="409" y2="157"/><polygon class="d-arrow" points="409,152 409,162 417,157"/>
+    <line class="d-edge" x1="537" y1="157" x2="544" y2="157"/><polygon class="d-arrow" points="544,152 544,162 552,157"/>
+</svg>
+<div class="d-cap">社員の役割は上の行で終わる。下の行の全体が AI の受け持ちだ。</div>
+</div>
+
+<div class="note">
+    <span class="nh">中心の概念 — Event Stream と Knowledge State</span>
+    GitLab は開発の変更の <strong>Event Stream</strong> であり、Wiki はいまの時点で有効な <strong>Knowledge State</strong> だ。GitLab には Commit・MR・Release が時間の順に積まれ続けるが、Wiki は「7/1 の修正、7/2 の修正…」といった履歴の羅列ではなく、<strong>組織がいま知っておくべき知識の構造</strong>（Architecture · Rule Engine · 状態の体系 · チャネルの方針 · Troubleshooting …）へ精製されて保たれる。
+</div>
+
+<h3>Knowledge State の実体 — 決定的にビルドされる索引</h3>
+<p>「いま有効な知識の状態」は抽象的なスローガンではなく、<strong>機械的に再現できる成果物</strong>でなければならない。Reference Wiki がこれをすでに実証した: すべての文書のメタデータ（題・要約・概念・関係）はキュレーションのファイル一つから<a href="#!kgs-overview">決定的なビルド</a>で知識インデックスの JSON になり、<strong>同じ入力はいつも同じ出力</strong>を出す。だから <code>--check</code> 一回で「保存された状態がソースとずれていないか」をバイトの単位で判定でき、ずれたままではマージできない（<a href="#!kgs-gates">ドリフトのゲート</a>）。Knowledge State が Event Stream より遅れたり、ソースと矛盾したりするのを<strong>規律ではなく機械が</strong>止める構造 — これが会社のプラットフォームが受け継ぐ状態の管理の実体だ。</p>
+
+<h3>業界がすでに歩んでいる道</h3>
+<ul>
+    <li><strong>文書をコードのそばに</strong> — Spotify は文書をコードと同じリポジトリに置いて CI でビルドする <a href="https://backstage.io/blog/2020/09/08/announcing-tech-docs/" target="_blank" rel="noopener">Backstage TechDocs</a> で 5,000 以上の文書サイトを運用し、GitLab は 2,700 ページを超える公開のハンドブックの <a href="https://handbook.gitlab.com/handbook/company/culture/all-remote/handbook-first/" target="_blank" rel="noopener">handbook-first の文化</a>で知られる。docs-as-code は大きな組織ですでに検証されたアプローチだ。</li>
+    <li><strong>文書の同期の自動化</strong> — <a href="https://swimm.io/blog/how-does-swimm-s-auto-sync-feature-work" target="_blank" rel="noopener">Swimm</a> は、すべての PR ごとにコードの変更と文書を突き合わせて自動で更新する Auto-sync で「Continuous Documentation」を商用化した。</li>
+    <li><strong>コードから知識を自動で抽出</strong> — Cognition の <a href="https://cognition.com/blog/deepwiki" target="_blank" rel="noopener">DeepWiki（2025）</a>はリポジトリを分析してアーキテクチャの図とモジュールの文書を含むウィキを自動生成し、上位の公開のリポジトリ 5 万以上を索引した。GitHub はリポジトリの知識を常時注入する <a href="https://github.blog/changelog/2025-09-24-copilot-spaces-is-now-generally-available/" target="_blank" rel="noopener">Copilot Spaces</a> を GA し、Claude Code の <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">CLAUDE.md</a>・AGENTS.md は「リポジトリの中の、機械が読む知識のファイル」を業界の慣行にした。</li>
+    <li><strong>知識の検索の市場の急成長</strong> — 全社の AI 知識検索の <a href="https://futurumgroup.com/insights/glean-doubles-arr-to-200m-can-its-knowledge-graph-beat-copilot/" target="_blank" rel="noopener">Glean は ARR $200M</a> を超え、Atlassian は <a href="https://www.atlassian.com/software/rovo" target="_blank" rel="noopener">Rovo</a> をクラウドの料金プランに標準で載せた。</li>
+</ul>
+<p>つまり<strong>「GitLab の開発の成果の AI による自動の知識化」は、docs-as-code という検証された土台の上に、2025 年以後に商用化された自動の抽出の技術を組織の知識の管理へ当てはめること</strong>である。</p>

@@ -1100,5 +1100,136 @@
   "name": "news-20260724-claude-opus-5",
   "title": "Claude Opus 5 — 半額の準 Fable がやってきた",
   "summary": "Anthropic の 2026-07-24 の Claude Opus 5 の公開を、公式の発表と複数の報道から突き合わせて検証した記事 — $5/$25 で CursorBench 3.2 の max のピークの Fable 5 に 0.5% 以内、タスクあたりの費用は半分。Frontier-Bench 43.3%、OSWorld 2.0 を ⅓ の予算で、ARC-AGI 3 で 3 倍。図面を見られないと知るや自分で CV パイプラインを書いて FreeCAD 3D を再構成した長期のエージェンティックなデモ、加えて Fable 5 のセーフガードの誤検知の論争の文脈と、未確認の主張の切り分け"
+ },
+ {
+  "name": "dzp-overview",
+  "title": "提案の概要 — GitLab をもとにした AI 開発ナレッジプラットフォーム",
+  "summary": "GitLab の開発の成果を AI が組織の知識として自動で積み上げる Read-Only のプラットフォームの提案と、その好循環の概要 — Reference Wiki で実証されたエンジンの延長として述べる",
+  "relations": [
+   {
+    "target": "sb-choose",
+    "evidenceRef": "開発の成果を組織の知識として自動で積み上げる提案 — sb-choose のチームのセカンドブレインの拡張の社内の事例"
+   },
+   {
+    "target": "dzp-why",
+    "evidenceRef": "「提案の概要 — GitLab をもとにした AI 開発ナレッジプラットフォーム」に続く読む順 — この文書を土台に「なぜいまか — 散らばり消えていく開発の知識」へつながる"
+   }
+  ]
+ },
+ {
+  "name": "dzp-why",
+  "title": "なぜいまか — 散らばり消えていく開発の知識",
+  "summary": "散らばり消えていく開発の知識の費用を、業界の統計で根拠づけた問題の定義",
+  "relations": [
+   {
+    "target": "dzp-core",
+    "evidenceRef": "「なぜいまか — 散らばり消えていく開発の知識」に続く読む順 — この文書を土台に「提案の要 — 開発の流れはそのまま、知識化は AI が」へつながる"
+   }
+  ]
+ },
+ {
+  "name": "dzp-core",
+  "title": "提案の要 — 開発の流れはそのまま、知識化は AI が",
+  "summary": "開発の流れはそのままで知識化は AI が行う — Event Stream（GitLab）と Knowledge State（Wiki）の分離、その状態を決定的にビルドされる索引として実体化すること、そして業界の事例",
+  "relations": [
+   {
+    "target": "dzp-architecture",
+    "evidenceRef": "「提案の要 — 開発の流れはそのまま、知識化は AI が」に続く読む順 — この文書を土台に「プラットフォームのアーキテクチャ」へつながる"
+   }
+  ]
+ },
+ {
+  "name": "dzp-architecture",
+  "title": "プラットフォームのアーキテクチャ",
+  "summary": "GitLab を源とする 7 階層のパイプライン — 知識の生成の Trigger、SHA による増分の分析、Context の拡張、Trigger とは別の知識の無矛盾のゲートの層、そして実時間と補正の二重化",
+  "relations": [
+   {
+    "target": "dzp-core",
+    "evidenceRef": "dzp-core の原則（社員の流れを変えない・Event と Knowledge の分離）を 7 階層のパイプラインとして実装する"
+   },
+   {
+    "target": "dzp-knowledge",
+    "evidenceRef": "「プラットフォームのアーキテクチャ」に続く読む順 — この文書を土台に「知識の管理の体系 — 判定 · 構造 · 連結 · 追跡 · 信頼 · 寿命」へつながる"
+   }
+  ]
+ },
+ {
+  "name": "dzp-knowledge",
+  "title": "知識の管理の体系 — 判定 · 構造 · 連結 · 追跡 · 信頼 · 寿命",
+  "summary": "知識の原子の構造（実証された索引の核 + identifiers・sources・trust の拡張）と二重の連結（計算された related、宣言された 5 種の relations、ai-proposed からの承認の流れ） — 価値の判定、積み上げる更新、Identifier での検索、Provenance、信頼の水準、そして supersedes による寿命の管理",
+  "relations": [
+   {
+    "target": "dzp-security",
+    "evidenceRef": "「知識の管理の体系 — 判定 · 構造 · 連結 · 追跡 · 信頼 · 寿命」に続く読む順 — この文書を土台に「資産の活用とセキュリティ」へつながる"
+   },
+   {
+    "target": "kgs-edges",
+    "evidenceRef": "『二重の連結』は kgs-edges の計算されたエッジ + 型つきの関係のモデルを、会社のプラットフォームの構造として採り実装する"
+   }
+  ]
+ },
+ {
+  "name": "dzp-security",
+  "title": "資産の活用とセキュリティ",
+  "summary": "検証された Reference Wiki のエンジンの再利用 — wiki-plugin のパッケージ化（道具 18 種、スキル 4 種）、登録の義務の手順、llms.txt とグラフ JSON という AI の消費の層、そして 4 つのセキュリティの等級と保管庫の分離",
+  "relations": [
+   {
+    "target": "dzp-value",
+    "evidenceRef": "「資産の活用とセキュリティ」に続く読む順 — この文書を土台に「付加価値と活用のシナリオ」へつながる"
+   },
+   {
+    "target": "kgs-overview",
+    "evidenceRef": "Reference Wiki（このウィキ）を複製して文書を足す義務の手順は、kgs-overview の登録のパイプラインを再現し実装するものだ"
+   }
+  ]
+ },
+ {
+  "name": "dzp-value",
+  "title": "付加価値と活用のシナリオ — 開発の組織を越えて",
+  "summary": "ひとつの Knowledge State に等級のフィルタで対象ごとのビューを増やすことから来る付加価値 — API の仕様書の自動の更新（FACT・identifiers・supersedes）、社員・パートナー・顧客・AI エージェントによる活用、ナレッジグラフを AI コーディングの事前の知識として載せる好循環の実体、そして信頼の等級が非開発の読者を広げること",
+  "relations": [
+   {
+    "target": "dzp-roadmap",
+    "evidenceRef": "「付加価値と活用のシナリオ」に続く読む順 — この文書を土台に「推進のロードマップ」へつながる"
+   }
+  ]
+ },
+ {
+  "name": "dzp-roadmap",
+  "title": "推進のロードマップ — 4 つの Phase と 1 次の PoC",
+  "summary": "4 段階での推進（wiki-plugin の移植 → 会社の PoC → センターへの拡大 → 全社）と、OmniEsol ERP SCM での 1 次の PoC — ゲートで計測する検証の KPI の四つの軸",
+  "relations": [
+   {
+    "target": "kgs-plugin",
+    "evidenceRef": "Phase 1 は wiki-plugin（wiki-init · add-doc · validate）を入れて知識の体系を立ち上げる"
+   }
+  ]
+ },
+ {
+  "name": "sne-overview",
+  "title": "送信エンジンの実装の要請 — 概要と責任の境界",
+  "summary": "送信要求を作るところまでを AI 通知が受け持ち、それ以後の送信・タイミング・再処理・状況を送信エンジンが受け持つ — Kafka をもとにした送信エンジンの実装の要請の概要と責任の境界。",
+  "relations": [
+   {
+    "target": "sne-scope",
+    "evidenceRef": "概要と責任の境界を土台に、エンジンが実装すべき具体の要請の項目へつながる"
+   }
+  ]
+ },
+ {
+  "name": "sne-scope",
+  "title": "送信エンジンの実装の要請の項目",
+  "summary": "チャネルへの送信、冪等、配送の保証と DLQ、加えて時点の 4 つの型のタイミング、送る瞬間の最新の照会、周期のバッチの寿命の管理、そして送信の状況の画面についての要請。",
+  "relations": [
+   {
+    "target": "sne-interface",
+    "evidenceRef": "要請の項目を土台に、先に確定すべきインタフェースと協議の事項へつながる"
+   }
+  ]
+ },
+ {
+  "name": "sne-interface",
+  "title": "インタフェース · 規模 · 協議 · 期待される効果",
+  "summary": "エンジンの本体より先にインタフェースを確定して並行して進める — 送信要求の伝達、送る時点の確定、結果の返信のインタフェースと、Phase の優先度、そして開いたままの協議の事項。"
  }
 ]

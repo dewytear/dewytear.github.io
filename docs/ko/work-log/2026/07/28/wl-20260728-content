@@ -20,3 +20,22 @@
 <p><code>check_diagram_bounds</code> <strong>228개 전수 통과</strong>(ja 5편 신규). <code>validate_all</code> ERROR 0 · WARN 23 유지. 브라우저에서 5편 모두 일본어 h2 · pageerror 0 · ko/en 회귀 무변화이고, 래스터 이미지 4장이 실제로 로드되는 것(<code>naturalWidth</code> 1440·1205·1440·1440), Kimi 기사의 <strong>cmp 막대 23개</strong>와 Opus 5 기사의 <strong>유튜브 임베드 1개</strong>가 살아 있는 것을 따로 확인했다.</p>
 
 <p><strong>다음</strong>: 배치 11 — DOUZONE 12편(<code>dz-map</code> · <code>dzp-*</code> 8편 · <code>sne-*</code> 3편). 그다음이 마감 PR(<code>ai-guide</code>·<code>ai-map</code> + <code>check_translation.py</code>의 ja 강제 + 규칙 문서 갱신).</p>
+
+<h3>일본어(ja) 배치 11 — DOUZONE 12편 + 폴더 제목 일본어화</h3>
+<p>열한 번째 배치이자 <strong>본문 번역의 마지막 콘텐츠 배치</strong>. DOUZONE World 전체 — 지식지도 <code>dz-map</code>, AI 개발 지식 플랫폼 제안 8편, AI 알림 발송엔진 요청 3편(합 98KB · 도식 9개) — 을 옮겼다. 이로써 ja 본문은 <strong>113 / 115편(98%)</strong>이고, 남은 둘은 마감 PR이 담당할 <code>ai-guide</code>·<code>ai-map</code>뿐이다.</p>
+<ul>
+    <li><strong>사내 제안서라 어휘를 먼저 고정했다</strong> — 지식 플랫폼→<code>ナレッジプラットフォーム</code> · 지식 상태→<code>Knowledge State</code>(원어 유지) · 가치 판정→<code>価値の判定</code> · 무결성 게이트→<code>無矛盾のゲート</code> · 증분 분석→<code>増分の分析</code> · 신뢰 등급→<code>信頼の水準</code> · 수명주기→<code>寿命の管理</code> · 선순환→<code>好循環</code> · 발송요청→<code>送信要求</code> · 멱등→<code>冪等</code> · 전이형→<code>遷移型</code>.</li>
+    <li><strong>제도·조직 고유명사는 원문 유지</strong> — OmniEsol · SCM구축개발1Unit · GitLab · Kafka · DLQ · FACT/INFERRED/DECISION · PUBLIC~RESTRICTED. 스키마 예시의 필드명(<code>identifiers</code>·<code>sources</code>·<code>trust</code>)과 값(<code>SD_SO_HDR</code> 등)도 한 글자도 바꾸지 않았다 — 바꾸면 예시가 예시가 아니게 된다.</li>
+    <li><strong>주석은 번역하고 코드는 두었다</strong> — JSON 예시의 <code>// 불변 논리 ID = 라우트</code> 같은 설명 주석은 일본어로, 키·값은 그대로.</li>
+</ul>
+<div class="note">
+    <span class="nh">라벨 하나를 고쳐 본문과 맞췄다</span>
+    PR 1에서 넣어 둔 ja 클러스터 라벨이 <code>AI通知配信エンジン</code>이었는데, 본문 번역에서 발송엔진을 <code>送信エンジン</code>으로 확정했다. 사이드바 라벨과 본문 용어가 어긋나면 같은 것을 가리키는지 알기 어려우므로 <code>tools/clusters.json</code>의 ja 라벨을 <code>AI通知の送信エンジン</code>으로 맞췄고, <code>dz-map</code>의 <code>data-topics</code>(ko 문서가 전 언어 검색 키를 함께 담는 구조)에도 ja 키 두 개를 추가했다 — 안 넣으면 <code>validate_i18n</code>이 WARN을 띄운다.
+</div>
+<div class="note">
+    <span class="nh">폴더 제목이 일본어 화면에서 한글로 남아 있었다</span>
+    브라우저 검증에서 ja 페이지의 <strong>빵부스러기(breadcrumb)에 &ldquo;AI 개발 지식 플랫폼&rdquo;</strong>이 한글로 떠 있는 것을 발견했다. 문서 라벨(<code>label_ja</code>)은 배치마다 달았지만 <strong>폴더 노드의 <code>title_ja</code>는 한 번도 달지 않아</strong> ko로 폴백하고 있었던 것 — <code>title_en</code>은 28개가 이미 있으니 영어 독자만 제대로 보던 셈이다. 이번 PR에서 <strong>29개 전부</strong>(지식 체계·News &amp; Articles·제안 2종·07월·날짜 24개)에 <code>title_ja</code>를 넣어 닫았다. 재검증에서 breadcrumb 한글은 사라졌다.
+</div>
+<p><code>check_diagram_bounds</code> <strong>237개 전수 통과</strong>(ja 9편 신규). <code>validate_all</code> ERROR 0 · WARN 23 유지. 브라우저에서 12편 모두 일본어 h2 · pageerror 0 · ko/en 회귀 무변화.</p>
+<p class="scn-sub">본문에 남는 한글은 이제 <strong>개념 칩뿐</strong>이다(지식플랫폼·조직지식·큐레이터…). <code>concepts.en.json</code>이 2건뿐인 데서 보듯 영어판도 같은 상태라 이번 배치가 만든 퇴행이 아니며, 개념 표시명 사전은 별도 주제로 다룰 일이다.</p>
+<p><strong>다음</strong>: 마감 PR — <code>ai-guide</code>·<code>ai-map</code> 번역, <code>check_translation.py</code>에 ja 강제 추가(사용자 결정 &ldquo;영어처럼 강제&rdquo;), <code>tools/i18n.md</code>·<code>CLAUDE.md</code>·README 갱신, 설정 드롭다운의 &ldquo;번역 진행 중&rdquo; 표기 제거.</p>

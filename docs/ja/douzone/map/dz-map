@@ -1,0 +1,73 @@
+<h2>Knowledge Map — Douzone</h2>
+<p>このページは <strong>DOUZONE World</strong>（業務・組織の知識）を集計した知識の地図です。ウィキの知識は <strong>World → Domain → System → Document</strong> の 4 階層で構成され、この地図はそのうち DOUZONE World を扱います。会社の知識の文書が<strong>どの System に属し、互いにどうつながっているか</strong>を示します。文書ごとの要約・中心の概念・関連する文書は、AI が作った構造的な知識のインデックス（<code>knowledge-index.json</code>）から出てきており、この関連は <a href="#!cosmos"><strong>Knowledge Graph</strong></a> で 3 次元のグラフと 6 種類の 2D の表現として見られます。講義や学習の知識は <a href="#!ai-map"><strong>AI Knowledge Map</strong></a> が同じ構造で集計します。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 760 312" role="img" aria-label="知識の階層: World(AI・DOUZONE) → Domain(知識の領域) → System(主題のグループ) → Document(個別の文書)"><text class="d-label" x="16" y="52" text-anchor="start">World</text><text class="d-sub" x="16" y="70" text-anchor="start">最上位の知識の世界</text><text class="d-label" x="16" y="126" text-anchor="start">Domain</text><text class="d-sub" x="16" y="144" text-anchor="start">知識の領域</text><text class="d-label" x="16" y="206" text-anchor="start">System</text><text class="d-sub" x="16" y="224" text-anchor="start">具体的な体系・主題</text><text class="d-label" x="16" y="278" text-anchor="start">Document</text><text class="d-sub" x="16" y="296" text-anchor="start">個別の文書</text><rect class="d-box" x="168" y="30" width="188" height="44" rx="9"/><text class="d-label" x="262" y="57" text-anchor="middle">AI</text><rect class="d-box accent" x="472" y="30" width="188" height="44" rx="9"/><text class="d-label" x="566" y="57" text-anchor="middle">DOUZONE</text><line class="d-edge" x1="262" y1="74" x2="262" y2="104"/><line class="d-edge" x1="566" y1="74" x2="566" y2="104"/><rect class="d-box" x="168" y="104" width="188" height="44" rx="9"/><text class="d-label sm" x="262" y="131" text-anchor="middle">Claude · Code / PlugIn</text><rect class="d-box" x="472" y="104" width="188" height="44" rx="9"/><text class="d-label sm" x="566" y="131" text-anchor="middle">dev.Center · Proposal</text><line class="d-edge" x1="262" y1="148" x2="262" y2="178"/><line class="d-edge" x1="566" y1="148" x2="566" y2="178"/><rect class="d-box soft" x="104" y="178" width="316" height="56" rx="10"/><text class="d-sub" x="262" y="200" text-anchor="middle">Introduction · Tutorial · Skill · Second Brain</text><text class="d-sub" x="262" y="218" text-anchor="middle">LLM Wiki · Harness · OMC</text><rect class="d-box soft" x="472" y="178" width="188" height="56" rx="10"/><text class="d-sub" x="566" y="209" text-anchor="middle">AI 開発ナレッジ基盤</text><line class="d-edge" x1="262" y1="234" x2="262" y2="256"/><line class="d-edge" x1="566" y1="234" x2="566" y2="256"/><rect class="d-box soft" x="104" y="256" width="556" height="40" rx="10"/><text class="d-sub" x="382" y="280" text-anchor="middle">個別の文書 — 各 System の下でシリーズの順に並びます</text></svg>
+<div class="d-cap">ふたつの World — 学習の知識（AI）と業務の知識（DOUZONE）が、同じインデックスの上でつながります。</div>
+</div>
+
+<h3>System をひと目で</h3>
+<p>&ldquo;ハブの文書&rdquo;は、ほかの文書からいちばん多く関連として指された、その筋の入口の文書です。<span class="scn-sub">表の数値は <code>knowledge-index.json</code> から実時間で集計され、新しい System は文書が登録されると自動で現れます。</span></p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>System</th><th>編数</th><th>中心の主題</th><th>ハブの文書</th></tr></thead>
+        <tbody id="km-clusters" data-section-prefix="Douzone" data-topics='{"AI開発ナレッジプラットフォーム":"GitLab の開発の成果の自動の知識化の提案","AI通知の送信エンジン":"Kafka をもとにした送信エンジンの実装の要請"}'>
+            <tr><td><strong>AI開発ナレッジプラットフォーム</strong></td><td>8</td><td>GitLab の開発の成果の自動の知識化の提案</td><td><a href="#!dzp-overview">提案の概要</a></td></tr>
+            <tr><td><strong>AI通知の送信エンジン</strong></td><td>3</td><td>Kafka をもとにした送信エンジンの実装の要請</td><td><a href="#!sne-scope">実装の要請の項目</a></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>System の詳細 — 何が入っていて、どの順に読むか</h3>
+
+<h4>AI開発ナレッジプラットフォーム — GitLab をもとにした自動の知識化の提案（8 編）</h4>
+<p>GitLab に積み上がる開発の成果を AI が分析して<strong>組織の知識へ自動で変換し蓄積する</strong> Read-Only Engineering Knowledge Platform の提案のシリーズです。下の順に読めば、問題の定義から実行の計画までがひと続きにつながります。</p>
+<ul>
+    <li><a href="#!dzp-overview">提案の概要</a> — 一文の要約と好循環の構造（開発の成果 → 組織の知識 → 次の開発）。シリーズの入口の文書。</li>
+    <li><a href="#!dzp-why">なぜいまか</a> — 散らばり消えていく開発の知識の費用を、業界の統計で根拠づけた問題の定義。</li>
+    <li><a href="#!dzp-core">提案の要</a> — 開発の流れはそのまま、知識化は AI が。Event Stream（GitLab）と Knowledge State（Wiki）の分離。</li>
+    <li><a href="#!dzp-architecture">プラットフォームのアーキテクチャ</a> — 7 階層の構成、知識の生成の Trigger、SHA による増分の分析、知識の無矛盾のゲート、運用の二重化。</li>
+    <li><a href="#!dzp-knowledge">知識の管理の体系</a> — 価値の判定 · 知識の原子の構造（実証されたスキーマ + 拡張のフィールド） · 二重の連結（related・relations） · Identifier での検索 · 出典の追跡 · FACT/INFERRED/DECISION の信頼の等級 · supersedes による寿命の管理。</li>
+    <li><a href="#!dzp-security">資産の活用とセキュリティ</a> — Reference Wiki のエンジンの再利用（wiki-plugin のパッケージ化・義務の手順の図・AI の消費の層）と、PUBLIC〜RESTRICTED の等級とアクセスの分離。</li>
+    <li><a href="#!dzp-value">付加価値と活用のシナリオ</a> — API の仕様書の自動の更新、等級のフィルタで作る社員・パートナー・顧客・AI の対象別のビュー、AI コーディングの事前の知識、非開発の職種での活用。</li>
+    <li><a href="#!dzp-roadmap">推進のロードマップ</a> — 4 つの Phase での推進（wiki-plugin の移植から）と 1 次の PoC（OmniEsol ERP · SCM のドメイン）、ゲートで計測する検証の KPI。</li>
+</ul>
+
+<h4>AI通知の送信エンジン — Kafka をもとにした送信エンジンの実装の要請（3 編）</h4>
+<p>AI 通知が<strong>送信要求の生成まで</strong>終えたあとの、実際の送信・タイミング・再処理・状況を、プラットフォームのチームが <strong>Kafka をもとにした共用の送信エンジン</strong>として実装してくれるよう要請する提案のシリーズです。概念を主に整理しており、具体の設計は協議で確定します。</p>
+<ul>
+    <li><a href="#!sne-overview">概要・責任の境界</a> — 送信要求の生成までが AI 通知、それ以後の送信・タイミング・再処理・状況が送信エンジンという責任の境界。</li>
+    <li><a href="#!sne-scope">実装の要請の項目</a> — チャネルへの送信・冪等・配送の保証・DLQ、時点の 4 つの型（即時・遅延・周期・遷移）のタイミング、送る瞬間の最新の照会、周期のバッチの寿命の管理、送信の状況の画面。</li>
+    <li><a href="#!sne-interface">インタフェース・協議</a> — エンジンよりインタフェースを先に確定して並行して実装する。送信要求の伝達・送る時点の確定・結果の返信のインタフェースと、Phase の優先度。</li>
+</ul>
+
+<h4>予定の System — 場所だけ用意されたところ</h4>
+<p>下の三つの System は、ナビゲーションにフォルダだけ用意された状態です。そのフォルダに文書が加わり知識のインデックスに登録されると、上の表と <a href="#!cosmos">Knowledge Graph</a> に自動で現れます。</p>
+<ul>
+    <li><strong>Architecture</strong> — OmniEsol ERP・SCM の領域のシステムの構造、階層の設計、モジュール間の連携といったアーキテクチャの知識が積まれる場所です。</li>
+    <li><strong>Development Guide</strong> — 開発の標準、共通のパターン、コードレビューの基準など、チームが共有する開発のガイドが集まる場所です。</li>
+    <li><strong>Project</strong> — 個々のプロジェクトの業務の Rule、意思決定、障害の経験といったプロジェクト単位の知識が記録される場所です。</li>
+</ul>
+
+<h3>おすすめの読む順</h3>
+<ul>
+    <li><strong>提案書をはじめて読むなら</strong> — <a href="#!dzp-overview">提案の概要</a> → <a href="#!dzp-why">なぜいまか</a> → <a href="#!dzp-core">提案の要</a>。ここまでが「何を、なぜ」です。</li>
+    <li><strong>技術の検討が目的なら</strong> — <a href="#!dzp-architecture">プラットフォームのアーキテクチャ</a> → <a href="#!dzp-knowledge">知識の管理の体系</a> → <a href="#!dzp-security">資産の活用とセキュリティ</a>。「どうやって」を扱います。</li>
+    <li><strong>実行の判断が目的なら</strong> — <a href="#!dzp-roadmap">推進のロードマップ</a>で Phase・PoC・KPI を確かめ、背景が要るなら概要へ戻ります。</li>
+</ul>
+
+<h3>知識をつなぐ橋 — ブリッジの概念</h3>
+<p>いくつもの System に<strong>同時に</strong>現れる概念は、筋をまたぐ&ldquo;橋&rdquo;になります。DOUZONE World のふたつの System（提案のシリーズ）は、まだ<strong>共有する中心の概念がないので、集計されたブリッジがありません</strong> — 概念が 3 つ以上の System にまたがると、この場所に自動で現れます。いまは<strong>知識プラットフォーム · AI キュレーター · 知識の管理</strong>のような概念が AI World（Second Brain・LLM Wiki の System）と主題でつながっており、World をまたぐ橋の候補です。</p>
+
+<h3>ハブの文書 — いちばん多くつながる入口</h3>
+<p>ほかの文書たちが<strong>関連する文書</strong>としていちばんよく指した文書です。いまの入口は <a href="#!dzp-overview">提案の概要</a>（4 回のつながり）であり、共通のハブの基準（6 回以上）に届くと、この場所に自動で集計されます。</p>
+
+<h3>いちばん多く扱われる中心の概念</h3>
+<p>DOUZONE World でくり返し現れる上位の概念です。概念を押すと、その概念での<strong>統合の検索</strong>が開きます。</p>
+<p class="scn-sub" id="km-top">지식플랫폼 6</p>
+<p class="scn-sub" id="km-totals">知識の文書 11 編 · 固有の概念 46 個。</p>
+
+<div class="note">
+    <span class="nh">生きている地図</span>
+    この地図と <code>knowledge-index.json</code> は、AI が文書を読んで<strong>自動で生成</strong>します。関連する文書は<strong>希少性で重みづけした概念の重なり</strong>（まれな概念ほど強く）で計算し、重なる概念の少ない文書は<strong>同じフォルダの隣</strong>で補います。文書が増えたり変わったりしたら、インデックスを作り直して地図を更新します。
+</div>

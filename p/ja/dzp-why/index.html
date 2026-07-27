@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>なぜいまか — 散らばり消えていく開発の知識</title>
+<meta name="description" content="散らばり消えていく開発の知識の費用を、業界の統計で根拠づけた問題の定義">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/dzp-why/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/dzp-why/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/dzp-why/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/dzp-why/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/dzp-why/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="なぜいまか — 散らばり消えていく開発の知識">
+<meta property="og:description" content="散らばり消えていく開発の知識の費用を、業界の統計で根拠づけた問題の定義">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/dzp-why/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="なぜいまか — 散らばり消えていく開発の知識">
+<meta name="twitter:description" content="散らばり消えていく開発の知識の費用を、業界の統計で根拠づけた問題の定義">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "なぜいまか — 散らばり消えていく開発の知識",
+ "description": "散らばり消えていく開発の知識の費用を、業界の統計で根拠づけた問題の定義",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/dzp-why/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!dzp-why",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-06T02:35:24+09:00",
+ "dateModified": "2026-07-13T21:31:39+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!dzp-why">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/dzp-why/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/dzp-why/" hreflang="en">English</a>
+</p>
+<article>
+<h2>なぜいまか — 散らばり消えていく開発の知識</h2>
+<p>プロジェクトを進めれば、Architecture と設計の構造、業務の Rule と状態の遷移、DB の Table・Column の意味、API の連携、障害の原因と解決の方法、性能の改善の事例、再利用できる開発のパターンといった知識が次々に生まれる。しかしこの知識のほとんどは <strong>Source Code · Commit · Merge Request · Issue · メッセンジャー · メール · 会議 · 個人の記憶</strong>に散らばったまま残り、<strong>組織の知識</strong>として積み上がらない。</p>
+
+<h3>費用はすでに数字になっている</h3>
+<ul>
+    <li>開発者の <strong>62% が毎日 30 分以上</strong>を答え探しに使い、<strong>68% は週に 1 回以上、知識のサイロ</strong>にぶつかる — <a href="https://survey.stackoverflow.co/2022/" target="_blank" rel="noopener">Stack Overflow Developer Survey 2022</a></li>
+    <li>開発者の <strong>69% が週に 8 時間以上（勤務時間のおよそ 20%）を非効率で失い</strong>、主な原因として<strong>「不十分な文書」</strong>を挙げる — <a href="https://www.atlassian.com/blog/developer/developer-experience-report-2024" target="_blank" rel="noopener">Atlassian, State of Developer Experience 2024</a></li>
+    <li>知識労働者は勤務時間の <strong>19% を情報の検索・収集</strong>に使う — <a href="https://www.mckinsey.com/industries/technology-media-and-telecommunications/our-insights/the-social-economy" target="_blank" rel="noopener">McKinsey, The Social Economy (2012)</a></li>
+    <li>職務の知識の <strong>42% はその人にしかない固有の知識</strong>なので、退職すれば同僚はその業務の 42% を行えない。大企業の基準で、非効率な知識の共有による損失は<strong>年に 4,700 万ドル</strong>と推計される — <a href="https://www.panopto.com/company/news/inefficient-knowledge-sharing-costs-large-businesses-47-million-per-year/" target="_blank" rel="noopener">Panopto Workplace Knowledge Report (2018)</a></li>
+    <li>新しい開発者が十分な生産性に達するまでには、平均で <strong>3〜9 か月</strong>かかる — <a href="https://newsletter.getdx.com/p/developer-onboarding-time" target="_blank" rel="noopener">DX, Developer Onboarding Research</a></li>
+</ul>
+<p>その結果として組織では、同じ問題のくり返しの分析、設計の意図と変更の背景の喪失、プロジェクトのあいだでの経験の再利用の不足、担当者の異動・退職にともなう知識の損失、新しい開発者の高いオンボーディングの費用、AI の開発の道具を使うたびの Context の説明のくり返しが、何度も起きる。</p>
+
+<h3>「文書をきちんと書こう」は答えにならない</h3>
+<p>オープンソースの調査では <strong>93% が「不完全あるいは古い文書」を蔓延する問題</strong>として挙げながら、60% は文書にほとんど貢献しなかった（<a href="https://opensourcesurvey.org/2017/" target="_blank" rel="noopener">GitHub Open Source Survey 2017</a>）。Stack Overflow は、社内のウィキや文書の DB が放置され信頼を失う構造的な理由を早くに分析している（<a href="https://stackoverflow.blog/2019/09/30/why-your-wikis-instant-messaging-and-documentation-databases-dont-work/" target="_blank" rel="noopener">Why Your Wikis … Don't Work, 2019</a>）。日程と優先順位に押される開発の現場では、<strong>人の真面目さに頼る文書化は続かない。</strong></p>
+
+<div class="note">
+    <span class="nh">問題の定義しなおし</span>
+    足りないのは開発者の真面目さではなく<strong>構造</strong>だ。知識はすでに GitLab に積まれている — それを読んで整理する主体が人である必要がないだけである。そしてその構造の半分（知識を収めてつなぎ検証するエンジン）は Reference Wiki として<strong>すでに運用中</strong>だ — ないのは GitLab とのつながりだけである。次の編の<a href="/p/ja/dzp-core/">提案の要</a>でその構造を扱う。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼 &middot; <span class="pr-k">作成日</span> 2026-07-06 &middot; <span class="pr-k">更新日</span> 2026-07-13</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/dzp-overview/">提案の概要 — GitLab をもとにした AI 開発ナレッジプラットフォーム</a></li><li><a href="/p/ja/dzp-value/">付加価値と活用のシナリオ — 開発の組織を越えて</a></li></ul>
+</nav>
+</body>
+</html>
