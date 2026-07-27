@@ -1,0 +1,27 @@
+<h2>2026-07-27 · 운영 — 로그 날짜 어긋남을 CI가 잡게 하기</h2>
+
+<p>같은 실수가 두 번 났다. <strong>KST로 넘어간 날의 작업을 전날 로그에 적는 것</strong>이다. 첫 번째는 2026-07-14, UTC 세션 날짜를 그대로 쓴 사고. 두 번째는 바로 오늘 — 전날 저녁 21:27에 확인한 KST 날짜를 아침 08:40 커밋까지 그대로 재사용해, <a href="#!wl-20260727-content">07-27 작업</a>을 <code>wl-20260726-content</code>에 적었다. 사용자가 눈으로 잡았다. 변경 유형: <strong>TOOL</strong>.</p>
+
+<div class="note warn">
+    <span class="nh">CI는 왜 못 잡았나</span>
+    <code>check_worklog.py</code>는 <strong>&ldquo;로그를 건드렸는가&rdquo;만</strong> 봤다. 어느 날짜 로그인지는 보지 않았다. <code>validate_routes</code>의 <code>worklog-date-order</code>는 <code>list</code>의 날짜 폴더가 오름차순인지(사이드바 렌더용)만, <code>worklog-day-split</code>은 한 날에 로그가 5개 이상인지만 본다. <strong>작업일과 로그 날짜를 대조하는 검사는 없었다.</strong> 07-14 때 이 규칙을 CLAUDE.md 산문으로만 남기고 기계화하지 않은 결과다.
+</div>
+
+<h3>넣은 것 — <code>check_worklog</code>의 두 번째 판정</h3>
+<ul>
+    <li><strong>기준 시각은 &lsquo;지금&rsquo;이 아니라 HEAD 커밋의 작성 시각을 KST로 본 날짜</strong>다. 어제 만든 PR을 오늘 CI가 돌려도 판정이 흔들리면 안 되고, <code>build_dates.py</code>의 KST 정규화 규약과도 같아야 한다.</li>
+    <li>날짜 폴더가 있는 로그를 건드렸다면 <strong>그중 하나는 그 날짜와 같아야</strong> 한다. 아니면 ERROR이고, 어떤 경로로 옮기면 되는지까지 출력한다.</li>
+    <li><strong>날짜 없는 로그는 대상이 아니다</strong> — <code>wl-backlog</code>·<code>wl-guide</code>는 그날의 기록이 아니라 상태판이라 갱신해도 날짜를 요구하지 않는다.</li>
+    <li><strong>탈출구를 뒀다</strong> — 커밋 메시지에 <code>Worklog-Backdated: &lt;사유&gt;</code>를 남기면 통지로 낮춘다. 지난 날짜 작업을 뒤늦게 분리 기록하는 정당한 경우가 실제로 있었기 때문이다(<a href="#!wl-20260720-design">2026-07-20 분리</a>). 게이트가 정당한 작업까지 막으면 결국 사람이 게이트를 걷어내게 된다 &mdash; 막되, 의도를 밝히면 지나가게 한다.</li>
+</ul>
+
+<h3>왜 &lsquo;하루 넘긴 후속도 새 로그&rsquo;가 맞나</h3>
+<p>CLAUDE.md에는 서로 당기는 두 규칙이 있다: <strong>후속은 그 주제의 기존 로그를 갱신</strong>(과분할 방지)과 <strong>파일명 날짜는 KST 기준</strong>. 날짜가 넘어가면 둘이 충돌하는데, 선례는 이미 후자의 손을 들어 줬다 &mdash; 2026-07-20 작업을 07-19 로그에 이어 붙였다가 <strong>사용자 결정으로 그날 로그로 분리</strong>했다. 이번 게이트는 그 선례를 규칙으로 굳힌 것이다.</p>
+
+<h3>검증</h3>
+<ul>
+    <li>고치기 전 브랜치 상태에 게이트를 걸어 <strong>실제로 ERROR가 나는 것</strong>을 먼저 확인했다(&ldquo;작업일은 2026-07-27인데 건드린 로그는 2026-07-26&rdquo;) &mdash; 잡아야 할 것을 잡는지부터 본 것이다.</li>
+    <li>기록을 옮긴 뒤 통과. 나머지 경우도 표로 전수 확인했다 — 전날 로그만 건드림(차단) · 진짜 트레일러(통과) · 오늘 로그 포함(통과) · <code>wl-backlog</code>만(대상 제외).</li>
+    <li><strong>테스트가 결함을 하나 잡았다</strong> — 탈출구를 <code>'Worklog-Backdated:' in 메시지</code>로 단순 검사했더니, <strong>이 게이트를 도입한 커밋 자신이</strong> 본문에서 그 규약을 설명했다는 이유로 게이트를 열어 버렸다. 줄 맨 앞에서만 인정하도록(<code>re.M</code> 앵커) 고쳤다. 탈출구는 <em>의도</em>를 표시하는 장치인데 <em>언급</em>만으로 열리면 장치가 아니다.</li>
+    <li>번들 스냅샷 동기 + <code>plugin.json</code> version 상향.</li>
+</ul>
