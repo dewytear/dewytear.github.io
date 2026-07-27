@@ -19,20 +19,30 @@ import sys
 
 HANGUL_RE = re.compile(r'[가-힣]')
 
-# 날짜가 붙은 일지(wl-YYYYMMDD-*)만 "라벨만 번역, 본문은 ko 폴백"이 정상이다.
-# 2026-07-28까지 work-log/ 경로 전체를 면제했는데, 그 바람에 **일지가 아닌
-# 안내 문서** wl-guide가 딸려 들어가 label_ja만 달고 ja 본문 없이 통과했다
-# (메뉴는 일본어인데 열면 한국어). 면제는 이름으로 좁힌다.
-WORKLOG_DATED_RE = re.compile(r'^wl-\d{8}-')
-
-# TODO(wl-backlog): 지금 label_en·label_ja가 있는데 en·ja 본문이 둘 다 없다
-# (= wl-guide와 같은 상태, 영어에서도 한국어가 나온다). 라벨을 뗄지 본문을
-# 번역할지 결정이 필요해 잠시 면제한다 — **통과가 아니라 미결 표시**다.
-WORKLOG_UNDECIDED = {'wl-backlog'}
+WORKLOG_RE = re.compile(r'^work-log/')
 
 
-def _worklog_exempt(name):
-    return bool(WORKLOG_DATED_RE.match(name)) or name in WORKLOG_UNDECIDED
+def _worklog_body_optional(rel, lang_files):
+    """work-log 문서가 "라벨만 번역, 본문은 ko 폴백" 면제를 받는 조건.
+
+    워크로그 본문은 병행 대상이 아니다(tools/i18n.md) — 그래서 라벨만 번역돼
+    있고 본문이 ko로 폴백하는 것이 정상이다. 다만 **어느 한 언어에만 본문이
+    있는 것**은 정상이 아니다: 2026-07-28까지 `wl-guide`가 en 본문만 갖고
+    ja 본문이 없어 "메뉴는 일본어인데 열면 한국어"였는데, 경로가 work-log라는
+    이유로 게이트를 통째로 빠져나갔다.
+
+    그래서 면제 기준을 이름이 아니라 **대칭**으로 잡는다 — 번역 언어 어디에도
+    본문이 없으면(= 전 언어가 똑같이 ko 폴백) 면제, 한 곳이라도 있으면 나머지
+    언어에도 있어야 한다. 이름 목록이 필요 없고, 새 안내 문서가 생겨도 규칙이
+    저절로 맞는다.
+
+    · 날짜 일지 59편 — 어디에도 본문 없음 → 면제
+    · wl-backlog     — 어디에도 본문 없음 → 면제 (2026-07-28 결정: 살아있는
+                       목록이라 번역본을 두면 매번 세 벌을 갱신해야 해 ko 전용)
+    · wl-guide       — en·ja 본문 있음 → 검사 대상
+    """
+    return (WORKLOG_RE.match(rel)
+            and not any(rel in files for files in lang_files.values()))
 
 
 def _f(level, check, name, message):
@@ -190,7 +200,7 @@ def run(root):
                 findings.append(_f('WARN', '%s-body-without-label' % lang, n['name'],
                                     "docs/%s/%s exists but list node has no label_%s"
                                     % (lang, rel, lang)))
-            if has_label and not has_body and not _worklog_exempt(n['name']):
+            if has_label and not has_body and not _worklog_body_optional(rel, lang_files):
                 findings.append(_f('ERROR', 'label-without-%s-body' % lang, n['name'],
                                     "list node has label_%s but docs/%s/%s is missing "
                                     "(번역 라벨만 달고 본문을 빼면 그 언어인 척하는 "
