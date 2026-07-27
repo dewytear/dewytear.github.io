@@ -1,0 +1,81 @@
+<h2>ハーネス 100・性能</h2>
+<p><strong>ハーネス 100</strong> は、よく使われる<strong>100 種のケースのハーネスをあらかじめ組んで</strong>公開したまとめです。毎回チームをゼロから組む代わりに、<strong>似た構成を探してカスタマイズ</strong>するほうがずっと速くなります。</p>
+
+<h3>どんなケースがあるのか</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>領域</th><th>例</th></tr></thead>
+        <tbody>
+            <tr><td>コンテンツ制作</td><td>YouTube · ポッドキャスト · ニュースレター · オンライン講座</td></tr>
+            <tr><td>ソフトウェア開発</td><td>機能開発 · リファクタリング · バグ修正 · テスト</td></tr>
+            <tr><td>データ分析</td><td>収集 · 整形 · 分析 · レポート</td></tr>
+            <tr><td>ビジネス戦略</td><td>スタートアップの検証からピッチまで · <strong>政府支援の事業計画書</strong></td></tr>
+            <tr><td>教育 · 学習</td><td>カリキュラム · 講義案 · 問題の出題</td></tr>
+            <tr><td>法務 · 運用 · 専門ドメイン</td><td>リスク評価 · 運用プロセス · ドメイン別の専門構成</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>たとえば<strong>政府支援の事業計画書</strong>の構成には、<em>公告文の分析の専門家・事業性パートの執筆者・予算編成のアシスタント</em>といったエージェントがあらかじめ入っています。</p>
+
+<h3>ERP カスタムに合わせて変える方法</h3>
+<p>いちばん近い構成を選んだあと、<strong>役割を ERP カスタムの流れに置き換える</strong>だけです。</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>ハーネス 100 の元の役割</th><th>→ ERP カスタムへの置き換え</th></tr></thead>
+        <tbody>
+            <tr><td>資料の調査・分析の専門家</td><td>標準ソース · 影響範囲の分析担当</td></tr>
+            <tr><td>本文の執筆者</td><td>カスタム設計担当 · 開発エージェント</td></tr>
+            <tr><td>検収・ファクトチェック</td><td>回帰 QA · 数値の整合の検証</td></tr>
+        </tbody>
+    </table>
+</div>
+<p class="scn-sub">※ 実行は <code>/harness</code> に意図を渡し、提案されたチームを上の表のとおりに修正依頼すれば大丈夫です。</p>
+
+<h3>性能 — どれだけ良くなるのか</h3>
+<p>開発課題を <strong>15 件</strong>（初級・中級・上級）、<strong>ハーネスなし</strong>と<strong>ハーネスあり</strong>で解かせ、最終の成果物を <strong>LLM 審判（judge）</strong>が採点しました。結果は平均で<strong>約 60% の性能向上</strong>、ハーネスを組んだ場合の<strong>勝率 100%</strong>。とくに<strong>課題が難しいほど</strong>、単一ツールの点数が大きく落ちるのに対し、ハーネスは<strong>品質が保たれ</strong>ました。</p>
+
+<div class="note">
+    <span class="nh">数値の出どころ</span>
+    上の「60% 向上・勝率 100%」は<strong>講演者による自前の測定値</strong>です。参考までに、Anthropic もマルチエージェント構成が単一エージェントに対して<strong>内部評価で 90.2% の性能向上</strong>を示したと発表しており、「役割を分けると難しい課題で有利」という傾向自体は一致しています。
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 620 214" role="img" aria-label="概念図: 難易度が上がるほど単一ツールは品質が落ち、ハーネスは保たれる">
+    <!-- baseline -->
+    <line class="d-edge" x1="40" y1="180" x2="600" y2="180"/>
+    <!-- legend -->
+    <rect class="d-box soft" x="360" y="14" width="16" height="12" rx="2"/>
+    <text class="d-sub" x="382" y="24">ハーネスなし</text>
+    <rect class="d-box accent" x="470" y="14" width="16" height="12" rx="2"/>
+    <text class="d-sub" x="492" y="24">ハーネスあり</text>
+
+    <!-- group 初級 (cx=150) -->
+    <rect class="d-box soft" x="108" y="61" width="38" height="119" rx="4"/>
+    <rect class="d-box accent" x="154" y="51" width="38" height="129" rx="4"/>
+    <text class="d-sub" x="150" y="196" text-anchor="middle">初級</text>
+
+    <!-- group 中級 (cx=320) -->
+    <rect class="d-box soft" x="278" y="96" width="38" height="84" rx="4"/>
+    <rect class="d-box accent" x="324" y="57" width="38" height="123" rx="4"/>
+    <text class="d-sub" x="320" y="196" text-anchor="middle">中級</text>
+
+    <!-- group 上級 (cx=490) -->
+    <rect class="d-box soft" x="448" y="131" width="38" height="49" rx="4"/>
+    <rect class="d-box accent" x="494" y="61" width="38" height="119" rx="4"/>
+    <text class="d-sub" x="490" y="196" text-anchor="middle">上級</text>
+
+    <!-- y hint -->
+    <text class="d-sub" x="40" y="46" text-anchor="start">品質スコア(概念)</text>
+</svg>
+<div class="d-cap">概念図 — 実際の値ではなく<strong>傾向</strong>です。難しい課題ほど差が広がります。</div>
+</div>
+
+<div class="note warn">
+    <span class="nh">注意</span>
+    上のグラフは<strong>傾向を見せる概念図</strong>であり、正確な数値は配布されたベンチマーク資料を確認してください。ERP のカスタムはドメインの性質上<strong>標準への影響範囲・回帰</strong>が品質を左右するので、ベンチマークの数値よりも<strong>自分の現場を基準にした検証</strong>のほうが大切です。
+</div>
+
+<div class="note">
+    <span class="nh">どこで見つけるのか</span>
+    検索語<strong>「ハーネス 100」</strong>（韓国語版）で事例のまとめを見つけられます。マーケットプレイスのアドレスとあわせて、<a href="#!hnp-install">インストール</a>の文書の注意事項を参照してください。
+</div>

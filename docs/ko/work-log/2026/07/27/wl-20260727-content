@@ -57,4 +57,13 @@
 </ul>
 <p><code>hns-team</code>의 &ldquo;오케스트레이터&rdquo; 상자는 120px인데 <code>オーケストレーター</code>가 9전각(약 106px)이라 여백이 7px밖에 안 남아, 실렌더 게이트에 걸리면 줄일 셈이었으나 <strong>통과</strong>했다. 대신 그 상자만 <code>指揮エージェント</code>로 두어 좌우 여백을 확보했다.</p>
 <p><code>check_diagram_bounds</code> <strong>185개 전수 통과</strong>(ja 9편 신규). <code>validate_all</code> ERROR 0 · WARN 23 유지, <code>build_index --check</code> 3언어 OK, 브라우저에서 12편 모두 일본어 h2 · ko/en 회귀 무변화 · pageerror 0.</p>
-<p><strong>다음</strong>: 배치 4 — 하네스 플러그인(hnp-* 10편) · OMC 플러그인(omc-* 12편).</p>
+<h3>일본어(ja) 배치 4 — 하네스 플러그인(hnp-* 10편)</h3>
+<p>네 번째 배치. 앞선 세 배치가 <strong>강의 정리</strong>였다면 이쪽은 <strong>ERP 실무 문서</strong>라, 번역에서 가장 신경 쓴 것은 <strong>업무 용어를 일본 ERP에서 통하는 말로 옮기는 것</strong>이었다.</p>
+<ul>
+    <li><strong>본문 10편</strong> — <code>hnp-intro·concepts·install·first-run·architecture·agents-skills·verify·scenarios·hundred·commands</code>. 그중 <strong>8편이 도식</strong>(architecture는 2개).</li>
+    <li><strong>ERP 용어 정본</strong>: 여신한도→<code>与信限度</code> · 수불→<code>受払</code> · 분개→<code>仕訳</code> · 계정과목→<code>勘定科目</code> · 전자결재→<code>電子決裁</code> · 소요량→<code>所要量</code> · 대사→<code>突合</code> · 회귀 테스트→<code>回帰テスト</code> · 이관→<code>移行</code> · 공수→<code>工数</code>. 한국식 한자어를 그대로 음독하면 일본어로 안 통하는 것들이라(예: 대사 → ×<code>対査</code>, ○<code>突合</code>) 하나씩 실무 용례로 바꿨다.</li>
+    <li><strong>4대보험</strong>은 제도명이 나라마다 달라 <code>社会保険</code>으로 일반화했다 — 직역하면 일본 독자에게 존재하지 않는 제도를 가리킨다.</li>
+    <li>시나리오 카드 12장은 <code>.scn-*</code> 클래스 구조를 그대로 두고 텍스트만 옮겼다.</li>
+</ul>
+<p><code>check_diagram_bounds</code> <strong>193개 전수 통과</strong>(ja 8편 신규). <code>validate_all</code> ERROR 0 · WARN 23 유지, 브라우저에서 10편 모두 일본어 h2 · ko/en 회귀 무변화 · pageerror 0.</p>
+<p><strong>다음</strong>: 배치 5 — OMC 플러그인(omc-* 13편).</p>
