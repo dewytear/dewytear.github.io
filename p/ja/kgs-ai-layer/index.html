@@ -44,7 +44,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-07-26T17:16:42+09:00"
+ "dateModified": "2026-07-28T02:16:48+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -69,7 +69,7 @@
 
 <h3>JS を実行しない客のための扉 — 静的スナップショット</h3>
 <p>ここまでの入り口は<strong>機械にデータを渡す</strong>道でした。ところが一般の検索エンジンはデータではなく<strong>ページ</strong>を索引します。このウィキはハッシュルーティングの SPA なので、JS を実行しないクローラーが <code>#!welcome</code> に来ると<strong>空の抜け殻</strong>を見ます。文書断片（<code>docs/ko/…</code>）は本文ではあるものの、タイトル・説明・正規アドレスのない HTML の破片なので、ページとするには足りません。</p>
-<p>そこで文書ごとに<strong>静的スナップショット</strong>もいっしょに出します — <code>/p/&lt;name&gt;/</code>（英語は <code>/p/en/&lt;name&gt;/</code>）。本文をそのまま入れつつ <code>&lt;title&gt;</code>（最初の h2）・説明（要約）・<code>canonical</code>・言語の相互リンク（hreflang）・Article JSON-LD（ライセンス・作成日を含む）を載せた<strong>本物のページ</strong>です。本文中の <code>#!</code> リンクもスナップショットどうしでつないであるので、JS のないクローラーが<strong>リンクをたどるだけでウィキ全体を巡回</strong>でき、<code>/p/</code>・<code>/p/en/</code> の<strong>全体一覧ハブ</strong>がその巡回の出発点になります（ホームは JS でナビゲーションを描くので、元の HTML には文書リンクがひとつもありません — ハブへのリンクを <code>&lt;noscript&gt;</code> に埋め込んで、その行き止まりをなくしました）。</p>
+<p>そこで文書ごとに<strong>静的スナップショット</strong>もいっしょに出します — <code>/p/&lt;name&gt;/</code>（英語は <code>/p/en/&lt;name&gt;/</code>、日本語は <code>/p/ja/&lt;name&gt;/</code>）。本文をそのまま入れつつ <code>&lt;title&gt;</code>（最初の h2）・説明（要約）・<code>canonical</code>・言語の相互リンク（hreflang）・Article JSON-LD（ライセンス・作成日を含む）を載せた<strong>本物のページ</strong>です。本文中の <code>#!</code> リンクもスナップショットどうしでつないであるので、JS のないクローラーが<strong>リンクをたどるだけでウィキ全体を巡回</strong>でき、<code>/p/</code>・<code>/p/en/</code>・<code>/p/ja/</code> の<strong>全体一覧ハブ</strong>がその巡回の出発点になります（ホームは JS でナビゲーションを描くので、元の HTML には文書リンクがひとつもありません — ハブへのリンクを <code>&lt;noscript&gt;</code> に埋め込んで、その行き止まりをなくしました）。</p>
 <p>スナップショットは<strong>人が到着してもよいページ</strong>です。最初は人が開くとすぐ SPA へ送っていたのですが、それではこのスナップショットが存在する理由である<strong>文書ごとの固定アドレスが消えてしまいます</strong> — 検索結果や共有リンクから来た人はアドレスが <code>/#!name</code> に変わるのを見ることになり、ブックマークしたり再共有したりしてもその文書を指せません。いまは送らず、いちばん上に「ウィキで開く」リンクだけを置いています。スナップショットには<strong>Open Graph・Twitter カード</strong>も載っているので、リンクを展開して見せる場所（X・Slack・Discord など）でタイトル・要約・画像がいっしょに出ます — そのプレビューを作る側は JS を動かさないので、<strong>SPA では作れず、静的ページだけができること</strong>です。</p>
 <div class="note">
     <span class="nh">同じ知識の三つの表面</span>
@@ -107,7 +107,7 @@
     プロンプトに一行あれば十分です — <em>「dewytear.github.io/llms.txt をまず読み、knowledge-graph.json の関連（related・relations・concepts）をたどって分析せよ。」</em> スキーマの詳細と巡回のルールは <a href="/p/ja/ai-guide/">AI 巡回ガイド</a>が契約として保証します。こうした知識管理の構造のおかげで、ウィキが大きくなるほど AI の分析半径も自動で一緒に大きくなります。
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-07-26</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-07-28</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
 <ul><li><a href="/p/ja/kgs-overview/">知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン</a></li><li><a href="/p/ja/kgs-edges/">文書はどうつながるのか — 概念キュレーションと idf 重みつきエッジ</a></li><li><a href="/p/ja/kgs-views/">グラフを読む 9 つの眼 — ビューごとに違う問いに答える</a></li></ul>

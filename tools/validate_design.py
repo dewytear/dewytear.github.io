@@ -176,17 +176,38 @@ def _is_cjk(ch):
             or 0x31F0 <= o <= 0x31FF)     # katakana phonetic extensions
 
 
+def _is_fullwidth_form(o):
+    """Full-width forms of ASCII and currency symbols — （ ） ＝ ？ ￥ etc.
+
+    Japanese bodies use these freely and they fell through to `fallback: 0.0`
+    until 2026-07-28, so a label like `（レベル＝3）` was measured several tens
+    of px short. Measured 0.958–1.0 in the diagram font, so `cjk` (0.9589) is a
+    valid lower bound for the whole block — with one exception, Ｑ at 0.912,
+    which is listed explicitly in diagram_metrics.json and wins via the `chars`
+    lookup below."""
+    return 0xFF01 <= o <= 0xFF60 or 0xFFE0 <= o <= 0xFFE6
+
+
 def _char_ratio(ch, M):
     """Advance width of one character as a fraction of the font size.
 
-    Half-width katakana are the one full-width-looking script that is genuinely
-    narrow (measured 0.5) — folding them into `cjk` would OVER-estimate and this
-    gate must never do that (it would fail text that actually fits)."""
-    if 0xFF66 <= ord(ch) <= 0xFF9F:
+    Half-width katakana and the half-width CJK punctuation just before them
+    (｡｢｣､･) are the full-width-looking scripts that are genuinely narrow
+    (measured 0.5) — folding them into `cjk` would OVER-estimate and this gate
+    must never do that (it would fail text that actually fits)."""
+    o = ord(ch)
+    # Combining voiced-sound marks carry no advance of their own — the base
+    # kana does. Full-width would over-estimate; the lower bound is 0.
+    if o in (0x3099, 0x309A):
+        return 0.0
+    if 0xFF61 <= o <= 0xFF9F:
         return M.get('halfwidth', 0.48)
-    if _is_cjk(ch):
+    explicit = M['chars'].get(ch)
+    if explicit is not None:
+        return explicit   # 실측 개별값이 범위 규칙보다 우선 (Ｑ 등 예외 흡수)
+    if _is_cjk(ch) or _is_fullwidth_form(o):
         return M['cjk']
-    return M['chars'].get(ch, M['fallback'])
+    return M['fallback']
 
 
 def _nominal_fs(cls):

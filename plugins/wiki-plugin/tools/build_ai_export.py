@@ -107,6 +107,11 @@ def translated_langs():
     return [l for l in _load_prerender().LANGS if l != LANG]
 
 
+def lang_self_name(lang):
+    """그 언어가 스스로를 부르는 이름 — 스냅샷 빌더의 STR을 정본으로 읽는다."""
+    return (_load_prerender().STR.get(lang) or {}).get('self_name', lang)
+
+
 def langs_with_body(rel_path):
     """이 문서가 실제 본문을 가진 번역 언어들. 부분 번역 상태에서 없는 URL을
     광고하지 않기 위해 파일 존재로만 판정한다."""
@@ -226,17 +231,26 @@ def build_llms():
                  'fetch해 그래프를 순회하라.**' % BASE)
     lines.append('- [전체 코퍼스 llms-full.txt](%sllms-full.txt): 모든 문서의 본문 텍스트를 '
                  '한 파일에 담은 덤프 — fetch 한 번으로 위키 전체를 컨텍스트에 적재.' % BASE)
-    lines.append('- 정적 스냅샷 `%sp/<name>/`(영어는 `%sp/en/<name>/`): JS 없이 읽히는 '
-                 '문서 페이지 — 그래프 노드의 `page` 필드가 같은 주소를 가리킨다.' % (BASE, BASE))
+    snap_other = ''.join(', %s는 `%sp/%s/<name>/`' % (lang_self_name(l), BASE, l)
+                         for l in translated_langs())
+    lines.append('- 정적 스냅샷 `%sp/<name>/`(%s): JS 없이 읽히는 문서 페이지 — 그래프 '
+                 '노드의 `page` 필드가 같은 주소를 가리킨다.'
+                 % (BASE, snap_other.lstrip(', ')))
     lines.append('- [AI 순회 가이드](%sdocs/%s/ai/map/%s): 그래프를 어떻게 질의·순회·분석하는지의 '
                  '계약(노드·엣지·개념 조인·계층).' % (BASE, LANG, GUIDE_NAME))
     lines.append('- [지식 인덱스](%sdata/knowledge-index.%s.json) · [내비 트리](%slist) · '
                  '[문서 날짜](%sdata/doc-dates.json) · [Atom 피드](%sfeed.xml)'
                  % (BASE, LANG, BASE, BASE, BASE))
-    en_count = sum(1 for n in by_name if n in paths and _has_lang(paths[n], 'en'))
-    if en_count:
-        lines.append('- English: %d/%d개 문서에 영어 본문이 있다 — 아래 목록의 [EN] 링크, '
-                     '경로는 docs/en/<같은 상대 경로>.' % (en_count, st['docCount']))
+    # 번역 언어 안내는 언어 목록으로 일반화한다 — 영어만 하드코딩돼 있던 탓에
+    # 일본어 본문 115편·스냅샷이 실재하는데도 기계 독자에게는 보이지 않았다
+    # (robots.txt는 이미 /p/ja/를 안내해 서로 어긋나 있었다 · 2026-07-28).
+    for l in translated_langs():
+        n_body = sum(1 for n in by_name if n in paths and _has_lang(paths[n], l))
+        if n_body:
+            lines.append('- %s: %d/%d개 문서에 %s 본문이 있다 — 아래 목록의 [%s] 링크, '
+                         '경로는 docs/%s/<같은 상대 경로>.'
+                         % (lang_self_name(l), n_body, st['docCount'],
+                            lang_self_name(l), l.upper(), l))
     lines.append('')
 
     # Docs grouped by System, in the map's cluster order; leftover sections after.

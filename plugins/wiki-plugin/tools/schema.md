@@ -194,7 +194,7 @@
 | `llms-full.txt` | 전체 코퍼스 덤프. 헤더(라이선스·문서/개념 수) 뒤 문서마다 `# 제목` / `Section:` / `URL:` / 본문 평문. 본문은 태그 제거·엔티티 unescape·행별 공백 접기(케이스 보존), 인라인 SVG는 `<text>` 라벨만 남긴다. 순서는 llms.txt와 동일한 순회. |
 | `feed.xml` | Atom 피드. 인덱스 문서를 `doc-dates.json`의 `c` 내림차순 상위 30편. entry: title·link(해시 라우트)·id(프래그먼트 URL)·published=`c`·updated=`u`·summary·category(section). 채널 `<updated>`=포함 문서의 max `u` — **빌드 시각 금지**(결정론). |
 | `robots.txt` | 생성물(수작업 금지). `User-agent: *` Allow + `AI_CRAWLERS` 명시 환영 + 라이선스 주석 + Sitemap + AI 진입점 주석(llms·llms-full·graph·feed·순회 가이드). |
-| `sitemap.xml` | 홈 + 기계 파일(llms·llms-full·feed·graph) + **전 문서의 프리렌더 스냅샷 URL**(`/p/<name>/`, 내비 순서). en 본문이 있는 문서는 ko/en 두 URL + `xhtml:link` hreflang(ko·en·x-default=ko). `<lastmod>` 없음(--check 결정론). |
+| `sitemap.xml` | 홈 + 기계 파일(llms·llms-full·feed·graph) + **전 문서의 프리렌더 스냅샷 URL**(`/p/<name>/`, 내비 순서). 번역 본문이 있는 문서는 그 언어의 URL도 함께 싣고 `xhtml:link` hreflang(ko·en·ja·x-default=ko)을 붙인다 — 언어 목록은 `build_prerender.LANGS`가 정본이라 언어를 늘려도 이 표를 고칠 일은 없다. `<lastmod>` 없음(--check 결정론). |
 | `data/knowledge-graph.json` | 자기완결 그래프(§1의 docs + `url`/`route`/`page` 인라인 + stats). 소비: 외부 AI가 한 번의 fetch로 전체 순회. |
 
 ### 4.1 프리렌더 스냅샷 (`tools/build_prerender.py`)
@@ -205,8 +205,9 @@
 
 | 산출물 | 계약 |
 | --- | --- |
-| `p/<name>/index.html` | 한국어 스냅샷. `<title>`=본문 첫 `<h2>`, `meta description`=인덱스 summary, `canonical`=자기 주소, hreflang(ko·en·x-default), Article JSON-LD(`license`=CC BY 4.0, `datePublished`/`dateModified`=doc-dates), 본문 프래그먼트 인라인. 본문의 `#!name` 링크는 **같은 언어의 스냅샷 주소로 재작성**돼 JS 없는 크롤러도 전체를 순회한다. 사람이 열면 `location.replace`로 SPA 라우트로 이동(`?static`을 붙이면 정적 유지). |
+| `p/<name>/index.html` | 한국어 스냅샷. `<title>`=본문 첫 `<h2>`, `meta description`=인덱스 summary, `canonical`=자기 주소, hreflang(ko·en·ja·x-default), Article JSON-LD(`license`=CC BY 4.0, `datePublished`/`dateModified`=doc-dates), 본문 프래그먼트 인라인. 본문의 `#!name` 링크는 **같은 언어의 스냅샷 주소로 재작성**돼 JS 없는 크롤러도 전체를 순회한다. 사람이 열면 `location.replace`로 SPA 라우트로 이동(`?static`을 붙이면 정적 유지). |
 | `p/en/<name>/index.html` | 영어 스냅샷. en 본문이 있는 문서만 생성(부분 번역 안전). |
+| `p/ja/<name>/index.html` | 일본어 스냅샷. 같은 규칙 — `LANGS`의 번역 언어마다 `p/<lang>/<name>/`가 생긴다. |
 | `404.html` | GitHub Pages 404 → `/p/<name>/` 경로면 해당 문서의 SPA 라우트로, 그 외에는 홈으로 리다이렉트. |
 
 - **왜 스냅샷을 광고하나**: `docs/<lang>/<path>`는 `<h2>…<p>` 조각이라 title·description·canonical이 없다. 검색엔진에는 스냅샷을, 기계 소비자에게는 조각(`url`)·전체 코퍼스(`llms-full.txt`)를 준다 — 같은 지식의 두 표면.

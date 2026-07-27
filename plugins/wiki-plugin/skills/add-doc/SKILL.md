@@ -15,13 +15,16 @@ description: LLM 위키에 문서를 추가하는 전체 워크플로 — 파일
    - `name`은 불변 논리 ID(해시 라우트). 물리 경로는 도메인 트리(예: `ai/claude/code/tutorial/`).
    - 표는 반드시 `<div class="tbl-wrap">`로 감싼다(모바일 가로 스크롤).
    - 도식은 인라인 `<svg>`를 `<div class="diagram">`에 넣고 `.d-box`/`.d-label` 등 시맨틱 클래스만 사용.
-2. **`list`에 노드 추가** — `name`·`path`(docs/<lang>/ 아래 상대 경로)·`label`(+`label_en`)·`tags`. 새 문서·대폭 재작성이면 `model`도 기록. **name과 path는 항상 쌍으로.**
+2. **`list`에 노드 추가** — `name`·`path`(docs/<lang>/ 아래 상대 경로)·`label`·`tags`, 그리고 **강제 번역 언어마다** `label_<lang>`/`tags_<lang>`(이 위키는 en·ja — `tools/check_translation.py`의 `ENFORCED_LANGS`가 정본). 새 폴더를 만들면 브랜치 노드의 `title_<lang>`도 같은 언어 집합으로. 새 문서·대폭 재작성이면 `model`도 기록. **name과 path는 항상 쌍으로.**
 3. **`tools/doc-entries.ko.json`에 엔트리 추가** — `{name, title, summary, concepts}`.
    - `concepts`는 **본문에 실재하는 개념만**(정직성). 기존 개념 어휘를 재사용해야 연관 링크가 생긴다.
    - 연관 규칙: 공유 개념 2개↑ 또는 단일 공유 개념 df≤3 (스키마 계약: `tools/schema.md`).
-   - **영어 동반**(다국어 위키인 경우, 워크로그 제외): `docs/en/<같은 상대 경로>` 번역 본문 +
-     `label_en`/`tags_en` + `doc-entries.en.json` 오버레이(`{name, title, summary}` — concepts 없음)를
-     같은 PR에 싣는다. 도식의 SVG `<text>`·aria-label도 번역(지오메트리 보존, 라벨 폭 선검토).
+   - **번역 동반**(다국어 위키인 경우, 워크로그 본문 제외): `ENFORCED_LANGS`의 **각 언어 L**마다
+     `docs/L/<같은 상대 경로>` 번역 본문 + `label_L`/`tags_L` + `doc-entries.L.json`
+     오버레이(`{name, title, summary}` — concepts 없음)를 같은 PR에 싣는다. 이 위키는 현재
+     **en·ja**이고, 빠지면 `check_translation`이 PR을 막는다. 도식의 SVG `<text>`·aria-label도
+     번역한다(지오메트리 보존, 라벨 폭 선검토 — 영어는 길어지고 일본어는 가나가 전각이라
+     글자 수가 늘기 쉽다).
 4. **인덱스 재생성** — `python3 tools/build_index.py` 후 `--check`로 0 확인. `python3 tools/build_dates.py`도 실행(문서 커밋 후 재실행해야 새 문서 날짜가 잡힘 — git 이력 기반).
 5. **Work Log** — 하루 안에서 **빅 프레임 4종**(콘텐츠/기능/디자인·UI/운영·도구)으로 묶는다. 같은 날 같은 프레임 로그가 있으면 **그 로그에 `<h3>` 섹션 추가**, 없으면 `wl-YYYYMMDD-<frame>` 새 파일 + `list` 날짜 트리 노드(`"tags": []`). 날짜는 **KST** 기준.
 6. **검증** — `python3 tools/validate_all.py` 실행, **ERROR 0가 머지 조건**. WARN은 검토 후 보정하거나 사유를 Work Log에 남긴다.

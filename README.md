@@ -2,7 +2,7 @@
 
 **[dewytear.github.io](https://dewytear.github.io)** — a personal wiki about Claude Code,
 plugins, harnesses, LLM wikis and second brains. Written in Korean, published in
-**Korean, English and Japanese** (116 documents in all three), CC BY 4.0.
+**Korean, English and Japanese** (all 115 indexed documents in all three), CC BY 4.0.
 
 ![Aaron's Claude Wiki](og-image.png)
 

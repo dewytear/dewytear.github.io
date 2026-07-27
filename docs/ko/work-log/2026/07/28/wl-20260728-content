@@ -37,7 +37,7 @@
     브라우저 검증에서 ja 페이지의 <strong>빵부스러기(breadcrumb)에 &ldquo;AI 개발 지식 플랫폼&rdquo;</strong>이 한글로 떠 있는 것을 발견했다. 문서 라벨(<code>label_ja</code>)은 배치마다 달았지만 <strong>폴더 노드의 <code>title_ja</code>는 한 번도 달지 않아</strong> ko로 폴백하고 있었던 것 — <code>title_en</code>은 28개가 이미 있으니 영어 독자만 제대로 보던 셈이다. 이번 PR에서 <strong>29개 전부</strong>(지식 체계·News &amp; Articles·제안 2종·07월·날짜 24개)에 <code>title_ja</code>를 넣어 닫았다. 재검증에서 breadcrumb 한글은 사라졌다.
 </div>
 <p><code>check_diagram_bounds</code> <strong>237개 전수 통과</strong>(ja 9편 신규). <code>validate_all</code> ERROR 0 · WARN 23 유지. 브라우저에서 12편 모두 일본어 h2 · pageerror 0 · ko/en 회귀 무변화.</p>
-<p class="scn-sub">본문에 남는 한글은 이제 <strong>개념 칩뿐</strong>이다(지식플랫폼·조직지식·큐레이터…). <code>concepts.en.json</code>이 2건뿐인 데서 보듯 영어판도 같은 상태라 이번 배치가 만든 퇴행이 아니며, 개념 표시명 사전은 별도 주제로 다룰 일이다.</p>
+<p class="scn-sub">본문에 남는 한글은 이제 <strong>개념 칩뿐</strong>이다(지식플랫폼·조직지식·큐레이터…). 개념 표시명 사전(<code>concepts.ja.json</code>)이 아직 없어 ko 키가 그대로 보이는 것이라 이번 배치가 만든 퇴행은 아니며, 사전 생성은 별도 주제로 다룰 일이다.</p>
 <p><strong>다음</strong>: 마감 PR — <code>ai-guide</code>·<code>ai-map</code> 번역, <code>check_translation.py</code>에 ja 강제 추가(사용자 결정 &ldquo;영어처럼 강제&rdquo;), <code>tools/i18n.md</code>·<code>CLAUDE.md</code>·README 갱신, 설정 드롭다운의 &ldquo;번역 진행 중&rdquo; 표기 제거.</p>
 
 <h3>일본어(ja) 마감 — 지도 2편 + 게이트 강제 + 규칙 문서</h3>
@@ -58,4 +58,4 @@
     <span class="nh">솔직한 전제 — 이걸로 방문자가 늘지는 않는다</span>
     영어 전면 병행이 유입을 늘리지 못했고, 일본어도 <strong>그 자체로는 사람을 데려오지 않는다</strong>. 검색 등록·커뮤니티 노출이 선행돼야 의미가 생기며, 그 항목들은 여전히 <a href="#!wl-backlog">Backlog</a>의 &ldquo;지금 할 일&rdquo;에 사람 몫으로 남아 있다. 이 작업의 값은 <strong>그 유입이 생겼을 때 일본어 독자가 폴백된 한국어를 만나지 않는다</strong>는 데 있다.
 </div>
-<p class="scn-sub"><strong>남은 것</strong>: 개념 표시명 사전(<code>concepts.ja.json</code> 미생성 — 개념 칩이 ko 키 그대로). <code>concepts.en.json</code>도 2건뿐이라 en과 같은 상태이므로, 별도 주제로 다룬다.</p>
+<p class="scn-sub"><strong>남은 것</strong>: 개념 표시명 사전(<code>concepts.ja.json</code> 미생성 — 개념 칩이 ko 키 그대로). 영어판 <code>concepts.en.json</code>은 302건이 갖춰져 있으니 <strong>일본어만 비어 있는 상태</strong>이며, 별도 주제로 다룬다.</p>

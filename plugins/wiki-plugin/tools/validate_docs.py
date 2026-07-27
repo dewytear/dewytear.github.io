@@ -438,11 +438,17 @@ def check_banned_astronomy_metaphor(doc_nodes, entries, bodies):
 # Map pages carry a static fallback table (for no-JS / index-load-failure)
 # that mirrors stats hydrateAiMap would render live. Fallback numbers rot
 # silently when docs are added, so cross-check them against the index.
+# 번역판 지도도 같은 폴백 표를 들고 있으므로 언어를 늘릴 때마다 이 목록에
+# 함께 넣는다 — 빠지면 그 언어의 폴백 수치만 조용히 낡는다(2026-07-28에
+# ja 두 줄·en dz-map 한 줄이 빠져 있던 것을 발견해 보강).
 MAP_FALLBACKS = [
     # (doc path under docs/, index file under data/, stats galaxy key)
     ('ko/ai/map/ai-map', 'knowledge-index.ko.json', 'AI'),
     ('en/ai/map/ai-map', 'knowledge-index.en.json', 'AI'),
+    ('ja/ai/map/ai-map', 'knowledge-index.ja.json', 'AI'),
     ('ko/douzone/map/dz-map', 'knowledge-index.ko.json', 'Douzone'),
+    ('en/douzone/map/dz-map', 'knowledge-index.en.json', 'Douzone'),
+    ('ja/douzone/map/dz-map', 'knowledge-index.ja.json', 'Douzone'),
 ]
 
 
