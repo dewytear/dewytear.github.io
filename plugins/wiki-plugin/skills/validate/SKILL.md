@@ -1,6 +1,6 @@
 ---
 name: validate
-description: 위키 품질 검증 일괄 실행 — validate_all(라우트·문서·i18n·그래프·도식) + PR 게이트(check_worklog·check_cachebuster). 머지 전 점검, ERROR/WARN 해석이 필요할 때 사용.
+description: 위키 품질 검증 일괄 실행 — validate_all(라우트·문서·i18n·그래프·도식) + PR 게이트(check_worklog·check_cachebuster·check_translation·check_plugin_sync) + 도식 실렌더 전수(check_diagram_bounds). 머지 전 점검, ERROR/WARN 해석이 필요할 때 사용.
 ---
 
 # 위키 검증

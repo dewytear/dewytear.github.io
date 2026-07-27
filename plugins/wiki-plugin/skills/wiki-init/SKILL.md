@@ -99,8 +99,8 @@ about은 내비에 등록하지 않는 특수 문서다(`validate_routes`의
    ④ 이 가이드 문서 자체도 여느 문서처럼 수정·삭제해도 된다는 안내.
    `list`에는 이 World 1개 + 가이드 문서 노드로 시작한다.
 3. `tools/doc-entries.ko.json`을 `{"docs": []}` 대신 문서 엔트리 배열 형식으로 시작(README·schema.md 참조).
-   - **`tools/doc-entries.en.json`도 함께 만든다** — 영어를 아직 안 쓰면 빈 배열 `[]`로. (없으면 `validate_i18n`이 `en-entry-orphan` **ERROR**를 낸다.)
-4. **`i18n.js`(또는 `index.html`)에 `var STRINGS = { ko: {…}, en: {…} }` 블록을 만든다** — ko/en 키 집합이 같아야 한다. (없으면 `validate_i18n`이 `strings-parity` **ERROR**를 낸다. 새 UI 문구는 하드코딩 대신 이 STRINGS 키로 넣는다.)
+   - **번역 언어를 쓸 계획이면 `tools/doc-entries.<lang>.json`도 함께 만든다**(예: `.en.json`·`.ja.json`). 파일이 아예 없으면 `validate_i18n`은 그 언어를 **건너뛰므로**(ERROR 아님) 조용히 빠질 수 있다 — 켜는 순간 만들어 두는 편이 안전하다.
+4. **`i18n.js`(또는 `index.html`)에 `var STRINGS = { ko: {…}, en: {…} }` 블록을 만든다** — 모든 언어의 키 집합이 같아야 한다(`LANGS_READY`에 켠 언어마다 사전 하나). 파싱 실패나 키 어긋남은 `validate_i18n`의 `strings-parity`가 잡는다. 새 UI 문구는 하드코딩 대신 이 STRINGS 키로 넣는다. 개념 표시명은 STRINGS가 아니라 `tools/concepts.<lang>.json`(`{note, labels}`, 키는 한국어 원본 그대로)에 둔다 — 빠뜨리면 그 언어에서만 개념 칩이 한국어로 보인다.
 5. `python3 tools/build_index.py && python3 tools/build_dates.py`로 data/ 생성 확인.
 6. `python3 tools/validate_all.py` — ERROR 0 확인.
 7. CI: `.github/workflows/validate.yml`에 validate_all(push·PR) + check_worklog·check_cachebuster(PR) 스텝을 건다(레퍼런스 위키의 워크플로 참조). **checkout은 `fetch-depth: 0` 필수** — `check_worklog`(base와의 diff)·`build_dates.py`(git 이력의 최초 커밋 = 생성일)가 shallow clone에서는 오동작한다.

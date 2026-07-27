@@ -54,7 +54,7 @@
 </ul>
 
 <h3>AI コーディングの事前の知識 — 好循環が閉じる地点</h3>
-<p>いちばん戦略的な活用は<strong>ナレッジグラフを AI コーディングの事前の知識として使うこと</strong>だ。いまは開発者が Claude Code のような AI の道具に、毎回ドメインの背景を説明し直している — 「受注の状態はこう遷移して、与信のチェックはあの時点で行って…」（<a href="#!dzp-why">なぜいまか</a>が指した、Context をくり返し説明する費用）。このプラットフォームでは、AI が<strong>作業を始める前に</strong>ナレッジグラフを先に読む:</p>
+<p>いちばん戦略的な活用は<strong>知識グラフを AI コーディングの事前の知識として使うこと</strong>だ。いまは開発者が Claude Code のような AI の道具に、毎回ドメインの背景を説明し直している — 「受注の状態はこう遷移して、与信のチェックはあの時点で行って…」（<a href="#!dzp-why">なぜいまか</a>が指した、Context をくり返し説明する費用）。このプラットフォームでは、AI が<strong>作業を始める前に</strong>知識グラフを先に読む:</p>
 <ul>
     <li><strong>入口</strong> — llms.txt で知識の全体の地形をつかみ、knowledge-graph.json の<strong>一度の fetch</strong> でノード・関係・概念・URL を手に入れる。</li>
     <li><strong>選別</strong> — 作業する対象のソースで出会った <code>identifiers</code>（Table・Rule ID・API 名）で関連する方針の文書に届き、型つきの関係をたどって必要なぶんだけ広げる — 先行知識で背景を、supersedes で「いま有効な方針」を、DECISION の等級で設計の決定の理由を。</li>

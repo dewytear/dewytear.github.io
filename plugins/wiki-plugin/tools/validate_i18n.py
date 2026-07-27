@@ -32,12 +32,21 @@ def iter_nodes(nodes):
 
 
 def load_list(root):
+    """-> (문서 리프, 브랜치 노드, findings).
+
+    브랜치(폴더) 노드는 `name`이 없어 오래도록 라벨 검사에서 통째로 빠져
+    있었다 — 2026-07-28 일본어 점검에서 `Wiki` 폴더가 `label_en`만 있고
+    `label_ja`가 없어 일본어 사이드바에 한국어가 뜨는 것을 발견해 함께
+    돌려준다."""
     try:
         tree = json.load(open(os.path.join(root, 'list'), encoding='utf-8'))
     except (OSError, json.JSONDecodeError) as e:
-        return None, [_f('ERROR', 'en-mirror', '-', 'cannot parse list: %s' % e)]
+        return None, None, [_f('ERROR', 'en-mirror', '-', 'cannot parse list: %s' % e)]
     top = tree if isinstance(tree, list) else tree.get('children', [])
-    return [n for n in iter_nodes(top) if 'name' in n], []
+    nodes = list(iter_nodes(top))
+    return ([n for n in nodes if 'name' in n],
+            [n for n in nodes if 'name' not in n and isinstance(n.get('children'), list)],
+            [])
 
 
 def walk_files(base_dir):
@@ -116,7 +125,7 @@ def extract_strings_keys(index_html_text):
 
 def run(root):
     findings = []
-    docs, load_findings = load_list(root)
+    docs, branches, load_findings = load_list(root)
     findings.extend(load_findings)
     if docs is None:
         return findings
@@ -158,6 +167,24 @@ def run(root):
                                     "list node has label_%s but docs/%s/%s is missing "
                                     "(번역 라벨만 달고 본문을 빼면 그 언어인 척하는 "
                                     "한국어 문서가 된다 — tools/i18n.md)" % (lang, lang, rel)))
+
+    # 3b. branch-label-parity: 폴더(브랜치) 노드의 번역 라벨은 언어들 사이에서
+    # 대칭이어야 한다. 브랜치는 `name`이 없어 위 검사가 통째로 건너뛰던 사각이라
+    # `Wiki` 폴더가 label_en만 갖고 ja 사이드바에 한국어로 뜨는 것을 아무도
+    # 잡지 못했다(2026-07-28). 어떤 언어든 라벨을 하나 달았다면 나머지 번역
+    # 언어에도 달아야 한다 — 라틴 문자라 번역이 불필요한 폴더(AI·Code·2026 등)는
+    # 어느 언어에도 라벨이 없으므로 이 대칭 규칙에 걸리지 않는다.
+    for n in branches:
+        have = [l for l in tr_langs if ('label_%s' % l) in n]
+        if not have:
+            continue
+        label = n.get('title') or n.get('label') or '-'
+        for l in tr_langs:
+            if ('label_%s' % l) not in n:
+                findings.append(_f('WARN', 'branch-label-parity', label,
+                                    "폴더 노드에 label_%s가 있는데 label_%s가 없음 — %s "
+                                    "사이드바에 한국어 라벨이 그대로 뜬다"
+                                    % (have[0], l, l)))
 
     # 4. <lang>-entry-orphan: doc-entries.<lang>.json entries must reference a
     # real ko entry name that also has a body in that language.

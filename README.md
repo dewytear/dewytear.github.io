@@ -2,7 +2,7 @@
 
 **[dewytear.github.io](https://dewytear.github.io)** — a personal wiki about Claude Code,
 plugins, harnesses, LLM wikis and second brains. Written in Korean, published in
-**Korean, English and Japanese** (116 documents in all three), CC BY 4.0.
+**Korean, English and Japanese** (all 115 indexed documents in all three), CC BY 4.0.
 
 ![Aaron's Claude Wiki](og-image.png)
 
@@ -115,3 +115,10 @@ python3 -m http.server 8000
 ```
 
 브라우저에서 http://localhost:8000 접속.
+
+## 연락 · 기여
+
+버그 제보·질문·제안은 [Issues](https://github.com/dewytear/dewytear.github.io/issues)에 남겨 주세요 —
+공개 기록이 남아 같은 질문이 반복되지 않습니다. 그 밖의 문의는
+[youngjinkwak@gmail.com](mailto:youngjinkwak@gmail.com) 또는
+[About 페이지](https://dewytear.github.io/p/about/)로.

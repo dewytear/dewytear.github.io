@@ -8,7 +8,7 @@
 <p>知識インデックス・グラフ JSON・<code>llms.txt</code>・sitemap・文書の日付 — サイトが読む生成物はすべて<strong>ツールが生成し、手では編集しません</strong>。ビルドは<strong>決定論的</strong>（同じ入力 → いつも同じ出力）なので、CI の <code>--check</code> モードが「いまリポジトリにある生成物」と「ソースから作りたての生成物」をバイトで比較できます。食い違えば（＝文書を直して再生成を忘れれば）<strong>マージが止まります</strong>。だから <a href="#!kgs-ai-layer">AI が読むグラフファイル</a>が実際の知識と違う瞬間は、構造的に存在しません。</p>
 
 <h3>PR を守る同伴ゲート — 「A を変えたなら B も一緒に」</h3>
-<p>あるルールは生成物の比較では捕まえられません。「アセットを直したならキャッシュバスターも上げよ」のような<strong>同伴ルール</strong>は、PR の変更一覧（diff）を見て<strong>片割れも一緒に来たか</strong>を検査する必要があります。こうしたゲートが四つあり、すべて実際の事故や運用の必要から生まれました:</p>
+<p>あるルールは生成物の比較では捕まえられません。「アセットを直したならキャッシュバスターも上げよ」のような<strong>同伴ルール</strong>は、PR の変更一覧（diff）を見て<strong>片割れも一緒に来たか</strong>を検査する必要があります。こうしたゲートが五つあり、すべて実際の事故や運用の必要から生まれました:</p>
 
 <div class="tbl-wrap">
 <table>
@@ -17,6 +17,7 @@
 <tr><td><code>check_worklog</code></td><td>実質的な変更のある PR には <strong>Work Log を同伴</strong>（既存ログの更新も認める）</td><td>「小さくても記録」のルールが散文にしかなく忘れられていた問題</td></tr>
 <tr><td><code>check_cachebuster</code></td><td>?v 付きアセット（app.js など）を直したら<strong>同じ PR で ?v を上げる</strong></td><td>2026-07-09 の実事故 — 直したのに再訪ブラウザで「反映されない」</td></tr>
 <tr><td><code>check_plugin_sync</code></td><td>プラグイン同梱のツールはルートの <code>tools/</code> と<strong>バイト一致</strong> + バンドル変更時は<strong>バージョン上げ</strong></td><td>2026-07-10 の実事故 — 検証機 190 行が古いまま配布された</td></tr>
+<tr><td><code>check_translation</code></td><td>新しい文書を載せるときは<strong>強制する言語の本文・ラベル・索引のオーバーレイを同伴</strong>（いまは en・ja）</td><td>「新規文書は翻訳を同伴」のルールが散文にしかなく漏れていた問題 — ワークログのゲートと同じ骨組みに移しました</td></tr>
 <tr><td><code>diagram-bounds</code></td><td>図の文字が箱・viewBox を<strong>1px もはみ出さない</strong>ことをヘッドレスブラウザの実レンダーで検査</td><td>フォント幅の推定だけでは境界値のはみ出しを取りこぼしていた問題</td></tr>
 </tbody>
 </table>
@@ -38,7 +39,7 @@
     <rect class="d-box" x="214" y="104" width="302" height="42" rx="8"/>
     <text class="d-sub" x="365" y="130" text-anchor="middle">② ドリフト — 生成物がソースとずれたら遮断</text>
     <rect class="d-box" x="214" y="152" width="302" height="42" rx="8"/>
-    <text class="d-sub" x="365" y="178" text-anchor="middle">③ 同伴 — Work Log · ?v · バンドル+版</text>
+    <text class="d-sub" x="365" y="178" text-anchor="middle">③ 同伴 — Work Log · ?v · バンドル · 翻訳</text>
     <rect class="d-box" x="214" y="200" width="302" height="42" rx="8"/>
     <text class="d-sub" x="365" y="226" text-anchor="middle">④ 実レンダー — 図の境界を全数確認</text>
     <line class="d-edge" x1="530" y1="100" x2="548" y2="100"/>
@@ -70,5 +71,5 @@
 
 <div class="note">
     <span class="nh">ひと目でまとめ</span>
-    生成物は<strong>決定論的ビルド</strong>でのみ生成（直接編集は禁止）→ <code>--check</code> がドリフトを遮断 → 同伴ゲート 4 種が「片割れも一緒に来たか」を検査 → <strong>ERROR 0 がマージの条件</strong>。復元の労働は <code>--fix</code> が代行し、機械が判定できない記述やバージョンの判断は<strong>変更タイプの宣言</strong>で人が開始時点に押さえます。ゲートはすべて、実際の事故の再発防止として生まれました。
+    生成物は<strong>決定論的ビルド</strong>でのみ生成（直接編集は禁止）→ <code>--check</code> がドリフトを遮断 → 同伴ゲート 5 種が「片割れも一緒に来たか」を検査 → <strong>ERROR 0 がマージの条件</strong>。復元の労働は <code>--fix</code> が代行し、機械が判定できない記述やバージョンの判断は<strong>変更タイプの宣言</strong>で人が開始時点に押さえます。ゲートはすべて、実際の事故の再発防止として生まれました。
 </div>

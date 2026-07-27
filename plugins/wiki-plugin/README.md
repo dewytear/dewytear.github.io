@@ -25,7 +25,7 @@ LLM 위키(세컨드 브레인)를 **구축·운영**하는 Claude Code 플러�
 | 값 | 반영 | 비고 |
 |---|---|---|
 | 위키 이름 · 부제 | `config.json` `title`·`tagline` (+`index.html` 폴백) | 이름은 반드시 지정 |
-| 기본 언어 | `defaults.lang` | ko/en |
+| 기본 언어 | `defaults.lang` | `i18n.js`의 `LANGS_READY`에 있는 값 중 하나(레퍼런스 위키는 ko·en·ja) |
 | 프로필 이미지 · 한 줄 | `image` · `defaults.photoLine` | 빈 값이면 자동 숨김 |
 | 배경음악 | `defaults.music` | ⚠️ **레퍼런스 위키의 개인 YouTube 링크를 그대로 두지 말 것** — 본인 URL 또는 빈 값(끔) |
 | 테마 · 액센트 색 | `defaults.theme`·`accentDay`·`accentNight` | 낮/밤 포인트 색 |
