@@ -2056,9 +2056,14 @@ function detectLang(){
         var q = (location.search || '').match(/[?&]lang=([a-z]{2})\b/);
         if(q && LANGS_READY.indexOf(q[1]) !== -1){ return q[1]; }
     }catch(e){}
+    // 브라우저 언어 → 준비된 언어로 매칭. 예전에는 "한국어냐 아니냐"로만 갈라
+    // 비한국어를 전부 영어로 보냈다 — ja/zh 본문을 넣어도 자동으로는 영어가
+    // 나가는 함정이었다. 이제 LANGS_READY에 있으면 그 언어로, 없으면 영어,
+    // 영어도 없으면 한국어. (`zh-TW`·`zh-CN`은 둘 다 `zh`로 뭉쳐진다.)
     try{
-        var nav = (navigator.language || '').toLowerCase();
-        if(nav && nav.slice(0, 2) !== 'ko' && LANGS_READY.indexOf('en') !== -1){ return 'en'; }
+        var nav = (navigator.language || '').toLowerCase().slice(0, 2);
+        if(nav && nav !== 'ko' && LANGS_READY.indexOf(nav) !== -1){ return nav; }
+        if(nav && nav !== 'ko' && LANGS_READY.indexOf('en') !== -1){ return 'en'; }
     }catch(e){}
     return 'ko';
 }

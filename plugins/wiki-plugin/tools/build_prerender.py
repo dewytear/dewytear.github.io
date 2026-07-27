@@ -45,7 +45,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LIST = os.path.join(ROOT, 'list')
 KO = 'ko'
-LANGS = ['ko', 'en']
+LANGS = ['ko', 'en', 'ja']
 OUT_DIR = 'p'
 
 LICENSE_NAME = 'CC BY 4.0'
@@ -60,10 +60,12 @@ OG_IMAGE = 'og-image.png'
 EXTRA_PAGES = {
     'about': {
         'path': 'about',
-        'section': {'ko': '소개', 'en': 'About'},
+        'section': {'ko': '소개', 'en': 'About', 'ja': '紹介'},
         'summary': {
             'ko': '곽영진 — 더존비즈온 책임연구원. 복잡한 일을 구조화하고 반복된 경험을 '
                   '시스템과 지식으로 바꾸는 일을 합니다.',
+            'ja': '郭永珍（クァク・ヨンジン）— ダウンビジョン主任研究員。複雑な仕事を構造化し、'
+                  '繰り返した経験をシステムと知識に変える仕事をしています。',
             'en': 'Youngjin Kwak — Principal Researcher at Douzone Bizon. I structure '
                   'complex work and turn repeated experience into systems and knowledge.',
         },
@@ -80,10 +82,24 @@ STR = {
         'updated': '수정일자',
         'related': '연관 문서',
         'other_lang': 'English',
+        'self_name': '한국어',
         'hub_title': '문서 전체 목록',
         'hub_desc': '이 위키의 모든 문서를 한 페이지에 — 분류별 목록.',
         'hub_lead': '위키의 모든 문서입니다. 각 링크는 JS 없이 읽히는 정적 페이지로 이어집니다.',
         'home': '위키 홈',
+    },
+    'ja': {
+        'live': 'これは静的スナップショットです — ウィキで開く',
+        'section': '分類',
+        'created': '作成日',
+        'updated': '更新日',
+        'related': '関連文書',
+        'other_lang': '한국어',
+        'self_name': '日本語',
+        'hub_title': '全文書一覧',
+        'hub_desc': 'このウィキの全文書を1ページに — 分類別の一覧。',
+        'hub_lead': 'ウィキの全文書です。各リンクは JavaScript なしで読める静的ページに繋がります。',
+        'home': 'ウィキのホーム',
     },
     'en': {
         'live': 'This is a static snapshot — open it in the wiki',
@@ -92,6 +108,7 @@ STR = {
         'updated': 'Updated',
         'related': 'Related documents',
         'other_lang': '한국어',
+        'self_name': 'English',
         'hub_title': 'All documents',
         'hub_desc': 'Every document in this wiki on one page, grouped by section.',
         'hub_lead': 'Every document in the wiki. Each link is a static page that reads without JavaScript.',
@@ -274,7 +291,7 @@ def page_style():
             '</style>')
 
 
-def page_html(name, lang, meta, body, dates, paths, has_en):
+def page_html(name, lang, meta, body, dates, paths, langs):
     """One snapshot page. Self-contained head, site CSS by absolute URL."""
     title = meta['title']
     desc = meta['summary']
@@ -286,8 +303,10 @@ def page_html(name, lang, meta, body, dates, paths, has_en):
 
     alts = ['    <link rel="canonical" href="%s">' % self_url,
             '    <link rel="alternate" hreflang="ko" href="%s">' % snapshot_url(name, 'ko')]
-    if has_en:
-        alts.append('    <link rel="alternate" hreflang="en" href="%s">' % snapshot_url(name, 'en'))
+    for other in langs:
+        if other != KO:
+            alts.append('    <link rel="alternate" hreflang="%s" href="%s">'
+                        % (other, snapshot_url(name, other)))
     alts.append('    <link rel="alternate" hreflang="x-default" href="%s">' % snapshot_url(name, 'ko'))
 
     ld = {
@@ -324,11 +343,11 @@ def page_html(name, lang, meta, body, dates, paths, has_en):
         rel = ('\n<nav class="pr-rel"><h2>%s</h2>\n<ul>%s</ul>\n</nav>'
                % (esc(s['related']), items))
 
-    other = ''
-    if has_en:
-        ol = 'en' if lang == KO else KO
-        other = ('  &middot; <a href="%s" hreflang="%s">%s</a>\n'
-                 % (snapshot_path(name, ol), ol, esc(s['other_lang'])))
+    # 이 문서가 존재하는 다른 언어들로 가는 상호링크 — 언어가 셋 이상이면
+    # "다른 언어" 하나로 표현할 수 없으므로 각 언어의 자기 이름을 쓴다.
+    other = ''.join('  &middot; <a href="%s" hreflang="%s">%s</a>\n'
+                    % (snapshot_path(name, ol), ol, esc(STR[ol]['self_name']))
+                    for ol in langs if ol != lang)
 
     out = []
     out.append('<!doctype html>')
@@ -364,7 +383,7 @@ def page_html(name, lang, meta, body, dates, paths, has_en):
     return '\n'.join(out) + '\n'
 
 
-def hub_html(lang, entries, has_en_hub):
+def hub_html(lang, entries, langs):
     """The one page that makes the whole wiki walkable without JavaScript.
 
     index.html is an empty SPA shell: a crawler that reads the raw HTML finds
@@ -378,8 +397,9 @@ def hub_html(lang, entries, has_en_hub):
 
     alts = ['    <link rel="canonical" href="%s">' % self_url,
             '    <link rel="alternate" hreflang="ko" href="%s">' % hub_url(KO)]
-    if has_en_hub:
-        alts.append('    <link rel="alternate" hreflang="en" href="%s">' % hub_url('en'))
+    for other in langs:
+        if other != KO:
+            alts.append('    <link rel="alternate" hreflang="%s" href="%s">' % (other, hub_url(other)))
     alts.append('    <link rel="alternate" hreflang="x-default" href="%s">' % hub_url(KO))
 
     out = []
@@ -401,10 +421,11 @@ def hub_html(lang, entries, has_en_hub):
     out.append('<body class="day prerender">')
     out.append('<p class="pr-live"><a href="%s">%s &#8599;</a>'
                % (BASE_PATH, esc(s['home'])))
-    if has_en_hub:
-        ol = 'en' if lang == KO else KO
+    for ol in langs:
+        if ol == lang:
+            continue
         out.append('  &middot; <a href="%s" hreflang="%s">%s</a>'
-                   % (hub_path(ol), ol, esc(s['other_lang'])))
+                   % (hub_path(ol), ol, esc(STR[ol]['self_name'])))
     out.append('</p>')
     out.append('<h2>%s</h2>' % esc(s['hub_title']))
     out.append('<p>%s</p>' % esc(s['hub_lead']))
@@ -440,6 +461,7 @@ def build_pages():
     paths = load_paths()
     dates = _doc_dates()
     pages = {}
+    hubs = {}
     order = list_order()
     for lang in LANGS:
         idx = bi.build(lang)
@@ -454,7 +476,9 @@ def build_pages():
             if not os.path.isfile(src):
                 continue          # untranslated in this language — no snapshot
             raw = open(src, encoding='utf-8').read()
-            has_en = os.path.isfile(os.path.join(ROOT, 'docs', 'en', rel))
+            # 이 문서가 실제로 존재하는 언어들 — hreflang·상호링크의 근거.
+            langs = [l for l in LANGS
+                     if os.path.isfile(os.path.join(ROOT, 'docs', l, rel))]
             if doc is None:
                 meta = _extra_meta(name, lang, raw)
             else:
@@ -467,13 +491,18 @@ def build_pages():
                 }
             out_rel = os.path.join(OUT_DIR, '' if lang == KO else lang, name, 'index.html')
             pages[out_rel] = page_html(name, lang, meta, rewrite_links(raw, lang),
-                                       dates, paths, has_en)
+                                       dates, paths, langs)
             sec = meta['section'] or STR[lang]['hub_title']
             if not hub or hub[-1][0] != sec:
                 hub.append((sec, []))
             hub[-1][1].append((name, meta['title']))
+        hubs[lang] = hub
+    # 허브는 모든 언어를 다 돈 뒤에 만든다 — 상호링크가 "실제로 문서가 있는
+    # 언어"만 가리켜야 하기 때문(빈 허브를 광고하지 않는다).
+    live = [l for l in LANGS if hubs.get(l)]
+    for lang in live:
         pages[os.path.join(OUT_DIR, '' if lang == KO else lang, 'index.html')] = \
-            hub_html(lang, hub, True)
+            hub_html(lang, hubs[lang], live)
     return pages
 
 

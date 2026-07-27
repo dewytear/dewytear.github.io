@@ -148,13 +148,37 @@ def load_diagram_metrics(root):
     except (OSError, ValueError):
         return None
     return {'cjk': m.get('cjk', 0.95), 'fallback': m.get('fallback', 0.0),
-            'chars': m.get('chars', {})}
+            'halfwidth': m.get('halfwidth', 0.48), 'chars': m.get('chars', {})}
 
 
 def _is_cjk(ch):
+    """Full-width scripts that share the measured `cjk` advance ratio.
+
+    Kana were missing until 2026-07-27 and fell through to `fallback: 0.0` —
+    Japanese diagram text measured as **zero width**, so the overflow gate was
+    blind to it ("ナレッジグラフ" scored 0 against a real ~87px). Measured in the
+    diagram font: hiragana/katakana 1.024, kanji·Hangul·CJK punctuation 1.0 —
+    all at or above the stored ratio, so using `cjk` stays a valid lower bound."""
     o = ord(ch)
     return (0xAC00 <= o <= 0xD7A3 or 0x1100 <= o <= 0x11FF or 0x3130 <= o <= 0x318F
-            or 0x3400 <= o <= 0x9FFF or 0xF900 <= o <= 0xFAFF)
+            or 0x3400 <= o <= 0x9FFF or 0xF900 <= o <= 0xFAFF
+            or 0x3000 <= o <= 0x303F      # CJK punctuation 、。「」 (1.0)
+            or 0x3040 <= o <= 0x309F      # hiragana (1.024)
+            or 0x30A0 <= o <= 0x30FF      # katakana + ・ー (1.024 / 1.0)
+            or 0x31F0 <= o <= 0x31FF)     # katakana phonetic extensions
+
+
+def _char_ratio(ch, M):
+    """Advance width of one character as a fraction of the font size.
+
+    Half-width katakana are the one full-width-looking script that is genuinely
+    narrow (measured 0.5) — folding them into `cjk` would OVER-estimate and this
+    gate must never do that (it would fail text that actually fits)."""
+    if 0xFF66 <= ord(ch) <= 0xFF9F:
+        return M.get('halfwidth', 0.48)
+    if _is_cjk(ch):
+        return M['cjk']
+    return M['chars'].get(ch, M['fallback'])
 
 
 def _nominal_fs(cls):
@@ -196,7 +220,7 @@ def _text_lines(inner):
 def _line_width_lb(line, fs, M):
     total = 0.0
     for ch in line:
-        total += M['cjk'] if _is_cjk(ch) else M['chars'].get(ch, M['fallback'])
+        total += _char_ratio(ch, M)
     return total * fs
 
 
