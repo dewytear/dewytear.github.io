@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI がこのウィキを読む方法 — 機械可読レイヤーとグラフ巡回</title>
+<meta name="description" content="外部の AI が関連をたどってこのウィキを分析できるようにする機械可読レイヤー — llms.txt、自己完結のグラフ JSON、巡回の契約">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/kgs-ai-layer/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/kgs-ai-layer/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/kgs-ai-layer/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/kgs-ai-layer/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/kgs-ai-layer/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI がこのウィキを読む方法 — 機械可読レイヤーとグラフ巡回">
+<meta property="og:description" content="外部の AI が関連をたどってこのウィキを分析できるようにする機械可読レイヤー — llms.txt、自己完結のグラフ JSON、巡回の契約">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/kgs-ai-layer/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI がこのウィキを読む方法 — 機械可読レイヤーとグラフ巡回">
+<meta name="twitter:description" content="外部の AI が関連をたどってこのウィキを分析できるようにする機械可読レイヤー — llms.txt、自己完結のグラフ JSON、巡回の契約">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "AI がこのウィキを読む方法 — 機械可読レイヤーとグラフ巡回",
+ "description": "外部の AI が関連をたどってこのウィキを分析できるようにする機械可読レイヤー — llms.txt、自己完結のグラフ JSON、巡回の契約",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/kgs-ai-layer/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!kgs-ai-layer",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-11T19:47:53+09:00",
+ "dateModified": "2026-07-26T17:16:42+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!kgs-ai-layer">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/kgs-ai-layer/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/kgs-ai-layer/" hreflang="en">English</a>
+</p>
+<article>
+<h2>AI がこのウィキを読む方法 — 機械可読レイヤーとグラフ巡回</h2>
+<p>このウィキの最終目標のひとつは、<strong>AI に仕事を渡すときここを真っ先に見に行かせる</strong>こと、そして単票の検索ではなく<strong>関連をたどって分析</strong>させることです。だから人間向けの画面とは別に、外部の AI が自分で見つけて巡回できる<strong>機械可読レイヤー</strong>があります。文書本文が JS なしに URL でそのまま fetch される静的断片であること（<a href="/p/ja/kgs-overview/">1 編</a>）が、このレイヤーの土台です。</p>
+
+<h3>三つの扉 — 表紙・グラフ・契約</h3>
+<ul>
+    <li><strong><code>llms.txt</code>（表紙）</strong> — サイトルートにある AI 向けの玄関。ウィキの目的、機械向けファイルの場所、そして<strong>すべての文書のタイトル・要約・URL</strong> が System ごとに整理されています。AI エコシステムの慣例（llms.txt）に従うので、初めて来たエージェントが最初に読むファイルです。</li>
+    <li><strong><code>data/knowledge-graph.json</code>（自己完結グラフ）</strong> — <strong>このファイルひとつを fetch するだけで</strong>グラフ全体を巡回できます。各ノード（文書）にタイトル・要約・概念・<strong>関連エッジ（<code>related</code>）</strong>と<strong>向きのある型付き関係（<code>relations</code>）</strong>はもちろん<strong>原文 URL までインライン</strong>されているので、ほかのファイルと結合する必要がありません。</li>
+    <li><strong><a href="/p/ja/ai-guide/">AI 巡回ガイド</a>（契約）</strong> — 「ノードとは何で、エッジをどう解釈し、どの順で fetch するか」を明文化した文書。スキーマとルールがここに固定されているので、どのエージェントも同じやり方で読みます。</li>
+</ul>
+
+<p>ここに<strong>三つの扉を補助する入り口</strong>もいっしょに生成されます。<strong><code>llms-full.txt</code></strong> はすべての文書の本文プレーンテキストを 1 ファイルにまとめた全コーパスのダンプなので、fetch 一度でウィキ全体をコンテキストに載せられます。<strong><code>feed.xml</code>（Atom フィード）</strong>は最新の文書 30 編を時系列で知らせ、人の RSS リーダーやクローラーが新しい記事を購読できるようにします。<strong><code>robots.txt</code></strong> は主要な AI クローラー（GPTBot・ClaudeBot・PerplexityBot など）を名指しで明示的に歓迎し、上の入り口を広告します。コンテンツのライセンスは <strong>CC BY 4.0</strong> — 「出典を示せば自由に引用・再利用してよい」という法的な合図を robots.txt・llms.txt・フィード・サイトのフッターが一貫して宣言し、AI システムが安心してこのウィキを引用できるようにしています。</p>
+
+<h3>JS を実行しない客のための扉 — 静的スナップショット</h3>
+<p>ここまでの入り口は<strong>機械にデータを渡す</strong>道でした。ところが一般の検索エンジンはデータではなく<strong>ページ</strong>を索引します。このウィキはハッシュルーティングの SPA なので、JS を実行しないクローラーが <code>#!welcome</code> に来ると<strong>空の抜け殻</strong>を見ます。文書断片（<code>docs/ko/…</code>）は本文ではあるものの、タイトル・説明・正規アドレスのない HTML の破片なので、ページとするには足りません。</p>
+<p>そこで文書ごとに<strong>静的スナップショット</strong>もいっしょに出します — <code>/p/&lt;name&gt;/</code>（英語は <code>/p/en/&lt;name&gt;/</code>）。本文をそのまま入れつつ <code>&lt;title&gt;</code>（最初の h2）・説明（要約）・<code>canonical</code>・言語の相互リンク（hreflang）・Article JSON-LD（ライセンス・作成日を含む）を載せた<strong>本物のページ</strong>です。本文中の <code>#!</code> リンクもスナップショットどうしでつないであるので、JS のないクローラーが<strong>リンクをたどるだけでウィキ全体を巡回</strong>でき、<code>/p/</code>・<code>/p/en/</code> の<strong>全体一覧ハブ</strong>がその巡回の出発点になります（ホームは JS でナビゲーションを描くので、元の HTML には文書リンクがひとつもありません — ハブへのリンクを <code>&lt;noscript&gt;</code> に埋め込んで、その行き止まりをなくしました）。</p>
+<p>スナップショットは<strong>人が到着してもよいページ</strong>です。最初は人が開くとすぐ SPA へ送っていたのですが、それではこのスナップショットが存在する理由である<strong>文書ごとの固定アドレスが消えてしまいます</strong> — 検索結果や共有リンクから来た人はアドレスが <code>/#!name</code> に変わるのを見ることになり、ブックマークしたり再共有したりしてもその文書を指せません。いまは送らず、いちばん上に「ウィキで開く」リンクだけを置いています。スナップショットには<strong>Open Graph・Twitter カード</strong>も載っているので、リンクを展開して見せる場所（X・Slack・Discord など）でタイトル・要約・画像がいっしょに出ます — そのプレビューを作る側は JS を動かさないので、<strong>SPA では作れず、静的ページだけができること</strong>です。</p>
+<div class="note">
+    <span class="nh">同じ知識の三つの表面</span>
+    ひとつの文書は三つのアドレスを持ちます — <code>url</code>（原文の断片、機械のパース用）・<code>route</code>（SPA、人間用）・<code>page</code>（静的スナップショット、検索エンジン・JS のないクローラー用）。グラフのノードに三つとも入っているので、消費者は目的に合う表面を選べます。サイトマップが広告するのは <code>page</code> です。
+</div>
+
+<h3>巡回はこう流れる</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 150" role="img" aria-label="AI の巡回順: llms.txt の表紙を読み、knowledge-graph.json 一枚でグラフを巡回し、必要な原文 URL を fetch して分析する">
+    <rect class="d-box" x="14" y="36" width="196" height="58" rx="10"/>
+    <text class="d-label" x="112" y="60" text-anchor="middle">① llms.txt</text>
+    <text class="d-sub" x="112" y="80" text-anchor="middle">表紙 — どこに何があるか</text>
+    <line class="d-edge" x1="210" y1="65" x2="244" y2="65"/>
+    <polygon class="d-arrow" points="244,60 252,65 244,70"/>
+    <rect class="d-box accent" x="254" y="36" width="220" height="58" rx="10"/>
+    <text class="d-label" x="364" y="60" text-anchor="middle">② グラフ JSON を 1 回</text>
+    <text class="d-sub" x="364" y="80" text-anchor="middle">ノード・エッジ・概念・URL</text>
+    <line class="d-edge" x1="474" y1="65" x2="508" y2="65"/>
+    <polygon class="d-arrow" points="508,60 516,65 508,70"/>
+    <rect class="d-box" x="518" y="36" width="188" height="58" rx="10"/>
+    <text class="d-label" x="612" y="60" text-anchor="middle">③ 原文 fetch・分析</text>
+    <text class="d-sub" x="612" y="80" text-anchor="middle">必要なノードの url だけ</text>
+    <text class="d-sub" x="364" y="128" text-anchor="middle">related をたどって 1 ホップ・2 ホップ拡張 — 根拠は shared 概念</text>
+</svg>
+<div class="d-cap">単一 fetch の巡回 — グラフファイル一枚で計画を立て、原文は必要なものだけ取ってきます。</div>
+</div>
+
+<p>実際の 2 ホップ巡回を例にすると: ハブの<a href="/p/ja/hns-anatomy/">ハーネスの構成と効果</a>から出発すると、1 ホップで隣の 4 編、2 ホップなら<strong>13 編</strong>に届きます。AI はこうして到達した文書の集合について、<strong>共有概念（shared）</strong>を根拠に「これらの文書がなぜひとまとまりなのか」を説明しながら分析できます — 単票の検索では不可能な、<strong>関係ベース</strong>の読み方です。ここに <code>relations</code> が加われば、単に「関連がある」を超えて<strong>先行・実装・根拠といった関係の種類と向き</strong>まで読み、「何を先に読むべきか」「どの文書がどの主張の根拠か」を押さえて分析できます。</p>
+
+<h3>絶対にずれないように — ドリフトのゲート</h3>
+<p>機械可読ファイルが実際の知識とずれてしまえば、ないほうがましです。だからこれらのファイルは手で書かず<strong>知識インデックスから自動生成</strong>され（robots.txt もフィードもすべて生成物）、CI の <code>--check</code> ゲートが「文書を追加・修正して再生成しなければマージ不可」を強制します。フィードの時刻さえビルド時刻ではなく git 履歴（<code>doc-dates.json</code>）から来るので、再生成しても結果が揺れません。結果: <strong>文書が増えた瞬間に llms.txt・llms-full.txt・フィード・グラフ JSON・sitemap・静的スナップショットがつねに一緒に最新</strong>になります。スナップショットのゲートはもう一歩進んで、<strong>もう生成されない古いスナップショット（stale）</strong>まで捕まえます — 文書の名前が変わると古いページが幽霊のように残り、検索エンジンに露出しつづけるからです。検証の時点で 97 ノードの URL がすべて実ファイルと一致し、切れた参照（dangling）が 0 であることを機械的に確認しました。</p>
+
+<div class="note">
+    <span class="nh">AI に仕事を頼むとき</span>
+    プロンプトに一行あれば十分です — <em>「dewytear.github.io/llms.txt をまず読み、knowledge-graph.json の関連（related・relations・concepts）をたどって分析せよ。」</em> スキーマの詳細と巡回のルールは <a href="/p/ja/ai-guide/">AI 巡回ガイド</a>が契約として保証します。こうした知識管理の構造のおかげで、ウィキが大きくなるほど AI の分析半径も自動で一緒に大きくなります。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-07-26</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/kgs-overview/">知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン</a></li><li><a href="/p/ja/kgs-edges/">文書はどうつながるのか — 概念キュレーションと idf 重みつきエッジ</a></li><li><a href="/p/ja/kgs-views/">グラフを読む 9 つの眼 — ビューごとに違う問いに答える</a></li></ul>
+</nav>
+</body>
+</html>

@@ -1296,6 +1296,10 @@ function applySettings(){
         var el = document.getElementById(p[0]);
         if(el){ el.title = STR(p[1]); el.setAttribute('aria-label', STR(p[1])); }
     });
+    // The feed itself is per-language (ko is feed.xml, others feed.<lang>.xml),
+    // so point RSS at the reader's own feed instead of always the Korean one.
+    var fl = document.getElementById('feed-link');
+    if(fl){ fl.href = currentLang() === 'ko' ? 'feed.xml' : 'feed.' + currentLang() + '.xml'; }
     var mbtn = document.getElementById('music-btn');
     if(mbtn){ mbtn.title = STR('musicTitle'); mbtn.setAttribute('aria-label', STR('musicAria')); }
     // 새 글 기간(newDays)·언어 변경 등이 반영되도록 nav 새 글 표시를 다시 단다.

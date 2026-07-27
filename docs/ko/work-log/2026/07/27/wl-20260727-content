@@ -7,3 +7,37 @@
     <li>영어판도 같은 PR에서 대칭으로(<code>Applied to a knowledge wiki and a development organization</code> / <code>leadership, the PM, and neighbouring teams</code>).</li>
 </ul>
 <p>규칙으로 남길 것: <strong>기사(News &amp; Articles)에는 저자의 신상·소속을 쓰지 않는다.</strong> &ldquo;내 조직에 적용하면&rdquo;류의 관점은 익명의 일반 조직 어휘로 쓰고, 특정 회사 이야기는 그쪽 대분류(DOUZONE) 문서가 담당한다. 자기 위키를 가리켜야 할 때는 &ldquo;이 위키&rdquo;로 충분하다.</p>
+
+<h3>일본어(ja) 배치 1 — 지식 체계 6편 + 기초강의 6편</h3>
+<p><a href="#!wl-20260727-features">1단계에서 켠 배선</a> 위에 첫 본문 배치를 얹었다. 순서는 영어 때와 같게 <strong>①지식 체계(kgs-*) ②Claude Code 기초강의(introduction)</strong>부터 &mdash; 위키 자신을 설명하는 문서라 용어(지식계층·개념·엣지·게이트)의 일본어 표기를 여기서 먼저 확정해야 뒤 배치가 흔들리지 않는다. 변경 유형: <strong>CONTENT + TOOL</strong>.</p>
+<ul>
+    <li><strong>본문 12편</strong> &mdash; <code>kgs-overview·edges·views·ai-layer·plugin·gates</code>, <code>welcome·install·commands·skills·mcp·hooks</code>. 그중 <strong>10편이 인라인 도식</strong>을 갖고 있다.</li>
+    <li><strong>용어 정본</strong>: 知識階層(지식계층) · 概念(개념) · エッジ(엣지) · キュレーション(큐레이션) · 同伴ゲート(동반 게이트) · ドリフト(드리프트) · 巡回(순회) · スナップショット(스냅샷). 4계층 이름(World→Domain→System→Document)과 <code>name</code>·<code>path</code> 같은 스키마 식별자는 원문 그대로 둔다.</li>
+    <li><code>list</code>에 <code>label_ja</code>·<code>tags_ja</code> 12쌍, <code>doc-entries.ja.json</code>에 12엔트리(제목·요약·관계 근거문). <strong>관계 타입·<code>source</code>는 번역 오버레이에 넣지 않는다</strong> &mdash; ko 정본이 갖고 근거문만 언어별로 갈린다(en과 같은 규약).</li>
+</ul>
+
+<div class="note warn">
+    <span class="nh">도식 게이트가 ja를 안 보고 있었다</span>
+    번역 본문을 올리고 <code>check_diagram_bounds.mjs</code>를 돌렸더니 <strong>&ldquo;159개 (ko/en)&rdquo;</strong>가 그대로 나왔다 &mdash; 새로 올린 일본어 도식 10편이 <strong>한 개도 검사되지 않았다</strong>. 두 도식 게이트 모두 <code>LANGS = ['ko', 'en']</code>이 하드코딩돼 있었던 것. 1단계에서 <code>validate_i18n</code>·<code>build_ai_export</code>·<code>build_prerender</code>는 목록 기반으로 일반화했는데 <strong>도식 쪽 둘을 빠뜨렸다</strong>.<br>
+    두 파일 모두 <code>docs/</code>의 실제 폴더에서 언어를 읽도록 고쳤다. 이제 <strong>언어 폴더가 생기는 순간 자동으로 검사 대상</strong>이 되어 같은 누락이 반복되지 않는다. 고친 뒤 <strong>169개(ko/en/ja) 전수 통과</strong>, 파이썬 쪽도 ja 본문 12편을 실제로 로드하는 것을 확인했다(310개 본문 중 ja 12).
+</div>
+
+<h4>도식 폭 — 일본어는 한국어보다 넓다</h4>
+<p>가나가 전각(1.024)이라 <strong>같은 뜻이라도 한국어보다 폭이 커지기 쉽다</strong>. 박스를 넓히는 대신 문구를 줄이는 쪽으로 잡았다 &mdash; 좌표를 건드리면 ko/en 도식과 레이아웃이 갈라지기 때문이다. 실제로 줄인 예: &ldquo;バージョン上げを強制&rdquo;→&ldquo;版上げを強制&rdquo;(116px 박스), &ldquo;② プロジェクトへ移動&rdquo;→&ldquo;② プロジェクトへ&rdquo;, &ldquo;ネイティブインストーラー&rdquo;→&ldquo;ネイティブ導入ツール&rdquo;.</p>
+
+<h4>피드가 일본어로 처음 나오면서 드러난 것</h4>
+<p>본문이 생기니 <code>feed.ja.xml</code>이 처음 생성됐고(12엔트리), 그 김에 두 가지가 눈에 띄어 같이 고쳤다 &mdash; 둘 다 <strong>영어 때부터 있던 것</strong>인데 언어가 셋이 되니 비로소 보였다.</p>
+<ul>
+    <li><strong>푸터 RSS 링크가 언제나 <code>feed.xml</code>(한국어)이었다.</strong> 영어 독자도 한국어 피드를 구독하게 되어 있었다. 이제 <code>applySettings</code>가 현재 언어의 피드로 <code>href</code>를 바꾼다(ko는 <code>feed.xml</code>, 그 외는 <code>feed.&lt;lang&gt;.xml</code>). ko/en/ja 각각 실제로 열어 <strong>HTTP 200 · <code>xml:lang</code> 일치</strong>를 확인했다.</li>
+    <li><strong>ja 피드의 subtitle이 한국어였다.</strong> <code>config.json</code>에 <code>description_ja</code>가 없어 ko로 폴백하고 있었다(메커니즘 자체는 <code>description_&lt;lang&gt;</code>로 이미 일반화돼 있었고 값만 없었다). 추가했고, <code>description_en</code>의 &ldquo;Korean-and-English wiki&rdquo;도 3언어가 된 현실에 맞게 고쳤다.</li>
+    <li><code>index.html</code>: <code>feed.ja.xml</code> alternate · <code>og:locale:alternate</code> ja · <code>&lt;noscript&gt;</code> 크롤 경로에 <code>p/ja/</code> 추가.</li>
+</ul>
+
+<h4>검증</h4>
+<ul>
+    <li><code>build_index --check</code> 3언어 OK(115편) · <code>validate_all</code> <strong>ERROR 0 · WARN 23</strong>(배치 전과 동일)</li>
+    <li><code>check_diagram_bounds</code> <strong>169개 전수 통과</strong>(ja 10편 신규 포함)</li>
+    <li>브라우저: 일본어 설정에서 배치 1의 <strong>12편 모두 일본어 h2</strong>, 미번역 문서(<code>ccb-what</code>·<code>sb-intro</code>)는 한국어 폴백, <strong>ko/en 회귀 무변화</strong>, pageerror 0</li>
+    <li>프리렌더 248페이지(<code>p/ja/</code> 12편 신규)</li>
+</ul>
+<p><strong>다음</strong>: 배치 2 — Claude Code 번들(tutorial ccb-* 12편).</p>

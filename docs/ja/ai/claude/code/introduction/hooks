@@ -1,0 +1,47 @@
+            <h2>Hooks</h2>
+<div class="diagram">
+<svg viewBox="0 0 660 188" role="img" aria-label="フックのライフサイクル: SessionStart、UserPromptSubmit、PreToolUse、ツール実行、PostToolUse、Stop">
+    <rect class="d-box" x="8" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="42" text-anchor="middle">SessionStart</text>
+    <text class="d-sub" x="108" y="59" text-anchor="middle">セッション開始</text>
+
+    <rect class="d-box" x="223" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="42" text-anchor="middle">UserPromptSubmit</text>
+    <text class="d-sub" x="323" y="59" text-anchor="middle">プロンプト送信</text>
+
+    <rect class="d-box" x="438" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="42" text-anchor="middle">PreToolUse</text>
+    <text class="d-sub" x="538" y="59" text-anchor="middle">ツール実行の直前</text>
+
+    <rect class="d-box soft" x="8" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="134" text-anchor="middle">ツール実行</text>
+    <text class="d-sub" x="108" y="151" text-anchor="middle">ツールが実際に動く</text>
+
+    <rect class="d-box" x="223" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="134" text-anchor="middle">PostToolUse</text>
+    <text class="d-sub" x="323" y="151" text-anchor="middle">ツール実行の直後</text>
+
+    <rect class="d-box accent" x="438" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="134" text-anchor="middle">Stop</text>
+    <text class="d-sub" x="538" y="151" text-anchor="middle">応答の終了</text>
+
+    <line class="d-edge" x1="208" y1="46" x2="221" y2="46"/><polygon class="d-arrow" points="215,41 223,46 215,51"/>
+    <line class="d-edge" x1="423" y1="46" x2="436" y2="46"/><polygon class="d-arrow" points="430,41 438,46 430,51"/>
+    <path class="d-edge" d="M538 72 C538 87, 523 92, 505 92 H141 C123 92, 108 97, 108 110"/><polygon class="d-arrow" points="103,106 113,106 108,112"/><polygon class="d-arrow" points="328,87 328,97 318,92"/>
+    <line class="d-edge" x1="208" y1="138" x2="221" y2="138"/><polygon class="d-arrow" points="215,133 223,138 215,143"/>
+    <line class="d-edge" x1="423" y1="138" x2="436" y2="138"/><polygon class="d-arrow" points="430,133 438,138 430,143"/>
+</svg>
+</div>
+            <p>
+
+                フック（Hook）は、Claude Code がライフサイクルの特定の時点ごとに自動で実行する、ユーザー定義のシェルコマンドです。ルールを強制し、動作を決定論的に自動化できます &mdash; ハーネスが直接実行するので、Claude が覚えていたときだけでなく<em>毎回</em>実行されます。
+                フックは <code>settings.json</code> で設定し、次のようなイベントに結びつきます:
+                <ul>
+                    <li><strong>PreToolUse</strong> &mdash; ツール実行の直前（例: 保護対象ファイルの変更をブロック）</li>
+                    <li><strong>PostToolUse</strong> &mdash; ツール実行の直後（例: 直前に直したファイルを自動フォーマット・リント）</li>
+                    <li><strong>SessionStart</strong> &mdash; セッションが始まるとき（例: テストが走るように依存関係をインストール）</li>
+                    <li><strong>Stop</strong> &mdash; Claude が応答を終えたとき（例: 通知の送信）</li>
+                </ul>
+                代表的な使い道は、修正のたびにフォーマッターを走らせる、コミット前にテストスイートを実行する、機微なパスを保護する、長い作業が終わったらデスクトップ通知を送る、などです。フックは結局ただのシェルコマンドなので、プロジェクトがすでに使っているどんなツールとも Claude Code をつなげられます。
+
+            </p>

@@ -1,1 +1,130 @@
-[]
+[
+ {
+  "name": "kgs-overview",
+  "title": "知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン",
+  "summary": "World→Domain→System→Document の 4 階層と文書の登録パイプライン — 不変 ID・物理パス・決定論的なインデックスビルド",
+  "relations": [
+   {
+    "target": "kgs-edges",
+    "evidenceRef": "4 階層と登録パイプラインを定義 — edges の概念とエッジ判定を理解するための先行"
+   }
+  ]
+ },
+ {
+  "name": "kgs-edges",
+  "title": "文書はどうつながるのか — 概念キュレーションと idf 重みつきエッジ",
+  "summary": "概念のキュレーションと希少性（idf）で重みづけした共有概念エッジ — 判定ルール、実際のエッジの解剖、境界値の波及、正直さの原則",
+  "relations": [
+   {
+    "target": "kgs-views",
+    "evidenceRef": "概念のキュレーションとエッジ判定のルール — views のハブとブリッジを読むことに先行する"
+   }
+  ]
+ },
+ {
+  "name": "kgs-views",
+  "title": "グラフを読む 9 つの眼 — ビューごとに違う問いに答える",
+  "summary": "Constellation・Orbits・Strata（3D）と Bundling・Chord・Packing・Concepts・Arc・Matrix — 各ビューが答える問いと、ハブ・ブリッジがグラフの中心を示す方法",
+  "relations": [
+   {
+    "target": "kgs-ai-layer",
+    "evidenceRef": "9 つのビューとハブ・ブリッジ — ai-layer の巡回と消費を理解することに先行する"
+   }
+  ]
+ },
+ {
+  "name": "kgs-ai-layer",
+  "title": "AI がこのウィキを読む方法 — 機械可読レイヤーとグラフ巡回",
+  "summary": "外部の AI が関連をたどってこのウィキを分析できるようにする機械可読レイヤー — llms.txt、自己完結のグラフ JSON、巡回の契約",
+  "relations": [
+   {
+    "target": "kgs-plugin",
+    "evidenceRef": "機械可読レイヤー — plugin のエンジンのパッケージ化を理解するための先行"
+   }
+  ]
+ },
+ {
+  "name": "kgs-plugin",
+  "title": "ウィキエンジンのプラグイン化 — wiki-plugin と同期の規律",
+  "summary": "知識体系を wiki-plugin としてパッケージする — スキル 4 種、ツールのスナップショット、同期ゲート、バージョンの規律、ドッグフーディング",
+  "relations": [
+   {
+    "target": "kgs-overview",
+    "evidenceRef": "前の四編が説明したウィキエンジンを wiki-plugin（スキル 4 種・ツールのスナップショット）として実装する"
+   },
+   {
+    "target": "kgs-gates",
+    "evidenceRef": "エンジンのパッケージ化と同期の規律 — gates のバンドルゲートとバージョン規律を理解するための先行"
+   }
+  ]
+ },
+ {
+  "name": "kgs-gates",
+  "title": "ウィキはどうやって自分を守るのか — ゲートと自動化の体系",
+  "summary": "決定論的ビルドと --check によるドリフト遮断、PR の同伴ゲート 4 種、--fix の自動復元、変更タイプの宣言 — 検証中心の自動化が知識体系の整合を保つ仕組み"
+ },
+ {
+  "name": "welcome",
+  "title": "Welcome",
+  "summary": "Claude Code との出会い — ターミナルで読み、直し、走らせ、コミットする",
+  "relations": [
+   {
+    "target": "install",
+    "evidenceRef": "Claude Code とは何かを紹介 — install のインストール・実行・認証に先行する"
+   }
+  ]
+ },
+ {
+  "name": "install",
+  "title": "インストールと開始",
+  "summary": "ネイティブインストーラーで入れ、プロジェクトで実行して認証する",
+  "relations": [
+   {
+    "target": "commands",
+    "evidenceRef": "「インストールと開始」のあとの読む順序 — この文書を土台に「日々の使い方」へ続く"
+   },
+   {
+    "target": "hnp-install",
+    "evidenceRef": "プラグインのインストールは基本のインストールを前提にする — 「Claude Code が入っていること（インストールと開始を参照）」"
+   }
+  ]
+ },
+ {
+  "name": "commands",
+  "title": "日々の使い方",
+  "summary": "自然言語のプロンプトとスラッシュコマンドでセッションを動かす",
+  "relations": [
+   {
+    "target": "skills",
+    "evidenceRef": "「日々の使い方」のあとの読む順序 — この文書を土台に「Skills」へ続く"
+   }
+  ]
+ },
+ {
+  "name": "skills",
+  "title": "Skills",
+  "summary": "特定の作業のための、再利用できるパッケージ化された能力とワークフロー",
+  "relations": [
+   {
+    "target": "mcp",
+    "evidenceRef": "「Skills」のあとの読む順序 — この文書を土台に「MCP Servers」へ続く"
+   }
+  ]
+ },
+ {
+  "name": "mcp",
+  "title": "MCP Servers",
+  "summary": "MCP 標準を通じて外部のツールやデータソースにつなぐ",
+  "relations": [
+   {
+    "target": "hooks",
+    "evidenceRef": "「MCP Servers」のあとの読む順序 — この文書を土台に「Hooks」へ続く"
+   }
+  ]
+ },
+ {
+  "name": "hooks",
+  "title": "Hooks",
+  "summary": "ライフサイクルのイベントで自動的に走るシェルコマンド"
+ }
+]
