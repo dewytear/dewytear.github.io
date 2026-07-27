@@ -1,0 +1,61 @@
+<h2>ハーネスの構成と効果</h2>
+<p>ハーネスを組むのに必要な要素は多いのですが、核心は次のとおりです。一部では<strong>LLM モデルを除いた、モデルを取り囲むすべて</strong>をハーネスと呼ぶこともあります。</p>
+
+<h3>中心となる構成要素</h3>
+<ul>
+    <li><strong>エージェント</strong> — 役割の決まった AI の作業者。</li>
+    <li><strong>スキル・ツール</strong> — エージェントが働くときに使う機能と接続のための道具。</li>
+    <li><strong>オーケストレーター</strong> — エージェントたちがうまく働くように整える PM の役割。</li>
+    <li><strong>評価・テスト</strong> — 成果物を検証し、品質を保つ。</li>
+    <li><strong>アーティファクト・メモリ</strong> — 成果物と文脈を継続的に管理する。</li>
+</ul>
+
+<h3>どうやって生産性が上がるのか</h3>
+<div class="diagram">
+<svg viewBox="0 0 680 150" role="img" aria-label="運用のループ: 目標の分解 → 並列実行 → テスト検証 → 問題があれば戻し、通過すれば完了">
+    <rect class="d-box" x="6" y="70" width="110" height="48" rx="10"/>
+    <text class="d-label sm" x="61" y="98" text-anchor="middle">目標の分解</text>
+
+    <rect class="d-box" x="146" y="70" width="110" height="48" rx="10"/>
+    <text class="d-label sm" x="201" y="98" text-anchor="middle">並列実行</text>
+
+    <rect class="d-box" x="286" y="70" width="112" height="48" rx="10"/>
+    <text class="d-label sm" x="342" y="98" text-anchor="middle">テスト検証</text>
+
+    <polygon class="d-box" points="470,66 512,94 470,122 428,94"/>
+    <text class="d-label sm" x="470" y="98" text-anchor="middle">問題?</text>
+
+    <rect class="d-box accent" x="548" y="70" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="608" y="98" text-anchor="middle">完了</text>
+
+    <line class="d-edge" x1="116" y1="94" x2="144" y2="94"/><polygon class="d-arrow" points="138,89 146,94 138,99"/>
+    <line class="d-edge" x1="256" y1="94" x2="284" y2="94"/><polygon class="d-arrow" points="278,89 286,94 278,99"/>
+    <line class="d-edge" x1="398" y1="94" x2="426" y2="94"/><polygon class="d-arrow" points="420,89 428,94 420,99"/>
+    <line class="d-edge" x1="512" y1="94" x2="546" y2="94"/><polygon class="d-arrow" points="540,89 548,94 540,99"/>
+    <text class="d-sub" x="530" y="84" text-anchor="middle">通過</text>
+
+    <path class="d-edge" d="M470 66 C470 46, 458 27, 436 27 H235 C214 27, 201 43, 201 68"/><polygon class="d-arrow" points="196,64 206,64 201,70"/><polygon class="d-arrow" points="340,22 340,32 330,27"/>
+    <text class="d-sub" x="430" y="20" text-anchor="middle">問題なら戻す</text>
+</svg>
+<div class="d-cap">問題があれば並列実行へ戻り、通過すれば完了します。</div>
+</div>
+<p>運用の構造は、だいたいこう流れます。</p>
+<ol>
+    <li>目標を<strong>分解</strong>して、各エージェントに<strong>分担</strong>する。</li>
+    <li>分担した作業を<strong>並列で実行</strong>する。</li>
+    <li>結果を<strong>テストで検証</strong>し、間違っている部分にはフィードバック。</li>
+    <li>検証の<strong>ループ</strong>をくり返す。</li>
+</ol>
+<p>この運用構造のおかげで<strong>人の介入が最小限</strong>になり、AI がより長く自律的に、並列で速く働き、テストにもとづく検証で<strong>品質が確保</strong>されます。</p>
+
+<h3>ビッグテックの事例と関心の急増</h3>
+<ul>
+    <li>昨年 11 月の <strong>Anthropic</strong> を皮切りに、事例があふれ出した。</li>
+    <li>1 月に <strong>OpenAI</strong> が「500 万行のコードを 6 か月間、人の介入なしにエージェントだけで開発」をブログで公開 → 大きな話題に。</li>
+    <li>シリコンバレーの開発者を中心に「ハーネスをどう組むか」の研究・試みが爆発的に増加。ひとつより<strong>マルチエージェント</strong>のほうがうまくやる、ということも発見された。</li>
+</ul>
+
+<div class="note">
+    <span class="nh">ボトルネックはモデルではなく構造</span>
+    モデルの性能はすでに十分に上がっています（Gemini 3.5 Flash、GPT 5.5/5.6、Opus 4.8、そしてセキュリティ上の懸念から限定公開の Claude Mythos など）。いまのボトルネックは<strong>モデルを包む構造（ハーネス）</strong>です。人はこれから<strong>設計・検証・意思決定</strong>に集中すればよいのです。
+</div>

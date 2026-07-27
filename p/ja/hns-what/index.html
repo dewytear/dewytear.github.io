@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ハーネスエンジニアリングとは？</title>
+<meta name="description" content="ハーネスという概念を、AI が働くシステム全体の設計として定義する。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/hns-what/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hns-what/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hns-what/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/hns-what/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hns-what/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ハーネスエンジニアリングとは？">
+<meta property="og:description" content="ハーネスという概念を、AI が働くシステム全体の設計として定義する。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/hns-what/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ハーネスエンジニアリングとは？">
+<meta name="twitter:description" content="ハーネスという概念を、AI が働くシステム全体の設計として定義する。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "ハーネスエンジニアリングとは？",
+ "description": "ハーネスという概念を、AI が働くシステム全体の設計として定義する。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/hns-what/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hns-what",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:09:56+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hns-what">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/hns-what/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/hns-what/" hreflang="en">English</a>
+</p>
+<article>
+<h2>ハーネスエンジニアリングとは？</h2>
+<p>ひと言で定義すると<strong>「AI が働くシステムを設計すること」</strong>です。同じ AI モデルでも、その<strong>モデルを取り囲む環境（ハーネス）をどう組むか</strong>によって結果の品質がまるで変わる、という発見から出発しました。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 132" role="img" aria-label="焦点がプロンプトからコンテキストへ、さらにモデルを取り囲む環境全体であるハーネスへと広がってきた">
+    <rect class="d-box soft" x="14" y="46" width="182" height="44" rx="10"/>
+    <text class="d-label sm" x="105" y="66" text-anchor="middle">プロンプト工学</text>
+    <text class="d-sub" x="105" y="82" text-anchor="middle">問い方</text>
+    <line class="d-edge" x1="196" y1="68" x2="216" y2="68"/><polygon class="d-arrow" points="216,63 224,68 216,73"/>
+
+    <rect class="d-box soft" x="228" y="38" width="188" height="60" rx="10"/>
+    <text class="d-label sm" x="322" y="62" text-anchor="middle">コンテキスト工学</text>
+    <text class="d-sub" x="322" y="80" text-anchor="middle">知識・資料の提供</text>
+    <line class="d-edge" x1="416" y1="68" x2="436" y2="68"/><polygon class="d-arrow" points="436,63 444,68 436,73"/>
+
+    <rect class="d-box accent" x="448" y="28" width="220" height="78" rx="12"/>
+    <text class="d-label" x="558" y="60" text-anchor="middle">ハーネス工学</text>
+    <text class="d-sub" x="558" y="80" text-anchor="middle">モデル + 環境全体の設計</text>
+</svg>
+<div class="d-cap">焦点が<strong>問い</strong> → <strong>資料</strong> → <strong>モデルを取り囲む環境全体</strong>へと、だんだん広がってきました。</div>
+</div>
+
+<h3>生産性の体感の変化</h3>
+<p>講師が体感した作業速度の変化です。</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>時期・ツール</th><th>同じ作業にかかった時間</th></tr></thead>
+        <tbody>
+            <tr><td>従来</td><td>約 3 か月</td></tr>
+            <tr><td>ChatGPT の登場</td><td>約 1 か月</td></tr>
+            <tr><td>Cursor · Claude Code</td><td>1〜2 週間</td></tr>
+            <tr><td><strong>ハーネスエンジニアリング</strong></td><td>MVP で約 2 時間、リリースまで 2〜3 日</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>パラダイムの転換</h3>
+<p>AI を扱う焦点は移りつづけてきました。</p>
+<ul>
+    <li><strong>プロンプトエンジニアリング</strong> — AI とどう会話するか（問い方）。</li>
+    <li><strong>コンテキストエンジニアリング</strong> — どんな知識・資料を一緒に渡すか。</li>
+    <li><strong>ハーネスエンジニアリング</strong> — モデルひとつではなく<strong>モデルを取り囲むすべての環境</strong>をどう組むか。</li>
+</ul>
+
+<h3>「ハンドルを AI に」</h3>
+<p>従来のやり方では、つねに<strong>人がハンドル</strong>を握り、AI は横で補助するだけでした。だから人がハンドルを握っているあいだしか生産性がありませんでした。ハーネスはその<strong>ハンドルを AI に渡し</strong>、複数の課題を同時に、長く自律的にこなさせるアプローチです。</p>
+
+<div class="note">
+    <span class="nh">「ハーネス」という言葉</span>
+    ハーネス（harness）は<strong>馬車の馬具</strong>に由来します。馬（AI）をどううまく操れるように整えるかが性能を左右する、という比喩です。単体のエージェントにも、複数のエージェントを束ねるマルチ構成にも効きます。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Harness &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/hns-anatomy/">ハーネスの構成と効果</a></li><li><a href="/p/ja/hns-kitchen/">厨房のたとえで理解するハーネス</a></li></ul>
+</nav>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>厨房のたとえで理解するハーネス</title>
+<meta name="description" content="レストランの厨房にたとえて、単一とマルチのエージェント構成の違いを明快にする。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/hns-kitchen/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hns-kitchen/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hns-kitchen/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/hns-kitchen/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hns-kitchen/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="厨房のたとえで理解するハーネス">
+<meta property="og:description" content="レストランの厨房にたとえて、単一とマルチのエージェント構成の違いを明快にする。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/hns-kitchen/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="厨房のたとえで理解するハーネス">
+<meta name="twitter:description" content="レストランの厨房にたとえて、単一とマルチのエージェント構成の違いを明快にする。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "厨房のたとえで理解するハーネス",
+ "description": "レストランの厨房にたとえて、単一とマルチのエージェント構成の違いを明快にする。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/hns-kitchen/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hns-kitchen",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:09:56+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hns-kitchen">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/hns-kitchen/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/hns-kitchen/" hreflang="en">English</a>
+</p>
+<article>
+<h2>厨房のたとえで理解するハーネス</h2>
+<p>ハーネスエンジニアリングを<strong>厨房の運営</strong>にたとえると、理解しやすくなります。</p>
+
+<h3>一人シェフ vs マルチエージェント</h3>
+
+<div class="diagram">
+<svg viewBox="0 0 680 168" role="img" aria-label="一人シェフは注文・調理・検品・皿洗いをひとりで順にこなすのでボトルネックが生まれ、マルチエージェントの厨房は役割を分けて並列で処理する">
+    <line class="d-edge dash" x1="332" y1="14" x2="332" y2="152"/>
+
+    <rect class="d-box soft" x="34" y="20" width="252" height="32" rx="8"/>
+    <text class="d-label sm" x="160" y="41" text-anchor="middle">一人シェフ</text>
+    <rect class="d-box" x="30" y="78" width="56" height="34" rx="7"/>
+    <text class="d-sub" x="58" y="99" text-anchor="middle">注文</text>
+    <rect class="d-box" x="96" y="78" width="56" height="34" rx="7"/>
+    <text class="d-sub" x="124" y="99" text-anchor="middle">調理</text>
+    <rect class="d-box" x="162" y="78" width="56" height="34" rx="7"/>
+    <text class="d-sub" x="190" y="99" text-anchor="middle">検品</text>
+    <rect class="d-box" x="228" y="78" width="58" height="34" rx="7"/>
+    <text class="d-sub" x="257" y="99" text-anchor="middle">皿洗い</text>
+    <line class="d-edge" x1="86" y1="95" x2="96" y2="95"/><polygon class="d-arrow" points="88,90 96,95 88,100"/>
+    <line class="d-edge" x1="152" y1="95" x2="162" y2="95"/><polygon class="d-arrow" points="154,90 162,95 154,100"/>
+    <line class="d-edge" x1="218" y1="95" x2="228" y2="95"/><polygon class="d-arrow" points="220,90 228,95 220,100"/>
+    <text class="d-sub" x="160" y="138" text-anchor="middle">ひとりで順に処理 → 詰まる</text>
+
+    <rect class="d-box soft" x="380" y="20" width="270" height="32" rx="8"/>
+    <text class="d-label sm" x="515" y="41" text-anchor="middle">マルチエージェントの厨房</text>
+    <rect class="d-box accent" x="376" y="78" width="60" height="42" rx="8"/>
+    <text class="d-sub" x="406" y="103" text-anchor="middle">注文</text>
+    <rect class="d-box accent" x="444" y="78" width="60" height="42" rx="8"/>
+    <text class="d-sub" x="474" y="103" text-anchor="middle">仕込み</text>
+    <rect class="d-box accent" x="512" y="78" width="60" height="42" rx="8"/>
+    <text class="d-sub" x="542" y="103" text-anchor="middle">調理</text>
+    <rect class="d-box accent" x="580" y="78" width="60" height="42" rx="8"/>
+    <text class="d-sub" x="610" y="103" text-anchor="middle">検品</text>
+    <text class="d-accent" x="515" y="138" text-anchor="middle" font-size="12">役割分担 → 並列処理</text>
+</svg>
+<div class="d-cap">一人シェフは速いけれど<strong>ボトルネック</strong>が生まれ、マルチエージェントの厨房は役割を分けて<strong>品質を保ちながら長く</strong>働きます。</div>
+</div>
+<ul>
+    <li><strong>一人シェフ</strong> — 注文・調理・検品・皿洗いをひとりで。最初は速いのですが、注文が立て込むと<strong>ボトルネック</strong>が生まれ、長くは働けません。</li>
+    <li><strong>マルチエージェント</strong> — 注文・仕込み・調理・検品と<strong>役割を分ける</strong>。同時に並列で、それぞれ得意なことに集中 → <strong>品質を保ちながら長く</strong>働きます。</li>
+</ul>
+
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>構成</th><th>長所</th><th>短所</th></tr></thead>
+        <tbody>
+            <tr><td>単一エージェント</td><td>速くて経済的</td><td>拡張性・安定性に限界</td></tr>
+            <tr><td>マルチエージェント</td><td>安定していて拡張性が高い</td><td>コストがより掛かる</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>万能ではありません。一人の厨房で足りる作業もあれば、マルチが光る作業も別にあります。</p>
+
+<h3>ハーネス = 厨房運営の全体</h3>
+<p>誰が・いつ・何をするかが事前に設計され、エージェント・スキル・オーケストレーションがタイトにつながります。そのワークフローとルールを<strong>全体としてうまく管理すること</strong>がハーネスエンジニアリングです。</p>
+
+<h3>品質は磨きつづける</h3>
+<p>材料が新鮮か（中間の成果物）、最後の料理が大丈夫か、<strong>中間も最終も検討・フィードバック</strong>する必要があります。ハーネスを使っても<strong>一度で完成品は出てきません。</strong>出てくる成果物は下書きと見て、エージェントたちを磨きつづけて高品質へ引き上げます。</p>
+
+<div class="note warn">
+    <span class="nh">トークンの使用量</span>
+    マルチで回すぶんトークンの使用量は増えます。とくに<strong>エージェントどうしが会話する</strong>ときに多くなり、計測では<strong>約 30% 多く</strong>使われたケースもありました。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Harness &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/hns-anatomy/">ハーネスの構成と効果</a></li><li><a href="/p/ja/hns-run/">ハーネスを実行する（実習）</a></li><li><a href="/p/ja/hns-what/">ハーネスエンジニアリングとは？</a></li><li><a href="/p/ja/hnp-verify/">검증·품질과 _workspace</a></li></ul>
+</nav>
+</body>
+</html>
