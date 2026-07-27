@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>オラクルのオントロジーとプロパティグラフ — テーブルを知識の地図に</title>
+<meta name="description" content="オラクルのオントロジーとプロパティグラフのアプローチを整理する — RDF vs プロパティグラフ、メタデータのビューとしてのグラフの作り方、PGQL と SQL/PGQ の多段ホップと循環の問い合わせ、グラフのアルゴリズム、Select AI の自然言語の問い合わせを、公式の文書の確認と図と用語辞典で解説。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/news-20260710-oracle-ontology-property-graph/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260710-oracle-ontology-property-graph/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260710-oracle-ontology-property-graph/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/news-20260710-oracle-ontology-property-graph/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260710-oracle-ontology-property-graph/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="オラクルのオントロジーとプロパティグラフ — テーブルを知識の地図に">
+<meta property="og:description" content="オラクルのオントロジーとプロパティグラフのアプローチを整理する — RDF vs プロパティグラフ、メタデータのビューとしてのグラフの作り方、PGQL と SQL/PGQ の多段ホップと循環の問い合わせ、グラフのアルゴリズム、Select AI の自然言語の問い合わせを、公式の文書の確認と図と用語辞典で解説。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/news-20260710-oracle-ontology-property-graph/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="オラクルのオントロジーとプロパティグラフ — テーブルを知識の地図に">
+<meta name="twitter:description" content="オラクルのオントロジーとプロパティグラフのアプローチを整理する — RDF vs プロパティグラフ、メタデータのビューとしてのグラフの作り方、PGQL と SQL/PGQ の多段ホップと循環の問い合わせ、グラフのアルゴリズム、Select AI の自然言語の問い合わせを、公式の文書の確認と図と用語辞典で解説。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "オラクルのオントロジーとプロパティグラフ — テーブルを知識の地図に",
+ "description": "オラクルのオントロジーとプロパティグラフのアプローチを整理する — RDF vs プロパティグラフ、メタデータのビューとしてのグラフの作り方、PGQL と SQL/PGQ の多段ホップと循環の問い合わせ、グラフのアルゴリズム、Select AI の自然言語の問い合わせを、公式の文書の確認と図と用語辞典で解説。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/news-20260710-oracle-ontology-property-graph/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260710-oracle-ontology-property-graph",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-10T12:23:47+09:00",
+ "dateModified": "2026-07-10T15:55:10+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260710-oracle-ontology-property-graph">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/news-20260710-oracle-ontology-property-graph/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/news-20260710-oracle-ontology-property-graph/" hreflang="en">English</a>
+</p>
+<article>
+<h2>オラクルのオントロジーとプロパティグラフ — テーブルを知識の地図に</h2>
+<p>オラクルの<strong>オントロジー・プロパティグラフ</strong>のアプローチを整理した文書です。<strong>RDF とプロパティグラフ（Property Graph）</strong>というふた筋のグラフを比べ、散らばったリレーショナルのテーブル（RDB）を<strong>エンティティと関係でつないで&ldquo;知識の地図&rdquo;（広い意味のオントロジー）にする方法</strong>、それをオラクルの DB の中で <strong>PGQL・SQL/PGQ</strong> で問い合わせ、<strong>Select AI</strong> で自然言語の問い合わせまでつなぐ流れを扱います。技術（オラクルのグラフ、PGQL、SQL/PGQ、Graph Studio、Select AI）の<strong>公式の文書を確認して根拠を備え</strong>、はじめて聞く用語はそれぞれの節と末尾の<strong>用語辞典</strong>でほどいて説明しました。</p>
+
+<div class="note">
+    <span class="nh">扱った内容と根拠の確認</span>
+    · 主題: オラクルのオントロジー · プロパティグラフ（RDF · PGQL · SQL/PGQ · Select AI）<br>
+    · 根拠: オラクル公式のブログ・文書（SQL/PGQ・PGQL・Graph Server/PGX・Graph Studio・Select AI）、ISO SQL:2023 の標準、oracle/pgql-lang — リンクは文書の末尾の出典の節に。<br>
+    · このウィキの <a href="/p/ja/sb-level4/">セカンドブレイン レベル 4 · ナレッジグラフ</a>、<a href="/p/ja/dzp-core/">Douzone ナレッジプラットフォームの提案</a>と同じ&ldquo;知識を関係でつなぐ&rdquo;系譜の文書です。
+</div>
+
+<h3>① ふた筋のグラフ — RDF vs プロパティグラフ</h3>
+<p>出発点は <strong>RDF</strong> と<strong>プロパティグラフ</strong>を並べて置くことです。どちらもデータを&ldquo;点と線&rdquo;（エンティティと関係）として見るグラフですが、性格が違います。</p>
+<div class="note">
+    <span class="nh">用語 — RDF とトリプル</span>
+    <strong>RDF</strong>（Resource Description Framework）は、すべての事実を<strong>主語–述語–目的語</strong>の三つの断片、すなわち<strong>トリプル（triple）</strong>として厳格に表す標準です（例: &ldquo;ワイン 1 – 原産地 – フランス&rdquo;）。規則や概念を定義した<strong>語彙集・単語帳</strong>に近く、意味を形式的に詰めること（推論）に強いのです。
+</div>
+<p>プロパティグラフはもっと柔軟です。データを<strong>ノード（node）・エッジ（edge）・プロパティ（property）</strong>の三つで表します。</p>
+<ul>
+    <li><strong>ノード（＝バーテックス, vertex）</strong> — ひとつの対象。人・出来事・物といった<strong>エンティティ</strong>。（例: &lsquo;イ・モンリョン&rsquo;、&lsquo;ソン・チュニャン&rsquo;）</li>
+    <li><strong>エッジ（edge）</strong> — ノードとノードをつなぐ<strong>関係</strong>。（例: &lsquo;結婚した&rsquo;）</li>
+    <li><strong>プロパティ（property）</strong> — ノードやエッジに付く<strong>属性</strong>。RDF とは違って<strong>あってもなくてもよい</strong>柔軟な値。（例: 性別＝男、年齢＝20）</li>
+    <li><strong>ラベル（label）</strong> — ノード・エッジに付ける<strong>名札</strong>（型）。（例: ノードのラベル&lsquo;人&rsquo;）</li>
+</ul>
+<p>要の違いは<strong>属性をどこに置くか</strong>です。同じワインのテーブルを表すとき、RDF は酒種・輸入元・年式・原産地・価格という<strong>列をひとつひとつすべてエッジに</strong>取り出すので、ひとつのノードに 5 本の線がぶら下がります — データが増えると急に複雑で重くなります。プロパティグラフは、そのうち年式や価格のように<strong>たどる必要のない値は属性としてノードの中に入れ</strong>、原産地や輸入元のように<strong>共有し探索する値だけをエッジに</strong>残します。その結果、線（エッジ）の数が減って見通しがよく、&ldquo;フランス産のワインだけ&rdquo;・&ldquo;同じ輸入元のワインだけ&rdquo;といった<strong>つながりの探索が速くなります</strong>。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 360" role="img" aria-label="同じワインのテーブルを、RDF はすべての列をエッジに取り出してひとつのノードに 5 本の線がぶら下がり、プロパティグラフはたどる値だけをエッジに残して残りは属性としてノードに入れる">
+    <text class="d-label sm" x="360" y="22" text-anchor="middle">同じワインのデータ、ふたつの表し方</text>
+    <rect class="d-box soft" x="190" y="38" width="340" height="30" rx="7"/><text class="d-label sm" x="360" y="57" text-anchor="middle">RDB テーブル: ワイン・酒種・輸入元・年式・原産地・価格</text>
+
+    <text class="d-label sm" x="180" y="98" text-anchor="middle">RDF — 列をすべてエッジに</text>
+    <circle class="d-node" cx="180" cy="180" r="26"/><text class="d-node-label" x="180" y="184" text-anchor="middle">ワイン1</text>
+    <line class="d-edge" x1="158" y1="164" x2="96" y2="132"/><rect class="d-box soft" x="40" y="118" width="60" height="24" rx="6"/><text class="d-sub" x="70" y="134" text-anchor="middle">酒種</text>
+    <line class="d-edge" x1="154" y1="180" x2="96" y2="180"/><rect class="d-box soft" x="34" y="168" width="62" height="24" rx="6"/><text class="d-sub" x="65" y="184" text-anchor="middle">輸入元</text>
+    <line class="d-edge" x1="158" y1="196" x2="96" y2="228"/><rect class="d-box soft" x="38" y="216" width="62" height="24" rx="6"/><text class="d-sub" x="69" y="232" text-anchor="middle">年式</text>
+    <line class="d-edge" x1="202" y1="164" x2="250" y2="136"/><rect class="d-box soft" x="248" y="122" width="62" height="24" rx="6"/><text class="d-sub" x="279" y="138" text-anchor="middle">原産地</text>
+    <line class="d-edge" x1="206" y1="192" x2="250" y2="220"/><rect class="d-box soft" x="248" y="210" width="52" height="24" rx="6"/><text class="d-sub" x="274" y="226" text-anchor="middle">価格</text>
+    <text class="d-sub" x="180" y="284" text-anchor="middle">ノード 1 個にエッジ 5 本 — 増えると複雑で重い</text>
+
+    <line class="d-edge dash" x1="360" y1="100" x2="360" y2="300"/>
+
+    <text class="d-label sm" x="545" y="98" text-anchor="middle">プロパティグラフ — 属性はノードの中に</text>
+    <rect class="d-box accent" x="470" y="150" width="150" height="80" rx="12"/><text class="d-label sm" x="545" y="172" text-anchor="middle">ワイン1</text><text class="d-sub" x="545" y="192" text-anchor="middle">年式=2018</text><text class="d-sub" x="545" y="208" text-anchor="middle">価格=&#165;</text>
+    <line class="d-edge accent" x1="470" y1="176" x2="438" y2="150"/><rect class="d-box soft" x="376" y="136" width="62" height="24" rx="6"/><text class="d-sub" x="407" y="152" text-anchor="middle">原産地</text>
+    <line class="d-edge accent" x1="470" y1="204" x2="438" y2="230"/><rect class="d-box soft" x="376" y="220" width="62" height="24" rx="6"/><text class="d-sub" x="407" y="236" text-anchor="middle">輸入元</text>
+    <line class="d-edge accent" x1="620" y1="162" x2="634" y2="162"/><polygon class="d-arrow accent" points="634,158 642,162 634,166"/><rect class="d-box soft" x="642" y="150" width="72" height="24" rx="6"/><text class="d-sub" x="678" y="166" text-anchor="middle">フランス産</text><text class="d-sub" x="678" y="200" text-anchor="middle">エッジで即時</text>
+    <text class="d-sub" x="545" y="284" text-anchor="middle">エッジ数が減る · つながりの探索に有利</text>
+</svg>
+<div class="d-cap">違いは<strong>属性の置き場所</strong> — RDF は全部エッジに取り出して厳格だが重く、プロパティグラフは<strong>たどるものだけをエッジ</strong>に残して軽い。</div>
+</div>
+
+<h3>② なぜプロパティグラフか — 結合の代わりにつながりをたどる</h3>
+<p>プロパティグラフの使いどころは<strong>関係の探索</strong>に表れます。代表的な例をふたつ:</p>
+<ul>
+    <li><strong>銀行の送金</strong> — 口座のテーブルと送金のテーブルがあるとき、&ldquo;1 番の口座は 833 番とつながっているか&rdquo;を RDB で見るには、送金の履歴を SQL で<strong>くり返し結合</strong>しながらたどる必要があります。グラフなら口座をノード、送金をエッジにすれば<strong>経路をそのまま可視化</strong>して、どの口座を経たかが直感的に見えます。</li>
+    <li><strong>小売の注文</strong> — 顧客・注文・商品のテーブルで&ldquo;チョコレートを買った顧客はほかに何を買ったか&rdquo;と問うと、SQL は何度も結合しなければなりませんが、グラフは商品→顧客→商品を<strong>エッジをたどって</strong>すぐに見渡します。</li>
+</ul>
+<p>共通するのは<strong>&ldquo;つながりが大事な問い&rdquo;</strong>だということです。産業ごとの使い道: <strong>金融</strong>（不正な送金・マネーロンダリングの検出）、<strong>小売</strong>（購買パターンのクラスタリング・推薦）、<strong>病院</strong>（似た患者の移動の経路）、<strong>製造</strong>（部品の階層・故障の波及・サプライチェーンへの影響）、<strong>ネットワーク</strong>（通信・交通・道路網の障害のルーティング、クラウドの障害の根本原因の追跡）。データが互いに<strong>つながり依存している</strong>ところなら、どこでも合います。</p>
+
+<h3>③ オントロジーとは何か — 広く見れば&lsquo;知識の地図&rsquo;</h3>
+<p>この記事の概念の中心です。<strong>オントロジー</strong>を難しく&ldquo;意味論・OWL の標準&rdquo;としてだけ見る必要はない、ということです。</p>
+<div class="note">
+    <span class="nh">用語 — オントロジー（広い意味 vs 狭い意味）</span>
+    <strong>狭い意味</strong>: <strong>OWL</strong>（Web Ontology Language）という W3C 標準で概念の<strong>文法と語彙・意味（semantics）</strong>を形式的に定義し、<strong>推論</strong>までする体系 — RDF 系列の厳密なオントロジー。<br>
+    <strong>広い意味</strong>: 散らばったテーブルの<strong>エンティティと関係をつないだグラフそのもの</strong>も&ldquo;知識の層（レイヤー）&rdquo;と見てオントロジーと呼ぶ。（パランティアが&ldquo;オントロジー&rdquo;と呼ぶものも、かなりの部分はこのつながりのことだ。）<strong>大事なのは形式の標準よりも、分散した業務のデータがひとつの知識の地図になるという点。</strong>
+</div>
+<p>つまり実用では<strong>広い意味</strong>が役に立ちます。ほとんどのワークフローや業務が<strong>テーブル（エンティティ）</strong>で管理されているのですが、その<strong>エンティティどうしの関係（リレーションシップ）</strong>を明示的につないでやれば、テーブル単位に切れていたものが<strong>互いに結びつけて見る知識の地図</strong>になります。RDF/OWL の形式的な推論が要らないのであれば、プロパティグラフだけでも実用的な&ldquo;知識のレイヤー&rdquo;が得られます。（形式意味論や推論がどうしても必要な場合は RDF/OWL が強い — ふたつのアプローチは排他的ではありません。）</p>
+
+<h3>④ グラフを作る — データを複製せずメタデータで</h3>
+<p>いちばん実務的なところです。プロパティグラフは<strong>データを物理的に複製しません</strong>。既存の RDB のテーブルの上に<strong>メタデータだけでグラフの&lsquo;ビュー&rsquo;</strong>を載せます。<code>CREATE PROPERTY GRAPH</code> 文で、</p>
+<ul>
+    <li><strong>ノードになるテーブル</strong>を指定し、キー（口座番号など）と必要な<strong>プロパティ</strong>を選ぶ（例: バンクアカウント → ノード、キー＝id、属性＝name・balance）。</li>
+    <li><strong>関係になるテーブル</strong>を<strong>エッジ表（&ldquo;H 表&rdquo;）</strong>として指定し、ソースのキー・宛先のキーで、どのノードからどのノードへつなぐかを決める（例: バンクトランスファー → エッジ、source＝送金の口座、destination＝受取の口座）。</li>
+</ul>
+<div class="note warn">
+    <span class="nh">用語 — エッジ表（H 表）と&ldquo;FK がなくてもよい&rdquo;</span>
+    関係を収める別のテーブルを、よく <strong>H 表</strong>（エッジ表）と呼びます。伝統的な RDB ならテーブル間の関係を<strong>外部キー（FK, Foreign Key）</strong>で表しますが、プロパティグラフのソース／宛先のキーは <strong>PK–FK の制約がかかっていなくても指定できます。</strong>つまり既存のスキーマに FK が整理されていなくても、グラフを載せられるのです。
+</div>
+<p>実戦の勘どころ: エッジ（H）表を手で作るのは面倒ですが、テーブルの情報と既存の関係を渡せば <strong>ChatGPT やクロードのような AI が&ldquo;こう作ればよい&rdquo;と提案</strong>してくれます。オラクルの <strong>Autonomous DB</strong> では、スキーマ（ERD）の情報を渡すとグラフの生成まで<strong>自動</strong>で助けてくれる機能もあります。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 260" role="img" aria-label="RDB の口座テーブルはノードに、送金テーブルはエッジの H 表として指定し、CREATE PROPERTY GRAPH 文で物理の複製なしにグラフのビューを作る">
+    <rect class="d-box soft" x="20" y="40" width="150" height="60" rx="9"/><text class="d-label sm" x="95" y="62" text-anchor="middle">バンクアカウント</text><text class="d-sub" x="95" y="80" text-anchor="middle">RDB テーブル · 口座</text><text class="d-sub" x="95" y="93" text-anchor="middle">キー=id, name, balance</text>
+    <rect class="d-box soft" x="20" y="150" width="150" height="60" rx="9"/><text class="d-label sm" x="95" y="172" text-anchor="middle">バンクトランスファー</text><text class="d-sub" x="95" y="190" text-anchor="middle">RDB テーブル · 送金</text><text class="d-sub" x="95" y="203" text-anchor="middle">src · dst · amount</text>
+    <line class="d-edge" x1="170" y1="70" x2="214" y2="100"/><polygon class="d-arrow" points="209,94 216,102 207,100"/>
+    <text class="d-sub" x="192" y="66" text-anchor="middle">ノードへ</text>
+    <line class="d-edge" x1="170" y1="180" x2="214" y2="150"/><polygon class="d-arrow" points="207,150 216,148 209,156"/>
+    <text class="d-sub" x="188" y="200" text-anchor="middle">エッジ(H)へ</text>
+    <rect class="d-box accent" x="222" y="96" width="196" height="58" rx="11"/><text class="d-label sm" x="320" y="120" text-anchor="middle">CREATE PROPERTY GRAPH</text><text class="d-sub" x="320" y="140" text-anchor="middle">メタデータだけ — 複製なし</text>
+    <line class="d-edge accent" x1="418" y1="125" x2="462" y2="125"/><polygon class="d-arrow accent" points="462,120 470,125 462,130"/>
+    <rect class="d-box accent" x="470" y="88" width="230" height="74" rx="12"/><text class="d-label" x="585" y="116" text-anchor="middle">プロパティグラフのビュー</text><text class="d-sub" x="585" y="136" text-anchor="middle">口座=ノード · 送金=エッジ</text><text class="d-sub" x="585" y="150" text-anchor="middle">FK なしでも src/dst キーで連結</text>
+    <text class="d-sub" x="320" y="196" text-anchor="middle">エッジ表(H)の作成は AI が提案 · ADB は ERD から自動生成</text>
+    <text class="d-sub" x="585" y="196" text-anchor="middle">RDF と同じ原理 — 物理でなくビュー</text>
+</svg>
+<div class="d-cap">グラフは<strong>新しい保存庫ではなく既存のテーブルの上のビュー</strong> — ノードの表 + エッジ（H）の表を指定すれば終わり。</div>
+</div>
+
+<h3>⑤ グラフへの問い合わせ — PGQL と SQL/PGQ、そして&lsquo;ホップ&rsquo;</h3>
+<p>作ったグラフに問いを投げる言語がふたつあります。どちらも <strong>SQL がもと</strong>なので <code>SELECT</code>・<code>WHERE</code> はそのまま使い、<strong>グラフのパターンは <code>MATCH</code> 節</strong>に書きます。</p>
+<div class="note">
+    <span class="nh">用語 — PGQL · SQL/PGQ · ホップ（hop）</span>
+    <strong>PGQL</strong>（Property Graph Query Language）: オラクルが参加して作ったオープンなグラフ問い合わせ言語。グラフ分析のエンジン（PGX）でアルゴリズムを回すときに強い。<br>
+    <strong>SQL/PGQ</strong>: <strong>ISO SQL:2023 の標準</strong>（Part 16）に取り込まれたグラフ問い合わせの機能。<code>GRAPH_TABLE(...)</code> 演算子 + <code>MATCH</code> のパターンを使います。<strong>SQL のエンジンでそのまま回るので速い。</strong><br>
+    <strong>パターンの表記</strong>: ノードは <code>(丸括弧)</code>、関係は <code>[角括弧]</code>、方向があれば <code>-&gt;</code>、なければ <code>-</code>。<br>
+    <strong>ホップ（hop）</strong>: 関係を一度飛び越えること。<code>{1,3}</code> は&ldquo;1〜3 回まで経由してでもつながっている&rdquo;経路 — 中間の口座を何段階か経た送金まで見つけます。
+</div>
+<p>この&lsquo;ホップ&rsquo;のおかげで<strong>複雑なつながりの分析</strong>が一行で表せます。代表的な三つの金融の問い合わせ:</p>
+<ul>
+    <li><strong>直接の送金</strong> — 一度でも振り込んだ口座を返す（ソース→宛先の 1 ホップ）。</li>
+    <li><strong>多段階の送金</strong> — <code>{1,3}</code> ホップ: 中間の口座を 1〜3 段階経て振り込まれた経路まで。<strong>マネーロンダリング</strong>の検出に使います。</li>
+    <li><strong>循環（ループ）の検出</strong> — 始点と終点が同じ口座（例: 5 ホップ後に自分へ戻ってきたお金）。ロンダリングの輪を見つける要です。</li>
+</ul>
+<p>同じ問い合わせを伝統的な SQL で書けば<strong>大量の結合とユニオン</strong>にふくらみますが、SQL/PGQ なら <code>MATCH</code> 一行で済みます — これがグラフのクエリの中心の値打ち（複雑なつながりを簡潔かつ直感的に）です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="口座のグラフで 1 ホップの直接の送金、1 から 3 ホップの多段階の送金によるマネーロンダリング、そして始点と終点が同じ循環ループの検出を示す">
+    <text class="d-label sm" x="120" y="26" text-anchor="middle">1 ホップ — 直接の送金</text>
+    <circle class="d-node" cx="50" cy="90" r="20"/><text class="d-node-label" x="50" y="94" text-anchor="middle">A1</text>
+    <line class="d-edge accent" x1="70" y1="90" x2="168" y2="90"/><polygon class="d-arrow accent" points="168,85 178,90 168,95"/>
+    <circle class="d-node" cx="198" cy="90" r="20"/><text class="d-node-label" x="198" y="94" text-anchor="middle">A2</text>
+    <text class="d-sub" x="120" y="140" text-anchor="middle">MATCH (a)-[t]-&gt;(b)</text>
+
+    <line class="d-edge dash" x1="252" y1="30" x2="252" y2="210"/>
+
+    <text class="d-label sm" x="360" y="26" text-anchor="middle">{1,3} ホップ — 多段階 · 資金洗浄</text>
+    <circle class="d-node" cx="292" cy="90" r="18"/><text class="d-node-label" x="292" y="94" text-anchor="middle">A1</text>
+    <line class="d-edge accent" x1="310" y1="90" x2="336" y2="90"/><polygon class="d-arrow accent" points="336,86 344,90 336,94"/>
+    <circle class="d-node" cx="362" cy="90" r="18"/><text class="d-node-label" x="362" y="94" text-anchor="middle">中間</text>
+    <line class="d-edge accent" x1="380" y1="90" x2="406" y2="90"/><polygon class="d-arrow accent" points="406,86 414,90 406,94"/>
+    <circle class="d-node" cx="432" cy="90" r="18"/><text class="d-node-label" x="432" y="94" text-anchor="middle">A9</text>
+    <text class="d-sub" x="360" y="140" text-anchor="middle">MATCH (a)-[t]-&gt;{1,3}(b)</text>
+
+    <line class="d-edge dash" x1="486" y1="30" x2="486" y2="210"/>
+
+    <text class="d-label sm" x="605" y="26" text-anchor="middle">循環 — ループの検出</text>
+    <circle class="d-node" cx="605" cy="70" r="18"/><text class="d-node-label" x="605" y="74" text-anchor="middle">A1</text>
+    <circle class="d-node" cx="545" cy="140" r="16"/><circle class="d-node" cx="665" cy="140" r="16"/>
+    <line class="d-edge accent" x1="592" y1="83" x2="556" y2="126"/><polygon class="d-arrow accent" points="553,120 555,130 561,124"/>
+    <line class="d-edge accent" x1="559" y1="148" x2="651" y2="148"/><polygon class="d-arrow accent" points="651,143 660,148 651,153"/>
+    <line class="d-edge accent" x1="656" y1="127" x2="617" y2="84"/><polygon class="d-arrow accent" points="622,84 614,80 620,90"/>
+    <text class="d-sub" x="605" y="186" text-anchor="middle">始点=終点の口座（5 ホップ後）</text>
+    <text class="d-sub" x="360" y="232" text-anchor="middle">伝統的な SQL なら大量の結合・ユニオン → SQL/PGQ は MATCH 一行</text>
+</svg>
+<div class="d-cap">ホップの表記ひとつで<strong>直接→多段階→循環</strong>の分析が開く — マネーロンダリングの検出が代表の事例。</div>
+</div>
+
+<h3>⑥ グラフのアルゴリズム — 80 種ほどの内蔵の分析</h3>
+<p>グラフは&ldquo;探す&rdquo;を越えて&ldquo;分析&rdquo;へ進みます。オラクルの DB には<strong>80 個ほどのグラフのアルゴリズム</strong>が内蔵されていて、有名なものはほぼ対応しています。大きくは四つの筋:</p>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>筋</th><th>何を見つけるか</th><th>使い道</th></tr></thead>
+    <tbody>
+        <tr><td><strong>コミュニティの検出</strong></td><td>密につながったグループ（クラスタ）</td><td>小売の似た購買の顧客のクラスタリング</td></tr>
+        <tr><td><strong>中心性（centrality）</strong></td><td>ネットワークの中心・影響力のあるノード</td><td>インフルエンサー・ハブとなる口座の特定</td></tr>
+        <tr><td><strong>構造の識別</strong></td><td>くり返される型</td><td>不正な取引・マネーロンダリングのパターンの検出</td></tr>
+        <tr><td><strong>経路の探索</strong></td><td>ふたつのノードのあいだの経路</td><td>資金の追跡・最短の経路</td></tr>
+    </tbody>
+</table></div>
+<p>単なるつながりを越えて<strong>パターンに隠れた洞察</strong>を引き出すことが、プロパティグラフのいちばん大きな値打ちです。ただしアルゴリズムの分析（とくに大容量）は、インメモリの<strong>グラフサーバー（PGX）</strong>を別に立てて並列で回すので、単純な照会より時間がかかります。</p>
+
+<h3>⑦ Select AI — 自然言語でグラフに問う</h3>
+<p>中心の方向: 利用者が PGQL・SQL/PGQ を<strong>自分で書くのではなく、AI に自動生成させる</strong>こと。オラクルの <strong>Select AI</strong> がこれを DB に内蔵で提供します。自然言語をグラフの問い合わせに変えてくれるのですが、要は<strong>メタデータ</strong>です。</p>
+<div class="note">
+    <span class="nh">用語 — Select AI · AI プロファイル</span>
+    <strong>Select AI</strong>: <code>SELECT AI &lt;自然言語&gt;</code> のように自然言語を入れると、DB が SQL（テーブル）または SQL/PGQ（グラフ）に変えて実行する機能。<br>
+    <strong>AI プロファイル</strong>: オラクルは自前の LLM を提供しないので、どの<strong>モデル</strong>を使うか、どの<strong>スキーマ・オブジェクト</strong>を対象にするかをプロファイルに登録します。問い合わせの際、そのオブジェクトのメタデータ（テーブルなら DDL、グラフなら <code>CREATE PROPERTY GRAPH</code> 文）が<strong>自動で LLM に渡され</strong>、正確なクエリを作ります。
+</div>
+<p>働きは<strong>自然言語 →（AI プロファイル: モデル + 対象のメタデータ）→ LLM が GRAPH_TABLE のクエリを生成 → SQL のエンジンが実行 → 結果</strong>の順です。対応する動作（action）: <strong>runsql</strong>（そのまま実行）・<strong>showsql</strong>（生成されたクエリを見る）・<strong>explainsql</strong>（なぜそうなったか）・<strong>narrate</strong>（結果を言葉でほどく）・<strong>showprompt</strong>（LLM に実際に渡ったプロンプト — ここに <code>CREATE PROPERTY GRAPH</code> 文がそのまま入って行きます）。</p>
+<div class="note warn">
+    <span class="nh">機能の範囲と制約（時点に注意）</span>
+    自然言語からの生成は <strong>SQL/PGQ のみ対応</strong>（PGQL は対象外） → この点も SQL/PGQ へ向かう理由です。合成（ダミー）のテスト用データの生成や、グラフとテーブルを<strong>ひとつのクエリで合わせること</strong>はまだ限定的。自然言語からよいクエリを出すにはテーブル・列に<strong>コメント（説明）</strong>が付いている必要があり、日本語や同義語への対応は<strong>ディスクリプションのプロパティ</strong>と <strong>AI エージェント</strong>で補います。（Select AI の機能は速く更新されるので、導入の際は最新の文書で再確認を。）
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 720 240" role="img" aria-label="Select AI のパイプライン: 自然言語の質問が AI プロファイルを通じて対象のグラフのメタデータとともに LLM に渡され、LLM が GRAPH_TABLE の SQL/PGQ クエリを生成して SQL のエンジンが実行し、結果を narrate でほどく">
+    <rect class="d-box soft" x="14" y="94" width="120" height="52" rx="9"/><text class="d-label sm" x="74" y="116" text-anchor="middle">自然言語の質問</text><text class="d-sub" x="74" y="134" text-anchor="middle">&ldquo;1&#8594;330 は連結?&rdquo;</text>
+    <line class="d-edge accent" x1="134" y1="120" x2="164" y2="120"/><polygon class="d-arrow accent" points="164,115 172,120 164,125"/>
+    <rect class="d-box accent" x="172" y="80" width="140" height="80" rx="11"/><text class="d-label sm" x="242" y="104" text-anchor="middle">AI プロファイル</text><text class="d-sub" x="242" y="124" text-anchor="middle">モデルの指定 +</text><text class="d-sub" x="242" y="138" text-anchor="middle">対象グラフのメタデータ</text>
+    <line class="d-edge accent" x1="242" y1="80" x2="242" y2="52"/><polygon class="d-arrow accent" points="238,58 242,50 246,58"/>
+    <rect class="d-box soft" x="152" y="20" width="180" height="30" rx="7"/><text class="d-sub" x="242" y="39" text-anchor="middle">CREATE PROPERTY GRAPH 文</text>
+    <line class="d-edge accent" x1="312" y1="120" x2="342" y2="120"/><polygon class="d-arrow accent" points="342,115 350,120 342,125"/>
+    <rect class="d-box" x="350" y="94" width="110" height="52" rx="9"/><text class="d-label sm" x="405" y="116" text-anchor="middle">LLM</text><text class="d-sub" x="405" y="134" text-anchor="middle">クエリ生成</text>
+    <line class="d-edge accent" x1="460" y1="120" x2="490" y2="120"/><polygon class="d-arrow accent" points="490,115 498,120 490,125"/>
+    <rect class="d-box" x="498" y="94" width="122" height="52" rx="9"/><text class="d-label sm" x="559" y="112" text-anchor="middle">GRAPH_TABLE</text><text class="d-sub" x="559" y="132" text-anchor="middle">SQL/PGQ · SQL 実行</text>
+    <line class="d-edge accent" x1="620" y1="120" x2="650" y2="120"/><polygon class="d-arrow accent" points="650,115 658,120 650,125"/>
+    <rect class="d-box soft" x="658" y="94" width="54" height="52" rx="9"/><text class="d-label sm" x="685" y="116" text-anchor="middle">結果</text><text class="d-sub" x="685" y="134" text-anchor="middle">narrate</text>
+    <text class="d-sub" x="360" y="196" text-anchor="middle">action: runsql · showsql · explainsql · narrate · showprompt</text>
+    <text class="d-sub" x="360" y="216" text-anchor="middle">自然言語からの生成は SQL/PGQ だけ — 対象のメタデータ（コメント・説明）が精度を左右</text>
+</svg>
+<div class="d-cap">利用者は自然言語を投げるだけで、<strong>メタデータを載せた LLM</strong> がグラフのクエリを代わりに書く — 精度の鍵は&ldquo;説明の付いたスキーマ&rdquo;。</div>
+</div>
+
+<h3>⑧ 道具とエディション — 何をいつ使うか</h3>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>道具</th><th>何か</th><th>条件</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Graph Server &amp; Client</strong></td><td>インメモリのグラフの問い合わせ・分析のエンジン（PGX） + 可視化・CLI</td><td>DB <strong>12.2+</strong> で<strong>追加のライセンスなしに</strong>標準で提供</td></tr>
+        <tr><td><strong>Enterprise Edition</strong></td><td>並列のアーキテクチャ（大容量のアルゴリズムの分析）</td><td>並列処理は <strong>EE 以上</strong>が必要（SE では不可）</td></tr>
+        <tr><td><strong>Graph Studio</strong></td><td>ノートブック・自動のモデリング・可視化の統合環境</td><td>Autonomous DB（クラウド）でプロビジョニングすればすぐ</td></tr>
+    </tbody>
+</table></div>
+<p>実務的には、まず<strong>コア（グラフを作って自然言語で問い合わせる）</strong>に集中し、可視化・高度なアルゴリズム・クラウド（ADB）は必要になったときに広げる順が自然です。何より<strong>&ldquo;解こうとする業務（問い）&rdquo;を先に定義すること</strong>がグラフの設計の出発点です — グラフは保存の構造ではなく<strong>問いごとに作るビュー</strong>だからです。</p>
+
+<h3>用語辞典</h3>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>用語</th><th>意味</th></tr></thead>
+    <tbody>
+        <tr><td><strong>RDF · トリプル</strong></td><td>すべての事実を主語–述語–目的語の 3 断片で厳格に表す標準。規則・語彙の定義に強い。</td></tr>
+        <tr><td><strong>プロパティグラフ</strong></td><td>ノード・エッジ・プロパティでデータを表す柔軟なグラフのモデル。つながりの探索に強い。</td></tr>
+        <tr><td><strong>ノード · バーテックス</strong></td><td>エンティティ（人・物・出来事）。同じ意味のふたつの呼び名。</td></tr>
+        <tr><td><strong>エッジ</strong></td><td>ノードとノードをつなぐ関係。方向があることもないことも。</td></tr>
+        <tr><td><strong>プロパティ</strong></td><td>ノード・エッジに付く属性（キー–値）。あってもなくてもよい。</td></tr>
+        <tr><td><strong>ラベル</strong></td><td>ノード・エッジに付ける名札（型）。</td></tr>
+        <tr><td><strong>オントロジー</strong></td><td>（狭く）OWL で概念の意味・推論を形式化。（広く）エンティティと関係をつないだ知識の地図そのもの。</td></tr>
+        <tr><td><strong>OWL</strong></td><td>Web Ontology Language。RDF の上で形式意味論と推論を提供する W3C 標準。</td></tr>
+        <tr><td><strong>エッジ表（H 表）</strong></td><td>関係を収める別のテーブル。グラフのエッジになる。PK–FK の制約がなくても指定できる。</td></tr>
+        <tr><td><strong>PGQL</strong></td><td>オラクルが参加した SQL がもとのグラフ問い合わせ言語。分析のエンジン（PGX）に強い。</td></tr>
+        <tr><td><strong>SQL/PGQ</strong></td><td>ISO SQL:2023 の標準のグラフ問い合わせ。GRAPH_TABLE+MATCH。SQL のエンジンでそのまま実行（速い）。</td></tr>
+        <tr><td><strong>GRAPH_TABLE</strong></td><td>グラフのパターンマッチングの結果をリレーショナルの表のように返す SQL/PGQ の演算子。</td></tr>
+        <tr><td><strong>MATCH</strong></td><td>探すグラフのパターンを書く節。ノードは ()、関係は []、方向は -&gt;。</td></tr>
+        <tr><td><strong>ホップ（hop）</strong></td><td>関係を一度飛び越えること。{1,3}＝1〜3 段階までつながった経路。</td></tr>
+        <tr><td><strong>グラフのアルゴリズム</strong></td><td>コミュニティの検出・中心性・構造の識別・経路の探索など 80 種ほどを内蔵。</td></tr>
+        <tr><td><strong>Graph Server(PGX)</strong></td><td>インメモリの並列グラフ分析エンジン。大容量のアルゴリズム用。</td></tr>
+        <tr><td><strong>Select AI · AI プロファイル</strong></td><td>自然言語を SQL/PGQ へ変換。プロファイルにモデル + 対象のスキーマを登録してメタデータを LLM に渡す。</td></tr>
+    </tbody>
+</table></div>
+
+<h3>まとめ — 三つの文で</h3>
+<ul>
+    <li><strong>プロパティグラフ</strong>は散らばったテーブルをエンティティと関係でつないで&ldquo;知識の地図&rdquo;（広い意味のオントロジー）を作るが、データを複製せず<strong>メタデータのビュー</strong>として載せる。</li>
+    <li>つながりが大事な問い（マネーロンダリング・推薦・障害の追跡）は SQL の結合ではなく <strong><code>MATCH</code> とホップ</strong>の一行で — <strong>SQL/PGQ</strong> が標準であり速い道だ。</li>
+    <li>クエリは手で書かず <strong>Select AI</strong> で自然言語から生成する — 鍵は&ldquo;<strong>説明の付いたメタデータ</strong>&rdquo;だ。</li>
+</ul>
+
+<h3>出典</h3>
+<p class="scn-sub"><strong>オラクル公式 · 標準</strong></p>
+<ul>
+    <li>Oracle, &ldquo;Property Graphs in Oracle Database 23ai: The SQL/PGQ Standard&rdquo; — <a href="https://blogs.oracle.com/database/property-graphs-in-oracle-database-23ai-the-sql-pgq-standard" target="_blank" rel="noopener">blogs.oracle.com</a></li>
+    <li>Oracle, &ldquo;Discover connections with SQL Property Graphs in Oracle Autonomous Database&rdquo; — <a href="https://blogs.oracle.com/database/sql-property-graphs-in-oracle-autonomous-database" target="_blank" rel="noopener">blogs.oracle.com</a></li>
+    <li>ISO SQL:2023 · SQL/PGQ（Part 16）、GRAPH_TABLE・MATCH — ORACLE-BASE のまとめ — <a href="https://oracle-base.com/articles/23/sql-property-graphs-and-sql-pgq-23" target="_blank" rel="noopener">oracle-base.com</a></li>
+    <li>PGQL の言語・仕様 — <a href="https://pgql-lang.org/" target="_blank" rel="noopener">pgql-lang.org</a> · <a href="https://github.com/oracle/pgql-lang" target="_blank" rel="noopener">github.com/oracle/pgql-lang</a></li>
+    <li>Oracle Graph Server &amp; Client（PGX）、80+ のアルゴリズム・並列 — <a href="https://www.oracle.com/database/technologies/spatialandgraph/property-graph-features/graph-server-and-client.html" target="_blank" rel="noopener">oracle.com</a></li>
+    <li>Graph Studio（Autonomous DB）の紹介 — <a href="https://blogs.oracle.com/database/introducing-graph-studio-with-oracle-autonomous-database" target="_blank" rel="noopener">blogs.oracle.com</a></li>
+    <li>Select AI for Property Graphs（自然言語→PGQ, GRAPH_TABLE） — <a href="https://docs.oracle.com/en/cloud/paas/autonomous-database/serverless/adbsb/graph-autonomous-database.html" target="_blank" rel="noopener">docs.oracle.com</a></li>
+</ul>
+<p class="scn-sub"><strong>RDF vs プロパティグラフ · オントロジーの背景</strong></p>
+<ul>
+    <li>Neo4j, &ldquo;RDF triple stores vs. property graphs&rdquo; — <a href="https://neo4j.com/blog/knowledge-graph/rdf-vs-property-graphs-knowledge-graphs/" target="_blank" rel="noopener">neo4j.com</a></li>
+    <li>Atlan, &ldquo;Ontology vs Knowledge Graph&rdquo; — <a href="https://atlan.com/know/ai-agent/knowledge-graph/ontology-vs-knowledge-graph/" target="_blank" rel="noopener">atlan.com</a></li>
+</ul>
+<p class="scn-sub"><strong>このウィキの関連文書</strong> — <a href="/p/ja/sb-level4/">セカンドブレイン レベル 4 · ナレッジグラフ</a> · <a href="/p/ja/dzp-core/">Douzone ナレッジプラットフォームの提案</a> · <a href="/p/ja/dzp-architecture/">プラットフォームのアーキテクチャ</a></p>
+
+<div class="note">
+    <span class="nh">この文書の態度</span>
+    オラクルのグラフの技術（SQL/PGQ・PGQL・PGX・Graph Studio・Select AI）は<strong>公式の文書と標準で実在を確認</strong>しました。ただし<strong>機能の範囲と制約（合成データ・グラフとテーブルの結合など）</strong>は<strong>速く更新される領域</strong>なので、実際に導入する際は最新のオラクルの文書で再確認するのが正確です。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">作成日</span> 2026-07-10 &middot; <span class="pr-k">更新日</span> 2026-07-10</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/news-20260711-neo4j-rdf-vs-property-graph/">RDF かプロパティグラフか — ナレッジグラフのためのふたつのモデル（Neo4j）</a></li><li><a href="/p/ja/sb-level4/">レベル 4 · 関係でつなぐ（知識グラフ）</a></li></ul>
+</nav>
+</body>
+</html>

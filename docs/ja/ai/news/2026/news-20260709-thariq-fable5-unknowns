@@ -1,0 +1,473 @@
+<h2>Fable 5 の時代のボトルネックはモデルではなく人間か — Thariq Shihipar の&ldquo;地図と領土&rdquo;のフレーム</h2>
+
+<p>Anthropic の Claude Code のチームで働く <strong>Thariq Shihipar（タリク・シヒパル）</strong>は、Fable 5 を扱いながら同じ問題にくり返し出会ったと言う。モデルは以前よりずっと長い作業をこなし、道具を使い、コードベースを探索し、利用者が書いていない部分まで自分で決める。ところがまさにそのために、結果が期待とずれることがある。<strong>モデルが弱いからではなく、利用者が渡した地図（map）が実際の領土（territory）を十分に写していなかったから</strong>だ。</p>
+
+<p>この記事は、タリクの公開の文章 <em>A Field Guide to Fable: Finding Your Unknowns</em>、彼が自ら公開した 11 個の HTML の実戦のアーティファクト、Fable 5 についての Anthropic の公式の発表とモデルの文書、そして長期のエージェントとコーディングエージェントの研究を突き合わせて分析する。結論から言えば、タリクの主張は単なる&ldquo;プロンプトをうまく書け&rdquo;ではない。<strong>強いエージェントの時代には、実装の力より、unknown を見つけ、決定の根拠を残し、結果を理解する力が新しいボトルネックになる</strong>という主張だ。</p>
+
+<div class="note">
+    <span class="nh">出典の階層</span>
+    <strong>一次の資料</strong>: Thariq Shihipar の公開の文章と、自ら公開した 11 個のアーティファクト。<br>
+    <strong>公式の資料</strong>: Anthropic の Fable 5 の発表および Claude のモデルの文書。<br>
+    <strong>補強の資料</strong>: AI Engineer の発表の要約・報道と、長期の作業・コーディングエージェントの研究。<br>
+    閲覧数のように時点によって変わる指標や、発表中の個人の逸話は別に表示し、会社の公式の事実と混ぜない。
+</div>
+
+<h3>1. まず正しておくこと — 原文は確認できる</h3>
+
+<p>タリクの中心の原文は X に公開された <strong><em>A Field Guide to Fable: Finding Your Unknowns</em></strong> だ。最初の文は、Fable 5 と働きながら古い教訓をまた学び直す、という問題意識から始まる。<strong>&ldquo;地図は領土ではない&rdquo;</strong>。利用者がプロンプト・仕様・文書で描いた世界と、実際のコード・データ・組織・利用者の行動は同じではない、という意味だ。</p>
+
+<div class="note">
+    <span class="nh">一次の出典</span>
+    · <a href="https://x.com/trq212/status/2073100352921215386" target="_blank" rel="noopener">Thariq Shihipar, A Field Guide to Fable: Finding Your Unknowns</a><br>
+    · <a href="https://thariqs.github.io/html-effectiveness/unknowns/" target="_blank" rel="noopener">Know your unknowns — タリクの 11 個の実戦の HTML アーティファクト</a>
+</div>
+
+<p>とくにふたつ目のリンクは解釈の余地が少ない。タリクが自ら公開した companion guide は、実戦のパターンを<strong>事前 8 個、実装中 1 個、実装後 2 個 — 合計 11 個</strong>と明記している。したがってこれを単に&ldquo;6 つのプロンプトのコツ&rdquo;としてだけ紹介すると、要点の圧縮には役立っても、公開の資料の全体を伝えたことにはならない。</p>
+
+<h3>2. Fable 5 とはどんなモデルか — 公式に確認できる範囲</h3>
+
+<p>Anthropic は <strong>2026 年 6 月 9 日</strong>に Claude Fable 5 を発表した。公式の発表はこれを一般に使える Mythos 級のモデルとして紹介し、当時に一般に利用できた既存のモデルを越える能力と、<strong>より長く複雑な作業での優位</strong>を強調する。Anthropic のモデルの文書もまた、Fable 5 を<strong>長時間実行されるエージェント（long-running agents）</strong>のための次の世代の知能として説明する。</p>
+
+<p>公式の文書で大事な部分は、単なるベンチマークの数字ではない。Fable 5 はより長く自律的に作業し、長い文脈のなかで自分のノートを保ち、複合的な作業を続ける方向に設計されている。タリクの unknown の議論はまさにこの能力とつながる。<strong>エージェントが長く働くほど、利用者が自分で確かめていない決定もより多く積み上がりうる。</strong></p>
+
+<div class="note">
+    <span class="nh">Anthropic 公式の資料</span>
+    · <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank" rel="noopener">Introducing Claude Fable 5</a>, 2026-06-09.<br>
+    · <a href="https://platform.claude.com/docs/en/intro" target="_blank" rel="noopener">Claude Platform Docs — model overview</a>
+</div>
+
+<h3>3. タリクの第一の論拠 — Capability Overhang: 能力はあるのに使い方を知らない</h3>
+
+<p>タリクの発表を貫く最初の概念が <strong>capability overhang</strong> だ。モデルにはすでにある能力が存在するのに、利用者とプロダクトのチームがその能力を引き出す方法をまだ見つけていない状態のこと。新しいモデルを、前のモデルと同じプロンプト、同じシステムプロンプト、同じ道具の契約でだけ評価すれば、実際の能力を過小に見積もりうる。</p>
+
+<p>彼が挙げるポケモンの例は直感的だ。数多くの名前のなかから、ある文字列の条件を満たす項目をすべて探せと言えば、ふつうのチャットのモデルは記憶と推論だけで間違えることがある。しかし Claude Code のようなエージェントは、データを取ってきて、スクリプトを書き、フィルタを走らせて答えを検証できる。ここでの性能の向上は&ldquo;もっと多く覚えたから&rdquo;ではなく、<strong>問題を道具の使える形に変えたから</strong>だ。</p>
+
+<div class="note">
+    <span class="nh">実務の解釈</span>
+    <strong>モデル</strong>と<strong>モデル + 道具 + 権限 + 文脈 + 検証のループ</strong>は同じシステムではない。AI にはできないと結論づける前に、その能力を引き出すハーネスがあるかをまず見るべきだ。
+</div>
+
+<p>2026 年の Claude Code のアーキテクチャの分析の研究も、この見方を補強する。研究は単純なモデルの呼び出しのループより、シェルの道具、権限、文脈の管理、MCP・プラグイン・スキル・フック、サブエージェントといった周辺のシステムを重要な設計の空間と見る。タリクの言い方に変えれば、<strong>モデルの能力の上限と、実際のプロダクトで引き出して使う能力のあいだに隙間</strong>がある。</p>
+
+<h3>4. Unhobbling Claude — 強いモデルを前のモデルの規則で縛らない</h3>
+
+<p>タリクは新しいモデルをうまく使う仕事を、単なるプロンプトエンジニアリングより <strong>unhobbling</strong>、すなわちモデルの足を縛った制約をほどく問題として説明する。ここにはふたつの大事な事例がある。</p>
+
+<h4>4-1. システムプロンプトを削ったという主張</h4>
+
+<p>タリクの公開の発表をまとめた資料によれば、Claude Code のチームはモデルが強くなるにつれてシステムプロンプトのかなりの部分を取り除き、発表では<strong>およそ 80%</strong> という数値が言及された。理由は逆説的だ。弱いモデルには役立った禁止のリストや例が、強いモデルでは可能な解法の境界のように働きうるからである。</p>
+
+<p>ただしこの <strong>80%</strong> は Anthropic のプロダクトの文書に明記された公式の変更の数値として確認できるものではない。したがって正確な会社の公式の指標とは断ぜず、<strong>タリクの公開の発表上の主張</strong>として扱うのが正しい。それでも論旨ははっきりしている。新しいモデルを導入しながら、過去の失敗を防ぐために積み上げた規則をそのまま保てば、過去のモデルの限界を新しいモデルに相続させうる。</p>
+
+<h4>4-2. 同じ質問の道具もモデルの世代によって変わった</h4>
+
+<p>タリクは利用者に質問する道具を事例に挙げる。彼の説明によれば、前の世代のモデルでは道具を安定して呼ばせるために手を多くかける必要があり、その後のモデルでは仕様について質問するよう指示すれば実際のインタビューのように動き、Fable では質問と結果をより構造化された形へ組織する水準まで行ったという。</p>
+
+<p>要点は世代ごとの勝ち負けではない。<strong>道具の仕様が同じでも、モデルが変われば相互作用のパターンが変わる。</strong>したがってモデルのアップグレードは単なる差し替えではなく、プロンプト、道具の説明、権限、検証のやり方まで実験し直すべきシステムの変更である。</p>
+
+<h3>5. 中心のフレーム — 地図は領土ではない</h3>
+
+<p><strong>地図（map）</strong>は利用者が AI に渡した表現だ。プロンプト、PRD、仕様、CLAUDE.md、サンプルのコード、デザインのガイド、議事録、チケットがこれにあたる。<strong>領土（territory）</strong>は実際に事が起きる現実だ。レガシーのコード、隠れたデータの制約、配備の環境、顧客の行動、組織の暗黙の規則、障害の履歴、法的な制限が領土である。</p>
+
+<p>問題は、地図がいつも不完全だというところにある。人は自分が知っていることさえ全部は書かないし、知らないことは当然書けないし、考えつかなかったことは問いすら作れない。エージェントはその空欄に出会うたびに止まりはしない。<strong>仮定を作って進み続ける。</strong>モデルが強くなるほど、その仮定の上でより遠くまで行ける。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 760 400" role="img" aria-label="左の整った地図と右の複雑な実際の領土を対比し、そのあいだの隙間を unknowns として示した図">
+    <rect class="d-box soft" x="20" y="46" width="300" height="320" rx="16"/>
+    <text class="d-label" x="40" y="76">MAP · 伝えられた表現</text>
+    <text class="d-sub" x="40" y="96">Prompt · PRD · CLAUDE.md · Spec</text>
+    <rect class="d-box" x="40" y="112" width="120" height="50" rx="10"/><text class="d-label sm" x="100" y="142" text-anchor="middle">目標と機能</text>
+    <rect class="d-box" x="180" y="112" width="120" height="50" rx="10"/><text class="d-label sm" x="240" y="142" text-anchor="middle">API 契約</text>
+    <rect class="d-box" x="40" y="182" width="120" height="50" rx="10"/><text class="d-label sm" x="100" y="212" text-anchor="middle">サンプルコード</text>
+    <rect class="d-box" x="180" y="182" width="120" height="50" rx="10"/><text class="d-label sm" x="240" y="212" text-anchor="middle">デザインガイド</text>
+    <path class="d-edge dash" d="M160 137 L170 172 M180 137 L170 172 M160 207 L170 172 M180 207 L170 172"/>
+    <circle class="d-box accent" cx="170" cy="172" r="20"/><text class="d-label sm" x="170" y="176" text-anchor="middle">計画</text>
+    <text class="d-sub" x="170" y="342" text-anchor="middle">人が言葉で書いて伝えた表現</text>
+
+    <path class="d-edge accent" d="M320 204 H330"/>
+    <rect class="d-box accent" x="330" y="176" width="100" height="56" rx="12"/>
+    <text class="d-label sm" x="380" y="198" text-anchor="middle">UNKNOWNS</text>
+    <text class="d-sub" x="380" y="216" text-anchor="middle">地図にない決定</text>
+    <path class="d-edge accent" d="M430 204 H436"/><polygon class="d-arrow accent" points="434,199 442,204 434,209"/>
+
+    <rect class="d-box" x="440" y="46" width="300" height="320" rx="16"/>
+    <text class="d-label" x="460" y="76">TERRITORY · 実際の現実</text>
+    <text class="d-sub" x="460" y="96">Codebase · Data · Users · Ops · Constraints</text>
+    <circle class="d-node" cx="470" cy="132" r="7"/><text class="d-label sm" x="486" y="136">レガシーの例外</text>
+    <circle class="d-node b" cx="470" cy="170" r="7"/><text class="d-label sm" x="486" y="174">運用の障害の履歴</text>
+    <circle class="d-node c" cx="470" cy="208" r="7"/><text class="d-label sm" x="486" y="212">暗黙のルール</text>
+    <circle class="d-node d" cx="470" cy="246" r="7"/><text class="d-label sm" x="486" y="250">規制・権限</text>
+    <circle class="d-node dim" cx="470" cy="284" r="7"/><text class="d-label sm" x="486" y="288">実データの分布</text>
+    <text class="d-sub" x="590" y="342" text-anchor="middle">コード・データ・組織に散らばる現実</text>
+</svg>
+<div class="d-cap">地図はプロンプトと文書の整った表現で、領土はコード・データ・運用・組織の制約が絡んだ現実だ。中央の unknowns がふたつのあいだの決定の空白である。</div>
+</div>
+
+<div class="note">
+    <span class="nh">タリクの逆説</span>
+    弱いモデルは早く詰まるので人が介入する。強いモデルは自分で迂回して最後まで行ける。だから<strong>強いモデルほど、誤った仮定がより遠くまで伝わる危険</strong>も生まれる。
+</div>
+
+<h3>6. 四つの種類の unknown — いちばん高くつくのは&ldquo;知らないことすら知らないもの&rdquo;</h3>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>区分</th><th>意味</th><th>プロジェクトの例</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Known knowns</strong></td><td>知っていて、知っていることも分かっている</td><td>明示した目標、機能、日程、API の契約</td></tr>
+        <tr><td><strong>Known unknowns</strong></td><td>知らないという事実は分かっている</td><td>まだ選んでいない DB、認証のやり方、配備の戦略</td></tr>
+        <tr><td><strong>Unknown knowns</strong></td><td>知ってはいるが、当たり前すぎて書かなかった</td><td>チームの慣行、承認の手続き、暗黙の例外処理</td></tr>
+        <tr><td><strong>Unknown unknowns</strong></td><td>考えつきもしなかった</td><td>後半で見つかる規制、性能、データ、互換性の制約</td></tr>
+    </tbody>
+</table>
+</div>
+
+<p>タリクの実戦のガイドは、この四つのマス、とくに <strong>unknown unknowns</strong> を安く見つけるための仕掛けだ。プロジェクトの後半で見つかればアーキテクチャをひっくり返さねばならない問題を、実装の前に質問・プロトタイプ・リファレンスで引き上げるのである。</p>
+
+<h3>7. &ldquo;6 つの技法&rdquo;は要約であり、一次の資料には 11 個のアーティファクトがある</h3>
+
+<p>映像や二次の要約では、タリクの方法はよく <strong>Blind Spot, Prototype, Interview, Reference, Implementation Notes, Quiz</strong> の六つに圧縮される。この要約は中心の流れを理解するのに役立つ。しかしタリク本人の companion guide はこれをさらに細分して <strong>11 個の独立した HTML のアーティファクト</strong>として公開している。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 760 450" role="img" aria-label="実装の前 8 個、実装中 1 個、実装後 2 個のパターンが循環して unknown を known に変えていくプロセスの図">
+    <rect class="d-box soft" x="20" y="40" width="460" height="270" rx="16"/>
+    <text class="d-label" x="40" y="66">BEFORE · 実装の前</text>
+    <rect class="d-box" x="40" y="86" width="92" height="56" rx="10"/><text class="d-label sm" x="86" y="106" text-anchor="middle">1 · Blindspot</text><text class="d-sub" x="86" y="124" text-anchor="middle">聞けない制約</text>
+    <rect class="d-box" x="142" y="86" width="92" height="56" rx="10"/><text class="d-label sm" x="188" y="106" text-anchor="middle">2 · Teach</text><text class="d-sub" x="188" y="124" text-anchor="middle">判断の語彙</text>
+    <rect class="d-box" x="244" y="86" width="92" height="56" rx="10"/><text class="d-label sm" x="290" y="106" text-anchor="middle">3 · 4 directions</text><text class="d-sub" x="290" y="124" text-anchor="middle">暗黙の好み</text>
+    <rect class="d-box" x="346" y="86" width="92" height="56" rx="10"/><text class="d-label sm" x="392" y="106" text-anchor="middle">4 · Mock first</text><text class="d-sub" x="392" y="124" text-anchor="middle">安い失敗で検証</text>
+    <rect class="d-box" x="40" y="150" width="92" height="56" rx="10"/><text class="d-label sm" x="86" y="170" text-anchor="middle">5 · Brainstorm</text><text class="d-sub" x="86" y="188" text-anchor="middle">介入点を広げる</text>
+    <rect class="d-box" x="142" y="150" width="92" height="56" rx="10"/><text class="d-label sm" x="188" y="170" text-anchor="middle">6 · Interview</text><text class="d-sub" x="188" y="188" text-anchor="middle">高価な決定から</text>
+    <rect class="d-box" x="244" y="150" width="92" height="56" rx="10"/><text class="d-label sm" x="290" y="170" text-anchor="middle">7 · Reference</text><text class="d-sub" x="290" y="188" text-anchor="middle">意味・不変条件</text>
+    <rect class="d-box" x="346" y="150" width="92" height="56" rx="10"/><text class="d-label sm" x="392" y="170" text-anchor="middle">8 · Tweakable</text><text class="d-sub" x="392" y="188" text-anchor="middle">決定空間の検討</text>
+    <text class="d-sub" x="250" y="292" text-anchor="middle">8 つの事前のパターン — 死角・好み・解法の空間を先に広げる</text>
+
+    <path class="d-edge accent" d="M480 175 H498"/><polygon class="d-arrow accent" points="494,170 502,175 494,180"/>
+    <rect class="d-box accent" x="500" y="40" width="110" height="270" rx="16"/>
+    <text class="d-label sm" x="512" y="66">DURING</text>
+    <rect class="d-box soft" x="510" y="130" width="90" height="90" rx="10"/>
+    <text class="d-label sm" x="555" y="155" text-anchor="middle">9 · Impl.</text><text class="d-label sm" x="555" y="172" text-anchor="middle">notes</text>
+    <text class="d-sub" x="555" y="196" text-anchor="middle">逸脱・仮定</text>
+
+    <path class="d-edge accent" d="M610 175 H628"/><polygon class="d-arrow accent" points="624,170 632,175 624,180"/>
+    <rect class="d-box" x="630" y="40" width="110" height="270" rx="16"/>
+    <text class="d-label sm" x="642" y="66">AFTER</text>
+    <rect class="d-box soft" x="640" y="110" width="90" height="70" rx="10"/><text class="d-label sm" x="685" y="140" text-anchor="middle">10 · Buy-in</text><text class="d-sub" x="685" y="158" text-anchor="middle">組織の合意</text>
+    <rect class="d-box soft" x="640" y="200" width="90" height="70" rx="10"/><text class="d-label sm" x="685" y="230" text-anchor="middle">11 · Quiz me</text><text class="d-sub" x="685" y="248" text-anchor="middle">利用者の理解</text>
+
+    <rect class="d-box" x="210" y="326" width="340" height="60" rx="14"/>
+    <text class="d-label sm" x="380" y="352" text-anchor="middle">Unknown → Decision → Record → Shared Context</text>
+    <text class="d-sub" x="380" y="374" text-anchor="middle">最初の作業の unknown を次の作業の known へ昇格</text>
+
+    <path class="d-edge accent dash" d="M685 310 C 700 400, 460 430, 250 410 C 150 400, 90 360, 62 312"/>
+    <polygon class="d-arrow accent" points="55,314 63,306 68,320"/>
+</svg>
+<div class="d-cap">11 のパターンはチェックリストではなくループだ。実装中に起きた deviation は記録され、実装後の共有と学習を経て、次の作業の事前の文脈へ戻ってくる。</div>
+</div>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>時点</th><th>タリクが公開したアーティファクト</th><th>目的</th></tr></thead>
+    <tbody>
+        <tr><td>実装の前</td><td><strong>1. Blindspot pass</strong></td><td>コードベース・ドメインの隠れた制約を見つける</td></tr>
+        <tr><td>実装の前</td><td><strong>2. Teach me my unknowns</strong></td><td>不慣れな領域の語彙と判断の基準を学ぶ</td></tr>
+        <tr><td>実装の前</td><td><strong>3. Four design directions</strong></td><td>言葉にできない好みを、極端に違う案として外へ出す</td></tr>
+        <tr><td>実装の前</td><td><strong>4. Mock before you wire</strong></td><td>実際のアプリに触れる前に安いプロトタイプで検証</td></tr>
+        <tr><td>実装の前</td><td><strong>5. Brainstorm the intervention</strong></td><td>介入の地点を広く探索し、費用の順に比べる</td></tr>
+        <tr><td>実装の前</td><td><strong>6. The interview</strong></td><td>設計を大きく変える質問から一度にひとつずつ確かめる</td></tr>
+        <tr><td>実装の前</td><td><strong>7. Point at a reference</strong></td><td>説明の代わりに、動くリファレンスの意味と不変条件を伝える</td></tr>
+        <tr><td>実装の前</td><td><strong>8. The tweakable plan</strong></td><td>変えやすい決定と機械的な作業を分けて計画を検討する</td></tr>
+        <tr><td>実装中</td><td><strong>9. Implementation notes</strong></td><td>計画からの逸脱・仮定・保守的な選択を記録する</td></tr>
+        <tr><td>実装の後</td><td><strong>10. Buy-in doc</strong></td><td>デモ・仕様・実装のノートを意思決定の文書にまとめる</td></tr>
+        <tr><td>実装の後</td><td><strong>11. Quiz me before I merge</strong></td><td>利用者が変更を実際に理解しているかを検証する</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>8. パターン 1 — Blindspot pass: すぐ実装せず死角から探す</h3>
+
+<p>不慣れなコードベースでいちばん危ういふるまいは、知らない人が先に詳細な仕様を確定することだ。タリクの最初のパターンは、実装の前にエージェントにコードベースを読ませ、<strong>利用者がまだ問えていない問題</strong>を見つけさせる。</p>
+
+<div class="note">
+    <span class="nh">プロンプトのパターン — 原文の意味を保った日本語の再構成</span>
+    私は Acme に新しい SSO の認証プロバイダを追加しようとしているが、認証のモジュールを扱ったことがない。すぐ実装せず blindspot pass をしてくれ。このコードベースの領域で、私が知らないことすら知らないものを見つけ、それぞれを説明したうえで、実装のために私がもっとよいプロンプトを書く方法を教えてくれ。
+</div>
+
+<p>このパターンはすぐに&ldquo;正解をくれ&rdquo;ではなく、<strong>&ldquo;私の問いの欠陥を見つけてくれ&rdquo;</strong>だ。ERP のように業務の規則がコードとデータに分散したシステムではとくに強い。依頼書にない状態の遷移、取り消しの規則、会計の締め、顧客ごとの拡張の列といった制約が、実装の前に表に出うるからである。</p>
+
+<h3>9. パターン 2 — Teach me my unknowns: 知らない領域の言葉から学ぶ</h3>
+
+<p>ふたつ目のアーティファクトは、作業の対象がコードでないときにより鮮明だ。タリクはカラーグレーディング（color grading）を例に挙げる。自分が専門の用語と判断の基準を知らなければ、望む結果を正確に頼めない。だから AI に結果から作れと言うのではなく、<strong>専門家が見ている軸と語彙をまず教えてくれ</strong>と頼む。</p>
+
+<div class="note">
+    <span class="nh">要点</span>
+    よいプロンプトを書くには、まずその分野で何を区別すべきかを知らねばならない。AI は実行者である前に、<strong>問いを作るための家庭教師</strong>になれる。
+</div>
+
+<h3>10. パターン 3 — Four design directions: 好みを説明せず、ぶつけて見つける</h3>
+
+<p>利用者はしばしば、結果を見ればよい悪いが分かるのに、始める前に趣味を言語化できない。タリクは、わずかに違う四つの案ではなく<strong>前提が大きく違う四つの方向</strong>を実際の HTML として作らせる。利用者は反応して選び、選んだ結果が次のくり返しの制約になる。</p>
+
+<div class="note">
+    <span class="nh">プロンプトのパターン</span>
+    私はこの画面についての視覚的な好みを正確に説明できない。似た変種を四つではなく、互いに哲学の違う四つのデザインの方向を、ひとつの HTML のページに作って見せてくれ。私が比べて反応する。
+</div>
+
+<p>これは <strong>unknown knowns</strong> を見つける方法だ。利用者はすでに好みを持っているが、説明できない。プロトタイプがその暗黙の基準を外へ引き出す。</p>
+
+<h3>11. パターン 4 — Mock before you wire: 実際のシステムに触れる前に安い失敗を買う</h3>
+
+<p>タリクの四つ目のパターンは、実際のアプリにつなぐ前に<strong>単一の HTML のモック</strong>を作る。データの契約、バックエンドの接続、状態の管理のような高くつく作業に入る前に、流れと画面を検証するのだ。</p>
+
+<p>大事なのは&ldquo;プロトタイプも作れ&rdquo;ではない。<strong>不可逆の費用が大きくなる前に、利用者の隠れた基準を見つけよ</strong>ということだ。実装の前の 30 分の失敗が、実装の後の 3 日のやり直しを防ぎうる。</p>
+
+<h3>12. パターン 5 — Brainstorm the intervention: 解法をひとつ選ぶ前に介入の地点を広げる</h3>
+
+<p>利用者は問題を見つけると、たいていすぐに自分の思いついた解決策をプロンプトに書く。しかしその瞬間に解法の空間は狭まる。タリクはまずコードベースを読ませ、<strong>可能な介入の地点を 10 個</strong>探させ、いちばん安いものからいちばん野心的なものまで並べさせる。</p>
+
+<div class="note">
+    <span class="nh">実務上の意味</span>
+    &ldquo;この関数を直せ&rdquo;より&ldquo;この問題を減らせる介入の地点を探せ&rdquo;が先だ。利用者が選んだ場所が本当に最適な変更点なのかを検証する段階である。
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 760 380" role="img" aria-label="左の単一の解法へ直行する経路と、右のいくつもの設計の方向と介入の地点を探索してから収束するやり方を比べた図">
+    <rect class="d-box" x="20" y="40" width="340" height="280" rx="16"/>
+    <text class="d-label" x="40" y="66">A · 解法を先に固定</text>
+    <text class="d-sub" x="40" y="86">最初に思いついた変更点ひとつへ直行</text>
+    <circle class="d-node dim" cx="110" cy="140" r="6"/><circle class="d-node dim" cx="230" cy="150" r="6"/><circle class="d-node dim" cx="250" cy="235" r="6"/>
+    <text class="d-sub" x="190" y="118" text-anchor="middle">見えなかった代案</text>
+    <circle class="d-box accent" cx="70" cy="190" r="20"/><text class="d-label sm" x="70" y="194" text-anchor="middle">問題</text>
+    <circle class="d-box accent" cx="170" cy="190" r="20"/><text class="d-label sm" x="170" y="194" text-anchor="middle">解法</text>
+    <circle class="d-box accent" cx="290" cy="190" r="24"/><text class="d-label sm" x="290" y="194" text-anchor="middle">実装</text>
+    <path class="d-edge accent" d="M92 190 H148 M192 190 H264"/>
+    <polygon class="d-arrow accent" points="144,185 152,190 144,195"/><polygon class="d-arrow accent" points="260,185 268,190 260,195"/>
+    <text class="d-sub" x="190" y="290" text-anchor="middle">速いが、間違った地点なら手戻りの費用が大きい</text>
+
+    <rect class="d-box accent" x="380" y="40" width="360" height="280" rx="16"/>
+    <text class="d-label" x="400" y="66">B · 領域を探索してから収束</text>
+    <text class="d-sub" x="400" y="86">異なる方向・介入点を先に広げる</text>
+    <circle class="d-box accent" cx="430" cy="190" r="20"/><text class="d-label sm" x="430" y="194" text-anchor="middle">問題</text>
+    <circle class="d-node b" cx="510" cy="150" r="15"/><text class="d-label sm" x="510" y="154" text-anchor="middle">A</text>
+    <circle class="d-node c" cx="520" cy="190" r="15"/><text class="d-label sm" x="520" y="194" text-anchor="middle">B</text>
+    <circle class="d-node d" cx="510" cy="230" r="15"/><text class="d-label sm" x="510" y="234" text-anchor="middle">C</text>
+    <circle class="d-node dim" cx="600" cy="130" r="11"/><text class="d-sub" x="600" y="133" text-anchor="middle">UI</text>
+    <circle class="d-node dim" cx="615" cy="190" r="11"/><text class="d-sub" x="615" y="193" text-anchor="middle">API</text>
+    <circle class="d-node dim" cx="600" cy="250" r="11"/><text class="d-sub" x="600" y="253" text-anchor="middle">Rule</text>
+    <path class="d-edge accent" d="M450 178 L495 155 M450 190 L505 190 M450 202 L495 225"/>
+    <path class="d-edge" d="M525 148 L589 132 M535 190 L604 190 M525 232 L589 248"/>
+    <path class="d-edge accent" d="M611 132 L668 178 M626 190 L668 190 M611 248 L668 202"/>
+    <circle class="d-box accent" cx="690" cy="190" r="34"/>
+    <text class="d-label sm" x="690" y="186" text-anchor="middle">根拠ある</text><text class="d-label sm" x="690" y="200" text-anchor="middle">収束</text>
+    <text class="d-sub" x="560" y="286" text-anchor="middle"><tspan x="560" dy="0">初期の費用は少し増えるが、</tspan><tspan x="560" dy="14">unknown を安く見つけて手戻りを減らす</tspan></text>
+</svg>
+<div class="d-cap">左は最初に思いついた解法をすぐ実装する。右は異なる方向と介入の地点をまず広げ、unknown を見つけてから収束する。タリクの言う&ldquo;領域から探して進む&rdquo;の違いだ。</div>
+</div>
+
+<p>この対比は、Four design directions、Mock、Brainstorm、Reference がなぜ同じ系列なのかを示す。四つの技法はどれも、モデルに即座の正解を求めず、<strong>探索できる領域を外へ出して、人が反応できるようにする</strong>。つまり正解を生む性能より、<strong>探索の空間の品質</strong>を先に上げるのだ。</p>
+
+<h3>13. パターン 6 — The interview: AI が利用者にインタビューする</h3>
+
+<p>方向が定まったら、モデルに逆に質問させる。ここで大事なのは&ldquo;質問ある？&rdquo;ではない。タリクのパターンは<strong>一度にひとつずつ</strong>問い、利用者の答えが次の問いを変え、<strong>アーキテクチャをいちばん大きく変える質問から</strong>問う。</p>
+
+<div class="note">
+    <span class="nh">プロンプトのパターン</span>
+    実装の前に私にインタビューしてくれ。一度にひとつずつ質問し、私の答えに応じて次の質問を変えてくれ。質問の順は、答えがアーキテクチャをいちばん大きく変える項目から決めてくれ。十分になったら、決まったこと、未決のこと、君が仮定したことを分けて要約してくれ。
+</div>
+
+<p>このやり方は質問の数を増やすことが目的ではない。<strong>情報の価値の高い質問を前倒しすること</strong>が目的だ。認証の主体、データの所有権、複数の会社にまたがる範囲、障害時の一貫性のように、ひっくり返すのが高くつく決定を先に確定する。</p>
+
+<h3>14. パターン 7 — Point at a reference: 説明より動く地図を渡す</h3>
+
+<p>望む動きを言葉で正確に説明しにくいなら、すでに動いている実装を渡す。タリクの公開の例は <strong>Rust の crate の意味を TypeScript で再実装する</strong>状況だ。言語が違っても構わない。まず semantics map を作り、何を保つべきかを確かめてから移す。</p>
+
+<p>よいリファレンスは、何十の文よりも多くの情報を含む。エラーの処理、順序、境界の条件、不変条件、API の手ざわりが実際の動きの中に入っているからだ。ただしコピーは答えではない。<strong>保つべき意味と、いまの環境に合わせて変える表面を分ける</strong>必要がある。</p>
+
+<h3>15. パターン 8 — The tweakable plan: 変えられる決定を計画の前に置く</h3>
+
+<p>タリクの companion guide で見落とされやすい大事なパターンだ。実装の計画を単なる作業の一覧にせず、<strong>利用者が調整できる決定</strong>を前に置く。データのモデル、型のインタフェース、利用者に見えるふるまいのように、方向を変えれば大きく影響する項目をまず見せ、機械的なリファクタリングは後ろへ送る。</p>
+
+<div class="note">
+    <span class="nh">なぜ大事か</span>
+    人が検討すべきなのはすべてのコードの行ではない。<strong>決定の空間</strong>だ。計画の文書が機械的な作業で埋まると、本当に変えるべき設計の決定を取り落とす。
+</div>
+
+<h3>16. パターン 9 — Implementation notes: 計画からの逸脱を隠さない</h3>
+
+<p>どれだけ準備しても、実装中には現実が計画とぶつかる。強いエージェントの危うさは、計画から外れること自体ではなく、<strong>外れたという事実を見せないまま自分で正当化して進み続けること</strong>だ。タリクは別に implementation-notes のファイルを保たせる。</p>
+
+<div class="note">
+    <span class="nh">プロンプトのパターン</span>
+    実装のノートのファイルを保ってくれ。エッジケースのために計画から外れねばならないときは、可能な選択のうち保守的なほうを取り、何が変わったか・なぜそうしたか・どんな仮定を置いたかを Deviations の下に記録してくれ。致命的な阻害の理由でなければ、進み続けてくれ。
+</div>
+
+<p>このノートはログ以上の意味を持つ。最初の作業の unknown を次の作業の known に変える<strong>地図の更新の仕掛け</strong>だ。とくに長期のエージェントでは、結果だけを残さず意思決定の provenance を残さねばならない。</p>
+
+<h3>17. パターン 10 — Buy-in doc: 実装の結果を組織の意思決定の単位に変える</h3>
+
+<p>タリクの公開した 11 個のうち、二番目によく抜け落ちる項目だ。実装が終わったら、プロトタイプ、仕様、implementation notes を散らばったままにせず、<strong>Slack にそのまま共有できる単一の buy-in の文書</strong>にまとめる。そして説明よりデモを前に出す。</p>
+
+<p>これは個人の生産性を組織の生産性に変える段階だ。AI が速く作った結果もチームで採られなければ価値がない。デモ、決定の理由、変更の範囲、残ったリスクをひとつの文書に束ねて<strong>検討と同意の費用</strong>を下げる。</p>
+
+<h3>18. パターン 11 — Quiz me before I merge: 説明できないコードは、まだ自分のコードではない</h3>
+
+<p>最後はクイズだ。タリクは diff をもとに、変更の文脈、直感、実際の実装の内容を説明する HTML のレポートを作らせ、利用者が理解したかをクイズで確かめさせる。</p>
+
+<div class="note">
+    <span class="nh">プロンプトのパターン</span>
+    この diff をもとに、私が変更を完全に理解できる HTML のレポートを作ってくれ。文脈、中心の直感、実際にやったことを説明し、最後にクイズを付けてくれ。私が間違えたところは説明し直し、変形の問題を出してくれ。私が十分に理解する前に完了とみなさないでくれ。
+</div>
+
+<p>これは教育のための遊びではない。AI が生成したコードが増えるほど、レビューの問いは<strong>&ldquo;テストが通るか&rdquo;</strong>だけでは足りない。<strong>&ldquo;運用する人が失敗のモードと復旧の方法を説明できるか&rdquo;</strong>まで確かめてはじめて、所有権が生まれる。</p>
+
+<h3>19. 六つの大きな流れにもう一度圧縮すると</h3>
+
+<p>11 のアーティファクトは、実務では次の六つの流れに圧縮できる。だから二次のコンテンツで&ldquo;6 つの技法&rdquo;として紹介されるのも、まったく誤りではない。ただし以下は<strong>要約の階層</strong>であり、元の資料は 11 個だという点は区別すべきだ。</p>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>大きな流れ</th><th>含まれる 11 のアーティファクト</th><th>探す空白</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Blind Spot</strong></td><td>Blindspot pass, Teach me my unknowns</td><td>ドメインそのものを知らず問えなかったもの</td></tr>
+        <tr><td><strong>Explore &amp; Prototype</strong></td><td>Four design directions, Mock before you wire, Brainstorm the intervention</td><td>隠れた好みと代案の空間</td></tr>
+        <tr><td><strong>Interview</strong></td><td>The interview, The tweakable plan</td><td>未決の事項と不可逆の決定</td></tr>
+        <tr><td><strong>Reference</strong></td><td>Point at a reference</td><td>言葉から漏れるふるまいの意味と不変条件</td></tr>
+        <tr><td><strong>Implementation Memory</strong></td><td>Implementation notes</td><td>現実と計画がぶつかった地点</td></tr>
+        <tr><td><strong>Ownership</strong></td><td>Buy-in doc, Quiz me before I merge</td><td>組織の合意と利用者の理解の空白</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>20. タリクの第二の大きなメッセージ — 生産の費用が下がればトレードオフも計算し直す</h3>
+
+<p>タリクの発表の後半はプロンプトの技術を越える。彼は過去にスタートアップを営みながら、いつもひとつを選ばねばならなかったと振り返る。アプリを磨くか、新しい機能を試すか、一方をやれば他方は後回しにするしかなかった。ソフトウェアを作る費用が高かったからだ。</p>
+
+<p>Fable のような強いコーディングエージェントが作業の費用を大きく下げるなら、過去の優先順位の体系をそのまま保つのが合理的なのかを、もう一度問わねばならない。タリクの態度は<strong>&ldquo;トレードオフがあると早く信じすぎるな&rdquo;</strong>に近い。ふたつのうち一方を選ぶ前に、両方とも試せるのか、かつては高くついたがいまは安くなった実験は何かを確かめよ、ということだ。</p>
+
+<p>この点で彼の&ldquo;無理を言え（be unreasonable）&rdquo;は無謀さとは違う。<strong>費用の関数が変わったのに、古い制約を事実のように受け取るな</strong>という主張である。</p>
+
+<h3>21. &ldquo;コーディングを愛したが、戻れない&rdquo; — 変化への喪の作業</h3>
+
+<p>タリクはコーディングエージェントの生産性だけを讃えはしない。彼は手でコードを書き、頭の中でコードベースを回し、夜遅くまでデバッグしていた感覚を愛したと言う。同時に、何週間も失敗し、ほとんどのプロジェクトが思いどおりにならなかった費用も覚えている。</p>
+
+<p>だから結論は単なる&ldquo;AI が開発者を置き換える&rdquo;ではない。<strong>好きだった働き方の一部を失う感情は本物だが、生産のやり方が変わったあとで過去へ戻ることが答えではない。</strong>変化そのものを通り抜けながら、新しい所有権と理解のやり方を作らねばならない、というメッセージだ。</p>
+
+<h3>22. 外部の研究はタリクの論拠をどこまで補強するか</h3>
+
+<h4>22-1. エージェントはより長い作業をこなす方向へ進んでいる</h4>
+
+<p>METR 系列の研究は、フロンティアの AI が成功裏にこなせる作業の時間の地平が速く伸びる趨勢を報告する。この結果をすべての実務のプロジェクトへそのまま一般化はできないが、<strong>モデルがより長い作業の経路を自律的に探索する</strong>というタリクの問題意識を補強する。</p>
+
+<h4>22-2. モデルの性能だけではエージェントの性能を説明できない</h4>
+
+<p>Claude Code のアーキテクチャの分析は、道具、権限、文脈、拡張の仕組み、サブエージェントがシステムの能力の中心の要素であることを示す。これは capability overhang と unhobbling の論拠に直接つながる。<strong>モデルにできることと、プロダクトが実際に許し導くことは違う。</strong></p>
+
+<h4>22-3. 生産性の指標と価値の指標は分けるべきだ</h4>
+
+<p>コーディングエージェントの導入の研究は、開発の産出量の増加を観察しつつも、マージされた PR の数がそのまま顧客の価値や保守の品質を意味するわけではない、と警告する。タリクのメッセージも同じ点に触れる。<strong>作る費用が下がっても、何を作るかを判断する費用は消えない。</strong></p>
+
+<div class="note">
+    <span class="nh">研究の補強の資料</span>
+    · <a href="https://arxiv.org/abs/2503.14499" target="_blank" rel="noopener">Kwa et al., Measuring AI Ability to Complete Long Tasks</a>.<br>
+    · <a href="https://arxiv.org/abs/2604.14228" target="_blank" rel="noopener">Liu et al., Dive into Claude Code: The Design Space of Today&rsquo;s and Future AI Agent Systems</a>.<br>
+    · <a href="https://arxiv.org/abs/2607.01418" target="_blank" rel="noopener">Murphy-Hill et al., Adoption and Impact of Command-Line AI Coding Agents</a>.<br>
+    · <a href="https://arxiv.org/abs/2605.25438" target="_blank" rel="noopener">Quispe, Coding Beyond Your Training</a>.
+</div>
+
+<h3>23. 事実関係のチェック — 確認できたもの、発表上の主張、まだ検証しにくいもの</h3>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>項目</th><th>判定</th><th>根拠と解釈</th></tr></thead>
+    <tbody>
+        <tr><td>タリクの <em>A Field Guide to Fable</em> の原文の存在</td><td><strong>一次の出典で確認</strong></td><td>Thariq 本人の X の投稿</td></tr>
+        <tr><td>実戦のパターンが事前 8・中間 1・事後 2 の計 11 個</td><td><strong>一次の出典で確認</strong></td><td>Thariq 本人の companion guide が明記</td></tr>
+        <tr><td>Fable 5 の 2026-06-09 の公式の発表</td><td><strong>公式に確認</strong></td><td>Anthropic の公式の発表</td></tr>
+        <tr><td>Fable 5 が長期・複合のエージェントの作業を中心の用途に置くという説明</td><td><strong>公式に確認</strong></td><td>Anthropic の発表およびモデルの文書</td></tr>
+        <tr><td>強いモデルでは道具・ハーネス・文脈が性能に重要だという方向</td><td><strong>研究が補強</strong></td><td>Claude Code のアーキテクチャの研究</td></tr>
+        <tr><td>Claude Code のシステムプロンプトをおよそ 80% 削除</td><td><strong>タリクの公開の発表上の主張</strong></td><td>発表の要約で確認できるが、Anthropic のプロダクトの文書の公式の変更の数値としては扱わない</td></tr>
+        <tr><td>質問の道具がモデルの世代ごとに違って動いたという比較</td><td><strong>タリクの実務の経験</strong></td><td>プロダクトのチームの経験談であり、統制された実験ではない</td></tr>
+        <tr><td>原文の 280 万の閲覧</td><td><strong>時点に依存・独立した検証は保留</strong></td><td>閲覧の指標は変動しうるので、本文の論拠には使わない</td></tr>
+        <tr><td>発表のデッキを前夜におよそ 4 時間で制作</td><td><strong>個人の逸話</strong></td><td>発表上の自述として扱い、独立した検証の対象と区別する</td></tr>
+        <tr><td>古いコードベースの数週間の作業が数時間に短縮</td><td><strong>個人の逸話</strong></td><td>タリクの経験談であり、一般の生産性の数値として一般化しない</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>24. 知識のウィキと開発の組織に当てはめると</h3>
+
+<p>タリクのフレームは、個人のプロンプトの技術より<strong>組織の知識のシステム</strong>により大きく当てはめられる。とくに ERP の開発は、コードだけを読んでも領土は分からない。業務の規則、顧客ごとの例外、DB の状態、配備の履歴、障害への対応、担当者の判断が、いくつものシステムと人に散らばっているからだ。</p>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>タリクのパターン</th><th>ERP・開発の組織への適用</th><th>WIKI の資産化</th></tr></thead>
+    <tbody>
+        <tr><td>Blindspot pass</td><td>開発の依頼の前に既存の Rule・状態・DB・顧客ごとの拡張・障害の履歴を探索</td><td>未確認の制約の一覧</td></tr>
+        <tr><td>Teach me my unknowns</td><td>不慣れな業務のドメインの中心の用語・決定の軸を学ぶ</td><td>Domain Primer</td></tr>
+        <tr><td>Design directions / Mock</td><td>共通の UI・エージェントの画面をいくつもの前提で素早く比べる</td><td>Prototype Decision</td></tr>
+        <tr><td>Brainstorm intervention</td><td>依頼された修正の場所のほかに Rule・API・DB・バッチ・UI の介入点を比べる</td><td>Option Map</td></tr>
+        <tr><td>Interview</td><td>コンサルタント・PM・開発者に、アーキテクチャへの影響が大きい質問から確かめる</td><td>Decision Record</td></tr>
+        <tr><td>Reference</td><td>既存の顧客の実装・標準のモジュール・他製品のふるまいを意味の単位で比べる</td><td>Semantic Reference</td></tr>
+        <tr><td>Tweakable plan</td><td>データのモデル・状態の体系・API の契約を機械的な修正と分ける</td><td>Reviewable Plan</td></tr>
+        <tr><td>Implementation notes</td><td>計画からの逸脱、運用のデータの例外、保守的な選択を記録</td><td>Deviation Log</td></tr>
+        <tr><td>Buy-in doc</td><td>デモ・決定・リスクを経営陣・PM・隣接のチームへの共有用にまとめる</td><td>Decision Brief</td></tr>
+        <tr><td>Quiz</td><td>AI が生成した変更を、担当の開発者が障害・復旧の観点まで説明する</td><td>Ownership Check</td></tr>
+    </tbody>
+</table>
+</div>
+
+<p>ここで GitHub WIKI は単なる文書の保管庫ではなく、<strong>unknown を known へ昇格させる仕掛け</strong>になる。Implementation notes で見つかった例外が文書化され、文書の中心の概念が Knowledge Graph につながり、次のエージェントがその地図をまた読む。そうすれば最初のプロジェクトの試行錯誤が、次のプロジェクトの事前の文脈になる。</p>
+
+<div class="note">
+    <span class="nh">このウィキの観点でいちばん大事な結論</span>
+    <strong>よいナレッジグラフは、すでに知っている事実をつなぐだけのものではない。過去の作業で見つかった unknown を、次の作業の known context として再利用させねばならない。</strong>
+</div>
+
+<h3>25. 実務の運用のプロトコル — 次のエージェントの作業からこう始める</h3>
+
+<ol>
+    <li><strong>作業の指示の前に Blindspot pass</strong> — コード・文書・履歴から、自分が取り落とした制約をまず探す。</li>
+    <li><strong>不慣れなドメインなら Teach me my unknowns</strong> — 専門の用語と判断の軸を学ぶ。</li>
+    <li><strong>好みが曖昧なら 4 つの方向と mock</strong> — 言葉で仕様を無理に確定しない。</li>
+    <li><strong>解法を固める前に intervention points を探索</strong> — 変更の地点を広く比べる。</li>
+    <li><strong>アーキテクチャへの影響が大きい質問からインタビュー</strong> — 一度にひとつずつ、答えに応じて次の問いを変える。</li>
+    <li><strong>よい既存の実装があれば semantics map</strong> — 表面のコピーではなく意味と不変条件を移す。</li>
+    <li><strong>計画は tweakable decisions first</strong> — 人が変えられる決定を前に置く。</li>
+    <li><strong>実装中は deviations を記録</strong> — 計画からの逸脱と仮定を隠さない。</li>
+    <li><strong>完了の後に buy-in doc</strong> — デモ、決定、リスクをひとつの文書にする。</li>
+    <li><strong>merge の前に quiz</strong> — 担当者が失敗のモードと復旧の方法を説明できねばならない。</li>
+</ol>
+
+<h3>26. 最後の解釈 — ボトルネックが人間だという言葉の本当の意味</h3>
+
+<p>タリクの主張を&ldquo;AI の結果が悪ければ利用者のせい&rdquo;と読めば、要点を取り逃す。むしろ逆だ。モデルがよくなるほど、人間に残る希少な資源が何なのかを定義し直す主張である。</p>
+
+<ul>
+    <li>何が価値のある問題かを判断する力</li>
+    <li>自分が何を知らないかを見つける力</li>
+    <li>言葉にできなかった好みと暗黙の規則を外へ出す力</li>
+    <li>エージェントの計画からの逸脱と仮定を追う力</li>
+    <li>生成された結果を運用できるほど理解し所有する力</li>
+</ul>
+
+<p>強いモデルは、より少ない指示でより遠くまで行く。だからプロンプトを長くするだけでは足りない。必要なのは<strong>地図と領土の違いを意図的に表に出すワークフロー</strong>だ。タリクの 11 のアーティファクトは、その違いを実装の前・中・後に見つけるための具体的な仕掛けである。</p>
+
+<div class="note">
+    <span class="nh">一文に圧縮すると</span>
+    <strong>次のプロジェクトで AI にすぐ仕事をさせず、まず&ldquo;私が何を知らないのかから一緒に探そう&rdquo;と始めよ。</strong>
+</div>
+
+<h3>出典と参考の資料</h3>
+
+<ul>
+    <li><strong>一次の資料</strong> — <a href="https://x.com/trq212/status/2073100352921215386" target="_blank" rel="noopener">Thariq Shihipar, A Field Guide to Fable: Finding Your Unknowns</a>.</li>
+    <li><strong>一次の資料</strong> — <a href="https://thariqs.github.io/html-effectiveness/unknowns/" target="_blank" rel="noopener">Thariq Shihipar, Know your unknowns — 11 self-contained HTML artifacts</a>.</li>
+    <li><strong>公式</strong> — <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5" target="_blank" rel="noopener">Anthropic, Introducing Claude Fable 5</a>, 2026-06-09.</li>
+    <li><strong>公式</strong> — <a href="https://platform.claude.com/docs/en/intro" target="_blank" rel="noopener">Anthropic Claude Platform Docs — model overview</a>.</li>
+    <li><strong>二次の報道</strong> — <a href="https://the-decoder.com/anthropic-developer-shares-prompting-tips-for-fable-5-that-focus-on-finding-your-own-blind-spots-first/" target="_blank" rel="noopener">THE DECODER, Anthropic developer shares prompting tips for Fable 5 that focus on finding your own blind spots first</a>, 2026-07-04.</li>
+    <li><strong>発表の補強</strong> — <a href="https://explainx.ai/blog/field-guide-to-fable-thariq-shihipar-anthropic-ai-engineer-2026" target="_blank" rel="noopener">Field Guide to Fable — Thariq Shihipar talk recap</a>.</li>
+    <li><a href="https://arxiv.org/abs/2503.14499" target="_blank" rel="noopener">Kwa et al., Measuring AI Ability to Complete Long Tasks</a>, 2025.</li>
+    <li><a href="https://arxiv.org/abs/2604.14228" target="_blank" rel="noopener">Liu et al., Dive into Claude Code: The Design Space of Today&rsquo;s and Future AI Agent Systems</a>, 2026.</li>
+    <li><a href="https://arxiv.org/abs/2607.01418" target="_blank" rel="noopener">Murphy-Hill et al., Adoption and Impact of Command-Line AI Coding Agents</a>, 2026.</li>
+    <li><a href="https://arxiv.org/abs/2605.25438" target="_blank" rel="noopener">Quispe, Coding Beyond Your Training</a>, 2026.</li>
+</ul>

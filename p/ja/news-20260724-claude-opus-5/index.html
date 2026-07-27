@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Opus 5 — 半額の準 Fable がやってきた</title>
+<meta name="description" content="Anthropic の 2026-07-24 の Claude Opus 5 の公開を、公式の発表と複数の報道から突き合わせて検証した記事 — $5/$25 で CursorBench 3.2 の max のピークの Fable 5 に 0.5% 以内、タスクあたりの費用は半分。Frontier-Bench 43.3%、OSWorld 2.0 を ⅓ の予算で、ARC-AGI 3 で 3 倍。図面を見られないと知るや自分で CV パイプラインを書いて FreeCAD 3D を再構成した長期のエージェンティックなデモ、加えて Fable 5 のセーフガードの誤検知の論争の文脈と、未確認の主張の切り分け">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/news-20260724-claude-opus-5/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260724-claude-opus-5/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260724-claude-opus-5/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/news-20260724-claude-opus-5/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260724-claude-opus-5/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Claude Opus 5 — 半額の準 Fable がやってきた">
+<meta property="og:description" content="Anthropic の 2026-07-24 の Claude Opus 5 の公開を、公式の発表と複数の報道から突き合わせて検証した記事 — $5/$25 で CursorBench 3.2 の max のピークの Fable 5 に 0.5% 以内、タスクあたりの費用は半分。Frontier-Bench 43.3%、OSWorld 2.0 を ⅓ の予算で、ARC-AGI 3 で 3 倍。図面を見られないと知るや自分で CV パイプラインを書いて FreeCAD 3D を再構成した長期のエージェンティックなデモ、加えて Fable 5 のセーフガードの誤検知の論争の文脈と、未確認の主張の切り分け">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/news-20260724-claude-opus-5/">
+<meta property="og:image" content="https://dewytear.github.io/assets/ai/news/2026/news-20260724-claude-opus-5/hero.webp">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Claude Opus 5 — 半額の準 Fable がやってきた">
+<meta name="twitter:description" content="Anthropic の 2026-07-24 の Claude Opus 5 の公開を、公式の発表と複数の報道から突き合わせて検証した記事 — $5/$25 で CursorBench 3.2 の max のピークの Fable 5 に 0.5% 以内、タスクあたりの費用は半分。Frontier-Bench 43.3%、OSWorld 2.0 を ⅓ の予算で、ARC-AGI 3 で 3 倍。図面を見られないと知るや自分で CV パイプラインを書いて FreeCAD 3D を再構成した長期のエージェンティックなデモ、加えて Fable 5 のセーフガードの誤検知の論争の文脈と、未確認の主張の切り分け">
+<meta name="twitter:image" content="https://dewytear.github.io/assets/ai/news/2026/news-20260724-claude-opus-5/hero.webp">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Claude Opus 5 — 半額の準 Fable がやってきた",
+ "description": "Anthropic の 2026-07-24 の Claude Opus 5 の公開を、公式の発表と複数の報道から突き合わせて検証した記事 — $5/$25 で CursorBench 3.2 の max のピークの Fable 5 に 0.5% 以内、タスクあたりの費用は半分。Frontier-Bench 43.3%、OSWorld 2.0 を ⅓ の予算で、ARC-AGI 3 で 3 倍。図面を見られないと知るや自分で CV パイプラインを書いて FreeCAD 3D を再構成した長期のエージェンティックなデモ、加えて Fable 5 のセーフガードの誤検知の論争の文脈と、未確認の主張の切り分け",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/news-20260724-claude-opus-5/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260724-claude-opus-5",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-25T13:36:03+09:00",
+ "dateModified": "2026-07-25T21:29:58+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260724-claude-opus-5">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/news-20260724-claude-opus-5/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/news-20260724-claude-opus-5/" hreflang="en">English</a>
+</p>
+<article>
+<h2>Claude Opus 5 — 半額の準 Fable がやってきた</h2>
+
+<figure class="doc-img">
+    <img src="assets/ai/news/2026/news-20260724-claude-opus-5/hero.webp" width="1440" height="810"
+         alt="ヴィンテージの鳥の卵の図版が集まって数字の 5 の形をなす Claude Opus 5 の公開ビジュアル">
+    <figcaption>ひとつひとつの卵が集まって&lsquo;5&rsquo;をなす — Claude Opus 5 の公開ビジュアル（画像: Anthropic）</figcaption>
+</figure>
+
+<p>2026 年 7 月 24 日、Anthropic が <strong>Claude Opus 5</strong> を公開しました。一行の要約 — <strong>&ldquo;最上位のモデル Fable 5 にぴたりと迫る性能を、半額で。&rdquo;</strong> 2 か月のあいだに 4 度目のモデルのリリースという速さのなかで出たこの発表にレビュアーがざわついた理由は単純です: いくつものベンチマークで<strong>自社の最上位のモデルを上回る数値</strong>が出たからです。この記事は<strong>公式の発表と複数の報道で突き合わせて検証した事実</strong>を骨組みに、公開の直後のレビューの反応から出た話をあわせて整理したものです — 検証できた事実と未確認の反応は分けて表記しました。</p>
+
+<div class="note">
+    <span class="nh">記事の情報（出典）</span>
+    · 対象: <strong>Anthropic Claude Opus 5 の公開</strong>（2026-07-24）<br>
+    · 整理: <strong>公式の発表・複数の報道の突き合わせ検証</strong>（2026-07-25） · 参考: 公開の直後のレビューの反応<br>
+    · 公式の原文: <a href="https://www.anthropic.com/news/claude-opus-5" target="_blank" rel="noopener">Introducing Claude Opus 5 (anthropic.com)</a> · 文書の末尾に出典の一覧
+</div>
+
+<h3>三行の要約</h3>
+<ul>
+    <li>Opus 5 は <strong>$5/$25</strong>（入力／出力、100 万トークンあたり） — 前作の Opus 4.8 と同じ価格なのに、性能は <strong>Fable 5（$10/$50）のすぐ下</strong>か、一部のベンチマークでは<strong>その上</strong>です。</li>
+    <li>本当のニュースは Fable との対決だけではありません — <strong>Opus 4.8 → 5 の世代の跳躍</strong>が全項目にわたって大きく、とくに<strong>&ldquo;自分で検証しながら最後までやり切る&rdquo;長期のエージェンティックな作業</strong>が目に見えてよくなりました（図面を見られないと知るや CV パイプラインを自分で書いて 3D CAD を再構成したデモが象徴）。</li>
+    <li>実利用の関心事は<strong>セーフガード</strong> — Fable 5 は 7 月の初めから安全の分類器がセキュリティやデバッグの作業まで誤検知する論争がありましたが、Opus 5 はその制約がずっとゆるい、というのがレビューの見どころです。</li>
+</ul>
+
+<h3>用語を三つだけ知っておく</h3>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>用語</th><th>やさしい説明</th></tr></thead>
+    <tbody>
+        <tr><td><strong>effort<br>(考える強さ)</strong></td><td>モデルが答えひとつに<strong>どれだけ長く考えるか</strong>を調節するダイヤル。high → xhigh → max と上げるほど点数は上がりますが、トークン（＝お金）をより使います。今回の比較の中心の軸です。</td></tr>
+        <tr><td><strong>トークン効率</strong></td><td>同じ結果を<strong>どれだけ少ないトークンで</strong>出せるか。単価が安くても話が長ければ高くつきます — Opus 5 は単価も半分でトークンも少なめなので、&lsquo;タスクあたりの費用&rsquo;が大きく下がります。</td></tr>
+        <tr><td><strong>長期のエージェンティックな作業</strong></td><td>一度答えて終わりではなく、<strong>目標を与えると試行→検証→修正を何十回もくり返して</strong>仕上げる仕事。コーディングエージェントやコンピュータの操作といった実戦の作業はみなここに入ります。</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>ベンチマーク — &ldquo;max でだけ Fable が勝つ&rdquo;</h3>
+<p>公開の直後のレビューがいちばん沸いたところです。コーディングの実戦のベンチマーク <strong>CursorBench 3.2</strong> で、effort を上限まで上げた <strong>max の区間でだけ Fable 5 がわずかに先行し</strong>（ピーク比で<strong>0.5% 以内</strong>）、ほとんどの利用者が実際に使う <strong>high・xhigh の区間では事実上同じ出力</strong>が出ます — なのにタスクあたりの費用は<strong>半分</strong>です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="CursorBench 3.2 の概念図: effort を high, xhigh, max と上げると Opus 5 と Fable 5 の点数の曲線がほぼ重なり、max でだけ Fable 5 が 0.5% 以内で先行し、Opus 4.8 はその下にある">
+    <text class="d-label" x="360" y="26" text-anchor="middle">CursorBench 3.2 — effort 別の点数（概念図）</text>
+    <line class="d-edge" x1="90" y1="240" x2="660" y2="240"/>
+    <line class="d-edge" x1="90" y1="240" x2="90" y2="50"/>
+    <text class="d-sub" x="200" y="262" text-anchor="middle">high</text>
+    <text class="d-sub" x="390" y="262" text-anchor="middle">xhigh</text>
+    <text class="d-sub" x="580" y="262" text-anchor="middle">max</text>
+    <text class="d-sub" x="76" y="150" text-anchor="end">点数</text>
+    <path class="d-edge" d="M200 150 C300 122, 480 102, 580 88" fill="none"/>
+    <circle class="d-node" cx="200" cy="150" r="6"/><circle class="d-node" cx="390" cy="112" r="6"/><circle class="d-node" cx="580" cy="88" r="6"/>
+    <text class="d-label sm" x="644" y="84">Fable 5</text>
+    <path class="d-edge accent" d="M200 152 C300 126, 480 108, 580 96" fill="none"/>
+    <circle class="d-node" cx="200" cy="152" r="6"/><circle class="d-node" cx="390" cy="116" r="6"/><circle class="d-node" cx="580" cy="96" r="6"/>
+    <text class="d-label sm" x="644" y="104">Opus 5</text>
+    <path class="d-edge dash" d="M200 196 C300 178, 480 166, 580 158" fill="none"/>
+    <circle class="d-node dim" cx="200" cy="196" r="6"/><circle class="d-node dim" cx="390" cy="170" r="6"/><circle class="d-node dim" cx="580" cy="158" r="6"/>
+    <text class="d-label sm" x="644" y="162">Opus 4.8</text>
+    <text class="d-sub" x="360" y="290" text-anchor="middle">max でだけ 0.5% 以内の差 — high・xhigh は事実上同格、タスクあたりの費用は半分</text>
+</svg>
+<div class="d-cap">公式のチャートの構図を移した概念図（実測の縮尺ではない）。ふたつの曲線がほぼ重なること — それが今回の発表の一枚の絵だ。</div>
+</div>
+
+<p>ほかのベンチマークでは、そもそも <strong>Fable 5 を上回る</strong>結果も出ました。突き合わせて検証できた数値だけを挙げるとこうです。</p>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>ベンチマーク</th><th>結果</th><th>意味</th></tr></thead>
+    <tbody>
+        <tr><td><strong>CursorBench 3.2</strong>（コーディング）</td><td>max effort で Fable 5 のピーク比 <strong>−0.5% 以内</strong>、タスクあたりの費用 <strong>½</strong></td><td>&ldquo;事実上同じ性能、半額&rdquo;の根拠</td></tr>
+        <tr><td><strong>Frontier-Bench</strong>（エージェンティックなコーディング）</td><td><strong>43.3%</strong> vs GPT-5.6 Sol 34.4%</td><td>他社の最上位も上回る</td></tr>
+        <tr><td><strong>OSWorld 2.0</strong>（コンピュータの操作）</td><td>すべての価格帯で優位、Fable 5 のピークを<strong>およそ ⅓ の予算</strong>で突破</td><td>エージェントの実戦で費用の優位がいちばん大きい</td></tr>
+        <tr><td><strong>Zapier AutomationBench</strong>（業務の自動化）</td><td>同じ費用で次点のモデルの<strong>約 1.5 倍</strong>の通過率</td><td>知識労働・自動化に強い</td></tr>
+        <tr><td><strong>ARC-AGI 3</strong>（抽象的な推論）</td><td>次点のモデルの<strong>3 倍</strong>の点数</td><td>世代の跳躍を象徴する数値</td></tr>
+    </tbody>
+</table>
+</div>
+
+<figure class="doc-img">
+    <img src="assets/ai/news/2026/news-20260724-claude-opus-5/fig-frontier-bench.webp" width="1440" height="810"
+         alt="Frontier-Bench v0.1 の公式チャート: 横軸は試行あたりの費用（対数スケール）、縦軸は点数。Opus 5 の曲線が Fable 5 より左上にあり GPT-5.6 Sol より高く、Opus 4.8 はいちばん下にある">
+    <figcaption>公式の <strong>Frontier-Bench v0.1</strong> のチャート — 横軸は<strong>試行あたりの費用</strong>（対数）、縦軸は点数。<strong>左上へ行くほど&lsquo;安くてよくできる&rsquo;</strong>という意味で、Opus 5（オレンジ）は Fable 5（黄）の左上にまるごと乗っています。脚注によればこの数値は mini-SWE-agent のハーネスにもとづく内部の実行であり、安全の分類器が拒否した件は Opus 4.8 にフォールバックして集計しています（画像: Anthropic）</figcaption>
+</figure>
+
+<p>レビューの反応の見立てもこの点です — &ldquo;Fable 対 Opus の構図よりも<strong>4.8 から 5 への跳躍</strong>が本当のニュースだ&rdquo;と。前作に比べて全項目が大きく上がり、多分野にまたがる推論（ツールなし）・法律・医療などの一部の項目でだけ Fable 5 が優位を保ちました（それさえツールを使えば逆転する、というのがレビューの観察）。</p>
+
+<h3>変わった手先の器用さ — デモ 3 種</h3>
+<p>Claude は画像生成のモデルを持たないので&ldquo;絵を描けない AI&rdquo;という弱点がありましたが、Opus 5 は<strong>コードで描く視覚物</strong>（SVG・HTML・3D インタラクティブ）が目に見えてよくなりました。公式の発表に載ったデモ 3 種を図にするとこうです。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="Opus 5 の公式デモ 3 種: 風洞の気流の可視化、インタラクティブな細胞のイラスト、図面からの 3D CAD の再構成">
+    <text class="d-label" x="360" y="24" text-anchor="middle">公開デモ 3 種 — コードで描く視覚物</text>
+    <rect class="d-box" x="24" y="44" width="212" height="160" rx="10"/>
+    <text class="d-label sm" x="130" y="66" text-anchor="middle">風洞の気流</text>
+    <path class="d-edge accent" d="M44 110 C90 100, 120 96, 216 92" fill="none"/>
+    <path class="d-edge accent" d="M44 130 C86 128, 110 118, 216 112" fill="none"/>
+    <path class="d-edge accent" d="M44 150 C90 152, 130 158, 216 166" fill="none"/>
+    <circle class="d-node" cx="118" cy="132" r="16"/>
+    <text class="d-sub" x="130" y="192" text-anchor="middle">物体の上の空気の流れを描画</text>
+    <rect class="d-box" x="254" y="44" width="212" height="160" rx="10"/>
+    <text class="d-label sm" x="360" y="66" text-anchor="middle">インタラクティブな細胞</text>
+    <circle class="d-node dim" cx="360" cy="128" r="42"/>
+    <circle class="d-node" cx="352" cy="120" r="13"/>
+    <circle class="d-node dim" cx="384" cy="140" r="7"/><circle class="d-node dim" cx="336" cy="148" r="6"/><circle class="d-node dim" cx="380" cy="106" r="5"/>
+    <text class="d-sub" x="360" y="192" text-anchor="middle">クリックして探る 3D イラスト</text>
+    <rect class="d-box accent" x="484" y="44" width="212" height="160" rx="10"/>
+    <text class="d-label sm" x="590" y="66" text-anchor="middle">図面 → 3D CAD の再構成</text>
+    <rect class="d-box soft" x="504" y="84" width="74" height="56" rx="6"/>
+    <text class="d-sub" x="541" y="116" text-anchor="middle">部品の図面</text>
+    <line class="d-edge" x1="578" y1="112" x2="602" y2="112"/><polygon class="d-arrow" points="602,107 610,112 602,117"/>
+    <rect class="d-box soft" x="610" y="84" width="66" height="56" rx="6"/>
+    <text class="d-sub" x="643" y="110" text-anchor="middle">3D 部品</text>
+    <text class="d-sub" x="643" y="126" text-anchor="middle">(FreeCAD)</text>
+    <text class="d-sub" x="590" y="168" text-anchor="middle">下に詳細 — 今回の発表の白眉</text>
+    <text class="d-sub" x="360" y="238" text-anchor="middle">三つとも&ldquo;画像生成&rdquo;ではなくコード（SVG・HTML・CAD スクリプト）で描いた成果物</text>
+</svg>
+<div class="d-cap">元のデモの映像は<a href="https://www.anthropic.com/news/claude-opus-5" target="_blank" rel="noopener">公式の発表のページ</a>で見られる — ここでは構図だけを図に移した。</div>
+</div>
+
+<figure class="doc-video">
+    <div class="dv-frame">
+        <iframe src="https://www.youtube-nocookie.com/embed/4WQd-8d5j4k" title="Claude Opus 5 に関する映像"
+                loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <figcaption>動く成果物で見るほうが速いです — Claude Opus 5 に関する映像（<a href="https://youtu.be/4WQd-8d5j4k" target="_blank" rel="noopener">YouTube で開く</a>）</figcaption>
+</figure>
+
+<h3>白眉 — &ldquo;見られないなら、見る方法を作る&rdquo;</h3>
+<p>今回の発表でいちばん語られている事例です。Opus 5 に<strong>機械の部品の図面をひとつ</strong>与えて&ldquo;これを 3D CAD のモデルに再構成するコードを書け&rdquo;と言ったのですが — <strong>図面を開いて見る手段はわざと与えませんでした。</strong>目標だけがあって方法がふさがれた状況です。Opus 5 はあきらめる代わりに<strong>コンピュータビジョンのパイプラインを自分で書いて</strong>画像のピクセルから図形の幾何を取り出し、それで部品の全体を FreeCAD の 3D モデルに再構成してみせました。同じ条件の競合のモデルは<strong>5 回の試行ですべて失敗</strong>しました。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 240" role="img" aria-label="CAD の再構成のデモの流れ: 部品の図面を見られない状態で Opus 5 が自分でコンピュータビジョンのパイプラインを書き、ピクセルから幾何を取り出して FreeCAD の 3D モデルに再構成し、検証しながらくり返す">
+    <text class="d-label" x="360" y="26" text-anchor="middle">&ldquo;図面を見られない&rdquo; → 自分で目を作った過程</text>
+    <rect class="d-box soft" x="26" y="70" width="150" height="70" rx="10"/>
+    <text class="d-label sm" x="101" y="98" text-anchor="middle">部品の図面の画像</text>
+    <text class="d-sub" x="101" y="120" text-anchor="middle">見る手段なし 🚫</text>
+    <line class="d-edge" x1="176" y1="105" x2="204" y2="105"/><polygon class="d-arrow" points="204,100 212,105 204,110"/>
+    <rect class="d-box accent" x="212" y="62" width="216" height="86" rx="10"/>
+    <text class="d-label sm" x="320" y="90" text-anchor="middle">CV パイプラインを自作</text>
+    <text class="d-sub" x="320" y="112" text-anchor="middle">ピクセル → 輪郭・寸法の幾何を抽出</text>
+    <text class="d-sub" x="320" y="132" text-anchor="middle">（言われていない方法を発明）</text>
+    <line class="d-edge" x1="428" y1="105" x2="456" y2="105"/><polygon class="d-arrow" points="456,100 464,105 456,110"/>
+    <rect class="d-box soft" x="464" y="70" width="230" height="70" rx="10"/>
+    <text class="d-label sm" x="579" y="98" text-anchor="middle">FreeCAD 3D モデルの再構成</text>
+    <text class="d-sub" x="579" y="120" text-anchor="middle">競合のモデルは 5 回の試行で全敗</text>
+    <path class="d-edge dash" d="M579 140 C579 196, 320 196, 320 148"/><polygon class="d-arrow" points="315,154 320,144 325,154"/>
+    <text class="d-sub" x="450" y="212" text-anchor="middle">結果を目標と照らす → できるまで修正（検証しながらくり返す）</text>
+</svg>
+<div class="d-cap">&ldquo;目標（北極星）さえ与えれば方法を見つけて最後まで行く&rdquo; — Opus 4.8 に比べていちばん大きくよくなったという<strong>長期のエージェンティックな能力</strong>の象徴の事例。</div>
+</div>
+
+<p>これがなぜ大切なのでしょうか。実務で AI にやらせる仕事のほとんどはワンショットではなく<strong>ループ</strong>です — 目標を与え、結果を検証し、また直させるくり返し。Anthropic が&ldquo;作業を検証して慎重にくり返す能力が強くなった&rdquo;と強調したのがまさにこの点であり、上の事例はその能力が&ldquo;方法の発明&rdquo;にまで届くという実演です。</p>
+
+<h3>セーフガード — Fable 5 の誤検知の論争の文脈</h3>
+<p>レビューの反応が&ldquo;現実にいちばんありがたい変化&rdquo;として挙げたところです。背景があります — <strong>Fable 5 は 7 月の初めに安全の分類器が強化されたあと</strong>、セキュリティのコードレビューやふつうのデバッグまで危険な要求と誤検知して<strong>下位のモデル（Opus 4.8）へ落とす</strong>問題が公論になりました（GitHub のイシュー多数、デバッグのベンチマークの急落の報道）。Opus 5 は同じ分類器の体系を使いつつ<strong>ずっと敏感でなく</strong>引っかかるよう調整された、というのが発表とレビューに共通する観察です。一部のレビューは&ldquo;Fable に比べてトリガーの確率が 85% 減&rdquo;という数値に言及しましたが、この具体的な数値は公式の文書で確認できなかったので、下の事実検証のノートに別に表記しました。</p>
+<p>もうひとつ — アラインメントの評価で問題行動の点数が前作より低く（低いほどよい）、オープンソースのコードの<strong>脆弱性・エクスプロイトの発掘の能力は大きく上がった</strong>というのもレビューの反応の観察です。詳しい数値は<a href="https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf" target="_blank" rel="noopener">公式のシステムカード（PDF）</a>が一次の出典です。</p>
+
+<h3>価格 — この発表の本体</h3>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>モデル</th><th>入力 $/1M</th><th>出力 $/1M</th><th>備考</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Claude Opus 5</strong></td><td><strong>$5</strong></td><td><strong>$25</strong></td><td>Opus 4.8 と同じ — 性能だけ跳ねた</td></tr>
+        <tr><td>Claude Fable 5</td><td>$10</td><td>$50</td><td>max effort のピークは依然として最上</td></tr>
+        <tr><td>Claude Opus 4.8</td><td>$5</td><td>$25</td><td>前作</td></tr>
+    </tbody>
+</table>
+</div>
+<p>単価が半分なうえに<strong>トークン効率（同じ仕事に使うトークンの量）もよいほう</strong>なので、ベンチマークが見せた&lsquo;タスクあたりの費用&rsquo;の差は単価の差よりさらに開きます（OSWorld で ⅓ の予算で Fable のピークを突破したのがその例）。公開と同時に Claude.ai・API・Claude Code・Cowork で使え、<strong>Claude Max プランの既定のモデル</strong>になりました。</p>
+
+<h3>事実検証のノート</h3>
+<ul>
+    <li><strong>突き合わせ検証を通ったもの（本文の数値）</strong> — 公開日（7/24）・価格（$5/$25、Fable $10/$50）・CursorBench 3.2（max で 0.5% 以内・タスクあたり半分の費用）・Frontier-Bench 43.3% vs 34.4%・OSWorld ⅓ の予算・AutomationBench 約 1.5 倍・ARC-AGI 3 の 3 倍・デモ 3 種・CAD の事例（競合のモデルは 5 回全敗）は、公式の発表と複数の独立した報道が一致。</li>
+    <li><strong>レビューの反応の主張（公式の数値は未確認）</strong> — ①セーフガードのトリガー&ldquo;85% 減&rdquo;: 方向（緩和）は公式・報道で確認できるが、85% という数値は確認できず。②&ldquo;Sonnet 5 がタスクあたりいちばん高いモデル&rdquo;: レビュアーの計算による主張で、独立した検証はなし。③アラインメントの評価・脆弱性の発掘の数値: システムカードが一次の出典であり、本文には方向だけを述べた。</li>
+    <li><strong>図は概念図</strong> — CursorBench の曲線・デモのパネルは公式のチャートや公開のデモの構図を移したもので、縮尺の実測ではない（数値は表を基準に）。</li>
+    <li><strong>ベンチマークの数値の読み方</strong> — 同じモデルでも、どんな<a href="/p/ja/hns-what/">ハーネス</a>（道具・文脈・再試行の設定）に載せるかで点数が大きく変わります。自社発表の数値と独立した再現の数値が開く事例は <a href="/p/ja/news-20260716-kimi-k3/">Kimi K3 の記事</a>で実際に確認しました — 上の表も&lsquo;順位&rsquo;より&lsquo;費用あたりの性能の構図&rsquo;として読むほうが安全です。</li>
+</ul>
+
+<div class="note">
+    <span class="nh">出典</span>
+    · 公式: <a href="https://www.anthropic.com/news/claude-opus-5" target="_blank" rel="noopener">Introducing Claude Opus 5</a> · <a href="https://www-cdn.anthropic.com/c5fbac3f0b1280a933ebd26d3cb8bb9f5bdeaf48/Claude%20Opus%205%20System%20Card.pdf" target="_blank" rel="noopener">System Card (PDF)</a><br>
+    · 報道: <a href="https://thenextweb.com/news/anthropic-claude-opus-5-launch-frontier-bench-coding" target="_blank" rel="noopener">TNW</a> · <a href="https://decrypt.co/374305/claude-opus-5-outscores-fable-5-most-benchmarks-half-price" target="_blank" rel="noopener">Decrypt</a> · <a href="https://venturebeat.com/orchestration/anthropic-launches-claude-opus-5-a-cheaper-ai-model-for-coding-agents-and-enterprise-workflows" target="_blank" rel="noopener">VentureBeat</a> · <a href="https://interestingengineering.com/culture/anthropic-claude-opus-5-coding-performance" target="_blank" rel="noopener">Interesting Engineering</a> · <a href="https://qz.com/anthropic-claude-opus-5-fable-5-price-072426" target="_blank" rel="noopener">Quartz</a><br>
+    · Fable 5 の分類器の文脈: <a href="https://www.techtimes.com/articles/319576/20260702/claude-fable-5-debugging-scores-drop-70-safety-classifier-reroutes-tasks-weaker-fallback-model.htm" target="_blank" rel="noopener">TechTimes</a> · <a href="https://github.com/anthropics/claude-code/issues/67246" target="_blank" rel="noopener">claude-code#67246</a>
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">作成日</span> 2026-07-25 &middot; <span class="pr-k">更新日</span> 2026-07-25</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/news-20260716-kimi-k3/">Kimi K3 — 2.8 兆パラメータのオープンウェイトがフロンティアに届く</a></li><li><a href="/p/ja/news-20260709-thariq-fable5-unknowns/">Fable 5 の時代のボトルネックはモデルではなく人間か — Thariq Shihipar の「地図と領土」のフレーム</a></li><li><a href="/p/ja/news-20260622-mythos-looped/">Anthropic の Mythos とループド・トランスフォーマー — ハイゼンベルクの寄稿を読む</a></li><li><a href="/p/ja/welcome/">Welcome</a></li></ul>
+</nav>
+</body>
+</html>
