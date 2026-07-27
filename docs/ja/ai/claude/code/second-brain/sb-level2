@@ -1,0 +1,86 @@
+<h2>レベル 2 · 主題でまとめる（LLM ウィキ + メモリ）</h2>
+<p>ファイルが積み上がると<strong>主題ごとに編んで</strong>おきたくなります。そこで登場するのが <strong>LLM ウィキ</strong>です。この段階の問いは<strong>「この主題に関するものを全部集めて」</strong>。レベル 1 の上に<strong>インデックスとつながり</strong>を載せる、と考えれば大丈夫です。</p>
+
+<div class="note">
+    <span class="nh">すでに扱った主題とのつながり</span>
+    このウィキには<strong>Karpathy（カルパシー）流の LLM ウィキ</strong>を詳しく扱った <a href="#!llmw-overview">LLM Wiki</a> のセットがすでにあります。レベル 2 はまさにその世界です — ここでは<strong>セカンドブレインの観点</strong>から要点だけを押さえます。
+</div>
+
+<h3>ウィキは「インデックスをたどって降りながら読む」</h3>
+<p>ウィキの強みは<strong>インデックス（索引）</strong>です。AI がウィキに入ってくると、「この人が<em>エージェンティックなワークフロー</em>を尋ねたのでここから始める → 関連する <em>WAT フレームワーク</em>へ降りて → 必要なら <em>CLAUDE.md のシステムプロンプト</em>まで」というふうに<strong>道（trail）をたどってページをまるごと読みます。</strong></p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 210" role="img" aria-label="ウィキのインデックスのドリルダウン: インデックスから主題、下位の概念へと道をたどって降りながら、ページをまるごと読む">
+    <rect class="d-box accent" x="20" y="80" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="90" y="102" text-anchor="middle">ウィキ索引</text>
+    <text class="d-sub" x="90" y="119" text-anchor="middle">主題の一覧</text>
+
+    <rect class="d-box" x="220" y="80" width="150" height="52" rx="10"/>
+    <text class="d-label sm" x="295" y="102" text-anchor="middle">エージェント作業</text>
+    <text class="d-sub" x="295" y="119" text-anchor="middle">概念のページ</text>
+
+    <rect class="d-box" x="430" y="26" width="150" height="50" rx="10"/>
+    <text class="d-label sm" x="505" y="50" text-anchor="middle">WAT フレーム</text>
+    <text class="d-sub" x="505" y="65" text-anchor="middle">下位の概念</text>
+
+    <rect class="d-box" x="430" y="134" width="150" height="50" rx="10"/>
+    <text class="d-label sm" x="505" y="158" text-anchor="middle">CLAUDE.md</text>
+    <text class="d-sub" x="505" y="173" text-anchor="middle">関連する概念</text>
+
+    <line class="d-edge accent" x1="160" y1="106" x2="218" y2="106"/><polygon class="d-arrow accent" points="212,101 220,106 212,111"/>
+    <path class="d-edge accent" d="M370 96 C400 80, 410 60, 428 52"/><polygon class="d-arrow accent" points="420,50.7 427,58.7 430,48.7"/>
+    <path class="d-edge accent" d="M370 116 C400 132, 410 152, 428 158"/><polygon class="d-arrow accent" points="420,155.4 427,164.4 430,154.4"/>
+    <text class="d-sub" x="300" y="200" text-anchor="middle">必要な分だけ道をたどって降りながら読む</text>
+</svg>
+<div class="d-cap">YouTube の字幕や議事録を「ウィキに入れて」と頼めば、AI が概念・比較・出典・技法に<strong>自動で分類</strong>して、こうした構造を作ってくれます。</div>
+</div>
+
+<h3>メモリ — AI が自分で書くファイル</h3>
+<p>レベル 2 で新しく加わる軸が<strong>メモリ</strong>です。Claude Code の<strong>自動メモリ</strong>をオンにすると、AI が <code>memory.md</code> を<strong>自分で更新</strong>します。気にかけなくても文脈が積み上がります。</p>
+<pre><code><span class="c"># 自動メモリのオン/オフを確認</span>
+/memory
+<span class="c"># auto-memory on / off の状態が見えるので、off ならオンにすればよい</span></code></pre>
+
+<div class="diagram">
+<svg viewBox="0 0 560 150" role="img" aria-label="自動メモリのループ: 会話が進むと AI が memory.md に要点を更新しつづける">
+    <rect class="d-box" x="30" y="52" width="140" height="48" rx="10"/>
+    <text class="d-label sm" x="100" y="80" text-anchor="middle">会話・作業が進む</text>
+
+    <rect class="d-box accent" x="230" y="52" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="290" y="80" text-anchor="middle">memory.md</text>
+
+    <rect class="d-box soft" x="410" y="52" width="130" height="48" rx="10"/>
+    <text class="d-label sm" x="475" y="80" text-anchor="middle">次のセッションが</text>
+    <text class="d-sub" x="475" y="94" text-anchor="middle">文脈を引き継ぐ</text>
+
+    <line class="d-edge accent" x1="170" y1="76" x2="228" y2="76"/><polygon class="d-arrow accent" points="222,71 230,76 222,81"/>
+    <text class="d-sub" x="199" y="66" text-anchor="middle">自動で記録</text>
+    <line class="d-edge" x1="350" y1="76" x2="408" y2="76"/><polygon class="d-arrow" points="402,71 410,76 402,81"/>
+    <!-- loop back -->
+    <path class="d-edge dash" d="M290 100 V128 H100 V102"/><polygon class="d-arrow" points="95,106 105,106 100,100"/>
+    <text class="d-sub" x="195" y="122" text-anchor="middle">積んだ記憶をまた参照</text>
+</svg>
+</div>
+
+<h3>道具に依存しない — Claude Code でも Codex でも</h3>
+<p>セカンドブレインは<strong>ただのファイルとフォルダ</strong>なので、特定の道具に縛られません。ただしファイル名の慣例は道具ごとに違います。</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>道具</th><th>方針のファイル</th><th>メモリ</th></tr></thead>
+        <tbody>
+            <tr><td>Claude Code</td><td><code>CLAUDE.md</code></td><td><code>memory.md</code> を自動更新</td></tr>
+            <tr><td>Codex など</td><td><code>AGENTS.md</code>（内容は同じものをコピー）</td><td>「メモリは memory.md を見よ」とルーティング</td></tr>
+        </tbody>
+    </table>
+</div>
+<p class="scn-sub">※ <code>CLAUDE.md</code> をコピーして <code>AGENTS.md</code> として置けば、ふたつの道具が同じブレインを共有します。結局は<strong>どこを見よと案内する（ルーティングする）</strong>かの問題です。</p>
+
+<div class="note warn">
+    <span class="nh">ウィキのリンク = 知識グラフ？ 違います</span>
+    ウィキのリンクは<strong>「関連項目（See also）・バックリンク」</strong>に近いものです。<strong>「これはこれを裏づける / これはあれの競合だ」</strong>のような<strong>関係の意味</strong>までは持ちません。似た効果は出ますが、本当の<strong>関係ベース</strong>は<a href="#!sb-level4">レベル 4 — 知識グラフ</a>です。
+</div>
+
+<div class="note">
+    <span class="nh">Obsidian は必須ではない</span>
+    華やかな<strong>グラフビュー</strong>で知られる <strong>Obsidian</strong> は、結局<strong>マークダウンを可視化</strong>してくれるレイヤーにすぎません。視覚的に見るのが助けになるなら使い、そうでなければなくてもかまいません — 大事なのは<strong>自分のシステムがそれを見つけて取り出してくれるか</strong>です。次は<a href="#!sb-level3">レベル 3 — 意味で探す</a>。
+</div>

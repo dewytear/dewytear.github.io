@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>レベル 4 · 関係でつなぐ（知識グラフ）</title>
+<meta name="description" content="実体と関係でものごとをつなぐ知識グラフのレベル 4 を説明する。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/sb-level4/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/sb-level4/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/sb-level4/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/sb-level4/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/sb-level4/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="レベル 4 · 関係でつなぐ（知識グラフ）">
+<meta property="og:description" content="実体と関係でものごとをつなぐ知識グラフのレベル 4 を説明する。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/sb-level4/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="レベル 4 · 関係でつなぐ（知識グラフ）">
+<meta name="twitter:description" content="実体と関係でものごとをつなぐ知識グラフのレベル 4 を説明する。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "レベル 4 · 関係でつなぐ（知識グラフ）",
+ "description": "実体と関係でものごとをつなぐ知識グラフのレベル 4 を説明する。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/sb-level4/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!sb-level4",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-04T10:06:25+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!sb-level4">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/sb-level4/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/sb-level4/" hreflang="en">English</a>
+</p>
+<article>
+<h2>レベル 4 · 関係でつなぐ（知識グラフ）</h2>
+<p>レベル 3 が<strong>「意味の近いもの」</strong>を探したのに対し、レベル 4 は<strong>「何が何とどう絡んでいるか」</strong>をたどります。これが<strong>知識グラフ（knowledge graph）</strong>です。問いのかたちは<strong>「X から始めて A までつながりを追跡して」</strong>。ふつうはいちばん<strong>強力ですが、いちばん複雑で高コスト</strong>な段階です。</p>
+
+<h3>実体 + 関係 = グラフ</h3>
+<p>知識グラフはふたつでできています。<strong>実体（エンティティ: 人・会社・製品）</strong>と、それらのあいだの<strong>名前の付いた関係（誰がどこで働く、何を保証する）</strong>です。ウィキのリンクと違い、<strong>関係に意味（型）</strong>があります。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 250" role="img" aria-label="知識グラフの例: Jordan は Acme で働き、Acme は Postpilot に保証され、Postpilot は Cadently の競合である">
+    <!-- nodes -->
+    <circle class="d-node" cx="110" cy="80" r="12"/>
+    <text class="d-label sm" x="110" y="52" text-anchor="middle">Jordan</text>
+    <text class="d-sub" x="110" y="112" text-anchor="middle">人</text>
+
+    <circle class="d-node d" cx="330" cy="70" r="14"/>
+    <text class="d-label sm" x="330" y="42" text-anchor="middle">Acme</text>
+    <text class="d-sub" x="330" y="102" text-anchor="middle">会社</text>
+
+    <circle class="d-node b" cx="540" cy="120" r="13"/>
+    <text class="d-label sm" x="540" y="92" text-anchor="middle">Postpilot</text>
+    <text class="d-sub" x="540" y="152" text-anchor="middle">会社</text>
+
+    <circle class="d-node c" cx="330" cy="200" r="13"/>
+    <text class="d-label sm" x="330" y="230" text-anchor="middle">Cadently</text>
+
+    <!-- typed edges -->
+    <line class="d-edge accent" x1="123" y1="76" x2="316" y2="71"/>
+    <text class="d-accent" x="215" y="62" text-anchor="middle" font-size="11">勤務(works_at)</text>
+    <line class="d-edge accent" x1="343" y1="79" x2="527" y2="112"/>
+    <text class="d-accent" x="440" y="86" text-anchor="middle" font-size="11">保証(endorsed_by)</text>
+    <line class="d-edge dash" x1="527" y1="130" x2="343" y2="193"/>
+    <text class="d-sub" x="450" y="176" text-anchor="middle">競合(competitor_of)</text>
+    <line class="d-edge" x1="330" y1="84" x2="330" y2="187"/>
+</svg>
+<div class="d-cap">「Jordan → Acme → Postpilot → Cadently」のように<strong>関係の鎖</strong>をたどりながら答えを組み立てます。</div>
+</div>
+
+<div class="note">
+    <span class="nh">ウィキより軽いこともある</span>
+    ウィキは関連するページを<strong>まるごと読まなければ</strong>なりません（「11Labs だけ知りたいのに、AI 動画制作の文書を全部読む」ような具合）。グラフは<strong>必要なエッジ（関係）だけ</strong>を押さえればよいので、こういう場合は<strong>むしろ軽くなります。</strong>
+</div>
+
+<h3>ツール — LightRAG · Graphiti · GraphRAG</h3>
+<p>たいていは<strong>ソフトウェアが実体と関係を自動で抽出</strong>してグラフを作ってくれます。代表的なものは:</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>ツール</th><th>特徴</th></tr></thead>
+        <tbody>
+            <tr><td><strong>LightRAG</strong></td><td>グラフ + ベクトルを組み合わせた軽量な RAG。増分の更新に強い（オープンソース）。</td></tr>
+            <tr><td><strong>Graphiti</strong></td><td>時間（変化）まで収める知識グラフのフレームワーク。</td></tr>
+            <tr><td><strong>GraphRAG</strong>（Microsoft）</td><td>文書のかたまりから実体・関係・要約を構築するやり方。</td></tr>
+        </tbody>
+    </table>
+</div>
+<p class="scn-sub">※ 講義中の「グラファイファイアー」は <strong>Graphiti</strong>、「クワドラント」は<a href="/p/ja/sb-level3/">レベル 3</a> の <strong>Qdrant</strong> を指していると思われます。</p>
+
+<h3>本当の勝負どころは検索ではなく「頭の中の取り出し」</h3>
+<p>知識グラフの品質は、結局<strong>入れたデータの量と質</strong>が左右します。ところが多くの人の本当のボトルネックは<strong>システムが見つけられないこと</strong>ではなく、<strong>頭の中の知識がまだシステムに入っていないこと</strong>です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 620 130" role="img" aria-label="インタビューのスキルが自分をしつこく問いただしてブレインストーミングのファイルを作り、それが知識グラフの材料になる">
+    <rect class="d-box" x="20" y="42" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="80" y="70" text-anchor="middle">自分 (頭の中)</text>
+    <rect class="d-box accent" x="200" y="42" width="150" height="48" rx="10"/>
+    <text class="d-label sm" x="275" y="64" text-anchor="middle">インタビュー技</text>
+    <text class="d-sub" x="275" y="80" text-anchor="middle">しつこく問う(grill)</text>
+    <rect class="d-box" x="410" y="42" width="180" height="48" rx="10"/>
+    <text class="d-label sm" x="500" y="64" text-anchor="middle">ブレストのファイル</text>
+    <text class="d-sub" x="500" y="80" text-anchor="middle">→ グラフの材料</text>
+
+    <line class="d-edge accent" x1="140" y1="66" x2="198" y2="66"/><polygon class="d-arrow accent" points="192,61 200,66 192,71"/>
+    <line class="d-edge accent" x1="350" y1="66" x2="408" y2="66"/><polygon class="d-arrow accent" points="402,61 410,66 402,71"/>
+    <path class="d-edge dash" d="M275 90 V112 H80 V92"/><polygon class="d-arrow" points="75,96 85,96 80,90"/>
+    <text class="d-sub" x="180" y="106" text-anchor="middle">分からなくなるまで問い返す</text>
+</svg>
+<div class="d-cap">「私をインタビューして（grill me）」式のスキルで顧客や事業を<strong>問いただして</strong>ファイルにすれば、それがそのままグラフやウィキの材料になります。</div>
+</div>
+
+<p>だからシステムのせいにする前に、まず尋ねてみてください。<strong>「自分のフォルダは、本当に自分の頭の中と同じくらい<em>総体的（holistic）</em>か？」</strong>資料・契約書・字幕を入れながら<strong>ブレインストーミング</strong>で肉づけしていく習慣が肝心です。</p>
+
+<div class="note warn">
+    <span class="nh">プライバシー — どこへ行くデータなのか</span>
+    自分のデータを Claude のモデルで処理すれば、その内容は <strong>Anthropic へ送られます</strong>。自分の業務資料なら受け入れられても、<strong>顧客のデータや機微な情報</strong>なら話は別です。そういう場合は<strong>オープンソース・ローカルのモデル</strong>で回し、すべてを収めるセカンドブレインは<strong>クラウドではなくローカル</strong>に置くという選択も検討してください。何をどこで処理しているのかを<strong>自分で分かっている</strong>ことが先です。
+</div>
+
+<div class="note">
+    <span class="nh">次へ</span>
+    関係まで要らないなら、わざわざグラフを使わなくてもかまいません。これらすべてを<strong>自動・常時</strong>で回す最後の段階が<a href="/p/ja/sb-level5/">レベル 5 — つねに動いているブレイン OS</a>です。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Second Brain &middot; <span class="pr-k">作成日</span> 2026-07-04 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/news-20260710-oracle-ontology-property-graph/">오라클 온톨로지와 프로퍼티 그래프 — 테이블을 지식의 지도로</a></li><li><a href="/p/ja/news-20260711-neo4j-rdf-vs-property-graph/">RDF냐 프로퍼티 그래프냐 — 지식 그래프를 위한 두 모델 (Neo4j)</a></li><li><a href="/p/ja/sb-levels/">5 段階をひと目で</a></li><li><a href="/p/ja/llmw-overview/">LLM Wiki — 概要</a></li></ul>
+</nav>
+</body>
+</html>
