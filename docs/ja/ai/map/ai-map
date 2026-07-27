@@ -1,0 +1,133 @@
+<h2>Knowledge Map — AI</h2>
+<p>このページは <strong>AI World の下の講義・学習の文書の全体</strong>を AI が読んで作った<strong>構造的な知識のインデックス</strong>（<code>knowledge-index.json</code>）を総合した知識の地図です。文書ごとの<strong>要約 · 中心の概念 · 関連する文書</strong>を集め、何がどこにあり<strong>互いにどうつながっているか</strong>を示します。各文書の下にある<strong>&ldquo;関連する文書&rdquo;</strong>の推薦も同じインデックスから出ており、この関連は <a href="#!cosmos"><strong>Knowledge Graph</strong></a> で 3 次元のグラフと 6 種類の 2D の表現として見られます。</p>
+
+<p>ウィキの知識は <strong>World → Domain → System → Document</strong> の 4 階層で構成されます — <strong>World</strong> は最上位の知識の世界（AI · DOUZONE）、<strong>Domain</strong> は知識の領域、<strong>System</strong> は具体的な体系・主題（下の表のグループ）、<strong>Document</strong> は個別の文書です。この地図はそのうち <strong>AI World</strong> を扱い、業務の知識は <a href="#!dz-map"><strong>Douzone Knowledge Map</strong></a> が同じ構造で集計します。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 760 312" role="img" aria-label="知識の階層: World(AI・DOUZONE) → Domain(知識の領域) → System(主題のグループ) → Document(個別の文書)"><text class="d-label" x="16" y="52" text-anchor="start">World</text><text class="d-sub" x="16" y="70" text-anchor="start">最上位の知識の世界</text><text class="d-label" x="16" y="126" text-anchor="start">Domain</text><text class="d-sub" x="16" y="144" text-anchor="start">知識の領域</text><text class="d-label" x="16" y="206" text-anchor="start">System</text><text class="d-sub" x="16" y="224" text-anchor="start">具体的な体系・主題</text><text class="d-label" x="16" y="278" text-anchor="start">Document</text><text class="d-sub" x="16" y="296" text-anchor="start">個別の文書</text><rect class="d-box accent" x="168" y="30" width="188" height="44" rx="9"/><text class="d-label" x="262" y="57" text-anchor="middle">AI</text><rect class="d-box" x="472" y="30" width="188" height="44" rx="9"/><text class="d-label" x="566" y="57" text-anchor="middle">DOUZONE</text><line class="d-edge" x1="262" y1="74" x2="262" y2="104"/><line class="d-edge" x1="566" y1="74" x2="566" y2="104"/><rect class="d-box" x="168" y="104" width="188" height="44" rx="9"/><text class="d-label sm" x="262" y="131" text-anchor="middle">このウィキ · Claude · News</text><rect class="d-box" x="472" y="104" width="188" height="44" rx="9"/><text class="d-label sm" x="566" y="131" text-anchor="middle">dev.Center · Proposal</text><line class="d-edge" x1="262" y1="148" x2="262" y2="178"/><line class="d-edge" x1="566" y1="148" x2="566" y2="178"/><rect class="d-box soft" x="104" y="178" width="316" height="56" rx="10"/><text class="d-sub" x="262" y="200" text-anchor="middle">知識体系 · Introduction · Tutorial · Skill</text><text class="d-sub" x="262" y="218" text-anchor="middle">Second Brain · LLM Wiki · Harness · OMC</text><rect class="d-box soft" x="472" y="178" width="188" height="56" rx="10"/><text class="d-sub" x="566" y="209" text-anchor="middle">AI 開発ナレッジ基盤</text><line class="d-edge" x1="262" y1="234" x2="262" y2="256"/><line class="d-edge" x1="566" y1="234" x2="566" y2="256"/><rect class="d-box soft" x="104" y="256" width="556" height="40" rx="10"/><text class="d-sub" x="382" y="280" text-anchor="middle">個別の文書 — 各 System の下でシリーズの順に並びます</text></svg>
+<div class="d-cap">ふたつの World — 学習の知識（AI）と業務の知識（DOUZONE）が、同じインデックスの上でつながります。</div>
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="知識の地図: 基礎の理解・知識の管理・自動化の三つの筋と、それらをつなぐ共有の概念">
+    <!-- three theme groups -->
+    <rect class="d-box" x="30" y="20" width="200" height="74" rx="10"/>
+    <text class="d-label" x="130" y="50" text-anchor="middle">基礎の理解</text>
+    <text class="d-sub" x="130" y="72" text-anchor="middle">Intro·Tutorial·Skill</text>
+
+    <rect class="d-box" x="260" y="20" width="200" height="74" rx="10"/>
+    <text class="d-label" x="360" y="50" text-anchor="middle">知識の管理</text>
+    <text class="d-sub" x="360" y="72" text-anchor="middle">Second Brain·LLM Wiki</text>
+
+    <rect class="d-box" x="490" y="20" width="200" height="74" rx="10"/>
+    <text class="d-label" x="590" y="50" text-anchor="middle">自動化・統括</text>
+    <text class="d-sub" x="590" y="72" text-anchor="middle">Harness·OMC</text>
+
+    <!-- connectors down to the shared-concept bar -->
+    <line class="d-edge" x1="130" y1="94" x2="130" y2="150"/>
+    <line class="d-edge" x1="360" y1="94" x2="360" y2="150"/>
+    <line class="d-edge" x1="590" y1="94" x2="590" y2="150"/>
+
+    <!-- shared-concept bridge bar -->
+    <rect class="d-box accent" x="18" y="150" width="684" height="80" rx="10"/>
+    <text class="d-label" x="360" y="178" text-anchor="middle">知識をつなぐ橋 · 共有の概念</text>
+    <text class="d-sub" x="360" y="202" text-anchor="middle">スキル · サブエージェント · オーケストレーター · ハーネス</text>
+    <text class="d-sub" x="360" y="220" text-anchor="middle">CLAUDE.md · インストール · マーケットプレイス · スラッシュコマンド</text>
+</svg>
+<div class="d-cap">三つの筋に分かれますが、上の<strong>共有の概念</strong>が筋を横切って文書を密につなぎます。</div>
+</div>
+
+<h3>System をひと目で</h3>
+<p>文書は下の System にまとめられます。&ldquo;ハブの文書&rdquo;は、ほかの文書からいちばん多く関連として指された、その筋の入口の文書です。<span class="scn-sub">表の数値は <code>knowledge-index.json</code> から実時間で集計されます。</span></p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>System</th><th>編数</th><th>中心の主題</th><th>ハブの文書</th></tr></thead>
+        <tbody id="km-clusters" data-section-prefix="AI" data-topics='{"知識体系":"このウィキの 4 階層・概念のエッジ・型つきの関係・9 つのビュー・AI の消費・ゲート","CLAUDE.md":"CLAUDE.md の十戒 — AI コーディングの行動の指針","Introduction":"Claude Code の第一歩 · インストール · 日々の利用","Tutorial（入門）":"ターミナル・CLAUDE.md・スキル・エージェントの実習","Skill":"スキルの原理・構造・段階的な読み込み・セキュリティ","Second Brain":"知識の管理の 5 段階 · セマンティック・グラフ","LLM Wiki":"Obsidian のボールト · キャプチャ · Ingest・Query・Lint","Harness エンジニアリング":"エージェントのチーム・オーケストレーター・検証","Harness プラグイン":"意図の入力→チームの構成→自律の実行(ERP)","OMC プラグイン":"実行のモード・エージェント・フック・費用の管理","News & Articles":"モデルの公開・論文・対談など AI の記事を読む"}'>
+            <tr><td><strong>知識体系</strong></td><td>6</td><td>このウィキの 4 階層・概念のエッジ・型つきの関係・9 つのビュー・AI の消費・ゲート</td><td><a href="#!kgs-overview">知識はどう積み上がるのか</a></td></tr>
+            <tr><td><strong>CLAUDE.md</strong></td><td>1</td><td>CLAUDE.md の十戒 — AI コーディングの行動の指針</td><td><a href="#!claude-md-commandments">CLAUDE.md の十戒</a></td></tr>
+            <tr><td><strong>Introduction</strong></td><td>6</td><td>Claude Code の第一歩 · インストール · 日々の利用</td><td><a href="#!welcome">Welcome</a></td></tr>
+            <tr><td><strong>Tutorial（入門）</strong></td><td>12</td><td>ターミナル・CLAUDE.md・スキル・エージェントの実習</td><td><a href="#!ccb-skills">スキル（Skill）をつくる</a></td></tr>
+            <tr><td><strong>Skill</strong></td><td>12</td><td>スキルの原理・構造・段階的な読み込み・セキュリティ</td><td><a href="#!skl-overview">Skill シリーズ — 全体の地図</a></td></tr>
+            <tr><td><strong>Second Brain</strong></td><td>9</td><td>知識の管理の 5 段階 · セマンティック・グラフ</td><td><a href="#!sb-levels">5 段階をひと目で</a></td></tr>
+            <tr><td><strong>LLM Wiki</strong></td><td>11</td><td>Obsidian のボールト · キャプチャ · Ingest・Query・Lint</td><td><a href="#!llmw-vaults">ボールトの体系 — メインのボールトとウィキのボールト</a></td></tr>
+            <tr><td><strong>Harness エンジニアリング</strong></td><td>12</td><td>エージェントのチーム・オーケストレーター・検証</td><td><a href="#!hns-anatomy">ハーネスの構成と効果</a></td></tr>
+            <tr><td><strong>Harness プラグイン</strong></td><td>10</td><td>意図の入力→チームの構成→自律の実行(ERP)</td><td><a href="#!hnp-intro">Harness プラグイン — 紹介</a></td></tr>
+            <tr><td><strong>OMC プラグイン</strong></td><td>13</td><td>実行のモード・エージェント・フック・費用の管理</td><td><a href="#!omc-install">インストール</a></td></tr>
+            <tr><td><strong>News &amp; Articles</strong></td><td>12</td><td>モデルの公開・論文・対談など AI の記事を読む</td><td><a href="#!news-20260724-claude-opus-5">Claude Opus 5 — 半額の準 Fable がやってきた</a></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>System の詳細 — 何が入っていて、どの順に読むか</h3>
+
+<h4>知識体系 — このウィキ自身の説明書（6 編）</h4>
+<p>このウィキの知識が<strong>どう積み上がり、つながり、読まれるのか</strong>を実際のデータで解説する自己記述の System です。<a href="#!kgs-overview">知識はどう積み上がるのか</a>（4 階層・登録のパイプライン・三つの目印） → <a href="#!kgs-edges">文書はどうつながるのか</a>（概念のキュレーション・idf のエッジ・方向のある型つきの関係） → <a href="#!kgs-views">グラフを読む 7 つの目</a>（ビューごとの問い・ハブ・ブリッジ） → <a href="#!kgs-ai-layer">AI はこのウィキをどう読むのか</a>（機械が読める層） → <a href="#!kgs-plugin">ウィキのエンジンのプラグイン化</a>（wiki-plugin） → <a href="#!kgs-gates">ウィキはどう自分を守るのか</a>（ゲート・自動化）の順に読めば、この地図のページのすべての数値がどこから来るのかが分かります。</p>
+
+<h4>Introduction — Claude Code の第一歩（6 編）</h4>
+<p>Claude Code とは何で、どう始めるのかを扱う入口の System です。<a href="#!welcome">Welcome</a> で道具の正体を、<a href="#!install">インストールと開始</a>でインストールと認証を、<a href="#!commands">日々の利用</a>でスラッシュコマンド・CLAUDE.md・プランモードを身につけます。続いて拡張の三つの軸 — <a href="#!skills">Skills</a>、<a href="#!mcp">MCP Servers</a>、<a href="#!hooks">Hooks</a> — を紹介します。この System の概念（インストール・スラッシュコマンド・CLAUDE.md）は Tutorial や OMC の System へそのままつながります。</p>
+
+<h4>Tutorial（入門） — 基礎の講義の実習（12 編）</h4>
+<p>Claude Code の基礎の講義を文書にした System で、<a href="#!ccb-overview">講義の概要と目標</a>が入口です。<a href="#!ccb-what">Claude Code とは</a> → <a href="#!ccb-terminal">ターミナルの基礎</a> → <a href="#!ccb-claudemd">CLAUDE.md の指針</a>で基礎を固めたあと、<a href="#!ccb-research-web">調査・ファイル・ウェブサイト</a>・<a href="#!ccb-design-system">デザインシステムの抽出</a>・<a href="#!ccb-papers">Hugging Face の論文の整理</a>といった実戦の例を経て、<a href="#!ccb-skills">スキルをつくる</a>・<a href="#!ccb-plugins">プラグイン</a>・<a href="#!ccb-agents">エージェントをつくる</a>へ広げ、<a href="#!ccb-manage">使用量と文脈の管理</a>・<a href="#!ccb-tips">役に立つ機能</a>で締めます。</p>
+
+<h4>Skill — スキルの深掘り（12 編）</h4>
+<p>&ldquo;スキルはなぜ、どう動くのか&rdquo;を原理から掘る System です。<a href="#!skl-overview">概要</a>と<a href="#!skl-coding-agent">コーディングエージェントの誕生</a>で背景をつかみ、<a href="#!skl-what">スキルとは</a>・<a href="#!skl-strengths">長所</a>・<a href="#!skl-context">コンテキストウィンドウと道具</a>・<a href="#!skl-progressive">段階的な読み込み</a>で中心の原理を、<a href="#!skl-structure">SKILL.md の構造</a>・<a href="#!skl-examples">例のスキル</a>・<a href="#!skl-install">インストールと利用</a>・<a href="#!skl-security">セキュリティ上の注意</a>・<a href="#!skl-creating">スキルをつくる</a>で実務を扱います。<a href="#!skl-wrap">エンジニアリングの階層と Q&amp;A</a>が MCP やハーネスとの関係を整理し、自動化の筋へ橋を架けます。</p>
+
+<h4>Second Brain — 知識の管理の 5 段階（9 編）</h4>
+<p>個人と組織の知識の管理を<strong>レベル 1（正確に見つける）からレベル 5（自律のブレイン OS）まで</strong>の段階のモデルで説明する System です。<a href="#!sb-intro">セカンドブレインとは</a>から始め、入口の文書 <a href="#!sb-levels">5 段階をひと目で</a>で全体の絵をつかみ、<a href="#!sb-level1">レベル 1</a>〜<a href="#!sb-level5">レベル 5</a>を順に読みます。<a href="#!sb-context-connections">何を入れ、何を置くか</a>と <a href="#!sb-choose">自分のレベル探し・チームへの拡張</a>が実際に当てはめる判断を助けます。LLM Wiki の System が、このモデルのレベル 2 を実装する実体です。</p>
+
+<h4>LLM Wiki — Obsidian をもとにした知識のボールト（11 編）</h4>
+<p>Obsidian のボールトで LLM に優しいウィキを運用する方法論の System です。<a href="#!llmw-overview">概要</a>のあと、入口の文書 <a href="#!llmw-vaults">ボールトの体系</a>で構造をつかみ、<a href="#!llmw-capture">知識のキャプチャ</a>・<a href="#!llmw-metadata">ノートのメタデータ</a>・<a href="#!llmw-links">連結と参照</a>・<a href="#!llmw-cards">ウィキのカード</a>・<a href="#!llmw-system">システムのファイルと rules</a>で運用の規則を学びます。<a href="#!llmw-onboard">オンボーディングの実習</a>・<a href="#!llmw-ingest-query-lint">Ingest・Query・Lint</a>・<a href="#!llmw-clipper-query">ウェブクリッパーと Query の実戦</a>が実習の軸で、<a href="#!llmw-philosophy">活用と哲学</a>が締めです。</p>
+
+<h4>Harness エンジニアリング — エージェントのチームの方法論（12 編）</h4>
+<p>AI World で<strong>いちばん多くつながるハブ</strong>（<a href="#!hns-anatomy">構成と効果</a>、11 回）を抱える System です。<a href="#!hns-overview">概要</a> → <a href="#!hns-what">ハーネスエンジニアリングとは</a> → <a href="#!hns-anatomy">構成と効果</a>で概念をつかみ、<a href="#!hns-install">メタなハーネスのスキルのインストール</a>・<a href="#!hns-run">ハーネスを実行する</a>・<a href="#!hns-review">生成された結果のレビュー</a>で実習します。<a href="#!hns-kitchen">厨房のたとえ</a>・<a href="#!hns-team">エージェントのチームと文脈</a>・<a href="#!hns-core">中心の 3 要素</a>が働きの原理を、<a href="#!hns-usecases">活用の事例</a>・<a href="#!hns-hundred">ハーネス 100</a>・<a href="#!hns-tools">道具の拡張</a>が応用を扱います。</p>
+
+<h4>Harness プラグイン — ERP の実戦のハーネス（10 編）</h4>
+<p>ハーネスの方法論を <strong>ERP のカスタマイズの実務</strong>に当てはめたプラグインの System です。<a href="#!hnp-intro">紹介</a>・<a href="#!hnp-concepts">中心の概念</a>・<a href="#!hnp-install">インストール</a>のあと、<a href="#!hnp-first-run">最初の実行（営業・受注）</a>ですぐ実習します。<a href="#!hnp-architecture">動く構造と 6 段階</a>・<a href="#!hnp-agents-skills">エージェントとスキルの設計</a>・<a href="#!hnp-verify">検証・品質と _workspace</a>が内部の構造を、<a href="#!hnp-scenarios">シナリオの掲示板</a>・<a href="#!hnp-hundred">ハーネス 100・性能</a>・<a href="#!hnp-commands">コマンド</a>が活用を扱います。Harness エンジニアリングの System の理論が、ここで業務のドメインと出会います。</p>
+
+<h4>OMC プラグイン — 実行のモードと自律の実行（13 編）</h4>
+<p>oh-my-claudecode のプラグインの使い方の System で、編数がいちばん多いのです（13 編）。<a href="#!omc-intro">紹介</a>・<a href="#!omc-concepts">中心の用語</a>のあと、ハブの文書 <a href="#!omc-install">インストール</a>と <a href="#!omc-doctor">インストールの診断</a>で環境を作り、<a href="#!omc-modes">実行のモード</a>（autopilot・ralph・ultrawork・team）・<a href="#!omc-agents">エージェントとスキル</a>・<a href="#!omc-hooks">Hook とメモリ</a>・<a href="#!omc-tools">高度な道具</a>で機能を身につけます。<a href="#!omc-workflows">実戦のシナリオ</a>・<a href="#!omc-windows">Windows の注意</a>・<a href="#!omc-cost">費用と性能</a>・<a href="#!omc-commands">コマンド集</a>・<a href="#!omc-quickref">クイックリファレンス</a>が運用の編です。</p>
+
+<h3>おすすめの学習の経路</h3>
+<ul>
+    <li><strong>はじめてなら</strong> — <a href="#!welcome">Welcome</a> → <a href="#!install">インストールと開始</a> → <a href="#!commands">日々の利用</a> → <a href="#!ccb-overview">基礎の講義</a>（Tutorial の順に） → <a href="#!skills">Skills</a>。Claude Code を入れて日々の道具にする最短の経路です。</li>
+    <li><strong>知識の管理が目的なら</strong> — <a href="#!sb-intro">セカンドブレインとは</a> → <a href="#!sb-levels">5 段階をひと目で</a>で自分のレベルを見つけ、レベル 2 が要るなら <a href="#!llmw-overview">LLM Wiki の概要</a> → <a href="#!llmw-vaults">ボールトの体系</a>へ降りて実際のボールトを作ります。</li>
+    <li><strong>自動化・マルチエージェントが目的なら</strong> — <a href="#!skl-overview">スキルの深掘り</a>で原理を固めてから <a href="#!hns-what">ハーネスエンジニアリングとは</a> → <a href="#!hns-anatomy">構成と効果</a> → <a href="#!hns-run">実行する</a>、続いて実務への適用は <a href="#!hnp-intro">Harness プラグイン</a>か <a href="#!omc-intro">OMC</a> へ分かれます。</li>
+</ul>
+
+<h3>知識をつなぐ橋 — ブリッジの概念</h3>
+<p>いくつもの System に<strong>同時に</strong>現れる概念ほど、筋をまたぐ&ldquo;橋&rdquo;の役をします。ひとつの筋を学びながら、別の筋へ自然に移る道すじです。</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>概念</th><th>つながる System</th><th>登場</th></tr></thead>
+        <tbody id="km-bridges">
+            <tr><td><strong>スキル</strong></td><td>8 つ — Harness エンジニアリング · Harness プラグイン · Introduction · News &amp; Articles · OMC プラグイン · Skill · Tutorial（入門） · 知識体系</td><td>22 編</td></tr>
+            <tr><td><strong>サブエージェント</strong></td><td>6 つ — Harness エンジニアリング · Harness プラグイン · News &amp; Articles · OMC プラグイン · Skill · Tutorial（入門）</td><td>10 編</td></tr>
+            <tr><td><strong>CLAUDE.md</strong></td><td>6 つ — CLAUDE.md · Harness エンジニアリング · Introduction · LLM Wiki · Second Brain · Tutorial（入門）</td><td>6 編</td></tr>
+            <tr><td><strong>スラッシュコマンド</strong></td><td>5 つ — Harness エンジニアリング · Harness プラグイン · Introduction · LLM Wiki · OMC プラグイン</td><td>11 編</td></tr>
+            <tr><td><strong>インストール</strong></td><td>5 つ — Harness エンジニアリング · Harness プラグイン · Introduction · OMC プラグイン · Tutorial（入門）</td><td>8 編</td></tr>
+            <tr><td><strong>マーケットプレイス</strong></td><td>5 つ — Harness エンジニアリング · Harness プラグイン · OMC プラグイン · Tutorial（入門） · 知識体系</td><td>5 編</td></tr>
+            <tr><td><strong>エージェント</strong></td><td>4 つ — Harness エンジニアリング · Harness プラグイン · News &amp; Articles · Tutorial（入門）</td><td>10 編</td></tr>
+            <tr><td><strong>ナレッジグラフ</strong></td><td>4 つ — LLM Wiki · News &amp; Articles · Second Brain · 知識体系</td><td>10 編</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>ハブの文書 — いちばん多くつながる入口</h3>
+<p>ほかの文書たちが<strong>関連する文書</strong>としていちばんよく指した上位の文書です。新しい主題を始めるときのよい出発点です。</p>
+<ul id="km-hubs">
+    <li><a href="#!hns-anatomy">ハーネスの構成と効果</a> <span class="scn-sub">· 12 回のつながり</span></li>
+    <li><a href="#!omc-install">インストール</a> <span class="scn-sub">· 9 回</span></li>
+    <li><a href="#!hnp-intro">Harness プラグイン — 紹介</a> · <a href="#!llmw-overview">LLM Wiki — 概要</a> · <a href="#!llmw-vaults">ボールトの体系 — メインのボールトとウィキのボールト</a> · <a href="#!skl-overview">スキルの深掘り — 概要</a> <span class="scn-sub">· 各 8 回</span></li>
+    <li><a href="#!ccb-overview">講義の概要と目標</a> · <a href="#!ccb-skills">スキル（Skill）をつくる</a> · <a href="#!hnp-first-run">最初のハーネスの実行</a> · <a href="#!hns-install">メタなハーネスのスキルのインストール</a> · <a href="#!hns-run">ハーネスを実行する</a> · <a href="#!llmw-capture">何を収めるのか — 知識のキャプチャ</a> · <a href="#!sb-levels">5 段階をひと目で</a> · <a href="#!skl-strengths">スキルの長所</a> <span class="scn-sub">· 各 7 回</span></li>
+    <li><a href="#!hnp-concepts">中心の概念をやさしく</a> <span class="scn-sub">· 6 回</span></li>
+</ul>
+
+<h3>いちばん多く扱われる中心の概念</h3>
+<p>AI World の全体でくり返し現れる上位の概念です。概念を押すと、その概念での<strong>統合の検索</strong>が開きます。</p>
+<p class="scn-sub" id="km-top">스킬 22 · 슬래시명령어 11 · 서브에이전트 10 · 에이전트 10 · 오케스트레이터 10 · 지식그래프 10 · 하네스 10 · 세컨드브레인 9 · 검증 8 · 설치 8 · 플러그인 7 · CLAUDE.md 6 · ERP커스터마이징 6 · _workspace 6 · 에이전트팀 6 · 재사용 6</p>
+<p class="scn-sub" id="km-totals">知識の文書 104 編 · 固有の概念 331 個。</p>
+
+<div class="note">
+    <span class="nh">生きている地図</span>
+    この地図と <code>knowledge-index.json</code> は、AI が文書を読んで<strong>自動で生成</strong>します。関連する文書は<strong>希少性で重みづけした概念の重なり</strong>（まれな概念ほど強く）で計算し、重なる概念の少ない文書は<strong>同じフォルダの隣</strong>で補います。文書が増えたり変わったりしたら、インデックスを作り直して地図を更新します。
+</div>

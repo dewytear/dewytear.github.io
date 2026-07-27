@@ -2,7 +2,7 @@
 
 **[dewytear.github.io](https://dewytear.github.io)** — a personal wiki about Claude Code,
 plugins, harnesses, LLM wikis and second brains. Written in Korean, published in
-**Korean and English** (116 documents, both languages), CC BY 4.0.
+**Korean, English and Japanese** (116 documents in all three), CC BY 4.0.
 
 ![Aaron's Claude Wiki](og-image.png)
 
@@ -82,7 +82,7 @@ GitHub Pages로 배포됩니다: https://dewytear.github.io
 
 ## 언어 추가하기 (다국어)
 
-설정 → 기본 설정의 **언어** 선택(한국어/English/中文/日本語)이 사이트 전체(문서·내비 라벨·태그·화면 문구·지식 인덱스·지도·그래프)를 전환합니다. 번역이 없는 조각은 자동으로 한국어에 폴백하므로, 채우는 만큼만 그 언어가 살아납니다.
+설정 → 기본 설정의 **언어** 선택(한국어/English/中文/日本語)이 사이트 전체(문서·내비 라벨·태그·화면 문구·지식 인덱스·지도·그래프)를 전환합니다. 번역이 없는 조각은 자동으로 한국어에 폴백하므로, 채우는 만큼만 그 언어가 살아납니다. **현재 en·ja는 전면 병행**(인덱스 문서 115편 전부)이고 zh는 미착수입니다 — en·ja는 신규 문서 동반이 PR CI(`tools/check_translation.py`)로 강제됩니다.
 
 **전체 절차·원칙·검증 체크리스트는 [`tools/i18n.md`](tools/i18n.md)를 따릅니다.** 핵심 원칙: 문서의 라벨·태그·인덱스 오버레이는 그 문서의 **본문 번역과 같은 PR에서 함께** 갱신하고(제목↔본문 불일치 방지), UI 문구는 `STRINGS` 사전으로만 넣습니다.
 
