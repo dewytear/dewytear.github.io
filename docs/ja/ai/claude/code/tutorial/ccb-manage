@@ -1,0 +1,38 @@
+<h2>使用量・コンテキスト・セッションの管理</h2>
+<p>Claude Code をうまく使うには、<strong>使用量（トークン）</strong>と<strong>コンテキスト</strong>、そして<strong>セッション（文脈）</strong>を管理できる必要があります。トークンがとても重要な時代になりました。</p>
+
+<h3>使用量 — /usage</h3>
+<ul>
+    <li><code>/usage</code> — いまのセッションと今週の使用量を表示します。</li>
+    <li><strong>セッションの上限</strong>: 最初に実行した時点から<strong>5 時間</strong>単位で計算されます。5 時間のうちに 100% 使い切ると、その 5 時間が終わるまで待つことになります。</li>
+    <li><strong>週次のリミット</strong>もあります。開発者がいちばん苦しむ上限なので、<strong>やりくり上手に</strong>使うのが肝心です。</li>
+</ul>
+
+<h3>コンテキスト — /context</h3>
+<p><code>/context</code> は、いま Claude Code に何が載って運ばれているのかを可視化して見せてくれます。コンテキストウィンドウの大きさは<strong>モデルによって違います</strong> — 基本はたいてい 20 万（200K）トークンで、最新のモデル（Fable 5・Sonnet 5・Sonnet 4.6、Opus 4.6 以降）は<strong>100 万（1M）トークン</strong>に対応します。Max・Team・Enterprise のプランでは Opus が自動で 1M コンテキストにアップグレードされ、<code>/model opus[1m]</code> のように <code>[1m]</code> の接尾辞を付けて自分で選ぶこともできます。</p>
+<ul>
+    <li>システムプロンプトやツールの定義などが一部を占め、仕事を頼むたびに少しずつ埋まっていきます。</li>
+    <li>ある程度埋まると<strong>コンパクト（compact）</strong>が起きて、内容が圧縮・縮小されます。</li>
+    <li>コンパクトが起きると<strong>一部のデータが失われ</strong>、性能が少し落ちることがあります。</li>
+    <li>だから満杯になるまで待たず、適当な時点で <code>/compact</code> による<strong>手動の圧縮</strong>が勧められます。</li>
+</ul>
+<p>エージェントを活用すれば、メインのコンテキストを節約しながら品質を保てます。</p>
+
+<h3>セッション（文脈）の管理</h3>
+<p>ウェブのチャットと違い、Claude Code は <code>/exit</code> で出ると文脈が切れます。もう一度つなぐには次のコマンドを使います。</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>コマンド</th><th>やること</th></tr></thead>
+        <tbody>
+            <tr><td><code>claude --continue</code></td><td>直近のセッションをそのまま続けて開始</td></tr>
+            <tr><td><code>claude --resume</code></td><td>過去のセッション一覧から選んで、その文脈へ復帰</td></tr>
+            <tr><td><code>/clear</code></td><td>出ずに文脈だけ空にして新しいセッションを開始</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>セッションの記録は<strong>ユーザーフォルダ配下の <code>~/.claude/projects/</code></strong> に、プロジェクトごと・セッションごとに保存されます。つまり、ずっと前の作業も <code>--resume</code> でよみがえらせられます。ただしこの記録は<strong>ローカルにだけ</strong>保存されるので、別の PC にはありません。</p>
+
+<div class="note warn">
+    <span class="nh">キャッシュに注意</span>
+    AI にはキャッシュがあり、続けて頼めば新しい依頼の分だけが課金されます。ただしキャッシュには<strong>有効時間</strong>があるので、時間が経ってから <code>--resume</code> でまた頼むと、積み上げた内容を全部もう一度載せて送ることになり、キャッシュの恩恵を受けられません。そんなときは<strong>新しいセッション</strong>を開くほうが有利なこともあります。
+</div>

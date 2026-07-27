@@ -1,0 +1,63 @@
+<h2>講義の概要と目標</h2>
+<p>この資料は<strong>「Claude Code 基礎 / ファン・ミンホ」</strong>の実習講義を映像の順に整理したものです。開発者ではない方にとってターミナルは不慣れな環境ですが、<strong>たったひとつの山 — 「フォルダを作り、その場所で <code>claude</code> を実行すること」</strong>さえ越えれば、そこから先は AI がほとんどの仕事を代わりにやってくれます。今日の目標はターミナルと仲よくなることです。</p>
+
+<h3>この講義でできるようになること</h3>
+<ul>
+    <li>ターミナルでフォルダを作り、Claude Code を実行する。</li>
+    <li><code>CLAUDE.md</code> で自分だけの作業方針を与える。</li>
+    <li>ウェブ調査 → ファイル保存 → ウェブサイト生成までを一度に任せる。</li>
+    <li>繰り返し作業を<strong>スキル（Skill）</strong>に、専門的な作業を<strong>エージェント（Agent）</strong>にして再利用する。</li>
+    <li>プラグインを入れて PDF・PPT・エクセルの文書を扱う。</li>
+    <li>使用量・コンテキスト・セッションを管理して品質とコストを調節する。</li>
+</ul>
+
+<h3>もう一歩 — ハーネス（Harness）</h3>
+<div class="diagram">
+<svg viewBox="0 0 660 188" role="img" aria-label="ハーネスによる本の生成パイプライン: エージェントチーム作成 → リサーチ素材の準備 → 並列執筆 → 挿絵の生成・挿入 → マークダウン・PDF 変換 → ウェブサイト">
+    <rect class="d-box" x="8" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="42" text-anchor="middle">① チーム作成</text>
+    <text class="d-sub" x="108" y="59" text-anchor="middle">本を書くエージェント複数</text>
+
+    <rect class="d-box" x="223" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="42" text-anchor="middle">② リサーチ素材の準備</text>
+    <text class="d-sub" x="323" y="59" text-anchor="middle">資料の調査・収集</text>
+
+    <rect class="d-box" x="438" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="42" text-anchor="middle">③ 並列執筆</text>
+    <text class="d-sub" x="538" y="59" text-anchor="middle">同時に作成・報告</text>
+
+    <rect class="d-box" x="8" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="134" text-anchor="middle">④ 挿絵の生成・挿入</text>
+    <text class="d-sub" x="108" y="151" text-anchor="middle">画像生成・配置</text>
+
+    <rect class="d-box" x="223" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label sm" x="323" y="134" text-anchor="middle">⑤ マークダウン・PDF 変換</text>
+    <text class="d-sub" x="323" y="151" text-anchor="middle">成果物の文書化</text>
+
+    <rect class="d-box accent" x="438" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="134" text-anchor="middle">⑥ ウェブサイト</text>
+    <text class="d-sub" x="538" y="151" text-anchor="middle">めくって見るサイト</text>
+
+    <line class="d-edge" x1="208" y1="46" x2="221" y2="46"/><polygon class="d-arrow" points="215,41 223,46 215,51"/>
+    <line class="d-edge" x1="423" y1="46" x2="436" y2="46"/><polygon class="d-arrow" points="430,41 438,46 430,51"/>
+    <path class="d-edge" d="M538 72 C538 87, 523 92, 505 92 H141 C123 92, 108 97, 108 110"/><polygon class="d-arrow" points="103,106 113,106 108,112"/><polygon class="d-arrow" points="328,87 328,97 318,92"/>
+    <line class="d-edge" x1="208" y1="138" x2="221" y2="138"/><polygon class="d-arrow" points="215,133 223,138 215,143"/>
+    <line class="d-edge" x1="423" y1="138" x2="436" y2="138"/><polygon class="d-arrow" points="430,133 438,138 430,143"/>
+</svg>
+<div class="d-cap">数行のプロンプトで、チーム編成から執筆・挿絵・変換・ウェブサイトまで約 1 時間で仕上がります。</div>
+</div>
+<p>基礎の山を越えると、その次に<strong>ハーネス（Harness）</strong>が待っています。ハーネスを使えば、数行のプロンプトだけで 200〜300 ページを超える本を一冊つくり出せます。講義で見せられた例はこう動きます。</p>
+<ul>
+    <li>本を書く<strong>エージェントを複数</strong>（例: 5 つ）作る。</li>
+    <li>リサーチのエージェントが本の素材を用意する。</li>
+    <li>エージェントたちが<strong>並列で執筆</strong>し、完了を報告する。</li>
+    <li>必要な挿絵の画像まで生成し、正確な位置に挿入する。</li>
+    <li>成果物をマークダウン・PDF に変換し、ページをめくって見るウェブサイトまで作る。 — <strong>所要は合計およそ 1 時間</strong>。</li>
+</ul>
+<p>つまり「Claude Code を始める人のための自分だけの本」も自分で作れます。ハーネス自体はこのあと別のセッションで扱います。</p>
+
+<div class="note">
+    <span class="nh">出典</span>
+    本文書セットは「（トラック 2）Claude Code 基礎 / ファン・ミンホ / 260429」の実習講義の内容を順に整理・再構成したものです。
+    <br>· 映像: youtube.com/watch?v=pHfDgZ7cll0
+</div>

@@ -1,0 +1,55 @@
+<h2>実習: ウェブ調査 → ファイル → ウェブサイト</h2>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="パイプライン: ウェブ調査（WebSearch·WebFetch） → ファイルに保存 → ウェブサイト生成 → デザイン修正">
+    <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="85" y="46" text-anchor="middle">① ウェブ調査</text>
+    <text class="d-sub" x="85" y="63" text-anchor="middle">WebSearch·WebFetch</text>
+
+    <rect class="d-box" x="180" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="255" y="46" text-anchor="middle">② ファイル保存</text>
+    <text class="d-sub" x="255" y="63" text-anchor="middle">出典つきで整理</text>
+
+    <rect class="d-box" x="350" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="425" y="46" text-anchor="middle">③ サイト生成</text>
+    <text class="d-sub" x="425" y="63" text-anchor="middle">テキスト → サイト</text>
+
+    <rect class="d-box accent" x="520" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="595" y="46" text-anchor="middle">④ デザイン修正</text>
+    <text class="d-sub" x="595" y="63" text-anchor="middle">テーマ · ブランド</text>
+
+    <line class="d-edge" x1="160" y1="48" x2="176" y2="48"/><polygon class="d-arrow" points="172,43 180,48 172,53"/>
+    <line class="d-edge" x1="330" y1="48" x2="346" y2="48"/><polygon class="d-arrow" points="342,43 350,48 342,53"/>
+    <line class="d-edge" x1="500" y1="48" x2="516" y2="48"/><polygon class="d-arrow" points="512,43 520,48 512,53"/>
+</svg>
+<div class="d-cap">ウェブで調べた内容をファイルに保存し、そのファイルからサイトを作って整えます。</div>
+</div>
+<p>Claude Code にはいくつものツールが標準で組み込まれています。その中の<strong>ウェブ検索（WebSearch）・ウェブ取得（WebFetch）</strong>ツールを使えば、頼んだ作業をウェブで調べて持ってこられます。調査 → ファイル保存 → ウェブサイト生成までをひと続きでやってみます。</p>
+
+<h3>1）調べてファイルに保存</h3>
+<pre><code>Mythos（ミトス）モデルを調べて、関連する内容をファイルに保存して。</code></pre>
+<p>Claude Code がウェブ検索で資料を集め、出典リンクを含めてファイルに整理します。（CLAUDE.md の方針があれば日本語で書かれ、ファイル名に <code>_new</code> が付きます。）</p>
+
+<h3>2）調べた内容からウェブサイトを生成</h3>
+<pre><code>いま調べた内容をもとに、洗練されたモダンなウェブサイトを作って。
+アニメーション効果を最大化した背景と、インタラクティブな要素を追加して。</code></pre>
+<p>テキストファイルをひとつ渡すだけで、Claude Code が意図を汲んでサイトを仕上げます。完成後に「ブラウザで開いて」と言えば、そのまま表示してくれます。</p>
+
+<h3>3）デザイン修正・ブランディング</h3>
+<p>できあがったサイトは、いくらでも直せます。</p>
+<pre><code><span class="c"># テーマの変更</span>
+ホワイトテーマに変えて。
+<span class="c"># ブランド名を挙げるとより良いデザインが出る</span>
+ホワイトカラーの Apple のサイト風に直して。</code></pre>
+<p>「Apple のサイト風」のように<strong>見慣れたブランドに言及すると</strong>、完成度の高いデザインを作ってくれる傾向があります。</p>
+
+<h3>作業中に知っておくとよい操作</h3>
+<ul>
+    <li><strong>ESC</strong> — 進行中の作業をいつでもキャンセル。</li>
+    <li>作業中に何かをタイプすると<strong>次の作業としてキューに積まれ</strong>、AI が処理できる時点で実行されます。</li>
+    <li>エラーが出ても「続けて」と言うか、ただ待つだけで Claude Code が自分で解決することがよくあります。</li>
+</ul>
+
+<div class="note warn">
+    <span class="nh">トークン注意</span>
+    ウェブサイト生成のような大きな作業は、トークン（使用量）を速く消費します。実習中に料金プランの上限に達することがあるので、重い作業は必要なときだけ回してください。（使用量の管理はあとの「使用量・コンテキスト・セッション管理」を参照）
+</div>
