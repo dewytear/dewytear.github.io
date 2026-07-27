@@ -46,6 +46,7 @@
     <li><strong><code>tools/schema.md</code>가 아직 2언어 계약</strong>이었다(<code>ko/en 두 URL</code>, <code>hreflang(ko·en·x-default)</code>, <code>p/en/</code> 행만) — <code>i18n.md</code>는 이미 3언어로 적고 있어 두 문서가 서로 모순이었다. 언어 목록이 <code>build_prerender.LANGS</code> 정본임을 명시해 다음 언어에는 이 표를 안 고쳐도 되게 했다.</li>
     <li><strong>플러그인 스킬 4곳</strong> — 도그푸딩 대상이라 지금 상태로는 이 저장소에서 <em>실패하는</em> PR을 만든다. <code>add-doc</code>의 &ldquo;영어 동반&rdquo;을 <code>ENFORCED_LANGS</code> 전 언어로, <code>wiki-init</code>의 en 전용 서술과 <strong>번들 검증기와 사실이 다른 괄호 주석</strong>(&ldquo;빈 배열이 없으면 ERROR&rdquo; &mdash; 실제로는 파일이 없으면 skip)을 고치고 개념 사전 안내를 넣었다. <code>validate</code> 스킬의 게이트 목록에 빠져 있던 <code>check_translation</code>·<code>check_diagram_bounds</code>도 추가.</li>
     <li><strong><code>config.json</code>의 기본 <code>description</code></strong>이 아직 &ldquo;한글 위키&rdquo;였다 — <code>_en</code>·<code>_ja</code>만 고치고 원본을 빼먹은 것인데, 이 문장이 <code>llms.txt</code> 인용구와 <code>og:description</code>으로 그대로 나간다. <code>README.md</code>는 안에서 116편/115편이 어긋나 있어 통일했다.</li>
+    <li><strong><code>README.md</code>에 &ldquo;연락 · 기여&rdquo; 절</strong> — 저장소에는 연락 경로가 아예 없었다. 기본 경로는 <strong>Issues</strong>로 뒀다(공개 기록이 남아 같은 질문이 반복되지 않는다). 메일은 <strong>개인 주소 하나만</strong> 적는다(사용자 결정) &mdash; 회사 도메인은 스팸이 조직 메일 시스템으로 들어가고 소속이 바뀌면 죽은 주소가 된다. 주소 자체는 이미 About 페이지와 <code>/p/about/</code> 정적 스냅샷에 평문으로 공개돼 있어 새로 드러나는 정보는 없다.</li>
 </ul>
 
 <h3>잘못 적은 것을 어떻게 처리했나</h3>
