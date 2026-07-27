@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ウェブクリッパーとインボックス、Query の実戦</title>
+<meta name="description" content="Web Clipper で資料をインボックスに集め、仕分けてインジェストし、クエリで取り出す。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/llmw-clipper-query/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/llmw-clipper-query/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/llmw-clipper-query/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/llmw-clipper-query/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/llmw-clipper-query/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ウェブクリッパーとインボックス、Query の実戦">
+<meta property="og:description" content="Web Clipper で資料をインボックスに集め、仕分けてインジェストし、クエリで取り出す。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/llmw-clipper-query/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ウェブクリッパーとインボックス、Query の実戦">
+<meta name="twitter:description" content="Web Clipper で資料をインボックスに集め、仕分けてインジェストし、クエリで取り出す。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "ウェブクリッパーとインボックス、Query の実戦",
+ "description": "Web Clipper で資料をインボックスに集め、仕分けてインジェストし、クエリで取り出す。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/llmw-clipper-query/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!llmw-clipper-query",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:38:08+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!llmw-clipper-query">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/llmw-clipper-query/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/llmw-clipper-query/" hreflang="en">English</a>
+</p>
+<article>
+<h2>ウェブクリッパーとインボックス、Query の実戦</h2>
+
+<div class="diagram">
+<svg viewBox="0 0 660 188" role="img" aria-label="クリッピングのパイプライン: ウェブ記事 → ウェブクリッパー → インボックスのフォルダ → /inbox で仕分け → インジェスト → /query">
+    <rect class="d-box" x="8" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="42" text-anchor="middle">① ウェブ記事</text>
+    <text class="d-sub" x="108" y="59" text-anchor="middle">読んだ記事</text>
+    <rect class="d-box" x="223" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="42" text-anchor="middle">② ウェブクリッパー</text>
+    <text class="d-sub" x="323" y="59" text-anchor="middle">Chrome 拡張</text>
+    <rect class="d-box" x="438" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="42" text-anchor="middle">③ インボックス</text>
+    <text class="d-sub" x="538" y="59" text-anchor="middle">0.2 inbox/article</text>
+
+    <rect class="d-box" x="8" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="134" text-anchor="middle">④ /inbox で仕分け</text>
+    <text class="d-sub" x="108" y="151" text-anchor="middle">主題ごとにまとめる</text>
+    <rect class="d-box" x="223" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="134" text-anchor="middle">⑤ インジェスト</text>
+    <text class="d-sub" x="323" y="151" text-anchor="middle">ウィキカードの生成</text>
+    <rect class="d-box accent" x="438" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="134" text-anchor="middle">⑥ /query</text>
+    <text class="d-sub" x="538" y="151" text-anchor="middle">取り出して使う</text>
+
+    <line class="d-edge" x1="208" y1="46" x2="221" y2="46"/><polygon class="d-arrow" points="215,41 223,46 215,51"/>
+    <line class="d-edge" x1="423" y1="46" x2="436" y2="46"/><polygon class="d-arrow" points="430,41 438,46 430,51"/>
+    <path class="d-edge" d="M538 72 C538 87, 523 92, 505 92 H141 C123 92, 108 97, 108 110" fill="none"/><polygon class="d-arrow" points="103,106 113,106 108,112"/><polygon class="d-arrow" points="328,87 328,97 318,92"/>
+    <line class="d-edge" x1="208" y1="138" x2="221" y2="138"/><polygon class="d-arrow" points="215,133 223,138 215,143"/>
+    <line class="d-edge accent" x1="423" y1="138" x2="436" y2="138"/><polygon class="d-arrow accent" points="430,133 438,138 430,143"/>
+</svg>
+<div class="d-cap">ウェブ記事をクリッパーで<strong>インボックス</strong>に集め、<code>/inbox</code> で仕分けし、インジェストしてから <code>/query</code> で取り出して使います。</div>
+</div>
+
+<h3>Obsidian のウェブクリッパー</h3>
+<p>Chrome 拡張の <strong>Obsidian Web Clipper</strong> でウェブの記事をクリップし、ボルトの<strong>インボックス</strong>に入れます。講師はキャプチャのルール（JSON のテンプレート）をウィキボルトに入れてあります。</p>
+<ul>
+    <li>設定 → 一般オプションの<strong>ボルトの保存先</strong>にボルト名を登録すれば、どのボルトへ送るか指定できます。</li>
+    <li>テンプレート（JSON）をインポートし、<strong>Web Article</strong> のテンプレートをいちばん上に上げます（先に発動）。<code>x.com</code>・<code>youtube</code> など、アドレスによってトリガーされるテンプレートもあります。</li>
+    <li>キャプチャすると、あらかじめ指定した <code>0.2 inbox/article</code> のようなフォルダに保存されます。</li>
+</ul>
+
+<h3>インボックスのスキル — 集めて分析</h3>
+<pre><code>/inbox        <span class="c"># インボックスに集めた資料を分析し、主題ごとにまとめて提案</span></code></pre>
+<p>いくつかを先に集めておいて <code>/inbox</code> を回すと、「5 つのうち 3 つは同じ筋なので、一緒にインジェストしますか？」のように<strong>主題ごとに分けて</strong>提案します。</p>
+
+<h3>トークンのコツ — 原文のスクレイピング</h3>
+<p>インジェストのときにリンクだけ渡すと、AI が原文を<strong>取ってくる</strong>ところから始めることになり、トークンが余分にかかります。<strong>ウェブクリッパーで先にスクレイピング</strong>して原文を確保してから始めれば、トークンを節約できます。</p>
+
+<h3>Query の実戦</h3>
+<pre><code>/query LLM ウィキボルトの学術的な価値を整理して。
+あとでリファレンスマネージャーで書誌情報を引用するつもり。</code></pre>
+<p>ウィキボルトで足りなければ<strong>メインボルトまで検索</strong>して持ってくるようになっていて、自分がどう質問したかも一緒に記録されます。結果には答えだけでなく、<strong>Obsidian のメタデータをどう設計すればよいか（author・created・source・category など）</strong>まで薦めてくれます。</p>
+
+<div class="note">
+    <span class="nh">論文はまるごと入れないこと</span>
+    論文の原文をすべてインジェストするより、<strong>要旨（abstract）</strong>くらいで基本の概念だけ分からせ、<strong>原文の場所</strong>を残しておくのがよいです。重要なキーペーパーだけフルで読ませ、自分のコメンタリーや実験の文脈も一緒に入れると、さらに役立ちます。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · LLM Wiki &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/llmw-cards/">ウィキカードの種類と生ソース</a></li><li><a href="/p/ja/llmw-ingest-query-lint/">三つの中心的な動作 — Ingest · Query · Lint</a></li><li><a href="/p/ja/llmw-capture/">何を入れるのか — 知識のキャプチャ</a></li></ul>
+</nav>
+</body>
+</html>

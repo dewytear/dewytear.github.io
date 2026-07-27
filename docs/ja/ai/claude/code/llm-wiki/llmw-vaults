@@ -1,0 +1,64 @@
+<h2>ボルトの体系 — メインのボルトとウィキのボルト</h2>
+<p>Obsidian は根本的に<strong>ボルト（Vault）</strong>の体系でできています。ボルトはひとつの名前のもとにまとめられた<strong>マークダウンファイルの集まり</strong>で、これがひとつのセットとして読まれます。Claude Code が特定のフォルダを開いて、その中の <code>CLAUDE.md</code> を読んで固有のアイデンティティを持つのと同じ構造です。</p>
+
+<h3>AI が書いた知識と自分が書いた知識を分ける</h3>
+<p>できるかぎり<strong>AI が書いた知識と自分が書いた知識をボルトで分ける</strong>のがよいです。AI が作った成果物を、まるで自分が全部分かっているかのように錯覚しやすいので、自分がどこまで勉強したのかを<strong>厳密に分ける</strong>ことが大切です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 660 250" role="img" aria-label="中央のメインボルト（母船）を中心に、複数のウィキボルト（衛星）が双方向につながる 2 ボルトのアーキテクチャ">
+    <rect class="d-box accent" x="260" y="100" width="140" height="54" rx="12"/>
+    <text class="d-label" x="330" y="124" text-anchor="middle">メインボルト</text>
+    <text class="d-sub" x="330" y="142" text-anchor="middle">母船(mothership)</text>
+
+    <rect class="d-box soft" x="28" y="16" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="87" y="41" text-anchor="middle">ウィキボルト</text>
+    <rect class="d-box soft" x="514" y="16" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="573" y="41" text-anchor="middle">ウィキボルト</text>
+    <rect class="d-box soft" x="18" y="107" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="77" y="132" text-anchor="middle">ウィキボルト</text>
+    <rect class="d-box soft" x="524" y="107" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="583" y="132" text-anchor="middle">ウィキボルト</text>
+    <rect class="d-box soft" x="28" y="196" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="87" y="221" text-anchor="middle">ウィキボルト</text>
+    <rect class="d-box soft" x="514" y="196" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="573" y="221" text-anchor="middle">ウィキボルト</text>
+
+    <line class="d-edge accent" x1="260" y1="127" x2="136" y2="127"/>
+    <polygon class="d-arrow accent" points="136,127 144,122 144,132"/>
+    <polygon class="d-arrow accent" points="260,127 252,122 252,132"/>
+    <line class="d-edge accent" x1="400" y1="127" x2="524" y2="127"/>
+    <polygon class="d-arrow accent" points="524,127 516,122 516,132"/>
+    <polygon class="d-arrow accent" points="400,127 408,122 408,132"/>
+    <line class="d-edge accent" x1="297.1" y1="98.2" x2="140" y2="56"/>
+    <polygon class="d-arrow accent" points="140,56 149.9,54.2 147.5,62.8"/>
+    <polygon class="d-arrow accent" points="297.1,98.2 289.6,91.4 287.2,100"/>
+    <line class="d-edge accent" x1="362.9" y1="98.2" x2="520" y2="56"/>
+    <polygon class="d-arrow accent" points="520,56 512.5,62.8 510.1,54.2"/>
+    <polygon class="d-arrow accent" points="362.9,98.2 372.8,100 370.4,91.4"/>
+    <line class="d-edge accent" x1="297.3" y1="156" x2="140" y2="196"/>
+    <polygon class="d-arrow accent" points="140,196 147.5,189.4 149.9,198"/>
+    <polygon class="d-arrow accent" points="297.3,156 287.4,154 289.8,162.6"/>
+    <line class="d-edge accent" x1="362.7" y1="156" x2="520" y2="196"/>
+    <polygon class="d-arrow accent" points="520,196 510.1,198 512.5,189.4"/>
+    <polygon class="d-arrow accent" points="362.7,156 370.2,162.6 372.6,154"/>
+</svg>
+<div class="d-cap">中央の<strong>メインボルト（母船）</strong>を中心に、複数の<strong>ウィキボルト（衛星）</strong>が双方向の同期・参照でつながります。</div>
+</div>
+
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>ボルト</th><th>たとえ</th><th>入れる内容</th></tr></thead>
+        <tbody>
+            <tr><td><strong>メインボルト</strong></td><td>母船（mothership）</td><td>自分がよく分かっていて人に説明できる概念。出来上がった成果物。</td></tr>
+            <tr><td><strong>LLM ウィキボルト</strong></td><td>衛星（satellite、複数）</td><td>学ぼうとしていること、まだよく分からない・技術的な概念。材料の置き場。</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>講師は実際にボルトを<strong>約 8 個</strong>使い、用途と共有の相手に合わせて分けて使っています。</p>
+
+<h3>ローカルファイルと同期</h3>
+<ul>
+    <li>Obsidian は<strong>ローカルファイル</strong>なので、セキュリティが重要な業務に向いています。ファイルのパスがそのまま見えるので、コンピュータが扱いやすく速いです。</li>
+    <li>マークダウン<strong>以外のファイル（HTML・PDF・画像・ワープロ文書など）は入れないことを推奨</strong> — Obsidian のレンダリングが遅くなります。</li>
+    <li>同期は公式の Sync、またはそれをまねて<strong>セルフホスト</strong>できる <code>osync</code> のようなプラグインで、組織内の共同ボルトを構成できます。</li>
+</ul>

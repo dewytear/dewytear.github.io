@@ -1,0 +1,54 @@
+<h2>つながり（Links）とボルト間の参照</h2>
+<p>Obsidian のいちばんの長所は<strong>ノートどうしのつながり</strong>です。たとえば「BM25」のノートに、MOC（Map of Content、知識の地図）、ハーネスエンジニアリング、ログなど、さまざまなノートがつながっています。この<strong>つながりが核心</strong>です。</p>
+
+<h3>住所ひとつでつながった知識をまとめて読む</h3>
+<p>「BM25」のノートの住所だけを人工知能に渡せば、それと<strong>つながった残りのノートもソーセージのように</strong>連なって読まれます。ただしこの自動のつながりは<strong>同じボルトの中でだけ</strong>可能です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 640 250" role="img" aria-label="ノートがリンクでつながった知識グラフ。青い線はボルトを越えるつながり">
+    <rect class="d-box soft" x="20" y="30" width="300" height="200" rx="12"/>
+    <text class="d-sub" x="170" y="50" text-anchor="middle">ウィキボルト (衛星)</text>
+    <rect class="d-box soft" x="340" y="30" width="280" height="200" rx="12"/>
+    <text class="d-sub" x="480" y="50" text-anchor="middle">メインボルト (母船)</text>
+
+    <line class="d-edge" x1="170" y1="130" x2="80" y2="72"/>
+    <line class="d-edge" x1="170" y1="130" x2="92" y2="188"/>
+    <line class="d-edge" x1="170" y1="130" x2="250" y2="82"/>
+    <line class="d-edge" x1="170" y1="130" x2="250" y2="184"/>
+    <line class="d-edge accent" x1="170" y1="130" x2="430" y2="82"/>
+    <line class="d-edge accent" x1="170" y1="130" x2="470" y2="186"/>
+
+    <circle class="d-node b" cx="170" cy="130" r="8"/>
+    <text class="d-sub" x="170" y="118" text-anchor="middle">BM25</text>
+    <circle class="d-node" cx="80" cy="72" r="7"/>
+    <text class="d-sub" x="80" y="66" text-anchor="middle">MOC</text>
+    <circle class="d-node" cx="92" cy="188" r="7"/>
+    <text class="d-sub" x="92" y="206" text-anchor="middle">ハーネス</text>
+    <circle class="d-node" cx="250" cy="82" r="7"/>
+    <text class="d-sub" x="250" y="76" text-anchor="middle">ログ</text>
+    <circle class="d-node" cx="250" cy="184" r="7"/>
+    <text class="d-sub" x="250" y="202" text-anchor="middle">概念 A</text>
+
+    <circle class="d-node c" cx="430" cy="82" r="7"/>
+    <text class="d-sub" x="430" y="76" text-anchor="middle">関連記事</text>
+    <circle class="d-node c" cx="540" cy="120" r="7"/>
+    <text class="d-sub" x="540" y="114" text-anchor="middle">関連記事</text>
+    <circle class="d-node c" cx="470" cy="186" r="7"/>
+    <text class="d-sub" x="470" y="204" text-anchor="middle">関連記事</text>
+    <line class="d-edge" x1="430" y1="82" x2="540" y2="120"/>
+    <line class="d-edge" x1="540" y1="120" x2="470" y2="186"/>
+</svg>
+<div class="d-cap">ノートどうしがリンクでつながった小さな<strong>知識グラフ</strong> — 青い線（accent）は<strong>ボルトを越えるつながり</strong>です。</div>
+</div>
+
+<h3>ボルト間のつながり — マークダウンリンク</h3>
+<p>ボルトの内部で使うウィキリンク（<code>[[...]]</code>）はボルトの外のノートを指せないので、外部のボルトへのつながりは<strong>マークダウンリンクの方式</strong>（<code>[テキスト](住所)</code>）にする必要があります。講師はこのボルト間のリンクも自動で書かれるように、システムファイルに設定してあります。</p>
+<ul>
+    <li>オンボーディングのときに「あなたのメインボルトは何ですか？」と尋ねられます。</li>
+    <li>メインボルトの住所を渡すと、その <strong>URI の値をパース</strong>して、その住所へのつながりも一緒に作ってくれます。</li>
+</ul>
+
+<div class="note">
+    <span class="nh">例 — モバイルコマンドセンター</span>
+    車に Starlink とバッテリーのシステムを入れる「モバイルコマンドセンター」のウィキカードを作ったとき、人工知能はウィキボルトの中の関連する概念（Related）だけでなく、<strong>メインボルトに整理してあった関連記事</strong>も見つけてつなぎました（メインボルト Related）。こうして<strong>自分の知識システム全体</strong>をつなぎ、Obsidian のボルトが生まれつき持つ限界（ボルト内のつながりしかできない）を越えます。
+</div>

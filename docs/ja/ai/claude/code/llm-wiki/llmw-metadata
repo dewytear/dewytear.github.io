@@ -1,0 +1,46 @@
+<h2>ノートの構造 — メタデータと段階的な開示</h2>
+<p>ウィキのノートを開くと<strong>タイトル → メタデータ → 本文</strong>の順に並んでいます。たとえば本文が 38 行目から始まるなら、その前の<strong>37 行はすべてメタデータ</strong>です。</p>
+
+<h3>YAML フロントマターが肝</h3>
+<p>Obsidian がマークダウンのエディタとして価値が高いのは、まさにこの <strong>YAML フロントマター</strong>のメタデータのフィールドです。Claude Code で学んだ<strong>段階的な開示（progressive disclosure）</strong>と同じ原理で動きます。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 520 268" role="img" aria-label="ノートの構造: タイトルから YAML フロントマター（メタデータ）、そして本文へ続く段階的な開示">
+    <rect class="d-box" x="130" y="18" width="260" height="44" rx="10"/>
+    <text class="d-label" x="260" y="45" text-anchor="middle">タイトル (Title)</text>
+
+    <line class="d-edge" x1="260" y1="62" x2="260" y2="90"/>
+    <polygon class="d-arrow" points="260,90 255,82 265,82"/>
+
+    <rect class="d-box accent" x="110" y="92" width="300" height="66" rx="12"/>
+    <text class="d-label" x="260" y="124" text-anchor="middle">YAML フロントマター</text>
+    <text class="d-sub" x="260" y="143" text-anchor="middle">メタデータ — 英語で簡潔に</text>
+
+    <line class="d-edge" x1="260" y1="158" x2="260" y2="186"/>
+    <polygon class="d-arrow" points="260,186 255,178 265,178"/>
+
+    <rect class="d-box soft" x="110" y="188" width="300" height="66" rx="12"/>
+    <text class="d-label" x="260" y="220" text-anchor="middle">本文 (Body)</text>
+    <text class="d-sub" x="260" y="239" text-anchor="middle">全体の内容 — 必要なときだけ</text>
+
+    <text class="d-accent" x="462" y="128" text-anchor="middle" font-size="11">① 先に</text>
+    <text class="d-accent" x="462" y="224" text-anchor="middle" font-size="11">② 必要時</text>
+    <path class="d-edge dash accent" d="M462 138 V206" fill="none"/>
+    <polygon class="d-arrow accent" points="462,210 457,202 467,202"/>
+</svg>
+<div class="d-cap">エージェントは<strong>メタデータ（フロントマター）を先に</strong>読み、必要なときだけ<strong>本文</strong>を開きます。</div>
+</div>
+
+<ul>
+    <li>コンテキストウィンドウには制限があり（多くて 100 万トークン）、すべての内容を開いて見ることはできません。</li>
+    <li>だから重要な内容だけを<strong>簡潔に（concise）</strong>いちばん上（メタデータ）に入れておきます。</li>
+    <li>Claude Code のようなエージェントは、この<strong>メタデータを先に</strong>読みます。全体に比べれば氷山の一角ですが、この一角だけをざっと見て、何に関する内容かを素早くつかみます。</li>
+</ul>
+
+<h3>タイトル・説明をうまく書く（英語で）</h3>
+<p>スキルの <code>description</code> と同じく、ノートの<strong>タイトルと説明（description）のフィールド</strong>をうまく書くことが大切です。私たちは日本語話者ですが、<strong>人工知能は英語のほうが速く・うまく読む</strong>ので、メタデータは英語で書くほうが有利です。</p>
+
+<div class="note">
+    <span class="nh">コンテキストの最適化</span>
+    Obsidian の大きな長所は、ひとつのファイルにすべてを詰め込まず、<strong>「好みは 好み.md を見よ」「専門のペルソナはここを見よ」</strong>のように別ファイルの住所を書けることです。仕事のときに必要なファイルだけ開かせて<strong>コンテキストを最適化</strong>します。講師は Karpathy のアイデアを借りて、こうしたメタデータの作成を自動化するコマンド・スキルのセットを用意しています。
+</div>
