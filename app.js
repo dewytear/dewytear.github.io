@@ -1810,7 +1810,12 @@ var GC_COUNTS = {};
 function gcCount(path, start){
     var url = GC_HOST + '/counter/' + path + '.json' + (start ? '?start=' + start : '');
     if(GC_COUNTS[url]){ return GC_COUNTS[url]; }
-    GC_COUNTS[url] = fetch(url, { mode: 'cors' })
+    // no-store: 서버가 이미 4시간 캐시하는 응답에 `Expires`(+4h)가 실려 와
+    // 브라우저가 그 위에 4시간을 더 얹는다 — 두 층이 겹치면 최악 8시간 낡은
+    // 숫자를 본다. 서버 캐시는 못 없애지만(캐시버스터는 캐시 키에서 제외된다)
+    // 우리가 더 낡게 만드는 층은 걷어낸다. 같은 URL은 세션당 1회만 부르므로
+    // (아래 프라미스 재사용) 요청 수는 늘지 않는다.
+    GC_COUNTS[url] = fetch(url, { mode: 'cors', cache: 'no-store' })
         // 집계가 0건이면 404로 오지만 본문은 정상 JSON이라 상태코드는 안 본다.
         // 다만 403(집계 설정 꺼짐)은 본문이 JSON이 아니고 CORS 헤더도 없어서
         // 여기까지 오지 못하거나 파싱에서 걸린다 — 아래 catch가 이유를 남긴다.
