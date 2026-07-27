@@ -1,0 +1,21 @@
+<h2>高度なツール</h2>
+<p>OMC は、コードをより正確に扱うためのツール群を用意しています。テキスト検索より精密な分析が必要なときに役立ちます。</p>
+
+<div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr><th>ツール群</th><th>代表的な機能</th><th>使いどころ</th><th>注意点</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>LSP</strong></td><td>lsp_hover、lsp_goto_definition、lsp_find_references、lsp_diagnostics</td><td>正確なシンボルの探索、型エラーの確認、参照の検索</td><td>typescript-language-server、pyright、rust-analyzer など言語ごとのサーバーが必要</td></tr>
+            <tr><td><strong>AST Grep</strong></td><td>ast_grep_search、ast_grep_replace</td><td>構文の構造にもとづく検索・置換</td><td>テキストの grep より精密だが、パターンを書く力が要る</td></tr>
+            <tr><td><strong>Python REPL</strong></td><td>pandas、numpy、matplotlib による分析</td><td>CSV・ログ・統計の分析</td><td>データファイルへのアクセス権限とパッケージの有無の確認が必要</td></tr>
+            <tr><td><strong>Ask / Team CLI</strong></td><td>omc ask、omc team、omc session search</td><td>外部の CLI ワーカーとセッションの検索</td><td>プラグインのインストールの流れと CLI/runtime の経路の区別が必要</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">LSP の補足</span>
+    LSP（Language Server Protocol）は、コードエディタが「この変数の定義はどこ？」「ここに型エラーはある？」を正確に突き止められるようにする標準です。ただし、その言語のランゲージサーバーが入っていないと正常に動きません。
+</div>

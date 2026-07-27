@@ -1,0 +1,164 @@
+<h2>実行モード</h2>
+<p>OMC は作業の性格に合わせていくつもの実行モードを用意しています。各モードは「どう仕事を進めるか」を決めるやり方だと考えてください。モードは、軽い単発の作業から大きく自律的な作業までの強さのスペクトラムとして理解すると分かりやすくなります。</p>
+
+<p><strong>強さのスペクトラム（弱い → 強い）:</strong> 会話（単発の問い）→ plan（計画の策定）→ autopilot（自律実行）→ ralph（完了までくり返し）→ team ralph（チーム + くり返し）</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 134" role="img" aria-label="強さのスペクトラム: 会話 → plan → autopilot → ralph → team ralph の順で、右へ行くほど自律的で強い">
+    <rect class="d-box" x="8" y="30" width="118" height="48" rx="10"/>
+    <text class="d-label sm" x="67" y="52" text-anchor="middle">会話</text>
+    <text class="d-sub" x="67" y="68" text-anchor="middle">単発の問い</text>
+    <rect class="d-box" x="138" y="30" width="118" height="48" rx="10"/>
+    <text class="d-label sm" x="197" y="52" text-anchor="middle">plan</text>
+    <text class="d-sub" x="197" y="68" text-anchor="middle">計画の策定</text>
+    <rect class="d-box" x="268" y="30" width="118" height="48" rx="10"/>
+    <text class="d-label sm" x="327" y="52" text-anchor="middle">autopilot</text>
+    <text class="d-sub" x="327" y="68" text-anchor="middle">自律実行</text>
+    <rect class="d-box" x="398" y="30" width="118" height="48" rx="10"/>
+    <text class="d-label sm" x="457" y="52" text-anchor="middle">ralph</text>
+    <text class="d-sub" x="457" y="68" text-anchor="middle">完了までくり返し</text>
+    <rect class="d-box accent" x="528" y="30" width="118" height="48" rx="10"/>
+    <text class="d-label sm" x="587" y="52" text-anchor="middle">team ralph</text>
+    <text class="d-sub" x="587" y="68" text-anchor="middle">チーム + 反復</text>
+
+    <line class="d-edge" x1="126" y1="54" x2="132" y2="54"/><polygon class="d-arrow" points="130,49 138,54 130,59"/>
+    <line class="d-edge" x1="256" y1="54" x2="262" y2="54"/><polygon class="d-arrow" points="260,49 268,54 260,59"/>
+    <line class="d-edge" x1="386" y1="54" x2="392" y2="54"/><polygon class="d-arrow" points="390,49 398,54 390,59"/>
+    <line class="d-edge accent" x1="516" y1="54" x2="522" y2="54"/><polygon class="d-arrow accent" points="520,49 528,54 520,59"/>
+    <text class="d-sub" x="340" y="120" text-anchor="middle">← 軽い · 単発    |    自律性 · 強さが増す →</text>
+</svg>
+<div class="d-cap">左は<strong>軽い単発の作業</strong>、右へ行くほど<strong>自律的で強い</strong>実行モードです。</div>
+</div>
+
+<h3>中心となる 4 モード — 詳しく見る</h3>
+<p>実務でいちばんよく使うことになる四つのモードです。どんな原理で動くのか、いつ使っていつ使ってはいけないのかを、公式のスキル定義にもとづいて解きました。下のモード名のボタンか、前へ・次へ のボタンでページを切り替えて見てください。</p>
+
+<div class="carousel">
+    <div class="carousel-stage">
+
+        <div class="scn active">
+            <h4>Autopilot — <code>/oh-my-claudecode:autopilot &lt;task&gt;</code></h4>
+            <p><strong>2〜3 行のアイデアを渡すだけで、要件の分析 → 設計 → 並列の実装 → QA → 多角的な検証まで全工程を自律で終わらせる自律実行モード</strong>です。成果物は「動いて、検証されたコード」です。（なお、現行の公式 README は team を代表のモードとして掲げています — Team のページを参照。）</p>
+            <p><strong>どう動くのか</strong> — 五つの段階（Phase 0〜4）を順に進み、前の段階が終わってから次の段階が始まります。拡張の段階で短い依頼を詳しい仕様（<code>.omc/autopilot/spec.md</code>）へ広げ、計画を critic が検証したあと、実行の段階では内部的に ralph + ultrawork を使って難易度別の executor が並列で実装します。</p>
+            <ul>
+                <li><strong>向いている</strong> — 要件がある程度は明確で、計画・コーディング・テスト・検証といった複数の段階が必要な機能を、最初から最後まで任せたいとき。</li>
+                <li><strong>向いていない</strong> — 選択肢の探索やブレインストーミング（→ plan）、素早い単発の修正（→ 普通の会話）、要件があいまいな場合（→ deep-interview を先に）。入力があまりにあいまいだと、autopilot 自身が deep-interview を先に勧めることもあります。</li>
+                <li><strong>中断・再開</strong> — <code>/oh-my-claudecode:cancel</code> でいつでも中断でき、進行の状況が保存されるので続きから再開できます。</li>
+            </ul>
+            <pre><code><span class="c"># スラッシュコマンドでも、自然言語のキーワード("autopilot:"、「オートパイロット」)でも可能</span>
+/oh-my-claudecode:autopilot 注文キャンセル API の追加 (キャンセル理由の保存、在庫の戻しを含む)</code></pre>
+        </div>
+
+        <div class="scn">
+            <h4>Ralph — <code>/oh-my-claudecode:ralph &lt;task&gt;</code></h4>
+            <p><strong>「終わりました」という嘘の報告を防ぐ、完了を保証するモード</strong>です。作業をユーザーストーリーの単位に構造化し、すべてのストーリーが通過してレビュアーの検証まで終わるまで、止まらずくり返します。</p>
+            <p><strong>どう動くのか</strong> — 始めるときに作業を <code>prd.json</code>（ストーリーごとの完了条件の一覧）として自動で構造化し、ストーリーをひとつずつ通過（<code>passes: true</code>）するまでくり返します。くり返しのなかで分かったことは <code>progress.txt</code> に積み上がって次の反復で活かされ、完了を宣言する前にはレビュアー（既定は architect）が完了条件と照らした検証を必ず行います。セッションが勝手に終わらないよう persistent-mode の Hook が Stop イベントを遮り、内部の実行には ultrawork の並列エンジンを使います。</p>
+            <ul>
+                <li><strong>--critic=architect|critic|codex</strong> — 完了の検証を担うレビュアーを差し替えられます（既定は architect）。</li>
+                <li><strong>向いている</strong> — マイグレーションやレビュー指摘の一括修正のように「部分的な完了が許されない」作業。</li>
+                <li><strong>注意</strong> — 検証に落ちると再試行がくり返され、そのぶんトークンのコストが増えます。完了条件を具体的に書くほど反復は減ります。</li>
+            </ul>
+            <pre><code><span class="c"># マジックキーワード "don't stop"、"until done"、韓国語の「랄프」でも発動</span>
+/oh-my-claudecode:ralph コードレビューで出た指摘 12 件をすべて修正 (ビルド・テストの通過まで)</code></pre>
+        </div>
+
+        <div class="scn">
+            <h4>Ultrawork — <code>/oh-my-claudecode:ultrawork &lt;task&gt;</code> · <code>ulw</code></h4>
+            <p><strong>互いに独立した作業を、複数のエージェントへ同時に配る並列実行のエンジン</strong>です。速さが最優先のときに使います。</p>
+            <p><strong>どう動くのか</strong> — 作業の意図をまずつかみ、関連するコンテキストを並列で集めたあと、依存関係を見て同時に回せる作業のまとまり（並列ウェーブ）を組みます。独立した作業は絶対に順番待ちをさせず同時に発射し、それぞれの作業の難しさに合ったモデルのティアが自動で割り当てられます。30 秒以上かかるビルドやテストはバックグラウンドで回します。</p>
+            <ul>
+                <li>ultrawork は<strong>継続性と検証のループを持たない「部品」</strong>です。完了したかどうかの管理は利用者の役目なので、完了の保証が必要なら ralph（ultrawork を内蔵）を使ってください。</li>
+                <li><strong>向いている</strong> — 互いに依存のない多数のファイルの一括変換・修正（例: 15 ファイルすべてを変換）。</li>
+                <li><strong>注意</strong> — 同時に何人もの作業者が動くぶん、同じ時間に使うトークンがいちばん多くなります。</li>
+            </ul>
+            <pre><code><span class="c"># 短いキーワード ulw / uw /「ウルトラワーク」</span>
+ulw: src/legacy フォルダの独立したユーティリティクラス 12 個すべてに単体テストを追加</code></pre>
+        </div>
+
+        <div class="scn">
+            <h4>Team — <code>/oh-my-claudecode:team &lt;N&gt;:&lt;agent&gt; &lt;task&gt;</code></h4>
+            <p><strong>N 体のエージェントに役割を与え、段階型のパイプラインで協業させるモード</strong>です。ralph と組み合わせた team ralph が OMC でいちばん強い実行の強さです。現行の公式 README は team を OMC の代表（canonical）モードとして掲げています（リポジトリの説明も「Teams-first Multi-agent orchestration」）。</p>
+            <p><strong>どう動くのか</strong> — チームの計画（team-plan）→ 要件の文書化（team-prd）→ 分担しての実行（team-exec）→ 検証（team-verify）→ 修正のループ（team-fix）という段階型のパイプラインで進みます。たとえば <code>/team 3:executor "TypeScript のエラーをすべて修正"</code> は executor 3 体が作業を分けて担当します。</p>
+            <ul>
+                <li><strong>前提</strong> — <code>~/.claude/settings.json</code> に <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> の環境変数の設定が必要です。オフだと警告のうえ、可能な範囲で非チームの実行にフォールバックします。</li>
+                <li><strong>区別</strong> — セッション内の <code>/team</code>（ネイティブのチームのワークフロー）と、ターミナルの <code>omc team</code>（tmux の窓に claude・codex・gemini の実際の CLI ワーカーを立てる）は別のランタイムです。</li>
+                <li><strong>注意</strong> — いちばん強いモードなので、トークンのコストもいちばん大きくなります。作業の分解と役割の分担が本当に必要な大きい作業にだけ使ってください。</li>
+            </ul>
+            <pre><code><span class="c"># 役割(agent)には executor、architect などエージェント名を指定</span>
+/oh-my-claudecode:team 3:executor ビルドを壊している TypeScript のエラーをすべて修正</code></pre>
+        </div>
+
+    </div>
+
+    <div class="carousel-dots">
+        <button class="active">Autopilot</button>
+        <button>Ralph</button>
+        <button>Ultrawork</button>
+        <button>Team</button>
+    </div>
+    <div class="carousel-nav">
+        <button class="arrow-btn prev">&larr; 前へ</button>
+        <span class="cn-label">1 / 4</span>
+        <button class="arrow-btn next">次へ &rarr;</button>
+    </div>
+</div>
+
+<div class="note">
+    <span class="nh">三つのモードの包含関係 — autopilot ⊃ ralph ⊃ ultrawork</span>
+    ultrawork は並列の実行だけを担う部品で、ralph はその上に継続実行・ストーリーの追跡・完了の検証を載せたもの、autopilot はさらにその上に要件の分析・設計・QA・多角的な検証というパイプライン全体を載せたものです。だから<strong>「並列だけ要るなら ulw、完了の保証が要るなら ralph、最初から最後まで任せるなら autopilot」</strong>と選べば大丈夫です。
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 520 232" role="img" aria-label="包含関係: autopilot が ralph を、ralph が ultrawork を包む入れ子の構造">
+    <rect class="d-box accent" x="40" y="20" width="440" height="196" rx="14"/>
+    <text class="d-label" x="260" y="44" text-anchor="middle">autopilot</text>
+    <text class="d-sub" x="260" y="61" text-anchor="middle">要件分析・設計・QA・多角的な検証</text>
+
+    <rect class="d-box" x="90" y="74" width="340" height="128" rx="12"/>
+    <text class="d-label sm" x="260" y="96" text-anchor="middle">ralph</text>
+    <text class="d-sub" x="260" y="112" text-anchor="middle">継続実行・完了の検証</text>
+
+    <rect class="d-box soft" x="150" y="126" width="220" height="60" rx="10"/>
+    <text class="d-label sm" x="260" y="152" text-anchor="middle">ultrawork</text>
+    <text class="d-sub" x="260" y="170" text-anchor="middle">並列実行のエンジン</text>
+</svg>
+<div class="d-cap"><strong>autopilot ⊃ ralph ⊃ ultrawork</strong> — 外側ほど多くの段階を包みます。</div>
+</div>
+
+<h3>autopilot の 5 段階の進み方（詳細）</h3>
+<p>autopilot は依頼を受けると、次の五つの段階を自動でたどります。各段階は前の段階が終わってから始まり、実行と検証の段階の中では並列の処理が起きます。</p>
+<ol>
+    <li><strong>拡張</strong> — アナリストとアーキテクトが短い依頼を詳しい仕様（spec.md）へ広げます。あいまいなら deep-interview を先に勧めます。</li>
+    <li><strong>計画</strong> — アーキテクトが実装の計画を立て、critic が抜けと危険を検証します。</li>
+    <li><strong>実行</strong> — ralph + ultrawork で、難易度別の executor たちが並列で実装します。</li>
+    <li><strong>QA</strong> — ビルド・リント・テストを最大 5 回くり返します。同じエラーが 3 回くり返されたら根本的な問題と見て中断・報告します。</li>
+    <li><strong>検証</strong> — architect・security-reviewer・code-reviewer の 3 名全員の承認が必要で、差し戻された項目は修正してから再検証します。</li>
+</ol>
+
+<h3>補助のモード</h3>
+<p>中心となる 4 モードを補うモードです。計画の段階、要件の整理、原因の分析のように、実行の前後を支えます。</p>
+<div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr><th>モード</th><th>目的</th><th>使用例</th><th>おすすめの場面</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>Plan</strong></td><td>実行の前に計画を立てて利用者の承認を得る</td><td><code>/oh-my-claudecode:plan &lt;作業&gt;</code></td><td>実装の前に段階と範囲を確定したいとき（omc-plan は互換用のエイリアス）</td></tr>
+            <tr><td><strong>Ralplan</strong></td><td>合意にもとづく計画の策定 — <code>plan --consensus</code> のエイリアスで、planner・architect・critic が合意するまで計画を磨く</td><td><code>/oh-my-claudecode:ralplan &lt;description&gt;</code></td><td>アーキテクチャ・DB・セキュリティなど、リスクの高い設計の検討（<code>--deliberate</code> で高リスクの審議モード）</td></tr>
+            <tr><td><strong>Deep Interview</strong></td><td>ソクラテス式の問いであいまいな要件を明確にする</td><td><code>/deep-interview &lt;idea&gt;</code></td><td>要件が抽象的だったり範囲がはっきりしないとき — 出てきた仕様は autopilot が引き継いで使う</td></tr>
+            <tr><td><strong>UltraQA</strong></td><td>ビルド・リント・テストが通るまで診断と修正のサイクルをくり返す</td><td><code>/oh-my-claudecode:ultraqa &lt;goal&gt;</code></td><td>実装は終わっていて、品質のゲートだけをくり返し回したいとき</td></tr>
+            <tr><td><strong>Trace</strong></td><td>複数の tracer が並列で仮説を立て、証拠にもとづいて原因を追跡する</td><td><code>/oh-my-claudecode:trace</code></td><td>障害・バグ・性能低下の原因の分析</td></tr>
+            <tr><td><strong>CCG</strong></td><td>Claude・Codex・Gemini の三つのモデルの結果をまとめる</td><td><code>/oh-my-claudecode:ccg &lt;task&gt;</code></td><td>複数のモデルの視点が必要なレビュー・分析</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note warn">
+    <span class="nh">実務での選び方</span>
+    バグ 1 件や単一ファイルの修正なら普通の会話で十分です。複数のファイルを変える必要があるなら <code>autopilot</code>、独立した作業が多いなら <code>ultrawork</code>、完了の保証が大事なら <code>ralph</code>、要件そのものがあいまいなら <code>deep-interview</code> を先に使う、というのが現実的です。実装は終わっていて品質のゲートだけ回すなら <code>ultraqa</code>、役割の分担が必要な大きい作業なら <code>team</code> まで上げつつ、強さが上がるほどコストも一緒に大きくなることを覚えておいてください。
+</div>
+
+<div class="note">
+    <span class="nh">韓国語キーワードへの対応</span>
+    最新のバージョンは韓国語のマジックキーワードも認識します。プロンプトに「랄프」「오토파일럿」「울트라워크」「코드 리뷰」「보안 리뷰」「딥 분석」のような韓国語の表現を使うと、英語のキーワードと同じモードが自動でオンになります。ただし韓国語のエイリアスは部分文字列として一致するので、意図せずモードがオンになることがあり、キャンセルのキーワード（<code>stopomc</code> / <code>cancelomc</code>）は英語でのみ動きます。
+</div>

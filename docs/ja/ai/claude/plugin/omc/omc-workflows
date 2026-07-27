@@ -1,0 +1,115 @@
+<h2>実戦のシナリオ別ワークフロー</h2>
+<p>モード・エージェント・ツールを実際の場面でどう組み合わせて使うのかを、8 つのシナリオにまとめました。下の番号のボタンか、前へ・次への ボタンでシナリオをひとつずつ確認してください。</p>
+
+<div class="carousel">
+    <div class="carousel-stage">
+
+        <div class="scn active">
+            <h3>シナリオ 1 — 新しいプロジェクトのキックオフ</h3>
+            <p>空のプロジェクトを始めるとき — 文書化 → 設計の合意 → 要件の明確化 → チームでの実装、の順に進めます。</p>
+            <pre><code><span class="c"># 1. プロジェクト構造の文書化</span>
+/oh-my-claudecode:deepinit
+<span class="c"># 2. アーキテクチャの合意（専門家の合意にもとづく）</span>
+ralplan: システム全体のアーキテクチャ設計 (Next.js, PostgreSQL, Redis)
+<span class="c"># 3. 中心となる要件の明確化</span>
+/deep-interview "ソーシャルログインのある SaaS アプリ"
+<span class="c"># 4. チームで基本機能を実装</span>
+team ralph: 基本 CRUD 機能をすべて実装</code></pre>
+        </div>
+
+        <div class="scn">
+            <h3>シナリオ 2 — 機能の追加</h3>
+            <p>要件が明確ならそのまま autopilot、あいまいなら deep-interview で磨いてから実装します。</p>
+            <pre><code><span class="c"># 要件が明確なとき</span>
+autopilot: メール通知機能の追加 (登録の歓迎、パスワード再設定、注文の確認)
+<span class="c"># 要件があいまいなとき — まず明確化</span>
+/deep-interview "通知機能の追加"
+<span class="c"># → 明確になった要件で実装</span>
+autopilot: [明確になった要件]で実装</code></pre>
+        </div>
+
+        <div class="scn">
+            <h3>シナリオ 3 — レガシーコードのリファクタリング</h3>
+            <p>現状の把握 → 計画 → 並列の変換 → 検証、の四段階で安全に進めます。</p>
+            <pre><code><span class="c"># 1. 現状の把握（技術的負債の分析）</span>
+deep-analyze: このコードベースの技術的負債を把握
+<span class="c"># 2. マイグレーションの計画</span>
+/oh-my-claudecode:plan JavaScript → TypeScript のマイグレーション
+<span class="c"># 3. 複数ファイルの並列変換</span>
+ulw: この 15 ファイルを全部 TypeScript に変換
+<span class="c"># 4. 検証</span>
+review code
+fix build</code></pre>
+        </div>
+
+        <div class="scn">
+            <h3>シナリオ 4 — バグの追跡と修正</h3>
+            <p>エラーメッセージをそのまま貼り付ければ、debugger がスタックを分析して根本原因を見つけます。</p>
+            <pre><code><span class="c"># エラーメッセージをそのまま貼り付ける</span>
+deep-analyze:
+  Error: Cannot read property 'user' of undefined
+  at AuthMiddleware (middleware.ts:45)
+<span class="c"># → debugger がスタックを分析 → 根本原因を把握 → 修正案を提示</span>
+<span class="c"># 修正の適用</span>
+fix build</code></pre>
+        </div>
+
+        <div class="scn">
+            <h3>シナリオ 5 — リリース前のコードレビュー</h3>
+            <p>品質・セキュリティのレビューを順に回し、見つかった問題を ralph で一度に直します。</p>
+            <pre><code><span class="c"># 1. 総合的なコードレビュー（ロジック・アンチパターン・性能）</span>
+review code
+<span class="c"># 2. セキュリティの脆弱性の点検</span>
+security review
+<span class="c"># 3. 見つかったすべての問題を一括で修正</span>
+ralph: コードレビューで見つかったすべての問題を修正</code></pre>
+        </div>
+
+        <div class="scn">
+            <h3>シナリオ 6 — TDD での開発</h3>
+            <p>テストを先に作ってから実装する流れ（Red → Green → Refactor）を自動でくり返します。</p>
+            <pre><code><span class="c"># テストが先、実装はあと</span>
+tdd: ユーザー認証サービスの開発
+<span class="c"># → 1) テストケースの作成  2) 失敗するテスト(Red)</span>
+<span class="c"># → 3) 実装の委任  4) 通過の確認(Green)  5) リファクタリング</span></code></pre>
+        </div>
+
+        <div class="scn">
+            <h3>シナリオ 7 — データ分析の作業</h3>
+            <p>複数の分析エージェントが並列で Python（pandas・matplotlib）を回し、総合的なレポートを作ります。</p>
+            <pre><code><span class="c"># ログ・CSV データの分析</span>
+/sciomc この CSV ファイルを分析:
+  - ユーザーの行動パターン
+  - 離脱の原因の分析
+  - 売上への貢献が大きい機能</code></pre>
+        </div>
+
+        <div class="scn">
+            <h3>シナリオ 8 — Git 作業の自動化</h3>
+            <p>git-master にコミットの整理、PR の説明の作成、ブランチ戦略まで任せられます。</p>
+            <pre><code><span class="c"># 変更したファイルを意味の単位でコミットに整理</span>
+git-master に委任: 変更したファイルを意味のある単位でコミットに整理
+<span class="c"># PR の説明を作成（日本語で、理由・内容・テストを含めて）</span>
+git-master: この変更の PR の説明を作成
+<span class="c"># ブランチ戦略</span>
+git-master: feature/auth ブランチの作業後、main への squash merge を準備</code></pre>
+        </div>
+
+    </div>
+
+    <div class="carousel-dots">
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button>7</button>
+        <button>8</button>
+    </div>
+    <div class="carousel-nav">
+        <button class="arrow-btn prev">&larr; 前へ</button>
+        <span class="cn-label">1 / 8</span>
+        <button class="arrow-btn next">次へ &rarr;</button>
+    </div>
+</div>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OMC の紹介</title>
+<meta name="description" content="OMC プラグインが Claude Code に足す自律実行・マルチエージェントでの作業・自動検証を紹介する。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/omc-intro/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/omc-intro/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/omc-intro/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/omc-intro/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/omc-intro/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OMC の紹介">
+<meta property="og:description" content="OMC プラグインが Claude Code に足す自律実行・マルチエージェントでの作業・自動検証を紹介する。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/omc-intro/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OMC の紹介">
+<meta name="twitter:description" content="OMC プラグインが Claude Code に足す自律実行・マルチエージェントでの作業・自動検証を紹介する。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "OMC の紹介",
+ "description": "OMC プラグインが Claude Code に足す自律実行・マルチエージェントでの作業・自動検証を紹介する。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/omc-intro/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!omc-intro",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T12:15:44+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!omc-intro">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/omc-intro/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/omc-intro/" hreflang="en">English</a>
+</p>
+<article>
+<h2>OMC の紹介</h2>
+<p><strong>oh-my-claudecode（以下 OMC）</strong>は、Claude Code に自律実行・マルチエージェント協業・自動検証の機能を足してくれるプラグインです。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 180" role="img" aria-label="Claude Code にプラグインを足した OMC が、自律実行・マルチエージェント・自動検証を追加する">
+    <rect class="d-box soft" x="12" y="58" width="128" height="50" rx="10"/>
+    <text class="d-label sm" x="76" y="80" text-anchor="middle">Claude Code</text>
+    <text class="d-sub" x="76" y="96" text-anchor="middle">ターミナル CLI</text>
+    <text class="d-label" x="158" y="89" text-anchor="middle">+</text>
+    <rect class="d-box soft" x="176" y="58" width="112" height="50" rx="10"/>
+    <text class="d-label sm" x="232" y="80" text-anchor="middle">プラグイン</text>
+    <text class="d-sub" x="232" y="96" text-anchor="middle">機能の拡張</text>
+    <text class="d-label" x="306" y="89" text-anchor="middle">=</text>
+
+    <rect class="d-box accent" x="324" y="52" width="128" height="62" rx="12"/>
+    <text class="d-label" x="388" y="80" text-anchor="middle">OMC</text>
+    <text class="d-sub" x="388" y="98" text-anchor="middle">oh-my-claudecode</text>
+
+    <rect class="d-box soft" x="486" y="22" width="182" height="34" rx="8"/>
+    <text class="d-label sm" x="577" y="43" text-anchor="middle">最後まで自律実行</text>
+    <rect class="d-box soft" x="486" y="72" width="182" height="34" rx="8"/>
+    <text class="d-label sm" x="577" y="93" text-anchor="middle">マルチエージェント分担</text>
+    <rect class="d-box soft" x="486" y="122" width="182" height="34" rx="8"/>
+    <text class="d-label sm" x="577" y="143" text-anchor="middle">作業後の自動検証</text>
+
+    <path class="d-edge accent" d="M452 83 C468 83, 470 44, 484 39"/><polygon class="d-arrow accent" points="478,35 486,38 480,44"/>
+    <line class="d-edge accent" x1="452" y1="85" x2="484" y2="89"/><polygon class="d-arrow accent" points="478,84 486,89 478,94"/>
+    <path class="d-edge accent" d="M452 87 C468 87, 470 134, 484 139"/><polygon class="d-arrow accent" points="478,135 486,138 480,144"/>
+</svg>
+<div class="d-cap">OMC は Claude Code に<strong>自律実行・マルチエージェント・自動検証</strong>をコマンド一行で足します。</div>
+</div>
+
+<h3>三つの概念</h3>
+<ul>
+    <li><strong>Claude Code とは</strong> — ターミナルや IDE から Claude にコーディングの作業を任せる CLI ツールです。ファイルを読んで修正し、コマンドを実行して開発を助けます。</li>
+    <li><strong>プラグインとは</strong> — Claude Code に新しい機能を足す拡張パックです。いちど入れれば専用のコマンドと動作が追加されます。</li>
+    <li><strong>OMC が足すもの</strong> — 「最後まで自分で実装」「複数の作業者で分担」「作業後の自動検証」といった高度な進め方を、コマンド一行で使えるようにしてくれます。</li>
+</ul>
+
+<p>この文書は、ローカル環境に実際にインストールして<strong>一部を検証</strong>し、公式ドキュメント・リリースノート・プラグインの文書と突き合わせて作成した要約です。<strong>Windows PowerShell、WSL2、macOS、Linux</strong> によって一部のコマンドと動作が変わりうるので、環境に依存する項目は分けて表示しました。基準のバージョンは <strong>v4.15.2</strong>（2026-07-05 時点で確認）です。リリースが月に 3〜5 回と多めなので、細かい動作は読んでいる時点の最新のリリースノートと違うことがあります。</p>
+
+<div class="note">
+    <span class="nh">参照した資料</span>
+    公式 GitHub の README、公式 Reference（REFERENCE.md）、公式 Releases、Claude Code Plugin の公式ドキュメント。
+    <br>· 公式 GitHub: github.com/Yeachan-Heo/oh-my-claudecode
+    <br>· 公式 Reference: /blob/main/docs/REFERENCE.md
+    <br>· 公式 Releases: /releases
+    <br>· Claude Code Plugin のドキュメント: code.claude.com/docs/en/discover-plugins
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · PlugIn · OMC &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/omc-concepts/">用語のポイント</a></li><li><a href="/p/ja/omc-install/">インストール</a></li><li><a href="/p/ja/omc-doctor/">インストールの診断</a></li></ul>
+</nav>
+</body>
+</html>

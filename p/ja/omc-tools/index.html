@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>高度なツール</title>
+<meta name="description" content="LSP・AST Grep・Python REPL など、コードを精密に分析するツール群を紹介する。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/omc-tools/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/omc-tools/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/omc-tools/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/omc-tools/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/omc-tools/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高度なツール">
+<meta property="og:description" content="LSP・AST Grep・Python REPL など、コードを精密に分析するツール群を紹介する。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/omc-tools/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="高度なツール">
+<meta name="twitter:description" content="LSP・AST Grep・Python REPL など、コードを精密に分析するツール群を紹介する。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "高度なツール",
+ "description": "LSP・AST Grep・Python REPL など、コードを精密に分析するツール群を紹介する。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/omc-tools/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!omc-tools",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T12:15:44+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!omc-tools">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/omc-tools/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/omc-tools/" hreflang="en">English</a>
+</p>
+<article>
+<h2>高度なツール</h2>
+<p>OMC は、コードをより正確に扱うためのツール群を用意しています。テキスト検索より精密な分析が必要なときに役立ちます。</p>
+
+<div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr><th>ツール群</th><th>代表的な機能</th><th>使いどころ</th><th>注意点</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><strong>LSP</strong></td><td>lsp_hover、lsp_goto_definition、lsp_find_references、lsp_diagnostics</td><td>正確なシンボルの探索、型エラーの確認、参照の検索</td><td>typescript-language-server、pyright、rust-analyzer など言語ごとのサーバーが必要</td></tr>
+            <tr><td><strong>AST Grep</strong></td><td>ast_grep_search、ast_grep_replace</td><td>構文の構造にもとづく検索・置換</td><td>テキストの grep より精密だが、パターンを書く力が要る</td></tr>
+            <tr><td><strong>Python REPL</strong></td><td>pandas、numpy、matplotlib による分析</td><td>CSV・ログ・統計の分析</td><td>データファイルへのアクセス権限とパッケージの有無の確認が必要</td></tr>
+            <tr><td><strong>Ask / Team CLI</strong></td><td>omc ask、omc team、omc session search</td><td>外部の CLI ワーカーとセッションの検索</td><td>プラグインのインストールの流れと CLI/runtime の経路の区別が必要</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">LSP の補足</span>
+    LSP（Language Server Protocol）は、コードエディタが「この変数の定義はどこ？」「ここに型エラーはある？」を正確に突き止められるようにする標準です。ただし、その言語のランゲージサーバーが入っていないと正常に動きません。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · PlugIn · OMC &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/omc-doctor/">インストールの診断</a></li><li><a href="/p/ja/welcome/">Welcome</a></li></ul>
+</nav>
+</body>
+</html>
