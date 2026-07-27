@@ -19,30 +19,15 @@ import sys
 
 HANGUL_RE = re.compile(r'[가-힣]')
 
-WORKLOG_RE = re.compile(r'^work-log/')
-
-
-def _worklog_body_optional(rel, lang_files):
-    """work-log 문서가 "라벨만 번역, 본문은 ko 폴백" 면제를 받는 조건.
-
-    워크로그 본문은 병행 대상이 아니다(tools/i18n.md) — 그래서 라벨만 번역돼
-    있고 본문이 ko로 폴백하는 것이 정상이다. 다만 **어느 한 언어에만 본문이
-    있는 것**은 정상이 아니다: 2026-07-28까지 `wl-guide`가 en 본문만 갖고
-    ja 본문이 없어 "메뉴는 일본어인데 열면 한국어"였는데, 경로가 work-log라는
-    이유로 게이트를 통째로 빠져나갔다.
-
-    그래서 면제 기준을 이름이 아니라 **대칭**으로 잡는다 — 번역 언어 어디에도
-    본문이 없으면(= 전 언어가 똑같이 ko 폴백) 면제, 한 곳이라도 있으면 나머지
-    언어에도 있어야 한다. 이름 목록이 필요 없고, 새 안내 문서가 생겨도 규칙이
-    저절로 맞는다.
-
-    · 날짜 일지 59편 — 어디에도 본문 없음 → 면제
-    · wl-backlog     — 어디에도 본문 없음 → 면제 (2026-07-28 결정: 살아있는
-                       목록이라 번역본을 두면 매번 세 벌을 갱신해야 해 ko 전용)
-    · wl-guide       — en·ja 본문 있음 → 검사 대상
-    """
-    return (WORKLOG_RE.match(rel)
-            and not any(rel in files for files in lang_files.values()))
+# work-log 면제는 **없다**(2026-07-28 폐지). 한때 "라벨만 번역, 본문은 ko
+# 폴백"을 허용하려고 경로 기반 면제를 뒀는데, 그 면제가 존재한 이유는
+# 날짜 일지 59편 중 5편만 번역 라벨을 갖고 있던 **불일치를 수용하기
+# 위해서**였다. 그 5편의 라벨을 떼자 면제할 대상이 0이 됐다.
+#
+# 그래서 규칙이 한 줄로 줄었다 — **label_<lang>가 있다 = 그 언어의 본문이
+# 있다.** 워크로그 본문은 번역하지 않는 정책이므로(CLAUDE.md) 워크로그는
+# 번역 라벨을 가질 수 없고, 이 규칙 하나가 그것을 자동으로 강제한다.
+# 예외는 `wl-guide` 하나 — ko·en·ja 본문을 실제로 갖췄으므로 통과한다.
 
 
 def _f(level, check, name, message):
@@ -189,8 +174,8 @@ def run(root):
     # 2026-07-26 승격: 인덱스 문서 전체(115편)의 영어 본문이 갖춰졌으므로
     # label-without-en-body를 INFO -> ERROR로 올린다 — 라벨만 영어로 달고
     # 본문을 빼면 영어 사용자에게 "영어인 척하는 한국어 문서"가 되기 때문.
-    # 워크로그(work-log/)는 영어 병행 대상이 아니라 라벨만 영어이고 본문은
-    # ko로 폴백하는 것이 정상이므로 이 게이트에서 제외한다(i18n.md 정책).
+    # 예외 없음(2026-07-28) — 워크로그 본문은 번역하지 않는 정책이므로
+    # 워크로그는 애초에 번역 라벨을 가질 수 없고, 이 규칙 하나로 강제된다.
     for lang in tr_langs:
         for n in docs:
             rel = n.get('path', n['name'])
@@ -200,7 +185,7 @@ def run(root):
                 findings.append(_f('WARN', '%s-body-without-label' % lang, n['name'],
                                     "docs/%s/%s exists but list node has no label_%s"
                                     % (lang, rel, lang)))
-            if has_label and not has_body and not _worklog_body_optional(rel, lang_files):
+            if has_label and not has_body:
                 findings.append(_f('ERROR', 'label-without-%s-body' % lang, n['name'],
                                     "list node has label_%s but docs/%s/%s is missing "
                                     "(번역 라벨만 달고 본문을 빼면 그 언어인 척하는 "
