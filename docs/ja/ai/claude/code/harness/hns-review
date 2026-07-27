@@ -1,0 +1,64 @@
+<h2>生成結果のレビュー — エージェント・スキル・オーケストレーター</h2>
+<div class="diagram">
+<svg viewBox="0 0 680 220" role="img" aria-label="生成された .claude のアーキテクチャ: 上のオーケストレーターが配下のエージェントを整え、スキルが注入され、成果物は共有の _workspace に集まる">
+    <rect class="d-box accent" x="255" y="10" width="170" height="46" rx="10"/>
+    <text class="d-label" x="340" y="38" text-anchor="middle">オーケストレーター</text>
+
+    <rect class="d-box" x="44" y="96" width="160" height="52" rx="10"/>
+    <text class="d-label sm" x="124" y="126" text-anchor="middle">エージェント A</text>
+
+    <rect class="d-box" x="260" y="96" width="160" height="52" rx="10"/>
+    <text class="d-label sm" x="340" y="126" text-anchor="middle">エージェント B</text>
+
+    <rect class="d-box" x="476" y="96" width="160" height="52" rx="10"/>
+    <text class="d-label sm" x="556" y="126" text-anchor="middle">エージェント C</text>
+
+    <line class="d-edge" x1="340" y1="56" x2="124" y2="94"/><polygon class="d-arrow" points="119,88 129,88 124,95"/>
+    <line class="d-edge" x1="340" y1="56" x2="340" y2="94"/><polygon class="d-arrow" points="335,88 345,88 340,95"/>
+    <line class="d-edge" x1="340" y1="56" x2="556" y2="94"/><polygon class="d-arrow" points="551,88 561,88 556,95"/>
+
+    <circle class="d-node c" cx="212" cy="112" r="5"/>
+    <circle class="d-node c" cx="212" cy="132" r="5"/>
+    <circle class="d-node c" cx="428" cy="112" r="5"/>
+    <circle class="d-node c" cx="428" cy="132" r="5"/>
+    <circle class="d-node c" cx="644" cy="112" r="5"/>
+    <circle class="d-node c" cx="644" cy="132" r="5"/>
+    <text class="d-sub" x="124" y="86" text-anchor="middle">● 注入スキル</text>
+
+    <rect class="d-box soft" x="200" y="168" width="280" height="44" rx="10"/>
+    <text class="d-label sm" x="340" y="195" text-anchor="middle">_workspace (共有の成果物)</text>
+
+    <line class="d-edge dash" x1="124" y1="148" x2="232" y2="168"/><polygon class="d-arrow" points="229.8,157 239.8,162 228.8,168"/>
+    <line class="d-edge dash" x1="340" y1="148" x2="340" y2="166"/><polygon class="d-arrow" points="335,162 345,162 340,168"/>
+    <line class="d-edge dash" x1="556" y1="148" x2="448" y2="168"/><polygon class="d-arrow" points="451.9,157 440.9,162 450.9,168"/>
+</svg>
+<div class="d-cap">オーケストレーターがエージェントたちを整え、スキルが注入され、成果物は _workspace に集まります。</div>
+</div>
+<p>ハーネスが組まれると何が作られるのかを見ていきます。Claude Code はエージェントやスキルなどを<strong><code>.claude</code> フォルダの下</strong>に生成します。</p>
+
+<h3>作られたエージェント（例）</h3>
+<p>「国家 R&amp;D 予算・ポスト PBS」という課題では、こんなチームが組まれました。</p>
+<ul>
+    <li><strong>R&amp;D 予算の定量分析担当</strong> — 予算の配分・調整案を省庁・事業・年度の単位に分解し、政府／出資機関の比率の変化を追跡。</li>
+    <li><strong>政府出資機関のガバナンス・財政の専門家</strong> — PBS から任務中心型の体制への転換戦略を導く。</li>
+    <li><strong>国家 R&amp;D 政策のリサーチャー</strong> — 予算・政策文書・報道資料・NIS/NSTC の議題などを一次情報から調査。</li>
+    <li><strong>レポート執筆エージェント</strong> — 前段の成果物を集めてレポートに書き上げる。</li>
+    <li><strong>QA レビュアー</strong> — 単なる誤字脱字ではなく<strong>主張と出典の整合、数値の一貫性、提言の論理のつながり</strong>を突き合わせて確認。</li>
+</ul>
+
+<h3>注入されるスキル</h3>
+<p>エージェントだけでは足りないので、専門化した<strong>スキル</strong>を作って注入します。例: 予算の定量分析の手法（標準の様式・計算のルール・チェックリスト）、政策レポートの引用検証（検証の軸・優先順位）、政府向け政策レポートの書式（目次）。</p>
+
+<h3>オーケストレーター（つねに 1 つ）</h3>
+<p>エージェントたちが横道へそれないように整える <strong>PM の役割</strong>です。細かい作業をのぞき込むことはせず、「エージェントたちがうまく働いているか」だけを見ます。Phase 0 から各段階に必要なエージェントが何かまで、<strong>ワークフローが事前に計画</strong>されています。（Claude Code のプランモードに近い感覚）</p>
+
+<h3>レビューと実行の準備</h3>
+<ul>
+    <li>レビューの工程は必須です。「エージェントをもっと追加」「意図と合わないので修正」「ハーネスを直して」のように<strong>フィードバック</strong>すれば、エージェント／スキルが新しく生まれたり補強されたりします。</li>
+    <li>エージェントが<strong>動的にロードされない</strong>問題があります。<code>/agents</code> に見えないときは <code>/exit</code> してから入り直すとロードされます。</li>
+</ul>
+
+<div class="note">
+    <span class="nh">_workspace フォルダ</span>
+    ハーネスで実行すると <code>_workspace</code> フォルダができて、エージェントたちが作った<strong>中間の成果物</strong>が集まります — 一次リサーチ、予算分析、QA レポート（クリティカル・メジャー・マイナーの各課題）と修正案、限界事項、そして<strong>根拠となる出典</strong>まで。出典ベースなのでハルシネーションが大きく減ります。
+</div>

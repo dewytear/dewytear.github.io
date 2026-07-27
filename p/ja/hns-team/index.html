@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>エージェントチームとコンテキスト管理</title>
+<meta name="description" content="隔離サブエージェント、会話するエージェントチーム、コンテキスト管理を扱う。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/hns-team/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hns-team/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hns-team/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/hns-team/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hns-team/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="エージェントチームとコンテキスト管理">
+<meta property="og:description" content="隔離サブエージェント、会話するエージェントチーム、コンテキスト管理を扱う。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/hns-team/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="エージェントチームとコンテキスト管理">
+<meta name="twitter:description" content="隔離サブエージェント、会話するエージェントチーム、コンテキスト管理を扱う。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "エージェントチームとコンテキスト管理",
+ "description": "隔離サブエージェント、会話するエージェントチーム、コンテキスト管理を扱う。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/hns-team/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hns-team",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:09:56+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hns-team">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/hns-team/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/hns-team/" hreflang="en">English</a>
+</p>
+<article>
+<h2>エージェントチームとコンテキスト管理</h2>
+<p>複数のエージェントをどう協業させるか、そしてコンテキストをどう管理するかが、ハーネスの品質を左右します。</p>
+
+<h3>隔離型サブエージェント → 会話するチームへ</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 172" role="img" aria-label="隔離サブエージェント（互いに話せない）と、エージェントチーム（互いに通信する）の比較">
+    <line class="d-edge dash" x1="350" y1="6" x2="350" y2="150"/>
+
+    <rect class="d-box" x="110" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="170" y="31" text-anchor="middle">指揮エージェント</text>
+    <rect class="d-box soft" x="40" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="95" y="104" text-anchor="middle">エージェント A</text>
+    <rect class="d-box soft" x="190" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="245" y="104" text-anchor="middle">エージェント B</text>
+    <line class="d-edge" x1="140" y1="44" x2="100" y2="78"/><polygon class="d-arrow" points="96,72 104,80 90,80"/>
+    <line class="d-edge" x1="200" y1="44" x2="240" y2="78"/><polygon class="d-arrow" points="244,72 250,80 236,80"/>
+    <text class="d-sub" x="170" y="105" text-anchor="middle">✕</text>
+    <text class="d-sub" x="170" y="140" text-anchor="middle">互いに話せない</text>
+    <text class="d-label sm" x="170" y="162" text-anchor="middle">隔離サブエージェント</text>
+
+    <rect class="d-box accent" x="470" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="530" y="31" text-anchor="middle">指揮エージェント</text>
+    <rect class="d-box" x="400" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="455" y="104" text-anchor="middle">エージェント C</text>
+    <rect class="d-box" x="550" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="605" y="104" text-anchor="middle">エージェント D</text>
+    <line class="d-edge" x1="500" y1="44" x2="460" y2="78"/><polygon class="d-arrow" points="456,72 464,80 450,80"/>
+    <line class="d-edge" x1="560" y1="44" x2="600" y2="78"/><polygon class="d-arrow" points="604,72 610,80 596,80"/>
+    <line class="d-edge accent" x1="512" y1="100" x2="548" y2="100"/>
+    <polygon class="d-arrow accent" points="542,95 550,100 542,105"/>
+    <polygon class="d-arrow accent" points="518,95 510,100 518,105"/>
+    <text class="d-accent" x="530" y="140" text-anchor="middle" font-size="11">↔ 互いに通信</text>
+    <text class="d-label sm" x="530" y="162" text-anchor="middle">エージェントチーム</text>
+</svg>
+<div class="d-cap">隔離サブエージェントは結果を返すだけですが、エージェントチームは互いを呼び起こして協業します。</div>
+</div>
+<ul>
+    <li><strong>従来のやり方</strong> — サブエージェントたちが<strong>隔離された環境</strong>でそれぞれ働き、結果だけを返す（並列）。互いに会話する手段がありませんでした。</li>
+    <li><strong>エージェントチーム</strong> — エージェントたちが<strong>コミュニケーションしながら</strong>働くので、より賢く動きます。</li>
+</ul>
+<p>たとえば、リサーチのエージェントが調査を終えて終了したあと分析のエージェントがスポーンされ、分析中に<strong>リサーチの足りない部分</strong>を見つけたとします。このとき自分で調べるのではなく、<strong>リサーチのエージェントをもう一度呼び起こして</strong>追加の調査を依頼します。</p>
+
+<h3>エージェントチームの有効化</h3>
+<p>この機能は<strong>実験版</strong>なので、既定では無効です。ユーザーフォルダの <code>~/.claude/settings.json</code> で環境変数をオンにします。</p>
+<pre><code><span class="c"># ~/.claude/settings.json の env</span>
+"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"</code></pre>
+<ul>
+    <li>この値をオンにして初めて、エージェントたちが会話しながらチームとして動きます。</li>
+    <li>エージェントが<strong>動的ロードに成功</strong>するとチームモードがきちんと入り、失敗すると隔離された通常のサブエージェントとして立ち上がることがよくあります。（実験版のバグ）</li>
+    <li>ちなみに Gemini の <strong>Antigravity CLI</strong> にも、エージェント間のコミュニケーション機能が追加されました。</li>
+</ul>
+
+<h3>コンテキスト = 厨房の作業台</h3>
+<p>コンテキストは料理を作る<strong>作業台</strong>のようなものです。その料理に関係するものだけが載っていればすっきりしますが、関係のないものが混ざると失敗の余地が生まれます（塩の容器に砂糖が入っているようなもの）。実際、会話が長くなると前後の考えが<strong>矛盾</strong>することがあり、その状態で仕事をさせると AI は「A が正しいのか B が正しいのか」と混乱します。だから<strong>コンテキストの管理</strong>が大切なのです。</p>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Harness &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/hnp-architecture/">동작 구조와 6단계</a></li><li><a href="/p/ja/hnp-intro/">Harness 플러그인 — 소개</a></li><li><a href="/p/ja/hns-run/">ハーネスを実行する（実習）</a></li><li><a href="/p/ja/omc-agents/">에이전트 · 스킬</a></li></ul>
+</nav>
+</body>
+</html>

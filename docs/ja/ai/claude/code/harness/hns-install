@@ -1,0 +1,26 @@
+<h2>メタハーネススキルのインストール（実習）</h2>
+<p>ハーネスを毎回手で組む（エージェントやスキルをいちいち用意する）のは面倒です。そこで講師は<strong>目標を渡すだけでハーネスを代わりに組んでくれる「メタハーネス」スキル</strong>を開発して GitHub に公開し、多くの使用レポートとスターを集めました。今日の実習は、このスキルを入れるところから始めます。</p>
+
+<h3>方法 1 — コマンド 2 行</h3>
+<pre><code><span class="c"># 1) ハーネスのマーケットプレイスを追加</span>
+/plugin marketplace add lev-factory/harness
+<span class="c"># 2) ハーネスプラグインをインストール</span>
+/plugin install harness</code></pre>
+
+<h3>方法 2 — /plugin の UI</h3>
+<ol>
+    <li><code>/plugin</code> と入力 → 方向キーの<strong>右</strong>で移動して <strong>Marketplace</strong> タブを選ぶ。</li>
+    <li><strong>Add Marketplace</strong> で <code>lev-factory/harness</code> を入力 → Enter（GitHub からダウンロード）。</li>
+    <li>プラグインのインストール画面で Enter → <strong>User スコープ</strong>で入れると、どのプロジェクトでも使えます。</li>
+</ol>
+
+<h3>インストール後 — リロードして確認</h3>
+<p>インストールが終わると「リロードせよ」という案内が出ます。<code>/reload</code>（プラグインのリロード）のあと <code>/harness</code> が出れば、正常にインストールされています。</p>
+<pre><code>/reload
+<span class="c"># 下が補完・実行できればインストール成功</span>
+/harness</code></pre>
+
+<div class="note warn">
+    <span class="nh">マーケットプレイスのパスを確認</span>
+    マーケットプレイスのハンドル（<code>lev-factory/harness</code>）は発表で言及された値を写したものなので、実際に入れるときは講師の GitHub（例:<strong>「ハーネス 100」</strong>で検索）で<strong>正確なリポジトリのパスを確認</strong>してください。プラグインのインストールがうまくいかないときは、UI の方法とコマンドの方法を交互に試します。
+</div>

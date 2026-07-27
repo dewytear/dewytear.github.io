@@ -1,0 +1,51 @@
+<h2>ハーネスエンジニアリング — 概要と復習</h2>
+<p>この資料は<strong>「ハーネスエンジニアリング / ファン・ミンホ」</strong>の実習講義を、映像の順にパートごとに整理したものです。前回の <a href="#!ccb-overview">Claude Code 基礎</a>の講義に続き、今回のテーマは<strong>ハーネスエンジニアリング（Harness Engineering）</strong>です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 188" role="img" aria-label="人は意図だけを渡し、ハーネスが組んだエージェントチームが自律的に長く作業して、検証済みの成果物を出す">
+    <rect class="d-box soft" x="12" y="66" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="82" y="88" text-anchor="middle">一度の指示</text>
+    <text class="d-sub" x="82" y="104" text-anchor="middle">意図だけ伝える</text>
+    <line class="d-edge accent" x1="152" y1="92" x2="206" y2="92"/>
+    <polygon class="d-arrow accent" points="206,87 214,92 206,97"/>
+
+    <rect class="d-box accent" x="214" y="42" width="252" height="100" rx="12"/>
+    <text class="d-label" x="340" y="68" text-anchor="middle">ハーネス (Harness)</text>
+    <circle class="d-node" cx="286" cy="102" r="8"/>
+    <circle class="d-node" cx="340" cy="102" r="8"/>
+    <circle class="d-node" cx="394" cy="102" r="8"/>
+    <line class="d-edge accent" x1="294" y1="102" x2="332" y2="102"/>
+    <line class="d-edge accent" x1="348" y1="102" x2="386" y2="102"/>
+    <text class="d-sub" x="340" y="130" text-anchor="middle">エージェントチームが自律的に作業</text>
+
+    <line class="d-edge accent" x1="466" y1="92" x2="518" y2="92"/>
+    <polygon class="d-arrow accent" points="518,87 526,92 518,97"/>
+    <rect class="d-box" x="526" y="66" width="142" height="52" rx="10"/>
+    <text class="d-label sm" x="597" y="88" text-anchor="middle">検証済みの成果物</text>
+    <text class="d-sub" x="597" y="104" text-anchor="middle">QA 通過</text>
+</svg>
+<div class="d-cap">人は意図だけを渡し、ハーネスが組んでくれた<strong>エージェントチーム</strong>が自律的に長く働いて、検証済みの成果物を出します。</div>
+</div>
+
+<div class="note">
+    <span class="nh">先に知っておくこと</span>
+    ハーネスは<strong>人の介入なしに長いあいだ多くの仕事をこなす</strong>構造なので、実習らしく感じられないかもしれません。その代わり「一度頼んだら AI が長く作業して良い成果物を作った」を目の当たりにする時間になります。
+</div>
+
+<h3>前回の基礎講義の復習</h3>
+<ul>
+    <li>AI ツールにはウェブだけでなく<strong>デスクトップアプリ、ターミナル（Claude Code）</strong>の形がある。</li>
+    <li>ターミナルの基本 — <code>pwd</code>・<code>cd</code>・<code>mkdir</code>、そしてフォルダで <code>claude</code> を実行。</li>
+    <li>リサーチ → ファイル → ウェブサイト制作、<strong>デザインシステムのスキル</strong>でデザインをまとわせる。</li>
+    <li><strong>エージェント</strong>を作って論文を分析、複数のエージェントで<strong>並列処理</strong>。</li>
+    <li>AI を扱ううえでの<strong>コンテキストの重要性</strong>とトークン使用量の管理。</li>
+</ul>
+
+<h3>講師の紹介 — FDE</h3>
+<p>講師は Kakao の <strong>FDE（Forward Deployed Engineer、前方配置エンジニア）</strong>の組織に所属しています。FDE は Palantir を皮切りに OpenAI・Anthropic でも多く採用されている職種で、クライアント（または社内の組織）の現場に配置され、必要なシステムを<strong>AI で素早く構築</strong>し、AX（AI 転換）の教育・定着を支援します。</p>
+
+<div class="note">
+    <span class="nh">出典</span>
+    本文書セットは「ハーネスエンジニアリング / ファン・ミンホ」の実習講義の内容を順に整理・再構成したものです。講義は Claude Code 基礎の後続セッションです。
+    <br>· 映像: <a href="https://www.youtube.com/live/iqoPgoYBVaM" target="_blank" rel="noopener">youtube.com/live/iqoPgoYBVaM</a>
+</div>

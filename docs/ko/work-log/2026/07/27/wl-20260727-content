@@ -48,4 +48,13 @@
     <li><strong>강사명 표기</strong>: 원문 &ldquo;황민호&rdquo;는 일본어 본문에서 &ldquo;ファン・ミンホ&rdquo;로 음차하고 출처의 원 강의명은 유지했다.</li>
 </ul>
 <p>도식 폭은 이번에도 문구를 줄여 맞췄다: &ldquo;④ フォルダへ移動&rdquo;→&ldquo;④ そこへ移動&rdquo;(120px 박스), &ldquo;テーマ · ブランディング&rdquo;→&ldquo;テーマ · ブランド&rdquo;. <code>check_diagram_bounds</code>는 <strong>176개 전수 통과</strong>(ja 7편 신규). <code>validate_all</code> ERROR 0 · WARN 23 유지, <code>build_index --check</code> 3언어 OK.</p>
-<p><strong>다음</strong>: 배치 3 — 하네스(hns-* 12편) · 하네스 플러그인(hnp-* 10편).</p>
+<h3>일본어(ja) 배치 3 — 하네스 강의(hns-* 12편)</h3>
+<p>세 번째 배치. 도식이 <strong>9편</strong>으로 지금까지 중 가장 많고, 박스가 작은 도식(주방 비유의 56px 칸, 실행 흐름의 100px 칸)이 섞여 있어 폭 판단이 가장 빡빡했다.</p>
+<ul>
+    <li><strong>본문 12편</strong> — <code>hns-overview·what·anatomy·install·run·review·kitchen·team·core·usecases·hundred·tools</code>.</li>
+    <li><strong>용어 정본</strong>: ハーネス(하네스) · オーケストレーター(오케스트레이터) · エージェントチーム(에이전트 팀) · 意図(의도) · 並列実行(병렬 실행) · 検証ループ(검증 루프). 본문 제목의 &ldquo;하네스 엔지니어링&rdquo;은 <strong>ハーネスエンジニアリング</strong>으로 길게 쓰되, <strong>도식 안에서만</strong> 폭 때문에 <code>ハーネス工学</code>으로 줄였다(<code>hns-what</code>의 3단 도식) — 도식은 라벨 길이가 곧 레이아웃이라 본문과 다른 축약을 허용한다.</li>
+    <li>강사명은 배치 2와 같이 <code>ファン・ミンホ</code>로 통일.</li>
+</ul>
+<p><code>hns-team</code>의 &ldquo;오케스트레이터&rdquo; 상자는 120px인데 <code>オーケストレーター</code>가 9전각(약 106px)이라 여백이 7px밖에 안 남아, 실렌더 게이트에 걸리면 줄일 셈이었으나 <strong>통과</strong>했다. 대신 그 상자만 <code>指揮エージェント</code>로 두어 좌우 여백을 확보했다.</p>
+<p><code>check_diagram_bounds</code> <strong>185개 전수 통과</strong>(ja 9편 신규). <code>validate_all</code> ERROR 0 · WARN 23 유지, <code>build_index --check</code> 3언어 OK, 브라우저에서 12편 모두 일본어 h2 · ko/en 회귀 무변화 · pageerror 0.</p>
+<p><strong>다음</strong>: 배치 4 — 하네스 플러그인(hnp-* 10편) · OMC 플러그인(omc-* 12편).</p>

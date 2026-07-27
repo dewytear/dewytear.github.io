@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>メタハーネススキルのインストール（実習）</title>
+<meta name="description" content="マーケットプレイスからメタハーネスのプラグインを入れる実習の手順。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/hns-install/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hns-install/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hns-install/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/hns-install/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hns-install/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="メタハーネススキルのインストール（実習）">
+<meta property="og:description" content="マーケットプレイスからメタハーネスのプラグインを入れる実習の手順。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/hns-install/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="メタハーネススキルのインストール（実習）">
+<meta name="twitter:description" content="マーケットプレイスからメタハーネスのプラグインを入れる実習の手順。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "メタハーネススキルのインストール（実習）",
+ "description": "マーケットプレイスからメタハーネスのプラグインを入れる実習の手順。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/hns-install/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hns-install",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:09:56+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hns-install">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/hns-install/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/hns-install/" hreflang="en">English</a>
+</p>
+<article>
+<h2>メタハーネススキルのインストール（実習）</h2>
+<p>ハーネスを毎回手で組む（エージェントやスキルをいちいち用意する）のは面倒です。そこで講師は<strong>目標を渡すだけでハーネスを代わりに組んでくれる「メタハーネス」スキル</strong>を開発して GitHub に公開し、多くの使用レポートとスターを集めました。今日の実習は、このスキルを入れるところから始めます。</p>
+
+<h3>方法 1 — コマンド 2 行</h3>
+<pre><code><span class="c"># 1) ハーネスのマーケットプレイスを追加</span>
+/plugin marketplace add lev-factory/harness
+<span class="c"># 2) ハーネスプラグインをインストール</span>
+/plugin install harness</code></pre>
+
+<h3>方法 2 — /plugin の UI</h3>
+<ol>
+    <li><code>/plugin</code> と入力 → 方向キーの<strong>右</strong>で移動して <strong>Marketplace</strong> タブを選ぶ。</li>
+    <li><strong>Add Marketplace</strong> で <code>lev-factory/harness</code> を入力 → Enter（GitHub からダウンロード）。</li>
+    <li>プラグインのインストール画面で Enter → <strong>User スコープ</strong>で入れると、どのプロジェクトでも使えます。</li>
+</ol>
+
+<h3>インストール後 — リロードして確認</h3>
+<p>インストールが終わると「リロードせよ」という案内が出ます。<code>/reload</code>（プラグインのリロード）のあと <code>/harness</code> が出れば、正常にインストールされています。</p>
+<pre><code>/reload
+<span class="c"># 下が補完・実行できればインストール成功</span>
+/harness</code></pre>
+
+<div class="note warn">
+    <span class="nh">マーケットプレイスのパスを確認</span>
+    マーケットプレイスのハンドル（<code>lev-factory/harness</code>）は発表で言及された値を写したものなので、実際に入れるときは講師の GitHub（例:<strong>「ハーネス 100」</strong>で検索）で<strong>正確なリポジトリのパスを確認</strong>してください。プラグインのインストールがうまくいかないときは、UI の方法とコマンドの方法を交互に試します。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Harness &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/hnp-install/">설치와 준비</a></li><li><a href="/p/ja/omc-install/">설치</a></li><li><a href="/p/ja/ccb-plugins/">プラグイン・マーケットプレイス</a></li><li><a href="/p/ja/hnp-commands/">명령어 · 빠른 참조</a></li></ul>
+</nav>
+</body>
+</html>
