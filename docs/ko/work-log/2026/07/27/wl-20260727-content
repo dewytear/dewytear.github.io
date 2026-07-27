@@ -40,4 +40,12 @@
     <li>브라우저: 일본어 설정에서 배치 1의 <strong>12편 모두 일본어 h2</strong>, 미번역 문서(<code>ccb-what</code>·<code>sb-intro</code>)는 한국어 폴백, <strong>ko/en 회귀 무변화</strong>, pageerror 0</li>
     <li>프리렌더 248페이지(<code>p/ja/</code> 12편 신규)</li>
 </ul>
-<p><strong>다음</strong>: 배치 2 — Claude Code 번들(tutorial ccb-* 12편).</p>
+<h3>일본어(ja) 배치 2 — Claude Code 기초강의(ccb-* 12편)</h3>
+<p>영어 때와 같은 순서로 두 번째 배치. 실습형 강의라 <strong>화면에서 그대로 따라 치는 명령·프롬프트</strong>가 많아, 배치 1(개념 해설)과는 번역 판단이 달랐다.</p>
+<ul>
+    <li><strong>본문 12편</strong> — <code>ccb-overview·what·terminal·claudemd·research-web·design-system·papers·skills·plugins·agents·manage·tips</code>. 그중 <strong>7편이 도식</strong>.</li>
+    <li><strong>코드 블록의 번역 경계</strong>: <code>pwd</code>·<code>mkdir kist-test</code>·<code>/plugin install</code> 같은 <strong>실제로 치는 명령은 원문 그대로</strong> 두고, <code>#</code> 주석과 <strong>사용자가 AI에게 말하는 프롬프트</strong>만 일본어로 옮겼다(예: <code>이 회의록 세 개를…</code> → <code>この議事録 3 つを…</code>). 프롬프트는 실행 결과가 언어에 따라 달라지는 게 정상이라 번역하는 것이 맞고, 명령은 번역하면 <strong>동작하지 않는다</strong>.</li>
+    <li><strong>강사명 표기</strong>: 원문 &ldquo;황민호&rdquo;는 일본어 본문에서 &ldquo;ファン・ミンホ&rdquo;로 음차하고 출처의 원 강의명은 유지했다.</li>
+</ul>
+<p>도식 폭은 이번에도 문구를 줄여 맞췄다: &ldquo;④ フォルダへ移動&rdquo;→&ldquo;④ そこへ移動&rdquo;(120px 박스), &ldquo;テーマ · ブランディング&rdquo;→&ldquo;テーマ · ブランド&rdquo;. <code>check_diagram_bounds</code>는 <strong>176개 전수 통과</strong>(ja 7편 신규). <code>validate_all</code> ERROR 0 · WARN 23 유지, <code>build_index --check</code> 3언어 OK.</p>
+<p><strong>다음</strong>: 배치 3 — 하네스(hns-* 12편) · 하네스 플러그인(hnp-* 10편).</p>

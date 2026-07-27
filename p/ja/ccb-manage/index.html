@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使用量・コンテキスト・セッションの管理</title>
+<meta name="description" content="トークンの使用量・コンテキスト・セッションを管理して品質とコストを制御する">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/ccb-manage/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/ccb-manage/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/ccb-manage/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/ccb-manage/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/ccb-manage/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用量・コンテキスト・セッションの管理">
+<meta property="og:description" content="トークンの使用量・コンテキスト・セッションを管理して品質とコストを制御する">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/ccb-manage/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="使用量・コンテキスト・セッションの管理">
+<meta name="twitter:description" content="トークンの使用量・コンテキスト・セッションを管理して品質とコストを制御する">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "使用量・コンテキスト・セッションの管理",
+ "description": "トークンの使用量・コンテキスト・セッションを管理して品質とコストを制御する",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/ccb-manage/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!ccb-manage",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T20:36:07+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!ccb-manage">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/ccb-manage/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/ccb-manage/" hreflang="en">English</a>
+</p>
+<article>
+<h2>使用量・コンテキスト・セッションの管理</h2>
+<p>Claude Code をうまく使うには、<strong>使用量（トークン）</strong>と<strong>コンテキスト</strong>、そして<strong>セッション（文脈）</strong>を管理できる必要があります。トークンがとても重要な時代になりました。</p>
+
+<h3>使用量 — /usage</h3>
+<ul>
+    <li><code>/usage</code> — いまのセッションと今週の使用量を表示します。</li>
+    <li><strong>セッションの上限</strong>: 最初に実行した時点から<strong>5 時間</strong>単位で計算されます。5 時間のうちに 100% 使い切ると、その 5 時間が終わるまで待つことになります。</li>
+    <li><strong>週次のリミット</strong>もあります。開発者がいちばん苦しむ上限なので、<strong>やりくり上手に</strong>使うのが肝心です。</li>
+</ul>
+
+<h3>コンテキスト — /context</h3>
+<p><code>/context</code> は、いま Claude Code に何が載って運ばれているのかを可視化して見せてくれます。コンテキストウィンドウの大きさは<strong>モデルによって違います</strong> — 基本はたいてい 20 万（200K）トークンで、最新のモデル（Fable 5・Sonnet 5・Sonnet 4.6、Opus 4.6 以降）は<strong>100 万（1M）トークン</strong>に対応します。Max・Team・Enterprise のプランでは Opus が自動で 1M コンテキストにアップグレードされ、<code>/model opus[1m]</code> のように <code>[1m]</code> の接尾辞を付けて自分で選ぶこともできます。</p>
+<ul>
+    <li>システムプロンプトやツールの定義などが一部を占め、仕事を頼むたびに少しずつ埋まっていきます。</li>
+    <li>ある程度埋まると<strong>コンパクト（compact）</strong>が起きて、内容が圧縮・縮小されます。</li>
+    <li>コンパクトが起きると<strong>一部のデータが失われ</strong>、性能が少し落ちることがあります。</li>
+    <li>だから満杯になるまで待たず、適当な時点で <code>/compact</code> による<strong>手動の圧縮</strong>が勧められます。</li>
+</ul>
+<p>エージェントを活用すれば、メインのコンテキストを節約しながら品質を保てます。</p>
+
+<h3>セッション（文脈）の管理</h3>
+<p>ウェブのチャットと違い、Claude Code は <code>/exit</code> で出ると文脈が切れます。もう一度つなぐには次のコマンドを使います。</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>コマンド</th><th>やること</th></tr></thead>
+        <tbody>
+            <tr><td><code>claude --continue</code></td><td>直近のセッションをそのまま続けて開始</td></tr>
+            <tr><td><code>claude --resume</code></td><td>過去のセッション一覧から選んで、その文脈へ復帰</td></tr>
+            <tr><td><code>/clear</code></td><td>出ずに文脈だけ空にして新しいセッションを開始</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>セッションの記録は<strong>ユーザーフォルダ配下の <code>~/.claude/projects/</code></strong> に、プロジェクトごと・セッションごとに保存されます。つまり、ずっと前の作業も <code>--resume</code> でよみがえらせられます。ただしこの記録は<strong>ローカルにだけ</strong>保存されるので、別の PC にはありません。</p>
+
+<div class="note warn">
+    <span class="nh">キャッシュに注意</span>
+    AI にはキャッシュがあり、続けて頼めば新しい依頼の分だけが課金されます。ただしキャッシュには<strong>有効時間</strong>があるので、時間が経ってから <code>--resume</code> でまた頼むと、積み上げた内容を全部もう一度載せて送ることになり、キャッシュの恩恵を受けられません。そんなときは<strong>新しいセッション</strong>を開くほうが有利なこともあります。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/commands/">日々の使い方</a></li><li><a href="/p/ja/omc-hooks/">Hook · 메모리</a></li></ul>
+</nav>
+</body>
+</html>

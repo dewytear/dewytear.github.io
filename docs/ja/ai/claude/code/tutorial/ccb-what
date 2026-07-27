@@ -1,0 +1,57 @@
+<h2>Claude Code とは何か</h2>
+<p>Claude Code は<strong>自分のローカル環境（自分の PC）で動く AI エージェント</strong>だと考えてください。ウェブのチャットと違い、自分のコンピュータのファイルを直接読んで修正し、コマンドを実行して仕事を片づけます。作業は<strong>プロジェクトごとにフォルダをひとつ作り、そのフォルダの中で</strong>進めます。Windows では通常 <strong>PowerShell</strong> のターミナルで実行します。</p>
+
+<h3>既存のサービスとの違い</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr><th>形態</th><th>特徴</th><th>自由度</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>ウェブブラウザ（Claude・ChatGPT・Gemini）</td><td>ブラウザ内の制約された環境で AI を使う。ファイルをいちいちアップロードする必要がある</td><td>もっとも制限的</td></tr>
+            <tr><td>Claude デスクトップアプリ</td><td>ローカルで動くが、ターミナルに比べると制約がある</td><td>中間</td></tr>
+            <tr><td><strong>Claude Code（ターミナル）</strong></td><td>実行したフォルダのファイルに直接アクセス。思いどおりに自由に作業できる</td><td>もっとも自由</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>ターミナル環境に少し慣れるだけで、普段 AI チャットを使うようにずっと自由に使えるようになります。</p>
+
+<h3>実演 — 議事録 3 つをひとつのレポートに</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="実演の流れ: フォルダ探索 → ファイル読み込み → 分析 → レポート作成">
+    <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="85" y="46" text-anchor="middle">① フォルダ探索</text>
+    <text class="d-sub" x="85" y="63" text-anchor="middle">search</text>
+
+    <rect class="d-box" x="180" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="255" y="46" text-anchor="middle">② ファイル読み</text>
+    <text class="d-sub" x="255" y="63" text-anchor="middle">一つずつ読む</text>
+
+    <rect class="d-box" x="350" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="425" y="46" text-anchor="middle">③ 分析</text>
+    <text class="d-sub" x="425" y="63" text-anchor="middle">内容の把握</text>
+
+    <rect class="d-box accent" x="520" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="595" y="46" text-anchor="middle">④ レポート作成</text>
+    <text class="d-sub" x="595" y="63" text-anchor="middle">成果物の生成</text>
+
+    <line class="d-edge" x1="160" y1="48" x2="176" y2="48"/><polygon class="d-arrow" points="172,43 180,48 172,53"/>
+    <line class="d-edge" x1="330" y1="48" x2="346" y2="48"/><polygon class="d-arrow" points="342,43 350,48 342,53"/>
+    <line class="d-edge" x1="500" y1="48" x2="516" y2="48"/><polygon class="d-arrow" points="512,43 520,48 512,53"/>
+</svg>
+<div class="d-cap">ファイル一覧を教えなくても、自分で探索・読み込み・分析してレポートを作ります。</div>
+</div>
+<p>議事録ファイル 3 つが入ったフォルダで Claude Code を実行し、こう頼みます。</p>
+<pre><code>この議事録 3 つをまとめて 1 つのレポートに要約して。日本語で。</code></pre>
+<p>ここで肝心なのは<strong>どんなファイルがあるかを教えていない</strong>という点です。ウェブのチャットならファイルを自分でアップロードする必要がありますが、Claude Code は</p>
+<ul>
+    <li>いまのフォルダに<strong>どんなファイルがあるかをまず探索（search）</strong>し、</li>
+    <li>そのファイルを<strong>一つずつ読み</strong>込み、</li>
+    <li>内容を<strong>分析</strong>したうえで結果（レポート）を作ってくれます。</li>
+</ul>
+<p>つまり「実行した場所のフォルダ」がそのまま作業空間になり、その中のファイルを自分で扱います。</p>
+
+<div class="note">
+    <span class="nh">覚えておくこと</span>
+    Claude Code は <code>claude</code> を実行した<strong>そのフォルダ全体にアクセス</strong>します。だからプロジェクトごとにフォルダを分け、作業するフォルダの中で実行する習慣が大切です。
+</div>

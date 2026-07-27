@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>スキル（Skill）を作る</title>
+<meta name="description" content="くり返す作業を再利用できるスキルにする方法と、@ 参照・権限の扱い">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/ccb-skills/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/ccb-skills/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/ccb-skills/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/ccb-skills/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/ccb-skills/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="スキル（Skill）を作る">
+<meta property="og:description" content="くり返す作業を再利用できるスキルにする方法と、@ 参照・権限の扱い">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/ccb-skills/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="スキル（Skill）を作る">
+<meta name="twitter:description" content="くり返す作業を再利用できるスキルにする方法と、@ 参照・権限の扱い">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "スキル（Skill）を作る",
+ "description": "くり返す作業を再利用できるスキルにする方法と、@ 参照・権限の扱い",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/ccb-skills/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!ccb-skills",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T20:36:07+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!ccb-skills">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/ccb-skills/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/ccb-skills/" hreflang="en">English</a>
+</p>
+<article>
+<h2>スキル（Skill）を作る</h2>
+<p><strong>スキル</strong>は、一度以上くり返す作業を保存しておいて再利用しつづけるための機能の単位です。さきほど作ったデザインシステムをスキルにすれば、以後いくつものサイトを同じデザインで簡単に量産できます。</p>
+
+<h3>@（アットマーク）— ファイル・フォルダの参照</h3>
+<p>既存のファイルを参考にして作業させたいときは <code>@</code> を入力します。<code>@</code> を打つとファイル選択の一覧が出るので、目当てのファイルを選んで <strong>Tab</strong> で確定します。</p>
+<pre><code><span class="c"># デザインシステムのファイルを参照してスキルにする</span>
+@design-system_new.html このデザインシステムを "my-design" スキルにして。</code></pre>
+<p><code>@</code> のあとのファイル／フォルダは「この内容を参考にして作業する」という意味です。ファイルだけでなくフォルダも指定できます。</p>
+
+<h3>権限の確認</h3>
+<p>作業中に特定のフォルダへ何かをしようとするとき、<strong>権限をたずねる選択肢</strong>が出ます。</p>
+<ul>
+    <li><strong>1 番</strong> — 今回だけ許可。</li>
+    <li><strong>2 番</strong> — 同じ作業はもう聞かない。</li>
+</ul>
+
+<h3>スキルが保存される場所</h3>
+<ul>
+    <li><strong>プロジェクト専用</strong> — プロジェクト配下の <code>.claude/skills/</code> に生成（そのプロジェクトだけ）。</li>
+    <li><strong>グローバル</strong> — ユーザーフォルダ配下の <code>~/.claude/skills/</code>（Windows は <code>Users\ユーザー\.claude\skills</code>）。どのフォルダで実行しても使えます。</li>
+</ul>
+<p>スキルができると <code>~/.claude/skills/my-design/</code> の下にその内容（例: Apple トーンのホワイトなデザインシステム）が記録されます。</p>
+
+<h3>スキルでもう一度サイトを作る</h3>
+<pre><code>@papers_new.md この論文の内容をもとに、my-design スキルを使って
+同じデザインで論文紹介のウェブサイトを作って。</code></pre>
+<p>こうすると、さきほど作った Mythos のサイトと<strong>同じデザイン</strong>の論文紹介サイトができあがります。</p>
+
+<div class="note">
+    <span class="nh">もっと多くのスキル</span>
+    スキルの作り方はだいたい同じです。たとえば OpenAI の <strong>GPT Image 2</strong> の開発者ドキュメントの URL を渡して「この内容で GPT イメージのスキルにして」と言えば、インフォグラフィック生成のスキルになります。<strong>HWP</strong> のように公式にない形式も、自分でスキルにして再利用できます。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/ccb-design-system/">デザインシステムの抽出</a></li><li><a href="/p/ja/skills/">Skills</a></li><li><a href="/p/ja/skl-overview/">스킬 심화 — 개요</a></li><li><a href="/p/ja/skl-strengths/">스킬의 특장점</a></li></ul>
+</nav>
+</body>
+</html>

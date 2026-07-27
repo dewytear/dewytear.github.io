@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>プラグイン・マーケットプレイス</title>
+<meta name="description" content="マーケットプレイスから document-skills プラグインを入れて確認する">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/ccb-plugins/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/ccb-plugins/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/ccb-plugins/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/ccb-plugins/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/ccb-plugins/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="プラグイン・マーケットプレイス">
+<meta property="og:description" content="マーケットプレイスから document-skills プラグインを入れて確認する">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/ccb-plugins/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="プラグイン・マーケットプレイス">
+<meta name="twitter:description" content="マーケットプレイスから document-skills プラグインを入れて確認する">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "プラグイン・マーケットプレイス",
+ "description": "マーケットプレイスから document-skills プラグインを入れて確認する",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/ccb-plugins/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!ccb-plugins",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T20:36:07+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!ccb-plugins">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/ccb-plugins/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/ccb-plugins/" hreflang="en">English</a>
+</p>
+<article>
+<h2>プラグイン・マーケットプレイス</h2>
+<p>複数のスキルをまとめて<strong>プラグイン</strong>の形で配布できます。論文はたいてい PDF なので、PDF をうまく読むスキルの入った<strong>公式のドキュメントスキル（document-skills）</strong>プラグインを入れてみます。</p>
+
+<h3>1）マーケットプレイスの追加</h3>
+<p>Claude Code で <code>/plugin</code> と入力して Enter を押すと、プラグインの画面が出ます。矢印キーで<strong>マーケットプレイス</strong>を選び → <strong>Add Marketplace</strong> で Anthropic 公式のマーケットプレイスを追加します。</p>
+<pre><code><span class="c"># GitHub への接続が塞がれていたり UI が難しいときは、コマンドで直接実行</span>
+/plugin marketplace add anthropics/skills</code></pre>
+
+<h3>2）document-skills のインストール</h3>
+<p>追加したマーケットプレイス（Anthropic 公式）にはプラグインがいくつかありますが、そのうち <strong>document-skills</strong> だけを入れます。一覧で <strong>Space</strong> で選び、<strong>Enter</strong> でインストールします。コマンドでもできます。</p>
+<pre><code>/plugin install document-skills</code></pre>
+<p>このスキルは <strong>PDF・PPT（pptx）・エクセル</strong>といった文書を Claude Code で読めるようにしてくれます。</p>
+
+<h3>3）再起動して確認</h3>
+<p>インストール後にうまく反映されないときは、<code>/exit</code> で Claude Code を出てから再起動します。そのうえで <code>/pdf</code> または <code>/pptx</code> と入力してコマンドが出れば<strong>インストール成功</strong>です。出なければマーケットプレイスの追加とインストールをやり直します。</p>
+
+<div class="note">
+    <span class="nh">インストールで詰まったとき（GitHub のエラーなど）</span>
+    Google で <strong>「anthropic skills github」</strong>と検索して公式リポジトリに入ると、README の途中にインストールのコマンドがあります。<code>plugin marketplace add ...</code> の一行と <code>plugin install document-skills</code> の一行をそれぞれコピーして Claude Code に貼り付けて実行すれば大丈夫です。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/omc-install/">설치</a></li><li><a href="/p/ja/hnp-install/">설치와 준비</a></li><li><a href="/p/ja/hns-install/">메타 하네스 스킬 설치 (실습)</a></li><li><a href="/p/ja/kgs-plugin/">ウィキエンジンのプラグイン化 — wiki-plugin と同期の規律</a></li></ul>
+</nav>
+</body>
+</html>

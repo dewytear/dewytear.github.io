@@ -1,0 +1,32 @@
+<h2>スキル（Skill）を作る</h2>
+<p><strong>スキル</strong>は、一度以上くり返す作業を保存しておいて再利用しつづけるための機能の単位です。さきほど作ったデザインシステムをスキルにすれば、以後いくつものサイトを同じデザインで簡単に量産できます。</p>
+
+<h3>@（アットマーク）— ファイル・フォルダの参照</h3>
+<p>既存のファイルを参考にして作業させたいときは <code>@</code> を入力します。<code>@</code> を打つとファイル選択の一覧が出るので、目当てのファイルを選んで <strong>Tab</strong> で確定します。</p>
+<pre><code><span class="c"># デザインシステムのファイルを参照してスキルにする</span>
+@design-system_new.html このデザインシステムを "my-design" スキルにして。</code></pre>
+<p><code>@</code> のあとのファイル／フォルダは「この内容を参考にして作業する」という意味です。ファイルだけでなくフォルダも指定できます。</p>
+
+<h3>権限の確認</h3>
+<p>作業中に特定のフォルダへ何かをしようとするとき、<strong>権限をたずねる選択肢</strong>が出ます。</p>
+<ul>
+    <li><strong>1 番</strong> — 今回だけ許可。</li>
+    <li><strong>2 番</strong> — 同じ作業はもう聞かない。</li>
+</ul>
+
+<h3>スキルが保存される場所</h3>
+<ul>
+    <li><strong>プロジェクト専用</strong> — プロジェクト配下の <code>.claude/skills/</code> に生成（そのプロジェクトだけ）。</li>
+    <li><strong>グローバル</strong> — ユーザーフォルダ配下の <code>~/.claude/skills/</code>（Windows は <code>Users\ユーザー\.claude\skills</code>）。どのフォルダで実行しても使えます。</li>
+</ul>
+<p>スキルができると <code>~/.claude/skills/my-design/</code> の下にその内容（例: Apple トーンのホワイトなデザインシステム）が記録されます。</p>
+
+<h3>スキルでもう一度サイトを作る</h3>
+<pre><code>@papers_new.md この論文の内容をもとに、my-design スキルを使って
+同じデザインで論文紹介のウェブサイトを作って。</code></pre>
+<p>こうすると、さきほど作った Mythos のサイトと<strong>同じデザイン</strong>の論文紹介サイトができあがります。</p>
+
+<div class="note">
+    <span class="nh">もっと多くのスキル</span>
+    スキルの作り方はだいたい同じです。たとえば OpenAI の <strong>GPT Image 2</strong> の開発者ドキュメントの URL を渡して「この内容で GPT イメージのスキルにして」と言えば、インフォグラフィック生成のスキルになります。<strong>HWP</strong> のように公式にない形式も、自分でスキルにして再利用できます。
+</div>
