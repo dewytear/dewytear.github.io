@@ -1,0 +1,47 @@
+<h2>AI 2040: Plan A — 政策と検証（合意を支える仕掛け）</h2>
+<p>この編は <a href="#!news-20260709-ai-2040-plan-a">AI 2040: Plan A の概要</a>の続きとして、<a href="#!news-20260709-ai-2040-scenario">シナリオ</a>を動かす<strong>政策の仕掛け</strong>を整理します。Plan A の言い方では軸は<strong>「検証された合意（verified deal）」</strong> — <em>みんなが減速し、みんなが互いを監視する</em>ということです。以下は公開の要約と Supplements の報道で突き合わせて確認した内容です。</p>
+
+<h3>① 全面的な研究の透明性（Total Research Transparency）</h3>
+<p>フロンティアの AI 研究をすべて<strong>誰でも見られるように</strong>公開することが、中心となる規範です。効果は三つに整理されます。</p>
+<ul>
+    <li><strong>突破を隠す動機の除去</strong> — こっそり先行する利得がなくなる。</li>
+    <li><strong>相互監査</strong> — 競合する研究所どうしが互いの安全の作業を監査できる。</li>
+    <li><strong>隠れたアラインメントの遮断</strong> — モデルにこっそり特定の忠誠心を植えることがほぼ不可能になる。</li>
+</ul>
+
+<h3>② 検証のプロトコル — ネットワークタップ + 部分再計算</h3>
+<p>「透明である」という主張を<strong>技術的に確かめる</strong>方法です。推論の検証（inference verification）の方式に似て:</p>
+<ul>
+    <li><strong>ネットワークタップ（network taps）</strong>でデータセンターのワークロードの証拠を集め、</li>
+    <li><strong>部分再計算（partial recomputation）</strong>で、そのワークロードを成すパケットが実際に申告された計算と一致するかを標本で検証します。</li>
+</ul>
+<p>つまり相手が「我々は合意の範囲内でしか計算していない」と言うとき、その言葉を<strong>信じる代わりに計算で確かめる</strong>構造です。</p>
+
+<h3>③ データセンターの再配置 — 防衛できない位置へ</h3>
+<p>いちばん目を引く仕掛けです。R&amp;D のデータセンターを<strong>わざと自国が防衛しにくい位置</strong>に置いて、合意から離脱しにくくします。</p>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>主体</th><th>R&amp;D クラスタの位置</th></tr></thead>
+    <tbody>
+        <tr><td><strong>アメリカ</strong></td><td><strong>モンゴル</strong></td></tr>
+        <tr><td><strong>中国</strong></td><td><strong>カナダ</strong></td></tr>
+    </tbody>
+</table></div>
+<p>ここに <strong>SL5</strong> 水準のモデル重みのセキュリティと、検証の完全性を適用します。例として、カナダ・モンゴルに相互に建設されたデータセンターがある時点でそれぞれ GW 級（カナダ 約 1GW・モンゴル 約 2GW）で稼働し、年末の世界の計算の一定の比率（約 15%）に達する、といった<strong>具体的な数値の軌跡</strong>を原文のモデルが示します。</p>
+
+<h3>④ 相互確証された計算の破壊（Mutually Assured Compute Destruction）</h3>
+<p>冷戦の核抑止（MAD）の論理をデータセンターへ移したものです。合意が壊れて相手がクラスタを<strong>奪おう</strong>とすれば、そのクラスタを守る側が<strong>「焦土（scorched-earth）」の仕掛けで自国の計算を自ら破壊</strong>します。アメリカはモンゴルのクラスタに、中国はカナダのクラスタに、それぞれ対称にこの仕掛けを置きます。「奪っても使えない」が、離脱の利得を 0 にするのです。</p>
+
+<h3>⑤ モデルスペック · 第三者による監督</h3>
+<p>上の仕掛けとあわせて、モデルの目標と行動の規範を<strong>公開されたモデルスペック（model spec）</strong>として明文化し、合意の履行を<strong>第三者が監督</strong>します。批評する側も、この三つ（研究の透明性・モデルスペック・第三者の監督）は Plan A の<strong>いちばん強い部分</strong>だと挙げます（<a href="#!news-20260709-ai-2040-reactions">反応・批評</a>を参照）。</p>
+
+<div class="note">
+    <span class="nh">原文の補足資料（Supplements）</span>
+    検証の計画と経済モデルの細部は、原文の <a href="https://ai-2040.com/supplements" target="_blank" rel="noopener">Supplements</a> に<strong>インタラクティブな探索ツール</strong>として提供されています（資本・ロボット・物価・土地・エネルギーで経済をモデル化、検証計画の詳細）。このウィキには<strong>静的な要約</strong>だけを移し、シミュレータの再現は範囲の外に置きます。
+</div>
+
+<div class="note warn">
+    <span class="nh">事実と推定</span>
+    仕掛けの<strong>設計の意図</strong>（透明性・検証・再配置・計算の破壊）は公開の資料で確認できます。ただし、それらが<strong>実際に働きうるか</strong> — 米中が防衛できない位置に国家の中核の計算を置くことに合意する政治的な現実味、検証の完全さ — は強く<a href="#!news-20260709-ai-2040-reactions">論争</a>されています。
+</div>
+
+<p class="scn-sub"><strong>次へ</strong> — <a href="#!news-20260709-ai-2040-reactions">反応・批評</a>: 公開後の支持と反論。</p>

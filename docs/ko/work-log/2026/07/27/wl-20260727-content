@@ -113,3 +113,23 @@
 </div>
 <p><code>check_diagram_bounds</code> <strong>220개 전수 통과</strong>(ja 5편 신규). 십계명 페이지는 도식이 아니라 <strong>래스터 히어로 이미지</strong>라, 브라우저에서 <code>naturalWidth=941</code>로 실제 로드되는 것과 영어 코드블록 첫 줄이 <code># CLAUDE.md</code>로 온전한 것을 따로 확인했다. <code>validate_all</code> ERROR 0 · WARN 23 유지 · ko/en 회귀 무변화 · pageerror 0.</p>
 <p><strong>다음</strong>: 배치 9 — News &amp; Articles 12편(기사 묶음, 최대 50KB짜리 포함).</p>
+
+<h3>일본어(ja) 배치 9 — AI 2040 시리즈 4편 + 기사 3편</h3>
+<p>아홉 번째 배치. News &amp; Articles 구간에 처음 들어가, <strong>AI 2040: Plan A 시리즈 4편</strong>과 독립 기사 3편을 옮겼다. 기사는 강의와 성격이 달라 손이 더 갔다 — <strong>출처·인용·수치가 본문의 뼈대</strong>라 하나도 흐려지면 안 되기 때문이다.</p>
+<ul>
+    <li><strong>본문 7편</strong> — <code>news-20260709-ai-2040-{plan-a,scenario,policy,reactions}</code> · <code>news-20260622-mythos-looped</code>(도식 2) · <code>news-20260711-neo4j-rdf-vs-property-graph</code>(도식 3) · <code>news-20260724-snucatch-ai-coding</code>(도식 2).</li>
+    <li><strong>인용문은 원어 그대로</strong> — 코코타일로·응고의 영어 블록인용, Karpathy 인용, &ldquo;what you draw is what you store&rdquo; 같은 표어는 번역하지 않았다. 반면 하이젠버그 기사의 <strong>한국어 &lsquo;1분 요약&rsquo;</strong>은 일본어 독자가 읽을 길이 없으므로 일본어로 옮기고 원제·매체를 함께 남겼다.</li>
+    <li><strong>수치·날짜·URL은 손대지 않는다</strong> — 25%→30%→75%, −20%/−13%, METR 19%, 지점당 21→13명·+43%, 카나다 1GW·몽골 2GW 같은 값과 모든 외부 링크를 원본 그대로 유지했다.</li>
+    <li><strong>용어 정본</strong>: 초지능→<code>超知能</code> · 전면 연구 투명성→<code>全面的な研究の透明性</code> · 상호확증 연산 파괴→<code>相互確証された計算の破壊</code> · 루프드 트랜스포머→<code>ループド・トランスフォーマー</code> · 프렐류드/코다→<code>プレリュード/コーダ</code> · 프로퍼티 그래프→<code>プロパティグラフ</code> · 지식 그래프→<code>ナレッジグラフ</code> · 조직 원리→<code>組織の原理</code> · 바이브코딩→<code>バイブコーディング</code> · 제번스 역설→<code>ジェヴォンズのパラドックス</code> · 케이퍼빌리티 오버행→<code>ケイパビリティ・オーバーハング</code>.</li>
+</ul>
+<div class="note">
+    <span class="nh">일본어라 상자를 넓혀야 했던 곳</span>
+    <code>mythos-looped</code>의 루프드 열에서 &ldquo;입력 임베딩 (프렐류드)&rdquo;가 <code>入力の埋め込み（プレリュード）</code>가 되며 <strong>14자</strong>로 불어나 150px 상자를 넘겼다. 문구를 더 줄이면 프렐류드/코다라는 원 논문의 용어가 사라지므로, 대신 <strong>입력·출력 상자를 200px로 함께 넓혔다</strong>(중앙 <code>x=540</code> 유지 → <code>x=440 width=200</code>). 순환 블록의 루프 경로와 y 구간이 겹치지 않아 충돌은 없다.<br>
+    <code>neo4j</code>의 원형 노드는 <strong>r=22</strong>라 4자(<code>スニータ</code> ≈ 45px)가 현의 폭 43px을 넘길 참이었다. 노드 라벨은 3자로 맞춰(<code>スニタ</code>·<code>ボルボ</code>) 원본(수니타·볼보차 3자)과 같은 밀도로 두었다.
+</div>
+<p><code>check_diagram_bounds</code> <strong>223개 전수 통과</strong>(ja 3편 신규). <code>validate_all</code> ERROR 0 · WARN 23 유지. 브라우저에서 7편 모두 일본어 h2 · pageerror 0 · ko/en 회귀 무변화이고, 개요 편의 <strong>클릭형 연표</strong>가 일본어로도 동작하는 것(2029 → 2035 클릭 시 <code>2035 — 一時停止</code>로 전환)을 따로 확인했다.</p>
+<div class="note warn">
+    <span class="nh">본문에 남는 한글은 아직 정상이다</span>
+    일본어 페이지의 <strong>개념 칩</strong>(초지능·AI 거버넌스·온톨로지…)과 <strong>미번역 문서의 연관 링크 라벨</strong>이 한글로 보인다. 개념 표시명은 <code>concepts.en.json</code>이 2건뿐인 데서 보듯 <strong>영어판도 같은 상태</strong>라 배치가 만든 퇴행이 아니고, 연관 링크는 그 문서가 배치 10~12에서 번역되면 자연히 일본어가 된다.
+</div>
+<p><strong>다음</strong>: 배치 10 — 남은 뉴스 기사 5편(<code>thariq-fable5-unknowns</code> 50KB 등 도식·이미지가 많은 묶음).</p>
