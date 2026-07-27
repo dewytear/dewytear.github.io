@@ -527,6 +527,54 @@ def check_map_fallback_drift(root):
     return findings
 
 
+def check_og_card_drift(root):
+    """WARN: the OG share card's stat chips disagree with the index.
+
+    og-image.png is what every share of this site looks like, and its numbers
+    are baked into pixels — nothing regenerates them automatically. It sat at
+    `337 concepts · KO·EN` until 2026-07-28, long after the wiki reached 370
+    concepts and three languages, so every share advertised a wiki that no
+    longer existed.
+
+    We can't read the PNG, so we check its SOURCE (tools/og-card.html) — the
+    chips there are the record of what the image shows. A hit means: fix the
+    HTML, then re-render the PNG (instructions are in that file's header).
+    """
+    findings = []
+    cpath = os.path.join(root, 'tools', 'og-card.html')
+    ipath = os.path.join(root, 'data', 'knowledge-index.ko.json')
+    if not (os.path.isfile(cpath) and os.path.isfile(ipath)):
+        return findings
+    with open(cpath, encoding='utf-8') as f:
+        card = f.read()
+    with open(ipath, encoding='utf-8') as f:
+        st = (json.load(f).get('stats') or {})
+
+    for label, want in (('docs', st.get('docCount')), ('concepts', st.get('conceptCount'))):
+        m = re.search(r'<b>(\d+)</b>\s*' + label, card)
+        if m and want is not None and int(m.group(1)) != want:
+            findings.append({'level': 'WARN', 'check': 'og-card-drift', 'name': 'og-card.html',
+                'message': f"카드의 {label} {m.group(1)} ≠ 인덱스 {want} — "
+                           f"tools/og-card.html 수정 후 og-image.png 재생성"})
+
+    # Language chip (e.g. KO·EN·JA) vs i18n.js's LANGS_READY.
+    m = re.search(r'<b>([A-Z]{2}(?:[^<A-Za-z]+[A-Z]{2})*)</b>', card)
+    try:
+        with open(os.path.join(root, 'i18n.js'), encoding='utf-8') as f:
+            lm = re.search(r'LANGS_READY\s*=\s*\[([^\]]*)\]', f.read())
+        ready = re.findall(r"['\"]([A-Za-z-]+)['\"]", lm.group(1)) if lm else []
+    except (OSError, AttributeError):
+        ready = []
+    if m and ready:
+        shown = set(re.findall(r'[A-Z]{2}', m.group(1)))
+        want = {l.upper() for l in ready}
+        if shown != want:
+            findings.append({'level': 'WARN', 'check': 'og-card-drift', 'name': 'og-card.html',
+                'message': f"카드의 언어 칩 {sorted(shown)} ≠ LANGS_READY {sorted(want)} — "
+                           f"수정 후 og-image.png 재생성"})
+    return findings
+
+
 def check_cluster_coverage(root):
     """ERROR: an indexed doc's section resolves to no cluster in
     tools/clusters.json even though its galaxy has clusters defined.
@@ -605,6 +653,7 @@ def run(root):
     findings += check_orphan_entries(doc_nodes, entries)
     findings += check_banned_astronomy_metaphor(doc_nodes, entries, bodies)
     findings += check_map_fallback_drift(root)
+    findings += check_og_card_drift(root)
     findings += check_cluster_coverage(root)
     return findings
 

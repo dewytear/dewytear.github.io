@@ -231,3 +231,18 @@
 <p>역검증: 날짜 일지 하나에 <code>label_ja</code>를 임시로 되돌리니 <code>label-without-ja-body</code> ERROR가 떴고, <code>wl-guide</code>는 그대로 통과했다. 폴더 제목(<code>title_&lt;lang&gt;</code>: <code>07월</code>→<code>July</code>/<code>7月</code>)은 번역을 유지한다 — 트리 구조는 읽는 사람의 언어로 보이는 편이 맞다.</p>
 
 <p class="scn-sub">세 번째로 같은 교훈이다: <strong>예외를 만들기 전에 &ldquo;왜 이 예외가 필요한가&rdquo;를 한 번 더 물어야 한다.</strong> 앞 절에서는 이름 목록이 규칙의 결함을 가렸고, 이번엔 대칭 면제가 데이터의 불일치를 가리고 있었다. 둘 다 <strong>원인을 고치자 규칙이 사라졌다.</strong></p>
+
+<h3>후속 — OG 공유 카드가 &ldquo;KO·EN&rdquo;이라고 말하고 있었다</h3>
+<p>대표님이 <strong>&ldquo;OG 카드 일어판도 있어야 하지 않아?&rdquo;</strong>라고 물으셨다. 확인해 보니 전제가 조금 달랐고, 대신 <strong>더 급한 것</strong>이 나왔다.</p>
+<ul>
+    <li><strong>카드는 한국어가 아니라 영어다.</strong> 본문·부제·칩이 전부 영어이고, 그래프 안 글자(문서 라벨·명판)는 카드 제작 때 <code>fillText</code>를 무력화해 <strong>애초에 전부 빼놨다</strong>. 그래서 &ldquo;한국어판에 일본어판이 없다&rdquo;는 구도가 아니었다.</li>
+    <li><strong>그런데 내용이 틀려 있었다</strong> — <code>337 concepts</code>(실제 370) · <code>KO·EN</code>(07-28부터 3개 국어). <strong>공유될 때마다 없는 위키를 광고</strong>하고 있었던 셈이다.</li>
+</ul>
+<p>사용자 결정: <strong>영어 카드 하나로 유지하고 내용만 정정</strong>한다. 카드 문구가 10단어 남짓이고 사이트 제목도 영어라 공유 미리보기로는 영어가 가장 넓게 닿는다. 언어별 3장으로 늘리면 수치가 바뀔 때마다 세 장을 모두 재생성해야 하는데, 재생성은 헤드리스 브라우저 수작업이다.</p>
+<p><code>370 concepts</code> · <code>KO·EN·JA</code>로 고치고 <code>og-image.png</code>를 재생성했다. 그래프 그림은 결정적 렌더라 <strong>바뀌지 않았다</strong>(FNV 해시 + 피보나치 구, reduced-motion 강제, 3프레임에서 정지).</p>
+
+<div class="note">
+    <span class="nh">픽셀에 박힌 수치를 어떻게 지키나 — <code>og-card-drift</code> 신설</span>
+    카드 수치는 <strong>PNG 안에 구워져</strong> 있어 아무것도 자동으로 갱신하지 않는다. 그래서 07-28까지 낡은 채로 남아 있었다. PNG를 읽을 수는 없으니 <strong>원본(<code>tools/og-card.html</code>)의 칩을 인덱스·<code>LANGS_READY</code>와 대조</strong>한다 — 그 HTML이 &ldquo;이미지가 무엇을 보여 주는지&rdquo;의 기록이기 때문이다. 걸리면 &ldquo;HTML 고치고 PNG 재생성&rdquo;이라고 알려 준다. 역검증: <code>337</code>·<code>KO·EN</code>으로 되돌리니 두 건 모두 잡혔다.
+    <br><strong>한계는 정직하게 적어 둔다</strong> — 이 검사는 HTML이 낡는 것만 잡지, 누가 HTML만 고치고 PNG를 재생성하지 않으면 못 잡는다. 픽셀을 읽는 검사는 비용이 맞지 않아 만들지 않았다.
+</div>
