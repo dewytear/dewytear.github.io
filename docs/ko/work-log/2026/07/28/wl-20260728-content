@@ -1,0 +1,22 @@
+<h2>2026-07-28 · 콘텐츠 — 일본어 배치 10 (남은 뉴스 기사 5편)</h2>
+
+<p>열 번째 배치. News &amp; Articles 구간에서 가장 무거운 다섯 편 — <code>thariq-fable5-unknowns</code>(50KB) · <code>llm-wiki-knowledge-context</code>(30KB) · <code>oracle-ontology-property-graph</code>(35KB) · <code>kimi-k3</code>(38KB) · <code>claude-opus-5</code>(21KB), 합 <strong>175KB · 도식 12개 · 래스터 이미지 4장 · 유튜브 임베드 1개</strong> — 을 일본어로 옮겼다. 이로써 ja 본문은 <strong>104 / 115편(90%)</strong>. 변경 유형: <strong>CONTENT</strong>.</p>
+<p>작업은 <a href="#!wl-20260727-content">어제 배치 9</a>에서 이어지지만, <strong>날짜가 KST 자정을 넘겨 그날 로그로 분리</strong>했다(어제 세운 날짜 규칙 그대로 — 같은 주제라도 날짜가 우선).</p>
+
+<h3>번역 방침 — 사실의 뼈대는 손대지 않는다</h3>
+<ul>
+    <li><strong>수치·날짜·URL·벤치마크 이름 전부 원본 유지</strong> — Kimi K3의 2.8T/~50B·57.1점·1,679 Elo·76% 승률·283.6ms→114.4ms, Opus 5의 $5/$25·43.3% vs 34.4%·0.5% 이내, 타릭 기사의 &ldquo;약 80%&rdquo;·280만 조회. 특히 두 기사는 <strong>&ldquo;확인된 사실 / 발표상 주장 / 개인 일화&rdquo;를 나눠 적는 것 자체가 본문의 요지</strong>라, 판정 열의 어휘(<code>公式に確認</code>·<code>タリクの公開の発表上の主張</code>·<code>個人の逸話</code>·<code>時点に依存</code>)를 일관되게 고정했다.</li>
+    <li><strong>영어 개념어는 번역하지 않는다</strong> — capability overhang · unhobbling · unknown unknowns · map/territory · deviation · buy-in · semantics map · provenance. 타릭 기사는 이 어휘 자체가 프레임이라, 일본어 조사만 붙여 그대로 뒀다(<code>unknown を known へ昇格</code>).</li>
+    <li><strong>프롬프트 예시는 &ldquo;의미 보존 재구성&rdquo;임을 명시</strong> — 원문 주석 &ldquo;원문의 의미를 보존한 한국어 재구성&rdquo;을 <code>原文の意味を保った日本語の再構成</code>으로 옮겨, 일본어 독자도 <strong>이것이 타릭의 원문 그대로가 아님</strong>을 알 수 있게 했다.</li>
+    <li><strong>용어 정본</strong>: 하네스→<code>ハーネス</code> · 오픈웨이트→<code>オープンウェイト</code> · 전문가 혼합→<code>専門家の混合(MoE)</code> · 잠재추론→<code>潜在での推論</code> · 날리지 컨텍스트→<code>ナレッジコンテキスト</code> · 승격 플로우→<code>昇格のフロー</code> · 계층 로딩→<code>階層の読み込み</code> · 조직 원리→<code>組織の原理</code> · 엣지 테이블(H)→<code>エッジ表(H 表)</code> · 홉→<code>ホップ</code> · 사각지대→<code>死角</code>.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">일본어라 좁아진 상자 — 이번엔 &ldquo;줄이기&rdquo;로 풀었다</span>
+    배치 9에서는 상자를 넓혔지만, 이번 도식들은 <strong>격자로 배열된 작은 상자</strong>(92px·90px)라 하나를 넓히면 줄 전체가 어긋난다. 그래서 <strong>부제(d-sub)를 줄이는 쪽</strong>으로 맞췄다 — 타릭 기사 11패턴 격자에서 <code>질문 못한 제약</code>→<code>聞けない制約</code> · <code>판단 어휘 학습</code>→<code>判断の語彙</code> · <code>개입 공간 확장</code>→<code>介入点を広げる</code> · <code>이탈·가정 기록</code>→<code>逸脱・仮定</code>. 상단의 패턴 이름(<code>1 · Blindspot</code> 등)은 원문 그대로라 정보 손실이 없다.<br>
+    LLM Wiki 기사의 RAG 파이프라인도 110px 상자 5개가 붙어 있어 <code>청크·임베딩</code>을 <code>チャンク埋込</code>로, <code>검색 없이 문서째</code>를 <code>検索なしで丸ごと</code>로 줄였다. 오라클 기사의 와인 테이블 행은 전각 구분점(<code>・</code>)으로 바꾸고 <code>ヴィンテージ</code>(6자)를 <code>年式</code>(2자)로 줄여 340px 안에 넣었다.
+</div>
+
+<p><code>check_diagram_bounds</code> <strong>228개 전수 통과</strong>(ja 5편 신규). <code>validate_all</code> ERROR 0 · WARN 23 유지. 브라우저에서 5편 모두 일본어 h2 · pageerror 0 · ko/en 회귀 무변화이고, 래스터 이미지 4장이 실제로 로드되는 것(<code>naturalWidth</code> 1440·1205·1440·1440), Kimi 기사의 <strong>cmp 막대 23개</strong>와 Opus 5 기사의 <strong>유튜브 임베드 1개</strong>가 살아 있는 것을 따로 확인했다.</p>
+
+<p><strong>다음</strong>: 배치 11 — DOUZONE 12편(<code>dz-map</code> · <code>dzp-*</code> 8편 · <code>sne-*</code> 3편). 그다음이 마감 PR(<code>ai-guide</code>·<code>ai-map</code> + <code>check_translation.py</code>의 ja 강제 + 규칙 문서 갱신).</p>

@@ -1,0 +1,298 @@
+<h2>Kimi K3 — 2.8 兆パラメータのオープンウェイト、フロンティアに届く</h2>
+
+<figure class="doc-img">
+    <img src="assets/ai/news/2026/news-20260716-kimi-k3/hero.webp" width="1440" height="659"
+         alt="鉄粉が磁場に沿って並び、中央に数字の 3 を描く Kimi K3 の公開ビジュアル">
+    <figcaption>鉄粉が描く磁場の中の&lsquo;3&rsquo; — Kimi K3 の公開ビジュアル（画像: Moonshot AI）</figcaption>
+</figure>
+
+<p>2026 年 7 月 16 日、中国の AI 企業<strong>ムーンショット（Moonshot AI）</strong>が新しい AI モデル <strong>Kimi K3</strong> を公開しました。一行にまとめるとこうです — <strong>&ldquo;誰でもダウンロードして使える公開のモデルが、はじめて世界の 1 位圏の有料のモデルのすぐ下まで来た。&rdquo;</strong> 載せた数値はすべて<strong>複数の独立した出典をウェブ検索で突き合わせて検証した</strong>ものだけで、検証の過程で訂正したり除いたりした内容は末尾の&ldquo;事実検証のノート&rdquo;に別に整理しました。</p>
+
+<div class="note">
+    <span class="nh">記事の情報（出典）</span>
+    · 対象: <strong>Moonshot AI Kimi K3 の公開</strong>（2026-07-16）<br>
+    · 検証: <strong>2026-07-19 のウェブ検索による突き合わせ検証</strong> — 互いに独立した複数の出典が一致する事実だけを本文に収録<br>
+    · 公式の原文: <a href="https://www.kimi.com/blog/kimi-k3" target="_blank" rel="noopener">Kimi K3 Tech Blog (kimi.com/blog/kimi-k3)</a> · 文書の末尾に分類別の出典の一覧
+</div>
+
+<h3>三行の要約</h3>
+<ul>
+    <li>Kimi K3 は<strong>歴代でいちばん大きい公開（オープンウェイト）のモデル</strong>です — 頭脳の大きさ（パラメータ）が 2.8 兆個。</li>
+    <li>いくつもの公開の試験（ベンチマーク）で <strong>Claude Fable 5、GPT-5.6 のすぐ下の 3 位圏</strong>で、ウェブの画面づくりのような一部の分野では <strong>1 位</strong>です。</li>
+    <li>それでいて価格は 1 位圏のモデルより<strong>一段階安い</strong>のです。&ldquo;公開のモデルはアメリカの有料のモデルより半年〜1 年遅れる&rdquo;という通念が崩れた出来事なので、業界が大きくざわつきました。</li>
+</ul>
+
+<h3>まず用語を五つだけ知っておく</h3>
+<p>この五つを知れば、以下の内容はすべて読めます。</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>用語</th><th>やさしい説明</th></tr></thead>
+    <tbody>
+        <tr><td><strong>パラメータ</strong></td><td>モデルの中に入っている<strong>調節ねじの数</strong>。学習しながらこのねじが少しずつ回り、知識と能力が刻まれます。多いほど収められるものが増える代わりに、作って動かす費用が大きくなります。</td></tr>
+        <tr><td><strong>トークン</strong></td><td>AI が文を読み書きするときの<strong>最小の断片</strong>。だいたい単語ひとつが 1〜2 トークンです。AI の利用料もトークンの数で計算します。</td></tr>
+        <tr><td><strong>コンテキストウィンドウ</strong></td><td>モデルが<strong>一度に覚えながら作業できる分量</strong>。K3 は 100 万トークン — 分厚い本を何冊もまるごと渡して&ldquo;これを全部読んで答えて&rdquo;ができる大きさです。</td></tr>
+        <tr><td><strong>オープンウェイト</strong></td><td>学習の終わったモデルの<strong>&lsquo;頭脳のファイル&rsquo;（重み）をまるごと公開</strong>すること。誰でもダウンロードして自分のサーバーで動かし、直して使えます。反対は閉じた形 — OpenAI や Anthropic のようにファイルは隠して使用権だけを売るやり方です。</td></tr>
+        <tr><td><strong>ベンチマーク</strong></td><td>いくつものモデルに<strong>同じ試験問題を渡して採点した成績表</strong>。コーディングの試験、常識の試験、実務の試験など種類が多く、この記事に出てくる順位はすべてベンチマークの順位です。</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>何があったのか</h3>
+<ul>
+    <li><strong>公開</strong>: 2026-07-16、Moonshot AI（北京）。アプリと API（開発者向けの有料の接続窓口）ですぐ使えます。</li>
+    <li><strong>大きさ</strong>: パラメータ <strong>2.8 兆個</strong> — 公開のモデルの歴史で最大です。</li>
+    <li><strong>記憶力</strong>: コンテキストウィンドウ <strong>100 万トークン</strong>、絵や写真も理解するマルチモーダル、考えを深く／浅く調節する 3 段階の推論のモード。</li>
+    <li><strong>注意</strong>: &ldquo;オープンウェイト&rdquo;と発表しましたが、頭脳のファイルそのものは <strong>2026-07-27 に公開の予定</strong>です。この記事を書く時点ではまだアプリと API でしか使えません。</li>
+</ul>
+
+<h3>秘訣 ① — 専門家 896 人のうち 16 人だけを呼ぶ（MoE）</h3>
+<p>&ldquo;2.8 兆パラメータなら、動かすのにとんでもないお金がかかるのでは？&rdquo; — そのとおりです。だから K3 は <strong>MoE（Mixture of Experts, 専門家の混合）</strong>という構造を使います。大きな総合病院を思い浮かべてください。専門医が 896 人いても、患者ひとりを 896 人全員が診るわけではありません。受付が症状を見て<strong>本当に必要な 16 人だけ</strong>を呼びます。</p>
+<p>K3 はまさにこう働きます。文の断片（トークン）がひとつ入ってくるたびに<strong>ルーター</strong>（受付）が 896 個の専門家のニューラルネットのうち <strong>16 個だけを選んで</strong>仕事をさせます。だから知識の倉庫の全体は 2.8 兆と巨大なのに、その瞬間に実際に働いている部分は<strong>およそ 500 億（50B）</strong>だけです — 知識はゾウなのに足取りはチーターというわけです。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 320" role="img" aria-label="Kimi K3 のブロックの構造: 入力トークンが KDA アテンションとルーターを通り、896 個の expert のプールのうち 16 個だけが活性化して出力につながり、AttnRes が層をまたいで選択的に残差を回収する">
+    <text class="d-label" x="360" y="26" text-anchor="middle">Kimi K3 ブロック — 総 2.8T · 活性 ~50B</text>
+    <rect class="d-box soft" x="14" y="126" width="92" height="44" rx="9"/><text class="d-label sm" x="60" y="152" text-anchor="middle">入力トークン</text>
+    <line class="d-edge" x1="106" y1="148" x2="132" y2="148"/><polygon class="d-arrow" points="132,143 140,148 132,153"/>
+    <rect class="d-box" x="140" y="118" width="130" height="60" rx="9"/><text class="d-label sm" x="205" y="142" text-anchor="middle">KDA アテンション</text><text class="d-sub" x="205" y="162" text-anchor="middle">線形 · 6.3× デコード</text>
+    <line class="d-edge" x1="270" y1="148" x2="290" y2="148"/><polygon class="d-arrow" points="290,143 298,148 290,153"/>
+    <rect class="d-box" x="298" y="126" width="90" height="44" rx="9"/><text class="d-label sm" x="343" y="152" text-anchor="middle">ルーター</text>
+    <text class="d-sub" x="343" y="192" text-anchor="middle">Quantile Balancing</text>
+    <line class="d-edge accent" x1="388" y1="148" x2="422" y2="148"/><polygon class="d-arrow accent" points="422,143 430,148 422,153"/>
+    <rect class="d-box accent" x="430" y="64" width="190" height="192" rx="12"/>
+    <text class="d-label sm" x="525" y="86" text-anchor="middle">Expert プール · 896 個</text>
+    <circle class="d-node" cx="456" cy="108" r="8"/><circle class="d-node dim" cx="478" cy="108" r="8"/><circle class="d-node dim" cx="500" cy="108" r="8"/><circle class="d-node" cx="522" cy="108" r="8"/><circle class="d-node dim" cx="544" cy="108" r="8"/><circle class="d-node dim" cx="566" cy="108" r="8"/><circle class="d-node dim" cx="588" cy="108" r="8"/><circle class="d-node" cx="610" cy="108" r="8"/>
+    <circle class="d-node dim" cx="456" cy="130" r="8"/><circle class="d-node dim" cx="478" cy="130" r="8"/><circle class="d-node" cx="500" cy="130" r="8"/><circle class="d-node dim" cx="522" cy="130" r="8"/><circle class="d-node dim" cx="544" cy="130" r="8"/><circle class="d-node" cx="566" cy="130" r="8"/><circle class="d-node dim" cx="588" cy="130" r="8"/><circle class="d-node dim" cx="610" cy="130" r="8"/>
+    <circle class="d-node dim" cx="456" cy="152" r="8"/><circle class="d-node" cx="478" cy="152" r="8"/><circle class="d-node dim" cx="500" cy="152" r="8"/><circle class="d-node dim" cx="522" cy="152" r="8"/><circle class="d-node" cx="544" cy="152" r="8"/><circle class="d-node dim" cx="566" cy="152" r="8"/><circle class="d-node dim" cx="588" cy="152" r="8"/><circle class="d-node dim" cx="610" cy="152" r="8"/>
+    <circle class="d-node dim" cx="456" cy="174" r="8"/><circle class="d-node dim" cx="478" cy="174" r="8"/><circle class="d-node dim" cx="500" cy="174" r="8"/><circle class="d-node" cx="522" cy="174" r="8"/><circle class="d-node dim" cx="544" cy="174" r="8"/><circle class="d-node dim" cx="566" cy="174" r="8"/><circle class="d-node" cx="588" cy="174" r="8"/><circle class="d-node dim" cx="610" cy="174" r="8"/>
+    <circle class="d-node" cx="456" cy="196" r="8"/><circle class="d-node dim" cx="478" cy="196" r="8"/><circle class="d-node dim" cx="500" cy="196" r="8"/><circle class="d-node dim" cx="522" cy="196" r="8"/><circle class="d-node" cx="544" cy="196" r="8"/><circle class="d-node dim" cx="566" cy="196" r="8"/><circle class="d-node dim" cx="588" cy="196" r="8"/><circle class="d-node dim" cx="610" cy="196" r="8"/>
+    <circle class="d-node dim" cx="456" cy="218" r="8"/><circle class="d-node" cx="478" cy="218" r="8"/><circle class="d-node dim" cx="500" cy="218" r="8"/><circle class="d-node dim" cx="522" cy="218" r="8"/><circle class="d-node dim" cx="544" cy="218" r="8"/><circle class="d-node" cx="566" cy="218" r="8"/><circle class="d-node dim" cx="588" cy="218" r="8"/><circle class="d-node" cx="610" cy="218" r="8"/>
+    <circle class="d-node dim" cx="456" cy="240" r="8"/><circle class="d-node dim" cx="478" cy="240" r="8"/><circle class="d-node" cx="500" cy="240" r="8"/><circle class="d-node dim" cx="522" cy="240" r="8"/><circle class="d-node dim" cx="544" cy="240" r="8"/><circle class="d-node dim" cx="566" cy="240" r="8"/><circle class="d-node" cx="588" cy="240" r="8"/><circle class="d-node dim" cx="610" cy="240" r="8"/>
+    <text class="d-sub" x="525" y="276" text-anchor="middle">トークンごとに 16 個だけ活性（図は 56 個のみ表示）</text>
+    <line class="d-edge accent" x1="620" y1="148" x2="640" y2="148"/><polygon class="d-arrow accent" points="640,143 648,148 640,153"/>
+    <rect class="d-box soft" x="648" y="126" width="62" height="44" rx="9"/><text class="d-label sm" x="679" y="152" text-anchor="middle">出力</text>
+    <path class="d-edge accent dash" d="M205 178 C205 296, 679 296, 679 174"/><polygon class="d-arrow accent" points="674,180 679,170 684,180"/>
+    <text class="d-sub" x="360" y="312" text-anchor="middle">AttnRes — 層をまたいで選択的に残差を回収</text>
+</svg>
+<div class="d-cap">病院のたとえで見る: 受付（ルーター）が専門医 896 人のうち<strong>16 人だけを呼ぶ</strong>。知識の倉庫は 2.8 兆でも、その瞬間に働くのは ~50B。</div>
+</div>
+
+<h3>秘訣 ② — 長く読み、深くなっても忘れない（KDA · AttnRes）</h3>
+<p>Moonshot が公式のブログで明かした残りのふたつの改善です。名前は難しくても、やることは単純です。</p>
+<ul>
+    <li><strong>Kimi Delta Attention（KDA）</strong> — AI が文を読むときは&ldquo;どの単語に注目するか&rdquo;を計算し続けるのですが（これを<strong>アテンション</strong>といいます）、文が長くなるほどこの計算が雪だるま式にふくらみます。KDA はこの計算を軽くしたやり方で、100 万トークンの長い文書で答えを書く速さを<strong>最大 6.3 倍</strong>にします。本の全体に線を引く代わりに、よく整理された要約のメモを持って読むようなものです。</li>
+    <li><strong>Attention Residuals（AttnRes）</strong> — AI のモデルは数十〜数百の層（レイヤー）を通りながら考えを整えますが、層が深くなると<strong>前で見た大事な情報がだんだんぼやける</strong>問題があります。AttnRes は必要なときに前の層の情報を<strong>選んで取り出し直す</strong>仕掛けです。伝言ゲームで言葉が変形しないよう、途中で元のメモをもう一度確かめるのに似ています。</li>
+</ul>
+<p>これらの構造の改善のおかげで、K3 は前作の K2 より<strong>&lsquo;燃費&rsquo;がおよそ 2.5 倍</strong>よくなった、と Moonshot は説明します。&ldquo;2.5 倍賢い&rdquo;という意味ではなく、<strong>同じ量の計算資源と学習データから 2.5 倍の実力を引き出す</strong>という意味です。</p>
+
+<p>Moonshot が公開した公式の図解で見ると、三つがひとつの絵に入ります — 専門家を選んで使う <strong>Stable LatentMoE</strong>、長い文を軽く読む <strong>KDA</strong>、そしてブロックを横切って大事な情報を引き戻す <strong>AttnRes</strong>（右側の横線）。</p>
+
+<figure class="doc-img">
+    <img src="assets/ai/news/2026/news-20260716-kimi-k3/fig-architecture.webp" width="1205" height="1080"
+         alt="Kimi K3 の公式のアーキテクチャ図解: 左上に Stable LatentMoE の共有・ルーティングの expert とルーター、左下に Kimi Delta Attention のモジュール、右に KDA・Gated MLA・Stable LatentMoE のブロックをつなぐ Attention Residuals のバックボーン">
+    <figcaption>Kimi K3 の公式のアーキテクチャ図解 — Stable LatentMoE・KDA のモジュール（左）、ブロックを横切って残差を回収する AttnRes のバックボーン（右）（画像: Moonshot AI テックブログ）</figcaption>
+</figure>
+
+<h3>成績表 — どれくらいできるのか</h3>
+<h4>総合の点数: 1 位圏のすぐ下</h4>
+<p>いくつもの試験の結果をひとつに合算する <strong>Artificial Analysis Intelligence Index</strong>（9 つの試験の平均、いわば&lsquo;模試の総点&rsquo;）で、K3 は <strong>57.1 点</strong>を取りました。1 位の Claude Fable 5 Max（59.9）、2 位の GPT-5.6 Sol Max（58.9）に続く <strong>3 位</strong>です。点数の差は 3 点もありません — 下の図のとおり、事実上肩を並べた水準です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 230" role="img" aria-label="Artificial Analysis Intelligence Index v4.1 の上位 3 モデル: Claude Fable 5 Max 59.9 点、GPT-5.6 Sol Max 58.9 点、Kimi K3 Max 57.1 点と差はわずか">
+    <line class="d-edge" x1="190" y1="40" x2="190" y2="178"/>
+    <text class="d-label sm" x="178" y="65" text-anchor="end">Claude Fable 5 Max</text>
+    <rect class="d-box" x="190" y="48" width="411" height="26" rx="5"/>
+    <text class="d-sub" x="609" y="65">59.9</text>
+    <text class="d-label sm" x="178" y="110" text-anchor="end">GPT-5.6 Sol Max</text>
+    <rect class="d-box" x="190" y="93" width="404" height="26" rx="5"/>
+    <text class="d-sub" x="602" y="110">58.9</text>
+    <text class="d-label sm" x="178" y="155" text-anchor="end">Kimi K3 Max</text>
+    <rect class="d-box accent" x="190" y="138" width="392" height="26" rx="5"/>
+    <text class="d-label sm" x="590" y="155">57.1</text>
+    <text class="d-sub" x="190" y="194">0</text>
+    <text class="d-sub" x="360" y="216" text-anchor="middle">Artificial Analysis Intelligence Index v4.1 · 棒は 0 から比例</text>
+</svg>
+<div class="d-cap">上のふたつは<strong>閉じた形の有料</strong>、K3 は<strong>公開（予定）のモデル</strong>だ — このわずかな差が今回の公開の要。</div>
+</div>
+
+<h4>コーディングの試験: 一部は 1 位</h4>
+<p>コーディングはこれまで Anthropic と OpenAI がいちばん先を行くと見られてきた分野ですが、K3 はここでも 1〜2 位を争います。</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>ベンチマーク（試験の種類）</th><th>K3 の点数</th><th>順位</th><th>比較</th></tr></thead>
+    <tbody>
+        <tr><td>ProgramBench（プログラムを書く）</td><td>77.8</td><td><strong>1 位</strong></td><td>GPT-5.6 Sol 77.6 · Fable 5 76.8</td></tr>
+        <tr><td>SWE-Marathon（長時間のコーディングの持久力）</td><td>42.0</td><td><strong>1 位</strong></td><td>—</td></tr>
+        <tr><td>FrontierSWE（実際のソフトウェアの修正）</td><td>81.2</td><td>2 位</td><td>Fable 5 86.6 · GPT-5.6 Sol 71.3</td></tr>
+        <tr><td>Terminal-Bench 2.1（ターミナルの作業 · 自己申告）</td><td>88.3</td><td>2 位</td><td>GPT-5.6 Sol 88.8</td></tr>
+        <tr><td>DeepSWE のリーダーボード（公式のコーディングの順位表）</td><td>67.3</td><td>—</td><td>mini-SWE-agent 基準</td></tr>
+    </tbody>
+</table>
+</div>
+<p class="scn-sub">すべてのモデルは最大の推論の強さ（max/xhigh）が基準。原表の注: Fable 5 の結果は潜在的なフォールバックを含み、GPT-5.6 Sol の結果は潜在的なサイバーガードを含む。</p>
+
+<h4>人が直接選んだ 1 位: ウェブの画面づくり</h4>
+<p><strong>LMArena</strong> は変わった試験場です。問題を出してふたつのモデルの答えを<strong>名前を伏せたまま並べて見せ、人がよいほうへ投票</strong>します。その勝ち負けをチェスのランキングのように点数（Elo）へ積み上げるのです。ウェブの画面（フロントエンド）を作ってみせる <strong>Frontend Code Arena</strong> で、K3 は <strong>1,679 点で 1 位</strong> — Claude Fable 5 を抜きました。前作の K2.6 が 18 位でしたから<strong>一世代で 17 段</strong>跳び、7 つの細目のうち 6 つで 1 位（ゲームの分野だけ Fable 5 に次ぐ 2 位）でした。同じ問題でぶつかったとき K3 の答えが選ばれた割合（勝率）は平均 <strong>76%</strong> — 100 回やれば 76 回勝ったという意味です。</p>
+<p>文章を書くのも強いのです。実際の台本を目隠しで採点するある作文のリーダーボード（運営者 Louie）で <strong>2,840 Elo の 1 位</strong>に立ちましたが、公開のモデルがこのボードで 1 位を取ったのははじめてです（前作は 21 位）。実務の課題を中心に評価する <strong>Vals Index</strong> でも 38 のモデルのうち <strong>2 位（74.7%）</strong>でした。</p>
+
+<h3>ちょっと待って — 自分で付けた点数をそのまま信じてはいけません</h3>
+<div class="note warn">
+    <span class="nh">同じモデル、同じ試験で 7 点の差</span>
+    上の表の Terminal-Bench 88.3 点は <strong>Moonshot が自分で測った</strong>点数です。ところが評価機関の Vals が<strong>独立に測り直すとおよそ 80.9 点</strong>でした。ごまかしというより、モデルにどんな道具を持たせてどんな設定で試験させたか — つまり<strong>&lsquo;ハーネス&rsquo;（モデルを包む実行の環境）</strong> — が違ったからです。同じドライバーでも車が違えばラップタイムが変わるのと同じです。教訓: <strong>AI の成績表はいつも&ldquo;誰が、どんな条件で測ったか&rdquo;を一緒に見なければなりません。</strong>
+</div>
+
+<h3>価格 — なぜみんな&ldquo;コスパ&rdquo;を語るのか</h3>
+<p>AI モデルの API は<strong>トークンの数だけ料金を払う</strong>従量制です。質問（入力）と答え（出力）にそれぞれ値が付きます。</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>項目</th><th>価格（100 万トークンあたり）</th></tr></thead>
+    <tbody>
+        <tr><td>入力</td><td>$3.00</td></tr>
+        <tr><td>入力 — キャッシュヒット</td><td>$0.30 <span class="scn-sub">（同じ内容をくり返し送るとき自動で 90% 割引）</span></td></tr>
+        <tr><td>出力</td><td>$15.00</td></tr>
+    </tbody>
+</table>
+</div>
+<p>この価格の意味は比べてはじめて見えます。業界のまとめでは<strong>&ldquo;Opus 4.8 級の性能を Sonnet 5 の価格帯で&rdquo;</strong> — つまり最上級のモデルの実力を一段階下の等級の値で売る、ということです（Latent.space）。しかも 100 万トークンの長い文書を入れても<strong>追加の割増がありません</strong>。逆側の解釈もあります: 前作の K2 よりは値が大きく上がったので、&ldquo;<strong>超低価格の中国 AI の時代は終わった</strong>&rdquo;という合図として読む見方です（The Decoder）。どちらも事実の両面です — <strong>1 位圏より安く、かつての中国の公開のモデルより高い</strong>のです。</p>
+
+<h3>何を作れるのか — 公式のデモ</h3>
+<p>Moonshot のショーケースは&ldquo;一度指示して終わる仕事&rdquo;より<strong>長期の自律の作業</strong> — 人が仕事を任せて席を離れても、何時間から何日かをひとりで計画し、作り、結果を確かめながら直していくやり方 — に焦点があります。</p>
+<ul>
+    <li><strong>半導体チップの設計</strong> — 24〜48 時間をひとりで回り、公開の設計の道具で小さな AI 専用のチップを設計し、検証まで終えました（4mm² の面積、シミュレーションで毎秒 8,700 トークンの処理）。AI が&ldquo;AI を動かすチップ&rdquo;を設計したわけです。</li>
+    <li><strong>科学のデータの分析</strong> — 重力波（ブラックホールの衝突などが作る時空のさざ波）の観測イベント 391 件を、<strong>サブエージェント</strong>（本体が使う補助の AI の働き手）20 個ほどを同時に使って分析し、可視化 7 種と論文 10 編ほどの要約を作り出しました。</li>
+    <li><strong>ゲーム・3D</strong> — 武侠のオープンワールド RPG、コロッセウム、格闘ゲーム、ゲームボーイのエミュレータ、部品が分解される 3D のタイプライター、ブラックホールのシミュレーションなどをブラウザ向けに制作。とくに<strong>自分が作った画面をスクリーンショットに撮って目で確かめて直す</strong> — 人の開発者と同じ — フィードバックのループを使います。</li>
+    <li><strong>モーショングラフィックス・映像</strong> — 文・画像・映像をひとつのモデルがまとめて扱う構造なので、自分のアーキテクチャを説明するアニメーションの映像のようなものも作りました。</li>
+</ul>
+
+<h4>カーネルの最適化 — 自分の体をなすコードを自分で速く</h4>
+<p>ショーケースのなかで開発者がいちばん注目したのが <strong>GPU のカーネルの最適化</strong>です。カーネルとは GPU で回る<strong>小さく中心的な計算のプログラム</strong>で、AI モデルの速さは結局このカーネルがどれだけ速いかで決まります。実験の設計はこうです — それぞれのモデルを<strong>まったく同じサンドボックス</strong>に入れ、<strong>カーネルの課題 4 種</strong>（AttnRes・DSA・512-head MLA・KDA）を<strong>最大 24 時間かけて自分で</strong>プロファイリング・書き直し・ベンチマークさせました（NVIDIA H200 と他社の GPGPU）。結果は<strong>4 つの課題のうち 3 つで K3 が 1 位</strong>、DSA でだけ Claude Fable 5 が 1 位でした。とくに AttnRes の課題では、順伝播 + 逆伝播の 1 回が <strong>283.6ms → 114.4ms</strong> に縮みました — 自分のアーキテクチャ（AttnRes・KDA）をなすコードを自分で最適化したわけです。</p>
+
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>モデル</th><th>AttnRes</th><th>DSA</th><th>MLA-512</th><th>KDA-GPGPU</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Kimi K3</strong></td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>+59.7%</strong></td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:96.2%"></span></span>+55.1%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>518 TF</strong></td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>+73.6%</strong></td></tr>
+        <tr><td>Claude Fable 5</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:95.6%"></span></span>+57.1%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>+57.3%</strong></td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:95.2%"></span></span>493 TF</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:76.8%"></span></span>+56.5%</td></tr>
+        <tr><td>GPT-5.6 Sol</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:29%"></span></span>+17.3%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:85.3%"></span></span>+48.9%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:69.9%"></span></span>362 TF</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:90.6%"></span></span>+66.7%</td></tr>
+        <tr><td>Claude Opus 4.8</td>
+            <td>—</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:76.1%"></span></span>+43.6%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:76.1%"></span></span>394 TF</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:77.4%"></span></span>+57.0%</td></tr>
+        <tr><td>GPT-5.5</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:51.6%"></span></span>+30.8%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:66.7%"></span></span>+38.2%</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:74.5%"></span></span>386 TF</td>
+            <td>—</td></tr>
+    </tbody>
+</table>
+</div>
+<p class="scn-sub">数値は Moonshot 公式のテックブログのインタラクティブなチャート（Active hours ごとの新記録の軌跡）の最終の記録をそのまま移したもの。AttnRes・DSA・KDA-GPGPU は <strong>FLA Triton のベースライン比の速度の向上（%）</strong>、MLA-512 は<strong>達成した TFLOPS（順 + 逆伝播）</strong>、KDA-GPGPU は非 NVIDIA の他社の GPGPU で測定。&lsquo;—&rsquo;は原チャートに未記載。棒は課題（列）ごとの 1 位に対する比率で、表が現れるときに満ちていきます。別途オープンソースとして公開された FlashKDA のカーネルは、H20 の GPU でプリフィルを <strong>1.72〜2.22 倍</strong>に加速しました。</p>
+<div class="note">
+    <span class="nh">読み方</span>
+    上の事例はすべて <strong>Moonshot 自社の宣伝のためのショーケース</strong>です。成果物が実際に公開されてはいますが、第三者が再現・検証した結果ではないので、&ldquo;こういう方向の仕事（時間のかかる自律の作業）をさせられるようになった&rdquo;くらいに読むのが正確です。</div>
+
+<h3>世の中の反応</h3>
+<ul>
+    <li><strong>&ldquo;追いかける時代は終わった&rdquo;</strong> — OpenAI の研究者 roon は&ldquo;中国の研究所がずっと後れていた時代は終わった。Kimi は少なくともいまの公開の 1 位圏のモデルと対等だ&rdquo;と評しました。ただし&ldquo;使ってみると今日の成績表が示すほどには役立たないと感じる人も出るだろう&rdquo;という但し書きも付けています。</li>
+    <li><strong>安全への心配</strong> — 閉じたモデルは問題が起きれば会社が遮断できますが、<strong>オープンウェイトは一度出たら回収できません</strong>。そこで&ldquo;これほど強いモデルを公開してよいのか、とくにハッキング（サイバー攻撃）の能力はどの程度か&rdquo;がすぐに争点になりました。公開された成績表にサイバーの能力の試験（CyberGym）の点数が<strong>抜けている</strong>という指摘とともに、英国 AI 安全研究所（AISI）などの独立した評価を求める声が出ましたし、&ldquo;過度な恐れは要らない&rdquo;という反論（Transformer）もあります。</li>
+    <li><strong>株式市場まで揺れた</strong> — &ldquo;高い有料のモデルと巨大なインフラにお金が集まる&rdquo;という見通しの上に立っていた半導体・AI 関連の株価が、公開の直後に急落したという報道が続きました。2025 年の初めに低価格の中国のモデル DeepSeek が市場を揺らした&lsquo;DeepSeek ショック&rsquo;の再演だという評価です。</li>
+</ul>
+
+<h3>付録 — 価格で見る使いやすさ: ChatGPT・Claude との比較</h3>
+<p>実際に使うときに体感するのは結局ふたつの価格です — 開発者が払う <strong>API の料金</strong>（トークンあたり）と、一般の利用者が払う<strong>アプリの購読料</strong>（月額）。2026-07-19 の時点で、各社の公式の価格の文書と複数の価格の追跡サイトを突き合わせて確認した数値です。</p>
+
+<h4>API の料金（100 万トークンあたり、USD）</h4>
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>モデル</th><th>入力</th><th>出力 <span class="scn-sub">（棒: 短いほど安い）</span></th><th>備考</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Kimi K3</strong></td><td>$3.00</td><td><span class="cmp-bar"><span class="cmp-fill accent" style="--w:30%"></span></span><strong>$15.00</strong></td><td>キャッシュヒットの入力 $0.30 · 100 万トークンのコンテキストに<strong>割増なし</strong></td></tr>
+        <tr><td>Claude Sonnet 5</td><td>$2.00*</td><td><span class="cmp-bar"><span class="cmp-fill" style="--w:20%"></span></span>$10.00*</td><td>*2026-08-31 までの期間限定の価格、以後は $3/$15</td></tr>
+        <tr><td>Claude Opus 4.8</td><td>$5.00</td><td><span class="cmp-bar"><span class="cmp-fill" style="--w:50%"></span></span>$25.00</td><td>—</td></tr>
+        <tr><td>GPT-5.6 Sol</td><td>$5.00</td><td><span class="cmp-bar"><span class="cmp-fill" style="--w:60%"></span></span>$30.00</td><td>入力が 272K を超える要求は $10/$45 に割増</td></tr>
+        <tr><td>Claude Fable 5</td><td>$10.00</td><td><span class="cmp-bar"><span class="cmp-fill" style="--w:100%"></span></span>$50.00</td><td>—</td></tr>
+    </tbody>
+</table>
+</div>
+<p>読み方: K3 の出力の単価は <strong>GPT-5.6 Sol の半分、Claude Fable 5 の 30%</strong> であり、Claude の中級のモデル Sonnet 5 の<strong>標準の価格（$3/$15）とちょうど同じ</strong>です — &ldquo;Opus 級の性能を Sonnet の価格で&rdquo;という業界の評はここから来ます。長い文書の作業では差がさらに開きます: K3 は 100 万トークンまで同じ単価ですが、GPT-5.6 Sol は 272K を超える要求から値がほぼ倍に跳ねます。</p>
+
+<h4>アプリの購読料（月, USD）</h4>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>サービス</th><th>無料</th><th>標準</th><th>上位</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Kimi</strong></td><td>Adagio — <strong>K3 を含む</strong>、無制限の標準チャット・ディープリサーチ</td><td>Moderato $19 · Allegretto $39</td><td>Allegro $99 · Vivace $199</td></tr>
+        <tr><td>ChatGPT (OpenAI)</td><td>無料ティア</td><td>Go $8 · Plus $20</td><td>Pro $100 · Pro $200（Sora・Operator を含む）</td></tr>
+        <tr><td>Claude (Anthropic)</td><td>無料ティア</td><td>Pro $20</td><td>Max $100（Pro の 5 倍） · Max $200（20 倍）</td></tr>
+    </tbody>
+</table>
+</div>
+<div class="note">
+    <span class="nh">比べるときの注意</span>
+    価格表だけで&ldquo;どちらが安いか&rdquo;を断ずるのは難しいのです。ティアごとに<strong>使用量の上限・同時の要求の制限・付加の機能</strong>（映像の生成、エージェント、コーディングの CLI など）が違い、Sonnet 5 は期間限定の価格で、購読料は API とは別の課金です。ただ方向ははっきりしています — <strong>無料ティアに最新のフラッグシップ（K3）を含めた</strong> Kimi の構成は 3 社のなかでいちばん攻撃的で、これが&ldquo;フロンティア級の知能の価格破壊&rdquo;という今回の公開の物語を完成させます。
+</div>
+
+<h3>事実検証のノート — 訂正・除外したもの</h3>
+<div class="note warn">
+    <span class="nh">初期のレビューやコミュニティに広がった記述のうち訂正・除外したもの</span>
+    · <strong>&ldquo;3 兆パラメータ&rdquo;</strong> → 公式と報道が一致する数値は <strong>2.8 兆（2.8T）</strong>（本文に反映）<br>
+    · <strong>&ldquo;重みはすでにウェブで公開されている&rdquo;</strong> → 公開の<strong>予定</strong>（2026-07-27）、執筆の時点では API のみ<br>
+    · <strong>&ldquo;GDPval は OpenAI が作ったベンチマーク&rdquo;</strong> → 本文が引いたのは Artificial Analysis が運営する変種（<strong>GDPval-AA v2</strong>）<br>
+    · <strong>除外（突き合わせ検証に失敗）</strong>: ある利用者の&ldquo;CSGO クローン $324&rdquo;の事例、&ldquo;知能の単位あたり $0.94 vs Opus $1.80&rdquo;という費用の指標、Meta の&ldquo;Muse Spark&rdquo;への言及、競合のモデルの勝率 58% という数値、個別のデバッグの失敗のツイート — 複数の独立した出典で確認できず、載せませんでした。
+</div>
+
+<h3>出典</h3>
+<p class="scn-sub"><strong>公式</strong></p>
+<ul>
+    <li>Moonshot AI, &ldquo;Kimi K3 Tech Blog: Open Frontier Intelligence&rdquo; — <a href="https://www.kimi.com/blog/kimi-k3" target="_blank" rel="noopener">kimi.com/blog/kimi-k3</a></li>
+    <li>Kimi API Platform — K3 のクイックスタート・価格 — <a href="https://platform.kimi.ai/docs/guide/kimi-k3-quickstart" target="_blank" rel="noopener">platform.kimi.ai (quickstart)</a> · <a href="https://platform.kimi.ai/docs/pricing/chat" target="_blank" rel="noopener">platform.kimi.ai (pricing)</a></li>
+    <li>Kimi_Moonshot, KDA・AttnRes の公式 X スレッド — <a href="https://x.com/Kimi_Moonshot/status/2077830234955816983" target="_blank" rel="noopener">x.com/Kimi_Moonshot</a></li>
+</ul>
+<p class="scn-sub"><strong>指数・リーダーボード</strong></p>
+<ul>
+    <li>Artificial Analysis, &ldquo;Kimi K3 achieves #3 in the Artificial Analysis Intelligence Index&rdquo; — <a href="https://artificialanalysis.ai/articles/kimi-k3-achieves-3-in-the-artificial-analysis-intelligence-index-comparable-to-opus-4-8-and-gpt-5-5" target="_blank" rel="noopener">artificialanalysis.ai</a> · <a href="https://artificialanalysis.ai/models/kimi-k3" target="_blank" rel="noopener">モデルのページ</a></li>
+    <li>Arena.ai, Frontend Code Arena 1 位の告知・76% の勝率 — <a href="https://x.com/arena/status/2077824029126504525" target="_blank" rel="noopener">x.com/arena (1 位)</a> · <a href="https://x.com/arena/status/2077893862778183737" target="_blank" rel="noopener">x.com/arena (勝率)</a></li>
+    <li>NxCode, &ldquo;Kimi K3 Benchmarks Explained&rdquo; — Vals の独立した再現・コーディングのベンチのまとめ — <a href="https://www.nxcode.io/resources/news/kimi-k3-benchmarks-coding-agent-evaluation-guide-2026" target="_blank" rel="noopener">nxcode.io</a></li>
+</ul>
+<p class="scn-sub"><strong>報道・分析</strong></p>
+<ul>
+    <li>VentureBeat — <a href="https://venturebeat.com/technology/chinas-moonshot-ai-releases-kimi-k3-the-largest-open-source-model-ever-rivaling-top-u-s-systems" target="_blank" rel="noopener">歴代最大のオープンソースのモデルを公開</a></li>
+    <li>Fortune — <a href="https://fortune.com/2026/07/16/moonshots-kimi-k3-pushes-chinese-ai-into-fable-level-territory/" target="_blank" rel="noopener">中国の AI、Fable 級の領域へ</a></li>
+    <li>Tom&rsquo;s Hardware — <a href="https://www.tomshardware.com/tech-industry/artificial-intelligence/moonshot-releases-2-8-trillion-parameter-kimi-k3" target="_blank" rel="noopener">2.8T パラメータ・計算の制約の迂回</a></li>
+    <li>The Decoder — <a href="https://the-decoder.com/kimis-open-model-k3-nears-gpt-5-6-sol-and-fable-5-while-signaling-the-end-of-super-cheap-chinese-ai/" target="_blank" rel="noopener">超低価格の中国 AI の終わり</a></li>
+    <li>Latent.space AINews — <a href="https://www.latent.space/p/ainews-kimi-k3-28t-a50b-the-largest" target="_blank" rel="noopener">2.8T-A50B・作文のベンチマーク</a></li>
+    <li>Simon Willison — <a href="https://simonwillison.net/2026/Jul/16/kimi-k3/" target="_blank" rel="noopener">Kimi K3 のノート</a></li>
+    <li>Ken Huang — <a href="https://kenhuangus.substack.com/p/demystifying-kimi-k3-how-chinas-28t" target="_blank" rel="noopener">Demystifying Kimi K3（カーネルの最適化の実験の詳細）</a></li>
+    <li>WCCFTech — <a href="https://wccftech.com/kimi-k3-built-a-chip-in-48-hours-over-8700-tokens-s-as-china-delivers-2-8-trillion-ai-model/" target="_blank" rel="noopener">48 時間のチップ設計のデモ</a></li>
+</ul>
+<p class="scn-sub"><strong>価格（付録の比較表）</strong></p>
+<ul>
+    <li>Anthropic 公式の価格の文書 — <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">platform.claude.com (API)</a> · <a href="https://claude.com/pricing" target="_blank" rel="noopener">claude.com/pricing (購読)</a></li>
+    <li>OpenAI GPT-5.6 の価格 — <a href="https://openrouter.ai/openai/gpt-5.6-sol" target="_blank" rel="noopener">OpenRouter (Sol)</a> · <a href="https://benchlm.ai/openai/api-pricing" target="_blank" rel="noopener">BenchLM の集計</a> · <a href="https://www.aipricing.guru/chatgpt-subscription-pricing/" target="_blank" rel="noopener">購読ティアの集計</a></li>
+    <li>Kimi のメンバーシップ・API — <a href="https://www.kimi.com/help/membership/membership-pricing" target="_blank" rel="noopener">kimi.com（メンバーシップ公式）</a> · <a href="https://www.eesel.ai/blog/kimi-k3-pricing" target="_blank" rel="noopener">eesel（ティアのまとめ）</a></li>
+</ul>
+<p class="scn-sub"><strong>反応・波及</strong></p>
+<ul>
+    <li>prinz(X) — CyberGym の点数の欠落を指摘 — <a href="https://x.com/deredleritt3r/status/2077846199768424785" target="_blank" rel="noopener">x.com/deredleritt3r</a></li>
+    <li>Dan McAteer(X) — サイバーのリスクの評価 — <a href="https://x.com/daniel_mac8/status/2077861850868322645" target="_blank" rel="noopener">x.com/daniel_mac8</a></li>
+    <li>Transformer — <a href="https://www.transformernews.ai/p/kimi-k3-is-no-reason-for-china-panic-export-controls-xi-jingping" target="_blank" rel="noopener">&ldquo;チャイナパニックは不要&rdquo;という反論</a></li>
+    <li>Yahoo Finance — <a href="https://finance.yahoo.com/technology/ai/articles/china-kimi-k3-hits-us-225728395.html" target="_blank" rel="noopener">米国の株式市場の反応</a> · BankInfoSecurity — <a href="https://www.bankinfosecurity.com/chinas-kimi-k3-triggers-chip-stocks-into-bear-market-a-32263" target="_blank" rel="noopener">チップ関連株の急落</a></li>
+</ul>
+
+<div class="note">
+    <span class="nh">この文書の態度</span>
+    数値はすべて上の出典で突き合わせて検証できたものだけを載せ、自己申告と独立した再現が異なるところ（Terminal-Bench）は<strong>両方を並べて</strong>書きました。この文書自体も原文のページを直接閲覧できない環境で、検索による突き合わせ検証で書かれたものなので、細かな数値を引くときはリンクの原文をもう一度確かめることをお勧めします。
+</div>

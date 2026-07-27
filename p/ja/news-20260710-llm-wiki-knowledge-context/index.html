@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LLM Wiki とナレッジコンテキスト — 書き込みの時点でコンパイルするチームの知識</title>
+<meta name="description" content="セミナーの発表を、元の出典の確認と図とともに分析する — カルパシーの LLM Wiki（書き込みの時点のコンパイル vs RAG）、Obsidian + Git のチームの実装の昇格のフロー、OpenViking の階層の読み込み、人とエージェントのガバナンス。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/news-20260710-llm-wiki-knowledge-context/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260710-llm-wiki-knowledge-context/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260710-llm-wiki-knowledge-context/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/news-20260710-llm-wiki-knowledge-context/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260710-llm-wiki-knowledge-context/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LLM Wiki とナレッジコンテキスト — 書き込みの時点でコンパイルするチームの知識">
+<meta property="og:description" content="セミナーの発表を、元の出典の確認と図とともに分析する — カルパシーの LLM Wiki（書き込みの時点のコンパイル vs RAG）、Obsidian + Git のチームの実装の昇格のフロー、OpenViking の階層の読み込み、人とエージェントのガバナンス。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/news-20260710-llm-wiki-knowledge-context/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LLM Wiki とナレッジコンテキスト — 書き込みの時点でコンパイルするチームの知識">
+<meta name="twitter:description" content="セミナーの発表を、元の出典の確認と図とともに分析する — カルパシーの LLM Wiki（書き込みの時点のコンパイル vs RAG）、Obsidian + Git のチームの実装の昇格のフロー、OpenViking の階層の読み込み、人とエージェントのガバナンス。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "LLM Wiki とナレッジコンテキスト — 書き込みの時点でコンパイルするチームの知識",
+ "description": "セミナーの発表を、元の出典の確認と図とともに分析する — カルパシーの LLM Wiki（書き込みの時点のコンパイル vs RAG）、Obsidian + Git のチームの実装の昇格のフロー、OpenViking の階層の読み込み、人とエージェントのガバナンス。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/news-20260710-llm-wiki-knowledge-context/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260710-llm-wiki-knowledge-context",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-10T09:13:02+09:00",
+ "dateModified": "2026-07-10T09:13:02+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260710-llm-wiki-knowledge-context">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/news-20260710-llm-wiki-knowledge-context/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/news-20260710-llm-wiki-knowledge-context/" hreflang="en">English</a>
+</p>
+<article>
+<h2>LLM Wiki とナレッジコンテキスト — 書き込みの時点でコンパイルするチームの知識</h2>
+<p>LLM Wiki を主題にしたセミナーの発表を分析した文書です。発表は<strong>カルパシー（Andrej Karpathy）の LLM Wiki の提案</strong>から出発し、発表者のチームが実際に運用している<strong>&ldquo;ナレッジコンテキスト&rdquo;</strong>（Obsidian のボールト + Git リポジトリ）の実装、規模が大きくなって出会った<strong>索引の膨張の問題と OpenViking の導入</strong>、そして<strong>人とエージェントの役割を分けたガバナンス</strong>までを扱います。発表の内容をそのまま移す代わりに、言及された道具・提案の<strong>元の出典（カルパシーの gist・GitHub リポジトリ・公式の文書）をウェブで確認して根拠を補い</strong>、中心の過程を図に整理しました。</p>
+
+<div class="note">
+    <span class="nh">扱った内容と根拠の確認</span>
+    · 素材: 社内セミナーの発表&ldquo;LLM Wiki とナレッジコンテキスト&rdquo;（2026-07）<br>
+    · 根拠の補強: カルパシーの LLM Wiki の gist、<strong>volcengine/OpenViking</strong>（GitHub・公式の文書）、<strong>kepano/obsidian-skills</strong>（GitHub）を直接確認 — リンクは文書の末尾の出典の節に。<br>
+    · このウィキの <a href="/p/ja/llmw-overview/">LLM Wiki — 概要</a>の講義シリーズ、<a href="/p/ja/sb-level2/">セカンドブレイン レベル 2</a> と同じ主題の系譜の文書です。
+</div>
+
+<h3>① 問題 — 知識はあるのに、毎回また説明する</h3>
+<p>発表が挙げた出発点はよく見る風景です。チームの知識がチャットのログ・文書・個人のメモに散らばっていて、新しいメンバーが来るたび、エージェントに仕事をさせるたびに<strong>同じ文脈を最初から説明し直します</strong>。共有の文書は&ldquo;最終&rdquo;、&ldquo;本当に最終&rdquo;の写しが増えてどれが現行かわからなくなり（Google ドキュメント式の写しの増殖）、いちばん値打ちのある<strong>暗黙知</strong> — なぜそう決めたのか、どんな試みが失敗したのか — は記録されないまま人の頭の中だけに残ります。LLM の時代には、この費用は<strong>トークンでも請求</strong>されます: エージェントを呼ぶたびに同じ背景の説明を文脈へ注ぎ直すことになるからです。</p>
+
+<h3>② RAG と LLM Wiki — 読みの時点の検索 vs 書き込みの時点のコンパイル</h3>
+<p>この問題への通常の答えが RAG（検索拡張生成）です。文書を断片（チャンク）にして埋め込んでおき、<strong>質問が来た瞬間</strong>に似た断片を探して文脈へ差し込むやり方 — つまり知識の整理を<strong>読み（質問）の時点</strong>へ先送りします。カルパシーが提案した LLM Wiki は方向をひっくり返します。資料が<strong>入ってくる時点</strong>で LLM が読んで整理・統合し、人が読めるウィキの文書にしておけば、質問の時点では検索のパイプラインなしに<strong>ただその文書を読めば</strong>よいのです。カルパシーはこれをコンパイラにたとえます — 元の資料がソースコード、LLM がコンパイラ、ウィキが実行の成果物であり、RAG が実行のたびにソースを探し直すインタプリタだとすれば、LLM Wiki は<strong>あらかじめコンパイルしておく</strong>ほうです。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 330" role="img" aria-label="RAG は質問の時点で断片を検索して注入し、LLM Wiki は書き込みの時点で LLM がコンパイルしておいたウィキを質問の時点でただ読む">
+    <text class="d-label sm" x="360" y="26" text-anchor="middle">RAG — 読み（質問）の時点の検索</text>
+    <rect class="d-box soft" x="16" y="44" width="110" height="48" rx="9"/><text class="d-label sm" x="71" y="65" text-anchor="middle">元の文書</text><text class="d-sub" x="71" y="81" text-anchor="middle">そのまま保存</text>
+    <line class="d-edge" x1="126" y1="68" x2="150" y2="68"/><polygon class="d-arrow" points="150,63 158,68 150,73"/>
+    <rect class="d-box" x="158" y="44" width="110" height="48" rx="9"/><text class="d-label sm" x="213" y="65" text-anchor="middle">チャンク埋込</text><text class="d-sub" x="213" y="81" text-anchor="middle">索引だけ準備</text>
+    <line class="d-edge" x1="268" y1="68" x2="292" y2="68"/><polygon class="d-arrow" points="292,63 300,68 292,73"/>
+    <rect class="d-box" x="300" y="44" width="110" height="48" rx="9"/><text class="d-label sm" x="355" y="65" text-anchor="middle">質問 &#8594; 検索</text><text class="d-sub" x="355" y="81" text-anchor="middle">似た断片 topK</text>
+    <line class="d-edge" x1="410" y1="68" x2="434" y2="68"/><polygon class="d-arrow" points="434,63 442,68 434,73"/>
+    <rect class="d-box" x="442" y="44" width="110" height="48" rx="9"/><text class="d-label sm" x="497" y="65" text-anchor="middle">文脈へ注入</text><text class="d-sub" x="497" y="81" text-anchor="middle">断片をつなぐ</text>
+    <line class="d-edge" x1="552" y1="68" x2="576" y2="68"/><polygon class="d-arrow" points="576,63 584,68 576,73"/>
+    <rect class="d-box soft" x="584" y="44" width="110" height="48" rx="9"/><text class="d-label sm" x="639" y="65" text-anchor="middle">回答</text><text class="d-sub" x="639" y="81" text-anchor="middle">質問ごとに反復</text>
+    <text class="d-sub" x="360" y="118" text-anchor="middle">整理を質問の時点へ先送り — 断片化した文脈、パイプラインが常時必要</text>
+
+    <line class="d-edge dash" x1="30" y1="146" x2="690" y2="146"/>
+
+    <text class="d-label sm" x="360" y="180" text-anchor="middle">LLM Wiki — 書き込みの時点のコンパイル</text>
+    <rect class="d-box soft" x="16" y="198" width="110" height="48" rx="9"/><text class="d-label sm" x="71" y="219" text-anchor="middle">元の資料</text><text class="d-sub" x="71" y="235" text-anchor="middle">不変で保管</text>
+    <line class="d-edge accent" x1="126" y1="222" x2="150" y2="222"/><polygon class="d-arrow accent" points="150,217 158,222 150,227"/>
+    <rect class="d-box accent" x="158" y="198" width="110" height="48" rx="9"/><text class="d-label sm" x="213" y="219" text-anchor="middle">LLM コンパイル</text><text class="d-sub" x="213" y="235" text-anchor="middle">整理・統合・連結</text>
+    <line class="d-edge accent" x1="268" y1="222" x2="292" y2="222"/><polygon class="d-arrow accent" points="292,217 300,222 292,227"/>
+    <rect class="d-box" x="300" y="198" width="110" height="48" rx="9"/><text class="d-label sm" x="355" y="219" text-anchor="middle">ウィキ文書</text><text class="d-sub" x="355" y="235" text-anchor="middle">人も読める *.md</text>
+    <line class="d-edge" x1="410" y1="222" x2="434" y2="222"/><polygon class="d-arrow" points="434,217 442,222 434,227"/>
+    <rect class="d-box" x="442" y="198" width="110" height="48" rx="9"/><text class="d-label sm" x="497" y="219" text-anchor="middle">質問 &#8594; 読む</text><text class="d-sub" x="497" y="235" text-anchor="middle">検索なしで丸ごと</text>
+    <line class="d-edge" x1="552" y1="222" x2="576" y2="222"/><polygon class="d-arrow" points="576,217 584,222 576,227"/>
+    <rect class="d-box soft" x="584" y="198" width="110" height="48" rx="9"/><text class="d-label sm" x="639" y="219" text-anchor="middle">回答</text><text class="d-sub" x="639" y="235" text-anchor="middle">整理はもう済み</text>
+    <text class="d-sub" x="360" y="272" text-anchor="middle">整理を書き込みの時点で終える — コンパイルの費用は一度、読みは安くくり返す</text>
+    <text class="d-sub" x="360" y="306" text-anchor="middle">カルパシーの比喩: 元＝ソースコード · LLM＝コンパイラ · ウィキ＝成果物 · lint＝テスト</text>
+</svg>
+<div class="d-cap">同じ知識、違う時点 — RAG は<strong>質問のたびに</strong>探し、LLM Wiki は<strong>入ってきたときに一度</strong>整理する。</div>
+</div>
+
+<div class="tbl-wrap"><table>
+    <thead><tr><th></th><th>RAG（読みの時点の検索）</th><th>LLM Wiki（書き込みの時点のコンパイル）</th></tr></thead>
+    <tbody>
+        <tr><td>整理の時点</td><td>質問の瞬間（そのつど）</td><td>資料が入るとき（あらかじめ一度）</td></tr>
+        <tr><td>質問の費用</td><td>検索のパイプライン + 断片の注入のくり返し</td><td>文書を読む（パイプラインは不要）</td></tr>
+        <tr><td>知識の形</td><td>断片（チャンク） — 人には読みにくい</td><td>統合された文書 — 人と LLM の共用</td></tr>
+        <tr><td>一貫性</td><td>断片どうしの矛盾に気づきにくい</td><td>コンパイル・lint の段階で統合・点検</td></tr>
+        <tr><td>合う場所</td><td>膨大で頻度が低く、原文の引用が大事な資料</td><td>チームがくり返し使う生きた知識</td></tr>
+    </tbody>
+</table></div>
+<p class="scn-sub">ふたつは排他的ではありません — 発表も&ldquo;よく使う中心の知識はウィキへコンパイル、膨大な原文は検索で&rdquo;という併用を前提にしています。</p>
+
+<h3>③ カルパシーの LLM Wiki — 3 層の構造と index.md・log.md</h3>
+<p>カルパシーが gist で公開した提案の骨組みは<strong>3 層の構造</strong>です。いちばん下に<strong>元のソース</strong>（入ってきた資料を原文のまま、不変で保管）、その上に LLM が元を読んで概念の単位のマークダウンとして保守する<strong>ウィキのレイヤー</strong>（人は読み取り専用 — 直したければ元の層に資料を入れてまたコンパイルさせる）、そしてこのすべての動作を定める<strong>スキーマのレイヤー</strong>（CLAUDE.md・AGENTS.md 類の規約: 文書の形式、命名、連結の規則）です。ここに管理のファイルがふたつ付きます — 全項目の目次である <code>index.md</code>、そしてすべての変更を <code>## [日付] 動作 | 対象</code> の形式で追記していくだけの <code>log.md</code>。運用の動作は <strong>ingest</strong>（新しい資料のコンパイル） · <strong>query</strong>（質問への応答） · <strong>lint</strong>（ウィキ全体の矛盾・壊れたリンクの点検）の三つに整理されます。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 320" role="img" aria-label="カルパシーの LLM Wiki の 3 層の構造: 元のソースを LLM が ingest でコンパイルしてウィキのレイヤーを作り、スキーマの規約がこれを統制し、index.md と log.md が目次と履歴を担い、lint が一貫性を点検し query で読む">
+    <rect class="d-box soft" x="60" y="20" width="250" height="44" rx="9"/><text class="d-label sm" x="185" y="39" text-anchor="middle">問い合わせ — 人・エージェント</text><text class="d-sub" x="185" y="55" text-anchor="middle">query: ウィキを読んで答える</text>
+    <line class="d-edge" x1="185" y1="106" x2="185" y2="72"/><polygon class="d-arrow" points="181,74 185,66 189,74"/>
+    <rect class="d-box accent" x="60" y="106" width="250" height="76" rx="12"/><text class="d-label" x="185" y="138" text-anchor="middle">ウィキのレイヤー (*.md)</text><text class="d-sub" x="185" y="158" text-anchor="middle">概念の単位 · LLM が保守</text><text class="d-sub" x="185" y="172" text-anchor="middle">人は読み取り専用</text>
+    <path class="d-edge accent" d="M60 128 C18 132, 18 162, 58 160"/><polygon class="d-arrow accent" points="64,156 56,161 63,166"/>
+    <text class="d-sub" x="30" y="196" text-anchor="middle">lint 点検</text>
+    <line class="d-edge accent" x1="185" y1="240" x2="185" y2="190"/><polygon class="d-arrow accent" points="181,192 185,184 189,192"/>
+    <text class="d-sub" x="248" y="220" text-anchor="middle">ingest — LLM がコンパイル</text>
+    <rect class="d-box soft" x="60" y="240" width="250" height="56" rx="9"/><text class="d-label sm" x="185" y="263" text-anchor="middle">元のソース (sources/)</text><text class="d-sub" x="185" y="281" text-anchor="middle">原文のまま · 不変 · 人が投入</text>
+
+    <rect class="d-box" x="440" y="106" width="240" height="76" rx="12"/><text class="d-label" x="560" y="138" text-anchor="middle">スキーマのレイヤー</text><text class="d-sub" x="560" y="158" text-anchor="middle">CLAUDE.md · AGENTS.md の規約</text><text class="d-sub" x="560" y="172" text-anchor="middle">形式・命名・連結の規則</text>
+    <line class="d-edge dash" x1="440" y1="144" x2="318" y2="144"/><polygon class="d-arrow" points="320,140 312,144 320,148"/>
+    <text class="d-sub" x="379" y="134" text-anchor="middle">規約が統制</text>
+
+    <rect class="d-box" x="440" y="216" width="115" height="52" rx="9"/><text class="d-label sm" x="497" y="238" text-anchor="middle">index.md</text><text class="d-sub" x="497" y="256" text-anchor="middle">全体の目次</text>
+    <rect class="d-box" x="565" y="216" width="115" height="52" rx="9"/><text class="d-label sm" x="622" y="238" text-anchor="middle">log.md</text><text class="d-sub" x="622" y="256" text-anchor="middle">追加のみの履歴</text>
+    <line class="d-edge dash" x1="497" y1="216" x2="330" y2="168"/><polygon class="d-arrow" points="335,164 322,166 331,172"/>
+    <text class="d-sub" x="560" y="296" text-anchor="middle">すべての動作を &#35;&#35; [日付] 動作 | 対象 で記録</text>
+</svg>
+<div class="d-cap">3 層の構造: <strong>元は不変</strong>、<strong>ウィキは LLM が管理</strong>、<strong>スキーマが規約を強制</strong> — index.md・log.md が目次と履歴を担う。</div>
+</div>
+
+<div class="note">
+    <span class="nh">このウィキとの接点</span>
+    いま見ているこのウィキが、まさにこの構造の変形です — 本文（HTML のフラグメント）がウィキのレイヤー、<code>list</code>・知識インデックスが index.md の役、Work Log が log.md の役、CLAUDE.md の規則 + validate のゲートがスキーマと lint の役をします。講義シリーズ <a href="/p/ja/llmw-overview/">LLM Wiki — 概要</a>で同じ概念を段階ごとに扱います。
+</div>
+
+<h3>④ ナレッジコンテキスト — Obsidian のボールト + Git でチームへ移す</h3>
+<p>発表の中心は、カルパシーの個人向けの提案を<strong>チームの規模へ</strong>移した実際の実装です。リポジトリひとつがそのままチームの知識の文脈であり、物理的には <strong>Obsidian のボールトであり Git のリポジトリ</strong>です — 非開発者は Obsidian の画面でノートを書き、開発者は Git で PR を送ります。同じファイルをふたつの窓口で扱うだけです。フォルダの構造がそのまま権限の構造です:</p>
+<ul>
+    <li><code>context/</code> — <strong>チームの共有層</strong>。検証を通った知識だけが入る、チームの公式の文脈。</li>
+    <li><code>members/&lt;名前&gt;/</code> — <strong>個人の作業層</strong>。各自の下書き・実験・メモ。ここまでは自由。</li>
+    <li><code>agents/</code> — エージェントの設定とスキル。共有層と個人層の<strong>両方に存在</strong>し、個人が作ったスキルが検証を経てチームのスキルへ昇格します。<code>AGENTS.md</code> がチームの<strong>公式のシステムプロンプト</strong>の役。</li>
+    <li><code>_private/</code> — 同期から<strong>外れる</strong>領域。昇格の経路そのものがありません。</li>
+</ul>
+<p>中心の過程は、個人の知識がチームの知識になる<strong>昇格（promotion）のフロー</strong>です。個人層のノートを共有層へ上げるには PR を開き、自動の検証（形式・リンク・frontmatter）と AI のレビュー（重複・規約の違反・既存の文書との衝突）を経て、<strong>最後に人が承認</strong>してはじめて <code>context/</code> に合わさります。frontmatter（メタデータ）は Obsidian の Templates で入力の時点に強制し、すべての履歴は Git のヒストリが自動で残します。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 240" role="img" aria-label="昇格のフロー: 個人層の下書きが Git の PR として上がり、自動の検証と AI のレビューを経て人の承認のあとチームの共有層 context/ に合わさる。_private は同期の対象外で昇格の経路がない">
+    <rect class="d-box soft" x="10" y="60" width="102" height="60" rx="9"/><text class="d-label sm" x="61" y="83" text-anchor="middle">members/</text><text class="d-sub" x="61" y="99" text-anchor="middle">個人の下書き</text><text class="d-sub" x="61" y="112" text-anchor="middle">自由に書く</text>
+    <line class="d-edge" x1="112" y1="90" x2="122" y2="90"/><polygon class="d-arrow" points="122,85 130,90 122,95"/>
+    <rect class="d-box" x="130" y="60" width="102" height="60" rx="9"/><text class="d-label sm" x="181" y="83" text-anchor="middle">Git PR</text><text class="d-sub" x="181" y="99" text-anchor="middle">昇格の要求</text><text class="d-sub" x="181" y="112" text-anchor="middle">Obsidian/Git</text>
+    <line class="d-edge" x1="232" y1="90" x2="242" y2="90"/><polygon class="d-arrow" points="242,85 250,90 242,95"/>
+    <rect class="d-box" x="250" y="60" width="102" height="60" rx="9"/><text class="d-label sm" x="301" y="83" text-anchor="middle">自動の検証</text><text class="d-sub" x="301" y="99" text-anchor="middle">形式・リンク</text><text class="d-sub" x="301" y="112" text-anchor="middle">frontmatter</text>
+    <line class="d-edge" x1="352" y1="90" x2="362" y2="90"/><polygon class="d-arrow" points="362,85 370,90 362,95"/>
+    <rect class="d-box" x="370" y="60" width="102" height="60" rx="9"/><text class="d-label sm" x="421" y="83" text-anchor="middle">AI レビュー</text><text class="d-sub" x="421" y="99" text-anchor="middle">重複・規約</text><text class="d-sub" x="421" y="112" text-anchor="middle">既存文書と衝突</text>
+    <line class="d-edge" x1="472" y1="90" x2="482" y2="90"/><polygon class="d-arrow" points="482,85 490,90 482,95"/>
+    <rect class="d-box accent" x="490" y="60" width="102" height="60" rx="9"/><text class="d-label sm" x="541" y="83" text-anchor="middle">人の承認</text><text class="d-sub" x="541" y="99" text-anchor="middle">最終のゲート</text><text class="d-sub" x="541" y="112" text-anchor="middle">マージ権限</text>
+    <line class="d-edge accent" x1="592" y1="90" x2="602" y2="90"/><polygon class="d-arrow accent" points="602,85 610,90 602,95"/>
+    <rect class="d-box accent" x="610" y="60" width="100" height="60" rx="9"/><text class="d-label sm" x="660" y="83" text-anchor="middle">context/</text><text class="d-sub" x="660" y="99" text-anchor="middle">チーム共有層</text><text class="d-sub" x="660" y="112" text-anchor="middle">公式の文脈</text>
+    <text class="d-sub" x="360" y="36" text-anchor="middle">個人の知識 &#8594; チームの知識への昇格フロー — 検証は機械と AI が、責任は人が</text>
+    <rect class="d-box" x="10" y="160" width="102" height="44" rx="9" stroke-dasharray="5 4"/><text class="d-label sm" x="61" y="179" text-anchor="middle">_private/</text><text class="d-sub" x="61" y="195" text-anchor="middle">同期の対象外</text>
+    <line class="d-edge dash" x1="112" y1="182" x2="180" y2="182"/>
+    <text class="d-sub" x="250" y="186">昇格の経路なし — そもそも共有の対象ではない</text>
+    <text class="d-sub" x="360" y="228" text-anchor="middle">agents/ フォルダ（スキル・設定）も同じフローで個人 &#8594; チームへ昇格 · AGENTS.md = チーム公式のシステムプロンプト</text>
+</svg>
+<div class="d-cap">知識だけでなく<strong>スキルも同じ関門</strong>を通る — よくできた個人のスキルがチームの資産になる経路。</div>
+</div>
+
+<p>発表が挙げた効果は四つです。(1) 背景の説明の代わりに<strong>ノートのリンクひとつ</strong>で文脈が伝わり、(2) エージェントに同じ説明をくり返し注ぎ込まないので<strong>トークンが節約</strong>され、(3) 個人のスキル・プロンプトが昇格のフローに乗って<strong>チーム全体へ広がり</strong>、(4) 公式の文脈が単一のリポジトリなので<strong>&ldquo;最終_本当に最終&rdquo;の写しの問題が構造的に消えます</strong>。決定の背景のような暗黙知も、PR の説明とノートとして残り積み上がります。</p>
+
+<h3>⑤ スケールの壁 — マークダウンの膨張と OpenViking</h3>
+<p>運用が根づくと別の問題が来ました。ノートが数千枚に増えて<strong>索引のファイルが 1,000〜3,000 行のものが 20〜30 個</strong>にふくらみ、エージェントが文脈をつかもうと索引を読むだけで文脈のかなりの部分が消費されました — 書き込みの時点のコンパイルで節約したトークンを<strong>探す費用</strong>が食い返す状況です。発表のチームが導入した解が、バイトダンスが公開した <strong>OpenViking</strong> です: エージェントのメモリ・知識（RAG）・スキルを<strong>ひとつのファイルシステムのパラダイム</strong>に統合した&ldquo;コンテキストデータベース&rdquo;で、すべての知識が <code>viking://</code> のパスを持ちます。要は<strong>階層の読み込み</strong>です — すべてのノードが <strong>L0（一行の要約） · L1（概要） · L2（全文）</strong>の三段階の要約を持ち、エージェントは L0 で全体を安く見渡し、候補の L1 で計画を立て、<strong>本当に必要な文書だけを L2 で</strong>読み込みます。ディレクトリ単位の再帰的な検索（フォルダの L0・L1 で位置を絞ってから下位へドリルダウン）が巨大な索引を置き換えます。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="OpenViking の階層の読み込み: エージェントが viking:// のツリーの L0 の一行の要約で全体を見渡し、候補のフォルダの L1 の概要で計画し、必要な文書だけを L2 の全文で読み込む">
+    <rect class="d-box soft" x="16" y="20" width="180" height="44" rx="9"/><text class="d-label sm" x="106" y="39" text-anchor="middle">viking://context/</text><text class="d-sub" x="106" y="55" text-anchor="middle">知識ツリーの根</text>
+    <line class="d-edge" x1="60" y1="64" x2="60" y2="240"/>
+    <line class="d-edge" x1="60" y1="96" x2="84" y2="96"/><rect class="d-box soft" x="88" y="80" width="130" height="32" rx="7"/><text class="d-label sm" x="153" y="100" text-anchor="middle">resources/</text>
+    <line class="d-edge" x1="60" y1="144" x2="84" y2="144"/><rect class="d-box soft" x="88" y="128" width="130" height="32" rx="7"/><text class="d-label sm" x="153" y="148" text-anchor="middle">evidence/</text>
+    <line class="d-edge" x1="60" y1="192" x2="84" y2="192"/><rect class="d-box soft" x="88" y="176" width="130" height="32" rx="7"/><text class="d-label sm" x="153" y="196" text-anchor="middle">skills/</text>
+    <line class="d-edge" x1="60" y1="240" x2="84" y2="240"/><rect class="d-box soft" x="88" y="224" width="130" height="32" rx="7"/><text class="d-label sm" x="153" y="244" text-anchor="middle">memory/</text>
+    <text class="d-sub" x="117" y="284" text-anchor="middle">メモリ・知識・スキルを一つの木に統合</text>
+
+    <rect class="d-box" x="300" y="20" width="150" height="44" rx="9"/><text class="d-label sm" x="375" y="39" text-anchor="middle">エージェントの問い</text><text class="d-sub" x="375" y="55" text-anchor="middle">何が必要か</text>
+    <line class="d-edge accent" x1="375" y1="64" x2="375" y2="86"/><polygon class="d-arrow accent" points="371,88 375,96 379,88"/>
+    <rect class="d-box accent" x="280" y="96" width="190" height="48" rx="9"/><text class="d-label sm" x="375" y="117" text-anchor="middle">L0 — 一行の要約</text><text class="d-sub" x="375" y="133" text-anchor="middle">全ノードを安く見渡す</text>
+    <line class="d-edge accent" x1="375" y1="144" x2="375" y2="166"/><polygon class="d-arrow accent" points="371,168 375,176 379,168"/>
+    <rect class="d-box accent" x="280" y="176" width="190" height="48" rx="9"/><text class="d-label sm" x="375" y="197" text-anchor="middle">L1 — 概要</text><text class="d-sub" x="375" y="213" text-anchor="middle">候補のフォルダ・文書で計画</text>
+    <line class="d-edge accent" x1="375" y1="224" x2="375" y2="246"/><polygon class="d-arrow accent" points="371,248 375,256 379,248"/>
+    <rect class="d-box" x="280" y="256" width="190" height="36" rx="9"/><text class="d-label sm" x="375" y="279" text-anchor="middle">L2 — 全文（必要な分だけ）</text>
+
+    <line class="d-edge dash" x1="218" y1="112" x2="278" y2="112"/>
+    <text class="d-sub" x="595" y="120" text-anchor="middle">フォルダの要約で位置を絞り</text>
+    <text class="d-sub" x="595" y="138" text-anchor="middle">下位へ再帰的にドリルダウン</text>
+    <text class="d-sub" x="595" y="200" text-anchor="middle">下へ行くほどトークン費用が増加</text>
+    <text class="d-sub" x="595" y="218" text-anchor="middle">&#8594; 巨大な索引ファイルは不要</text>
+    <text class="d-sub" x="595" y="279" text-anchor="middle">使用の履歴で要約を改善（自己進化）</text>
+</svg>
+<div class="d-cap">全部を読むのではなく<strong>要約のはしご</strong>を降りていけ — L0 &#8594; L1 &#8594; L2 の段階的な読み込みが索引の膨張を置き換える。</div>
+</div>
+
+<p>発表は、既存のフォルダを OpenViking の型に対応づけるマッピングも紹介しました — 参考の資料は <code>resources</code>、決定の根拠や議事録は <code>evidence</code>、エージェントのスキルは <code>skills</code>、会話や作業の記憶は <code>memory</code>、まだ分類前のものは unindexed に置いて少しずつ編入。検索と読み込みがどの経路をどれだけ読んだかが<strong>観測できる（observability）</strong>点も導入の理由に挙げました。</p>
+
+<h3>⑥ ガバナンス — 人が握るもの、エージェントに任せるもの</h3>
+<p>&ldquo;エージェントがウィキを管理する&rdquo;は&ldquo;全部任せる&rdquo;という意味ではありません。発表のチームの原則は<strong>既定はエージェント、例外を人が明示する</strong>という、ホワイトリストの逆転です:</p>
+<div class="tbl-wrap"><table>
+    <thead><tr><th>主体</th><th>担当</th><th>理由</th></tr></thead>
+    <tbody>
+        <tr><td rowspan="3"><strong>人だけ</strong></td><td><code>_private/</code> の領域</td><td>同期・昇格の経路そのものがない — 機械が触れる理由がない</td></tr>
+        <tr><td>削除</td><td>知識を消すことは戻しにくく、文脈の判断が要る</td></tr>
+        <tr><td>敏感な権限・最終の承認</td><td>共有層へのマージの責任の所在は人に</td></tr>
+        <tr><td><strong>エージェント</strong></td><td>そのほかのすべて</td><td>整理・統合・リンク・要約・レビューなどのくり返しの作業は機械のほうが誠実だ</td></tr>
+    </tbody>
+</table></div>
+<p>これを支える仕掛けが三つあります — frontmatter は <strong>Obsidian の Templates で入力の時点に強制</strong>して事後の手直しを減らし、<strong>Git のヒストリ</strong>が誰が（人であれエージェントであれ）何をいつ変えたかを漏れなく残し、昇格のフローの<strong>人の承認のゲート</strong>が共有層の品質の下限を守ります。このウィキの <a href="/p/ja/dzp-core/">Douzone ナレッジプラットフォームの提案</a>が採った&ldquo;開発の流れはそのまま、知識化は AI が&rdquo;と同じ思想です。</p>
+
+<h3>⑦ 道具の生態系 — エージェントが Obsidian を扱いはじめた</h3>
+<p>発表が最後に挙げた合図は道具の側です。Obsidian の CEO ステフ・アンゴ（Steph Ango, kepano）が <strong>obsidian-skills</strong> を公開しました。これは Claude Code のようなコーディングエージェントが Obsidian のファイル形式（.md のウィキリンク・コールアウト、.base のデータベース、.canvas のキャンバス）を正しく読み書きできるよう教える <strong>Agent Skills 規格の SKILL.md 五つ</strong>です。Obsidian が CLI も提供しはじめたので、&ldquo;人は Obsidian の画面で、エージェントはファイル・CLI・スキルで&rdquo;同じボールトを扱うというこの記事の構図が<strong>公式の道具に支えられる</strong>ことになります。ナレッジコンテキストのようにマークダウン + Git を選んだチームには、エージェント側の窓口が標準化されつつあるという意味です。</p>
+
+<h3>まとめ — 三つの文で</h3>
+<ul>
+    <li>知識の整理を<strong>質問の時点（RAG）から書き込みの時点（ウィキへのコンパイル）へ</strong>移せば、チームとエージェントが同じ文書を読む単一の文脈が生まれる。</li>
+    <li>チームの規模では構造がそのままガバナンスだ — <strong>個人層／共有層／非公開層の分離と昇格の PR フロー</strong>が品質と責任を作る。</li>
+    <li>知識が大きくなると探す費用がボトルネックになる — <strong>階層の要約（L0・L1・L2）と再帰的なドリルダウン</strong>が巨大な索引の次の段階だ。</li>
+</ul>
+
+<h3>出典</h3>
+<p class="scn-sub"><strong>確認した元の出典</strong></p>
+<ul>
+    <li>Andrej Karpathy, &ldquo;LLM Wiki&rdquo; の提案の gist — <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noopener">gist.github.com/karpathy</a> — 3 層の構造・index.md・log.md・コンパイラの比喩の原文。</li>
+    <li>OpenViking（バイトダンスの volcengine が公開） — <a href="https://github.com/volcengine/OpenViking" target="_blank" rel="noopener">github.com/volcengine/OpenViking</a> · 文書 <a href="https://docs.openviking.ai" target="_blank" rel="noopener">docs.openviking.ai</a> — &ldquo;Self-evolving Context Database for AI Agents&rdquo;、viking:// のパス・L0/L1/L2 の階層の読み込み・ディレクトリの再帰的な検索。</li>
+    <li>Steph Ango（kepano）, obsidian-skills — <a href="https://github.com/kepano/obsidian-skills" target="_blank" rel="noopener">github.com/kepano/obsidian-skills</a> — .md/.base/.canvas 用の SKILL.md 5 種、Agent Skills 規格。</li>
+    <li>Obsidian — <a href="https://obsidian.md" target="_blank" rel="noopener">obsidian.md</a></li>
+</ul>
+<p class="scn-sub"><strong>このウィキの関連文書</strong> — <a href="/p/ja/llmw-overview/">LLM Wiki の講義シリーズ</a> · <a href="/p/ja/sb-level2/">セカンドブレイン レベル 2（LLM ウィキ + メモリ）</a> · <a href="/p/ja/dzp-core/">Douzone ナレッジプラットフォームの提案</a></p>
+
+<div class="note">
+    <span class="nh">この文書の態度</span>
+    カルパシーの提案・OpenViking・obsidian-skills は<strong>公開のリポジトリと文書で実在を確認</strong>しました。いっぽう&ldquo;ナレッジコンテキスト&rdquo;の運用の経験（フォルダの構造、索引が 20〜30 個に膨張したこと、マッピングなど）は<strong>発表者の事例の報告</strong>であり、数値と効果はそのチームの文脈で読む必要があります。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">作成日</span> 2026-07-10 &middot; <span class="pr-k">更新日</span> 2026-07-10</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/llmw-overview/">LLM Wiki — 概要</a></li><li><a href="/p/ja/sb-level2/">レベル 2 · 主題でまとめる（LLM ウィキ + メモリ）</a></li><li><a href="/p/ja/dzp-knowledge/">지식 관리 체계 — 판정·갱신·추적·신뢰·수명주기</a></li><li><a href="/p/ja/skl-what/">スキルとは何か</a></li></ul>
+</nav>
+</body>
+</html>
