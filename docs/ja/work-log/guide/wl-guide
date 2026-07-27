@@ -1,0 +1,38 @@
+<h2>Work Log — 記録ルールの案内</h2>
+<p>このフォルダは、<strong>AI といっしょにした作業</strong>が日ごとに積み上がっていく場所です。構造はいつも 4 階層に従います: <strong>年 &gt; 月 &gt; 日 &gt; 主題</strong>。</p>
+
+<div class="note">
+    <span class="nh">フォルダの構造</span>
+    <code>Work Log &gt; 2026 &gt; 07월 &gt; 03일 &gt; (主題の文書)</code><br>
+    · <strong>年</strong> — 4 桁（例: <code>2026</code>）<br>
+    · <strong>月</strong> — 2 桁 + 「월」（例: <code>07월</code>）<br>
+    · <strong>日</strong> — 2 桁 + 「일」（例: <code>03일</code>）<br>
+    · <strong>主題</strong> — その日にした作業ひとつにつき文書ひとつ。ひとつの日にいくつかの作業があれば、その数だけ文書ができます。<br>
+    · <strong>日付の基準</strong> — <strong>韓国標準時（KST, UTC+9）</strong>。深夜をまたいだ作業は次の日のフォルダに入ります。
+</div>
+
+<div class="note warn">
+    <span class="nh">1 日 = 複数の主題の文書</span>
+    同じ日のうちでも、<strong>全体の主題が異なる作業は別の文書に分けます</strong>。関わりのない主題をひとつのログに混ぜると、あとから文脈を取り戻しにくくなるからです。例: 5 日は <strong>8 つの文書</strong>に分かれています — 知識体系 · コスモス · ミニゲーム · デザイン · 設定 · ログの整理 · 全体の点検 · 多言語対応。自動のログ記録（キュレーター）も同じルールに従います。
+</div>
+
+<h3>なぜ記録するのか</h3>
+<p>AI に作業をさせると、成果物は残っても<strong>「何を・なぜ・どうやって」決めたのか</strong>は散らばりがちです。このログはその文脈を残しておくためのもので、同じ作業をやり直したり続けたりするときに<strong>すぐ文脈を取り戻せる</strong>ようにします。</p>
+
+<h3>入れるとよいもの（推奨）</h3>
+<ul>
+    <li><strong>概要</strong> — 何をしたのかを 1〜2 行で。</li>
+    <li><strong>変更・決定</strong> — 実際に何が変わり、なぜそう決めたのか。</li>
+    <li><strong>結果</strong> — 成果物・PR・マージの状態など。</li>
+    <li><strong>次にすること</strong> — 残っていること、続けること。</li>
+</ul>
+
+<div class="note">
+    <span class="nh">ファイル名のルール</span>
+    文書のファイル名は <code>wl-YYYYMMDD-主題</code> に従います（例: <code>wl-20260703-wiki</code>）。list の <code>label</code> が人の読む主題名を担います。
+</div>
+
+<div class="note warn">
+    <span class="nh">ログにタグは付けない</span>
+    ワークログの文書には<strong>タグを付けません</strong> — <code>list</code> では <code>"tags": []</code> のままにします。ログのタグが<strong>タグ索引や検索</strong>に混ざると、本当の内容（講義や文書）を探すときの<strong>邪魔になる</strong>からです。分類が要るときは <code>label</code> と日付のフォルダ構造だけを使います。
+</div>

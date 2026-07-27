@@ -92,7 +92,11 @@
       if (x[1] !== y[1]) return x[1] < y[1] ? -1 : 1;
       return 0;
     });
-    return { docs: docs, clusters: clusters, byName: byName, edges: edges };
+    // conceptLabels는 prep이 가공하지 않고 그대로 실어 나른다 — 2026-07-28까지
+    // 이 한 줄이 없어 clabel()이 언제나 {}를 받는 항등함수였다(개념 뷰의 노드
+    // 라벨이 ko/en/ja 모두 한국어 키로 그려졌다).
+    return { docs: docs, clusters: clusters, byName: byName, edges: edges,
+             conceptLabels: (model && model.conceptLabels) || {} };
   }
 
   function cidx(byName, name) {
@@ -592,7 +596,7 @@
         '<line x1="' + Pp[A][0].toFixed(1) + '" y1="' + Pp[A][1].toFixed(1) +
         '" x2="' + Pp[B][0].toFixed(1) + '" y2="' + Pp[B][1].toFixed(1) +
         '" stroke="' + ink.muted + '" stroke-width="' + Math.min(3.2, 0.8 + n * 0.55).toFixed(1) +
-        '" opacity="0.3"><title>' + escapeHtml(A) + ' ↔ ' + escapeHtml(B) + '</title></line>'
+        '" opacity="0.3"><title>' + escapeHtml(clabel(P, A)) + ' ↔ ' + escapeHtml(clabel(P, B)) + '</title></line>'
       );
     }
     for (i = 0; i < nodes.length; i++) {
@@ -612,7 +616,9 @@
         '" fill="' + clusters[dom].color + '" stroke="' + ink.surface + '" stroke-width="2"><title>' +
         escapeHtml(clabel(P, cn2)) + ' · ' + escapeHtml(fmt(st.conceptIn || '{n}편에 등장', df[cn2])) + '</title></circle>'
       );
-      var nHalfW = Math.max(8, cn2.length * 4);
+      // 폭은 그려지는 글자(표시명) 기준 — 키 길이로 재면 일본어·영어 라벨에서
+      // x 클램프가 어긋난다(위 :534가 이미 clabel 길이를 쓴다).
+      var nHalfW = Math.max(8, clabel(P, cn2).length * 4);
       var nlx = clampRange(pos[0], nHalfW + 4, W - nHalfW - 4);
       var nly = clampRange(pos[1] - r - 5, 12, H - 8);
       s.push(

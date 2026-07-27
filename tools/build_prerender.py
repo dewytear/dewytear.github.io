@@ -72,6 +72,10 @@ EXTRA_PAGES = {
     },
 }
 
+# og:locale — 언어를 늘릴 때 STR와 함께 채운다(빠지면 그 언어 스냅샷이
+# en_US로 나간다: 2026-07-28까지 ja 116쪽이 그랬다).
+OG_LOCALE = {'ko': 'ko_KR', 'en': 'en_US', 'ja': 'ja_JP'}
+
 # UI strings for the snapshot chrome, per language (kept tiny on purpose —
 # the snapshot is a reading fallback, not a second implementation of the app).
 STR = {
@@ -252,7 +256,7 @@ def social_tags(title, desc, url, image, lang, kind='article'):
         '<meta property="og:url" content="%s">' % esc(url),
         '<meta property="og:image" content="%s">' % esc(image),
         '<meta property="og:site_name" content="%s">' % esc(site),
-        '<meta property="og:locale" content="%s">' % ('ko_KR' if lang == KO else 'en_US'),
+        '<meta property="og:locale" content="%s">' % OG_LOCALE.get(lang, 'en_US'),
         '<meta name="twitter:card" content="summary_large_image">',
         '<meta name="twitter:title" content="%s">' % esc(title),
         '<meta name="twitter:description" content="%s">' % esc(desc),
@@ -485,7 +489,10 @@ def build_pages():
                 meta = {
                     'title': first_h2(raw) or doc['title'],
                     'summary': doc['summary'],
-                    'section': doc['section'],
+                    # section은 언어 무관 canonical 조인 키라 그대로 쓰면
+                    # en·ja 스냅샷에 한국어 분류가 박힌다(허브 <h3> 16건 · 문서
+                    # '분류' 줄). SPA는 이미 sectionL을 쓴다 — 스냅샷도 맞춘다.
+                    'section': doc.get('sectionL') or doc['section'],
                     'related': doc.get('related', []),
                     'rel_path': rel,
                 }

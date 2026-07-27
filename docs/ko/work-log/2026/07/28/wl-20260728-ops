@@ -74,3 +74,70 @@
     <span class="nh">솔직한 전제</span>
     이 정리는 <strong>이미 있던 구멍을 메우는 것</strong>이지 방문자를 만들지 않는다. 검색 등록·커뮤니티 노출은 여전히 <a href="#!wl-backlog">Backlog</a>에 사람 몫으로 남아 있다. 다만 ①은 &ldquo;일본어를 켰다&rdquo;가 실제로 참이 되게 하는 마지막 조각이었다 &mdash; 어제까지는 일본어 독자만 개념이 한국어로 보였다.
 </div>
+
+<h3>같은 날 후속 — 대표님이 짚은 세 곳, 그리고 게이트가 못 보던 층</h3>
+<p>위 정리를 머지한 직후 대표님이 배포본에서 세 곳을 짚었다: <strong>①메뉴 ②통합검색의 별똥별 ③지식그래프 2D 개념</strong> — 영어는 번역되는데 일본어는 한글이라는 것. 추적해 보니 <strong>원인이 서로 달랐고, 하나는 영어도 함께 깨져 있었다.</strong></p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>증상</th><th>원인</th><th>위 PR로 해결?</th></tr></thead>
+<tbody>
+<tr><td>①메뉴</td><td><code>Wiki</code> 폴더 노드의 <code>label_ja</code> 부재 — <code>validate_i18n</code>이 <code>name</code> 없는 브랜치를 통째로 스킵했다</td><td>✅</td></tr>
+<tr><td>②별똥별</td><td><code>games.js</code>가 <code>conceptLabel()</code>을 쓰는데 <code>concepts.ja.json</code>이 배포본에 없어 404가 <code>{}</code>로 삼켜졌다</td><td>✅</td></tr>
+<tr><td>③2D 개념</td><td><strong>전혀 다른 버그</strong> — <code>graphviews.js</code>의 <code>prep()</code>이 <code>model.conceptLabels</code>를 반환에서 빠뜨려 <code>clabel()</code>이 언제나 <code>{}</code>를 받는 <strong>항등함수</strong>였다</td><td>❌</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="note warn">
+    <span class="nh">③이 이 로그의 핵심이다 — 데이터가 완벽한데 화면만 한글이었다</span>
+    사전이 <strong>302/302로 완비된</strong> 상태에서 2D 개념 뷰를 렌더했더니 ja·en <strong>양쪽 모두</strong> <code>스킬 · 슬래시명령어 · 하네스…</code>가 나왔다. <code>conceptLabels</code>와 <code>clabel</code>은 #328에서 함께 들어왔는데 <strong>전달 한 줄이 처음부터 없었다</strong> — 즉 <strong>영어 모드도 그때부터 줄곧 깨져 있었고 아무도 신고하지 않았다.</strong> 일본어 점검이 아니었으면 영어 버그도 계속 안 보였을 것이다.
+</div>
+
+<h3>왜 게이트가 못 잡았나 — 구조적 원인 넷</h3>
+<ol>
+    <li><strong>번역 자산이 다섯 군데인데 게이트는 세 군데만 봤다.</strong> <code>STRINGS</code>·<code>list</code> 라벨·<code>doc-entries</code>는 검사했지만 <strong>개념 사전</strong>과 <strong>기능 JS 안의 임시 언어 사전</strong>(<code>games.js</code>의 <code>G2048_LADDER</code>)은 목록화조차 안 돼 있었다.</li>
+    <li><strong>절차서가 개념 사전을 빠뜨렸고, "더 손댈 곳이 없다"고 단언했다.</strong> <code>i18n.md</code>의 구조표에는 있는데 <strong>실제로 따라 하는 순서에는 없었다</strong> — 절차대로 하면 사전을 빠뜨리는 것이 정상 동작이었다.</li>
+    <li><strong>모든 i18n 게이트가 파일·키 수준이었다.</strong> ③이 이 점을 증명한다 — 파일 대조는 전부 통과인데 화면만 한글이다. <strong>원리적으로 못 잡는다.</strong></li>
+    <li><strong>사람 체크리스트에 의존했다.</strong> <code>i18n.md</code>의 검증 목록은 <strong>&ldquo;Knowledge Graph(2D 뷰)&rdquo;까지 이미 명시</strong>하고 있었다. 목록이 없어서 샌 게 아니라 <strong>그 화면을 열어 보지 않아서</strong> 샜다.</li>
+</ol>
+
+<h3>고친 것</h3>
+<ul>
+    <li><strong>③ <code>graphviews.js</code></strong> — <code>prep()</code>이 <code>conceptLabels</code>를 실어 나르게. 덤으로 링크 툴팁(<code>:595</code>)이 양 끝 개념을 raw 키로 뿌리던 것과, 노드 라벨 폭을 <strong>키 길이</strong>로 재던 것(<code>:615</code> — 일본어 라벨이 붙는 순간 x 클램프가 어긋난다)을 함께 고쳤다.</li>
+    <li><strong><code>games.js</code></strong> — <code>G2048_LADDER</code>에 <code>ja</code> 추가. 일본어 모드에서 <strong>타일만 영어</strong>로 나오고 있었다.</li>
+    <li><strong><code>music.js</code></strong> — 사이드바 음악 버튼의 <code>aria-label</code>·<code>title</code>이 <code>'배경음악 정지/재생'</code> 하드코딩이라 <strong>영어·일본어 모드에서도 한글</strong>이었다. '정지' 상태 키가 아예 없어 <code>musicTitleStop</code>·<code>musicAriaStop</code>을 3언어 신설.</li>
+    <li><strong>프로필 링크</strong>의 <code>aria-label</code>도 같은 문제 — <code>aboutAria</code> 키로 옮기고 <code>applySettings()</code>에 배선.</li>
+    <li><strong><code>og:locale</code></strong>이 <code>ko_KR</code> 아니면 <code>en_US</code>였다 → <strong>일본어 스냅샷 116쪽이 <code>en_US</code></strong>. 언어별 <code>OG_LOCALE</code> 맵으로.</li>
+    <li><strong>스냅샷의 분류 제목</strong>이 canonical 한글이라 <code>p/en/</code>·<code>p/ja/</code> 허브에 <strong>한글 제목 16건</strong>이 박혀 있었다(SEO 표면). SPA가 이미 쓰는 <code>sectionL</code>로 교체 → 두 언어 모두 <strong>0건</strong>.</li>
+    <li><strong><code>wl-guide</code> 일본어 본문 신설</strong> — 메뉴는 일본어인데 열면 한국어였다(en만 본문이 있었다). 앞선 정리에서 "en 전용 예외"로 문서화했던 것을 <strong>철회하고 대칭을 맞췄다</strong> — 안내·상태판 문서는 일지와 달리 본문도 병행한다.</li>
+</ul>
+
+<h3>재발 방지 — 게이트 세 겹</h3>
+<ul>
+    <li><strong><code>tools/check_i18n_render.mjs</code> 신설(핵심)</strong> — <code>check_diagram_bounds.mjs</code>와 같은 뼈대(로컬 서버 + CDP 헤드리스, CI <code>i18n-render</code> 잡). <code>LANGS_READY</code>의 비한국어 언어마다 <strong>21개 화면</strong>(홈·검색·지도 2종·문서·폴더·그래프 9뷰·도크 게임 5종)을 열어 <strong>렌더된 한국어</strong>를 잡는다. <strong>허용목록은 정규식 금지, 명시 문자열 + 사유만</strong> — 무엇을 왜 눈감아 주는지 읽히지 않으면 게이트가 아니라 장식이다.</li>
+    <li><strong><code>concept-dict-coverage</code></strong>(ERROR) — 언어마다 사전 존재 · 인덱스의 한글 개념 전수 커버 · 라벨 값에 한글 없음 · 고아 라벨 0.</li>
+    <li><strong><code>hidden-lang-dict</code></strong>(ERROR) — <code>STRINGS</code> 밖의 언어별 리터럴 사전이 <code>LANGS_READY</code> 전 언어를 갖췄는지.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">세 겹으로 나눈 이유 — 캔버스는 DOM에 없다</span>
+    별똥별·벽돌깨기·퐁·종이비행기는 <code>ctx.fillText</code>로 <strong>캔버스에 그린다</strong>. 그 글자는 DOM에 없어서 실렌더 검사가 <strong>원리적으로 못 본다</strong>(2048만 진짜 DOM 보드라 잡힌다). 그래서 캔버스 쪽은 정적 게이트가 대신 본다 — 별똥별 낱말은 <code>concept-dict-coverage</code>가, 2048 사다리는 <code>hidden-lang-dict</code>가. <strong>어느 한 층도 단독으로는 충분하지 않다</strong>는 것이 이번의 교훈이고, 그 사실을 검사기 주석에 <code>COVERAGE</code> 절로 박아 뒀다.
+</div>
+
+<h3>게이트가 진짜 잡는지 역검증</h3>
+<p>게이트를 넣고 "통과했다"만 보면 <strong>아무것도 검사하지 않는 게이트</strong>와 구별되지 않는다. 넷 다 일부러 깨뜨려 확인하고 되돌렸다.</p>
+<ul>
+    <li><code>concepts.ja.json</code>을 치움 → <code>concept-dict-coverage</code>가 <strong>302건 ERROR</strong></li>
+    <li>라벨 값 하나를 한국어로 되돌림 → <strong>&ldquo;1개 표시명의 값이 아직 한국어다&rdquo;</strong></li>
+    <li><code>G2048_LADDER.ja</code>를 지움 → <code>hidden-lang-dict</code> ERROR</li>
+    <li><strong><code>graphviews.js</code>의 전달 한 줄을 되돌림 → <code>check_i18n_render</code>가 <code>[ja] graph:concepts</code>에서 실패</strong>(훅·자동화·메인볼트·컨텍스트…). 2048 사다리를 ko로 강제했을 때도 <code>[ja] game:g2048</code>에서 잡혔다</li>
+</ul>
+<p>덤으로 <strong>검사기를 <code>ko</code>로 돌려 감도도 확인</strong>했다 — 한국어 모드에서는 화면마다 한국어를 보고한다. 통과가 &ldquo;아무것도 못 보는 것&rdquo;이 아님을 보이는 절차다.</p>
+
+<h3>규칙 정합</h3>
+<ul>
+    <li><code>i18n.md</code>: 순서에 <strong>개념 사전·임시 언어 사전 단계 추가</strong>, <strong>&ldquo;더 손댈 곳이 없다&rdquo; 문장 삭제</strong>(이 문장이 사고를 만들었다), 검증 체크리스트 맨 위에 기계 검사를 올리고 눈 검사가 왜 샜는지 적었다.</li>
+    <li><code>CLAUDE.md</code>: &ldquo;화면 문구는 <code>STRINGS</code>에만 — 기능 JS에 임시 언어 사전 금지&rdquo;, &ldquo;번역은 파일이 아니라 화면으로 확인한다&rdquo; 두 규칙 추가.</li>
+    <li><code>kgs-gates</code>(3언어): 동반 게이트 다섯 → <strong>여섯</strong>, <code>i18n-render</code> 행 추가.</li>
+</ul>

@@ -65,3 +65,23 @@ jobs:
           "$CHROME" --headless=new --remote-debugging-port=9333 --no-sandbox --disable-gpu about:blank >/dev/null 2>&1 &
           for i in $(seq 1 30); do curl -sf http://127.0.0.1:9333/json/version >/dev/null && break; sleep 1; done
           node tools/check_diagram_bounds.mjs
+
+  # 화면에 한국어가 새는지 실렌더로 확인 — 파일 대조 게이트(STRINGS 패리티·
+  # 라벨·오버레이·개념 사전)가 전부 초록인데도 일본어 화면에 한국어가 나오던
+  # 사고에서 태어났다(2026-07-28). 2D 개념 뷰는 사전이 302/302로 완비된
+  # 상태에서도 배선 누락 때문에 한국어를 그렸다 — 렌더를 봐야만 잡힌다.
+  i18n-render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Serve, launch Chrome, check rendered i18n
+        run: |
+          python3 -m http.server 8799 >/dev/null 2>&1 &
+          CHROME="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium-browser || command -v chromium)"
+          echo "using browser: $CHROME"
+          "$CHROME" --headless=new --remote-debugging-port=9333 --no-sandbox --disable-gpu about:blank >/dev/null 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:9333/json/version >/dev/null && break; sleep 1; done
+          node tools/check_i18n_render.mjs

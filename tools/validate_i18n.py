@@ -17,8 +17,21 @@ import re
 import sys
 
 
+HANGUL_RE = re.compile(r'[가-힣]')
+
+
 def _f(level, check, name, message):
     return {'level': level, 'check': check, 'name': name, 'message': message}
+
+
+def read_langs_ready(root):
+    """i18n.js의 `var LANGS_READY = [...]` — 실제로 켜진 언어 목록(정본)."""
+    try:
+        text = open(os.path.join(root, 'i18n.js'), encoding='utf-8').read()
+    except OSError:
+        return []
+    m = re.search(r'LANGS_READY\s*=\s*\[([^\]]*)\]', text)
+    return re.findall(r"['\"]([A-Za-z-]+)['\"]", m.group(1)) if m else []
 
 
 def iter_nodes(nodes):
@@ -185,6 +198,80 @@ def run(root):
                                     "폴더 노드에 label_%s가 있는데 label_%s가 없음 — %s "
                                     "사이드바에 한국어 라벨이 그대로 뜬다"
                                     % (have[0], l, l)))
+
+    # 3c. concept-dict-coverage: 개념 표시명 사전(tools/concepts.<lang>.json)이
+    # 인덱스의 한국어 개념을 전부 덮는지. 이 층은 2026-07-28까지 **완전히
+    # 무게이트**였다 — ja 사전이 통째로 없는 채로 validate_all·check_translation·
+    # build_index --check가 전부 초록이었고, 화면에서만 개념이 한국어로 보였다.
+    # 키는 canonical 한국어라 라틴 문자 개념(Claude Code·MCP…)은 대상이 아니다.
+    idx_path = os.path.join(root, 'data', 'knowledge-index.ko.json')
+    try:
+        _idx = json.load(open(idx_path, encoding='utf-8'))
+        vocab = set()
+        for d in _idx.get('docs', []):
+            vocab.update(d.get('concepts') or [])
+    except (OSError, json.JSONDecodeError, AttributeError) as e:
+        vocab = None
+        findings.append(_f('ERROR', 'concept-dict-coverage', '-',
+                            'cannot read data/knowledge-index.ko.json: %s' % e))
+    if vocab:
+        needs = {c for c in vocab if HANGUL_RE.search(c)}
+        for lang in tr_langs:
+            path = os.path.join(root, 'tools', 'concepts.%s.json' % lang)
+            if not os.path.isfile(path):
+                findings.append(_f('ERROR', 'concept-dict-coverage', lang,
+                                    'tools/concepts.%s.json 없음 — 개념 %d건이 그 언어에서 '
+                                    '한국어 키 그대로 보인다(검색 칩·문서 하단·지식지도·그래프)'
+                                    % (lang, len(needs))))
+                continue
+            try:
+                labels = (json.load(open(path, encoding='utf-8')) or {}).get('labels') or {}
+            except (OSError, json.JSONDecodeError, AttributeError) as e:
+                findings.append(_f('ERROR', 'concept-dict-coverage', lang,
+                                    'cannot parse tools/concepts.%s.json: %s' % (lang, e)))
+                continue
+            missing = sorted(needs - set(labels))
+            if missing:
+                findings.append(_f('ERROR', 'concept-dict-coverage', lang,
+                                    '%d개 개념에 %s 표시명이 없다 (예: %s)'
+                                    % (len(missing), lang, ', '.join(missing[:5]))))
+            # 값이 아직 한국어면 사전에 넣기만 하고 번역을 안 한 것.
+            untranslated = sorted(k for k, v in labels.items()
+                                  if isinstance(v, str) and HANGUL_RE.search(v))
+            if untranslated:
+                findings.append(_f('ERROR', 'concept-dict-coverage', lang,
+                                    '%d개 표시명의 값이 아직 한국어다 (예: %s)'
+                                    % (len(untranslated), ', '.join(untranslated[:5]))))
+            orphan = sorted(set(labels) - vocab)
+            if orphan:
+                findings.append(_f('WARN', 'concept-dict-coverage', lang,
+                                    '%d개 라벨이 인덱스에 없는 개념이다 — 개념이 사라졌거나 '
+                                    '오타 (예: %s)' % (len(orphan), ', '.join(orphan[:5]))))
+
+    # 3d. hidden-lang-dict: STRINGS 밖에서 언어별 문구를 들고 있는 리터럴 사전.
+    # `games.js`의 G2048_LADDER가 {ko, en}만 갖고 있어 일본어 모드에서 타일만
+    # 영어로 나왔는데, 이런 "숨은 i18n"은 어떤 게이트에도 안 잡혔다(2026-07-28).
+    ready = read_langs_ready(root)
+    if ready:
+        for fn in sorted(f for f in os.listdir(root) if f.endswith('.js')):
+            try:
+                text = open(os.path.join(root, fn), encoding='utf-8').read()
+            except OSError:
+                continue
+            for m in re.finditer(r'var\s+([A-Za-z_$][\w$]*)\s*=\s*\{\s*ko\s*:\s*\{', text):
+                name = m.group(1)
+                if name == 'STRINGS':
+                    continue   # 본체는 strings-parity가 따로 검사한다
+                block = extract_balanced(text, text.index('{', m.start()))
+                if block is None:
+                    continue
+                have = set(re.findall(r'[{,]\s*([A-Za-z_][A-Za-z0-9_]*)\s*:\s*\{', block))
+                missing = [l for l in ready if l not in have]
+                if missing:
+                    findings.append(_f('ERROR', 'hidden-lang-dict', '%s:%s' % (fn, name),
+                                        'STRINGS 밖의 언어 사전에 %s 항목이 없다 — 그 언어에서만 '
+                                        '다른 언어 문구가 나온다. STRINGS로 옮기거나 항목을 채울 것'
+                                        % ', '.join(missing)))
 
     # 4. <lang>-entry-orphan: doc-entries.<lang>.json entries must reference a
     # real ko entry name that also has a body in that language.
