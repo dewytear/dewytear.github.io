@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>スキルのインストールと利用（実習）</title>
+<meta name="description" content="スキルを入れて呼び出す実習のやり方をたどる。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/skl-install/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/skl-install/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/skl-install/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/skl-install/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/skl-install/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="スキルのインストールと利用（実習）">
+<meta property="og:description" content="スキルを入れて呼び出す実習のやり方をたどる。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/skl-install/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="スキルのインストールと利用（実習）">
+<meta name="twitter:description" content="スキルを入れて呼び出す実習のやり方をたどる。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "スキルのインストールと利用（実習）",
+ "description": "スキルを入れて呼び出す実習のやり方をたどる。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/skl-install/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!skl-install",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:20:26+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!skl-install">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/skl-install/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/skl-install/" hreflang="en">English</a>
+</p>
+<article>
+<h2>スキルのインストールと利用（実習）</h2>
+<p>スキルの実習は拍子抜けするほど簡単です — <strong>「このスキルを入れて」</strong>のひと言で終わります。ただし、さきほど学んだ<strong>動作の原理</strong>を思い浮かべながら使うと、ずっと面白くなります。</p>
+
+<h3>インストールする</h3>
+<ul>
+    <li>スキルの配布ページの <strong>「Get this skill」</strong>のボタンを押すと、git のアドレスがコピーされます。</li>
+    <li>そのアドレスを Claude Code に貼り付けて<strong>「このスキルを入れて」</strong>と言えばインストールされます。（手動なら該当のフォルダにコピー）</li>
+    <li>既定では<strong>グローバル（全体）のフォルダ</strong>に入ります。（プロジェクト／グローバルの選択もできますが、はじめは気にしなくて大丈夫です）</li>
+    <li>インストール後に見えなければ <code>/reload</code>（プラグインのリロード）するか、<strong>Claude Code を落として立ち上げ直せば</strong>スキルを咥えてきます。（<code>/clear</code> はコンテキストを空にするだけなので別ものです）</li>
+</ul>
+<p>スマートフォンでは <strong>Claude アプリ</strong>（サンドボックスで動く）からもスキルを試せます。</p>
+
+<h3>使う</h3>
+<pre><code><span class="c"># 使えるスキルの一覧を確認</span>
+私が使えるスキルには何がありますか?
+<span class="c"># 明示的な呼び出し</span>
+/スキル名 &lt;命令&gt;</code></pre>
+
+<h3>実習 — 組織のブランドのスキル</h3>
+<p>機関のウェブサイトのスタイルをもとに作った<strong>ブランドガイドラインのスキル</strong>を入れてから、こう頼みます。</p>
+<pre><code>&lt;ブランド&gt; のブランドガイドラインのスキルを使って
+夏季ワークショップのページを作って</code></pre>
+<p>すると、でたらめにではなく<strong>組織のブランドのスタイルで</strong>ページが作られます。核心はきれいさではなく — <strong>同じスキルを使えばみんな似たスタイル</strong>になり、組織の中で<strong>一貫した、再利用できる</strong>成果物が出てくる、という点です。同じやり方で <strong>PPT テンプレートのスキル</strong>（発表資料）、<strong>Finder のスキル</strong>（組織内の専門家を探す）などを使います。</p>
+
+<div class="note">
+    <span class="nh">発動の原理のおさらい</span>
+    「組織のスタイルで作って」と言うだけでスキルが発動するのは、<strong>メタデータの description</strong> に「このスタイルを使うときはこのスキルを使え」と書いてあるからです。ただし確実にしたいなら<strong>スキル名を明示する</strong>ほうがよいです。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Skill &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/skl-structure/">SKILL.md の構造とディスクリプション</a></li><li><a href="/p/ja/skl-overview/">スキル深掘り — 概要</a></li><li><a href="/p/ja/skl-coding-agent/">スキルの背景 — コーディングエージェントの誕生</a></li></ul>
+</nav>
+</body>
+</html>

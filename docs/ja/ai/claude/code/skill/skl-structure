@@ -1,0 +1,45 @@
+<h2>SKILL.md の構造とディスクリプション</h2>
+<p>スキルのフォルダの中心は <code>SKILL.md</code> のファイルで、そのほかに <code>reference</code>・<code>examples</code>・<code>scripts</code> といった同梱ファイルが一緒にあります。</p>
+
+<h3>フロントマター（メタデータ）</h3>
+<div class="diagram">
+<svg viewBox="0 0 640 210" role="img" aria-label="SKILL.md の解剖: フロントマター（name·description）はつねに読み込み、本文（指示）は呼ばれたときに読み込む">
+    <rect class="d-box" x="110" y="12" width="320" height="182" rx="10"/>
+    <text class="d-label" x="270" y="35" text-anchor="middle">SKILL.md</text>
+
+    <rect class="d-box accent" x="130" y="46" width="280" height="56" rx="9"/>
+    <text class="d-label" x="270" y="72" text-anchor="middle">フロントマター</text>
+    <text class="d-sub" x="270" y="90" text-anchor="middle">name · description</text>
+
+    <rect class="d-box soft" x="130" y="118" width="280" height="60" rx="9"/>
+    <text class="d-label" x="270" y="144" text-anchor="middle">本文 (指示)</text>
+    <text class="d-sub" x="270" y="162" text-anchor="middle">マークダウン · 使い方</text>
+
+    <line class="d-edge dash" x1="430" y1="74" x2="470" y2="74"/>
+    <text class="d-accent" x="478" y="78" text-anchor="start">つねに読み込む</text>
+    <line class="d-edge dash" x1="430" y1="148" x2="470" y2="148"/>
+    <text class="d-accent" x="478" y="152" text-anchor="start">呼ばれたら読む</text>
+</svg>
+<div class="d-cap">ひとつのファイルの中で、フロントマターはつねに、本文は呼ばれたときに読み込まれます。</div>
+</div>
+<p><code>SKILL.md</code> のいちばん上には YAML の<strong>フロントマター</strong>があります。たとえば PDF のスキルなら:</p>
+<pre><code><span class="c"># SKILL.md のフロントマター (つねに読み込まれる部分)</span>
+name: pdf
+description: PDF のテキスト/表の抽出、結合、分割などに使うツールキット</code></pre>
+<p>最初に読み込まれるときはこの<strong>フロントマターだけ</strong>が載り、実際の説明書（本文）は<strong>呼ばれたときに</strong>読み込まれます。</p>
+
+<h3>ディスクリプションの書き方が大事</h3>
+<p>スキルは <code>/スキル名</code> で<strong>明示的に呼び出す</strong>こともできますし、「PDF からテキストを抽出してみて」のように言えばフロントマターを根拠に<strong>自動で発動</strong>することもあります。だから <code>description</code> をうまく書く必要があります。</p>
+<ul>
+    <li><strong>呼び出されない場合</strong> — 例: PDF の編集機能があるのに description に「読むのに使う」としか書いていないと、編集を頼んでも呼び出されないことがある。</li>
+    <li><strong>不要に呼び出される場合</strong> — PDF と関係ないのに急に発動してしまう。</li>
+</ul>
+<p>だから、ちゃんと呼び出されるか、むだに発動しないかを<strong>テスト</strong>してみて、自分で作るときは description を<strong>念入りに</strong>書くべきです。</p>
+
+<h3>指示の中でファイルを参照する</h3>
+<p>本文（マークダウン）の指示の中には、<strong>「こういうときはこのファイルを見よ」</strong>のように別のファイルを参照するよう書いておけます。これは先に見た JSON のツールのスペックと違い、<strong>人に教えるように自然言語で</strong>「コマンドの実行のしかた」くらいを書くものです。</p>
+
+<div class="note">
+    <span class="nh">なぜ read と実行だけで動くのか</span>
+    コーディングエージェントは<strong>ファイルの読み・書き・編集・検索</strong>のツールを標準で備えていて、ファイルシステムを自由に扱えます。だから指示に「このファイルを読め」とあるだけで、エージェントが自分で読み込みます。スキルの内容とコーディングエージェントのツールが<strong>どう相互作用しながら読むのか</strong>を想像しながら見ると、理解しやすくなります。
+</div>

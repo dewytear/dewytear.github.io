@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>コンテキストウィンドウとツールの問題</title>
+<meta name="description" content="コンテキストウィンドウの限界と、ツールがコンテキストを食う問題を説明する。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/skl-context/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/skl-context/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/skl-context/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/skl-context/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/skl-context/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="コンテキストウィンドウとツールの問題">
+<meta property="og:description" content="コンテキストウィンドウの限界と、ツールがコンテキストを食う問題を説明する。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/skl-context/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="コンテキストウィンドウとツールの問題">
+<meta name="twitter:description" content="コンテキストウィンドウの限界と、ツールがコンテキストを食う問題を説明する。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "コンテキストウィンドウとツールの問題",
+ "description": "コンテキストウィンドウの限界と、ツールがコンテキストを食う問題を説明する。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/skl-context/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!skl-context",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T22:20:26+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!skl-context">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/skl-context/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/skl-context/" hreflang="en">English</a>
+</p>
+<article>
+<h2>コンテキストウィンドウとツールの問題</h2>
+<p>スキルの原理を理解するには、まず<strong>コンテキストウィンドウ</strong>から知る必要があります。</p>
+
+<h3>コンテキストウィンドウ</h3>
+<p>コンテキストウィンドウとは、LLM へ入力される<strong>入力の大きさ</strong>です。（出力がまた入力へ入って続いていく構造なので、出力も含まれます。）ここには利用者の質問だけでなく、次のすべてが収まります。</p>
+<ul>
+    <li>基本の情報（あなたは誰で、今日は何日で、何をして何をしてはいけないか）</li>
+    <li>指示文 · few-shot の例 · 出力の形式 · 文脈 · メモリ</li>
+    <li><strong>ツール</strong>の定義 · チャットの履歴（長くなるほど積み増される）</li>
+</ul>
+<p>昔の LLM はコンテキストが 2K〜8K（GPT-3 で約 2K、GPT-4 の初期で 8K）しかありませんでしたが、いま Claude Code で使うモデルは基本 200K、一部のモデル（Sonnet 4.6・Opus 4.6 以降など）は<strong>1M（100 万）トークン</strong>まで受けとります。ただし、大きければよいというものでもありません。<strong>コンテキストが埋まりはじめると LLM が不安定</strong>になり、仕事をしたがらなくなったり、おかしなところで終わらせたりします。</p>
+
+<div class="note">
+    <span class="nh">clear · compact — 机の片づけ</span>
+    Claude Code の <code>/clear</code>・<code>/compact</code> は、いまのコンテキストを減らしたり空にしたりして新しい作業に備えるコマンドです。机が散らかったまま仕事をするのと、<strong>すっかり片づけてから始める</strong>ことの違いだと考えてください。
+</div>
+
+<h3>ツールがコンテキストを食う</h3>
+<p>スキルも結局はツールの一種です。ところがツールをひとつ開いてみると、関数・引数・使う時点・単位などが書かれた<strong>複雑な JSON のスペック</strong>です。これがひとつひとつけっこう大きいので、<strong>ツールが数個を超えただけでコンテキストが破裂しそう</strong>になります。MCP やコネクタをいくつもつないでいると「これ以上つなげません」と出るのは、これが理由です。</p>
+
+<div class="note">
+    <span class="nh">トランクのたとえ</span>
+    ツールは自動車の<strong>トランク</strong>のようなものです。大きさに限りがあるので、キャンプ道具を全部は入れられません。選択肢はふたつ — もっと大きなトランクを買うか、荷物をできるかぎり減らすか。コーディングエージェントは後者を選び、<strong>ツールを六つに減らして実行環境を一緒に渡す</strong>やり方で問題を解きました。そしてその上に<strong>スキル</strong>が登場したのです。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Skill &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/skl-progressive/">段階的な読み込み（スキルの中心原理）</a></li><li><a href="/p/ja/skl-wrap/">まとめ — エンジニアリングの階層と Q&amp;A</a></li><li><a href="/p/ja/skl-strengths/">スキルの強み</a></li></ul>
+</nav>
+</body>
+</html>
