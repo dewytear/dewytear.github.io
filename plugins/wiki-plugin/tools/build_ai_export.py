@@ -490,6 +490,13 @@ def build_sitemap():
         if extra not in paths:
             paths[extra] = cfg['path']
             order.append(extra)
+    # **스냅샷이 실제로 생기는 문서만 싣는다.** 선택 규칙의 정본은
+    # build_prerender.snapshot_names() 하나다 — 여기서 `list` 전체를 싣던
+    # 탓에 워크로그 63편의 /p/<name>/ 이 404인 채로 검색엔진에 제출되고
+    # 있었다(2026-07-28). 사이트맵에 없는 URL을 적는 것보다, 없는 URL을
+    # 적지 않는 쪽이 언제나 옳다.
+    live_snapshots = pr.snapshot_names()
+    order = [n for n in order if n in live_snapshots]
 
     body = ''
     fixed = [BASE, BASE + 'p/']

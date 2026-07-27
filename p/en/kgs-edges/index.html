@@ -44,7 +44,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-07-24T22:16:42+09:00"
+ "dateModified": "2026-07-28T04:34:26+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -62,7 +62,7 @@
 <p>Every document has <strong>five or six key concepts</strong> curated for it when it is registered (step ③ of the pipeline in the <a href="/p/en/kgs-overview/">previous part</a>). One principle governs this: <strong>write only concepts that actually exist in the body</strong>. If you add a concept that is not in the body because you want a connection, the graph stops being "a map of real knowledge". So the edges of this graph are fewer in number, but <strong>each one can present its evidence (the shared concepts)</strong>.</p>
 
 <h3>The Scale — The Rarer the Concept, the Stronger the Connection</h3>
-<p>When two documents share a concept, they become a connection candidate. But not every concept can weigh the same. Sharing 'skills', which appears in <strong>22</strong> of 108 documents, is close to coincidence, while sharing 'vector search', which appears in only <strong>2</strong>, is a strong signal. So each concept is given a <strong>rarity weight (idf)</strong> — roughly the log of "total number of documents ÷ number of documents containing that concept":</p>
+<p>When two documents share a concept, they become a connection candidate. But not every concept can weigh the same. Sharing 'skills', which appears in <strong>22</strong> of 115 documents, is close to coincidence, while sharing 'vector search', which appears in only <strong>2</strong>, is a strong signal. So each concept is given a <strong>rarity weight (idf)</strong> — roughly the log of "total number of documents ÷ number of documents containing that concept":</p>
 
 <div class="diagram">
 <svg viewBox="0 0 720 176" role="img" aria-label="The idf scale: 'skills' appears in 21 docs with a light weight of 1.54, while 'vector search' appears in only 2 docs with a heavy weight of 3.89">
@@ -110,7 +110,7 @@
 <ul>
     <li><strong>2 or more shared</strong> → connect. Two different concepts overlapping is unlikely to be coincidence.</li>
     <li><strong>1 shared + that concept appears in 3 or fewer documents</strong> → connect. A real case: Welcome ↔ <a href="/p/en/commands/">Everyday Use</a> share only 'natural language', but 'natural language' is rare enough to count. Conversely, a pair sharing only 'skills' is not connected — one concept shared by 22 documents cannot serve as evidence.</li>
-    <li><strong>Otherwise</strong> → no connection by concept. Instead, a document that does not reach two concept connections is topped up with <strong>neighbors in the same System</strong> (e.g. the <a href="/p/en/ccb-claudemd/">CLAUDE.md lesson</a> → the lessons before and after it in the same Tutorial), so that <strong>every document has at least 2 to 4 connections</strong>. The current ratio is 179 concept connections (79%) · 49 folder top-ups (21%).</li>
+    <li><strong>Otherwise</strong> → no connection by concept. Instead, a document that does not reach two concept connections is topped up with <strong>neighbors in the same System</strong> (e.g. the <a href="/p/en/ccb-claudemd/">CLAUDE.md lesson</a> → the lessons before and after it in the same Tutorial), so that <strong>every document has at least 2 to 4 connections</strong>. The current ratio is 182 concept connections (77%) · 54 folder top-ups (23%).</li>
 </ul>
 
 <h3>The Ripple of a Threshold — Why You Cannot Add Concepts Casually</h3>
@@ -161,7 +161,7 @@
     Concepts are <strong>curated</strong> (body-real only) → edges come from <strong>rarity-weighted sharing</strong> (2 or more, or one rare concept) → shortfalls are made up by <strong>folder top-up</strong> → every document has 2–4 connections and there are no orphans. On top of that, <strong>citation backlinks (<code>citedBy</code>)</strong>, the reverse index of body <code>#!</code> links, and <strong>directed typed relations (<code>relations</code>)</strong> declared by curation are layered separately. Heavily referenced documents become <strong>hubs</strong> and form the center of the graph (<a href="/p/en/kgs-views/">next part</a>).
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · Wiki · Knowledge System &middot; <span class="pr-k">Created</span> 2026-07-11 &middot; <span class="pr-k">Updated</span> 2026-07-24</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Wiki · Knowledge System &middot; <span class="pr-k">Created</span> 2026-07-11 &middot; <span class="pr-k">Updated</span> 2026-07-28</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
 <ul><li><a href="/p/en/kgs-overview/">How Knowledge Accumulates — The Four-Level Hierarchy and the Registration Pipeline</a></li><li><a href="/p/en/kgs-views/">Nine Ways to Read the Graph — Each View Answers a Different Question</a></li></ul>

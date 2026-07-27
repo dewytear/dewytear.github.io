@@ -44,7 +44,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-06T02:35:24+09:00",
- "dateModified": "2026-07-13T21:31:39+09:00"
+ "dateModified": "2026-07-28T04:34:26+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -60,7 +60,7 @@
 <h3>We do not build it from scratch</h3>
 <p>We start the PoC by cloning the features already provided by the <strong>Reference Wiki</strong> that is running for pre-validation (the very wiki explained by the <a href="/p/en/kgs-overview/">How Knowledge Accumulates</a> series), and we grow the validated features into the company platform. Scope proven as of 2026-07: HTML Fragment documents, SPA Web UI, JSON Navigation Tree (immutable IDs separated from physical paths), unified/Tag/Concept search, Knowledge Index (deterministic build + <code>--check</code> drift gate), automatic related-document recommendation (<code>related</code>) and <strong>five typed knowledge relations (<code>relations</code>)</strong>, Knowledge Map · 3D/2D knowledge graph, <strong>an AI consumption layer (llms.txt · self-contained graph JSON)</strong>, a four-layer CI validation gate, Work Log, and Git History based document history.</p>
 
-<p>Reuse here is not merely "referring to the code." This engine is already <strong>packaged as wiki-plugin (v0.7.0)</strong> — it carries 18 registration/index/validation tools and 4 skills (add-doc · index · validate · wiki-init), so installing it in a new repository instantly bootstraps the same knowledge system (<a href="/p/en/kgs-plugin/">Packaging the Wiki Engine as a Plugin</a>). The Reference Wiki itself runs as the first dogfooding user of this plugin, so "we do not build it from scratch" is not a slogan but an <strong>installation procedure</strong>.</p>
+<p>Reuse here is not merely "referring to the code." This engine is already <strong>packaged as wiki-plugin (v0.21.0)</strong> — it carries 18 registration/index/validation tools and 4 skills (add-doc · index · validate · wiki-init), so installing it in a new repository instantly bootstraps the same knowledge system (<a href="/p/en/kgs-plugin/">Packaging the Wiki Engine as a Plugin</a>). The Reference Wiki itself runs as the first dogfooding user of this plugin, so "we do not build it from scratch" is not a slogan but an <strong>installation procedure</strong>.</p>
 
 <p>In particular, in this Reference Wiki, <strong>reflecting the knowledge system is mandated as a rule whenever AI writes or edits a document</strong> (enforced by the repository's AI guideline document). When a single document is added, navigation registration → knowledge index entry (including concepts and a <strong>multi-angle review of the five relation types</strong> — a missed review is surfaced by a non-blocking review signal) → deterministic index build → automatic reflection in the knowledge map, graph, and search → Work Log record all move together within the <strong>same unit of change (PR)</strong>. In other words, the company platform's operating discipline of a "knowledge reflection rate" is already being validated at small scale.</p>
 
@@ -122,7 +122,7 @@
     The recommended structure separates repositories and access into <strong>General Wiki (all employees) · Engineering Wiki (development organization) · Restricted Knowledge (restricted organizations)</strong>. All security grades are not mixed into a single public wiki, and employees search and read only within the scope of their own permissions.
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> Douzone · dev.Center · Proposal · AI Dev Knowledge Platform &middot; <span class="pr-k">Created</span> 2026-07-06 &middot; <span class="pr-k">Updated</span> 2026-07-13</p>
+<p class="pr-meta"><span class="pr-k">Section</span> Douzone · dev.Center · Proposal · AI Dev Knowledge Platform &middot; <span class="pr-k">Created</span> 2026-07-06 &middot; <span class="pr-k">Updated</span> 2026-07-28</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
 <ul><li><a href="/p/en/dzp-value/">Added Value and Use Scenarios — Beyond the Development Organization</a></li><li><a href="/p/en/skills/">Skills</a></li></ul>

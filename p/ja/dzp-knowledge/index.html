@@ -44,7 +44,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-06T02:35:24+09:00",
- "dateModified": "2026-07-13T21:31:39+09:00"
+ "dateModified": "2026-07-28T04:34:26+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -56,7 +56,7 @@
 </p>
 <article>
 <h2>知識の管理の体系 — 判定 · 構造 · 連結 · 追跡 · 信頼 · 寿命</h2>
-<p>パイプラインが知識を作るのだとすれば、この編はその知識が<strong>どんな構造に収まり、どうつながり、どう信頼を保つのか</strong>を扱う。ここに出てくる構造は想像ではない — 事前の検証のための Reference Wiki が、2026-07 の時点で文書 107 編 · 固有の概念 337 個 · 自動の関連エッジ 349 本 · 型つきの知識の関係 107 件の規模で<strong>実際に運用して検証したスキーマ</strong>を核とし、会社の開発の知識に要るフィールドだけを後方互換（additive）に広げる。</p>
+<p>パイプラインが知識を作るのだとすれば、この編はその知識が<strong>どんな構造に収まり、どうつながり、どう信頼を保つのか</strong>を扱う。ここに出てくる構造は想像ではない — 事前の検証のための Reference Wiki が、2026-07 の時点で文書 115 編 · 固有の概念 370 個 · 自動の関連エッジ 364 本 · 型つきの知識の関係 114 件の規模で<strong>実際に運用して検証したスキーマ</strong>を核とし、会社の開発の知識に要るフィールドだけを後方互換（additive）に広げる。</p>
 
 <h3>価値の判定 — 変更の量ではなく再利用の価値</h3>
 <ul>
@@ -68,7 +68,7 @@
 <p>知識の一編は三重の属性として存在する。第一の重ねが<strong>ノードの属性</strong>だ — Reference Wiki のナビゲーションのツリーで、すべての文書のノードは <code>name</code>（不変の論理 ID であり経路でもある）と <code>path</code>（物理の経路）を分けて持つ。ファイルがドメインのツリーの中で動いても <code>path</code> だけが変わり <code>name</code> は不変なので、<strong>積み上がったリンク・関係・検索がファイルの置き直しで壊れない</strong>。ここに表示のための <code>label</code>（+言語ごと）・<code>tags</code>・著作の <code>model</code> が載る（<a href="/p/ja/kgs-overview/">知識はどう積み上がるのか</a>）。第二の重ねが<strong>索引のエントリ</strong> — 下の例の上の部分が実証された核、下の部分が会社向けの拡張だ。第三の重ね（連結）は次の節で扱う。</p>
 <pre><code><span class="c"># Knowledge Index のエントリ — 実証された核 + 会社の拡張（例）</span>
 {
-  <span class="c">// ── 実証の核: Reference Wiki が 107 編の規模で運用中のフィールド ──</span>
+  <span class="c">// ── 実証の核: Reference Wiki が 115 編の規模で運用中のフィールド ──</span>
   "name": "dz-erp-so-status-transition",   <span class="c">// 不変の論理 ID = 経路</span>
   "title": "受注の状態の遷移の方針",
   "summary": "販売オーダーの状態の体系と、出荷・売上への遷移の条件",
@@ -95,7 +95,7 @@
     <li><strong>ⓐ 計算された関連（<code>related</code>）</strong> — 機械が共有された概念から自動で計算する対称の連結。ありふれた概念ほど低く、まれな概念ほど高く重みづけし（希少性・idf）、<strong>概念を 2 つ以上共有</strong>するか、<strong>まれな概念（全体で 3 編以下）を 1 つ共有</strong>するときだけつなぐ。連結が足りなければ同じフォルダ（System）で補い、<strong>すべての文書が 2〜4 の連結を持ち、孤立は 0</strong> を保証する。人がリンクを張らなくてもグラフが保たれる層 — AI が大量に生成する会社の知識ではとくに大事だ。</li>
     <li><strong>ⓑ 宣言された関係（<code>relations</code>）</strong> — 方向と種類のある型つきの関係が 5 種: <strong>先行知識（prerequisite） · 実装（implements） · 事例（example-of） · 根拠（evidence-for） · 置換（supersedes）</strong>。それぞれの関係は方向（A→対象）と一行の根拠（<code>evidenceRef</code>）、そして<strong>宣言の主体（<code>source</code>）</strong>を持つ。保存は正方向の一度だけで、逆方向（「この文書へ入ってくる関係」）は消費する側が自動で導く。</li>
 </ul>
-<p>ここで会社のプラットフォームとスキーマがぴたりと噛み合うのが <code>source</code> のフィールドだ。実証されたスキーマは、宣言の主体の語彙として <code>human · ai-proposed · imported · rule-derived</code> をすでに予約している（Reference Wiki の 107 件はすべて <code>human</code>）。会社のプラットフォームでは<strong>AI Curator が関係を <code>ai-proposed</code> として提案し、人が承認すれば <code>human</code> へ昇格</strong>する — 自動化の速さと「本文に実在する関係だけを張る」という正直さの原則を、ひとつのフィールドで両立させる構造だ。無矛盾は機械が守る: 存在しない対象を指す関係と、5 つの語彙の外の型は <strong>ERROR としてマージが遮られ</strong>、根拠の欠落や食い違う宣言は検討の信号（WARN）として浮かび上がる。</p>
+<p>ここで会社のプラットフォームとスキーマがぴたりと噛み合うのが <code>source</code> のフィールドだ。実証されたスキーマは、宣言の主体の語彙として <code>human · ai-proposed · imported · rule-derived</code> をすでに予約している（Reference Wiki の 114 件はすべて <code>human</code>）。会社のプラットフォームでは<strong>AI Curator が関係を <code>ai-proposed</code> として提案し、人が承認すれば <code>human</code> へ昇格</strong>する — 自動化の速さと「本文に実在する関係だけを張る」という正直さの原則を、ひとつのフィールドで両立させる構造だ。無矛盾は機械が守る: 存在しない対象を指す関係と、5 つの語彙の外の型は <strong>ERROR としてマージが遮られ</strong>、根拠の欠落や食い違う宣言は検討の信号（WARN）として浮かび上がる。</p>
 
 <h3>積み上げる更新 — 文書の数ではなく知識の密度</h3>
 <p>新しい知識が見つかったからといって、いつも新しい文書を作りはしない。まず Knowledge Index を検索して関連する文書があれば<strong>既存の文書を広げる</strong>。たとえば「受注の状態の遷移の体系」の文書がある状態で分割出荷の状態が加わったなら、新規の文書より先に既存の文書の拡張を判断する。Wiki が変更の履歴の集まりではなく<strong>継続して精製された、いまの知識の状態</strong>として保たれる理由だ。</p>
@@ -184,7 +184,7 @@
     概念（concepts）と関係（relations）は<strong>本文に実在するものだけ</strong>を張る。連結を増やそうとして、ない概念を入れたり無理な関係を作ったりすることはグラフをゆがめる — Reference Wiki が規則として打ち込み運用してきた原則であり、検証器の WARN は「直すべき一覧」ではなく<strong>「人が一度見る一覧」</strong>だ。AI が大量に知識を生成する会社の規模では、この原則がいっそう大事になる — <code>ai-proposed</code> → 人の承認という流れと、遮らないレビューの信号がその安全装置である。
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> Douzone · dev.Center · Proposal · AI開発ナレッジプラットフォーム &middot; <span class="pr-k">作成日</span> 2026-07-06 &middot; <span class="pr-k">更新日</span> 2026-07-13</p>
+<p class="pr-meta"><span class="pr-k">分類</span> Douzone · dev.Center · Proposal · AI開発ナレッジプラットフォーム &middot; <span class="pr-k">作成日</span> 2026-07-06 &middot; <span class="pr-k">更新日</span> 2026-07-28</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
 <ul><li><a href="/p/ja/news-20260710-llm-wiki-knowledge-context/">LLM Wiki とナレッジコンテキスト — 書き込みの時点でコンパイルするチームの知識</a></li><li><a href="/p/ja/dzp-core/">提案の要 — 開発の流れはそのまま、知識化は AI が</a></li><li><a href="/p/ja/sb-level2/">レベル 2 · 主題でまとめる（LLM ウィキ + メモリ）</a></li></ul>
