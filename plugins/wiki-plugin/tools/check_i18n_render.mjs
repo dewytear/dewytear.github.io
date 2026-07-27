@@ -46,17 +46,35 @@ function readyLangs() {
 // not a signal to loosen the rule.
 // ---------------------------------------------------------------------------
 const ALLOW = [
-  // Currently EMPTY, and that is the finding: with the fixes in this change,
-  // no non-Korean screen the sweep reaches renders any Korean at all. Verified
-  // by running the sweep against `ko`, where it reports Korean on every screen
-  // — so the detector is live, not vacuous.
+  // The work-log folders on disk are literally named `MM월` / `DD일`
+  // (docs/ko/work-log/2026/07/28/…). wl-guide documents how to create a log
+  // file, so it must quote the REAL path — in every language, including the
+  // English one, which has printed `07월 > 03일` since it was written. The
+  // sidebar shows the translated folder titles (`July` / `28日`) via
+  // title_<lang>; only this one guide shows the physical names.
+  ['월', 'wl-guide quotes the on-disk folder name `MM월`'],
+  ['일', 'wl-guide quotes the on-disk folder name `DD일`'],
   //
-  // The one exemption we expect to need eventually is the settings language
+  // Nothing else is exempt. The detector is live, not vacuous — running the
+  // sweep against `ko` reports Korean on every screen.
+  //
+  // One exemption we expect to need eventually: the settings language
   // <select>, which lists each language in its own endonym ('한국어'). It is
   // behind a password prompt, so the sweep does not reach it today; add it
   // here WITH THIS REASON if the screen ever becomes reachable.
 ];
 const ALLOW_STRINGS = ALLOW.map((a) => a[0]);
+
+// THIRD-PARTY EMBEDS — excluded structurally, not by string.
+//
+// The background-music player is a YouTube iframe, and YouTube sets its
+// `title` to the video's own title. The owner's playlist is Korean, so that
+// attribute is Korean on every screen in every language — and it changes
+// whenever the track changes, so no string allowlist could ever cover it.
+// It is not our UI text and we cannot translate it, so the ELEMENT is out of
+// scope. (This only shows up where the runner can reach youtube.com, which is
+// why CI caught it and a sandboxed local run did not.)
+const EXCLUDE = '#yt-music, iframe';
 
 // Work-log BODIES are Korean-only by policy (tools/i18n.md): dated logs
 // (wl-YYYYMMDD-*) fall back to ko in every language and that is correct.
@@ -86,6 +104,10 @@ const SCREENS = [
   { id: 'doc:kgs-overview', hash: '#!kgs-overview' },
   { id: 'doc:ccb-what', hash: '#!ccb-what' },
   { id: 'folder:tutorial', hash: '#!ccb-overview' },
+  // work-log의 안내 문서. 날짜 붙은 일지와 달리 본문도 병행 대상이라
+  // 여기서 검사한다 — 2026-07-28에 라벨만 번역되고 ja 본문이 없어
+  // "메뉴는 일본어인데 열면 한국어"였던 자리다.
+  { id: 'doc:wl-guide', hash: '#!wl-guide' },
   // Graph: one entry per view. The 2D group holds the view that was broken.
   ...['3d', '3d2', '3d3'].map((v) => ({
     id: `graph:${v}`, hash: '#!cosmos',
@@ -169,6 +191,7 @@ async function main() {
         ${scr.prep ? `try{ ${scr.prep} }catch(e){}` : ''}
         await new Promise(r=>setTimeout(r,1400));
         const ALLOW = ${JSON.stringify(ALLOW_STRINGS)};
+        const EXCLUDE = ${JSON.stringify(EXCLUDE)};
         const HAN = /[\\uac00-\\ud7a3]/;
         const SKIP_BODY = ${skipBody ? 'true' : 'false'};
         const out = [], seen = new Set();
@@ -190,6 +213,7 @@ async function main() {
           const el = n.parentElement;
           if(!el) continue;
           if(el.closest('script,style,noscript,template')) continue;
+          if(el.closest(EXCLUDE)) continue;   // 서드파티 임베드는 우리 문구가 아니다
           if(SKIP_BODY && el.closest('#article')) continue;
           const cs = getComputedStyle(el);
           if(cs.display==='none' || cs.visibility==='hidden') continue;
@@ -200,6 +224,7 @@ async function main() {
         // Accessible names are UI text too — they were a real leak (music button).
         document.querySelectorAll('[aria-label],[title]').forEach(el=>{
           if(!el.getClientRects().length) return;
+          if(el.closest(EXCLUDE)) return;
           record('@'+(el.id || el.className || el.tagName.toLowerCase()),
                  (el.getAttribute('aria-label')||'') + ' ' + (el.getAttribute('title')||''));
         });

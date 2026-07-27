@@ -141,3 +141,22 @@
     <li><code>CLAUDE.md</code>: &ldquo;화면 문구는 <code>STRINGS</code>에만 — 기능 JS에 임시 언어 사전 금지&rdquo;, &ldquo;번역은 파일이 아니라 화면으로 확인한다&rdquo; 두 규칙 추가.</li>
     <li><code>kgs-gates</code>(3언어): 동반 게이트 다섯 → <strong>여섯</strong>, <code>i18n-render</code> 행 추가.</li>
 </ul>
+
+<div class="note warn">
+    <span class="nh">머지 직전에 CI가 잡은 것 — 로컬은 통과했는데</span>
+    새 <code>i18n-render</code> 잡이 PR에서 <strong>실패</strong>했다. 원인은 <strong>배경음악 YouTube iframe의 <code>title</code></strong> &mdash; 유튜브가 그 자리에 <strong>영상 제목</strong>을 넣는데 대표님 플레이리스트가 한국어라, 모든 언어의 모든 화면에서 한국어로 잡혔다. <strong>로컬에서는 유튜브에 못 닿아 iframe이 뜨지 않아 통과했다</strong> &mdash; 샌드박스와 CI의 네트워크 차이가 만든 위양성이고, 게이트를 실제 CI에서 한 번 돌려보기 전엔 알 수 없는 종류다.
+    <br>고친 방식이 중요하다: <strong>문자열 허용목록이 아니라 요소 단위 제외</strong>(<code>EXCLUDE = '#yt-music, iframe'</code>)로 처리했다. 영상 제목은 곡이 바뀌면 같이 바뀌어서 어떤 문자열 목록으로도 덮을 수 없고, 애초에 <strong>우리 문구가 아니다</strong>. 제외가 너무 넓지 않은지도 확인했다 &mdash; 같은 한국어 문구를 사이드바 프로필 링크에 붙였더니 <strong>21건 전부 잡혔다</strong>.
+</div>
+
+<h3>wl-guide가 두 게이트를 다 빠져나간 이유</h3>
+<p>대표님이 &ldquo;로깅 규칙 페이지가 영어일 때는 영어인데 일본어는 한글&rdquo;이라고 짚으신 그 문서다. 본문 신설로 증상은 없앴지만, <strong>왜 아무 게이트도 못 잡았는지</strong>가 남는다.</p>
+<ul>
+    <li><code>validate_i18n</code>의 <code>label-without-&lt;lang&gt;-body</code>(ERROR)가 <strong><code>work-log/</code> 경로 전체를 면제</strong>했다. 날짜 붙은 일지 59편(라벨만 있고 본문 없음이 정상)에는 맞는 면제지만, <code>wl-guide</code>는 <strong>일지가 아니라 안내 문서</strong>인데 경로가 같다는 이유로 딸려 들어갔다. 면제를 <strong>이름 규칙(<code>wl-YYYYMMDD-*</code>)으로 좁혔다</strong>.</li>
+    <li>새로 만든 <code>check_i18n_render</code>의 화면 목록에 <strong>work-log 페이지가 하나도 없었다</strong>. <code>wl-guide</code>를 넣었다.</li>
+</ul>
+<p>같은 좁히기로 <code>wl-backlog</code>가 드러났다 &mdash; <strong>지금도 라벨만 번역되고 en·ja 본문이 둘 다 없다</strong>(영어에서도 한국어가 나온다). 다만 이건 PR마다 고치는 <strong>살아있는 목록</strong>이라 번역본을 두면 매번 세 벌을 갱신해야 하고, 안 하면 겉장만 남는다. 성격이 다른 판단이라 <strong>이번에 결정하지 않고</strong> <code>WORKLOG_UNDECIDED</code>로 <strong>미결 표시</strong>하고 <a href="#!wl-backlog">Backlog</a>에 결정 항목으로 올렸다 &mdash; 조용히 통과시키는 것과는 다르다.</p>
+
+<div class="note warn">
+    <span class="nh">이번의 진짜 교훈 &mdash; 고쳐 놓고 배포하지 않으면 안 고친 것과 같다</span>
+    대표님이 짚으신 세 가지(메뉴·별똥별·2D 개념)와 이번 로깅 규칙까지, <strong>지목받은 시점에 전부 이미 고쳐져 있었다.</strong> 다만 PR이 열린 채였고 배포본은 그 전 상태였다. 로컬에서 &ldquo;ERROR 0&rdquo;를 보고 &ldquo;고쳤습니다&rdquo;라고 말한 것이 성급했다. 앞으로 <strong>완료는 머지·배포·실사이트 확인까지 끝난 뒤에만</strong> 말한다.
+</div>

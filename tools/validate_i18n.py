@@ -19,6 +19,21 @@ import sys
 
 HANGUL_RE = re.compile(r'[가-힣]')
 
+# 날짜가 붙은 일지(wl-YYYYMMDD-*)만 "라벨만 번역, 본문은 ko 폴백"이 정상이다.
+# 2026-07-28까지 work-log/ 경로 전체를 면제했는데, 그 바람에 **일지가 아닌
+# 안내 문서** wl-guide가 딸려 들어가 label_ja만 달고 ja 본문 없이 통과했다
+# (메뉴는 일본어인데 열면 한국어). 면제는 이름으로 좁힌다.
+WORKLOG_DATED_RE = re.compile(r'^wl-\d{8}-')
+
+# TODO(wl-backlog): 지금 label_en·label_ja가 있는데 en·ja 본문이 둘 다 없다
+# (= wl-guide와 같은 상태, 영어에서도 한국어가 나온다). 라벨을 뗄지 본문을
+# 번역할지 결정이 필요해 잠시 면제한다 — **통과가 아니라 미결 표시**다.
+WORKLOG_UNDECIDED = {'wl-backlog'}
+
+
+def _worklog_exempt(name):
+    return bool(WORKLOG_DATED_RE.match(name)) or name in WORKLOG_UNDECIDED
+
 
 def _f(level, check, name, message):
     return {'level': level, 'check': check, 'name': name, 'message': message}
@@ -175,7 +190,7 @@ def run(root):
                 findings.append(_f('WARN', '%s-body-without-label' % lang, n['name'],
                                     "docs/%s/%s exists but list node has no label_%s"
                                     % (lang, rel, lang)))
-            if has_label and not has_body and not rel.startswith('work-log/'):
+            if has_label and not has_body and not _worklog_exempt(n['name']):
                 findings.append(_f('ERROR', 'label-without-%s-body' % lang, n['name'],
                                     "list node has label_%s but docs/%s/%s is missing "
                                     "(번역 라벨만 달고 본문을 빼면 그 언어인 척하는 "
