@@ -1,0 +1,77 @@
+<h2>エージェント・スキル</h2>
+<p>OMC の核心は<strong>委任（delegation）</strong>です。メインの Claude が指揮者の役割を負い、役割の決まった専門のエージェントたちへ作業を分けて任せます。各エージェントは作業の難しさに合うモデルへ自動で割り当てられ（設計・分析には高性能なモデル、単純な参照には軽量なモデル）、ひとりで全部こなすより正確で速くなります。</p>
+<p>エージェントは役割に応じて大きく四つのグループに分かれます。以下はグループごとの主なエージェントと、それぞれがやることです。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 200" role="img" aria-label="委任の組織図: メインの Claude（指揮者）が探索・分析、実装・修正、検証・品質、文書・UI・データのグループへ委任する">
+    <rect class="d-box accent" x="250" y="14" width="180" height="52" rx="12"/>
+    <text class="d-label" x="340" y="38" text-anchor="middle">メイン Claude</text>
+    <text class="d-sub" x="340" y="55" text-anchor="middle">指揮者 (delegation)</text>
+
+    <path class="d-edge" d="M340 66 V100" fill="none"/>
+    <path class="d-edge" d="M83 100 H597" fill="none"/>
+    <path class="d-edge" d="M83 100 V126" fill="none"/><polygon class="d-arrow" points="78,126 88,126 83,132"/>
+    <path class="d-edge" d="M253 100 V126" fill="none"/><polygon class="d-arrow" points="248,126 258,126 253,132"/>
+    <path class="d-edge" d="M427 100 V126" fill="none"/><polygon class="d-arrow" points="422,126 432,126 427,132"/>
+    <path class="d-edge" d="M597 100 V126" fill="none"/><polygon class="d-arrow" points="592,126 602,126 597,132"/>
+
+    <rect class="d-box" x="8" y="132" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="83" y="156" text-anchor="middle">探索・分析</text>
+    <text class="d-sub" x="83" y="173" text-anchor="middle">explore·architect</text>
+    <rect class="d-box" x="178" y="132" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="253" y="156" text-anchor="middle">実装・修正</text>
+    <text class="d-sub" x="253" y="173" text-anchor="middle">executor·debugger</text>
+    <rect class="d-box" x="352" y="132" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="427" y="156" text-anchor="middle">検証・品質</text>
+    <text class="d-sub" x="427" y="173" text-anchor="middle">qa·reviewer</text>
+    <rect class="d-box" x="522" y="132" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="597" y="156" text-anchor="middle">文書・UI・データ</text>
+    <text class="d-sub" x="597" y="173" text-anchor="middle">writer·designer</text>
+</svg>
+<div class="d-cap">メインの Claude が<strong>指揮者</strong>として、役割の決まった<strong>専門エージェントのグループ</strong>へ作業を分けて任せます。</div>
+</div>
+
+<h3>探索・分析</h3>
+<ul>
+    <li><strong>explore</strong> — コードベースをざっと見て、作業に関係するファイルと構造を見つけ出します。</li>
+    <li><strong>analyst</strong> — コードや要件を分析して、要点と論点を整理します。</li>
+    <li><strong>architect</strong> — 全体の構造と設計の方向を定め、結果が設計に合っているかを検証します。</li>
+    <li><strong>planner</strong> — 作業を実行できる段階に分けて計画を立てます。</li>
+    <li><strong>critic</strong> — 計画や結果を批判的に見直し、抜けと危険を探します。</li>
+    <li><strong>tracer</strong> — バグや障害の原因を、コードの流れをたどって追跡します。</li>
+</ul>
+
+<h3>実装・修正</h3>
+<ul>
+    <li><strong>executor</strong> — 計画に従って実際のコードを書き、直します。作業の難しさに応じて軽量・標準・高性能の段階に分かれます。</li>
+    <li><strong>debugger</strong> — バグの原因を見つけて直します。</li>
+    <li><strong>code-simplifier</strong> — 複雑に絡んだコードを、より単純で読みやすく整えます（リファクタリング）。</li>
+</ul>
+
+<h3>検証・品質</h3>
+<ul>
+    <li><strong>qa-tester</strong> — 機能が意図どおりに動くかテストし、完了の根拠を集めます。</li>
+    <li><strong>test-engineer</strong> — 自動テストのコードを書き、構成します。</li>
+    <li><strong>code-reviewer</strong> — コードの品質とスタイルを見ます。</li>
+    <li><strong>security-reviewer</strong> — セキュリティの脆弱性を点検します。</li>
+</ul>
+
+<h3>文書・デザイン・データ</h3>
+<ul>
+    <li><strong>writer</strong> — 文書と説明の文章を書きます。</li>
+    <li><strong>document-specialist</strong> — 外部のライブラリ・API のドキュメントを探して確認し、整理します。</li>
+    <li><strong>designer</strong> — 画面の UI/UX のデザインを扱います。</li>
+    <li><strong>vision</strong> — 画面のキャプチャや図のような画像を分析します。</li>
+    <li><strong>scientist</strong> — データを分析します。</li>
+    <li><strong>git-master</strong> — ブランチ・コミット・マージなど Git の作業を処理します。</li>
+</ul>
+
+<div class="note">
+    <span class="nh">ひと言でいうと</span>
+    自分でエージェントを選ぶ必要はありません。autopilot のようなモードが作業の意図をつかんで必要なエージェントを勝手に配置するので、たいていは「何をするか」だけ言えば大丈夫です。
+</div>
+
+<h3>skillify — くり返し作業をスキルにする</h3>
+<p><code>/oh-my-claudecode:skillify</code> は、ひとつのセッションで効果的だった作業のパターンを、再利用できるスキルとして抜き出すコマンドです。よくくり返す流れをいちど整理しておけば、次の作業ですぐ呼び出して使えます。かつての名称である <code>learner</code> は deprecated（サポート終了予定）の互換エイリアスなので、新しい文書・教育では skillify を使ってください。</p>
+<pre><code><span class="c"># セッションで効果的だったパターンを再利用スキルとして抽出</span>
+/oh-my-claudecode:skillify</code></pre>

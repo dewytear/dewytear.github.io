@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>コスト・性能</title>
+<meta name="description" content="並列・自律の実行が速さとトークンのコストにどう効くか、その釣り合いの取り方を説明する。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/omc-cost/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/omc-cost/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/omc-cost/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/omc-cost/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/omc-cost/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="コスト・性能">
+<meta property="og:description" content="並列・自律の実行が速さとトークンのコストにどう効くか、その釣り合いの取り方を説明する。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/omc-cost/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="コスト・性能">
+<meta name="twitter:description" content="並列・自律の実行が速さとトークンのコストにどう効くか、その釣り合いの取り方を説明する。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "コスト・性能",
+ "description": "並列・自律の実行が速さとトークンのコストにどう効くか、その釣り合いの取り方を説明する。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/omc-cost/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!omc-cost",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-03T12:15:44+09:00",
+ "dateModified": "2026-07-06T18:23:06+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!omc-cost">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/omc-cost/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/omc-cost/" hreflang="en">English</a>
+</p>
+<article>
+<h2>コスト・性能</h2>
+<p>OMC の核心は、作業を複数のエージェントに分けて同時に処理することです。だから全体の作業時間は縮められますが、同時に何人もの作業者が動くぶん AI の使用量（トークン）が増え、コストは大きくなりえます。<strong>速さとコストは一緒に動く</strong>と理解しておけば大丈夫です。</p>
+
+<h3>なぜコストが変わるのか</h3>
+<p>OMC のコストは固定の値ではなく、作業のやり方によって大きく変わります。次の要因がコストを左右します。</p>
+<ul>
+    <li><strong>並列化できるかどうか</strong> — 作業をいくつにも切り分けられれば速くなりますが、同時に何人もの作業者が動くので、同じ時間に使うトークンが増えます。</li>
+    <li><strong>再試行の回数</strong> — 検証に落ちるとエージェントがやり直します。再試行が多いほど、そのぶんトークンを追加で消費します。</li>
+    <li><strong>モデルの単価と文脈の大きさ</strong> — より大きなモデルを使ったり、一度に扱う文脈（コード・文書）が長かったりすると、呼び出し 1 回あたりのコストが上がります。</li>
+    <li><strong>ビルド・テストの失敗</strong> — ビルドやテストがよく失敗すると、直すための手戻りがくり返され、くり返すぶんトークンが余分に使われます。</li>
+    <li><strong>外部の CLI ワーカーの利用</strong> — Codex や Gemini のような外部のモデルも一緒に呼ぶモード（CCG など）は、モデルの呼び出し自体が増えるのでコストが加わります。</li>
+    <li><strong>作業の規模</strong> — 大きな作業を自律モードで最後まで回すと、累積の使用量が大きくなります。小さな修正の作業とはコストの差が大きくなります。</li>
+</ul>
+
+<div class="note">
+    <span class="nh">ひと言でいうと</span>
+    速いからといって、いつも安いわけではありません。小さな作業は普通の会話で軽く済ませ、並列・自律のモードはそれだけの価値がある大きな作業にだけ使う、というふうに調節すれば、速さとコストのバランスを取れます。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · PlugIn · OMC &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/omc-quickref/">クイックリファレンスカード</a></li><li><a href="/p/ja/sne-scope/">발송엔진 구현 요청 사항</a></li></ul>
+</nav>
+</body>
+</html>

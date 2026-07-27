@@ -1,0 +1,49 @@
+<h2>OMC の紹介</h2>
+<p><strong>oh-my-claudecode（以下 OMC）</strong>は、Claude Code に自律実行・マルチエージェント協業・自動検証の機能を足してくれるプラグインです。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 180" role="img" aria-label="Claude Code にプラグインを足した OMC が、自律実行・マルチエージェント・自動検証を追加する">
+    <rect class="d-box soft" x="12" y="58" width="128" height="50" rx="10"/>
+    <text class="d-label sm" x="76" y="80" text-anchor="middle">Claude Code</text>
+    <text class="d-sub" x="76" y="96" text-anchor="middle">ターミナル CLI</text>
+    <text class="d-label" x="158" y="89" text-anchor="middle">+</text>
+    <rect class="d-box soft" x="176" y="58" width="112" height="50" rx="10"/>
+    <text class="d-label sm" x="232" y="80" text-anchor="middle">プラグイン</text>
+    <text class="d-sub" x="232" y="96" text-anchor="middle">機能の拡張</text>
+    <text class="d-label" x="306" y="89" text-anchor="middle">=</text>
+
+    <rect class="d-box accent" x="324" y="52" width="128" height="62" rx="12"/>
+    <text class="d-label" x="388" y="80" text-anchor="middle">OMC</text>
+    <text class="d-sub" x="388" y="98" text-anchor="middle">oh-my-claudecode</text>
+
+    <rect class="d-box soft" x="486" y="22" width="182" height="34" rx="8"/>
+    <text class="d-label sm" x="577" y="43" text-anchor="middle">最後まで自律実行</text>
+    <rect class="d-box soft" x="486" y="72" width="182" height="34" rx="8"/>
+    <text class="d-label sm" x="577" y="93" text-anchor="middle">マルチエージェント分担</text>
+    <rect class="d-box soft" x="486" y="122" width="182" height="34" rx="8"/>
+    <text class="d-label sm" x="577" y="143" text-anchor="middle">作業後の自動検証</text>
+
+    <path class="d-edge accent" d="M452 83 C468 83, 470 44, 484 39"/><polygon class="d-arrow accent" points="478,35 486,38 480,44"/>
+    <line class="d-edge accent" x1="452" y1="85" x2="484" y2="89"/><polygon class="d-arrow accent" points="478,84 486,89 478,94"/>
+    <path class="d-edge accent" d="M452 87 C468 87, 470 134, 484 139"/><polygon class="d-arrow accent" points="478,135 486,138 480,144"/>
+</svg>
+<div class="d-cap">OMC は Claude Code に<strong>自律実行・マルチエージェント・自動検証</strong>をコマンド一行で足します。</div>
+</div>
+
+<h3>三つの概念</h3>
+<ul>
+    <li><strong>Claude Code とは</strong> — ターミナルや IDE から Claude にコーディングの作業を任せる CLI ツールです。ファイルを読んで修正し、コマンドを実行して開発を助けます。</li>
+    <li><strong>プラグインとは</strong> — Claude Code に新しい機能を足す拡張パックです。いちど入れれば専用のコマンドと動作が追加されます。</li>
+    <li><strong>OMC が足すもの</strong> — 「最後まで自分で実装」「複数の作業者で分担」「作業後の自動検証」といった高度な進め方を、コマンド一行で使えるようにしてくれます。</li>
+</ul>
+
+<p>この文書は、ローカル環境に実際にインストールして<strong>一部を検証</strong>し、公式ドキュメント・リリースノート・プラグインの文書と突き合わせて作成した要約です。<strong>Windows PowerShell、WSL2、macOS、Linux</strong> によって一部のコマンドと動作が変わりうるので、環境に依存する項目は分けて表示しました。基準のバージョンは <strong>v4.15.2</strong>（2026-07-05 時点で確認）です。リリースが月に 3〜5 回と多めなので、細かい動作は読んでいる時点の最新のリリースノートと違うことがあります。</p>
+
+<div class="note">
+    <span class="nh">参照した資料</span>
+    公式 GitHub の README、公式 Reference（REFERENCE.md）、公式 Releases、Claude Code Plugin の公式ドキュメント。
+    <br>· 公式 GitHub: github.com/Yeachan-Heo/oh-my-claudecode
+    <br>· 公式 Reference: /blob/main/docs/REFERENCE.md
+    <br>· 公式 Releases: /releases
+    <br>· Claude Code Plugin のドキュメント: code.claude.com/docs/en/discover-plugins
+</div>

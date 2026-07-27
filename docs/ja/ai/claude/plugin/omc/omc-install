@@ -1,0 +1,62 @@
+<h2>インストール</h2>
+<p>インストールの方法はふたつあります。<strong>一般の利用者はプラグインのマーケットプレイス方式</strong>を優先すれば大丈夫です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 218" role="img" aria-label="インストールの決定木: どうインストールするかによって、プラグインのマーケットプレイス・--local・npm CLI の三つに分かれる">
+    <polygon class="d-box" points="340,14 412,54 340,94 268,54"/>
+    <text class="d-label sm" x="340" y="58" text-anchor="middle">どう入れる?</text>
+
+    <path class="d-edge" d="M340 94 L115 129 Q103 132 103 138" fill="none"/>
+    <polygon class="d-arrow" points="98,132 108,132 103,140"/>
+    <line class="d-edge" x1="340" y1="94" x2="340" y2="132"/>
+    <polygon class="d-arrow" points="335,132 345,132 340,140"/>
+    <path class="d-edge" d="M340 94 L565 129 Q573 132 573 138" fill="none"/>
+    <polygon class="d-arrow" points="568,132 578,132 573,140"/>
+
+    <text class="d-accent" x="195" y="112" text-anchor="middle" font-size="11">推奨</text>
+    <text class="d-sub" x="352" y="122" text-anchor="middle">プロジェクト</text>
+    <text class="d-sub" x="500" y="112" text-anchor="middle">ターミナル</text>
+
+    <rect class="d-box accent" x="8" y="140" width="190" height="62" rx="11"/>
+    <text class="d-label sm" x="103" y="166" text-anchor="middle">マーケットプレイス</text>
+    <text class="d-sub" x="103" y="184" text-anchor="middle">一般利用者 · スラッシュ命令</text>
+    <rect class="d-box" x="243" y="140" width="190" height="62" rx="11"/>
+    <text class="d-label sm" x="338" y="166" text-anchor="middle">--local</text>
+    <text class="d-sub" x="338" y="184" text-anchor="middle">プロジェクト設定 · 全体を保存</text>
+    <rect class="d-box" x="478" y="140" width="190" height="62" rx="11"/>
+    <text class="d-label sm" x="573" y="166" text-anchor="middle">npm CLI</text>
+    <text class="d-sub" x="573" y="184" text-anchor="middle">ターミナルの omc コマンド</text>
+</svg>
+<div class="d-cap">「どう入れる?」から<strong>マーケットプレイス（推奨）</strong>・<code>--local</code>・<code>npm CLI</code> の三つに分かれます。</div>
+</div>
+
+<h3>1）推奨 — プラグインのマーケットプレイス</h3>
+<p>Claude Code の中でマーケットプレイスを追加してから OMC プラグインを入れます。入力欄で下の 2 行を順に実行します。<strong>2 行をまとめて貼り付けると失敗するので、必ず 1 行ずつ実行</strong>してください（公式 README に明記）。</p>
+<pre><code><span class="c"># ステップ 1: プラグインのリポジトリ（マーケットプレイス）を登録</span>
+/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
+<span class="c"># ステップ 2: 登録したリポジトリから OMC プラグインをインストール</span>
+/plugin install oh-my-claudecode</code></pre>
+
+<h3>2）プロジェクトの設定（--local を推奨）</h3>
+<p>インストール後はプロジェクト単位の設定をおすすめします。<code>--local</code> を付ければ既存のグローバルな <code>CLAUDE.md</code> を上書きしないので安全です。</p>
+<pre><code><span class="c"># いまのプロジェクトにだけ OMC の設定を適用 — グローバル設定はそのまま保存</span>
+/oh-my-claudecode:omc-setup --local</code></pre>
+<p>グローバルな設定がどうしても必要なときだけ下のコマンドを使います。ただし、既存の <code>~/.claude/CLAUDE.md</code> に影響が出ないかを先に確認してください。</p>
+<pre><code><span class="c"># すべてのプロジェクトに共通で適用 — 既存のグローバル CLAUDE.md への影響を要確認</span>
+/oh-my-claudecode:omc-setup</code></pre>
+
+<div class="note">
+    <span class="nh">会社の開発 PC・共用プロジェクトでの推奨</span>
+    グローバルな設定よりプロジェクトローカルの設定（<code>--local</code>）を優先することをおすすめします。プロジェクトごとにルールが違うとき、グローバルな <code>CLAUDE.md</code> が混ざるのを防げます。
+</div>
+
+<h3>3）npm でのインストール — CLI/runtime 用途の公式な別経路</h3>
+<p>一般の利用者は上のプラグイン方式で十分ですが、<strong>npm でのインストールも公式に対応した別の経路</strong>です。ただし用途が違います。プラグインのインストールは Claude Code のセッション内でスラッシュコマンド（<code>/autopilot</code> など）を使うためのもので、npm のインストールはターミナルで <code>omc</code> CLI のコマンド（<code>omc doctor</code>、<code>omc team</code>、<code>omc ask</code> など）を使うためのものです。</p>
+<pre><code><span class="c"># ターミナル CLI(omc コマンド)が必要なときだけ — npm のパッケージ名は oh-my-claude-sisyphus</span>
+npm i -g oh-my-claude-sisyphus@latest</code></pre>
+<p>注意すべきなのは<strong>npm のパッケージ名がリポジトリ名と違う</strong>ことです。プロジェクトのブランドは oh-my-claudecode ですが、npm に公開されたパッケージ名は <code>oh-my-claude-sisyphus</code> です。インストールすると <code>oh-my-claudecode</code> と <code>omc</code> のふたつのコマンドが一緒に登録されます。インストール中に <code>deprecated prebuild-install</code> の警告が見えることがありますが、上位の依存に由来する既知の警告で、インストールの失敗を意味しません。curl スクリプトによるインストールは公式ドキュメントにないので使いません。</p>
+
+<div class="note warn">
+    <span class="nh">インストール・アップデート</span>
+    プラグイン方式を使う場合、インストールとアップデートは Claude Code のプラグイン管理の機能で処理します。マーケットプレイスの自動更新がオフなら、<code>/plugin marketplace update omc</code> でまず最新版に同期してから、<code>/oh-my-claudecode:omc-setup</code> をもう一度実行して最新の設定を適用してください。
+</div>

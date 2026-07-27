@@ -66,4 +66,16 @@
     <li>시나리오 카드 12장은 <code>.scn-*</code> 클래스 구조를 그대로 두고 텍스트만 옮겼다.</li>
 </ul>
 <p><code>check_diagram_bounds</code> <strong>193개 전수 통과</strong>(ja 8편 신규). <code>validate_all</code> ERROR 0 · WARN 23 유지, 브라우저에서 10편 모두 일본어 h2 · ko/en 회귀 무변화 · pageerror 0.</p>
-<p><strong>다음</strong>: 배치 5 — OMC 플러그인(omc-* 13편).</p>
+<h3>일본어(ja) 배치 5 — OMC 플러그인(omc-* 13편)</h3>
+<p>다섯 번째 배치로 <strong>ja 본문이 59편(51%)</strong>을 넘어 절반을 지났다. 이 묶음은 <strong>레퍼런스 문서</strong> 성격이라 명령어·환경변수·스킬 이름이 빽빽해, 번역 경계를 배치 2보다 더 엄격히 잡았다.</p>
+<ul>
+    <li><strong>본문 13편</strong> — <code>omc-intro·concepts·install·doctor·modes·agents·hooks·tools·workflows·windows·cost·commands·quickref</code>. 그중 <strong>5편이 도식</strong>(modes는 2개).</li>
+    <li><strong>번역하지 않은 것</strong>: 슬래시 명령(<code>/oh-my-claudecode:autopilot</code>), 환경변수(<code>DISABLE_OMC</code>·<code>OMC_SKIP_HOOKS</code>·<code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</code>), 에이전트·스킬 이름(<code>executor</code>·<code>ralph</code>·<code>skillify</code>), Hook 이벤트명(<code>PreToolUse</code>), 시스템 메시지 문자열(<code>The boulder never stops rolling</code>) — 전부 <strong>화면에 그대로 나타나거나 그대로 쳐야 하는 문자열</strong>이라 번역하면 문서가 거짓이 된다.</li>
+    <li><strong>번역한 것</strong>: 주석, 설명문, 그리고 예시 프롬프트의 작업 내용(<code>주문 취소 API 추가</code> → <code>注文キャンセル API の追加</code>).</li>
+</ul>
+<div class="note">
+    <span class="nh">한국어 키워드 절은 그대로 뒀다</span>
+    OMC는 &ldquo;랄프&rdquo;·&ldquo;오토파일럿&rdquo; 같은 <strong>한국어</strong> 매직 키워드를 인식한다. 일본어판이라고 이를 일본어 키워드로 바꾸면 <strong>동작하지 않는 것을 동작한다고 쓰는 것</strong>이라, 영어판과 마찬가지로 한국어 키워드를 원문 그대로 두고 &ldquo;한국어 표현을 쓰면&rdquo;이라고 설명했다. 번역은 사실을 옮기는 것이지 사실을 만드는 게 아니다.
+</div>
+<p><code>check_diagram_bounds</code> <strong>198개 전수 통과</strong>(ja 5편 신규). 캐러셀(<code>omc-modes</code> 4쪽·<code>omc-workflows</code> 8쪽)도 일본어에서 동작 확인 — 다음 버튼으로 <code>1 / 4 → 2 / 4</code> 전환·활성 패널 교체까지 실측했다. <code>validate_all</code> ERROR 0 · WARN 23 유지, ko/en 회귀 무변화 · pageerror 0.</p>
+<p><strong>다음</strong>: 배치 6 — LLM Wiki(llmw-* 11편) · 세컨드 브레인(sb-* 9편).</p>
