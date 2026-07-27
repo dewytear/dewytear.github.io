@@ -1,0 +1,74 @@
+<h2>ウィキはどうやって自分を守るのか — ゲートと自動化の体系</h2>
+<p>前の五編は、知識が<a href="#!kgs-overview">積み上がり</a>、<a href="#!kgs-edges">つながり</a>、<a href="#!kgs-views">読まれ</a>、<a href="#!kgs-ai-layer">AI に消費され</a>、<a href="#!kgs-plugin">プラグインとしてパッケージされる</a>構造を説明してきました。最後の問いが残ります — <strong>この構造がずれていないことを、誰が保証するのか？</strong> 文書を追加してインデックスの再生成を忘れたら？ ツールを直してプラグインの写しを忘れたら？ この編では、その保証を担う<strong>ゲート（gate）と自動化の体系</strong>を、実際の事故の事例とともに説明します。</p>
+
+<h3>原則 — 判断のいらない労働は機械が、判断は人が</h3>
+<p>このウィキの自動化は<strong>生成ではなく検証が中心</strong>です。要約・概念・関係・本文は、人（または AI の作業者）が文書を読んでキュレーションします — ここには判断が必要で、判断を機械に渡すとグラフの正直さが崩れるからです。代わりに機械はふたつを担います: <strong>① キュレーションの結果どうしが食い違っていないかを判定</strong>し（ゲート）、<strong>② 判断のいらない復元労働を代行</strong>します（--fix）。ルールを散文でだけ書いておくと忘れられます — 実際に忘れられて事故になり、そのたびにルールがゲートとして機械化されてきました。</p>
+
+<h3>つねに同じ結果 — 決定論的ビルドとドリフトのゲート</h3>
+<p>知識インデックス・グラフ JSON・<code>llms.txt</code>・sitemap・文書の日付 — サイトが読む生成物はすべて<strong>ツールが生成し、手では編集しません</strong>。ビルドは<strong>決定論的</strong>（同じ入力 → いつも同じ出力）なので、CI の <code>--check</code> モードが「いまリポジトリにある生成物」と「ソースから作りたての生成物」をバイトで比較できます。食い違えば（＝文書を直して再生成を忘れれば）<strong>マージが止まります</strong>。だから <a href="#!kgs-ai-layer">AI が読むグラフファイル</a>が実際の知識と違う瞬間は、構造的に存在しません。</p>
+
+<h3>PR を守る同伴ゲート — 「A を変えたなら B も一緒に」</h3>
+<p>あるルールは生成物の比較では捕まえられません。「アセットを直したならキャッシュバスターも上げよ」のような<strong>同伴ルール</strong>は、PR の変更一覧（diff）を見て<strong>片割れも一緒に来たか</strong>を検査する必要があります。こうしたゲートが四つあり、すべて実際の事故や運用の必要から生まれました:</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>ゲート</th><th>守るルール</th><th>生まれたきっかけ</th></tr></thead>
+<tbody>
+<tr><td><code>check_worklog</code></td><td>実質的な変更のある PR には <strong>Work Log を同伴</strong>（既存ログの更新も認める）</td><td>「小さくても記録」のルールが散文にしかなく忘れられていた問題</td></tr>
+<tr><td><code>check_cachebuster</code></td><td>?v 付きアセット（app.js など）を直したら<strong>同じ PR で ?v を上げる</strong></td><td>2026-07-09 の実事故 — 直したのに再訪ブラウザで「反映されない」</td></tr>
+<tr><td><code>check_plugin_sync</code></td><td>プラグイン同梱のツールはルートの <code>tools/</code> と<strong>バイト一致</strong> + バンドル変更時は<strong>バージョン上げ</strong></td><td>2026-07-10 の実事故 — 検証機 190 行が古いまま配布された</td></tr>
+<tr><td><code>diagram-bounds</code></td><td>図の文字が箱・viewBox を<strong>1px もはみ出さない</strong>ことをヘッドレスブラウザの実レンダーで検査</td><td>フォント幅の推定だけでは境界値のはみ出しを取りこぼしていた問題</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>すべての同伴ゲートが<strong>遮断</strong>なのではありません。<code>check_relations_review</code> は新しく登録された文書を選び、その<strong>知識の関係の型の分布</strong>と 5 型（先行知識・実装・事例・根拠・置き換え）のチェックリストを出す<strong>非遮断のレビュー信号</strong>です — 関係は<strong>本文に実在するときだけ</strong>正直に付けるものなので（無理なリンクは禁止）、機械が「関係を入れろ」と強制できないからです。だからこれはマージを止めず、<a href="#!kgs-edges">関係を先行知識だけで埋めるな</a>というルールを人／AI に一度見せる信号としてだけ働きます（上の知識グラフの WARN と同じ「人が一度見る一覧」の思想）。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="PR は CI のゲート層（状態検証、ドリフト検査、同伴ゲート、実レンダー検査）をすべて通ってから master にマージされ配布される">
+    <rect class="d-box" x="14" y="112" width="140" height="56" rx="10"/>
+    <text class="d-label" x="84" y="136" text-anchor="middle">変更コミット</text>
+    <text class="d-sub" x="84" y="156" text-anchor="middle">Pull Request</text>
+    <line class="d-edge" x1="154" y1="140" x2="190" y2="140"/>
+    <polygon class="d-arrow" points="190,135 198,140 190,145"/>
+    <rect class="d-box soft" x="200" y="16" width="330" height="248" rx="12"/>
+    <text class="d-label" x="365" y="42" text-anchor="middle">CI ゲート層</text>
+    <rect class="d-box" x="214" y="56" width="302" height="42" rx="8"/>
+    <text class="d-sub" x="365" y="82" text-anchor="middle">① 状態検証 — ルート・文書・グラフ・図・i18n</text>
+    <rect class="d-box" x="214" y="104" width="302" height="42" rx="8"/>
+    <text class="d-sub" x="365" y="130" text-anchor="middle">② ドリフト — 生成物がソースとずれたら遮断</text>
+    <rect class="d-box" x="214" y="152" width="302" height="42" rx="8"/>
+    <text class="d-sub" x="365" y="178" text-anchor="middle">③ 同伴 — Work Log · ?v · バンドル+版</text>
+    <rect class="d-box" x="214" y="200" width="302" height="42" rx="8"/>
+    <text class="d-sub" x="365" y="226" text-anchor="middle">④ 実レンダー — 図の境界を全数確認</text>
+    <line class="d-edge" x1="530" y1="100" x2="548" y2="100"/>
+    <polygon class="d-arrow" points="548,95 556,100 548,105"/>
+    <rect class="d-box accent" x="560" y="72" width="146" height="56" rx="10"/>
+    <text class="d-label" x="633" y="96" text-anchor="middle">ERROR 0</text>
+    <text class="d-sub" x="633" y="116" text-anchor="middle">マージの条件</text>
+    <line class="d-edge" x1="633" y1="128" x2="633" y2="158"/>
+    <polygon class="d-arrow" points="628,158 633,166 638,158"/>
+    <rect class="d-box" x="560" y="168" width="146" height="56" rx="10"/>
+    <text class="d-label" x="633" y="192" text-anchor="middle">master マージ</text>
+    <text class="d-sub" x="633" y="212" text-anchor="middle">Pages デプロイ</text>
+    <text class="d-sub" x="360" y="290" text-anchor="middle">マージされた瞬間、インデックス・グラフ・llms.txt・マップまで全表面がすでに更新済みです</text>
+</svg>
+<div class="d-cap">すべての PR は四層のゲートを通らなければなりません — ひとつでも ERROR ならマージ不可。</div>
+</div>
+
+<h3>自分で直すゲート — --fix</h3>
+<p>ゲートが「ずれている」と判定したあとの復元は、ほとんどが判断のいらない労働です: バンドルの写しはルートから<em>コピー</em>すればよく、キャッシュバスターは数字を<em>+1</em> すればよい。だからふたつのゲートに <code>--fix</code> モードがあります — <code>check_plugin_sync --fix</code> はずれたスナップショットを自動で復元し、<code>check_cachebuster --fix</code> は古い <code>?v</code> を自動で上げます。境界は明確です: <strong>復元は機械、判断は人。</strong> プラグインのバージョンをどれだけ上げるか（内容更新＝minor、バグ修正＝patch）、機能変更が解説文書を古くしたかどうかは、--fix は触りません。</p>
+
+<h3>変更タイプの宣言 — ゲートが捕まえられないもののための規律</h3>
+<p>機械のゲートには限界があります。関係タイプの機能を入れた PR はすべてのゲートを通ったのに、肝心の<strong>このシリーズの文書が新機能を説明していないという記述のギャップ</strong>は、別の検討でようやく見つかりました — 「説明が古いか」は誤検知なく機械が判定できないからです。だから最後の装置はゲートではなく<strong>宣言の規律</strong>です。作業を始めるときに変更タイプを宣言し、タイプ別の影響表に目を通します:</p>
+<ul>
+    <li><code>ENGINE</code> ビューアの動作 — 自己記述文書の検討 · ?v 上げ &nbsp;/&nbsp; <code>STYLE</code> デザイン・図 — デザイン規則 · ?v 上げ</li>
+    <li><code>TOOL</code> ビルド・検証ツール — バンドル同期 + バージョン &nbsp;/&nbsp; <code>SCHEMA</code> 生成物の契約 — schema.md を同伴 · 後方互換の判断 · 解説文書の検討</li>
+    <li><code>PLUGIN</code> スキル・メタ — バージョン上げ &nbsp;/&nbsp; <code>CONTENT</code> 本文・一覧 — 登録の 5 段階 · プラグインへの反映は禁止</li>
+</ul>
+<p>宣言はプランや PR 本文に一行あれば十分です（例: <em>「変更タイプ: TOOL + PLUGIN」</em>）。複数の宣言が普通です — 関係タイプの機能は五つのタイプを貫いており、始めに宣言していれば <code>SCHEMA</code> 行の「解説文書の検討」が実装 PR の中で引っかかっていたはずです。これはゲート（強制）ではなく<strong>判断の補助</strong>です — 判断が必要な領域を機械化する代わりに、判断する時点を前へ引き寄せます。</p>
+
+<div class="note">
+    <span class="nh">ひと目でまとめ</span>
+    生成物は<strong>決定論的ビルド</strong>でのみ生成（直接編集は禁止）→ <code>--check</code> がドリフトを遮断 → 同伴ゲート 4 種が「片割れも一緒に来たか」を検査 → <strong>ERROR 0 がマージの条件</strong>。復元の労働は <code>--fix</code> が代行し、機械が判定できない記述やバージョンの判断は<strong>変更タイプの宣言</strong>で人が開始時点に押さえます。ゲートはすべて、実際の事故の再発防止として生まれました。
+</div>

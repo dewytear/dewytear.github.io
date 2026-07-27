@@ -24,11 +24,16 @@ const CDP = process.env.CDP_PORT || '9333';
 const HTTP = process.env.HTTP_PORT || '8799';
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
-// Languages under test: en labels tend to run longer than the Korean
-// originals, so every translated body must pass the same bounds gate.
+// Languages under test: translated labels run to different widths than the
+// Korean originals (en words are longer, ja kana are full-width), so every
+// translated body must pass the same bounds gate. The list is derived from
+// the docs/ tree so a new language is covered the moment its folder appears.
 // A doc is checked in a language only when that language's file exists
 // and contains a diagram (missing translations are simply skipped).
-const LANGS = ['ko', 'en'];
+const LANGS = ['ko', ...fs.readdirSync(path.join(ROOT, 'docs'), { withFileTypes: true })
+  .filter((e) => e.isDirectory() && e.name !== 'ko')
+  .map((e) => e.name)
+  .sort()];
 
 function diagramRoutes(lang) {
   const list = JSON.parse(fs.readFileSync(path.join(ROOT, 'list'), 'utf8'));

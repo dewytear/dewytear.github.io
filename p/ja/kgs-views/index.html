@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>グラフを読む 9 つの眼 — ビューごとに違う問いに答える</title>
+<meta name="description" content="Constellation・Orbits・Strata（3D）と Bundling・Chord・Packing・Concepts・Arc・Matrix — 各ビューが答える問いと、ハブ・ブリッジがグラフの中心を示す方法">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/kgs-views/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/kgs-views/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/kgs-views/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/kgs-views/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/kgs-views/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="グラフを読む 9 つの眼 — ビューごとに違う問いに答える">
+<meta property="og:description" content="Constellation・Orbits・Strata（3D）と Bundling・Chord・Packing・Concepts・Arc・Matrix — 各ビューが答える問いと、ハブ・ブリッジがグラフの中心を示す方法">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/kgs-views/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="グラフを読む 9 つの眼 — ビューごとに違う問いに答える">
+<meta name="twitter:description" content="Constellation・Orbits・Strata（3D）と Bundling・Chord・Packing・Concepts・Arc・Matrix — 各ビューが答える問いと、ハブ・ブリッジがグラフの中心を示す方法">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "グラフを読む 9 つの眼 — ビューごとに違う問いに答える",
+ "description": "Constellation・Orbits・Strata（3D）と Bundling・Chord・Packing・Concepts・Arc・Matrix — 各ビューが答える問いと、ハブ・ブリッジがグラフの中心を示す方法",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/kgs-views/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!kgs-views",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-11T19:47:53+09:00",
+ "dateModified": "2026-07-26T00:14:01+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!kgs-views">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/kgs-views/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/kgs-views/" hreflang="en">English</a>
+</p>
+<article>
+<h2>グラフを読む 9 つの眼 — ビューごとに違う問いに答える</h2>
+<p>同じ知識グラフでも、<strong>何が知りたいか</strong>によって合う可視化は変わります。<a href="/p/ja/cosmos/">Knowledge Graph</a> 画面のドックは、まず <strong>3D・2D</strong> を選び、その中のビューを選ぶ 2 段構えで（既定は 3D）、全部で <strong>9 つのビュー</strong>があります。それぞれ、異なる問いひとつに答えるように選ばれています。この文書は「このビューで何を見ればよいか」を整理します。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="9 つのビュー: Constellation、Orbits、Strata が上段（3D）、Bundling、Chord、Packing が中段、Concepts、Arc、Matrix が下段">
+    <rect class="d-box accent" x="16" y="16" width="220" height="76" rx="10"/>
+    <text class="d-label" x="126" y="46" text-anchor="middle">Constellation</text>
+    <text class="d-sub" x="126" y="66" text-anchor="middle">全体の形・クラスター</text>
+    <rect class="d-box accent" x="250" y="16" width="220" height="76" rx="10"/>
+    <text class="d-label" x="360" y="46" text-anchor="middle">Orbits</text>
+    <text class="d-sub" x="360" y="66" text-anchor="middle">恒星・惑星・衛星の系譜</text>
+    <rect class="d-box accent" x="484" y="16" width="220" height="76" rx="10"/>
+    <text class="d-label" x="594" y="46" text-anchor="middle">Strata</text>
+    <text class="d-sub" x="594" y="66" text-anchor="middle">4 階層を層で貫く</text>
+    <rect class="d-box" x="16" y="106" width="220" height="76" rx="10"/>
+    <text class="d-label" x="126" y="136" text-anchor="middle">Bundling</text>
+    <text class="d-sub" x="126" y="156" text-anchor="middle">文書↔文書の束</text>
+    <rect class="d-box" x="250" y="106" width="220" height="76" rx="10"/>
+    <text class="d-label" x="360" y="136" text-anchor="middle">Chord</text>
+    <text class="d-sub" x="360" y="156" text-anchor="middle">System 間の結合の強さ</text>
+    <rect class="d-box" x="484" y="106" width="220" height="76" rx="10"/>
+    <text class="d-label" x="594" y="136" text-anchor="middle">Packing</text>
+    <text class="d-sub" x="594" y="156" text-anchor="middle">規模・体積の比較</text>
+    <rect class="d-box" x="16" y="196" width="220" height="76" rx="10"/>
+    <text class="d-label" x="126" y="226" text-anchor="middle">Concepts</text>
+    <text class="d-sub" x="126" y="246" text-anchor="middle">概念の共起マップ</text>
+    <rect class="d-box" x="250" y="196" width="220" height="76" rx="10"/>
+    <text class="d-label" x="360" y="226" text-anchor="middle">Arc</text>
+    <text class="d-sub" x="360" y="246" text-anchor="middle">近い/遠いつながり</text>
+    <rect class="d-box" x="484" y="196" width="220" height="76" rx="10"/>
+    <text class="d-label" x="594" y="226" text-anchor="middle">Matrix</text>
+    <text class="d-sub" x="594" y="246" text-anchor="middle">ブロック（密集/空白）</text>
+    <text class="d-sub" x="360" y="290" text-anchor="middle">上段の三つが 3D グループ、下の六つが 2D グループ — データはひとつです</text>
+</svg>
+<div class="d-cap">9 つの眼 — すべて同じインデックスから描かれるので、どのビューでもデータはひとつです。</div>
+</div>
+</div>
+
+<h3>ビュー別「この問いにはこのビュー」</h3>
+<div class="tbl-wrap"><table>
+<thead><tr><th>ビュー</th><th>答える問い</th><th>読み方</th></tr></thead>
+<tbody>
+<tr><td><strong>Constellation</strong>（星座・3D）</td><td>知識の全体はどんな形か？</td><td>丸い球の上で<strong>色 = World/System</strong>。同じ色のパッチがひとつの主題クラスターで、パッチを横切る線が主題どうしの橋です。設定で丸み（0〜100）を調節できます。</td></tr>
+<tr><td><strong>Orbits</strong>（軌道系・3D）</td><td>ひとつの System にどんな文書がつながれているか？</td><td>World が<strong>恒星</strong>、System がそのまわりを回る<strong>惑星</strong>、文書が惑星を回る<strong>衛星</strong>です。軌道面が互いに傾いているので所属がひと目で分かれ、実際に公転するので静止画より系譜が読みやすくなります。文書を押すと、その文書の<strong>隣だけを残して</strong>カードが開きます。</td></tr>
+<tr><td><strong>Strata</strong>（ストラタ・3D）</td><td>4 階層は実際にどうつながっているか？</td><td>World → Domain → System → Document を<strong>四枚のガラス板</strong>として積み、系譜線を上下に貫かせます。このウィキの階層モデルそのものを目で確かめるビューで、いちばん下の文書層には概念エッジが低い弧として敷かれます。</td></tr>
+<tr><td><strong>Bundling</strong></td><td>どの文書どうしが引き合っているか？</td><td>円周に文書が System 順に並び、概念のつながりが中心へ曲がって束になります。<strong>太い束 = 強く絡んだ主題の組</strong>。</td></tr>
+<tr><td><strong>Chord</strong></td><td>System どうしはどれだけ結合しているか？</td><td>弧の長さ = その System の対外的なつながりの量、リボンの太さ = ふたつの System のあいだのつながりの数。<strong>いちばん太いリボン</strong>が知識の実質的な隣人関係です。</td></tr>
+<tr><td><strong>Packing</strong></td><td>どこに知識が多く積まれているか？</td><td>World の円のなかに System の円、そのなかに文書の点。<strong>円の大きさ = 文書数</strong> — 成長の偏りがひと目で見えます。</td></tr>
+<tr><td><strong>Concepts</strong></td><td>概念どうしはどうつるんでいるか？</td><td>ノードが文書ではなく<strong>概念</strong>である唯一のビュー。いっしょに登場する概念どうしがつながり、語彙レベルの知識の地形（例: 「スキル」のまわりに何が集まるか）を見せます。</td></tr>
+<tr><td><strong>Arc</strong></td><td>つながりは隣の中か、遠くへ行くのか？</td><td>文書を一列に並べ、つながりを弧で描きます。<strong>低い弧 = 同じ主題の中</strong>、<strong>高い弧 = 主題を飛び越える橋</strong>。</td></tr>
+<tr><td><strong>Matrix</strong></td><td>どのブロックが密集で、どこが空白か？</td><td>文書×文書の格子につながりを点で。System 順に並ぶので<strong>対角ブロック = 内部の結束</strong>、<strong>ブロック外の点 = 交差するつながり</strong>、空いた領域 = まだつないでいない知識。</td></tr>
+</tbody>
+</table></div>
+
+<h3>ハブとブリッジ — グラフの中心を見つける方法</h3>
+<p>ビューが何であれ、分析の入り口はふたつです:</p>
+<ul>
+    <li><strong>ハブ（hub）</strong> — ほかの文書からいちばん多く参照される文書。現在の 1 位は<a href="/p/ja/hns-anatomy/">ハーネスの構成と効果</a>（被参照 11 回）で、<a href="/p/ja/llmw-overview/">LLM Wiki の概要</a>・<a href="/p/ja/llmw-vaults/">ボルト体系</a>がそれぞれ 8 回で続きます。ある主題を初めてつかむときは、そのクラスターのハブから読むのがいちばん速い方法です。</li>
+    <li><strong>ブリッジ（bridge）</strong> — 複数の System にまたがって登場する概念。「スキル」は <strong>7 つの System</strong> にまたがる最大のブリッジで、「スラッシュコマンド」・「サブエージェント」がそれぞれ 5 つの System をつなぎます。ブリッジの概念をたどると、<strong>主題と主題が実際に出会う地点</strong>が見えてきます。</li>
+</ul>
+<p>ハブ・ブリッジ・System 別の集計は<a href="/p/ja/ai-map/">知識マップ</a>が表で見せてくれ、文書が追加されるたびにライブで再計算されます。要するに — <strong>知識マップは「まとめられた表」、7 つのビューは「同じデータの可視化」</strong>であり、この文書シリーズはそのデータが作られる原理（<a href="/p/ja/kgs-edges/">前編</a>）と消費されるかたち（<a href="/p/ja/kgs-ai-layer/">次編</a>）を説明します。</p>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-07-26</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/kgs-edges/">文書はどうつながるのか — 概念キュレーションと idf 重みつきエッジ</a></li><li><a href="/p/ja/kgs-overview/">知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン</a></li><li><a href="/p/ja/kgs-ai-layer/">AI がこのウィキを読む方法 — 機械可読レイヤーとグラフ巡回</a></li></ul>
+</nav>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン</title>
+<meta name="description" content="World→Domain→System→Document の 4 階層と文書の登録パイプライン — 不変 ID・物理パス・決定論的なインデックスビルド">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/kgs-overview/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/kgs-overview/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/kgs-overview/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/kgs-overview/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/kgs-overview/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン">
+<meta property="og:description" content="World→Domain→System→Document の 4 階層と文書の登録パイプライン — 不変 ID・物理パス・決定論的なインデックスビルド">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/kgs-overview/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン">
+<meta name="twitter:description" content="World→Domain→System→Document の 4 階層と文書の登録パイプライン — 不変 ID・物理パス・決定論的なインデックスビルド">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン",
+ "description": "World→Domain→System→Document の 4 階層と文書の登録パイプライン — 不変 ID・物理パス・決定論的なインデックスビルド",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/kgs-overview/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!kgs-overview",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-11T19:47:53+09:00",
+ "dateModified": "2026-07-15T19:59:42+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!kgs-overview">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/kgs-overview/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/kgs-overview/" hreflang="en">English</a>
+</p>
+<article>
+<h2>知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン</h2>
+<p>このパートは<strong>このウィキそのもの</strong>を説明します。ウィキの目標は単なる記事の寄せ集めではなく、文書が増えるほど<strong>つながりも一緒に育つ知識グラフ</strong>になることです。そのためには知識が<em>どこにでも</em>積まれてはならず、<strong>決められた構造</strong>（どこに）と<strong>決められた手順</strong>（どうやって）で積まれる必要があります。この文書では、その構造と手順を実際の文書ひとつ（<a href="/p/ja/welcome/">Welcome</a>）を例に最後まで追いかけて説明します。</p>
+
+<h3>構造 — World → Domain → System → Document</h3>
+<p>すべての文書は 4 段階の<strong>知識階層</strong>の中に居場所を持ちます。最上位の <strong>World</strong> は知識の世界（学習知識 <code>AI</code>・業務知識 <code>Douzone</code>）、<strong>Domain</strong> はその中の領域、<strong>System</strong> は具体的な主題体系、<strong>Document</strong> が個々の文書です。たとえば <a href="/p/ja/welcome/">Welcome</a> 文書の住所はこう読めます:</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 128" role="img" aria-label="Welcome 文書の 4 階層の住所: World AI、Domain Claude·Code、System Introduction、Document welcome">
+    <rect class="d-box accent" x="14" y="34" width="120" height="46" rx="9"/>
+    <text class="d-label" x="74" y="55" text-anchor="middle">AI</text>
+    <text class="d-sub" x="74" y="72" text-anchor="middle">World</text>
+    <line class="d-edge" x1="134" y1="57" x2="166" y2="57"/>
+    <polygon class="d-arrow" points="166,52 174,57 166,62"/>
+    <rect class="d-box" x="176" y="34" width="150" height="46" rx="9"/>
+    <text class="d-label" x="251" y="55" text-anchor="middle">Claude · Code</text>
+    <text class="d-sub" x="251" y="72" text-anchor="middle">Domain</text>
+    <line class="d-edge" x1="326" y1="57" x2="358" y2="57"/>
+    <polygon class="d-arrow" points="358,52 366,57 358,62"/>
+    <rect class="d-box" x="368" y="34" width="150" height="46" rx="9"/>
+    <text class="d-label" x="443" y="55" text-anchor="middle">Introduction</text>
+    <text class="d-sub" x="443" y="72" text-anchor="middle">System</text>
+    <line class="d-edge" x1="518" y1="57" x2="550" y2="57"/>
+    <polygon class="d-arrow" points="550,52 558,57 550,62"/>
+    <rect class="d-box soft" x="560" y="34" width="146" height="46" rx="9"/>
+    <text class="d-label" x="633" y="55" text-anchor="middle">welcome</text>
+    <text class="d-sub" x="633" y="72" text-anchor="middle">Document</text>
+</svg>
+<div class="d-cap">Welcome の 4 階層の住所 — section 文字列では <code>AI · Claude · Code · Introduction</code>。</div>
+</div>
+
+<p>この階層は別のデータベースではなく、<strong>ナビゲーションツリー（<code>list</code> ファイル）の入れ子そのもの</strong>から導かれます。サイドバーに見えるフォルダ構造がそのまま知識階層なので、「メニューは別・分類は別」というズレが原理的に起きません。同じ System（末端フォルダ）にある文書たちは<strong>読む順序のあるシリーズ</strong>として扱われ、このフォルダ所属は後で見る関連文書の計算のセーフティネット（フォルダ補完）としても使われます。</p>
+
+<h3>文書のふたつの名前 — 不変 ID と物理パス</h3>
+<p>ツリーの葉（文書）ノードはふたつの重要なフィールドを持ちます:</p>
+<ul>
+    <li><strong><code>name</code> — 不変の論理 ID</strong>: ハッシュルート（<code>#!welcome</code>）であり、知識グラフのノードキー。いちど決めたら変わらないので、文書を別のフォルダへ移しても<strong>既存のリンクやエッジが壊れません</strong>。</li>
+    <li><strong><code>path</code> — 物理パス</strong>: <code>docs/ko/</code> 以下の実際のファイル位置（例: <code>ai/claude/code/introduction/welcome</code>）。ドメインツリーをたどるので、フォルダを見るだけで知識階層が分かります。</li>
+</ul>
+<p>文書の本文は<strong>静的な HTML 断片</strong>（骨組みのない <code>&lt;h2&gt;…&lt;p&gt;…</code>）です。ビルドツールもサーバーも JS レンダリングも要らず、<strong>URL でそのまま fetch</strong> されるので、人間のブラウザも AI も同じ原文を読みます — この性質が <a href="/p/ja/kgs-ai-layer/">AI 消費レイヤー</a>の土台になります。</p>
+
+<h3>三つの標識 — ラベル・タグ・概念の役割分担</h3>
+<p>文書ひとつが登録されるとき、名前のほかに<strong>三つの標識</strong>が一緒に残ります。三つは似て見えますが、<strong>記録される場所も、使われる場所もまったく違います</strong> — この分担を知っていれば「タグを付けたのに、なぜグラフに反映されないのか」といった混乱がありません。</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>標識</th><th>どこに記録</th><th>どこで使う</th><th>Welcome の実例</th></tr></thead>
+<tbody>
+<tr><td><strong>ラベル</strong>（label）</td><td><code>list</code> ノード</td><td>サイドバー・一覧の<strong>表示名</strong>（言語別 <code>label_en</code>）</td><td>&ldquo;Welcome&rdquo;</td></tr>
+<tr><td><strong>タグ</strong>（tags）</td><td><code>list</code> ノード</td><td><strong>入っていく扉</strong> — 文書下部のチップ、<a href="/p/ja/tags/">Tags 索引</a>、検索の補助</td><td><code>claude-code · 紹介 · CLI · ターミナル · AI</code></td></tr>
+<tr><td><strong>概念</strong>（concepts）</td><td><code>doc-entries</code>（キュレーション）</td><td><strong>つなぐ材料</strong> — 知識グラフのエッジ計算の原料、検索で最大の重み</td><td><code>Claude Code · ターミナル · CLI · コーディングエージェント · 自然言語 · Anthropic</code></td></tr>
+</tbody>
+</table>
+</div>
+
+<p><strong>タグはブラウジングの装置です。</strong>文書本文の下部にチップとして表示され、チップを押すとそのタグの付いた文書一覧へ移動します（文書がひとつだけならその文書へ直接）。<a href="/p/ja/tags/">Tags 索引</a>はタグ全体を辞書のように広げます — ハングルは初声（ㄱ・ㄴ・ㄷ…）、英字はアルファベットのバケットにまとまり、よく使われた上位 10 個がバンドとして先に出ます。統合検索でもタグが一致すればスコアを得ますが、重みは概念より低めです（タグ 3 &lt; 概念 5）。言語を変えると <code>tags_en</code> のような言語別タグが代わりに表示されます。なお Work Log 文書はわざと <code>tags: []</code> にしています — 作業記録が知識タグの索引を散らかさないようにするためです。</p>
+<p><strong>概念はグラフの装置です。</strong>人（または AI）が文書を読み、<strong>本文に実在する中心概念だけ</strong>をキュレーションして残し、<a href="/p/ja/kgs-edges/">次の編</a>で見る関連文書（related）の計算はすべてこの概念から出発します。つまり<strong>タグをいくら付けてもグラフのエッジはひとつも生まれません</strong> — 3D 知識グラフと 2D ビューが読むのは概念だけです。逆に概念は索引ページには出てきません。同じ文書に対する「探す扉」と「つなぐ材料」が分かれているので、ブラウジングの利便のためにタグを増やしても、知識グラフの正直さ（本文実在の原則）は揺らぎません。</p>
+
+<h3>手順 — 文書ひとつが登録されるパイプライン</h3>
+<p>新しい知識が入るときは必ず同じ手順を通ります。手順の核心は<strong>人（または AI）が文書を実際に読んでキュレーションした要約・概念</strong>を残す段階（③）です — ここで知識グラフの材料が作られます。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 210" role="img" aria-label="登録パイプライン: 本文作成、list 登録、doc-entries キュレーション、build_index 再生成、グラフ・マップ・AI レイヤーへ自動反映">
+    <rect class="d-box" x="14" y="18" width="200" height="52" rx="9"/>
+    <text class="d-label" x="114" y="40" text-anchor="middle">① 本文の作成</text>
+    <text class="d-sub" x="114" y="58" text-anchor="middle">docs/ko/&lt;ドメインツリー&gt;</text>
+    <rect class="d-box" x="258" y="18" width="200" height="52" rx="9"/>
+    <text class="d-label" x="358" y="40" text-anchor="middle">② list 登録</text>
+    <text class="d-sub" x="358" y="58" text-anchor="middle">name(不変) + path(物理)</text>
+    <rect class="d-box accent" x="502" y="18" width="204" height="52" rx="9"/>
+    <text class="d-label" x="604" y="40" text-anchor="middle">③ キュレーション</text>
+    <text class="d-sub" x="604" y="58" text-anchor="middle">要約 + 中心概念 5〜6 個</text>
+    <line class="d-edge" x1="214" y1="44" x2="250" y2="44"/>
+    <polygon class="d-arrow" points="250,39 258,44 250,49"/>
+    <line class="d-edge" x1="458" y1="44" x2="494" y2="44"/>
+    <polygon class="d-arrow" points="494,39 502,44 494,49"/>
+    <line class="d-edge" x1="604" y1="70" x2="604" y2="102"/>
+    <polygon class="d-arrow" points="599,102 604,110 609,102"/>
+    <rect class="d-box" x="258" y="110" width="448" height="52" rx="9"/>
+    <text class="d-label" x="482" y="132" text-anchor="middle">④ インデックス再生成（決定論的ビルド）</text>
+    <text class="d-sub" x="482" y="150" text-anchor="middle">同じ入力 → 常に同じ結果 · --check でドリフトを遮断</text>
+    <line class="d-edge" x1="482" y1="162" x2="482" y2="184"/>
+    <polygon class="d-arrow" points="477,184 482,192 487,184"/>
+    <text class="d-sub" x="482" y="206" text-anchor="middle">知識グラフ · 知識マップ · 検索 · AI レイヤーへ自動反映</text>
+</svg>
+<div class="d-cap">登録パイプライン — 人がやるのは ①〜③、④ からは機械が同じ結果を再現します。</div>
+</div>
+
+<ol>
+    <li><strong>本文の作成</strong> — ドメインツリーの位置に HTML 断片として保存。</li>
+    <li><strong><code>list</code> 登録</strong> — <code>name</code>・<code>path</code>・ラベル・タグをツリーに追加。この瞬間にナビゲーションと知識階層の中に居場所ができます。</li>
+    <li><strong>キュレーション</strong> — 文書を読んで <code>doc-entries</code> に<strong>要約 1 行 + 中心概念（平均 6 個）</strong>を記録。概念は本文に実在するものだけを書くのが原則です（<a href="/p/ja/kgs-edges/">次の編</a>の正直さの原則）。</li>
+    <li><strong>インデックス再生成</strong> — ビルドツールが ② の階層と ③ の概念から<strong>関連文書（related）を計算</strong>し、知識インデックスを作り直します。このビルドは<strong>決定論的</strong>（同じ入力 → いつも同じ出力）なので、CI の <code>--check</code> が「インデックスがソースと食い違えばマージ不可」を機械的に強制します。</li>
+</ol>
+
+<p>結果として文書をひとつ入れれば — ナビゲーション・知識マップ・3D 知識グラフ・検索・<a href="/p/ja/kgs-ai-layer/">AI 用グラフファイル</a>まで<strong>すべての表面が自動でいっしょに更新</strong>されます。知識管理でありがちな「整理はしたのに見つけられない」状態が構造的に起きない理由です。</p>
+
+<div class="note">
+    <span class="nh">現在の規模</span>
+    この手順で積み上がった知識は現在<strong>文書 108 編・固有概念 338 個・つながり 228 本</strong>（文書あたり平均 3.3 本）、さらにキュレーションで宣言した<strong>型付き関係 110 件</strong>が重なっています。孤立文書（つながり 0）は 0 編 — すべての文書がグラフの中にあります。数値は<a href="/p/ja/ai-map/">知識マップ</a>でライブ集計されます。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-07-15</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/kgs-edges/">文書はどうつながるのか — 概念キュレーションと idf 重みつきエッジ</a></li><li><a href="/p/ja/kgs-ai-layer/">AI がこのウィキを読む方法 — 機械可読レイヤーとグラフ巡回</a></li></ul>
+</nav>
+</body>
+</html>

@@ -1,0 +1,44 @@
+            <h2>インストールと開始</h2>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="インストールの流れ: ネイティブ導入 → プロジェクトへ移動 → claude 実行 → 認証">
+    <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="85" y="46" text-anchor="middle">① インストール</text>
+    <text class="d-sub" x="85" y="63" text-anchor="middle">ネイティブ導入ツール</text>
+
+    <rect class="d-box" x="180" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="255" y="46" text-anchor="middle">② プロジェクトへ</text>
+    <text class="d-sub" x="255" y="63" text-anchor="middle">cd your-project</text>
+
+    <rect class="d-box" x="350" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="425" y="46" text-anchor="middle">③ claude 実行</text>
+    <text class="d-sub" x="425" y="63" text-anchor="middle">claude</text>
+
+    <rect class="d-box accent" x="520" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="595" y="46" text-anchor="middle">④ 認証</text>
+    <text class="d-sub" x="595" y="63" text-anchor="middle">ログイン · API キー</text>
+
+    <line class="d-edge" x1="160" y1="48" x2="176" y2="48"/><polygon class="d-arrow" points="172,43 180,48 172,53"/>
+    <line class="d-edge" x1="330" y1="48" x2="346" y2="48"/><polygon class="d-arrow" points="342,43 350,48 342,53"/>
+    <line class="d-edge" x1="500" y1="48" x2="516" y2="48"/><polygon class="d-arrow" points="512,43 520,48 512,53"/>
+</svg>
+</div>
+            <p>
+
+                いちばん速い始め方はネイティブインストーラーです &mdash; 依存関係なしにコマンド一行で済み、Claude Code を自動で最新の状態に保ってくれます。
+                <ul>
+                    <li>macOS / Linux / WSL: <code>curl -fsSL https://claude.ai/install.sh | bash</code></li>
+                    <li>Windows (PowerShell): <code>irm https://claude.ai/install.ps1 | iex</code></li>
+                    <li>プロジェクトへ移動: <code>cd your-project</code></li>
+                    <li>実行: <code>claude</code></li>
+                </ul>
+                Homebrew（<code>brew install --cask claude-code</code>）と WinGet にも対応しています。npm でのインストール（<code>npm install -g @anthropic-ai/claude-code</code>、Node.js 22 以上が必要）も引き続き動作し、同じネイティブバイナリを入れます。
+                初回起動すると Claude Code が認証の手順を案内します &mdash; Claude アカウント（Pro/Max プラン）でログインするか、Anthropic API キーを使えます。そのあとは、やりたいことを普通の言葉で説明するだけです。例: <em>「認証フローを説明して」</em>、<em>「ダークモードのトグルを追加してテストを走らせて」</em>。
+                知っておくと便利な起動フラグをいくつか:
+                <ul>
+                    <li><code>claude</code> &mdash; 対話セッションを開始</li>
+                    <li><code>claude "プロンプト"</code> &mdash; 一度きりの作業を実行</li>
+                    <li><code>claude -c</code> &mdash; 直近の会話を再開</li>
+                    <li><code>claude --help</code> &mdash; 全オプションを表示</li>
+                </ul>
+
+            </p>
