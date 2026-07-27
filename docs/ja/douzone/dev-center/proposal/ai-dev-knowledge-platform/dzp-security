@@ -1,0 +1,66 @@
+<h2>資産の活用とセキュリティ</h2>
+
+<h3>はじめから作り直さない</h3>
+<p>事前の検証のために運用している <strong>Reference Wiki</strong>（<a href="#!kgs-overview">知識はどう積み上がるのか</a>のシリーズが解説する、あのウィキ）がすでに備えている機能を複製して PoC を始め、検証された機能を会社のプラットフォームへ育てる。2026-07 の時点で実証されている範囲: HTML Fragment の文書、SPA の Web UI、JSON の Navigation Tree（不変の ID と物理の経路の分離）、統合／Tag／Concept の検索、Knowledge Index（決定的なビルド + <code>--check</code> のドリフトのゲート）、自動の関連の推薦（<code>related</code>）と<strong>型つきの知識の関係 5 種（<code>relations</code>）</strong>、Knowledge Map · 3D/2D のナレッジグラフ、<strong>AI の消費の層（llms.txt · 自己完結のグラフ JSON）</strong>、4 層の CI の検証のゲート、Work Log、Git History にもとづく文書の履歴。</p>
+
+<p>再利用は「コードを参考にする」の水準ではない。このエンジンはすでに <strong>wiki-plugin（v0.7.0）としてパッケージ</strong>されている — 登録・索引・検証の道具 18 種とスキル 4 種（add-doc · index · validate · wiki-init）を収め、新しいリポジトリに入れれば同じ知識の体系をすぐに立ち上げる（<a href="#!kgs-plugin">ウィキのエンジンのプラグイン化</a>）。Reference Wiki 自身がこのプラグインの最初のドッグフーディングの利用者として運用しているので、「はじめから作り直さない」はスローガンではなく<strong>インストールの手順</strong>である。</p>
+
+<p>とくにこの Reference Wiki では、<strong>AI が文書を作成・修正するときに知識の体系への反映が規則として義務づけられている</strong>（リポジトリの AI 向けの指針の文書で強制）。文書が一編加われば、ナビゲーションへの登録 → 知識の索引のエントリ（概念と<strong>関係の 5 型の多角的な検討</strong>を含む — 検討の抜けは、遮らないレビューの信号が知らせる） → 決定的な索引のビルド → 知識の地図・グラフ・検索への自動の反映 → Work Log への記録、までが<strong>同じ変更の単位（PR）</strong>で一緒に動く。会社のプラットフォームの「知識の反映率」という運用の規律が、すでに小さな規模で検証されているわけだ。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 196" role="img" aria-label="Reference Wiki の文書の追加の義務の手順: 文書の作成、list ノードの登録、索引のエントリの作成を経て決定的な索引のビルドが走り、地図・グラフ・検索へ自動で反映され、Work Log まで同じ変更の単位で記録される">
+    <text class="d-sub" x="8" y="14" text-anchor="start">文書の追加 — AI が行う義務の手順</text>
+    <rect class="d-box" x="8" y="22" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="108" y="41" text-anchor="middle">① 文書の作成</text>
+    <text class="d-sub" x="108" y="57" text-anchor="middle">HTML Fragment · ドメインのツリー</text>
+    <rect class="d-box" x="240" y="22" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="340" y="41" text-anchor="middle">② ナビ(list) ノードの登録</text>
+    <text class="d-sub" x="340" y="57" text-anchor="middle">name · path · label · tags · model</text>
+    <rect class="d-box accent" x="472" y="22" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="572" y="41" text-anchor="middle">③ Index エントリの作成</text>
+    <text class="d-sub" x="572" y="57" text-anchor="middle">title · summary · concepts</text>
+    <line class="d-edge" x1="208" y1="45" x2="232" y2="45"/><polygon class="d-arrow" points="232,40 232,50 240,45"/>
+    <line class="d-edge" x1="440" y1="45" x2="464" y2="45"/><polygon class="d-arrow" points="464,40 464,50 472,45"/>
+
+    <path class="d-edge" d="M572 68 C572 88, 556 98, 536 98 H144 C124 98, 108 106, 108 118 V126"/>
+    <polygon class="d-arrow" points="103,125 113,125 108,132"/>
+    <polygon class="d-arrow" points="348,93 348,103 338,98"/>
+
+    <text class="d-sub" x="672" y="122" text-anchor="end">知識の体系へ自動で反映 — 同じ PR で</text>
+    <rect class="d-box" x="8" y="134" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="108" y="153" text-anchor="middle">④ 決定的な Index Build</text>
+    <text class="d-sub" x="108" y="169" text-anchor="middle">再生成 · --check で検証</text>
+    <rect class="d-box" x="240" y="134" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="340" y="153" text-anchor="middle">⑤ 地図 · グラフ · 検索へ反映</text>
+    <text class="d-sub" x="340" y="169" text-anchor="middle">Knowledge Index JSON</text>
+    <rect class="d-box accent" x="472" y="134" width="200" height="46" rx="9"/>
+    <text class="d-label sm" x="572" y="153" text-anchor="middle">⑥ Work Log への記録</text>
+    <text class="d-sub" x="572" y="169" text-anchor="middle">主題ごとの文書に伴って記録</text>
+    <line class="d-edge" x1="208" y1="157" x2="232" y2="157"/><polygon class="d-arrow" points="232,152 232,162 240,157"/>
+    <line class="d-edge" x1="440" y1="157" x2="464" y2="157"/><polygon class="d-arrow" points="464,152 464,162 472,157"/>
+</svg>
+<div class="d-cap">文書が増えれば知識の体系も一緒に更新される — 規則として義務づけられているので、人が気をつけなくても壊れない。</div>
+</div>
+
+<ul>
+    <li><strong>Reference Wiki → 機能の実験 → 検証 → 会社の PoC → 安定化 → 組織への展開</strong>という経路をとり、検証されていないものを組織へいきなり入れない。</li>
+    <li>文書は <strong>HTML を中心</strong>に運用し、表 · Dashboard · SVG の Diagram · <code>&lt;details&gt;</code> · 状態の Badge · Warning Box · Architecture Flow · DB の構造の可視化を活かす。</li>
+    <li>HTML による AI の Token の増加は、文書の全体を読まない <strong>Knowledge Index にもとづく Retrieval</strong> で最小にする。これは CLAUDE.md の階層と MCP の連携で組織の知識を AI の文脈にする <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Anthropic 公式の推奨のパターン</a>とも地続きだ。</li>
+</ul>
+
+<h3>AI の消費の層 — 機械が読む三つの扉</h3>
+<p>「AI が組織の知識を Context として活かす」という約束にも、Reference Wiki にはすでに実物がある（<a href="#!kgs-ai-layer">AI はこのウィキをどう読むのか</a>）。外部の AI は三つの扉から入ってくる: ① <code>llms.txt</code> — 知識の全体の表紙（何がどこにあるか）を llmstxt.org の慣例で見せる → ② <code>knowledge-graph.json</code> — <strong>たった一度の fetch</strong> でグラフの全体（ノード・関連・型つきの関係・概念・各文書の URL）を受け取る自己完結のファイル → ③ 必要な文書だけを選んで個別に fetch。コーパスの全体を埋め込んだり毎回クロールしたりせずに、AI が関係をたどって必要なぶんだけ読む構造であり、これらのファイルは索引から自動で生成され、<code>--check</code> のゲートが古いまま配備されるのを止める。会社のプラットフォームの Claude Code や AI Agent との連携は、この契約を社内網の URL の上へそのまま移す仕事だ。</p>
+
+<h3>セキュリティとアクセスの構造</h3>
+<p>会社の開発の知識には、内部の Architecture、顧客のプロジェクトの情報、DB の構造、障害の分析、セキュリティの設定、認証に関わる情報が含まれうる。したがって知識の等級を分け、保管庫とアクセスを分離する。</p>
+<ul>
+    <li><strong>PUBLIC</strong> — 全社員が閲覧できる一般の知識</li>
+    <li><strong>INTERNAL</strong> — 開発の組織の範囲の技術の知識</li>
+    <li><strong>CONFIDENTIAL</strong> — 顧客・プロジェクトの機微な情報を含む知識</li>
+    <li><strong>RESTRICTED</strong> — 限られた組織だけがアクセスするセキュリティの知識</li>
+</ul>
+
+<div class="note warn">
+    <span class="nh">ひとつの公開の Wiki に混ぜない</span>
+    勧める構造は <strong>General Wiki（全社員） · Engineering Wiki（開発の組織） · Restricted Knowledge（限られた組織）</strong>という保管庫とアクセスの分離だ。すべてのセキュリティの等級をひとつの公開の Wiki に混ぜず、社員は自分の権限の範囲の中だけで検索し閲覧する。
+</div>

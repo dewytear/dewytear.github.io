@@ -1,0 +1,128 @@
+<h2>知識の管理の体系 — 判定 · 構造 · 連結 · 追跡 · 信頼 · 寿命</h2>
+<p>パイプラインが知識を作るのだとすれば、この編はその知識が<strong>どんな構造に収まり、どうつながり、どう信頼を保つのか</strong>を扱う。ここに出てくる構造は想像ではない — 事前の検証のための Reference Wiki が、2026-07 の時点で文書 107 編 · 固有の概念 337 個 · 自動の関連エッジ 349 本 · 型つきの知識の関係 107 件の規模で<strong>実際に運用して検証したスキーマ</strong>を核とし、会社の開発の知識に要るフィールドだけを後方互換（additive）に広げる。</p>
+
+<h3>価値の判定 — 変更の量ではなく再利用の価値</h3>
+<ul>
+    <li><strong>知識にする対象</strong> — 新しい Architecture・業務の Rule、DB の Table・Column の意味の変更、API の追加・変更、状態の遷移の変更、外部のシステムとの連携、くり返せる障害の解決、共通の開発のパターン、性能の改善の事例、セキュリティの方針・Dependency の変化、既存の設計の方針の変更</li>
+    <li><strong>既定で除外</strong> — 変数名の変更、単純な Null Check、誤字・コメント・Formatting、単なる Log の追加、Test Data、一度きりの Debug、機械的な Refactoring</li>
+</ul>
+
+<h3>知識の原子の構造 — 実証されたスキーマの上に広げる</h3>
+<p>知識の一編は三重の属性として存在する。第一の重ねが<strong>ノードの属性</strong>だ — Reference Wiki のナビゲーションのツリーで、すべての文書のノードは <code>name</code>（不変の論理 ID であり経路でもある）と <code>path</code>（物理の経路）を分けて持つ。ファイルがドメインのツリーの中で動いても <code>path</code> だけが変わり <code>name</code> は不変なので、<strong>積み上がったリンク・関係・検索がファイルの置き直しで壊れない</strong>。ここに表示のための <code>label</code>（+言語ごと）・<code>tags</code>・著作の <code>model</code> が載る（<a href="#!kgs-overview">知識はどう積み上がるのか</a>）。第二の重ねが<strong>索引のエントリ</strong> — 下の例の上の部分が実証された核、下の部分が会社向けの拡張だ。第三の重ね（連結）は次の節で扱う。</p>
+<pre><code><span class="c"># Knowledge Index のエントリ — 実証された核 + 会社の拡張（例）</span>
+{
+  <span class="c">// ── 実証の核: Reference Wiki が 107 編の規模で運用中のフィールド ──</span>
+  "name": "dz-erp-so-status-transition",   <span class="c">// 不変の論理 ID = 経路</span>
+  "title": "受注の状態の遷移の方針",
+  "summary": "販売オーダーの状態の体系と、出荷・売上への遷移の条件",
+  "concepts": ["受注状態遷移", "与信チェック", "分割出荷"],  <span class="c">// 本文に実在する概念だけ</span>
+  "section": "Douzone · OmniEsol · SCM",   <span class="c">// ツリーの位置から自動で計算</span>
+  "related": [ … ],                        <span class="c">// 自動で計算 — 手で編集しない</span>
+  "relations": [ … ],                      <span class="c">// 宣言された型つきの関係（次の節）</span>
+
+  <span class="c">// ── 会社の拡張（提案）: スキーマ v2 の additive の規則に従う — フィールドの追加は後方互換 ──</span>
+  "kind": "policy",  "status": "active",  "trust": "DECISION",
+  "product": "OmniEsol",  "domain": "SCM",  "project": "sales-order",
+  "identifiers": ["SD_SO_HDR", "SD_SO_ITEM", "SO_STS_CD", "CREDIT_CHK_YN"],
+  "sources": [{
+    "project": "scm/sales-order",
+    "commit": "abc123",  "mergeRequest": 382,
+    "paths": ["src/.../SalesOrderService.java", "mapper/.../SalesOrderMapper.xml"]
+  }]
+}</code></pre>
+<p>拡張が核を侵さないことが要点だ。Reference Wiki のスキーマの契約は「フィールドの追加は後方互換、意味の変更はバージョンの引き上げ」を明記しているので、<code>identifiers</code>・<code>sources</code>・<code>trust</code> のような会社のフィールドを足しても、<strong>検証器・ビルド・グラフ・検索といった既存の消費者は修正なしでそのまま動く</strong>。新しく作るのはフィールドと、そのフィールドを読む検索の層だけである。</p>
+
+<h3>二重の連結 — 計算された関連と、宣言された関係</h3>
+<p>知識は孤立したカードではなくグラフであるべきだ。Reference Wiki は連結を<strong>二重</strong>に実証しており、会社のプラットフォームはこれをそのまま受け継ぐ（<a href="#!kgs-edges">文書はどうつながるのか</a>）:</p>
+<ul>
+    <li><strong>ⓐ 計算された関連（<code>related</code>）</strong> — 機械が共有された概念から自動で計算する対称の連結。ありふれた概念ほど低く、まれな概念ほど高く重みづけし（希少性・idf）、<strong>概念を 2 つ以上共有</strong>するか、<strong>まれな概念（全体で 3 編以下）を 1 つ共有</strong>するときだけつなぐ。連結が足りなければ同じフォルダ（System）で補い、<strong>すべての文書が 2〜4 の連結を持ち、孤立は 0</strong> を保証する。人がリンクを張らなくてもグラフが保たれる層 — AI が大量に生成する会社の知識ではとくに大事だ。</li>
+    <li><strong>ⓑ 宣言された関係（<code>relations</code>）</strong> — 方向と種類のある型つきの関係が 5 種: <strong>先行知識（prerequisite） · 実装（implements） · 事例（example-of） · 根拠（evidence-for） · 置換（supersedes）</strong>。それぞれの関係は方向（A→対象）と一行の根拠（<code>evidenceRef</code>）、そして<strong>宣言の主体（<code>source</code>）</strong>を持つ。保存は正方向の一度だけで、逆方向（「この文書へ入ってくる関係」）は消費する側が自動で導く。</li>
+</ul>
+<p>ここで会社のプラットフォームとスキーマがぴたりと噛み合うのが <code>source</code> のフィールドだ。実証されたスキーマは、宣言の主体の語彙として <code>human · ai-proposed · imported · rule-derived</code> をすでに予約している（Reference Wiki の 107 件はすべて <code>human</code>）。会社のプラットフォームでは<strong>AI Curator が関係を <code>ai-proposed</code> として提案し、人が承認すれば <code>human</code> へ昇格</strong>する — 自動化の速さと「本文に実在する関係だけを張る」という正直さの原則を、ひとつのフィールドで両立させる構造だ。無矛盾は機械が守る: 存在しない対象を指す関係と、5 つの語彙の外の型は <strong>ERROR としてマージが遮られ</strong>、根拠の欠落や食い違う宣言は検討の信号（WARN）として浮かび上がる。</p>
+
+<h3>積み上げる更新 — 文書の数ではなく知識の密度</h3>
+<p>新しい知識が見つかったからといって、いつも新しい文書を作りはしない。まず Knowledge Index を検索して関連する文書があれば<strong>既存の文書を広げる</strong>。たとえば「受注の状態の遷移の体系」の文書がある状態で分割出荷の状態が加わったなら、新規の文書より先に既存の文書の拡張を判断する。Wiki が変更の履歴の集まりではなく<strong>継続して精製された、いまの知識の状態</strong>として保たれる理由だ。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 172" role="img" aria-label="積み上げる更新の分岐: 新しい知識を見つけたら索引を検索し、関連する文書があれば既存の文書を更新し、なければ新規の文書を生成する">
+    <rect class="d-box" x="8" y="66" width="150" height="48" rx="9"/>
+    <text class="d-label sm" x="83" y="86" text-anchor="middle">新しい知識の発見</text>
+    <text class="d-sub" x="83" y="102" text-anchor="middle">Merge の分析の結果</text>
+    <rect class="d-box" x="186" y="66" width="140" height="48" rx="9"/>
+    <text class="d-label sm" x="256" y="86" text-anchor="middle">Index 検索</text>
+    <text class="d-sub" x="256" y="102" text-anchor="middle">関連する文書を探す</text>
+    <polygon class="d-box" points="412,58 476,90 412,122 348,90"/>
+    <text class="d-label sm" x="412" y="94" text-anchor="middle">関連文書はある?</text>
+    <rect class="d-box accent" x="536" y="28" width="136" height="44" rx="9"/>
+    <text class="d-label sm" x="604" y="46" text-anchor="middle">既存の文書を更新</text>
+    <text class="d-sub" x="604" y="62" text-anchor="middle">積み上げて拡張</text>
+    <rect class="d-box" x="536" y="108" width="136" height="44" rx="9"/>
+    <text class="d-label sm" x="604" y="126" text-anchor="middle">新規の文書を生成</text>
+    <text class="d-sub" x="604" y="142" text-anchor="middle">新しい知識のカード</text>
+    <line class="d-edge" x1="158" y1="90" x2="178" y2="90"/><polygon class="d-arrow" points="178,85 178,95 186,90"/>
+    <line class="d-edge" x1="326" y1="90" x2="340" y2="90"/><polygon class="d-arrow" points="340,85 340,95 348,90"/>
+    <path class="d-edge" d="M476 90 H500 C510 90, 514 84, 514 74 V64 C514 56, 518 54, 526 54 H528"/>
+    <polygon class="d-arrow" points="528,45 528,55 536,50"/>
+    <text class="d-sub" x="498" y="80" text-anchor="middle">YES</text>
+    <path class="d-edge" d="M476 90 H500 C510 90, 514 96, 514 106 V116 C514 124, 518 126, 526 126 H528"/>
+    <polygon class="d-arrow" points="528,125 528,135 536,130"/>
+    <text class="d-sub" x="498" y="112" text-anchor="middle">NO</text>
+</svg>
+<div class="d-cap">既存の文書の拡張をいつも先に判断する — 文書の数ではなく知識の密度を増やす。</div>
+</div>
+
+<h3>開発の Identifier での検索</h3>
+<p>開発者は自然言語より <strong>Table 名 · Column 名 · Rule ID · Class 名 · Method 名 · API 名 · Mapper ID · Error Code</strong> で探すことが多い。上の拡張のフィールド <code>identifiers</code> がこの検索の一次のキーになり、検索の優先の順は<strong>① Identifier の完全一致（拡張のフィールド） → ② 題 → ③ 概念（concepts） → ④ 要約 → ⑤ タグ → ⑥ 関連する文書（related） → ⑦ 同じプロジェクト</strong>で構成する — ②〜⑥ はすべて実証された核のフィールドの上で動くので、会社が新しく作る検索のロジックは ① と ⑦ だけだ。ソースで出会った <code>SO_STS_CD</code> ひとつだけで、関連する方針の文書に届けるようでなければならない。</p>
+
+<h3>出典の追跡（Provenance）</h3>
+<p>すべての知識は、拡張のフィールド <code>sources</code> のように<strong>どのプロジェクト → どの Commit → どの MR → どの Source File</strong> から来たのかを逆にたどれねばならない。Reference Wiki では文書の作成日・更新日を Git の履歴から導くことでこの原則を小さく実証しており、会社のプラットフォームは追跡の単位を GitLab の座標（commit・MR・paths）へ広げる。検索で知識を足しつつ出典を一緒に保つやり方は RAG の研究が確立したもので、外部の知識を結びつけるとより事実に即し出典をたどれる生成になり（<a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener">Lewis et al., NeurIPS 2020</a>）、ハルシネーションが大きく減る（<a href="https://arxiv.org/abs/2104.07567" target="_blank" rel="noopener">Shuster et al., 2021</a>）ことが実証されている。</p>
+
+<h3>信頼の水準 — FACT · INFERRED · DECISION</h3>
+<p>コードで見つかったというだけの理由で、公式の方針として確定はしない。最新の研究でも、最高の性能の LLM でさえコードの要約の品質と正確さを見誤る場合が報告されており（<a href="https://arxiv.org/abs/2507.16587" target="_blank" rel="noopener">arXiv 2507.16587, 2025</a>）、NIST の生成 AI のプロファイルは<strong>コンテンツの出典の追跡（Content Provenance）</strong>と「自信たっぷりに述べられる誤り（confabulation）」の管理を、中心のリスクの統制として求めている（<a href="https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf" target="_blank" rel="noopener">NIST AI 600-1</a>）。信頼の水準は拡張のフィールド <code>trust</code> に記録する。</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>区分</th><th>意味</th><th>例</th><th>掲載の方針</th></tr></thead>
+        <tbody>
+            <tr><td><strong>FACT</strong></td><td>コードから直接に確かめられる</td><td>Table · Column · API · Class の関係</td><td>自動での掲載の可能性が高い</td></tr>
+            <tr><td><strong>INFERRED</strong></td><td>コードの構造にもとづく推論</td><td>再試行の目的の推定、重複の防止の推定</td><td>推論であることを明示して掲載</td></tr>
+            <tr><td><strong>DECISION</strong></td><td>業務・Architecture の決定</td><td>GUID を選んだ理由、与信のチェックの時点の決定</td><td>MR・設計の文書など追加の根拠を確かめてから掲載</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>寿命の管理 — 削除せず置き換える</h3>
+<p>方針が変わったからといって過去の知識を削除しない。たとえば「与信のチェック → 受注の保存の時点」が「受注の保存 + 出荷の時点で再検証」に変わったなら、既存の文書を <code>superseded</code> へ移して新しい方針の文書とつなぎ、<strong>いまの方針と変更の履歴を同時に</strong>たどれるようにする。このつながりこそ、関係の 5 種の<strong>置換（supersedes）</strong>の型だ — <code>新しい文書 -[supersedes]-&gt; 古い文書</code>。興味深いことに Reference Wiki では文書をその場で改訂するため、この型は正直に <strong>0 件</strong>のまま空いている（語彙・検証・UI は備えつつ、無理な組を作らなかった）。方針の変更が実在する会社の開発の知識は<strong>この型がはじめて実戦に投入される環境</strong>であり、下の状態機械の「置換」の遷移が、そのまま supersedes の関係の生成である。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 176" role="img" aria-label="知識の寿命: draft から active になり、有効でなくなれば deprecated、新しい方針に置き換われば superseded となって新しい active の文書とつながる">
+    <rect class="d-box" x="8" y="72" width="110" height="44" rx="9"/>
+    <text class="d-label sm" x="63" y="90" text-anchor="middle">draft</text>
+    <text class="d-sub" x="63" y="106" text-anchor="middle">作成中</text>
+    <rect class="d-box accent" x="152" y="72" width="120" height="44" rx="9"/>
+    <text class="d-label sm" x="212" y="90" text-anchor="middle">active</text>
+    <text class="d-sub" x="212" y="106" text-anchor="middle">いま有効</text>
+    <rect class="d-box" x="332" y="32" width="150" height="44" rx="9"/>
+    <text class="d-label sm" x="407" y="50" text-anchor="middle">deprecated</text>
+    <text class="d-sub" x="407" y="66" text-anchor="middle">もう有効ではない</text>
+    <rect class="d-box" x="332" y="112" width="150" height="44" rx="9"/>
+    <text class="d-label sm" x="407" y="130" text-anchor="middle">superseded</text>
+    <text class="d-sub" x="407" y="146" text-anchor="middle">新しい方針で置換</text>
+    <rect class="d-box accent" x="552" y="112" width="120" height="44" rx="9"/>
+    <text class="d-label sm" x="612" y="130" text-anchor="middle">新しい active</text>
+    <text class="d-sub" x="612" y="146" text-anchor="middle">つながりを維持</text>
+    <line class="d-edge" x1="118" y1="94" x2="144" y2="94"/><polygon class="d-arrow" points="144,89 144,99 152,94"/>
+    <path class="d-edge" d="M272 94 H296 C306 94, 310 88, 310 78 V68 C310 60, 314 58, 322 58 H324"/>
+    <polygon class="d-arrow" points="324,49 324,59 332,54"/>
+    <text class="d-sub" x="296" y="84" text-anchor="middle">破棄</text>
+    <path class="d-edge" d="M272 94 H296 C306 94, 310 100, 310 110 V120 C310 128, 314 130, 322 130 H324"/>
+    <polygon class="d-arrow" points="324,125 324,135 332,130"/>
+    <text class="d-sub" x="296" y="116" text-anchor="middle">置換</text>
+    <line class="d-edge dash accent" x1="482" y1="134" x2="544" y2="134"/><polygon class="d-arrow accent" points="544,129 544,139 552,134"/>
+</svg>
+<div class="d-cap">superseded の文書は、新しい文書と supersedes の関係でつながったまま残る — 「なぜ変わったのか」が一緒に保たれる。</div>
+</div>
+
+<div class="note">
+    <span class="nh">受け継ぐ原則 — 正直さ</span>
+    概念（concepts）と関係（relations）は<strong>本文に実在するものだけ</strong>を張る。連結を増やそうとして、ない概念を入れたり無理な関係を作ったりすることはグラフをゆがめる — Reference Wiki が規則として打ち込み運用してきた原則であり、検証器の WARN は「直すべき一覧」ではなく<strong>「人が一度見る一覧」</strong>だ。AI が大量に知識を生成する会社の規模では、この原則がいっそう大事になる — <code>ai-proposed</code> → 人の承認という流れと、遮らないレビューの信号がその安全装置である。
+</div>

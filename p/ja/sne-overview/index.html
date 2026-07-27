@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>送信エンジンの実装の要請 — 概要と責任の境界</title>
+<meta name="description" content="送信要求を作るところまでを AI 通知が受け持ち、それ以後の送信・タイミング・再処理・状況を送信エンジンが受け持つ — Kafka をもとにした送信エンジンの実装の要請の概要と責任の境界。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/sne-overview/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/sne-overview/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/sne-overview/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/sne-overview/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/sne-overview/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="送信エンジンの実装の要請 — 概要と責任の境界">
+<meta property="og:description" content="送信要求を作るところまでを AI 通知が受け持ち、それ以後の送信・タイミング・再処理・状況を送信エンジンが受け持つ — Kafka をもとにした送信エンジンの実装の要請の概要と責任の境界。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/sne-overview/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="送信エンジンの実装の要請 — 概要と責任の境界">
+<meta name="twitter:description" content="送信要求を作るところまでを AI 通知が受け持ち、それ以後の送信・タイミング・再処理・状況を送信エンジンが受け持つ — Kafka をもとにした送信エンジンの実装の要請の概要と責任の境界。">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "送信エンジンの実装の要請 — 概要と責任の境界",
+ "description": "送信要求を作るところまでを AI 通知が受け持ち、それ以後の送信・タイミング・再処理・状況を送信エンジンが受け持つ — Kafka をもとにした送信エンジンの実装の要請の概要と責任の境界。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/sne-overview/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!sne-overview",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-16T20:45:37+09:00",
+ "dateModified": "2026-07-16T20:45:37+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!sne-overview">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/sne-overview/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/sne-overview/" hreflang="en">English</a>
+</p>
+<article>
+<h2>送信エンジンの実装の要請 — 概要と責任の境界</h2>
+<p>AI 通知は「何を・いつ・誰に・どのチャネルで送るか」を判断して<strong>送信要求</strong>を作るところまで完了した。それ以後の<strong>実際の送信・タイミング・再処理・状況</strong>を受け持つ<strong>Kafka（メッセージキュー）をもとにした送信エンジン</strong>の実装を、プラットフォームのチームに要請する。</p>
+
+<div class="note"><span class="nh">この文書の目的</span>
+送信の段階を共用の送信エンジンとして実装してもらうよう要請する文書だ。<strong>プラットフォームのチームが実装すべきもの</strong>と<strong>AI 通知が必要とするもの</strong>を中心に、概念を主に整理しており、具体的な内部の設計は含めない（詳細は協議で確定）。</div>
+
+<h3>概要</h3>
+<p>AI 通知のシステムは業務のイベントや利用者の要求を受けて、<strong>どの通知を · どの時点に · 誰に · どのチャネルで</strong>送るかを規則で判断し、その結果を<strong>「送信要求」</strong>という形で作っておく。ここまでが 1 次の実装で完了した AI 通知の領域だ。</p>
+<p>いまはその送信要求を受けて<strong>実際に送信し、時点に合わせてタイミングを実行し、失敗を再処理し、送信の状況を管理・表示する</strong><strong>送信エンジン</strong>が要る。大量・非同期・配送の保証・拡張性が求められるので、Kafka をもとに実装してもらうよう要請する。</p>
+
+<h3>ここまで — AI 通知が作っておくもの</h3>
+<p>AI 通知は下の流れで<strong>送信要求</strong>を生成する。「いつ・誰に送るか」の<strong>判断</strong>と、遷移型の場合は<strong>状態の遷移の検知</strong>までが AI 通知の受け持ちだ。</p>
+<div class="diagram">
+  <svg viewBox="0 0 900 132" role="img" aria-label="AI 通知が判断と送信要求の生成までを行い、境界の向こうで送信エンジンが送信を受け持つ">
+    <defs>
+      <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path class="d-arrow" d="M0,0 L9,4.5 L0,9 Z"/></marker>
+      <marker id="ahA" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path class="d-arrow accent" d="M0,0 L9,4.5 L0,9 Z"/></marker>
+    </defs>
+    <rect class="d-box" x="10" y="34" width="150" height="44" rx="9"/>
+    <text class="d-label" x="85" y="53" text-anchor="middle">業務イベント</text>
+    <text class="d-sub" x="85" y="68" text-anchor="middle">/ 利用者の要求</text>
+    <rect class="d-box" x="200" y="34" width="170" height="44" rx="9"/>
+    <text class="d-label" x="285" y="53" text-anchor="middle">規則で判断</text>
+    <text class="d-sub" x="285" y="68" text-anchor="middle">対象 · 内容 · 宛先 · 経路 · 時点</text>
+    <rect class="d-box accent" x="410" y="34" width="180" height="44" rx="9"/>
+    <text class="d-label" x="500" y="53" text-anchor="middle">送信要求の生成</text>
+    <text class="d-sub" x="500" y="68" text-anchor="middle">遷移型は遷移の検知を含む</text>
+    <rect class="d-box soft" x="700" y="34" width="185" height="44" rx="9"/>
+    <text class="d-label" x="792" y="53" text-anchor="middle">送信エンジン</text>
+    <text class="d-sub" x="792" y="68" text-anchor="middle">送信 · タイミング · 再処理</text>
+    <line class="d-edge" x1="160" y1="56" x2="196" y2="56" marker-end="url(#ah)"/>
+    <line class="d-edge" x1="370" y1="56" x2="406" y2="56" marker-end="url(#ah)"/>
+    <line class="d-edge accent" x1="590" y1="56" x2="696" y2="56" marker-end="url(#ahA)"/>
+    <line class="d-edge dash" x1="645" y1="14" x2="645" y2="104"/>
+    <text class="d-accent" x="655" y="122" font-size="11">◀ AI 通知 · 送信エンジン ▶</text>
+  </svg>
+  <div class="d-cap">図 1. 責任の境界 — 送信要求の生成までが AI 通知、それ以後の送信が送信エンジン</div>
+</div>
+
+<h3>要請の概要 — 送信に求める特性と責任の境界</h3>
+<p>送信の段階は次の特性を求める。（キューの技術の選択やトポロジーはプラットフォームのチームの判断に任せ、Kafka をもとにすることを前提として要請する。）</p>
+<ul>
+  <li><strong>非同期・急増の吸収</strong> — 判断と送信を分け、瞬間の大量の送信をキューで緩衝する。</li>
+  <li><strong>配送の保証</strong> — 取りこぼしなく送られ、実際に届いたかを確かめる。</li>
+  <li><strong>再処理</strong> — 一時の失敗は自動で再試行し、くり返す失敗は隔離してから手で再処理する。</li>
+  <li><strong>正確なタイミング</strong> — 即時・遅延・周期・遷移といった時点の型に合う送信。</li>
+  <li><strong>拡張性</strong> — チャネルと物量の増加に応じる。</li>
+</ul>
+<h4>責任の境界</h4>
+<table>
+  <thead><tr><th>区分</th><th>AI 通知のチーム（完了・維持）</th><th>送信エンジン（プラットフォームのチーム · 実装の要請）</th></tr></thead>
+  <tbody>
+    <tr><td>判断</td><td>対象・内容・受信者・チャネル・<strong>時点の型</strong>の判断、<strong>遷移の検知</strong>・業務の条件の評価</td><td>—</td></tr>
+    <tr><td>送信要求</td><td>送信要求の<strong>生成・伝達</strong></td><td>送信要求の<strong>受信（消費）</strong></td></tr>
+    <tr><td>タイミング</td><td>時点の型・パラメータの決定</td><td>即時・遅延・周期・再試行の<strong>タイミングの実行</strong>、<strong>周期のバッチの寿命の管理</strong></td></tr>
+    <tr><td>送信の時点の確定</td><td>送る瞬間の<strong>最新の対象の照会・解釈</strong>（誰に・何を）</td><td>確定した結果で<strong>実際に送信</strong></td></tr>
+    <tr><td>送信</td><td>—</td><td>チャネルへの送信・冪等・配送の保証・順序・DLQ</td></tr>
+    <tr><td>結果・状況</td><td>結果の受信・履歴への反映</td><td>結果の<strong>返信</strong>、送信の<strong>データの管理・状況の画面</strong></td></tr>
+  </tbody>
+</table>
+<div class="diagram">
+  <svg viewBox="0 0 900 210" role="img" aria-label="送信要求のキューから送信エンジンが消費してチャネルへ送信し、失敗は DLQ へ、結果と状況を返信する">
+    <defs>
+      <marker id="bh" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path class="d-arrow" d="M0,0 L9,4.5 L0,9 Z"/></marker>
+      <marker id="bhA" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path class="d-arrow accent" d="M0,0 L9,4.5 L0,9 Z"/></marker>
+    </defs>
+    <rect class="d-box" x="12" y="70" width="150" height="46" rx="9"/>
+    <text class="d-label" x="87" y="89" text-anchor="middle">AI 通知</text>
+    <text class="d-sub" x="87" y="104" text-anchor="middle">送信要求の発行</text>
+    <rect class="d-box accent" x="200" y="70" width="130" height="46" rx="9"/>
+    <text class="d-label" x="265" y="97" text-anchor="middle">送信要求のキュー</text>
+    <rect class="d-box" x="370" y="62" width="170" height="62" rx="9"/>
+    <text class="d-label" x="455" y="86" text-anchor="middle">送信エンジン</text>
+    <text class="d-sub" x="455" y="102" text-anchor="middle">消費 · タイミング · 送信</text>
+    <text class="d-sub" x="455" y="116" text-anchor="middle">再試行 · 冪等</text>
+    <rect class="d-box soft" x="600" y="18" width="150" height="40" rx="9"/>
+    <text class="d-label sm" x="675" y="43" text-anchor="middle">チャネル(通知・メール…)</text>
+    <rect class="d-box soft" x="600" y="82" width="150" height="38" rx="9"/>
+    <text class="d-label sm" x="675" y="105" text-anchor="middle">DLQ(隔離・再処理)</text>
+    <rect class="d-box soft" x="600" y="142" width="150" height="40" rx="9"/>
+    <text class="d-label sm" x="675" y="167" text-anchor="middle">状況の画面・データ管理</text>
+    <line class="d-edge accent" x1="162" y1="93" x2="196" y2="93" marker-end="url(#bhA)"/>
+    <line class="d-edge accent" x1="330" y1="93" x2="366" y2="93" marker-end="url(#bhA)"/>
+    <line class="d-edge" x1="540" y1="84" x2="596" y2="42" marker-end="url(#bh)"/>
+    <line class="d-edge" x1="540" y1="98" x2="596" y2="100" marker-end="url(#bh)"/>
+    <line class="d-edge" x1="540" y1="112" x2="596" y2="158" marker-end="url(#bh)"/>
+    <line class="d-edge dash" x1="455" y1="124" x2="455" y2="195"/>
+    <line class="d-edge dash" x1="455" y1="195" x2="87" y2="195"/>
+    <line class="d-edge dash" x1="87" y1="195" x2="87" y2="118" marker-end="url(#bh)"/>
+    <text class="d-sub" x="250" y="190" text-anchor="middle">結果・状態の返信 → 履歴へ反映</text>
+  </svg>
+  <div class="d-cap">図 2. 送信エンジンのキューの流れ（概念） — 要求の消費 → 送信 → チャネル／DLQ、結果の返信</div>
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> Douzone · dev.Center · Proposal · AI 알림 발송엔진 &middot; <span class="pr-k">作成日</span> 2026-07-16 &middot; <span class="pr-k">更新日</span> 2026-07-16</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/sne-scope/">送信エンジンの実装の要請の項目</a></li><li><a href="/p/ja/sne-interface/">インタフェース · 規模 · 協議 · 期待される効果</a></li></ul>
+</nav>
+</body>
+</html>
