@@ -34,3 +34,36 @@
     <span class="nh">두 번의 실사고로 만든 게이트가 세 번째를 막았다</span>
     이 검사는 <strong>2026-07-14</strong>와 <strong>2026-07-27</strong>, 같은 사고가 두 번 난 뒤에 넣은 것이다(&ldquo;전날 확인한 날짜를 아침까지 재사용&rdquo;). 이번에는 <strong>사람이 아니라 기계가 먼저 알아챘고</strong>, 오류 메시지가 적어야 할 경로(<code>work-log/2026/07/29/wl-20260729-&lt;frame&gt;</code>)까지 알려 줬다. <code>Worklog-Backdated:</code>로 낮출 수도 있었지만 쓰지 않았다 &mdash; 지난 날짜에 적는 것이 <em>의도</em>일 때를 위한 탈출구이고, 여기서는 그냥 날짜가 넘어간 것이다.
 </div>
+
+<h3>AI 2040 두 편의 태그를 본문 어휘로 교정</h3>
+
+<p>WARN 23건을 유형별로 정리해 보고하니 대표님이 <strong>실질 후보로 남은 <code>tag-content-mismatch</code> 2건만</strong> 손대라고 하셨다. <code>validate_docs</code>가 태그를 본문과 대조해 <strong>절반 미만</strong>만 발견되면 내는 신호다.</p>
+
+<div class="note">
+    <span class="nh">진단 &mdash; 태그가 본문 어휘가 아니라 &ldquo;시리즈 공통 주제 라벨&rdquo;이었다</span>
+    두 편만의 문제가 아니었다. <code>AI 거버넌스</code>·<code>미중 경쟁</code>은 <strong>AI 2040 시리즈 4편 어느 본문에도 한 번도 나오지 않는다</strong>(<code>거버넌스</code> 0회 · <code>미중</code> 0회). 시리즈 전체에 같은 태그 다섯 개를 순서만 바꿔 붙여 놓은 것이라, 본문이 실제로 다루는 것과 어긋난 편에서 신호가 먼저 터졌을 뿐이다.
+</div>
+
+<p><strong>정책·검증(1/5 &rarr; 6/6)</strong> &mdash; 이 편은 &ldquo;검증된 합의&rdquo;를 지탱하는 장치를 다룬다. <code>초지능</code>은 아예 안 나오고 <code>AI 안전</code>도 없다. 본문이 실제로 말하는 것으로 바꿨다:</p>
+<ul>
+    <li><code>AI 거버넌스 · AI 안전 · 미중 경쟁 · 초지능</code> &rarr; <strong><code>검증된 합의 · 연구 투명성 · 모델 스펙 · 제3자 감독 · 데이터센터</code></strong></li>
+</ul>
+
+<p><strong>연도별 시나리오(2/5 &rarr; 6/6)</strong> &mdash; 이 편의 축은 2029년 <em>미·중 합의</em>로 2030년 초지능을 회피하고 2035년 일시정지를 거친다는 연표다. 특히 <code>미중 경쟁</code>은 <strong>방향이 반대</strong>다 &mdash; 본문은 &ldquo;무모한 초지능 경쟁을 <em>피하기로 합의</em>&rdquo;하는 이야기다.</p>
+<ul>
+    <li><code>AI 거버넌스 · AI 2027 · 미중 경쟁</code> &rarr; <strong><code>미중 합의 · 연구 투명성 · AI 에이전트 · 일시정지</code></strong></li>
+</ul>
+
+<p><code>tags_en</code>·<code>tags_ja</code>도 함께 고쳤고, <strong>각 언어 본문에 실재하는 표현을 그대로 썼다</strong> &mdash; en은 <code>US&ndash;China agreement</code>(본문의 엔 대시 그대로)·<code>third-party oversight</code>, ja는 <code>米中の合意</code>·<code>第三者の監督</code>·<code>モデルスペック</code>(ja 본문은 <code>モデル仕様</code>이 아니라 이 표기를 쓴다). 게이트는 ko 본문만 보지만 정직성은 세 언어에 같이 적용된다.</p>
+
+<div class="note warn">
+    <span class="nh">남겨 둔 것 &mdash; 같은 문제를 가진 나머지 2편</span>
+    개요(<strong>4/6</strong>)와 반응·비평(<strong>3/5</strong>)도 <code>AI 거버넌스</code>·<code>AI 안전</code>이 본문에 없다. <strong>절반은 넘어서 게이트가 통과시키지만 성격은 동일하다</strong> &mdash; 특히 반응·비평은 3/5로 경계에 붙어 있어 태그 하나만 더 어긋나면 터진다. 대표님 지시 범위가 &ldquo;두 편&rdquo;이라 손대지 않았고, 확장은 판단을 받고 하는 것이 맞다.
+</div>
+
+<div class="note">
+    <span class="nh">개념(concepts)은 일부러 그대로 뒀다</span>
+    같은 네 편의 <code>doc-entries</code> 개념도 태그와 거의 같은 다섯 개(<code>초지능·AI 거버넌스·AI 안전·미중 경쟁·AI 정렬</code>)다. 그래도 건드리지 않았다 &mdash; <strong>태그와 개념은 층이 다르다.</strong> 태그는 독자에게 보이는 표면 라벨이라 본문 어휘와 맞는 편이 낫고 게이트도 그렇게 본다. 개념은 <strong>지식 그래프의 조인 키</strong>여서, 본문이 그 단어를 쓰지 않아도 <em>실질적으로 다루면</em> 성립한다 &mdash; 정책·검증 편은 &ldquo;거버넌스&rdquo;라는 말 없이 투명성 규범·제3자 감독·조약 검증을 다루고, 그게 곧 거버넌스다. 게다가 개념을 떼면 <code>AI 거버넌스</code>의 df가 4&rarr;2로 떨어져 <strong>옆 문서의 엣지까지 흔든다</strong>(CLAUDE.md가 경고하는 df&le;3 경계 파급). 태그만 고치는 것이 파급 없이 정확도를 올리는 지점이다.
+</div>
+
+<p><code>validate_all</code> <strong>WARN 23 &rarr; 21</strong>(<code>validate_docs</code> 0). 남은 21건은 <code>wrong-cluster</code> 14 · <code>isolated-doc</code> 5 · <code>worklog-day-split</code> 1 · <code>synonym-concept</code> 1인데, <strong>전부 &ldquo;고칠 것이 없다&rdquo;가 정답인 검토 신호</strong>다(하네스 강의↔플러그인은 실제로 한 계보이고, <code>CI</code>/<code>CLI</code>는 문자열만 닮은 오탐이다).</p>
