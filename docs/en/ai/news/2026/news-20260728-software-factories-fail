@@ -1,0 +1,189 @@
+<h2>The Harness Is Not Enough — Why Software Factories Fail</h2>
+
+<p>At <strong>AI Engineer World's Fair 2026</strong>, <strong>Dex Horthy</strong> of HumanLayer gave a talk titled &ldquo;Harness Engineering is not Enough: Why Software Factories Fail&rdquo; that passed 250,000 views within a day. The argument fits in one sentence &mdash; <strong>if AI coding is degrading your codebase, it is not because you are holding it wrong; it is because the model was never trained for the thing you want.</strong></p>
+
+<p>The distinction matters. If the problem were skill, the fix would be better prompts, tighter loops, more review bots &mdash; more <strong>harness</strong>. But if the cause sits in training, then no amount of harness can produce <strong>something the model never learned in the first place.</strong></p>
+
+<h3>First, the cracks are measured, not felt</h3>
+
+<p>The talk opens with telemetry rather than anecdote. Faros AI's <em>Acceleration Whiplash</em> report (March 2026) analyzed two years of engineering telemetry from <strong>22,000 developers across more than 4,000 teams</strong>.</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Metric</th><th>Change</th></tr></thead>
+<tbody>
+<tr><td>Bugs per developer</td><td><strong>+54%</strong></td></tr>
+<tr><td>Incidents &divide; pull requests</td><td><strong>more than tripled</strong></td></tr>
+<tr><td>Median review time</td><td><strong>5&times;</strong></td></tr>
+<tr><td>PRs merged with no review</td><td><strong>+31.3%</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Throughput genuinely rose. But <strong>bugs and incidents rose faster than throughput.</strong> As Horthy puts it, companies that have no business having outages because of coding agents are having outages because of coding agents.</p>
+
+<h3>They actually ran the lights-out factory</h3>
+
+<p>The <strong>lights-out software factory</strong>, a term coined by Dan North, is this idea: nobody enjoys code review, so remove it. Invest instead in the <em>surrounding</em> systems &mdash; testing, monitoring, rollout &mdash; and redefine the human job as &ldquo;how much work can I put in the agent's queue?&rdquo;</p>
+
+<p>HumanLayer did exactly this from <strong>July to November 2025</strong>. Nobody read the code. The talk summarizes the outcome:</p>
+
+<div class="note warn">
+    <span class="nh">What happened after three months</span>
+    No matter how carefully you prompt, research, and reproduce, you eventually hit <strong>a bug the agent cannot solve</strong>. Then you have to go dig through <strong>a codebase you stopped reading three months ago</strong> to find what broke. Meanwhile your site is down, your users are angry, and you are miserable reading all the slop you let slip into the system.
+</div>
+
+<p>Note the timescale. &ldquo;Brownfield&rdquo; usually conjures a ten-year-old Java system, but Horthy says that at today's shipping pace <strong>agents start to struggle after just three to six months</strong>. This is not only a legacy problem.</p>
+
+<h3>The core — models are trained on &ldquo;did the test pass&rdquo;</h3>
+
+<p>Here is the substance of the talk: why the harness cannot fix this, explained through <strong>how reinforcement learning scores a coding agent</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 296" role="img" aria-label="Coding agent reinforcement learning loop: one problem is attempted many times, scored on whether tests pass, and the weights are updated. The scorecard has no column for design quality">
+    <rect class="d-box" x="16" y="52" width="142" height="56" rx="10"/>
+    <text class="d-label" x="87" y="78" text-anchor="middle">One problem</text>
+    <text class="d-sub" x="87" y="97" text-anchor="middle">a real OSS issue</text>
+    <line class="d-edge" x1="158" y1="80" x2="186" y2="80"/>
+    <polygon class="d-arrow" points="186,75 194,80 186,85"/>
+    <rect class="d-box" x="196" y="52" width="152" height="56" rx="10"/>
+    <text class="d-label" x="272" y="78" text-anchor="middle">Many attempts</text>
+    <text class="d-sub" x="272" y="97" text-anchor="middle">N traces</text>
+    <line class="d-edge" x1="348" y1="80" x2="376" y2="80"/>
+    <polygon class="d-arrow" points="376,75 384,80 376,85"/>
+    <rect class="d-box accent" x="386" y="52" width="152" height="56" rx="10"/>
+    <text class="d-label" x="462" y="78" text-anchor="middle">Score</text>
+    <text class="d-sub" x="462" y="97" text-anchor="middle">tests pass, get 1</text>
+    <line class="d-edge" x1="538" y1="80" x2="566" y2="80"/>
+    <polygon class="d-arrow" points="566,75 574,80 566,85"/>
+    <rect class="d-box" x="576" y="52" width="128" height="56" rx="10"/>
+    <text class="d-label" x="640" y="78" text-anchor="middle">Update weights</text>
+    <text class="d-sub" x="640" y="97" text-anchor="middle">boost good traces</text>
+    <line class="d-edge" x1="640" y1="108" x2="640" y2="134"/>
+    <line class="d-edge" x1="640" y1="134" x2="87" y2="134"/>
+    <line class="d-edge" x1="87" y1="134" x2="87" y2="120"/>
+    <polygon class="d-arrow" points="82,120 87,112 92,120"/>
+    <text class="d-sub" x="364" y="150" text-anchor="middle">next round</text>
+    <rect class="d-box soft" x="16" y="184" width="688" height="88" rx="12"/>
+    <text class="d-label" x="360" y="212" text-anchor="middle">What the scorecard has no column for</text>
+    <text class="d-sub" x="360" y="236" text-anchor="middle">Design quality · maintainability · architectural coherence</text>
+    <text class="d-sub" x="360" y="258" text-anchor="middle">What is not measured does not get reinforced</text>
+</svg>
+<div class="d-cap">The loop that trains a coding agent. The only reward is &ldquo;did the tests pass?&rdquo;</div>
+</div>
+
+<p>Take <strong>SWE-bench Multilingual</strong>, one of the classics. Its tasks come from open-source repositories like Redis, jq and Django, run about <strong>15 minutes</strong> each, and carry a <strong>binary 0 or 1 reward</strong>. The scoring procedure works like this:</p>
+
+<ol>
+    <li>Check out the commit from <em>before</em> a human fixed the issue.</li>
+    <li>Let the agent solve it and store its patch.</li>
+    <li><strong>Undo every change the agent made to test files</strong> &mdash; because models will happily comment out a test to make things green.</li>
+    <li>Apply the hidden golden test and run it. Reward 1 <strong>only if the old tests still pass and the new test passes too.</strong></li>
+</ol>
+
+<p>Nowhere in that procedure is there <strong>a place to deduct points for worse design.</strong> So the model wraps things in <code>try/catch</code> that need no <code>try/catch</code>, and casts types that should not be cast. Passing the test is all that counts. In the talk's words &mdash; <strong>the model is just trying to get the test to pass.</strong></p>
+
+<div class="note">
+    <span class="nh">Why maintainability is hard to score</span>
+    Because <strong>the cost function of bad architecture is measured in months and years.</strong> Right after a coding episode there is no signal at all. You find out that somebody vibed this a little too hard months later. A reward that arrives that late cannot drive reinforcement learning. Verifying that code <em>runs</em> and verifying that it is <em>maintainable</em> differ by orders of magnitude.
+</div>
+
+<h3>So why not build a benchmark that scores quality?</h3>
+
+<p>People are trying, and the talk acknowledges it. The most concrete effort is Cognition's <strong>FrontierCode</strong>. Its tasks were built with open-source maintainers, take <strong>40+ hours each</strong>, and are scored on far more than test passage &mdash; <strong>regression safety, cleanliness, scope, test correctness and maintainability</strong>. Its false-positive rate is <strong>81% lower</strong> than SWE-Bench Pro. Tasks are split into Extended (150), Main (100) and Diamond (the 50 hardest).</p>
+
+<p>The result is telling. <strong>The best model scores roughly 13% on the hardest subset</strong> &mdash; nothing like the 50%+ regime common on SWE-bench-style evals, which suggests the impression that &ldquo;coding is solved&rdquo; may say more about <strong>how easy the benchmarks were</strong>.</p>
+
+<p>Horthy still draws a line here. Having models judge code quality has a ceiling:</p>
+
+<div class="note warn">
+    <span class="nh">The sharpest line in the talk</span>
+    <strong>&ldquo;If the model knew what good code looks like, it would probably write it in the first place.&rdquo;</strong><br>
+    Review agents and more tokens <strong>can raise the floor</strong>, but they remain bounded by what we can teach during RL.
+</div>
+
+<h3>The conclusion — we still have to read the code, but less of it</h3>
+
+<p>This is where the talk parts ways with ordinary pessimism. Horthy's prescription is not &ldquo;use less AI&rdquo; but <strong>&ldquo;spend 30 minutes before any code is written.&rdquo;</strong> Align up front and the resulting code becomes predictable &mdash; which is what makes reading all of it realistic again.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="Four alignment steps before implementation: product review, system design, program design, vertical slices, then implementation and a human reading every line">
+    <rect class="d-box" x="14" y="34" width="156" height="62" rx="10"/>
+    <text class="d-label" x="92" y="62" text-anchor="middle">① Product review</text>
+    <text class="d-sub" x="92" y="82" text-anchor="middle">problem · behavior</text>
+    <line class="d-edge" x1="170" y1="65" x2="184" y2="65"/>
+    <polygon class="d-arrow" points="184,60 192,65 184,70"/>
+    <rect class="d-box" x="194" y="34" width="156" height="62" rx="10"/>
+    <text class="d-label" x="272" y="62" text-anchor="middle">② System design</text>
+    <text class="d-sub" x="272" y="82" text-anchor="middle">contracts · limits</text>
+    <line class="d-edge" x1="350" y1="65" x2="364" y2="65"/>
+    <polygon class="d-arrow" points="364,60 372,65 364,70"/>
+    <rect class="d-box accent" x="374" y="34" width="156" height="62" rx="10"/>
+    <text class="d-label" x="452" y="62" text-anchor="middle">③ Program design</text>
+    <text class="d-sub" x="452" y="82" text-anchor="middle">signatures · call graph</text>
+    <line class="d-edge" x1="530" y1="65" x2="544" y2="65"/>
+    <polygon class="d-arrow" points="544,60 552,65 544,70"/>
+    <rect class="d-box" x="554" y="34" width="152" height="62" rx="10"/>
+    <text class="d-label" x="630" y="62" text-anchor="middle">④ Vertical slices</text>
+    <text class="d-sub" x="630" y="82" text-anchor="middle">order · checkpoints</text>
+    <text class="d-sub" x="360" y="122" text-anchor="middle">about 30 minutes to here</text>
+    <line class="d-edge" x1="360" y1="130" x2="360" y2="152"/>
+    <polygon class="d-arrow" points="355,152 360,160 365,152"/>
+    <rect class="d-box soft" x="120" y="164" width="480" height="54" rx="10"/>
+    <text class="d-label" x="360" y="188" text-anchor="middle">Implementation — the agent writes it</text>
+    <text class="d-sub" x="360" y="208" text-anchor="middle">following the plan you already agreed on</text>
+    <line class="d-edge" x1="360" y1="218" x2="360" y2="234"/>
+    <polygon class="d-arrow" points="355,234 360,242 365,234"/>
+    <rect class="d-box" x="120" y="246" width="480" height="44" rx="10"/>
+    <text class="d-label" x="360" y="273" text-anchor="middle">Review — a human reads every line</text>
+</svg>
+<div class="d-cap">Thirty minutes up front removes hours of review. That is what keeps reading everything possible.</div>
+</div>
+
+<p>The four steps, unpacked:</p>
+
+<ul>
+    <li><strong>① Product review</strong> &mdash; what problem are we solving, what is the desired behavior, with mock-ups if useful.</li>
+    <li><strong>② System architecture</strong> &mdash; component contracts, data models, constraints. Many teams already do this one.</li>
+    <li><strong>③ Program design</strong> &mdash; the step Horthy calls <strong>badly under-emphasized</strong>. People assume that once the architecture is right the model can just cook, but in practice you have to go down to <strong>types, method signatures, program layout and call stacks</strong>. Dylan Mulroy at Cloudflare using call graphs in his planning is the same instinct.</li>
+    <li><strong>④ Vertical slices</strong> &mdash; the order of implementation, coordination across repositories, and what gets checked at each phase.</li>
+</ul>
+
+<p>One important caveat: <strong>small things still go straight to the agent.</strong> This is a tool for hard problems in complex codebases, not a ritual to impose on every change.</p>
+
+<h3>&ldquo;You don't have too many PRs. You have too many bad PRs.&rdquo;</h3>
+
+<p>The talk also inverts the belief that review is the bottleneck. <strong>A good PR is a joy to review</strong> &mdash; you read through it thinking &ldquo;yep, this is what we discussed.&rdquo; A PR that needs even 20% rework (generous for AI-vibed code) is <strong>an emotional and intellectual burden on both reviewer and submitter.</strong></p>
+
+<p>So up-front alignment does not buy &ldquo;slow but safe.&rdquo; Three things speed up at once:</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Stage</th><th>Why it gets faster</th></tr></thead>
+<tbody>
+<tr><td>Alignment</td><td>AI gathers all the information at once, so it is shorter</td></tr>
+<tr><td>Coding</td><td>AI does it</td></tr>
+<tr><td>Review</td><td>You aligned up front, so you are just reading</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>The net effect: <strong>you really do move faster, while still reading everything and still owning the code.</strong></p>
+
+<h3>How to take the argument</h3>
+
+<p>The talk narrows its own scope. Horthy quotes Addy Osmani to draw the boundary &mdash; <em>&ldquo;A developer vibe coding a side project a dozen people will ever run and a team keeping a 10-year-old enterprise system alive for another quarter share almost no constraints worth naming.&rdquo;</em> Most advice on the internet is <strong>one of these groups telling the other how to live their lives.</strong></p>
+
+<p>Horthy is explicit about it: <strong>if you love vibe coding, please go on.</strong> What this talk targets is <strong>hard problems in complex codebases.</strong></p>
+
+<p>It is also worth reading honestly. This rests on <strong>one company's four-month experiment and the models of one moment.</strong> Horthy leaves the door open &mdash; &ldquo;if you want to just keep yoloing prompts until you get to GPT-7, by all means.&rdquo; The very existence of FrontierCode, actually scoring maintainability, is a signal that the limit may not be permanent.</p>
+
+<p>But on the question of <strong>what to do this quarter</strong>, the measured data (Faros), the failed experiment (HumanLayer) and the structural limit of the benchmarks (reward = tests pass) all point the same way. The tools covered in this wiki's <a href="#!hns-what">harness engineering</a> series remain useful &mdash; but as the title says, <strong>they are not enough on their own.</strong></p>
+
+<h3>Sources</h3>
+<ul>
+    <li>Dex Horthy (HumanLayer), <em>Harness Engineering is not Enough: Why Software Factories Fail</em>, AI Engineer World's Fair 2026 &mdash; <a href="https://www.youtube.com/watch?v=Ib5GBkD555M" target="_blank" rel="noopener">talk video</a></li>
+    <li>Faros AI, <em>Acceleration Whiplash</em> (March 2026) &mdash; two years of telemetry from 22,000 developers across 4,000+ teams</li>
+    <li>Cognition, <em>Introducing FrontierCode</em> &mdash; <a href="https://cognition.com/blog/frontier-code" target="_blank" rel="noopener">cognition.com/blog/frontier-code</a></li>
+    <li>Addy Osmani, <em>Software Factories, Light and Dark</em> &mdash; source of the &ldquo;side project vs. 10-year-old enterprise system&rdquo; passage quoted in the talk</li>
+</ul>

@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ハーネスだけでは足りない — ソフトウェア工場が失敗する理由</title>
+<meta name="description" content="Dex Horthy（HumanLayer）の AI Engineer World&#x27;s Fair 2026 の発表 — モデルはテスト通過だけで報酬を得て設計の品質を学ばないため、ハーネスでは埋められないという主張。Faros の計測（バグ +54%・インシデント 3 倍）、4 か月の lights-out 実験の失敗、FrontierCode の保守性の採点、実装前 30 分の四段階の擦り合わせ">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/news-20260728-software-factories-fail/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260728-software-factories-fail/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260728-software-factories-fail/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/news-20260728-software-factories-fail/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260728-software-factories-fail/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ハーネスだけでは足りない — ソフトウェア工場が失敗する理由">
+<meta property="og:description" content="Dex Horthy（HumanLayer）の AI Engineer World&#x27;s Fair 2026 の発表 — モデルはテスト通過だけで報酬を得て設計の品質を学ばないため、ハーネスでは埋められないという主張。Faros の計測（バグ +54%・インシデント 3 倍）、4 か月の lights-out 実験の失敗、FrontierCode の保守性の採点、実装前 30 分の四段階の擦り合わせ">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/news-20260728-software-factories-fail/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ハーネスだけでは足りない — ソフトウェア工場が失敗する理由">
+<meta name="twitter:description" content="Dex Horthy（HumanLayer）の AI Engineer World&#x27;s Fair 2026 の発表 — モデルはテスト通過だけで報酬を得て設計の品質を学ばないため、ハーネスでは埋められないという主張。Faros の計測（バグ +54%・インシデント 3 倍）、4 か月の lights-out 実験の失敗、FrontierCode の保守性の採点、実装前 30 分の四段階の擦り合わせ">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "ハーネスだけでは足りない — ソフトウェア工場が失敗する理由",
+ "description": "Dex Horthy（HumanLayer）の AI Engineer World's Fair 2026 の発表 — モデルはテスト通過だけで報酬を得て設計の品質を学ばないため、ハーネスでは埋められないという主張。Faros の計測（バグ +54%・インシデント 3 倍）、4 か月の lights-out 実験の失敗、FrontierCode の保守性の採点、実装前 30 分の四段階の擦り合わせ",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/news-20260728-software-factories-fail/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260728-software-factories-fail",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-28T09:07:29+09:00",
+ "dateModified": "2026-07-28T09:07:29+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260728-software-factories-fail">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/news-20260728-software-factories-fail/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/news-20260728-software-factories-fail/" hreflang="en">English</a>
+</p>
+<article>
+<h2>ハーネスだけでは足りない — ソフトウェア工場が失敗する理由</h2>
+
+<p><strong>AI Engineer World's Fair 2026</strong> で HumanLayer の <strong>Dex Horthy</strong> が話した「Harness Engineering is not Enough: Why Software Factories Fail」は、公開から一日で 25 万回の再生を超えました。主張は一文にまとまります &mdash; <strong>いま AI コーディングがコードベースを壊しているのは、あなたの使い方が下手だからではなく、モデルがそのように訓練されていないからだ。</strong></p>
+
+<p>この区別が重要です。「使い方が下手」なら、答えはより良いプロンプト・より精巧なループ・より多くのレビューボット &mdash; つまり<strong>ハーネス</strong>を積み増すことになります。しかし原因が訓練にあるなら、ハーネスをいくら積んでも<strong>モデルがそもそも学ばなかったものを生み出すことはできません。</strong></p>
+
+<h3>まず、ひび割れは感覚ではなく計測である</h3>
+
+<p>発表は逸話ではなく計測から始まります。Faros AI が 2026 年 3 月に出した <em>Acceleration Whiplash</em> レポートは、<strong>開発者 22,000 人・4,000 を超えるチーム</strong>の 2 年分のエンジニアリングのテレメトリを分析したものです。</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>指標</th><th>変化</th></tr></thead>
+<tbody>
+<tr><td>開発者あたりのバグ</td><td><strong>+54%</strong></td></tr>
+<tr><td>インシデント &divide; PR の比率</td><td><strong>3 倍以上</strong></td></tr>
+<tr><td>レビューにかかる時間（中央値）</td><td><strong>5 倍</strong></td></tr>
+<tr><td>レビューなしでマージされた PR</td><td><strong>+31.3%</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<p>処理量は確かに増えました。ところが<strong>バグとインシデントが処理量よりも速く増えた</strong>のです。Horthy の言い方では、コーディングエージェントのせいで障害が起きる理由のない会社が、コーディングエージェントのせいで障害を起こしています。</p>
+
+<h3>「明かりを消した工場」を本当にやってみた</h3>
+
+<p>Dan North が名づけた <strong>lights-out software factory</strong> はこういう発想です。コードレビューは誰もが嫌うのだから、いっそなくす。代わりにテスト・監視・ロールアウトといった<em>周辺のシステム</em>に投資し、人の仕事は「エージェントのキューにどれだけ積めるか」に置き換える。</p>
+
+<p>HumanLayer は <strong>2025 年 7 月から 11 月まで</strong>これを実際にやりました。誰もコードを読みませんでした。結果は発表でこう整理されています。</p>
+
+<div class="note warn">
+    <span class="nh">3 か月後に起きたこと</span>
+    どれほど丁寧にプロンプトを組み、リサーチさせ、再現させても、<strong>エージェントがどうしても解けないバグ</strong>が出ます。そうなると<strong>3 か月読んでいないコードベース</strong>を自分で掘り返し、何が壊れたのかを探すことになります。そのあいだサイトは落ち、ユーザーは怒り、自分はその間に流し込んだスロップコードを読みながら惨めになります。
+</div>
+
+<p>注目すべきは期間です。「ブラウンフィールド」といえば 10 年物の Java システムを思い浮かべますが、Horthy はいまの出荷速度では<strong>3〜6 か月でエージェントが苦しみ始める</strong>と言います。古いシステムだけの問題ではないということです。</p>
+
+<h3>核心 — モデルは「テストが通ったか」で訓練される</h3>
+
+<p>ここからがこの発表の中身です。なぜハーネスでは足りないのかを、<strong>強化学習（RL）の採点のしかた</strong>で説明します。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 296" role="img" aria-label="コーディングエージェントの強化学習ループ: ひとつの問題を何度も試し、テストが通ったかで採点して重みを更新する。採点表には設計の品質の欄がない">
+    <rect class="d-box" x="16" y="52" width="142" height="56" rx="10"/>
+    <text class="d-label" x="87" y="78" text-anchor="middle">問題ひとつ</text>
+    <text class="d-sub" x="87" y="97" text-anchor="middle">実際の OSS の課題</text>
+    <line class="d-edge" x1="158" y1="80" x2="186" y2="80"/>
+    <polygon class="d-arrow" points="186,75 194,80 186,85"/>
+    <rect class="d-box" x="196" y="52" width="152" height="56" rx="10"/>
+    <text class="d-label" x="272" y="78" text-anchor="middle">何度も試行</text>
+    <text class="d-sub" x="272" y="97" text-anchor="middle">トレース N 本</text>
+    <line class="d-edge" x1="348" y1="80" x2="376" y2="80"/>
+    <polygon class="d-arrow" points="376,75 384,80 376,85"/>
+    <rect class="d-box accent" x="386" y="52" width="152" height="56" rx="10"/>
+    <text class="d-label" x="462" y="78" text-anchor="middle">採点</text>
+    <text class="d-sub" x="462" y="97" text-anchor="middle">テスト通過なら 1</text>
+    <line class="d-edge" x1="538" y1="80" x2="566" y2="80"/>
+    <polygon class="d-arrow" points="566,75 574,80 566,85"/>
+    <rect class="d-box" x="576" y="52" width="128" height="56" rx="10"/>
+    <text class="d-label" x="640" y="78" text-anchor="middle">重みの更新</text>
+    <text class="d-sub" x="640" y="97" text-anchor="middle">良い挙動を強化</text>
+    <line class="d-edge" x1="640" y1="108" x2="640" y2="134"/>
+    <line class="d-edge" x1="640" y1="134" x2="87" y2="134"/>
+    <line class="d-edge" x1="87" y1="134" x2="87" y2="120"/>
+    <polygon class="d-arrow" points="82,120 87,112 92,120"/>
+    <text class="d-sub" x="364" y="150" text-anchor="middle">次のラウンド</text>
+    <rect class="d-box soft" x="16" y="184" width="688" height="88" rx="12"/>
+    <text class="d-label" x="360" y="212" text-anchor="middle">採点表に欄がないもの</text>
+    <text class="d-sub" x="360" y="236" text-anchor="middle">設計の品質 · 保守性 · アーキテクチャの一貫性</text>
+    <text class="d-sub" x="360" y="258" text-anchor="middle">測られないものは強化されない</text>
+</svg>
+<div class="d-cap">コーディングエージェントを訓練するループ。報酬は「テストが通ったか」だけです。</div>
+</div>
+
+<p>代表的なベンチマークの <strong>SWE-bench Multilingual</strong> を見てみます。Redis・jq・Django といったオープンソースのリポジトリから取った<strong>15 分ほどの課題</strong>で、報酬は <strong>0 か 1</strong> です。採点の手順はこうです。</p>
+
+<ol>
+    <li>人が問題を直す<em>前</em>のコミットをチェックアウトする。</li>
+    <li>エージェントに問題を解かせ、そのパッチを保存する。</li>
+    <li><strong>エージェントがテストファイルに加えた変更はすべて元に戻す</strong> &mdash; モデルがテストをコメントアウトして通そうとするのを防ぐためです。</li>
+    <li>隠しておいた正解のテストを当てて走らせる。<strong>既存のテストも通り、新しいテストも通れば</strong>報酬 1。</li>
+</ol>
+
+<p>この手順のどこにも<strong>「設計が悪くなったか」を減点する場所がありません。</strong>だからモデルは要らないところに <code>try/catch</code> を巻き、型を無理にキャストします。テストさえ通ればよいのですから。発表の言い方では &mdash; <strong>モデルはテストを通そうとしているだけです。</strong></p>
+
+<div class="note">
+    <span class="nh">なぜ保守性は採点しにくいのか</span>
+    <strong>悪いアーキテクチャのコストが月・年の単位で測られるから</strong>です。コーディングが終わった直後には何の信号もありません。「ここは少しバイブしすぎたな」と分かるのは数か月あとです。そんなに遅れて来る報酬は強化学習の信号には使えません。コードが<em>動くか</em>を確かめるのと<em>保守できるか</em>を確かめるのとでは、難しさが桁で違います。
+</div>
+
+<h3>では品質を採点するベンチマークを作ればよいのでは</h3>
+
+<p>実際にそうした試みが出ていて、発表もそれを認めます。もっとも具体的なのが Cognition の <strong>FrontierCode</strong> です。オープンソースのメンテナーと一緒に作った課題で、<strong>ひとつあたり 40 時間以上</strong>かかり、採点の項目はテスト通過にとどまりません &mdash; <strong>回帰の安全性・整っていること・範囲の遵守・テストの正当性・保守性</strong>。SWE-Bench Pro に比べて偽陽性が <strong>81% 低い</strong>とされます。課題は Extended（150）・Main（100）・Diamond（もっとも難しい 50）に分かれています。</p>
+
+<p>その結果が示唆的です。<strong>最高性能のモデルでも、もっとも難しい束では約 13%</strong> にとどまります。SWE-bench 系でよく見る 50%+ とはまるで違う絵で、「コーディングはもう解けた問題だ」という印象が<strong>ベンチマークが易しかったせい</strong>かもしれないことを示しています。</p>
+
+<p>ただし Horthy はここに一本の線を引きます。モデルにコードの品質を審査させるアプローチには天井がある、というのです。</p>
+
+<div class="note warn">
+    <span class="nh">発表でもっとも鋭い一行</span>
+    <strong>「モデルが良いコードとは何かを分かっていたなら、はじめからそう書いていたはずだ。」</strong><br>
+    レビューエージェントを足しトークンを積むことは<strong>床を上げることはできても</strong>、結局は強化学習で教えられる範囲に閉じ込められます。
+</div>
+
+<h3>結論 — いまはまだコードを読む。ただし読む量を減らす</h3>
+
+<p>ここでこの発表はありふれた悲観論と分かれます。Horthy の処方は「AI を減らそう」ではなく<strong>「コードを書く前に 30 分を使おう」</strong>です。前段で揃えておけば出てくるコードが予測可能になり、だからこそ全部読むことが現実的になります。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="実装の前の四つの段階: プロダクトレビュー、システム設計、プログラム設計、垂直スライスを経てから実装し、人がすべて読む">
+    <rect class="d-box" x="14" y="34" width="156" height="62" rx="10"/>
+    <text class="d-label" x="92" y="62" text-anchor="middle">① プロダクトレビュー</text>
+    <text class="d-sub" x="92" y="82" text-anchor="middle">課題と望む挙動</text>
+    <line class="d-edge" x1="170" y1="65" x2="184" y2="65"/>
+    <polygon class="d-arrow" points="184,60 192,65 184,70"/>
+    <rect class="d-box" x="194" y="34" width="156" height="62" rx="10"/>
+    <text class="d-label" x="272" y="62" text-anchor="middle">② システム設計</text>
+    <text class="d-sub" x="272" y="82" text-anchor="middle">契約と制約</text>
+    <line class="d-edge" x1="350" y1="65" x2="364" y2="65"/>
+    <polygon class="d-arrow" points="364,60 372,65 364,70"/>
+    <rect class="d-box accent" x="374" y="34" width="156" height="62" rx="10"/>
+    <text class="d-label" x="452" y="62" text-anchor="middle">③ プログラム設計</text>
+    <text class="d-sub" x="452" y="82" text-anchor="middle">シグネチャと呼び出し</text>
+    <line class="d-edge" x1="530" y1="65" x2="544" y2="65"/>
+    <polygon class="d-arrow" points="544,60 552,65 544,70"/>
+    <rect class="d-box" x="554" y="34" width="152" height="62" rx="10"/>
+    <text class="d-label" x="630" y="62" text-anchor="middle">④ 垂直スライス</text>
+    <text class="d-sub" x="630" y="82" text-anchor="middle">実装順と確認</text>
+    <text class="d-sub" x="360" y="122" text-anchor="middle">ここまで約 30 分</text>
+    <line class="d-edge" x1="360" y1="130" x2="360" y2="152"/>
+    <polygon class="d-arrow" points="355,152 360,160 365,152"/>
+    <rect class="d-box soft" x="120" y="164" width="480" height="54" rx="10"/>
+    <text class="d-label" x="360" y="188" text-anchor="middle">実装 — エージェントが書く</text>
+    <text class="d-sub" x="360" y="208" text-anchor="middle">合意した計画のとおりに進める</text>
+    <line class="d-edge" x1="360" y1="218" x2="360" y2="234"/>
+    <polygon class="d-arrow" points="355,234 360,242 365,234"/>
+    <rect class="d-box" x="120" y="246" width="480" height="44" rx="10"/>
+    <text class="d-label" x="360" y="273" text-anchor="middle">レビュー — 人がすべて読む</text>
+</svg>
+<div class="d-cap">前段の 30 分がレビューの数時間を減らします。だから全部読むことがいまも可能です。</div>
+</div>
+
+<p>四つの段階をもう少しほどくとこうなります。</p>
+
+<ul>
+    <li><strong>① プロダクトレビュー</strong> &mdash; どんな問題を解くのか、望む挙動は何か。必要ならモックアップまで。</li>
+    <li><strong>② システムのアーキテクチャ</strong> &mdash; コンポーネント間の契約、データモデル、制約。すでに多くのチームがやっている段階です。</li>
+    <li><strong>③ プログラム設計</strong> &mdash; Horthy が<strong>もっとも過小評価されている</strong>と指摘する段階。アーキテクチャさえ合っていればモデルが勝手にやってくれると思われがちですが、実際には<strong>型・メソッドのシグネチャ・プログラムの配置・コールスタック</strong>まで降りる必要があります。Cloudflare の Dylan Mulroy が計画にコールグラフを使うのも同じ筋です。</li>
+    <li><strong>④ 垂直スライス</strong> &mdash; 実装の順序、複数のリポジトリにまたがる調整、各段階で何を確かめるか。</li>
+</ul>
+
+<p>大事な但し書きがひとつ。<strong>小さいものはいまでもそのままエージェントに渡します。</strong>これはすべての変更にかぶせる儀式ではなく、複雑なコードベースの難しい問題に使う道具です。</p>
+
+<h3>「PR が多すぎるのではない。悪い PR が多すぎるのだ」</h3>
+
+<p>レビューが詰まりだという通念もひっくり返します。<strong>良い PR はレビューが楽しい</strong> &mdash; 読みながら「そう、話したとおりだ」と流れていきます。逆に手直しが 20% で済むとしても（AI が吐いたコードとしては甘い数字です）、それは<strong>レビューする側にも出す側にも情緒的・知的な負担</strong>になります。</p>
+
+<p>ですから前段の擦り合わせが作るのは「遅いが安全な」開発ではありません。三か所が同時に速くなります。</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>段階</th><th>なぜ速くなるか</th></tr></thead>
+<tbody>
+<tr><td>擦り合わせ</td><td>AI で必要な情報を一度に集めるので短くなる</td></tr>
+<tr><td>コーディング</td><td>AI がやるので速い</td></tr>
+<tr><td>レビュー</td><td>前段で合わせてあるので読むだけでよい</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>結果として<strong>実際に速く動きながら、それでも全部を読み、コードを自分のものとして持ち続けます。</strong></p>
+
+<h3>この主張をどう受け取るか</h3>
+
+<p>発表は自分で適用の範囲を狭めます。Horthy が引く Addy Osmani の一文がその境界を正確に描きます &mdash; <em>「十数人しか使わないサイドプロジェクトをバイブコーディングする開発者と、10 年物のエンタープライズシステムを次の四半期まで生かしておくチームとは、名づける価値のある制約をほとんど共有していない。」</em>インターネットで交わされる助言のほとんどは、<strong>一方の集団がもう一方に生き方を指図することです</strong>。</p>
+
+<p>だから Horthy 自身も釘を刺します。<strong>バイブコーディングが楽しいなら続けてください。</strong>この発表が狙うのは<strong>複雑なコードベースで難しい問題を解く場合</strong>です。</p>
+
+<p>加えて正直に見るべき点もあります。これは<strong>一社の 4 か月の実験と、いまこの時点のモデル</strong>にもとづく主張です。Horthy も将来解決されうると開いています &mdash; 「GPT-7 が出るまでプロンプトを投げ続けたいなら、どうぞ」。FrontierCode のような試みが実際に保守性を採点し始めたこと自体、この限界が永続的でないかもしれない信号でもあります。</p>
+
+<p>ただし<strong>この四半期に何をするか</strong>という問いに対しては、計測されたデータ（Faros）と失敗した実験（HumanLayer）とベンチマークの構造的な限界（報酬 = テスト通過）が同じ方向を指しています。このウィキの<a href="/p/ja/hns-what/">ハーネスエンジニアリング</a>の講義が扱う道具はいまも有効ですが、題が言うとおり<strong>それだけでは足りない</strong>というのがこの発表の要旨です。</p>
+
+<h3>出典</h3>
+<ul>
+    <li>Dex Horthy（HumanLayer）, <em>Harness Engineering is not Enough: Why Software Factories Fail</em>, AI Engineer World's Fair 2026 &mdash; <a href="https://www.youtube.com/watch?v=Ib5GBkD555M" target="_blank" rel="noopener">発表の動画</a></li>
+    <li>Faros AI, <em>Acceleration Whiplash</em>（2026-03） &mdash; 開発者 22,000 人・4,000 あまりのチームの 2 年分のテレメトリの分析</li>
+    <li>Cognition, <em>Introducing FrontierCode</em> &mdash; <a href="https://cognition.com/blog/frontier-code" target="_blank" rel="noopener">cognition.com/blog/frontier-code</a></li>
+    <li>Addy Osmani, <em>Software Factories, Light and Dark</em> &mdash; 発表に引かれた「サイドプロジェクト vs 10 年物のエンタープライズシステム」の一節</li>
+</ul>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">作成日</span> 2026-07-28 &middot; <span class="pr-k">更新日</span> 2026-07-28</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/news-20260724-claude-opus-5/">Claude Opus 5 — 半額の準 Fable がやってきた</a></li><li><a href="/p/ja/news-20260716-kimi-k3/">Kimi K3 — 2.8 兆パラメータのオープンウェイトがフロンティアに届く</a></li></ul>
+</nav>
+</body>
+</html>
