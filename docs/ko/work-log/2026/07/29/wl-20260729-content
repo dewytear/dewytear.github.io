@@ -1,0 +1,36 @@
+<h2>2026-07-29 · 콘텐츠 — 아티클 등재 위치 정정</h2>
+
+<p><a href="#!wl-20260728-content">어제 등재한 아티클</a>의 후속이지만 <strong>KST 자정을 넘겨 그날 로그로 분리</strong>했다(같은 주제라도 날짜가 우선 — <a href="#!wl-20260720-design">07-20 선례</a>). 변경 유형: <strong>CONTENT</strong>.</p>
+
+<h3>사이드바 번호가 밀렸다</h3>
+
+<p>대표님이 짚으셨다 &mdash; <strong>&ldquo;다른 것들을 09번과 10번으로 밀면서 08번으로 등록되었네?&rdquo;</strong> 사실이었다. 07-28 글(<a href="#!news-20260728-software-factories-fail">하네스로는 부족하다</a>)을 Kimi K3(07-16) 바로 뒤에 끼워 넣어, 07-24 두 편이 한 칸씩 밀렸다.</p>
+
+<table>
+    <thead><tr><th>번호</th><th>이전</th><th>이후</th></tr></thead>
+    <tbody>
+        <tr><td>08</td><td><strong>하네스로는 부족하다</strong> (07-28)</td><td>손으로 코딩하는 시대의 끝? (07-24)</td></tr>
+        <tr><td>09</td><td>손으로 코딩하는 시대의 끝? (07-24)</td><td>Claude Opus 5 (07-24)</td></tr>
+        <tr><td>10</td><td>Claude Opus 5 (07-24)</td><td><strong>하네스로는 부족하다</strong> (07-28)</td></tr>
+    </tbody>
+</table>
+
+<p>News &amp; Articles의 사이드바 번호는 <strong><code>list</code>의 배열 순서를 그대로 매기고, 그 순서는 날짜 오름차순</strong>이다. 노드를 Opus 5 뒤로 옮겨 새 글이 마지막이 되게 했다 &mdash; <code>list</code> 32줄 이동, 내용 변경 0. 인덱스·피드·스냅샷·사이트맵을 재생성했다.</p>
+
+<div class="note warn">
+    <span class="nh">왜 게이트가 못 잡았나 &mdash; 그리고 왜 지금 만들지 않나</span>
+    <strong>잡을 수 없다.</strong> <code>list</code>의 순서는 <em>사람이 정하는 편집 결정</em>이라 어떤 검증기도 &ldquo;여기가 맞는 자리&rdquo;를 알지 못한다. 날짜순 강제를 전 트리에 넣는 것은 오히려 <strong>틀린다</strong> &mdash; 강의 시리즈는 날짜와 무관하게 읽는 순서로 배열하고, 그게 맞다. 이름에 날짜를 가진 노드(<code>news-YYYYMMDD-*</code>·work-log 날짜 폴더)에 한해 정렬 이탈을 WARN으로 띄우는 정도가 적정선이라 <a href="#!wl-backlog">Backlog</a>에 <code>WATCH</code>로 올려 뒀다(착수 조건: 같은 실수 재발).
+    <br><br>
+    다만 <strong>이번 실수의 본질은 규칙 부재가 아니다.</strong> 기존 배열을 확인하지 않고 눈에 먼저 보인 자리에 붙였을 뿐이다. 게이트를 새로 만드는 것보다 그 사실을 적어 두는 편이 정확하다.
+</div>
+
+<h3>정리하다 규칙에 두 번 걸렸다 &mdash; 둘 다 내가 만든 것</h3>
+
+<p>첫째, 브랜치에 커밋을 얹으니 <strong>이미 머지된 PR #361을 재사용할 수 없어</strong> master 위로 리베이스하고 PR #362를 새로 열었다. 스쿼시 머지는 원 커밋과 내용이 같은 새 커밋을 만들므로, 옛 커밋을 그대로 들고 있으면 conflict가 난다.</p>
+
+<p>둘째, <code>check_worklog</code>의 <strong><code>worklog-date</code> ERROR</strong>가 정확히 발동했다 &mdash; <em>&ldquo;이 PR의 작업일은 2026-07-29(KST)인데 그 날짜 로그를 건드리지 않았습니다&rdquo;</em>. 처음엔 07-28 로그에 후속 상자를 붙였는데, 그 사이 KST 자정이 지나 있었다. 이 로그가 그 결과다.</p>
+
+<div class="note">
+    <span class="nh">두 번의 실사고로 만든 게이트가 세 번째를 막았다</span>
+    이 검사는 <strong>2026-07-14</strong>와 <strong>2026-07-27</strong>, 같은 사고가 두 번 난 뒤에 넣은 것이다(&ldquo;전날 확인한 날짜를 아침까지 재사용&rdquo;). 이번에는 <strong>사람이 아니라 기계가 먼저 알아챘고</strong>, 오류 메시지가 적어야 할 경로(<code>work-log/2026/07/29/wl-20260729-&lt;frame&gt;</code>)까지 알려 줬다. <code>Worklog-Backdated:</code>로 낮출 수도 있었지만 쓰지 않았다 &mdash; 지난 날짜에 적는 것이 <em>의도</em>일 때를 위한 탈출구이고, 여기서는 그냥 날짜가 넘어간 것이다.
+</div>
