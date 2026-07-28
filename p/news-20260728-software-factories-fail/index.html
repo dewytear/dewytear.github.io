@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>하네스로는 부족하다 — 소프트웨어 공장이 실패하는 이유</title>
+<meta name="description" content="Dex Horthy(HumanLayer)의 AI Engineer World&#x27;s Fair 2026 발표 정리 — 모델은 테스트 통과로만 보상받아 설계 품질을 학습하지 못하므로 하네스로는 메울 수 없다는 주장, Faros 계측(버그 +54%·인시던트 3배)과 4개월 lights-out 실험 실패, FrontierCode의 유지보수성 채점, 구현 전 30분 4단계 정렬">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/news-20260728-software-factories-fail/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260728-software-factories-fail/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260728-software-factories-fail/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/news-20260728-software-factories-fail/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260728-software-factories-fail/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="하네스로는 부족하다 — 소프트웨어 공장이 실패하는 이유">
+<meta property="og:description" content="Dex Horthy(HumanLayer)의 AI Engineer World&#x27;s Fair 2026 발표 정리 — 모델은 테스트 통과로만 보상받아 설계 품질을 학습하지 못하므로 하네스로는 메울 수 없다는 주장, Faros 계측(버그 +54%·인시던트 3배)과 4개월 lights-out 실험 실패, FrontierCode의 유지보수성 채점, 구현 전 30분 4단계 정렬">
+<meta property="og:url" content="https://dewytear.github.io/p/news-20260728-software-factories-fail/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="하네스로는 부족하다 — 소프트웨어 공장이 실패하는 이유">
+<meta name="twitter:description" content="Dex Horthy(HumanLayer)의 AI Engineer World&#x27;s Fair 2026 발표 정리 — 모델은 테스트 통과로만 보상받아 설계 품질을 학습하지 못하므로 하네스로는 메울 수 없다는 주장, Faros 계측(버그 +54%·인시던트 3배)과 4개월 lights-out 실험 실패, FrontierCode의 유지보수성 채점, 구현 전 30분 4단계 정렬">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "하네스로는 부족하다 — 소프트웨어 공장이 실패하는 이유",
+ "description": "Dex Horthy(HumanLayer)의 AI Engineer World's Fair 2026 발표 정리 — 모델은 테스트 통과로만 보상받아 설계 품질을 학습하지 못하므로 하네스로는 메울 수 없다는 주장, Faros 계측(버그 +54%·인시던트 3배)과 4개월 lights-out 실험 실패, FrontierCode의 유지보수성 채점, 구현 전 30분 4단계 정렬",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/news-20260728-software-factories-fail/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260728-software-factories-fail",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-07-28T09:07:29+09:00",
+ "dateModified": "2026-07-28T09:07:29+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260728-software-factories-fail">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/news-20260728-software-factories-fail/" hreflang="en">English</a>
+  &middot; <a href="/p/ja/news-20260728-software-factories-fail/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>하네스로는 부족하다 — 소프트웨어 공장이 실패하는 이유</h2>
+
+<p><strong>AI Engineer World's Fair 2026</strong>에서 HumanLayer의 <strong>Dex Horthy</strong>가 한 발표 &ldquo;Harness Engineering is not Enough: Why Software Factories Fail&rdquo;은 공개 하루 만에 25만 조회를 넘겼다. 주장은 한 문장으로 요약된다 &mdash; <strong>지금 AI 코딩이 코드베이스를 망가뜨리는 것은 당신이 잘못 쓰고 있어서가 아니라, 모델이 그렇게 훈련되지 않았기 때문이다.</strong></p>
+
+<p>이 구분이 왜 중요한가. &ldquo;잘못 쓰고 있다&rdquo;가 맞다면 답은 더 나은 프롬프트, 더 정교한 루프, 더 많은 리뷰 봇 &mdash; 즉 <strong>하네스</strong>를 더 쌓는 것이다. 하지만 원인이 훈련에 있다면, 하네스를 아무리 쌓아도 <strong>모델이 애초에 배우지 않은 것을 만들어낼 수는 없다.</strong></p>
+
+<h3>먼저, 균열은 느낌이 아니라 데이터다</h3>
+
+<p>발표는 정황이 아니라 계측으로 시작한다. Faros AI가 2026년 3월 낸 <em>Acceleration Whiplash</em> 보고서는 개발자 <strong>22,000명 · 4,000개 이상 팀</strong>의 2년치 엔지니어링 텔레메트리를 분석했다.</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>지표</th><th>변화</th></tr></thead>
+<tbody>
+<tr><td>개발자당 버그</td><td><strong>+54%</strong></td></tr>
+<tr><td>인시던트 &divide; PR 비율</td><td><strong>3배 이상</strong></td></tr>
+<tr><td>리뷰 소요 시간(중앙값)</td><td><strong>5배</strong></td></tr>
+<tr><td>리뷰 없이 머지된 PR</td><td><strong>+31.3%</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<p>처리량은 분명히 늘었다. 그런데 <strong>버그와 인시던트가 처리량보다 더 빨리 늘었다.</strong> Horthy가 인용한 표현대로, 코딩 에이전트 때문에 장애가 날 이유가 없는 회사들이 코딩 에이전트 때문에 장애를 겪고 있다.</p>
+
+<h3>&ldquo;불 끄고 돌리는 공장&rdquo;을 진짜로 해봤다</h3>
+
+<p>Dan North이 이름 붙인 <strong>lights-out software factory</strong>는 이런 발상이다: 코드 리뷰는 다들 싫어하니 아예 없애자. 대신 테스트·모니터링·롤아웃 같은 <em>주변 시스템</em>에 투자하고, 사람의 일은 &ldquo;에이전트에게 얼마나 많은 일을 큐에 넣느냐&rdquo;로 바꾸자.</p>
+
+<p>HumanLayer는 <strong>2025년 7월부터 11월까지</strong> 이것을 실제로 했다. 아무도 코드를 읽지 않았다. 결과는 발표에서 이렇게 정리된다.</p>
+
+<div class="note warn">
+    <span class="nh">3개월 뒤에 일어난 일</span>
+    아무리 정교하게 프롬프트를 짜고, 리서치를 시키고, 재현을 시켜도 <strong>에이전트가 끝내 풀지 못하는 버그</strong>가 나온다. 그러면 <strong>3개월 동안 읽지 않은 코드베이스</strong>를 직접 파헤쳐 무엇이 망가졌는지 찾아야 한다. 그동안 사이트는 내려가 있고, 사용자는 화가 나 있고, 자신은 그 사이 흘려보낸 슬롭 코드를 읽으며 비참해진다.
+</div>
+
+<p>주목할 대목은 기간이다. 흔히 &ldquo;브라운필드&rdquo;라 하면 10년 된 자바 시스템을 떠올리지만, Horthy는 지금의 출시 속도에서는 <strong>3~6개월만 지나도 에이전트가 힘들어하기 시작한다</strong>고 말한다. 오래된 시스템만의 문제가 아니라는 뜻이다.</p>
+
+<h3>핵심 — 모델은 &ldquo;테스트 통과&rdquo;로 훈련된다</h3>
+
+<p>여기서부터가 이 발표의 알맹이다. 왜 하네스로 안 되는지를 <strong>강화학습(RL)의 채점 방식</strong>으로 설명한다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 296" role="img" aria-label="코딩 에이전트 강화학습 루프: 문제 하나에 여러 번 시도해 테스트 통과 여부로 채점하고 가중치를 갱신한다. 채점표에는 설계 품질 칸이 없다">
+    <rect class="d-box" x="16" y="52" width="142" height="56" rx="10"/>
+    <text class="d-label" x="87" y="78" text-anchor="middle">문제 하나</text>
+    <text class="d-sub" x="87" y="97" text-anchor="middle">실제 OSS 이슈</text>
+    <line class="d-edge" x1="158" y1="80" x2="186" y2="80"/>
+    <polygon class="d-arrow" points="186,75 194,80 186,85"/>
+    <rect class="d-box" x="196" y="52" width="152" height="56" rx="10"/>
+    <text class="d-label" x="272" y="78" text-anchor="middle">여러 번 시도</text>
+    <text class="d-sub" x="272" y="97" text-anchor="middle">트레이스 N개</text>
+    <line class="d-edge" x1="348" y1="80" x2="376" y2="80"/>
+    <polygon class="d-arrow" points="376,75 384,80 376,85"/>
+    <rect class="d-box accent" x="386" y="52" width="152" height="56" rx="10"/>
+    <text class="d-label" x="462" y="78" text-anchor="middle">채점</text>
+    <text class="d-sub" x="462" y="97" text-anchor="middle">테스트 통과면 1</text>
+    <line class="d-edge" x1="538" y1="80" x2="566" y2="80"/>
+    <polygon class="d-arrow" points="566,75 574,80 566,85"/>
+    <rect class="d-box" x="576" y="52" width="128" height="56" rx="10"/>
+    <text class="d-label" x="640" y="78" text-anchor="middle">가중치 갱신</text>
+    <text class="d-sub" x="640" y="97" text-anchor="middle">좋은 행동 강화</text>
+    <line class="d-edge" x1="640" y1="108" x2="640" y2="134"/>
+    <line class="d-edge" x1="640" y1="134" x2="87" y2="134"/>
+    <line class="d-edge" x1="87" y1="134" x2="87" y2="120"/>
+    <polygon class="d-arrow" points="82,120 87,112 92,120"/>
+    <text class="d-sub" x="364" y="150" text-anchor="middle">다음 라운드</text>
+    <rect class="d-box soft" x="16" y="184" width="688" height="88" rx="12"/>
+    <text class="d-label" x="360" y="212" text-anchor="middle">채점표에 칸이 없는 것</text>
+    <text class="d-sub" x="360" y="236" text-anchor="middle">설계 품질 · 유지보수성 · 아키텍처의 일관성</text>
+    <text class="d-sub" x="360" y="258" text-anchor="middle">측정되지 않으면 강화되지도 않는다</text>
+</svg>
+<div class="d-cap">코딩 에이전트를 훈련하는 루프. 보상은 &ldquo;테스트가 통과했는가&rdquo; 하나뿐이다.</div>
+</div>
+
+<p>대표적인 벤치마크인 <strong>SWE-bench Multilingual</strong>을 보자. Redis·jq·Django 같은 오픈소스 저장소에서 뽑은 <strong>15분짜리 과제</strong>들이고, 보상은 <strong>0 아니면 1</strong>이다. 채점 절차는 이렇다.</p>
+
+<ol>
+    <li>사람이 문제를 고치기 <em>전</em>의 커밋을 체크아웃한다.</li>
+    <li>에이전트가 문제를 풀고, 그 패치를 저장한다.</li>
+    <li><strong>에이전트가 테스트 파일에 한 변경은 전부 되돌린다</strong> &mdash; 모델이 테스트를 주석 처리해 통과시키는 일을 막기 위해서다.</li>
+    <li>숨겨 뒀던 정답 테스트를 적용하고 돌린다. <strong>기존 테스트도 통과하고 새 테스트도 통과하면</strong> 보상 1.</li>
+</ol>
+
+<p>이 절차 어디에도 <strong>&ldquo;설계가 나빠졌는가&rdquo;를 감점할 자리가 없다.</strong> 그래서 모델은 필요 없는 곳에 <code>try/catch</code>를 두르고, 타입을 억지로 캐스팅한다. 테스트만 통과하면 되니까. 발표의 표현으로는 &mdash; <strong>모델은 테스트를 통과시키려 애쓸 뿐이다.</strong></p>
+
+<div class="note">
+    <span class="nh">왜 유지보수성은 채점하기 어려운가</span>
+    <strong>나쁜 아키텍처의 비용은 몇 달·몇 년 단위로 측정되기 때문</strong>이다. 코딩이 끝난 직후에는 아무 신호가 없다. &ldquo;누가 여기 좀 과하게 바이브했네&rdquo;는 몇 달 뒤에야 드러난다. 보상이 그렇게 늦게 오면 강화학습의 신호로 쓸 수가 없다. 코드가 <em>돌아가는지</em> 확인하는 것과 <em>유지보수 가능한지</em> 확인하는 것은 난이도가 몇 자릿수 다르다.
+</div>
+
+<h3>그럼 품질을 채점하는 벤치마크를 만들면 되지 않나</h3>
+
+<p>실제로 그런 시도가 나오고 있고, 발표도 이를 인정한다. 가장 구체적인 것이 Cognition의 <strong>FrontierCode</strong>다. 오픈소스 메인테이너들과 함께 만든 과제들로 <strong>하나당 40시간 이상</strong>이 걸리며, 채점 항목이 테스트 통과에 그치지 않는다 &mdash; <strong>회귀 안전성 · 정돈됨 · 범위 준수 · 테스트의 정당성 · 유지보수성</strong>. SWE-Bench Pro 대비 위양성이 <strong>81% 낮다</strong>. 과제는 Extended(150) · Main(100) · Diamond(가장 어려운 50)로 나뉜다.</p>
+
+<p>그 결과가 시사적이다. <strong>최고 성능 모델이 가장 어려운 묶음에서 약 13%</strong>에 그친다. SWE-bench류에서 흔히 보는 50%+ 와는 전혀 다른 그림이고, &ldquo;코딩은 이제 풀린 문제&rdquo;라는 인상이 <strong>벤치마크가 쉬웠기 때문</strong>일 수 있음을 보여 준다.</p>
+
+<p>다만 Horthy는 여기에 선을 하나 긋는다. 모델이 코드 품질을 심사하게 하는 접근에는 천장이 있다는 것이다.</p>
+
+<div class="note warn">
+    <span class="nh">발표에서 가장 날카로운 한 줄</span>
+    <strong>&ldquo;모델이 좋은 코드가 무엇인지 알았다면, 애초에 그렇게 썼을 것이다.&rdquo;</strong><br>
+    리뷰 에이전트를 붙이고 토큰을 더 쓰는 것은 <strong>바닥을 올릴 수는 있어도</strong>, 결국 강화학습에서 가르칠 수 있는 범위에 갇힌다.
+</div>
+
+<h3>결론 — 아직은 코드를 읽어야 한다. 대신 읽을 것을 줄인다</h3>
+
+<p>여기서 발표가 흔한 비관론과 갈라진다. Horthy의 처방은 &ldquo;AI를 덜 쓰자&rdquo;가 아니라 <strong>&ldquo;코드를 쓰기 전에 30분을 쓰자&rdquo;</strong>다. 앞단에서 정렬해 두면 나오는 코드가 예측 가능해지고, 그래야 전부 읽는 것이 현실적으로 가능해진다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="구현 전 네 단계 정렬: 제품 리뷰, 시스템 설계, 프로그램 설계, 수직 슬라이스를 거친 뒤 구현하고 사람이 전부 리뷰한다">
+    <rect class="d-box" x="14" y="34" width="156" height="62" rx="10"/>
+    <text class="d-label" x="92" y="62" text-anchor="middle">① 제품 리뷰</text>
+    <text class="d-sub" x="92" y="82" text-anchor="middle">무슨 문제·원하는 동작</text>
+    <line class="d-edge" x1="170" y1="65" x2="184" y2="65"/>
+    <polygon class="d-arrow" points="184,60 192,65 184,70"/>
+    <rect class="d-box" x="194" y="34" width="156" height="62" rx="10"/>
+    <text class="d-label" x="272" y="62" text-anchor="middle">② 시스템 설계</text>
+    <text class="d-sub" x="272" y="82" text-anchor="middle">컴포넌트 계약·제약</text>
+    <line class="d-edge" x1="350" y1="65" x2="364" y2="65"/>
+    <polygon class="d-arrow" points="364,60 372,65 364,70"/>
+    <rect class="d-box accent" x="374" y="34" width="156" height="62" rx="10"/>
+    <text class="d-label" x="452" y="62" text-anchor="middle">③ 프로그램 설계</text>
+    <text class="d-sub" x="452" y="82" text-anchor="middle">시그니처·호출 그래프</text>
+    <line class="d-edge" x1="530" y1="65" x2="544" y2="65"/>
+    <polygon class="d-arrow" points="544,60 552,65 544,70"/>
+    <rect class="d-box" x="554" y="34" width="152" height="62" rx="10"/>
+    <text class="d-label" x="630" y="62" text-anchor="middle">④ 수직 슬라이스</text>
+    <text class="d-sub" x="630" y="82" text-anchor="middle">구현 순서·중간 확인</text>
+    <text class="d-sub" x="360" y="122" text-anchor="middle">여기까지 약 30분</text>
+    <line class="d-edge" x1="360" y1="130" x2="360" y2="152"/>
+    <polygon class="d-arrow" points="355,152 360,160 365,152"/>
+    <rect class="d-box soft" x="120" y="164" width="480" height="54" rx="10"/>
+    <text class="d-label" x="360" y="188" text-anchor="middle">구현 — 에이전트가 쓴다</text>
+    <text class="d-sub" x="360" y="208" text-anchor="middle">합의된 계획을 그대로 따른다</text>
+    <line class="d-edge" x1="360" y1="218" x2="360" y2="234"/>
+    <polygon class="d-arrow" points="355,234 360,242 365,234"/>
+    <rect class="d-box" x="120" y="246" width="480" height="44" rx="10"/>
+    <text class="d-label" x="360" y="273" text-anchor="middle">리뷰 — 사람이 전부 읽는다</text>
+</svg>
+<div class="d-cap">앞단 30분이 리뷰 몇 시간을 줄인다. 그래서 전부 읽는 것이 여전히 가능하다.</div>
+</div>
+
+<p>네 단계를 조금 더 풀면 이렇다.</p>
+
+<ul>
+    <li><strong>① 제품 리뷰</strong> &mdash; 무슨 문제를 푸는가, 원하는 동작은 무엇인가. 필요하면 목업까지.</li>
+    <li><strong>② 시스템 설계</strong> &mdash; 컴포넌트 사이의 계약, 데이터 모델, 제약. 이미 많은 팀이 하고 있는 단계다.</li>
+    <li><strong>③ 프로그램 설계</strong> &mdash; Horthy가 <strong>가장 과소평가되고 있다</strong>고 지적하는 단계. 아키텍처만 맞으면 모델이 알아서 할 거라고들 생각하지만, 실제로는 <strong>타입·메서드 시그니처·프로그램 배치·호출 스택</strong>까지 내려가야 한다. Cloudflare의 Dylan Mulroy가 계획 과정에 호출 그래프를 쓰는 것도 같은 맥락이다.</li>
+    <li><strong>④ 수직 슬라이스</strong> &mdash; 구현 순서, 여러 저장소에 걸친 조율, 각 단계에서 무엇을 확인할지.</li>
+</ul>
+
+<p>중요한 단서가 하나 붙는다. <strong>작은 일은 여전히 그냥 에이전트에게 바로 준다.</strong> 이 절차는 모든 변경에 씌우는 의식이 아니라, 복잡한 코드베이스의 어려운 문제에 쓰는 도구다.</p>
+
+<h3>&ldquo;PR이 너무 많은 게 아니라, 나쁜 PR이 너무 많은 것&rdquo;</h3>
+
+<p>리뷰가 병목이라는 통념도 뒤집는다. <strong>좋은 PR은 리뷰가 즐겁다</strong> &mdash; 읽으면서 &ldquo;그래, 우리가 이야기한 그대로네&rdquo; 하고 넘어가게 된다. 반대로 재작업이 20%만 필요해도(AI가 쏟아낸 코드치고는 후한 수치다) 그것은 <strong>리뷰어와 제출자 양쪽에 정서적·지적 부담</strong>이 된다.</p>
+
+<p>그래서 앞단 정렬이 만드는 것은 &ldquo;느리지만 안전한&rdquo; 개발이 아니다. 세 군데가 동시에 빨라진다.</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>단계</th><th>왜 빨라지나</th></tr></thead>
+<tbody>
+<tr><td>정렬</td><td>AI로 필요한 정보를 한 번에 모으니 짧아진다</td></tr>
+<tr><td>코딩</td><td>AI가 하니 빠르다</td></tr>
+<tr><td>리뷰</td><td>앞단에서 맞췄으니 읽기만 하면 된다</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>결과적으로 <strong>실제로 더 빨리 움직이면서도, 여전히 전부 읽고, 코드를 소유한다.</strong></p>
+
+<h3>이 주장을 어떻게 받아들일까</h3>
+
+<p>발표는 스스로 적용 범위를 좁힌다. Horthy가 인용한 Addy Osmani의 문장이 그 경계를 정확히 그린다 &mdash; <em>&ldquo;열두 명이나 쓸 사이드 프로젝트를 바이브 코딩하는 개발자와, 10년 된 엔터프라이즈 시스템을 다음 분기까지 살려 두는 팀은 이름 붙일 만한 제약을 거의 공유하지 않는다.&rdquo;</em> 인터넷에서 오가는 조언 대부분은 <strong>한쪽 집단이 다른 집단에게 사는 법을 훈수하는 것</strong>이다.</p>
+
+<p>그래서 Horthy 본인도 못을 박는다. <strong>바이브 코딩이 즐겁다면 계속하시라.</strong> 이 발표가 겨냥하는 것은 <strong>복잡한 코드베이스에서 어려운 문제를 푸는 경우</strong>다.</p>
+
+<p>덧붙여 정직하게 볼 지점도 있다. 이것은 <strong>한 회사의 4개월 실험과 현시점 모델</strong>에 기반한 주장이다. Horthy도 미래에 해결될 수 있다고 열어 둔다 &mdash; &ldquo;GPT-7이 나올 때까지 프롬프트만 던지겠다면 그렇게 하셔도 된다.&rdquo; FrontierCode 같은 시도가 실제로 유지보수성을 채점하기 시작했다는 것 자체가, 이 한계가 영구적이지 않을 수 있다는 신호이기도 하다.</p>
+
+<p>다만 <strong>지금 이 분기에 무엇을 할 것인가</strong>라는 질문에 대해서는, 계측된 데이터(Faros)와 실패한 실험(HumanLayer)과 벤치마크의 구조적 한계(테스트 통과 보상)가 같은 방향을 가리킨다. 이 위키의 <a href="/p/hns-what/">하네스 엔지니어링</a> 강의가 다루는 도구들은 여전히 유효하지만, 발표의 제목이 말하듯 <strong>그것만으로는 부족하다</strong>는 것이 이 발표의 요지다.</p>
+
+<h3>출처</h3>
+<ul>
+    <li>Dex Horthy(HumanLayer), <em>Harness Engineering is not Enough: Why Software Factories Fail</em>, AI Engineer World's Fair 2026 &mdash; <a href="https://www.youtube.com/watch?v=Ib5GBkD555M" target="_blank" rel="noopener">발표 영상</a></li>
+    <li>Faros AI, <em>Acceleration Whiplash</em>(2026-03) &mdash; 개발자 22,000명·4,000여 팀의 2년치 텔레메트리 분석</li>
+    <li>Cognition, <em>Introducing FrontierCode</em> &mdash; <a href="https://cognition.com/blog/frontier-code" target="_blank" rel="noopener">cognition.com/blog/frontier-code</a></li>
+    <li>Addy Osmani, <em>Software Factories, Light and Dark</em> &mdash; 발표에 인용된 &ldquo;사이드 프로젝트 vs 10년 된 엔터프라이즈 시스템&rdquo; 대목</li>
+</ul>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">생성일자</span> 2026-07-28 &middot; <span class="pr-k">수정일자</span> 2026-07-28</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/news-20260724-claude-opus-5/">Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다</a></li><li><a href="/p/news-20260716-kimi-k3/">Kimi K3 — 2.8조 파라미터 오픈웨이트, 프런티어에 닿다</a></li></ul>
+</nav>
+</body>
+</html>

@@ -59,3 +59,24 @@
     영어 전면 병행이 유입을 늘리지 못했고, 일본어도 <strong>그 자체로는 사람을 데려오지 않는다</strong>. 검색 등록·커뮤니티 노출이 선행돼야 의미가 생기며, 그 항목들은 여전히 <a href="#!wl-backlog">Backlog</a>의 &ldquo;지금 할 일&rdquo;에 사람 몫으로 남아 있다. 이 작업의 값은 <strong>그 유입이 생겼을 때 일본어 독자가 폴백된 한국어를 만나지 않는다</strong>는 데 있다.
 </div>
 <p class="scn-sub"><strong>남은 것</strong>: 개념 표시명 사전(<code>concepts.ja.json</code> 미생성 — 개념 칩이 ko 키 그대로). 영어판 <code>concepts.en.json</code>은 302건이 갖춰져 있으니 <strong>일본어만 비어 있는 상태</strong>이며, 별도 주제로 다룬다.</p>
+
+<h3>아티클 — 하네스로는 부족하다(소프트웨어 공장이 실패하는 이유)</h3>
+<p>대표님이 강연 전문과 ChatGPT가 만든 HTML 재구성본을 주시며 <strong>원본 강연을 주제로 아티클을 써 달라</strong>고 하셨다. 웹 검색으로 사실을 교차검증하고 3개 언어로 등재했다.</p>
+
+<div class="note">
+    <span class="nh">무엇을 검증했나</span>
+    발표자·행사를 확정했다 &mdash; <strong>Dex Horthy(HumanLayer)</strong>, <strong>AI Engineer World's Fair 2026</strong>, 「Harness Engineering is not Enough: Why Software Factories Fail」. 전문에는 없던 수치도 원출처에서 채웠다: Faros AI <em>Acceleration Whiplash</em>(2026-03)의 <strong>개발자 22,000명·4,000여 팀·2년치</strong> 표본과 버그 +54%·인시던트 3배·리뷰 시간 5배·무리뷰 머지 +31.3%, lights-out 실험 기간이 <strong>2025년 7~11월</strong>이라는 것, Cognition <strong>FrontierCode</strong>의 채점 항목 5종·위양성 81% 감소·Diamond 최난도에서 최고 모델 <strong>약 13%</strong>.
+</div>
+
+<p>글의 축은 <strong>&ldquo;왜 하네스로는 안 되는가&rdquo;</strong> 하나로 잡았다. 강연의 논증이 <em>RL 채점표에 설계 품질 칸이 없다 → 그래서 테스트만 통과시키는 행동이 강화된다 → 유지보수성은 보상이 몇 달 뒤에 와서 신호로 못 쓴다</em>로 이어지는데, 이 사슬을 이해하면 나머지(리뷰를 없애면 안 되는 이유, 앞단 30분 정렬)가 따라온다. 가장 날카로운 한 줄 &mdash; <strong>&ldquo;모델이 좋은 코드를 알았다면 애초에 그렇게 썼을 것&rdquo;</strong> &mdash; 을 별도 상자로 세웠다.</p>
+
+<p><strong>슬라이드는 그대로 쓰지 않고 인라인 SVG 도식 2개로 다시 그렸다</strong>(사용자가 &ldquo;가능하면 원문 슬라이드 채용&rdquo;을 허용했으나): ①외부 이미지 핫링크는 저장소 규칙상 금지이고 ②샌드박스에서 슬라이드 이미지를 받을 수 없었으며 ③무엇보다 도식으로 그리면 <strong>테마 전환·3개 언어 번역·폭 게이트</strong>가 전부 적용된다. RL 보상 루프와 4단계 정렬을 각각 한 장으로 압축했다.</p>
+
+<div class="note warn">
+    <span class="nh">번역에서 두 번 샜다 &mdash; 기계가 아니라 눈으로 잡았다</span>
+    일본어 본문에 <strong>러시아어 단어(<code>указывать</code>)</strong>와 <strong>영어 단어(<code>approach</code>)</strong>가 섞여 들어갔다. 둘 다 문법적으로는 문장이 성립해 어떤 게이트에도 걸리지 않는다 &mdash; <code>check_i18n_render</code>는 <strong>한글</strong>만 찾고, 도식 게이트는 폭만 본다. 작성 직후 라틴·키릴 문자를 정규식으로 훑어 발견했다. <strong>번역 품질은 여전히 사람(과 스스로의 점검)의 몫</strong>이라는 표시다.
+</div>
+
+<p>등재 파급도 게이트가 그대로 잡아 줬다. 문서가 하나 늘자 <strong>지식지도 폴백 3개 언어</strong>(News &amp; Articles 12&rarr;13, km-totals 104·331&rarr;105·335, km-top)와 <strong>OG 카드</strong>(115&rarr;116 docs, 370&rarr;374 concepts)가 동시에 낡았고, 어제 만든 <code>map-fallback-drift</code>·<code>og-card-drift</code>가 즉시 WARN을 냈다. 전부 갱신하고 카드 PNG도 재생성했다 &mdash; <strong>어제의 게이트가 오늘 바로 값을 했다.</strong></p>
+
+<p>관계는 5타입을 훑고 <strong>하나만</strong> 달았다: <code>evidence-for</code> &rarr; <a href="#!hns-review">hns-review</a>(생성 결과 리뷰). Faros 계측과 lights-out 실패는 &ldquo;생성 결과를 사람이 리뷰해야 한다&rdquo;는 그 문서의 <strong>외부 근거</strong>다. 선행지식·구현·사례·대체는 본문에 실재하지 않아 달지 않았다. 개념은 기존 어휘(코딩에이전트·하네스·벤치마크)를 재사용하고 <strong>코드리뷰·강화학습·유지보수성</strong> 3개를 새로 만들었으며, <code>concept-dict-coverage</code>가 요구하는 대로 en·ja 표시명도 함께 넣었다.</p>
