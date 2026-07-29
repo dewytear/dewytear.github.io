@@ -1,13 +1,12 @@
 # 내위키 좋아요·조회수 Worker
 #
-# 배포 (대표님 로컬에서):
-#   npm i -g wrangler && wrangler login
-#   wrangler d1 create dewytear-wiki           # → database_id를 아래에 붙여넣기
-#   wrangler d1 execute dewytear-wiki --remote --file=./schema.sql
-#   wrangler deploy
+# 배포는 Workers Builds(저장소 연결)로 한다 — master에 푸시하면 자동 배포된다.
+# **Cloudflare 빌드 설정의 Root directory가 `worker`여야 한다.** `/`로 두면
+# wrangler가 이 파일을 못 찾고, 자동설정이 저장소를 훑어 "Hugo 사이트"라고 잘못
+# 추측한 뒤 `npx hugo`를 실행해 죽는다(2026-07-29 실사고). 자세한 것은 README.md.
 #
-# 배포가 끝나면 나오는 URL(https://<name>.<계정>.workers.dev)만 알려 주시면
-# app.js의 LIKES_API에 넣습니다. **API 토큰은 알려주지 마세요** — 필요 없습니다.
+# database_id는 비밀이 아니다 — 계정 인증 없이는 아무것도 못 하고, wrangler 설정에
+# 커밋하는 것이 Cloudflare의 정상 사용법이다. **API 토큰은 여기에 넣지 않는다.**
 name = "dewytear-wiki"
 main = "index.js"
 compatibility_date = "2026-07-01"
@@ -15,7 +14,7 @@ compatibility_date = "2026-07-01"
 [[d1_databases]]
 binding = "DB"                 # index.js의 env.DB
 database_name = "dewytear-wiki"
-database_id = "PUT-YOUR-D1-DATABASE-ID-HERE"
+database_id = "5ee836553011e795d71cb050e3345638"
 
 # 관측: 무료 플랜에서도 실시간 로그(wrangler tail)와 대시보드 지표를 볼 수 있다.
 [observability]
