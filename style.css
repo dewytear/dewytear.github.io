@@ -1855,6 +1855,11 @@
         }
         .doc-views .dv-k{ opacity: .75; }
         .doc-views b{ font-weight: 600; }
+        /* `display: inline-flex`가 UA의 `[hidden]{display:none}`을 눌러 버리므로
+           명시해야 한다 — 자리를 미리 만들고 숫자만 나중에 채우는 구조라
+           (2026-07-30 조회수 이관) 이 줄이 없으면 "조회: 0"이 잠깐 비친다.
+           `.doc-likes`·`.like-btn`도 같은 이유로 같은 규칙을 갖고 있다. */
+        .doc-views[hidden]{ display: none; }
         /* 상단 메타의 좋아요 — **표시 전용**(누르는 곳은 본문 끝 필 버튼 하나).
            조회수와 같은 무게로, 통계처럼 읽히게 둔다. `.on`은 이 브라우저가 이미
            누른 글이라는 상태 표시. */

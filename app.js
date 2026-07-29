@@ -1808,67 +1808,51 @@ function countPageview(path){
     })();
 }
 
-// ---- 방문자 수 표시 (GoatCounter visitor counter) ----
-// `/counter/<경로>.json`은 CORS를 허용하고(`Access-Control-Allow-Origin: *`)
-// 서버가 4시간 캐시한다 — 그래서 (a) 수치는 최대 4시간 늦고 (b) 자주 부를
-// 이유가 없다. 같은 URL은 이 세션에서 한 번만 부르고 프라미스를 재사용한다.
-// 집계 설정이 꺼져 있거나(403) 네트워크가 막히면 null → 화면에 아무것도 안 띄운다.
-var GC_HOST = 'https://dewytear.goatcounter.com';
-var GC_COUNTS = {};
-function gcCount(path, start){
-    var url = GC_HOST + '/counter/' + path + '.json' + (start ? '?start=' + start : '');
-    if(GC_COUNTS[url]){ return GC_COUNTS[url]; }
-    // no-store: 서버가 이미 4시간 캐시하는 응답에 `Expires`(+4h)가 실려 와
-    // 브라우저가 그 위에 4시간을 더 얹는다 — 두 층이 겹치면 최악 8시간 낡은
-    // 숫자를 본다. 서버 캐시는 못 없애지만(캐시버스터는 캐시 키에서 제외된다)
-    // 우리가 더 낡게 만드는 층은 걷어낸다. 같은 URL은 세션당 1회만 부르므로
-    // (아래 프라미스 재사용) 요청 수는 늘지 않는다.
-    GC_COUNTS[url] = fetch(url, { mode: 'cors', cache: 'no-store' })
-        // 집계가 0건이면 404로 오지만 본문은 정상 JSON이라 상태코드는 안 본다.
-        // 다만 403(집계 설정 꺼짐)은 본문이 JSON이 아니고 CORS 헤더도 없어서
-        // 여기까지 오지 못하거나 파싱에서 걸린다 — 아래 catch가 이유를 남긴다.
-        .then(function(r){ return r.json(); })
-        .then(function(j){
-            // count는 자릿수 구분자(가는 공백·쉼표)가 들어간 문자열이다.
-            var n = parseInt(String((j && j.count) || '').replace(/\D/g, ''), 10);
-            return isNaN(n) ? null : n;
-        })
-        .catch(function(e){
-            // 화면에는 아무것도 띄우지 않되(방문자에게 보일 오류가 아니다),
-            // 왜 안 뜨는지 확인할 단서는 콘솔에 남긴다. 흔한 원인 셋:
-            //   ① GoatCounter 설정의 "Allow adding visitor counts on your
-            //      website"가 꺼져 있음(403 + CORS 헤더 없음)
-            //   ② 광고·추적 차단기가 goatcounter.com을 막음
-            //   ③ 오프라인·일시적 네트워크 오류
-            try{ console.warn('[goatcounter] ' + url + ' — ' + e); }catch(_){}
-            return null;
-        });
-    return GC_COUNTS[url];
-}
-
-// 사이드바 푸터의 방문자 수는 **뗐다**(2026-07-30 결정). 2026-07-29에 "오늘"을
-// 떼고 누적만 남겼는데, 남은 누적도 사이드바에 상주할 값은 아니었다 —
-// 페이지마다 따라다니면서 아무 행동으로도 이어지지 않는 숫자다. 문서별 조회수
-// (`.doc-views`)는 그 문서를 읽는 맥락에 붙어 있으니 남겼다.
-// 집계 자체(`goatcounter.count`)는 계속 돈다 — 조회수가 거기서 나온다.
-
 // 문서 메타 라인: 생성일자 **바로 앞**에 이 문서의 조회수를 붙인다.
 // `.doc-meta-r`은 오른쪽 정렬 그룹이라 앞에 끼워 넣어도 날짜는 제자리 —
 // 숫자가 늦게 도착해도 레이아웃이 밀리지 않는다.
+//
+// **숫자의 출처가 GoatCounter에서 Worker로 바뀌었다**(2026-07-30). 예전에는
+// `/counter/<name>.json`을 읽었는데 그 응답은 서버에서 4시간 캐시되고
+// (`GetStale`이라 만료 후 첫 방문자는 여전히 옛 값을 받는다) 차단기가
+// goatcounter.com을 막으면 아무것도 그리지 못했다. 이제 좋아요와 같은 D1 행에서
+// 온다 — 즉시 반영되고, 요청도 좋아요와 **한 번으로 합쳐졌다**.
+//
+// 자리(엘리먼트)는 여기서 **동기적으로** 만들고 숫자만 나중에 채운다.
+// injectLikes가 `.doc-likes`를 이 앞에 끼우므로(좋아요·조회·날짜 순) 자리가
+// 미리 있어야 순서가 흔들리지 않는다.
 function injectDocViews(name){
     var art = document.getElementById('article');
     var right = art && art.querySelector('.doc-meta-r');
     if(!right || right.querySelector('.doc-views')){ return; }
-    gcCount(encodeURIComponent(name), '').then(function(n){
-        if(n === null || CURRENT_DOC !== name){ return; }
-        if(right.querySelector('.doc-views')){ return; }
-        var el = document.createElement('span');
-        el.className = 'doc-views';
-        el.title = STR('docViewsTitle');
-        el.innerHTML = '<span class="dv-k">' + escapeHtml(STR('docViews')) + '</span>'
-                     + '<b>' + n.toLocaleString() + '</b>';
-        right.insertBefore(el, right.querySelector('.doc-date'));
-    });
+    var el = document.createElement('span');
+    el.className = 'doc-views';
+    el.hidden = true;                        // 숫자가 오기 전엔 자리도 차지하지 않는다
+    el.title = STR('docViewsTitle');
+    el.innerHTML = '<span class="dv-k">' + escapeHtml(STR('docViews')) + '</span>'
+                 + '<b>0</b>';
+    right.insertBefore(el, right.querySelector('.doc-date'));
+}
+
+/** 조회수를 그린다. 0이면 감춘 채로 둔다 — "조회: 0"은 알려 주는 바가 없다. */
+function paintViews(name, n){
+    if(CURRENT_DOC !== name){ return; }   // 그 사이 다른 문서로 갔다
+    var el = document.querySelector('.doc-views');
+    if(!el || typeof n !== 'number' || n <= 0){ return; }
+    el.querySelector('b').textContent = n.toLocaleString();
+    el.hidden = false;
+}
+
+/**
+ * 이 방문을 조회수로 셀 것인가.
+ *
+ * 프로덕션에서만 센다. 로컬(127.0.0.1)과 CI가 걸러지는 것이 요점이다 —
+ * i18n-render가 44화면, diagram-bounds가 도식 문서 전부를 실제 Chrome으로
+ * 여니 막지 않으면 **PR마다 조회수가 오른다**. Worker의 봇 UA 필터가 두 번째
+ * 그물이지만, 애초에 보내지 않는 것이 첫 번째다(요청도 아끼고 의도도 분명하다).
+ */
+function countsViews(){
+    return location.hostname === 'dewytear.github.io';
 }
 
 // ---- 좋아요 (Cloudflare Worker + D1) ----
@@ -1920,7 +1904,18 @@ function injectLikes(name){
     if(!LIKES_API || !window.fetch){ return; }
     var art = document.getElementById('article');
     var right = art && art.querySelector('.doc-meta-r');
-    if(!art || art.querySelector('.like-dock')){ return; }
+    if(!art){ return; }
+
+    // 이 가드가 **문서를 알아야** 한다(2026-07-30 버그픽스). `.like-dock`은
+    // `#article`의 직계 자식이라 본문 교체를 살아남는다 — 그런데 예전 가드는
+    // "dock이 있으면 그만"이었다. 그래서 문서를 옮기면:
+    //   ① 살아남은 버튼의 클로저가 **옛 문서 이름**을 붙들고 있어 좋아요가
+    //      엉뚱한 문서에 붙었고(읽던 글이 아니라 직전 글의 수치가 올랐다),
+    //   ② 조기 반환 때문에 상단 `.doc-likes` 칩이 두 번째 문서부터 안 그려졌다.
+    // 같은 문서면 그대로 두고(중복 append 방지), 다른 문서면 걷어내고 다시 짠다.
+    var stale = art.querySelector('.like-dock');
+    if(stale && stale.getAttribute('data-doc') === name){ return; }
+    if(stale && stale.parentNode){ stale.parentNode.removeChild(stale); }
 
     // 상단 표시 — 조회수 **앞**에 끼운다(좋아요·조회·날짜 순). `.doc-meta-r`은
     // 오른쪽 정렬 그룹이라 늦게 도착한 숫자가 날짜를 밀지 않는다.
@@ -1937,6 +1932,7 @@ function injectLikes(name){
     // 붙이면 자연히 그 앞에 온다.
     var dock = document.createElement('div');
     dock.className = 'like-dock';
+    dock.setAttribute('data-doc', name);   // 위 가드가 읽는다 — 어느 문서의 dock인가
     var btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'like-btn';
@@ -1948,16 +1944,29 @@ function injectLikes(name){
     dock.appendChild(btn);
     art.appendChild(dock);
 
-    fetch(LIKES_API + '/v1/counters?doc=' + encodeURIComponent(name), { cache: 'no-store' })
-        .then(function(r){ return r.json(); })
+    // 조회 기록과 두 숫자 읽기를 **한 요청으로** 합친다. `POST /v1/view`는 올린
+    // 뒤의 행을 그대로 돌려주므로(`{doc, likes, views}`) 따로 읽을 이유가 없다 —
+    // 그리고 그래야 **읽는 사람 자신의 방문이 화면 숫자에 바로 포함**된다.
+    // 세지 않는 환경(로컬·CI)에서는 읽기만 한다.
+    var counting = countsViews();
+    var req = counting
+        ? fetch(LIKES_API + '/v1/view', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ doc: name }),
+          })
+        : fetch(LIKES_API + '/v1/counters?doc=' + encodeURIComponent(name), { cache: 'no-store' });
+
+    req.then(function(r){ return r.json(); })
         .then(function(j){
             if(!j || typeof j.likes !== 'number'){ return; }
             paintLikes(name, j.likes, likedAlready(name));
+            paintViews(name, j.views);
         })
         .catch(function(e){
             // 화면에는 아무것도 띄우지 않되(방문자에게 보일 오류가 아니다),
             // 왜 안 뜨는지 확인할 단서는 콘솔에 남긴다.
-            try{ console.warn('[likes] ' + e); }catch(_){}
+            try{ console.warn('[counters] ' + e); }catch(_){}
         });
 }
 
