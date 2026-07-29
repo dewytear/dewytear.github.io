@@ -54,5 +54,12 @@
 
 <div class="note warn">
     <span class="nh">Cloudflare 배포 두 번째 실패 &mdash; Root directory</span>
-    로그가 원인을 정확히 보여줬다. <code>wrangler deploy</code>가 <strong>저장소 루트</strong>에서 돌아 <code>wrangler.toml</code>을 못 찾자, wrangler의 <strong>자동설정</strong>이 끼어들어 저장소를 훑고 <em>&ldquo;Framework: Static / Build Command: npx hugo&rdquo;</em>라고 잘못 추측한 뒤 <code>npx hugo</code>를 실행했다 &mdash; 있지도 않은 명령이라 <code>npm error could not determine executable to run</code>. 우리 설정은 <code>worker/</code>에 있으니 <strong>Root directory를 <code>worker</code>로</strong> 두면 자동설정 자체가 발동하지 않는다. 안내서에 이미 적어 둔 항목인데 기본값 <code>/</code>가 남아 있었다.
+    로그가 원인을 정확히 보여줬다. <code>wrangler deploy</code>가 <strong>저장소 루트</strong>에서 돌아 <code>wrangler.toml</code>을 못 찾자, wrangler의 <strong>자동설정</strong>이 끼어들어 저장소를 훑고 <em>&ldquo;Framework: Static / Build Command: npx hugo&rdquo;</em>라고 잘못 추측한 뒤 <code>npx hugo</code>를 실행했다 &mdash; 있지도 않은 명령이라 <code>npm error could not determine executable to run</code>.
+</div>
+
+<div class="note">
+    <span class="nh">고치는 방향을 바꿨다 &mdash; 사람이 아니라 파일을 옮긴다</span>
+    처음엔 &ldquo;대시보드에서 Root directory를 <code>worker</code>로 바꿔 주세요&rdquo;로 안내했는데, 대표님이 <strong>&ldquo;뭘 어떻게 해야 하는지 모르겠어&rdquo;</strong>라고 하셨다. 맞는 신호다 &mdash; 고칠 수 있는 쪽이 둘인데 <strong>사람이 대시보드를 찾아 들어가는 쪽</strong>을 골라 놓고 있었다. <code>wrangler.toml</code>을 <strong>저장소 맨 위로 옮기니</strong>(<code>main = "worker/index.js"</code>) 기본 설정 <code>/</code> 그대로 wrangler가 설정을 찾고, 자동설정도 발동하지 않는다. <strong>대시보드에서 바꿀 것이 0이 됐다.</strong> Worker 소스는 <code>worker/</code>에 그대로 있다.
+    <br><br>
+    설명이 길어지고 상대가 길을 잃으면 그건 <strong>안내가 부족한 게 아니라 설계가 사람에게 일을 미룬 것</strong>이라는 신호로 읽는 편이 낫다. 남은 사람 몫은 D1 하나 만들기뿐인데, 그건 계정 안에서만 되는 일이라 줄일 수 없다.
 </div>
