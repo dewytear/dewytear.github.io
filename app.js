@@ -1840,30 +1840,17 @@ function gcCount(path, start){
             //      website"가 꺼져 있음(403 + CORS 헤더 없음)
             //   ② 광고·추적 차단기가 goatcounter.com을 막음
             //   ③ 오프라인·일시적 네트워크 오류
-            try{ console.warn('[visit-counter] ' + url + ' — ' + e); }catch(_){}
+            try{ console.warn('[goatcounter] ' + url + ' — ' + e); }catch(_){}
             return null;
         });
     return GC_COUNTS[url];
 }
 
-// 사이드바 푸터: "전체 n". **누적만** 보여 준다(2026-07-29 결정).
-// 예전에는 "오늘 n · 전체 n"이었는데 오늘의 경계를 UTC로 둘 수밖에 없었다 —
-// `/counter/`의 `start`가 `time.Parse("2006-01-02")`로만 파싱돼 UTC 자정 고정이고
-// 시각 단위를 못 받는다. 그래서 한국에서 보면 "오늘"이 **09:00 KST에 초기화**되는
-// 이상한 숫자였고, 거기에 서버 4시간 캐시까지 얹혀 오전 내내 0에 가깝게 보였다.
-// 고칠 수 없는 축이라 **떼는 것이 정직하다**. 누적은 경계 문제가 없다.
-function renderVisitCounter(){
-    var box = document.getElementById('visit-counter');
-    if(!box || !window.fetch){ return; }
-    gcCount('TOTAL', '').then(function(n){
-        if(n === null){ return; }   // 못 읽으면 그대로 숨겨 둔다
-        box.innerHTML =
-              '<span class="vc-k">' + escapeHtml(STR('visitsTotal')) + '</span>'
-            + '<b>' + n.toLocaleString() + '</b>';
-        box.title = STR('visitsTitle');
-        box.hidden = false;
-    });
-}
+// 사이드바 푸터의 방문자 수는 **뗐다**(2026-07-30 결정). 2026-07-29에 "오늘"을
+// 떼고 누적만 남겼는데, 남은 누적도 사이드바에 상주할 값은 아니었다 —
+// 페이지마다 따라다니면서 아무 행동으로도 이어지지 않는 숫자다. 문서별 조회수
+// (`.doc-views`)는 그 문서를 읽는 맥락에 붙어 있으니 남겼다.
+// 집계 자체(`goatcounter.count`)는 계속 돈다 — 조회수가 거기서 나온다.
 
 // 문서 메타 라인: 생성일자 **바로 앞**에 이 문서의 조회수를 붙인다.
 // `.doc-meta-r`은 오른쪽 정렬 그룹이라 앞에 끼워 넣어도 날짜는 제자리 —
@@ -2228,7 +2215,6 @@ App.data.loadList().then(function(tree){
         document.querySelector('#more').innerHTML = renderMore();
         refreshRecentDocs();   // reorder by last-modified once dates load
         route();   // render the initial page once indexes exist
-        renderVisitCounter();   // 사이드바 푸터의 오늘·전체 방문자 수
 })
 
 // Load the AI knowledge index (summaries·concepts·related). Non-blocking:
