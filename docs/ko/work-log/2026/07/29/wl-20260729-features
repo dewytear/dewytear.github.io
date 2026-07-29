@@ -1,0 +1,17 @@
+<h2>2026-07-29 · 기능 — 방문자 수는 누적만</h2>
+
+<p>대표님이 <strong>&ldquo;방문자수는 전체 방문자수만 보이도록 조정하자&rdquo;</strong>고 하셨다. 사이드바 푸터의 &ldquo;오늘(UTC) n · 전체 n&rdquo;에서 앞쪽을 뗐다. 변경 유형: <strong>ENGINE + STYLE</strong>.</p>
+
+<div class="note warn">
+    <span class="nh">뗀 이유 &mdash; 고칠 수 없는 축이었다</span>
+    바로 앞서 대표님이 <strong>&ldquo;GoatCounter의 4시간 캐시를 새벽으로 바꿀 수 있냐&rdquo;</strong>고 물으셔서 소스를 확인했는데, 두 가지가 함께 드러났다. ①캐시는 <code>vcounterCache = zcache.New(time.Hour*4, time.Hour*8)</code>로 <strong>하드코딩</strong>이라 설정이 없고, ②<code>start</code> 파라미터는 <code>time.Parse(&quot;2006-01-02&quot;)</code>로만 파싱돼 <strong>UTC 자정 고정 · 시각 단위 불가</strong>다. 즉 &ldquo;오늘&rdquo;은 한국에서 <strong>09:00 KST에 초기화</strong>되는 숫자였고, 거기에 4시간 캐시가 얹혀 오전 내내 0에 가깝게 보였다. <strong>맞출 방법이 없는 숫자는 띄우지 않는 편이 정직하다.</strong> 누적은 경계 문제가 없다.
+</div>
+
+<ul>
+    <li><code>app.js</code> &mdash; <code>renderVisitCounter</code>가 <code>TOTAL</code> 누적 하나만 조회한다. 요청도 2 &rarr; 1로 줄었다.</li>
+    <li><code>i18n.js</code> &mdash; <code>visitsToday</code> 키를 3개 언어에서 제거하고, <code>visitsTotal</code>을 <code>방문</code>/<code>Visits</code>/<code>訪問</code>으로 바꿨다(&ldquo;전체/Total/累計&rdquo;는 옆에 비교 대상이 사라져 의미가 없다). <code>visitsTitle</code>에서 UTC 경계 설명도 삭제.</li>
+    <li><code>style.css</code> &mdash; 구분점 <code>.vc-sep</code> 규칙 제거(사용처 소멸).</li>
+    <li><code>?v</code> 상향 &mdash; <code>app.js</code> 43 · <code>i18n.js</code> 24 · <code>style.css</code> 43.</li>
+</ul>
+
+<p class="scn-sub">캐시 자체는 그대로 최대 4시간 지연이다. 이건 GoatCounter 서버 안의 값이라 우리가 손댈 수 없고, 게다가 <code>GetStale</code> 방식이라 만료 후 첫 방문자는 여전히 옛 값을 받는다 &mdash; 트래픽이 뜸하면 체감 지연은 4시간을 넘는다. <code>visitsTitle</code>에 &ldquo;최대 4시간 지연&rdquo;을 남겨 둔 이유다.</p>
