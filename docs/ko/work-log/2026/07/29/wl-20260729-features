@@ -65,10 +65,3 @@
 </div>
 
 <p>ID를 받는 방식도 같은 이유로 바꿨다. 처음엔 &ldquo;Database ID를 찾아서 알려 주세요&rdquo;였는데 <strong>Account ID를 주셨고</strong>(대시보드 URL 앞자리라 눈에 먼저 띈다), 내가 &ldquo;그건 Account ID입니다&rdquo;라고 답했더니 <strong>&ldquo;id야&rdquo;</strong>라는 답이 돌아왔다 &mdash; 화면에서는 그것도 ID라고 부르니 당연하다. 말로 가려낼 일이 아니라서 <strong>&ldquo;주소창 URL을 통째로 보내 주세요, 제가 뽑아냅니다&rdquo;</strong>로 바꿨고 한 번에 끝났다(<code>&hellip;/d1/databases/165681cc-&hellip;/console</code>). <strong>사람에게 판별을 맡기지 말고 판별 가능한 원본을 달라고 하는 것</strong>이 옳았다.</p>
-
-<div class="note warn">
-    <span class="nh">CI가 안 도는 것을 GitHub 장애로 오독했다 &mdash; 실은 머지 충돌</span>
-    푸시해도 <code>validate</code>가 큐에 들어가지조차 않아 한참을 기다렸다. 같은 커밋에 <strong>Workers Builds는 정상 반응</strong>했으니 웹훅은 살아 있고 워크플로 파일도 그대로여서 GitHub 쪽 일시 장애로 결론지었는데, 틀렸다. 원인은 <strong>머지 충돌</strong>이었다 &mdash; <code>#366</code>이 먼저 머지되며 <code>worker/</code>가 양쪽에서 갈렸고, <code>pull_request</code> 이벤트는 GitHub이 <code>refs/pull/&lt;n&gt;/merge</code>를 만들 수 있어야 발동하므로 충돌 상태에서는 <strong>실패도 아니고 아예 발동하지 않는다</strong>. 브랜치 push에 걸리는 Workers Builds는 그 ref와 무관하니 정상으로 보인 것이고, 그 대비가 오히려 오독의 근거가 됐다.
-    <br><br>
-    <strong>&ldquo;체크가 없다&rdquo;와 &ldquo;체크가 실패했다&rdquo;는 다른 신호다.</strong> 아예 없을 때 먼저 볼 곳은 워크플로 파일이나 서비스 상태가 아니라 <strong>PR의 <code>mergeable_state</code></strong>였다 &mdash; 첫 조회에서 <code>dirty</code>로 이미 답이 나와 있었는데 <code>total_count: 0</code>만 보고 있었다.
-</div>
