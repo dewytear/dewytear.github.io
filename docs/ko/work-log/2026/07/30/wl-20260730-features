@@ -67,4 +67,30 @@
 
 <p><strong>검증</strong>(CDP로 Worker를 스텁): 세지 않는 환경 <code>GET /v1/counters?doc=kgs-edges</code> 1회 &middot; 세는 환경 <code>POST /v1/view {"doc":"kgs-edges"}</code> 1회 &middot; 조회수 <code>1,234</code> 로케일 서식 &middot; 상단 순서 <code>좋아요 &rarr; 조회 &rarr; 날짜</code> &middot; 좋아요 대상 문서 일치 &middot; 예외 0.</p>
 
+<h3>좋아요 버튼을 태그 구분선 앞으로</h3>
+
+<p>대표님이 <strong>&ldquo;좋아요의 위치가 TAGS 아래인데 일반적인 위치인 거야?&rdquo;</strong>라고 물으셨다. 두 안을 렌더해 보여 드리고 <strong>태그 앞</strong>으로 옮기는 쪽을 고르셨다.</p>
+
+<p>먼저 답부터 하면 <strong>어색한 위치는 아니었다.</strong> 관습은 둘로 갈린다 &mdash; 태그 다음에 반응 버튼(티스토리·네이버의 공감, Medium), 반응 버튼 다음에 태그(브런치, note의 스키 &rarr; 해시태그). 표준이랄 것이 없다.</p>
+
+<div class="note">
+    <span class="nh">근거는 관습이 아니라 우리 CSS였다</span>
+    <code>.doc-tags</code>는 <code>margin-top: 36px</code>에 <code>border-top</code>을 가진 <strong>구분선</strong>이다 &mdash; &ldquo;글이 여기서 끝난다&rdquo;고 선을 그은 것이다. 그 선 <strong>뒤</strong>에 버튼을 두면 글에도 속하지 않고 연관 문서에도 속하지 않는 회색지대에 뜬다. 옮기니 좋아요가 <strong>마지막 문장 바로 아래</strong>, 읽기를 마친 자리에 붙고 태그 선이 그 아래에서 글 전체를 닫는다. 좋아요는 다 읽은 사람에게 하는 요청이니 읽기가 끝나는 지점에 가까울수록 맞다.
+    <br><br>
+    반대 논리도 있었다 &mdash; A는 &ldquo;본문은 본문, 그 뒤는 부가물&rdquo;이라는 경계가 더 뚜렷하고, 평소 <code>opacity: .5</code>로 존재감을 낮춘 이 버튼은 구분선 밖이 어울린다고 볼 수도 있다. 그래서 <strong>글로만 설명하지 않고 둘 다 렌더해</strong> 고르게 했다(CLAUDE.md 소통 규칙).
+</div>
+
+<p><code>injectLikes</code>가 <code>art.appendChild(dock)</code> 대신 <code>.doc-tags</code> 앞에 <code>insertBefore</code>한다. <strong>태그가 없는 문서</strong>(워크로그 등)는 예전처럼 맨 끝에 붙는다 &mdash; 실렌더로 둘 다 확인했다(태그 문서: dock이 태그 앞 &middot; 워크로그: dock이 마지막 자식). 곁따라 dock이 <code>article.fade-in</code> <strong>안으로</strong> 들어가 본문 교체 때 자연히 함께 사라진다 &mdash; 앞서 고친 <code>data-doc</code> 가드는 그대로 두었다(두 겹이 손해될 것이 없다).</p>
+
+<h3>이관 결과와, 고치지 않기로 한 것</h3>
+
+<p>배포 후 <code>/v1/seed</code>를 한 번 열어 끝났다 &mdash; <strong>186편 확인, 조회수가 있는 56편 이관</strong>, 못 읽은 문서 0. 나머지 130편은 GoatCounter 수치가 실제로 0이라 심을 값이 없던 것이다. 배치 5회가 실패 없이 돌았다.</p>
+
+<div class="note">
+    <span class="nh">잘못 기록된 좋아요는 그대로 둔다</span>
+    가드 버그가 살아 있던 하루 동안, 문서를 옮긴 뒤 누른 좋아요는 <strong>직전 문서에 붙었다</strong>. 픽스는 앞으로의 동작만 고치므로 그 수치는 D1에 남아 있다. 정리 방법(D1 Console에서 특정 행 조정 또는 <code>likes</code> 초기화)을 제시했고 <strong>&ldquo;그냥 둬&rdquo;로 결정</strong>됐다.
+    <br><br>
+    설계 문서에 이미 적어 둔 태도와 같다 &mdash; <em>개인 위키의 좋아요는 부풀려져도 잃는 게 없다.</em> 시크릿창 우회를 막지 않기로 한 것과 같은 판단이고, 하루치 오차를 지우려 실제 사람이 누른 기록까지 날리는 것은 남는 장사가 아니다. <strong>기록해 두는 이유는 따로 있다</strong>: 훗날 수치를 비교하는 사람이 &ldquo;그때 정정했겠지&rdquo;라고 오해하지 않게 하는 것. 고치지 않은 것도 결정이고, 결정은 적어야 남는다.
+</div>
+
 <p class="scn-sub"><code>.doc-views</code>에 <code>[hidden]</code> 규칙이 없던 것도 이때 드러났다. 자리를 미리 만들고 숫자만 나중에 채우는 구조로 바꾸니 <code>display: inline-flex</code>가 UA의 <code>[hidden]{display:none}</code>을 눌러 &ldquo;조회: 0&rdquo;이 비쳤다 &mdash; <code>.doc-likes</code>·<code>.like-btn</code>은 같은 이유로 이미 그 규칙을 갖고 있었다. 사이드바 방문자 수를 뗄 때 지운 CSS 주석이 경고하던 바로 그 함정이다.</p>

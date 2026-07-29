@@ -1942,7 +1942,15 @@ function injectLikes(name){
                   + '<b class="lk-n">0</b>';
     btn.addEventListener('click', function(){ sendLike(name); });
     dock.appendChild(btn);
-    art.appendChild(dock);
+
+    // 태그 줄(`.doc-tags`) **앞**에 놓는다(2026-07-30 결정). 그 줄은
+    // `border-top`을 가진 구분선 — "글이 여기서 끝난다"는 선이다. 그 뒤에
+    // 두면 버튼이 글에도, 연관 문서에도 속하지 않는 자리에 뜬다. 좋아요는 다
+    // 읽은 사람에게 하는 요청이니 **마지막 문장 바로 아래**가 맞고, 태그 선이
+    // 그 아래에서 글 전체를 닫는다. 태그가 없는 문서는 예전처럼 맨 끝.
+    var tags = art.querySelector('.doc-tags');
+    if(tags && tags.parentNode){ tags.parentNode.insertBefore(dock, tags); }
+    else { art.appendChild(dock); }
 
     // 조회 기록과 두 숫자 읽기를 **한 요청으로** 합친다. `POST /v1/view`는 올린
     // 뒤의 행을 그대로 돌려주므로(`{doc, likes, views}`) 따로 읽을 이유가 없다 —
