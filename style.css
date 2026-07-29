@@ -1872,6 +1872,70 @@
         }
         .doc-views .dv-k{ opacity: .75; }
         .doc-views b{ font-weight: 600; }
+        /* 상단 메타의 좋아요 — **표시 전용**(누르는 곳은 본문 끝 필 버튼 하나).
+           조회수와 같은 무게로, 통계처럼 읽히게 둔다. `.on`은 이 브라우저가 이미
+           누른 글이라는 상태 표시. */
+        .doc-likes{
+            display: inline-flex;
+            align-items: baseline;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+        .doc-likes[hidden]{ display: none; }
+        .doc-likes svg{ width: 12px; height: 12px; transform: translateY(1.5px); }
+        .doc-likes b{ font-weight: 600; }
+        .doc-likes.on{ color: var(--accent-ink); }
+        .doc-likes.on svg{ fill: currentColor; stroke: currentColor; }
+
+        /* 좋아요 버튼 — 본문 끝, 연관 문서 위. 사이드바 도구·게임 도크와 같은
+           언어(반투명 필 + backdrop-blur, 평소엔 낮은 존재감·호버 시 깨어남). */
+        .like-dock{
+            display: flex;
+            justify-content: center;
+            margin: 26px 0 4px;
+        }
+        .like-btn{
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 15px 7px 13px;
+            background: color-mix(in srgb, var(--bg-alt) 72%, transparent);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            color: var(--muted);
+            font: 500 13px/1 inherit;
+            cursor: pointer;
+            opacity: .5;
+            transition: opacity .25s ease, color .2s ease, border-color .2s ease;
+        }
+        .like-btn[hidden]{ display: none; }
+        /* 탭 타깃을 44px로 — 필은 31px로 두고 **히트 영역만** 넓힌다. 상단 인라인을
+           버튼으로 만들지 않은 이유가 12px이 손가락에 너무 작다는 것이었으니,
+           정작 이 버튼이 31px이면 같은 잣대를 스스로 어기는 셈이다. 모양은 승인받은
+           그대로 두고 눌리는 범위만 키우는 것이 정답. */
+        .like-btn{ position: relative; }
+        .like-btn::after{
+            content: '';
+            position: absolute;
+            inset: -7px -6px;      /* 31 + 14 = 45px */
+        }
+        .like-btn:hover,
+        .like-btn:focus-visible{ opacity: 1; color: var(--text); }
+        .like-btn svg{ width: 15px; height: 15px; }
+        .like-btn b{ font-weight: 600; font-variant-numeric: tabular-nums; }
+        /* 누른 뒤 — disabled지만 흐려지지 않는다. "이미 눌렀다"는 상태이지
+           "쓸 수 없다"가 아니므로 accent로 또렷하게 남긴다. */
+        .like-btn.on{
+            opacity: 1;
+            color: var(--accent-ink);
+            border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+            cursor: default;
+        }
+        .like-btn.on svg{ fill: currentColor; stroke: currentColor; }
         /* Created/updated date line — small, muted; right-aligned when solo. */
         .doc-date{
             text-align: right;

@@ -38,3 +38,21 @@
     <span class="nh">첫 배포가 실패했다 &mdash; 원인은 내 쪽 순서였다</span>
     대표님이 저장소를 <strong>Workers Builds</strong>에 연결해(<code>npx wrangler deploy</code> · Root <code>/</code>) 배포를 걸었는데 Deploying 단계에서 실패했다. 원인은 명확하다 &mdash; <strong><code>worker/</code>가 아직 master에 없었다.</strong> 내 작업 브랜치에만 푸시하고 머지를 안 한 상태에서 Cloudflare가 master를 클론했으니 <code>wrangler.toml</code>을 찾을 수 없었다. &ldquo;URL만 주시면 켜집니다&rdquo;라고 말할 때 <strong>그 전에 머지가 필요하다는 것을 안 짚은 것이 누락</strong>이다. 덤으로 Workers Builds 경로에서는 대시보드 바인딩이 배포 때마다 덮여 쓰이므로 <strong>바인딩을 <code>wrangler.toml</code>에 적어야 한다</strong> &mdash; 안내서를 그 경로 기준으로 고쳤다.
 </div>
+
+<h3>좋아요 배선 — 필 버튼 + 상단 표시</h3>
+
+<p>디자인 시안 3안을 렌더해 보여 드렸고 대표님이 <strong>&ldquo;A와 C를 같이 운용하는 건 어때?&rdquo;</strong>로 답하셨다. 좋은 조합이라 받아들이되 한 가지를 조정했다 &mdash; <strong>A는 버튼, C는 표시 전용</strong>으로 나눴다. 상단 인라인은 12px이라 모바일 탭 타깃으로 너무 작고(권장 44px), 같은 동작에 누를 곳이 둘이면 &ldquo;어느 걸 눌러야 하나&rdquo;가 생긴다. 상단은 조회수 옆에서 통계처럼 읽히고(하트가 채워져 있으면 &ldquo;내가 누른 글&rdquo;이라는 상태 표시), 누르는 건 본문 끝 필 버튼 하나다. <strong>누르면 두 숫자가 함께 갱신된다</strong>(<code>paintLikes</code>가 두 곳을 동시에 그린다 &mdash; 한쪽만 갱신하면 숫자가 어긋난다).</p>
+
+<div class="note warn">
+    <span class="nh">내 잣대를 내가 어기고 있었다 &mdash; 탭 타깃 31px</span>
+    상단을 버튼으로 만들지 않은 근거가 &ldquo;12px은 손가락에 너무 작다&rdquo;였는데, 계측해 보니 <strong>정작 내가 만든 필 버튼이 31px</strong>이었다. 같은 잣대를 스스로 어긴 것이다. 승인받은 모양을 바꾸지 않고 <code>::after{ inset: -7px -6px }</code>로 <strong>히트 영역만 45px</strong>로 넓혔고, 필 바깥 5px을 클릭해도 좋아요가 발동하는 것을 헤드리스에서 확인했다.
+</div>
+
+<p><strong>검증은 Worker를 가로채서 했다.</strong> 샌드박스가 <code>workers.dev</code>에 못 닿으므로 Playwright <code>page.route</code>로 canned JSON을 주고 실제 클릭까지 돌렸다 &mdash; 밤·낮 두 테마에서 버튼 12&rarr;13, 상단 12&rarr;13 동시 갱신, <code>.on</code> 전환, <code>disabled</code>, <code>localStorage</code> 표식, <strong>pageerror 0</strong>, POST 정확히 1회.</p>
+
+<p><strong>실패는 조용하다</strong> &mdash; <code>LIKES_API</code>가 비었거나 fetch가 실패하면 버튼도 숫자도 아예 그리지 않는다(<code>hidden</code>). Worker가 죽어도 본문은 그대로 읽힌다. 이 계층은 장식이지 뼈대가 아니다.</p>
+
+<div class="note warn">
+    <span class="nh">Cloudflare 배포 두 번째 실패 &mdash; Root directory</span>
+    로그가 원인을 정확히 보여줬다. <code>wrangler deploy</code>가 <strong>저장소 루트</strong>에서 돌아 <code>wrangler.toml</code>을 못 찾자, wrangler의 <strong>자동설정</strong>이 끼어들어 저장소를 훑고 <em>&ldquo;Framework: Static / Build Command: npx hugo&rdquo;</em>라고 잘못 추측한 뒤 <code>npx hugo</code>를 실행했다 &mdash; 있지도 않은 명령이라 <code>npm error could not determine executable to run</code>. 우리 설정은 <code>worker/</code>에 있으니 <strong>Root directory를 <code>worker</code>로</strong> 두면 자동설정 자체가 발동하지 않는다. 안내서에 이미 적어 둔 항목인데 기본값 <code>/</code>가 남아 있었다.
+</div>

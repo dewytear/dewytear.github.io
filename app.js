@@ -562,6 +562,7 @@ function fetchPage(filename){
             // AI 연관 문서 추천 (knowledge-index.json). May arrive after
             // this render, so injectRelated re-runs when the index loads.
             injectDocViews(filename);
+            injectLikes(filename);
             injectDocDate(filename);
             injectRelations();
             injectRelated();
@@ -1881,6 +1882,125 @@ function injectDocViews(name){
                      + '<b>' + n.toLocaleString() + '</b>';
         right.insertBefore(el, right.querySelector('.doc-date'));
     });
+}
+
+// ---- 좋아요 (Cloudflare Worker + D1) ----
+// GitHub Pages는 정적이라 쓰기가 없다. 좋아요만을 위해 바깥에 아주 작은 쓰기
+// 계층을 둔다(소스·배포법은 저장소의 `worker/`).
+//
+// **비어 있으면 기능이 통째로 꺼진다** — 버튼도 숫자도 그리지 않는다. Worker가
+// 없거나 죽어도 위키 본문은 그대로 읽힌다. 이 계층은 장식이지 뼈대가 아니다.
+var LIKES_API = 'https://dewytear-wiki.youngjinkwak-5ee.workers.dev';
+// 화면은 둘, 누르는 곳은 하나 (2026-07-29 결정).
+//   ·본문 끝  `.like-dock` — 필 버튼. 다 읽은 자리에서 누른다
+//   ·상단 메타 `.doc-likes` — **표시 전용**. 조회수 옆의 통계처럼 읽힌다
+// 상단을 버튼으로 두지 않은 이유: 12px은 모바일 탭 타깃으로 너무 작고(권장 44px),
+// 같은 동작에 누를 곳이 둘이면 "어느 걸 눌러야 하나"가 생긴다.
+var LIKE_KEY = 'wiki.liked.';
+var LIKE_N = {};        // name → 서버가 준 마지막 좋아요 수
+
+function likedAlready(name){
+    // 중복 방지는 이 표식 하나뿐이다 — 서버는 누가 눌렀는지 저장하지 않는다.
+    // 그래서 시크릿창·다른 기기로는 우회된다. 알고 고른 한계다(worker/README.md).
+    try{ return localStorage.getItem(LIKE_KEY + name) === '1'; }catch(_){ return false; }
+}
+function markLiked(name){
+    try{ localStorage.setItem(LIKE_KEY + name, '1'); }catch(_){ /* 사파리 사생활 모드 등 */ }
+}
+
+/** 좋아요 수를 두 화면에 동시에 반영한다. 한쪽만 갱신하면 숫자가 어긋난다. */
+function paintLikes(name, n, liked){
+    if(CURRENT_DOC !== name){ return; }   // 그 사이 다른 문서로 갔다
+    LIKE_N[name] = n;
+    var btn = document.querySelector('.like-btn');
+    if(btn){
+        btn.querySelector('.lk-n').textContent = n.toLocaleString();
+        btn.classList.toggle('on', !!liked);
+        btn.disabled = !!liked;
+        btn.title = STR(liked ? 'likedTitle' : 'likeTitle');
+        btn.setAttribute('aria-pressed', liked ? 'true' : 'false');
+        btn.hidden = false;
+    }
+    var top = document.querySelector('.doc-likes');
+    if(top){
+        top.querySelector('b').textContent = n.toLocaleString();
+        top.classList.toggle('on', !!liked);
+        top.hidden = false;
+    }
+}
+
+function injectLikes(name){
+    if(!LIKES_API || !window.fetch){ return; }
+    var art = document.getElementById('article');
+    var right = art && art.querySelector('.doc-meta-r');
+    if(!art || art.querySelector('.like-dock')){ return; }
+
+    // 상단 표시 — 조회수 **앞**에 끼운다(좋아요·조회·날짜 순). `.doc-meta-r`은
+    // 오른쪽 정렬 그룹이라 늦게 도착한 숫자가 날짜를 밀지 않는다.
+    if(right && !right.querySelector('.doc-likes')){
+        var top = document.createElement('span');
+        top.className = 'doc-likes';
+        top.hidden = true;                       // 숫자가 오기 전엔 자리도 차지하지 않는다
+        top.title = STR('likesTitle');
+        top.innerHTML = likeHeartSVG() + '<b>0</b>';
+        right.insertBefore(top, right.querySelector('.doc-views') || right.firstChild);
+    }
+
+    // 본문 끝 버튼 — 연관 문서보다 위. injectRelated가 append하므로 여기서 먼저
+    // 붙이면 자연히 그 앞에 온다.
+    var dock = document.createElement('div');
+    dock.className = 'like-dock';
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'like-btn';
+    btn.hidden = true;
+    btn.innerHTML = likeHeartSVG()
+                  + '<span class="lk-k">' + escapeHtml(STR('like')) + '</span>'
+                  + '<b class="lk-n">0</b>';
+    btn.addEventListener('click', function(){ sendLike(name); });
+    dock.appendChild(btn);
+    art.appendChild(dock);
+
+    fetch(LIKES_API + '/v1/counters?doc=' + encodeURIComponent(name), { cache: 'no-store' })
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+            if(!j || typeof j.likes !== 'number'){ return; }
+            paintLikes(name, j.likes, likedAlready(name));
+        })
+        .catch(function(e){
+            // 화면에는 아무것도 띄우지 않되(방문자에게 보일 오류가 아니다),
+            // 왜 안 뜨는지 확인할 단서는 콘솔에 남긴다.
+            try{ console.warn('[likes] ' + e); }catch(_){}
+        });
+}
+
+function sendLike(name){
+    if(likedAlready(name)){ return; }
+    // 낙관적 갱신 — 눌렀는데 아무 반응이 없으면 두 번 누른다. 표식을 먼저 심어
+    // 연타를 막고, 서버 응답이 오면 그 값으로 덮는다.
+    markLiked(name);
+    paintLikes(name, (LIKE_N[name] || 0) + 1, true);
+    fetch(LIKES_API + '/v1/like', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ doc: name }),
+    })
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+            if(j && typeof j.likes === 'number'){ paintLikes(name, j.likes, true); }
+        })
+        .catch(function(e){
+            // 실패해도 표식은 남긴다 — 안 되는 버튼을 계속 누르게 하는 것보다,
+            // 이 브라우저에서 조용히 끝나는 편이 낫다.
+            try{ console.warn('[likes] ' + e); }catch(_){}
+        });
+}
+
+/** 테마를 따르는 단색 스트로크 하트 — 채워짐은 CSS(.on)가 담당한다. */
+function likeHeartSVG(){
+    return '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor"'
+         + ' stroke-width="1.7" stroke-linejoin="round">'
+         + '<path d="M12 20.5 4.4 13a4.6 4.6 0 1 1 7.6-5 4.6 4.6 0 1 1 7.6 5Z"/></svg>';
 }
 
 // ---- 화면 제목 (탭·북마크·공유) ----
