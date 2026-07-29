@@ -1,0 +1,22 @@
+# 내위키 좋아요·조회수 Worker
+#
+# 배포 (대표님 로컬에서):
+#   npm i -g wrangler && wrangler login
+#   wrangler d1 create dewytear-wiki           # → database_id를 아래에 붙여넣기
+#   wrangler d1 execute dewytear-wiki --remote --file=./schema.sql
+#   wrangler deploy
+#
+# 배포가 끝나면 나오는 URL(https://<name>.<계정>.workers.dev)만 알려 주시면
+# app.js의 LIKES_API에 넣습니다. **API 토큰은 알려주지 마세요** — 필요 없습니다.
+name = "dewytear-wiki"
+main = "index.js"
+compatibility_date = "2026-07-01"
+
+[[d1_databases]]
+binding = "DB"                 # index.js의 env.DB
+database_name = "dewytear-wiki"
+database_id = "PUT-YOUR-D1-DATABASE-ID-HERE"
+
+# 관측: 무료 플랜에서도 실시간 로그(wrangler tail)와 대시보드 지표를 볼 수 있다.
+[observability]
+enabled = true
