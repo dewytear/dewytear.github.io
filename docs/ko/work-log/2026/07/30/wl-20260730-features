@@ -30,4 +30,41 @@
     순수 삭제라 <strong>새로 생긴 시각 요소가 없다</strong>는 점이 이 타협의 근거다. 새 컴포넌트였다면 계측으로 갈음하지 않았다.
 </div>
 
-<p class="scn-sub">좋아요·조회수 현황을 함께 적어 둔다. <strong>좋아요는 Worker(D1)에 배선됐고</strong>, <strong>조회수는 아직 GoatCounter</strong>다 &mdash; <code>/v1/view</code> 엔드포인트는 있지만 호출하는 코드가 없다. 갈아타려면 <code>worker/seed_views.py</code>로 <code>base</code> 열을 이관해야 하고(안 하면 모든 문서가 0으로 리셋된 것처럼 보인다) 그건 별도 주제다.</p>
+<h3>조회수도 Worker로 옮겼다</h3>
+
+<p>&ldquo;조회수도 옮겨가는 게 좋지 않아?&rdquo;라는 물음에 동의했다. 근거가 셋이다. ①GoatCounter의 <code>/counter/</code> 응답은 서버에서 4시간 캐시되고 <code>GetStale</code>이라 만료 후 첫 방문자는 여전히 옛 값을 받는다 &mdash; 트래픽이 뜸하면 체감 지연이 4시간을 넘는다. ②차단기가 goatcounter.com을 막으면 숫자를 <strong>아예 못 그린다</strong>. ③<code>/v1/counters</code>가 <strong>이미</strong> <code>views: row.views + row.base</code>를 돌려주고 있었다 &mdash; 클라이언트는 필요한 값을 받고도 버리고 GoatCounter를 한 번 더 읽고 있었다.</p>
+
+<div class="note">
+    <span class="nh">요청이 둘에서 하나로 줄었다</span>
+    <code>POST /v1/view</code>는 올린 뒤의 행을 그대로 돌려준다(<code>{doc, likes, views}</code>). 그래서 &ldquo;조회를 센다&rdquo;와 &ldquo;두 숫자를 읽는다&rdquo;를 <strong>한 요청으로 합쳤다</strong> &mdash; 예전에는 GoatCounter 읽기 + Worker 읽기로 둘이었다. 부수 효과가 더 중요하다: <strong>읽는 사람 자신의 방문이 화면 숫자에 곧바로 포함된다.</strong> 세지 않는 환경에서는 <code>GET /v1/counters</code>로 읽기만 한다.
+</div>
+
+<div class="note warn">
+    <span class="nh">봇 걸러내기가 우리 몫으로 넘어왔다 &mdash; 그리고 첫 봇은 우리 CI였다</span>
+    좋아요는 사람이 눌러야 오르지만 조회수는 페이지가 열리면 자동으로 오른다. GoatCounter가 서버에서 해 주던 봇 걸러내기가 옮겨오는 순간 우리 책임이 된다. 남의 크롤러보다 먼저 걸러야 할 것이 <strong>우리 CI</strong>였다 &mdash; <code>i18n-render</code>가 44화면, <code>diagram-bounds</code>가 도식 문서 전부를 <strong>실제 Chrome</strong>으로 연다. 막지 않으면 <strong>PR마다 조회수가 올랐다.</strong>
+    <br><br>
+    그물을 둘 뒀다. ①클라이언트가 <code>location.hostname</code>이 프로덕션일 때만 보낸다(애초에 보내지 않는 것이 첫 번째다 &mdash; 요청도 아끼고 의도도 분명하다). ②Worker가 UA로 봇을 거른다. 거를 때 <strong>400이 아니라 현재 수치를 그대로 돌려준다</strong> &mdash; 봇에게 오류를 주면 재시도를 부르고, 사람 쪽 클라이언트와 응답 모양이 갈라지면 배선이 복잡해진다. UA는 자칭이라 작정한 봇은 못 막는다(알려진 한계).
+</div>
+
+<h3>이관을 사람에게 미루지 않았다</h3>
+
+<p>원래 설계는 <code>worker/seed_views.py</code>를 로컬에서 돌려 SQL을 붙여넣는 것이었다. 그런데 AI 작업 샌드박스는 프록시가 goatcounter.com을 막아(<code>CONNECT tunnel failed, 403</code>) 그 스크립트를 <strong>내가 돌릴 수 없다</strong>. 남는 건 &ldquo;PC에 Python과 wrangler를 갖추고 로그인하세요&rdquo;인데, 그건 <a href="#work-log/2026/07/30/wl-20260730-ops">전날 이 로그의 짝</a>에서 &ldquo;설계가 사람에게 일을 미룬 것&rdquo;이라고 적어 둔 모양 그대로다. <strong>Cloudflare에는 네트워크 제약이 없으니 거기서 하는 것이 맞다</strong> &mdash; Worker에 <code>GET /v1/seed</code>를 뒀다. 주소 하나를 열면 진행 상황이 보이고 끝난다.</p>
+
+<ul>
+    <li><strong>멱등하다</strong> &mdash; <code>ON CONFLICT … WHERE counters.base = 0</code>이 전부다. 여러 번 열어도 수치가 겹쳐 오르지 않는다.</li>
+    <li><strong>비밀키를 두지 않았다</strong> &mdash; 쓰는 값은 공개 카운터이고 쓰는 조건은 <code>base = 0</code>뿐이라, 누가 호출해도 결과는 참값 한 번 심기다. 지킬 것이 없는 곳의 자물쇠는 자물쇠 관리가 새 위험이 된다.</li>
+    <li><strong>배치로 나눴다</strong> &mdash; 무료 플랜은 요청당 서브리퀘스트 50개가 상한인데 문서가 180편이 넘는다. 40편씩 끊고 페이지가 스스로 이어 호출한다. 문서 목록은 Worker가 위키의 <code>doc-dates.json</code>에서 읽어 심어 준다(브라우저에서 읽으면 크로스오리진이라 사이트 CORS 설정에 매인다).</li>
+</ul>
+
+<div class="note warn">
+    <span class="nh">검증하다 어제 머지한 버그를 찾았다 &mdash; 좋아요가 엉뚱한 문서에 붙었다</span>
+    조회수 배선을 헤드리스로 확인하는 중에 상단 좋아요 칩이 <strong>두 번째 문서부터 안 보이는</strong> 것을 발견했다. master로 갈라 보니 <strong>내 변경 탓이 아니라 어제 머지한 <code>#367</code>에 있던 버그</strong>였고, 파 보니 더 나빴다: <code>kgs-edges</code>를 읽는 중에 좋아요를 누르면 <code>{"doc":"kgs-overview"}</code>가 갔다. <strong>첫 이동 이후의 모든 좋아요가 직전 문서에 붙고 있었다.</strong>
+    <br><br>
+    원인은 가드 한 줄이다. <code>.like-dock</code>은 <code>#article</code>의 <strong>직계 자식</strong>이라 본문 교체를 살아남는데, 가드가 &ldquo;dock이 있으면 그만&rdquo;이었다. 그래서 <code>injectLikes</code>가 조기 반환하고, 살아남은 버튼의 <strong>클로저가 옛 문서 이름을 붙들었다</strong>(칩이 안 그려진 것은 같은 조기 반환의 다른 증상이었다). 가드가 <strong>문서를 알아야</strong> 했다 &mdash; <code>data-doc</code>을 달고 같은 문서면 두고 다른 문서면 걷어낸 뒤 다시 짠다.
+    <br><br>
+    <strong>어제의 검증이 한 문서만 봤다.</strong> 클릭·낙관적 갱신·두 숫자 동기화·히트 영역까지 계측했는데 <strong>문서를 옮긴 뒤</strong>를 보지 않았다. 해시 라우팅 SPA에서 &ldquo;문서를 옮긴 뒤&rdquo;는 특수한 경로가 아니라 <strong>가장 흔한 경로</strong>다 &mdash; 첫 진입만 보는 검증은 실사용의 소수 사례를 본 것이었다.
+</div>
+
+<p><strong>검증</strong>(CDP로 Worker를 스텁): 세지 않는 환경 <code>GET /v1/counters?doc=kgs-edges</code> 1회 &middot; 세는 환경 <code>POST /v1/view {"doc":"kgs-edges"}</code> 1회 &middot; 조회수 <code>1,234</code> 로케일 서식 &middot; 상단 순서 <code>좋아요 &rarr; 조회 &rarr; 날짜</code> &middot; 좋아요 대상 문서 일치 &middot; 예외 0.</p>
+
+<p class="scn-sub"><code>.doc-views</code>에 <code>[hidden]</code> 규칙이 없던 것도 이때 드러났다. 자리를 미리 만들고 숫자만 나중에 채우는 구조로 바꾸니 <code>display: inline-flex</code>가 UA의 <code>[hidden]{display:none}</code>을 눌러 &ldquo;조회: 0&rdquo;이 비쳤다 &mdash; <code>.doc-likes</code>·<code>.like-btn</code>은 같은 이유로 이미 그 규칙을 갖고 있었다. 사이드바 방문자 수를 뗄 때 지운 CSS 주석이 경고하던 바로 그 함정이다.</p>

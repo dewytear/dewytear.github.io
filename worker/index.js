@@ -7,7 +7,9 @@
  *   GET  /v1/counters?doc=<name>          → { doc, likes, views }
  *   GET  /v1/totals                       → { likes, docs }   사이트 합계
  *   POST /v1/like     { "doc": "<name>" } → { doc, likes, views }
- *   POST /v1/view     { "doc": "<name>" } → { doc, likes, views }
+ *   POST /v1/view     { "doc": "<name>" } → { doc, likes, views }   봇 UA는 세지 않음
+ *   GET  /v1/seed                          조회수 이관 화면 (일회성, 멱등)
+ *   POST /v1/seed     { "docs": [...] }  → { ok, done, seeded, failed }
  *
  * 배포본: https://dewytear-wiki.youngjinkwak-5ee.workers.dev
  *   D1 `dewytear-wiki` (165681cc-…) 바인딩 `DB`. 설정은 저장소 맨 위 wrangler.toml —
@@ -39,6 +41,19 @@ const ALLOWED_ORIGINS = [
 // list의 논리 ID 규칙 — 소문자·숫자·하이픈. 여기서 걸러 두면 D1에 임의 키가
 // 쌓이지 않는다(무료 한도 5GB는 넉넉하지만, 쓰레기가 섞이면 수치를 못 믿는다).
 const DOC_RE = /^[a-z0-9][a-z0-9-]{0,63}$/;
+
+// 봇 걸러내기 — **조회수에만** 적용한다.
+//
+// 좋아요는 사람이 눌러야 오르지만 조회수는 페이지가 열리면 자동으로 오른다.
+// 그래서 봇이 곧바로 수치를 부풀린다. GoatCounter는 이 걸러내기를 서버에서
+// 해 주고 있었고, 조회수를 이 Worker로 가져오는 순간 그 책임도 함께 온다.
+//
+// UA는 자칭이라 작정한 봇은 못 막는다 — 그건 이 방어의 알려진 한계이고,
+// 좋아요의 중복 방지와 같은 태도다(막을 수 있는 값싼 것부터 막는다).
+// `headless`가 목록에 있는 이유는 남의 봇이 아니라 **우리 CI**다:
+// i18n-render가 44화면, diagram-bounds가 도식 문서 전부를 실제 Chrome으로
+// 여니, 막지 않으면 PR마다 조회수가 오른다.
+const BOT_RE = /bot|crawl|spider|slurp|headless|preview|scrape|monitor|curl|wget|python|node-fetch|lighthouse|pingdom/i;
 
 // 아이솔레이트 메모리 스로틀 — IP당 이 창 안에서 최대 N번. 저장하지 않는다.
 const THROTTLE_WINDOW_MS = 10_000;
@@ -111,6 +126,126 @@ async function bump(db, doc, col) {
     return read(db, doc);
 }
 
+// ── 조회수 이관 (일회성) ──────────────────────────────────────────────
+//
+// **왜 Worker가 하나.** 이관은 GoatCounter의 문서별 수치를 `base`에 심는
+// 일이고, 원래 설계는 `worker/seed_views.py`를 사람이 로컬에서 돌려 SQL을
+// 붙여넣는 것이었다. 그런데 AI 작업 샌드박스는 프록시가 goatcounter.com을
+// 막아 그 스크립트를 돌릴 수 없고, 그러면 남는 건 "대표님 PC에 Python과
+// wrangler를 갖추고 로그인하세요"다 — 설계가 사람에게 일을 미루는 모양이다.
+// Cloudflare에는 네트워크 제약이 없으니 **여기서 하는 것이 맞다.**
+//
+// **비밀키가 없는 이유.** 이 엔드포인트가 쓰는 값은 GoatCounter의 공개
+// 카운터이고, 쓰는 조건은 `base = 0`(아직 이관되지 않은 행)뿐이다. 즉 누가
+// 호출해도 결과는 **참값 한 번 심기**이고 두 번 호출해도 달라지지 않는다.
+// 지킬 것이 없는 곳에 자물쇠를 달면 자물쇠 관리가 새 위험이 된다.
+//
+// 이관이 끝나면 이 절은 지워도 된다. 남겨 두어도 하는 일이 없다.
+const GC_HOST = 'https://dewytear.goatcounter.com';
+
+// 무료 플랜은 **요청당 서브리퀘스트 50개**가 상한이다. 문서가 180편이 넘으니
+// 한 번에 다 돌 수 없어 배치로 나눈다(페이지가 스스로 이어서 호출한다).
+const SEED_BATCH = 40;
+
+/** 문서 목록의 정본은 위키다 — doc-dates.json이 list에서 생성된 전체 문서다. */
+const DOC_LIST_URL = 'https://dewytear.github.io/data/doc-dates.json';
+
+async function seedBatch(db, request, origin) {
+    let docs = [];
+    try { docs = (await request.json()).docs || []; } catch (_) { /* 아래서 걸린다 */ }
+    docs = docs.filter((d) => typeof d === 'string' && DOC_RE.test(d)).slice(0, SEED_BATCH);
+    if (!docs.length) return json({ error: 'docs' }, origin, 400);
+
+    const seeded = [];
+    const failed = [];
+    await Promise.all(docs.map(async (doc) => {
+        let n = null;
+        try {
+            const r = await fetch(`${GC_HOST}/counter/${encodeURIComponent(doc)}.json`);
+            // 집계 0건은 404로 오지만 본문은 정상 JSON이라 상태코드는 보지 않는다.
+            const j = await r.json();
+            // count는 자릿수 구분자(가는 공백·쉼표)가 섞인 문자열이다.
+            const parsed = parseInt(String((j && j.count) || '').replace(/\D/g, ''), 10);
+            n = isNaN(parsed) ? null : parsed;
+        } catch (_) { n = null; }
+        if (n === null) { failed.push(doc); return; }
+        // `WHERE base = 0`이 멱등성의 전부다 — 이미 이관된 행은 건드리지 않으니
+        // 여러 번 호출해도 수치가 겹쳐 오르지 않는다.
+        await db.prepare(
+            `INSERT INTO counters (doc, base) VALUES (?, ?)
+             ON CONFLICT(doc) DO UPDATE SET base = excluded.base WHERE counters.base = 0`
+        ).bind(doc, n).run();
+        if (n > 0) seeded.push(doc);
+    }));
+    return json({ ok: true, done: docs.length, seeded: seeded.length, failed }, origin);
+}
+
+/**
+ * 한 번 열면 끝나는 이관 화면. 문서 목록은 Worker가 위키에서 읽어 심어 두고
+ * (브라우저에서 읽으면 크로스오리진이라 사이트 CORS 설정에 매인다),
+ * 배치 호출은 이 페이지의 스크립트가 순서대로 이어 간다.
+ */
+async function seedPage(origin) {
+    let names = [];
+    let err = '';
+    try {
+        const r = await fetch(DOC_LIST_URL);
+        const j = await r.json();
+        names = Object.keys((j && j.docs) || {}).filter((d) => DOC_RE.test(d));
+    } catch (e) { err = String(e); }
+
+    const head = '<!doctype html><meta charset="utf-8"><title>조회수 이관</title>'
+        + '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        + '<style>body{font:15px/1.7 -apple-system,BlinkMacSystemFont,"Pretendard",sans-serif;'
+        + 'max-width:34rem;margin:12vh auto;padding:0 1.2rem;background:#212a3a;color:#e8ecf3}'
+        + 'b{color:#7fd1c1}code{background:#2b3648;padding:.1em .4em;border-radius:4px}'
+        + '#log{white-space:pre-wrap;color:#9aa7bd;font-size:13px;margin-top:1rem}</style>';
+
+    if (!names.length) {
+        return new Response(
+            `${head}<h1>조회수 이관</h1><p>문서 목록을 읽지 못했습니다.</p><p><code>${esc(err)}</code></p>`,
+            { status: 500, headers: { 'Content-Type': 'text/html; charset=utf-8', ...cors(origin) } },
+        );
+    }
+
+    const body = `${head}<h1>조회수 이관</h1>
+<p>GoatCounter의 문서별 조회수를 D1의 <code>base</code>로 옮깁니다.
+문서 <b>${names.length}편</b>. 이미 옮겨진 문서는 건너뛰므로 <b>여러 번 열어도 안전</b>합니다.</p>
+<p id="st">시작합니다…</p><div id="log"></div>
+<script>
+const NAMES = ${JSON.stringify(names)}, SIZE = ${SEED_BATCH};
+const st = document.getElementById('st'), log = document.getElementById('log');
+let done = 0, seeded = 0, failed = [];
+(async () => {
+  for (let i = 0; i < NAMES.length; i += SIZE) {
+    const docs = NAMES.slice(i, i + SIZE);
+    st.textContent = '이관 중… ' + done + ' / ' + NAMES.length;
+    try {
+      const r = await fetch('/v1/seed', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ docs }),
+      });
+      const j = await r.json();
+      if (!j.ok) throw new Error(j.error || 'unknown');
+      done += j.done; seeded += j.seeded; failed = failed.concat(j.failed || []);
+    } catch (e) {
+      log.textContent += '배치 실패: ' + e + '\\n';
+      done += docs.length; failed = failed.concat(docs);
+    }
+  }
+  st.innerHTML = '<b>완료</b> — ' + done + '편 확인, 조회수가 있는 ' + seeded + '편을 옮겼습니다.';
+  if (failed.length) log.textContent += '못 읽은 문서 ' + failed.length + '편: ' + failed.join(', ');
+})();
+</script>`;
+    return new Response(body, {
+        headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', ...cors(origin) },
+    });
+}
+
+function esc(s) {
+    return String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
+
 export default {
     async fetch(request, env) {
         const origin = request.headers.get('Origin') || '';
@@ -122,7 +257,9 @@ export default {
         // 브라우저에서 오는 요청은 Origin이 있어야 하고 허용목록에 있어야 한다.
         // (Origin 없는 요청 — curl 등 — 은 막지 않는다. 막아 봐야 헤더 한 줄이라
         //  보안이 되지 못하고, 정직하게 "못 막는다"고 적어 두는 편이 낫다.)
-        if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+        // 같은 오리진(이 Worker가 스스로 낸 /v1/seed 페이지)은 언제나 허용한다 —
+        // 브라우저는 same-origin POST에도 Origin을 실어 보내므로 명시해야 한다.
+        if (origin && origin !== url.origin && !ALLOWED_ORIGINS.includes(origin)) {
             return json({ error: 'origin' }, origin, 403);
         }
 
@@ -155,7 +292,19 @@ export default {
                 try { doc = (await request.json()).doc || ''; } catch (_) { /* 아래서 걸린다 */ }
                 if (!DOC_RE.test(doc)) return json({ error: 'doc' }, origin, 400);
                 const col = url.pathname === '/v1/like' ? 'likes' : 'views';
+                // 봇은 조회수만 올리지 못하게 한다. 400이 아니라 **현재 수치를
+                // 그대로 돌려준다** — 봇에게 오류를 주면 재시도를 부르고, 사람이
+                // 쓰는 클라이언트와 응답 모양이 달라지면 배선이 복잡해진다.
+                if (col === 'views' && BOT_RE.test(request.headers.get('User-Agent') || '')) {
+                    return json(await read(db, doc), origin);
+                }
                 return json(await bump(db, doc, col), origin);
+            }
+
+            // 조회수 이관 (일회성). 자세한 사정은 파일 아래쪽 seed 절에.
+            if (url.pathname === '/v1/seed') {
+                if (request.method === 'GET') return seedPage(origin);
+                if (request.method === 'POST') return seedBatch(db, request, origin);
             }
 
             return json({ error: 'not-found' }, origin, 404);

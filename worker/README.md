@@ -139,19 +139,49 @@ wrangler deploy                                  # 끝에 나오는 URL을 알�
 0으로 리셋된 것처럼 보인다.** 2026년 7월부터 쌓인 수치를 `base` 열에 심어 두고
 그 위로 Worker가 증가분을 더하면 숫자가 이어진다.
 
-```bash
-python3 worker/seed_views.py > seed.sql          # GoatCounter를 읽어 SQL 생성
+### 하실 일 — 주소 하나 열기
+
+```
+https://dewytear-wiki.youngjinkwak-5ee.workers.dev/v1/seed
 ```
 
-만들어진 `seed.sql`을 **D1 Console에 붙여넣거나** 아래로 실행한다:
+열면 진행 상황이 보이고 `완료 — n편 확인`으로 끝난다. **여러 번 열어도 안전하다** —
+이미 옮겨진 문서(`base > 0`)는 건너뛰므로 수치가 겹쳐 오르지 않는다.
+
+설치할 것도, 붙여넣을 것도 없다. **Worker가 스스로 GoatCounter를 읽는다** —
+이관은 원래 아래 `seed_views.py`를 사람이 로컬에서 돌려 SQL을 붙여넣는 설계였는데,
+그러려면 Python·wrangler·로그인이 필요했다. Cloudflare에는 네트워크 제약이 없으니
+거기서 하는 것이 맞다(AI 작업 샌드박스는 프록시가 goatcounter.com을 막아 애초에
+그 스크립트를 돌릴 수 없다는 점도 있다).
+
+비밀키를 두지 않은 이유: 이 엔드포인트가 쓰는 값은 **공개** 카운터이고 쓰는
+조건은 `base = 0`뿐이다. 누가 호출해도 결과는 참값 한 번 심기이므로 지킬 것이
+없다 — 없는 자물쇠를 달면 자물쇠 관리가 새 위험이 된다.
+
+### 대안 — 로컬에서 (wrangler가 이미 있다면)
 
 ```bash
+python3 worker/seed_views.py > seed.sql          # GoatCounter를 읽어 SQL 생성
 wrangler d1 execute dewytear-wiki --remote --file=./seed.sql
 ```
 
 `/counter/<path>.json`은 토큰 없이 읽히는 공개 엔드포인트다. 다만 그 응답도
-서버에서 최대 4시간 캐시되므로 여기서 얻는 값은 이관 시점 기준 최대 4시간 이전
-수치다 — 한 번 심고 마는 시작값이라 그 정도 오차는 문제가 되지 않는다.
+서버에서 최대 4시간 캐시되므로 두 방법 모두 이관 시점 기준 최대 4시간 이전
+수치를 얻는다 — 한 번 심고 마는 시작값이라 그 정도 오차는 문제가 되지 않는다.
+
+### 봇은 세지 않는다
+
+조회수는 페이지가 열리면 자동으로 오르니 좋아요와 달리 **봇이 곧바로 수치를
+부풀린다.** GoatCounter가 서버에서 해 주던 걸러내기가 이제 우리 몫이다:
+
+- Worker가 `User-Agent`로 봇을 거른다(`bot|crawl|spider|headless|…`). 400을 주지
+  않고 **현재 수치를 그대로 돌려준다** — 오류는 재시도를 부른다.
+- 클라이언트는 `location.hostname`이 프로덕션일 때만 보낸다. 이쪽이 첫 그물이고,
+  막는 대상은 남의 봇이 아니라 **우리 CI**다(`i18n-render` 44화면,
+  `diagram-bounds` 도식 문서 전부를 실제 Chrome으로 연다).
+
+UA는 자칭이라 작정한 봇은 못 막는다. 좋아요의 중복 방지와 같은 태도다 —
+값싸게 막을 수 있는 것까지만 막고, 한계는 적어 둔다.
 
 ---
 
