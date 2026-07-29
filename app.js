@@ -1845,20 +1845,20 @@ function gcCount(path, start){
     return GC_COUNTS[url];
 }
 
-// 사이드바 푸터: "오늘 n · 전체 n". 오늘의 경계는 **UTC** — 집계 쪽 합계가
-// UTC 기준(SiteTotalUTC)이라 같은 기준으로 물어야 숫자가 어긋나지 않는다.
+// 사이드바 푸터: "전체 n". **누적만** 보여 준다(2026-07-29 결정).
+// 예전에는 "오늘 n · 전체 n"이었는데 오늘의 경계를 UTC로 둘 수밖에 없었다 —
+// `/counter/`의 `start`가 `time.Parse("2006-01-02")`로만 파싱돼 UTC 자정 고정이고
+// 시각 단위를 못 받는다. 그래서 한국에서 보면 "오늘"이 **09:00 KST에 초기화**되는
+// 이상한 숫자였고, 거기에 서버 4시간 캐시까지 얹혀 오전 내내 0에 가깝게 보였다.
+// 고칠 수 없는 축이라 **떼는 것이 정직하다**. 누적은 경계 문제가 없다.
 function renderVisitCounter(){
     var box = document.getElementById('visit-counter');
     if(!box || !window.fetch){ return; }
-    var today = new Date().toISOString().slice(0, 10);
-    Promise.all([gcCount('TOTAL', today), gcCount('TOTAL', '')]).then(function(r){
-        if(r[1] === null){ return; }   // 전체조차 못 읽으면 그대로 숨겨 둔다
+    gcCount('TOTAL', '').then(function(n){
+        if(n === null){ return; }   // 못 읽으면 그대로 숨겨 둔다
         box.innerHTML =
-              '<span class="vc-k">' + escapeHtml(STR('visitsToday')) + '</span>'
-            + '<b>' + (r[0] === null ? '–' : r[0].toLocaleString()) + '</b>'
-            + '<span class="vc-sep">·</span>'
-            + '<span class="vc-k">' + escapeHtml(STR('visitsTotal')) + '</span>'
-            + '<b>' + r[1].toLocaleString() + '</b>';
+              '<span class="vc-k">' + escapeHtml(STR('visitsTotal')) + '</span>'
+            + '<b>' + n.toLocaleString() + '</b>';
         box.title = STR('visitsTitle');
         box.hidden = false;
     });
