@@ -15,3 +15,26 @@
 </ul>
 
 <p class="scn-sub">캐시 자체는 그대로 최대 4시간 지연이다. 이건 GoatCounter 서버 안의 값이라 우리가 손댈 수 없고, 게다가 <code>GetStale</code> 방식이라 만료 후 첫 방문자는 여전히 옛 값을 받는다 &mdash; 트래픽이 뜸하면 체감 지연은 4시간을 넘는다. <code>visitsTitle</code>에 &ldquo;최대 4시간 지연&rdquo;을 남겨 둔 이유다.</p>
+
+<h3>좋아요·조회수 — Worker(쓰기 계층) 도입</h3>
+
+<p>대표님이 <a href="https://blog.neocode24.com/blog/" target="_blank" rel="noopener">정적 블로그에 동적 기능을 얹는 사례</a>를 가져오시며 <strong>좋아요와 조회수</strong>를 원하셨다. GitHub Pages는 정적이라 쓰기가 없으니, 바깥에 아주 작은 쓰기 계층(Cloudflare Workers + D1)을 둔다. 변경 유형: <strong>ENGINE + TOOL</strong>. 이 절은 <strong>서버 코드와 안내서까지</strong>이고 클라이언트 배선은 다음 단계다.</p>
+
+<div class="note">
+    <span class="nh">KV가 아니라 D1을 골랐다</span>
+    이런 사례 글은 대개 Workers + <strong>KV</strong>를 쓰는데, 카운터에는 KV가 틀린 선택이다. ①무료 쓰기 한도가 <strong>KV 1,000/일 vs D1 100,000행/일</strong>인데 조회수는 페이지뷰마다 쓰기 1회다. ②더 나쁜 건 KV가 <strong>읽고&rarr;더하고&rarr;쓰는</strong> 왕복이라 그 사이에 낀 요청이 <strong>조용히 유실</strong>된다는 점이다. D1은 <code>ON CONFLICT DO UPDATE SET n = n + 1</code> 한 문장으로 원자적이다. 좋아요만이면 KV로도 됐지만 조회수까지 하면 D1이 맞다.
+</div>
+
+<p><strong>API</strong>: <code>GET /v1/counters?doc=</code> · <code>GET /v1/totals</code> · <code>POST /v1/like</code> · <code>POST /v1/view</code>. <code>/v1/totals</code>는 대표님이 <strong>&ldquo;전체 방문자의 좋아요 집계는 어떻게 하나&rdquo;</strong>고 물으신 데서 나왔다 &mdash; 답은 <strong>서버가 이미 하고 있다</strong>는 것이다. localStorage는 합계를 갖고 있지 않고 &ldquo;이 브라우저가 눌렀나&rdquo;만 기억하며, 숫자는 D1의 공유 행 하나에 쌓인다. 그 열 자체가 모든 방문자의 클릭 합계이고, <code>SUM(likes)</code>로 사이트 합계도 바로 나온다.</p>
+
+<div class="note warn">
+    <span class="nh">중복 방지는 localStorage만 &mdash; 알고 고른 한계</span>
+    서버는 누가 눌렀는지 <strong>저장하지 않는다</strong>(IP·해시·쿠키 전부 없음). 그래서 <strong>시크릿창·다른 기기는 우회되고, 작정한 <code>curl</code>은 못 막는다.</strong> 개인 위키의 좋아요는 부풀려져도 잃는 게 없고, 대신 &ldquo;쿠키·개인정보 수집 없음&rdquo;이라는 약속을 그대로 지킬 수 있다. 방어는 그 약속을 깨지 않는 선까지만 &mdash; Origin 허용목록, 문서 이름 정규식, 그리고 <strong>어디에도 쓰지 않는</strong> 아이솔레이트 메모리 스로틀. 소스와 안내서에 한계로 명시했다.
+</div>
+
+<p><code>base</code> 열이 조용한 핵심이다. 조회수를 GoatCounter에서 갈아탈 때 이걸 안 채우면 <strong>모든 문서가 0으로 리셋된 것처럼</strong> 보인다. <code>worker/seed_views.py</code>가 공개 <code>/counter/&lt;name&gt;.json</code>(토큰 불필요)을 읽어 이관 SQL을 만들고, 화면 숫자는 <code>base + views</code>다. 이 스크립트를 <code>tools/</code>가 아니라 <code>worker/</code>에 둔 이유 &mdash; <code>tools/</code>의 파일은 전부 위키 플러그인 번들로 복사되는데, 이 사이트의 GoatCounter 계정에 묶인 일회성 도구는 플러그인에 들어갈 물건이 아니다.</p>
+
+<div class="note warn">
+    <span class="nh">첫 배포가 실패했다 &mdash; 원인은 내 쪽 순서였다</span>
+    대표님이 저장소를 <strong>Workers Builds</strong>에 연결해(<code>npx wrangler deploy</code> · Root <code>/</code>) 배포를 걸었는데 Deploying 단계에서 실패했다. 원인은 명확하다 &mdash; <strong><code>worker/</code>가 아직 master에 없었다.</strong> 내 작업 브랜치에만 푸시하고 머지를 안 한 상태에서 Cloudflare가 master를 클론했으니 <code>wrangler.toml</code>을 찾을 수 없었다. &ldquo;URL만 주시면 켜집니다&rdquo;라고 말할 때 <strong>그 전에 머지가 필요하다는 것을 안 짚은 것이 누락</strong>이다. 덤으로 Workers Builds 경로에서는 대시보드 바인딩이 배포 때마다 덮여 쓰이므로 <strong>바인딩을 <code>wrangler.toml</code>에 적어야 한다</strong> &mdash; 안내서를 그 경로 기준으로 고쳤다.
+</div>

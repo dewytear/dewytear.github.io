@@ -3,16 +3,71 @@
 GitHub Pages는 정적이라 쓰기가 없다. 좋아요와 "4시간 캐시 없는" 조회수만을 위해
 바깥에 아주 작은 쓰기 계층을 둔다. 무료 한도 안이고, 죽어도 위키 본문은 그대로 읽힌다.
 
-**토큰·API 키는 어디에도 필요 없다.** 아래 A안(대시보드)은 브라우저만으로 끝난다.
-누가 물어도 계정 비밀번호·API 토큰을 알려 주지 말 것 — 이 문서의 어떤 단계도
-그것을 요구하지 않는다.
+**토큰·API 키는 어디에도 필요 없다.** 세 경로 모두 브라우저 로그인이나 `wrangler login`
+으로 끝난다. 누가 물어도 계정 비밀번호·API 토큰을 알려 주지 말 것 — 이 문서의 어떤
+단계도 그것을 요구하지 않는다.
 
 ---
 
-## A안 — 대시보드만으로 (권장, 설치 없음)
+> **먼저 확인**: 이 `worker/` 디렉터리가 **master에 머지돼 있어야** 한다.
+> Cloudflare는 master를 클론하므로, 브랜치에만 있으면 `wrangler.toml`을 찾지 못해
+> Deploying 단계에서 실패한다(2026-07-29 첫 배포 실패 원인).
 
-메뉴 이름은 Cloudflare가 종종 바꾼다. 찾는 대상을 적어 두었으니 라벨이 조금 달라도
-같은 것을 고르면 된다.
+---
+
+## A안 — 저장소 연결(Workers Builds), 실제로 쓰는 경로
+
+대표님이 고른 경로다. GitHub 저장소를 Worker에 연결해 두면 **master에 푸시할 때마다
+자동 배포**된다. 대시보드에서 손으로 붙여넣는 것보다 낫다 — 저장소가 정본이 된다.
+
+### 1. D1 데이터베이스 만들기
+
+1. [dash.cloudflare.com](https://dash.cloudflare.com) → **Storage & Databases → D1 SQL Database**
+2. **Create** → 이름 `dewytear-wiki`
+3. **Console** 탭에서 [`schema.sql`](./schema.sql)을 붙여넣고 실행
+4. **Database ID**를 복사해 둔다 (Settings 또는 개요에 있다)
+
+> Database ID는 **비밀이 아니다.** 계정 인증 없이는 아무것도 못 하고, wrangler 설정
+> 파일에 그대로 커밋하는 것이 Cloudflare의 정상 사용법이다.
+
+### 2. `wrangler.toml`에 ID 넣기
+
+[`wrangler.toml`](./wrangler.toml)의 `database_id = "PUT-YOUR-D1-DATABASE-ID-HERE"`를
+1단계에서 복사한 값으로 바꿔 커밋한다.
+
+**Workers Builds 경로에서는 바인딩을 대시보드에 만들면 안 된다** — 배포마다
+`wrangler.toml`이 정본으로 덮어쓰므로 대시보드에서 만든 바인딩은 사라진다.
+바인딩은 이 파일의 `[[d1_databases]]` 블록이 담당한다.
+
+### 3. 빌드 설정 — Root directory를 `worker`로
+
+Worker 페이지 → **Deployments → Build settings**:
+
+| 항목 | 값 |
+|---|---|
+| Build command | (비움) |
+| Deploy command | `npx wrangler deploy` |
+| **Root directory** | **`worker`** ← 기본값 `/`면 실패한다 |
+
+`wrangler.toml`이 `worker/`에 있으므로 거기서 실행돼야 한다. Root를 못 바꾸는
+상황이면 Deploy command를 `npx wrangler deploy -c worker/wrangler.toml`로 해도 된다.
+
+### 4. Retry build → URL 확인
+
+성공하면 Worker 주소가 생긴다:
+
+```
+https://dewytear-wiki.<대표님계정서브도메인>.workers.dev
+```
+
+**이 URL만** 알려 주시면 `app.js`의 `LIKES_API`에 넣어 기능이 켜진다.
+
+---
+
+## B안 — 대시보드에 직접 붙여넣기 (저장소 연결 없이)
+
+저장소를 연결하지 않고 손으로 올리는 경로. 메뉴 이름은 Cloudflare가 종종 바꾼다 —
+라벨이 조금 달라도 찾는 대상(D1 / Bindings / Edit Code)이 같으면 그것을 고르면 된다.
 
 ### 1. D1 데이터베이스 만들기
 
@@ -54,7 +109,9 @@ https://dewytear-wiki.<대표님계정서브도메인>.workers.dev
 
 **이 URL만** 알려 주시면 `app.js`의 `LIKES_API`에 넣어 기능이 켜진다.
 
-### 6. 잘 되는지 혼자 확인해 보기
+---
+
+## 잘 되는지 혼자 확인해 보기 (경로 무관)
 
 브라우저 주소창에 그냥 붙여넣어 본다:
 
@@ -66,13 +123,13 @@ https://<위 URL>/v1/totals
 
 | 증상 | 원인 |
 |---|---|
-| `{"error":"no-db"}` | 4단계 바인딩이 없거나 이름이 `DB`가 아니다 |
-| `{"error":"server"}` | 2단계 `schema.sql`을 실행하지 않았다 |
+| `{"error":"no-db"}` | 바인딩이 없거나 변수명이 `DB`가 아니다 (A안이면 `wrangler.toml`, B안이면 4단계) |
+| `{"error":"server"}` | `schema.sql`을 실행하지 않았다 |
 | `{"error":"not-found"}` | 경로 오타 — `/v1/totals` |
 
 ---
 
-## B안 — CLI로 (wrangler, Node 필요)
+## C안 — 로컬 CLI로 (wrangler, Node 필요)
 
 ```bash
 npm i -g wrangler
@@ -98,7 +155,7 @@ wrangler deploy                                  # 끝에 나오는 URL을 알�
 python3 worker/seed_views.py > seed.sql          # GoatCounter를 읽어 SQL 생성
 ```
 
-만들어진 `seed.sql`을 **D1 Console에 붙여넣거나**(A안) 아래로 실행한다(B안):
+만들어진 `seed.sql`을 **D1 Console에 붙여넣거나** 아래로 실행한다:
 
 ```bash
 wrangler d1 execute dewytear-wiki --remote --file=./seed.sql
