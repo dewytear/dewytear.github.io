@@ -9,6 +9,11 @@
  *   POST /v1/like     { "doc": "<name>" } → { doc, likes, views }
  *   POST /v1/view     { "doc": "<name>" } → { doc, likes, views }
  *
+ * 배포본: https://dewytear-wiki.youngjinkwak-5ee.workers.dev
+ *   D1 `dewytear-wiki` (165681cc-…) 바인딩 `DB`. 설정은 저장소 맨 위 wrangler.toml —
+ *   Workers Builds가 master 푸시마다 자동 배포한다. 살아 있는지 보려면 브라우저로
+ *   `/v1/totals`를 열면 된다(정상: {"likes":0,"docs":0}).
+ *
  * 실패는 조용하다 — 클라이언트(app.js)가 null을 받으면 UI를 아예 감춘다.
  * Worker가 죽어도 위키 본문은 그대로 읽힌다. 이 계층은 장식이지 뼈대가 아니다.
  *

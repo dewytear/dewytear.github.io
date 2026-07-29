@@ -1,0 +1,25 @@
+# 내위키 좋아요·조회수 Worker
+#
+# 배포는 Workers Builds(저장소 연결) — master에 푸시하면 자동 배포된다.
+#
+# **이 파일이 왜 worker/ 안이 아니라 저장소 맨 위에 있나.** Cloudflare 빌드는
+# 기본 Root directory `/`에서 `npx wrangler deploy`를 돌린다. 설정 파일이 하위
+# 디렉터리에 있으면 wrangler가 못 찾고, 그러면 **자동설정이 저장소를 훑어
+# "Hugo 사이트"라고 잘못 추측한 뒤 `npx hugo`를 실행해 죽는다**(2026-07-29 실사고).
+# 여기 두면 대시보드에서 아무 설정도 바꿀 필요가 없다 — 사람 손이 덜 가는 쪽을
+# 골랐다. Worker 소스 자체는 `worker/`에 그대로 있다(main이 그리로 가리킨다).
+#
+# database_id는 비밀이 아니다 — 계정 인증 없이는 아무것도 못 하고, wrangler 설정에
+# 커밋하는 것이 Cloudflare의 정상 사용법이다. **API 토큰은 여기에 넣지 않는다.**
+name = "dewytear-wiki"
+main = "worker/index.js"
+compatibility_date = "2026-07-01"
+
+[[d1_databases]]
+binding = "DB"                 # index.js의 env.DB
+database_name = "dewytear-wiki"
+database_id = "165681cc-0791-490c-83df-ddb625d26843"
+
+# 관측: 무료 플랜에서도 실시간 로그(wrangler tail)와 대시보드 지표를 볼 수 있다.
+[observability]
+enabled = true

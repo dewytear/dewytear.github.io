@@ -3,64 +3,52 @@
 GitHub Pages는 정적이라 쓰기가 없다. 좋아요와 "4시간 캐시 없는" 조회수만을 위해
 바깥에 아주 작은 쓰기 계층을 둔다. 무료 한도 안이고, 죽어도 위키 본문은 그대로 읽힌다.
 
-**토큰·API 키는 어디에도 필요 없다.** 세 경로 모두 브라우저 로그인이나 `wrangler login`
-으로 끝난다. 누가 물어도 계정 비밀번호·API 토큰을 알려 주지 말 것 — 이 문서의 어떤
-단계도 그것을 요구하지 않는다.
+**토큰·API 키는 어디에도 필요 없다.** 브라우저 로그인이나 `wrangler login`으로 끝난다.
+누가 물어도 계정 비밀번호·API 토큰을 알려 주지 말 것 — 이 문서의 어떤 단계도 그것을
+요구하지 않는다.
 
 ---
 
-> **먼저 확인**: 이 `worker/` 디렉터리가 **master에 머지돼 있어야** 한다.
-> Cloudflare는 master를 클론하므로, 브랜치에만 있으면 `wrangler.toml`을 찾지 못해
-> Deploying 단계에서 실패한다(2026-07-29 첫 배포 실패 원인).
+> **선행 조건**: `wrangler.toml`(저장소 맨 위)과 이 `worker/` 디렉터리가 **master에
+> 머지돼 있어야** 한다. Cloudflare는 master를 클론하므로 브랜치에만 있으면 설정을
+> 찾지 못한다(2026-07-29 첫 배포 실패 원인).
 
 ---
 
-## A안 — 저장소 연결(Workers Builds), 실제로 쓰는 경로
+## 대표님이 하실 일 — 딱 하나 (D1 만들기)
 
-대표님이 고른 경로다. GitHub 저장소를 Worker에 연결해 두면 **master에 푸시할 때마다
-자동 배포**된다. 대시보드에서 손으로 붙여넣는 것보다 낫다 — 저장소가 정본이 된다.
+Cloudflare 빌드 설정은 **아무것도 바꾸지 않는다.** `wrangler.toml`을 저장소 맨 위에
+둬서 기본 설정(Root `/`, `npx wrangler deploy`) 그대로 동작하게 해 뒀다.
 
-### 1. D1 데이터베이스 만들기
+남은 것은 **데이터를 담을 D1 하나 만들기**뿐이다. 이건 계정 안에서만 되는 일이라
+사람 손이 필요하다.
 
-1. [dash.cloudflare.com](https://dash.cloudflare.com) → **Storage & Databases → D1 SQL Database**
-2. **Create** → 이름 `dewytear-wiki`
-3. **Console** 탭에서 [`schema.sql`](./schema.sql)을 붙여넣고 실행
-4. **Database ID**를 복사해 둔다 (Settings 또는 개요에 있다)
+### 1. D1 만들기
 
-> Database ID는 **비밀이 아니다.** 계정 인증 없이는 아무것도 못 하고, wrangler 설정
-> 파일에 그대로 커밋하는 것이 Cloudflare의 정상 사용법이다.
+[dash.cloudflare.com](https://dash.cloudflare.com) → 왼쪽 **Storage & Databases**
+→ **D1 SQL Database** → **Create** → 이름 `dewytear-wiki` → 만들기
 
-### 2. `wrangler.toml`에 ID 넣기
+### 2. 표 만들기
 
-[`wrangler.toml`](./wrangler.toml)의 `database_id = "PUT-YOUR-D1-DATABASE-ID-HERE"`를
-1단계에서 복사한 값으로 바꿔 커밋한다.
+만든 DB 화면의 **Console** 탭 → [`schema.sql`](./schema.sql) 내용을 전부
+붙여넣고 실행. **Tables** 탭에 `counters`가 보이면 된 것이다.
 
-**Workers Builds 경로에서는 바인딩을 대시보드에 만들면 안 된다** — 배포마다
-`wrangler.toml`이 정본으로 덮어쓰므로 대시보드에서 만든 바인딩은 사라진다.
-바인딩은 이 파일의 `[[d1_databases]]` 블록이 담당한다.
+### 3. Database ID 알려주기
 
-### 3. 빌드 설정 — Root directory를 `worker`로
-
-Worker 페이지 → **Deployments → Build settings**:
-
-| 항목 | 값 |
-|---|---|
-| Build command | (비움) |
-| Deploy command | `npx wrangler deploy` |
-| **Root directory** | **`worker`** ← 기본값 `/`면 실패한다 |
-
-`wrangler.toml`이 `worker/`에 있으므로 거기서 실행돼야 한다. Root를 못 바꾸는
-상황이면 Deploy command를 `npx wrangler deploy -c worker/wrangler.toml`로 해도 된다.
-
-### 4. Retry build → URL 확인
-
-성공하면 Worker 주소가 생긴다:
+**주소창의 URL을 그대로 복사해서 보내면 된다.** 이런 모양이고, 맨 끝이 Database ID다:
 
 ```
-https://dewytear-wiki.<대표님계정서브도메인>.workers.dev
+https://dash.cloudflare.com/<계정>/workers/d1/databases/a1b2c3d4-e5f6-…
+                                                        ^^^^^^^^^^^^^^^^ 이것
 ```
 
-**이 URL만** 알려 주시면 `app.js`의 `LIKES_API`에 넣어 기능이 켜진다.
+화면에서 **Database ID** 항목을 찾아 복사해도 된다. **하이픈이 있는 UUID**다 —
+하이픈 없는 32자리는 Account ID이니 그건 아니다.
+
+### 4. 끝
+
+ID를 `wrangler.toml`에 넣어 커밋하면 **master 푸시 → 자동 배포**로 켜진다.
+잘 됐는지는 아래 &ldquo;혼자 확인해 보기&rdquo;로.
 
 ---
 
@@ -123,7 +111,7 @@ https://<위 URL>/v1/totals
 
 | 증상 | 원인 |
 |---|---|
-| `{"error":"no-db"}` | 바인딩이 없거나 변수명이 `DB`가 아니다 (A안이면 `wrangler.toml`, B안이면 4단계) |
+| `{"error":"no-db"}` | D1 바인딩이 없다 — `wrangler.toml`의 `[[d1_databases]]` 또는 B안 4단계 |
 | `{"error":"server"}` | `schema.sql`을 실행하지 않았다 |
 | `{"error":"not-found"}` | 경로 오타 — `/v1/totals` |
 
@@ -140,8 +128,8 @@ wrangler d1 execute dewytear-wiki --remote --file=./schema.sql
 wrangler deploy                                  # 끝에 나오는 URL을 알려주기
 ```
 
-`wrangler.toml`의 `database_id = "PUT-YOUR-D1-DATABASE-ID-HERE"`만 실제 값으로
-바꾸면 된다. 그 ID는 비밀이 아니다(바인딩 없이는 아무것도 못 한다).
+`wrangler.toml`은 **저장소 맨 위**에 있고, 고칠 것은 `database_id` 한 줄뿐이다.
+그 ID는 비밀이 아니다(계정 인증 없이는 아무것도 못 한다).
 
 ---
 

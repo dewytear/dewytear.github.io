@@ -1,0 +1,33 @@
+<h2>2026-07-30 · 기능 — 방문자 수 표시를 뗀다</h2>
+
+<p>대표님이 <strong>&ldquo;위키의 방문자수 표시를 제거해줘. 그냥 없는 게 좋겠어&rdquo;</strong>라고 하셨다. 사이드바 푸터의 &ldquo;방문 n&rdquo;을 통째로 없앴다. 변경 유형: <strong>ENGINE + STYLE</strong>.</p>
+
+<div class="note">
+    <span class="nh">하루 만에 두 번 깎았고, 두 번째는 축이 아니라 존재였다</span>
+    <a href="#work-log/2026/07/29/wl-20260729-features">전날</a>에는 &ldquo;오늘(UTC)&rdquo;을 떼고 누적만 남겼다. 그때 근거는 <strong>고칠 수 없는 축</strong>이었다 &mdash; GoatCounter의 <code>start</code>가 UTC 자정 고정이라 한국에서 &ldquo;오늘&rdquo;이 09:00 KST에 초기화됐다. 이번엔 축의 문제가 아니다. 남은 누적은 <strong>정확한 숫자였지만 사이드바에 상주할 이유가 없었다</strong> &mdash; 모든 페이지에 따라다니면서 읽는 사람의 어떤 행동으로도 이어지지 않는다.
+    <br><br>
+    <strong>고칠 수 없어서 떼는 것과, 맞지만 필요 없어서 떼는 것은 다른 판단이다.</strong> 전날의 정정은 후자를 미룬 것이기도 했다 &mdash; 틀린 축을 떼고 나니 남은 값이 왜 거기 있는지가 비로소 보였다.
+</div>
+
+<p><strong>문서별 조회수(<code>.doc-views</code>)는 남겼다.</strong> 같은 종류의 숫자지만 자리가 다르다 &mdash; 그 문서를 읽는 맥락에, 생성일자 옆에 붙어 &ldquo;이 글이 얼마나 읽혔나&rdquo;를 말한다. 사이드바의 누적 방문은 어떤 문서를 보고 있어도 같은 값이었다.</p>
+
+<h3>제거 범위 — 다섯 곳</h3>
+
+<ul>
+    <li><code>app.js</code> &mdash; <code>renderVisitCounter()</code>와 초기화 호출. 함수를 지운 자리에는 <strong>왜 없는지</strong>를 주석으로 남겼다(다음 사람이 &ldquo;조회수는 있는데 방문자 수는 왜 없지&rdquo;를 다시 묻지 않도록).</li>
+    <li><code>index.html</code> &mdash; <code>#visit-counter</code> 행.</li>
+    <li><code>style.css</code> &mdash; <code>.sf-visits</code> 기본 블록과 <code>[hidden]</code>·<code>.vc-k</code>·<code>b</code> 규칙까지 넷 전부. <strong>남기면 죽은 CSS가 된다.</strong></li>
+    <li><code>i18n.js</code> &mdash; <code>visitsTotal</code>·<code>visitsTitle</code>을 <strong>3개 언어에서</strong>. 한쪽만 지우면 STRINGS 패리티가 깨진다.</li>
+    <li><code>?v</code> &mdash; 같은 PR에서 이미 <code>app.js</code> 44 · <code>i18n.js</code> 25 · <code>style.css</code> 44로 올라가 있어 추가 상향은 없다(master 대비 1회 상향이 조건이다).</li>
+</ul>
+
+<p><strong>집계 자체는 그대로 돈다.</strong> <code>goatcounter.count</code>와 <code>gcCount</code>는 남겼다 &mdash; 문서별 조회수가 거기서 나오므로 지우면 그쪽이 함께 죽는다. 다만 <code>gcCount</code>의 실패 경고 라벨을 <code>[visit-counter]</code> &rarr; <code>[goatcounter]</code>로 고쳤다. 이제 그 함수를 쓰는 곳은 조회수뿐인데, 라벨이 사라진 기능의 이름을 부르고 있으면 <strong>콘솔을 볼 사람을 없는 코드로 안내한다</strong>.</p>
+
+<div class="note warn">
+    <span class="nh">검증은 화면이 아니라 DOM 계측으로 했다 &mdash; 한계를 적어 둔다</span>
+    헤드리스에서 사이드바가 접힌 상태로 렌더돼 푸터 스크린샷 클립이 계속 본문으로 어긋났다. 시간을 더 쓰지 않고 <strong>CDP로 DOM을 계측</strong>했다: <code>#visit-counter</code> 부재, <code>#sidebar-foot</code>의 <code>.sf-row</code> 2개·높이 56px, 푸터 텍스트 <code>RSS / for AI / CC BY 4.0 / Tags</code>, 예외 0. 여기에 <code>check_i18n_render</code> 44화면과 <code>validate_all</code>을 얹었다.
+    <br><br>
+    순수 삭제라 <strong>새로 생긴 시각 요소가 없다</strong>는 점이 이 타협의 근거다. 새 컴포넌트였다면 계측으로 갈음하지 않았다.
+</div>
+
+<p class="scn-sub">좋아요·조회수 현황을 함께 적어 둔다. <strong>좋아요는 Worker(D1)에 배선됐고</strong>, <strong>조회수는 아직 GoatCounter</strong>다 &mdash; <code>/v1/view</code> 엔드포인트는 있지만 호출하는 코드가 없다. 갈아타려면 <code>worker/seed_views.py</code>로 <code>base</code> 열을 이관해야 하고(안 하면 모든 문서가 0으로 리셋된 것처럼 보인다) 그건 별도 주제다.</p>
