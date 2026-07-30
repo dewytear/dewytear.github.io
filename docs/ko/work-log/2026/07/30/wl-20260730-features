@@ -119,6 +119,21 @@
     <strong>고칠 지점은 &ldquo;증상을 빨리 알아보기&rdquo;가 아니라 &ldquo;실패한 명령을 확인 없이 넘기지 않기&rdquo;다.</strong> 진단이 빨라지는 개선은 사고 횟수를 줄이지 않는다 &mdash; 사고는 그대로 나고 복구만 빨라진다. 머지 직후 브랜치 재시작은 기억해 둘 습관이 아니라 <strong>머지 다음에 붙는 절차</strong>로 다뤄야 한다.
 </div>
 
+<h3>워크로그에는 좋아요를 달지 않는다</h3>
+
+<p>대표님이 <strong>&ldquo;work log 본문에는 좋아요를 제외해줘&rdquo;</strong>라고 하셨다. 개발 일지는 읽고 반응할 글이 아니라 기록이다 &mdash; 브레드크럼(제목 아래 폴더 경로)·최근 문서 모듈·번역에서 이미 워크로그를 예외로 두고 있으니 같은 결이다. <code>injectLikes</code>가 <code>isWorklog(name)</code>이면 반환한다.</p>
+
+<div class="note warn">
+    <span class="nh">그냥 끄면 조회수까지 죽었다 &mdash; 내가 만든 얽힘</span>
+    앞 절에서 조회 기록과 두 숫자 읽기를 <strong>한 요청으로 합치면서</strong> 그 fetch를 <code>injectLikes</code> 안에 뒀다. 요청 수를 줄인 것은 맞지만, 그 바람에 <strong>&ldquo;좋아요 UI&rdquo;와 &ldquo;조회 기록&rdquo;이 한 함수에 묶였다.</strong> 그래서 좋아요를 끄자 워크로그의 조회수 기록까지 함께 꺼졌다. <code>loadCounters(name)</code>로 분리했다 &mdash; 좋아요 UI가 없어도 돈다(<code>paintLikes</code>는 버튼·칩이 없으면 아무 일도 하지 않으니 그냥 호출한다).
+    <br><br>
+    <strong>합치는 최적화는 두 관심사를 한 수명에 묶는다.</strong> 요청 하나를 아낀 대가가 &ldquo;한쪽을 끄면 다른 쪽도 꺼진다&rdquo;였고, 그 값은 며칠 뒤가 아니라 <strong>같은 날</strong> 청구됐다.
+</div>
+
+<p>가드 위치도 한 번 걸릴 자리였다. <code>isWorklog</code> 반환은 <strong>stale dock 제거보다 뒤</strong>에 둬야 한다 &mdash; 앞에 두면 일반 문서에서 워크로그로 이동할 때 <strong>이전 문서의 좋아요 버튼이 그대로 남는다</strong>(<code>.like-dock</code>이 <code>#article</code>의 직계 자식이라 본문 교체를 살아남는, 앞서 버그를 냈던 그 성질이다). 네 경로를 실렌더로 확인했다: 일반 문서(버튼·칩·조회수 ○) &rarr; 워크로그(전부 ×) &rarr; 워크로그(전부 ×) &rarr; 일반 문서(다시 ○), 예외 0.</p>
+
+<p class="scn-sub">덤으로 확인한 것 &mdash; <strong>워크로그는 원래 조회수도 표시되지 않는다.</strong> <code>injectDocViews</code>가 <code>.doc-meta-r</code>을 요구하는데 워크로그에는 그 메타 줄이 없다(생성일자만 다른 자리에 붙는다). master에서 갈라 확인했으니 이번 변경과 무관한 원래 동작이다. 표시만 없고 <strong>조회는 계속 기록된다</strong> &mdash; 나중에 보여 주기로 하면 그때부터가 아니라 지금부터의 수치가 남는다.</p>
+
 <h3>이관 결과와, 고치지 않기로 한 것</h3>
 
 <p>배포 후 <code>/v1/seed</code>를 한 번 열어 끝났다 &mdash; <strong>186편 확인, 조회수가 있는 56편 이관</strong>, 못 읽은 문서 0. 나머지 130편은 GoatCounter 수치가 실제로 0이라 심을 값이 없던 것이다. 배치 5회가 실패 없이 돌았다.</p>
