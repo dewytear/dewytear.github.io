@@ -563,6 +563,7 @@ function fetchPage(filename){
             // this render, so injectRelated re-runs when the index loads.
             injectDocViews(filename);
             injectLikes(filename);
+            loadCounters(filename);   // 좋아요가 없어도(워크로그) 조회수는 센다
             injectDocDate(filename);
             injectRelations();
             injectRelated();
@@ -1964,6 +1965,12 @@ function paintLikes(name, n, liked){
     }
 }
 
+/** 워크로그(개발 일지)인가 — 섹션 경로가 'Work Log'로 시작한다(route()와 같은 판정). */
+function isWorklog(name){
+    var doc = DOC_BY_NAME[name];
+    return !!(doc && doc.section && doc.section.indexOf('Work Log') === 0);
+}
+
 function injectLikes(name){
     if(!LIKES_API || !window.fetch){ return; }
     var art = document.getElementById('article');
@@ -1980,6 +1987,16 @@ function injectLikes(name){
     var stale = art.querySelector('.like-dock');
     if(stale && stale.getAttribute('data-doc') === name){ return; }
     if(stale && stale.parentNode){ stale.parentNode.removeChild(stale); }
+
+    // 워크로그에는 좋아요를 달지 않는다(2026-07-30 결정). 개발 일지는 읽고
+    // 반응할 글이 아니라 기록이다 — 브레드크럼·최근 문서 모듈·번역에서 이미
+    // 워크로그를 예외로 두는 것과 같은 결이다. **조회수는 그대로 센다**
+    // (loadCounters가 이 함수와 무관하게 돈다).
+    //
+    // 이 반환은 위의 stale 제거보다 **뒤여야 한다** — 앞에 두면 일반 문서에서
+    // 워크로그로 이동할 때 이전 문서의 버튼이 그대로 남는다(같은 dock이
+    // `#article`의 직계 자식이라 본문 교체를 살아남는 그 성질 때문이다).
+    if(isWorklog(name)){ return; }
 
     // 상단 표시 — 조회수 **앞**에 끼운다(좋아요·조회·날짜 순). `.doc-meta-r`은
     // 오른쪽 정렬 그룹이라 늦게 도착한 숫자가 날짜를 밀지 않는다.
@@ -2016,12 +2033,24 @@ function injectLikes(name){
     if(tags && tags.parentNode){ tags.parentNode.insertBefore(dock, tags); }
     else { art.appendChild(dock); }
 
-    // 조회 기록과 두 숫자 읽기를 **한 요청으로** 합친다. `POST /v1/view`는 올린
-    // 뒤의 행을 그대로 돌려주므로(`{doc, likes, views}`) 따로 읽을 이유가 없다 —
-    // 그리고 그래야 **읽는 사람 자신의 방문이 화면 숫자에 바로 포함**된다.
-    // 세지 않는 환경(로컬·CI)에서는 읽기만 한다.
-    var counting = countsViews();
-    var req = counting
+}
+
+/**
+ * 조회를 기록하고 두 숫자를 그린다.
+ *
+ * **좋아요 UI와 분리해 둔 이유** — 워크로그는 좋아요를 달지 않지만(injectLikes가
+ * 건너뛴다) 조회수는 센다. 예전엔 이 fetch가 injectLikes 안에 있어서, 좋아요를
+ * 끄면 조회수까지 함께 죽었다(2026-07-30 분리).
+ *
+ * 조회 기록과 두 숫자 읽기는 **한 요청**이다. `POST /v1/view`가 올린 뒤의 행을
+ * 그대로 돌려주므로(`{doc, likes, views}`) 따로 읽을 이유가 없고, 그래야
+ * **읽는 사람 자신의 방문이 화면 숫자에 바로 포함**된다. 세지 않는 환경
+ * (로컬·CI)에서는 읽기만 한다. `paintLikes`는 버튼·칩이 없으면 아무 일도 하지
+ * 않으니 워크로그에서도 그냥 호출한다.
+ */
+function loadCounters(name){
+    if(!LIKES_API || !window.fetch){ return; }
+    var req = countsViews()
         ? fetch(LIKES_API + '/v1/view', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
