@@ -1,0 +1,28 @@
+<h2>2026-07-31 · 운영 — Search Console 소유 확인 파일을 심는다</h2>
+
+<p>대표님이 Google Search Console에 <strong>URL 접두어로 등록하고 HTML 확인 파일을 받으셨다</strong>. 계정 안에서만 되는 일이라 <a href="#work-log/wl-backlog">Backlog</a>의 &ldquo;지금 할 일&rdquo;에 사람 몫으로 올려 두었던 항목이고, 파일이 오면 나머지는 저장소 일이다. 변경 유형: <strong>CONTENT</strong>(자산 추가).</p>
+
+<p><code>google4a6273515e6d80fc.html</code>을 <strong>저장소 루트</strong>에 그대로 커밋했다 &mdash; 53바이트, 개행 없는 한 줄(<code>google-site-verification: &hellip;</code>). GitHub Pages는 루트 파일을 그대로 서빙하므로 배포되면 <code>https://dewytear.github.io/google4a6273515e6d80fc.html</code>에서 열린다.</p>
+
+<div class="note">
+    <span class="nh">파일명만 듣지 않고 원본을 받았다</span>
+    이 형식은 파일명에서 내용을 <strong>추측할 수 있다</strong>(<code>google-site-verification: &lt;파일명&gt;</code>). 그래서 &ldquo;파일명만 알려 주세요&rdquo;로 끝낼 수도 있었지만, <a href="#work-log/2026/07/29/wl-20260729-features">Database ID를 받을 때</a> 배운 것을 그대로 적용해 <strong>원본 파일을 첨부받아 <code>cmp</code>로 바이트 동일성을 확인</strong>했다. 추측이 맞을 확률이 높다는 것과 확인했다는 것은 다르고, 틀리면 인증 실패 &rarr; 왕복 한 번이 더 생긴다.
+</div>
+
+<p><strong>다른 생성물에 섞이지 않는지 확인했다.</strong> 사이트맵에 이 파일이 들어가면 검색엔진에 무의미한 URL을 제출하는 셈인데, <code>sitemap.xml</code>은 <code>snapshot_names()</code>(인덱스 문서 + <code>EXTRA_PAGES</code>)만 읽으므로 루트 자산은 애초에 대상이 아니다 &mdash; <code>grep</code>으로 0건 확인. <code>build_prerender</code>·<code>build_ai_export</code>의 <code>--check</code>도 모두 고정점이고 <code>validate_all</code>은 ERROR 0이다.</p>
+
+<div class="note warn">
+    <span class="nh">날짜가 또 넘어갔다 &mdash; 이번엔 먼저 확인했다</span>
+    로그를 쓰려는 시점이 <strong>KST 07-31 00:12</strong>였다. 07-30 로그에 이어 쓸 참이었는데, 같은 함정에 이미 두 번 걸렸으므로(<a href="#work-log/2026/07/30/wl-20260730-ops">07-30 운영</a>) <strong>글을 쓰기 전에 <code>TZ=Asia/Seoul date</code>를 먼저 실행</strong>했다. 그래서 이 파일이 07-31에 있다.
+    <br><br>
+    고친 것은 &ldquo;조심하기&rdquo;가 아니라 <strong>순서</strong>다 &mdash; 날짜를 기억에서 꺼내지 않고 매번 셸에 묻는다. 판단이 필요한 일을 판단하지 않아도 되는 일로 바꾸는 편이 낫다.
+</div>
+
+<h3>남은 것 — 대표님 손이 두 번 더</h3>
+
+<ol>
+    <li><strong>확인 버튼</strong> &mdash; 배포 후 Search Console에서 <em>확인</em>을 누른다. 그 전에 위 주소가 열리는지 내가 확인해 알려 드린다.</li>
+    <li><strong>사이트맵 제출</strong> &mdash; <code>sitemap.xml</code>. <code>robots.txt</code>에 이미 <code>Sitemap:</code>으로 선언돼 있어 크롤러는 스스로 찾지만, 제출하면 <em>색인 생성 범위</em> 보고서가 열려 <strong>어디까지 색인됐는지</strong>를 볼 수 있다 &mdash; 그게 다음 판단의 근거다(특히 <code>/p/</code> 스냅샷이 실제로 잡히는지).</li>
+</ol>
+
+<p class="scn-sub">이 위키는 백링크가 없는 새 도메인이라 제출 없이는 색인에 몇 달이 걸린다. 사이트 쪽 준비(스냅샷·사이트맵·<code>llms.txt</code>·피드)는 <a href="#work-log/2026/07/26/wl-20260726-ops">2026-07-26</a>에 끝나 있었고, 병목은 줄곧 &ldquo;외부 서비스에 로그인해야 하는 절차&rdquo;였다.</p>
