@@ -110,6 +110,15 @@
 
 <p><strong>검증</strong>(CDP): 빈 상태 문구·탭 제목·최근 문서 모듈 숨김 &middot; 클릭 시 타임스탬프 저장(<code>1785381666646</code>)·옛 표식 <code>'1'</code> 유지 &middot; 카드 4장과 <strong>최근순 정렬</strong>(타임스탬프 문서가 <code>'1'</code> 문서보다 앞) &middot; 3개 언어 실렌더(<code>좋아요한 문서</code>/<code>Liked Docs</code>/<code>お気に入り</code>, 내비 라벨·부제 포함) &middot; 예외 0.</p>
 
+<div class="note warn">
+    <span class="nh">같은 CI 사고를 하루 안에 두 번 냈다 &mdash; 진짜 원인은 앞단이었다</span>
+    이 PR도 CI가 발동하지 않았다. 원인은 <a href="#work-log/2026/07/30/wl-20260730-ops">아침에 진단해 적어 둔 것</a>과 같다 &mdash; 스쿼시 머지로 master가 전진했는데 브랜치가 <strong>이미 머지된 커밋을 그대로 안고 있어</strong> 충돌이 생기고, 그러면 GitHub이 머지 ref를 못 만들어 Actions가 <strong>실패도 아니고 발동을 안 한다</strong>.
+    <br><br>
+    아침의 교훈(&ldquo;체크가 없으면 <code>mergeable_state</code>부터 본다&rdquo;)은 <strong>작동했다</strong> &mdash; 이번엔 몇 분 안에 원인을 찾았다. 그런데 그 교훈은 <strong>진단 속도만</strong> 고쳤고 재발은 못 막았다. 실제 분기점은 더 앞이었다: 규칙에 &ldquo;머지된 PR의 브랜치는 master에서 다시 시작한다&rdquo;가 명시돼 있고 <code>#368</code> 뒤에는 그렇게 했는데 <code>#369</code> 뒤에는 안 했다. 그 사이에 <code>git pull</code>이 <code>Need to specify how to reconcile divergent branches</code>로 <strong>실패했고 나는 그 실패를 지나쳤다</strong>.
+    <br><br>
+    <strong>고칠 지점은 &ldquo;증상을 빨리 알아보기&rdquo;가 아니라 &ldquo;실패한 명령을 확인 없이 넘기지 않기&rdquo;다.</strong> 진단이 빨라지는 개선은 사고 횟수를 줄이지 않는다 &mdash; 사고는 그대로 나고 복구만 빨라진다. 머지 직후 브랜치 재시작은 기억해 둘 습관이 아니라 <strong>머지 다음에 붙는 절차</strong>로 다뤄야 한다.
+</div>
+
 <h3>이관 결과와, 고치지 않기로 한 것</h3>
 
 <p>배포 후 <code>/v1/seed</code>를 한 번 열어 끝났다 &mdash; <strong>186편 확인, 조회수가 있는 56편 이관</strong>, 못 읽은 문서 0. 나머지 130편은 GoatCounter 수치가 실제로 0이라 심을 값이 없던 것이다. 배치 5회가 실패 없이 돌았다.</p>
