@@ -1873,10 +1873,74 @@ var LIKE_N = {};        // name → 서버가 준 마지막 좋아요 수
 function likedAlready(name){
     // 중복 방지는 이 표식 하나뿐이다 — 서버는 누가 눌렀는지 저장하지 않는다.
     // 그래서 시크릿창·다른 기기로는 우회된다. 알고 고른 한계다(worker/README.md).
-    try{ return localStorage.getItem(LIKE_KEY + name) === '1'; }catch(_){ return false; }
+    // 값은 '1'(옛 표식) 또는 누른 시각(ms). 둘 다 "눌렀다"로 읽는다 —
+    // 2026-07-30에 시각 저장으로 바꾸기 전 표식이 '1'이라 그것도 살려야 한다.
+    try{
+        var v = localStorage.getItem(LIKE_KEY + name);
+        return !!v && v !== '0';
+    }catch(_){ return false; }
 }
 function markLiked(name){
-    try{ localStorage.setItem(LIKE_KEY + name, '1'); }catch(_){ /* 사파리 사생활 모드 등 */ }
+    // 누른 **시각**을 남긴다. 옛 표식('1')은 시각 미상으로 남고, 이후 누른 것부터
+    // 좋아요 목록을 최근순으로 정렬할 수 있다(과거분은 되살릴 수 없다).
+    try{ localStorage.setItem(LIKE_KEY + name, String(Date.now())); }catch(_){ /* 사파리 사생활 모드 등 */ }
+}
+
+/**
+ * 이 브라우저가 좋아요한 문서 — 최근 누른 순.
+ *
+ * **서버에는 이 목록이 없다.** 누가 무엇을 눌렀는지 저장하지 않기로 한 설계의
+ * 결과이고(worker/README.md의 중복 방지 방침), 그래서 이 목록은 정확히
+ * "이 브라우저의 기록"이다. 다른 기기·시크릿창은 각자 따로이며 복구는 불가능하다.
+ *
+ * `list`에 없는 이름(이관·삭제된 문서의 옛 표식)은 조용히 건너뛴다 — 표식은
+ * 지우지 않는다(그 문서가 되살아나면 다시 보이는 편이 낫다).
+ */
+function likedDocs(){
+    var out = [];
+    try{
+        for(var i = 0; i < localStorage.length; i++){
+            var k = localStorage.key(i);
+            if(!k || k.indexOf(LIKE_KEY) !== 0){ continue; }
+            var v = localStorage.getItem(k);
+            if(!v || v === '0'){ continue; }
+            var name = k.substr(LIKE_KEY.length);
+            var doc = DOC_BY_NAME[name];
+            if(!doc){ continue; }
+            // 10자리 이상 숫자만 시각으로 본다 — 옛 표식 '1'은 0(미상)이 된다.
+            out.push({ doc: doc, t: /^[0-9]{10,}$/.test(v) ? parseInt(v, 10) : 0 });
+        }
+    }catch(_){ /* 사파리 사생활 모드에서는 localStorage 접근 자체가 던진다 */ }
+    // 최근 누른 순. 시각 미상('1' 표식)은 뒤로 모으고, 그 안에서는 문서 이름순
+    // — 정렬 기준이 없는 것들을 무작위로 흔들지 않기 위해서다.
+    out.sort(function(x, y){
+        if(x.t !== y.t){ return y.t - x.t; }
+        return x.doc.name < y.doc.name ? -1 : 1;
+    });
+    return out;
+}
+
+/** 좋아요한 문서 화면 — 연관 문서와 같은 카드 목록(2026-07-30 A안 확정). */
+function showLiked(){
+    var items = likedDocs();
+    var head = '<div class="folder-head"><h2>' + escapeHtml(STR('likedDocs')) + '</h2>';
+    if(!items.length){
+        setArticle(head + '</div><p class="empty">' + escapeHtml(STR('likedDocsEmpty'))
+                 + '<br><span class="scn-sub">' + escapeHtml(STR('likedDocsNote')) + '</span></p>');
+        return;
+    }
+    head += '<p class="folder-sub">'
+          + escapeHtml(STRF('likedDocsSub', { n: items.length })) + '</p></div>';
+    var lis = items.map(function(it){
+        return '<li><a href="#!' + encodeURIComponent(it.doc.name) + '">'
+             + escapeHtml(it.doc.label) + '</a>'
+             + '<span class="rel-why">' + escapeHtml(it.doc.sectionL || '') + '</span></li>';
+    }).join('');
+    // 클래스는 `.related`가 **아니어야** 한다 — setArticle이 직후에
+    // `#article .related`를 지운다(이전 문서의 연관 블록 정리용). 카드 모양은
+    // `.related-list`가 단독으로 갖고 있어 그것만 빌려 쓴다(2026-07-30 실사고).
+    setArticle(head + '<nav class="liked-docs" aria-label="' + escapeHtml(STR('likedDocs')) + '">'
+             + '<ul class="related-list">' + lis + '</ul></nav>');
 }
 
 /** 좋아요 수를 두 화면에 동시에 반영한다. 한쪽만 갱신하면 숫자가 어긋난다. */
@@ -2038,7 +2102,7 @@ function routeTitle(path){
     if(doc){ return String(labelFor(doc) || '').replace(/^[\s❖✦§·⤓\-–—•*#>:]+/, ''); }
     if(path.indexOf('folder:') === 0){ return decodeURIComponent(path.substr(7)); }
     var screens = { cosmos: 'cosmosTitle', tags: 'tagsTitle', settings: 'settings',
-                    'new': 'newPageHead', about: 'aboutTitle' };
+                    'new': 'newPageHead', about: 'aboutTitle', liked: 'likedDocs' };
     if(screens[path]){ return STR(screens[path]); }
     return '';   // 홈·검색은 사이트 이름 그대로
 }
@@ -2063,6 +2127,7 @@ function route(){
     document.body.classList.toggle('folder-view', path.indexOf('folder:') === 0);
     document.body.classList.toggle('cosmos-view', path === 'cosmos');
     document.body.classList.toggle('newlist-view', path === 'new');
+    document.body.classList.toggle('liked-view', path === 'liked');
     // Work Log docs are dev journal: like tags, the "recent docs"
     // module stays out of them — Work Log 폴더 모아보기(folder:Work Log …)도 동일.
     var doc = DOC_BY_NAME[path];
@@ -2077,6 +2142,7 @@ function route(){
     else if(path.indexOf('tag:') === 0){ showTag(decodeURIComponent(path.substr(4))); markActiveNav(null); }
     else if(path.indexOf('folder:') === 0){ showFolder(decodeURIComponent(path.substr(7))); markActiveNav(null); }
     else if(path === 'new'){ showNew(); markActiveNav(null); }
+    else if(path === 'liked'){ showLiked(); markActiveNav(null); }
     else if(path === 'settings'){ openSettings(); markActiveNav(null); }
     else { fetchPage(path); markActiveNav(path); }
 }

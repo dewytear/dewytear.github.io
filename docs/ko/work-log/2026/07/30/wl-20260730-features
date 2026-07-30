@@ -82,6 +82,43 @@
 
 <p><code>injectLikes</code>가 <code>art.appendChild(dock)</code> 대신 <code>.doc-tags</code> 앞에 <code>insertBefore</code>한다. <strong>태그가 없는 문서</strong>(워크로그 등)는 예전처럼 맨 끝에 붙는다 &mdash; 실렌더로 둘 다 확인했다(태그 문서: dock이 태그 앞 &middot; 워크로그: dock이 마지막 자식). 곁따라 dock이 <code>article.fade-in</code> <strong>안으로</strong> 들어가 본문 교체 때 자연히 함께 사라진다 &mdash; 앞서 고친 <code>data-doc</code> 가드는 그대로 두었다(두 겹이 손해될 것이 없다).</p>
 
+<h3>좋아요한 문서 목록 — 이미 있는 데이터에 문을 달았다</h3>
+
+<p>대표님이 <strong>&ldquo;방문자가 자신이 좋아요 누른 목록을 볼 수 있을까?&rdquo;</strong>라고 물으셨다. 답은 &ldquo;데이터는 이미 있다&rdquo;였다 &mdash; <code>localStorage</code>의 <code>wiki.liked.&lt;이름&gt;</code> 표식을 훑으면 그 브라우저가 누른 목록이 그대로 나온다. 새로 저장할 것이 없고, 화면과 라우트만 없었다. 진입점 2안·목적지 2안을 렌더해 보여 드리고 <strong>E1(사이드바 고정 항목) + A(카드 목록)</strong>으로 확정됐다.</p>
+
+<div class="note warn">
+    <span class="nh">목업이 후보를 하나 탈락시켰다 &mdash; 세 번째 버튼이 잘렸다</span>
+    진입점 후보 E2는 <code>.nav-tools</code>(모두 펼치기·접기)에 버튼을 하나 더 붙이는 것이었다. 렌더해 보니 <strong>세 번째 버튼이 사이드바 폭에서 잘렸다</strong> &mdash; 필 두 개가 딱 맞게 들어가 있어 자리가 없다. 글로 검토했다면 &ldquo;도구 줄에 하나 더&rdquo;가 그럴듯하게 통과했을 것이다. 덤으로 성격도 어긋난다: 그 줄은 <strong>동작</strong>이고 좋아요 목록은 <strong>장소</strong>다. E1은 <code>list</code>의 route-only 노드(<code>❖ Knowledge Graph</code>가 선례)를 하나 더 두는 것이라 장소들 사이에 자연히 놓인다.
+</div>
+
+<p><strong>하트는 채운 것을 쓴다.</strong> 대표님이 &ldquo;빈 하트는 좋아요 누르기 전을 의미하지 않나&rdquo;라고 지적하셨다 &mdash; 맞다. 우리 코드에서 <code>.like-btn.on</code>이 채워지는 것이 &ldquo;누른 상태&rdquo;다. 내비의 하트는 <strong>상태가 아니라 라벨</strong>이니 빈 하트면 &ldquo;아직 안 누름&rdquo;으로 오독된다. <code>♥</code>(U+2665)를 쓰고, 내비가 글리프를 라벨 문자열에 담는 기존 방식(<code>❖</code>·<code>✦</code>)을 따랐다 &mdash; 코드가 늘지 않는다.</p>
+
+<div class="note warn">
+    <span class="nh">setArticle이 내 목록을 지웠다 &mdash; 클래스 이름 충돌</span>
+    카드 모양을 빌리려고 <code>&lt;nav class="related"&gt;</code>로 감쌌더니 <strong>부제는 &ldquo;2편&rdquo;인데 카드가 0장</strong>이었다. <code>setArticle</code>은 <code>innerHTML</code>을 심은 <strong>직후에 <code>#article .related</code>를 지운다</strong> &mdash; 이전 문서의 연관 블록이 남는 것을 막는 청소인데, 내가 그 클래스를 쓰는 순간 내 목록도 청소 대상이 됐다. 카드 스타일은 <code>.related-list</code>가 단독으로 갖고 있어서 <code>.liked-docs</code>로 감싸고 <code>ul</code>만 그 클래스를 빌리는 것으로 끝났다.
+    <br><br>
+    <strong>기존 클래스를 빌릴 때는 스타일만 오는 게 아니라 그 클래스에 걸린 동작도 함께 온다.</strong> 계측(카드 0장)이 없었으면 &ldquo;왜 안 보이지&rdquo;를 CSS에서 찾았을 것이다.
+</div>
+
+<ul>
+    <li><strong>정렬은 최근 누른 순</strong> &mdash; 표식이 <code>'1'</code>만 저장해 누른 시각을 몰랐다. <code>markLiked</code>가 이제 <code>Date.now()</code>를 저장하고, <code>likedAlready</code>는 <code>'1'</code>도 &ldquo;눌렀다&rdquo;로 읽는다(옛 표식 보존). 시각 미상은 뒤로 모으고 그 안에서는 이름순 &mdash; 기준 없는 것들을 무작위로 흔들지 않기 위해서다. <strong>과거분의 시각은 되살릴 수 없다.</strong></li>
+    <li><strong><code>list</code>에 없는 이름은 건너뛴다</strong>(삭제·이관된 문서의 옛 표식). 표식 자체는 지우지 않는다 &mdash; 그 문서가 되살아나면 다시 보이는 편이 낫다.</li>
+    <li><strong>스냅샷을 만들지 않는다</strong> &mdash; <code>liked</code>는 <code>EXTRA_PAGES</code>에 넣지 않았다. 내용이 전적으로 브라우저별 상태라 정적 스냅샷은 빈 페이지가 되고, 크롤러·AI에게 의미 없는 URL을 심는 셈이다. 사이트맵은 같은 <code>snapshot_names()</code>를 읽으니 죽은 URL도 생기지 않는다.</li>
+</ul>
+
+<p><strong>화면에 한계를 적었다.</strong> 부제가 &ldquo;이 브라우저에서 누른 n편 · 기기·브라우저마다 따로 기록됩니다&rdquo;이고, 빈 상태에는 &ldquo;서버는 누가 눌렀는지 저장하지 않습니다&rdquo;를 붙였다. 폰에서 누른 것이 PC에서 안 보이는 이유를 그 자리에서 알 수 있어야 한다 &mdash; 이건 버그가 아니라 무계정·무쿠키 설계의 결과이고, 설명하지 않으면 버그로 읽힌다.</p>
+
+<p><strong>검증</strong>(CDP): 빈 상태 문구·탭 제목·최근 문서 모듈 숨김 &middot; 클릭 시 타임스탬프 저장(<code>1785381666646</code>)·옛 표식 <code>'1'</code> 유지 &middot; 카드 4장과 <strong>최근순 정렬</strong>(타임스탬프 문서가 <code>'1'</code> 문서보다 앞) &middot; 3개 언어 실렌더(<code>좋아요한 문서</code>/<code>Liked Docs</code>/<code>お気に入り</code>, 내비 라벨·부제 포함) &middot; 예외 0.</p>
+
+<div class="note warn">
+    <span class="nh">같은 CI 사고를 하루 안에 두 번 냈다 &mdash; 진짜 원인은 앞단이었다</span>
+    이 PR도 CI가 발동하지 않았다. 원인은 <a href="#work-log/2026/07/30/wl-20260730-ops">아침에 진단해 적어 둔 것</a>과 같다 &mdash; 스쿼시 머지로 master가 전진했는데 브랜치가 <strong>이미 머지된 커밋을 그대로 안고 있어</strong> 충돌이 생기고, 그러면 GitHub이 머지 ref를 못 만들어 Actions가 <strong>실패도 아니고 발동을 안 한다</strong>.
+    <br><br>
+    아침의 교훈(&ldquo;체크가 없으면 <code>mergeable_state</code>부터 본다&rdquo;)은 <strong>작동했다</strong> &mdash; 이번엔 몇 분 안에 원인을 찾았다. 그런데 그 교훈은 <strong>진단 속도만</strong> 고쳤고 재발은 못 막았다. 실제 분기점은 더 앞이었다: 규칙에 &ldquo;머지된 PR의 브랜치는 master에서 다시 시작한다&rdquo;가 명시돼 있고 <code>#368</code> 뒤에는 그렇게 했는데 <code>#369</code> 뒤에는 안 했다. 그 사이에 <code>git pull</code>이 <code>Need to specify how to reconcile divergent branches</code>로 <strong>실패했고 나는 그 실패를 지나쳤다</strong>.
+    <br><br>
+    <strong>고칠 지점은 &ldquo;증상을 빨리 알아보기&rdquo;가 아니라 &ldquo;실패한 명령을 확인 없이 넘기지 않기&rdquo;다.</strong> 진단이 빨라지는 개선은 사고 횟수를 줄이지 않는다 &mdash; 사고는 그대로 나고 복구만 빨라진다. 머지 직후 브랜치 재시작은 기억해 둘 습관이 아니라 <strong>머지 다음에 붙는 절차</strong>로 다뤄야 한다.
+</div>
+
 <h3>이관 결과와, 고치지 않기로 한 것</h3>
 
 <p>배포 후 <code>/v1/seed</code>를 한 번 열어 끝났다 &mdash; <strong>186편 확인, 조회수가 있는 56편 이관</strong>, 못 읽은 문서 0. 나머지 130편은 GoatCounter 수치가 실제로 0이라 심을 값이 없던 것이다. 배치 5회가 실패 없이 돌았다.</p>

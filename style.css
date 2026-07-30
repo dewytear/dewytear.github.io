@@ -494,6 +494,7 @@
         body.worklog-view #more,
         body.cosmos-view #more,
         body.newlist-view #more,
+        body.liked-view #more,
         body.hide-recent #more{
             display: none;
         }
@@ -2211,6 +2212,10 @@
 
         /* AI "연관 문서" — recommendations from knowledge-index.json, shown at
            the foot of a doc. Cards echo the tag-index "most used" band. */
+        /* 좋아요한 문서 목록 — 카드 모양은 `.related-list`를 빌려 쓰지만 클래스는
+           `.related`가 아니다(setArticle이 그 클래스를 지운다). 구분선 없이
+           머리말 아래에 바로 붙는다. */
+        .liked-docs{ margin-top: 18px; }
         .related{
             margin-top: 30px;
             padding-top: 16px;
