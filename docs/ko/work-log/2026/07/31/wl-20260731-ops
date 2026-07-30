@@ -18,6 +18,32 @@
     고친 것은 &ldquo;조심하기&rdquo;가 아니라 <strong>순서</strong>다 &mdash; 날짜를 기억에서 꺼내지 않고 매번 셸에 묻는다. 판단이 필요한 일을 판단하지 않아도 되는 일로 바꾸는 편이 낫다.
 </div>
 
+<h3>사이트맵을 못 읽는다 — 저장소 쪽은 결백하다</h3>
+
+<p>제출 직후 Search Console이 <strong>&ldquo;사이트맵을 읽을 수 없음&rdquo;</strong>, 발견된 페이지 0, 유형 &ldquo;알 수 없음&rdquo;을 냈다. 유형을 모른다는 것은 <strong>한 번도 파싱하지 못했다</strong>는 뜻이다. 파일 쪽을 전부 훑었다.</p>
+
+<ul>
+    <li><strong>BOM·선행 공백 없음</strong> &mdash; <code>od -c</code>로 첫 바이트가 <code>&lt;?xml</code>임을 확인(BOM이 있으면 파서가 죽는다)</li>
+    <li><strong>XML 적합</strong> &mdash; 370 URL, 174 KB(한도 50 MB·50,000 URL 대비 무시할 크기), 끝이 <code>&lt;/urlset&gt;</code>으로 정상 종료(잘림 없음)</li>
+    <li><strong>범위 이탈 URL 0</strong> &mdash; 전부 <code>https://dewytear.github.io/</code> 하위. 접두어 밖 URL이 섞이면 오류가 난다</li>
+    <li><strong>master 반영 확인</strong> &mdash; <code>sitemap.xml</code>·<code>robots.txt</code>·인증 파일 셋 다 트리에 있고 <code>robots.txt</code>에 <code>Sitemap:</code> 선언도 살아 있다</li>
+</ul>
+
+<p>속성 접두어도 <code>https://dewytear.github.io/</code>로 정확했다 &mdash; <strong>http로 등록해 리다이렉트를 만나는 흔한 원인은 배제</strong>됐다(내가 먼저 의심한 쪽이었고 틀렸다).</p>
+
+<div class="note warn">
+    <span class="nh">내가 못 닿는 곳이라 여기서 멈춘다</span>
+    프록시가 <code>github.io</code>를 막아(<code>CONNECT tunnel failed, 403</code>) <strong>배포된 사이트맵을 내가 직접 열어볼 수 없다.</strong> 그래서 &ldquo;파일이 서빙되는가&rdquo;와 &ldquo;Google만 못 가져오는가&rdquo;를 가를 수 없다. 추측으로 고치기 시작하면 멀쩡한 것을 건드리게 되니, <strong>Googlebot 자신에게 묻는 검사</strong>를 청했다 &mdash; URL 검사의 <em>실시간 URL 테스트</em>는 내 브라우저도 사람 브라우저도 아닌 Googlebot이 가져오므로 이 갈림길을 정확히 나눈다.
+</div>
+
+<h3>구조화 데이터 오류 — Dataset description이 짧았다</h3>
+
+<p>그 URL 검사에서 다른 문제가 잡혔다. 홈의 JSON-LD <code>Dataset</code>이 <strong>중요한 문제 1개</strong>: <em>&lsquo;description&rsquo; 입력란의 문자열 길이가 잘못되었습니다.</em> Google의 Dataset 스펙은 <code>description</code>을 <strong>50자 이상</strong>으로 요구하는데 우리 문구가 <strong>47자</strong>였다. 세 글자가 모자라 항목 전체가 오류로 떨어진 것이다.</p>
+
+<p>204자로 늘렸다. <strong>글자 수를 채우는 군더더기를 붙이지 않고</strong> 그래프의 실제 구조를 적었다 &mdash; 노드=문서, 엣지=희소성 가중 공유 개념과 사람이 선언한 관계 5종, JSON 한 파일로 순회 가능, 계층 4단계. 검색 결과에 그대로 나갈 수 있는 문장이니 정확해야 하고, 마침 정확하게 쓰면 길이는 저절로 찬다.</p>
+
+<p class="scn-sub">JSON-LD는 <code>index.html</code>에 손으로 쓴 한 블록뿐이다(<code>build_ai_export.py</code>의 비슷한 문구는 그래프 JSON의 <code>note</code> 필드로 무관하다). 고친 뒤 블록을 <strong><code>json.loads</code>로 파싱해</strong> 문법이 깨지지 않았는지, <code>description</code> 길이가 50~5000에 들어오는지 기계로 확인했다 &mdash; JSON-LD는 문법이 하나 깨지면 <strong>블록 전체가 조용히 무시</strong>되므로 눈으로 보고 넘길 곳이 아니다.</p>
+
 <h3>남은 것 — 대표님 손이 두 번 더</h3>
 
 <ol>
