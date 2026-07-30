@@ -1,4 +1,4 @@
-<h2>2026-07-31 · 운영 — Search Console 소유 확인 파일을 심는다</h2>
+<h2>2026-07-31 · 운영 — Search Console 등록과 구조화 데이터 수정</h2>
 
 <p>대표님이 Google Search Console에 <strong>URL 접두어로 등록하고 HTML 확인 파일을 받으셨다</strong>. 계정 안에서만 되는 일이라 <a href="#work-log/wl-backlog">Backlog</a>의 &ldquo;지금 할 일&rdquo;에 사람 몫으로 올려 두었던 항목이고, 파일이 오면 나머지는 저장소 일이다. 변경 유형: <strong>CONTENT</strong>(자산 추가).</p>
 
@@ -44,11 +44,28 @@
 
 <p class="scn-sub">JSON-LD는 <code>index.html</code>에 손으로 쓴 한 블록뿐이다(<code>build_ai_export.py</code>의 비슷한 문구는 그래프 JSON의 <code>note</code> 필드로 무관하다). 고친 뒤 블록을 <strong><code>json.loads</code>로 파싱해</strong> 문법이 깨지지 않았는지, <code>description</code> 길이가 50~5000에 들어오는지 기계로 확인했다 &mdash; JSON-LD는 문법이 하나 깨지면 <strong>블록 전체가 조용히 무시</strong>되므로 눈으로 보고 넘길 곳이 아니다.</p>
 
-<h3>남은 것 — 대표님 손이 두 번 더</h3>
+<h3>재검사 — 통과, 그리고 사이트맵 원인이 좁혀졌다</h3>
+
+<p>배포 뒤 실시간 URL 테스트를 다시 돌렸다. <strong>유효한 항목 1개</strong>(문제 0), 그리고 더 중요한 줄들이 함께 나왔다 &mdash; <strong>크롤링 완료 · 크롤링 허용 예 · 페이지 가져오기 성공 · 색인 생성 허용 예</strong>.</p>
+
+<p>이 네 줄이 앞 절의 갈림길을 닫는다. <strong>Googlebot은 우리 사이트를 가져올 수 있다.</strong> 즉 사이트맵을 못 읽는 것은 접근·차단 문제가 아니고, 파일 쪽도 결백하니 <strong>남는 설명은 새 속성 첫 제출의 큐 지연</strong>이다. 하루 뒤 재확인으로 두고 Backlog에 그렇게 적었다 &mdash; <strong>지금 재제출을 눌러 봐야 같은 큐에 다시 들어갈 뿐</strong>이다.</p>
+
+<div class="note">
+    <span class="nh">리소스 오류 목록은 세 종류가 섞여 있었다 &mdash; 고칠 것은 없다</span>
+    같은 검사의 &ldquo;페이지 리소스&rdquo;에 <code>기타 오류</code>가 수십 줄 떴다. 갈라 보니:
+    <br><br>
+    ① <strong><code>docs/**</code> 조각 다수와 <code>config.json</code></strong> &mdash; 홈(검색 화면)이 <code>ensureTextIndex()</code>로 <strong>전문검색 인덱스를 만들려고 본문을 백그라운드로 받는 것</strong>이다. 대상 파일이 전부 실재함을 확인했으니 <strong>404가 아니라</strong> Googlebot이 렌더링 예산 안에서 끊은 것이다. ② <strong>GoatCounter 비콘</strong> &mdash; 외부 집계, 무해. ③ <strong>doubleclick·youtube의 &ldquo;robots.txt에서 차단됨&rdquo;</strong> &mdash; 배경 음악 임베드가 부르는 <strong>남의 도메인</strong>이라 우리 <code>robots.txt</code>와 무관하고 손댈 수도 없다.
+    <br><br>
+    색인에는 영향이 없다 &mdash; 크롤러가 읽는 본문은 <code>/p/</code> 정적 스냅샷이고, 저 XHR은 사람이 쓰는 검색 편의 기능이다. <strong>오류 목록의 길이보다 &ldquo;가져오기 성공&rdquo; 한 줄이 더 중요한 신호</strong>였다.
+</div>
+
+<p class="scn-sub">다만 홈 진입이 문서 본문 100여 개를 부른다는 사실 자체는 기록해 둔다. 이건 이미 Backlog에 <strong>트리거와 함께</strong> 잡혀 있다(<code>~500편: 사전 전문검색 인덱스(text-index.json 1요청)</code>). Googlebot이 이를 리소스 오류로 표시한다는 것은 새 데이터지만, 그 항목의 트리거는 <strong>문서 수·체감 성능</strong>이지 크롤러 소음이 아니므로 임의로 앞당기지 않는다.</p>
+
+<h3>남은 것 — 하나로 줄었다</h3>
 
 <ol>
-    <li><strong>확인 버튼</strong> &mdash; 배포 후 Search Console에서 <em>확인</em>을 누른다. 그 전에 위 주소가 열리는지 내가 확인해 알려 드린다.</li>
-    <li><strong>사이트맵 제출</strong> &mdash; <code>sitemap.xml</code>. <code>robots.txt</code>에 이미 <code>Sitemap:</code>으로 선언돼 있어 크롤러는 스스로 찾지만, 제출하면 <em>색인 생성 범위</em> 보고서가 열려 <strong>어디까지 색인됐는지</strong>를 볼 수 있다 &mdash; 그게 다음 판단의 근거다(특히 <code>/p/</code> 스냅샷이 실제로 잡히는지).</li>
+    <li><strong>소유 확인</strong> &mdash; <strong>끝났다.</strong> 사이트맵 화면에 들어갈 수 있다는 것 자체가 통과의 증거다(미인증 속성은 보고서를 열지 못한다).</li>
+    <li><strong>사이트맵 읽기 재확인</strong> &mdash; 제출 자체는 끝났고, Google이 아직 <strong>읽지 못한 상태</strong>다. 하루 뒤 다시 본다. 읽히면 <em>색인 생성 범위</em>에서 <code>/p/</code> 스냅샷이 실제로 잡히는지가 다음 판단(커스텀 도메인·홍보 순서)의 근거다. <code>robots.txt</code>의 <code>Sitemap:</code> 선언은 그와 무관하게 살아 있어 크롤러는 스스로도 찾아간다.</li>
 </ol>
 
 <p class="scn-sub">이 위키는 백링크가 없는 새 도메인이라 제출 없이는 색인에 몇 달이 걸린다. 사이트 쪽 준비(스냅샷·사이트맵·<code>llms.txt</code>·피드)는 <a href="#work-log/2026/07/26/wl-20260726-ops">2026-07-26</a>에 끝나 있었고, 병목은 줄곧 &ldquo;외부 서비스에 로그인해야 하는 절차&rdquo;였다.</p>
