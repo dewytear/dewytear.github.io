@@ -1,0 +1,49 @@
+<h2>2026-08-02 · 기능 — 그래프 스튜디오: 펼쳐서 만지고, 직접 그리는 지식그래프</h2>
+
+<p>대표님이 Neo4j Bloom 화면을 가져오시며 <strong>&ldquo;내 위키 전체의 관계를 도화지에 쫙 펼쳐서, 확대·축소하고, 노드를 누르면 설명·관계를 보고, 찍어 드래그하면 물방울처럼 출렁이게&rdquo;</strong>, 그리고 <strong>arrows.app처럼 직접 그려 보는 교육 모드</strong>까지 원하셨다. 참고 이미지보다 나은 결과물이 목표. 변경 유형: <strong>ENGINE + STYLE + TOOL + CONTENT</strong>.</p>
+
+<div class="note">
+    <span class="nh">기존 9뷰와 별개의 새 화면으로 갈랐다</span>
+    <a href="#!cosmos">Knowledge Graph</a>(#!cosmos)는 이미 9개 뷰를 도크로 전환한다 — 3D 3종 + 정적 2D 6종. 이번 것은 <strong>실시간 물리·노드 드래그·제작</strong>이라 성격이 달라, 도크에 10번째로 끼우지 않고 <strong>독립 라우트 <code>#!graph</code></strong>로 냈다(사용자 결정). <code>list</code>의 route-only 노드는 <code>liked</code> 선례를 그대로 따랐고, 스냅샷은 만들지 않는다(cosmos·liked와 동일 — JS 렌더 전용).
+</div>
+
+<h3>목업을 먼저 만져 보게 했다</h3>
+
+<p>CLAUDE.md의 &ldquo;디자인 선택지는 이미지와 함께&rdquo; 규칙대로, 구현 전에 <strong>실데이터 232노드로 도는 자기완결 HTML 프로토타입</strong>을 만들어 인터랙티브 아티팩트 + 스크린샷 + 드래그 필름스트립으로 전달했다. <strong>물방울은 정지화면으로 전달되지 않으므로</strong> 직접 드래그해 보는 것이 GIF보다 정확하다. 스타일 2안(A 잉크·글래스 / B Bloom-클린)을 상단 토글로 비교하게 했고, 대표님이 <strong>&ldquo;기본은 혼합, 토글로 어느 모드든&rdquo;</strong>을 골랐다 — 그래서 기본값은 <code>auto</code>(밤=잉크, 낮=Bloom)이고 설정에서 셋 중 고정할 수 있다.</p>
+
+<h3>물방울 — 물리 위치 p와 시각 위치 q의 2층</h3>
+
+<p>핵심 설계는 <strong>물리 위치 <code>p</code>와 별개로 시각 위치 <code>q</code>를 두고, q가 p를 부족감쇠 스프링(ζ≈0.35·ω=18)으로 쫓게</strong> 한 것이다. 드래그하면 p가 먼저 가고 q가 늘어나며 따라오고, 놓으면 q가 2~3회 오버슈트한 뒤 정착한다 — &ldquo;물방울이 잡혔다 놓이는&rdquo; 감각. squash/stretch는 시각 속도 방향의 타원 변형(면적 보존)이고 <code>ctx.setTransform</code>이라 <strong>스프라이트 캐시 규칙(매 프레임 재래스터 금지)을 위반하지 않는다</strong>. 이웃이 스프링으로 딸려와 젤리 연쇄가 공짜로 나온다.</p>
+
+<div class="note warn">
+    <span class="nh">idle이면 rAF 자체를 끊는다 — 성능이 아니라 배터리 문제다</span>
+    force 시뮬은 알파 냉각으로 수렴하면 멈추지만, 그것만으로는 렌더 루프가 계속 돈다. 그래서 <strong>드래그·핀치·출렁임 에너지·최근 입력(1.2초)</strong> 중 아무것도 없으면 <code>requestAnimationFrame</code>을 아예 재예약하지 않는다. 모든 입력·테마 변경이 <code>wake()</code>로 되살린다. 테마 변경 감시를 MutationObserver로 둔 이유도 이것이다 — 색은 프레임마다 재읽지만, 잠들어 있으면 읽을 프레임이 없으니 깨워야 한다.
+</div>
+
+<h3>원본을 넘어서려고 더한 것들</h3>
+
+<p>&ldquo;참고 이미지보다 낫게&rdquo;를 구체적 결함 해소로 옮겼다. 참고 화면의 약점은 <strong>라벨 겹침</strong>과 <strong>회색 노드 소음</strong>이었다.</p>
+<ul>
+    <li><strong>라벨 겹침 회피</strong> — DOM 라벨 풀에 점수(차수×2 + 관계 보유×3)순 그리디 배치 + 셀 그리드 충돌 스킵. 참고 이미지처럼 제목이 서로 밟지 않는다.</li>
+    <li><strong>회색 대신 색 군집</strong> — 클러스터 앵커 인력으로 World·System이 자연히 색으로 뭉친다(accent hue + i·137.5°).</li>
+    <li><strong>검색 스포트라이트</strong> — 상단 검색에 두 글자 이상 치면 일치 노드만 깨어나고 나머지는 가라앉는다. Enter로 첫 일치에 점프.</li>
+    <li><strong>포커스+컨텍스트</strong> — 노드를 누르면 1홉 이웃만 색·라벨, 나머지는 <code>globalAlpha</code> dim(라이브 CSS filter 5fps 사고를 피해). 관계 5타입은 색+방향 화살표, 카드는 <code>.c2-card</code> 어휘 재사용에 relations를 타입별로 묶어 보인다(기존 <code>relType*</code> 문구 재사용 — 새 번역 0).</li>
+    <li><strong>개념=마름모·문서=원</strong>으로 두 종류를 시각 구분. 개념 노드 범위는 없음/공유(df≥2)/전부 3택.</li>
+</ul>
+
+<h3>제작 모드 — 교육을 텍스트 입력·모바일까지</h3>
+
+<p>arrows.app식으로 빈 도화지에 노드·관계를 직접 그린다. 관계를 이을 때 <strong>이 위키의 5타입 어휘</strong>(선행지식·구현·사례·근거·대체)를 그대로 쓰는 것이 교육 효과의 핵심 — 배우면서 위키의 관계 모델을 익힌다. 탐색 카드의 &ldquo;제작 모드로 복사&rdquo;로 <strong>실제 그래프의 한 조각을 뜯어</strong> 시작할 수도 있다. localStorage 자동 저장 + JSON 내보내기/불러오기.</p>
+
+<div class="note warn">
+    <span class="nh">모바일에서 막히는 세 구멍을 메웠다</span>
+    제작 모드의 세 동작이 데스크톱 전제였다: ①<strong>더블클릭</strong>으로 노드 생성 — <code>touch-action:none</code> 캔버스는 브라우저가 dblclick을 합성해 주지 않아, 터치 더블탭을 직접 감지한다(350ms·28px 이내 두 탭). ②<strong>노드 가장자리 할로에서 드래그</strong>로 관계 — 손가락으로 8px 밴드를 조준하기 어려워, 노드를 탭하면 뜨는 <strong>선택 툴바(이름·연결·삭제)</strong>를 대안으로 뒀다. &lsquo;연결&rsquo;을 누르고 다음 노드를 탭하면 타입 피커가 뜬다. ③<strong>Delete 키</strong> — 없는 환경이라 툴바의 삭제가 대신한다. 데스크톱에도 같은 툴바가 떠 동작이 눈에 보인다(발견성).
+    <br><br>
+    한글 입력도 손봤다 — IME 조합 중의 Enter(<code>isComposing</code>·keyCode 229)를 거르지 않으면 마지막 글자가 잘린 채 커밋된다. 라벨 입력은 원하는 대로 자유 텍스트다.
+</div>
+
+<h3>검증</h3>
+
+<p>CDP 실인터랙션으로 전 경로를 돌렸다: 마운트(내비 라벨·탭 제목·최근 문서 숨김) · 노드 클릭 카드(제목·관계·문서 열기·씨앗 버튼) · 검색 dim/Enter 점프 · 설정 패널 7슬라이더·3셀렉트 · 제작(마우스 더블클릭 + <strong>터치 더블탭</strong> 노드 생성 → 라벨 입력 → 할로 드래그 및 툴바 연결로 엣지+타입 피커 → <code>graphMaker</code> 저장 → undo → 삭제) · <strong>티어다운 완결</strong>(문서로 이동 시 <code>.gl-stage</code>·<code>gl-maker</code> 클래스·리스너 회수, 재진입 재마운트) · idle 6초 후 <strong>슬립 상태 표시</strong> · 영어·일본어 실렌더 · 예외 0. <code>check_i18n_render</code>에 studio 3화면(탐색·패널·제작)을 더해 <strong>50화면</strong>이 됐다.</p>
+
+<p class="scn-sub">규모: <code>graphlive.js</code> ~1,300줄 + <code>.gl-*</code> CSS + 3언어 54키. 자기기술 문서는 <a href="#!kgs-views">그래프를 읽는 9가지 눈</a>에 &ldquo;펼쳐서 만지는 그래프&rdquo; 절을 3언어로 더했다(9뷰 수치는 cosmos 것이라 그대로 — 스튜디오는 별개 화면). <code>SPECIAL_ROUTES</code>에 <code>graph</code>·<code>liked</code>를 넣어 본문에서 <code>#!graph</code>를 링크해도 broken-link가 안 나게 했다.</p>
