@@ -131,6 +131,20 @@ const SCREENS = [
     prep: `(()=>{const g=document.querySelector('[data-gvg="2d"]'); if(g)g.click();
                  const b=document.querySelector('[data-gv="${v}"]'); if(b)b.click(); return !!b;})()`,
   })),
+  // 그래프 스튜디오(#!graph — graphlive.js). 라벨·카드·패널·범례·제작 힌트가
+  // 전부 DOM이라 이 스윕이 실제로 본다. 탐색 기본 화면 + 설정 패널 열림 +
+  // 제작 모드(빈 캔버스 힌트·툴바) 세 상태를 훑는다. 마운트가 KNOWLEDGE
+  // 프라미스 뒤라 prep은 요소가 생길 때까지 재시도한다.
+  { id: 'studio:explore', hash: '#!graph',
+    prep: `(async()=>{for(let i=0;i<40;i++){if(document.querySelector('.gl-canvas'))return true;
+                 await new Promise(r=>setTimeout(r,150));}return false;})()` },
+  { id: 'studio:panel', hash: '#!graph',
+    prep: `(async()=>{for(let i=0;i<40;i++){const b=document.querySelectorAll('.gl-tr .gl-pill')[2];
+                 if(b){b.click();return true;}await new Promise(r=>setTimeout(r,150));}return false;})()` },
+  { id: 'studio:maker', hash: '#!graph',
+    prep: `(async()=>{try{localStorage.removeItem('graphMaker')}catch(e){}
+                 for(let i=0;i<40;i++){const b=document.querySelectorAll('.gl-seg button')[1];
+                 if(b){b.click();return true;}await new Promise(r=>setTimeout(r,150));}return false;})()` },
   // Search dock games. Only 2048 is inspectable here — it draws a real DOM
   // board. The other four paint to <canvas>, and canvas text is invisible to
   // any DOM sweep (see COVERAGE note below), so they are listed for the dock
