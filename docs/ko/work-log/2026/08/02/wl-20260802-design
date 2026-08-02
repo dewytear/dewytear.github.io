@@ -1,0 +1,7 @@
+<h2>2026-08-02 · 디자인 — 사이드바 라우트 글리프에 액센트 확장 (◈·♥·✦)</h2>
+
+<p>그래프 스튜디오를 배포하고 보니 사이드바에서 <strong>❖ Knowledge Graph·✦ Knowledge Map만 색이 있고 ◈ 그래프 스튜디오·♥ 좋아요한 문서·✦ AI 순회 가이드는 무채색</strong>이라 특별 항목들의 위계가 어긋나 보였다. 대표님 요청으로 세 글리프에도 색을 넣었다. 변경 유형: <strong>STYLE</strong>.</p>
+
+<p>방법은 새 규칙이 아니라 <strong>기존 규칙에의 합류</strong>다 — ❖(cosmos)·✦(ai-map·dz-map)가 이미 쓰는 <code>::first-letter</code> 액센트 규칙(style.css)에 <code>#!graph</code>·<code>#!liked</code>·<code>#!ai-guide</code> 셀렉터 세 줄을 더했다. 라벨 본문은 다른 메뉴와 똑같이 무채색으로 두고 <strong>선두 글리프만 <code>var(--accent-ink)</code></strong>를 입는, 이 사이드바의 가장 조용한 강조 방식 그대로다. ♥는 본문 좋아요 버튼의 켜짐 상태(<code>.doc-likes.on</code>)와 같은 토큰이라, 하트 색이 화면 어디서든 하나로 읽힌다.</p>
+
+<p class="scn-sub">테마 토큰만 쓰므로 낮(주황)·밤(청록)이 자동 대응 — 헤드리스 렌더로 두 테마의 계산색(<code>getComputedStyle(a,'::first-letter')</code>)과 스크린샷을 확인했다. 같은 PR에서 <code>style.css ?v=49</code> 상향.</p>

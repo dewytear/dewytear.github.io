@@ -1912,11 +1912,15 @@
             margin: 2px 0 0;
         }
 
-        /* Knowledge Graph / Map entries: identical to every other menu item —
-           only the leading glyph (✦ / ❖, the first letter) carries the accent,
-           the quietest possible cue. Both maps (AI · DOUZONE) match. */
+        /* Knowledge Graph / Studio / Liked / Map entries: identical to every
+           other menu item — only the leading glyph (✦ / ❖ / ◈ / ♥, the first
+           letter) carries the accent, the quietest possible cue. The ♥ matches
+           the like button's on-state (.doc-likes.on), same token. */
         #navigation a[href="#!cosmos"]::first-letter,
+        #navigation a[href="#!graph"]::first-letter,
+        #navigation a[href="#!liked"]::first-letter,
         #navigation a[href="#!ai-map"]::first-letter,
+        #navigation a[href="#!ai-guide"]::first-letter,
         #navigation a[href="#!dz-map"]::first-letter{
             color: var(--accent-ink);
         }
