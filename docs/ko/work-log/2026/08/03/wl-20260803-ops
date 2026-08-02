@@ -1,0 +1,14 @@
+<h2>2026-08-03 · 운영·도구 — Dataset 리치결과 오류 판독 + 위키 소개문에 Graph Studio 홍보</h2>
+
+<p>대표님이 구글 서치 콘솔 스크린샷을 가져오셨다 — Dataset 구조화 데이터에 <strong>&ldquo;description 문자열 길이가 잘못되었습니다&rdquo;</strong>가 여전히 떠 있다는 것. 판독 결과 <strong>수정 전 크롤을 보고 있는 것</strong>이었다: 스크린샷의 크롤 시각이 7/31 06:42인데 50자 미만 설명을 고친 수정은 8/1에 배포됐고, 화면에 보이는 짧은 문구(&ldquo;&hellip;순회 가이드 참조.&rdquo;)가 정확히 수정 전 텍스트다. 현재 배포본의 Dataset description은 충분히 길어 <strong>코드 쪽 잔여 결함은 없다</strong> — 서치 콘솔에서 해당 이슈의 <strong>&ldquo;수정사항 확인(재검증)&rdquo;</strong>을 누르면 재크롤 후 해소된다. 변경 유형: <strong>CONTENT</strong>.</p>
+
+<p>이왕 재크롤을 부를 김에, 대표님 주문대로 <strong>위키 소개문에 Graph Studio를 홍보</strong>로 실었다. 소개문이 사는 표면을 전수 갱신했다:</p>
+
+<ul>
+    <li><strong>index.html 4곳</strong> — <code>meta description</code>·<code>og:description</code>·<code>twitter:description</code>·JSON-LD WebSite: &ldquo;&hellip;한글 위키. <strong>위키 전체를 살아 움직이는 지식그래프로 펼쳐 만지는 Graph Studio를 제공합니다.</strong>&rdquo; — 구글 검색 스니펫·공유 카드가 이 문구를 쓴다.</li>
+    <li><strong>JSON-LD Dataset description</strong> — &ldquo;같은 그래프를 브라우저에서 직접 펼쳐 만지는 Graph Studio 화면도 제공합니다&rdquo; 한 문장 추가(길이 여유도 커짐).</li>
+    <li><strong><code>config.json</code> 3언어</strong> — <code>llms.txt</code>·Atom 피드 3종의 소개가 여기서 나온다. ko·en·ja 모두에 Graph Studio 문구를 더하고 <code>build_ai_export.py</code> 재생성.</li>
+    <li><strong>README.md</strong> — For people 표에 Graph Studio 행 추가(라이브 그래프 + arrows.app식 제작 모드).</li>
+</ul>
+
+<p class="scn-sub">배포 후 서치 콘솔에서 ①Dataset 이슈의 &ldquo;수정사항 확인&rdquo; ②URL 검사 → 색인 재요청(홈)을 누르면 새 소개문과 함께 재검증된다. index.html은 <code>?v</code> 대상이 아니라 캐시버스터 불요.</p>

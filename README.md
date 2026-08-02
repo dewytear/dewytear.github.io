@@ -15,6 +15,7 @@ and the whole thing is exported as a self-contained knowledge graph:
 | [The wiki](https://dewytear.github.io) — hash-routed SPA, no build step | [`llms.txt`](https://dewytear.github.io/llms.txt) — sign-post ([llmstxt.org](https://llmstxt.org)) |
 | [All documents](https://dewytear.github.io/p/en/) — static pages, no JS needed | [`llms-full.txt`](https://dewytear.github.io/llms-full.txt) — the whole corpus in one fetch |
 | [Knowledge Graph](https://dewytear.github.io/#!cosmos) — nine views over one index | [`knowledge-graph.json`](https://dewytear.github.io/data/knowledge-graph.json) — nodes, concepts, relations |
+| [Graph Studio](https://dewytear.github.io/#!graph) — the whole wiki as a live, touchable graph, plus an arrows.app-style create mode | |
 | [About the author](https://dewytear.github.io/p/en/about/) | [`feed.en.xml`](https://dewytear.github.io/feed.en.xml) — Atom, newest first |
 
 Things that might be worth stealing: the **nine graph views** over a single index
