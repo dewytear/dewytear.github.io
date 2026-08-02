@@ -2131,7 +2131,8 @@ function routeTitle(path){
     if(doc){ return String(labelFor(doc) || '').replace(/^[\s❖✦§·⤓\-–—•*#>:]+/, ''); }
     if(path.indexOf('folder:') === 0){ return decodeURIComponent(path.substr(7)); }
     var screens = { cosmos: 'cosmosTitle', tags: 'tagsTitle', settings: 'settings',
-                    'new': 'newPageHead', about: 'aboutTitle', liked: 'likedDocs' };
+                    'new': 'newPageHead', about: 'aboutTitle', liked: 'likedDocs',
+                    graph: 'glTitle' };
     if(screens[path]){ return STR(screens[path]); }
     return '';   // 홈·검색은 사이트 이름 그대로
 }
@@ -2157,6 +2158,10 @@ function route(){
     document.body.classList.toggle('cosmos-view', path === 'cosmos');
     document.body.classList.toggle('newlist-view', path === 'new');
     document.body.classList.toggle('liked-view', path === 'liked');
+    document.body.classList.toggle('graph-view', path === 'graph');
+    // 그래프 스튜디오는 document/window에 리스너를 건다 — 화면을 떠날 때마다
+    // 회수해야 하므로 라우팅마다 부른다(마운트 전이면 no-op).
+    if(window.GraphLive){ GraphLive.unmount(); }
     // Work Log docs are dev journal: like tags, the "recent docs"
     // module stays out of them — Work Log 폴더 모아보기(folder:Work Log …)도 동일.
     var doc = DOC_BY_NAME[path];
@@ -2167,6 +2172,7 @@ function route(){
     CURRENT_DOC = null;   // cleared here; fetchPage sets it for real docs
     if(isSearch){ showSearch(); markActiveNav(null); return; }
     if(path === 'cosmos'){ showCosmos(); markActiveNav(null); return; }
+    if(path === 'graph'){ showGraphLab(); markActiveNav(null); return; }
     if(path === 'tags'){ showTagIndex(); markActiveNav(null); }
     else if(path.indexOf('tag:') === 0){ showTag(decodeURIComponent(path.substr(4))); markActiveNav(null); }
     else if(path.indexOf('folder:') === 0){ showFolder(decodeURIComponent(path.substr(7))); markActiveNav(null); }

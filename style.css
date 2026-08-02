@@ -493,6 +493,7 @@
         body.search-view #more,
         body.worklog-view #more,
         body.cosmos-view #more,
+        body.graph-view #more,
         body.newlist-view #more,
         body.liked-view #more,
         body.hide-recent #more{
@@ -500,8 +501,222 @@
         }
 
         /* ---- 지식 코스모스 (3D constellation of the knowledge graph) ---- */
-        body.cosmos-view #article{
+        body.cosmos-view #article,
+        body.graph-view #article{
             padding: 0;   /* full-bleed like the search screen */
+        }
+
+        /* ---- 그래프 스튜디오 (#!graph — graphlive.js) ----
+           cosmos와 같은 전면 화면 언어. 글래스 필·카드는 기존 어휘(.c2-*)를
+           재사용하고, 여기는 스테이지·바·패널·제작 모드 전용분만 얹는다. */
+        .gl-screen{
+            position: relative;
+            min-height: calc(100vh - 90px);
+            min-height: calc(100dvh - 90px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .gl-top{
+            position: absolute;
+            top: 18px; left: 0; right: 0;
+            z-index: 4;
+            text-align: center;
+            pointer-events: none;
+        }
+        .gl-head{ margin: 0; font-size: 19px; letter-spacing: .02em; }
+        .gl-sub{ margin: 4px 0 0; font-size: 12px; color: var(--muted); }
+        .gl-stage{ position: absolute; inset: 0; }
+        .gl-canvas{
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            cursor: grab;
+            touch-action: none;   /* 팬·핀치가 그래프 조작 — 페이지 스크롤과 충돌 방지 */
+        }
+        .gl-canvas.grabbing{ cursor: grabbing; }
+        .gl-labels{ position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+        .gl-lb{
+            position: absolute; left: 0; top: 0;
+            font-size: 11.5px; line-height: 1.25; white-space: nowrap;
+            color: var(--text);
+            text-shadow: 0 0 4px var(--bg), 0 0 8px var(--bg);
+            transform: translate(-50%, 0);
+            opacity: 0;
+            transition: opacity .18s;
+        }
+        .gl-lb.on{ opacity: .92; }
+        .gl-lb.dim{ opacity: .18; }
+        .gl-lb.c{ color: var(--muted); font-size: 10.5px; }
+        /* 상단 바(글래스 필) — 검색 도크·gv-dock과 같은 언어 */
+        .gl-bar{
+            position: absolute; z-index: 5;
+            display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+        }
+        .gl-tl{ top: 14px; left: 14px; max-width: 60%; }
+        .gl-tr{ top: 14px; right: 14px; }
+        .gl-pill{
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 7px 12px; border-radius: 999px;
+            background: color-mix(in srgb, var(--bg-alt) 72%, transparent);
+            border: 1px solid var(--border);
+            color: var(--muted); font-size: 12px; cursor: pointer; user-select: none;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            transition: color .15s, border-color .15s;
+        }
+        .gl-pill:hover{ color: var(--text); }
+        .gl-pill.on{
+            color: var(--accent-ink);
+            border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+        }
+        .gl-seg{
+            display: inline-flex; overflow: hidden; border-radius: 999px;
+            background: color-mix(in srgb, var(--bg-alt) 72%, transparent);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .gl-seg button{
+            all: unset; padding: 7px 14px; font-size: 12.5px;
+            color: var(--muted); cursor: pointer;
+        }
+        .gl-seg button.on{
+            color: var(--accent-ink);
+            background: color-mix(in srgb, var(--accent) 12%, transparent);
+        }
+        .gl-seg button:focus-visible,
+        .gl-pill:focus-visible{ outline: 2px solid var(--accent); outline-offset: 1px; }
+        .gl-mkbar{ display: none; gap: 8px; flex-wrap: wrap; }
+        body.gl-maker .gl-mkbar{ display: flex; }
+        /* 범례 */
+        .gl-legend{
+            position: absolute; left: 14px; bottom: 14px; z-index: 5;
+            background: color-mix(in srgb, var(--bg-alt) 72%, transparent);
+            border: 1px solid var(--border); border-radius: 12px;
+            padding: 9px 12px; font-size: 11px; color: var(--muted);
+            display: flex; flex-direction: column; gap: 4px;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .gl-legend .row{ display: flex; align-items: center; gap: 7px; }
+        .gl-legend .sw{ width: 16px; border-top: 2px solid var(--muted); }
+        .gl-legend .sw.dash{ border-top-style: dashed; }
+        .gl-legend .sw.acc{ border-top-color: var(--accent); }
+        .gl-legend .dot{ width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+        .gl-legend .dia{ width: 8px; height: 8px; background: var(--muted); transform: rotate(45deg) scale(.8); }
+        /* 포커스 카드 — .c2-card 어휘를 쓰되 이 화면에선 stage 기준 배치로
+           덮는다. .c2-card 본체 규칙이 파일 뒤에 있어 두 클래스로 특이도를
+           올려야 이긴다(top:50% + translateY(-50%)를 반드시 무효화). */
+        .c2-card.gl-card{
+            position: absolute; right: 14px; top: 64px; bottom: auto;
+            transform: none;
+            width: min(300px, calc(100% - 28px));
+            max-height: calc(100% - 130px); overflow: auto;
+            display: none;
+        }
+        .c2-card.gl-card.on{ display: block; }
+        .gl-sum{ font-size: 12px; color: var(--muted); line-height: 1.55; margin: 6px 0 4px; }
+        .gl-rt{
+            font-size: 10.5px; color: var(--accent-ink);
+            letter-spacing: .04em; margin: 10px 0 3px;
+        }
+        .gl-seed{ margin-top: 10px; width: 100%; justify-content: center; }
+        /* 설정 패널 — 우측 슬라이드 글래스 */
+        .gl-panel{
+            position: absolute; right: 14px; top: 64px; bottom: 14px; width: 280px;
+            z-index: 7; overflow: auto;
+            background: color-mix(in srgb, var(--bg-alt) 82%, transparent);
+            border: 1px solid var(--border); border-radius: 14px;
+            padding: 14px 16px;
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            transform: translateX(calc(100% + 22px));
+            transition: transform .22s;
+        }
+        .gl-panel.open{ transform: none; }
+        .gl-panel h4{
+            margin: 12px 0 8px; font-size: 11px;
+            color: var(--accent-ink); letter-spacing: .08em;
+        }
+        .gl-panel h4:first-child{ margin-top: 2px; }
+        .gl-fr{
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 8px; margin: 7px 0; font-size: 12px; color: var(--muted);
+        }
+        .gl-fr label{ flex: 1; }
+        .gl-fr output{
+            width: 44px; text-align: right; color: var(--text);
+            font-size: 11.5px; font-variant-numeric: tabular-nums;
+        }
+        .gl-fr input[type=range]{ flex: 2; accent-color: var(--accent); height: 20px; }
+        .gl-fr select, .gl-small{
+            background: var(--bg-alt); border: 1px solid var(--border);
+            color: var(--text); border-radius: 8px; font-size: 12px; padding: 4px 8px;
+        }
+        /* 제작 모드 */
+        .gl-hint{
+            position: absolute; inset: 0; z-index: 2;
+            display: none; align-items: center; justify-content: center;
+            pointer-events: none;
+        }
+        .gl-hint.on{ display: flex; }
+        .gl-hint div{
+            color: var(--muted); font-size: 14px; max-width: 420px; text-align: center;
+            background: color-mix(in srgb, var(--bg-alt) 72%, transparent);
+            border: 1px dashed var(--border); border-radius: 14px;
+            padding: 14px 22px;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        }
+        .gl-picker{
+            position: absolute; z-index: 8; display: none;
+            flex-direction: column; gap: 4px; padding: 8px;
+            background: color-mix(in srgb, var(--bg-alt) 82%, transparent);
+            border: 1px solid var(--border); border-radius: 12px;
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+        }
+        .gl-picker.on{ display: flex; }
+        .gl-picker button{
+            all: unset; font-size: 12px; padding: 5px 10px; border-radius: 8px;
+            cursor: pointer; color: var(--text);
+            display: flex; gap: 8px; align-items: center;
+        }
+        .gl-picker button:hover{ background: color-mix(in srgb, var(--accent) 14%, transparent); }
+        .gl-picker .sw{ width: 14px; border-top: 2px solid var(--accent); }
+        .gl-selbar{
+            position: absolute; z-index: 8; display: none; gap: 6px;
+        }
+        .gl-selbar.on{ display: flex; }
+        .gl-selbar .gl-pill{ padding: 5px 10px; font-size: 11.5px; }
+        .gl-search{
+            width: 150px; padding: 7px 12px; border-radius: 999px;
+            background: color-mix(in srgb, var(--bg-alt) 72%, transparent);
+            border: 1px solid var(--border);
+            color: var(--text); font-size: 12px; outline: none;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .gl-search:focus{ border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
+        .gl-search::placeholder{ color: var(--muted); }
+        body.gl-maker .gl-search{ display: none; }
+        .gl-nodein{
+            position: absolute; z-index: 8; display: none;
+            transform: translate(-50%, -50%);
+            background: var(--bg-alt); border: 1px solid var(--accent);
+            border-radius: 8px; color: var(--text);
+            font-size: 13px; padding: 5px 9px; width: 170px; text-align: center;
+            outline: none;
+        }
+        @media (max-width: 800px){
+            .gl-top{ display: none; }   /* 좁은 화면에선 바가 곧 헤더다 */
+            .gl-tl{ max-width: calc(100% - 28px); }
+            .gl-tr{ top: auto; bottom: 64px; }
+            .gl-panel{
+                left: 10px; right: 10px; top: auto; bottom: 10px;
+                width: auto; max-height: 55%;
+                transform: translateY(calc(100% + 20px));   /* 바텀시트 */
+            }
+            .gl-panel.open{ transform: none; }
+            .c2-card.gl-card{ left: 10px; right: 10px; width: auto; top: auto; bottom: 64px; max-height: 50%; transform: none; }
+            .gl-legend{ display: none; }
+        }
+        @media (prefers-reduced-motion: reduce){
+            .gl-lb{ transition: none; }
+            .gl-panel{ transition: none; }
         }
         .cosmos-screen{
             position: relative;
