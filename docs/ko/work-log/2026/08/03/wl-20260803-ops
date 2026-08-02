@@ -12,3 +12,9 @@
 </ul>
 
 <p class="scn-sub">배포 후 서치 콘솔에서 ①Dataset 이슈의 &ldquo;수정사항 확인&rdquo; ②URL 검사 → 색인 재요청(홈)을 누르면 새 소개문과 함께 재검증된다. index.html은 <code>?v</code> 대상이 아니라 캐시버스터 불요.</p>
+
+<h3>홈 소개문·Dataset 설명을 영어로</h3>
+
+<p>이어서 대표님이 짚으셨다 — <strong>&ldquo;소개가 한글인데 영어가 더 낫지 않아?&rdquo;</strong> 홈은 URL이 하나라 소개문도 하나인데, 영어 소개는 <code>feed.en.xml</code>·README·<code>/p/en/</code>에만 있고 <strong>홈 검색 결과를 결정하는 index.html에는 없었다</strong>. 위키가 3언어 완비이고 브랜드명도 영어라 홈 소개문 4곳(meta·og·twitter·WebSite)을 영어로 교체했다: <em>&ldquo;A trilingual (KO·EN·JA) wiki on Claude Code, plugins, harnesses, LLM wikis and second brains — with Graph Studio, the whole wiki as a live, touchable knowledge graph.&rdquo;</em> Dataset 설명도 이름(영어)과 비대칭이던 한국어 장문을 같은 내용의 영어로 통일했다(Google Dataset Search의 주 이용자도 글로벌).</p>
+
+<p class="scn-sub">의도적으로 안 바꾼 것: <code>html lang="ko"</code>·<code>og:locale ko_KR</code> — 페이지 본문 기본 언어는 여전히 한국어(SPA가 방문자 언어로 자동 전환)이고, 설명 언어와 페이지 언어는 별개다. 언어별 피드·llms.txt 소개(config.json)는 이미 언어별로 올바라 무변경.</p>
