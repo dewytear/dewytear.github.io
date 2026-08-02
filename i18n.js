@@ -77,7 +77,7 @@ var STRINGS = {
         cosmosSub3d3: 'Strata(계층) — World→Domain→System→Document 네 층 · 드래그 회전 · 휠 확대 · 문서 클릭 시 이웃 보기',
         c2Open: '문서 열기', c2Close: '닫기', c2Refs: '피참조', c2Nbr: '이웃',
         // ---- 그래프 스튜디오 (#!graph) ----
-        glTitle: '그래프 스튜디오',
+        glTitle: 'Graph Studio',
         glSub: '위키 전체를 펼친 라이브 그래프 — 노드를 잡아 끌고, 눌러서 관계를 보세요',
         glSubMaker: '빈 도화지에 나만의 지식그래프를 — 더블클릭으로 노드, 가장자리 드래그로 관계',
         glExplore: '탐색', glMaker: '제작',
@@ -367,7 +367,7 @@ var STRINGS = {
         cosmosSub3d3: 'Strata（階層）— World→Domain→System→Document の四層 · ドラッグで回転 · ホイールで拡大 · 文書をクリックで隣接を表示',
         c2Open: '文書を開く', c2Close: '閉じる', c2Refs: '被参照', c2Nbr: '隣接',
         // ---- グラフスタジオ (#!graph) ----
-        glTitle: 'グラフスタジオ',
+        glTitle: 'Graph Studio',
         glSub: 'ウィキ全体をライブグラフに — ノードをつかんで動かし、押して関係を見る',
         glSubMaker: '白紙に自分の知識グラフを — ダブルクリックでノード、縁からドラッグで関係',
         glExplore: '探索', glMaker: '作成',
