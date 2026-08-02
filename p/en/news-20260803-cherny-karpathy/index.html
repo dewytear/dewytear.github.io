@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The One Who Deleted and the One Who Rendered — Cherny&#x27;s “80% of the Harness” and Karpathy&#x27;s “LOTR Movie”</title>
+<meta name="description" content="Two scenes from right after Opus 5, cross-verified into one piece — Claude Code creator Cherny deleted 80%+ of the system prompt and the model got smarter (ablation methodology, &#x27;sabotage yourselves every six months&#x27;, &#x27;loops prompt Claude&#x27;), while Karpathy turned LOTR&#x27;s first paragraph plus $10 into a 5,500-line three.js 3D movie, embedded playable in the article. The shared structure: scaffolding shrinks × output scale jumps × the bottleneck moves to verification and perception">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/news-20260803-cherny-karpathy/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260803-cherny-karpathy/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260803-cherny-karpathy/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/news-20260803-cherny-karpathy/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260803-cherny-karpathy/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The One Who Deleted and the One Who Rendered — Cherny&#x27;s “80% of the Harness” and Karpathy&#x27;s “LOTR Movie”">
+<meta property="og:description" content="Two scenes from right after Opus 5, cross-verified into one piece — Claude Code creator Cherny deleted 80%+ of the system prompt and the model got smarter (ablation methodology, &#x27;sabotage yourselves every six months&#x27;, &#x27;loops prompt Claude&#x27;), while Karpathy turned LOTR&#x27;s first paragraph plus $10 into a 5,500-line three.js 3D movie, embedded playable in the article. The shared structure: scaffolding shrinks × output scale jumps × the bottleneck moves to verification and perception">
+<meta property="og:url" content="https://dewytear.github.io/p/en/news-20260803-cherny-karpathy/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The One Who Deleted and the One Who Rendered — Cherny&#x27;s “80% of the Harness” and Karpathy&#x27;s “LOTR Movie”">
+<meta name="twitter:description" content="Two scenes from right after Opus 5, cross-verified into one piece — Claude Code creator Cherny deleted 80%+ of the system prompt and the model got smarter (ablation methodology, &#x27;sabotage yourselves every six months&#x27;, &#x27;loops prompt Claude&#x27;), while Karpathy turned LOTR&#x27;s first paragraph plus $10 into a 5,500-line three.js 3D movie, embedded playable in the article. The shared structure: scaffolding shrinks × output scale jumps × the bottleneck moves to verification and perception">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "The One Who Deleted and the One Who Rendered — Cherny's “80% of the Harness” and Karpathy's “LOTR Movie”",
+ "description": "Two scenes from right after Opus 5, cross-verified into one piece — Claude Code creator Cherny deleted 80%+ of the system prompt and the model got smarter (ablation methodology, 'sabotage yourselves every six months', 'loops prompt Claude'), while Karpathy turned LOTR's first paragraph plus $10 into a 5,500-line three.js 3D movie, embedded playable in the article. The shared structure: scaffolding shrinks × output scale jumps × the bottleneck moves to verification and perception",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/news-20260803-cherny-karpathy/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260803-cherny-karpathy",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-08-03T08:50:32+09:00",
+ "dateModified": "2026-08-03T08:50:32+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260803-cherny-karpathy">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/news-20260803-cherny-karpathy/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/ja/news-20260803-cherny-karpathy/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>The One Who Deleted and the One Who Rendered — Cherny's &ldquo;80% of the Harness&rdquo; and Karpathy's &ldquo;LOTR Movie&rdquo;</h2>
+
+<p>In the two weeks after Opus 5 shipped, the two most-shared scenes in the AI world looked like opposites. <strong>Boris Cherny — creator of Claude Code</strong> — said in a talk that when the new model arrived, his team <strong>deleted more than 80% of the system prompt, and the model got smarter</strong>. <strong>Andrej Karpathy</strong> declared we are &ldquo;leaving the territory&rdquo; of testing LLMs with SVG pelicans, handed Opus 5 the first paragraph of The Lord of the Rings and a $10 budget, and got back <strong>a 3D animation that runs in the browser</strong>. One story is about erasing, the other about conjuring — and they are <strong>two faces of the same event</strong>. This article cross-verifies both against multiple reports, lays out the details, and analyzes why they are one story.</p>
+
+<div class="note">
+    <span class="nh">About this article (sources)</span>
+    · Subjects: <strong>Boris Cherny's talk and interview remarks</strong> (right after Opus 5 shipped; YC Startup School · Root Access lineage plus multiple reports) · <strong>Karpathy's X post and public demo</strong> (2026-08-02)<br>
+    · Method: <strong>cross-verification across multiple reports</strong> (2026-08-03) — source list and fact-check notes at the end
+</div>
+
+<h3>Three-line summary</h3>
+<ul>
+    <li>When Opus 5 arrived, Cherny's team <strong>deleted more than 80% of Claude Code's system prompt</strong> — and the model ran <strong>&ldquo;slightly smarter&rdquo;</strong>. The methodology is <strong>ablation</strong> (delete everything, reintroduce line by line, measure); the advice: &ldquo;<strong>sabotage yourselves — delete your system prompt every six months</strong>&rdquo;.</li>
+    <li>Karpathy gave Opus 5 the <strong>first paragraph of LOTR plus a 1M-token budget (~$10)</strong> and asked for a three.js render — about two hours later it had written <strong>5,500 lines of code that procedurally render a 3D movie</strong>, <a href="https://karpathy.ai/lotr-movie/" target="_blank" rel="noopener">playable and forkable in the browser</a> (embedded below).</li>
+    <li>The shared structure: as models improve, <strong>scaffolding gets deleted, output scale jumps, and the bottleneck moves to verification and perception</strong> — the weakness Karpathy flagged (&ldquo;LLMs can't watch their own video; they audit by slowly taking screenshots&rdquo;) is exactly that bottleneck.</li>
+</ul>
+
+<h3>Cherny — what &ldquo;we deleted 80% and it got smarter&rdquo; actually means</h3>
+<p>Cherny created Claude Code and now heads it — so this is <strong>the harness's own author deleting the harness</strong>. Piecing the reports together:</p>
+<ul>
+    <li><strong>What was deleted</strong> — more than <strong>80%</strong> of Claude Code's system prompt when Opus 5 landed. Behaviors that older models had to be told about, the new model <strong>already does without being told</strong>.</li>
+    <li><strong>The result</strong> — not degradation but improvement: in Cherny's words the model became <strong>&ldquo;slightly smarter&rdquo;</strong>. Stale scaffolding is not neutral — it is <strong>a cost that fights the model</strong>. Instructions written to patch an old model's weaknesses become shackles once those weaknesses are gone.</li>
+    <li><strong>The methodology: ablation</strong> — this was not a hunch. The team <strong>deletes the entire system prompt and reintroduces it line by line, measuring the impact of each line</strong>, for every model generation. When a new model arrives, the default posture is &ldquo;throw essentially everything away and start over&rdquo;.</li>
+    <li><strong>The advice</strong> — generalized for everyone: <strong>&ldquo;sabotage yourselves — delete your system prompt every six months&rdquo;</strong>. A harness is not an asset; it is <strong>a consumable that depreciates</strong>.</li>
+    <li><strong>The next layer: loops</strong> — from the same talk lineage comes the line <strong>&ldquo;I don't prompt Claude anymore — I have loops that prompt Claude&rdquo;</strong>. The human job moves up from writing one good prompt to <strong>designing the loop</strong> in which the model observes, plans, acts and reflects for hours or days. The showcase: thousands of parallel agents <strong>rewriting the Bun runtime from Zig to Rust in 11 days</strong>.</li>
+</ul>
+<p>Read through this wiki's <a href="/p/en/hns-what/">harness engineering series</a> — which defines the harness as &ldquo;the whole system in which the AI works&rdquo; — Cherny's remarks are not the abolition of the harness but <strong>its generational turnover</strong>. What got deleted is the prompt layer, the fastest to go stale; the upper layers — loops, verification, tools — got thicker. The precise reading is not &ldquo;harnesses matter less&rdquo; but <strong>&ldquo;the harness's center of gravity moved from instructions to structure&rdquo;</strong>.</p>
+
+<h3>Karpathy — leaving the pelican for Middle-earth</h3>
+<p>There is a lineage here. For years, the community's informal test for every new model was <strong>&ldquo;draw an SVG of a pelican riding a bicycle&rdquo;</strong> — making the model draw with code to probe its spatial and structural sense. In this post Karpathy declared <strong>&ldquo;we're starting to leave that territory&rdquo;</strong>, and showed the generalized version himself.</p>
+<ul>
+    <li><strong>Input</strong>: the <strong>first paragraph</strong> of The Lord of the Rings + a <strong>1M-token budget (~$10)</strong> + a request to render it in three.js. That's all — no storyboard, no assets, no scene list.</li>
+    <li><strong>Output</strong>: about two hours later, <strong>5,500 lines of code</strong> — placing and orchestrating polygon assets at (x,y,z) coordinates, writing the camera work and animation <strong>procedurally</strong>: a 3D movie that runs in the browser.</li>
+    <li><strong>Karpathy's verdict</strong>: &ldquo;kind of janky but fun&rdquo; — and &ldquo;it's a bit <strong>mindboggling</strong>&rdquo; that the LLM had to place and choreograph all of it.</li>
+</ul>
+
+<figure class="doc-video">
+    <div class="dv-frame">
+        <iframe src="https://karpathy.ai/lotr-movie/" title="Karpathy — LOTR movie (a three.js scene procedurally rendered by Opus 5)"
+                loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <figcaption>This is <strong>the real artifact</strong> — the 5,500 lines Opus 5 wrote, running live above. If the frame stays blank: <a href="https://karpathy.ai/lotr-movie/" target="_blank" rel="noopener">open in a new tab</a> · <a href="https://x.com/karpathy/status/2083749667410727319" target="_blank" rel="noopener">Karpathy's original X post</a></figcaption>
+</figure>
+
+<p>What matters just as much is the <strong>weakness</strong> Karpathy flagged: moving artifacts — games, worlds — are <strong>hard for an LLM to audit</strong>. Models cannot natively perceive video, so Opus 5 had to <strong>slowly, painstakingly take screenshots at different points</strong> to check its own scene, and it slipped a few times along the way — hence the jank. It can build the thing but <strong>cannot watch what it built</strong> — the most precise one-liner this experiment leaves behind.</p>
+
+<h3>Why this is one story</h3>
+<p>Put the two scenes side by side and the same structure appears.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="Three things that move when model intelligence rises: scaffolding shrinks (Cherny), output scale jumps (Karpathy), and the bottleneck moves to verification and perception">
+    <text class="d-label" x="360" y="26" text-anchor="middle">When the model gets smarter, three things move around it</text>
+    <rect class="d-box" x="250" y="46" width="220" height="42" rx="10"/>
+    <text class="d-label sm" x="360" y="72" text-anchor="middle">Model intelligence ↑ (Opus 5)</text>
+    <line class="d-edge" x1="300" y1="88" x2="129" y2="120"/><polygon class="d-arrow" points="133,113 125,122 135,123"/>
+    <line class="d-edge" x1="360" y1="88" x2="360" y2="120"/><polygon class="d-arrow" points="355,112 360,120 365,112"/>
+    <line class="d-edge" x1="420" y1="88" x2="591" y2="120"/><polygon class="d-arrow" points="585,123 595,122 587,113"/>
+    <rect class="d-box soft" x="24" y="120" width="210" height="104" rx="10"/>
+    <text class="d-label sm" x="129" y="146" text-anchor="middle">Scaffolding shrinks</text>
+    <text class="d-sub" x="129" y="170" text-anchor="middle">80% of the system prompt cut</text>
+    <text class="d-sub" x="129" y="188" text-anchor="middle">instructions become shackles</text>
+    <text class="d-sub" x="129" y="210" text-anchor="middle">— Cherny</text>
+    <rect class="d-box soft" x="254" y="120" width="210" height="104" rx="10"/>
+    <text class="d-label sm" x="359" y="146" text-anchor="middle">Output scale jumps</text>
+    <text class="d-sub" x="359" y="170" text-anchor="middle">pelican SVG → LOTR movie</text>
+    <text class="d-sub" x="359" y="188" text-anchor="middle">$10 · 2 hours · 5,500 lines</text>
+    <text class="d-sub" x="359" y="210" text-anchor="middle">— Karpathy</text>
+    <rect class="d-box accent" x="484" y="120" width="210" height="104" rx="10"/>
+    <text class="d-label sm" x="589" y="146" text-anchor="middle">The bottleneck moves</text>
+    <text class="d-sub" x="589" y="170" text-anchor="middle">verification and perception</text>
+    <text class="d-sub" x="589" y="188" text-anchor="middle">screenshot audits · Lean certs</text>
+    <text class="d-sub" x="589" y="210" text-anchor="middle">— the next battleground</text>
+    <text class="d-sub" x="360" y="258" text-anchor="middle">Instructions get deleted · making gets cheap · &ldquo;checking it's right&rdquo; gets expensive</text>
+    <text class="d-sub" x="360" y="278" text-anchor="middle">The human and harness job moves up to designing the verification loop</text>
+</svg>
+<div class="d-cap">Cherny (left) and Karpathy (center) are two faces of the same event — and both point at the box on the right.</div>
+</div>
+
+<ul>
+    <li><strong>Instructions get deleted.</strong> As models internalize behaviors, the &ldquo;do it this way&rdquo; layer depreciates — Cherny's 80% is the measured value of that depreciation.</li>
+    <li><strong>Making gets cheap.</strong> In a world where one paragraph yields a 3D movie, the marginal cost of an artifact has fallen to $10 and two hours — Karpathy's experiment is the specimen.</li>
+    <li><strong>So verification becomes the bottleneck.</strong> Karpathy's model audited itself by screenshots because it can't watch its own video; Cherny's answer is to have <strong>loops, not humans, run the verification</strong>. And last week OpenAI showing up with <a href="/p/en/news-20260801-astra-math/">Lean machine-checked certificates</a> for its mathematics is a different answer at the same spot — <strong>as generation becomes abundant, verification becomes precious</strong>.</li>
+</ul>
+<p>This meets the conclusion this wiki reached in <a href="/p/en/news-20260728-software-factories-fail/">&ldquo;The Harness Is Not Enough&rdquo;</a> — a harness's value lies not in the thickness of its instructions but in <strong>the quality of its verification loop</strong>. Cherny testified to that thesis as the harness's own author; Karpathy testified to it with the scale of the artifact.</p>
+
+<h3>Fact-check notes</h3>
+<ul>
+    <li><strong>Cross-verified (the article's skeleton)</strong> — Cherny's 80%+ deletion and &ldquo;slightly smarter&rdquo;, the ablation methodology, the six-month sabotage advice, &ldquo;loops prompt Claude&rdquo;, the Bun Zig→Rust 11-day case; Karpathy's first-paragraph + 1M tokens (~$10), ~2 hours, 5,500 lines, procedural three.js render, the screenshot-audit weakness, and the public demo URL agree across multiple independent reports (and Karpathy's original post).</li>
+    <li><strong>Paraphrase scope</strong> — Cherny quotes are faithful renderings from talk/interview coverage, not verbatim transcripts. Karpathy's &ldquo;janky but fun&rdquo; and &ldquo;mindboggling&rdquo; are his own words from the X post.</li>
+    <li><strong>A correction of common shorthand</strong> — this is often shared as &ldquo;an animation made with SVG&rdquo;; precisely, it is <strong>the next step beyond the SVG-pelican test, done in three.js</strong> (Karpathy's own framing). The article narrates that lineage.</li>
+    <li><strong>The embed</strong> — the frame above is not a video file but <strong>the interactive scene running the code Opus 5 wrote</strong>. If the external site (karpathy.ai) blocks embedding, the caption's new-tab link still works.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">Sources</span>
+    · Cherny: <a href="https://finance.biggo.com/news/7df48019614f68c0" target="_blank" rel="noopener">BigGo — &ldquo;We Deleted 80% of Claude Code's System Prompts&rdquo;</a> · <a href="https://finance.biggo.com/news/954a98de-8b79-429f-bd7e-761c27a3b210" target="_blank" rel="noopener">BigGo — &ldquo;Delete Your System Prompts Every Six Months&rdquo;</a> · <a href="https://explainx.ai/blog/anthropic-engineer-loops-prompts-ai-coding-harness-engineering-2026" target="_blank" rel="noopener">explainx — Build Loops, Not Prompts</a> · <a href="https://www.ycrootaccess.com/p/boris-cherny-building-claude-code" target="_blank" rel="noopener">Root Access (YC) — Building Claude Code</a> · <a href="https://www.startuphub.ai/ai-news/artificial-intelligence/2026/anthropic-s-boris-cherny-on-building-claude-code" target="_blank" rel="noopener">StartupHub</a> · <a href="https://memeburn.com/boris-cherny-says-loop-engineering-has-replaced-prompting/" target="_blank" rel="noopener">Memeburn</a><br>
+    · Karpathy: <a href="https://x.com/karpathy/status/2083749667410727319" target="_blank" rel="noopener">original X post (2026-08-02)</a> · <a href="https://karpathy.ai/lotr-movie/" target="_blank" rel="noopener">public demo — karpathy.ai/lotr-movie</a> · <a href="https://www.benzinga.com/markets/tech/26/08/60861644/andrej-karpathy-says-ai-has-moved-beyond-simple-prompts-after-claude-opus-builds-3d-lord-of-the-rings-world" target="_blank" rel="noopener">Benzinga</a><br>
+    · Background: <a href="https://newsletter.pragmaticengineer.com/p/how-claude-code-is-built" target="_blank" rel="noopener">Pragmatic Engineer — How Claude Code is built</a>
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">Created</span> 2026-08-03 &middot; <span class="pr-k">Updated</span> 2026-08-03</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/news-20260724-claude-opus-5/">Claude Opus 5 — A Near-Fable at Half the Price Has Arrived</a></li><li><a href="/p/en/news-20260728-software-factories-fail/">The Harness Is Not Enough — Why Software Factories Fail</a></li><li><a href="/p/en/hns-overview/">Harness Engineering — Overview and Recap</a></li><li><a href="/p/en/welcome/">Welcome</a></li></ul>
+</nav>
+</body>
+</html>
