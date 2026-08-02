@@ -1,0 +1,109 @@
+<h2>OpenAI Astra — &ldquo;10대 난제 해결&rdquo;, 이번엔 증명서를 들고 왔다</h2>
+
+<p>2026년 8월 1일, OpenAI가 차기 주력 모델 <strong>Astra</strong>의 내부 버전이 <strong>10년 이상 본질적 진전이 없던 미해결 문제 10건</strong>을 해결했다고 발표했습니다. 수학·양자 복잡도·이론 전산학에 걸친 결과이고, 헤드라인은 <strong>27년 묵은 군론 문제(비-sofic 군의 존재)의 최초 해결</strong>입니다. 9개월 전 &ldquo;GPT-5가 에르되시 문제 10개를 풀었다&rdquo;는 발표가 하루 만에 허위로 판명돼 망신을 샀던 그 회사가, 이번에는 <strong>249쪽의 원고와 기계가 줄 단위로 검사할 수 있는 Lean 증명서</strong>를 함께 던졌습니다. 이 글은 공식 발표와 복수 보도를 교차검증해, <strong>무엇이 풀렸고 · 왜 &lsquo;해결&rsquo;로 인정되며 · 수학자들은 뭐라고 하는지</strong>를 정리합니다.</p>
+
+<div class="note">
+    <span class="nh">기사 정보 (출처)</span>
+    · 대상: <strong>OpenAI &ldquo;Ten advances in mathematics and theoretical computer science&rdquo;</strong> (2026-08-01, OpenAI News)<br>
+    · 정리: <strong>복수 보도 교차검증</strong>(2026-08-03) — 문서 말미에 출처 목록과 사실검증 노트<br>
+    · 성격: 전 결과 <strong>동료평가 이전</strong> — 본문에서 검증 상태를 구분해 표기합니다
+</div>
+
+<h3>세 줄 요약</h3>
+<ul>
+    <li>Astra 내부 버전이 <strong>10개 미해결 문제</strong>에 새 결과를 냈습니다 — 전부 <strong>기계검증 가능한 Lean 인증서</strong>가 붙었고, 생성에 든 토큰 비용은 합쳐서 <strong>약 $2,000</strong>(Sol API 요율)입니다.</li>
+    <li>&ldquo;해결&rdquo;의 근거는 세 겹입니다 — ①Lean이 <strong>증명의 논리 전개를 줄 단위로 기계검증</strong> ②<strong>실명 수학자들이 원고를 비판적으로 독해</strong>(Connes 장은 Sorin Popa) ③그럼에도 <strong>동료평가는 아직</strong> — 형식화가 원 문제와 일치하는지, 결과의 의의가 얼마나 큰지는 여전히 사람 몫입니다.</li>
+    <li>수학계 반응의 축은 Terence Tao의 표현대로 <strong>&ldquo;증명 희소의 시대에서 증명 풍요의 시대로&rdquo;</strong> — 명성의 무게중심이 &lsquo;최초로 증명한 사람&rsquo;에서 <strong>&lsquo;검증하고 소화하는 사람&rsquo;</strong>으로 옮겨가고 있다는 것입니다.</li>
+</ul>
+
+<h3>용어 세 개만 알고 가기</h3>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>용어</th><th>쉬운 설명</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Lean<br>(증명 보조기)</strong></td><td>수학 증명을 <strong>프로그램처럼 적게 하는 언어</strong>. 모든 단계를 기계가 읽을 수 있게 강제하므로, 컴파일이 통과하면 <strong>&ldquo;그 형식 명제의 증명에 논리 비약이 없다&rdquo;</strong>를 작성자를 믿지 않고도 확인할 수 있습니다.</td></tr>
+        <tr><td><strong>형식화<br>(formalization)</strong></td><td>사람 말로 된 문제를 Lean이 읽는 <strong>형식 명제로 옮기는 일</strong>. Lean이 보증하는 건 형식 명제까지이고, <strong>그 명제가 원래 문제와 같은 것인지</strong>는 여전히 수학자가 눈으로 확인해야 합니다 — 이번 발표의 핵심 논점.</td></tr>
+        <tr><td><strong>sofic 군</strong></td><td>무한 군을 유한한 순열로 &ldquo;점점 정밀하게 근사&rdquo;할 수 있으면 sofic. 1999년 Gromov가 개념을 낸 뒤 <strong>&ldquo;sofic이 아닌 군이 존재하는가&rdquo;</strong>는 27년간 아무도 답하지 못했습니다 — 이번 발표의 헤드라인이 바로 이 답(존재함, 명시적 구성)입니다.</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>무엇이 풀렸나 — 10문제</h3>
+<p>OpenAI 발표 기준, 열 개 모두 <strong>&ldquo;주 결과에 한해 10년 이상 진전이 없던&rdquo;</strong> 문제입니다. 고차원 기하·부호 이론·산술회로 복잡도·군론·작용소대수·양자 복잡도·격자 암호·극단 조합론에 걸쳐 있습니다.</p>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>분야</th><th>결과</th><th>왜 큰가</th></tr></thead>
+    <tbody>
+        <tr><td>군론</td><td><strong>비-sofic 군의 최초 명시적 구성</strong></td><td>Gromov(1999)·Weiss(2000) 이래 27년 미해결 — 이번 발표의 헤드라인</td></tr>
+        <tr><td>작용소대수</td><td><strong>Connes 강성 추측 반증</strong></td><td>오래 열려 있던 추측을 반례로 닫음 — 해당 장의 독해자가 이 분야 대가 Sorin Popa</td></tr>
+        <tr><td>고차원 기하</td><td>구 채우기(sphere packing) 밀도 <strong>일반 상한의 1978년 이후 첫 개선</strong></td><td>반세기 가까이 멈춰 있던 상한</td></tr>
+        <tr><td>부호 이론</td><td>이진·구면 부호 한계의 <strong>지수적 개선</strong></td><td>통신·저장의 이론적 한계에 직결</td></tr>
+        <tr><td>산술회로</td><td>퍼머넌트(permanent) 계산의 <strong>새 회로 하한</strong></td><td>계산 복잡도의 벽 문제</td></tr>
+        <tr><td>양자 복잡도</td><td>얽힘 2인 게임의 <strong>지수적 병렬 반복 정리</strong></td><td>양자 게임 증폭의 일반형</td></tr>
+        <tr><td>격자 암호</td><td>최근접 벡터 문제(CVP)의 <strong>근사 난해성</strong></td><td>격자 기반 암호의 안전성 근거 강화</td></tr>
+        <tr><td>이산 기하</td><td><strong>Ehrhart 부피 추측 증명</strong></td><td>격자 다면체의 고전 추측</td></tr>
+        <tr><td>극단 조합론</td><td><strong>에르되시 카탈로그 3문제</strong>(다색 램지 수 #183 포함)</td><td>지난해 소동의 바로 그 카탈로그에서, 이번엔 진짜로</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>왜 &lsquo;해결&rsquo;로 인정되나 — 세 관문과 남은 하나</h3>
+<p>AI가 &ldquo;풀었다&rdquo;는 주장에서 늘 문제가 되는 건 <strong>검증</strong>입니다. 이번 발표가 이전의 AI 수학 발표들과 구조적으로 다른 지점이 여기입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 252" role="img" aria-label="해결 인정의 세 관문과 남은 하나: Astra가 증명을 생성하고, Lean 4가 줄 단위로 기계검증하고, 실명 전문가가 원고를 독해했으며, 동료평가는 아직 남아 있다">
+    <text class="d-label" x="360" y="26" text-anchor="middle">&lsquo;해결&rsquo;은 어디까지 왔나 — 통과한 세 관문, 남은 하나</text>
+    <rect class="d-box soft" x="16" y="66" width="158" height="96" rx="10"/>
+    <text class="d-label sm" x="95" y="92" text-anchor="middle">Astra 증명 생성</text>
+    <text class="d-sub" x="95" y="116" text-anchor="middle">원고 249쪽</text>
+    <text class="d-sub" x="95" y="134" text-anchor="middle">비용 합계 ~$2,000</text>
+    <line class="d-edge" x1="174" y1="114" x2="186" y2="114"/><polygon class="d-arrow" points="186,109 194,114 186,119"/>
+    <rect class="d-box accent" x="194" y="66" width="158" height="96" rx="10"/>
+    <text class="d-label sm" x="273" y="92" text-anchor="middle">Lean 기계검증 ✓</text>
+    <text class="d-sub" x="273" y="116" text-anchor="middle">줄 단위 논리 검사</text>
+    <text class="d-sub" x="273" y="134" text-anchor="middle">작성자 신뢰 불요</text>
+    <line class="d-edge" x1="352" y1="114" x2="364" y2="114"/><polygon class="d-arrow" points="364,109 372,114 364,119"/>
+    <rect class="d-box accent" x="372" y="66" width="158" height="96" rx="10"/>
+    <text class="d-label sm" x="451" y="92" text-anchor="middle">전문가 독해 ✓</text>
+    <text class="d-sub" x="451" y="116" text-anchor="middle">Popa 등 실명 검토</text>
+    <text class="d-sub" x="451" y="134" text-anchor="middle">공저자 아닌 독자</text>
+    <line class="d-edge dash" x1="530" y1="114" x2="542" y2="114"/><polygon class="d-arrow" points="542,109 550,114 542,119"/>
+    <rect class="d-box soft" x="550" y="66" width="158" height="96" rx="10" stroke-dasharray="6 5"/>
+    <text class="d-label sm" x="629" y="92" text-anchor="middle">동료평가 — 아직</text>
+    <text class="d-sub" x="629" y="116" text-anchor="middle">형식화 일치 확인</text>
+    <text class="d-sub" x="629" y="134" text-anchor="middle">의의·신규성 판단</text>
+    <text class="d-sub" x="360" y="196" text-anchor="middle">Lean이 보증하는 것: &ldquo;이 형식 명제의 증명은 논리적으로 참&rdquo;</text>
+    <text class="d-sub" x="360" y="216" text-anchor="middle">사람이 확인할 것: 그 형식 명제가 정말 원 문제인가 · 이 결과가 분야를 얼마나 바꾸나</text>
+</svg>
+<div class="d-cap">검증의 사다리 — 기계검증과 실명 독해까지 통과했고, 동료평가라는 마지막 관문이 남아 있다.</div>
+</div>
+
+<p>풀어서 쓰면 이렇습니다. 첫째, <strong>열 결과 모두에 Lean 인증서</strong>가 붙었습니다 — 이 규모의 AI 수학 발표가 기계검증 인증서를 전부 갖춰 나온 것은 처음이고, &ldquo;증명에 구멍이 있는가&rdquo;라는 고전적 의심을 기계가 대신 닫아 줍니다. 둘째, 원고의 감사의 글에는 <strong>실제 수학자들이 독해자로 실명 기재</strong>돼 있습니다 — Connes 강성 장은 작용소대수의 대가 <strong>Sorin Popa</strong>가, 비-sofic 군 장은 <strong>Henry Bradford·Michael Chapman·Alon Dogon·Francesco Fournier-Facio·François Charles</strong>가 읽었습니다. 공저자가 아니라 <strong>비판적 독자</strong>라는 점이 중요합니다. 셋째, 그럼에도 <strong>어느 결과도 동료평가를 거치지 않았습니다</strong>. Lean은 형식 명제의 참까지만 보증합니다 — <strong>그 형식화가 열려 있던 원 문제와 정확히 같은 것인지, 문헌 대비 얼마나 새로운지, 분야를 얼마나 바꾸는지</strong>는 지금부터 수학 공동체가 확인할 일입니다.</p>
+
+<h3>수학자들은 뭐라고 하나</h3>
+<p><strong>Terence Tao</strong>(필즈상)는 이번 발표 직후를 포함해 올해 내내 같은 프레임을 반복하고 있습니다 — 수학이 <strong>&ldquo;증명 희소(proof scarcity)의 시대에서 증명 풍요(proof abundance)의 시대로&rdquo;</strong> 넘어가고 있으며, 그 시대에는 <strong>&ldquo;최초 증명자에게 주어지던 명성의 일부가, 증명을 검증하고 소화하는 사람에게로 옮겨가야 한다&rdquo;</strong>는 것입니다. 그는 사람과 기계가 대규모로 분업하는 <strong>&ldquo;big mathematics&rdquo;</strong>의 비전을 말하는 동시에, 경고도 잊지 않습니다 — 아무도 이해하지 못한 채 &ldquo;해결됨&rdquo; 딱지가 붙은 문제는 <strong>후속 연구의 흥미 자체를 죽일 수 있다</strong>는 것입니다(ICM 2026 발표·Mathstodon).</p>
+<p><strong>Thomas Bloom</strong>(맨체스터대, 에르되시 문제 카탈로그 관리자)의 한마디는 &ldquo;big news&rdquo;였습니다. 이 반응이 무게를 갖는 이유는 이력 때문입니다 — <strong>2025년 10월, OpenAI 임원이 &ldquo;GPT-5가 에르되시 문제 10개를 풀었다&rdquo;고 발표했을 때 그것을 공개적으로 해체한 사람이 바로 Bloom</strong>입니다(당시 &lsquo;풀었다&rsquo;던 문제들은 이미 문헌에 답이 있던 것으로, 모델은 검색을 잘한 것에 가까웠습니다). 그 소동을 정면으로 겪은 카탈로그 관리자가 이번 발표에는 &ldquo;big news&rdquo;라고 답했다는 것 — 이번 검증 체계가 지난번과 다르다는 가장 압축적인 증언입니다.</p>
+<p>긴장도 있습니다. 2026년 6월 국제수학연맹(IMU)의 지지 아래 발표되고 Tao도 서명한 <strong>라이덴 선언(Leiden Declaration)</strong>은, AI 기업들이 <strong>동료평가를 우회해 보도자료로 결과를 발표하는 관행</strong>이 증명과 귀속(attribution)의 무결성을 위협한다고 경고했습니다. OpenAI는 이번 발표에서 이 선언을 <strong>스스로 인용</strong>했습니다 — 기준을 알고 있으며 Lean 인증서·실명 독해가 그에 대한 응답이라는 제스처지만, 발표의 형식 자체는 여전히 학술지가 아닌 기업 블로그라는 점에서 선언이 겨눈 관행 안에 있습니다.</p>
+
+<h3>Astra는 무엇인가</h3>
+<p>이번 발표는 결과만큼이나 <strong>발표 방식</strong>이 화제였습니다 — 차기 주력 모델의 이름을 신제품 행사가 아니라 <strong>수학 결과 묶음에 실어 공개</strong>했기 때문입니다(&ldquo;수학 블로그 포스트에 차기 모델 발표를 끼워 넣었다&rdquo;는 촌평이 나온 이유). 보도를 종합하면 Astra는 <strong>여러 에이전트가 협업해 몇 시간~며칠 단위의 장기 작업을 수행</strong>하도록 설계된 모델 패밀리로, 기존 <strong>Sol·Terra·Luna</strong> 라인 옆의 새 클래스가 될지, GPT-6 또는 GPT-5.7로 출시될지는 <strong>미정</strong>입니다. 이름도 잠정입니다. 워싱턴에서 정책 입안자들에게 시연됐고, 예고된 <strong>미국 정부의 출시 전 검토 절차를 처음으로 거치는 모델</strong>이 될 것으로 보도됐습니다. 공개 시점·가격·사양은 발표되지 않았습니다.</p>
+
+<h3>왜 지금 가능한가 — 검증 병목의 이동</h3>
+<p>이 발표의 구조적 의미는 <strong>생성기(LLM)와 검증기(Lean)의 결합</strong>에 있습니다. LLM의 고질적 약점은 &ldquo;그럴듯하지만 어딘가 새는 증명&rdquo;이었고, 사람이 그 구멍을 찾는 비용이 병목이었습니다. 증명을 Lean으로 강제하면 <strong>구멍 찾기를 기계가 무료로 대신</strong>합니다 — 모델은 틀린 시도를 마음껏 버리며 통과할 때까지 탐색할 수 있고, 사람의 일은 &lsquo;증명 검산&rsquo;에서 <strong>&lsquo;형식화가 옳은가&rsquo;와 &lsquo;이게 의미 있는가&rsquo;</strong>라는 위층으로 올라갑니다. Tao가 말하는 명성의 이동이 정확히 이 구조 변화의 사회적 번역입니다. 합계 ~$2,000이라는 비용은 그래서 상징적입니다 — <strong>27년 묵은 문제의 해답 후보를 생성하는 한계비용</strong>이 처음으로 가격표를 달았습니다.</p>
+
+<h3>사실검증 노트</h3>
+<ul>
+    <li><strong>교차검증 통과(본문 뼈대)</strong> — 발표일(8/1)·10문제 구성·비-sofic 군 최초 구성(1999/27년)·Connes 강성 반증·1978년 이후 구 채우기 상한 첫 개선·Ehrhart 증명·에르되시 3문제(#183)·전 결과 Lean 인증서·249쪽 원고·비용 ~$2,000(Sol API 요율)·실명 독해자(Popa 외)·동료평가 이전 상태는 복수 독립 보도가 일치.</li>
+    <li><strong>단일 계통 출처(방향만 서술)</strong> — Astra의 멀티에이전트·장기 작업 설계, Sol·Terra·Luna 병렬 클래스설, GPT-6/5.7 미정, 워싱턴 시연과 정부 검토 1호 전망은 The Information발 보도 계통 — 본문에서 &ldquo;보도됐다&rdquo;로 한정했습니다.</li>
+    <li><strong>인용의 범위</strong> — Tao의 &lsquo;증명 풍요·명성 이동·big mathematics&rsquo;는 본인 게시글·ICM 2026 발표에 근거한 요지 인용(축자역 아님). Bloom의 &ldquo;big news&rdquo;는 X 게시글 보도 인용.</li>
+    <li><strong>미확정</strong> — 각 결과의 수학적 의의 평가와 형식화-원문제 일치 확인은 진행 중 — 이 기사는 &ldquo;해결 주장 + 검증 체계&rdquo;를 다루며, 최종 판정은 동료평가와 커뮤니티 검토 이후의 일입니다.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">출처</span>
+    · 공식: <a href="https://openai.com/news/" target="_blank" rel="noopener">OpenAI — &ldquo;Ten advances in mathematics and theoretical computer science&rdquo; (2026-08-01)</a><br>
+    · 보도: <a href="https://the-decoder.com/openai-announces-its-next-major-model-astra-by-dropping-ten-previously-unsolved-math-solutions/" target="_blank" rel="noopener">The Decoder</a> · <a href="https://thenextweb.com/news/openai-astra-model-ten-math-proofs-non-sofic-groups" target="_blank" rel="noopener">TNW</a> · <a href="https://www.techtimes.com/articles/322710/20260802/openais-astra-solves-ten-decade-old-math-problems-machine-checkable-lean-proofs.htm" target="_blank" rel="noopener">TechTimes</a> · <a href="https://siliconangle.com/2026/08/02/openais-astra-solves-10-long-open-math-problems-publishes-proofs/" target="_blank" rel="noopener">SiliconANGLE</a> · <a href="https://www.datacamp.com/blog/open-ai-model-astra-solved-ten-open-math-problems" target="_blank" rel="noopener">DataCamp</a> · <a href="https://gizmodo.com/openai-smuggled-the-announcement-of-astra-its-next-ai-model-into-a-blog-post-about-math-2000793689" target="_blank" rel="noopener">Gizmodo</a><br>
+    · Astra 모델 계통: <a href="https://www.theinformation.com/briefings/exclusive-openai-previews-astra-ai-model-dc" target="_blank" rel="noopener">The Information</a> · <a href="https://the-decoder.com/openai-is-reportedly-building-astra-a-model-family-designed-to-work-on-problems-for-hours-or-days/" target="_blank" rel="noopener">The Decoder (사전 보도)</a><br>
+    · 수학자: <a href="https://mathstodon.xyz/@tao/116477355181348435" target="_blank" rel="noopener">Terence Tao (Mathstodon)</a> · <a href="https://teorth.github.io/tao-web/ai-views.html" target="_blank" rel="noopener">Tao — AI 견해 모음</a> · <a href="https://kingy.ai/news/openai-astra-ten-math-results-evidence/" target="_blank" rel="noopener">kingy.ai — 근거와 한계 분석</a>
+</div>
