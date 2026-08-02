@@ -1,0 +1,12 @@
+<h2>2026-08-03 · 기능 — 그래프 스튜디오 JSON 내보내기, Safari 한글 깨짐 수정</h2>
+
+<p>배포 후 대표님이 Safari에서 <a href="#!graph">Graph Studio</a> 제작 모드의 내보낸 JSON을 미리보기하니 <strong>한글이 깨져</strong> 있었다. 어제(08-02) 출시한 기능의 후속 버그픽스지만 <strong>KST 날짜가 넘어가 그날 로그로 분리</strong>한다(2026-07-20 선례 규칙). 변경 유형: <strong>ENGINE</strong>.</p>
+
+<div class="note warn">
+    <span class="nh">원인 — 인코딩 선언이 전무한 Blob</span>
+    <code>mkExport</code>의 Blob이 <code>type:'application/json'</code>뿐이었다. Blob은 내용을 UTF-8 바이트로 쓰지만 <strong>BOM도 charset도 없어</strong>, Safari 미리보기(iOS 다운로드·Quick Look)가 BOM 없는 텍스트의 UTF-8 스니핑에 약해 레거시 인코딩으로 읽는다. Chrome은 스니핑이 강해 멀쩡해 보인다 — &ldquo;Safari에서만 깨짐&rdquo;과 정확히 일치하는 결.
+</div>
+
+<p>수정은 두 줄이다. 내보내기 내용 앞에 <strong>UTF-8 BOM(<code>﻿</code>)</strong>을 붙이고 <code>charset=utf-8</code>을 명시했다 — 모든 미리보기·편집기가 존중하는 유일한 인코딩 신호로, 엑셀용 CSV 내보내기의 보편 관례와 같다. 가져오기는 <code>JSON.parse</code>가 선두 BOM에 throw하므로 <strong>파싱 전에 벗긴다</strong>(외부에서 재저장돼 BOM이 남은 파일의 재가져오기도 함께 방탄).</p>
+
+<p class="scn-sub">검증은 환경 무관의 바이트 수준: 내보낸 파일 선두 3바이트 <code>EF BB BF</code> 확인 · 실제 파일 입력 경로로 재가져오기 왕복(한글 라벨 &ldquo;한글 라벨&rdquo;·&ldquo;지식그래프 ✦&rdquo; 온전) · 파이썬 <code>utf-8-sig</code> 교차 파싱. 이 환경에 Safari·Firefox가 없어 실기기 재검은 배포 후 몫이지만, BOM이 있으면 어떤 소비자든 인코딩이 모호하지 않다. <code>graphlive.js ?v=2</code>.</p>

@@ -753,10 +753,14 @@ function mkDeleteSel(){
     R.mkSel = -1; updateSelbar(); mkSave();
 }
 function mkExport(){
-    var blob = new Blob([JSON.stringify({ v: 1,
+    // UTF-8 BOM을 앞에 붙인다 — Blob은 UTF-8로 쓰지만 선언이 없으면 Safari
+    // 미리보기(iOS 다운로드·Quick Look)가 레거시 인코딩으로 읽어 한글이
+    // 깨진다. BOM이 모든 미리보기가 존중하는 유일한 신호(CSV 관례와 동일)이고,
+    // 우리 가져오기는 파싱 전에 벗기므로 왕복이 안전하다.
+    var blob = new Blob(['\uFEFF' + JSON.stringify({ v: 1,
         nodes: R.MK.nodes.map(function(n){ return { id: n.id, label: n.label,
             x: Math.round(n.x), y: Math.round(n.y), pin: !!n.pin }; }),
-        edges: R.MK.edges }, null, 1)], { type: 'application/json' });
+        edges: R.MK.edges }, null, 1)], { type: 'application/json;charset=utf-8' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'my-knowledge-graph.json';
@@ -767,7 +771,9 @@ function mkImport(file){
     var rd = new FileReader();
     rd.onload = function(){
         try{
-            var s = JSON.parse(rd.result);
+            // 선두 BOM은 JSON.parse가 throw한다 — 우리 내보내기(BOM 포함)와
+            // 외부에서 재저장된 파일 모두를 위해 파싱 전에 벗긴다.
+            var s = JSON.parse(String(rd.result).replace(/^\uFEFF/, ''));
             if(!s || s.v !== 1 || !Array.isArray(s.nodes) || !Array.isArray(s.edges)) return;
             mkSnap();
             R.MK = { v: 1,
