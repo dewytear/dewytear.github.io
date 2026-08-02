@@ -18,3 +18,9 @@
 <p>이어서 대표님이 짚으셨다 — <strong>&ldquo;소개가 한글인데 영어가 더 낫지 않아?&rdquo;</strong> 홈은 URL이 하나라 소개문도 하나인데, 영어 소개는 <code>feed.en.xml</code>·README·<code>/p/en/</code>에만 있고 <strong>홈 검색 결과를 결정하는 index.html에는 없었다</strong>. 위키가 3언어 완비이고 브랜드명도 영어라 홈 소개문 4곳(meta·og·twitter·WebSite)을 영어로 교체했다: <em>&ldquo;A trilingual (KO·EN·JA) wiki on Claude Code, plugins, harnesses, LLM wikis and second brains — with Graph Studio, the whole wiki as a live, touchable knowledge graph.&rdquo;</em> Dataset 설명도 이름(영어)과 비대칭이던 한국어 장문을 같은 내용의 영어로 통일했다(Google Dataset Search의 주 이용자도 글로벌).</p>
 
 <p class="scn-sub">의도적으로 안 바꾼 것: <code>html lang="ko"</code>·<code>og:locale ko_KR</code> — 페이지 본문 기본 언어는 여전히 한국어(SPA가 방문자 언어로 자동 전환)이고, 설명 언어와 페이지 언어는 별개다. 언어별 피드·llms.txt 소개(config.json)는 이미 언어별로 올바라 무변경.</p>
+
+<h3>check_all — &ldquo;마지막 편집 이후 게이트 하나 빠뜨림&rdquo; 사고의 기계적 종결</h3>
+
+<p>Astra 기사 PR의 CI가 <strong>plugin-sync 표류</strong>로 떨어졌다 — 기사 등재 중 <code>tools/concepts.en·ja.json</code>과 <code>og-card.html</code>을 고치고 <strong>번들 재동기화를 빠뜨린 것</strong>. 같은 계열 사고가 두 번째다(#375에서는 늦게 고친 워크로그 뒤에 <code>build_ai_export</code>를 재실행하지 않아 피드 표류). 패턴은 &ldquo;게이트를 모른다&rdquo;가 아니라 <strong>&ldquo;게이트가 마지막 편집보다 먼저 돌았다&rdquo;</strong>다 — 낱개 게이트를 기억으로 돌리는 한 구조적으로 재발한다.</p>
+
+<p>그래서 기계로 닫았다: <strong><code>tools/check_all.py</code></strong> — CI validate-all 잡의 파이썬 게이트 8단계(<code>validate_all</code>·export/prerender <code>--check</code>·plugin-sync·worklog·cachebuster·translation·relations 리뷰)를 <strong>같은 순서·같은 플래그로 전부 실행</strong>한다. &ldquo;여기 초록 = CI 초록&rdquo;이 계약이고, 도식·UI 문구를 만졌을 때 돌릴 브라우저 잡 2종은 끝에서 상기시킨다. CLAUDE.md 규칙 5를 &ldquo;커밋 직전 <strong>마지막에</strong> check_all&rdquo;로 갱신 — 개별 실행은 디버깅용, 판정은 항상 종합으로. 이번 표류 자체는 <code>check_plugin_sync --fix</code> + plugin <code>0.27.0</code>으로 해소했다.</p>
