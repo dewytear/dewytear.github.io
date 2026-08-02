@@ -47,3 +47,23 @@
 <p>CDP 실인터랙션으로 전 경로를 돌렸다: 마운트(내비 라벨·탭 제목·최근 문서 숨김) · 노드 클릭 카드(제목·관계·문서 열기·씨앗 버튼) · 검색 dim/Enter 점프 · 설정 패널 7슬라이더·3셀렉트 · 제작(마우스 더블클릭 + <strong>터치 더블탭</strong> 노드 생성 → 라벨 입력 → 할로 드래그 및 툴바 연결로 엣지+타입 피커 → <code>graphMaker</code> 저장 → undo → 삭제) · <strong>티어다운 완결</strong>(문서로 이동 시 <code>.gl-stage</code>·<code>gl-maker</code> 클래스·리스너 회수, 재진입 재마운트) · idle 6초 후 <strong>슬립 상태 표시</strong> · 영어·일본어 실렌더 · 예외 0. <code>check_i18n_render</code>에 studio 3화면(탐색·패널·제작)을 더해 <strong>50화면</strong>이 됐다.</p>
 
 <p class="scn-sub">규모: <code>graphlive.js</code> ~1,300줄 + <code>.gl-*</code> CSS + 3언어 54키. 자기기술 문서는 <a href="#!kgs-views">그래프를 읽는 9가지 눈</a>에 &ldquo;펼쳐서 만지는 그래프&rdquo; 절을 3언어로 더했다(9뷰 수치는 cosmos 것이라 그대로 — 스튜디오는 별개 화면). <code>SPECIAL_ROUTES</code>에 <code>graph</code>·<code>liked</code>를 넣어 본문에서 <code>#!graph</code>를 링크해도 broken-link가 안 나게 했다.</p>
+
+<h3>머지 전 3각도 리뷰 — 결함 12건을 잡아 고쳤다</h3>
+
+<p>머지 직전, 엔진을 <strong>정확성·성능·통합</strong> 세 각도로 코드리뷰했다. 통합·게이트(i18n 61키×3언어·언마운트·캐시버스터·라우트·플러그인 동기)는 깨끗했으나, 엔진 안에서 <strong>사용자가 실제로 밟는 결함 둘</strong>을 포함해 12건이 나왔다.</p>
+
+<div class="note warn">
+    <span class="nh">복구 불가 프리즈 — 모델 재빌드 후 남은 옛 인덱스</span>
+    탐색에서 개념명을 검색한 뒤 설정에서 &ldquo;개념 노드 → 없음&rdquo;으로 바꾸면 모델이 작아지는데, <code>searchSet</code>·<code>hoverI</code>의 옛 인덱스가 <code>clearSel</code>로는 안 지워져 다음 프레임 <code>labels()</code>가 범위 밖 <code>g.meta[i].title</code>를 참조 → TypeError. <code>frame()</code>에 try/catch가 없어 rAF 루프가 죽고, <code>R.running</code>이 <code>true</code>로 굳어 <code>wake()</code>조차 못 살리는 <strong>영구 프리즈</strong>였다. 재빌드 두 곳(<code>gl-con</code>·<code>gl-reset</code>)에 <code>resetTransient()</code>를 넣어 옛 인덱스를 지우고, <code>frame()</code>의 <code>draw();labels()</code>를 try/catch로 감싸 유사 사고에도 루프가 안 죽게 이중으로 막았다.
+</div>
+
+<p>나머지도 실재하는 것만 고쳤다:</p>
+<ul>
+    <li><strong>야간 성능 — 매 프레임 그라디언트 재생성</strong>: 잉크(밤) 노드가 프레임마다 <code>createRadialGradient</code>를 새로 만들어 270~490노드×60fps로 재래스터했다(저장소가 금지한 5fps 패턴). <code>cosmos.js</code> <code>softSprite</code> 선례대로 <strong>색상별 글로우 스프라이트를 캐시</strong>해 <code>drawImage</code>로 blit, dim은 <code>globalAlpha</code>로. 밤/잉크 렌더가 픽셀 그대로 유지되는지 재스크린샷으로 확인했다.</li>
+    <li><strong>죽은 &ldquo;비우기&rdquo; 버튼</strong>: 제작 툴바의 Clear에 클릭 핸들러가 아예 없었다 — 배선 + undo 가능하게 스냅샷 선행. (2노드→비우기→0→되돌리기→2 실측)</li>
+    <li><strong>검색창 Enter IME 가드 누락</strong>(한글 조합 확정 Enter가 조기 점프) · <strong>빈 이름 개명 시 고아 엣지</strong>(노드만 지우고 엣지·스냅샷 방치)를 <code>mkDeleteSel</code>과 동형으로.</li>
+    <li><strong>GC 부담</strong>: <code>toScreen()</code>가 프레임당 수천 [x,y]를 할당 → 스크래치 버퍼(<code>toScreenTo</code>)로 회수. 제작 렌더의 <code>mkById</code> 선형스캔 O(엣지×노드)를 id→node Map으로, 루프 안 <code>getComputedStyle</code>를 프레임당 1회로 hoist.</li>
+    <li>마이너 하드닝: 핀치 0-나눗셈 NaN 가드 · undo 후 선택툴바·러버밴드 상태 리셋 · <code>Date.now()</code> id 충돌→단조 카운터 · <code>seedToMaker</code> 엣지 중복 제거 · <code>nd.qx||nd.x</code> 0-폴백을 <code>==null</code>로.</li>
+</ul>
+
+<p class="scn-sub">전부 <code>graphlive.js</code> 한 파일. 재검증: <code>validate_all</code> ERROR 0 · <code>check_i18n_render</code> 50화면×en/ja · <strong>프리즈 재현 테스트</strong>(검색→개념노드 없음 후 예외 0·루프 생존) · 밤/낮·잉크/블룸·포커스 카드·제작 데스크톱·<strong>모바일 실터치(CDP <code>Input.dispatchTouchEvent</code>)</strong> 스크린샷 회귀 확인. graphlive.js는 master 미배포라 <code>?v=1</code> 유지(캐시버스터 게이트 통과 — 재방문 캐시 없음).</p>

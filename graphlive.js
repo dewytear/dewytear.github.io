@@ -231,7 +231,12 @@ function mkWobble(dt){
 }
 
 /* ═══════════════ 카메라 ═══════════════ */
+// 핫루프(엣지·노드·라벨·히트)는 프레임당 toScreen을 수천 번 부른다 — 매번 새
+// [x,y]를 만들면 GC 부담이라, 스크래치 버퍼에 써넣는 toScreenTo를 쓴다. 단일
+// 스레드·동기 렌더라 아래 모듈 버퍼는 서로 겹치지 않게만 배분하면 안전하다.
 function toScreen(x, y){ return [x * R.cam.s + R.cam.tx, y * R.cam.s + R.cam.ty]; }
+function toScreenTo(x, y, out){ out[0] = x * R.cam.s + R.cam.tx; out[1] = y * R.cam.s + R.cam.ty; return out; }
+var _sA = [0, 0], _sB = [0, 0], _sN = [0, 0];   // 엣지 A·B, 단일 노드
 function toWorld(x, y){ return [(x - R.cam.tx) / R.cam.s, (y - R.cam.ty) / R.cam.s]; }
 function stageXY(ev){
     var b = R.cv.getBoundingClientRect();
@@ -293,6 +298,24 @@ function palette(acc, day, bloom){
     }
     return cols;
 }
+// 잉크 노드의 소프트 글로우 — 색상별 64px 스프라이트를 한 번만 구워 캐시한다.
+// 색이 유한(클러스터 수 + 폴백)해 캐시가 작고, 테마·accent가 바뀌면 색상키가
+// 달라져 자연히 새로 굽는다. 중심 알파 0.8을 굽고, 노드별 dim은 blit 시
+// globalAlpha로 곱한다.
+function glowSprite(c){
+    var key = c[0] + ',' + c[1] + ',' + c[2];
+    var sp = R.glow[key];
+    if(sp) return sp;
+    var S = 64, cv2 = document.createElement('canvas');
+    cv2.width = S; cv2.height = S;
+    var g2 = cv2.getContext('2d');
+    var gr = g2.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
+    gr.addColorStop(0, hsl(c, 0.8));
+    gr.addColorStop(1, hsl(c, 0));
+    g2.fillStyle = gr; g2.fillRect(0, 0, S, S);
+    R.glow[key] = cv2;
+    return cv2;
+}
 function draw(){
     var cv = R.cv, ctx = R.ctx, W = cv.clientWidth, H = cv.clientHeight;
     ctx.setTransform(R.dpr, 0, 0, R.dpr, 0, 0);
@@ -318,7 +341,7 @@ function drawExplore(ctx, W, H, day, bloom, acc, cols, edgeH){
         var lit = focus ? (a === R.sel || b === R.sel)
                 : srch ? (R.searchSet.has(a) && R.searchSet.has(b)) : true;
         if(k !== lastK){ ctx.setLineDash(k === K_FOLDER ? [2, 5] : []); lastK = k; }
-        var A = toScreen(g.qx[a], g.qy[a]), B = toScreen(g.qx[b], g.qy[b]);
+        var A = toScreenTo(g.qx[a], g.qy[a], _sA), B = toScreenTo(g.qx[b], g.qy[b], _sB);
         if(Math.max(A[0], B[0]) < 0 || Math.min(A[0], B[0]) > W
         || Math.max(A[1], B[1]) < 0 || Math.min(A[1], B[1]) > H) continue;
         var rel = k >= 2 && k <= 6;
@@ -357,7 +380,7 @@ function arrow(ctx, A, B, tipGap){
     ctx.closePath(); ctx.fillStyle = ctx.strokeStyle; ctx.fill();
 }
 function node(ctx, wx, wy, r, qvx, qvy, kind, c, aMul, isSel, bloom, day, acc, W, H){
-    var S = toScreen(wx, wy);
+    var S = toScreenTo(wx, wy, _sN);
     if(S[0] < -30 || S[0] > W + 30 || S[1] < -30 || S[1] > H + 30) return;
     var u = reduce ? 0 : Math.min(Math.hypot(qvx, qvy) * 0.018, 0.45);
     var ang = Math.atan2(qvy, qvx);
@@ -380,10 +403,14 @@ function node(ctx, wx, wy, r, qvx, qvy, kind, c, aMul, isSel, bloom, day, acc, W
         if(isSel){ ctx.beginPath(); ctx.arc(0, 0, r + 5, 0, 7);
             ctx.strokeStyle = hsl(acc, 0.95); ctx.lineWidth = 2; ctx.stroke(); }
     } else {                              // 잉크·글래스: 소프트 글로우 + 코어
-        var gr = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 2.4);
-        gr.addColorStop(0, hsl(c, 0.8 * aMul));
-        gr.addColorStop(1, hsl(c, 0));
-        ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(0, 0, r * 2.4, 0, 7); ctx.fill();
+        // 글로우는 색상별 스프라이트 캐시를 blit — 매 프레임 createRadialGradient
+        // 재래스터 금지(cosmos.js softSprite 선례, 5fps 사고 방지). aMul(포커스
+        // dim)은 globalAlpha로. 스프라이트 중심 알파 0.8이 이미 구워져 있어
+        // globalAlpha=aMul이면 원래의 0.8*aMul과 같다.
+        var R2 = r * 2.4;
+        ctx.globalAlpha = aMul;
+        ctx.drawImage(glowSprite(c), -R2, -R2, R2 * 2, R2 * 2);
+        ctx.globalAlpha = 1;
         ctx.beginPath(); ctx.arc(0, 0, r * 0.62, 0, 7);
         ctx.fillStyle = hsl(c, aMul, 16); ctx.fill();
         if(isSel){ ctx.beginPath(); ctx.arc(0, 0, r + 6, 0, 7);
@@ -393,20 +420,26 @@ function node(ctx, wx, wy, r, qvx, qvy, kind, c, aMul, isSel, bloom, day, acc, W
 }
 function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
     var P = R.P;
+    // 프레임당 1회: id→node 맵(엣지마다 선형 mkById 스캔하면 O(엣지×노드)) +
+    // 테마 토큰(getComputedStyle을 루프 안에서 부르면 스타일 재계산 스래싱).
+    var byId = {};
+    R.MK.nodes.forEach(function(n){ byId[n.id] = n; });
+    var muted = cssVar('--muted'), textCol = cssVar('--text');
+    var r2 = 13 * P.scale * Math.max(R.cam.s, 0.5);
     ctx.setLineDash([]);
     ctx.font = '10.5px sans-serif'; ctx.textAlign = 'center';
     R.MK.edges.forEach(function(ed){
-        var na = mkById(ed.a), nb = mkById(ed.b); if(!na || !nb) return;
-        if(na.qx === undefined){ na.qx = na.x; na.qy = na.y; }
-        if(nb.qx === undefined){ nb.qx = nb.x; nb.qy = nb.y; }
-        var A = toScreen(na.qx, na.qy), B = toScreen(nb.qx, nb.qy);
+        var na = byId[ed.a], nb = byId[ed.b]; if(!na || !nb) return;
+        if(na.qx == null){ na.qx = na.x; na.qy = na.y; }
+        if(nb.qx == null){ nb.qx = nb.x; nb.qy = nb.y; }
+        var A = toScreenTo(na.qx, na.qy, _sA), B = toScreenTo(nb.qx, nb.qy, _sB);
         var rel = ed.type >= 2 && ed.type <= 6;
         ctx.strokeStyle = rel
             ? hsl([(acc[0] + REL_HUE[ed.type]) % 360, 65, day ? 45 : 62], 0.85)
             : hsl(edgeH, 0.5);
         ctx.lineWidth = 1.5;
         ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
-        ctx.fillStyle = cssVar('--muted');
+        ctx.fillStyle = muted;
         ctx.fillText(rel ? relTypeLabel(REL_KINDS[ed.type - 2]) : STR('mkRelPlain'),
                      (A[0] + B[0]) / 2, (A[1] + B[1]) / 2 - 5);
         if(rel) arrow(ctx, A, B, 16 * R.cam.s + 5);
@@ -414,18 +447,18 @@ function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
     if(R.rubber){
         var rn = R.MK.nodes[R.rubber.from];
         if(rn){
-            var R1 = toScreen(rn.qx || rn.x, rn.qy || rn.y);
+            var R1 = toScreenTo(rn.qx == null ? rn.x : rn.qx, rn.qy == null ? rn.y : rn.qy, _sN);
             ctx.strokeStyle = hsl(acc, 0.7); ctx.setLineDash([4, 4]);
             ctx.beginPath(); ctx.moveTo(R1[0], R1[1]); ctx.lineTo(R.rubber.x, R.rubber.y);
             ctx.stroke(); ctx.setLineDash([]);
         }
     }
     R.MK.nodes.forEach(function(nd, i){
-        if(nd.qx === undefined){ nd.qx = nd.x; nd.qy = nd.y; nd.qvx = 0; nd.qvy = 0; }
-        node(ctx, nd.qx, nd.qy, 13 * P.scale * Math.max(R.cam.s, 0.5),
+        if(nd.qx == null){ nd.qx = nd.x; nd.qy = nd.y; nd.qvx = 0; nd.qvy = 0; }
+        node(ctx, nd.qx, nd.qy, r2,
              nd.qvx || 0, nd.qvy || 0, 0, cols[i % cols.length], 1,
              R.mkSel === i, bloom, day, acc, W, H);
-        var S = toScreen(nd.qx, nd.qy), r2 = 13 * P.scale * Math.max(R.cam.s, 0.5);
+        var S = toScreenTo(nd.qx, nd.qy, _sN);
         if(nd.pin){
             ctx.beginPath(); ctx.arc(S[0], S[1], r2 + 4, 0, 7);
             ctx.strokeStyle = hsl(acc, 0.45); ctx.lineWidth = 1;
@@ -435,7 +468,7 @@ function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
             ctx.beginPath(); ctx.arc(S[0], S[1], r2 + 9, 0, 7);
             ctx.strokeStyle = hsl(acc, 0.5); ctx.lineWidth = 8 * Math.min(R.cam.s, 1); ctx.stroke();
         }
-        ctx.fillStyle = cssVar('--text'); ctx.font = '600 12px sans-serif'; ctx.textAlign = 'center';
+        ctx.fillStyle = textCol; ctx.font = '600 12px sans-serif'; ctx.textAlign = 'center';
         ctx.fillText(nd.label, S[0], S[1] + r2 + 16);
     });
 }
@@ -465,7 +498,7 @@ function labels(){
         }
         var W = R.cv.clientWidth, H = R.cv.clientHeight;
         for(var s2 = 0; s2 < shown.length && used < pool.length; s2++){
-            var i = shown[s2], S = toScreen(g.qx[i], g.qy[i]);
+            var i = shown[s2], S = toScreenTo(g.qx[i], g.qy[i], _sN);
             if(S[0] < 0 || S[0] > W || S[1] < 0 || S[1] > H) continue;
             var forced = (focus && (i === R.sel || R.nbr.has(i)))
                       || (srch && R.searchSet.has(i)) || i === R.hoverI;
@@ -501,7 +534,9 @@ function frame(ts){
             energy = mkWobble(dt);
         }
     }
-    draw(); labels();
+    // 렌더 예외가 나도 루프를 죽이지 않는다 — 안 그러면 R.running이 true로
+    // 굳어 wake()도 못 살리는 영구 프리즈가 된다(과거 stale-index 사고 방어선).
+    try{ draw(); labels(); }catch(_){ }
     if(R.stateEl){
         R.stateEl.textContent = R.paused ? STR('glPaused')
             : (R.P.mode === 'explore' && R.alpha <= 0.004 && energy < 0.5
@@ -570,6 +605,13 @@ function select(i){
     wake();
 }
 function clearSel(){ if(!R) return; R.sel = -1; R.nbr = null; R.card.classList.remove('on'); wake(); }
+// 모델 재빌드(개념 노드 범위 변경·설정 초기화) 후 반드시 부른다 — searchSet·
+// hoverI에 남은 옛 인덱스가 새 모델 범위를 넘으면 labels()가 크래시한다.
+function resetTransient(){
+    if(!R) return;
+    R.searchSet = null; R.hoverI = -1;
+    if(R.searchEl) R.searchEl.value = '';
+}
 function panTo(i){
     R.cam.tx = R.cv.clientWidth / 2 - R.G.px[i] * R.cam.s;
     R.cam.ty = R.cv.clientHeight / 2 - R.G.py[i] * R.cam.s;
@@ -592,10 +634,16 @@ function seedToMaker(){
     }
     add(sel);
     g.adj[sel].forEach(function(j){ if(g.meta[j].kind === 0) add(j); });
+    // 이미 있는 엣지는 다시 넣지 않는다 — 같은 노드에서 '씨앗 가져오기'를 두 번
+    // 하면 엣지가 중복되던 문제.
+    var have = {};
+    R.MK.edges.forEach(function(e2){ have[e2.a + '|' + e2.b + '|' + e2.type] = 1; });
     g.edges.forEach(function(ed){
         if(copied[ed[0]] !== undefined && copied[ed[1]] !== undefined && ed[2] !== K_MEMBER){
-            R.MK.edges.push({ a: copied[ed[0]], b: copied[ed[1]],
-                type: ed[2] >= 2 && ed[2] <= 6 ? ed[2] : K_PLAIN });
+            var type = ed[2] >= 2 && ed[2] <= 6 ? ed[2] : K_PLAIN;
+            var key = copied[ed[0]] + '|' + copied[ed[1]] + '|' + type;
+            if(have[key]) return; have[key] = 1;
+            R.MK.edges.push({ a: copied[ed[0]], b: copied[ed[1]], type: type });
         }
     });
     mkSave(); setMode('maker'); fit();
@@ -617,6 +665,15 @@ function mkSnap(){
     R.mkUndo.push(JSON.stringify({ v: 1, nodes: R.MK.nodes, edges: R.MK.edges }));
     if(R.mkUndo.length > 20) R.mkUndo.shift();
 }
+// undo — 스냅샷 복원 + 걸쳐 있던 상호작용 상태(선택 툴바·러버밴드·드래그·링크·
+// 피커)를 전부 리셋해야 유령 UI가 안 남는다.
+function mkUndo(){
+    var s = R.mkUndo.pop();
+    if(!s) return;
+    R.MK = JSON.parse(s);
+    R.mkSel = -1; R.rubber = null; R.mkDragI = -1; R.linkFrom = -1;
+    updateSelbar(); closePicker(); mkSave();
+}
 function mkSave(){
     try{ localStorage.setItem(MK_KEY, JSON.stringify({ v: 1,
         nodes: R.MK.nodes.map(function(n){ return { id: n.id, label: n.label,
@@ -627,7 +684,7 @@ function mkSave(){
 }
 function editLabel(i){
     R.editI = i;
-    var nd = R.MK.nodes[i], S = toScreen(nd.qx || nd.x, nd.qy || nd.y);
+    var nd = R.MK.nodes[i], S = toScreen(nd.qx == null ? nd.x : nd.qx, nd.qy == null ? nd.y : nd.qy);
     var inp = R.nodein;
     inp.style.display = 'block';
     inp.style.left = S[0] + 'px'; inp.style.top = S[1] + 'px';
@@ -637,7 +694,15 @@ function commitLabel(){
     if(R.editI < 0) return;
     var v = R.nodein.value.trim();
     if(v){ mkSnap(); R.MK.nodes[R.editI].label = v; }
-    else { R.MK.nodes.splice(R.editI, 1); }
+    else {
+        // 빈 이름 = 노드 삭제. mkDeleteSel과 동형으로 — 연결된 엣지도 지우고
+        // (안 지우면 고아 엣지가 저장·내보내기에 남는다) 스냅샷으로 undo 가능하게.
+        mkSnap();
+        var id = R.MK.nodes[R.editI].id;
+        R.MK.nodes.splice(R.editI, 1);
+        R.MK.edges = R.MK.edges.filter(function(e2){ return e2.a !== id && e2.b !== id; });
+        R.mkSel = -1; updateSelbar();
+    }
     R.editI = -1; R.nodein.style.display = 'none'; mkSave();
 }
 function openPicker(x, y, fromI, toI){
@@ -673,7 +738,7 @@ function updateSelbar(){
     if(R.P.mode !== 'maker' || R.mkSel < 0 || !R.MK.nodes[R.mkSel]){
         sb.classList.remove('on'); return;
     }
-    var nd = R.MK.nodes[R.mkSel], S = toScreen(nd.qx || nd.x, nd.qy || nd.y);
+    var nd = R.MK.nodes[R.mkSel], S = toScreen(nd.qx == null ? nd.x : nd.qx, nd.qy == null ? nd.y : nd.qy);
     var box = R.stage.getBoundingClientRect();
     sb.style.left = Math.max(8, Math.min(S[0], box.width - 180)) + 'px';
     sb.style.top = Math.max(8, S[1] - 13 * R.cam.s - 46) + 'px';
@@ -867,7 +932,7 @@ function setMode(m){
     var sub = document.getElementById('gl-sub');
     if(sub) sub.textContent = STR(m === 'maker' ? 'glSubMaker' : 'glSub');
     clearSel(); closePicker();
-    R.mkSel = -1; R.linkFrom = -1; updateSelbar();
+    R.mkSel = -1; R.linkFrom = -1; R.rubber = null; R.mkDragI = -1; updateSelbar();
     R.hint.firstChild.textContent = STR('mkHintEmpty');
     R.hint.classList.toggle('on', m === 'maker' && !R.MK.nodes.length);
     renderLegend(); fit();
@@ -878,7 +943,7 @@ function hitNode(mx, my){
     if(R.P.mode === 'explore'){
         var g = R.G, best = -1, bd = 1e9;
         for(var i = 0; i < g.n; i++){
-            var S = toScreen(g.qx[i], g.qy[i]);
+            var S = toScreenTo(g.qx[i], g.qy[i], _sN);
             var r = Math.max(g.r[i] * R.P.scale * Math.max(R.cam.s, 0.5) + 6, 11);
             var d2 = (S[0] - mx) * (S[0] - mx) + (S[1] - my) * (S[1] - my);
             if(d2 < r * r && d2 < bd){ bd = d2; best = i; }
@@ -887,7 +952,7 @@ function hitNode(mx, my){
     }
     for(var j = R.MK.nodes.length - 1; j >= 0; j--){
         var nd = R.MK.nodes[j];
-        var S2 = toScreen(nd.qx || nd.x, nd.qy || nd.y);
+        var S2 = toScreenTo(nd.qx == null ? nd.x : nd.qx, nd.qy == null ? nd.y : nd.qy, _sN);
         if(Math.hypot(S2[0] - mx, S2[1] - my) < 15 * R.cam.s + 6) return j;
     }
     return -1;
@@ -895,7 +960,7 @@ function hitNode(mx, my){
 function mkHaloHit(mx, my){
     for(var j = R.MK.nodes.length - 1; j >= 0; j--){
         var nd = R.MK.nodes[j];
-        var S2 = toScreen(nd.qx || nd.x, nd.qy || nd.y);
+        var S2 = toScreenTo(nd.qx == null ? nd.x : nd.qx, nd.qy == null ? nd.y : nd.qy, _sN);
         var d = Math.hypot(S2[0] - mx, S2[1] - my), r = 13 * R.cam.s;
         if(d > r + 2 && d < r + 14) return j;
     }
@@ -960,7 +1025,7 @@ function onMove(ev){
     if(R.pinch && R.pts.size === 2){
         var a = Array.from(R.pts.values());
         var d = Math.hypot(a[0][0] - a[1][0], a[0][1] - a[1][1]);
-        var k = Math.max(0.15, Math.min(R.pinch.s * d / R.pinch.d, 4)) / R.cam.s;
+        var k = Math.max(0.15, Math.min(R.pinch.s * d / (R.pinch.d || 1), 4)) / R.cam.s;
         R.cam.s *= k;
         R.cam.tx = R.pinch.cx - (R.pinch.cx - R.cam.tx) * k;
         R.cam.ty = R.pinch.cy - (R.pinch.cy - R.cam.ty) * k;
@@ -1042,7 +1107,9 @@ function dblAt(xy){
         if(h >= 0){ editLabel(h); return; }
         var w = toWorld(xy[0], xy[1]);
         mkSnap();
-        R.MK.nodes.push({ id: 'n' + Date.now(), label: '',
+        // 단조 카운터 — Date.now()는 같은 ms에 두 노드가 생기면 id가 겹쳐
+        // mkById가 엉뚱한 노드를 물 수 있다.
+        R.MK.nodes.push({ id: 'n' + (++R.mkSeq) + '_' + R.MK.nodes.length, label: '',
             x: w[0], y: w[1], qx: w[0], qy: w[1], qvx: 0, qvy: 0, pin: true });
         mkSave(); editLabel(R.MK.nodes.length - 1);
     } else {
@@ -1068,8 +1135,7 @@ function onKey(ev){
         if((ev.key === 'Delete' || ev.key === 'Backspace') && R.mkSel >= 0){
             mkDeleteSel();
         } else if((ev.key === 'z' || ev.key === 'Z') && (ev.ctrlKey || ev.metaKey)){
-            var s = R.mkUndo.pop();
-            if(s){ R.MK = JSON.parse(s); R.mkSel = -1; mkSave(); }
+            mkUndo();
         }
     }
 }
@@ -1097,6 +1163,9 @@ function bindPanel(){
     panel.querySelector('#gl-con').addEventListener('change', function(){
         R.P.con = this.value; saveP(R.P);
         R.G = buildModel(R.P); buildOrder();
+        // 모델이 작아지면 옛 searchSet/hoverI 인덱스가 범위 밖 — 안 지우면
+        // 다음 프레임 labels()가 g.meta[i](undefined)를 참조해 루프가 죽는다.
+        resetTransient();
         R.alpha = 1;
         for(var i = 0; i < 60; i++) tick();
         for(var j = 0; j < R.G.n; j++){ R.G.qx[j] = R.G.px[j]; R.G.qy[j] = R.G.py[j]; }
@@ -1112,6 +1181,7 @@ function bindPanel(){
         panel.innerHTML = panelHTML(); bindPanel();
         R.stateEl = panel.querySelector('#gl-state');
         R.G = buildModel(R.P); buildOrder();
+        resetTransient();
         R.alpha = 1; clearSel(); fit();
     });
     R.stateEl = panel.querySelector('#gl-state');
@@ -1141,7 +1211,8 @@ function mount(screen){
         lastTap: null, linkFrom: -1, selbar: null, searchSet: null,
         alpha: 1, alphaTarget: 0, paused: false,
         raf: 0, running: false, lastT: 0, hot: performance.now(),
-        pool: [], listeners: [], obs: null, stateEl: null,
+        pool: [], listeners: [], obs: null, stateEl: null, glow: {},
+        searchEl: ui.search, mkSeq: 0,
         dpr: Math.min(window.devicePixelRatio || 1, 2),
         MK: null, G: null, order: []
     };
@@ -1188,9 +1259,12 @@ function mount(screen){
     ui.bGear.onclick = function(){ R.panel.classList.toggle('open'); clearSel(); };
     ui.bExplore.onclick = function(){ setMode('explore'); };
     ui.bMaker.onclick = function(){ setMode('maker'); };
-    ui.bUndo.onclick = function(){
-        var s = R.mkUndo.pop();
-        if(s){ R.MK = JSON.parse(s); R.mkSel = -1; mkSave(); }
+    ui.bUndo.onclick = mkUndo;
+    ui.bClear.onclick = function(){
+        if(!R.MK.nodes.length && !R.MK.edges.length) return;
+        mkSnap();   // 비우기도 undo로 되돌릴 수 있게 스냅샷 먼저
+        R.MK = { v: 1, nodes: [], edges: [] };
+        R.mkSel = -1; updateSelbar(); mkSave(); fit();
     };
     // 검색 스포트라이트 — 제목·개념 일치 노드만 깨어나고 나머지는 가라앉는다.
     // Enter는 첫 일치로 점프(선택+이동), Esc·비우기는 해제.
@@ -1206,6 +1280,9 @@ function mount(screen){
     });
     on(ui.search, 'keydown', function(ev){
         ev.stopPropagation();
+        // 한글 IME 조합 확정 Enter(isComposing·keyCode 229)를 안 거르면 아직
+        // 입력 중인데 조기 점프한다 — 라벨 입력과 같은 가드.
+        if(ev.isComposing || ev.keyCode === 229) return;
         if(ev.key === 'Escape'){ this.value = ''; R.searchSet = null; this.blur(); wake(); }
         if(ev.key === 'Enter' && R.searchSet && R.searchSet.size){
             var first = -1, bd = -1;
