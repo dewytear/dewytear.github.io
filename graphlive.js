@@ -471,14 +471,17 @@ function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
         }
         ctx.fillStyle = textCol; ctx.font = '600 12px sans-serif'; ctx.textAlign = 'center';
         ctx.fillText(nd.label, S[0], S[1] + r2 + 16);
-        // 속성(키-값) 두 번째 줄 — 최대 2쌍 + "+n", 긴 값(씨앗 태그 등)은
-        // 말줄임으로 클램프. 메이커 그래프는 소규모라 항상 그려도 부담 없다.
+        // 속성(키-값) — 쌍마다 한 줄씩 세로로, 개수 상한 없이 전부 그린다
+        // (가로 나열은 쌍이 늘면 말줄임으로 뭉개진다 — 대표님 피드백으로 세로 확정.
+        // 메이커 그래프는 수기 소규모라 긴 목록도 사용자의 배치 선택이다).
+        // 긴 값(씨앗 태그 등)만 줄 단위 말줄임.
         if(nd.props && nd.props.length){
-            var pv = nd.props.slice(0, 2).map(function(p){ return p[0] + '=' + p[1]; }).join(' · ')
-                   + (nd.props.length > 2 ? ' +' + (nd.props.length - 2) : '');
-            if(pv.length > 34) pv = pv.slice(0, 33) + '…';
             ctx.fillStyle = muted; ctx.font = '10px sans-serif';
-            ctx.fillText(pv, S[0], S[1] + r2 + 30);
+            nd.props.forEach(function(p, pi){
+                var ln = p[0] + '=' + p[1];
+                if(ln.length > 24) ln = ln.slice(0, 23) + '…';
+                ctx.fillText(ln, S[0], S[1] + r2 + 30 + pi * 13);
+            });
         }
     });
 }
