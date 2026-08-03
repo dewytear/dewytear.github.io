@@ -418,6 +418,22 @@ function node(ctx, wx, wy, r, qvx, qvy, kind, c, aMul, isSel, bloom, day, acc, W
     }
     ctx.restore();
 }
+// 속성 줄바꿈 — 폭(w)자 안에서 쉼표·공백·가운뎃점 같은 자연 경계를 우선해
+// 자르고, 경계가 없으면(띄어쓰기 없는 한글 등) 폭에서 강제로 자른다.
+function wrapProp(s, w){
+    var out = [];
+    while(s.length > w){
+        var cut = 0;
+        for(var i = w; i > w - 12; i--){
+            if(' ,·'.indexOf(s.charAt(i)) >= 0){ cut = i + 1; break; }
+        }
+        if(!cut) cut = w;
+        out.push(s.slice(0, cut));
+        s = s.slice(cut).replace(/^\s+/, '');
+    }
+    if(s) out.push(s);
+    return out;
+}
 function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
     var P = R.P;
     // 프레임당 1회: id→node 맵(엣지마다 선형 mkById 스캔하면 O(엣지×노드)) +
@@ -471,16 +487,17 @@ function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
         }
         ctx.fillStyle = textCol; ctx.font = '600 12px sans-serif'; ctx.textAlign = 'center';
         ctx.fillText(nd.label, S[0], S[1] + r2 + 16);
-        // 속성(키-값) — 쌍마다 한 줄씩 세로로, 개수 상한 없이 전부 그린다
-        // (가로 나열은 쌍이 늘면 말줄임으로 뭉개진다 — 대표님 피드백으로 세로 확정.
-        // 메이커 그래프는 수기 소규모라 긴 목록도 사용자의 배치 선택이다).
-        // 긴 값(씨앗 태그 등)만 줄 단위 말줄임.
+        // 속성(키-값) — 쌍마다 한 줄씩 세로로, 개수 상한 없이 전부 그린다.
+        // 긴 값(씨앗 태그 등)도 말줄임으로 자르지 않고 아래로 줄바꿈해 전부
+        // 보인다(둘 다 대표님 피드백). 수기 소규모 캔버스라 세로 길이는
+        // 사용자의 배치 선택이다.
         if(nd.props && nd.props.length){
             ctx.fillStyle = muted; ctx.font = '10px sans-serif';
-            nd.props.forEach(function(p, pi){
-                var ln = p[0] + '=' + p[1];
-                if(ln.length > 24) ln = ln.slice(0, 23) + '…';
-                ctx.fillText(ln, S[0], S[1] + r2 + 30 + pi * 13);
+            var ly = S[1] + r2 + 30;
+            nd.props.forEach(function(p){
+                wrapProp(p[0] + '=' + p[1], 24).forEach(function(ln){
+                    ctx.fillText(ln, S[0], ly); ly += 13;
+                });
             });
         }
     });
@@ -777,19 +794,14 @@ function openPicker(x, y, fromI, toI){
 }
 function closePicker(){ if(R) R.picker.classList.remove('on'); }
 /* ── 속성 편집 패널 — 선택 툴바의 [속성] ──
-   행마다 키/값 입력 + 행 삭제(×), 하단 [+ 속성 추가]·[완료]. 편집은 DOM에만
+   행마다 키(input)/값(자동 확장 textarea) + 행 삭제(×), 하단 [+ 속성 추가]·
+   [완료]. 입력 편의: 키에서 Enter → 값으로, 값에서 Enter → 다음 행 키(마지막
+   행이면 새 행 추가) — 손을 마우스로 옮기지 않고 연속 입력된다. 편집은 DOM에만
    쌓고 [완료](또는 캔버스 탭)에서 한 번에 반영 — 변경이 있을 때만 mkSnap이라
    undo 1스텝 = 편집 세션 1회다. */
-function propsRow(k, v){
-    var row = el('div', 'gl-pr');
-    var ki = document.createElement('input');
-    ki.placeholder = STR('mkPropKey'); ki.value = k || '';
-    var vi = document.createElement('input');
-    vi.placeholder = STR('mkPropVal'); vi.value = v || '';
-    var del = el('button', 'gl-pr-x', '&times;');
-    del.type = 'button'; del.onclick = function(){ row.remove(); };
-    row.appendChild(ki); row.appendChild(vi); row.appendChild(del);
-    return row;
+function propsGrow(vi){
+    vi.style.height = 'auto';
+    vi.style.height = Math.min(vi.scrollHeight, 72) + 'px';
 }
 function openProps(i){
     var nd = R.MK.nodes[i]; if(!nd) return;
@@ -797,24 +809,49 @@ function openProps(i){
     var pp = R.props;
     pp.innerHTML = '';
     var rows = el('div', 'gl-pr-rows');
-    (nd.props || []).forEach(function(p){ rows.appendChild(propsRow(p[0], p[1])); });
-    if(!nd.props || !nd.props.length) rows.appendChild(propsRow('', ''));
+    function addRow(k, v){
+        var row = el('div', 'gl-pr');
+        var ki = document.createElement('input');
+        ki.placeholder = STR('mkPropKey'); ki.value = k || '';
+        var vi = document.createElement('textarea');
+        vi.placeholder = STR('mkPropVal'); vi.value = v || ''; vi.rows = 1;
+        vi.addEventListener('input', function(){ propsGrow(vi); });
+        ki.addEventListener('keydown', function(e2){
+            if(e2.isComposing || e2.keyCode === 229) return;
+            if(e2.key === 'Enter'){ e2.preventDefault(); vi.focus(); }
+        });
+        vi.addEventListener('keydown', function(e2){
+            if(e2.isComposing || e2.keyCode === 229) return;
+            if(e2.key === 'Enter' && !e2.shiftKey){
+                e2.preventDefault();
+                var nxt = row.nextElementSibling;
+                if(nxt) nxt.querySelector('input').focus();
+                else addRow('', '').querySelector('input').focus();
+            }
+        });
+        var del = el('button', 'gl-pr-x', '&times;');
+        del.type = 'button'; del.onclick = function(){ row.remove(); };
+        row.appendChild(ki); row.appendChild(vi); row.appendChild(del);
+        rows.appendChild(row);
+        return row;
+    }
+    (nd.props || []).forEach(function(p){ addRow(p[0], p[1]); });
+    if(!nd.props || !nd.props.length) addRow('', '');
     pp.appendChild(rows);
     var bar = el('div', 'gl-pr-bar');
     var add = pillBtn(STR('mkPropAdd'));
-    add.onclick = function(){
-        var r2 = propsRow('', '');
-        rows.appendChild(r2); r2.querySelector('input').focus();
-    };
+    add.onclick = function(){ addRow('', '').querySelector('input').focus(); };
     var done = pillBtn(STR('mkPropDone'));
     done.onclick = commitProps;
     bar.appendChild(add); bar.appendChild(done);
     pp.appendChild(bar);
     var S = toScreen(nd.qx == null ? nd.x : nd.qx, nd.qy == null ? nd.y : nd.qy);
     var box = R.stage.getBoundingClientRect();
-    pp.style.left = Math.max(8, Math.min(S[0], box.width - 250)) + 'px';
-    pp.style.top = Math.max(8, Math.min(S[1] + 24, box.height - 200)) + 'px';
+    pp.style.left = Math.max(8, Math.min(S[0], box.width - 270)) + 'px';
+    pp.style.top = Math.max(8, Math.min(S[1] + 24, box.height - 220)) + 'px';
     pp.classList.add('on');
+    // 긴 값은 열자마자 접힘 없이 보이게 — DOM 부착 후에야 scrollHeight가 잡힌다
+    pp.querySelectorAll('textarea').forEach(propsGrow);
     var first = pp.querySelector('input');
     if(first) first.focus();
 }
@@ -823,9 +860,10 @@ function commitProps(){
     if(i >= 0 && R.MK.nodes[i]){
         var ps = [];
         R.props.querySelectorAll('.gl-pr').forEach(function(row){
-            var ins = row.querySelectorAll('input');
-            var k = ins[0].value.trim();
-            if(k) ps.push([k, ins[1].value.trim()]);
+            var k = row.querySelector('input').value.trim();
+            // 값 안의 줄바꿈은 공백으로 — 캔버스 표시·JSON 모두 한 줄 의미다
+            var v = row.querySelector('textarea').value.trim().replace(/\s*\n\s*/g, ' ');
+            if(k) ps.push([k, v]);
         });
         var nd = R.MK.nodes[i];
         if(JSON.stringify(ps) !== JSON.stringify(nd.props || [])){

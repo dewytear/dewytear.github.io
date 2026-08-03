@@ -709,21 +709,27 @@
         /* 속성 편집 패널 — 피커와 같은 디자인 언어(반투명 + blur) */
         .gl-props{
             position: absolute; z-index: 8; display: none;
-            flex-direction: column; gap: 4px; padding: 10px; width: 232px;
+            flex-direction: column; gap: 4px; padding: 10px; width: 252px;
             background: color-mix(in srgb, var(--bg-alt) 82%, transparent);
             border: 1px solid var(--border); border-radius: 12px;
             backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
         }
         .gl-props.on{ display: flex; }
-        .gl-pr{ display: flex; gap: 4px; align-items: center; }
-        .gl-pr input{
+        .gl-pr{ display: flex; gap: 4px; align-items: flex-start; }
+        .gl-pr input, .gl-pr textarea{
             flex: 1 1 0; min-width: 0;
             background: var(--bg-alt); border: 1px solid var(--border);
             border-radius: 8px; color: var(--text); font-size: 12px;
-            padding: 5px 8px; outline: none;
+            padding: 5px 8px; outline: none; font-family: inherit;
         }
-        .gl-pr input:focus{ border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
-        .gl-pr input::placeholder{ color: var(--muted); }
+        .gl-pr input{ flex: 0 1 76px; }
+        /* 값 칸 — 자동 확장 textarea (긴 값도 접힘 없이 보이며 입력) */
+        .gl-pr textarea{
+            flex: 1 1 0; resize: none; overflow-y: auto;
+            max-height: 72px; line-height: 1.45;
+        }
+        .gl-pr input:focus, .gl-pr textarea:focus{ border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
+        .gl-pr input::placeholder, .gl-pr textarea::placeholder{ color: var(--muted); }
         .gl-pr-x{
             all: unset; cursor: pointer; color: var(--muted);
             font-size: 15px; line-height: 1; padding: 2px 4px; border-radius: 6px;
