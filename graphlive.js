@@ -418,6 +418,22 @@ function node(ctx, wx, wy, r, qvx, qvy, kind, c, aMul, isSel, bloom, day, acc, W
     }
     ctx.restore();
 }
+// 속성 줄바꿈 — 폭(w)자 안에서 쉼표·공백·가운뎃점 같은 자연 경계를 우선해
+// 자르고, 경계가 없으면(띄어쓰기 없는 한글 등) 폭에서 강제로 자른다.
+function wrapProp(s, w){
+    var out = [];
+    while(s.length > w){
+        var cut = 0;
+        for(var i = w; i > w - 12; i--){
+            if(' ,·'.indexOf(s.charAt(i)) >= 0){ cut = i + 1; break; }
+        }
+        if(!cut) cut = w;
+        out.push(s.slice(0, cut));
+        s = s.slice(cut).replace(/^\s+/, '');
+    }
+    if(s) out.push(s);
+    return out;
+}
 function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
     var P = R.P;
     // 프레임당 1회: id→node 맵(엣지마다 선형 mkById 스캔하면 O(엣지×노드)) +
@@ -425,6 +441,14 @@ function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
     var byId = {};
     R.MK.nodes.forEach(function(n){ byId[n.id] = n; });
     var muted = cssVar('--muted'), textCol = cssVar('--text');
+    // 배경색 헤일로 — 엣지 선이 라벨·속성·엣지 이름을 관통해 읽기 어려운 문제의
+    // 표준 처리. 글자 뒤에 배경색 3px 테두리를 깔아 선이 글자 주변에서 끊긴다.
+    var halo = cssVar('--bg');
+    function haloText(txt, x, y){
+        ctx.lineWidth = 3; ctx.lineJoin = 'round';
+        ctx.strokeStyle = halo; ctx.strokeText(txt, x, y);
+        ctx.fillText(txt, x, y);
+    }
     var r2 = 13 * P.scale * Math.max(R.cam.s, 0.5);
     ctx.setLineDash([]);
     ctx.font = '10.5px sans-serif'; ctx.textAlign = 'center';
@@ -440,7 +464,8 @@ function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
         ctx.lineWidth = 1.5;
         ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
         ctx.fillStyle = muted;
-        ctx.fillText(rel ? relTypeLabel(REL_KINDS[ed.type - 2]) : STR('mkRelPlain'),
+        // 수기 이름이 있으면 타입 라벨을 대체 (화살표·색은 타입 그대로)
+        haloText(ed.label || (rel ? relTypeLabel(REL_KINDS[ed.type - 2]) : STR('mkRelPlain')),
                      (A[0] + B[0]) / 2, (A[1] + B[1]) / 2 - 5);
         if(rel) arrow(ctx, A, B, 16 * R.cam.s + 5);
     });
@@ -469,7 +494,20 @@ function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
             ctx.strokeStyle = hsl(acc, 0.5); ctx.lineWidth = 8 * Math.min(R.cam.s, 1); ctx.stroke();
         }
         ctx.fillStyle = textCol; ctx.font = '600 12px sans-serif'; ctx.textAlign = 'center';
-        ctx.fillText(nd.label, S[0], S[1] + r2 + 16);
+        haloText(nd.label, S[0], S[1] + r2 + 16);
+        // 속성(키-값) — 쌍마다 한 줄씩 세로로, 개수 상한 없이 전부 그린다.
+        // 긴 값(씨앗 태그 등)도 말줄임으로 자르지 않고 아래로 줄바꿈해 전부
+        // 보인다(둘 다 대표님 피드백). 수기 소규모 캔버스라 세로 길이는
+        // 사용자의 배치 선택이다. 10.5px — 밤 테마에서 10px muted가 흐릿했다.
+        if(nd.props && nd.props.length){
+            ctx.fillStyle = muted; ctx.font = '10.5px sans-serif';
+            var ly = S[1] + r2 + 30;
+            nd.props.forEach(function(p){
+                wrapProp(p[0] + '=' + p[1], 24).forEach(function(ln){
+                    haloText(ln, S[0], ly); ly += 13;
+                });
+            });
+        }
     });
 }
 
@@ -550,6 +588,12 @@ function frame(ts){
 }
 
 /* ═══════════════ 포커스 카드 (.c2-card 어휘 재사용) ═══════════════ */
+// 문서 name → 현재 언어 태그 배열. app.js가 list 로드 후 만드는 전역
+// DOC_BY_NAME을 읽는다(없으면 빈 배열 — graphlive 단독 환경 방어).
+function docTags(name){
+    var d = window.DOC_BY_NAME && window.DOC_BY_NAME[name];
+    return (d && d.tags) || [];
+}
 function select(i){
     var g = R.G, m = g.meta[i];
     R.sel = i; R.nbr = new Set(g.adj[i]);
@@ -565,6 +609,13 @@ function select(i){
         if(g.meta[j].kind === 1) chips += '<span>' + escapeHtml(g.meta[j].title) + '</span>';
     });
     if(chips) h += '<div class="c2-concepts">' + chips + '</div>';
+    // 태그 칩 — 인덱스에는 tags가 없지만 app.js의 전역 DOC_BY_NAME이 list 노드의
+    // 언어별 태그(tags_<lang> 폴백 포함)를 이미 들고 있다. tagChip()도 전역 재사용
+    // (#!tag: 링크 — 사이트 어디서나 같은 동작). 가드는 단독 로드·list 선행 레이스 방어.
+    var tgs = docTags(m.id);
+    if(m.kind === 0 && tgs.length && typeof tagChip === 'function'){
+        h += '<div class="gl-tags">' + tgs.map(function(t){ return tagChip(t); }).join('') + '</div>';
+    }
     // relations 타입별 그룹 (기존 relType* STR 재사용 — 새 번역 0)
     var byType = {};
     g.edges.forEach(function(ed){
@@ -627,8 +678,12 @@ function seedToMaker(){
         var m = g.meta[i], id = 'seed:' + m.id;
         copied[i] = id;
         if(!mkById(id)){
-            R.MK.nodes.push({ id: id, label: m.title,
-                x: g.px[i] - g.px[sel], y: g.py[i] - g.py[sel], pin: false });
+            var nd = { id: id, label: m.title,
+                x: g.px[i] - g.px[sel], y: g.py[i] - g.py[sel], pin: false };
+            // 문서 태그를 '태그=…' 속성으로 심는다 — 속성 편집기에서 수정·삭제 가능.
+            var tgs = m.kind === 0 ? docTags(m.id) : [];
+            if(tgs.length) nd.props = [[STR('mkPropTags'), tgs.join(', ')]];
+            R.MK.nodes.push(nd);
         }
         return id;
     }
@@ -672,12 +727,19 @@ function mkUndo(){
     if(!s) return;
     R.MK = JSON.parse(s);
     R.mkSel = -1; R.rubber = null; R.mkDragI = -1; R.linkFrom = -1;
-    updateSelbar(); closePicker(); mkSave();
+    updateSelbar(); closePicker(); closeProps(); mkSave();
+}
+// 직렬화용 노드 사본 — props(키-값 쌍 배열)는 있을 때만 실어 JSON 노이즈를 줄인다.
+// 엣지는 객체 그대로 직렬화되므로 수기 label이 자동 동반된다.
+function mkNodeOut(n){
+    var o = { id: n.id, label: n.label,
+        x: Math.round(n.x), y: Math.round(n.y), pin: !!n.pin };
+    if(n.props && n.props.length) o.props = n.props;
+    return o;
 }
 function mkSave(){
     try{ localStorage.setItem(MK_KEY, JSON.stringify({ v: 1,
-        nodes: R.MK.nodes.map(function(n){ return { id: n.id, label: n.label,
-            x: Math.round(n.x), y: Math.round(n.y), pin: !!n.pin }; }),
+        nodes: R.MK.nodes.map(mkNodeOut),
         edges: R.MK.edges })); }catch(_){ }
     R.hint.classList.toggle('on', R.P.mode === 'maker' && !R.MK.nodes.length);
     wake();
@@ -701,7 +763,7 @@ function commitLabel(){
         var id = R.MK.nodes[R.editI].id;
         R.MK.nodes.splice(R.editI, 1);
         R.MK.edges = R.MK.edges.filter(function(e2){ return e2.a !== id && e2.b !== id; });
-        R.mkSel = -1; updateSelbar();
+        R.mkSel = -1; updateSelbar(); closeProps();
     }
     R.editI = -1; R.nodein.style.display = 'none'; mkSave();
 }
@@ -709,6 +771,11 @@ function openPicker(x, y, fromI, toI){
     var pk = R.picker, acc = hslOf(cssVar('--accent'));
     R.pkFrom = R.MK.nodes[fromI].id; R.pkTo = R.MK.nodes[toI].id;
     pk.innerHTML = '';
+    // 이름칸(선택) — 타입 버튼이 곧 확정이라는 기존 흐름은 그대로 두고,
+    // 적어 두면 그 문구가 타입 라벨 대신 선 위에 표시된다.
+    var nameIn = document.createElement('input');
+    nameIn.className = 'gl-pk-name'; nameIn.placeholder = STR('mkEdgeNamePh');
+    pk.appendChild(nameIn);
     var types = [[K_PLAIN, STR('mkRelPlain')]];
     REL_KINDS.forEach(function(t, ix){ types.push([2 + ix, relTypeLabel(t)]); });
     types.forEach(function(t){
@@ -719,17 +786,103 @@ function openPicker(x, y, fromI, toI){
             : 'hsl(' + ((acc[0] + REL_HUE[t[0]]) % 360) + ',65%,55%)';
         b.appendChild(sw); b.appendChild(document.createTextNode(t[1]));
         b.onclick = function(){
-            mkSnap(); R.MK.edges.push({ a: R.pkFrom, b: R.pkTo, type: t[0] });
+            mkSnap();
+            var e2 = { a: R.pkFrom, b: R.pkTo, type: t[0] };
+            var nm = nameIn.value.trim();
+            if(nm) e2.label = nm;
+            R.MK.edges.push(e2);
             mkSave(); closePicker();
         };
         pk.appendChild(b);
     });
     var box = R.stage.getBoundingClientRect();
     pk.style.left = Math.min(x, box.width - 170) + 'px';
-    pk.style.top = Math.min(y, box.height - 240) + 'px';
+    pk.style.top = Math.min(y, box.height - 270) + 'px';
     pk.classList.add('on');
 }
 function closePicker(){ if(R) R.picker.classList.remove('on'); }
+/* ── 속성 편집 패널 — 선택 툴바의 [속성] ──
+   행마다 키(input)/값(자동 확장 textarea) + 행 삭제(×), 하단 [+ 속성 추가]·
+   [완료]. 입력 편의: 키에서 Enter → 값으로, 값에서 Enter → 다음 행 키(마지막
+   행이면 새 행 추가) — 손을 마우스로 옮기지 않고 연속 입력된다. 편집은 DOM에만
+   쌓고 [완료](또는 캔버스 탭)에서 한 번에 반영 — 변경이 있을 때만 mkSnap이라
+   undo 1스텝 = 편집 세션 1회다. */
+function propsGrow(vi){
+    vi.style.height = 'auto';
+    vi.style.height = Math.min(vi.scrollHeight, 72) + 'px';
+}
+function openProps(i){
+    var nd = R.MK.nodes[i]; if(!nd) return;
+    R.propsI = i;
+    var pp = R.props;
+    pp.innerHTML = '';
+    var rows = el('div', 'gl-pr-rows');
+    function addRow(k, v){
+        var row = el('div', 'gl-pr');
+        var ki = document.createElement('input');
+        ki.placeholder = STR('mkPropKey'); ki.value = k || '';
+        var vi = document.createElement('textarea');
+        vi.placeholder = STR('mkPropVal'); vi.value = v || ''; vi.rows = 1;
+        vi.addEventListener('input', function(){ propsGrow(vi); });
+        ki.addEventListener('keydown', function(e2){
+            if(e2.isComposing || e2.keyCode === 229) return;
+            if(e2.key === 'Enter'){ e2.preventDefault(); vi.focus(); }
+        });
+        vi.addEventListener('keydown', function(e2){
+            if(e2.isComposing || e2.keyCode === 229) return;
+            if(e2.key === 'Enter' && !e2.shiftKey){
+                e2.preventDefault();
+                var nxt = row.nextElementSibling;
+                if(nxt) nxt.querySelector('input').focus();
+                else addRow('', '').querySelector('input').focus();
+            }
+        });
+        var del = el('button', 'gl-pr-x', '&times;');
+        del.type = 'button'; del.onclick = function(){ row.remove(); };
+        row.appendChild(ki); row.appendChild(vi); row.appendChild(del);
+        rows.appendChild(row);
+        return row;
+    }
+    (nd.props || []).forEach(function(p){ addRow(p[0], p[1]); });
+    if(!nd.props || !nd.props.length) addRow('', '');
+    pp.appendChild(rows);
+    var bar = el('div', 'gl-pr-bar');
+    var add = pillBtn(STR('mkPropAdd'));
+    add.onclick = function(){ addRow('', '').querySelector('input').focus(); };
+    var done = pillBtn(STR('mkPropDone'));
+    done.onclick = commitProps;
+    bar.appendChild(add); bar.appendChild(done);
+    pp.appendChild(bar);
+    var S = toScreen(nd.qx == null ? nd.x : nd.qx, nd.qy == null ? nd.y : nd.qy);
+    var box = R.stage.getBoundingClientRect();
+    pp.style.left = Math.max(8, Math.min(S[0], box.width - 270)) + 'px';
+    pp.style.top = Math.max(8, Math.min(S[1] + 24, box.height - 220)) + 'px';
+    pp.classList.add('on');
+    // 긴 값은 열자마자 접힘 없이 보이게 — DOM 부착 후에야 scrollHeight가 잡힌다
+    pp.querySelectorAll('textarea').forEach(propsGrow);
+    var first = pp.querySelector('input');
+    if(first) first.focus();
+}
+function commitProps(){
+    var i = R.propsI;
+    if(i >= 0 && R.MK.nodes[i]){
+        var ps = [];
+        R.props.querySelectorAll('.gl-pr').forEach(function(row){
+            var k = row.querySelector('input').value.trim();
+            // 값 안의 줄바꿈은 공백으로 — 캔버스 표시·JSON 모두 한 줄 의미다
+            var v = row.querySelector('textarea').value.trim().replace(/\s*\n\s*/g, ' ');
+            if(k) ps.push([k, v]);
+        });
+        var nd = R.MK.nodes[i];
+        if(JSON.stringify(ps) !== JSON.stringify(nd.props || [])){
+            mkSnap();
+            if(ps.length) nd.props = ps; else delete nd.props;
+            mkSave();
+        }
+    }
+    closeProps();
+}
+function closeProps(){ if(R){ R.propsI = -1; R.props.classList.remove('on'); } }
 // 선택 툴바 — 노드를 탭하면 옆에 [이름]·[연결]·[삭제] 필이 뜬다.
 // 모바일의 세 구멍(더블클릭 없음·할로 조준 불가·Delete 키 없음)을 메우는
 // 대체 경로이자, 데스크톱에서도 동작을 눈에 보이게 하는 발견성 장치다.
@@ -740,7 +893,7 @@ function updateSelbar(){
     }
     var nd = R.MK.nodes[R.mkSel], S = toScreen(nd.qx == null ? nd.x : nd.qx, nd.qy == null ? nd.y : nd.qy);
     var box = R.stage.getBoundingClientRect();
-    sb.style.left = Math.max(8, Math.min(S[0], box.width - 180)) + 'px';
+    sb.style.left = Math.max(8, Math.min(S[0], box.width - 230)) + 'px';
     sb.style.top = Math.max(8, S[1] - 13 * R.cam.s - 46) + 'px';
     sb.classList.add('on');
 }
@@ -750,7 +903,7 @@ function mkDeleteSel(){
     var id = R.MK.nodes[R.mkSel].id;
     R.MK.nodes.splice(R.mkSel, 1);
     R.MK.edges = R.MK.edges.filter(function(e2){ return e2.a !== id && e2.b !== id; });
-    R.mkSel = -1; updateSelbar(); mkSave();
+    R.mkSel = -1; updateSelbar(); closeProps(); mkSave();
 }
 function mkExport(){
     // UTF-8 BOM을 앞에 붙인다 — Blob은 UTF-8로 쓰지만 선언이 없으면 Safari
@@ -758,8 +911,7 @@ function mkExport(){
     // 깨진다. BOM이 모든 미리보기가 존중하는 유일한 신호(CSV 관례와 동일)이고,
     // 우리 가져오기는 파싱 전에 벗기므로 왕복이 안전하다.
     var blob = new Blob(['\uFEFF' + JSON.stringify({ v: 1,
-        nodes: R.MK.nodes.map(function(n){ return { id: n.id, label: n.label,
-            x: Math.round(n.x), y: Math.round(n.y), pin: !!n.pin }; }),
+        nodes: R.MK.nodes.map(mkNodeOut),
         edges: R.MK.edges }, null, 1)], { type: 'application/json;charset=utf-8' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -778,11 +930,25 @@ function mkImport(file){
             mkSnap();
             R.MK = { v: 1,
                 nodes: s.nodes.filter(function(n){ return n && n.id && typeof n.label === 'string'; })
-                    .map(function(n){ return { id: String(n.id), label: n.label,
-                        x: +n.x || 0, y: +n.y || 0, pin: !!n.pin }; }),
+                    .map(function(n){
+                        var o = { id: String(n.id), label: n.label,
+                            x: +n.x || 0, y: +n.y || 0, pin: !!n.pin };
+                        // props: [[키,값],…]만 수용 — 쌍이 아니거나 키가 비면 버린다.
+                        if(Array.isArray(n.props)){
+                            var ps = n.props.filter(function(p){
+                                return Array.isArray(p) && String(p[0] || '').trim();
+                            }).map(function(p){ return [String(p[0]), String(p[1] == null ? '' : p[1])]; });
+                            if(ps.length) o.props = ps;
+                        }
+                        return o;
+                    }),
                 edges: s.edges.filter(function(e2){ return e2 && e2.a && e2.b; })
-                    .map(function(e2){ return { a: String(e2.a), b: String(e2.b),
-                        type: +e2.type || K_PLAIN }; }) };
+                    .map(function(e2){
+                        var o = { a: String(e2.a), b: String(e2.b),
+                            type: +e2.type || K_PLAIN };
+                        if(typeof e2.label === 'string' && e2.label.trim()) o.label = e2.label.trim();
+                        return o;
+                    }) };
             R.mkSel = -1; mkSave(); fit();
         }catch(_){ }
     };
@@ -856,9 +1022,13 @@ function buildUI(screen){
     var selbar = el('div', 'gl-selbar');
     var bRename = pillBtn(STR('mkRename'));
     var bLink = pillBtn(STR('mkLink'));
+    var bProps = pillBtn(STR('mkProps'));
     var bDelete = pillBtn(STR('mkDelete'));
-    selbar.appendChild(bRename); selbar.appendChild(bLink); selbar.appendChild(bDelete);
+    selbar.appendChild(bRename); selbar.appendChild(bLink);
+    selbar.appendChild(bProps); selbar.appendChild(bDelete);
     stage.appendChild(selbar);
+    var propsEl = el('div', 'gl-props');
+    stage.appendChild(propsEl);
     var nodein = el('input', 'gl-nodein');
     nodein.placeholder = STR('mkLabelPh');
     stage.appendChild(nodein);
@@ -868,7 +1038,8 @@ function buildUI(screen){
 
     return { stage: stage, cv: cv, labelsEl: labelsEl, hint: hint, legend: legend,
         card: card, panel: panel, picker: picker, nodein: nodein, file: file,
-        selbar: selbar, bRename: bRename, bLink: bLink, bDelete: bDelete,
+        selbar: selbar, bRename: bRename, bLink: bLink, bProps: bProps,
+        bDelete: bDelete, props: propsEl,
         search: search,
         seg: seg, bExplore: bExplore, bMaker: bMaker, mkbar: mkbar,
         bUndo: bUndo, bExport: bExport, bImport: bImport, bClear: bClear,
@@ -937,7 +1108,7 @@ function setMode(m){
     R.bMaker.classList.toggle('on', m === 'maker');
     var sub = document.getElementById('gl-sub');
     if(sub) sub.textContent = STR(m === 'maker' ? 'glSubMaker' : 'glSub');
-    clearSel(); closePicker();
+    clearSel(); closePicker(); closeProps();
     R.mkSel = -1; R.linkFrom = -1; R.rubber = null; R.mkDragI = -1; updateSelbar();
     R.hint.firstChild.textContent = STR('mkHintEmpty');
     R.hint.classList.toggle('on', m === 'maker' && !R.MK.nodes.length);
@@ -974,6 +1145,8 @@ function mkHaloHit(mx, my){
 }
 function onDown(ev){
     wake();
+    // 속성 패널이 열린 채 캔버스를 탭하면 편집 내용을 잃지 않게 커밋하고 닫는다.
+    if(R.propsI >= 0) commitProps();
     R.cv.setPointerCapture(ev.pointerId);
     var xy = stageXY(ev);
     R.pts.set(ev.pointerId, xy);
@@ -1133,7 +1306,7 @@ function dblAt(xy){
 function onKey(ev){
     if(!R) return;
     if(ev.target.tagName === 'INPUT' || ev.target.tagName === 'SELECT' || ev.target.tagName === 'TEXTAREA') return;
-    if(ev.key === 'Escape'){ clearSel(); R.panel.classList.remove('open'); closePicker(); }
+    if(ev.key === 'Escape'){ clearSel(); R.panel.classList.remove('open'); closePicker(); closeProps(); }
     else if(ev.key === '0'){ fit(); }
     else if(ev.key === '+' || ev.key === '='){ R.cam.s = Math.min(R.cam.s * 1.2, 4); wake(); }
     else if(ev.key === '-'){ R.cam.s = Math.max(R.cam.s / 1.2, 0.15); wake(); }
@@ -1208,8 +1381,9 @@ function mount(screen){
         P: P, screen: screen, stage: ui.stage, cv: ui.cv, ctx: ui.cv.getContext('2d'),
         labelsEl: ui.labelsEl, hint: ui.hint, legend: ui.legend, card: ui.card,
         panel: ui.panel, picker: ui.picker, nodein: ui.nodein, file: ui.file,
+        props: ui.props, propsI: -1,
         bExplore: ui.bExplore, bMaker: ui.bMaker,
-        selbarUI: { rename: ui.bRename, link: ui.bLink, del: ui.bDelete },
+        selbarUI: { rename: ui.bRename, link: ui.bLink, props: ui.bProps, del: ui.bDelete },
         colCtx: document.createElement('canvas').getContext('2d'),
         cam: { s: 1, tx: 0, ty: 0 }, pts: new Map(), pinch: null, panning: false,
         moved: 0, dragI: -1, hoverI: -1, sel: -1, nbr: null,
@@ -1298,6 +1472,7 @@ function mount(screen){
     });
     R.selbar = ui.selbar;
     ui.bRename.onclick = function(){ if(R.mkSel >= 0){ R.selbar.classList.remove('on'); editLabel(R.mkSel); } };
+    ui.bProps.onclick = function(){ if(R.mkSel >= 0){ R.selbar.classList.remove('on'); openProps(R.mkSel); } };
     ui.bLink.onclick = function(){
         if(R.mkSel < 0) return;
         R.linkFrom = R.mkSel; R.selbar.classList.remove('on');

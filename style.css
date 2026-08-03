@@ -698,6 +698,49 @@
         }
         .gl-selbar.on{ display: flex; }
         .gl-selbar .gl-pill{ padding: 5px 10px; font-size: 11.5px; }
+        /* 엣지 이름칸 — 피커 맨 위, 비우면 타입 기본 라벨 */
+        .gl-picker .gl-pk-name{
+            background: var(--bg-alt); border: 1px solid var(--border);
+            border-radius: 8px; color: var(--text); font-size: 12px;
+            padding: 5px 9px; margin-bottom: 2px; outline: none; width: 130px;
+        }
+        .gl-picker .gl-pk-name:focus{ border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
+        .gl-picker .gl-pk-name::placeholder{ color: var(--muted); }
+        /* 속성 편집 패널 — 피커와 같은 디자인 언어(반투명 + blur) */
+        .gl-props{
+            position: absolute; z-index: 8; display: none;
+            flex-direction: column; gap: 4px; padding: 10px; width: 252px;
+            background: color-mix(in srgb, var(--bg-alt) 82%, transparent);
+            border: 1px solid var(--border); border-radius: 12px;
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+        }
+        .gl-props.on{ display: flex; }
+        .gl-pr{ display: flex; gap: 4px; align-items: flex-start; }
+        .gl-pr input, .gl-pr textarea{
+            flex: 1 1 0; min-width: 0;
+            background: var(--bg-alt); border: 1px solid var(--border);
+            border-radius: 8px; color: var(--text); font-size: 12px;
+            padding: 5px 8px; outline: none; font-family: inherit;
+        }
+        .gl-pr input{ flex: 0 1 76px; }
+        /* 값 칸 — 자동 확장 textarea (긴 값도 접힘 없이 보이며 입력) */
+        .gl-pr textarea{
+            flex: 1 1 0; resize: none; overflow-y: auto;
+            max-height: 72px; line-height: 1.45;
+        }
+        .gl-pr input:focus, .gl-pr textarea:focus{ border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
+        .gl-pr input::placeholder, .gl-pr textarea::placeholder{ color: var(--muted); }
+        .gl-pr-x{
+            all: unset; cursor: pointer; color: var(--muted);
+            font-size: 15px; line-height: 1; padding: 2px 4px; border-radius: 6px;
+        }
+        .gl-pr-x:hover{ color: var(--accent-ink); }
+        .gl-pr-rows{ display: flex; flex-direction: column; gap: 4px; max-height: 180px; overflow-y: auto; }
+        .gl-pr-bar{ display: flex; gap: 6px; justify-content: flex-end; margin-top: 4px; }
+        .gl-pr-bar .gl-pill{ padding: 4px 10px; font-size: 11.5px; }
+        /* 탐색 포커스 카드의 태그 줄 — 개념 칩과 같은 스케일, 링크는 전역 .tag */
+        .gl-tags{ display: flex; flex-wrap: wrap; gap: 4px; margin: 8px 0 2px; }
+        .gl-tags .tag{ margin: 0; padding: 2px 8px; font-size: 11px; border-radius: 999px; }
         .gl-search{
             width: 150px; padding: 7px 12px; border-radius: 999px;
             background: color-mix(in srgb, var(--bg-alt) 72%, transparent);

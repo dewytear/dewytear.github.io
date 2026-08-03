@@ -10,3 +10,16 @@
 <p>수정은 두 줄이다. 내보내기 내용 앞에 <strong>UTF-8 BOM(<code>﻿</code>)</strong>을 붙이고 <code>charset=utf-8</code>을 명시했다 — 모든 미리보기·편집기가 존중하는 유일한 인코딩 신호로, 엑셀용 CSV 내보내기의 보편 관례와 같다. 가져오기는 <code>JSON.parse</code>가 선두 BOM에 throw하므로 <strong>파싱 전에 벗긴다</strong>(외부에서 재저장돼 BOM이 남은 파일의 재가져오기도 함께 방탄).</p>
 
 <p class="scn-sub">검증은 환경 무관의 바이트 수준: 내보낸 파일 선두 3바이트 <code>EF BB BF</code> 확인 · 실제 파일 입력 경로로 재가져오기 왕복(한글 라벨 &ldquo;한글 라벨&rdquo;·&ldquo;지식그래프 ✦&rdquo; 온전) · 파이썬 <code>utf-8-sig</code> 교차 파싱. 이 환경에 Safari·Firefox가 없어 실기기 재검은 배포 후 몫이지만, BOM이 있으면 어떤 소비자든 인코딩이 모호하지 않다. <code>graphlive.js ?v=2</code>.</p>
+
+<h3>노드 태그·수기 속성(키-값)·엣지 이름 입력</h3>
+
+<p>대표님 요청 3건 — ①탐색 노드에 <strong>태그를 속성으로</strong> ②제작에서 노드에 <strong>속성 수기 추가</strong> ③제작에서 연결 후 <strong>연결 이름 수기 입력</strong>. 형식은 문답으로 확정: 속성은 <strong>키-값 쌍</strong>(arrows.app 관례), 엣지 이름은 <strong>타입 선택 화면에 선택적 이름칸</strong>(비우면 타입 기본 라벨), 씨앗 복사 시 <strong>문서 태그가 <code>태그=…</code> 속성으로 동반</strong>. 변경 유형: <strong>ENGINE + STYLE</strong>.</p>
+
+<div class="note">
+    <span class="nh">설계 — 인덱스를 안 건드리고 태그를 얻는 길</span>
+    지식 인덱스에는 tags가 없지만, app.js가 이미 전역 <code>DOC_BY_NAME</code>에 list 노드의 언어별 태그(<code>tags_&lt;lang&gt;</code> 폴백 포함)를 들고 있다. 탐색 포커스 카드가 이를 읽어 기존 <code>tagChip()</code>(태그 화면 링크)으로 그린다 — <strong>build_index 무변경·데이터 재생성 0·3언어 태그 공짜</strong>.
+</div>
+
+<p>제작 스키마는 <code>v:1</code>을 유지한 채 옵션 필드만 늘렸다 — 노드 <code>props: [[키,값],…]</code>, 엣지 <code>label</code>. 저장·내보내기는 <strong>있을 때만</strong> 싣고, 가져오기는 쌍만 필터해 정규화하므로 <strong>구버전 파일·localStorage가 그대로 호환</strong>된다. UI는 선택 툴바에 <strong>[속성]</strong> 필을 추가해 피커와 같은 디자인 언어의 편집 패널(행 = 키/값/×, 하단 [+ 속성 추가]·[완료])을 띄우고, [완료]나 캔버스 탭에서 <strong>변경분만 한 번에 커밋</strong>(undo 1스텝 = 편집 세션 1회). 캔버스에는 노드 라벨 아래 속성이 <strong>쌍마다 한 줄씩 세로로, 개수 상한 없이 전부</strong> 그려지고, <strong>긴 값도 말줄임 없이 쉼표·공백 경계에서 줄바꿈</strong>해 다 보인다(가로 한 줄+말줄임 초안을 대표님 피드백 두 번으로 세로·랩까지 확정). 엣지 선 위에는 수기 이름(타입 라벨 대체 — 화살표·색은 타입 그대로)이 그려진다. 시인성 실렌더 점검(낮/밤·확대/축소)에서 <strong>엣지 선이 글자를 관통</strong>하고 밤 테마의 10px 속성이 흐린 두 약점이 보여, <strong>배경색 헤일로(글자 뒤 3px 테두리)</strong>를 라벨·속성·엣지 이름 전부에 깔고 속성을 10.5px로 올렸다 — 캔버스 라벨 가독성의 표준 처리로, BEFORE/AFTER 목업을 대표님이 확인하고 확정. 입력도 같은 결로 다듬었다 — 값 칸은 <strong>자동 확장 textarea</strong>라 긴 값이 접히지 않고, <strong>키에서 Enter → 값, 값에서 Enter → 다음/새 행</strong>으로 마우스 없이 연속 입력된다(IME 조합 Enter 가드 포함, 값 안 줄바꿈은 공백으로 정규화).</p>
+
+<p class="scn-sub">검증은 헤드리스 실렌더 16항목 전수 통과 — 속성 추가·커밋·undo·새로고침 복원, 이름 있는 엣지 생성(<code>참조한다</code>), BOM+신형(props·label) 가져오기 왕복, <strong>구형 JSON 역호환</strong>, 탐색 카드 태그 칩·씨앗 태그 속성의 <strong>ko/en/ja 3언어</strong>(태그=/Tags=/タグ=). <code>check_i18n_render</code> 50화면 통과. 신규 STR 키 7종 ×3언어. <code>graphlive.js ?v=3</code> · <code>style.css ?v=51</code> · <code>i18n.js ?v=30</code>.</p>
