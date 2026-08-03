@@ -452,16 +452,18 @@ function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
     var r2 = 13 * P.scale * Math.max(R.cam.s, 0.5);
     ctx.setLineDash([]);
     ctx.font = '10.5px sans-serif'; ctx.textAlign = 'center';
-    R.MK.edges.forEach(function(ed){
+    R.MK.edges.forEach(function(ed, ei){
         var na = byId[ed.a], nb = byId[ed.b]; if(!na || !nb) return;
         if(na.qx == null){ na.qx = na.x; na.qy = na.y; }
         if(nb.qx == null){ nb.qx = nb.x; nb.qy = nb.y; }
         var A = toScreenTo(na.qx, na.qy, _sA), B = toScreenTo(nb.qx, nb.qy, _sB);
         var rel = ed.type >= 2 && ed.type <= 6;
+        // 편집 중인 엣지는 두껍고 진하게 — "지금 이 선을 고치고 있다"는 피드백
+        var editing = R.pkEditI === ei;
         ctx.strokeStyle = rel
-            ? hsl([(acc[0] + REL_HUE[ed.type]) % 360, 65, day ? 45 : 62], 0.85)
-            : hsl(edgeH, 0.5);
-        ctx.lineWidth = 1.5;
+            ? hsl([(acc[0] + REL_HUE[ed.type]) % 360, 65, day ? 45 : 62], editing ? 1 : 0.85)
+            : hsl(edgeH, editing ? 0.9 : 0.5);
+        ctx.lineWidth = editing ? 2.5 : 1.5;
         ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
         ctx.fillStyle = muted;
         // 수기 이름이 있으면 타입 라벨을 대체 (화살표·색은 타입 그대로)
@@ -767,25 +769,46 @@ function commitLabel(){
     }
     R.editI = -1; R.nodein.style.display = 'none'; mkSave();
 }
-function openPicker(x, y, fromI, toI){
+// 관계 피커 — 생성(fromI·toI)과 편집(editI: 기존 엣지 인덱스) 두 모드를 겸한다.
+// 편집 모드: 이름칸에 현재 이름 프리필, 현재 타입에 .on 표시, [완료]=이름만
+// 저장(타입 유지), 타입 클릭=타입+이름 저장, [삭제]=엣지 제거. 전부 mkSnap
+// 후 반영이라 Ctrl+Z 한 번으로 되돌아간다.
+function openPicker(x, y, fromI, toI, editI){
     var pk = R.picker, acc = hslOf(cssVar('--accent'));
-    R.pkFrom = R.MK.nodes[fromI].id; R.pkTo = R.MK.nodes[toI].id;
+    var edit = editI != null && R.MK.edges[editI];
+    R.pkEditI = edit ? editI : -1;
+    if(!edit){ R.pkFrom = R.MK.nodes[fromI].id; R.pkTo = R.MK.nodes[toI].id; }
     pk.innerHTML = '';
     // 이름칸(선택) — 타입 버튼이 곧 확정이라는 기존 흐름은 그대로 두고,
     // 적어 두면 그 문구가 타입 라벨 대신 선 위에 표시된다.
     var nameIn = document.createElement('input');
     nameIn.className = 'gl-pk-name'; nameIn.placeholder = STR('mkEdgeNamePh');
+    if(edit) nameIn.value = R.MK.edges[editI].label || '';
     pk.appendChild(nameIn);
+    function commitEdit(type){
+        var ed = R.MK.edges[R.pkEditI]; if(!ed){ closePicker(); return; }
+        var nm = nameIn.value.trim();
+        var changed = (type != null && type !== ed.type) || nm !== (ed.label || '');
+        if(changed){
+            mkSnap();
+            if(type != null) ed.type = type;
+            if(nm) ed.label = nm; else delete ed.label;
+            mkSave();
+        }
+        closePicker(); wake();
+    }
     var types = [[K_PLAIN, STR('mkRelPlain')]];
     REL_KINDS.forEach(function(t, ix){ types.push([2 + ix, relTypeLabel(t)]); });
     types.forEach(function(t){
         var b = document.createElement('button');
         b.type = 'button';
+        if(edit && R.MK.edges[editI].type === t[0]) b.className = 'on';
         var sw = document.createElement('span'); sw.className = 'sw';
         sw.style.borderColor = t[0] === K_PLAIN ? cssVar('--muted')
             : 'hsl(' + ((acc[0] + REL_HUE[t[0]]) % 360) + ',65%,55%)';
         b.appendChild(sw); b.appendChild(document.createTextNode(t[1]));
         b.onclick = function(){
+            if(edit){ commitEdit(t[0]); return; }
             mkSnap();
             var e2 = { a: R.pkFrom, b: R.pkTo, type: t[0] };
             var nm = nameIn.value.trim();
@@ -795,12 +818,34 @@ function openPicker(x, y, fromI, toI){
         };
         pk.appendChild(b);
     });
+    if(edit){
+        nameIn.addEventListener('keydown', function(e2){
+            if(e2.isComposing || e2.keyCode === 229){ e2.stopPropagation(); return; }
+            if(e2.key === 'Enter') commitEdit(null);
+            if(e2.key === 'Escape') closePicker();
+            e2.stopPropagation();
+        });
+        var bar = el('div', 'gl-pk-bar');
+        var done = pillBtn(STR('mkPropDone'));
+        done.onclick = function(){ commitEdit(null); };
+        var del = pillBtn(STR('mkDelete'));
+        del.onclick = function(){
+            if(R.MK.edges[R.pkEditI]){
+                mkSnap(); R.MK.edges.splice(R.pkEditI, 1); mkSave();
+            }
+            closePicker(); wake();
+        };
+        bar.appendChild(done); bar.appendChild(del);
+        pk.appendChild(bar);
+    }
     var box = R.stage.getBoundingClientRect();
     pk.style.left = Math.min(x, box.width - 170) + 'px';
-    pk.style.top = Math.min(y, box.height - 270) + 'px';
+    pk.style.top = Math.min(y, box.height - (edit ? 310 : 270)) + 'px';
     pk.classList.add('on');
+    if(edit) nameIn.focus();
+    wake();
 }
-function closePicker(){ if(R) R.picker.classList.remove('on'); }
+function closePicker(){ if(R){ R.picker.classList.remove('on'); R.pkEditI = -1; } }
 /* ── 속성 편집 패널 — 선택 툴바의 [속성] ──
    행마다 키(input)/값(자동 확장 textarea) + 행 삭제(×), 하단 [+ 속성 추가]·
    [완료]. 입력 편의: 키에서 Enter → 값으로, 값에서 Enter → 다음 행 키(마지막
@@ -1143,6 +1188,23 @@ function mkHaloHit(mx, my){
     }
     return -1;
 }
+// 엣지 히트 — 점-선분 거리 ≤ 8px. 노드·할로 히트가 먼저 확인된 뒤에만
+// 불리므로(onDown 순서) 노드 근처 오탐이 없다.
+function hitEdge(mx, my){
+    var byId = {};
+    R.MK.nodes.forEach(function(n){ byId[n.id] = n; });
+    for(var j = R.MK.edges.length - 1; j >= 0; j--){
+        var ed = R.MK.edges[j];
+        var na = byId[ed.a], nb = byId[ed.b]; if(!na || !nb) continue;
+        var A = toScreenTo(na.qx == null ? na.x : na.qx, na.qy == null ? na.y : na.qy, _sA);
+        var B = toScreenTo(nb.qx == null ? nb.x : nb.qx, nb.qy == null ? nb.y : nb.qy, _sB);
+        var dx = B[0] - A[0], dy = B[1] - A[1];
+        var len2 = dx * dx + dy * dy; if(!len2) continue;
+        var t = Math.max(0, Math.min(1, ((mx - A[0]) * dx + (my - A[1]) * dy) / len2));
+        if(Math.hypot(mx - (A[0] + dx * t), my - (A[1] + dy * t)) <= 8) return j;
+    }
+    return -1;
+}
 function onDown(ev){
     wake();
     // 속성 패널이 열린 채 캔버스를 탭하면 편집 내용을 잃지 않게 커밋하고 닫는다.
@@ -1184,6 +1246,14 @@ function onDown(ev){
         if(h >= 0){ R.rubber = { from: h, x: xy[0], y: xy[1] }; return; }
         R.mkDragI = hitNode(xy[0], xy[1]);
         if(R.mkDragI >= 0){ mkSnap(); R.mkSel = R.mkDragI; updateSelbar(); return; }
+        // 엣지 탭 = 편집기 (이름·타입·삭제) — 링크 분기와 동형으로 포인터를
+        // 정리하고 패닝 진입을 막는다.
+        var he = hitEdge(xy[0], xy[1]);
+        if(he >= 0){
+            R.pts.delete(ev.pointerId);
+            openPicker(xy[0], xy[1], -1, -1, he);
+            return;
+        }
     } else {
         R.dragI = hitNode(xy[0], xy[1]);
         if(R.dragI >= 0){
@@ -1281,7 +1351,16 @@ function onDbl(ev){
 // touch-action:none 캔버스에서는 브라우저가 dblclick을 합성해 주지 않는
 // 환경이 있어(모바일 제작 모드의 핵심 동작이 통째로 막힌다) 직접 감지한다.
 function dblAt(xy){
+    // 자체 감지 더블탭과 브라우저 합성 dblclick이 겹치는 환경에서는 두 번
+    // 불린다 — 500ms 디바운스로 한 번만 처리(안 하면 피커 닫기 가드를 첫
+    // 호출이 소비하고 두 번째 호출이 그 밑에 노드를 만든다).
+    var nowD = performance.now();
+    if(nowD - (R.lastDbl || 0) < 500) return;
+    R.lastDbl = nowD;
     if(R.P.mode === 'maker'){
+        // 피커(엣지 편집기 포함)가 열려 있으면 더블탭은 닫기만 — 편집기 위
+        // 더블탭이 그 밑에 노드를 만드는 사고 방지.
+        if(R.picker.classList.contains('on')){ closePicker(); return; }
         var h = hitNode(xy[0], xy[1]);
         if(h >= 0){ editLabel(h); return; }
         var w = toWorld(xy[0], xy[1]);
@@ -1381,7 +1460,7 @@ function mount(screen){
         P: P, screen: screen, stage: ui.stage, cv: ui.cv, ctx: ui.cv.getContext('2d'),
         labelsEl: ui.labelsEl, hint: ui.hint, legend: ui.legend, card: ui.card,
         panel: ui.panel, picker: ui.picker, nodein: ui.nodein, file: ui.file,
-        props: ui.props, propsI: -1,
+        props: ui.props, propsI: -1, pkEditI: -1,
         bExplore: ui.bExplore, bMaker: ui.bMaker,
         selbarUI: { rename: ui.bRename, link: ui.bLink, props: ui.bProps, del: ui.bDelete },
         colCtx: document.createElement('canvas').getContext('2d'),
