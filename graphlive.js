@@ -441,6 +441,14 @@ function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
     var byId = {};
     R.MK.nodes.forEach(function(n){ byId[n.id] = n; });
     var muted = cssVar('--muted'), textCol = cssVar('--text');
+    // 배경색 헤일로 — 엣지 선이 라벨·속성·엣지 이름을 관통해 읽기 어려운 문제의
+    // 표준 처리. 글자 뒤에 배경색 3px 테두리를 깔아 선이 글자 주변에서 끊긴다.
+    var halo = cssVar('--bg');
+    function haloText(txt, x, y){
+        ctx.lineWidth = 3; ctx.lineJoin = 'round';
+        ctx.strokeStyle = halo; ctx.strokeText(txt, x, y);
+        ctx.fillText(txt, x, y);
+    }
     var r2 = 13 * P.scale * Math.max(R.cam.s, 0.5);
     ctx.setLineDash([]);
     ctx.font = '10.5px sans-serif'; ctx.textAlign = 'center';
@@ -457,7 +465,7 @@ function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
         ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
         ctx.fillStyle = muted;
         // 수기 이름이 있으면 타입 라벨을 대체 (화살표·색은 타입 그대로)
-        ctx.fillText(ed.label || (rel ? relTypeLabel(REL_KINDS[ed.type - 2]) : STR('mkRelPlain')),
+        haloText(ed.label || (rel ? relTypeLabel(REL_KINDS[ed.type - 2]) : STR('mkRelPlain')),
                      (A[0] + B[0]) / 2, (A[1] + B[1]) / 2 - 5);
         if(rel) arrow(ctx, A, B, 16 * R.cam.s + 5);
     });
@@ -486,17 +494,17 @@ function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
             ctx.strokeStyle = hsl(acc, 0.5); ctx.lineWidth = 8 * Math.min(R.cam.s, 1); ctx.stroke();
         }
         ctx.fillStyle = textCol; ctx.font = '600 12px sans-serif'; ctx.textAlign = 'center';
-        ctx.fillText(nd.label, S[0], S[1] + r2 + 16);
+        haloText(nd.label, S[0], S[1] + r2 + 16);
         // 속성(키-값) — 쌍마다 한 줄씩 세로로, 개수 상한 없이 전부 그린다.
         // 긴 값(씨앗 태그 등)도 말줄임으로 자르지 않고 아래로 줄바꿈해 전부
         // 보인다(둘 다 대표님 피드백). 수기 소규모 캔버스라 세로 길이는
-        // 사용자의 배치 선택이다.
+        // 사용자의 배치 선택이다. 10.5px — 밤 테마에서 10px muted가 흐릿했다.
         if(nd.props && nd.props.length){
-            ctx.fillStyle = muted; ctx.font = '10px sans-serif';
+            ctx.fillStyle = muted; ctx.font = '10.5px sans-serif';
             var ly = S[1] + r2 + 30;
             nd.props.forEach(function(p){
                 wrapProp(p[0] + '=' + p[1], 24).forEach(function(ln){
-                    ctx.fillText(ln, S[0], ly); ly += 13;
+                    haloText(ln, S[0], ly); ly += 13;
                 });
             });
         }
