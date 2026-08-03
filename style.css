@@ -639,16 +639,31 @@
             display: flex; align-items: center; justify-content: space-between;
             gap: 8px; margin: 7px 0; font-size: 12px; color: var(--muted);
         }
-        .gl-fr label{ flex: 1; }
+        /* 라벨은 어떤 폭에서도 한 줄이다 — 좁아지면 게이지가 양보한다.
+           원래는 label{flex:1}·range{flex:2}로 **게이지가 우선**이라, 폭이 줄면
+           "클러스터 인력"·"Spring stiffness"가 두 줄로 접혀 행 높이가 들쭉날쭉
+           했다. 우선순위를 뒤집는다: label은 nowrap으로 줄바꿈을 금지하고
+           (flex-basis auto로 제 폭을 먼저 확보), range가 flex:1로 남는 폭만
+           가져간다. 그래도 안 들어가는 극한 폭에서는 label이 min-width:0으로
+           수축해 **말줄임**이 되고 — 두 줄로 접히거나 행이 넘치는 일은 없다. */
+        .gl-fr label{
+            flex: 0 1 auto; min-width: 0;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
         .gl-fr output{
+            flex: 0 0 auto;
             width: 44px; text-align: right; color: var(--text);
             font-size: 11.5px; font-variant-numeric: tabular-nums;
         }
-        .gl-fr input[type=range]{ flex: 2; accent-color: var(--accent); height: 20px; }
+        .gl-fr input[type=range]{
+            flex: 1 1 56px; min-width: 32px;
+            accent-color: var(--accent); height: 20px;
+        }
         .gl-fr select, .gl-small{
             background: var(--bg-alt); border: 1px solid var(--border);
             color: var(--text); border-radius: 8px; font-size: 12px; padding: 4px 8px;
         }
+        .gl-fr select{ flex: 0 1 auto; min-width: 0; }
         /* 제작 모드 */
         .gl-hint{
             position: absolute; inset: 0; z-index: 2;

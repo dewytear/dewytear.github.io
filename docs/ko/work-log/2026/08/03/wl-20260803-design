@@ -1,0 +1,12 @@
+<h2>2026-08-03 · 디자인 — 설정 패널: 게이지가 양보하고 라벨은 한 줄</h2>
+
+<p>대표님 요청 — <a href="#!graph">Graph Studio</a> 설정에서 <strong>게이지(슬라이더) 폭을 줄여도 문구가 한 줄</strong>로 보이게. 변경 유형: <strong>STYLE</strong>.</p>
+
+<div class="note warn">
+    <span class="nh">원인 — flex 우선순위가 게이지 쪽에 있었다</span>
+    <code>.gl-fr label{ flex: 1 }</code> + <code>input[type=range]{ flex: 2 }</code> 조합이었다. 둘 다 수축 가능인데 <strong>게이지가 두 배 비중</strong>이라, 폭이 줄면 라벨이 먼저 찌그러지며 &ldquo;클러스터 인력&rdquo;·&ldquo;Spring stiffness&rdquo;가 <strong>두 줄로 접히고</strong> 행 높이가 들쭉날쭉해졌다.
+</div>
+
+<p>우선순위를 뒤집었다 — <strong>라벨이 제 폭을 먼저 확보하고(<code>flex: 0 1 auto</code> + <code>white-space: nowrap</code>), 게이지가 남는 폭만 가져간다(<code>flex: 1 1 56px</code>)</strong>. 여기에 안전판을 하나 더 뒀다: 정말 안 들어가는 극한 폭에서는 라벨이 <code>min-width: 0</code>으로 수축해 <strong>말줄임(…)</strong>이 된다 — <strong>두 줄로 접히거나 행이 패널을 넘치는 일은 어떤 폭에서도 없다</strong>. 숫자 칸은 <code>flex: 0 0 auto</code>로 안 찌그러지고, 셀렉트는 <code>min-width: 0</code>으로 남는 폭을 흡수한다.</p>
+
+<p class="scn-sub">검증은 헤드리스 실렌더로 &mdash; 각 행 라벨의 <strong>실제 줄 수</strong>(높이÷line-height)와 <strong>행 넘침</strong>(<code>scrollWidth &gt; clientWidth</code>)을 3언어 × 폭 스윕(280·240·210·190·170px)으로 전수 확인했다. 결과: <strong>모든 언어·모든 폭에서 2줄 0 · 넘침 0</strong>. 실사용 폭에서는 말줄임조차 없다(데스크톱 280px·모바일 370px, ko/en/ja 전부 말줄임 0 — 최장 케이스 &ldquo;의미 관계(5타입)&rdquo;·&ldquo;Typed relations (5)&rdquo;·&ldquo;ノードの大きさ&rdquo; 포함). 게이지는 280px에서 89~106px를 확보해 조작감도 유지된다. <code>style.css ?v=50</code>.</p>
