@@ -1,0 +1,140 @@
+<h2>다 기록하는 사람, 발행하는 위키 — 지식 저장소에 대한 고찰</h2>
+
+<p class="scn-sub">한 라이프로깅 실천가의 대담 녹취를 해부하고, 이 위키와 같은 자리에 놓고 비교한 뒤, 우리가 나아갈 지점을 정리한 에세이입니다.</p>
+
+<h3>발단 — 세 가지 물음</h3>
+
+<p>이 글은 이 위키 자신에 대한 세 가지 물음에서 시작했습니다. <strong>내 위키는 RAG에 가까운가, LLM Wiki에 가까운가, 세컨드 브레인이라고 할 수 있는가.</strong> 답은 이렇게 정리됐습니다 — RAG는 질문 시점에 코퍼스를 검색해 생성에 끼워 넣는 <strong>파이프라인(소비 방식)</strong>이고, 이 위키는 그 파이프라인이 소비하는 <strong>지식 정본</strong>이므로 &ldquo;RAG가 아니라 RAG-ready&rdquo;가 정확합니다. 운영 방식은 <a href="#!llmw-overview">카파시가 제안한 LLM Wiki</a>(AI가 쓰고 사람이 큐레이션하는 지식 베이스)와 골격이 같되, 사적 볼트가 아닌 <strong>공개 발행물</strong>이고 사람용 화면과 AI용 기계 인터페이스(<code>llms.txt</code>&middot;<code>knowledge-graph.json</code>)를 함께 내놓는 <strong>이중 구조</strong>라는 점이 갈립니다. <a href="#!sb-levels">세컨드 브레인 5단계</a> 기준으로는 캡처&middot;조직&middot;연결&middot;검색을 갖춘 레벨 3~4권입니다.</p>
+
+<p>그 물음의 연장에서, 같은 주제를 정반대의 밀도로 실천하는 사람의 대담 녹취를 받았습니다. AX 컨설턴트이자 유튜브 채널 &lsquo;브레인 트리니티&rsquo;를 운영하는 <strong>브라이언</strong>이 한 팟캐스트에서 자신의 기록 시스템을 시연한 기록입니다. 목걸이형 녹음기로 <strong>24시간 음성</strong>을, Screenpipe로 <strong>24시간 화면</strong>을 기록하고, 그 전부를 옵시디언 볼트로 흘려 넣어 AI와 함께 회고하고 계획하는 — 본인 표현으로 &ldquo;기록 변태&rdquo;의 시스템입니다. 이 글은 그 대담을 해부하고, 이 위키와 같은 자리에 놓고 비교한 뒤, 우리가 나아갈 지점을 정리합니다.</p>
+
+<figure class="doc-video">
+    <div class="dv-frame">
+        <iframe src="https://www.youtube.com/embed/MRTQwBFURJs" title="LLM Wiki 강연 (구요한) — 이 위키의 LLM Wiki 문서 세트가 정리한 원 강연"
+                loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <figcaption>이 위키의 <a href="#!llmw-overview">LLM Wiki 문서 세트</a>가 정리한 원 강연 — 대담과 같은 생태계의 공개 자료입니다. 화면이 비면 <a href="https://www.youtube.com/live/MRTQwBFURJs" target="_blank" rel="noopener">YouTube에서 열기</a></figcaption>
+</figure>
+
+<h3>대담 해부 — 브라이언 시스템의 세 층</h3>
+
+<p>대담에서 시연된 시스템은 세 층으로 정리됩니다.</p>
+
+<p><strong>① 수집층 — 상시 자동 수집.</strong> 목걸이형 녹음기(Omi)가 하루 종일 음성을 녹음해 2분 이상 침묵을 경계로 이벤트를 쪼개 트랜스크립션을 옵시디언에 쌓고, Screenpipe가 24시간 화면을 녹화해 <strong>로컬 모델이 30분 간격으로 요약</strong>합니다. 회의는 별도 녹음기(PLAUD)로, 웹 자료는 옵시디언 웹클리퍼로 전체 트랜스크립트까지 담습니다. 일기는 자기 전 STT로 흘려 넣습니다. 요지는 <strong>수집에 드는 의지력을 0으로</strong> 만든 것 — 기록할지 말지를 매번 결정하지 않습니다.</p>
+
+<p><strong>② 구조층 — 5계층 데일리 노트와 두 개의 볼트.</strong> 하루는 <strong>의도(플래너) &rarr; 실행(트랜스크립트&middot;타임스탬프 로그) &rarr; 현실(화면 녹화 — 말로 표현되지 않은 부분) &rarr; 해석 &rarr; AI 로그</strong>의 다섯 켜로 기록됩니다. 계획(의도)과 실측(실행&middot;현실)을 분리해 두니 회고가 &ldquo;대차대조&rdquo;가 됩니다. 볼트는 둘로 나눕니다 — 가볍게 소비하는 자료용과, 깊게 새기는 지식용. 자료는 <code>raw</code> 폴더에 원본으로 들어가고, <strong>인제스트</strong>를 거치면 개념(엔티티)이 추출되고 서로 연결되어 <code>wiki</code> 폴더에 정제 노트로 재구성됩니다. 인제스트가 단순 마크다운 변환이 아니라 <strong>연결이자 인덱싱</strong>이라는 규정, 그리고 인제스트 때 <strong>&ldquo;이걸 왜 캡처했어? 나중에 어떻게 써먹고 싶어?&rdquo;를 시스템이 되묻게 해 놓은 것</strong>이 이 대담에서 가장 정교한 대목입니다. 본인은 이를 &ldquo;무의식의 의식화&rdquo;라고 부릅니다.</p>
+
+<p><strong>③ 활용층 — 회고 자동화와 에이전트.</strong> 매일 새벽 2시에 AI가 하루의 전 데이터로 회고를 만들고, 주&middot;월&middot;분기&middot;연 회고가 그 위에 쌓입니다. 1년치 기록으로 &ldquo;머릿속에 있던 서사 그대로&rdquo;의 연간 스토리를 받아 봤고, 연애 시절의 기록으로 러브 스토리를 뽑아 <strong>청혼에 썼다</strong>는 일화가 이 시스템의 정서적 보상을 요약합니다. 입구는 텔레그램의 에이전트(헤르메스)이고, 다음 목표는 디스코드에 멘토 페르소나 여럿을 두는 &ldquo;자문단&rdquo;입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 330" role="img" aria-label="두 시스템 파이프라인 비교: 브라이언은 상시 수집에서 에이전트 회고로, 이 위키는 선별 큐레이션에서 이중 인터페이스로 흐른다">
+    <text class="d-label" x="12" y="26">브라이언 — 라이프로깅 최대주의</text>
+    <rect class="d-box" x="12" y="40" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="87" y="61" text-anchor="middle">상시 수집</text>
+    <text class="d-sub" x="87" y="79" text-anchor="middle">24h 녹음·화면녹화</text>
+    <line class="d-edge" x1="162" y1="66" x2="187" y2="66"/><polygon class="d-arrow" points="187,61 195,66 187,71"/>
+    <rect class="d-box" x="187" y="40" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="262" y="61" text-anchor="middle">인제스트</text>
+    <text class="d-sub" x="262" y="79" text-anchor="middle">개념 추출 · 연결</text>
+    <line class="d-edge" x1="337" y1="66" x2="362" y2="66"/><polygon class="d-arrow" points="362,61 370,66 362,71"/>
+    <rect class="d-box" x="362" y="40" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="437" y="61" text-anchor="middle">두 볼트</text>
+    <text class="d-sub" x="437" y="79" text-anchor="middle">raw / wiki</text>
+    <line class="d-edge" x1="512" y1="66" x2="537" y2="66"/><polygon class="d-arrow" points="537,61 545,66 537,71"/>
+    <rect class="d-box accent" x="537" y="40" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="612" y="61" text-anchor="middle">에이전트 · 회고</text>
+    <text class="d-sub" x="612" y="79" text-anchor="middle">일·주·월·분기·연</text>
+
+    <line class="d-edge" x1="12" y1="150" x2="688" y2="150" stroke-dasharray="4 5"/>
+    <text class="d-sub" x="350" y="140" text-anchor="middle">사적 볼트 · 나를 위한 소비</text>
+    <text class="d-sub" x="350" y="170" text-anchor="middle">공개 발행 · 사람과 AI가 함께 소비</text>
+
+    <text class="d-label" x="12" y="206">이 위키 — 발행형 큐레이션</text>
+    <rect class="d-box" x="12" y="220" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="87" y="241" text-anchor="middle">선별 큐레이션</text>
+    <text class="d-sub" x="87" y="259" text-anchor="middle">주제 단위 등재</text>
+    <line class="d-edge" x1="162" y1="246" x2="187" y2="246"/><polygon class="d-arrow" points="187,241 195,246 187,251"/>
+    <rect class="d-box" x="187" y="220" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="262" y="241" text-anchor="middle">등재 파이프라인</text>
+    <text class="d-sub" x="262" y="259" text-anchor="middle">개념·관계·3언어</text>
+    <line class="d-edge" x1="337" y1="246" x2="362" y2="246"/><polygon class="d-arrow" points="362,241 370,246 362,251"/>
+    <rect class="d-box" x="362" y="220" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="437" y="241" text-anchor="middle">CI 게이트</text>
+    <text class="d-sub" x="437" y="259" text-anchor="middle">기계 규율 검증</text>
+    <line class="d-edge" x1="512" y1="246" x2="537" y2="246"/><polygon class="d-arrow" points="537,241 545,246 537,251"/>
+    <rect class="d-box accent" x="537" y="220" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="612" y="241" text-anchor="middle">이중 인터페이스</text>
+    <text class="d-sub" x="612" y="259" text-anchor="middle">그래프 · llms.txt</text>
+</svg>
+<div class="d-cap">같은 계보(카파시의 LLM Wiki)에서 갈라진 두 파이프라인 — 위는 <strong>삶 전체를 사적으로</strong>, 아래는 <strong>지식을 공적으로</strong> 다룹니다.</div>
+</div>
+
+<h3>같은 계보, 다른 선택 — 조목 비교</h3>
+
+<p>둘은 놀랄 만큼 같은 어휘를 씁니다. 원본과 정제본의 분리(그의 raw/wiki, 우리의 문서/인덱스), 인제스트에서의 개념 추출과 연결(그의 엔티티, 우리의 concepts&middot;relations), 로그의 축적(그의 AI 로그와 슬래시 로그, 우리의 <a href="#!wl-guide">워크로그</a>), 그리고 &ldquo;온톨로지는 그래프가 아니라 문서&rdquo;라는 규정 — 그는 자신의 세계관&middot;방향성&middot;지식 아키텍처를 문서로 두고 그것을 질서로 삼는데, 이 위키에서 정확히 같은 역할을 하는 것이 <a href="#!kgs-overview">지식 체계(kgs) 문서 세트</a>입니다. 차이는 무엇을 최적화하느냐에 있습니다.</p>
+
+<table>
+<thead><tr><th>축</th><th>브라이언 시스템</th><th>이 위키</th></tr></thead>
+<tbody>
+<tr><td>대상</td><td><strong>삶 전체</strong> — 음성·화면·감정·일정</td><td><strong>지식 작업</strong> — 강의·분석·일지</td></tr>
+<tr><td>수집</td><td>상시 자동(녹음·녹화) — 의지력 0</td><td>의도적 큐레이션 — 주제 단위 등재</td></tr>
+<tr><td>공개성</td><td>사적 볼트(옵시디언 로컬)</td><td><strong>공개 발행</strong>(GitHub Pages) + 이중 인터페이스</td></tr>
+<tr><td>규율</td><td>본인 매뉴얼 + 프롬프트(습관)</td><td><strong>CI 게이트</strong>(번역·관계·날짜·캐시 기계 강제)</td></tr>
+<tr><td>온톨로지</td><td>&lsquo;나&rsquo; 문서(세계관·방향성)</td><td>kgs 문서 세트 + 스키마(list·concepts·relations)</td></tr>
+<tr><td>활용</td><td>에이전트 대화·자동 회고(사적)</td><td>그래프 탐색·검색·AI export(공유 소비)</td></tr>
+<tr><td>정서적 보상</td><td>서사 — 연간 스토리, 청혼</td><td>구조 — 자라는 그래프, 남는 정본</td></tr>
+</tbody>
+</table>
+
+<div class="diagram">
+<svg viewBox="0 0 700 320" role="img" aria-label="지식 저장소 좌표계: 가로축 사적에서 공개, 세로축 선별 큐레이션에서 상시 자동 수집. 브라이언은 좌상, 이 위키는 우하, 방치된 노트는 좌하, 우상은 빈칸">
+    <line class="d-edge" x1="350" y1="20" x2="350" y2="300"/>
+    <line class="d-edge" x1="30" y1="160" x2="670" y2="160"/>
+    <text class="d-sub" x="38" y="152">사적 볼트</text>
+    <text class="d-sub" x="662" y="152" text-anchor="end">공개 발행</text>
+    <text class="d-sub" x="358" y="34">상시 자동 수집</text>
+    <text class="d-sub" x="358" y="292">선별 큐레이션</text>
+
+    <circle class="d-node" cx="180" cy="80" r="7"/>
+    <text class="d-label sm" x="180" y="60" text-anchor="middle">브라이언 시스템</text>
+    <text class="d-sub" x="180" y="104" text-anchor="middle">삶 전체 · 나를 위해</text>
+
+    <circle class="d-node b" cx="520" cy="240" r="7"/>
+    <text class="d-label sm" x="520" y="220" text-anchor="middle">이 위키</text>
+    <text class="d-sub" x="520" y="264" text-anchor="middle">지식 작업 · 모두에게</text>
+
+    <circle class="d-node c" cx="180" cy="240" r="7"/>
+    <text class="d-label sm" x="180" y="220" text-anchor="middle">방치된 노트 앱</text>
+    <text class="d-sub" x="180" y="264" text-anchor="middle">목적 없는 축적 — 지식의 무덤</text>
+
+    <text class="d-label sm" x="520" y="76" text-anchor="middle">발행형 라이프로그?</text>
+    <text class="d-sub" x="520" y="96" text-anchor="middle">비어 있는 사분면 — 프라이버시의 벽</text>
+</svg>
+<div class="d-cap">두 축으로 놓으면 두 시스템은 <strong>대각선의 양 끝</strong>입니다. 좌하(목적 없는 축적)는 대담이 말한 실패 지대, 우상은 프라이버시 때문에 비어 있는 칸입니다.</div>
+</div>
+
+<h3>대담이 던지는 세 논점</h3>
+
+<p><strong>논점 1 — RAG와 LLM Wiki의 구분은 &lsquo;언제 정제하느냐&rsquo;다.</strong> 대담은 차이를 두 가지로 요약합니다. RAG는 문서가 늘 때마다 임베딩&middot;청킹&middot;재인덱싱 비용이 다시 들지만 LLM Wiki는 <strong>새 문서만 증분으로</strong> 이으면 되고, RAG의 벡터는 사람이 못 읽지만 LLM Wiki는 <strong>사람이 읽는 마크다운 그대로</strong>라 사람과 AI가 같은 정본을 공유한다는 것. 이 위키의 언어로 옮기면 — RAG가 <strong>질문 시점(query-time)에 정제를 미루는</strong> 구조라면, LLM Wiki는 <strong>저장 시점(ingest-time)에 정제를 끝내 두는</strong> 구조입니다. 이 위키의 등재 파이프라인(개념 추출&middot;관계 검토&middot;번역&middot;인덱스 재생성)은 후자의 극단이고, 그래서 <code>knowledge-graph.json</code> 한 파일을 그대로 순회하는 소비가 가능해집니다. 다만 이 구분은 대체가 아니라 <strong>층의 분업</strong>입니다 — 정제된 위키 위에 의미 검색(RAG류)을 얹는 것이 <a href="#!sb-levels">5단계 사다리</a>의 레벨 3~4가 함께 있는 상태이며, 실제로 이 위키의 통합 검색이 그렇게 동작합니다.</p>
+
+<p><strong>논점 2 — 실패의 원인은 도구가 아니라 목적의 부재다.</strong> 대담에서 가장 뼈아픈 관찰은 세컨드 브레인 유행기에 &ldquo;구축은 했는데 안 쓰는&rdquo; — <strong>지식의 무덤</strong> — 이 양산된 이유로 <strong>목적성 없는 접근</strong>과 <strong>구조화 경험의 부재</strong>를 꼽은 대목입니다. 그의 처방은 인제스트 때 &ldquo;왜 캡처했어? 어디에 써먹고 싶어?&rdquo;를 시스템이 되묻게 하는 것 — 수집의 순간에 <strong>동기를 데이터로</strong> 남기는 장치입니다. 흥미로운 건 이 위키가 같은 원리를 <strong>다른 층위에서</strong> 이미 규칙으로 박아 뒀다는 점입니다. 문서 등재 시 관계(relations)는 본문에 실재하는 것만 달고 억지 링크를 금지하며, 개념은 본문에 실재하는 것만 적습니다(정직성 규칙). 고립된 문서를 결함이 아니라 검토 신호로만 다루는 것도 같은 맥락입니다 — <strong>연결과 수집 자체가 목적이 되는 순간 저장소는 죽는다</strong>는 통찰을, 그는 질문으로, 우리는 게이트와 규칙으로 구현한 셈입니다.</p>
+
+<p><strong>논점 3 — 온톨로지는 그래프가 아니라 문서다.</strong> 대담은 온톨로지(질서)와 지식 그래프(그 질서의 인스턴스)를 구분하고, 온톨로지의 실체를 &ldquo;나는 누구고 어떻게 생각하는가&rdquo;를 적은 <strong>문서</strong>로 둡니다. 이 위키도 정확히 그렇습니다 — World &rarr; Domain &rarr; System &rarr; Document의 계층, 관계 5타입의 어휘, 개념이 조인 키라는 규정은 전부 <a href="#!kgs-overview">kgs 문서</a>에 산문으로 있고, <a href="#!graph">Graph Studio</a>에 뜨는 그래프는 그 질서의 인스턴스입니다. 스키마가 코드보다 문서에 먼저 사는 구조는, AI가 저장소를 다룰 때 <strong>규칙을 읽고 따를 수 있게</strong> 하는 전제이기도 합니다.</p>
+
+<h3>나아갈 점 — 이 위키의 다음 계단</h3>
+
+<p>비교에서 이 위키가 가져올 것은 &ldquo;더 많이 기록하기&rdquo;가 아닙니다. 공개 발행물이라는 정체성상 삶 전체의 상시 수집은 이 위키의 길이 아니고, 대담 스스로도 &ldquo;모두가 이렇게 할 필요는 없다 — 필요할 때 꺼낼 수 있으면 충분하다&rdquo;고 선을 긋습니다. 가져올 것은 네 가지입니다.</p>
+
+<ul>
+<li><strong>수집 동기의 명시화</strong> — 그의 &ldquo;왜 캡처했어?&rdquo; 질문을 등재 절차에 이식할 수 있습니다. 지금 문서의 &lsquo;왜&rsquo;는 워크로그에 흩어져 있는데, 등재 시점에 <strong>수집 동기 한 줄</strong>을 doc-entries에 함께 남기면 나중의 재발견(리트리벌)이 좋아집니다.</li>
+<li><strong>주기 회고의 자동화</strong> — 워크로그는 일 단위로 쌓이지만 월&middot;분기 회고가 없습니다. 그의 새벽 2시 회고처럼, 워크로그&middot;커밋&middot;백로그를 재료로 <strong>월간 회고 문서를 생성하는 정기 작업</strong>은 <a href="#!sb-level5">레벨 5(항상 켜진 브레인 OS)</a>로 가는 가장 싼 첫 계단입니다.</li>
+<li><strong>가벼운 인박스 층</strong> — 그의 raw/wiki 2볼트처럼, &ldquo;가치 판단 전의 재료&rdquo;를 받아 두는 층이 이 위키에는 없습니다. 등재 문턱(3언어&middot;관계&middot;게이트)이 높아 좋은 재료가 유실될 수 있으니, <strong>발행 대상이 아닌 비공개 인박스</strong>를 곁에 두고 숙성된 것만 등재하는 이원 구조를 검토할 만합니다.</li>
+<li><strong>대화형 소비의 접점</strong> — 지금 AI 소비는 export를 읽어 가는 쪽에 맡겨져 있습니다. 그의 텔레그램 에이전트처럼 <strong>위키를 아는 질의응답 입구</strong>가 생기면, 정본은 그대로 두고 소비만 대화형으로 확장됩니다.</li>
+</ul>
+
+<p>한 줄로 맺으면 — 그는 <strong>삶을 기록해 자신에게 되돌려 주는 시스템</strong>을, 이 위키는 <strong>지식을 정제해 모두에게(사람과 AI에게) 내놓는 시스템</strong>을 만들고 있습니다. 같은 계보의 두 극단이고, 서로에게서 배울 것은 분명합니다: 그에게서 <strong>동기의 데이터화와 회고의 자동화</strong>를, 이 위키에서 그가 가져갈 만한 것은 <strong>기계 규율과 공개 발행의 지속 가능성</strong>일 것입니다. 지식 저장소의 성패는 도구도 밀도도 아니고, <strong>목적이 구조에 새겨져 있는가</strong>에 달려 있다는 것 — 그것이 이 비교의 결론입니다.</p>
+
+<div class="note">
+    <span class="nh">사실검증 노트</span>
+    브라이언 시스템에 대한 서술은 <strong>제공받은 대담 녹취(하우와이 팟캐스트 × 브레인 트리니티)를 유일한 출처</strong>로 하며, 장비명&middot;일화(24시간 녹음&middot;화면 녹화, 새벽 2시 회고, 청혼 스토리 등)는 녹취의 발언을 요지 인용한 것입니다 — 별도 교차검증은 하지 않았습니다. 카파시의 LLM Wiki 제안(2026-04 X 게시글 &ldquo;LLM Knowledge Bases&rdquo;와 llm-wiki gist)과 세컨드 브레인 5단계는 이 위키의 <a href="#!llmw-overview">LLM Wiki</a>&middot;<a href="#!sb-levels">세컨드 브레인</a> 문서 세트를 근거로 했습니다. 이 위키 자신에 대한 서술은 저장소의 실제 규칙&middot;도구를 기준으로 합니다.
+</div>

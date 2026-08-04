@@ -1,0 +1,140 @@
+<h2>The Man Who Records Everything, and the Wiki That Publishes — Reflections on Knowledge Vaults</h2>
+
+<p class="scn-sub">An essay that dissects a lifelogger's podcast transcript, places it side by side with this wiki, and draws out where we should go next.</p>
+
+<h3>Where It Started — Three Questions</h3>
+
+<p>This piece began with three questions about this wiki itself. <strong>Is it closer to RAG, to an LLM wiki, or can it be called a second brain?</strong> The answers settled as follows — RAG is a <strong>pipeline (a way of consuming)</strong> that retrieves from a corpus at question time and feeds generation, while this wiki is the <strong>canonical knowledge source</strong> that such a pipeline consumes: &ldquo;not RAG, but RAG-ready.&rdquo; Its operation shares a skeleton with <a href="#!llmw-overview">the LLM wiki Karpathy proposed</a> (a knowledge base written by AI and curated by a human), but it diverges in being a <strong>public publication</strong> rather than a private vault, with a <strong>dual interface</strong> — a human-facing UI plus a machine interface for AIs (<code>llms.txt</code> &amp; <code>knowledge-graph.json</code>). On the <a href="#!sb-levels">five-level second-brain ladder</a>, it sits around level 3&ndash;4: capture, organize, connect, search.</p>
+
+<p>As an extension of those questions, I received the transcript of a conversation with someone who practices the same subject at the opposite density. <strong>Brian</strong>, an AX consultant who runs the YouTube channel &ldquo;Brain Trinity,&rdquo; demonstrated his recording system on a podcast: a necklace recorder capturing <strong>24 hours of audio</strong>, Screenpipe capturing <strong>24 hours of screen</strong>, everything flowing into Obsidian vaults for AI-assisted retrospectives and planning — a self-described &ldquo;recording maniac&rdquo; system. This essay dissects that conversation, compares it with this wiki on equal footing, and lays out where we go next.</p>
+
+<figure class="doc-video">
+    <div class="dv-frame">
+        <iframe src="https://www.youtube.com/embed/MRTQwBFURJs" title="The LLM Wiki lecture (Yohan Koo) — the original talk this wiki's LLM Wiki docs are based on"
+                loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <figcaption>The original lecture behind this wiki's <a href="#!llmw-overview">LLM Wiki document set</a> — public material from the same ecosystem as the podcast. If the frame stays blank, <a href="https://www.youtube.com/live/MRTQwBFURJs" target="_blank" rel="noopener">open it on YouTube</a></figcaption>
+</figure>
+
+<h3>Dissecting the Conversation — Three Layers of Brian's System</h3>
+
+<p>The system demonstrated in the podcast resolves into three layers.</p>
+
+<p><strong>① Capture layer — always-on automatic collection.</strong> A necklace recorder (Omi) records audio all day, splitting events at two minutes of silence and piling transcriptions into Obsidian; Screenpipe records the screen 24/7 while <strong>a local model summarizes every 30 minutes</strong>. Meetings go through a dedicated recorder (PLAUD); web material lands via the Obsidian Web Clipper, full transcripts included; diaries are dictated by STT before bed. The point is that <strong>the willpower cost of capture has been driven to zero</strong> — he never decides whether to record.</p>
+
+<p><strong>② Structure layer — a five-layer daily note and two vaults.</strong> Each day is recorded in five strata: <strong>intent (planner) &rarr; execution (transcripts &amp; time-stamped logs) &rarr; reality (screen recordings — the parts words never captured) &rarr; interpretation &rarr; AI logs</strong>. Keeping plan (intent) and measurement (execution &amp; reality) separate turns retrospectives into a &ldquo;reconciliation of accounts.&rdquo; His vaults split in two — one for light consumption, one for deep engagement. Material enters a <code>raw</code> folder as-is; passing through <strong>ingest</strong>, concepts (entities) are extracted, cross-linked, and reconstituted as refined notes in a <code>wiki</code> folder. Two moves stand out: defining ingest not as Markdown conversion but as <strong>connection and indexing</strong>, and wiring the system to ask back, at ingest time, <strong>&ldquo;why did you capture this? how do you want to use it later?&rdquo;</strong> He calls this &ldquo;making the unconscious conscious.&rdquo;</p>
+
+<p><strong>③ Use layer — automated retrospectives and agents.</strong> At 2 a.m. daily, AI produces a retrospective from the day's full data; weekly, monthly, quarterly, and yearly reviews stack on top. He once received a year-long narrative &ldquo;exactly as it felt in his head,&rdquo; and famously pulled a love story out of his dating-era records and <strong>used it to propose</strong> — an anecdote that sums up the system's emotional payoff. The entry point is a Telegram agent (Hermes); the next goal is a Discord &ldquo;advisory board&rdquo; of mentor personas.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 330" role="img" aria-label="Two pipelines compared: Brian flows from always-on capture to agents and retrospectives; this wiki flows from curation to a dual interface">
+    <text class="d-label" x="12" y="26">Brian — lifelogging maximalism</text>
+    <rect class="d-box" x="12" y="40" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="87" y="61" text-anchor="middle">Always-on capture</text>
+    <text class="d-sub" x="87" y="79" text-anchor="middle">24h audio + screen</text>
+    <line class="d-edge" x1="162" y1="66" x2="187" y2="66"/><polygon class="d-arrow" points="187,61 195,66 187,71"/>
+    <rect class="d-box" x="187" y="40" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="262" y="61" text-anchor="middle">Ingest</text>
+    <text class="d-sub" x="262" y="79" text-anchor="middle">extract + connect</text>
+    <line class="d-edge" x1="337" y1="66" x2="362" y2="66"/><polygon class="d-arrow" points="362,61 370,66 362,71"/>
+    <rect class="d-box" x="362" y="40" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="437" y="61" text-anchor="middle">Two vaults</text>
+    <text class="d-sub" x="437" y="79" text-anchor="middle">raw / wiki</text>
+    <line class="d-edge" x1="512" y1="66" x2="537" y2="66"/><polygon class="d-arrow" points="537,61 545,66 537,71"/>
+    <rect class="d-box accent" x="537" y="40" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="612" y="61" text-anchor="middle">Agents + reviews</text>
+    <text class="d-sub" x="612" y="79" text-anchor="middle">day–week–year</text>
+
+    <line class="d-edge" x1="12" y1="150" x2="688" y2="150" stroke-dasharray="4 5"/>
+    <text class="d-sub" x="350" y="140" text-anchor="middle">private vault · consumed by oneself</text>
+    <text class="d-sub" x="350" y="170" text-anchor="middle">public publication · consumed by people and AIs</text>
+
+    <text class="d-label" x="12" y="206">This wiki — published curation</text>
+    <rect class="d-box" x="12" y="220" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="87" y="241" text-anchor="middle">Curation</text>
+    <text class="d-sub" x="87" y="259" text-anchor="middle">topic-level entry</text>
+    <line class="d-edge" x1="162" y1="246" x2="187" y2="246"/><polygon class="d-arrow" points="187,241 195,246 187,251"/>
+    <rect class="d-box" x="187" y="220" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="262" y="241" text-anchor="middle">Entry pipeline</text>
+    <text class="d-sub" x="262" y="259" text-anchor="middle">concepts · relations</text>
+    <line class="d-edge" x1="337" y1="246" x2="362" y2="246"/><polygon class="d-arrow" points="362,241 370,246 362,251"/>
+    <rect class="d-box" x="362" y="220" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="437" y="241" text-anchor="middle">CI gates</text>
+    <text class="d-sub" x="437" y="259" text-anchor="middle">machine discipline</text>
+    <line class="d-edge" x1="512" y1="246" x2="537" y2="246"/><polygon class="d-arrow" points="537,241 545,246 537,251"/>
+    <rect class="d-box accent" x="537" y="220" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="612" y="241" text-anchor="middle">Dual interface</text>
+    <text class="d-sub" x="612" y="259" text-anchor="middle">graph · llms.txt</text>
+</svg>
+<div class="d-cap">Two pipelines from the same lineage (Karpathy's LLM wiki) — the top treats <strong>a whole life, privately</strong>; the bottom treats <strong>knowledge, publicly</strong>.</div>
+</div>
+
+<h3>Same Lineage, Different Choices — A Point-by-Point Comparison</h3>
+
+<p>The two systems speak a strikingly similar vocabulary: raw versus refined (his raw/wiki, our documents/index), concept extraction and linking at ingest (his entities, our concepts &amp; relations), accumulated logs (his AI logs and slash-log, our <a href="#!wl-guide">work log</a>), and the maxim that <strong>&ldquo;an ontology is a document, not a graph&rdquo;</strong> — he keeps his worldview, direction, and knowledge architecture as documents and treats them as the ordering principle, which is exactly the role played here by the <a href="#!kgs-overview">knowledge-system (kgs) document set</a>. The difference is in what each optimizes.</p>
+
+<table>
+<thead><tr><th>Axis</th><th>Brian's system</th><th>This wiki</th></tr></thead>
+<tbody>
+<tr><td>Subject</td><td><strong>A whole life</strong> — audio, screen, feelings, schedule</td><td><strong>Knowledge work</strong> — lectures, analyses, logs</td></tr>
+<tr><td>Capture</td><td>Always-on, automatic — zero willpower</td><td>Deliberate curation — topic-level entry</td></tr>
+<tr><td>Visibility</td><td>Private vault (local Obsidian)</td><td><strong>Public publication</strong> (GitHub Pages) + dual interface</td></tr>
+<tr><td>Discipline</td><td>Personal manuals + prompts (habit)</td><td><strong>CI gates</strong> (translation, relations, dates, cache — machine-enforced)</td></tr>
+<tr><td>Ontology</td><td>&ldquo;Who I am&rdquo; documents (worldview, direction)</td><td>kgs document set + schema (list, concepts, relations)</td></tr>
+<tr><td>Use</td><td>Agent chat, automated reviews (private)</td><td>Graph exploration, search, AI export (shared consumption)</td></tr>
+<tr><td>Emotional payoff</td><td>Narrative — a year's story, a proposal</td><td>Structure — a growing graph, a lasting canon</td></tr>
+</tbody>
+</table>
+
+<div class="diagram">
+<svg viewBox="0 0 700 320" role="img" aria-label="A coordinate plane for knowledge vaults: private to public on the horizontal axis, curation to always-on capture on the vertical. Brian sits top-left, this wiki bottom-right, abandoned note apps bottom-left, and the top-right is empty">
+    <line class="d-edge" x1="350" y1="20" x2="350" y2="300"/>
+    <line class="d-edge" x1="30" y1="160" x2="670" y2="160"/>
+    <text class="d-sub" x="38" y="152">private vault</text>
+    <text class="d-sub" x="662" y="152" text-anchor="end">public publication</text>
+    <text class="d-sub" x="358" y="34">always-on capture</text>
+    <text class="d-sub" x="358" y="292">deliberate curation</text>
+
+    <circle class="d-node" cx="180" cy="80" r="7"/>
+    <text class="d-label sm" x="180" y="60" text-anchor="middle">Brian's system</text>
+    <text class="d-sub" x="180" y="104" text-anchor="middle">a whole life, for oneself</text>
+
+    <circle class="d-node b" cx="520" cy="240" r="7"/>
+    <text class="d-label sm" x="520" y="220" text-anchor="middle">This wiki</text>
+    <text class="d-sub" x="520" y="264" text-anchor="middle">knowledge work, for everyone</text>
+
+    <circle class="d-node c" cx="180" cy="240" r="7"/>
+    <text class="d-label sm" x="180" y="220" text-anchor="middle">Abandoned note apps</text>
+    <text class="d-sub" x="180" y="264" text-anchor="middle">purposeless hoarding — a tomb</text>
+
+    <text class="d-label sm" x="520" y="76" text-anchor="middle">Published lifelogs?</text>
+    <text class="d-sub" x="520" y="96" text-anchor="middle">empty quadrant — the privacy wall</text>
+</svg>
+<div class="d-cap">Plotted on two axes, the two systems are <strong>opposite ends of a diagonal</strong>. Bottom-left (purposeless hoarding) is the failure zone the podcast names; top-right stays empty because of privacy.</div>
+</div>
+
+<h3>Three Arguments the Conversation Raises</h3>
+
+<p><strong>Argument 1 — RAG versus LLM wiki is a question of when you refine.</strong> The podcast summarizes the difference in two points: RAG pays embedding, chunking, and re-indexing costs every time documents grow, while an LLM wiki only needs to <strong>connect new documents incrementally</strong>; and RAG's vectors are unreadable to humans, while an LLM wiki stays <strong>human-readable Markdown</strong>, so people and AI share one canon. Translated into this wiki's terms — RAG <strong>defers refinement to query time</strong>; an LLM wiki <strong>finishes refinement at ingest time</strong>. This wiki's entry pipeline (concept extraction, relation review, translation, index regeneration) is the extreme of the latter, which is precisely what makes it possible to consume <code>knowledge-graph.json</code> by traversing a single file as-is. But the distinction is a <strong>division of layers, not a rivalry</strong> — putting semantic search (RAG-like) on top of a refined wiki is what levels 3 and 4 of the <a href="#!sb-levels">five-level ladder</a> look like together, and that is in fact how this wiki's unified search works.</p>
+
+<p><strong>Argument 2 — the cause of failure is not the tool but the absence of purpose.</strong> The sharpest observation in the podcast concerns why the second-brain boom mass-produced vaults that were built but never used — <strong>tombs of knowledge</strong>: <strong>purposeless adoption</strong> and <strong>no prior experience of structuring oneself</strong>. His remedy is to make the system ask back at ingest: &ldquo;why did you capture this? where do you want to use it?&rdquo; — a device that records <strong>motive as data</strong> at the moment of collection. What is striking is that this wiki already encodes the same principle <strong>at a different layer</strong>: relations may only be declared when they actually exist in the text, forced links are forbidden, and concepts must appear in the body (the honesty rule); isolated documents are treated as review signals, not defects. <strong>The moment connecting and collecting become the goal, the vault dies</strong> — he implements that insight as a question, we implement it as gates and rules.</p>
+
+<p><strong>Argument 3 — an ontology is a document, not a graph.</strong> The podcast distinguishes ontology (order) from the knowledge graph (an instance of that order), and locates the ontology's substance in <strong>documents</strong> that say &ldquo;who I am and how I think.&rdquo; This wiki does exactly that — the World &rarr; Domain &rarr; System &rarr; Document hierarchy, the five-type relation vocabulary, and the rule that concepts are join keys all live as prose in the <a href="#!kgs-overview">kgs documents</a>, and the graph that appears in <a href="#!graph">Graph Studio</a> is an instance of that order. Keeping the schema in documents before code is also what lets an AI <strong>read the rules and follow them</strong> when it works on the repository.</p>
+
+<h3>Where We Go Next — This Wiki's Next Steps</h3>
+
+<p>What this wiki should take from the comparison is not &ldquo;record more.&rdquo; Given its identity as a public publication, always-on capture of a whole life is not its path — and the podcast itself draws the line: &ldquo;not everyone needs to do this; being able to retrieve when needed is enough.&rdquo; Four things are worth taking.</p>
+
+<ul>
+<li><strong>Make the motive explicit</strong> — his &ldquo;why did you capture this?&rdquo; question can be grafted onto our entry procedure. Today a document's &ldquo;why&rdquo; is scattered across work logs; recording <strong>a one-line capture motive</strong> in doc-entries at entry time would improve later retrieval.</li>
+<li><strong>Automate periodic retrospectives</strong> — work logs accumulate daily, but there is no monthly or quarterly review. Like his 2 a.m. retrospective, <strong>a scheduled job that drafts a monthly review</strong> from work logs, commits, and the backlog is the cheapest first step toward <a href="#!sb-level5">level 5 (an always-on brain OS)</a>.</li>
+<li><strong>A lightweight inbox layer</strong> — like his raw/wiki split, this wiki has no layer for &ldquo;material before the value judgment.&rdquo; The entry bar (three languages, relations, gates) is high enough that good material can be lost; a <strong>private, non-published inbox</strong> beside the wiki, promoting only what matures, is worth considering.</li>
+<li><strong>A conversational entry point</strong> — today AI consumption is left to whoever reads the exports. A <strong>QA entry point that knows the wiki</strong>, like his Telegram agent, would extend consumption into dialogue while leaving the canon untouched.</li>
+</ul>
+
+<p>In one line — he is building <strong>a system that records a life and gives it back to its owner</strong>; this wiki is building <strong>a system that refines knowledge and publishes it to everyone, human and AI</strong>. Two extremes of one lineage, with clear things to learn from each other: from him, <strong>motive-as-data and automated retrospectives</strong>; from this wiki, what he might take is <strong>machine discipline and the sustainability of public publication</strong>. A knowledge vault succeeds or fails not by tools or density, but by whether <strong>purpose is engraved into the structure</strong> — that is the conclusion of this comparison.</p>
+
+<div class="note">
+    <span class="nh">Fact-check note</span>
+    Descriptions of Brian's system rely on <strong>the provided podcast transcript (How &amp; AI podcast &times; Brain Trinity) as the sole source</strong>; device names and anecdotes (24-hour audio and screen capture, the 2 a.m. retrospective, the proposal story) are paraphrased from statements in that transcript and were not independently cross-verified. Karpathy's LLM wiki proposal (the 2026-04 X post &ldquo;LLM Knowledge Bases&rdquo; and the llm-wiki gist) and the five-level second-brain ladder are grounded in this wiki's <a href="#!llmw-overview">LLM Wiki</a> and <a href="#!sb-levels">Second Brain</a> document sets. Statements about this wiki itself are based on the repository's actual rules and tools.
+</div>
