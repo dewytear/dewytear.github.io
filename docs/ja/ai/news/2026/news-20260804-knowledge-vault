@@ -1,0 +1,140 @@
+<h2>すべてを記録する人、発行するウィキ — 知識の保管庫についての考察</h2>
+
+<p class="scn-sub">あるライフロガーの対談書き起こしを解剖し、このウィキと同じ土俵に並べて比較したうえで、私たちが次に進むべき地点を整理したエッセイです。</p>
+
+<h3>発端 — 三つの問い</h3>
+
+<p>この文章は、このウィキ自身への三つの問いから始まりました。<strong>このウィキは RAG に近いのか、LLM Wiki に近いのか、セカンドブレインと呼べるのか。</strong>答えはこう整理されました — RAG は質問の時点でコーパスを検索して生成に差し込む<strong>パイプライン（消費のしかた）</strong>であり、このウィキはそのパイプラインが消費する<strong>知識の正本</strong>なので、「RAG ではなく RAG-ready」が正確です。運用のしかたは<a href="#!llmw-overview">カパシーが提案した LLM Wiki</a>（AI が書き、人がキュレーションする知識ベース）と骨格が同じですが、個人のボールトではなく<strong>公開発行物</strong>であり、人向けの画面と AI 向けの機械インターフェース（<code>llms.txt</code>・<code>knowledge-graph.json</code>）を併せて提供する<strong>二重構造</strong>である点が分かれます。<a href="#!sb-levels">セカンドブレイン 5 段階</a>で言えば、キャプチャ・整理・接続・検索を備えたレベル 3〜4 圏です。</p>
+
+<p>その問いの延長で、同じテーマを正反対の密度で実践する人の対談書き起こしを受け取りました。AX コンサルタントで YouTube チャンネル「ブレイン・トリニティ」を運営する<strong>ブライアン</strong>が、あるポッドキャストで自分の記録システムを実演した記録です。ネックレス型レコーダーで<strong>24 時間の音声</strong>を、Screenpipe で<strong>24 時間の画面</strong>を記録し、その全部を Obsidian のボールトへ流し込んで AI とともに振り返り、計画する — 本人いわく「記録の変態」のシステムです。本稿はその対談を解剖し、このウィキと並べて比較し、進むべき地点を整理します。</p>
+
+<figure class="doc-video">
+    <div class="dv-frame">
+        <iframe src="https://www.youtube.com/embed/MRTQwBFURJs" title="LLM Wiki 講演（Yohan Koo）— このウィキの LLM Wiki 文書セットの元になった講演"
+                loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <figcaption>このウィキの<a href="#!llmw-overview">LLM Wiki 文書セット</a>が整理した元講演 — 対談と同じエコシステムの公開資料です。画面が空のままなら<a href="https://www.youtube.com/live/MRTQwBFURJs" target="_blank" rel="noopener">YouTube で開く</a></figcaption>
+</figure>
+
+<h3>対談の解剖 — ブライアン・システムの三層</h3>
+
+<p>対談で実演されたシステムは三つの層に整理できます。</p>
+
+<p><strong>① 収集層 — 常時自動収集。</strong>ネックレス型レコーダー（Omi）が一日中音声を録音し、2 分以上の沈黙を境にイベントを切り分けて書き起こしを Obsidian に積み、Screenpipe が 24 時間画面を録画して<strong>ローカルモデルが 30 分おきに要約</strong>します。会議は専用レコーダー（PLAUD）で、ウェブ資料は Obsidian Web Clipper で全文書き起こしごと取り込み、日記は寝る前に STT で流し込みます。要点は<strong>収集にかかる意志力をゼロに</strong>したこと — 記録するかどうかを毎回決めないのです。</p>
+
+<p><strong>② 構造層 — 5 層のデイリーノートと二つのボールト。</strong>一日は<strong>意図（プランナー）&rarr; 実行（書き起こし・タイムスタンプのログ）&rarr; 現実（画面録画 — 言葉にならなかった部分）&rarr; 解釈 &rarr; AI ログ</strong>の五つの層で記録されます。計画（意図）と実測（実行・現実）を分けておくことで、振り返りが「貸借対照」になります。ボールトは二つ — 軽く消費する資料用と、深く刻む知識用。資料は <code>raw</code> フォルダに原本のまま入り、<strong>インジェスト</strong>を経て概念（エンティティ）が抽出され、互いにつながれて <code>wiki</code> フォルダに精製ノートとして再構成されます。インジェストを単なる Markdown 変換ではなく<strong>接続でありインデックス化</strong>と規定したこと、そしてインジェスト時に<strong>「なぜこれをキャプチャした？あとでどう使いたい？」とシステムに問い返させる</strong>ようにしたことが、この対談で最も精巧なくだりです。本人はこれを「無意識の意識化」と呼びます。</p>
+
+<p><strong>③ 活用層 — 振り返りの自動化とエージェント。</strong>毎日深夜 2 時に AI が一日の全データから振り返りを作り、週・月・四半期・年の振り返りがその上に積み重なります。1 年分の記録から「頭の中にあった物語そのまま」の年間ストーリーを受け取ったこと、交際時代の記録からラブストーリーを引き出して<strong>プロポーズに使った</strong>という逸話が、このシステムの情緒的な報酬を要約しています。入口は Telegram のエージェント（ヘルメス）で、次の目標は Discord にメンターのペルソナを並べる「顧問団」です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 330" role="img" aria-label="二つのパイプラインの比較：ブライアンは常時収集からエージェントと振り返りへ、このウィキはキュレーションから二重インターフェースへ流れる">
+    <text class="d-label" x="12" y="26">ブライアン — ライフログ最大主義</text>
+    <rect class="d-box" x="12" y="40" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="87" y="61" text-anchor="middle">常時収集</text>
+    <text class="d-sub" x="87" y="79" text-anchor="middle">24h 録音・画面録画</text>
+    <line class="d-edge" x1="162" y1="66" x2="187" y2="66"/><polygon class="d-arrow" points="187,61 195,66 187,71"/>
+    <rect class="d-box" x="187" y="40" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="262" y="61" text-anchor="middle">インジェスト</text>
+    <text class="d-sub" x="262" y="79" text-anchor="middle">概念抽出・接続</text>
+    <line class="d-edge" x1="337" y1="66" x2="362" y2="66"/><polygon class="d-arrow" points="362,61 370,66 362,71"/>
+    <rect class="d-box" x="362" y="40" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="437" y="61" text-anchor="middle">二つのボールト</text>
+    <text class="d-sub" x="437" y="79" text-anchor="middle">raw / wiki</text>
+    <line class="d-edge" x1="512" y1="66" x2="537" y2="66"/><polygon class="d-arrow" points="537,61 545,66 537,71"/>
+    <rect class="d-box accent" x="537" y="40" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="612" y="61" text-anchor="middle">対話と振り返り</text>
+    <text class="d-sub" x="612" y="79" text-anchor="middle">日・週・月・年</text>
+
+    <line class="d-edge" x1="12" y1="150" x2="688" y2="150" stroke-dasharray="4 5"/>
+    <text class="d-sub" x="350" y="140" text-anchor="middle">私的ボールト · 自分のための消費</text>
+    <text class="d-sub" x="350" y="170" text-anchor="middle">公開発行 · 人と AI がともに消費</text>
+
+    <text class="d-label" x="12" y="206">このウィキ — 発行型キュレーション</text>
+    <rect class="d-box" x="12" y="220" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="87" y="241" text-anchor="middle">キュレーション</text>
+    <text class="d-sub" x="87" y="259" text-anchor="middle">テーマ単位の登載</text>
+    <line class="d-edge" x1="162" y1="246" x2="187" y2="246"/><polygon class="d-arrow" points="187,241 195,246 187,251"/>
+    <rect class="d-box" x="187" y="220" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="262" y="241" text-anchor="middle">登載パイプライン</text>
+    <text class="d-sub" x="262" y="259" text-anchor="middle">概念・関係・3言語</text>
+    <line class="d-edge" x1="337" y1="246" x2="362" y2="246"/><polygon class="d-arrow" points="362,241 370,246 362,251"/>
+    <rect class="d-box" x="362" y="220" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="437" y="241" text-anchor="middle">CI ゲート</text>
+    <text class="d-sub" x="437" y="259" text-anchor="middle">機械の規律で検証</text>
+    <line class="d-edge" x1="512" y1="246" x2="537" y2="246"/><polygon class="d-arrow" points="537,241 545,246 537,251"/>
+    <rect class="d-box accent" x="537" y="220" width="150" height="52" rx="9"/>
+    <text class="d-label sm" x="612" y="241" text-anchor="middle">二重 I/F</text>
+    <text class="d-sub" x="612" y="259" text-anchor="middle">グラフ · llms.txt</text>
+</svg>
+<div class="d-cap">同じ系譜（カパシーの LLM Wiki）から分かれた二つのパイプライン — 上は<strong>人生全体を私的に</strong>、下は<strong>知識を公的に</strong>扱います。</div>
+</div>
+
+<h3>同じ系譜、異なる選択 — 項目別の比較</h3>
+
+<p>二つのシステムは驚くほど同じ語彙を使います。原本と精製本の分離（彼の raw/wiki、私たちの文書／インデックス）、インジェストでの概念抽出と接続（彼のエンティティ、私たちの concepts・relations）、ログの蓄積（彼の AI ログとスラッシュログ、私たちの<a href="#!wl-guide">作業ログ</a>）、そして「オントロジーはグラフではなく文書」という規定 — 彼は自分の世界観・方向性・知識アーキテクチャを文書として置き、それを秩序とします。このウィキでまったく同じ役割を果たすのが<a href="#!kgs-overview">知識体系（kgs）文書セット</a>です。違いは、何を最適化するかにあります。</p>
+
+<table>
+<thead><tr><th>軸</th><th>ブライアンのシステム</th><th>このウィキ</th></tr></thead>
+<tbody>
+<tr><td>対象</td><td><strong>人生全体</strong> — 音声・画面・感情・予定</td><td><strong>知識労働</strong> — 講義・分析・日誌</td></tr>
+<tr><td>収集</td><td>常時自動（録音・録画）— 意志力ゼロ</td><td>意図的キュレーション — テーマ単位の登載</td></tr>
+<tr><td>公開性</td><td>私的ボールト（ローカルの Obsidian）</td><td><strong>公開発行</strong>（GitHub Pages）＋二重インターフェース</td></tr>
+<tr><td>規律</td><td>本人のマニュアル＋プロンプト（習慣）</td><td><strong>CI ゲート</strong>（翻訳・関係・作成日・キャッシュを機械が強制）</td></tr>
+<tr><td>オントロジー</td><td>「私」の文書（世界観・方向性）</td><td>kgs 文書セット＋スキーマ（list・concepts・relations）</td></tr>
+<tr><td>活用</td><td>エージェント対話・自動振り返り（私的）</td><td>グラフ探索・検索・AI エクスポート（共有消費）</td></tr>
+<tr><td>情緒的報酬</td><td>物語 — 年間ストーリー、プロポーズ</td><td>構造 — 育つグラフ、残る正本</td></tr>
+</tbody>
+</table>
+
+<div class="diagram">
+<svg viewBox="0 0 700 320" role="img" aria-label="知識保管庫の座標系：横軸は私的から公開へ、縦軸はキュレーションから常時収集へ。ブライアンは左上、このウィキは右下、放置されたノートアプリは左下、右上は空白">
+    <line class="d-edge" x1="350" y1="20" x2="350" y2="300"/>
+    <line class="d-edge" x1="30" y1="160" x2="670" y2="160"/>
+    <text class="d-sub" x="38" y="152">私的ボールト</text>
+    <text class="d-sub" x="662" y="152" text-anchor="end">公開発行</text>
+    <text class="d-sub" x="358" y="34">常時自動収集</text>
+    <text class="d-sub" x="358" y="292">選別キュレーション</text>
+
+    <circle class="d-node" cx="180" cy="80" r="7"/>
+    <text class="d-label sm" x="180" y="60" text-anchor="middle">ブライアンのシステム</text>
+    <text class="d-sub" x="180" y="104" text-anchor="middle">人生全体 · 自分のために</text>
+
+    <circle class="d-node b" cx="520" cy="240" r="7"/>
+    <text class="d-label sm" x="520" y="220" text-anchor="middle">このウィキ</text>
+    <text class="d-sub" x="520" y="264" text-anchor="middle">知識労働 · みんなのために</text>
+
+    <circle class="d-node c" cx="180" cy="240" r="7"/>
+    <text class="d-label sm" x="180" y="220" text-anchor="middle">放置されたノートアプリ</text>
+    <text class="d-sub" x="180" y="264" text-anchor="middle">目的なき蓄積 — 知識の墓</text>
+
+    <text class="d-label sm" x="520" y="76" text-anchor="middle">発行型ライフログ？</text>
+    <text class="d-sub" x="520" y="96" text-anchor="middle">空白の象限 — プライバシーの壁</text>
+</svg>
+<div class="d-cap">二つの軸に置くと、両システムは<strong>対角線の両端</strong>です。左下（目的なき蓄積）は対談が名指しした失敗地帯、右上はプライバシーゆえに空いたままの枠です。</div>
+</div>
+
+<h3>対談が投げかける三つの論点</h3>
+
+<p><strong>論点 1 — RAG と LLM Wiki の違いは「いつ精製するか」。</strong>対談は違いを二点に要約します。RAG は文書が増えるたびに埋め込み・チャンキング・再インデックスの費用がかかるが、LLM Wiki は<strong>新しい文書だけを増分で</strong>つなげばよいこと。RAG のベクトルは人が読めないが、LLM Wiki は<strong>人が読める Markdown のまま</strong>なので、人と AI が同じ正本を共有できること。このウィキの言葉に訳せば — RAG が<strong>質問時（query-time）に精製を先送りする</strong>構造なら、LLM Wiki は<strong>保存時（ingest-time）に精製を済ませておく</strong>構造です。このウィキの登載パイプライン（概念抽出・関係レビュー・翻訳・インデックス再生成）は後者の極致であり、だからこそ <code>knowledge-graph.json</code> を 1 ファイルのまま巡回する消費が可能になります。ただしこの区別は代替ではなく<strong>層の分業</strong>です — 精製されたウィキの上に意味検索（RAG 的な層)を載せるのが<a href="#!sb-levels">5 段階のはしご</a>のレベル 3 と 4 が同居した状態で、実際このウィキの統合検索はそう動いています。</p>
+
+<p><strong>論点 2 — 失敗の原因は道具ではなく目的の不在。</strong>対談で最も痛烈な観察は、セカンドブレインのブーム期に「構築はしたのに使わない」— <strong>知識の墓</strong> — が量産された理由として、<strong>目的なき着手</strong>と<strong>自分を構造化した経験の不在</strong>を挙げたくだりです。彼の処方箋は、インジェスト時に「なぜキャプチャした？どこで使いたい？」とシステムに問い返させること — 収集の瞬間に<strong>動機をデータとして</strong>残す仕掛けです。興味深いのは、このウィキが同じ原理を<strong>別の層で</strong>すでにルール化していることです。関係（relations）は本文に実在するものだけを張り、無理なリンクは禁止。概念は本文に実在するものだけを記す（正直さのルール）。孤立した文書を欠陥ではなくレビューの信号として扱うのも同じ文脈です。<strong>接続や収集そのものが目的になった瞬間、保管庫は死ぬ</strong> — その洞察を、彼は質問で、私たちはゲートとルールで実装しているわけです。</p>
+
+<p><strong>論点 3 — オントロジーはグラフではなく文書。</strong>対談はオントロジー（秩序）と知識グラフ（その秩序のインスタンス）を区別し、オントロジーの実体を「私は何者で、どう考えるのか」を記した<strong>文書</strong>に置きます。このウィキもまったく同じです — World &rarr; Domain &rarr; System &rarr; Document の階層、関係 5 タイプの語彙、概念はジョインキーだという規定は、すべて<a href="#!kgs-overview">kgs 文書</a>に散文として存在し、<a href="#!graph">Graph Studio</a> に現れるグラフはその秩序のインスタンスです。スキーマがコードより先に文書に住む構造は、AI がリポジトリを扱うときに<strong>ルールを読んで従える</strong>ための前提でもあります。</p>
+
+<h3>次に進む地点 — このウィキの次の階段</h3>
+
+<p>この比較からこのウィキが持ち帰るべきものは「もっと記録すること」ではありません。公開発行物というアイデンティティ上、人生全体の常時収集はこのウィキの道ではなく、対談自身も「みんながここまでやる必要はない — 必要なときに取り出せれば十分」と線を引いています。持ち帰るべきは四つです。</p>
+
+<ul>
+<li><strong>収集動機の明示化</strong> — 彼の「なぜキャプチャした？」という質問は、登載手続きに移植できます。いま文書の「なぜ」は作業ログに散在していますが、登載の時点で<strong>収集動機の一行</strong>を doc-entries に残せば、のちの再発見（リトリーバル）が良くなります。</li>
+<li><strong>定期振り返りの自動化</strong> — 作業ログは日単位で積もりますが、月次・四半期の振り返りはありません。彼の深夜 2 時の振り返りのように、作業ログ・コミット・バックログを材料に<strong>月次レビューを起草する定期ジョブ</strong>は、<a href="#!sb-level5">レベル 5（常時稼働のブレイン OS）</a>へ向かう最も安い最初の階段です。</li>
+<li><strong>軽いインボックス層</strong> — 彼の raw/wiki の二分のような、「価値判断前の材料」を受けておく層がこのウィキにはありません。登載の敷居（3 言語・関係・ゲート）が高いぶん良い材料が失われうるので、<strong>発行対象ではない非公開インボックス</strong>を脇に置き、熟したものだけを登載する二元構造は検討に値します。</li>
+<li><strong>対話型消費の入口</strong> — いま AI の消費はエクスポートを読みに来る側に委ねられています。彼の Telegram エージェントのような<strong>ウィキを知る質疑応答の入口</strong>ができれば、正本はそのままに消費だけが対話へ広がります。</li>
+</ul>
+
+<p>一行で結べば — 彼は<strong>人生を記録して持ち主に返すシステム</strong>を、このウィキは<strong>知識を精製して人と AI のみんなに差し出すシステム</strong>を作っています。同じ系譜の両極であり、互いに学ぶものは明白です。彼からは<strong>動機のデータ化と振り返りの自動化</strong>を。このウィキから彼が持ち帰れるとすれば、<strong>機械の規律と公開発行の持続可能性</strong>でしょう。知識の保管庫の成否は道具でも密度でもなく、<strong>目的が構造に刻まれているか</strong>にかかっている — それがこの比較の結論です。</p>
+
+<div class="note">
+    <span class="nh">ファクトチェックの注記</span>
+    ブライアンのシステムに関する記述は、<strong>提供された対談書き起こし（How &amp; AI ポッドキャスト × ブレイン・トリニティ）を唯一の出典</strong>とし、機器名や逸話（24 時間の録音・画面録画、深夜 2 時の振り返り、プロポーズの話など）は書き起こし内の発言の要旨引用です — 独自の相互検証は行っていません。カパシーの LLM Wiki 提案（2026-04 の X 投稿「LLM Knowledge Bases」と llm-wiki gist）とセカンドブレイン 5 段階は、このウィキの <a href="#!llmw-overview">LLM Wiki</a>・<a href="#!sb-levels">セカンドブレイン</a>文書セットに拠ります。このウィキ自身に関する記述は、リポジトリの実際のルールと道具に基づきます。
+</div>
