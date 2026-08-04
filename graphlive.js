@@ -368,16 +368,28 @@ function drawExplore(ctx, W, H, day, bloom, acc, cols, edgeH){
         }
     }
 }
-function arrow(ctx, A, B, tipGap){
-    var dx = B[0] - A[0], dy = B[1] - A[1], L = Math.hypot(dx, dy);
-    if(L < 26) return;
-    var t = 1 - tipGap / L, px = A[0] + dx * t, py = A[1] + dy * t;
-    var ang = Math.atan2(dy, dx);
+// 화살촉 본체 — (px,py)에 ang 방향으로 그린다. halo — 배경색을 주면 얇은
+// 배경 테두리를 둘러 선 위·배경 어디서나 또렷하다(제작 모드 시인성).
+function arrowHead(ctx, px, py, ang, sz, halo){
+    var col = ctx.strokeStyle;
     ctx.beginPath();
     ctx.moveTo(px, py);
-    ctx.lineTo(px - 7 * Math.cos(ang - 0.42), py - 7 * Math.sin(ang - 0.42));
-    ctx.lineTo(px - 7 * Math.cos(ang + 0.42), py - 7 * Math.sin(ang + 0.42));
-    ctx.closePath(); ctx.fillStyle = ctx.strokeStyle; ctx.fill();
+    ctx.lineTo(px - sz * Math.cos(ang - 0.42), py - sz * Math.sin(ang - 0.42));
+    ctx.lineTo(px - sz * Math.cos(ang + 0.42), py - sz * Math.sin(ang + 0.42));
+    ctx.closePath();
+    if(halo){
+        ctx.lineJoin = 'round'; ctx.lineWidth = 2;
+        ctx.strokeStyle = halo; ctx.stroke();
+        ctx.strokeStyle = col;
+    }
+    ctx.fillStyle = col; ctx.fill();
+}
+// size — 화살촉 크기(기본 7, 탐색 모드 기존값)
+function arrow(ctx, A, B, tipGap, size, halo){
+    var dx = B[0] - A[0], dy = B[1] - A[1], L = Math.hypot(dx, dy);
+    if(L < 26) return;
+    var t = 1 - tipGap / L;
+    arrowHead(ctx, A[0] + dx * t, A[1] + dy * t, Math.atan2(dy, dx), size || 7, halo);
 }
 function node(ctx, wx, wy, r, qvx, qvy, kind, c, aMul, isSel, bloom, day, acc, W, H){
     var S = toScreenTo(wx, wy, _sN);
@@ -451,7 +463,8 @@ function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
     }
     var r2 = 13 * P.scale * Math.max(R.cam.s, 0.5);
     ctx.setLineDash([]);
-    ctx.font = '10.5px sans-serif'; ctx.textAlign = 'center';
+    // 글자 크기 — "살짝만 키워달라" 피드백으로 전체 +1px (엣지 11.5·노드 13·속성 11.5)
+    ctx.font = '11.5px sans-serif'; ctx.textAlign = 'center';
     R.MK.edges.forEach(function(ed, ei){
         var na = byId[ed.a], nb = byId[ed.b]; if(!na || !nb) return;
         if(na.qx == null){ na.qx = na.x; na.qy = na.y; }
@@ -464,12 +477,42 @@ function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
             ? hsl([(acc[0] + REL_HUE[ed.type]) % 360, 65, day ? 45 : 62], editing ? 1 : 0.85)
             : hsl(edgeH, editing ? 0.9 : 0.5);
         ctx.lineWidth = editing ? 2.5 : 1.5;
+        var lbl = ed.label || (rel ? relTypeLabel(REL_KINDS[ed.type - 2]) : STR('mkRelPlain'));
+        // 자기 루프 — 노드 원보다 조금 큰 타원 중 **노드 밖 구간만** 호로
+        // 그린다: 왼쪽 림에서 나와 위를 돌아 오른쪽 림으로 다시 들어가는
+        // 모양(대표님 확정). 라벨은 그리지 않고(이름·타입은 탭하면 편집기에서),
+        // 화살촉은 방향 있는 타입일 때 재진입 직전 접선 방향으로 단다.
+        if(ed.a === ed.b){
+            var lg = loopGeom(A, r2);
+            var pts = [];
+            for(var k = 0; k <= 48; k++){
+                // 타원 아래(노드 안)에서 출발해 한 바퀴 — 밖 구간이 연속으로 나온다
+                var t2 = Math.PI / 2 + (k / 48) * Math.PI * 2;
+                var ex = lg[0] + lg[2] * Math.cos(t2), ey = lg[1] + lg[3] * Math.sin(t2);
+                if(Math.hypot(ex - A[0], ey - A[1]) > r2 + 1) pts.push([ex, ey]);
+            }
+            if(pts.length > 1){
+                ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+                for(var k2 = 1; k2 < pts.length; k2++) ctx.lineTo(pts[k2][0], pts[k2][1]);
+                ctx.stroke();
+                if(rel){
+                    var pA = pts[pts.length - 2], pB = pts[pts.length - 1];
+                    ctx.strokeStyle = hsl([(acc[0] + REL_HUE[ed.type]) % 360, 65, day ? 45 : 62], 1);
+                    arrowHead(ctx, pB[0], pB[1], Math.atan2(pB[1] - pA[1], pB[0] - pA[0]), 10, halo);
+                }
+            }
+            return;
+        }
         ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
         ctx.fillStyle = muted;
         // 수기 이름이 있으면 타입 라벨을 대체 (화살표·색은 타입 그대로)
-        haloText(ed.label || (rel ? relTypeLabel(REL_KINDS[ed.type - 2]) : STR('mkRelPlain')),
-                     (A[0] + B[0]) / 2, (A[1] + B[1]) / 2 - 5);
-        if(rel) arrow(ctx, A, B, 16 * R.cam.s + 5);
+        haloText(lbl, (A[0] + B[0]) / 2, (A[1] + B[1]) / 2 - 5);
+        if(rel){
+            // 화살촉은 알파 1 + 크게(11px) + 배경 테두리 — 0.85 알파 7px는
+            // "잘 안 보인다"는 피드백이 있었다. 탐색 모드는 기존값 유지.
+            ctx.strokeStyle = hsl([(acc[0] + REL_HUE[ed.type]) % 360, 65, day ? 45 : 62], 1);
+            arrow(ctx, A, B, 16 * R.cam.s + 5, 11, halo);
+        }
     });
     if(R.rubber){
         var rn = R.MK.nodes[R.rubber.from];
@@ -495,18 +538,18 @@ function drawMaker(ctx, W, H, day, bloom, acc, cols, edgeH){
             ctx.beginPath(); ctx.arc(S[0], S[1], r2 + 9, 0, 7);
             ctx.strokeStyle = hsl(acc, 0.5); ctx.lineWidth = 8 * Math.min(R.cam.s, 1); ctx.stroke();
         }
-        ctx.fillStyle = textCol; ctx.font = '600 12px sans-serif'; ctx.textAlign = 'center';
+        ctx.fillStyle = textCol; ctx.font = '600 13px sans-serif'; ctx.textAlign = 'center';
         haloText(nd.label, S[0], S[1] + r2 + 16);
         // 속성(키-값) — 쌍마다 한 줄씩 세로로, 개수 상한 없이 전부 그린다.
         // 긴 값(씨앗 태그 등)도 말줄임으로 자르지 않고 아래로 줄바꿈해 전부
         // 보인다(둘 다 대표님 피드백). 수기 소규모 캔버스라 세로 길이는
         // 사용자의 배치 선택이다. 10.5px — 밤 테마에서 10px muted가 흐릿했다.
         if(nd.props && nd.props.length){
-            ctx.fillStyle = muted; ctx.font = '10.5px sans-serif';
-            var ly = S[1] + r2 + 30;
+            ctx.fillStyle = muted; ctx.font = '11.5px sans-serif';
+            var ly = S[1] + r2 + 31;
             nd.props.forEach(function(p){
                 wrapProp(p[0] + '=' + p[1], 24).forEach(function(ln){
-                    haloText(ln, S[0], ly); ly += 13;
+                    haloText(ln, S[0], ly); ly += 14;
                 });
             });
         }
@@ -1188,15 +1231,31 @@ function mkHaloHit(mx, my){
     }
     return -1;
 }
-// 엣지 히트 — 점-선분 거리 ≤ 8px. 노드·할로 히트가 먼저 확인된 뒤에만
-// 불리므로(onDown 순서) 노드 근처 오탐이 없다.
+// 자기 루프의 타원 기하 [cx, cy, rx, ry] — 노드 원보다 조금 큰 타원(대표님
+// 확정)을 노드 위에 걸쳐 그린다. 아랫부분이 노드에 물려 "나갔다 돌아오는"
+// 루프로 읽힌다. 그리기(drawMaker)와 히트(hitEdge)가 같은 공식을 공유해야
+// "보이는 곳을 탭하면 잡힌다"가 성립한다.
+function loopGeom(S, r2){
+    var rx = Math.max(r2 * 1.2, 14), ry = Math.max(r2 * 0.85, 10);
+    return [S[0], S[1] - r2 - ry * 0.6, rx, ry];
+}
+// 엣지 히트 — 선분은 점-선분 거리, 자기 루프는 원 둘레 거리 ≤ 8px.
+// 노드·할로 히트가 먼저 확인된 뒤에만 불리므로(onDown 순서) 노드 근처 오탐이 없다.
 function hitEdge(mx, my){
     var byId = {};
     R.MK.nodes.forEach(function(n){ byId[n.id] = n; });
+    var r2 = 13 * R.P.scale * Math.max(R.cam.s, 0.5);
     for(var j = R.MK.edges.length - 1; j >= 0; j--){
         var ed = R.MK.edges[j];
         var na = byId[ed.a], nb = byId[ed.b]; if(!na || !nb) continue;
         var A = toScreenTo(na.qx == null ? na.x : na.qx, na.qy == null ? na.y : na.qy, _sA);
+        if(ed.a === ed.b){
+            var lg = loopGeom(A, r2);
+            // 타원 둘레 근사 거리 — 정규화 반경의 1로부터의 편차 × 평균 반지름
+            var u = (mx - lg[0]) / lg[2], v = (my - lg[1]) / lg[3];
+            if(Math.abs(Math.hypot(u, v) - 1) * (lg[2] + lg[3]) / 2 <= 8) return j;
+            continue;
+        }
         var B = toScreenTo(nb.qx == null ? nb.x : nb.qx, nb.qy == null ? nb.y : nb.qy, _sB);
         var dx = B[0] - A[0], dy = B[1] - A[1];
         var len2 = dx * dx + dy * dy; if(!len2) continue;
@@ -1236,7 +1295,8 @@ function onDown(ev){
         // 링크 모드(선택 툴바의 '연결') — 다음 탭한 노드로 관계를 잇는다
         if(R.linkFrom >= 0){
             var tgt0 = hitNode(xy[0], xy[1]);
-            if(tgt0 >= 0 && tgt0 !== R.linkFrom) openPicker(xy[0], xy[1], R.linkFrom, tgt0);
+            // 같은 노드를 다시 탭 = 자기 루프
+            if(tgt0 >= 0) openPicker(xy[0], xy[1], R.linkFrom, tgt0);
             R.linkFrom = -1; updateSelbar(); R.pts.delete(ev.pointerId);
             R.hint.classList.remove('on');
             R.hint.firstChild.textContent = STR('mkHintEmpty');
@@ -1313,7 +1373,11 @@ function onUp(ev){
     wake();
     if(R.rubber){
         var tgt = hitNode(xy[0], xy[1]);
-        if(tgt >= 0 && tgt !== R.rubber.from) openPicker(xy[0], xy[1], R.rubber.from, tgt);
+        // 같은 노드에 놓으면 자기 루프 — 단, 실제로 끌었을 때만(moved ≥ 10).
+        // 림을 단순 탭했을 때 루프 피커가 뜨는 오발 방지.
+        if(tgt >= 0 && (tgt !== R.rubber.from || R.moved >= 10)){
+            openPicker(xy[0], xy[1], R.rubber.from, tgt);
+        }
         R.rubber = null; return;
     }
     if(R.mkDragI >= 0){
