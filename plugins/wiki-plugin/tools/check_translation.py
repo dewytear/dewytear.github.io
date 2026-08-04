@@ -39,6 +39,12 @@ ENFORCED_LANGS = ('en', 'ja')
 WORKLOG_RE = re.compile(r'^docs/[^/]+/work-log/')
 KO_DOC_RE = re.compile(r'^docs/ko/(.+)$')
 
+# list 밖의 라우트 프래그먼트 — about처럼 화면 라우트가 직접 불러오는 비인덱스
+# 문서. 3언어 병행 수정은 사람이 지키되(같은 PR), label_<lang>·오버레이 같은
+# 동반물이 애초에 존재하지 않으므로 이 게이트의 대상이 아니다. (2026-08-04
+# about 정체성 반영 PR에서 게이트가 이 경로를 인덱스 문서로 오인해 막힌 사례)
+ROUTE_FRAGMENTS = {'about'}
+
 
 def changed_files(base, head):
     out = subprocess.run(
@@ -103,6 +109,8 @@ def main():
             if not m or s[:1] not in ('A', 'M') or WORKLOG_RE.match(p):
                 continue
             rel = m.group(1)
+            if rel in ROUTE_FRAGMENTS:
+                continue
             node = by_path.get(rel)
             if node is None:
                 errors.append(f'{p}: list에 이 path의 노드가 없음 (ko 문서·list 등록이 선행)')

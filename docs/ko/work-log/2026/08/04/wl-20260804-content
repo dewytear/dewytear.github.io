@@ -1,0 +1,12 @@
+<h2>2026-08-04 · 콘텐츠 — 위키 소개에 정체성 반영 (3언어)</h2>
+
+<p>대표님 지시 — 문답으로 정리한 위키의 정체성(&ldquo;RAG-ready한 공개 발행형 LLM Wiki이자 세컨드 브레인&rdquo;)을 <strong>위키 소개에 반영</strong>. 변경 유형: <strong>CONTENT</strong>.</p>
+
+<p>정체성 규정의 근거는 위키 자체의 정의 문서다 — RAG는 질문 시점에 코퍼스를 검색해 생성에 끼워 넣는 <strong>파이프라인(소비 방식)</strong>이고 이 위키는 그 파이프라인이 소비하는 <strong>지식 정본</strong>이므로 &ldquo;RAG가 아니라 RAG-ready&rdquo;가 정확하다. 운영 방식은 카파시의 LLM Wiki(AI가 쓰고 사람이 큐레이션)와 골격이 같되, <strong>사적 볼트가 아닌 공개 발행물</strong>이고 <strong>사람용 화면 + AI용 기계 인터페이스(llms.txt·knowledge-graph.json)의 이중 구조</strong>라는 점이 갈린다. 세컨드 브레인 5단계 기준으로는 캡처·조직·연결·검색을 갖춘 레벨 3~4권.</p>
+
+<p class="scn-sub">반영 지점 — ①<strong>About</strong>(&ldquo;Why This Wiki Exists&rdquo;)에 정체성 한 문장 + 특성 카드 3종(공개 발행물·이중 인터페이스·기계 규율)을 기존 <code>.about-cards</code> 어휘로 추가, ko·en·ja 병행 ②<strong>config.json</strong> description 3언어 확장(prerender 홈·허브 meta와 llms.txt 서두가 소비) ③<strong>index.html</strong> 영문 메타 4곳(meta·og·twitter·JSON-LD WebSite) 동일 취지로 갱신. 재생성은 check_all이 판정(prerender·ai export 드리프트 재생성 포함).</p>
+
+<div class="note">
+    <span class="nh">덤 — 번역 게이트의 라우트 프래그먼트 예외</span>
+    <code>check_translation</code>이 about 3언어 수정을 인덱스 문서로 오인해 &ldquo;list 노드 없음&rdquo;으로 막았다. about은 화면 라우트가 직접 불러오는 <strong>비인덱스 프래그먼트</strong>라 label·오버레이 동반물이 애초에 없다 — 게이트에 <code>ROUTE_FRAGMENTS</code> 예외를 등재하고 플러그인 번들 동기(+ 0.28.1). 3언어 병행 수정 자체는 이 PR처럼 사람이 지킨다.
+</div>
