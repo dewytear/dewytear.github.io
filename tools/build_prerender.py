@@ -322,6 +322,16 @@ def _site_title_desc():
     return (cfg.get('title') or 'Wiki'), (cfg.get('description') or '')
 
 
+def icon_links():
+    """Favicon links, absolute via BASE_PATH so they resolve from any /p/ depth.
+    Mirrors index.html: theme-following SVG + night-teal raster fallbacks."""
+    return [
+        '<link rel="icon" href="%sfavicon.svg" type="image/svg+xml">' % BASE_PATH,
+        '<link rel="icon" href="%sfavicon.ico" sizes="48x48">' % BASE_PATH,
+        '<link rel="apple-touch-icon" href="%sapple-touch-icon.png">' % BASE_PATH,
+    ]
+
+
 def rewrite_links(body, lang):
     """`href="#!other"` -> the sibling snapshot, so a JS-less crawler can walk
     the whole wiki through static pages. Same-language target; unknown targets
@@ -419,6 +429,7 @@ def page_html(name, lang, meta, body, dates, paths, langs):
     out.append('    <link rel="license" href="%s">' % LICENSE_URL)
     hero = hero_for(meta.get('rel_path'))
     out.extend(social_tags(title, desc, self_url, BASE + (hero or OG_IMAGE), lang))
+    out.extend(icon_links())
     out.append('<link rel="stylesheet" href="%sstyle.css">' % BASE_PATH)
     out.append('<script type="application/ld+json">')
     out.append(json.dumps(ld, ensure_ascii=False, indent=1))
@@ -472,6 +483,7 @@ def hub_html(lang, entries, langs):
     out.append('    <link rel="license" href="%s">' % LICENSE_URL)
     out.extend(social_tags(head_title, s['hub_desc'], self_url,
                            BASE + OG_IMAGE, lang, kind='website'))
+    out.extend(icon_links())
     out.append('<link rel="stylesheet" href="%sstyle.css">' % BASE_PATH)
     out.append(page_style())
     out.append('</head>')
@@ -576,6 +588,7 @@ def build_404():
         '<meta charset="utf-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
         '<title>Not Found</title>\n'
+        + '\n'.join(icon_links()) + '\n'
         '<script>\n'
         '// /p/<name>/ (or /p/en/<name>/) -> the SPA route for that document;\n'
         '// anything else -> the wiki home. A dead /p/en/ URL keeps its\n'
