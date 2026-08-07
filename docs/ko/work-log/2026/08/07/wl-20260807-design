@@ -1,0 +1,13 @@
+<h2>2026-08-07 · 디자인 — 파비콘 신설 (미니 지식그래프)</h2>
+
+<p>대표님 요청 — <strong>위키의 특징을 드러내는 파비콘</strong>을 만들어 등록. 지금까지 파비콘이 아예 없어 브라우저가 <code>/favicon.ico</code>를 404로 받고 있었다. 변경 유형: <strong>STYLE + TOOL</strong>.</p>
+
+<p>시안 3종(수묵 잉크 방울 · 미니 지식그래프 · 그라디언트 A 모노그램)을 브라우저 탭 실크기(16px)와 32/64px, 밝은/어두운 탭 목업으로 렌더해 보여드리고 <strong>B안 미니 지식그래프</strong>로 확정 — 허브 노드 + 위성 3개, 지식그래프(성좌)·그래프 스튜디오의 정체성을 탭 한 칸에 담은 축소판. 배경은 투명(대표님 확정).</p>
+
+<p class="scn-sub">자산 3종(repo 루트) — ①<code>favicon.svg</code>: 내부 <code>@media (prefers-color-scheme)</code>로 OS 밝기에 따라 낮 orange(#ff6600)/밤 teal(#4db6ac) 자동 전환, 엣지도 낮·밤 muted 동기 ②<code>favicon.ico</code>: 16/32/48 멀티사이즈 ③<code>apple-touch-icon.png</code>: 180px. 라스터 폴백 둘은 색 전환이 불가해 <strong>밤 teal 팔레트 단일</strong>로 확정(Safari는 SVG 파비콘 미지원). 제작은 SVG를 512px 헤드리스 렌더 후 PIL LANCZOS 축소·ico 합성.</p>
+
+<div class="note">
+    <span class="nh">등록 — head가 두 곳이라 두 곳 모두</span>
+    <code>index.html</code>은 theme-color 메타 옆에 링크 3줄(svg는 <code>?v=1</code>로 캐시버스터 추적 편입). 프리렌더 스냅샷은 head를 각자 생성하므로 <code>build_prerender.py</code>에 <code>icon_links()</code> 헬퍼를 신설해 문서 스냅샷·허브·404 세 빌더에 삽입(BASE_PATH 절대 URL) — 372면 + <code>404.html</code> 재생성. <code>build_prerender.py</code>는 플러그인 번들 미러 대상이라 <code>check_plugin_sync --fix</code> + plugin.json <strong>0.28.3</strong> 상향 동반.</div>
+
+<p>검증 — 로컬 서버에서 세 파일 200 응답·index/스냅샷/404의 <code>rel="icon"</code> 존재 확인, SVG 낮/밤 렌더로 색 전환 실측(#ff6600/#4db6ac), 16px 축소에서 허브+위성 구조 가독 확인.</p>
