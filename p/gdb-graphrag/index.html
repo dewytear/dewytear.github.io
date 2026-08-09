@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-08-09T15:10:53+09:00",
- "dateModified": "2026-08-09T15:10:53+09:00"
+ "dateModified": "2026-08-10T01:38:00+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -70,13 +70,13 @@
 <li><strong>GraphRAG(그래프 RAG)</strong> — 그 &lsquo;자료 더미&rsquo;를 낱낱의 조각이 아니라 <strong>서로 이어진 그래프</strong>로 저장해 두고, 검색할 때 이웃 맥락까지 함께 끌어오는 RAG입니다.</li>
 </ul>
 
-<p>이 셋은 한 줄로 이어집니다. <strong>관계를 저장하면(그래프 DB) &rarr; 지식이 그물이 되고(지식 그래프) &rarr; 그물째 검색해 답의 근거가 풍부해진다(GraphRAG).</strong> 아래에서 이 사슬을 앞에서부터 하나씩 풀겠습니다.</p>
+<p>이 셋은 한 줄로 이어집니다. <strong>관계를 저장하면(그래프 DB) &rarr; 지식이 그물이 되고(지식 그래프) &rarr; 그물째 검색해 답의 근거가 풍부해진다(GraphRAG).</strong></p>
 
 <h3>그래프 DB — 조인 대신 길찾기</h3>
 
 <p>우리가 익숙한 데이터베이스는 관계형 데이터베이스(RDB)입니다. 회원 표, 평점 표, 영화 표처럼 <strong>표 단위로</strong> 데이터를 쌓고, 표와 표 사이의 관계는 조회하는 순간에 <strong>조인(JOIN, 두 표를 공통 열로 이어 붙이는 연산)</strong>으로 복원합니다. 표 두 개면 조인 한 번, 표 다섯 개면 조인 네 번 — 관계가 깊어질수록 이어 붙이는 비용이 커집니다.</p>
 
-<p>그래프 DB는 반대로 갑니다. <strong>관계를 처음부터 화살표(엣지)로 저장</strong>해 둡니다. &ldquo;A라는 사람이 높은 평점을 준 액션 영화는?&rdquo;이라는 질문이 오면, 표를 이어 붙이는 게 아니라 <strong>A 노드에서 출발해 평가 엣지를 따라 걷고, 장르 엣지로 한 번 더 걸어가면</strong> 답에 도달합니다. 사람이 머릿속으로 관계를 떠올리는 과정을 거의 그대로 자료 구조로 옮긴 셈이라, 그려 놓으면 문장처럼 읽힙니다 — <em>사람 A &rarr;(평가함 5.0)&rarr; 영화 X &rarr;(장르)&rarr; 액션</em>.</p>
+<p>그래프 DB는 반대로 갑니다. <strong>관계를 처음부터 화살표(엣지)로 저장</strong>해 둡니다. &ldquo;A라는 사람이 높은 평점을 준 액션 영화는?&rdquo;이라는 질문이 오면, 표를 이어 붙이는 게 아니라 A 노드에서 출발해 평가 엣지를 따라 걷고, 장르 엣지로 한 번 더 걸어가면 답에 도달합니다. 사람이 머릿속으로 관계를 떠올리는 과정을 거의 그대로 자료 구조로 옮긴 셈이라, 그려 놓으면 문장처럼 읽힙니다 — <em>사람 A &rarr;(평가함 5.0)&rarr; 영화 X &rarr;(장르)&rarr; 액션</em>.</p>
 
 <div class="diagram">
 <svg viewBox="0 0 700 300" role="img" aria-label="RDB와 그래프 DB 비교: 왼쪽은 표들을 조인으로 이어 붙이고, 오른쪽은 노드에서 엣지를 따라 걸어 답에 도달한다">
@@ -134,7 +134,7 @@ RETURN m.제목, r.점수</code></pre>
 
 <h3>GraphRAG — 조각을 잇고, 그물째 가져온다</h3>
 
-<p>GraphRAG는 이 단절을 그래프로 꿰맵니다. 청크를 <strong>노드</strong>로 만들고, 청크끼리의 관계 — 같은 문서 소속, 앞뒤 순서, 같은 개체(사람&middot;제품&middot;사건) 언급 — 를 <strong>엣지</strong>로 저장합니다. 검색은 두 단계가 됩니다. 먼저 벡터 검색으로 질문과 가까운 조각을 찾고(넓게 건지기), 이어서 <strong>그 조각에서 엣지를 따라 이웃 맥락을 함께 끌어옵니다</strong>(깊게 걷기). 조각 하나가 아니라 조각이 속한 <strong>동네</strong>가 통째로 근거가 되는 것입니다.</p>
+<p>GraphRAG는 이 단절을 그래프로 꿰맵니다. 청크를 <strong>노드</strong>로 만들고, 청크끼리의 관계 — 같은 문서 소속, 앞뒤 순서, 같은 개체(사람&middot;제품&middot;사건) 언급 — 를 <strong>엣지</strong>로 저장합니다. 검색은 두 단계가 됩니다. 먼저 벡터 검색으로 질문과 가까운 조각을 찾고(넓게 건지기), 이어서 그 조각에서 엣지를 따라 이웃 맥락을 함께 끌어옵니다(깊게 걷기). 조각 하나가 아니라 조각이 속한 <strong>동네</strong>가 통째로 근거가 되는 것입니다.</p>
 
 <div class="diagram">
 <svg viewBox="0 0 700 320" role="img" aria-label="벡터 RAG와 GraphRAG 비교: 왼쪽은 청크들이 서로 연결 없이 떠 있고, 오른쪽은 카테고리 노드를 중심으로 기사와 내용 청크가 이어져 있다">
@@ -185,9 +185,9 @@ RETURN m.제목, r.점수</code></pre>
 
 <h3>온톨로지와 그래프 스키마 — 그물의 설계도</h3>
 
-<p>그래프를 쌓기 전에 정해야 할 것이 있습니다. <strong>어떤 종류의 노드와 어떤 종류의 관계를 인정할 것인가.</strong> 이 규칙 체계가 <strong>온톨로지</strong>(지식을 정리하는 표준 틀)이고, 그것을 그래프 DB의 라벨&middot;속성으로 구체화한 것이 <strong>그래프 스키마</strong>입니다. 사람들이 일상&middot;업무에서 암묵적으로 쓰는 개념과 그 사이의 규칙을 명세서로 적어, <strong>AI도 사람과 같은 지도를 보게</strong> 만드는 작업입니다.</p>
+<p>그래프를 쌓기 전에 정해야 할 것이 있습니다. <strong>어떤 종류의 노드와 어떤 종류의 관계를 인정할 것인가.</strong> 이 규칙 체계가 <strong>온톨로지</strong>(지식을 정리하는 표준 틀)이고, 그것을 그래프 DB의 라벨&middot;속성으로 구체화한 것이 <strong>그래프 스키마</strong>입니다. 사람들이 일상&middot;업무에서 암묵적으로 쓰는 개념과 그 사이의 규칙을 명세서로 적어, AI도 사람과 같은 지도를 보게 만드는 작업입니다.</p>
 
-<p>교육 도메인의 예가 직관적입니다. 개념과 개념 사이에 <strong>선행 관계</strong>를 적어 둔 지식맵 — &ldquo;2차 함수를 배우려면 방정식이 먼저&rdquo; — 이 있으면, 2차 함수에서 자꾸 틀리는 학생에게 2차 함수 문제만 반복해 주는 대신 <strong>한 걸음 앞의 방정식 문제를 함께 추천</strong>할 수 있습니다. 온톨로지가 곧 <strong>추론의 기준선</strong>이 되는 것입니다. 소프트웨어 제품 팀이 데이터 분석을 위해 페이지&ndash;하위 페이지&ndash;클릭 이벤트의 이름과 위계를 설계하는 택소노미(분류 체계) 작업도 같은 계보의 일입니다 — 온톨로지가 관계의 <em>의미</em>까지 적는 더 큰 틀이라는 점이 다를 뿐입니다.</p>
+<p>교육 도메인의 예가 직관적입니다. 개념과 개념 사이에 <strong>선행 관계</strong>를 적어 둔 지식맵 — &ldquo;2차 함수를 배우려면 방정식이 먼저&rdquo; — 이 있으면, 2차 함수에서 자꾸 틀리는 학생에게 2차 함수 문제만 반복해 주는 대신 한 걸음 앞의 방정식 문제를 함께 추천할 수 있습니다. 온톨로지가 곧 <strong>추론의 기준선</strong>이 되는 것입니다. 소프트웨어 제품 팀이 데이터 분석을 위해 페이지&ndash;하위 페이지&ndash;클릭 이벤트의 이름과 위계를 설계하는 택소노미(분류 체계) 작업도 같은 계보의 일입니다 — 온톨로지가 관계의 <em>의미</em>까지 적는 더 큰 틀이라는 점이 다를 뿐입니다.</p>
 
 <p>순서를 붙이면 이렇게 됩니다. <strong>온톨로지(무엇과 무엇의 관계를 인정하나) &rarr; 그래프 스키마(그걸 라벨·속성으로 어떻게 적나) &rarr; 지식 그래프(실제 데이터로 채운 그물) &rarr; GraphRAG(그물을 검색에 쓰기)</strong>. GraphRAG의 품질은 대부분 이 설계 단계에서 결정됩니다.</p>
 
@@ -197,7 +197,7 @@ RETURN m.제목, r.점수</code></pre>
 
 <h3>어디에 쓰이나</h3>
 
-<p><strong>제조&middot;스마트 팩토리</strong>가 좋은 예입니다. 공정에서 쏟아지는 고장 이력을 <em>설비 &rarr; 부위 &rarr; 증상 &rarr; 원인 &rarr; 해결책</em>의 그래프로 적어 두면, 새 고장이 났을 때 같은 증상의 과거 사례와 검증된 해결책까지 관계를 따라 즉시 도달합니다. 뉴스 서비스라면 <em>카테고리 &rarr; 기사 &rarr; 내용 청크</em>로, 교육이라면 <em>개념 &rarr; 선행 개념 &rarr; 문항</em>으로 — 도메인마다 그물의 모양은 다르지만 &ldquo;관계가 답의 절반&rdquo;인 곳이라면 어디든 같은 방식이 통합니다. 조직&middot;개인의 암묵지를 에이전트에게 이식하는 초개인화 흐름과 맞물리는 지점도 여기입니다: <strong>내가 암묵적으로 아는 연결을 그래프로 명시해야 AI도 나처럼 걸을 수 있습니다.</strong></p>
+<p><strong>제조&middot;스마트 팩토리</strong>가 좋은 예입니다. 공정에서 쏟아지는 고장 이력을 <em>설비 &rarr; 부위 &rarr; 증상 &rarr; 원인 &rarr; 해결책</em>의 그래프로 적어 두면, 새 고장이 났을 때 같은 증상의 과거 사례와 검증된 해결책까지 관계를 따라 즉시 도달합니다. 뉴스 서비스라면 <em>카테고리 &rarr; 기사 &rarr; 내용 청크</em>로, 교육이라면 <em>개념 &rarr; 선행 개념 &rarr; 문항</em>으로 — 도메인마다 그물의 모양은 다르지만, 답을 내는 데 사물 사이의 관계가 큰 몫을 하는 곳이라면 어디든 같은 방식이 통합니다. 조직&middot;개인의 암묵지를 에이전트에게 이식하는 초개인화 흐름과 맞물리는 지점도 여기입니다. 내가 암묵적으로 아는 연결을 그래프로 명시해 둬야, AI도 나처럼 그 길을 걸을 수 있습니다.</p>
 
 <h3>시작하기 — 그리고, 내보내고, 자동으로 뽑기</h3>
 
@@ -212,7 +212,7 @@ pipeline = SimpleKGPipeline(
 )
 await pipeline.run_async(file_path="문서.pdf")</code></pre>
 
-<p>돌리고 나면 문서 속 개체와 관계가 그래프로 추출되어 있고, 같은 패키지의 검색기(리트리버)로 벡터 검색과 그래프 탐색을 섞은 GraphRAG 질의까지 이어집니다. &ldquo;문서를 어떻게 그래프로 바꾸지?&rdquo;가 막막할 때 가장 빠른 첫 실험입니다. 만들고 끝이 아니라 <strong>원하는 답이 나오는지 평가</strong>까지 붙여야 쓸 만한 RAG가 된다는 점도 기억해 둘 만합니다.</p>
+<p>돌리고 나면 문서 속 개체와 관계가 그래프로 추출되어 있고, 같은 패키지의 검색기(리트리버)로 벡터 검색과 그래프 탐색을 섞은 GraphRAG 질의까지 이어집니다. &ldquo;문서를 어떻게 그래프로 바꾸지?&rdquo;가 막막할 때 가장 빠른 첫 실험입니다. 만들고 끝이 아니라 원하는 답이 나오는지 평가까지 붙여야 쓸 만한 RAG가 된다는 점도 기억해 둘 만합니다.</p>
 
 <h3>이 위키와의 접점</h3>
 
@@ -223,7 +223,7 @@ await pipeline.run_async(file_path="문서.pdf")</code></pre>
     개념 설명과 예제(영화 평점, 뉴스 카테고리, 교육 지식맵, 제조 고장 이력)는 제공받은 대담 녹취를 재구성한 것으로, 화자 신원은 다루지 않는다. 기술 사실은 공식 문서로 교차검증했다 — <a href="https://neo4j.com/docs/neo4j-graphrag-python/current/user_guide_kg_builder.html" target="_blank" rel="noopener">neo4j-graphrag-python 문서</a>(SimpleKGPipeline·from_pdf), <a href="https://neo4j.com/labs/arrows/" target="_blank" rel="noopener">arrows.app(Neo4j Labs)</a>의 사이퍼 내보내기, <a href="https://opencypher.org" target="_blank" rel="noopener">openCypher</a> 패턴 문법, LangChain의 LangGraph 문서(노드·엣지·상태 모델). 벡터 RAG의 청크 단절과 GraphRAG의 멀티홉 이점은 GraphRAG 서베이(arXiv 2501.00309)·HybridRAG(arXiv 2408.04948)의 정리와 일치한다. 사이퍼 예제의 한국어 라벨은 설명용이며, 실무 스키마는 보통 영문 라벨을 쓴다.
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">분류</span> AI · GraphDB &middot; <span class="pr-k">생성일자</span> 2026-08-09 &middot; <span class="pr-k">수정일자</span> 2026-08-09</p>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · GraphDB &middot; <span class="pr-k">생성일자</span> 2026-08-09 &middot; <span class="pr-k">수정일자</span> 2026-08-10</p>
 
 <nav class="pr-rel"><h2>연관 문서</h2>
 <ul><li><a href="/p/gdb-vector-retriever/">영화 줄거리로 영화 찾기 — Neo4j 샌드박스에서 만드는 첫 벡터 리트리버</a></li><li><a href="/p/news-20260710-oracle-ontology-property-graph/">오라클 온톨로지와 프로퍼티 그래프 — 테이블을 지식의 지도로</a></li><li><a href="/p/news-20260711-neo4j-rdf-vs-property-graph/">RDF냐 프로퍼티 그래프냐 — 지식 그래프를 위한 두 모델 (Neo4j)</a></li><li><a href="/p/sb-level3/">레벨 3 · 의미로 찾기 (시맨틱 검색·벡터DB)</a></li></ul>
