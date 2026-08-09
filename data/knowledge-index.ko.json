@@ -1,10 +1,10 @@
 {
  "schemaVersion": 2,
  "note": "AI가 각 문서를 읽어 만든 구조적 지식 인덱스(요약·핵심개념·연관문서). related는 희소성 가중 개념 중복(via:concept) + 같은 폴더 보완(via:folder)으로 계산.",
- "docCount": 120,
+ "docCount": 121,
  "stats": {
-  "docCount": 120,
-  "conceptCount": 386,
+  "docCount": 121,
+  "conceptCount": 388,
   "clusters": [
    {
     "label": "지식 체계",
@@ -23,7 +23,7 @@
     "hub": {
      "name": "wr-knowledge-vault",
      "title": "다 기록하는 사람, 발행하는 위키 — 지식 저장소에 대한 고찰",
-     "refs": 5
+     "refs": 4
     }
    },
    {
@@ -119,7 +119,7 @@
    {
     "label": "GraphDB",
     "section": "AI · GraphDB",
-    "count": 1,
+    "count": 2,
     "hub": {
      "name": "gdb-graphrag",
      "title": "그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다",
@@ -407,8 +407,8 @@
   ],
   "galaxies": {
    "AI": {
-    "docCount": 109,
-    "conceptCount": 347,
+    "docCount": 110,
+    "conceptCount": 349,
     "clusters": [
      {
       "label": "지식 체계",
@@ -427,7 +427,7 @@
       "hub": {
        "name": "wr-knowledge-vault",
        "title": "다 기록하는 사람, 발행하는 위키 — 지식 저장소에 대한 고찰",
-       "refs": 5
+       "refs": 4
       }
      },
      {
@@ -523,7 +523,7 @@
      {
       "label": "GraphDB",
       "section": "AI · GraphDB",
-      "count": 1,
+      "count": 2,
       "hub": {
        "name": "gdb-graphrag",
        "title": "그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다",
@@ -1085,6 +1085,7 @@
     "kgs-views",
     "kgs-plugin",
     "kgs-gates",
+    "gdb-vector-retriever",
     "dzp-security",
     "dzp-value"
    ]
@@ -3021,19 +3022,20 @@
      "via": "concept"
     },
     {
+     "name": "gdb-vector-retriever",
+     "title": "영화 줄거리로 영화 찾기 — Neo4j 샌드박스에서 만드는 첫 벡터 리트리버",
+     "shared": [
+      "임베딩",
+      "벡터검색"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "sb-levels",
      "title": "5단계 한눈에 보기",
      "shared": [
       "시맨틱검색",
       "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "llmw-ingest-query-lint",
-     "title": "세 가지 핵심 동작 — Ingest · Query · Lint",
-     "shared": [
-      "벡터검색"
      ],
      "via": "concept"
     }
@@ -5040,22 +5042,6 @@
      "shared": [
       "인제스트",
       "쿼리"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "gdb-graphrag",
-     "title": "그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다",
-     "shared": [
-      "벡터검색"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-level3",
-     "title": "레벨 3 · 의미로 찾기 (시맨틱 검색·벡터DB)",
-     "shared": [
-      "벡터검색"
      ],
      "via": "concept"
     }
@@ -7273,6 +7259,16 @@
    "section": "AI · GraphDB",
    "related": [
     {
+     "name": "gdb-vector-retriever",
+     "title": "영화 줄거리로 영화 찾기 — Neo4j 샌드박스에서 만드는 첫 벡터 리트리버",
+     "shared": [
+      "Cypher",
+      "그래프DB",
+      "벡터검색"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "news-20260710-oracle-ontology-property-graph",
      "title": "오라클 온톨로지와 프로퍼티 그래프 — 테이블을 지식의 지도로",
      "shared": [
@@ -7300,13 +7296,50 @@
       "벡터검색"
      ],
      "via": "concept"
+    }
+   ],
+   "citedBy": [
+    "gdb-vector-retriever"
+   ]
+  },
+  {
+   "name": "gdb-vector-retriever",
+   "title": "영화 줄거리로 영화 찾기 — Neo4j 샌드박스에서 만드는 첫 벡터 리트리버",
+   "summary": "개념 편에 이어 손을 움직이는 실습기 — 설치 없이 Neo4j 샌드박스로 그래프 DB를 빌리고(MovieLens 계열 Recommendations 데이터: Movie·Genre·Actor·Director·User 노드와 데이터를 품은 RATED 관계), 사이퍼 몇 줄로 데이터를 산책한 뒤, 영화 줄거리 100편을 OpenAI 임베딩 모델로 1,536차원 벡터로 바꿔 plotEmbedding 속성에 심고, CREATE VECTOR INDEX(코사인 유사도)로 색인을 달고, neo4j-graphrag의 VectorRetriever(드라이버·인덱스·임베더·반환 속성 4개 파라미터)로 검색기를 조립한다. 토이 스토리 줄거리를 요약해 던지면 제목 없이도 그 영화가 1위로 돌아오는 것까지 — 단어가 아니라 이야기가 닮아서 찾아지는 벡터 검색의 감각과, 벡터로 건지고 그래프로 걷는 GraphRAG로의 다음 걸음을 잇는다",
+   "concepts": [
+    "그래프DB",
+    "Cypher",
+    "벡터검색",
+    "임베딩",
+    "벡터인덱스",
+    "리트리버"
+   ],
+   "relations": [
+    {
+     "target": "gdb-graphrag",
+     "type": "implements",
+     "evidenceRef": "개념 편이 설명한 벡터 검색·리트리버·neo4j-graphrag 패키지를 샌드박스 실데이터로 끝까지 구현하는 실습",
+     "source": "human"
+    }
+   ],
+   "section": "AI · GraphDB",
+   "related": [
+    {
+     "name": "gdb-graphrag",
+     "title": "그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다",
+     "shared": [
+      "Cypher",
+      "그래프DB",
+      "벡터검색"
+     ],
+     "via": "concept"
     },
     {
-     "name": "wr-knowledge-vault",
-     "title": "다 기록하는 사람, 발행하는 위키 — 지식 저장소에 대한 고찰",
+     "name": "sb-level3",
+     "title": "레벨 3 · 의미로 찾기 (시맨틱 검색·벡터DB)",
      "shared": [
-      "온톨로지",
-      "RAG"
+      "임베딩",
+      "벡터검색"
      ],
      "via": "concept"
     }

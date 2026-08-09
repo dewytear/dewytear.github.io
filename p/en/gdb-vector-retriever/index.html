@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finding a Movie by Its Story — Your First Vector Retriever on a Neo4j Sandbox</title>
+<meta name="description" content="The hands-on companion to the concepts piece — borrow a graph DB in the browser with Neo4j Sandbox (the MovieLens-family Recommendations dataset: Movie, Genre, Actor, Director and User nodes, plus a RATED relationship that carries data), stroll the data with a few lines of Cypher, embed 100 movie plots into 1,536-dimensional vectors with an OpenAI embedding model and plant them as a plotEmbedding property, add a CREATE VECTOR INDEX (cosine similarity), then assemble a searcher with neo4j-graphrag&#x27;s VectorRetriever (four parameters: driver, index, embedder, return properties). Summarise Toy Story&#x27;s plot and the movie comes back in first place without its title ever being mentioned — the feel of vector search finding stories rather than words, and the next step toward GraphRAG: cast with vectors, walk with the graph">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/gdb-vector-retriever/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/gdb-vector-retriever/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/gdb-vector-retriever/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/gdb-vector-retriever/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/gdb-vector-retriever/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Finding a Movie by Its Story — Your First Vector Retriever on a Neo4j Sandbox">
+<meta property="og:description" content="The hands-on companion to the concepts piece — borrow a graph DB in the browser with Neo4j Sandbox (the MovieLens-family Recommendations dataset: Movie, Genre, Actor, Director and User nodes, plus a RATED relationship that carries data), stroll the data with a few lines of Cypher, embed 100 movie plots into 1,536-dimensional vectors with an OpenAI embedding model and plant them as a plotEmbedding property, add a CREATE VECTOR INDEX (cosine similarity), then assemble a searcher with neo4j-graphrag&#x27;s VectorRetriever (four parameters: driver, index, embedder, return properties). Summarise Toy Story&#x27;s plot and the movie comes back in first place without its title ever being mentioned — the feel of vector search finding stories rather than words, and the next step toward GraphRAG: cast with vectors, walk with the graph">
+<meta property="og:url" content="https://dewytear.github.io/p/en/gdb-vector-retriever/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Finding a Movie by Its Story — Your First Vector Retriever on a Neo4j Sandbox">
+<meta name="twitter:description" content="The hands-on companion to the concepts piece — borrow a graph DB in the browser with Neo4j Sandbox (the MovieLens-family Recommendations dataset: Movie, Genre, Actor, Director and User nodes, plus a RATED relationship that carries data), stroll the data with a few lines of Cypher, embed 100 movie plots into 1,536-dimensional vectors with an OpenAI embedding model and plant them as a plotEmbedding property, add a CREATE VECTOR INDEX (cosine similarity), then assemble a searcher with neo4j-graphrag&#x27;s VectorRetriever (four parameters: driver, index, embedder, return properties). Summarise Toy Story&#x27;s plot and the movie comes back in first place without its title ever being mentioned — the feel of vector search finding stories rather than words, and the next step toward GraphRAG: cast with vectors, walk with the graph">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Finding a Movie by Its Story — Your First Vector Retriever on a Neo4j Sandbox",
+ "description": "The hands-on companion to the concepts piece — borrow a graph DB in the browser with Neo4j Sandbox (the MovieLens-family Recommendations dataset: Movie, Genre, Actor, Director and User nodes, plus a RATED relationship that carries data), stroll the data with a few lines of Cypher, embed 100 movie plots into 1,536-dimensional vectors with an OpenAI embedding model and plant them as a plotEmbedding property, add a CREATE VECTOR INDEX (cosine similarity), then assemble a searcher with neo4j-graphrag's VectorRetriever (four parameters: driver, index, embedder, return properties). Summarise Toy Story's plot and the movie comes back in first place without its title ever being mentioned — the feel of vector search finding stories rather than words, and the next step toward GraphRAG: cast with vectors, walk with the graph",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/gdb-vector-retriever/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!gdb-vector-retriever",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-08-09T15:34:55+09:00",
+ "dateModified": "2026-08-09T15:34:55+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!gdb-vector-retriever">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/gdb-vector-retriever/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/ja/gdb-vector-retriever/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>Finding a Movie by Its Story — Your First Vector Retriever on a Neo4j Sandbox</h2>
+
+<p class="scn-sub">The <a href="/p/en/gdb-graphrag/">previous piece</a> unfolded the map; this one laces up the boots. We borrow a graph database in the browser — nothing to install — turn movie plots into numbers, and build, end to end, a search engine that answers &ldquo;got anything with a story like this?&rdquo; with actual movies.</p>
+
+<p>The goal fits in one sentence: <strong>throw in a plot, get back movies whose plots feel like it.</strong> It sounds grand, but there are only three parts, and each does something humble behind its unfamiliar name.</p>
+
+<ul>
+<li><strong>Embedding</strong> — turning a sentence into a <strong>list of numbers that carries its meaning</strong> (a vector). Sentences that mean similar things end up with numbers that sit close together. An embedding model does the converting; here we use OpenAI's.</li>
+<li><strong>Vector index</strong> — a <strong>lookup tab for finding those numbers fast</strong>. Like the thumb notches on a dictionary's edge, it takes you to &ldquo;nearby vectors&rdquo; without scanning everything.</li>
+<li><strong>Retriever</strong> — the searcher itself: it takes your question, embeds it, asks the index for the nearest matches, and <strong>hands back results</strong>.</li>
+</ul>
+
+<div class="diagram">
+<svg viewBox="0 0 700 150" role="img" aria-label="Five steps of the exercise: set up a sandbox, explore the data, embed the plots, create a vector index, then search with a retriever">
+    <rect class="d-box" x="10" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="70" y="61" text-anchor="middle">Sandbox</text>
+    <text class="d-sub" x="70" y="79" text-anchor="middle">borrow a DB</text>
+    <line class="d-edge" x1="130" y1="66" x2="142" y2="66"/><polygon class="d-arrow" points="142,61 150,66 142,71"/>
+    <rect class="d-box" x="150" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="210" y="61" text-anchor="middle">Stroll</text>
+    <text class="d-sub" x="210" y="79" text-anchor="middle">a bit of Cypher</text>
+    <line class="d-edge" x1="270" y1="66" x2="282" y2="66"/><polygon class="d-arrow" points="282,61 290,66 282,71"/>
+    <rect class="d-box" x="290" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="350" y="61" text-anchor="middle">Embed plots</text>
+    <text class="d-sub" x="350" y="79" text-anchor="middle">just 100</text>
+    <line class="d-edge" x1="410" y1="66" x2="422" y2="66"/><polygon class="d-arrow" points="422,61 430,66 422,71"/>
+    <rect class="d-box" x="430" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="490" y="61" text-anchor="middle">Vector index</text>
+    <text class="d-sub" x="490" y="79" text-anchor="middle">add the tabs</text>
+    <line class="d-edge" x1="550" y1="66" x2="562" y2="66"/><polygon class="d-arrow" points="562,61 570,66 562,71"/>
+    <rect class="d-box accent" x="570" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="630" y="61" text-anchor="middle">Retriever</text>
+    <text class="d-sub" x="630" y="79" text-anchor="middle">ask away</text>
+</svg>
+<div class="d-cap">Today's five steps. At the last one, &ldquo;plot in &rarr; similar movies out&rdquo; actually runs.</div>
+</div>
+
+<h3>Step one — borrow a graph database</h3>
+
+<p>You don't install anything to try a graph DB. Neo4j lends you a <strong>Sandbox</strong> — a free cloud instance, in the same spirit as running a Python notebook on Google Colab: open the browser and a graph database appears. Log in, and when it asks which project to spin up, pick <strong>Recommendations</strong> — a movie-recommendation dataset of the MovieLens family, preloaded and ready.</p>
+
+<p>Open it and the pictures from the previous piece are suddenly standing there in the flesh. Five kinds of nodes — Movie, Genre, Actor, Director, User. Click a movie node and its properties spill out: title, runtime, and the <strong>plot</strong>. Kung Fu Panda 3 has Jack Black attached by an <em>ACTED_IN</em> arrow, and some user attached by a <em>RATED</em> arrow — and <strong>inside</strong> that arrow sit a rating of 4 and a timestamp. Relationships that carry data of their own: this is where you first see, with your own eyes, the property-graph trait the previous piece kept talking about.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 300" role="img" aria-label="Structure of the movie recommendation data: user, actor, genre and director nodes each connect to the central movie node through their own relationships">
+    <rect class="d-box accent" x="280" y="124" width="140" height="52" rx="9"/>
+    <text class="d-label sm" x="350" y="145" text-anchor="middle">Movie</text>
+    <text class="d-sub" x="350" y="163" text-anchor="middle">title · plot</text>
+
+    <rect class="d-box" x="30" y="34" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="90" y="62" text-anchor="middle">User</text>
+    <line class="d-edge" x1="150" y1="70" x2="272" y2="128"/><polygon class="d-arrow" points="263,127 280,132 268,118"/>
+    <text class="d-sub" x="196" y="84" text-anchor="middle">RATED</text>
+    <text class="d-sub" x="196" y="102" text-anchor="middle">rating · time</text>
+
+    <rect class="d-box" x="30" y="220" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="90" y="248" text-anchor="middle">Actor</text>
+    <line class="d-edge" x1="150" y1="232" x2="272" y2="172"/><polygon class="d-arrow" points="263,174 280,168 267,183"/>
+    <text class="d-sub" x="200" y="216" text-anchor="middle">ACTED_IN</text>
+
+    <rect class="d-box" x="550" y="34" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="610" y="62" text-anchor="middle">Genre</text>
+    <line class="d-edge" x1="420" y1="128" x2="542" y2="70"/><polygon class="d-arrow" points="533,68 550,64 537,79"/>
+    <text class="d-sub" x="498" y="84" text-anchor="middle">IN_GENRE</text>
+
+    <rect class="d-box" x="550" y="220" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="610" y="248" text-anchor="middle">Director</text>
+    <line class="d-edge" x1="542" y1="232" x2="420" y2="172"/><polygon class="d-arrow" points="429,170 412,168 425,184"/>
+    <text class="d-sub" x="494" y="216" text-anchor="middle">DIRECTED</text>
+</svg>
+<div class="d-cap">The skeleton of the Recommendations data. The RATED arrow keeps a rating and a timestamp <strong>inside itself</strong> — in a property graph, relationships hold data too.</div>
+</div>
+
+<h3>Step two — a stroll with Cypher</h3>
+
+<p>Before the real construction, a few lines of Cypher (the graph query language — see the <a href="/p/en/gdb-graphrag/">previous piece</a>) to say hello to the data. The skeleton is three words: <code>MATCH</code> draws the shape of the relationship you want, <code>RETURN</code> names what you want back, <code>LIMIT</code> trims the count.</p>
+
+<pre><code><span class="c">// who rated what — browse 25 of them</span>
+MATCH (u:User)-[r:RATED]->(m:Movie) RETURN u, r, m LIMIT 25
+
+<span class="c">// titles and plots of Tom Hanks movies — comes back as a table, not a graph</span>
+MATCH (a:Actor {name: 'Tom Hanks'})-[:ACTED_IN]->(m:Movie)
+RETURN m.title, m.plot LIMIT 10</code></pre>
+
+<p>The first query paints itself as a graph on screen; the second, returning bare properties instead of nodes, comes back as a table. Same data, drawn or tabulated on demand — once you've seen that, the stroll has done its job.</p>
+
+<h3>Step three — turn plots into numbers and plant them back</h3>
+
+<p>Now the core work. From Python, connect to the sandbox with the Neo4j driver (the connection snippet is sitting right on the sandbox page under <em>Connect via drivers</em> — copy, paste, done), pull each movie's plot text, pass it through the embedding model, and plant the resulting vector back onto the node as a new property. Embedding everything would take a while, so — as befits an exercise — we cut it at <strong>100 movies</strong>.</p>
+
+<pre><code><span class="c"># 100 movies with plots → embed → store as plotEmbedding</span>
+movies = tx.run("""
+    MATCH (m:Movie) WHERE m.plot IS NOT NULL
+    RETURN m.title AS title, m.plot AS plot LIMIT 100""")
+for row in movies:
+    vec = generate_embedding(row["plot"])   <span class="c"># call the OpenAI embedding</span>
+    tx.run("""
+        MATCH (m:Movie {title: $title})
+        SET m.plotEmbedding = $vec""", title=row["title"], vec=vec)</code></pre>
+
+<p>A few dozen seconds later, click any movie in the sandbox again: next to plot there is now a <code>plotEmbedding</code> property packed with 1,536 real numbers. To a human eye it's noise — but the <strong>distance</strong> between these numbers is the <strong>likeness</strong> of the stories. The demo used OpenAI's text-embedding-ada-002 (1,536 dimensions); starting fresh today you'd take its successor in the same slot (the text-embedding-3 family) — the procedure is identical.</p>
+
+<figure class="doc-img">
+    <img src="assets/ai/graphdb/gdb-vector-retriever/embedding-space.webp" width="1400" height="700" alt="Schematic of an embedding space: grey dots are movie-plot vectors, the orange diamond is the query vector, and three teal circles — the nearest neighbours — are joined to it by dashed lines">
+    <figcaption>A schematic of the embedding space — grey dots are the movie plots, the orange diamond is the query you just threw in. Searching means finding its <strong>three nearest neighbours</strong> (teal) in this space. — made by this wiki</figcaption>
+</figure>
+
+<h3>Step four — add the tabs</h3>
+
+<p>Vectors planted; time to care about speed. With 100 movies a full scan is fine, but at hundreds of thousands, re-measuring every vector per query is waste. So we build a <strong>vector index</strong> — like the thumb notches on a dictionary, a shortcut to the nearby vectors, dug in advance. One Cypher statement:</p>
+
+<pre><code><span class="c">// create a vector index over plotEmbedding on Movie nodes</span>
+CREATE VECTOR INDEX moviePlots
+FOR (m:Movie) ON m.plotEmbedding
+OPTIONS {indexConfig: {
+  `vector.dimensions`: 1536,          <span class="c">// must match the embedding model</span>
+  `vector.similarity_function`: 'cosine'
+}}</code></pre>
+
+<p>The two options say something simple: the vectors this index handles are 1,536-dimensional, and &ldquo;near&rdquo; is judged by cosine similarity (likeness measured as the angle between vectors). <strong>The dimension count must match the embedding model's output</strong> — get this wrong and the index refuses your vectors.</p>
+
+<h3>Step five — assemble the retriever, and ask</h3>
+
+<p>All the parts are on the bench: a connection (driver), a tab system (index), a converter (embedder). Hand the three to <code>VectorRetriever</code> from the <code>neo4j-graphrag</code> package introduced in the <a href="/p/en/gdb-graphrag/">previous piece</a>, and the search engine is assembled. A fourth argument decides which properties come back in the results.</p>
+
+<pre><code>from neo4j_graphrag.retrievers import VectorRetriever
+
+retriever = VectorRetriever(
+    driver,                                <span class="c"># ① which DB</span>
+    index_name="moviePlots",               <span class="c"># ② which index</span>
+    embedder=embedder,                     <span class="c"># ③ how to vectorise the question</span>
+    return_properties=["title", "plot"],   <span class="c"># ④ what to hand back</span>
+)
+result = retriever.search(query_text="toys that secretly come alive", top_k=3)</code></pre>
+
+<p>Now ask for real. Throw in a short summary of Toy Story's plot, and Toy Story comes back in first place — title, plot, and the cosine similarity score alongside. Describe a film about a shooting incident, and a movie with exactly that material surfaces at a score around 0.93. Notice what never happened: the query never mentioned a title. <strong>It was found not because words overlapped, but because the stories resembled each other</strong> — this is the fork in the road between keyword search and vector search.</p>
+
+<h3>One step further</h3>
+
+<p>What we built today is a pure vector searcher. Bluntly: it hasn't used half of the graph's power yet — the moment you walk from a found movie node along <em>ACTED_IN</em> to its actors, along <em>IN_GENRE</em> to its genre, along <em>RATED</em> to users with similar taste, that's where <a href="/p/en/gdb-graphrag/">GraphRAG</a> proper begins. But this order is the right one. Cast with vectors, <strong>then</strong> walk with the graph — today's retriever is the first of those two verbs. As this wiki's own <a href="/p/en/kgs-ai-layer/">machine-readable layer</a> has long demonstrated, search quality is storage quality in disguise: the search recognised the story because the story was planted with care.</p>
+
+<div class="note">
+    <span class="nh">Fact-check note</span>
+    The procedure and run results (100 plots embedded, Toy Story ranked first, ~0.93 similarity on the shooting-incident query) are reconstructed from a demo transcript provided to this wiki; this wiki did not re-run the same environment. Code and syntax were cross-checked against primary sources — the <a href="https://neo4j.com/docs/neo4j-graphrag-python/current/" target="_blank" rel="noopener">neo4j-graphrag-python docs</a> (VectorRetriever's driver, index_name, embedder, return_properties; search's query_text and top_k), Neo4j's CREATE VECTOR INDEX syntax (vector.dimensions, vector.similarity_function), and the <a href="https://neo4j.com/labs/" target="_blank" rel="noopener">Neo4j Sandbox</a> Recommendations (MovieLens-family) dataset. The package was named neo4j-genai at the time of the demo and has since been renamed neo4j-graphrag; text-embedding-ada-002 is a legacy model, with the text-embedding-3 family recommended for new builds. The embedding-space figure is a conceptual schematic, not measured coordinates.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · GraphDB &middot; <span class="pr-k">Created</span> 2026-08-09 &middot; <span class="pr-k">Updated</span> 2026-08-09</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/gdb-graphrag/">Graph Databases &amp; GraphRAG — Store the Relationships, Change the Answers</a></li><li><a href="/p/en/sb-level3/">Level 3 · Searching by meaning (semantic search, vector DB)</a></li></ul>
+</nav>
+</body>
+</html>

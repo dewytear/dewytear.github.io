@@ -1,0 +1,145 @@
+<h2>あらすじで映画を探す — Neo4jサンドボックスで作る初めてのベクトルリトリーバー</h2>
+
+<p class="scn-sub"><a href="#!gdb-graphrag">前編</a>が地図を広げる文章だったなら、今回は靴ひもを結ぶ文章です。何もインストールせず、ブラウザでグラフDBを一台借り、映画のあらすじを数値に変えて植え込み、「こんな話の映画ない?」と尋ねると似た映画を返してくる検索機を、最後まで作り切ります。</p>
+
+<p>目標は一文に収まります。<strong>あらすじを投げると、あらすじが似ている映画が返ってくる検索機。</strong>大げさに聞こえますが部品は三つだけで、どれも名前が物々しいわりに、やることは素朴です。</p>
+
+<ul>
+<li><strong>埋め込み(エンベディング)</strong> — 文章を<strong>意味を担う数値の並び</strong>(ベクトル)に変えること。意味が近い文章ほど、数値も近くに寄ります。この変換をするのが埋め込みモデルで、ここではOpenAIのものを使います。</li>
+<li><strong>ベクトルインデックス</strong> — その数値を<strong>速く探せるように付けておく索引</strong>。辞書の小口にある「あかさたな」の切り込みを指で押さえれば目当てのページが開くように、索引があれば「近いベクトル」を総当たりせずに見つけられます。</li>
+<li><strong>リトリーバー</strong> — 質問を受け取り、埋め込み、索引から近いものを選んで<strong>結果を返す検索機</strong>そのものです。</li>
+</ul>
+
+<div class="diagram">
+<svg viewBox="0 0 700 150" role="img" aria-label="実習の五歩: サンドボックス構築、データ散歩、あらすじ埋め込み、ベクトルインデックス、リトリーバー検索の順に進む">
+    <rect class="d-box" x="10" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="70" y="61" text-anchor="middle">サンドボックス</text>
+    <text class="d-sub" x="70" y="79" text-anchor="middle">DBを借りる</text>
+    <line class="d-edge" x1="130" y1="66" x2="142" y2="66"/><polygon class="d-arrow" points="142,61 150,66 142,71"/>
+    <rect class="d-box" x="150" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="210" y="61" text-anchor="middle">データ散歩</text>
+    <text class="d-sub" x="210" y="79" text-anchor="middle">Cypher数行</text>
+    <line class="d-edge" x1="270" y1="66" x2="282" y2="66"/><polygon class="d-arrow" points="282,61 290,66 282,71"/>
+    <rect class="d-box" x="290" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="350" y="61" text-anchor="middle">埋め込み</text>
+    <text class="d-sub" x="350" y="79" text-anchor="middle">100本だけ</text>
+    <line class="d-edge" x1="410" y1="66" x2="422" y2="66"/><polygon class="d-arrow" points="422,61 430,66 422,71"/>
+    <rect class="d-box" x="430" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="490" y="61" text-anchor="middle">インデックス</text>
+    <text class="d-sub" x="490" y="79" text-anchor="middle">索引を付ける</text>
+    <line class="d-edge" x1="550" y1="66" x2="562" y2="66"/><polygon class="d-arrow" points="562,61 570,66 562,71"/>
+    <rect class="d-box accent" x="570" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="630" y="61" text-anchor="middle">リトリーバー</text>
+    <text class="d-sub" x="630" y="79" text-anchor="middle">尋ねてみる</text>
+</svg>
+<div class="d-cap">今日の五歩。最後の一歩で「あらすじ → 似た映画」が実際に動きます。</div>
+</div>
+
+<h3>一歩目 — グラフDBを借りる</h3>
+
+<p>グラフDBを触るのに何かをインストールする必要はありません。Neo4jが<strong>サンドボックス</strong>という無料のクラウドインスタンスを貸してくれます — Pythonノートブックをブラウザでそのまま回すGoogle Colabと同じ感覚で、ブラウザにグラフDBが一台現れます。ログインしてプロジェクトを選ぶ画面が出たら<strong>Recommendations</strong>を選びます。映画推薦研究で広く使われるMovieLens系の映画推薦データが、あらかじめ積み込まれたプロジェクトです。</p>
+
+<p>開いてみると、前編で絵として眺めていたものが実物として立っています。ノードは五種類 — 映画(Movie)、ジャンル(Genre)、俳優(Actor)、監督(Director)、ユーザー(User)。映画ノードを一つクリックすると、タイトル(title)、上映時間、そして<strong>あらすじ(plot)</strong>といったプロパティがずらりとぶら下がっています。カンフー・パンダ3のノードにはジャック・ブラックが<em>ACTED_IN</em>の矢印でつながり、あるユーザーが<em>RATED</em>の矢印でつながっている — そしてその矢印の<strong>中に</strong>、評価4点と残した時刻がプロパティとして入っています。関係そのものがデータを持つ。前編で語っていたプロパティグラフの性質を、ここで初めて自分の目で確かめることになります。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 300" role="img" aria-label="映画推薦データの構造: ユーザー・俳優・ジャンル・監督のノードがそれぞれの関係で中央の映画ノードとつながっている">
+    <rect class="d-box accent" x="280" y="124" width="140" height="52" rx="9"/>
+    <text class="d-label sm" x="350" y="145" text-anchor="middle">映画</text>
+    <text class="d-sub" x="350" y="163" text-anchor="middle">title · plot</text>
+
+    <rect class="d-box" x="30" y="34" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="90" y="62" text-anchor="middle">ユーザー</text>
+    <line class="d-edge" x1="150" y1="70" x2="272" y2="128"/><polygon class="d-arrow" points="263,127 280,132 268,118"/>
+    <text class="d-sub" x="196" y="84" text-anchor="middle">RATED</text>
+    <text class="d-sub" x="196" y="102" text-anchor="middle">評価 · 時刻</text>
+
+    <rect class="d-box" x="30" y="220" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="90" y="248" text-anchor="middle">俳優</text>
+    <line class="d-edge" x1="150" y1="232" x2="272" y2="172"/><polygon class="d-arrow" points="263,174 280,168 267,183"/>
+    <text class="d-sub" x="200" y="216" text-anchor="middle">ACTED_IN</text>
+
+    <rect class="d-box" x="550" y="34" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="610" y="62" text-anchor="middle">ジャンル</text>
+    <line class="d-edge" x1="420" y1="128" x2="542" y2="70"/><polygon class="d-arrow" points="533,68 550,64 537,79"/>
+    <text class="d-sub" x="498" y="84" text-anchor="middle">IN_GENRE</text>
+
+    <rect class="d-box" x="550" y="220" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="610" y="248" text-anchor="middle">監督</text>
+    <line class="d-edge" x1="542" y1="232" x2="420" y2="172"/><polygon class="d-arrow" points="429,170 412,168 425,184"/>
+    <text class="d-sub" x="494" y="216" text-anchor="middle">DIRECTED</text>
+</svg>
+<div class="d-cap">Recommendationsデータの骨組み。RATEDの矢印は評価と時刻を<strong>自分の中に</strong>持っています — プロパティグラフでは関係もデータを持つのです。</div>
+</div>
+
+<h3>二歩目 — Cypherでご近所散歩</h3>
+
+<p>本格的な工事の前に、Cypher(グラフ問い合わせ言語 — <a href="#!gdb-graphrag">前編</a>参照)を数行、データへの挨拶がわりに。骨組みは三語だけです。<code>MATCH</code>で探したい関係の形を描き、<code>RETURN</code>で何を返してほしいかを書き、<code>LIMIT</code>で件数を切ります。</p>
+
+<pre><code><span class="c">// 誰がどの映画を評価したか — 25件だけ眺める</span>
+MATCH (u:User)-[r:RATED]->(m:Movie) RETURN u, r, m LIMIT 25
+
+<span class="c">// トム・ハンクス出演作のタイトルとあらすじ — グラフではなく表で返ってくる</span>
+MATCH (a:Actor {name: 'Tom Hanks'})-[:ACTED_IN]->(m:Movie)
+RETURN m.title, m.plot LIMIT 10</code></pre>
+
+<p>最初の問い合わせは画面にグラフとして描かれ、二つ目のようにノードではなくプロパティだけを返すと表になって戻ってきます。同じデータを絵でも表でも受け取れる — それが確かめられたら、散歩はもう十分です。</p>
+
+<h3>三歩目 — あらすじを数値に変えて植え戻す</h3>
+
+<p>いよいよ中心工程です。PythonからNeo4jドライバーでサンドボックスに接続し(接続コードはサンドボックスの画面の<em>Connect via drivers</em>にそのまま出ているので、コピーして貼るだけです)、映画ノードのplotテキストを一つずつ取り出して埋め込みモデルに通し、返ってきたベクトルをそのノードの新しいプロパティとして植え戻します。全部回すと時間がかかるので、実習らしく<strong>100本だけ</strong>に切ります。</p>
+
+<pre><code><span class="c"># あらすじのある映画100本 → 埋め込み → plotEmbedding として保存</span>
+movies = tx.run("""
+    MATCH (m:Movie) WHERE m.plot IS NOT NULL
+    RETURN m.title AS title, m.plot AS plot LIMIT 100""")
+for row in movies:
+    vec = generate_embedding(row["plot"])   <span class="c"># OpenAI 埋め込みを呼ぶ</span>
+    tx.run("""
+        MATCH (m:Movie {title: $title})
+        SET m.plotEmbedding = $vec""", title=row["title"], vec=vec)</code></pre>
+
+<p>数十秒後、サンドボックスで適当な映画をもう一度クリックすると、plotの隣に<code>plotEmbedding</code>というプロパティが生まれ、1,536個の実数がぎっしり詰まっています。人の目にはノイズですが、この数値たちの<strong>距離</strong>こそが、物語の<strong>似ている度合い</strong>です。デモで使われたのはOpenAIのtext-embedding-ada-002(出力1,536次元)ですが、いま新しく始めるなら同じ席の後継モデル(text-embedding-3系)を使うのがよいでしょう — 手順は完全に同じです。</p>
+
+<figure class="doc-img">
+    <img src="assets/ai/graphdb/gdb-vector-retriever/embedding-space.webp" width="1400" height="700" alt="埋め込み空間の模式図: 灰色の点が映画あらすじのベクトル、オレンジのひし形が質問のベクトル、青緑の円3つが最も近い3本で、点線でつながっている">
+    <figcaption>埋め込み空間の模式図 — 灰色の点が映画のあらすじたち、オレンジのひし形がいま投げた質問です。検索とはこの空間で<strong>最も近い隣人3本</strong>(青緑)を見つけることです。— このウィキ自作</figcaption>
+</figure>
+
+<h3>四歩目 — 索引を付ける</h3>
+
+<p>ベクトルを植えたら、次は探す速さの番です。100本なら総当たりでも構いませんが、数十万本になると、問い合わせのたびに全部を測り直すのは無駄です。そこで<strong>ベクトルインデックス</strong>を作ります — 辞書の小口の切り込みのように、近いベクトルへの近道をあらかじめ掘っておくのです。Cypher一文で済みます。</p>
+
+<pre><code><span class="c">// Movie ノードの plotEmbedding にベクトルインデックスを作成</span>
+CREATE VECTOR INDEX moviePlots
+FOR (m:Movie) ON m.plotEmbedding
+OPTIONS {indexConfig: {
+  `vector.dimensions`: 1536,          <span class="c">// 埋め込みモデルの次元と一致させる</span>
+  `vector.similarity_function`: 'cosine'
+}}</code></pre>
+
+<p>オプション二行の言っていることは単純です。この索引が扱うベクトルは1,536次元で、「近い」の基準はコサイン類似度(ベクトル同士の角度で似ている度合いを測る関数)だということ。<strong>次元数は埋め込みモデルの出力と必ず合わせます</strong> — ここがずれると、索引はベクトルを受け付けてくれません。</p>
+
+<h3>五歩目 — リトリーバーを組み立てて、尋ねる</h3>
+
+<p>部品が揃いました。接続(ドライバー)、索引(インデックス)、変換器(エンベダー)。この三つを、<a href="#!gdb-graphrag">前編</a>で紹介した<code>neo4j-graphrag</code>パッケージの<code>VectorRetriever</code>に渡せば検索機の完成です。四つ目の引数で「結果としてどのプロパティだけを返すか」を決められます。</p>
+
+<pre><code>from neo4j_graphrag.retrievers import VectorRetriever
+
+retriever = VectorRetriever(
+    driver,                                <span class="c"># ① どのDBで</span>
+    index_name="moviePlots",               <span class="c"># ② どの索引で</span>
+    embedder=embedder,                     <span class="c"># ③ 質問をどうベクトルにするか</span>
+    return_properties=["title", "plot"],   <span class="c"># ④ 何を返すか</span>
+)
+result = retriever.search(query_text="おもちゃがこっそり動き出す話", top_k=3)</code></pre>
+
+<p>いよいよ本当に尋ねます。トイ・ストーリーのあらすじを短く要約して投げると、1位でトイ・ストーリーが返ってきます — タイトルとあらすじ、そしてコサイン類似度のスコアまで一緒に。銃撃事件を扱った映画を描写して投げれば、まさにその題材の映画が0.93ほどのスコアで浮かび上がります。注目すべきは、質問の中で映画のタイトルを一度も口にしていないこと。<strong>言葉が重なったからではなく、物語が似ていたから見つかった</strong> — ここがキーワード検索とベクトル検索の分かれ道です。</p>
+
+<h3>ここからもう一歩</h3>
+
+<p>今日作ったのは純粋なベクトル検索機です。率直に言えば、グラフの力はまだ半分も使っていません — 見つけた映画ノードから<em>ACTED_IN</em>をたどって俳優へ、<em>IN_GENRE</em>をたどってジャンルへ、<em>RATED</em>をたどって好みの近いユーザーへ歩き出した瞬間から、<a href="#!gdb-graphrag">GraphRAG</a>の本編が始まります。それでも順序はこちらが正しいのです。ベクトルで<strong>すくい</strong>、グラフで<strong>歩く</strong> — 今日完成させたリトリーバーは、その最初の動詞です。このウィキの<a href="#!kgs-ai-layer">機械可読レイヤー</a>がそうであるように、検索の品質は結局、保存の品質から生まれます。あらすじを丁寧に植えておいたからこそ、検索が物語を見分けたのです。</p>
+
+<div class="note">
+    <span class="nh">ファクトチェックノート</span>
+    実習の手順と実行結果(埋め込み100本、トイ・ストーリー検索1位、銃撃題材の質問での類似度約0.93)は提供されたデモの書き起こしを再構成したもので、このウィキが同一環境を再実行したわけではない。コードと文法は一次資料で照合した — <a href="https://neo4j.com/docs/neo4j-graphrag-python/current/" target="_blank" rel="noopener">neo4j-graphrag-python ドキュメント</a>のVectorRetriever(driver・index_name・embedder・return_properties、searchのquery_text・top_k)、Neo4jのCREATE VECTOR INDEX文法(vector.dimensions・vector.similarity_function)、<a href="https://neo4j.com/labs/" target="_blank" rel="noopener">Neo4jサンドボックス</a>のRecommendations(MovieLens系)データセット。デモ当時のパッケージ名はneo4j-genaiで、現在はneo4j-graphragに改名されている。text-embedding-ada-002はレガシーモデルで、新規構築にはtext-embedding-3系が推奨される。埋め込み空間の図は概念模式図であり、実測座標ではない。
+</div>
