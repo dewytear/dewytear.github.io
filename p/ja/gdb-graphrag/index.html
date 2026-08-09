@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>グラフデータベースとGraphRAG — 関係を保存すると答えが変わる</title>
+<meta name="description" content="表の代わりに関係を保存するグラフデータベースからGraphRAGまでを一本の鎖でつなぐ入門解説 — JOINを計算する代わりにエッジをたどるプロパティグラフと、絵に似た問い合わせ言語Cypher。ベクトルRAGのチャンク断絶をグラフで縫い合わせ、街区ごと検索するGraphRAG(マルチホップ推論・階層の保存・根拠の可視化)。網の設計図であるオントロジーとグラフスキーマ(教育知識マップの先行関係の例)、名前だけ似ているLangGraph(知識の地図 vs 仕事の順序図)の区別、製造の故障履歴・ニュースカテゴリなどのドメイン事例、そしてarrows.appのスケッチ→Cypherエクスポート→neo4j-graphragパッケージ(SimpleKGPipeline)でPDFをナレッジグラフに変える始め方まで">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/gdb-graphrag/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/gdb-graphrag/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/gdb-graphrag/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/gdb-graphrag/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/gdb-graphrag/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="グラフデータベースとGraphRAG — 関係を保存すると答えが変わる">
+<meta property="og:description" content="表の代わりに関係を保存するグラフデータベースからGraphRAGまでを一本の鎖でつなぐ入門解説 — JOINを計算する代わりにエッジをたどるプロパティグラフと、絵に似た問い合わせ言語Cypher。ベクトルRAGのチャンク断絶をグラフで縫い合わせ、街区ごと検索するGraphRAG(マルチホップ推論・階層の保存・根拠の可視化)。網の設計図であるオントロジーとグラフスキーマ(教育知識マップの先行関係の例)、名前だけ似ているLangGraph(知識の地図 vs 仕事の順序図)の区別、製造の故障履歴・ニュースカテゴリなどのドメイン事例、そしてarrows.appのスケッチ→Cypherエクスポート→neo4j-graphragパッケージ(SimpleKGPipeline)でPDFをナレッジグラフに変える始め方まで">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/gdb-graphrag/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="グラフデータベースとGraphRAG — 関係を保存すると答えが変わる">
+<meta name="twitter:description" content="表の代わりに関係を保存するグラフデータベースからGraphRAGまでを一本の鎖でつなぐ入門解説 — JOINを計算する代わりにエッジをたどるプロパティグラフと、絵に似た問い合わせ言語Cypher。ベクトルRAGのチャンク断絶をグラフで縫い合わせ、街区ごと検索するGraphRAG(マルチホップ推論・階層の保存・根拠の可視化)。網の設計図であるオントロジーとグラフスキーマ(教育知識マップの先行関係の例)、名前だけ似ているLangGraph(知識の地図 vs 仕事の順序図)の区別、製造の故障履歴・ニュースカテゴリなどのドメイン事例、そしてarrows.appのスケッチ→Cypherエクスポート→neo4j-graphragパッケージ(SimpleKGPipeline)でPDFをナレッジグラフに変える始め方まで">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "グラフデータベースとGraphRAG — 関係を保存すると答えが変わる",
+ "description": "表の代わりに関係を保存するグラフデータベースからGraphRAGまでを一本の鎖でつなぐ入門解説 — JOINを計算する代わりにエッジをたどるプロパティグラフと、絵に似た問い合わせ言語Cypher。ベクトルRAGのチャンク断絶をグラフで縫い合わせ、街区ごと検索するGraphRAG(マルチホップ推論・階層の保存・根拠の可視化)。網の設計図であるオントロジーとグラフスキーマ(教育知識マップの先行関係の例)、名前だけ似ているLangGraph(知識の地図 vs 仕事の順序図)の区別、製造の故障履歴・ニュースカテゴリなどのドメイン事例、そしてarrows.appのスケッチ→Cypherエクスポート→neo4j-graphragパッケージ(SimpleKGPipeline)でPDFをナレッジグラフに変える始め方まで",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/gdb-graphrag/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!gdb-graphrag",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-08-09T14:43:34+09:00",
+ "dateModified": "2026-08-09T14:43:34+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!gdb-graphrag">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/gdb-graphrag/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/gdb-graphrag/" hreflang="en">English</a>
+</p>
+<article>
+<h2>グラフデータベースとGraphRAG — 関係を保存すると答えが変わる</h2>
+
+<p class="scn-sub">表の代わりに関係を保存するグラフデータベースから出発し、その上にナレッジグラフを築き、そのグラフでAIの回答品質を引き上げるGraphRAGまで — 概念と例を軸に一気につなぐ入門解説です。</p>
+
+<h3>まず、なじみのない言葉を三つ</h3>
+
+<ul>
+<li><strong>グラフデータベース(グラフDB)</strong> — データを表(テーブル)ではなく<strong>点(ノード)と線(エッジ)</strong>で保存するデータベース。「誰が何をした」という関係そのものが保存の基本単位です。</li>
+<li><strong>RAG</strong> — AIに質問するたび、資料の山から関連する断片を<strong>その場で探して添える</strong>方式(Retrieval-Augmented Generation、検索拡張生成)。オープンブック試験のように、答える前に根拠を広げさせます。</li>
+<li><strong>GraphRAG(グラフRAG)</strong> — その「資料の山」をバラバラの断片ではなく<strong>互いにつながったグラフ</strong>として保存し、検索時に周辺の文脈まで一緒に引き寄せるRAGです。</li>
+</ul>
+
+<p>この三つは一本の鎖でつながります。<strong>関係を保存すると(グラフDB) → 知識が網になり(ナレッジグラフ) → 網ごと検索して答えの根拠が豊かになる(GraphRAG)。</strong>以下、この鎖を先頭から一つずつ解いていきます。</p>
+
+<h3>グラフDB — JOINの代わりに道探し</h3>
+
+<p>私たちに馴染み深いのはリレーショナルデータベース(RDB)です。会員表・評価表・映画表のように<strong>表単位で</strong>データを積み、表と表の関係は照会の瞬間に<strong>JOIN(共通の列で二つの表をつなぎ合わせる演算)</strong>で復元します。表が二つならJOIN一回、五つなら四回 — 関係が深くなるほど、つなぎ合わせるコストが膨らみます。</p>
+
+<p>グラフDBは逆を行きます。<strong>関係を最初から矢印(エッジ)として保存</strong>しておくのです。「Aという人が高評価をつけたアクション映画は?」という質問が来たら、表をつなぐのではなく、<strong>Aのノードから出発して評価エッジをたどり、ジャンルエッジをもう一歩歩けば</strong>答えに着きます。人が頭の中で関係を思い浮かべる過程をほぼそのままデータ構造に移した格好で、描いてみれば文章のように読めます — <em>人物A →(評価 5.0)→ 映画X →(ジャンル)→ アクション</em>。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 300" role="img" aria-label="RDBとグラフDBの比較: 左は表をJOINでつなぎ合わせ、右はノードからエッジをたどって答えに到達する">
+    <text class="d-label" x="12" y="26">RDB — 表をJOINでつなぐ</text>
+    <rect class="d-box" x="20" y="52" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="80" y="80" text-anchor="middle">会員表</text>
+    <rect class="d-box" x="196" y="52" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="256" y="80" text-anchor="middle">評価表</text>
+    <rect class="d-box" x="108" y="170" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="168" y="198" text-anchor="middle">映画表</text>
+    <line class="d-edge" x1="140" y1="75" x2="196" y2="75"/>
+    <text class="d-sub" x="168" y="66" text-anchor="middle">JOIN</text>
+    <line class="d-edge" x1="238" y1="98" x2="192" y2="170"/>
+    <text class="d-sub" x="238" y="140" text-anchor="middle">JOIN</text>
+    <text class="d-sub" x="168" y="252" text-anchor="middle">関係は照会の瞬間に</text>
+    <text class="d-sub" x="168" y="270" text-anchor="middle">演算で復元される</text>
+
+    <line class="d-edge" x1="350" y1="14" x2="350" y2="286" stroke-dasharray="4 5"/>
+
+    <text class="d-label" x="374" y="26">グラフDB — 関係をたどる</text>
+    <rect class="d-box" x="374" y="52" width="100" height="46" rx="9"/>
+    <text class="d-label sm" x="424" y="80" text-anchor="middle">人物A</text>
+    <line class="d-edge" x1="474" y1="75" x2="556" y2="75"/><polygon class="d-arrow" points="556,70 564,75 556,80"/>
+    <text class="d-sub" x="516" y="66" text-anchor="middle">評価 5.0</text>
+    <rect class="d-box" x="564" y="52" width="100" height="46" rx="9"/>
+    <text class="d-label sm" x="614" y="80" text-anchor="middle">映画X</text>
+    <line class="d-edge" x1="614" y1="98" x2="614" y2="164"/><polygon class="d-arrow" points="609,164 614,172 619,164"/>
+    <text class="d-sub" x="586" y="136" text-anchor="middle">ジャンル</text>
+    <rect class="d-box accent" x="564" y="172" width="100" height="46" rx="9"/>
+    <text class="d-label sm" x="614" y="200" text-anchor="middle">アクション</text>
+    <text class="d-sub" x="519" y="252" text-anchor="middle">関係が保存の単位 —</text>
+    <text class="d-sub" x="519" y="270" text-anchor="middle">質問は道探しになる</text>
+</svg>
+<div class="d-cap">同じデータ、違う保存 — RDBは関係を<strong>計算</strong>し、グラフDBは関係を<strong>保存</strong>します。「Aが高評価したアクション映画」は右側なら矢印二歩で届きます。</div>
+</div>
+
+<p>この保存モデルの正式名称が<strong>プロパティグラフ</strong>です。ノードとエッジの双方に<strong>ラベル</strong>(種類: 人、映画…)と<strong>プロパティ</strong>(名前、点数、日付…)を付けられるので、現実の「主語–動詞–目的語」をほぼそのまま収められます。代表的な実装がNeo4jで、このウィキの<a href="/p/ja/kgs-edges/">ナレッジグラフモデル</a>も同じプロパティグラフ系です。</p>
+
+<h3>Cypher — グラフへの尋ね方</h3>
+
+<p>RDBにSQLがあるように、グラフDBには<strong>Cypher(サイファー)</strong>という問い合わせ言語があります。面白いのは、文法が<strong>絵に似ている</strong>こと — ノードは丸括弧 <code>( )</code>、エッジは角括弧 <code>[ ]</code>、方向は矢印で書きます。先ほどの質問をCypherにするとこうなります。</p>
+
+<pre><code><span class="c">// Aが4点以上をつけたアクション映画 — パターンがそのまま絵</span>
+MATCH (a:Person {name: 'A'})-[r:RATED]->(m:Movie)-[:GENRE]->(:Genre {name: 'Action'})
+WHERE r.score >= 4.0
+RETURN m.title, r.score</code></pre>
+
+<p><code>(a:Person)-[r:RATED]-&gt;(m:Movie)</code> を声に出して読めば「人物aが映画mを評価した」。JOINを頭の中で組み立てる必要はなく、<strong>探したい関係の形をそのまま描いて尋ねる</strong>のがグラフ問い合わせの感覚です。</p>
+
+<h3>RAGの復習 — オープンブック試験</h3>
+
+<p>RAGはAIの回答に根拠を付ける標準手法です。質問が来ると①資料庫から関連する断片を検索し(Retrieval)、②質問に添えて増強し(Augmented)、③その中から答えを生成させます(Generation)。モデルが記憶に頼ってもっともらしい作り話(ハルシネーション)をする代わりに、<strong>出典のある答え</strong>を返すようになります。ウェブ検索との違いは<strong>自分だけのデータ</strong> — ウェブにない社内文書、個人ノート、設備マニュアル — を根拠に使える点。組織の専門家の暗黙知(文書化されていない経験知)を、いつでも引き出せる引き出しにする仕事に近いのです。</p>
+
+<p>ふつうのRAGは資料を<strong>ベクトルデータベース</strong>に入れます。文書は長いので一定の長さの<strong>チャンク(断片)</strong>に切り、各断片を意味を担う数値の列(埋め込み)に変えて保存し、質問と意味の近い断片を拾ってきます。ここまでは立派です。問題は<strong>切った瞬間に文脈が切れる</strong>こと — 断片同士は他人になり、「この断片がどの文書のどの章に属し、どの断片とつながるのか」を検索は知り得ません。</p>
+
+<h3>GraphRAG — 断片をつなぎ、網ごと持ってくる</h3>
+
+<p>GraphRAGはこの断絶をグラフで縫い合わせます。チャンクを<strong>ノード</strong>にし、チャンク同士の関係 — 同じ文書への所属、前後の順序、同じ実体(人・製品・出来事)への言及 — を<strong>エッジ</strong>として保存します。検索は二段階になります。まずベクトル検索で質問に近い断片を見つけ(広く網を打つ)、続いて<strong>その断片からエッジをたどって隣の文脈を一緒に引き寄せる</strong>(深く歩く)。断片一つではなく、断片の属する<strong>街区</strong>が丸ごと根拠になるのです。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 320" role="img" aria-label="ベクトルRAGとGraphRAGの比較: 左はチャンクがつながりなく浮かび、右はカテゴリノードを中心に記事と本文チャンクがつながっている">
+    <text class="d-label" x="12" y="26">ベクトルRAG — 断片がばらばら</text>
+    <rect class="d-box" x="24" y="56" width="98" height="40" rx="9"/>
+    <text class="d-label sm" x="73" y="81" text-anchor="middle">チャンク1</text>
+    <rect class="d-box" x="180" y="76" width="98" height="40" rx="9"/>
+    <text class="d-label sm" x="229" y="101" text-anchor="middle">チャンク2</text>
+    <rect class="d-box" x="60" y="150" width="98" height="40" rx="9"/>
+    <text class="d-label sm" x="109" y="175" text-anchor="middle">チャンク3</text>
+    <rect class="d-box" x="206" y="170" width="98" height="40" rx="9"/>
+    <text class="d-label sm" x="255" y="195" text-anchor="middle">チャンク4</text>
+    <text class="d-sub" x="170" y="252" text-anchor="middle">似た断片だけを単体で —</text>
+    <text class="d-sub" x="170" y="270" text-anchor="middle">文書の文脈は切れている</text>
+
+    <line class="d-edge" x1="350" y1="14" x2="350" y2="306" stroke-dasharray="4 5"/>
+
+    <text class="d-label" x="374" y="26">GraphRAG — 断片がつながる</text>
+    <rect class="d-box accent" x="480" y="52" width="110" height="42" rx="9"/>
+    <text class="d-label sm" x="535" y="78" text-anchor="middle">カテゴリ</text>
+    <rect class="d-box" x="380" y="140" width="100" height="40" rx="9"/>
+    <text class="d-label sm" x="430" y="165" text-anchor="middle">記事1</text>
+    <rect class="d-box" x="580" y="140" width="100" height="40" rx="9"/>
+    <text class="d-label sm" x="630" y="165" text-anchor="middle">記事2</text>
+    <rect class="d-box" x="380" y="228" width="100" height="40" rx="9"/>
+    <text class="d-label sm" x="430" y="253" text-anchor="middle">チャンク</text>
+    <rect class="d-box" x="580" y="228" width="100" height="40" rx="9"/>
+    <text class="d-label sm" x="630" y="253" text-anchor="middle">チャンク</text>
+    <line class="d-edge" x1="500" y1="94" x2="440" y2="140"/><polygon class="d-arrow" points="443,132 436,144 448,140"/>
+    <line class="d-edge" x1="572" y1="94" x2="622" y2="140"/><polygon class="d-arrow" points="614,138 626,144 620,132"/>
+    <line class="d-edge" x1="430" y1="180" x2="430" y2="228"/><polygon class="d-arrow" points="425,220 430,228 435,220"/>
+    <line class="d-edge" x1="630" y1="180" x2="630" y2="228"/><polygon class="d-arrow" points="625,220 630,228 635,220"/>
+    <line class="d-edge" x1="480" y1="160" x2="580" y2="160" stroke-dasharray="3 4"/>
+    <text class="d-sub" x="530" y="152" text-anchor="middle">関連</text>
+</svg>
+<div class="d-cap">左は断片を<strong>一つずつ拾い</strong>、右は断片の属する<strong>街区ごと持ってくる</strong> — 答えの説得力の差はここで生まれます。</div>
+</div>
+
+<p>効果は三つの筋で現れます。</p>
+
+<ul>
+<li><strong>マルチホップ推論</strong> — 「政治カテゴリの最新ニュース」という質問は、ベクトル検索だけでは不器用です(「政治」という語に似た断片を探す話ではないので)。グラフなら<em>カテゴリノード → 所属記事 → 各記事の本文チャンク</em>と歩いて、まさにその集合を集めてきます。集まった記事がそのまま答えの根拠一覧です。</li>
+<li><strong>階層と所属が見える</strong> — 断片がどの文書・どの章に属し、どの文書と関連するかが構造として残るため、モデルは「文脈の切れた断片一つ」ではなく<strong>構造を知った状態</strong>で答えます。</li>
+<li><strong>根拠の可視化</strong> — 答えがどのノードを踏んで作られたかをグラフの絵として一緒に見せられます。「答え+答えの地図」が同時に出るので、検証と信頼が容易になります。</li>
+</ul>
+
+<p>まとめると、モデルは同じまま、<strong>モデルに手渡す文脈の織り方</strong>が変わるのです。答えが一、二段落におとなしく収まる質問ならベクトルRAGで十分。答えが<strong>複数文書に散った関係</strong>にまたがるときにGraphRAGが真価を出します。実務ではベクトルで拾い、グラフで歩くハイブリッド構成が一般的です。</p>
+
+<h3>オントロジーとグラフスキーマ — 網の設計図</h3>
+
+<p>グラフを積む前に決めるべきことがあります。<strong>どんな種類のノードと、どんな種類の関係を認めるのか。</strong>この規則体系が<strong>オントロジー</strong>(知識を整理する標準の枠)であり、それをグラフDBのラベル・プロパティとして具体化したものが<strong>グラフスキーマ</strong>です。日常や業務で暗黙のうちに使っている概念とその関係規則を仕様書として書き出し、<strong>AIにも人と同じ地図を見せる</strong>作業です。</p>
+
+<p>教育ドメインの例が直感的です。概念と概念の間に<strong>先行関係</strong>を記した知識マップ — 「二次関数を学ぶには方程式が先」 — があれば、二次関数でつまずき続ける生徒に二次関数の問題ばかり繰り返す代わりに、<strong>一歩手前の方程式の問題を一緒に薦める</strong>ことができます。オントロジーが<strong>推論の基準線</strong>になるのです。プロダクトチームがデータ分析のためにページ–サブページ–クリックイベントの名前と階層を設計するタクソノミー(分類体系)の仕事も同じ系譜 — オントロジーは関係の<em>意味</em>まで記す、より大きな枠だという点が違うだけです。</p>
+
+<p>順番に並べるとこうなります。<strong>オントロジー(どの関係を認めるか) → グラフスキーマ(それをラベル・プロパティでどう書くか) → ナレッジグラフ(実データで満たした網) → GraphRAG(その網を検索に使う)</strong>。GraphRAGの品質はほとんどこの設計段階で決まります。</p>
+
+<h3>名前が似た他人 — LangGraph</h3>
+
+<p>名前に「グラフ」が入るためよく混同されるのが<strong>LangGraph(ラングラフ)</strong>です。これは知識を入れるグラフではなく、<strong>AIエージェントの作業フローを組むフレームワーク</strong> — 質問意図の分析、情報検索、回答生成といった<strong>作業ステップ一つひとつをノード</strong>として定義し、どの順序・条件で実行するかをエッジでつなぎます。つまりGraphRAGのグラフは<strong>知識の地図</strong>、LangGraphのグラフは<strong>仕事の順序図</strong>。二つはよく一緒に使われます — LangGraphで組んだエージェントの「検索」ノードの中でGraphRAGを呼ぶ、という具合です。組んだフローが意図どおり動くかは、可視化ツールのLangGraph Studioで段階ごとの実行を目で確かめられます。</p>
+
+<h3>どこで使われるか</h3>
+
+<p><strong>製造・スマートファクトリー</strong>が好例です。工程から溢れる故障履歴を<em>設備 → 部位 → 症状 → 原因 → 対処</em>のグラフとして書いておけば、新しい故障が起きたとき、同じ症状の過去事例と検証済みの対処まで関係をたどって即座に届きます。ニュースサービスなら<em>カテゴリ → 記事 → 本文チャンク</em>、教育なら<em>概念 → 先行概念 → 問題</em> — ドメインごとに網の形は違っても、「関係が答えの半分」である場所ならどこでも同じ方法が通ります。組織や個人の暗黙知をエージェントに移す超個人化の流れと噛み合うのもここです: <strong>自分が暗黙に知っているつながりをグラフとして明示して初めて、AIも自分と同じように歩けるのです。</strong></p>
+
+<h3>始め方 — 描いて、書き出して、自動で抽出する</h3>
+
+<p><strong>第一歩はただ描いてみることです。</strong>Neo4j Labsの無料ウェブツール<a href="https://arrows.app" target="_blank" rel="noopener">arrows.app</a>は、マインドマップを描く感覚でノードをドラッグしてグラフをスケッチできるホワイトボードです。頭の中の考えや自動化したい業務を、とにかくノードと矢印で広げてみる — これが事実上のオントロジーの下書きです。描き上げた図はPNG・SVGはもちろん<strong>Cypher文としてエクスポート</strong>でき、そのままグラフDBに流し込んで本物のナレッジグラフにできます。</p>
+
+<p><strong>第二歩は文書を自動でグラフに変えることです。</strong>Neo4j公式のPythonパッケージ<code>neo4j-graphrag</code>にはナレッジグラフ構築パイプライン(<code>SimpleKGPipeline</code>)が入っており、PDFを与えると<strong>チャンク分割 → 実体・関係抽出 → 埋め込み → グラフ格納</strong>を一度にやってくれます。</p>
+
+<pre><code><span class="c"># PDF一本をナレッジグラフに — 実質この一行</span>
+pipeline = SimpleKGPipeline(
+    llm=llm, driver=neo4j_driver,
+    embedder=embedder, from_pdf=True,
+)
+await pipeline.run_async(file_path="document.pdf")</code></pre>
+
+<p>回し終えると文書中の実体と関係がグラフとして抽出されており、同じパッケージの検索器(リトリーバー)で、ベクトル検索とグラフ探索を混ぜたGraphRAG問い合わせへと続けられます。「文書をどうグラフに変えるのか」が漠然としているときの、最速の初実験です。作って終わりではなく、<strong>望む答えが返るかの評価</strong>まで付けて初めて使い物になるRAGになる、という点も覚えておく価値があります。</p>
+
+<h3>このウィキとの接点</h3>
+
+<p>このウィキがGraphRAGを回しているわけではありません。しかし素材は同じ系譜です — 文書ごとに概念を抽出してつなぐ<a href="/p/ja/kgs-overview/">知識体系</a>、その結果として立っている<a href="/p/ja/kgs-edges/">プロパティグラフモデル</a>、そして機械が丸ごと持っていける<code>knowledge-graph.json</code>のエクスポートまで。この記事の語彙で言えば、このウィキは<strong>オントロジー(kgs文書セット)とナレッジグラフ(インデックス)をすでに備えた、GraphRAG-readyなコーパス</strong>なのです。グラフを手で触ってみたければ、このウィキの<a href="/p/ja/graph/">グラフスタジオ</a>でノードとエッジを置いてみるのも、arrows.appと同じ感覚の練習になります。</p>
+
+<div class="note">
+    <span class="nh">ファクトチェックノート</span>
+    概念説明と例(映画の評価、ニュースカテゴリ、教育の知識マップ、製造の故障履歴)は提供された対談の書き起こしを再構成したもので、話者の身元は扱わない。技術的事実は一次資料で照合した — <a href="https://neo4j.com/docs/neo4j-graphrag-python/current/user_guide_kg_builder.html" target="_blank" rel="noopener">neo4j-graphrag-python ドキュメント</a>(SimpleKGPipeline・from_pdf)、<a href="https://neo4j.com/labs/arrows/" target="_blank" rel="noopener">arrows.app(Neo4j Labs)</a>のCypherエクスポート、<a href="https://opencypher.org" target="_blank" rel="noopener">openCypher</a>のパターン文法、LangChainのLangGraphドキュメント(ノード・エッジ・状態)。ベクトルRAGのチャンク断絶とGraphRAGのマルチホップの利点は、GraphRAGサーベイ(arXiv 2501.00309)とHybridRAG(arXiv 2408.04948)の整理と一致する。Cypher例のラベルは説明用であり、実務のスキーマではない。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · GraphDB &middot; <span class="pr-k">作成日</span> 2026-08-09 &middot; <span class="pr-k">更新日</span> 2026-08-09</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/news-20260710-oracle-ontology-property-graph/">オラクルのオントロジーとプロパティグラフ — テーブルを知識の地図に</a></li><li><a href="/p/ja/news-20260711-neo4j-rdf-vs-property-graph/">RDF かプロパティグラフか — 知識グラフのためのふたつのモデル（Neo4j）</a></li><li><a href="/p/ja/sb-level3/">レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）</a></li><li><a href="/p/ja/wr-knowledge-vault/">すべてを記録する人、発行するウィキ — 知識の保管庫についての考察</a></li></ul>
+</nav>
+</body>
+</html>
