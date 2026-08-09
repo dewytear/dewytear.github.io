@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-08-09T16:00:12+09:00",
- "dateModified": "2026-08-09T16:00:12+09:00"
+ "dateModified": "2026-08-10T01:38:00+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -177,7 +177,7 @@ OPTIONS {indexConfig: {
   `vector.similarity_function`: 'cosine'
 }}</code></pre>
 
-<p>옵션 두 줄이 하는 말은 단순합니다. 이 색인이 다룰 벡터는 1,536차원이고, &lsquo;가깝다&rsquo;의 기준은 코사인 유사도(벡터 사이의 각도로 닮음을 재는 함수)라는 것. <strong>차원 수는 반드시 임베딩 모델의 출력과 맞춰야 합니다</strong> — 여기서 어긋나면 인덱스가 벡터를 받아 주지 않습니다.</p>
+<p>옵션 두 줄이 하는 말은 단순합니다. 이 색인이 다룰 벡터는 1,536차원이고, &lsquo;가깝다&rsquo;의 기준은 코사인 유사도(벡터 사이의 각도로 닮음을 재는 함수)라는 것. 차원 수는 반드시 임베딩 모델의 출력과 맞춰야 합니다 — 여기서 어긋나면 인덱스가 벡터를 받아 주지 않습니다.</p>
 
 <h3>다섯 걸음 — 리트리버를 조립하고, 묻는다</h3>
 
@@ -197,14 +197,14 @@ result = retriever.search(query_text="장난감들이 몰래 살아 움직이는
 
 <h3>여기서 한 발 더</h3>
 
-<p>오늘 만든 것은 순수한 벡터 검색기입니다. 냉정히 말하면 아직 그래프의 힘은 절반도 쓰지 않았습니다 — 찾아낸 영화 노드에서 <em>ACTED_IN</em>을 타고 배우로, <em>IN_GENRE</em>를 타고 장르로, <em>RATED</em>를 타고 취향이 비슷한 사용자로 걸어 나가는 순간부터가 <a href="/p/gdb-graphrag/">GraphRAG</a>의 본편입니다. 그래도 순서는 이쪽이 맞습니다. 벡터로 <strong>건지고</strong>, 그래프로 <strong>걷는다</strong> — 오늘 완성한 리트리버가 그 첫 동사입니다. 이 위키의 <a href="/p/kgs-ai-layer/">기계판독 계층</a>이 그래 왔듯, 검색의 품질은 결국 저장의 품질에서 나옵니다. 줄거리를 정성껏 심어 둔 덕에 검색이 이야기를 알아본 것입니다.</p>
+<p>오늘 만든 것은 순수한 벡터 검색기입니다. 아직 그래프의 힘은 절반도 쓰지 않았습니다 — 찾아낸 영화 노드에서 <em>ACTED_IN</em>을 타고 배우로, <em>IN_GENRE</em>를 타고 장르로, <em>RATED</em>를 타고 취향이 비슷한 사용자로 걸어 나가는 순간부터가 <a href="/p/gdb-graphrag/">GraphRAG</a>의 본편입니다. 그래도 순서는 이쪽이 맞습니다. 벡터로 <strong>건지고</strong>, 그래프로 <strong>걷는다</strong> — 오늘 완성한 리트리버가 그 첫 동사입니다. 검색이 이야기를 알아본 것은 줄거리를 정성껏 심어 둔 덕입니다. 이 위키가 문서마다 개념과 관계를 <a href="/p/kgs-ai-layer/">기계가 읽을 수 있는 형태</a>로 담아 두는 것도 같은 이유에서입니다.</p>
 
 <div class="note">
     <span class="nh">사실검증 노트</span>
     실습 절차와 실행 결과(임베딩 100편, 토이 스토리 검색 1위, 총기 소재 질의의 0.93 유사도)는 제공받은 시연 녹취를 재구성한 것으로, 이 위키가 동일 환경을 재실행하지는 않았다. 코드와 문법은 공식 문서로 교차검증했다 — <a href="https://neo4j.com/docs/neo4j-graphrag-python/current/" target="_blank" rel="noopener">neo4j-graphrag-python 문서</a>의 VectorRetriever(driver·index_name·embedder·return_properties, search의 query_text·top_k), Neo4j의 CREATE VECTOR INDEX 문법(vector.dimensions·vector.similarity_function), <a href="https://neo4j.com/labs/" target="_blank" rel="noopener">Neo4j 샌드박스</a>의 Recommendations(MovieLens 계열) 예제 데이터셋. 시연 당시 패키지명은 neo4j-genai였으나 현재 neo4j-graphrag로 개명되었고, text-embedding-ada-002는 레거시 모델이라 신규 구축에는 text-embedding-3 계열이 권장된다. 임베딩 공간 그림은 개념 모식도이며 실측 좌표가 아니다.
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">분류</span> AI · GraphDB &middot; <span class="pr-k">생성일자</span> 2026-08-09 &middot; <span class="pr-k">수정일자</span> 2026-08-09</p>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · GraphDB &middot; <span class="pr-k">생성일자</span> 2026-08-09 &middot; <span class="pr-k">수정일자</span> 2026-08-10</p>
 
 <nav class="pr-rel"><h2>연관 문서</h2>
 <ul><li><a href="/p/gdb-graphrag/">그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다</a></li><li><a href="/p/sb-level3/">레벨 3 · 의미로 찾기 (시맨틱 검색·벡터DB)</a></li></ul>

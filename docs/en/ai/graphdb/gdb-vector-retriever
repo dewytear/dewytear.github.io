@@ -117,7 +117,7 @@ OPTIONS {indexConfig: {
   `vector.similarity_function`: 'cosine'
 }}</code></pre>
 
-<p>The two options say something simple: the vectors this index handles are 1,536-dimensional, and &ldquo;near&rdquo; is judged by cosine similarity (likeness measured as the angle between vectors). <strong>The dimension count must match the embedding model's output</strong> — get this wrong and the index refuses your vectors.</p>
+<p>The two options say something simple: the vectors this index handles are 1,536-dimensional, and &ldquo;near&rdquo; is judged by cosine similarity (likeness measured as the angle between vectors). The dimension count must match the embedding model's output — get this wrong and the index refuses your vectors.</p>
 
 <h3>Step five — assemble the retriever, and ask</h3>
 
@@ -137,7 +137,7 @@ result = retriever.search(query_text="toys that secretly come alive", top_k=3)</
 
 <h3>One step further</h3>
 
-<p>What we built today is a pure vector searcher. Bluntly: it hasn't used half of the graph's power yet — the moment you walk from a found movie node along <em>ACTED_IN</em> to its actors, along <em>IN_GENRE</em> to its genre, along <em>RATED</em> to users with similar taste, that's where <a href="#!gdb-graphrag">GraphRAG</a> proper begins. But this order is the right one. Cast with vectors, <strong>then</strong> walk with the graph — today's retriever is the first of those two verbs. As this wiki's own <a href="#!kgs-ai-layer">machine-readable layer</a> has long demonstrated, search quality is storage quality in disguise: the search recognised the story because the story was planted with care.</p>
+<p>What we built today is a pure vector searcher. It hasn't used half of the graph's power yet — the moment you walk from a found movie node along <em>ACTED_IN</em> to its actors, along <em>IN_GENRE</em> to its genre, along <em>RATED</em> to users with similar taste, that's where <a href="#!gdb-graphrag">GraphRAG</a> proper begins. But this order is the right one. Cast with vectors, <strong>then</strong> walk with the graph — today's retriever is the first of those two verbs. The search recognised the story because the story was planted with care. That is also why this wiki keeps each document's concepts and relations in a <a href="#!kgs-ai-layer">form machines can read</a>.</p>
 
 <div class="note">
     <span class="nh">Fact-check note</span>

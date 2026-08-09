@@ -10,13 +10,13 @@
 <li><strong>GraphRAG</strong> — a RAG whose corpus is stored not as loose snippets but as a <strong>connected graph</strong>, so retrieval can pull in the surrounding context along with each hit.</li>
 </ul>
 
-<p>These three form a single chain: <strong>store relationships (graph DB) &rarr; knowledge becomes a web (knowledge graph) &rarr; search the web whole and the answer gains evidence (GraphRAG).</strong> Let's walk the chain from the front.</p>
+<p>These three form a single chain: <strong>store relationships (graph DB) &rarr; knowledge becomes a web (knowledge graph) &rarr; search the web whole and the answer gains evidence (GraphRAG).</strong></p>
 
 <h3>Graph DB — pathfinding instead of JOINs</h3>
 
 <p>The database most of us know is the relational database (RDB). Data piles up <strong>table by table</strong> — a members table, a ratings table, a movies table — and relationships between tables are reconstructed at query time with <strong>JOINs</strong> (an operation that stitches two tables together on a shared column). Two tables need one join; five tables need four — the deeper the relationship, the higher the stitching cost.</p>
 
-<p>A graph DB goes the other way: <strong>relationships are stored as arrows (edges) from the start</strong>. When the question &ldquo;which action movies did person A rate highly?&rdquo; arrives, you don't stitch tables — you <strong>start at node A, walk the rating edge, then walk one more genre edge</strong>, and you've arrived. It transplants the way people trace relationships in their heads almost directly into a data structure, so a drawn graph reads like a sentence — <em>Person A &rarr;(RATED 5.0)&rarr; Movie X &rarr;(GENRE)&rarr; Action</em>.</p>
+<p>A graph DB goes the other way: <strong>relationships are stored as arrows (edges) from the start</strong>. When the question &ldquo;which action movies did person A rate highly?&rdquo; arrives, you don't stitch tables — you start at node A, walk the rating edge, then walk one more genre edge, and you've arrived. It transplants the way people trace relationships in their heads almost directly into a data structure, so a drawn graph reads like a sentence — <em>Person A &rarr;(RATED 5.0)&rarr; Movie X &rarr;(GENRE)&rarr; Action</em>.</p>
 
 <div class="diagram">
 <svg viewBox="0 0 700 300" role="img" aria-label="RDB versus graph DB: the left side stitches tables with joins, the right side walks edges from node to node to reach the answer">
@@ -74,7 +74,7 @@ RETURN m.title, r.score</code></pre>
 
 <h3>GraphRAG — stitch the chunks, fetch the neighborhood</h3>
 
-<p>GraphRAG sews that gap up with a graph. Chunks become <strong>nodes</strong>, and the relationships between them — same document, adjacent order, mention of the same entity (person, product, event) — become <strong>edges</strong>. Retrieval turns into two steps: first a vector search finds chunks close to the question (cast a wide net), then <strong>edges are followed to pull in the neighboring context</strong> (walk deep). Not one snippet but the snippet's whole <strong>neighborhood</strong> becomes the evidence.</p>
+<p>GraphRAG sews that gap up with a graph. Chunks become <strong>nodes</strong>, and the relationships between them — same document, adjacent order, mention of the same entity (person, product, event) — become <strong>edges</strong>. Retrieval turns into two steps: first a vector search finds chunks close to the question (cast a wide net), then the retriever follows edges to pull in the neighboring context (walk deep). Not one snippet but the snippet's whole <strong>neighborhood</strong> becomes the evidence.</p>
 
 <div class="diagram">
 <svg viewBox="0 0 700 320" role="img" aria-label="Vector RAG versus GraphRAG: on the left, chunks float unconnected; on the right, articles and content chunks link around a category node">
@@ -125,9 +125,9 @@ RETURN m.title, r.score</code></pre>
 
 <h3>Ontology and graph schema — the blueprint of the web</h3>
 
-<p>Before piling up a graph, something must be decided: <strong>which kinds of nodes and which kinds of relationships you will admit</strong>. That rule book is the <strong>ontology</strong> (a standard frame for organizing knowledge), and its concrete form in a graph DB's labels and properties is the <strong>graph schema</strong>. It is the work of writing down, as a specification, the concepts people use tacitly at work — so that <strong>the AI reads the same map humans do</strong>.</p>
+<p>Before piling up a graph, something must be decided: <strong>which kinds of nodes and which kinds of relationships you will admit</strong>. That rule book is the <strong>ontology</strong> (a standard frame for organizing knowledge), and its concrete form in a graph DB's labels and properties is the <strong>graph schema</strong>. It is the work of writing down, as a specification, the concepts people use tacitly at work — so that the AI reads the same map humans do.</p>
 
-<p>Education makes the intuition easy. A knowledge map that records <strong>prerequisite relations</strong> between concepts — &ldquo;equations come before quadratic functions&rdquo; — lets a tutoring system do better than drilling a struggling student on quadratics again and again: it can <strong>recommend the prerequisite equation problems one step upstream</strong>. The ontology becomes the <strong>baseline for inference</strong>. The taxonomy work product teams do for analytics — naming and nesting pages, sub-pages, click events — is the same lineage of work; an ontology is the larger frame that also records what each relationship <em>means</em>.</p>
+<p>Education makes the intuition easy. A knowledge map that records <strong>prerequisite relations</strong> between concepts — &ldquo;equations come before quadratic functions&rdquo; — lets a tutoring system do better than drilling a struggling student on quadratics again and again: it can recommend the prerequisite equation problems one step upstream. The ontology becomes the <strong>baseline for inference</strong>. The taxonomy work product teams do for analytics — naming and nesting pages, sub-pages, click events — is the same lineage of work; an ontology is the larger frame that also records what each relationship <em>means</em>.</p>
 
 <p>Put in order: <strong>ontology (which relationships are admitted) &rarr; graph schema (how they are written as labels/properties) &rarr; knowledge graph (the web filled with real data) &rarr; GraphRAG (searching that web)</strong>. Most of GraphRAG's quality is decided at this design stage.</p>
 
@@ -137,7 +137,7 @@ RETURN m.title, r.score</code></pre>
 
 <h3>Where it gets used</h3>
 
-<p><strong>Manufacturing and smart factories</strong> are a good example. Write the flood of failure logs as a graph of <em>equipment &rarr; part &rarr; symptom &rarr; cause &rarr; fix</em>, and when a new failure appears you reach past cases with the same symptom — and their verified fixes — by simply following the edges. A news service becomes <em>category &rarr; article &rarr; content chunk</em>; education becomes <em>concept &rarr; prerequisite &rarr; exercise</em> — the web's shape differs by domain, but the same method works anywhere <strong>relationships are half the answer</strong>. This is also where hyper-personalization connects: <strong>the links you know tacitly must be made explicit as a graph before an AI can walk them the way you do.</strong></p>
+<p><strong>Manufacturing and smart factories</strong> are a good example. Write the flood of failure logs as a graph of <em>equipment &rarr; part &rarr; symptom &rarr; cause &rarr; fix</em>, and when a new failure appears you reach past cases with the same symptom — and their verified fixes — by simply following the edges. A news service becomes <em>category &rarr; article &rarr; content chunk</em>; education becomes <em>concept &rarr; prerequisite &rarr; exercise</em> — the web's shape differs by domain, but the same method works anywhere the answer leans on how things relate to each other. This is also where hyper-personalization connects. The links you know tacitly have to be written down as a graph before an AI can walk them the way you do.</p>
 
 <h3>Getting started — draw it, export it, extract it automatically</h3>
 
@@ -152,7 +152,7 @@ pipeline = SimpleKGPipeline(
 )
 await pipeline.run_async(file_path="document.pdf")</code></pre>
 
-<p>Afterwards the document's entities and relations sit extracted in the graph, and the same package's retrievers carry you on to GraphRAG queries that blend vector search with graph traversal. When &ldquo;how do I even turn a document into a graph?&rdquo; feels daunting, this is the fastest first experiment. One more thing worth keeping: a RAG isn't done when it's built — it becomes usable when you <strong>evaluate whether it gives the answers you wanted</strong>.</p>
+<p>Afterwards the document's entities and relations sit extracted in the graph, and the same package's retrievers carry you on to GraphRAG queries that blend vector search with graph traversal. When &ldquo;how do I even turn a document into a graph?&rdquo; feels daunting, this is the fastest first experiment. One more thing worth keeping: a RAG isn't done when it's built — it becomes usable when you evaluate whether it gives the answers you wanted.</p>
 
 <h3>Where this wiki fits</h3>
 

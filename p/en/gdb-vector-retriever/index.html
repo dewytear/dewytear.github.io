@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-08-09T16:00:12+09:00",
- "dateModified": "2026-08-09T16:00:12+09:00"
+ "dateModified": "2026-08-10T01:38:00+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -177,7 +177,7 @@ OPTIONS {indexConfig: {
   `vector.similarity_function`: 'cosine'
 }}</code></pre>
 
-<p>The two options say something simple: the vectors this index handles are 1,536-dimensional, and &ldquo;near&rdquo; is judged by cosine similarity (likeness measured as the angle between vectors). <strong>The dimension count must match the embedding model's output</strong> — get this wrong and the index refuses your vectors.</p>
+<p>The two options say something simple: the vectors this index handles are 1,536-dimensional, and &ldquo;near&rdquo; is judged by cosine similarity (likeness measured as the angle between vectors). The dimension count must match the embedding model's output — get this wrong and the index refuses your vectors.</p>
 
 <h3>Step five — assemble the retriever, and ask</h3>
 
@@ -197,14 +197,14 @@ result = retriever.search(query_text="toys that secretly come alive", top_k=3)</
 
 <h3>One step further</h3>
 
-<p>What we built today is a pure vector searcher. Bluntly: it hasn't used half of the graph's power yet — the moment you walk from a found movie node along <em>ACTED_IN</em> to its actors, along <em>IN_GENRE</em> to its genre, along <em>RATED</em> to users with similar taste, that's where <a href="/p/en/gdb-graphrag/">GraphRAG</a> proper begins. But this order is the right one. Cast with vectors, <strong>then</strong> walk with the graph — today's retriever is the first of those two verbs. As this wiki's own <a href="/p/en/kgs-ai-layer/">machine-readable layer</a> has long demonstrated, search quality is storage quality in disguise: the search recognised the story because the story was planted with care.</p>
+<p>What we built today is a pure vector searcher. It hasn't used half of the graph's power yet — the moment you walk from a found movie node along <em>ACTED_IN</em> to its actors, along <em>IN_GENRE</em> to its genre, along <em>RATED</em> to users with similar taste, that's where <a href="/p/en/gdb-graphrag/">GraphRAG</a> proper begins. But this order is the right one. Cast with vectors, <strong>then</strong> walk with the graph — today's retriever is the first of those two verbs. The search recognised the story because the story was planted with care. That is also why this wiki keeps each document's concepts and relations in a <a href="/p/en/kgs-ai-layer/">form machines can read</a>.</p>
 
 <div class="note">
     <span class="nh">Fact-check note</span>
     The procedure and run results (100 plots embedded, Toy Story ranked first, ~0.93 similarity on the shooting-incident query) are reconstructed from a demo transcript provided to this wiki; this wiki did not re-run the same environment. Code and syntax were cross-checked against primary sources — the <a href="https://neo4j.com/docs/neo4j-graphrag-python/current/" target="_blank" rel="noopener">neo4j-graphrag-python docs</a> (VectorRetriever's driver, index_name, embedder, return_properties; search's query_text and top_k), Neo4j's CREATE VECTOR INDEX syntax (vector.dimensions, vector.similarity_function), and the <a href="https://neo4j.com/labs/" target="_blank" rel="noopener">Neo4j Sandbox</a> Recommendations (MovieLens-family) dataset. The package was named neo4j-genai at the time of the demo and has since been renamed neo4j-graphrag; text-embedding-ada-002 is a legacy model, with the text-embedding-3 family recommended for new builds. The embedding-space figure is a conceptual schematic, not measured coordinates.
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · GraphDB &middot; <span class="pr-k">Created</span> 2026-08-09 &middot; <span class="pr-k">Updated</span> 2026-08-09</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · GraphDB &middot; <span class="pr-k">Created</span> 2026-08-09 &middot; <span class="pr-k">Updated</span> 2026-08-10</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
 <ul><li><a href="/p/en/gdb-graphrag/">Graph Databases &amp; GraphRAG — Store the Relationships, Change the Answers</a></li><li><a href="/p/en/sb-level3/">Level 3 · Searching by meaning (semantic search, vector DB)</a></li></ul>
