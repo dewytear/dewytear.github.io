@@ -1,0 +1,164 @@
+<h2>그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다</h2>
+
+<p class="scn-sub">표 대신 관계를 저장하는 그래프 데이터베이스에서 출발해, 그 위에 지식 그래프를 쌓고, 그 그래프로 AI의 답변 품질을 끌어올리는 GraphRAG까지 — 개념과 예제 중심으로 한 번에 잇는 입문 해설입니다.</p>
+
+<h3>먼저 낯선 말 세 개부터</h3>
+
+<ul>
+<li><strong>그래프 데이터베이스(그래프 DB)</strong> — 데이터를 표(테이블)가 아니라 <strong>점(노드)과 선(엣지)</strong>으로 저장하는 데이터베이스입니다. &ldquo;누가 무엇을 했다&rdquo;라는 관계 자체가 저장의 기본 단위입니다.</li>
+<li><strong>RAG</strong> — AI에게 질문할 때마다 자료 더미에서 관련 조각을 <strong>그때그때 찾아 붙여 주는</strong>(Retrieval-Augmented Generation, 검색 증강 생성) 방식입니다. 오픈북 시험처럼, 답하기 전에 근거부터 펴 놓게 만듭니다.</li>
+<li><strong>GraphRAG(그래프 RAG)</strong> — 그 &lsquo;자료 더미&rsquo;를 낱낱의 조각이 아니라 <strong>서로 이어진 그래프</strong>로 저장해 두고, 검색할 때 이웃 맥락까지 함께 끌어오는 RAG입니다.</li>
+</ul>
+
+<p>이 셋은 한 줄로 이어집니다. <strong>관계를 저장하면(그래프 DB) &rarr; 지식이 그물이 되고(지식 그래프) &rarr; 그물째 검색해 답의 근거가 풍부해진다(GraphRAG).</strong> 아래에서 이 사슬을 앞에서부터 하나씩 풀겠습니다.</p>
+
+<h3>그래프 DB — 조인 대신 길찾기</h3>
+
+<p>우리가 익숙한 데이터베이스는 관계형 데이터베이스(RDB)입니다. 회원 표, 평점 표, 영화 표처럼 <strong>표 단위로</strong> 데이터를 쌓고, 표와 표 사이의 관계는 조회하는 순간에 <strong>조인(JOIN, 두 표를 공통 열로 이어 붙이는 연산)</strong>으로 복원합니다. 표 두 개면 조인 한 번, 표 다섯 개면 조인 네 번 — 관계가 깊어질수록 이어 붙이는 비용이 커집니다.</p>
+
+<p>그래프 DB는 반대로 갑니다. <strong>관계를 처음부터 화살표(엣지)로 저장</strong>해 둡니다. &ldquo;A라는 사람이 높은 평점을 준 액션 영화는?&rdquo;이라는 질문이 오면, 표를 이어 붙이는 게 아니라 <strong>A 노드에서 출발해 평가 엣지를 따라 걷고, 장르 엣지로 한 번 더 걸어가면</strong> 답에 도달합니다. 사람이 머릿속으로 관계를 떠올리는 과정을 거의 그대로 자료 구조로 옮긴 셈이라, 그려 놓으면 문장처럼 읽힙니다 — <em>사람 A &rarr;(평가함 5.0)&rarr; 영화 X &rarr;(장르)&rarr; 액션</em>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 300" role="img" aria-label="RDB와 그래프 DB 비교: 왼쪽은 표들을 조인으로 이어 붙이고, 오른쪽은 노드에서 엣지를 따라 걸어 답에 도달한다">
+    <text class="d-label" x="12" y="26">RDB — 표를 조인해 잇는다</text>
+    <rect class="d-box" x="20" y="52" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="80" y="80" text-anchor="middle">회원 표</text>
+    <rect class="d-box" x="196" y="52" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="256" y="80" text-anchor="middle">평점 표</text>
+    <rect class="d-box" x="108" y="170" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="168" y="198" text-anchor="middle">영화 표</text>
+    <line class="d-edge" x1="140" y1="75" x2="196" y2="75"/>
+    <text class="d-sub" x="168" y="66" text-anchor="middle">JOIN</text>
+    <line class="d-edge" x1="238" y1="98" x2="192" y2="170"/>
+    <text class="d-sub" x="238" y="140" text-anchor="middle">JOIN</text>
+    <text class="d-sub" x="168" y="252" text-anchor="middle">관계는 조회하는 순간</text>
+    <text class="d-sub" x="168" y="270" text-anchor="middle">연산으로 복원된다</text>
+
+    <line class="d-edge" x1="350" y1="14" x2="350" y2="286" stroke-dasharray="4 5"/>
+
+    <text class="d-label" x="374" y="26">그래프 DB — 관계를 따라 걷는다</text>
+    <rect class="d-box" x="374" y="52" width="100" height="46" rx="9"/>
+    <text class="d-label sm" x="424" y="80" text-anchor="middle">사람 A</text>
+    <line class="d-edge" x1="474" y1="75" x2="556" y2="75"/><polygon class="d-arrow" points="556,70 564,75 556,80"/>
+    <text class="d-sub" x="516" y="66" text-anchor="middle">평가함 5.0</text>
+    <rect class="d-box" x="564" y="52" width="100" height="46" rx="9"/>
+    <text class="d-label sm" x="614" y="80" text-anchor="middle">영화 X</text>
+    <line class="d-edge" x1="614" y1="98" x2="614" y2="164"/><polygon class="d-arrow" points="609,164 614,172 619,164"/>
+    <text class="d-sub" x="592" y="136" text-anchor="middle">장르</text>
+    <rect class="d-box accent" x="564" y="172" width="100" height="46" rx="9"/>
+    <text class="d-label sm" x="614" y="200" text-anchor="middle">액션</text>
+    <text class="d-sub" x="519" y="252" text-anchor="middle">관계가 저장 단위 —</text>
+    <text class="d-sub" x="519" y="270" text-anchor="middle">질문은 길찾기가 된다</text>
+</svg>
+<div class="d-cap">같은 데이터, 다른 저장 — RDB는 <strong>관계를 계산</strong>하고, 그래프 DB는 <strong>관계를 저장</strong>합니다. &ldquo;A가 높은 평점을 준 액션 영화&rdquo;는 오른쪽에서 화살표 두 번이면 닿습니다.</div>
+</div>
+
+<p>이 저장 모델의 정식 이름이 <strong>프로퍼티 그래프</strong>입니다. 노드와 엣지 양쪽에 <strong>라벨</strong>(종류: 사람, 영화&hellip;)과 <strong>속성</strong>(이름, 평점, 날짜&hellip;)을 붙일 수 있어, 현실의 &lsquo;주어&ndash;동사&ndash;목적어&rsquo;를 거의 그대로 담습니다. 대표 구현이 Neo4j이고, 이 위키의 <a href="#!kgs-edges">지식 그래프 모델</a>도 같은 프로퍼티 그래프 계열입니다.</p>
+
+<h3>사이퍼 — 그래프에게 묻는 말</h3>
+
+<p>RDB에 SQL이 있듯 그래프 DB에는 <strong>사이퍼(Cypher)</strong>라는 질의 언어가 있습니다. 재미있는 점은 문법이 <strong>그림을 닮았다</strong>는 것 — 노드는 괄호 <code>( )</code>, 엣지는 대괄호 <code>[ ]</code>, 방향은 화살표로 적습니다. 위의 질문을 사이퍼로 옮기면 이렇게 됩니다.</p>
+
+<pre><code><span class="c">// A가 4점 이상을 준 액션 영화 찾기 — 패턴이 곧 그림</span>
+MATCH (a:사람 {이름: 'A'})-[r:평가함]->(m:영화)-[:장르]->(:장르 {이름: '액션'})
+WHERE r.점수 >= 4.0
+RETURN m.제목, r.점수</code></pre>
+
+<p><code>(a:사람)-[r:평가함]-&gt;(m:영화)</code>를 소리 내어 읽으면 &ldquo;사람 a가 영화 m을 평가했다&rdquo;입니다. 조인 연산을 머릿속에서 조립할 필요 없이, <strong>찾고 싶은 관계의 모양을 그대로 그려서 묻는</strong> 것이 그래프 질의의 감각입니다.</p>
+
+<h3>RAG 복습 — 오픈북 시험</h3>
+
+<p>RAG는 AI의 답변에 근거를 붙이는 표준 기법입니다. 질문이 오면 ①자료 창고에서 관련 조각을 검색하고(Retrieval) ②그 조각을 질문에 증강해 붙인 뒤(Augmented) ③그 안에서 답을 생성하게(Generation) 합니다. 모델이 기억에 의존해 그럴듯한 거짓말(할루시네이션)을 지어내는 대신, <strong>출처가 있는 답</strong>을 하게 되지요. 웹 검색과 다른 점은 <strong>나만의 자료</strong> — 웹에 없는 사내 문서, 개인 노트, 장비 매뉴얼 — 를 근거로 쓸 수 있다는 데 있습니다. 조직 안 전문가의 암묵지(문서화되지 않은 경험 지식)를 언제든 꺼내 쓰는 서랍을 다는 일에 가깝습니다.</p>
+
+<p>보통의 RAG는 자료를 <strong>벡터 데이터베이스</strong>에 넣습니다. 문서가 길므로 일정 길이의 <strong>청크(조각)</strong>로 잘라, 각 조각을 의미를 담은 숫자 목록(임베딩)으로 바꿔 저장하고, 질문과 의미가 가까운 조각을 골라 옵니다. 여기까지는 훌륭합니다. 문제는 <strong>자르는 순간 맥락이 끊긴다</strong>는 것 — 조각들은 서로 남남이 되어, &lsquo;이 조각이 어느 문서의 어느 장에 속하고 어떤 조각과 이어지는지&rsquo;를 검색이 알 수 없습니다.</p>
+
+<h3>GraphRAG — 조각을 잇고, 그물째 가져온다</h3>
+
+<p>GraphRAG는 이 단절을 그래프로 꿰맵니다. 청크를 <strong>노드</strong>로 만들고, 청크끼리의 관계 — 같은 문서 소속, 앞뒤 순서, 같은 개체(사람&middot;제품&middot;사건) 언급 — 를 <strong>엣지</strong>로 저장합니다. 검색은 두 단계가 됩니다. 먼저 벡터 검색으로 질문과 가까운 조각을 찾고(넓게 건지기), 이어서 <strong>그 조각에서 엣지를 따라 이웃 맥락을 함께 끌어옵니다</strong>(깊게 걷기). 조각 하나가 아니라 조각이 속한 <strong>동네</strong>가 통째로 근거가 되는 것입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 320" role="img" aria-label="벡터 RAG와 GraphRAG 비교: 왼쪽은 청크들이 서로 연결 없이 떠 있고, 오른쪽은 카테고리 노드를 중심으로 기사와 내용 청크가 이어져 있다">
+    <text class="d-label" x="12" y="26">벡터 RAG — 조각이 따로 논다</text>
+    <rect class="d-box" x="24" y="56" width="90" height="40" rx="9"/>
+    <text class="d-label sm" x="69" y="81" text-anchor="middle">청크 1</text>
+    <rect class="d-box" x="180" y="76" width="90" height="40" rx="9"/>
+    <text class="d-label sm" x="225" y="101" text-anchor="middle">청크 2</text>
+    <rect class="d-box" x="60" y="150" width="90" height="40" rx="9"/>
+    <text class="d-label sm" x="105" y="175" text-anchor="middle">청크 3</text>
+    <rect class="d-box" x="210" y="170" width="90" height="40" rx="9"/>
+    <text class="d-label sm" x="255" y="195" text-anchor="middle">청크 4</text>
+    <text class="d-sub" x="170" y="252" text-anchor="middle">비슷한 조각만 낱개로 —</text>
+    <text class="d-sub" x="170" y="270" text-anchor="middle">문서의 맥락은 끊겨 있다</text>
+
+    <line class="d-edge" x1="350" y1="14" x2="350" y2="306" stroke-dasharray="4 5"/>
+
+    <text class="d-label" x="374" y="26">GraphRAG — 조각이 이어져 있다</text>
+    <rect class="d-box accent" x="480" y="52" width="110" height="42" rx="9"/>
+    <text class="d-label sm" x="535" y="78" text-anchor="middle">카테고리</text>
+    <rect class="d-box" x="380" y="140" width="100" height="40" rx="9"/>
+    <text class="d-label sm" x="430" y="165" text-anchor="middle">기사 1</text>
+    <rect class="d-box" x="580" y="140" width="100" height="40" rx="9"/>
+    <text class="d-label sm" x="630" y="165" text-anchor="middle">기사 2</text>
+    <rect class="d-box" x="380" y="228" width="100" height="40" rx="9"/>
+    <text class="d-label sm" x="430" y="253" text-anchor="middle">내용 청크</text>
+    <rect class="d-box" x="580" y="228" width="100" height="40" rx="9"/>
+    <text class="d-label sm" x="630" y="253" text-anchor="middle">내용 청크</text>
+    <line class="d-edge" x1="500" y1="94" x2="440" y2="140"/><polygon class="d-arrow" points="443,132 436,144 448,140"/>
+    <line class="d-edge" x1="572" y1="94" x2="622" y2="140"/><polygon class="d-arrow" points="614,138 626,144 620,132"/>
+    <line class="d-edge" x1="430" y1="180" x2="430" y2="228"/><polygon class="d-arrow" points="425,220 430,228 435,220"/>
+    <line class="d-edge" x1="630" y1="180" x2="630" y2="228"/><polygon class="d-arrow" points="625,220 630,228 635,220"/>
+    <line class="d-edge" x1="480" y1="160" x2="580" y2="160" stroke-dasharray="3 4"/>
+    <text class="d-sub" x="530" y="152" text-anchor="middle">연관</text>
+</svg>
+<div class="d-cap">왼쪽은 조각을 <strong>낱개로 골라오고</strong>, 오른쪽은 조각이 속한 <strong>동네째 가져옵니다</strong> — 답의 설득력 차이는 여기서 납니다.</div>
+</div>
+
+<p>효과는 세 갈래로 나타납니다.</p>
+
+<ul>
+<li><strong>여러 걸음 추론(멀티홉)</strong> — &ldquo;정치 카테고리의 최신 뉴스&rdquo;라는 질문은 벡터 검색만으로는 어색합니다(&lsquo;정치&rsquo;라는 단어와 비슷한 조각을 찾는 게 아니니까). 그래프라면 <em>카테고리 노드 &rarr; 소속 기사들 &rarr; 각 기사의 내용 청크</em>로 걸어가 정확히 그 집합을 모아 옵니다. 모아진 기사들이 곧 답의 근거 목록입니다.</li>
+<li><strong>계층과 소속이 보인다</strong> — 조각이 어느 문서&middot;어느 장에 속하는지, 어떤 문서와 연관되는지가 구조로 남아 있어, 모델이 &ldquo;맥락이 끊긴 조각 하나&rdquo;가 아니라 <strong>구조를 아는 상태</strong>로 답합니다.</li>
+<li><strong>근거의 시각화</strong> — 답이 어느 노드들을 밟고 만들어졌는지를 그래프 그림으로 함께 보여 줄 수 있습니다. &lsquo;답 + 답의 지도&rsquo;가 같이 나오는 셈이라, 검증하고 신뢰하기가 쉬워집니다.</li>
+</ul>
+
+<p>정리하면 모델은 그대로인데 <strong>모델에게 건네는 맥락의 짜임새</strong>가 달라지는 것입니다. 답이 한두 문단 안에 얌전히 들어 있는 질문이라면 벡터 RAG로 충분하고, 답이 <strong>여러 문서에 흩어진 관계</strong>에 걸쳐 있을 때 GraphRAG가 제값을 합니다. 실무에서는 둘을 섞은 하이브리드 — 벡터로 건지고 그래프로 걷는 — 구성이 일반적입니다.</p>
+
+<h3>온톨로지와 그래프 스키마 — 그물의 설계도</h3>
+
+<p>그래프를 쌓기 전에 정해야 할 것이 있습니다. <strong>어떤 종류의 노드와 어떤 종류의 관계를 인정할 것인가.</strong> 이 규칙 체계가 <strong>온톨로지</strong>(지식을 정리하는 표준 틀)이고, 그것을 그래프 DB의 라벨&middot;속성으로 구체화한 것이 <strong>그래프 스키마</strong>입니다. 사람들이 일상&middot;업무에서 암묵적으로 쓰는 개념과 그 사이의 규칙을 명세서로 적어, <strong>AI도 사람과 같은 지도를 보게</strong> 만드는 작업입니다.</p>
+
+<p>교육 도메인의 예가 직관적입니다. 개념과 개념 사이에 <strong>선행 관계</strong>를 적어 둔 지식맵 — &ldquo;2차 함수를 배우려면 방정식이 먼저&rdquo; — 이 있으면, 2차 함수에서 자꾸 틀리는 학생에게 2차 함수 문제만 반복해 주는 대신 <strong>한 걸음 앞의 방정식 문제를 함께 추천</strong>할 수 있습니다. 온톨로지가 곧 <strong>추론의 기준선</strong>이 되는 것입니다. 소프트웨어 제품 팀이 데이터 분석을 위해 페이지&ndash;하위 페이지&ndash;클릭 이벤트의 이름과 위계를 설계하는 택소노미(분류 체계) 작업도 같은 계보의 일입니다 — 온톨로지가 관계의 <em>의미</em>까지 적는 더 큰 틀이라는 점이 다를 뿐입니다.</p>
+
+<p>순서를 붙이면 이렇게 됩니다. <strong>온톨로지(무엇과 무엇의 관계를 인정하나) &rarr; 그래프 스키마(그걸 라벨·속성으로 어떻게 적나) &rarr; 지식 그래프(실제 데이터로 채운 그물) &rarr; GraphRAG(그물을 검색에 쓰기)</strong>. GraphRAG의 품질은 대부분 이 설계 단계에서 결정됩니다.</p>
+
+<h3>이름이 비슷한 남 — LangGraph</h3>
+
+<p>이름에 &lsquo;그래프&rsquo;가 들어가서 자주 혼동되는 것이 <strong>LangGraph(랭그래프)</strong>입니다. 이것은 지식을 담는 그래프가 아니라 <strong>AI 에이전트의 작업 흐름을 짜는 프레임워크</strong>입니다 — 질문 의도 분석, 정보 검색, 답변 생성 같은 <strong>작업 단계 하나하나를 노드</strong>로 정의하고, 어떤 순서&middot;조건으로 실행할지를 엣지로 잇습니다. 즉 GraphRAG의 그래프는 <strong>지식의 지도</strong>이고, LangGraph의 그래프는 <strong>일의 순서도</strong>입니다. 둘은 흔히 함께 쓰입니다 — LangGraph로 짠 에이전트의 &lsquo;검색&rsquo; 노드 안에서 GraphRAG를 호출하는 식입니다. 만든 흐름이 의도대로 도는지는 LangGraph Studio라는 시각화 도구로 단계별 실행을 눈으로 확인할 수 있습니다.</p>
+
+<h3>어디에 쓰이나</h3>
+
+<p><strong>제조&middot;스마트 팩토리</strong>가 좋은 예입니다. 공정에서 쏟아지는 고장 이력을 <em>설비 &rarr; 부위 &rarr; 증상 &rarr; 원인 &rarr; 해결책</em>의 그래프로 적어 두면, 새 고장이 났을 때 같은 증상의 과거 사례와 검증된 해결책까지 관계를 따라 즉시 도달합니다. 뉴스 서비스라면 <em>카테고리 &rarr; 기사 &rarr; 내용 청크</em>로, 교육이라면 <em>개념 &rarr; 선행 개념 &rarr; 문항</em>으로 — 도메인마다 그물의 모양은 다르지만 &ldquo;관계가 답의 절반&rdquo;인 곳이라면 어디든 같은 방식이 통합니다. 조직&middot;개인의 암묵지를 에이전트에게 이식하는 초개인화 흐름과 맞물리는 지점도 여기입니다: <strong>내가 암묵적으로 아는 연결을 그래프로 명시해야 AI도 나처럼 걸을 수 있습니다.</strong></p>
+
+<h3>시작하기 — 그리고, 내보내고, 자동으로 뽑기</h3>
+
+<p><strong>1단계는 그냥 그려 보기입니다.</strong> Neo4j Labs가 만든 무료 웹 도구 <a href="https://arrows.app" target="_blank" rel="noopener">arrows.app</a>은 마인드맵 그리듯 노드를 끌어다 그래프를 스케치하는 화이트보드입니다. 머릿속 생각이나 자동화하고 싶은 업무를 무작정 노드와 화살표로 펼쳐 보는 것 — 이것이 사실상의 온톨로지 초안 작업입니다. 다 그린 그림은 PNG&middot;SVG는 물론 <strong>사이퍼 문장으로 내보내기</strong>가 되어, 그대로 그래프 DB에 부어 넣어 진짜 지식 그래프로 만들 수 있습니다.</p>
+
+<p><strong>2단계는 문서를 자동으로 그래프로 바꾸기입니다.</strong> Neo4j의 공식 파이썬 패키지 <code>neo4j-graphrag</code>에는 지식 그래프 구축 파이프라인(<code>SimpleKGPipeline</code>)이 들어 있어, PDF 문서를 넣으면 <strong>청크 분할 &rarr; 개체&middot;관계 추출 &rarr; 임베딩 &rarr; 그래프 적재</strong>를 한 번에 해 줍니다.</p>
+
+<pre><code><span class="c"># PDF 한 편을 지식 그래프로 — 핵심은 사실상 이 한 줄</span>
+pipeline = SimpleKGPipeline(
+    llm=llm, driver=neo4j_driver,
+    embedder=embedder, from_pdf=True,
+)
+await pipeline.run_async(file_path="문서.pdf")</code></pre>
+
+<p>돌리고 나면 문서 속 개체와 관계가 그래프로 추출되어 있고, 같은 패키지의 검색기(리트리버)로 벡터 검색과 그래프 탐색을 섞은 GraphRAG 질의까지 이어집니다. &ldquo;문서를 어떻게 그래프로 바꾸지?&rdquo;가 막막할 때 가장 빠른 첫 실험입니다. 만들고 끝이 아니라 <strong>원하는 답이 나오는지 평가</strong>까지 붙여야 쓸 만한 RAG가 된다는 점도 기억해 둘 만합니다.</p>
+
+<h3>이 위키와의 접점</h3>
+
+<p>이 위키가 GraphRAG를 돌리고 있는 것은 아닙니다. 그러나 재료는 같은 계보입니다 — 문서마다 개념을 뽑아 잇는 <a href="#!kgs-overview">지식 체계</a>, 그 결과로 서 있는 <a href="#!kgs-edges">프로퍼티 그래프 모델</a>, 그리고 기계가 통째로 집어갈 수 있는 <code>knowledge-graph.json</code> 내보내기까지. 이 글의 어휘로 말하면 이 위키는 <strong>온톨로지(kgs 문서 세트)와 지식 그래프(인덱스)를 이미 갖춘, GraphRAG-ready한 코퍼스</strong>인 셈입니다. 그래프를 직접 만져 보고 싶다면 이 위키의 <a href="#!graph">그래프 스튜디오</a>에서 노드와 엣지를 손으로 놓아 보는 것도 arrows.app과 같은 감각의 연습이 됩니다.</p>
+
+<div class="note">
+    <span class="nh">사실검증 노트</span>
+    개념 설명과 예제(영화 평점, 뉴스 카테고리, 교육 지식맵, 제조 고장 이력)는 제공받은 대담 녹취를 재구성한 것으로, 화자 신원은 다루지 않는다. 기술 사실은 공식 문서로 교차검증했다 — <a href="https://neo4j.com/docs/neo4j-graphrag-python/current/user_guide_kg_builder.html" target="_blank" rel="noopener">neo4j-graphrag-python 문서</a>(SimpleKGPipeline·from_pdf), <a href="https://neo4j.com/labs/arrows/" target="_blank" rel="noopener">arrows.app(Neo4j Labs)</a>의 사이퍼 내보내기, <a href="https://opencypher.org" target="_blank" rel="noopener">openCypher</a> 패턴 문법, LangChain의 LangGraph 문서(노드·엣지·상태 모델). 벡터 RAG의 청크 단절과 GraphRAG의 멀티홉 이점은 GraphRAG 서베이(arXiv 2501.00309)·HybridRAG(arXiv 2408.04948)의 정리와 일치한다. 사이퍼 예제의 한국어 라벨은 설명용이며, 실무 스키마는 보통 영문 라벨을 쓴다.
+</div>

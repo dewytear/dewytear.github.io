@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 
-이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 119개 문서 · 383개 개념.
+이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 120개 문서 · 386개 개념.
 
 License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 밝히면 자유롭게 인용·재사용할 수 있다.
 
@@ -12,8 +12,8 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - 정적 스냅샷 `https://dewytear.github.io/p/<name>/`(English는 `https://dewytear.github.io/p/en/<name>/`, 日本語는 `https://dewytear.github.io/p/ja/<name>/`): JS 없이 읽히는 문서 페이지 — 그래프 노드의 `page` 필드가 같은 주소를 가리킨다.
 - [AI 순회 가이드](https://dewytear.github.io/docs/ko/ai/map/ai-guide): 그래프를 어떻게 질의·순회·분석하는지의 계약(노드·엣지·개념 조인·계층).
 - [지식 인덱스](https://dewytear.github.io/data/knowledge-index.ko.json) · [내비 트리](https://dewytear.github.io/list) · [문서 날짜](https://dewytear.github.io/data/doc-dates.json) · [Atom 피드](https://dewytear.github.io/feed.xml)
-- English: 119/119개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
-- 日本語: 119/119개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
+- English: 120/120개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
+- 日本語: 120/120개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
 
 ## 지식 체계 (AI · Wiki · 지식 체계)
 - [지식은 어떻게 쌓이는가](https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-overview): World→Domain→System→Document 4계층과 문서 등재 파이프라인 — 불변 ID·물리 경로·결정론적 인덱스 빌드 · [EN](https://dewytear.github.io/docs/en/ai/wiki/knowledge-system/kgs-overview) · [JA](https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-overview)
@@ -130,6 +130,9 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [명령어 모음](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-commands): 설치부터 실행·취소까지 자주 쓰는 OMC 슬래시 명령어를 표로 정리한다. · [EN](https://dewytear.github.io/docs/en/ai/claude/plugin/omc/omc-commands) · [JA](https://dewytear.github.io/docs/ja/ai/claude/plugin/omc/omc-commands)
 - [빠른 참조 카드](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-quickref): 상황별로 자주 쓰는 OMC 명령을 묶은 치트시트다. · [EN](https://dewytear.github.io/docs/en/ai/claude/plugin/omc/omc-quickref) · [JA](https://dewytear.github.io/docs/ja/ai/claude/plugin/omc/omc-quickref)
 
+## GraphDB (AI · GraphDB)
+- [그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다](https://dewytear.github.io/docs/ko/ai/graphdb/gdb-graphrag): 표 대신 관계를 저장하는 그래프 데이터베이스에서 출발해 GraphRAG까지 한 사슬로 잇는 입문 해설 — RDB의 조인 대신 엣지를 따라 걷는 프로퍼티 그래프와 그림을 닮은 질의 언어 사이퍼(Cypher), 벡터 RAG의 청크 단절 문제를 그래프로 꿰매 이웃 맥락째 검색하는 GraphRAG(멀티홉 추론·계층 보존·근거 시각화), 그물의 설계도인 온톨로지와 그래프 스키마(교육 지식맵의 선행 관계 예), 이름만 비슷한 LangGraph(지식의 지도 vs 일의 순서도) 구분, 제조 고장 이력·뉴스 카테고리 등 도메인 사례, 그리고 arrows.app 스케치→사이퍼 내보내기→neo4j-graphrag 패키지(SimpleKGPipeline)로 PDF를 지식 그래프로 바꾸는 시작 경로까지 담았다 · [EN](https://dewytear.github.io/docs/en/ai/graphdb/gdb-graphrag) · [JA](https://dewytear.github.io/docs/ja/ai/graphdb/gdb-graphrag)
+
 ## News & Articles (AI · News & Articles · 2026)
 - [앤트로픽 미소스와 루프드 트랜스포머 — 하이젠버그 기고 읽기](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260622-mythos-looped): 하이젠버그 기고를 읽고, 루프드 트랜스포머가 무엇인지와 미소스·한국 기업 호재론의 사실과 추정을 가려 정리 · [EN](https://dewytear.github.io/docs/en/ai/news/2026/news-20260622-mythos-looped) · [JA](https://dewytear.github.io/docs/ja/ai/news/2026/news-20260622-mythos-looped)
 - [Fable 5 시대의 병목은 모델이 아니라 인간인가 — 타릭의 지도와 영토 프레임](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260709-thariq-fable5-unknowns): 타릭의 Fable 5 경험을 바탕으로 capability overhang, 지도와 영토, unknown 관리와 여섯 가지 실전 기법을 사실 검증과 외부 연구로 분석한다. · [EN](https://dewytear.github.io/docs/en/ai/news/2026/news-20260709-thariq-fable5-unknowns) · [JA](https://dewytear.github.io/docs/ja/ai/news/2026/news-20260709-thariq-fable5-unknowns)
@@ -178,7 +181,7 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [하네스 실행하기 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-run): 피참조 7회
 - [무엇을 담는가 — 지식 캡처](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-capture): 피참조 7회
 - [LLM Wiki — 개요](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-overview): 피참조 7회
-- [5단계 한눈에 보기](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-levels): 피참조 7회
 - [스킬의 특장점](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-strengths): 피참조 7회
 - [강의 개요와 목표](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-overview): 피참조 6회
-- [다 기록하는 사람, 발행하는 위키 — 지식 저장소에 대한 고찰](https://dewytear.github.io/docs/ko/ai/wiki/reflections/wr-knowledge-vault): 피참조 6회
+- [그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다](https://dewytear.github.io/docs/ko/ai/graphdb/gdb-graphrag): 피참조 6회
+- [5단계 한눈에 보기](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-levels): 피참조 6회
