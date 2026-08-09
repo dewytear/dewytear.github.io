@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>영화 줄거리로 영화 찾기 — Neo4j 샌드박스에서 만드는 첫 벡터 리트리버</title>
+<meta name="description" content="개념 편에 이어 손을 움직이는 실습기 — 설치 없이 Neo4j 샌드박스로 그래프 DB를 빌리고(MovieLens 계열 Recommendations 데이터: Movie·Genre·Actor·Director·User 노드와 데이터를 품은 RATED 관계), 사이퍼 몇 줄로 데이터를 산책한 뒤, 영화 줄거리 100편을 OpenAI 임베딩 모델로 1,536차원 벡터로 바꿔 plotEmbedding 속성에 심고, CREATE VECTOR INDEX(코사인 유사도)로 색인을 달고, neo4j-graphrag의 VectorRetriever(드라이버·인덱스·임베더·반환 속성 4개 파라미터)로 검색기를 조립한다. 토이 스토리 줄거리를 요약해 던지면 제목 없이도 그 영화가 1위로 돌아오는 것까지 — 단어가 아니라 이야기가 닮아서 찾아지는 벡터 검색의 감각과, 벡터로 건지고 그래프로 걷는 GraphRAG로의 다음 걸음을 잇는다">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/gdb-vector-retriever/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/gdb-vector-retriever/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/gdb-vector-retriever/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/gdb-vector-retriever/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/gdb-vector-retriever/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="영화 줄거리로 영화 찾기 — Neo4j 샌드박스에서 만드는 첫 벡터 리트리버">
+<meta property="og:description" content="개념 편에 이어 손을 움직이는 실습기 — 설치 없이 Neo4j 샌드박스로 그래프 DB를 빌리고(MovieLens 계열 Recommendations 데이터: Movie·Genre·Actor·Director·User 노드와 데이터를 품은 RATED 관계), 사이퍼 몇 줄로 데이터를 산책한 뒤, 영화 줄거리 100편을 OpenAI 임베딩 모델로 1,536차원 벡터로 바꿔 plotEmbedding 속성에 심고, CREATE VECTOR INDEX(코사인 유사도)로 색인을 달고, neo4j-graphrag의 VectorRetriever(드라이버·인덱스·임베더·반환 속성 4개 파라미터)로 검색기를 조립한다. 토이 스토리 줄거리를 요약해 던지면 제목 없이도 그 영화가 1위로 돌아오는 것까지 — 단어가 아니라 이야기가 닮아서 찾아지는 벡터 검색의 감각과, 벡터로 건지고 그래프로 걷는 GraphRAG로의 다음 걸음을 잇는다">
+<meta property="og:url" content="https://dewytear.github.io/p/gdb-vector-retriever/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="영화 줄거리로 영화 찾기 — Neo4j 샌드박스에서 만드는 첫 벡터 리트리버">
+<meta name="twitter:description" content="개념 편에 이어 손을 움직이는 실습기 — 설치 없이 Neo4j 샌드박스로 그래프 DB를 빌리고(MovieLens 계열 Recommendations 데이터: Movie·Genre·Actor·Director·User 노드와 데이터를 품은 RATED 관계), 사이퍼 몇 줄로 데이터를 산책한 뒤, 영화 줄거리 100편을 OpenAI 임베딩 모델로 1,536차원 벡터로 바꿔 plotEmbedding 속성에 심고, CREATE VECTOR INDEX(코사인 유사도)로 색인을 달고, neo4j-graphrag의 VectorRetriever(드라이버·인덱스·임베더·반환 속성 4개 파라미터)로 검색기를 조립한다. 토이 스토리 줄거리를 요약해 던지면 제목 없이도 그 영화가 1위로 돌아오는 것까지 — 단어가 아니라 이야기가 닮아서 찾아지는 벡터 검색의 감각과, 벡터로 건지고 그래프로 걷는 GraphRAG로의 다음 걸음을 잇는다">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "영화 줄거리로 영화 찾기 — Neo4j 샌드박스에서 만드는 첫 벡터 리트리버",
+ "description": "개념 편에 이어 손을 움직이는 실습기 — 설치 없이 Neo4j 샌드박스로 그래프 DB를 빌리고(MovieLens 계열 Recommendations 데이터: Movie·Genre·Actor·Director·User 노드와 데이터를 품은 RATED 관계), 사이퍼 몇 줄로 데이터를 산책한 뒤, 영화 줄거리 100편을 OpenAI 임베딩 모델로 1,536차원 벡터로 바꿔 plotEmbedding 속성에 심고, CREATE VECTOR INDEX(코사인 유사도)로 색인을 달고, neo4j-graphrag의 VectorRetriever(드라이버·인덱스·임베더·반환 속성 4개 파라미터)로 검색기를 조립한다. 토이 스토리 줄거리를 요약해 던지면 제목 없이도 그 영화가 1위로 돌아오는 것까지 — 단어가 아니라 이야기가 닮아서 찾아지는 벡터 검색의 감각과, 벡터로 건지고 그래프로 걷는 GraphRAG로의 다음 걸음을 잇는다",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/gdb-vector-retriever/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!gdb-vector-retriever",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-08-09T15:34:55+09:00",
+ "dateModified": "2026-08-09T15:34:55+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!gdb-vector-retriever">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/gdb-vector-retriever/" hreflang="en">English</a>
+  &middot; <a href="/p/ja/gdb-vector-retriever/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>영화 줄거리로 영화 찾기 — Neo4j 샌드박스에서 만드는 첫 벡터 리트리버</h2>
+
+<p class="scn-sub"><a href="/p/gdb-graphrag/">앞 편</a>이 지도를 펼치는 글이었다면, 이번 편은 신발끈을 묶는 글입니다. 설치 없이 브라우저에서 그래프 DB를 하나 빌리고, 영화 줄거리를 숫자로 바꿔 넣고, &ldquo;이런 이야기의 영화 없나?&rdquo;라고 물으면 비슷한 영화를 찾아 주는 검색기를 끝까지 만들어 봅니다.</p>
+
+<p>목표는 한 문장입니다. <strong>줄거리를 던지면, 줄거리가 비슷한 영화를 돌려주는 검색기.</strong> 대단해 보이지만 부품은 세 개뿐이고, 셋 다 이름만 낯설지 하는 일은 소박합니다.</p>
+
+<ul>
+<li><strong>임베딩</strong> — 문장을 <strong>의미를 담은 숫자 목록</strong>(벡터)으로 바꾸는 일입니다. 뜻이 비슷한 문장일수록 숫자들도 가까워집니다. 이 변환을 해 주는 것이 임베딩 모델이고, 여기서는 OpenAI의 모델을 씁니다.</li>
+<li><strong>벡터 인덱스</strong> — 그 숫자들을 <strong>빨리 찾을 수 있게 달아 두는 색인</strong>입니다. 사전 옆면의 ㄱㄴㄷ 홈을 짚으면 바로 그 페이지가 펼쳐지듯, 인덱스가 있으면 &ldquo;가까운 벡터&rdquo;를 전수조사 없이 찾습니다.</li>
+<li><strong>리트리버</strong> — 질문을 받아 임베딩하고, 인덱스에서 가까운 것을 골라 <strong>결과로 돌려주는 검색기</strong> 그 자체입니다.</li>
+</ul>
+
+<div class="diagram">
+<svg viewBox="0 0 700 150" role="img" aria-label="실습의 다섯 걸음: 샌드박스 구축, 데이터 살피기, 줄거리 임베딩, 벡터 인덱스, 리트리버 검색 순서로 진행한다">
+    <rect class="d-box" x="10" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="70" y="61" text-anchor="middle">샌드박스</text>
+    <text class="d-sub" x="70" y="79" text-anchor="middle">DB 빌리기</text>
+    <line class="d-edge" x1="130" y1="66" x2="142" y2="66"/><polygon class="d-arrow" points="142,61 150,66 142,71"/>
+    <rect class="d-box" x="150" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="210" y="61" text-anchor="middle">데이터 산책</text>
+    <text class="d-sub" x="210" y="79" text-anchor="middle">사이퍼 몇 줄</text>
+    <line class="d-edge" x1="270" y1="66" x2="282" y2="66"/><polygon class="d-arrow" points="282,61 290,66 282,71"/>
+    <rect class="d-box" x="290" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="350" y="61" text-anchor="middle">줄거리 임베딩</text>
+    <text class="d-sub" x="350" y="79" text-anchor="middle">100편만</text>
+    <line class="d-edge" x1="410" y1="66" x2="422" y2="66"/><polygon class="d-arrow" points="422,61 430,66 422,71"/>
+    <rect class="d-box" x="430" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="490" y="61" text-anchor="middle">벡터 인덱스</text>
+    <text class="d-sub" x="490" y="79" text-anchor="middle">색인 달기</text>
+    <line class="d-edge" x1="550" y1="66" x2="562" y2="66"/><polygon class="d-arrow" points="562,61 570,66 562,71"/>
+    <rect class="d-box accent" x="570" y="40" width="120" height="52" rx="9"/>
+    <text class="d-label sm" x="630" y="61" text-anchor="middle">리트리버</text>
+    <text class="d-sub" x="630" y="79" text-anchor="middle">검색해 보기</text>
+</svg>
+<div class="d-cap">오늘의 다섯 걸음. 마지막 걸음에서 &ldquo;줄거리 &rarr; 비슷한 영화&rdquo;가 실제로 돌아갑니다.</div>
+</div>
+
+<h3>첫걸음 — 그래프 DB를 빌린다</h3>
+
+<p>그래프 DB를 만져 보려고 뭘 설치할 필요는 없습니다. Neo4j가 <strong>샌드박스</strong>라는 무료 클라우드 인스턴스를 빌려줍니다 — 파이썬 노트북을 브라우저에서 바로 돌리는 구글 코랩과 같은 감각으로, 브라우저에서 바로 그래프 DB 한 대가 생깁니다. 로그인하고 프로젝트를 고르라는 화면이 나오면 <strong>Recommendations</strong>를 고릅니다. 영화 추천 연구에 널리 쓰이는 MovieLens 계열의 영화 추천 데이터가 미리 적재된 프로젝트입니다.</p>
+
+<p>열어 보면 앞 편에서 그림으로만 보던 것이 실물로 서 있습니다. 노드는 다섯 종류 — 영화(Movie), 장르(Genre), 배우(Actor), 감독(Director), 사용자(User). 영화 노드 하나를 클릭하면 제목(title), 상영시간, 그리고 <strong>줄거리(plot)</strong> 같은 속성들이 줄줄이 달려 있습니다. 쿵푸팬더 3의 노드에는 잭 블랙이 <em>ACTED_IN</em> 화살표로 이어져 있고, 어느 사용자가 <em>RATED</em> 화살표로 이어져 있는데, 그 화살표 <strong>안에</strong> 평점 4점과 남긴 시각이 속성으로 들어 있습니다. 관계 자체가 데이터를 담는다 — 그래프 DB의 이 성질을 여기서 처음 눈으로 확인하게 됩니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 300" role="img" aria-label="영화 추천 데이터의 구조: 사용자와 배우, 감독, 장르 노드가 각자의 관계로 가운데 영화 노드와 이어져 있다">
+    <rect class="d-box accent" x="280" y="124" width="140" height="52" rx="9"/>
+    <text class="d-label sm" x="350" y="145" text-anchor="middle">영화</text>
+    <text class="d-sub" x="350" y="163" text-anchor="middle">title · plot</text>
+
+    <rect class="d-box" x="30" y="34" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="90" y="62" text-anchor="middle">사용자</text>
+    <line class="d-edge" x1="150" y1="70" x2="272" y2="128"/><polygon class="d-arrow" points="263,127 280,132 268,118"/>
+    <text class="d-sub" x="196" y="84" text-anchor="middle">RATED</text>
+    <text class="d-sub" x="196" y="102" text-anchor="middle">평점 · 시각</text>
+
+    <rect class="d-box" x="30" y="220" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="90" y="248" text-anchor="middle">배우</text>
+    <line class="d-edge" x1="150" y1="232" x2="272" y2="172"/><polygon class="d-arrow" points="263,174 280,168 267,183"/>
+    <text class="d-sub" x="200" y="216" text-anchor="middle">ACTED_IN</text>
+
+    <rect class="d-box" x="550" y="34" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="610" y="62" text-anchor="middle">장르</text>
+    <line class="d-edge" x1="420" y1="128" x2="542" y2="70"/><polygon class="d-arrow" points="533,68 550,64 537,79"/>
+    <text class="d-sub" x="498" y="84" text-anchor="middle">IN_GENRE</text>
+
+    <rect class="d-box" x="550" y="220" width="120" height="46" rx="9"/>
+    <text class="d-label sm" x="610" y="248" text-anchor="middle">감독</text>
+    <line class="d-edge" x1="542" y1="232" x2="420" y2="172"/><polygon class="d-arrow" points="429,170 412,168 425,184"/>
+    <text class="d-sub" x="494" y="216" text-anchor="middle">DIRECTED</text>
+</svg>
+<div class="d-cap">Recommendations 데이터의 뼈대. RATED 화살표는 그 <strong>안에</strong> 평점과 시각을 담습니다 — 관계도 데이터를 갖는다는 것이 프로퍼티 그래프의 특징입니다.</div>
+</div>
+
+<h3>두 걸음 — 사이퍼로 동네 산책</h3>
+
+<p>본격적인 공사 전에 사이퍼(그래프 질의 언어, <a href="/p/gdb-graphrag/">앞 편</a> 참조) 몇 줄로 데이터와 인사를 해 둡니다. 골격은 셋뿐입니다. <code>MATCH</code>로 찾고 싶은 관계의 모양을 그리고, <code>RETURN</code>으로 무엇을 돌려받을지 적고, <code>LIMIT</code>으로 개수를 자릅니다.</p>
+
+<pre><code><span class="c">// 어떤 사용자가 어떤 영화를 평가했나 — 25건만 구경</span>
+MATCH (u:User)-[r:RATED]->(m:Movie) RETURN u, r, m LIMIT 25
+
+<span class="c">// 톰 행크스가 출연한 영화의 제목과 줄거리 — 그래프가 아니라 표로 돌아온다</span>
+MATCH (a:Actor {name: 'Tom Hanks'})-[:ACTED_IN]->(m:Movie)
+RETURN m.title, m.plot LIMIT 10</code></pre>
+
+<p>첫 질의는 화면에 그래프로 그려지고, 두 번째처럼 노드가 아니라 속성만 돌려받으면 표로 돌아옵니다. 같은 데이터를 그림으로도 표로도 받아 볼 수 있다는 것, 여기까지 확인되면 산책은 충분합니다.</p>
+
+<h3>세 걸음 — 줄거리를 숫자로 바꿔 노드에 심는다</h3>
+
+<p>이제 핵심 공정입니다. 파이썬에서 Neo4j 드라이버로 샌드박스에 접속한 뒤(접속 코드는 샌드박스 화면의 <em>Connect via drivers</em>에 그대로 나와 있어 복사해 붙이면 됩니다), 영화 노드의 plot 텍스트를 하나씩 꺼내 임베딩 모델에 통과시키고, 나온 벡터를 그 노드의 새 속성으로 도로 심습니다. 전부 돌리면 오래 걸리니 실습답게 <strong>100편만</strong> 자릅니다.</p>
+
+<pre><code><span class="c"># 줄거리가 있는 영화 100편 → 임베딩 → plotEmbedding 속성으로 저장</span>
+movies = tx.run("""
+    MATCH (m:Movie) WHERE m.plot IS NOT NULL
+    RETURN m.title AS title, m.plot AS plot LIMIT 100""")
+for row in movies:
+    vec = generate_embedding(row["plot"])   <span class="c"># OpenAI 임베딩 호출</span>
+    tx.run("""
+        MATCH (m:Movie {title: $title})
+        SET m.plotEmbedding = $vec""", title=row["title"], vec=vec)</code></pre>
+
+<p>몇십 초 뒤 샌드박스에서 아무 영화나 다시 클릭해 보면, plot 옆에 <code>plotEmbedding</code>이라는 속성이 새로 생겨 1,536개의 실수가 빼곡히 들어차 있습니다. 사람 눈에는 소음이지만, 이 숫자들의 <strong>거리</strong>가 곧 줄거리의 <strong>닮음</strong>입니다. 시연에 쓰인 모델은 OpenAI의 text-embedding-ada-002(출력 1,536차원)인데, 지금 새로 시작한다면 같은 자리의 후속 모델(text-embedding-3 계열)을 쓰는 편이 좋습니다 — 절차는 완전히 같습니다.</p>
+
+<figure class="doc-img">
+    <img src="assets/ai/graphdb/gdb-vector-retriever/embedding-space.webp" width="1400" height="700" alt="임베딩 공간 모식도: 회색 점들이 영화 줄거리 벡터, 주황 마름모가 질의 벡터, 청록 원 3개가 가장 가까운 세 편으로 점선으로 이어져 있다">
+    <figcaption>임베딩 공간의 모식도 — 회색 점이 영화 줄거리들, 주황 마름모가 방금 던진 질의입니다. 검색이란 이 공간에서 <strong>가장 가까운 이웃 셋</strong>(청록)을 찾는 일입니다. — 이 위키 자체 제작</figcaption>
+</figure>
+
+<h3>네 걸음 — 색인을 단다</h3>
+
+<p>벡터를 심었으니 찾는 속도를 챙길 차례입니다. 100편이야 전수조사해도 그만이지만, 수십만 편이 되면 질의마다 전부 재 보는 건 낭비입니다. 그래서 <strong>벡터 인덱스</strong>를 만듭니다 — 사전의 ㄱㄴㄷ 홈처럼, 가까운 벡터로 가는 지름길을 미리 파 두는 것입니다. 사이퍼 한 문장이면 됩니다.</p>
+
+<pre><code><span class="c">// 영화 노드의 plotEmbedding 위에 벡터 인덱스 생성</span>
+CREATE VECTOR INDEX moviePlots
+FOR (m:Movie) ON m.plotEmbedding
+OPTIONS {indexConfig: {
+  `vector.dimensions`: 1536,          <span class="c">// 임베딩 모델의 차원과 일치</span>
+  `vector.similarity_function`: 'cosine'
+}}</code></pre>
+
+<p>옵션 두 줄이 하는 말은 단순합니다. 이 색인이 다룰 벡터는 1,536차원이고, &lsquo;가깝다&rsquo;의 기준은 코사인 유사도(벡터 사이의 각도로 닮음을 재는 함수)라는 것. <strong>차원 수는 반드시 임베딩 모델의 출력과 맞춰야 합니다</strong> — 여기서 어긋나면 인덱스가 벡터를 받아 주지 않습니다.</p>
+
+<h3>다섯 걸음 — 리트리버를 조립하고, 묻는다</h3>
+
+<p>부품이 다 모였습니다. 접속(드라이버), 색인(인덱스), 변환기(임베더). 이 셋을 <a href="/p/gdb-graphrag/">앞 편</a>에서 소개한 <code>neo4j-graphrag</code> 패키지의 <code>VectorRetriever</code>에 넘기면 검색기가 완성됩니다. 넷째 인자로 &ldquo;결과로 어떤 속성만 돌려줄지&rdquo;를 정할 수 있습니다.</p>
+
+<pre><code>from neo4j_graphrag.retrievers import VectorRetriever
+
+retriever = VectorRetriever(
+    driver,                                <span class="c"># ① 어느 DB에서</span>
+    index_name="moviePlots",               <span class="c"># ② 어느 색인으로</span>
+    embedder=embedder,                     <span class="c"># ③ 질문을 어떻게 벡터로</span>
+    return_properties=["title", "plot"],   <span class="c"># ④ 무엇을 돌려줄지</span>
+)
+result = retriever.search(query_text="장난감들이 몰래 살아 움직이는 이야기", top_k=3)</code></pre>
+
+<p>이제 진짜 묻습니다. 토이 스토리의 줄거리를 짧게 요약해 질의로 던지면, 1등으로 토이 스토리가 돌아옵니다 — 제목과 줄거리, 그리고 코사인 유사도 점수까지 함께. 총기 사건을 다룬 영화를 묘사해 던지면 그런 소재의 영화가 0.93쯤의 점수로 올라옵니다. 질의에 영화 제목을 말한 적이 없다는 점이 포인트입니다. <strong>단어가 겹쳐서가 아니라 이야기가 닮아서 찾아진 것</strong> — 이것이 키워드 검색과 벡터 검색의 갈림길입니다.</p>
+
+<h3>여기서 한 발 더</h3>
+
+<p>오늘 만든 것은 순수한 벡터 검색기입니다. 냉정히 말하면 아직 그래프의 힘은 절반도 쓰지 않았습니다 — 찾아낸 영화 노드에서 <em>ACTED_IN</em>을 타고 배우로, <em>IN_GENRE</em>를 타고 장르로, <em>RATED</em>를 타고 취향이 비슷한 사용자로 걸어 나가는 순간부터가 <a href="/p/gdb-graphrag/">GraphRAG</a>의 본편입니다. 그래도 순서는 이쪽이 맞습니다. 벡터로 <strong>건지고</strong>, 그래프로 <strong>걷는다</strong> — 오늘 완성한 리트리버가 그 첫 동사입니다. 이 위키의 <a href="/p/kgs-ai-layer/">기계판독 계층</a>이 그래 왔듯, 검색의 품질은 결국 저장의 품질에서 나옵니다. 줄거리를 정성껏 심어 둔 덕에 검색이 이야기를 알아본 것입니다.</p>
+
+<div class="note">
+    <span class="nh">사실검증 노트</span>
+    실습 절차와 실행 결과(임베딩 100편, 토이 스토리 검색 1위, 총기 소재 질의의 0.93 유사도)는 제공받은 시연 녹취를 재구성한 것으로, 이 위키가 동일 환경을 재실행하지는 않았다. 코드와 문법은 공식 문서로 교차검증했다 — <a href="https://neo4j.com/docs/neo4j-graphrag-python/current/" target="_blank" rel="noopener">neo4j-graphrag-python 문서</a>의 VectorRetriever(driver·index_name·embedder·return_properties, search의 query_text·top_k), Neo4j의 CREATE VECTOR INDEX 문법(vector.dimensions·vector.similarity_function), <a href="https://neo4j.com/labs/" target="_blank" rel="noopener">Neo4j 샌드박스</a>의 Recommendations(MovieLens 계열) 예제 데이터셋. 시연 당시 패키지명은 neo4j-genai였으나 현재 neo4j-graphrag로 개명되었고, text-embedding-ada-002는 레거시 모델이라 신규 구축에는 text-embedding-3 계열이 권장된다. 임베딩 공간 그림은 개념 모식도이며 실측 좌표가 아니다.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · GraphDB &middot; <span class="pr-k">생성일자</span> 2026-08-09 &middot; <span class="pr-k">수정일자</span> 2026-08-09</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/gdb-graphrag/">그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다</a></li><li><a href="/p/sb-level3/">레벨 3 · 의미로 찾기 (시맨틱 검색·벡터DB)</a></li></ul>
+</nav>
+</body>
+</html>

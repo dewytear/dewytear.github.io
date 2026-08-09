@@ -2484,5 +2484,26 @@
     "source": "human"
    }
   ]
+ },
+ {
+  "name": "gdb-vector-retriever",
+  "title": "영화 줄거리로 영화 찾기 — Neo4j 샌드박스에서 만드는 첫 벡터 리트리버",
+  "summary": "개념 편에 이어 손을 움직이는 실습기 — 설치 없이 Neo4j 샌드박스로 그래프 DB를 빌리고(MovieLens 계열 Recommendations 데이터: Movie·Genre·Actor·Director·User 노드와 데이터를 품은 RATED 관계), 사이퍼 몇 줄로 데이터를 산책한 뒤, 영화 줄거리 100편을 OpenAI 임베딩 모델로 1,536차원 벡터로 바꿔 plotEmbedding 속성에 심고, CREATE VECTOR INDEX(코사인 유사도)로 색인을 달고, neo4j-graphrag의 VectorRetriever(드라이버·인덱스·임베더·반환 속성 4개 파라미터)로 검색기를 조립한다. 토이 스토리 줄거리를 요약해 던지면 제목 없이도 그 영화가 1위로 돌아오는 것까지 — 단어가 아니라 이야기가 닮아서 찾아지는 벡터 검색의 감각과, 벡터로 건지고 그래프로 걷는 GraphRAG로의 다음 걸음을 잇는다",
+  "concepts": [
+   "그래프DB",
+   "Cypher",
+   "벡터검색",
+   "임베딩",
+   "벡터인덱스",
+   "리트리버"
+  ],
+  "relations": [
+   {
+    "target": "gdb-graphrag",
+    "type": "implements",
+    "evidenceRef": "개념 편이 설명한 벡터 검색·리트리버·neo4j-graphrag 패키지를 샌드박스 실데이터로 끝까지 구현하는 실습",
+    "source": "human"
+   }
+  ]
  }
 ]

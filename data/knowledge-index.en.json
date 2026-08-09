@@ -1,10 +1,10 @@
 {
  "schemaVersion": 2,
  "note": "Structured knowledge index built by AI from every doc (summary, key concepts, related docs). related = idf-weighted concept overlap (via:concept) topped up with same-folder neighbours (via:folder).",
- "docCount": 120,
+ "docCount": 121,
  "stats": {
-  "docCount": 120,
-  "conceptCount": 386,
+  "docCount": 121,
+  "conceptCount": 388,
   "clusters": [
    {
     "label": "Knowledge System",
@@ -23,7 +23,7 @@
     "hub": {
      "name": "wr-knowledge-vault",
      "title": "The Man Who Records Everything, and the Wiki That Publishes — Reflections on Knowledge Vaults",
-     "refs": 5
+     "refs": 4
     }
    },
    {
@@ -119,7 +119,7 @@
    {
     "label": "GraphDB",
     "section": "AI · GraphDB",
-    "count": 1,
+    "count": 2,
     "hub": {
      "name": "gdb-graphrag",
      "title": "Graph Databases & GraphRAG — Store the Relationships, Change the Answers",
@@ -407,8 +407,8 @@
   ],
   "galaxies": {
    "AI": {
-    "docCount": 109,
-    "conceptCount": 347,
+    "docCount": 110,
+    "conceptCount": 349,
     "clusters": [
      {
       "label": "Knowledge System",
@@ -427,7 +427,7 @@
       "hub": {
        "name": "wr-knowledge-vault",
        "title": "The Man Who Records Everything, and the Wiki That Publishes — Reflections on Knowledge Vaults",
-       "refs": 5
+       "refs": 4
       }
      },
      {
@@ -523,7 +523,7 @@
      {
       "label": "GraphDB",
       "section": "AI · GraphDB",
-      "count": 1,
+      "count": 2,
       "hub": {
        "name": "gdb-graphrag",
        "title": "Graph Databases & GraphRAG — Store the Relationships, Change the Answers",
@@ -1089,6 +1089,7 @@
     "kgs-views",
     "kgs-plugin",
     "kgs-gates",
+    "gdb-vector-retriever",
     "dzp-security",
     "dzp-value"
    ]
@@ -3027,19 +3028,20 @@
      "via": "concept"
     },
     {
+     "name": "gdb-vector-retriever",
+     "title": "Finding a Movie by Its Story — Your First Vector Retriever on a Neo4j Sandbox",
+     "shared": [
+      "임베딩",
+      "벡터검색"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "sb-levels",
      "title": "The five levels at a glance",
      "shared": [
       "시맨틱검색",
       "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "llmw-ingest-query-lint",
-     "title": "Three Core Actions — Ingest · Query · Lint",
-     "shared": [
-      "벡터검색"
      ],
      "via": "concept"
     }
@@ -5046,22 +5048,6 @@
      "shared": [
       "인제스트",
       "쿼리"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "gdb-graphrag",
-     "title": "Graph Databases & GraphRAG — Store the Relationships, Change the Answers",
-     "shared": [
-      "벡터검색"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-level3",
-     "title": "Level 3 · Searching by meaning (semantic search, vector DB)",
-     "shared": [
-      "벡터검색"
      ],
      "via": "concept"
     }
@@ -7291,6 +7277,16 @@
    "section": "AI · GraphDB",
    "related": [
     {
+     "name": "gdb-vector-retriever",
+     "title": "Finding a Movie by Its Story — Your First Vector Retriever on a Neo4j Sandbox",
+     "shared": [
+      "Cypher",
+      "그래프DB",
+      "벡터검색"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "news-20260710-oracle-ontology-property-graph",
      "title": "Oracle Ontology and Property Graphs — Turning Tables into a Map of Knowledge",
      "shared": [
@@ -7318,13 +7314,50 @@
       "벡터검색"
      ],
      "via": "concept"
+    }
+   ],
+   "citedBy": [
+    "gdb-vector-retriever"
+   ]
+  },
+  {
+   "name": "gdb-vector-retriever",
+   "title": "Finding a Movie by Its Story — Your First Vector Retriever on a Neo4j Sandbox",
+   "summary": "The hands-on companion to the concepts piece — borrow a graph DB in the browser with Neo4j Sandbox (the MovieLens-family Recommendations dataset: Movie, Genre, Actor, Director and User nodes, plus a RATED relationship that carries data), stroll the data with a few lines of Cypher, embed 100 movie plots into 1,536-dimensional vectors with an OpenAI embedding model and plant them as a plotEmbedding property, add a CREATE VECTOR INDEX (cosine similarity), then assemble a searcher with neo4j-graphrag's VectorRetriever (four parameters: driver, index, embedder, return properties). Summarise Toy Story's plot and the movie comes back in first place without its title ever being mentioned — the feel of vector search finding stories rather than words, and the next step toward GraphRAG: cast with vectors, walk with the graph",
+   "concepts": [
+    "그래프DB",
+    "Cypher",
+    "벡터검색",
+    "임베딩",
+    "벡터인덱스",
+    "리트리버"
+   ],
+   "relations": [
+    {
+     "target": "gdb-graphrag",
+     "type": "implements",
+     "evidenceRef": "개념 편이 설명한 벡터 검색·리트리버·neo4j-graphrag 패키지를 샌드박스 실데이터로 끝까지 구현하는 실습",
+     "source": "human"
+    }
+   ],
+   "section": "AI · GraphDB",
+   "related": [
+    {
+     "name": "gdb-graphrag",
+     "title": "Graph Databases & GraphRAG — Store the Relationships, Change the Answers",
+     "shared": [
+      "Cypher",
+      "그래프DB",
+      "벡터검색"
+     ],
+     "via": "concept"
     },
     {
-     "name": "wr-knowledge-vault",
-     "title": "The Man Who Records Everything, and the Wiki That Publishes — Reflections on Knowledge Vaults",
+     "name": "sb-level3",
+     "title": "Level 3 · Searching by meaning (semantic search, vector DB)",
      "shared": [
-      "온톨로지",
-      "RAG"
+      "임베딩",
+      "벡터검색"
      ],
      "via": "concept"
     }

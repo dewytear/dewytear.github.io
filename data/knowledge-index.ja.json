@@ -1,10 +1,10 @@
 {
  "schemaVersion": 2,
  "note": "Structured knowledge index built by AI from every doc (summary, key concepts, related docs). related = idf-weighted concept overlap (via:concept) topped up with same-folder neighbours (via:folder).",
- "docCount": 120,
+ "docCount": 121,
  "stats": {
-  "docCount": 120,
-  "conceptCount": 386,
+  "docCount": 121,
+  "conceptCount": 388,
   "clusters": [
    {
     "label": "知識体系",
@@ -23,7 +23,7 @@
     "hub": {
      "name": "wr-knowledge-vault",
      "title": "すべてを記録する人、発行するウィキ — 知識の保管庫についての考察",
-     "refs": 5
+     "refs": 4
     }
    },
    {
@@ -119,7 +119,7 @@
    {
     "label": "GraphDB",
     "section": "AI · GraphDB",
-    "count": 1,
+    "count": 2,
     "hub": {
      "name": "gdb-graphrag",
      "title": "グラフデータベースとGraphRAG — 関係を保存すると答えが変わる",
@@ -407,8 +407,8 @@
   ],
   "galaxies": {
    "AI": {
-    "docCount": 109,
-    "conceptCount": 347,
+    "docCount": 110,
+    "conceptCount": 349,
     "clusters": [
      {
       "label": "知識体系",
@@ -427,7 +427,7 @@
       "hub": {
        "name": "wr-knowledge-vault",
        "title": "すべてを記録する人、発行するウィキ — 知識の保管庫についての考察",
-       "refs": 5
+       "refs": 4
       }
      },
      {
@@ -523,7 +523,7 @@
      {
       "label": "GraphDB",
       "section": "AI · GraphDB",
-      "count": 1,
+      "count": 2,
       "hub": {
        "name": "gdb-graphrag",
        "title": "グラフデータベースとGraphRAG — 関係を保存すると答えが変わる",
@@ -1089,6 +1089,7 @@
     "kgs-views",
     "kgs-plugin",
     "kgs-gates",
+    "gdb-vector-retriever",
     "dzp-security",
     "dzp-value"
    ]
@@ -3027,19 +3028,20 @@
      "via": "concept"
     },
     {
+     "name": "gdb-vector-retriever",
+     "title": "あらすじで映画を探す — Neo4jサンドボックスで作る初めてのベクトルリトリーバー",
+     "shared": [
+      "임베딩",
+      "벡터검색"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "sb-levels",
      "title": "5 段階をひと目で",
      "shared": [
       "시맨틱검색",
       "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "llmw-ingest-query-lint",
-     "title": "三つの中心的な動作 — Ingest · Query · Lint",
-     "shared": [
-      "벡터검색"
      ],
      "via": "concept"
     }
@@ -5046,22 +5048,6 @@
      "shared": [
       "인제스트",
       "쿼리"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "gdb-graphrag",
-     "title": "グラフデータベースとGraphRAG — 関係を保存すると答えが変わる",
-     "shared": [
-      "벡터검색"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-level3",
-     "title": "レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）",
-     "shared": [
-      "벡터검색"
      ],
      "via": "concept"
     }
@@ -7291,6 +7277,16 @@
    "section": "AI · GraphDB",
    "related": [
     {
+     "name": "gdb-vector-retriever",
+     "title": "あらすじで映画を探す — Neo4jサンドボックスで作る初めてのベクトルリトリーバー",
+     "shared": [
+      "Cypher",
+      "그래프DB",
+      "벡터검색"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "news-20260710-oracle-ontology-property-graph",
      "title": "オラクルのオントロジーとプロパティグラフ — テーブルを知識の地図に",
      "shared": [
@@ -7318,13 +7314,50 @@
       "벡터검색"
      ],
      "via": "concept"
+    }
+   ],
+   "citedBy": [
+    "gdb-vector-retriever"
+   ]
+  },
+  {
+   "name": "gdb-vector-retriever",
+   "title": "あらすじで映画を探す — Neo4jサンドボックスで作る初めてのベクトルリトリーバー",
+   "summary": "概念編に続く手を動かす実習記 — インストールなしでNeo4jサンドボックスからグラフDBを借り(MovieLens系Recommendationsデータ: Movie・Genre・Actor・Director・Userノードと、データを持つRATED関係)、Cypher数行でデータを散歩し、映画のあらすじ100本をOpenAI埋め込みモデルで1,536次元ベクトルに変えてplotEmbeddingプロパティに植え込み、CREATE VECTOR INDEX(コサイン類似度)で索引を付け、neo4j-graphragのVectorRetriever(ドライバー・インデックス・エンベダー・返却プロパティの4パラメータ)で検索機を組み立てる。トイ・ストーリーのあらすじを要約して投げれば、タイトルを一度も口にしなくてもその映画が1位で返ってくる — 言葉ではなく物語が似ているから見つかるベクトル検索の感覚と、ベクトルですくいグラフで歩くGraphRAGへの次の一歩をつなぐ",
+   "concepts": [
+    "그래프DB",
+    "Cypher",
+    "벡터검색",
+    "임베딩",
+    "벡터인덱스",
+    "리트리버"
+   ],
+   "relations": [
+    {
+     "target": "gdb-graphrag",
+     "type": "implements",
+     "evidenceRef": "개념 편이 설명한 벡터 검색·리트리버·neo4j-graphrag 패키지를 샌드박스 실데이터로 끝까지 구현하는 실습",
+     "source": "human"
+    }
+   ],
+   "section": "AI · GraphDB",
+   "related": [
+    {
+     "name": "gdb-graphrag",
+     "title": "グラフデータベースとGraphRAG — 関係を保存すると答えが変わる",
+     "shared": [
+      "Cypher",
+      "그래프DB",
+      "벡터검색"
+     ],
+     "via": "concept"
     },
     {
-     "name": "wr-knowledge-vault",
-     "title": "すべてを記録する人、発行するウィキ — 知識の保管庫についての考察",
+     "name": "sb-level3",
+     "title": "レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）",
      "shared": [
-      "온톨로지",
-      "RAG"
+      "임베딩",
+      "벡터검색"
      ],
      "via": "concept"
     }
