@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 
-이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 121개 문서 · 388개 개념.
+이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 122개 문서 · 390개 개념.
 
 License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 밝히면 자유롭게 인용·재사용할 수 있다.
 
@@ -12,8 +12,8 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - 정적 스냅샷 `https://dewytear.github.io/p/<name>/`(English는 `https://dewytear.github.io/p/en/<name>/`, 日本語는 `https://dewytear.github.io/p/ja/<name>/`): JS 없이 읽히는 문서 페이지 — 그래프 노드의 `page` 필드가 같은 주소를 가리킨다.
 - [AI 순회 가이드](https://dewytear.github.io/docs/ko/ai/map/ai-guide): 그래프를 어떻게 질의·순회·분석하는지의 계약(노드·엣지·개념 조인·계층).
 - [지식 인덱스](https://dewytear.github.io/data/knowledge-index.ko.json) · [내비 트리](https://dewytear.github.io/list) · [문서 날짜](https://dewytear.github.io/data/doc-dates.json) · [Atom 피드](https://dewytear.github.io/feed.xml)
-- English: 121/121개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
-- 日本語: 121/121개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
+- English: 122/122개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
+- 日本語: 122/122개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
 
 ## 지식 체계 (AI · Wiki · 지식 체계)
 - [지식은 어떻게 쌓이는가](https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-overview): World→Domain→System→Document 4계층과 문서 등재 파이프라인 — 불변 ID·물리 경로·결정론적 인덱스 빌드 · [EN](https://dewytear.github.io/docs/en/ai/wiki/knowledge-system/kgs-overview) · [JA](https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-overview)
@@ -161,6 +161,9 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [발송엔진 구현 요청 — 개요와 책임 경계](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-noti-send-engine/sne-overview): 발송요청 생성까지가 AI 알림, 이후 발송·타이밍·재처리·현황은 발송엔진 — 카프카 기반 발송엔진 구현 요청의 개요와 책임 경계 · [EN](https://dewytear.github.io/docs/en/douzone/dev-center/proposal/ai-noti-send-engine/sne-overview) · [JA](https://dewytear.github.io/docs/ja/douzone/dev-center/proposal/ai-noti-send-engine/sne-overview)
 - [발송엔진 구현 요청 사항](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-noti-send-engine/sne-scope): 채널 발송·멱등·전달보장·DLQ와 시점 4유형 타이밍·발송 시점 최신 조회·주기 배치 수명주기·발송 현황 화면 요구 · [EN](https://dewytear.github.io/docs/en/douzone/dev-center/proposal/ai-noti-send-engine/sne-scope) · [JA](https://dewytear.github.io/docs/ja/douzone/dev-center/proposal/ai-noti-send-engine/sne-scope)
 - [발송엔진 인터페이스·규모·협의](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-noti-send-engine/sne-interface): 엔진 본체보다 인터페이스를 먼저 확정해 병행 구현 — 발송요청 발행·발송 시점 확정·결과 회신 인터페이스와 Phase 우선순위·협의사항 · [EN](https://dewytear.github.io/docs/en/douzone/dev-center/proposal/ai-noti-send-engine/sne-interface) · [JA](https://dewytear.github.io/docs/ja/douzone/dev-center/proposal/ai-noti-send-engine/sne-interface)
+
+## im-not-ai (AI · Claude · Skills · im-not-ai)
+- [im-not-ai(Humanize KR) — AI 티를 지우는 편집 스킬](https://dewytear.github.io/docs/ko/ai/claude/skills/im-not-ai/sks-im-not-ai): AI가 쓴 글의 티는 문법이 아니라 버릇에서 난다 — 의의 부풀리기·아포리즘 공식·시그널포스팅·가짜 솔직 어투·기계적 3항·막연 귀속 같은 흔적 33종을 찾아 지우는 편집 스킬 im-not-ai의 소개. 본체는 blader의 humanizer(MIT) 원문 그대로이고 뿌리는 위키백과 "Signs of AI writing"이다. 목록만큼 중요한 오탐 방지 반쪽(티의 군집으로 판단·사람 글 신호 보존·저자 표본 우선·사실 불변·장르 존중), 초안→두 질문 감사→최종본의 동작 원리, 설치·호출 방법, 그리고 이 위키가 인덱스 문서 121편×3언어를 전부 통과시킨 실전 기록 — 수정은 22문장에 그쳤고 문체 감사가 사실 오류(7→9 뷰, 표 합산 등)까지 잡았다 — 를 담았다 · [EN](https://dewytear.github.io/docs/en/ai/claude/skills/im-not-ai/sks-im-not-ai) · [JA](https://dewytear.github.io/docs/ja/ai/claude/skills/im-not-ai/sks-im-not-ai)
 
 ## 06. AI 2040: Plan A (AI · News & Articles · 2026 · 06. AI 2040: Plan A)
 - [AI 2040: 플랜 A — 개요 (초지능을 2040까지 늦추자는 규범 시나리오)](https://dewytear.github.io/docs/ko/ai/news/2026/ai-2040-plan-a/news-20260709-ai-2040-plan-a): AI 2027 저자들(AI Futures Project)의 후속 규범 시나리오 해설 시리즈의 개요·허브. 예측이 아닌 권고로, 미·중 합의로 초지능을 2040까지 지연하는 골자·한줄 요지·인터랙티브 연표·AI 2027 대비를 담고 시나리오/정책/반응 3편으로 안내 · [EN](https://dewytear.github.io/docs/en/ai/news/2026/ai-2040-plan-a/news-20260709-ai-2040-plan-a) · [JA](https://dewytear.github.io/docs/ja/ai/news/2026/ai-2040-plan-a/news-20260709-ai-2040-plan-a)
