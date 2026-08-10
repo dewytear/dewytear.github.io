@@ -28,7 +28,7 @@
 
 <p>Anthropic announced Claude Fable 5 on <strong>June 9, 2026</strong>. The official announcement introduces it as a generally available Mythos-class model, emphasizing capability beyond the models generally available at the time and an <strong>edge on longer, more complex tasks</strong>. Anthropic&rsquo;s model documentation likewise describes Fable 5 as next-generation intelligence for <strong>long-running agents</strong>.</p>
 
-<p>What matters in the official documentation is not the raw benchmark numbers. Fable 5 is designed to work autonomously for longer, keep its own notes across long contexts, and carry compound tasks forward. Thariq&rsquo;s discussion of unknowns connects directly to that capability. <strong>The longer an agent works, the more decisions the user never personally reviewed can accumulate.</strong></p>
+<p>What deserves attention in the official documentation, beyond the raw benchmark numbers, is the design direction. Fable 5 is designed to work autonomously for longer, keep its own notes across long contexts, and carry compound tasks forward. Thariq&rsquo;s discussion of unknowns connects directly to that capability. <strong>The longer an agent works, the more decisions the user never personally reviewed can accumulate.</strong></p>
 
 <div class="note">
     <span class="nh">Anthropic official sources</span>
@@ -63,7 +63,7 @@
 
 <p>Thariq cites the tool for asking the user questions as an example. By his account, on the previous generation of models it took a lot of fiddling to get the tool called reliably; on later models, instructing them to ask about the spec produced something that behaved like a real interview; and with Fable it went as far as organizing the questions and results into a more structured form.</p>
 
-<p>The point is not which version wins. <strong>Even with an identical tool spec, the interaction pattern changes when the model changes.</strong> A model upgrade is therefore not a drop-in swap but a system change in which prompts, tool descriptions, permissions, and verification methods all have to be re-experimented with.</p>
+<p><strong>Even with an identical tool spec, the interaction pattern changes when the model changes.</strong> A model upgrade is therefore not a drop-in swap but a system change in which prompts, tool descriptions, permissions, and verification methods all have to be re-experimented with.</p>
 
 <h3>5. The core frame — the map is not the territory</h3>
 
@@ -219,7 +219,7 @@
 
 <p>Thariq&rsquo;s fourth pattern builds a <strong>single-file HTML mock</strong> before wiring into the real app. It validates the flow and the screens before entering expensive work such as data contracts, backend connections, and state management.</p>
 
-<p>The important part is not &ldquo;also build a prototype.&rdquo; It is <strong>discover the user&rsquo;s hidden criteria before the irreversible cost grows</strong>. A 30-minute failure before implementation can prevent a three-day rework after it.</p>
+<p>The point is to <strong>discover the user&rsquo;s hidden criteria before the irreversible cost grows</strong>. A 30-minute failure before implementation can prevent a three-day rework after it.</p>
 
 <h3>12. Pattern 5 — Brainstorm the intervention: widen the intervention points before picking one solution</h3>
 
@@ -268,14 +268,14 @@
 
 <h3>13. Pattern 6 — The interview: the AI interviews the user</h3>
 
-<p>Once a direction is set, you have the model ask the questions instead. What matters here is not &ldquo;any questions?&rdquo; Thariq&rsquo;s pattern asks <strong>one at a time</strong>, lets the user&rsquo;s answer change the next question, and asks <strong>the questions that most change the architecture first</strong>.</p>
+<p>Once a direction is set, you have the model ask the questions instead. Thariq&rsquo;s pattern asks <strong>one at a time</strong>, lets the user&rsquo;s answer change the next question, and asks <strong>the questions that most change the architecture first</strong>.</p>
 
 <div class="note">
     <span class="nh">Prompt pattern</span>
     Interview me before implementing. Ask one question at a time and change your follow-ups based on my answers. Order the questions so the ones whose answers most change the architecture come first. When you have enough, summarize with what is decided, what is undecided, and what you assumed kept separate.
 </div>
 
-<p>The goal of this approach is not to increase the number of questions. It is <strong>to move the questions with high information value earlier</strong>. Decisions that are expensive to reverse — who authenticates, who owns the data, the multi-company scope, consistency during outages — get settled first.</p>
+<p>The goal of this approach is <strong>to move the questions with high information value earlier</strong>. Decisions that are expensive to reverse — who authenticates, who owns the data, the multi-company scope, consistency during outages — get settled first.</p>
 
 <h3>14. Pattern 7 — Point at a reference: give a working map rather than an explanation</h3>
 
@@ -289,7 +289,7 @@
 
 <div class="note">
     <span class="nh">Why it matters</span>
-    What a human needs to review is not every line of code. It is the <strong>decision space</strong>. When a plan document is packed with mechanical work, the design decisions that actually need changing get missed.
+    Human review concentrates on the <strong>decision space</strong>. When a plan document is packed with mechanical work, the design decisions that actually need changing get missed.
 </div>
 
 <h3>16. Pattern 9 — Implementation notes: do not hide deviations from the plan</h3>
@@ -318,7 +318,7 @@
     Based on this diff, build an HTML report that lets me fully understand the change. Explain the context, the core intuition, and what you actually did, and add a quiz at the end. Re-explain anything I get wrong and give me a variation of the question. Do not consider it done before I understand it well enough.
 </div>
 
-<p>This is no educational gimmick. As AI-generated code grows, <strong>&ldquo;do the tests pass?&rdquo;</strong> alone is not enough as the review question. Ownership only appears once you also confirm <strong>&ldquo;can the operator explain the failure modes and how to recover?&rdquo;</strong></p>
+<p>As AI-generated code grows, <strong>&ldquo;do the tests pass?&rdquo;</strong> alone is not enough as the review question. Ownership only appears once you also confirm <strong>&ldquo;can the operator explain the failure modes and how to recover?&rdquo;</strong></p>
 
 <h3>19. Compressed back into six large flows</h3>
 
@@ -356,15 +356,15 @@
 
 <h4>22-1. Agents are advancing toward performing longer tasks</h4>
 
-<p>Research in the METR line reports a trend in which the time horizon of tasks frontier AI can complete successfully is growing fast. You cannot generalize that result directly to every real-world project, but it does reinforce Thariq&rsquo;s concern that <strong>models autonomously explore longer task paths</strong>.</p>
+<p>Research in the METR line reports a trend in which the time horizon of tasks frontier AI can complete successfully is growing fast. You cannot generalize that result directly to every real-world project, but it does reinforce Thariq&rsquo;s concern that models autonomously explore longer task paths.</p>
 
 <h4>22-2. Agent performance cannot be explained by model performance alone</h4>
 
-<p>The architectural analysis of Claude Code shows that tools, permissions, context, extension mechanisms, and subagents are core elements of the system&rsquo;s capability. This connects directly to the capability overhang and unhobbling arguments. <strong>What a model can do and what a product actually permits and encourages are different things.</strong></p>
+<p>The architectural analysis of Claude Code shows that tools, permissions, context, extension mechanisms, and subagents are core elements of the system&rsquo;s capability. This connects directly to the capability overhang and unhobbling arguments. What a model can do and what a product actually permits and encourages are different things.</p>
 
 <h4>22-3. Productivity metrics and value metrics have to be kept apart</h4>
 
-<p>Research on coding-agent adoption observes an increase in development output but warns that the number of merged PRs does not by itself mean customer value or maintenance quality. Thariq&rsquo;s message lands on the same point. <strong>Even when the cost of building comes down, the cost of judging what to build does not disappear.</strong></p>
+<p>Research on coding-agent adoption observes an increase in development output but warns that the number of merged PRs does not by itself mean customer value or maintenance quality. Thariq&rsquo;s message lands on the same point. Even when the cost of building comes down, the cost of judging what to build does not disappear.</p>
 
 <div class="note">
     <span class="nh">Supporting research</span>

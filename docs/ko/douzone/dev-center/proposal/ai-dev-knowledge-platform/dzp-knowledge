@@ -40,7 +40,7 @@
 </ul>
 <p>여기서 회사 플랫폼과 스키마가 정확히 맞물리는 지점이 <code>source</code> 필드다. 실증 스키마는 선언 주체 어휘로 <code>human · ai-proposed · imported · rule-derived</code>를 이미 예약해 두었다(Reference Wiki의 114건은 전부 <code>human</code>). 회사 플랫폼에서는 <strong>AI Curator가 관계를 <code>ai-proposed</code>로 제안하고, 사람이 승인하면 <code>human</code>으로 승격</strong>한다 — 자동화의 속도와 "본문에 실재하는 관계만 단다"는 정직성 원칙을 한 필드로 양립시키는 구조다. 무결성은 기계가 지킨다: 존재하지 않는 대상을 가리키는 관계와 5어휘 밖 타입은 <strong>ERROR로 머지가 차단</strong>되고, 근거 누락·상충 선언은 검토 신호(WARN)로 떠오른다.</p>
 
-<h3>누적 갱신 — 문서 수가 아니라 지식의 밀도</h3>
+<h3>누적 갱신 — 지식의 밀도를 늘린다</h3>
 <p>새 지식이 발견됐다고 항상 새 문서를 만들지 않는다. Knowledge Index를 먼저 검색해 관련 문서가 있으면 <strong>기존 문서를 확장</strong>한다. 예컨대 "수주 상태 전이 체계" 문서가 있는 상태에서 부분출고 상태가 추가되면, 신규 문서 이전에 기존 문서 확장을 우선 판단한다. Wiki가 변경 이력의 집합이 아니라 <strong>지속적으로 정제된 현재 지식 상태</strong>로 유지되는 이유다.</p>
 
 <div class="diagram">
@@ -68,7 +68,7 @@
     <polygon class="d-arrow" points="528,125 528,135 536,130"/>
     <text class="d-sub" x="498" y="112" text-anchor="middle">NO</text>
 </svg>
-<div class="d-cap">기존 문서 확장을 항상 먼저 판단한다 — 문서 수가 아니라 지식의 밀도를 늘린다.</div>
+<div class="d-cap">기존 문서 확장을 항상 먼저 판단한다 — 문서 수보다 밀도를 늘리는 쪽으로.</div>
 </div>
 
 <h3>개발 Identifier 검색</h3>
