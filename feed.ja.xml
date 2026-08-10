@@ -5,15 +5,24 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.ja.xml"/>
   <id>https://dewytear.github.io/feed.ja.xml</id>
-  <updated>2026-08-10T01:38:00+09:00</updated>
+  <updated>2026-08-10T17:46:22+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>im-not-ai（Humanize KR）— AIっぽさを消す編集スキル</title>
+    <link href="https://dewytear.github.io/p/ja/sks-im-not-ai/"/>
+    <id>https://dewytear.github.io/docs/ja/ai/claude/skills/im-not-ai/sks-im-not-ai</id>
+    <published>2026-08-10T17:46:22+09:00</published>
+    <updated>2026-08-10T17:46:22+09:00</updated>
+    <summary>AIの書いた文章は文法ではなく癖でばれる — 意義の水増し・アフォリズムの公式・予告・偽りの率直さ・機械的な三点セット・あいまいな帰属など33種の痕跡を見つけて消す編集スキル im-not-ai の紹介。本体は blader の humanizer（MIT）を原文のまま収録し、根はウィキペディアの「Signs of AI writing」。一覧と同じくらい大事な誤検出防止の半分（痕跡の群れで判断・人の徴候の保存・著者の見本の優先・事実の不変・ジャンルの尊重）、下書き→二つの問いの監査→最終版という動作、インストールと呼び出し、そしてこのウィキがインデックス文書121編×3言語を全部通した実戦記録 — 修正は22文にとどまり、文体の監査が事実の誤り（7→9ビュー、表の合算など）まで捕まえた — を収めた</summary>
+    <category term="AI · Claude · Skills · im-not-ai"/>
+  </entry>
   <entry>
     <title>あらすじで映画を探す — Neo4jサンドボックスで作る初めてのベクトルリトリーバー</title>
     <link href="https://dewytear.github.io/p/ja/gdb-vector-retriever/"/>
     <id>https://dewytear.github.io/docs/ja/ai/graphdb/gdb-vector-retriever</id>
     <published>2026-08-09T16:00:12+09:00</published>
-    <updated>2026-08-10T01:38:00+09:00</updated>
+    <updated>2026-08-10T07:42:30+09:00</updated>
     <summary>概念編に続く手を動かす実習記 — インストールなしでNeo4jサンドボックスからグラフDBを借り(MovieLens系Recommendationsデータ: Movie・Genre・Actor・Director・Userノードと、データを持つRATED関係)、Cypher数行でデータを散歩し、映画のあらすじ100本をOpenAI埋め込みモデルで1,536次元ベクトルに変えてplotEmbeddingプロパティに植え込み、CREATE VECTOR INDEX(コサイン類似度)で索引を付け、neo4j-graphragのVectorRetriever(ドライバー・インデックス・エンベダー・返却プロパティの4パラメータ)で検索機を組み立てる。トイ・ストーリーのあらすじを要約して投げれば、タイトルを一度も口にしなくてもその映画が1位で返ってくる — 言葉ではなく物語が似ているから見つかるベクトル検索の感覚と、ベクトルですくいグラフで歩くGraphRAGへの次の一歩をつなぐ</summary>
     <category term="AI · GraphDB"/>
   </entry>
@@ -22,7 +31,7 @@
     <link href="https://dewytear.github.io/p/ja/gdb-graphrag/"/>
     <id>https://dewytear.github.io/docs/ja/ai/graphdb/gdb-graphrag</id>
     <published>2026-08-09T15:10:53+09:00</published>
-    <updated>2026-08-10T01:38:00+09:00</updated>
+    <updated>2026-08-10T07:42:30+09:00</updated>
     <summary>表の代わりに関係を保存するグラフデータベースからGraphRAGまでを一本の鎖でつなぐ入門解説 — JOINを計算する代わりにエッジをたどるプロパティグラフと、絵に似た問い合わせ言語Cypher。ベクトルRAGのチャンク断絶をグラフで縫い合わせ、街区ごと検索するGraphRAG(マルチホップ推論・階層の保存・根拠の可視化)。網の設計図であるオントロジーとグラフスキーマ(教育知識マップの先行関係の例)、名前だけ似ているLangGraph(知識の地図 vs 仕事の順序図)の区別、製造の故障履歴・ニュースカテゴリなどのドメイン事例、そしてarrows.appのスケッチ→Cypherエクスポート→neo4j-graphragパッケージ(SimpleKGPipeline)でPDFをナレッジグラフに変える始め方まで</summary>
     <category term="AI · GraphDB"/>
   </entry>
@@ -31,7 +40,7 @@
     <link href="https://dewytear.github.io/p/ja/wr-knowledge-vault/"/>
     <id>https://dewytear.github.io/docs/ja/ai/wiki/reflections/wr-knowledge-vault</id>
     <published>2026-08-04T23:29:47+09:00</published>
-    <updated>2026-08-04T23:29:47+09:00</updated>
+    <updated>2026-08-10T16:29:39+09:00</updated>
     <summary>「このウィキは RAG か、LLM Wiki か、セカンドブレインか」という問いから出発し、24 時間の録音・画面録画で人生全体をノートのボールトに流し込むあるライフロガーの対談書き起こしを解剖して、このウィキと比較した考察 — 5 層のデイリーノート（意図・実行・現実・解釈・AI ログ）、raw/wiki の二ボールトと「なぜ入れた？」を問い返すインジェスト（入れる理由のデータ化）、質問時の片づけと保存時の片づけとしての RAG 対 LLM Wiki、オントロジーはグラフではなく文書だという規定、目的なき蓄積が知識の墓を生むという失敗論まで。結びに、このウィキが持ち帰る四つの階段（入れる理由の明示化・月次振り返りの自動化・非公開インボックス層・対話型 QA の入口）を提案する</summary>
     <category term="AI · Wiki · 고찰"/>
   </entry>
@@ -40,7 +49,7 @@
     <link href="https://dewytear.github.io/p/ja/news-20260803-cherny-karpathy/"/>
     <id>https://dewytear.github.io/docs/ja/ai/news/2026/news-20260803-cherny-karpathy</id>
     <published>2026-08-03T10:42:55+09:00</published>
-    <updated>2026-08-03T10:42:55+09:00</updated>
+    <updated>2026-08-10T16:29:39+09:00</updated>
     <summary>Opus 5 直後の二つの場面を複数報道でクロス検証して一本に — Claude Code 生みの親チェルニーはシステムプロンプトの 80%+ を消したらモデルが賢くなったと語り（アブレーション方法論・「半年ごとにサボタージュ」・「ループがプロンプトする」）、カパシーは指輪物語の冒頭一段落＋$10 から 5,500 行の three.js 3D ムービーを生やし、本文に再生可能な形で埋め込んだ。共通構造: 足場の縮小 × 成果物スケールの跳躍 × ボトルネックの検証・知覚への移動</summary>
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
@@ -49,7 +58,7 @@
     <link href="https://dewytear.github.io/p/ja/news-20260801-astra-math/"/>
     <id>https://dewytear.github.io/docs/ja/ai/news/2026/news-20260801-astra-math</id>
     <published>2026-08-03T08:29:44+09:00</published>
-    <updated>2026-08-03T08:29:44+09:00</updated>
+    <updated>2026-08-10T16:29:39+09:00</updated>
     <summary>OpenAI が 2026-08-01、次期モデル Astra の内部版で 10 年以上未解決の問題 10 件（27 年未解決の非 sofic 群の初構成・Connes 剛性の反証・1978 年以来の球充填上界の初改善など）を解決したという発表を複数報道でクロス検証 — 全件の Lean 機械検証証明書と実名の専門家読解（Popa ほか）という検証体制、それでも査読前という限界、Tao の「証明の豊富」フレームと Bloom の反応、2025-10 の GPT-5 エルデシュ騒動との対比まで</summary>
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
@@ -130,7 +139,7 @@
     <link href="https://dewytear.github.io/p/ja/dzp-value/"/>
     <id>https://dewytear.github.io/docs/ja/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-value</id>
     <published>2026-07-13T21:42:05+09:00</published>
-    <updated>2026-07-13T22:28:27+09:00</updated>
+    <updated>2026-08-10T16:29:39+09:00</updated>
     <summary>ひとつの Knowledge State に等級のフィルタで対象ごとのビューを増やすことから来る付加価値 — API の仕様書の自動の更新（FACT・identifiers・supersedes）、社員・パートナー・顧客・AI エージェントによる活用、知識グラフを AI コーディングの事前の知識として載せる好循環の実体、そして信頼の等級が非開発の読者を広げること</summary>
     <category term="Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼"/>
   </entry>
@@ -202,7 +211,7 @@
     <link href="https://dewytear.github.io/p/ja/kgs-views/"/>
     <id>https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-views</id>
     <published>2026-07-11T19:47:53+09:00</published>
-    <updated>2026-08-02T10:07:44+09:00</updated>
+    <updated>2026-08-10T15:16:04+09:00</updated>
     <summary>Constellation・Orbits・Strata（3D）と Bundling・Chord・Packing・Concepts・Arc・Matrix — 各ビューが答える問いと、ハブ・ブリッジがグラフの中心を示す方法</summary>
     <category term="AI · Wiki · 지식 체계"/>
   </entry>
@@ -256,7 +265,7 @@
     <link href="https://dewytear.github.io/p/ja/news-20260709-thariq-fable5-unknowns/"/>
     <id>https://dewytear.github.io/docs/ja/ai/news/2026/news-20260709-thariq-fable5-unknowns</id>
     <published>2026-07-09T00:55:15+09:00</published>
-    <updated>2026-07-27T08:44:41+09:00</updated>
+    <updated>2026-08-10T16:29:39+09:00</updated>
     <summary>タリクの Fable 5 の経験をもとに、capability overhang、地図と領土、unknown の管理、六つの実戦の技法を、事実関係と外部の研究に照らして分析する。</summary>
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
@@ -268,14 +277,5 @@
     <updated>2026-07-07T22:59:48+09:00</updated>
     <summary>ハイゼンベルクの寄稿を読み、ループド・トランスフォーマーとは何かを整理しながら、Mythos と韓国企業への追い風という主張について、確認できた事実と推定を分ける。</summary>
     <category term="AI · News &amp; Articles · 2026"/>
-  </entry>
-  <entry>
-    <title>提案の概要 — GitLab をもとにした AI 開発ナレッジプラットフォーム</title>
-    <link href="https://dewytear.github.io/p/ja/dzp-overview/"/>
-    <id>https://dewytear.github.io/docs/ja/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-overview</id>
-    <published>2026-07-06T02:35:24+09:00</published>
-    <updated>2026-07-28T04:43:06+09:00</updated>
-    <summary>GitLab の開発の成果を AI が組織の知識として自動で積み上げる Read-Only のプラットフォームの提案と、その好循環の概要 — Reference Wiki で実証されたエンジンの延長として述べる</summary>
-    <category term="Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼"/>
   </entry>
 </feed>

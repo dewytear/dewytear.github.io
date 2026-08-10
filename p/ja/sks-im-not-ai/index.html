@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>im-not-ai（Humanize KR）— AI っぽさを消す編集スキル</title>
+<meta name="description" content="AIの書いた文章は文法ではなく癖でばれる — 意義の水増し・アフォリズムの公式・予告・偽りの率直さ・機械的な三点セット・あいまいな帰属など33種の痕跡を見つけて消す編集スキル im-not-ai の紹介。本体は blader の humanizer（MIT）を原文のまま収録し、根はウィキペディアの「Signs of AI writing」。一覧と同じくらい大事な誤検出防止の半分（痕跡の群れで判断・人の徴候の保存・著者の見本の優先・事実の不変・ジャンルの尊重）、下書き→二つの問いの監査→最終版という動作、インストールと呼び出し、そしてこのウィキがインデックス文書121編×3言語を全部通した実戦記録 — 修正は22文にとどまり、文体の監査が事実の誤り（7→9ビュー、表の合算など）まで捕まえた — を収めた">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/sks-im-not-ai/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/sks-im-not-ai/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/sks-im-not-ai/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/sks-im-not-ai/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/sks-im-not-ai/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="im-not-ai（Humanize KR）— AI っぽさを消す編集スキル">
+<meta property="og:description" content="AIの書いた文章は文法ではなく癖でばれる — 意義の水増し・アフォリズムの公式・予告・偽りの率直さ・機械的な三点セット・あいまいな帰属など33種の痕跡を見つけて消す編集スキル im-not-ai の紹介。本体は blader の humanizer（MIT）を原文のまま収録し、根はウィキペディアの「Signs of AI writing」。一覧と同じくらい大事な誤検出防止の半分（痕跡の群れで判断・人の徴候の保存・著者の見本の優先・事実の不変・ジャンルの尊重）、下書き→二つの問いの監査→最終版という動作、インストールと呼び出し、そしてこのウィキがインデックス文書121編×3言語を全部通した実戦記録 — 修正は22文にとどまり、文体の監査が事実の誤り（7→9ビュー、表の合算など）まで捕まえた — を収めた">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/sks-im-not-ai/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="im-not-ai（Humanize KR）— AI っぽさを消す編集スキル">
+<meta name="twitter:description" content="AIの書いた文章は文法ではなく癖でばれる — 意義の水増し・アフォリズムの公式・予告・偽りの率直さ・機械的な三点セット・あいまいな帰属など33種の痕跡を見つけて消す編集スキル im-not-ai の紹介。本体は blader の humanizer（MIT）を原文のまま収録し、根はウィキペディアの「Signs of AI writing」。一覧と同じくらい大事な誤検出防止の半分（痕跡の群れで判断・人の徴候の保存・著者の見本の優先・事実の不変・ジャンルの尊重）、下書き→二つの問いの監査→最終版という動作、インストールと呼び出し、そしてこのウィキがインデックス文書121編×3言語を全部通した実戦記録 — 修正は22文にとどまり、文体の監査が事実の誤り（7→9ビュー、表の合算など）まで捕まえた — を収めた">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "im-not-ai（Humanize KR）— AI っぽさを消す編集スキル",
+ "description": "AIの書いた文章は文法ではなく癖でばれる — 意義の水増し・アフォリズムの公式・予告・偽りの率直さ・機械的な三点セット・あいまいな帰属など33種の痕跡を見つけて消す編集スキル im-not-ai の紹介。本体は blader の humanizer（MIT）を原文のまま収録し、根はウィキペディアの「Signs of AI writing」。一覧と同じくらい大事な誤検出防止の半分（痕跡の群れで判断・人の徴候の保存・著者の見本の優先・事実の不変・ジャンルの尊重）、下書き→二つの問いの監査→最終版という動作、インストールと呼び出し、そしてこのウィキがインデックス文書121編×3言語を全部通した実戦記録 — 修正は22文にとどまり、文体の監査が事実の誤り（7→9ビュー、表の合算など）まで捕まえた — を収めた",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/sks-im-not-ai/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!sks-im-not-ai",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-08-10T17:46:22+09:00",
+ "dateModified": "2026-08-10T17:46:22+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!sks-im-not-ai">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/sks-im-not-ai/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/sks-im-not-ai/" hreflang="en">English</a>
+</p>
+<article>
+<h2>im-not-ai（Humanize KR）— AI っぽさを消す編集スキル</h2>
+
+<p>AI が書いた文章には、それとわかる痕跡が残ります。文法が悪いからではありません — むしろ、なめらかすぎるからでもありません。痕跡は<strong>癖</strong>に出ます。何でもない出来事に「重要な節目」を付ける意義の水増し、根拠なしに「専門家たちは」で始まる文、どこでも三つずつ揃える並べ方、すべての段落を格言のように締めたがる衝動。<strong>im-not-ai は、こうした痕跡 33 種を見つけて消す編集スキル</strong>です。このウィキは 2026-08-09 から<strong>すべての本文が登録の前にこのスキルを通る</strong>ようルール化（CLAUDE.md）しており、原文の例が英語なので日本語・韓国語には相応するパターンに移して運用する — その意味で <strong>Humanize KR</strong> とも呼んでいます。</p>
+
+<h3>どこから来たスキルなのか</h3>
+<p>本体は blader が公開した <strong>humanizer</strong> スキルです。このウィキは原文を一文字も変えずに <code>.claude/skills/im-not-ai/SKILL.md</code> へ取り込み（MIT ライセンス、LICENSE 同梱）、変えたのはスキルの名前だけです。そしてこのスキルの根はさらに深いところにあります — ウィキペディアの <strong>「Signs of AI writing」（AI 文章の徴候）</strong>ページです。WikiProject AI Cleanup のチームが、ウィキペディアに投稿された数千件の AI 生成記事を片づけながら積み上げた観察の記録です。そのページの中心の洞察はこうです: <em>「LLM は次に来る言葉を統計で推測する。その結果は、いちばん広い場合に当てはまる、統計的にいちばんありそうな側へ収束する。」</em> 痕跡が出る理由がここにあります — 平均へ滑った文はどんな記事に置いても成立する代わりに、何も正確には言いません。</p>
+
+<h3>何を捕まえるのか — 代表パターン 8 つ</h3>
+<p>スキルは 33 のパターンを、内容・語法・スタイル・コミュニケーション・埋め草の五つの束に整理しています。全部を覚える必要はなく、よく引っかかる代表を例文で見れば感じがつかめます。</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>パターン</th><th>AI っぽい文</th><th>直した文</th></tr></thead>
+    <tbody>
+        <tr><td><strong>意義の水増し</strong></td><td>「このツールの本当の価値は信頼にあります。」</td><td>（文を削除 — 次の文の具体的な根拠こそが価値）</td></tr>
+        <tr><td><strong>アフォリズムの公式</strong></td><td>「検索の品質は結局、保存の品質から生まれる。」</td><td>「あらすじを丁寧に植えておいたおかげで、検索が物語を見分けた。」</td></tr>
+        <tr><td><strong>予告（シグナルポスト）</strong></td><td>「以下でこの問題をひとつずつ解いていきます。」</td><td>（予告なしで本論へ）</td></tr>
+        <tr><td><strong>偽りの率直さ</strong></td><td>「率直に言えば？ 状況によります。」</td><td>「状況による。」</td></tr>
+        <tr><td><strong>機械的な三点セット</strong></td><td>「革新とひらめき、そして洞察が得られます。」</td><td>（本当に三つのときだけ三つ — でなければ二つでも四つでも、ある分だけ）</td></tr>
+        <tr><td><strong>「X ではなく Y」の反復</strong></td><td>同じ文書で「核心は A ではない」「大事なのは B ではない」が何十回</td><td>対比が情報を運ぶ箇所だけ残し、あとは平叙文に</td></tr>
+        <tr><td><strong>あいまいな帰属</strong></td><td>「多くの専門家がこう見ています。」</td><td>出典を名前で挙げる。挙げられなければ文を削る</td></tr>
+        <tr><td><strong>丸ごと太字</strong></td><td>節の単位の長い一節を丸ごと<strong>太字</strong>で繰り返す</td><td>中心の用語・定義部だけ太字に</td></tr>
+    </tbody>
+</table>
+</div>
+<p>日本語・韓国語の本文では、このほかに「〜することが確認できます」の繰り返しや、味のない締めの段落（「今後が楽しみです」）のような相応パターンも一緒に見ます — 原文の例が英語なので、移し替えることが Humanize KR 運用の半分です。</p>
+
+<h3>半分は「消さない技術」— 誤検出を防ぐ</h3>
+<p>このスキルでパターンの一覧と同じくらい大事なのが、<strong>何に触るなという指針</strong>です。きれいな文法、乾いた文体、エムダッシュひとつ — これらは単独では AI の証拠になりません。判断は<strong>痕跡の群れ</strong>で行います。エムダッシュひとつは何の意味も持ちませんが、エムダッシュ＋無理な三点セット＋「生き生きとしたタペストリー」＋紋切り型の結論の段落がひとつの文章に集まれば、それは自白だ、というわけです。</p>
+<ul>
+    <li><strong>人の書いた徴候は保存する</strong> — でっち上げにくい具体的なディテール、解消されない両価の感情、自己訂正の括弧、長さの不揃いな文。これらを整えて消すと、文章はむしろ AI らしくなります。</li>
+    <li><strong>著者の見本がルールより優先</strong>（Voice Calibration）— 著者の既存の文章がエムダッシュを使うなら、スキルのエムダッシュ禁止条項より著者の習慣に従います。このウィキのエムダッシュ・曲がった引用符・用語の定義の太字が全数適用を生き残った根拠がこの条項です。</li>
+    <li><strong>事実は不変</strong> — より人間らしく聞かせるために原文にない事実・数値・引用をでっち上げたら、それらしく読めても欠陥と数えます。</li>
+    <li><strong>ジャンルを尊重する</strong> — 参照・技術文書の中立で平明な文体は、それ自体が正しい人間の声です。そこへ個性を注ぎ込むのも誤検出です。</li>
+</ul>
+
+<h3>どう動くのか — 下書き・監査・最終版</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="im-not-ai の流れ: 原文のスキャン → 下書きの書き直し → 二つの問いによる監査 → 最終版">
+    <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="85" y="46" text-anchor="middle">① 原文スキャン</text>
+    <text class="d-sub" x="85" y="63" text-anchor="middle">33 パターン照合</text>
+
+    <rect class="d-box" x="180" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="255" y="46" text-anchor="middle">② 下書き直し</text>
+    <text class="d-sub" x="255" y="63" text-anchor="middle">情報はそのまま</text>
+
+    <rect class="d-box" x="350" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="425" y="46" text-anchor="middle">③ 二つの問い</text>
+    <text class="d-sub" x="425" y="63" text-anchor="middle">残る癖・事実の検証</text>
+
+    <rect class="d-box accent" x="520" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="595" y="46" text-anchor="middle">④ 最終版</text>
+    <text class="d-sub" x="595" y="63" text-anchor="middle">人の徴候を保存</text>
+
+    <line class="d-edge" x1="160" y1="48" x2="176" y2="48"/><polygon class="d-arrow" points="172,43 180,48 172,53"/>
+    <line class="d-edge" x1="330" y1="48" x2="346" y2="48"/><polygon class="d-arrow" points="342,43 350,48 342,53"/>
+    <line class="d-edge" x1="500" y1="48" x2="516" y2="48"/><polygon class="d-arrow" points="512,43 520,48 512,53"/>
+</svg>
+<div class="d-cap">一度で直して終わりにせず、下書きを書いてから二つの問いで自己監査し、最終版を出します。</div>
+</div>
+<p>直す前に下書きを書き、その下書きへ二つの問いを投げます。<strong>「この文章はなぜまだ AI のように読めるのか？」</strong>そして<strong>「原文にない事実・名前・数値・引用を言っていないか？」</strong>この監査を通ったものだけが最終版になります。呼び出し方は三通りです — 会話に文章を貼れば下書き・監査メモ・最終版まで見せてくれ、ファイルを指せばその場で直して要約だけ報告し、別の作業の一段階として動くとき（例: このウィキの文書の執筆）は静かに最終版だけを出します。</p>
+
+<h3>インストールと使い方</h3>
+<p>スキルの実体はマークダウン一枚です（<a href="/p/ja/skl-what/">スキルとは何か</a>参照）。リポジトリかユーザーフォルダのスキルのディレクトリへフォルダごと入れれば終わりです。</p>
+<pre><code><span class="c"># このウィキのインストール位置 — プロジェクトのスキル</span>
+.claude/skills/im-not-ai/
+├── SKILL.md      <span class="c"># フロントマター（name・description）＋ 33 パターン＋誤検出の指針</span>
+└── LICENSE       <span class="c"># MIT（原作者 blader）</span></code></pre>
+<p>使うときは <code>/im-not-ai</code> で直接呼ぶか、「この文章の AI っぽさを消して」のように言えば、フロントマターの description を根拠に自動で発動します。このウィキでは呼ぶ段階すら省かれています — <strong>コンテンツの執筆に無条件で適用</strong>が CLAUDE.md のルールなので、新しい文書は自動で下書き → パターン点検 → 最終版の手順を通ります。</p>
+
+<h3>このウィキの実戦記録 — 121 編を全部通してみたら</h3>
+<p>ルールを作って終わりにはしませんでした。導入の直後に GraphDB の記事 2 編へ先に適用して感触をつかみ、続けて残り全部を System 単位で遡って監査しました — これで<strong>インデックス文書 121 編 × 3 言語がすべてこのスキルを通過</strong>しています。結果はふたつで、どちらも予想と少し違いました。</p>
+<ul>
+    <li><strong>全数の遡及で確定した修正は 22 文ほどにとどまりました。</strong>講義の実記録（話し手の口調と比喩が生きている文書）と参照文書（中立の文体が正解のジャンル）は大部分が検出ゼロ — スキル自身の誤検出防止の指針が「触るな」と判定したのです。実際の修正はアフォリズムの解体、あいまいな帰属の整理、「X ではなく Y」の反復の解消、丸ごと太字の平文化のように、文の単位にとどまりました。</li>
+    <li><strong>文体の監査が事実の誤りも一緒に捕まえました。</strong>パターンの点検は文を一行ずつ読み直させるので、文体の外のずれも一緒に浮かびました — グラフのビューが 9 つに増えたのに「7 つ」のままだった文、図は三分岐なのに本文は「ふたつ」と言うインストール文書、行を足すと 11 になる「十大難問」記事の表、地図ページの古いハブの数値まで。このスキルを回す費用のかなりの部分を、ここで取り返しました。</li>
+</ul>
+<p>まとめると、このスキルの使いみちは文章の偽装ではありません。統計的な平均へ滑った文をつかまえて、<strong>具体的に何を主張しているのかを問い直すこと</strong> — その過程で文体も、ときには内容も直っていきます。</p>
+
+<div class="note">
+    <span class="nh">出典</span>
+    · 原本のスキル: <a href="https://github.com/blader/humanizer" target="_blank" rel="noopener">blader/humanizer</a>（MIT）— このウィキの <code>.claude/skills/im-not-ai</code> に原文のまま収録<br>
+    · 根拠の文書: <a href="https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing" target="_blank" rel="noopener">Wikipedia: Signs of AI writing</a>（WikiProject AI Cleanup）<br>
+    · このウィキの導入・全数適用の記録: <a href="/p/ja/wl-20260809-ops/">2026-08-09 運用ログ</a> · <a href="/p/ja/wl-20260810-content/">2026-08-10 コンテンツログ</a>
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Skills · im-not-ai &middot; <span class="pr-k">作成日</span> 2026-08-10 &middot; <span class="pr-k">更新日</span> 2026-08-10</p>
+</body>
+</html>

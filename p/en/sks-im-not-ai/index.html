@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>im-not-ai (Humanize KR) — An Editing Skill That Erases the AI Tell</title>
+<meta name="description" content="AI-written text gives itself away through habits, not grammar — an introduction to im-not-ai, an editing skill that finds and removes 33 traces such as inflated significance, aphorism formulas, signposting, fake candor, mechanical rule-of-three, and vague attribution. The body is blader&#x27;s humanizer (MIT) vendored verbatim; its root is Wikipedia&#x27;s &quot;Signs of AI writing&quot;. Covers the equally important false-positive half (judge by clusters of tells, preserve human signals, the author&#x27;s sample outranks the rules, facts are immutable, respect the genre), the draft → two-question audit → final loop, installation and invocation, and this wiki&#x27;s field record of passing all 121 indexed documents × 3 languages through it — only about 22 sentences of edits, with the style audit catching factual errors (7→9 views, a table summing wrong) along the way">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/sks-im-not-ai/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/sks-im-not-ai/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/sks-im-not-ai/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/sks-im-not-ai/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/sks-im-not-ai/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="im-not-ai (Humanize KR) — An Editing Skill That Erases the AI Tell">
+<meta property="og:description" content="AI-written text gives itself away through habits, not grammar — an introduction to im-not-ai, an editing skill that finds and removes 33 traces such as inflated significance, aphorism formulas, signposting, fake candor, mechanical rule-of-three, and vague attribution. The body is blader&#x27;s humanizer (MIT) vendored verbatim; its root is Wikipedia&#x27;s &quot;Signs of AI writing&quot;. Covers the equally important false-positive half (judge by clusters of tells, preserve human signals, the author&#x27;s sample outranks the rules, facts are immutable, respect the genre), the draft → two-question audit → final loop, installation and invocation, and this wiki&#x27;s field record of passing all 121 indexed documents × 3 languages through it — only about 22 sentences of edits, with the style audit catching factual errors (7→9 views, a table summing wrong) along the way">
+<meta property="og:url" content="https://dewytear.github.io/p/en/sks-im-not-ai/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="im-not-ai (Humanize KR) — An Editing Skill That Erases the AI Tell">
+<meta name="twitter:description" content="AI-written text gives itself away through habits, not grammar — an introduction to im-not-ai, an editing skill that finds and removes 33 traces such as inflated significance, aphorism formulas, signposting, fake candor, mechanical rule-of-three, and vague attribution. The body is blader&#x27;s humanizer (MIT) vendored verbatim; its root is Wikipedia&#x27;s &quot;Signs of AI writing&quot;. Covers the equally important false-positive half (judge by clusters of tells, preserve human signals, the author&#x27;s sample outranks the rules, facts are immutable, respect the genre), the draft → two-question audit → final loop, installation and invocation, and this wiki&#x27;s field record of passing all 121 indexed documents × 3 languages through it — only about 22 sentences of edits, with the style audit catching factual errors (7→9 views, a table summing wrong) along the way">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "im-not-ai (Humanize KR) — An Editing Skill That Erases the AI Tell",
+ "description": "AI-written text gives itself away through habits, not grammar — an introduction to im-not-ai, an editing skill that finds and removes 33 traces such as inflated significance, aphorism formulas, signposting, fake candor, mechanical rule-of-three, and vague attribution. The body is blader's humanizer (MIT) vendored verbatim; its root is Wikipedia's \"Signs of AI writing\". Covers the equally important false-positive half (judge by clusters of tells, preserve human signals, the author's sample outranks the rules, facts are immutable, respect the genre), the draft → two-question audit → final loop, installation and invocation, and this wiki's field record of passing all 121 indexed documents × 3 languages through it — only about 22 sentences of edits, with the style audit catching factual errors (7→9 views, a table summing wrong) along the way",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/sks-im-not-ai/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!sks-im-not-ai",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-08-10T17:46:22+09:00",
+ "dateModified": "2026-08-10T17:46:22+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!sks-im-not-ai">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/sks-im-not-ai/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/ja/sks-im-not-ai/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>im-not-ai (Humanize KR) — An Editing Skill That Erases the AI Tell</h2>
+
+<p>AI-written text gives itself away. Not through bad grammar — and not even through being too polished. The tell is in the <strong>habits</strong>: inflating any event into "a pivotal milestone", opening sentences with "experts believe" and no source, lining everything up in threes, the urge to end every paragraph like a proverb. <strong>im-not-ai is an editing skill that finds and removes 33 such traces.</strong> Since 2026-08-09 this wiki has a standing rule (in CLAUDE.md) that <strong>every article passes through this skill before registration</strong>, and because the original's examples are English and we carry them over as corresponding Korean patterns, we also call the practice <strong>Humanize KR</strong>.</p>
+
+<h3>Where the skill comes from</h3>
+<p>The body of the skill is <strong>humanizer</strong>, published by blader. This wiki vendored it verbatim into <code>.claude/skills/im-not-ai/SKILL.md</code> (MIT license, LICENSE included); the only thing changed was the skill's name. And its roots go deeper — Wikipedia's <strong>"Signs of AI writing"</strong> page, the field notes of the WikiProject AI Cleanup team, accumulated while cleaning thousands of AI-generated articles out of Wikipedia. The page's key insight: <em>"LLMs use statistical algorithms to guess what should come next. The result tends toward the most statistically likely result that applies to the widest variety of cases."</em> That is why the tell exists — a sentence that has slid toward the average fits any article, and says nothing precisely.</p>
+
+<h3>What it catches — eight representative patterns</h3>
+<p>The skill organizes its 33 patterns into five groups: content, language, style, communication, and filler. You do not need to memorize them; the representative ones that come up most in this wiki's writing give you the idea.</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Pattern</th><th>The AI-flavored sentence</th><th>The fix</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Inflated significance</strong></td><td>"The real value of this tool lies in trust."</td><td>(Delete the sentence — the concrete evidence in the next sentence is the value)</td></tr>
+        <tr><td><strong>Aphorism formula</strong></td><td>"The quality of retrieval ultimately comes from the quality of storage."</td><td>"The search recognized the story because the plot had been planted with care."</td></tr>
+        <tr><td><strong>Signposting</strong></td><td>"Below, we will unpack this problem step by step."</td><td>(No preview — go straight in)</td></tr>
+        <tr><td><strong>Fake candor</strong></td><td>"Bluntly? It depends on the situation."</td><td>"It depends on the situation."</td></tr>
+        <tr><td><strong>Mechanical rule of three</strong></td><td>"You will gain innovation, inspiration, and insight."</td><td>(Three only when there really are three — otherwise two, or four, or however many exist)</td></tr>
+        <tr><td><strong>"Not X but Y" on repeat</strong></td><td>"The point is not A", "what matters is not B" — dozens of times in one document</td><td>Keep the contrasts that carry information; make the rest plain statements</td></tr>
+        <tr><td><strong>Vague attribution</strong></td><td>"Many experts see it this way."</td><td>Name the source, or cut the sentence if you cannot</td></tr>
+        <tr><td><strong>Wholesale bolding</strong></td><td>Entire clauses repeatedly set in <strong>bold</strong></td><td>Bold only key terms and definitions</td></tr>
+    </tbody>
+</table>
+</div>
+<p>For Korean text we also watch corresponding local patterns — the repeated "~하는 것을 확인할 수 있습니다" ending, the bland send-off paragraph ("exciting times lie ahead"). The original's examples are in English, so carrying them over is half of what Humanize KR means in practice.</p>
+
+<h3>The other half is knowing what not to touch</h3>
+<p>Just as important as the pattern list is the skill's guidance on <strong>what to leave alone</strong>. Clean grammar, dry prose, a single em dash — none of these is evidence of AI on its own. The judgment works on <strong>clusters</strong> of tells. One em dash means nothing; an em dash plus a forced triad plus a "vibrant tapestry" plus a stock conclusion paragraph, all in one piece, is a confession.</p>
+<ul>
+    <li><strong>Preserve human signals</strong> — hard-to-fabricate specifics, unresolved mixed feelings, self-correcting parentheticals, uneven sentence lengths. Smooth these away and the text becomes more AI-like, not less.</li>
+    <li><strong>The author's sample outranks the rules</strong> (Voice Calibration) — if the author's existing writing uses em dashes, their habit wins over the skill's em dash ban. This clause is why this wiki's em dashes, curly quotes, and definitional bolds survived the full retroactive pass.</li>
+    <li><strong>Facts are immutable</strong> — inventing a fact, number, or quote to sound more human counts as a defect, however natural it reads.</li>
+    <li><strong>Respect the genre</strong> — the neutral, plain voice of reference and technical documents is itself the correct human voice. Injecting personality there is a false positive too.</li>
+</ul>
+
+<h3>How it works — draft, audit, final</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="im-not-ai flow: scan the original, rewrite a draft, audit with two questions, deliver the final">
+    <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label sm" x="85" y="46" text-anchor="middle">① Scan</text>
+    <text class="d-sub" x="85" y="63" text-anchor="middle">against 33 patterns</text>
+
+    <rect class="d-box" x="180" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label sm" x="255" y="46" text-anchor="middle">② Draft rewrite</text>
+    <text class="d-sub" x="255" y="63" text-anchor="middle">information intact</text>
+
+    <rect class="d-box" x="350" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label sm" x="425" y="46" text-anchor="middle">③ Two-question audit</text>
+    <text class="d-sub" x="425" y="63" text-anchor="middle">remaining tells · facts</text>
+
+    <rect class="d-box accent" x="520" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label sm" x="595" y="46" text-anchor="middle">④ Final</text>
+    <text class="d-sub" x="595" y="63" text-anchor="middle">human signals kept</text>
+
+    <line class="d-edge" x1="160" y1="48" x2="176" y2="48"/><polygon class="d-arrow" points="172,43 180,48 172,53"/>
+    <line class="d-edge" x1="330" y1="48" x2="346" y2="48"/><polygon class="d-arrow" points="342,43 350,48 342,53"/>
+    <line class="d-edge" x1="500" y1="48" x2="516" y2="48"/><polygon class="d-arrow" points="512,43 520,48 512,53"/>
+</svg>
+<div class="d-cap">It does not fix in one pass: it writes a draft, audits itself with two questions, then delivers the final.</div>
+</div>
+<p>Before fixing anything it writes a draft, then puts two questions to that draft: <strong>"What still makes this read like AI?"</strong> and <strong>"Does it state any fact, name, number, or quote that is not in the source?"</strong> Only what passes this audit becomes the final version. There are three ways to invoke it — paste text into the conversation and it shows the draft, the audit notes, and the final; point it at a file and it rewrites in place, reporting only a summary; and when it runs as one step of a larger job (say, writing this wiki's documents) it quietly outputs the final text alone.</p>
+
+<h3>Installing and using it</h3>
+<p>The skill is really just one markdown file (see <a href="/p/en/skl-what/">What is a Skill</a>). Drop the folder into your repository's or user-level skills directory and you are done.</p>
+<pre><code><span class="c"># Where this wiki installed it — a project skill</span>
+.claude/skills/im-not-ai/
+├── SKILL.md      <span class="c"># frontmatter (name · description) + 33 patterns + false-positive guidance</span>
+└── LICENSE       <span class="c"># MIT (original author: blader)</span></code></pre>
+<p>Call it directly with <code>/im-not-ai</code>, or just say "remove the AI tells from this text" and the frontmatter description triggers it automatically. On this wiki even the calling step is gone — <strong>applying it to all content writing is mandatory</strong> under the CLAUDE.md rule, so every new document goes through draft → pattern check → final on its own.</p>
+
+<h3>Field record — putting all 121 documents through it</h3>
+<p>The rule did not stop at being written down. Right after installing, we applied the skill to the two GraphDB articles to get a feel for it, then retroactively audited everything else, System by System — with that, <strong>all 121 indexed documents × 3 languages have passed through the skill</strong>. The outcome had two parts, and both were a little unexpected.</p>
+<ul>
+    <li><strong>The full retroactive pass settled on only about 22 sentences of edits.</strong> Lecture transcriptions (with the speaker's spoken rhythm and metaphors intact) and reference documents (where a neutral voice is the correct genre) mostly came back with zero detections — the skill's own false-positive guidance ruled "leave it alone". The real edits stayed at sentence level: dismantling aphorisms, tightening vague attributions, thinning out "not X but Y" repetition, unbolding runs of whole clauses.</li>
+    <li><strong>The style audit caught factual errors along the way.</strong> Pattern checking forces you to reread every sentence, so mismatches beyond style surfaced with it — a sentence still saying "seven views" after the graph grew to nine, an install document saying "two ways" under a three-branch diagram, a news table whose rows added up to eleven under a headline of ten, stale hub counts on the map pages. A good share of the cost of running the skill came back right here.</li>
+</ul>
+<p>So the skill's use is not disguise. It grabs the sentences that slid toward the statistical average and asks them <strong>what, concretely, they claim</strong> — and in that process the style gets fixed, and sometimes the content does too.</p>
+
+<div class="note">
+    <span class="nh">Sources</span>
+    · Original skill: <a href="https://github.com/blader/humanizer" target="_blank" rel="noopener">blader/humanizer</a> (MIT) — vendored verbatim at this wiki's <code>.claude/skills/im-not-ai</code><br>
+    · Basis: <a href="https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing" target="_blank" rel="noopener">Wikipedia: Signs of AI writing</a> (WikiProject AI Cleanup)<br>
+    · This wiki's adoption and full-pass records: <a href="/p/en/wl-20260809-ops/">ops log 2026-08-09</a> · <a href="/p/en/wl-20260810-content/">content log 2026-08-10</a>
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Skills · im-not-ai &middot; <span class="pr-k">Created</span> 2026-08-10 &middot; <span class="pr-k">Updated</span> 2026-08-10</p>
+</body>
+</html>
