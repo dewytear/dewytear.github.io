@@ -67,8 +67,8 @@
 
 <h3>LLM이 발달하면 온톨로지는 필요 없어지지 않나</h3>
 <p>가장 날카로운 질문입니다. LLM이 레거시 정보를 그대로 이해하고 늘 정확히 답해 준다면 온톨로지는 필요 없습니다. 문제는 <strong>환각(hallucination)</strong>이 생각보다 심각하다는 데 있습니다. 특히 숫자 하나가 틀리면 안 되는 미션 크리티컬 업무 — 반도체 수율 계산, 보험 지급 심사 — 에서는 "대체로 맞는" 답이 쓸모가 없습니다.</p>
-<p>온톨로지가 환각을 줄이는 원리는 단순합니다. LLM에게 전부 맡기는 대신, <strong>구조가 정해 둔 범위 안에서만 답하게 제약</strong>하는 겁니다. 한국의 한 온톨로지 솔루션 기업은 질문과 LLM 사이에 자체 개발한 온톨로지 쿼리 언어를 끼워 넣어, 쿼리문 작성 같은 환각이 생길 만한 자유도를 LLM에게 아예 주지 않는 방식을 씁니다. 원리는 이 위키의 <a href="#!gdb-graphrag">GraphRAG 문서</a>가 다룬 "벡터로 건지고 그래프로 걷는" 접근과 같은 계보입니다 — 확률적인 모델에 결정론적인 구조를 붙여 주는 것.</p>
-<p>효과는 외부 연구들도 일관되게 보고합니다. 온톨로지 기반 하이퍼그래프 검색을 쓴 OG-RAG(EMNLP 2025)는 네 가지 LLM에서 <strong>사실 회수율 +55%, 응답 정확도 +40%</strong>를 보고했고, 임상 질의응답 연구에서는 온톨로지에 근거한 지식 그래프로 <strong>환각률을 63%에서 1.7%로</strong> 낮췄다는 결과가 나왔습니다. 앞의 솔루션 기업도 베이스 LLM 단독 대비 자사 온톨로지 결합 시 환각률이 크게 낮아진다는 자체 측정치를 밝힌 바 있습니다(하단 사실검증 노트 참고). 수치는 환경마다 다르지만 방향은 같습니다 — <strong>구조가 있으면 모델이 지어낼 자리가 줄어듭니다.</strong></p>
+<p>온톨로지가 환각을 줄이는 원리는 단순합니다. LLM에게 전부 맡기는 대신, <strong>구조가 정해 둔 범위 안에서만 답하게 제약</strong>하는 겁니다. 한국의 온톨로지 솔루션 기업 인포시즈(INFOCZ, 지식그래프 솔루션 GORAG 개발사)는 질문과 LLM 사이에 자체 개발한 온톨로지 쿼리 언어를 끼워 넣어, 쿼리문 작성 같은 환각이 생길 만한 자유도를 LLM에게 아예 주지 않는 방식을 씁니다. 원리는 이 위키의 <a href="#!gdb-graphrag">GraphRAG 문서</a>가 다룬 "벡터로 건지고 그래프로 걷는" 접근과 같은 계보입니다 — 확률적인 모델에 결정론적인 구조를 붙여 주는 것.</p>
+<p>효과는 외부 연구들도 일관되게 보고합니다. 온톨로지 기반 하이퍼그래프 검색을 쓴 OG-RAG(EMNLP 2025)는 네 가지 LLM에서 <strong>사실 회수율 +55%, 응답 정확도 +40%</strong>를 보고했고, 임상 질의응답 연구에서는 온톨로지에 근거한 지식 그래프로 <strong>환각률을 63%에서 1.7%로</strong> 낮췄다는 결과가 나왔습니다. 인포시즈도 베이스 LLM 단독 대비 자사 온톨로지 결합 시 환각률이 크게 낮아진다는 자체 측정치를 밝힌 바 있습니다(하단 사실검증 노트 참고). 수치는 환경마다 다르지만 방향은 같습니다 — <strong>구조가 있으면 모델이 지어낼 자리가 줄어듭니다.</strong></p>
 <p>그럼 LLM이 더 발달하면? 현장의 전망은 신중합니다. 추론 능력은 계속 좋아지겠지만, <strong>기업 내부 데이터는 LLM이 사전학습으로 접근할 수 없는 영역</strong>으로 남습니다. 그래서 발전의 방향은 "온톨로지가 필요 없어지는 쪽"이 아니라 "LLM이 온톨로지 같은 구조를 더 잘 쓰는 쪽"이 될 거라는 겁니다.</p>
 
 <h3>그래프 DB와 같은 건가요</h3>
@@ -95,5 +95,6 @@
     · 정의: <a href="https://tomgruber.org/writing/definition-of-ontology/" target="_blank" rel="noopener">Tom Gruber — Definition of Ontology</a> · W3C <a href="https://www.w3.org/TR/owl2-overview/" target="_blank" rel="noopener">OWL 2 Overview</a><br>
     · 구조 선례: <a href="https://www.palantir.com/docs/foundry/ontology/overview" target="_blank" rel="noopener">Palantir Foundry — Ontology Overview</a> ("조직의 디지털 트윈", objects·links·actions)<br>
     · 환각 감소 연구: OG-RAG(EMNLP 2025, <a href="https://arxiv.org/abs/2412.15235" target="_blank" rel="noopener">arXiv</a>) — 사실 회수 +55%·정확도 +40% · 임상 QA의 온톨로지 근거 지식 그래프 연구(<a href="https://www.sciencedirect.com/science/article/abs/pii/S1532046426000171" target="_blank" rel="noopener">ScienceDirect</a>) — 환각 63%→1.7%<br>
-    · <strong>업체 수치의 한계</strong>: 본문 속 솔루션 기업의 환각률 비교(베이스 LLM 32% · 오픈소스 최상 18% · 온톨로지 결합 5%)와 쿼리 언어의 효과는 <strong>해당 업체의 자체 측정·자체 발표</strong>로, 독립 검증치가 아닙니다(이 위키 방침에 따라 회사·제품명은 밝히지 않습니다). 본문은 방향성의 근거로만 인용했습니다.
+    · <strong>업체 수치의 한계</strong>: 인포시즈가 밝힌 환각률 비교(베이스 LLM 32% · 오픈소스 최상 18% · 온톨로지 결합 5%)와 쿼리 언어의 효과는 <strong>해당 업체의 자체 측정·자체 발표</strong>로, 독립 검증치가 아닙니다. 본문은 방향성의 근거로만 인용했습니다.<br>
+    · 업체 정보: <a href="https://infocz.co.kr/" target="_blank" rel="noopener">인포시즈(INFOCZ) 공식 사이트</a> · <a href="https://www.hankyung.com/article/2026081051241" target="_blank" rel="noopener">투자 유치 보도(한국경제)</a> · <a href="http://www.ainet.link/24282" target="_blank" rel="noopener">GORAG 소개 기사(AI넷)</a>
 </div>
