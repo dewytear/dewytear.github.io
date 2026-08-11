@@ -26,6 +26,10 @@ jobs:
       # 프리렌더 스냅샷(/p/<name>/·404.html)도 같은 원칙 — 문서를 고치고
       # 재생성하지 않으면 실패(옛 스냅샷 잔존 stale까지 검사)
       - run: python tools/build_prerender.py --check
+      # 지식 지도의 정적 폴백(km-*) — /p/ 스냅샷과 첫 페인트가 이걸 그대로
+      # 내보내므로 인덱스와 어긋나면 실패. 손으로 맞추던 시절 브리지·허브가
+      # 낡고 영문 개념명이 한국어로 남아 있었다(2026-08-11).
+      - run: python tools/build_map_fallbacks.py --check
       # 동봉 플러그인 tools 스냅샷이 source of truth(tools/)와 어긋나면 실패
       # (push·PR 양쪽 — stateless 정합 검사라 base diff 불필요)
       - if: github.event_name != 'pull_request'

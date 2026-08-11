@@ -22,3 +22,15 @@
 
 <h3>구조 정리 — 그래프 기사 2편을 News에서 GraphDB로 이동</h3>
 <p>대표님 지시: News &amp; Articles의 04·05번 글(<a href="#!news-20260710-oracle-ontology-property-graph">오라클 온톨로지와 프로퍼티 그래프</a>, <a href="#!news-20260711-neo4j-rdf-vs-property-graph">RDF vs 프로퍼티 그래프</a>)을 <strong>GraphDB 폴더로 이동</strong>하고 양쪽 번호를 정리. 물리 경로를 <code>ai/news/2026/</code> → <code>ai/graphdb/</code>로 이동(git mv, 3언어), 문서 ID는 불변 규칙에 따라 유지(해시 라우트·생성일·관계 보존). <strong>GraphDB 폴더 순번은 생성일 순</strong> — 오라클(07-10) → Neo4j(07-11) → GraphRAG(08-09) → 벡터 리트리버(08-09). News 쪽은 이동으로 순번이 두 칸 당겨져 유일한 명시 번호였던 "06. AI 2040: Plan A" 브랜치 타이틀을 <strong>"04."로 정정</strong>(3언어). ai-map ×3의 편수 갱신(GraphDB 2→4, News 15→13), 클러스터는 최장 접두 매칭이라 재등록 불필요 — 두 기사가 "AI · GraphDB" 클러스터로 자동 이속.</p>
+
+<h3>지식 지도 — System 상세 6개 보강 (9/15 → 15/15)</h3>
+<p>정합성 판정에서 드러난 서술 갭. 지도의 "System 상세" 절이 강의 System 9개만 설명하고 <strong>고찰·CLAUDE.md·Skills·GraphDB·Ontology·News &amp; Articles 6개는 표에만 있고 설명이 없었다</strong>. GraphDB 4편·News 13편처럼 규모가 있는 갈래가 빠져 있어 3언어로 채웠다.</p>
+<ul>
+    <li><strong>고찰</strong> — 지식 체계가 작동을 설명한다면 고찰은 다른 방식과 견줘 위치를 묻는다는 대비로 세웠다.</li>
+    <li><strong>CLAUDE.md</strong> — 게이트 문서(<a href="#!kgs-gates">위키는 어떻게 스스로를 지키는가</a>)와 짝으로 읽으라는 안내를 달았다 — 규칙과 기계 강제가 맞물리는 지점.</li>
+    <li><strong>Skills</strong> — 원리를 가르치는 Skill 강의와 개별 스킬을 소개하는 Skills를 구분해 적었다(이름이 비슷해 혼동되는 자리).</li>
+    <li><strong>GraphDB</strong> — 사이드바는 등재순이지만 읽는 순서는 개념(GraphRAG) → 실습(벡터 리트리버) → 모델 논쟁(RDF vs PG) → 벤더 구현(오라클)이 편하다고 안내했다.</li>
+    <li><strong>Ontology</strong> — 저장 기술(GraphDB) 위의 의미 층이라는 관계를 앞세우고, 벤더 자체 수치는 사실검증 노트와 함께 읽으라고 덧붙였다.</li>
+    <li><strong>News &amp; Articles</strong> — 순서 없이 읽어도 되는 갈래임을 밝히고 모델 축·일하는 방식 축으로 묶었다. AI 2040 4부작이 하위 폴더로 따로 있음도 표시.</li>
+</ul>
+<p class="scn-sub">링크 전수 확인 — 새로 넣은 참조가 모두 실재 문서를 가리키는지 인덱스와 대조했다(3언어 통과).</p>

@@ -3286,6 +3286,12 @@
         body.day .scn-pill.lv2{ color: #916812; }
         body.day .scn-pill.lv3{ color: #c0392b; }
         article .scn-card .scn-body{ margin: 0; font-size: 13px; color: var(--text); line-height: 1.6; }
+        /* 부속 문단·주석 — 본문보다 한 단 낮은 목소리. 원래 시나리오 카드
+           전용(.scn-card .scn-sub)으로 태어났는데 카드 밖에서도 본문의 곁말로
+           쓰이게 됐고, 선택자가 카드에 묶여 있어 276곳이 본문과 똑같이 그려지고
+           있었다(2026-08-11 발견). 카드 안쪽은 아래 줄이 특이도로 계속 이긴다. */
+        .scn-sub{ font-size: 13.5px; color: var(--muted); }
+        article p.scn-sub{ line-height: 1.7; margin: -6px 0 16px; }
         .scn-card .scn-sub{ font-size: 12px; color: var(--muted); font-weight: 700; }
         .scn-team{ display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
         .scn-team span{

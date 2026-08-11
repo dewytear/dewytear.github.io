@@ -31,6 +31,7 @@ STEPS = [
     ('validate_all',          lambda b: ['tools/validate_all.py'],                 False),
     ('build_ai_export chk',   lambda b: ['tools/build_ai_export.py', '--check'],   False),
     ('build_prerender chk',   lambda b: ['tools/build_prerender.py', '--check'],   False),
+    ('map fallbacks chk',     lambda b: ['tools/build_map_fallbacks.py', '--check'], False),
     ('check_plugin_sync',     lambda b: ['tools/check_plugin_sync.py', '--base', b], True),
     ('check_worklog',         lambda b: ['tools/check_worklog.py', '--base', b],   True),
     ('check_cachebuster',     lambda b: ['tools/check_cachebuster.py', '--base', b], True),

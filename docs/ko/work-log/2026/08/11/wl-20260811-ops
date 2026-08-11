@@ -1,0 +1,22 @@
+<h2>2026-08-11 · 운영·도구 — 지식 지도 폴백을 손이 아니라 인덱스에서 만든다</h2>
+
+<p>대표님 요청으로 지식 지도의 정합성을 판정했고, 그 결과를 도구로 굳혔다. 변경 유형: <strong>TOOL</strong>.</p>
+
+<h3>판정 — 다섯 블록 중 둘이 낡아 있었다</h3>
+<p>지도(ai-map·dz-map)는 <code>km-clusters</code>·<code>km-hubs</code>·<code>km-bridges</code>·<code>km-top</code>·<code>km-totals</code> 다섯 블록을 <strong>정적 HTML로도</strong> 들고 있다. 화면에서는 <code>hydrateAiMap()</code>이 인덱스로 덮어쓰므로 방문자는 최신값을 보지만, 정적 쪽이 그대로 나가는 자리가 둘 있다 — <code>/p/</code> 프리렌더 스냅샷(크롤러·SNS 미리보기·JS 비활성)과 하이드레이션 직전 첫 페인트. 대조 결과:</p>
+<ul>
+    <li><strong>정합</strong> — System 표 15행(라벨·편수·data-topics 키), 총계 113편·354개, 상위 개념 16개, 상단 도식의 Domain 박스는 모두 인덱스와 일치했다.</li>
+    <li><strong>불일치</strong> — 브리지 표의 '스킬'이 8개·22편에 멈춰 있었다(실제 9개·23편), CLAUDE.md는 6/6(실제 7/7), 상위 8의 구성 자체가 바뀌어 검증(5·11)·RAG(5·5)가 빠지고 에이전트·지식그래프가 남아 있었다. 허브 목록에서는 gdb-graphrag가 6회 무리에 남아 있었다(실제 7회).</li>
+    <li><strong>번역 누락</strong> — <strong>영문 지도의 브리지 개념명 7개가 한국어 그대로</strong>였다(스킬·서브에이전트·슬래시명령어·설치·마켓플레이스·에이전트·지식그래프). 일본어는 정상이었고, <code>/p/en/ai-map/</code> 스냅샷에도 한국어가 박혀 있었다.</li>
+</ul>
+<p class="scn-sub">기존 게이트(<code>validate_docs</code>의 <code>map-fallback-drift</code>)가 왜 못 잡았나 — clusters·km-top·km-totals만 검사하고 <strong>bridges·hubs는 아예 보지 않았다</strong>. 즉 낡은 곳이 정확히 검사 밖이었다.</p>
+
+<h3>해법 — 폴백을 사람이 쓰지 않게</h3>
+<p><code>tools/build_map_fallbacks.py</code>를 신설했다. <code>hydrateAiMap</code>과 <strong>같은 소스·같은 표시명·같은 문구</strong>로 다섯 블록을 만들어 6개 지도 문서(ko/en/ja × ai-map/dz-map)에 적는다 — 인덱스는 <code>data/knowledge-index.&lt;lang&gt;.json</code>, 개념 표시명은 <code>tools/concepts.&lt;lang&gt;.json</code>, 문구 템플릿은 <code>i18n.js</code>의 <code>kmRefs</code>·<code>kmEach</code>·<code>kmBridgeN</code>·<code>kmDocsN</code>·<code>kmTotals</code>. 대상 목록은 <code>validate_docs</code>의 <code>MAP_FALLBACKS</code>를 import해 정본을 하나로 뒀다(언어를 늘릴 때 두 곳을 고치는 사고 방지).</p>
+<ul>
+    <li>사람이 쓰는 부분은 그대로 — 클러스터 표의 '중심 주제' 열은 여전히 문서의 <code>data-topics</code> 속성에서 읽는다. 설명문은 손으로 쓰는 글이다.</li>
+    <li><code>--check</code>를 <code>check_all.py</code>(3단계 뒤)와 CI validate-all에 편입 — 이제 폴백 드리프트는 WARN이 아니라 <strong>실패</strong>다.</li>
+    <li><strong>검증</strong>: 헤드리스로 3언어를 각각 하드 리로드해 정적 블록과 하이드레이션 결과를 대조 — <code>km-clusters</code>·<code>km-hubs</code>·<code>km-bridges</code>·<code>km-top</code>·<code>km-totals</code> 다섯 모두 ko·en·ja에서 MATCH. 영문 브리지 개념명도 이 재생성으로 함께 번역됐다.</li>
+    <li>플러그인 번들에 새 도구 동봉 + <code>plugin.json</code> 0.28.8 → <strong>0.29.0</strong>(도구 추가라 minor).</li>
+</ul>
+<p class="scn-sub">부작용 하나 — 재생성된 폴백의 허브·클러스터 링크가 손으로 줄여 쓴 제목("그래프 DB와 GraphRAG") 대신 인덱스의 전체 제목("그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다")을 쓴다. 라이브 하이드레이션이 이미 전체 제목을 그리므로, 정적·라이브가 같아지는 쪽이 맞다고 판단했다.</p>

@@ -7,3 +7,16 @@
     <li>헤드리스 브라우저(CDP)로 노드 선택 → 카드 열림 → 버튼 계측으로 확인: <code>gl-pill</code> 적용·패딩 10px 12px·높이 50px(2줄 라벨).</li>
     <li>캐시버스터 <code>style.css?v=54</code>·<code>graphlive.js?v=6</code> 상향. check_cachebuster는 커밋 기준 비교라 못 잡는 케이스(음악 교체 때와 동일)로 수동 상향.</li>
 </ul>
+
+<h3>같은 부류 전수 감사 — 스타일이 끊긴 클래스 찾기</h3>
+<p>버튼 하나가 클래스 오타로 조용히 망가져 있었으니 같은 부류가 더 있는지 대표님 요청으로 전수 확인했다. 방법은 네 겹 — ①JS·HTML이 붙이는 클래스 268종을 CSS 선언(style.css + <strong>folder-dates.css</strong>)과 대조 ②인라인 <code>on*=</code> 핸들러 23개가 실제 전역 함수인지 ③<code>getElementById</code> 대상 50개가 마크업에 존재하는지 ④<code>var(--…)</code> 19종이 정의·폴백을 갖는지. 여기에 13개 화면을 헤드리스로 돌며 콘솔 예외를 수집했다(실 예외 0 — 오프라인 유튜브·카운터 경고만).</p>
+<p class="scn-sub">첫 감사에서 26건이 걸렸는데 대부분 정규식 오탐(<code>classList.toggle('x', path === 'y')</code>의 둘째 인자, 변수 보간)이었고, <code>folder-dates.css</code>를 빼먹어 생긴 오탐도 있었다 — CSS 파일이 하나가 아니라는 것을 확인 목록에 넣었다.</p>
+
+<h3>진짜 결함 — <code>.scn-sub</code> 276곳이 스타일 없이 렌더</h3>
+<p>감사에서 나온 최대 건. <code>.scn-sub</code>는 2026-07-04 시나리오 카드용으로 <code>.scn-card .scn-sub</code>(12px·굵게·흐리게)로 태어났는데, 그 뒤 워크로그·기사·지식지도에서 <strong>카드 밖 본문의 곁말</strong>로 쓰이기 시작했다. 선택자가 카드에 묶여 있어 카드 밖 용례는 선택자가 맞지 않고, 계측 결과 <strong>본문 문단과 완전히 동일</strong>(15px·<code>--text</code>·400)하게 그려지고 있었다. 89개 파일 276곳.</p>
+<ul>
+    <li>전역 <code>.scn-sub{ font-size: 13.5px; color: var(--muted); }</code> + <code>article p.scn-sub</code>의 줄간·여백 추가. 카드 안쪽은 <code>.scn-card .scn-sub</code>가 특이도로 계속 이겨 12px 굵게 유지 — 렌더 계측으로 세 용례(카드 내 div·카드 밖 p·인라인 span) 모두 확인했다.</li>
+    <li>같은 증상의 <code>&lt;p class="muted"&gt;</code> 3곳(sne-interface 3언어)은 새 클래스를 만들지 않고 하우스 관용구인 <code>scn-sub</code>로 바꿨다 — 용어를 둘로 늘리지 않는 편이 낫다.</li>
+    <li><code>style.css?v=55</code> 상향.</li>
+</ul>
+<p class="scn-sub">부수 확인(고치지 않음): 죽은 CSS 3개(<code>.about-motto</code>는 요소를 의도적으로 제거한 잔재, <code>.search-ico</code>·<code>.tag-count</code>), 아무도 읽지 않는 body 클래스 <code>folder-view</code>, 그리고 푸터 설정 아이콘 14×14px 같은 작은 탭 타깃 — 판단이 필요한 항목이라 백로그로 넘겼다.</p>
