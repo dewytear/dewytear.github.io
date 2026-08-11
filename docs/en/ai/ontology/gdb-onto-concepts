@@ -59,6 +59,12 @@
 
 <p>Here comes the part practitioners are most relieved to hear: <strong>this is not a migration that rips out your ERP and CRM.</strong> Legacy stays put; you define in this layer what the legacy data means and how it relates, and the LLM consults the layer when it searches or reasons. The pattern is already proven in industry — most prominently, Palantir calls its ontology <strong>"the digital twin of an organization"</strong>, the same structure of a semantic layer of objects, links, and actions laid over data assets.</p>
 
+<figure class="doc-img">
+    <img src="assets/ai/ontology/gdb-onto-concepts/palantir-ontology.webp" width="1400" height="800"
+         alt="Palantir Foundry ontology structure: data assets (datasets and models) at the bottom, the ontology semantic layer of objects, links, and actions above them, and applications and AI agents on top making decisions and writing back through actions">
+    <figcaption>Palantir Foundry's ontology structure — reconstructed by this wiki from the descriptions in the official docs (Palantir Foundry Docs, Ontology Overview)</figcaption>
+</figure>
+
 <h3>Won't better LLMs make ontologies unnecessary?</h3>
 <p>The sharpest question of the set. If an LLM could understand legacy information as-is and always answer correctly, you would not need an ontology. The problem is that <strong>hallucination</strong> is more serious than expected — and in mission-critical work where a single number must not be wrong (semiconductor yield calculations, insurance claim adjudication), a "mostly right" answer is useless.</p>
 <p>The principle by which an ontology reduces hallucination is simple: instead of leaving everything to the LLM, <strong>constrain it to answer only within what the structure defines</strong>. The company in the conversation described inserting its own ontology query language between the question and the LLM, so the LLM never gets the degrees of freedom — like composing query strings — where hallucination creeps in (the language was patented and then opened for anyone to use, they said). The principle is the same lineage as the "fish with vectors, walk with graphs" approach in this wiki's <a href="#!gdb-graphrag">GraphRAG article</a> — attaching a deterministic structure to a probabilistic model.</p>
