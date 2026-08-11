@@ -258,7 +258,7 @@ def build_stats(docs, cluster_labels=None):
     # Cluster membership is a subtree match: a doc belongs to the cluster
     # whose section is the LONGEST prefix of the doc's section path. Exact
     # equality alone silently dropped docs nested in sub-folders (e.g. the
-    # 4 docs under "… News & Articles · 2026 · 06. AI 2040: Plan A"), and
+    # 4 docs under "… News & Articles · 2026 · 04. AI 2040: Plan A"), and
     # longest-match keeps a doc in exactly one cluster even if a sub-folder
     # is later promoted to its own cluster.
     _sections = sorted((s for s, _ in cluster_labels), key=len, reverse=True)

@@ -688,7 +688,7 @@ function select(i){
     if(m.kind === 0){
         h += '<a class="c2-open" href="#!' + encodeURIComponent(m.id) + '">' + escapeHtml(STR('c2Open')) + '</a>';
     }
-    h += '<button type="button" class="gl-seed pill">' + escapeHtml(STR('glSeed')) + '</button>';
+    h += '<button type="button" class="gl-seed gl-pill">' + escapeHtml(STR('glSeed')) + '</button>';
     card.innerHTML = h;
     card.classList.add('on');
     R.panel.classList.remove('open');
