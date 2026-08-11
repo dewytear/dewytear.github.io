@@ -1,0 +1,9 @@
+<h2>2026-08-11 · 디자인·UI — 그래프 스튜디오 시드 버튼 크기 정상화</h2>
+
+<p>대표님 지적: 그래프 스튜디오에서 노드 카드의 <strong>"이 문서와 이웃을 제작 모드로 복사" 버튼의 상하 크기가 너무 작다</strong>. 원인을 추적해 보니 크기 값의 문제가 아니라 <strong>클래스 오타</strong>였다 — 버튼 마크업이 <code>class="gl-seed pill"</code>인데 style.css에는 <code>.pill</code>이 없고 <code>.gl-pill</code>만 있어, 필 스타일(패딩·라운드·글래스 배경)이 통째로 안 먹고 브라우저 기본 버튼으로 납작하게 렌더되고 있었다. 변경 유형: <strong>ENGINE + STYLE</strong>.</p>
+<ul>
+    <li><code>graphlive.js</code> — 버튼 클래스를 <code>gl-seed gl-pill</code>로 정정.</li>
+    <li><code>style.css</code> — <code>.gl-seed</code>에 세로 패딩 10px 추가(<code>.gl-pill</code> 기본 7px보다 넉넉히 — 카드 하단 전폭 CTA라 터치 타깃 확보).</li>
+    <li>헤드리스 브라우저(CDP)로 노드 선택 → 카드 열림 → 버튼 계측으로 확인: <code>gl-pill</code> 적용·패딩 10px 12px·높이 50px(2줄 라벨).</li>
+    <li>캐시버스터 <code>style.css?v=54</code>·<code>graphlive.js?v=6</code> 상향. check_cachebuster는 커밋 기준 비교라 못 잡는 케이스(음악 교체 때와 동일)로 수동 상향.</li>
+</ul>
