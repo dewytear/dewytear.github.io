@@ -62,13 +62,30 @@ BACKDATE_TRAILER = 'Worklog-Backdated:'
 BACKDATE_RE = re.compile(r'^\s*' + re.escape(BACKDATE_TRAILER) + r'\s*\S', re.M)
 
 
+def work_head(head):
+    """날짜 판정에 쓸 **실제 작업 커밋**.
+
+    CI는 PR을 `refs/pull/N/merge`로 체크아웃하므로 HEAD가 GitHub가 만든 병합
+    커밋이고, 그 작성 시각은 **작업 시각이 아니라 병합 커밋이 만들어진 시각**
+    이다. 2026-08-12 00:01 KST에 이게 물렸다 — 23:54 KST에 커밋한 PR을 자정
+    넘어 만들어진 병합 커밋 때문에 '작업일 08-12'로 읽고, 08-11 로그를
+    건드렸다는 이유로 실패시켰다. 병합 커밋의 부모는 (1) 베이스 (2) PR 헤드
+    순서이므로 두 번째 부모가 실제 작업 커밋이다."""
+    parents = subprocess.run(
+        ['git', 'rev-list', '--parents', '-n', '1', head],
+        capture_output=True, text=True, check=True,
+    ).stdout.split()
+    # ['<commit>', '<parent1>', '<parent2>', …] — 부모가 둘이면 병합 커밋
+    return parents[2] if len(parents) == 3 else head
+
+
 def kst_date_of_head(head):
-    """HEAD 커밋의 **작성 시각을 KST로** 본 날짜 (YYYY, MM, DD).
+    """작업 커밋의 **작성 시각을 KST로** 본 날짜 (YYYY, MM, DD).
 
     '지금'이 아니라 커밋 작성 시각을 쓴다 — 어제 만든 PR을 오늘 CI가 돌려도
     판정이 흔들리지 않아야 하고, build_dates.py의 KST 정규화 규약과도 같다."""
     out = subprocess.run(
-        ['git', 'log', '-1', '--date=iso-strict-local', '--format=%ad', head],
+        ['git', 'log', '-1', '--date=iso-strict-local', '--format=%ad', work_head(head)],
         capture_output=True, text=True, check=True,
         env={**os.environ, 'TZ': 'Asia/Seoul'},
     ).stdout.strip()
