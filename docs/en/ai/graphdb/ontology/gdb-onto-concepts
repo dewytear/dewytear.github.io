@@ -1,0 +1,94 @@
+<h2>What Is an Ontology — Not a Warehouse of Data but a Map of Meaning</h2>
+
+<p>When companies evaluate an ontology project, the questions practitioners ask are strikingly similar. "So what exactly is an ontology?", "Is it the same as a graph DB?", "LLMs keep getting better — why would we need this?" A webinar conversation between the CEO of a Korean ontology-solutions company and a partner at a global consulting firm collected the questions they hear most often in the field, and this article uses those concept questions as its skeleton, reinforced with standards and research material. The practical questions — adoption, building, ROI — are covered in <a href="#!gdb-onto-adoption">the next part</a>.</p>
+
+<h3>A database is a warehouse; an ontology is a map</h3>
+<p>Start with the most basic distinction. A database is <strong>a place that physically stores data</strong>. An ontology is <strong>a structure that defines meaning and relationships</strong> on top of it. The conversation's analogy is exact: as a map tells you where you are and what connects to what, an ontology tells you what the data means and how it links together.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 150" role="img" aria-label="A database is a warehouse holding data; an ontology is a map defining meaning, relationships, and rules">
+    <rect class="d-box" x="30" y="24" width="280" height="86" rx="10"/>
+    <text class="d-label sm" x="170" y="54" text-anchor="middle">Database = warehouse</text>
+    <text class="d-sub" x="170" y="76" text-anchor="middle">stores and fetches data</text>
+    <text class="d-sub" x="170" y="94" text-anchor="middle">values only</text>
+
+    <rect class="d-box accent" x="390" y="24" width="280" height="86" rx="10"/>
+    <text class="d-label sm" x="530" y="54" text-anchor="middle">Ontology = map</text>
+    <text class="d-sub" x="530" y="76" text-anchor="middle">defines meaning · relations · rules</text>
+    <text class="d-sub" x="530" y="94" text-anchor="middle">carries context</text>
+
+    <line class="d-edge" x1="310" y1="67" x2="386" y2="67"/><polygon class="d-arrow" points="382,62 390,67 382,72"/>
+    <text class="d-sub" x="348" y="58" text-anchor="middle">sits on top</text>
+</svg>
+<div class="d-cap">A warehouse just holds things; where everything is and how it connects is what the map tells you.</div>
+</div>
+
+<p>The traffic analogy sharpens it further. The road a car drives on is infrastructure, that is, data. But roads alone do not make a traffic system — you also need the <strong>rules and meanings</strong>: this road is one-way, that one only admits certain vehicles, that stretch is hazardous. That layer of rules is the ontology. Academically, Tom Gruber's 1993 definition — <strong>"an explicit specification of a conceptualization"</strong> — is still the standard, and the W3C formalized it for exchange on the web as <strong>OWL 2</strong>, the Web Ontology Language.</p>
+
+<p>The conversation names four essential components of an ontology — the domain's <strong>core concepts</strong>, the <strong>relationships</strong> between them, the actual <strong>data</strong>, and the <strong>rules</strong> the business runs on. Only with all four does a bare value like "inventory went up" become knowledge you can interrogate: was it a supplier's lead-time change, or a planner's strategic call?</p>
+
+<h3>The semantic layer — an interpreter between legacy and generative AI</h3>
+<p>So where does this map live in the enterprise stack? The answer: <strong>in the middle, between existing systems and generative AI</strong>. That middle tier is commonly called the semantic layer, and the ontology is its core component.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 236" role="img" aria-label="Semantic layer stack: legacy systems at the bottom, the ontology layer in the middle, LLMs and agents on top">
+    <rect class="d-box soft" x="40" y="14" width="600" height="44" rx="10"/>
+    <text class="d-label sm" x="340" y="41" text-anchor="middle">LLMs · AI agents · decisions</text>
+
+    <rect class="d-box accent" x="40" y="90" width="600" height="56" rx="10"/>
+    <text class="d-label sm" x="340" y="114" text-anchor="middle">Ontology (semantic layer)</text>
+    <text class="d-sub" x="340" y="134" text-anchor="middle">core concepts · relations · data · rules — the interpreter of meaning</text>
+
+    <rect class="d-box" x="40" y="178" width="136" height="44" rx="9"/>
+    <text class="d-label sm" x="108" y="205" text-anchor="middle">ERP</text>
+    <rect class="d-box" x="194" y="178" width="136" height="44" rx="9"/>
+    <text class="d-label sm" x="262" y="205" text-anchor="middle">CRM</text>
+    <rect class="d-box" x="348" y="178" width="136" height="44" rx="9"/>
+    <text class="d-label sm" x="416" y="205" text-anchor="middle">MES</text>
+    <rect class="d-box" x="502" y="178" width="138" height="44" rx="9"/>
+    <text class="d-label sm" x="571" y="205" text-anchor="middle">docs · drawings</text>
+
+    <line class="d-edge" x1="340" y1="58" x2="340" y2="86"/><polygon class="d-arrow" points="335,82 345,82 340,88"/>
+    <line class="d-edge" x1="108" y1="178" x2="108" y2="150"/><polygon class="d-arrow" points="103,154 113,154 108,148"/>
+    <line class="d-edge" x1="262" y1="178" x2="262" y2="150"/><polygon class="d-arrow" points="257,154 267,154 262,148"/>
+    <line class="d-edge" x1="416" y1="178" x2="416" y2="150"/><polygon class="d-arrow" points="411,154 421,154 416,148"/>
+    <line class="d-edge" x1="571" y1="178" x2="571" y2="150"/><polygon class="d-arrow" points="566,154 576,154 571,148"/>
+</svg>
+<div class="d-cap">Legacy stays where it is; you lay a meaning-interpreting layer over it. This is not a migration.</div>
+</div>
+
+<p>Here comes the part practitioners are most relieved to hear: <strong>this is not a migration that rips out your ERP and CRM.</strong> Legacy stays put; you define in this layer what the legacy data means and how it relates, and the LLM consults the layer when it searches or reasons. The pattern is already proven in industry — most prominently, Palantir calls its ontology <strong>"the digital twin of an organization"</strong>, the same structure of a semantic layer of objects, links, and actions laid over data assets.</p>
+
+<h3>Won't better LLMs make ontologies unnecessary?</h3>
+<p>The sharpest question of the set. If an LLM could understand legacy information as-is and always answer correctly, you would not need an ontology. The problem is that <strong>hallucination</strong> is more serious than expected — and in mission-critical work where a single number must not be wrong (semiconductor yield calculations, insurance claim adjudication), a "mostly right" answer is useless.</p>
+<p>The principle by which an ontology reduces hallucination is simple: instead of leaving everything to the LLM, <strong>constrain it to answer only within what the structure defines</strong>. The company in the conversation described inserting its own ontology query language between the question and the LLM, so the LLM never gets the degrees of freedom — like composing query strings — where hallucination creeps in (the language was patented and then opened for anyone to use, they said). The principle is the same lineage as the "fish with vectors, walk with graphs" approach in this wiki's <a href="#!gdb-graphrag">GraphRAG article</a> — attaching a deterministic structure to a probabilistic model.</p>
+<p>External research reports the same direction. OG-RAG (EMNLP 2025), which retrieves over an ontology-grounded hypergraph, reported <strong>+55% fact recall and +40% response correctness</strong> across four LLMs, and a clinical question-answering study using ontology-grounded knowledge graphs cut <strong>hallucination from 63% to 1.7%</strong>. The company in the conversation shared its own measurements showing large hallucination drops when its ontology is combined with a base LLM (see the fact-check note below). The numbers vary by setting, but the direction is consistent — <strong>with structure in place, the model has less room to make things up.</strong></p>
+<p>And when LLMs improve further? The conversation's outlook is measured: reasoning will keep getting better, but <strong>a company's internal data stays outside what an LLM can reach through pretraining</strong>. So the direction of progress is not "ontologies become unnecessary" but "LLMs get better at using structures like ontologies".</p>
+
+<h3>Is it the same as a graph database?</h3>
+<p>The misunderstanding that almost always follows. The answer is no. A graph DB is <strong>one strong storage technology</strong> for implementing an ontology, and inside a real ontology system three kinds of database split the work.</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Storage</th><th>What it is good at</th><th>Question it serves</th></tr></thead>
+    <tbody>
+        <tr><td><strong>RDB</strong></td><td>Storing and aggregating structured data</td><td>"How many units in stock this month?"</td></tr>
+        <tr><td><strong>Vector DB</strong></td><td>Similarity search over unstructured documents</td><td>"Find past incidents similar to this failure"</td></tr>
+        <tr><td><strong>Graph DB</strong></td><td>Traversing relationships and paths between entities</td><td>"If we close this valve, which reactors are affected?"</td></tr>
+    </tbody>
+</table>
+</div>
+<p>Some questions are answered straight from the RDB, some fish similar cases out of vectors, and questions that must follow causality and impact ride the graph. An ontology's real skill shows in <strong>the architecture that combines the three to fit the question</strong> — in the conversation's words, many solutions claim the ontology label, but go one level down and look at how they combine the three stores to answer, and you see the actual capability. The two competing graph storage models themselves (RDF vs. property graph) are covered in <a href="#!news-20260711-neo4j-rdf-vs-property-graph">a separate article</a>.</p>
+
+<div class="note">
+    <span class="nh">In one line</span>
+    A database keeps values; an ontology keeps <strong>what those values mean, how they connect, and which rules they obey</strong>. With this layer between legacy and generative AI, a probabilistic model becomes usable for deterministic work. For cases, ROI, and the build process, see <a href="#!gdb-onto-adoption">the practice part</a>.
+</div>
+
+<div class="note">
+    <span class="nh">Sources · fact-check note</span>
+    · Skeleton: a Korean webinar conversation on enterprise-ontology FAQs (an ontology-solutions company CEO + a global consulting firm partner) — speakers, companies, and product names anonymized per this wiki's policy<br>
+    · Definitions: <a href="https://tomgruber.org/writing/definition-of-ontology/" target="_blank" rel="noopener">Tom Gruber — Definition of Ontology</a> · W3C <a href="https://www.w3.org/TR/owl2-overview/" target="_blank" rel="noopener">OWL 2 Overview</a><br>
+    · Structural precedent: <a href="https://www.palantir.com/docs/foundry/ontology/overview" target="_blank" rel="noopener">Palantir Foundry — Ontology Overview</a> ("the digital twin of an organization"; objects · links · actions)<br>
+    · Hallucination research: OG-RAG (EMNLP 2025, <a href="https://arxiv.org/abs/2412.15235" target="_blank" rel="noopener">arXiv</a>) — +55% fact recall, +40% correctness · ontology-grounded KG study in clinical QA (<a href="https://www.sciencedirect.com/science/article/abs/pii/S1532046426000171" target="_blank" rel="noopener">ScienceDirect</a>) — hallucination 63%→1.7%<br>
+    · <strong>Limits of the conversation's figures</strong>: the hallucination comparison the company shared (base LLM 32% · best open source 18% · with their ontology 5%) and the query language's effect are <strong>the company's own measurements and claims</strong>, not independently verified. This article cites them only as evidence of direction.
+</div>

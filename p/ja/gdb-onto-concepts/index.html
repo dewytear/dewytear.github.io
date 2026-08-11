@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>オントロジーとは何か — データの倉庫ではなく、意味の地図</title>
+<meta name="description" content="企業の実務者がいちばんよく尋ねるオントロジーの概念質問を、匿名処理した韓国のウェビナー FAQ を骨組みに整理した概念編 — データベースは値を保存する倉庫、オントロジーは意味・関係・ルールを定義する地図という区別（グルーバーの「概念化の明示的な仕様」、W3C OWL 2）、中心概念・関係・データ・ルールの四大構成要素、レガシー（ERP・CRM・MES）と生成 AI のあいだの通訳者であるセマンティックレイヤー（マイグレーションではない、パランティアの「組織のデジタルツイン」の先例）、LLM が発達してもオントロジーが要る理由（幻覚 — OG-RAG の事実再現 +55%、臨床 QA の幻覚 63%→1.7% の研究、オントロジークエリ言語で LLM の自由度を制約）、そしてグラフ DB はオントロジーが操る三つの保存先（RDB・ベクトル・グラフ）のひとつにすぎないという整理まで">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/gdb-onto-concepts/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/gdb-onto-concepts/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/gdb-onto-concepts/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/gdb-onto-concepts/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/gdb-onto-concepts/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="オントロジーとは何か — データの倉庫ではなく、意味の地図">
+<meta property="og:description" content="企業の実務者がいちばんよく尋ねるオントロジーの概念質問を、匿名処理した韓国のウェビナー FAQ を骨組みに整理した概念編 — データベースは値を保存する倉庫、オントロジーは意味・関係・ルールを定義する地図という区別（グルーバーの「概念化の明示的な仕様」、W3C OWL 2）、中心概念・関係・データ・ルールの四大構成要素、レガシー（ERP・CRM・MES）と生成 AI のあいだの通訳者であるセマンティックレイヤー（マイグレーションではない、パランティアの「組織のデジタルツイン」の先例）、LLM が発達してもオントロジーが要る理由（幻覚 — OG-RAG の事実再現 +55%、臨床 QA の幻覚 63%→1.7% の研究、オントロジークエリ言語で LLM の自由度を制約）、そしてグラフ DB はオントロジーが操る三つの保存先（RDB・ベクトル・グラフ）のひとつにすぎないという整理まで">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/gdb-onto-concepts/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="オントロジーとは何か — データの倉庫ではなく、意味の地図">
+<meta name="twitter:description" content="企業の実務者がいちばんよく尋ねるオントロジーの概念質問を、匿名処理した韓国のウェビナー FAQ を骨組みに整理した概念編 — データベースは値を保存する倉庫、オントロジーは意味・関係・ルールを定義する地図という区別（グルーバーの「概念化の明示的な仕様」、W3C OWL 2）、中心概念・関係・データ・ルールの四大構成要素、レガシー（ERP・CRM・MES）と生成 AI のあいだの通訳者であるセマンティックレイヤー（マイグレーションではない、パランティアの「組織のデジタルツイン」の先例）、LLM が発達してもオントロジーが要る理由（幻覚 — OG-RAG の事実再現 +55%、臨床 QA の幻覚 63%→1.7% の研究、オントロジークエリ言語で LLM の自由度を制約）、そしてグラフ DB はオントロジーが操る三つの保存先（RDB・ベクトル・グラフ）のひとつにすぎないという整理まで">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "オントロジーとは何か — データの倉庫ではなく、意味の地図",
+ "description": "企業の実務者がいちばんよく尋ねるオントロジーの概念質問を、匿名処理した韓国のウェビナー FAQ を骨組みに整理した概念編 — データベースは値を保存する倉庫、オントロジーは意味・関係・ルールを定義する地図という区別（グルーバーの「概念化の明示的な仕様」、W3C OWL 2）、中心概念・関係・データ・ルールの四大構成要素、レガシー（ERP・CRM・MES）と生成 AI のあいだの通訳者であるセマンティックレイヤー（マイグレーションではない、パランティアの「組織のデジタルツイン」の先例）、LLM が発達してもオントロジーが要る理由（幻覚 — OG-RAG の事実再現 +55%、臨床 QA の幻覚 63%→1.7% の研究、オントロジークエリ言語で LLM の自由度を制約）、そしてグラフ DB はオントロジーが操る三つの保存先（RDB・ベクトル・グラフ）のひとつにすぎないという整理まで",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/gdb-onto-concepts/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!gdb-onto-concepts",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-08-11T09:00:58+09:00",
+ "dateModified": "2026-08-11T09:00:58+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!gdb-onto-concepts">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/gdb-onto-concepts/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/gdb-onto-concepts/" hreflang="en">English</a>
+</p>
+<article>
+<h2>オントロジーとは何か — データの倉庫ではなく、意味の地図</h2>
+
+<p>企業でオントロジーのプロジェクトを検討するとき、実務者が投げる質問は驚くほど似ています。「そもそもオントロジーって何ですか？」「グラフ DB と同じもの？」「LLM がこれだけ発達しているのに、なぜ必要？」— 韓国のオントロジーソリューション企業の代表と、グローバルコンサルティングファームのパートナーが、現場でいちばんよく受ける質問を選んで語り合ったウェビナーの対談があり、この文書はその概念系の質問を骨組みに、標準と研究資料を足して整理しました。導入・構築・ROI のような実践系の質問は<a href="/p/ja/gdb-onto-adoption/">次の編</a>が扱います。</p>
+
+<h3>データベースは倉庫、オントロジーは地図</h3>
+<p>いちばん基本の区別から。データベースは<strong>データを物理的に保存する場所</strong>です。オントロジーはその上で<strong>意味と関係を定義する構造</strong>です。対談の比喩が正確です — 地図を見れば自分がどこにいて、どこへつながるかが分かるように、オントロジーはデータが何を意味し、互いにどうつながるかを教えてくれます。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 150" role="img" aria-label="データベースはデータを収める倉庫、オントロジーは意味・関係・ルールを定義する地図">
+    <rect class="d-box" x="30" y="24" width="280" height="86" rx="10"/>
+    <text class="d-label sm" x="170" y="54" text-anchor="middle">データベース = 倉庫</text>
+    <text class="d-sub" x="170" y="76" text-anchor="middle">データを保存し取り出す</text>
+    <text class="d-sub" x="170" y="94" text-anchor="middle">値（value）だけがある</text>
+
+    <rect class="d-box accent" x="390" y="24" width="280" height="86" rx="10"/>
+    <text class="d-label sm" x="530" y="54" text-anchor="middle">オントロジー = 地図</text>
+    <text class="d-sub" x="530" y="76" text-anchor="middle">意味・関係・ルールを定義する</text>
+    <text class="d-sub" x="530" y="94" text-anchor="middle">文脈（context）がある</text>
+
+    <line class="d-edge" x1="310" y1="67" x2="386" y2="67"/><polygon class="d-arrow" points="382,62 390,67 382,72"/>
+    <text class="d-sub" x="348" y="58" text-anchor="middle">上に載せる</text>
+</svg>
+<div class="d-cap">倉庫には物が積んであるだけ — どこに何があり、どうつながるかは地図が教えてくれます。</div>
+</div>
+
+<p>交通に例えるとさらにはっきりします。車が走る道路そのものはインフラ、つまりデータです。しかし交通体系になるには道路だけでは足りません — この道路は一方通行で、あの道路は特定の車両しか通れず、あの区間には危険があるという<strong>ルールと意味</strong>が載らなければなりません。そのルールの層がオントロジーです。学術的には 1993 年のトム・グルーバー（Tom Gruber）の定義 — <strong>「概念化の明示的な仕様（explicit specification of a conceptualization）」</strong> — が今も標準のように使われ、W3C はこれをウェブで交換できるよう <strong>OWL 2</strong>（Web Ontology Language）という標準言語に規格化しています。</p>
+
+<p>対談はオントロジーの必須の構成要素を四つ挙げます — その業（ドメイン）の<strong>中心の概念</strong>、概念どうしの<strong>関係</strong>、実際の<strong>データ</strong>、そしてその業で通用する<strong>ルール</strong>。この四つが揃ってはじめて、「在庫が増えた」という値ひとつが「どのサプライヤーのリードタイム変化のせいか、担当者の戦略的な判断のせいか」を問える知識になります。</p>
+
+<h3>セマンティックレイヤー — レガシーと生成 AI のあいだの通訳者</h3>
+<p>ではこの地図を企業システムのどこに置くのか。答えは<strong>既存システムと生成 AI のあいだの中間層</strong>です。この層はセマンティックレイヤー（semantic layer）と呼ばれ、オントロジーはその中心の構成要素です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 236" role="img" aria-label="セマンティックレイヤーのスタック: 下にレガシーシステム、中央にオントロジーの層、上に LLM とエージェント">
+    <rect class="d-box soft" x="40" y="14" width="600" height="44" rx="10"/>
+    <text class="d-label sm" x="340" y="41" text-anchor="middle">LLM · AI エージェント · 意思決定</text>
+
+    <rect class="d-box accent" x="40" y="90" width="600" height="56" rx="10"/>
+    <text class="d-label sm" x="340" y="114" text-anchor="middle">オントロジー（セマンティックレイヤー）</text>
+    <text class="d-sub" x="340" y="134" text-anchor="middle">中心概念 · 関係 · データ · ルール — 意味の通訳者</text>
+
+    <rect class="d-box" x="40" y="178" width="136" height="44" rx="9"/>
+    <text class="d-label sm" x="108" y="205" text-anchor="middle">ERP</text>
+    <rect class="d-box" x="194" y="178" width="136" height="44" rx="9"/>
+    <text class="d-label sm" x="262" y="205" text-anchor="middle">CRM</text>
+    <rect class="d-box" x="348" y="178" width="136" height="44" rx="9"/>
+    <text class="d-label sm" x="416" y="205" text-anchor="middle">MES</text>
+    <rect class="d-box" x="502" y="178" width="138" height="44" rx="9"/>
+    <text class="d-label sm" x="571" y="205" text-anchor="middle">文書 · 図面</text>
+
+    <line class="d-edge" x1="340" y1="58" x2="340" y2="86"/><polygon class="d-arrow" points="335,82 345,82 340,88"/>
+    <line class="d-edge" x1="108" y1="178" x2="108" y2="150"/><polygon class="d-arrow" points="103,154 113,154 108,148"/>
+    <line class="d-edge" x1="262" y1="178" x2="262" y2="150"/><polygon class="d-arrow" points="257,154 267,154 262,148"/>
+    <line class="d-edge" x1="416" y1="178" x2="416" y2="150"/><polygon class="d-arrow" points="411,154 421,154 416,148"/>
+    <line class="d-edge" x1="571" y1="178" x2="571" y2="150"/><polygon class="d-arrow" points="566,154 576,154 571,148"/>
+</svg>
+<div class="d-cap">レガシーはそのまま置き、その上に意味を解釈してくれる層を載せます — マイグレーションではありません。</div>
+</div>
+
+<p>ここで実務者がいちばん安心する話が出てきます。<strong>既存の ERP・CRM を取り払うマイグレーションではない</strong>ということ。レガシーはそのままにして、レガシーのデータがどんな意味と関係を持つかをこの層に定義しておけば、LLM は検索や推論のときにこの層を参照します。この構図は業界ですでに検証されたパターンでもあります — 代表的にパランティア（Palantir）は自社のオントロジーを<strong>「組織のデジタルツイン」</strong>と呼び、データ資産の上にオブジェクト（objects）・リンク（links）・アクション（actions）からなるセマンティックレイヤーを載せる同じ構造を使っています。</p>
+
+<h3>LLM が発達すればオントロジーは要らなくなるのでは</h3>
+<p>いちばん鋭い質問です。LLM がレガシーの情報をそのまま理解し、いつも正確に答えてくれるなら、オントロジーは要りません。問題は<strong>幻覚（ハルシネーション）</strong>が思ったより深刻だということです。数字ひとつ間違えてはいけないミッションクリティカルな業務 — 半導体の歩留まり計算、保険の支払審査 — では「だいたい合っている」答えは使いものになりません。</p>
+<p>オントロジーが幻覚を減らす原理は単純です。LLM にすべてを任せる代わりに、<strong>構造が決めた範囲の中でだけ答えるよう制約</strong>するのです。対談の企業は、質問と LLM のあいだに自社開発のオントロジークエリ言語を挟み、クエリ文の作成のような幻覚が生まれやすい自由度を LLM に最初から与えない方式を紹介しました（この言語は特許出願ののち外部に開放したとのことです）。原理はこのウィキの <a href="/p/ja/gdb-graphrag/">GraphRAG の文書</a>が扱った「ベクトルで釣り上げ、グラフで歩く」アプローチと同じ系譜です — 確率的なモデルに決定論的な構造を付けてやること。</p>
+<p>効果は外部の研究も一貫して報告しています。オントロジーに根ざしたハイパーグラフ検索を使う OG-RAG（EMNLP 2025）は四つの LLM で<strong>事実の再現率 +55%、応答の正確度 +40%</strong> を報告し、臨床の質問応答の研究ではオントロジーに根ざした知識グラフで<strong>幻覚率を 63% から 1.7% へ</strong>下げたという結果が出ています。対談の企業も、ベース LLM 単独に比べ自社オントロジーの結合で幻覚率が大きく下がるという自社測定値を共有しました（下のファクトチェックの注記を参照）。数値は環境ごとに違いますが方向は同じです — <strong>構造があれば、モデルがでっち上げる余地は減ります。</strong></p>
+<p>では LLM がさらに発達したら？ 対談の見通しは慎重です。推論の能力は良くなり続けるでしょうが、<strong>企業の内部データは LLM が事前学習では届かない領域</strong>として残ります。だから発展の方向は「オントロジーが要らなくなる側」ではなく「LLM がオントロジーのような構造をもっと上手に使う側」になるだろう、というのです。</p>
+
+<h3>グラフデータベースと同じもの？</h3>
+<p>オントロジーの話にほぼ必ず付いてくる誤解です。答えは「いいえ」。グラフ DB はオントロジーを実装する<strong>有力な保存技術のひとつ</strong>にすぎず、実際のオントロジーのシステムの中では三種類のデータベースが役割を分け持ちます。</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>保存技術</th><th>得意なこと</th><th>こんな質問に使う</th></tr></thead>
+    <tbody>
+        <tr><td><strong>RDB</strong></td><td>定型データの保存・集計</td><td>「今月の在庫は何個？」</td></tr>
+        <tr><td><strong>ベクトル DB</strong></td><td>非定型文書の類似度検索</td><td>「この障害に似た過去の事例を探して」</td></tr>
+        <tr><td><strong>グラフ DB</strong></td><td>個体間の関係・経路の探索</td><td>「このバルブを閉めると、どの反応器まで影響が及ぶ？」</td></tr>
+    </tbody>
+</table>
+</div>
+<p>ある質問には RDB で直接答え、ある質問にはベクトルで類似事例を釣り上げ、因果・影響のように関係をたどる質問にはグラフに乗ります。オントロジーの実力は<strong>この三つを質問に合わせて組み合わせる設計</strong>で分かれます — 対談の言葉を借りれば、オントロジーを掲げるソリューションは多いが、一段下りて「三つの保存先をどう結合して答えるか」のアーキテクチャを見れば本当の実力が見える、と。なおグラフ保存モデル自体の二つの流派（RDF vs プロパティグラフ）の論点は<a href="/p/ja/news-20260711-neo4j-rdf-vs-property-graph/">別の記事</a>で扱いました。</p>
+
+<div class="note">
+    <span class="nh">一行のまとめ</span>
+    データベースは値を保管し、オントロジーはその値が<strong>何を意味し、どうつながり、どんなルールに従うのか</strong>を保管します。レガシーと生成 AI のあいだにこの層があってこそ、確率的なモデルが決定論的な業務に使えるようになります。導入事例・ROI・構築の手順は<a href="/p/ja/gdb-onto-adoption/">実践編</a>へ。
+</div>
+
+<div class="note">
+    <span class="nh">出典 · ファクトチェックの注記</span>
+    · 骨組み: 企業オントロジーの FAQ を扱った韓国のウェビナー対談（オントロジーソリューション企業の代表 + グローバルコンサルティングファームのパートナー）— このウィキの方針により話者・会社・製品名は匿名処理<br>
+    · 定義: <a href="https://tomgruber.org/writing/definition-of-ontology/" target="_blank" rel="noopener">Tom Gruber — Definition of Ontology</a> · W3C <a href="https://www.w3.org/TR/owl2-overview/" target="_blank" rel="noopener">OWL 2 Overview</a><br>
+    · 構造の先例: <a href="https://www.palantir.com/docs/foundry/ontology/overview" target="_blank" rel="noopener">Palantir Foundry — Ontology Overview</a>（「組織のデジタルツイン」、objects・links・actions）<br>
+    · 幻覚低減の研究: OG-RAG（EMNLP 2025、<a href="https://arxiv.org/abs/2412.15235" target="_blank" rel="noopener">arXiv</a>）— 事実再現 +55%・正確度 +40% · 臨床 QA のオントロジー根拠の知識グラフ研究（<a href="https://www.sciencedirect.com/science/article/abs/pii/S1532046426000171" target="_blank" rel="noopener">ScienceDirect</a>）— 幻覚 63%→1.7%<br>
+    · <strong>対談内の数値の限界</strong>: 企業が共有した幻覚率の比較（ベース LLM 32% · オープンソース最上 18% · オントロジー結合 5%）とクエリ言語の効果は<strong>当該企業の自社測定・自社発表</strong>であり、独立の検証値ではありません。本文は方向性の根拠としてのみ引用しました。
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · GraphDB · ontology &middot; <span class="pr-k">作成日</span> 2026-08-11 &middot; <span class="pr-k">更新日</span> 2026-08-11</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/gdb-graphrag/">グラフデータベースとGraphRAG — 関係を保存すると答えが変わる</a></li><li><a href="/p/ja/gdb-vector-retriever/">あらすじで映画を探す — Neo4jサンドボックスで作る初めてのベクトルリトリーバー</a></li></ul>
+</nav>
+</body>
+</html>
