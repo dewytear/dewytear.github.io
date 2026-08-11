@@ -1,0 +1,8 @@
+<h2>2026-08-11 · 기능 — 배경음악 기본 트랙 교체</h2>
+
+<p>대표님 요청으로 사이트 배경음악의 기본 트랙을 교체했다. <code>music.js</code>의 <code>DEFAULT_ID</code>를 <code>jzUkPTTOGoI</code> → <code>UQd0VWWmxcY</code>(<a href="https://youtu.be/UQd0VWWmxcY" target="_blank" rel="noopener">youtu.be/UQd0VWWmxcY</a>)로 변경. 변경 유형: <strong>ENGINE</strong>(설정값 1건).</p>
+<ul>
+    <li>설정에서 개인 트랙을 지정한 사용자는 영향 없음 — 기본값(비운 상태)만 새 트랙으로 재생된다.</li>
+    <li><code>index.html</code>의 <code>music.js?v=3</code> → <code>?v=4</code> 캐시버스터 상향(재방문 브라우저 반영).</li>
+    <li>실효 설정은 <code>config.json</code> defaults의 <code>music</code>이 담당 — 여기도 새 URL로 교체(no-store fetch라 캐시버스터 불필요). <code>music.js</code>의 <code>DEFAULT_ID</code>는 config가 비었을 때의 폴백으로 같은 트랙으로 정렬.</li>
+</ul>

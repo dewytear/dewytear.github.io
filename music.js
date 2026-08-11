@@ -13,7 +13,7 @@ function parseYouTubeId(input){
 
 // ---- Floating background music (YouTube IFrame API) ----
 (function(){
-    var DEFAULT_ID = 'jzUkPTTOGoI';
+    var DEFAULT_ID = 'UQd0VWWmxcY';
     function resolveId(){
         try{ return parseYouTubeId((effSettings().music) || '') || DEFAULT_ID; }
         catch(e){ return DEFAULT_ID; }
