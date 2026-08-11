@@ -524,6 +524,21 @@ def check_map_fallback_drift(root):
             if len(nums) >= 2 and nums[:2] != expect:
                 findings.append({'level': 'WARN', 'check': 'map-fallback-drift', 'name': name,
                     'message': f"km-totals fallback {nums[:2]} ≠ 인덱스 {expect}"})
+
+        # 'System 상세'의 절 제목에 손으로 적는 편수 — "라벨 — 설명 (13편)".
+        # km-* 블록은 build_map_fallbacks.py가 만들지만 이 산문은 사람이 쓰고,
+        # 문서가 늘면 조용히 낡는다(2026-08-12 감사에서 OMC의 '편수가 가장
+        # 많습니다'가 News & Articles와 동수가 된 것을 사람이 눈으로 잡았다).
+        for raw in re.findall(r'<h4>(.*?)</h4>', doc, re.DOTALL):
+            head = html.unescape(re.sub(r'<[^>]+>', '', raw)).strip()
+            label = re.split(r'\s+—\s+', head)[0].strip()
+            c = want.get(label)
+            if c is None:
+                continue   # 클러스터가 아닌 절(자유 소제목)은 대상이 아니다
+            m = re.search(r'[(（]\s*(\d+)\s*(?:편|docs?|編)\s*[)）]', head)
+            if m and int(m.group(1)) != c['count']:
+                findings.append({'level': 'WARN', 'check': 'map-section-count', 'name': name,
+                    'message': f"'{label}' 상세 절의 편수 {m.group(1)} ≠ 인덱스 {c['count']}"})
     return findings
 
 
