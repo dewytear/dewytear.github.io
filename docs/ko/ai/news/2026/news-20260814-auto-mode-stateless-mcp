@@ -1,0 +1,137 @@
+<h2>묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다</h2>
+
+<p>오늘(8월 14일)부터 Claude Code의 새 세션은 <strong>auto 모드로 시작</strong>합니다. 매번 &ldquo;이 명령을 실행할까요?&rdquo;라고 묻던 승인 프롬프트가 기본 동작에서 빠집니다. 그보다 두 주 앞서, 에이전트가 도구를 붙이는 표준인 <strong>MCP</strong>는 <strong>세션이라는 개념 자체를 프로토콜에서 들어냈습니다</strong>. 하나는 사람의 클릭을 걷어냈고 하나는 연결의 기억을 걷어냈는데, 남은 자리를 메운 것은 양쪽 다 <strong>미리 적어 둔 규칙</strong>입니다. 이 기사는 두 변경의 상세를 정리하고, 왜 이것이 한 이야기인지 봅니다.</p>
+
+<div class="note">
+    <span class="nh">기사 정보 (출처)</span>
+    · 대상: <strong>Anthropic의 auto 모드 기본값 공지</strong>(2026-08-08 발표 · 08-14 적용) · <strong>MCP 2026-07-28 스펙 릴리스 후보</strong><br>
+    · 정리: <strong>공식 발표·스펙 문서 + 복수 보도 교차 확인</strong>(2026-08-14) — 문서 말미에 출처 목록과 사실검증 노트
+</div>
+
+<h3>세 줄 요약</h3>
+<ul>
+    <li>Claude Code의 Pro·Max·Team 신규 세션이 <strong>auto 모드를 기본값</strong>으로 씁니다. 되돌릴 수 없거나 파괴적이거나 작업 환경 밖을 향하는 행동만 멈춰 세우고, 나머지는 묻지 않고 진행합니다.</li>
+    <li>근거로 제시된 수치가 뼈아픕니다 — Anthropic 조사에서 사용자들은 권한 프롬프트의 <strong>97%를 승인</strong>했고, 실험에서 몰래 끼워 넣은 위험한 명령을 <strong>사람은 13.6%만 거절</strong>했습니다. 같은 명령을 auto 모드의 분류기는 <strong>89% 저지</strong>했습니다. 승인 버튼은 이미 안전장치로 기능하지 않고 있었다는 이야기입니다.</li>
+    <li>MCP는 <code>initialize</code> 핸드셰이크와 <code>Mcp-Session-Id</code>를 삭제했습니다. 프로토콜 버전과 클라이언트 능력은 이제 <strong>매 요청의 <code>_meta</code></strong>에 실려 갑니다. 어떤 요청이든 아무 서버 인스턴스가 받아도 되고, 대신 <strong>양방향으로 호환되지 않는</strong> 변경이라 기존 서버는 리팩터가 필요합니다.</li>
+</ul>
+
+<h3>승인 루프는 이미 고장나 있었다</h3>
+<p>변경 자체보다 <strong>변경을 정당화하려고 공개한 수치</strong>가 더 눈에 띕니다. Anthropic이 밝힌 사용 실태는 이렇습니다.</p>
+<ul>
+    <li>사용자들은 권한 프롬프트의 <strong>97%를 승인</strong>합니다. 회사는 이를 판단이 아니라 <strong>반사적인 클릭</strong>으로 읽었습니다.</li>
+    <li>CLI 활성 사용자의 <strong>49.5%</strong>가 Bash 허용 규칙을 손수 만들어 두었고, <strong>62%</strong>는 <code>bypassPermissions</code>나 &ldquo;다시 묻지 않기&rdquo;를 써 봤습니다. 인터랙티브 세션의 <strong>4분의 1</strong>은 아예 처음부터 bypass 상태로 시작합니다.</li>
+</ul>
+<p>그래서 실험을 했습니다. 유료로 모집한 전문 테스터 <strong>1,053명</strong>을 테스트용 코딩 환경에 넣고, 세션 중간에 평범한 권한 프롬프트 하나를 <strong>누가 봐도 위험한 명령</strong>으로 바꿔치기했습니다. 승인하더라도 명령이 실제로 돌지는 않았고, 기록한 것은 <strong>참가자가 알아채고 거절했는지</strong>뿐입니다. 결과는 <strong>143명, 13.6%</strong>. 여섯 중 다섯은 위험한 명령을 그대로 통과시켰습니다.</p>
+<p>같은 명령들을 auto 모드의 분류기에 걸었을 때는 <strong>1,053건 중 937건, 89%</strong>가 막혔습니다. 뒤집으면 <strong>116건, 약 11%</strong>는 통과했다는 뜻이고, 이 숫자를 제목으로 뽑아 &ldquo;11%나 놓치는데 기본값으로 켜느냐&rdquo;고 지적한 보도도 있습니다. 지적 자체는 타당합니다. 다만 비교 대상이 무결한 사람이 아니라 <strong>13.6%의 사람</strong>이라는 점이 이 결정의 논거입니다.</p>
+
+<h3>그럼 무엇이 지키나 — 클릭 대신 규칙</h3>
+<p>승인 프롬프트를 걷어낸 자리에는 세 겹이 들어갔습니다.</p>
+<ul>
+    <li><strong>하드 디나이(hard deny)</strong> — 맥락을 따지지 않고 무조건 막는 규칙입니다. 데이터를 외부로 빼내는 행동이 대표적이고, <strong>비밀정보와 공개 데이터를 구분</strong>해 판정합니다. 사용자와 기업 관리자가 직접 범주를 추가할 수 있습니다.</li>
+    <li><strong>행동 직전의 상태 확인</strong> — <code>git reset --hard</code> 같은 파괴적 명령 앞에서는 <strong>git 상태와 저장소 공개 여부</strong>를 먼저 봅니다. 같은 명령이라도 커밋되지 않은 변경이 쌓여 있으면 판단이 달라집니다.</li>
+    <li><strong>프롬프트 인젝션 스크리닝</strong> — 파일이나 웹에서 읽어 온 내용에 &ldquo;이제부터 이렇게 하라&rdquo;는 식의 지시가 섞여 있는지 도구 결과를 프로브가 훑습니다. 그리고 별도 분류기가 <strong>하려는 행동이 사용자의 의도와 맞는지</strong>를 봅니다.</li>
+</ul>
+<p>여전히 사람에게 올라오는 것도 있습니다. 되돌릴 수 없거나, 파괴적이거나, Claude가 도는 환경 밖을 향하는 행동입니다. 이때 Claude는 먼저 더 안전한 우회로를 찾아보고, 없으면 그제야 허락을 구합니다. 반대로 <strong>기존 허용 규칙 중 지나치게 넓은 것</strong>&mdash;제한 없는 <code>python</code>·<code>node</code> 실행 같은&mdash;은 auto 모드에서 <strong>무시</strong>됩니다. 그런 규칙이 살아 있으면 무엇이든 분류기를 우회해 실행할 수 있기 때문입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="승인 게이트가 사람에서 규칙으로 옮겨간 구조 비교: 왼쪽은 사람이 매번 승인하던 방식(승인률 97퍼센트, 위험 명령 13.6퍼센트만 저지), 오른쪽은 하드 디나이 규칙과 인젝션 프로브가 걸러 내고 되돌릴 수 없는 행동만 사람에게 올라가는 방식(89퍼센트 저지)">
+    <text class="d-label" x="360" y="24" text-anchor="middle">승인 게이트가 옮겨간 자리</text>
+    <line class="d-edge dash" x1="360" y1="40" x2="360" y2="286"/>
+    <text class="d-label sm" x="184" y="60" text-anchor="middle">지금까지 — 사람이 게이트</text>
+    <rect class="d-box" x="54" y="74" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="184" y="96" text-anchor="middle">Claude가 행동을 제안</text>
+    <line class="d-edge" x1="184" y1="108" x2="184" y2="126"/><polygon class="d-arrow" points="179,118 184,126 189,118"/>
+    <rect class="d-box accent" x="54" y="126" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="184" y="148" text-anchor="middle">사람이 매번 승인</text>
+    <line class="d-edge" x1="184" y1="160" x2="184" y2="178"/><polygon class="d-arrow" points="179,170 184,178 189,170"/>
+    <rect class="d-box soft" x="54" y="178" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="184" y="200" text-anchor="middle">실행</text>
+    <text class="d-sub" x="184" y="234" text-anchor="middle">프롬프트의 97%가 승인된다</text>
+    <text class="d-sub" x="184" y="252" text-anchor="middle">심어 둔 위험 명령은 13.6%만 거절</text>
+    <text class="d-sub" x="184" y="270" text-anchor="middle">62%는 이미 bypass를 써 봤다</text>
+    <text class="d-label sm" x="536" y="60" text-anchor="middle">8월 14일부터 — 규칙이 게이트</text>
+    <rect class="d-box" x="406" y="74" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="536" y="96" text-anchor="middle">Claude가 행동을 제안</text>
+    <line class="d-edge accent" x1="536" y1="108" x2="536" y2="126"/><polygon class="d-arrow accent" points="531,118 536,126 541,118"/>
+    <rect class="d-box accent" x="406" y="126" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="536" y="148" text-anchor="middle">하드 디나이 · 인젝션 프로브</text>
+    <line class="d-edge accent" x1="536" y1="160" x2="536" y2="178"/><polygon class="d-arrow accent" points="531,170 536,178 541,170"/>
+    <rect class="d-box soft" x="406" y="178" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="536" y="200" text-anchor="middle">실행</text>
+    <text class="d-sub" x="536" y="234" text-anchor="middle">되돌릴 수 없는 행동만 사람에게</text>
+    <text class="d-sub" x="536" y="252" text-anchor="middle">같은 명령을 89% 저지 (937/1,053)</text>
+    <text class="d-sub" x="536" y="270" text-anchor="middle">너무 넓은 허용 규칙은 무시된다</text>
+</svg>
+<div class="d-cap">게이트가 없어진 것이 아니라, 매 순간의 클릭에서 미리 적어 둔 규칙으로 옮겨갔다.</div>
+</div>
+
+<p>공격 쪽 평가도 함께 나왔습니다. 독립 평가 기관인 Trajectory Labs가 <strong>72가지 간접 프롬프트 인젝션 시나리오를 각 10회씩, 모델당 720회</strong> 시도했고, auto 모드로 돌린 Fable 5·Opus 5·Sonnet 5에서 <strong>성공한 공격이 하나도 없었다</strong>고 보고했습니다. 사내 운용에서 실제로 막힌 사례로는 망 밖으로 나가는 데이터 유출, 파괴적인 대량 작업, 권한 상승 세 건이 공개됐는데 모두 Claude가 스스로 더 안전한 경로를 찾거나 사용자에게 확인을 구했습니다.</p>
+
+<h3>같은 주, MCP는 세션을 버렸다</h3>
+<p><strong>MCP(Model Context Protocol)</strong>는 에이전트가 외부 도구·데이터에 붙는 방식을 정한 표준입니다. 이 위키의 <a href="#!mcp">MCP 강의</a>가 다루는 그 규약이고, 2026-07-28 릴리스 후보는 출시 이래 가장 큰 개정입니다. 핵심은 한 문장입니다 — <strong>프로토콜 층에서 상태를 없앴다</strong>.</p>
+<ul>
+    <li><strong>핸드셰이크 삭제</strong> — 연결을 열 때 한 번 주고받던 <code>initialize</code>/<code>initialized</code>가 사라졌습니다. 프로토콜 버전·클라이언트 정보·클라이언트 능력은 이제 <strong>모든 요청의 <code>_meta</code></strong>에 실립니다. 서버 능력을 미리 알아야 하면 새로 생긴 <code>server/discover</code>로 필요할 때 조회합니다.</li>
+    <li><strong>세션 식별자 삭제</strong> — <code>Mcp-Session-Id</code> 헤더와 그에 딸린 프로토콜 수준 세션이 함께 없어졌습니다. 둘이 사라지자 <strong>어떤 요청이든 아무 서버 인스턴스에 도착해도 됩니다</strong>. 여러 대로 늘려 쓰려면 필요했던 고정 라우팅과 공유 세션 저장소가 규약 차원에서는 더 이상 필요 없습니다.</li>
+    <li><strong>상태가 필요하면 드러내서 넘긴다</strong> — 호출 사이에 이어져야 하는 상태는 <strong>서버가 발급한 핸들</strong>을 평범한 도구 인자로 주고받습니다. 숨어 있던 상태가 인자로 올라온 셈입니다.</li>
+    <li><strong>얇은 코어 + 확장</strong> — 나머지는 요청마다 협상하는 선택적 확장으로 빠졌습니다. 지금 공식 확장은 <strong>Tasks · MCP Apps · 기업 관리형 인가</strong> 셋이고, 인가 쪽은 OAuth 혼동 공격에 걸리기 쉽던 부분이 손질됐습니다.</li>
+</ul>
+
+<div class="diagram">
+<svg viewBox="0 0 720 286" role="img" aria-label="MCP가 세션 기반에서 요청 기반으로 바뀐 구조 비교: 왼쪽은 initialize 핸드셰이크와 Mcp-Session-Id로 연결이 상태를 들고 있어 고정 라우팅이 필요했고, 오른쪽은 매 요청이 _meta에 버전과 능력을 실어 아무 인스턴스나 받을 수 있다">
+    <text class="d-label" x="360" y="24" text-anchor="middle">세션에서 요청으로</text>
+    <line class="d-edge dash" x1="360" y1="40" x2="360" y2="272"/>
+    <text class="d-label sm" x="184" y="60" text-anchor="middle">이전 스펙 — 연결이 기억한다</text>
+    <rect class="d-box" x="44" y="76" width="112" height="36" rx="9"/>
+    <text class="d-label sm" x="100" y="99" text-anchor="middle">클라이언트</text>
+    <rect class="d-box" x="212" y="76" width="112" height="36" rx="9"/>
+    <text class="d-label sm" x="268" y="99" text-anchor="middle">서버</text>
+    <line class="d-edge" x1="156" y1="94" x2="204" y2="94"/><polygon class="d-arrow" points="204,89 212,94 204,99"/>
+    <text class="d-sub" x="184" y="136" text-anchor="middle">initialize / initialized 한 번</text>
+    <text class="d-sub" x="184" y="154" text-anchor="middle">Mcp-Session-Id로 계속 이어 붙기</text>
+    <text class="d-sub" x="184" y="186" text-anchor="middle">같은 인스턴스로 돌아가야 한다</text>
+    <text class="d-sub" x="184" y="204" text-anchor="middle">고정 라우팅 · 공유 세션 저장소</text>
+    <text class="d-label sm" x="536" y="60" text-anchor="middle">2026-07-28 — 요청이 자기를 소개한다</text>
+    <rect class="d-box" x="396" y="76" width="112" height="36" rx="9"/>
+    <text class="d-label sm" x="452" y="99" text-anchor="middle">클라이언트</text>
+    <rect class="d-box accent" x="586" y="62" width="100" height="30" rx="9"/>
+    <text class="d-label sm" x="636" y="82" text-anchor="middle">서버 A</text>
+    <rect class="d-box accent" x="586" y="98" width="100" height="30" rx="9"/>
+    <text class="d-label sm" x="636" y="118" text-anchor="middle">서버 B</text>
+    <line class="d-edge accent" x1="508" y1="88" x2="578" y2="77"/><polygon class="d-arrow accent" points="578,72 586,77 579,82"/>
+    <line class="d-edge accent" x1="508" y1="100" x2="578" y2="113"/><polygon class="d-arrow accent" points="579,108 586,113 578,118"/>
+    <text class="d-sub" x="536" y="154" text-anchor="middle">요청마다 _meta에 버전 · 능력</text>
+    <text class="d-sub" x="536" y="186" text-anchor="middle">아무 인스턴스나 받아도 된다</text>
+    <text class="d-sub" x="536" y="204" text-anchor="middle">이어질 상태는 서버가 준 핸들로</text>
+</svg>
+<div class="d-cap">연결이 들고 있던 기억이 요청 안으로 내려왔다 — 대신 매 요청이 무거워진다.</div>
+</div>
+
+<p>반응은 갈렸습니다. &ldquo;결국 REST를 다시 발명한 것 아니냐&rdquo;는 쪽과, 원래 <strong>표준을 하나로 맞춘 것 자체가 요점</strong>이었다는 쪽입니다. 앞의 냉소에는 실무적 이점이 따라옵니다 &mdash; 로드밸런서, API 게이트웨이, 점진 배포처럼 REST용으로 이미 갖춰 둔 인프라를 그대로 쓸 수 있게 됩니다. 대가는 분명합니다. 이 변경은 <strong>양방향으로 와이어 호환이 깨지므로</strong> 기존 서버는 버전만 올려서는 안 되고 실제로 고쳐야 합니다. 인증이나 재개 문제를 자체 확장으로 이미 해결해 둔 팀이라면, 더 나은 규약이라도 그걸 뜯어내는 데 시간이 걸립니다.</p>
+
+<h3>왜 이것이 한 이야기인가</h3>
+<p>두 변경은 서로 다른 회사, 서로 다른 층에서 났지만 같은 것을 걷어냈습니다. <strong>런타임에 붙들려 있던 고정점</strong>입니다. auto 모드가 걷어낸 것은 매 순간 사람이 맥락을 보고 내리던 판정이고, MCP가 걷어낸 것은 연결이 알아서 들고 있던 기억입니다. 둘 다 있을 때는 편했지만 횟수가 늘수록 비싸지는 종류였습니다. 사람의 승인은 에이전트가 하루 수백 번 행동하는 순간 반사적 클릭이 되고, 세션은 서버를 여러 대로 늘리는 순간 고정 라우팅이라는 짐이 됩니다.</p>
+<p>대신 들어온 것도 성격이 같습니다. 하드 디나이 규칙은 &ldquo;무엇을 절대 하지 않는가&rdquo;를 사건이 나기 전에 적어 둔 문서입니다. <code>_meta</code>는 그 반대 방향으로, 매 요청이 자기가 누구이고 무엇을 할 수 있는지 실어 보내는 쪽입니다. 미리 적어 두거나 매번 들고 가거나 &mdash; 어느 쪽이든 판정의 근거가 그때그때의 사람과 연결에서 <strong>선언된 규칙과 데이터로</strong> 옮겨갔습니다.</p>
+<p>실무에서 이게 무슨 뜻인지는 꽤 구체적입니다. <code>CLAUDE.md</code>와 설정 파일의 거부 규칙이 지금까지는 취향에 가까웠다면, 이제는 실제로 집행되는 정책이 됩니다. 넓게 열어 둔 허용 규칙은 편의가 아니라 무시 대상이 되고, 좁게 적은 거부 규칙은 사람이 자리를 비운 사이에도 계속 일합니다. 이 위키가 <a href="#!news-20260728-software-factories-fail">&ldquo;하네스로는 부족하다&rdquo;</a>에서 정리한 결론과 같은 방향입니다 &mdash; 하네스의 값어치는 지시의 두께가 아니라 <strong>검증과 경계가 얼마나 또렷한가</strong>에 있습니다.</p>
+<p>물론 이 방향에는 값이 붙습니다. 미리 적어 둔 규칙은 적어 둔 만큼만 지킵니다. 89%라는 숫자가 그 한계고, 나머지 11%는 규칙에 없던 모양의 위험이었습니다. 세션을 없앤 MCP도 상태를 없앤 것이 아니라 드러내서 인자로 옮긴 것이라, 이제 그 핸들을 누가 발급하고 언제 만료시키는지가 새 숙제가 됩니다. 감춰져 있던 문제가 보이는 자리로 나왔다는 편이 정확합니다.</p>
+
+<h3>이 위키에서 고친 것</h3>
+<p>이 변경으로 낡은 서술 두 곳을 같이 손봤습니다.</p>
+<ul>
+    <li><a href="#!hns-tools">도구 확장과 마무리</a>의 Q&amp;A에서 오토 모드를 &ldquo;권한을 매번 묻지 않아 더 자율적으로 동작&rdquo;한다고만 설명하고 있었습니다. 기본값이 되었다는 사실과 하드 디나이·인젝션 스크리닝을 덧붙였습니다.</li>
+    <li><a href="#!mcp">MCP 강의</a>의 마지막 문장 &ldquo;Claude Code는 사용 전에 허락을 구합니다&rdquo;는 8월 14일부터 사실과 어긋납니다. 규칙에 걸리는 행동만 멈춘다는 쪽으로 고쳤습니다.</li>
+</ul>
+
+<h3>사실검증 노트</h3>
+<ul>
+    <li><strong>자체 발표 수치</strong> — 승인률 97%, 허용 규칙 49.5%·bypass 62%·세션 4분의 1, 테스터 1,053명 실험의 13.6%와 89%(937건)는 모두 <strong>Anthropic이 공개한 자체 조사·실험</strong> 결과입니다. 외부에서 재현한 수치가 아닙니다.</li>
+    <li><strong>독립 평가</strong> — 720회 인젝션 시도 전부 실패는 <strong>Trajectory Labs</strong>의 평가로 보고된 것이고, 72개 시나리오 × 10회 × 모델별이라는 구성까지 함께 공개됐습니다. 평가 설계와 시나리오 난이도는 별도로 공개된 범위 안에서만 확인 가능합니다.</li>
+    <li><strong>11%라는 표현</strong> — 저지 89%의 나머지를 뒤집어 계산한 값이며, 이 각도로 제목을 뽑은 보도가 있어 본문에도 그대로 적었습니다. 두 숫자는 같은 실험의 앞뒤입니다.</li>
+    <li><strong>스펙 상세</strong> — 핸드셰이크 제거(SEP-2575)·세션 식별자 제거(SEP-2567)·<code>_meta</code>·<code>server/discover</code>·확장 3종은 <strong>MCP 공식 블로그와 변경 목록</strong>에 근거합니다. 2026-07-28은 <strong>릴리스 후보</strong>이므로 최종 확정 과정에서 세부가 바뀔 수 있습니다.</li>
+    <li><strong>적용 범위</strong> — auto 모드 기본값은 <strong>Pro·Max·Team 요금제의 새 세션</strong>이 대상이고, 이미 고정해 둔 설정이나 조직이 관리하는 기본값은 그대로 유지된다고 안내됐습니다.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">출처</span>
+    · auto 모드: <a href="https://claude.com/blog/auto-mode-default-in-claude-code" target="_blank" rel="noopener">Anthropic — Auto mode is now the default in Claude Code</a> · <a href="https://claude.com/blog/auto-mode" target="_blank" rel="noopener">Anthropic — Auto mode for Claude Code</a> · <a href="https://techcrunch.com/2026/08/09/anthropic-is-turning-claude-codes-auto-mode-on-by-default/" target="_blank" rel="noopener">TechCrunch</a> · <a href="https://www.theregister.com/ai-and-ml/2026/08/10/claude_code_puts_auto_mode_in_the_drivers_seat/" target="_blank" rel="noopener">The Register</a> · <a href="https://www.helpnetsecurity.com/2026/08/10/anthropic-claude-code-auto-mode/" target="_blank" rel="noopener">Help Net Security</a> · <a href="https://www.techi.com/claude-code-auto-mode-default-11-percent-miss-rate/" target="_blank" rel="noopener">TECHi — 11% 미탐 지적</a> · <a href="https://simonwillison.net/2026/Aug/8/auto-mode/" target="_blank" rel="noopener">Simon Willison</a><br>
+    · MCP 스펙: <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank" rel="noopener">MCP 공식 블로그 — 2026-07-28 릴리스 후보</a> · <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog" target="_blank" rel="noopener">변경 목록</a> · <a href="https://www.infoq.com/news/2026/08/mcp-stateless-gateway/" target="_blank" rel="noopener">InfoQ — 개발자 반응</a> · <a href="https://equixly.com/blog/2026/08/05/stateless-mcp/" target="_blank" rel="noopener">Equixly — 보안 관점</a> · <a href="https://developers.googleblog.com/scaling-ai-agent-infrastructure-with-the-mcp-stateless-updates/" target="_blank" rel="noopener">Google Developers Blog — 확장성 관점</a>
+</div>

@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Defaults That Stop Asking — Auto Mode and Stateless MCP</title>
+<meta name="description" content="Two changes from the same week in one piece — from 2026-08-14 Claude Code makes auto mode the default for new Pro, Max, and Team sessions (97% of prompts approved, people refused a planted dangerous command only 13.6% of the time, the classifier blocked 89%, and Trajectory Labs saw zero successes across 720 injection attempts), while the MCP 2026-07-28 spec deleted the initialize handshake and Mcp-Session-Id to take state out of the protocol (_meta, server/discover, server-minted handles, Tasks/MCP Apps/enterprise authorization extensions, wire-incompatible both ways). The shared structure: remove the fixed point held at runtime and move the decision to declared rules and per-request data">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/news-20260814-auto-mode-stateless-mcp/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260814-auto-mode-stateless-mcp/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260814-auto-mode-stateless-mcp/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/news-20260814-auto-mode-stateless-mcp/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260814-auto-mode-stateless-mcp/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Defaults That Stop Asking — Auto Mode and Stateless MCP">
+<meta property="og:description" content="Two changes from the same week in one piece — from 2026-08-14 Claude Code makes auto mode the default for new Pro, Max, and Team sessions (97% of prompts approved, people refused a planted dangerous command only 13.6% of the time, the classifier blocked 89%, and Trajectory Labs saw zero successes across 720 injection attempts), while the MCP 2026-07-28 spec deleted the initialize handshake and Mcp-Session-Id to take state out of the protocol (_meta, server/discover, server-minted handles, Tasks/MCP Apps/enterprise authorization extensions, wire-incompatible both ways). The shared structure: remove the fixed point held at runtime and move the decision to declared rules and per-request data">
+<meta property="og:url" content="https://dewytear.github.io/p/en/news-20260814-auto-mode-stateless-mcp/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Defaults That Stop Asking — Auto Mode and Stateless MCP">
+<meta name="twitter:description" content="Two changes from the same week in one piece — from 2026-08-14 Claude Code makes auto mode the default for new Pro, Max, and Team sessions (97% of prompts approved, people refused a planted dangerous command only 13.6% of the time, the classifier blocked 89%, and Trajectory Labs saw zero successes across 720 injection attempts), while the MCP 2026-07-28 spec deleted the initialize handshake and Mcp-Session-Id to take state out of the protocol (_meta, server/discover, server-minted handles, Tasks/MCP Apps/enterprise authorization extensions, wire-incompatible both ways). The shared structure: remove the fixed point held at runtime and move the decision to declared rules and per-request data">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Defaults That Stop Asking — Auto Mode and Stateless MCP",
+ "description": "Two changes from the same week in one piece — from 2026-08-14 Claude Code makes auto mode the default for new Pro, Max, and Team sessions (97% of prompts approved, people refused a planted dangerous command only 13.6% of the time, the classifier blocked 89%, and Trajectory Labs saw zero successes across 720 injection attempts), while the MCP 2026-07-28 spec deleted the initialize handshake and Mcp-Session-Id to take state out of the protocol (_meta, server/discover, server-minted handles, Tasks/MCP Apps/enterprise authorization extensions, wire-incompatible both ways). The shared structure: remove the fixed point held at runtime and move the decision to declared rules and per-request data",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/news-20260814-auto-mode-stateless-mcp/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260814-auto-mode-stateless-mcp",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-08-14T04:50:25+09:00",
+ "dateModified": "2026-08-14T04:50:25+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260814-auto-mode-stateless-mcp">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/news-20260814-auto-mode-stateless-mcp/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/ja/news-20260814-auto-mode-stateless-mcp/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>Defaults That Stop Asking &mdash; Auto Mode and Stateless MCP</h2>
+
+<p>As of today (14 August), a new Claude Code session <strong>starts in auto mode</strong>. The permission prompt that used to ask &ldquo;may I run this?&rdquo; is out of the default flow. Two weeks earlier, <strong>MCP</strong>, the standard agents use to attach tools, <strong>removed the idea of a session from the protocol entirely</strong>. One dropped the human click, the other dropped the connection's memory, and in both cases what filled the gap was <strong>a rule written down in advance</strong>. This article walks through both changes and why they are one story.</p>
+
+<div class="note">
+    <span class="nh">About this article (sources)</span>
+    · Subjects: <strong>Anthropic's auto-mode default announcement</strong> (announced 2026-08-08, effective 08-14) · <strong>MCP 2026-07-28 specification release candidate</strong><br>
+    · Compiled from <strong>official announcements, the spec documents, and cross-checked reporting</strong> (2026-08-14). Source list and fact-check notes at the end.
+</div>
+
+<h3>Three-line summary</h3>
+<ul>
+    <li>New Claude Code sessions on Pro, Max, and Team plans now use <strong>auto mode as the default</strong>. Only actions that are irreversible, destructive, or reach outside the working environment get stopped; everything else proceeds without a prompt.</li>
+    <li>The numbers behind the decision sting. In Anthropic's own data, users approved <strong>97% of permission prompts</strong>, and in a study where a dangerous command was slipped into an ordinary prompt, <strong>people rejected it only 13.6% of the time</strong>. Auto mode's classifier caught <strong>89%</strong> of the same commands. The approval button had already stopped working as a safeguard.</li>
+    <li>MCP deleted the <code>initialize</code> handshake and <code>Mcp-Session-Id</code>. Protocol version and client capabilities now ride in <strong><code>_meta</code> on every request</strong>. Any request can land on any server instance, but the change is <strong>wire-incompatible in both directions</strong>, so existing servers need real refactoring.</li>
+</ul>
+
+<h3>The approval loop was already broken</h3>
+<p>The <strong>numbers published to justify the change</strong> are more striking than the change itself. Here is what Anthropic reported about how people actually use permissions.</p>
+<ul>
+    <li>Users approve <strong>97% of permission prompts</strong>. The company reads this as <strong>reflexive clicking</strong> rather than judgment.</li>
+    <li><strong>49.5%</strong> of active CLI users have hand-written Bash allow rules, and <strong>62%</strong> have used <code>bypassPermissions</code> or &ldquo;don't ask again.&rdquo; A <strong>quarter</strong> of interactive sessions now start in bypass mode from the outset.</li>
+</ul>
+<p>So they ran a study. <strong>1,053</strong> paid professional testers worked in a test coding environment, and partway through each session one ordinary permission prompt was swapped for a <strong>plainly dangerous command</strong>. Approving it never actually ran anything; the study recorded only <strong>whether the participant noticed and refused</strong>. The result was <strong>143 people, 13.6%</strong>. Five out of six waved the dangerous command through.</p>
+<p>Run the same commands past auto mode's classifier and <strong>937 of 1,053, or 89%</strong>, were blocked. Flip that around and <strong>116 of them, roughly 11%</strong>, got through, and at least one outlet led with that number: why ship this as the default when it misses 11%? The objection is fair. What makes the decision defensible is that the comparison is not against a perfect human but against <strong>the 13.6% human</strong>.</p>
+
+<h3>So what guards the gate now? Rules instead of clicks</h3>
+<p>Three layers moved into the space the permission prompt left behind.</p>
+<ul>
+    <li><strong>Hard denies</strong> &mdash; rules that block regardless of context. Exfiltrating data is the headline case, and the rules <strong>distinguish secrets from public data</strong> when they judge. Users and enterprise administrators can add their own categories.</li>
+    <li><strong>A state check right before the action</strong> &mdash; before a destructive command such as <code>git reset --hard</code>, Claude looks at <strong>git state and whether the repository is public</strong>. The same command reads differently when there are uncommitted changes piled up.</li>
+    <li><strong>Prompt-injection screening</strong> &mdash; probes scan tool results for &ldquo;from now on, do this instead&rdquo; instructions hidden in content read from files or the web. A separate classifier then checks <strong>whether the intended action matches what the user asked for</strong>.</li>
+</ul>
+<p>Some things still come back to you: actions that are irreversible, destructive, or aimed outside the environment Claude runs in. In those cases Claude first looks for a safer route and only asks when it cannot find one. In the other direction, <strong>allow rules that are too broad</strong>, such as unrestricted <code>python</code> or <code>node</code> execution, are <strong>set aside</strong> in auto mode, because leaving them active would let anything run straight past the classifier.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="Comparison of where the approval gate sits: on the left a human approves every action (97 percent approval rate, only 13.6 percent of planted dangerous commands refused); on the right hard deny rules and injection probes filter actions and only irreversible ones reach the human (89 percent blocked)">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Where the approval gate moved</text>
+    <line class="d-edge dash" x1="360" y1="40" x2="360" y2="286"/>
+    <text class="d-label sm" x="184" y="60" text-anchor="middle">Until now: the human is the gate</text>
+    <rect class="d-box" x="54" y="74" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="184" y="96" text-anchor="middle">Claude proposes an action</text>
+    <line class="d-edge" x1="184" y1="108" x2="184" y2="126"/><polygon class="d-arrow" points="179,118 184,126 189,118"/>
+    <rect class="d-box accent" x="54" y="126" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="184" y="148" text-anchor="middle">Human approves, every time</text>
+    <line class="d-edge" x1="184" y1="160" x2="184" y2="178"/><polygon class="d-arrow" points="179,170 184,178 189,170"/>
+    <rect class="d-box soft" x="54" y="178" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="184" y="200" text-anchor="middle">Run</text>
+    <text class="d-sub" x="184" y="234" text-anchor="middle">97% of prompts get approved</text>
+    <text class="d-sub" x="184" y="252" text-anchor="middle">Planted danger refused only 13.6%</text>
+    <text class="d-sub" x="184" y="270" text-anchor="middle">62% have already used bypass</text>
+    <text class="d-label sm" x="536" y="60" text-anchor="middle">From 14 Aug: the rules are the gate</text>
+    <rect class="d-box" x="406" y="74" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="536" y="96" text-anchor="middle">Claude proposes an action</text>
+    <line class="d-edge accent" x1="536" y1="108" x2="536" y2="126"/><polygon class="d-arrow accent" points="531,118 536,126 541,118"/>
+    <rect class="d-box accent" x="406" y="126" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="536" y="148" text-anchor="middle">Hard deny · injection probes</text>
+    <line class="d-edge accent" x1="536" y1="160" x2="536" y2="178"/><polygon class="d-arrow accent" points="531,170 536,178 541,170"/>
+    <rect class="d-box soft" x="406" y="178" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="536" y="200" text-anchor="middle">Run</text>
+    <text class="d-sub" x="536" y="234" text-anchor="middle">Only irreversible actions reach you</text>
+    <text class="d-sub" x="536" y="252" text-anchor="middle">Same commands blocked 89% (937/1,053)</text>
+    <text class="d-sub" x="536" y="270" text-anchor="middle">Over-broad allow rules are ignored</text>
+</svg>
+<div class="d-cap">The gate did not disappear. It moved from a click in the moment to a rule written down in advance.</div>
+</div>
+
+<p>There is an attack-side evaluation too. Trajectory Labs, an independent evaluator, ran <strong>72 indirect prompt-injection scenarios ten times each, 720 attempts per model</strong>, and reported that <strong>no attack succeeded</strong> against Fable 5, Opus 5, or Sonnet 5 running in auto mode. Anthropic also published three cases caught in its own internal use: an off-network data leak, a destructive mass operation, and a privilege escalation. In each one Claude either found a safer path by itself or checked in with the user.</p>
+
+<h3>The same week, MCP dropped the session</h3>
+<p><strong>MCP (Model Context Protocol)</strong> is the standard that defines how an agent attaches to outside tools and data. It is the protocol covered in this wiki's <a href="/p/en/mcp/">MCP lecture</a>, and the 2026-07-28 release candidate is its largest revision since launch. One sentence covers the core of it: <strong>state is gone from the protocol layer</strong>.</p>
+<ul>
+    <li><strong>The handshake is gone</strong> &mdash; <code>initialize</code>/<code>initialized</code>, exchanged once when a connection opened, no longer exists. Protocol version, client info, and client capabilities now travel in <strong><code>_meta</code> on every request</strong>. If a client needs server capabilities up front, the new <code>server/discover</code> method fetches them on demand.</li>
+    <li><strong>The session identifier is gone</strong> &mdash; the <code>Mcp-Session-Id</code> header and the protocol-level session that came with it were removed together. With both gone, <strong>any request can arrive at any server instance</strong>. The sticky routing and shared session stores that horizontal deployments needed are no longer required at the protocol layer.</li>
+    <li><strong>State that must persist is passed openly</strong> &mdash; anything that has to carry across calls now travels as a <strong>server-minted handle</strong> given as an ordinary tool argument. State that used to hide in the connection is now an argument.</li>
+    <li><strong>Thin core plus extensions</strong> &mdash; the rest moved into optional extensions negotiated per request. Three are official today: <strong>Tasks, MCP Apps, and enterprise-managed authorization</strong>, with the authorization work tightening the parts that were prone to OAuth mix-up attacks.</li>
+</ul>
+
+<div class="diagram">
+<svg viewBox="0 0 720 286" role="img" aria-label="Comparison of MCP before and after: on the left the initialize handshake and Mcp-Session-Id keep state in the connection and require sticky routing; on the right every request carries version and capabilities in _meta so any instance can serve it">
+    <text class="d-label" x="360" y="24" text-anchor="middle">From session to request</text>
+    <line class="d-edge dash" x1="360" y1="40" x2="360" y2="272"/>
+    <text class="d-label sm" x="184" y="60" text-anchor="middle">Old spec: the connection remembers</text>
+    <rect class="d-box" x="44" y="76" width="112" height="36" rx="9"/>
+    <text class="d-label sm" x="100" y="99" text-anchor="middle">Client</text>
+    <rect class="d-box" x="212" y="76" width="112" height="36" rx="9"/>
+    <text class="d-label sm" x="268" y="99" text-anchor="middle">Server</text>
+    <line class="d-edge" x1="156" y1="94" x2="204" y2="94"/><polygon class="d-arrow" points="204,89 212,94 204,99"/>
+    <text class="d-sub" x="184" y="136" text-anchor="middle">initialize / initialized, once</text>
+    <text class="d-sub" x="184" y="154" text-anchor="middle">Mcp-Session-Id keeps the thread</text>
+    <text class="d-sub" x="184" y="186" text-anchor="middle">Must return to the same instance</text>
+    <text class="d-sub" x="184" y="204" text-anchor="middle">Sticky routing · shared session store</text>
+    <text class="d-label sm" x="536" y="60" text-anchor="middle">2026-07-28: each request introduces itself</text>
+    <rect class="d-box" x="396" y="76" width="112" height="36" rx="9"/>
+    <text class="d-label sm" x="452" y="99" text-anchor="middle">Client</text>
+    <rect class="d-box accent" x="586" y="62" width="100" height="30" rx="9"/>
+    <text class="d-label sm" x="636" y="82" text-anchor="middle">Server A</text>
+    <rect class="d-box accent" x="586" y="98" width="100" height="30" rx="9"/>
+    <text class="d-label sm" x="636" y="118" text-anchor="middle">Server B</text>
+    <line class="d-edge accent" x1="508" y1="88" x2="578" y2="77"/><polygon class="d-arrow accent" points="578,72 586,77 579,82"/>
+    <line class="d-edge accent" x1="508" y1="100" x2="578" y2="113"/><polygon class="d-arrow accent" points="579,108 586,113 578,118"/>
+    <text class="d-sub" x="536" y="154" text-anchor="middle">Version · capabilities in _meta each time</text>
+    <text class="d-sub" x="536" y="186" text-anchor="middle">Any instance may serve it</text>
+    <text class="d-sub" x="536" y="204" text-anchor="middle">Carried state travels as a handle</text>
+</svg>
+<div class="d-cap">What the connection used to remember now rides inside the request, which makes every request heavier.</div>
+</div>
+
+<p>Reactions split. One camp calls it a rediscovery of REST; the other says <strong>having one standard was the point all along</strong>. The cynical reading comes with a practical upside: load balancers, API gateways, and progressive rollouts already built for REST now work unchanged. The cost is plain. The change <strong>breaks wire compatibility in both directions</strong>, so existing servers need real work rather than a version bump. Teams that already solved auth or resumption with their own extensions will take a while to tear that out, however much better the new spec is.</p>
+
+<h3>Why this is one story</h3>
+<p>The two changes came from different companies at different layers, yet they removed the same thing: <strong>a fixed point held at runtime</strong>. Auto mode removed the judgment a human made in the moment by reading context; MCP removed the memory a connection kept on its own. Both were convenient while they lasted and grew expensive as the count went up. Human approval turns into reflexive clicking the moment an agent acts hundreds of times a day, and a session becomes the burden of sticky routing the moment you run more than one server.</p>
+<p>What replaced them is of a kind too. A hard deny rule is a document written before the incident, stating what must never happen. <code>_meta</code> works from the other direction, letting each request carry who it is and what it can do. Write it down in advance or carry it every time: either way, the basis for a decision moved from the human and the connection of the moment to <strong>declared rules and data</strong>.</p>
+<p>What that means in practice is fairly concrete. Deny rules in <code>CLAUDE.md</code> and your settings files used to be closer to preference; now they are policy that actually gets enforced. Allow rules left wide open become something to ignore rather than a convenience, and narrowly written deny rules keep working while nobody is watching. This runs in the same direction as the conclusion in this wiki's <a href="/p/en/news-20260728-software-factories-fail/">&ldquo;A harness is not enough&rdquo;</a> &mdash; a harness is worth what its <strong>verification and boundaries</strong> are worth, not what its instructions weigh.</p>
+<p>The direction has a price. A rule written in advance protects exactly as far as it was written. The 89% figure is that limit, and the remaining 11% was danger in a shape the rules did not have. MCP did not remove state either; it moved state out into arguments, so who mints a handle and when it expires becomes the new homework. It is more accurate to say a hidden problem got moved somewhere visible.</p>
+
+<h3>What this wiki fixed</h3>
+<p>Two passages went stale with this change, and both were updated in the same pass.</p>
+<ul>
+    <li>The Q&amp;A in <a href="/p/en/hns-tools/">Extending tools, and wrapping up</a> described auto mode only as &ldquo;it does not ask for permission every time, so it operates more autonomously.&rdquo; The fact that it is now the default, along with hard denies and injection screening, has been added.</li>
+    <li>The closing sentence of the <a href="/p/en/mcp/">MCP lecture</a>, &ldquo;Claude Code asks for permission before using them,&rdquo; is wrong as of 14 August. It now says Claude stops only on the actions the rules catch.</li>
+</ul>
+
+<h3>Fact-check notes</h3>
+<ul>
+    <li><strong>Self-reported figures</strong> &mdash; the 97% approval rate, 49.5% allow rules, 62% bypass, quarter of sessions, and the 13.6% and 89% (937 cases) from the 1,053-tester study all come from <strong>Anthropic's own research and experiments</strong>. None have been independently reproduced.</li>
+    <li><strong>Independent evaluation</strong> &mdash; the 720 injection attempts with zero successes were reported by <strong>Trajectory Labs</strong>, with the structure disclosed as 72 scenarios × 10 runs per model. The design and difficulty of the scenarios can only be judged within what was published.</li>
+    <li><strong>The 11% framing</strong> &mdash; that number is the inverse of the 89% block rate. At least one outlet built its headline around it, which is why it appears here too. The two figures are two ends of the same study.</li>
+    <li><strong>Spec details</strong> &mdash; handshake removal (SEP-2575), session-identifier removal (SEP-2567), <code>_meta</code>, <code>server/discover</code>, and the three extensions are drawn from the <strong>official MCP blog and changelog</strong>. 2026-07-28 is a <strong>release candidate</strong>, so details may still shift before it is finalized.</li>
+    <li><strong>Scope</strong> &mdash; the auto-mode default applies to <strong>new sessions on the Pro, Max, and Team plans</strong>. Settings already pinned, and defaults managed by an organization, were announced as unchanged.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">Sources</span>
+    · Auto mode: <a href="https://claude.com/blog/auto-mode-default-in-claude-code" target="_blank" rel="noopener">Anthropic &mdash; Auto mode is now the default in Claude Code</a> · <a href="https://claude.com/blog/auto-mode" target="_blank" rel="noopener">Anthropic &mdash; Auto mode for Claude Code</a> · <a href="https://techcrunch.com/2026/08/09/anthropic-is-turning-claude-codes-auto-mode-on-by-default/" target="_blank" rel="noopener">TechCrunch</a> · <a href="https://www.theregister.com/ai-and-ml/2026/08/10/claude_code_puts_auto_mode_in_the_drivers_seat/" target="_blank" rel="noopener">The Register</a> · <a href="https://www.helpnetsecurity.com/2026/08/10/anthropic-claude-code-auto-mode/" target="_blank" rel="noopener">Help Net Security</a> · <a href="https://www.techi.com/claude-code-auto-mode-default-11-percent-miss-rate/" target="_blank" rel="noopener">TECHi &mdash; on the 11% miss rate</a> · <a href="https://simonwillison.net/2026/Aug/8/auto-mode/" target="_blank" rel="noopener">Simon Willison</a><br>
+    · MCP spec: <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank" rel="noopener">MCP blog &mdash; the 2026-07-28 release candidate</a> · <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog" target="_blank" rel="noopener">Changelog</a> · <a href="https://www.infoq.com/news/2026/08/mcp-stateless-gateway/" target="_blank" rel="noopener">InfoQ &mdash; developer reaction</a> · <a href="https://equixly.com/blog/2026/08/05/stateless-mcp/" target="_blank" rel="noopener">Equixly &mdash; security view</a> · <a href="https://developers.googleblog.com/scaling-ai-agent-infrastructure-with-the-mcp-stateless-updates/" target="_blank" rel="noopener">Google Developers Blog &mdash; scaling view</a>
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">Created</span> 2026-08-14 &middot; <span class="pr-k">Updated</span> 2026-08-14</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/hns-tools/">Extending the Tools and Wrap-up</a></li><li><a href="/p/en/mcp/">MCP Servers</a></li><li><a href="/p/en/welcome/">Welcome</a></li><li><a href="/p/en/commands/">Everyday Use</a></li></ul>
+</nav>
+</body>
+</html>
