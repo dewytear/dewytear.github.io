@@ -1,0 +1,137 @@
+<h2>尋ねない既定値 &mdash; autoモードとMCPのステートレス化</h2>
+
+<p>今日（8月14日）から、Claude Code の新しいセッションは <strong>auto モードで始まります</strong>。毎回「このコマンドを実行しますか」と尋ねていた許可プロンプトが、既定の動きから外れました。その二週間前、エージェントがツールをつなぐ標準である <strong>MCP</strong> は、<strong>セッションという概念そのものをプロトコルから取り除きました</strong>。片方は人のクリックを、もう片方は接続の記憶を外したわけですが、空いた場所を埋めたのはどちらも<strong>あらかじめ書いておいたルール</strong>です。この記事では二つの変更の中身を整理し、なぜこれが一つの話なのかを見ます。</p>
+
+<div class="note">
+    <span class="nh">記事情報（出典）</span>
+    · 対象: <strong>Anthropic の auto モード既定化の告知</strong>（2026-08-08 発表 · 08-14 適用） · <strong>MCP 2026-07-28 仕様のリリース候補</strong><br>
+    · 整理: <strong>公式発表・仕様文書 + 複数報道の突き合わせ</strong>（2026-08-14）&mdash; 文末に出典一覧とファクトチェックのメモ
+</div>
+
+<h3>三行まとめ</h3>
+<ul>
+    <li>Claude Code の Pro・Max・Team の新規セッションが <strong>auto モードを既定値</strong>として使います。取り消せない操作、破壊的な操作、作業環境の外に向かう操作だけを止め、残りは尋ねずに進みます。</li>
+    <li>根拠として出された数字が痛いところを突きます。Anthropic の調査で利用者は許可プロンプトの <strong>97% を承認</strong>しており、実験でこっそり混ぜた危険なコマンドを <strong>人は 13.6% しか拒否できませんでした</strong>。同じコマンドを auto モードの分類器は <strong>89% 阻止</strong>しました。承認ボタンはすでに安全装置として働いていなかった、という話です。</li>
+    <li>MCP は <code>initialize</code> ハンドシェイクと <code>Mcp-Session-Id</code> を削除しました。プロトコルのバージョンとクライアントの能力は、これからは<strong>毎リクエストの <code>_meta</code></strong> に載って運ばれます。どのリクエストもどのサーバーインスタンスが受けてよくなった一方、<strong>双方向で互換が切れる</strong>変更なので、既存のサーバーには作り直しが要ります。</li>
+</ul>
+
+<h3>承認ループはすでに壊れていた</h3>
+<p>変更そのものより、<strong>変更を正当化するために公開された数字</strong>のほうが目を引きます。Anthropic が明かした利用実態はこうです。</p>
+<ul>
+    <li>利用者は許可プロンプトの <strong>97% を承認</strong>します。同社はこれを判断ではなく<strong>反射的なクリック</strong>と読みました。</li>
+    <li>CLI のアクティブ利用者の <strong>49.5%</strong> が Bash の許可ルールを自分で作っており、<strong>62%</strong> は <code>bypassPermissions</code> や「次から尋ねない」を使ったことがあります。対話セッションの <strong>4分の1</strong> は、最初から bypass の状態で始まります。</li>
+</ul>
+<p>そこで実験をしました。有料で募った専門テスター <strong>1,053人</strong> をテスト用のコーディング環境に入れ、セッションの途中でありふれた許可プロンプトを一つ、<strong>誰が見ても危険なコマンド</strong>にすり替えます。承認してもコマンドが実際に走ることはなく、記録したのは<strong>参加者が気づいて拒否したかどうか</strong>だけです。結果は <strong>143人、13.6%</strong>。六人のうち五人は危険なコマンドをそのまま通しました。</p>
+<p>同じコマンドを auto モードの分類器にかけると、<strong>1,053件のうち937件、89%</strong> が止まりました。裏返せば <strong>116件、およそ11%</strong> は通ったということで、この数字を見出しにして「11%も見逃すのに既定値にするのか」と指摘した報道もあります。指摘そのものは妥当です。ただ、比較の相手が無欠の人間ではなく <strong>13.6% の人間</strong>だという点が、この判断の論拠になっています。</p>
+
+<h3>では何が守るのか &mdash; クリックの代わりにルール</h3>
+<p>許可プロンプトを外した場所には、三つの層が入りました。</p>
+<ul>
+    <li><strong>ハードデナイ（hard deny）</strong> &mdash; 文脈を問わず無条件に止めるルールです。データを外に持ち出す操作が代表例で、<strong>秘密情報と公開データを区別</strong>して判定します。利用者や企業の管理者が範囲を追加できます。</li>
+    <li><strong>操作の直前の状態確認</strong> &mdash; <code>git reset --hard</code> のような破壊的コマンドの前には、<strong>git の状態とリポジトリが公開かどうか</strong>をまず見ます。同じコマンドでも、コミットしていない変更が溜まっていれば判断が変わります。</li>
+    <li><strong>プロンプトインジェクションの検査</strong> &mdash; ファイルやウェブから読み込んだ内容に「これからはこうしろ」といった指示が紛れていないか、ツールの結果をプローブが走査します。さらに別の分類器が、<strong>やろうとしている操作が利用者の意図と合っているか</strong>を見ます。</li>
+</ul>
+<p>いまも人に上がってくるものはあります。取り消せない、破壊的、あるいは Claude が動いている環境の外に向かう操作です。このとき Claude はまず安全な迂回路を探し、見つからなければそこで許可を求めます。逆に、<strong>既存の許可ルールのうち広すぎるもの</strong>、たとえば制限のない <code>python</code>・<code>node</code> の実行などは auto モードでは<strong>無視</strong>されます。そうしたルールが生きていると、何でも分類器を迂回して実行できてしまうからです。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="承認のゲートが人からルールへ移った構造の比較。左は人が毎回承認する方式（承認率97パーセント、仕込まれた危険なコマンドの拒否は13.6パーセント）、右はハードデナイのルールとインジェクション検査が選り分け、取り消せない操作だけが人に上がる方式（89パーセント阻止）">
+    <text class="d-label" x="360" y="24" text-anchor="middle">承認のゲートが移った先</text>
+    <line class="d-edge dash" x1="360" y1="40" x2="360" y2="286"/>
+    <text class="d-label sm" x="184" y="60" text-anchor="middle">これまで &mdash; 人がゲート</text>
+    <rect class="d-box" x="54" y="74" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="184" y="96" text-anchor="middle">Claude が操作を提案</text>
+    <line class="d-edge" x1="184" y1="108" x2="184" y2="126"/><polygon class="d-arrow" points="179,118 184,126 189,118"/>
+    <rect class="d-box accent" x="54" y="126" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="184" y="148" text-anchor="middle">人が毎回承認</text>
+    <line class="d-edge" x1="184" y1="160" x2="184" y2="178"/><polygon class="d-arrow" points="179,170 184,178 189,170"/>
+    <rect class="d-box soft" x="54" y="178" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="184" y="200" text-anchor="middle">実行</text>
+    <text class="d-sub" x="184" y="234" text-anchor="middle">プロンプトの97%が承認される</text>
+    <text class="d-sub" x="184" y="252" text-anchor="middle">仕込んだ危険は13.6%しか拒否せず</text>
+    <text class="d-sub" x="184" y="270" text-anchor="middle">62%はすでにbypassを使った</text>
+    <text class="d-label sm" x="536" y="60" text-anchor="middle">8月14日から &mdash; ルールがゲート</text>
+    <rect class="d-box" x="406" y="74" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="536" y="96" text-anchor="middle">Claude が操作を提案</text>
+    <line class="d-edge accent" x1="536" y1="108" x2="536" y2="126"/><polygon class="d-arrow accent" points="531,118 536,126 541,118"/>
+    <rect class="d-box accent" x="406" y="126" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="536" y="148" text-anchor="middle">ハードデナイ · 検査</text>
+    <line class="d-edge accent" x1="536" y1="160" x2="536" y2="178"/><polygon class="d-arrow accent" points="531,170 536,178 541,170"/>
+    <rect class="d-box soft" x="406" y="178" width="260" height="34" rx="9"/>
+    <text class="d-label sm" x="536" y="200" text-anchor="middle">実行</text>
+    <text class="d-sub" x="536" y="234" text-anchor="middle">取り消せない操作だけ人へ</text>
+    <text class="d-sub" x="536" y="252" text-anchor="middle">同じ命令を89%阻止 (937/1,053)</text>
+    <text class="d-sub" x="536" y="270" text-anchor="middle">広すぎる許可ルールは無視</text>
+</svg>
+<div class="d-cap">ゲートが消えたのではない。その場のクリックから、先に書いておいたルールへ移った。</div>
+</div>
+
+<p>攻撃側の評価も一緒に出ています。独立評価機関の Trajectory Labs が <strong>72通りの間接プロンプトインジェクションのシナリオを各10回、モデルあたり720回</strong> 試み、auto モードで動かした Fable 5・Opus 5・Sonnet 5 では <strong>成功した攻撃が一つもなかった</strong>と報告しました。社内運用で実際に止まった例としては、ネットワーク外へのデータ流出、破壊的な大量操作、権限昇格の三件が公開され、いずれも Claude が自分で安全な経路を見つけるか、利用者に確認を取っています。</p>
+
+<h3>同じ週、MCPはセッションを捨てた</h3>
+<p><strong>MCP（Model Context Protocol）</strong>は、エージェントが外部のツールやデータにつながる方法を定めた標準です。この wiki の <a href="#!mcp">MCP 講義</a>が扱っているその規約で、2026-07-28 のリリース候補は公開以来もっとも大きな改訂です。核心は一文で足ります &mdash; <strong>プロトコルの層から状態をなくした</strong>。</p>
+<ul>
+    <li><strong>ハンドシェイクの削除</strong> &mdash; 接続を開くときに一度だけやり取りしていた <code>initialize</code>/<code>initialized</code> がなくなりました。プロトコルのバージョン・クライアント情報・クライアントの能力は、<strong>すべてのリクエストの <code>_meta</code></strong> に載ります。サーバーの能力を先に知りたいときは、新設の <code>server/discover</code> で必要なときに取得します。</li>
+    <li><strong>セッション識別子の削除</strong> &mdash; <code>Mcp-Session-Id</code> ヘッダーと、それに付いていたプロトコル水準のセッションが一緒に消えました。二つが消えたことで、<strong>どのリクエストもどのサーバーインスタンスに届いてかまいません</strong>。台数を増やすために必要だった固定ルーティングや共有セッションストアが、規約の水準では要らなくなります。</li>
+    <li><strong>状態が要るなら表に出して渡す</strong> &mdash; 呼び出しをまたいで続く状態は、<strong>サーバーが発行したハンドル</strong>を普通のツール引数としてやり取りします。隠れていた状態が引数に上がってきた形です。</li>
+    <li><strong>薄いコア + 拡張</strong> &mdash; 残りはリクエストごとに交渉する任意の拡張に回りました。いまの公式拡張は <strong>Tasks・MCP Apps・企業向け管理型の認可</strong>の三つで、認可まわりは OAuth の取り違え攻撃に弱かった部分が手直しされています。</li>
+</ul>
+
+<div class="diagram">
+<svg viewBox="0 0 720 286" role="img" aria-label="MCPがセッション基盤からリクエスト基盤に変わった構造の比較。左はinitializeハンドシェイクとMcp-Session-Idで接続が状態を持ち、固定ルーティングが必要だった。右は毎リクエストが_metaにバージョンと能力を載せるので、どのインスタンスでも受けられる">
+    <text class="d-label" x="360" y="24" text-anchor="middle">セッションからリクエストへ</text>
+    <line class="d-edge dash" x1="360" y1="40" x2="360" y2="272"/>
+    <text class="d-label sm" x="184" y="60" text-anchor="middle">旧仕様 &mdash; 接続が覚える</text>
+    <rect class="d-box" x="44" y="76" width="112" height="36" rx="9"/>
+    <text class="d-label sm" x="100" y="99" text-anchor="middle">クライアント</text>
+    <rect class="d-box" x="212" y="76" width="112" height="36" rx="9"/>
+    <text class="d-label sm" x="268" y="99" text-anchor="middle">サーバー</text>
+    <line class="d-edge" x1="156" y1="94" x2="204" y2="94"/><polygon class="d-arrow" points="204,89 212,94 204,99"/>
+    <text class="d-sub" x="184" y="136" text-anchor="middle">initialize / initialized を一度</text>
+    <text class="d-sub" x="184" y="154" text-anchor="middle">Mcp-Session-Id で継ぎ足す</text>
+    <text class="d-sub" x="184" y="186" text-anchor="middle">同じインスタンスに戻る必要</text>
+    <text class="d-sub" x="184" y="204" text-anchor="middle">固定ルーティング · 共有ストア</text>
+    <text class="d-label sm" x="536" y="60" text-anchor="middle">2026-07-28 &mdash; 要求が自己紹介する</text>
+    <rect class="d-box" x="396" y="76" width="112" height="36" rx="9"/>
+    <text class="d-label sm" x="452" y="99" text-anchor="middle">クライアント</text>
+    <rect class="d-box accent" x="586" y="62" width="100" height="30" rx="9"/>
+    <text class="d-label sm" x="636" y="82" text-anchor="middle">サーバーA</text>
+    <rect class="d-box accent" x="586" y="98" width="100" height="30" rx="9"/>
+    <text class="d-label sm" x="636" y="118" text-anchor="middle">サーバーB</text>
+    <line class="d-edge accent" x1="508" y1="88" x2="578" y2="77"/><polygon class="d-arrow accent" points="578,72 586,77 579,82"/>
+    <line class="d-edge accent" x1="508" y1="100" x2="578" y2="113"/><polygon class="d-arrow accent" points="579,108 586,113 578,118"/>
+    <text class="d-sub" x="536" y="154" text-anchor="middle">毎回 _meta にバージョン · 能力</text>
+    <text class="d-sub" x="536" y="186" text-anchor="middle">どのインスタンスでもよい</text>
+    <text class="d-sub" x="536" y="204" text-anchor="middle">続く状態はハンドルで渡す</text>
+</svg>
+<div class="d-cap">接続が持っていた記憶がリクエストの中に降りてきた。代わりに一回ごとが重くなる。</div>
+</div>
+
+<p>反応は割れました。「結局 REST を作り直しただけではないか」という側と、そもそも<strong>標準を一つに揃えたこと自体が要点</strong>だったという側です。前者の冷めた見方には実務上の利点が付いてきます &mdash; ロードバランサー、API ゲートウェイ、段階的な展開など、REST 向けにすでに用意した仕組みをそのまま使えます。代償ははっきりしています。この変更は<strong>双方向でワイヤ互換が壊れる</strong>ので、既存のサーバーはバージョンを上げるだけでは済まず、実際に直さなければなりません。認証や再開の問題を自前の拡張で解決済みのチームなら、より良い規約でもそれを外すのに時間がかかります。</p>
+
+<h3>なぜこれが一つの話なのか</h3>
+<p>二つの変更は別々の会社の、別々の層で起きましたが、外したものは同じです。<strong>実行時に握られていた固定点</strong>です。auto モードが外したのは、その都度人が文脈を見て下していた判定であり、MCP が外したのは、接続が勝手に抱えていた記憶です。どちらも、あるうちは楽でも回数が増えるほど高くつく種類でした。人の承認はエージェントが一日に何百回も動いた瞬間に反射的なクリックになり、セッションはサーバーを何台かに増やした瞬間に固定ルーティングという荷物になります。</p>
+<p>代わりに入ったものも性格が同じです。ハードデナイのルールは「何を絶対にしないか」を、事が起きる前に書いておいた文書です。<code>_meta</code> は逆の向きで、毎回のリクエストが自分は誰で何ができるかを載せて運ぶほうです。先に書いておくか、毎回持って行くか &mdash; どちらにせよ判定の根拠が、その場の人と接続から<strong>宣言されたルールとデータへ</strong>移りました。</p>
+<p>実務でこれが何を意味するかは、かなり具体的です。<code>CLAUDE.md</code> と設定ファイルの拒否ルールが、これまでは好みに近かったとすれば、これからは実際に執行される方針になります。広く開けておいた許可ルールは便利さではなく無視の対象になり、狭く書いた拒否ルールは人が席を外している間も働き続けます。この wiki が <a href="#!news-20260728-software-factories-fail">「ハーネスでは足りない」</a>でまとめた結論と同じ向きです &mdash; ハーネスの値打ちは指示の厚みではなく、<strong>検証と境界がどれだけ明確か</strong>にあります。</p>
+<p>もちろんこの方向には値が付きます。先に書いておいたルールは、書いた分だけ守ります。89% という数字がその限界で、残りの 11% はルールになかった形の危険でした。セッションをなくした MCP も状態をなくしたのではなく、表に出して引数へ移したので、そのハンドルを誰が発行していつ失効させるのかが新しい宿題になります。隠れていた問題が見える場所に出てきた、というほうが正確です。</p>
+
+<h3>この wiki で直したところ</h3>
+<p>この変更で古くなった記述が二か所あり、あわせて直しました。</p>
+<ul>
+    <li><a href="#!hns-tools">ツールの拡張と締めくくり</a>の Q&amp;A で、オートモードを「権限を毎回たずねないのでより自律的に動く」とだけ説明していました。既定値になったことと、ハードデナイ・インジェクション検査を書き足しました。</li>
+    <li><a href="#!mcp">MCP 講義</a>の最後の一文「Claude Code は使用の前に許可を求めます」は、8月14日から事実と合いません。ルールに触れる操作だけを止める、という形に直しました。</li>
+</ul>
+
+<h3>ファクトチェックのメモ</h3>
+<ul>
+    <li><strong>自社発表の数字</strong> &mdash; 承認率97%、許可ルール49.5%・bypass 62%・セッションの4分の1、テスター1,053人の実験の13.6%と89%（937件）は、すべて <strong>Anthropic が公開した自社の調査・実験</strong>の結果です。外部で再現された数字ではありません。</li>
+    <li><strong>独立評価</strong> &mdash; 720回のインジェクション試行がすべて失敗したという報告は <strong>Trajectory Labs</strong> によるもので、72シナリオ × 10回 × モデル別という構成まで公開されています。評価の設計やシナリオの難度は、公開された範囲でしか確認できません。</li>
+    <li><strong>11%という言い方</strong> &mdash; 阻止89%の残りを裏返した値で、この角度で見出しを立てた報道があるため本文にもそのまま書きました。二つの数字は同じ実験の表と裏です。</li>
+    <li><strong>仕様の詳細</strong> &mdash; ハンドシェイクの削除（SEP-2575）・セッション識別子の削除（SEP-2567）・<code>_meta</code>・<code>server/discover</code>・拡張三種は、<strong>MCP の公式ブログと変更一覧</strong>に基づきます。2026-07-28 は<strong>リリース候補</strong>なので、確定までに細部が変わる可能性があります。</li>
+    <li><strong>適用範囲</strong> &mdash; auto モードの既定化は <strong>Pro・Max・Team プランの新規セッション</strong>が対象です。すでに固定した設定や、組織が管理する既定値はそのまま維持されると案内されています。</li>
+</ul>
+
+<div class="note">
+    <span class="nh">出典</span>
+    · auto モード: <a href="https://claude.com/blog/auto-mode-default-in-claude-code" target="_blank" rel="noopener">Anthropic &mdash; Auto mode is now the default in Claude Code</a> · <a href="https://claude.com/blog/auto-mode" target="_blank" rel="noopener">Anthropic &mdash; Auto mode for Claude Code</a> · <a href="https://techcrunch.com/2026/08/09/anthropic-is-turning-claude-codes-auto-mode-on-by-default/" target="_blank" rel="noopener">TechCrunch</a> · <a href="https://www.theregister.com/ai-and-ml/2026/08/10/claude_code_puts_auto_mode_in_the_drivers_seat/" target="_blank" rel="noopener">The Register</a> · <a href="https://www.helpnetsecurity.com/2026/08/10/anthropic-claude-code-auto-mode/" target="_blank" rel="noopener">Help Net Security</a> · <a href="https://www.techi.com/claude-code-auto-mode-default-11-percent-miss-rate/" target="_blank" rel="noopener">TECHi &mdash; 11%の見逃しへの指摘</a> · <a href="https://simonwillison.net/2026/Aug/8/auto-mode/" target="_blank" rel="noopener">Simon Willison</a><br>
+    · MCP 仕様: <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank" rel="noopener">MCP 公式ブログ &mdash; 2026-07-28 リリース候補</a> · <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog" target="_blank" rel="noopener">変更一覧</a> · <a href="https://www.infoq.com/news/2026/08/mcp-stateless-gateway/" target="_blank" rel="noopener">InfoQ &mdash; 開発者の反応</a> · <a href="https://equixly.com/blog/2026/08/05/stateless-mcp/" target="_blank" rel="noopener">Equixly &mdash; セキュリティの視点</a> · <a href="https://developers.googleblog.com/scaling-ai-agent-infrastructure-with-the-mcp-stateless-updates/" target="_blank" rel="noopener">Google Developers Blog &mdash; スケーリングの視点</a>
+</div>

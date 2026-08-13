@@ -1,0 +1,47 @@
+<h2>2026-08-14 · 콘텐츠 — 묻지 않는 기본값(auto 모드 + MCP 무상태) 기사 + 강의 2편 정합</h2>
+
+<p>아침 브리핑을 세션 안에서 직접 돌려 후보 6건을 뽑았고, 대표님이 세 건을 골랐다 — ①Claude Code auto 모드 기본값 ②MCP 2026-07-28 무상태 스펙 ⑥기업 RAG 실패 지점. 담는 방식은 <strong>①+②를 한 편으로 합본, ⑥은 다음 주제로 분리</strong>로 정했다. 변경 유형: <strong>CONTENT</strong>.</p>
+
+<h3>왜 합본인가 — 억지로 묶은 게 아니다</h3>
+<p>두 사건은 회사도 층도 다르지만 걷어낸 것이 같다. <strong>런타임에 붙들려 있던 고정점</strong> — auto 모드는 매 순간의 사람 승인을, MCP는 연결이 들고 있던 세션을 없앴고, 그 자리를 하드 디나이 규칙과 요청 단위 <code>_meta</code>가 메운다. 별개 두 사건을 한 편으로 잇는 선례도 이미 있다(<a href="#!news-20260803-cherny-karpathy">체르니·카파시 합본</a>의 &ldquo;왜 이것이 한 이야기인가&rdquo; 절). 백로그의 <code>LATER [구조] AI · Claude 단편 문서 병합</code>이 살아 있는 상황에서 편수를 둘 늘리는 것도 역행이라, 기사 하나로 묶는 편이 방향과 맞았다.</p>
+<ul>
+    <li>신규: <a href="#!news-20260814-auto-mode-stateless-mcp">묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다</a> (3언어, 도식 2개).</li>
+    <li>기사에서 가장 값나가는 대목은 기능 설명이 아니라 <strong>Anthropic이 근거로 공개한 수치</strong>였다 — 권한 프롬프트 승인률 97%, 테스터 1,053명에게 위험한 명령을 몰래 끼워 넣었더니 <strong>사람은 13.6%만 거절</strong>, 같은 명령을 분류기는 89% 저지. &ldquo;11%나 놓친다&rdquo;는 비판 보도의 비교 대상이 무결한 사람이 아니라 13.6%의 사람이라는 점을 나란히 적었다.</li>
+</ul>
+
+<h3>기사가 낡게 만든 기존 본문 두 곳</h3>
+<p>이번 변경으로 위키 안의 서술이 실제로 틀리게 된 자리가 있어 같은 PR에서 고쳤다. 엔진이 아니라 <strong>바깥 세계가 바뀌어 자기기술이 낡은</strong> 경우다.</p>
+<ul>
+    <li><a href="#!hns-tools">도구 확장과 마무리</a> — Q&amp;A의 오토 모드 설명이 &ldquo;권한을 매번 묻지 않아 더 자율적&rdquo;에서 멈춰 있었다. 08-14부터 기본값이라는 사실과 하드 디나이·인젝션 스크리닝을 한 줄 더했다(3언어).</li>
+    <li><a href="#!mcp">MCP Servers</a> — 마지막 문장 &ldquo;Claude Code는 사용 전에 허락을 구합니다&rdquo;가 오늘부터 사실과 어긋난다. &ldquo;규칙에 걸리는 행동만 멈춘다&rdquo;로 고쳤다(3언어).</li>
+</ul>
+<p class="scn-sub">브리핑 때 &ldquo;MCP 강의가 세션 기반 모델을 전제로 쓰여 낡았다&rdquo;고 적었는데, 열어 보니 그 강의는 핸드셰이크·세션을 아예 언급하지 않았다. 스펙 개정으로 낡는 문장은 없었고 auto 모드 쪽 한 줄만 걸렸다 — 파일을 열기 전의 추정이었다.</p>
+
+<h3>편수 갱신에서 어제 고친 문장을 또 고쳤다</h3>
+<p>News &amp; Articles가 13→14편이 되면서, <strong>어제(08-12) 동수로 맞춰 둔 OMC 절의 최상급 문장이 하루 만에 다시 틀렸다</strong> — &ldquo;News &amp; Articles와 함께 가장 많습니다(각 13편)&rdquo;를 &ldquo;News &amp; Articles 다음으로 많습니다(13편)&rdquo;로 3언어 재수정. 숫자는 <code>map-section-count</code>가 잡았지만 <strong>최상급·동수 같은 서술형 비교는 여전히 기계가 못 잡는다</strong>는 어제의 관찰이 하루 만에 실례로 돌아왔다.</p>
+<ul>
+    <li>상세 절 제목 13→14편, 사이드바 항목 수 설명도 &ldquo;기사 9편 + 폴더 1개로 10항목&rdquo; → &ldquo;10편 + 폴더 1개로 11항목&rdquo;(3언어).</li>
+    <li>총계 124→125편·393→394개 → <code>og-card.html</code> 수치 갱신 후 OG 이미지 재생성.</li>
+</ul>
+
+<h3>OG 이미지가 크롬 에러 페이지였다</h3>
+<p>재생성하려고 master의 <code>og-image.png</code>를 열어 봤더니 카드가 아니라 <strong>&ldquo;This site can't be reached&rdquo; 크롬 에러 화면</strong>이었다. 파일 크기 25KB(정상은 ~590KB)가 단서였고, 이력을 보면 #399(온톨로지 2편)에서 이 상태로 커밋됐다. 캡처 당시 로컬 HTTP 서버가 떠 있지 않아 <code>ERR_CONNECTION_REFUSED</code> 화면이 그대로 찍힌 것으로 보인다. 그 뒤로 슬랙·카카오톡 등에 이 위키 링크를 공유하면 에러 페이지가 미리보기로 나갔다.</p>
+<ul>
+    <li>이번에 정상 카드로 재생성해 <strong>고쳤다</strong> — 직전 정상본(#398)과 레이아웃·폰트·그래프가 같고 수치만 125/394로 바뀐 것을 이미지로 대조했다.</li>
+    <li><code>og-card-drift</code> 검사는 <strong>카드의 숫자만</strong> 본다(PNG를 읽을 수 없으므로 소스 HTML을 검사). 이번처럼 <strong>렌더 자체가 실패한 경우는 통과</strong>한다 — 숫자가 맞는 소스와 엉뚱한 PNG가 공존할 수 있다. 백로그에 &ldquo;og-image 실물 검사&rdquo;를 올려 둘 후보다.</li>
+</ul>
+
+<h3>지식 그래프 — 세션 개념이 df 3→4가 되며 한 곳이 끊겼다</h3>
+<p>새 기사의 개념에 <code>세션</code>을 넣자 문서빈도가 3에서 4로 올라, 이 개념 단일 공유에 기대던 <a href="#!ccb-manage">사용량 · 컨텍스트 · 세션 관리</a>가 <code>isolated-doc</code> WARN으로 새로 떴다. CLAUDE.md가 예고한 바로 그 경계값 파급이다.</p>
+<ul>
+    <li><strong>개념은 그대로 뒀다.</strong> 기사의 절반이 MCP 세션 삭제를 다루므로 <code>세션</code>을 빼는 것이 오히려 왜곡이다. ccb-manage는 순서대로 읽는 튜토리얼이라 앞뒤와 folder 연관으로 이미 이어져 있고, 규칙도 이 경우를 &ldquo;연결이 없는 게 자연스러운 것&rdquo;으로 본다.</li>
+    <li><code>wrong-cluster</code> WARN도 셋 늘었다(<code>mcp</code>·<code>claude-md-commandments</code>·새 기사). 새 기사가 Introduction 계열과 개념을 많이 공유해서 생긴 신호이고, 기사는 News &amp; Articles가 맞는 자리라 그대로 둔다.</li>
+</ul>
+
+<h3>검증</h3>
+<ul>
+    <li><code>node tools/check_diagram_bounds.mjs</code> — 신규 도식 2개 × 3언어 실렌더 통과. 일본어 가나가 전각이라 오른쪽 열 라벨을 ko보다 짧게 잡았다(&ldquo;하드 디나이 · 인젝션 프로브&rdquo; → &ldquo;ハードデナイ · 検査&rdquo;).</li>
+    <li><code>python3 tools/check_all.py</code> 8게이트 — 초록. 중간에 <code>build_prerender</code> 드리프트와 플러그인 스냅샷 어긋남이 걸려 재생성·<code>--fix</code>로 맞췄고 <code>plugin.json</code> 0.29.2 → 0.29.3.</li>
+    <li>관계는 5타입을 대조해 <strong>근거(evidence-for) → hns-tools</strong> 하나만 달았다. 방향상 이 기사가 MCP 강의의 선행지식일 수는 없으므로, 반대 방향은 <code>mcp</code> 엔트리에 <strong>선행지식 → 이 기사</strong>로 넣었다.</li>
+    <li><code>build_dates.py</code>가 <strong>자정 표류로 멈췄다</strong> — <code>wl-20260811-ops</code>의 생성일이 08-11 → 08-12로 바뀌었다며 불변 가드가 기록을 거부했다. 08-11 23:54 KST에 커밋한 것을 08-12 00:0x KST에 스쿼시 머지해, 마스터 이력의 시각이 날짜를 넘긴 탓이다(지난주 <code>check_worklog</code>에서 고친 것과 <strong>같은 부류가 다른 도구에서</strong> 난 것). 이번은 <code>--force</code>로 재산정한 뒤 <strong>그 한 건의 생성일만 원래 값(08-11)으로 되돌렸다</strong> — 작업일은 08-11이 맞고 08-12는 머지 시각이라, 진실 쪽을 남겼다. 도구를 고치는 일은 콘텐츠 주제와 분리해 백로그에 올렸다.</li>
+</ul>
