@@ -60,16 +60,19 @@
 <article>
 <h2>Intermediate — 11 Ways to Turn Sessions into a System</h2>
 
-<p>The <a href="/p/en/tip-beginner/">beginner part</a> was about keeping one session clean; the intermediate part is about <strong>moving whatever repeats into the system</strong>. Run research in parallel, freeze a good prompt into a skill, use CLAUDE.md as a router — tips 10 through 20 of the public tutorial, checked against the official docs.</p>
+<p>The <a href="/p/en/tip-beginner/">beginner part</a> was about keeping one session clean; the intermediate part is about <strong>moving whatever repeats into the system</strong>. Run research in parallel, freeze a good prompt into a skill, use CLAUDE.md as a router — tips 10 through 20 of the series, checked against the official docs.</p>
 
 <div class="note">
     <span class="nh">About this document (sources)</span>
-    · Skeleton: the intermediate part (10–20) of a <a href="https://youtu.be/i9oKsPg-AoM" target="_blank" rel="noopener">public tutorial video — 28 Claude Code tips</a><br>
-    · Verified and supplemented against the <a href="https://code.claude.com/docs" target="_blank" rel="noopener">official Claude Code docs</a> (as of 2026-08-14)
+    · Grounded in the <a href="https://code.claude.com/docs" target="_blank" rel="noopener">official Claude Code docs</a> (as of 2026-08-14)
 </div>
 
 <h3>10. Run subagents in parallel</h3>
-<p>A subagent is a separate agent the main session spawns like a deputy. Each one gets <strong>its own context window</strong> and reports only a summary back, which makes them ideal for read-heavy work like research and verification — what they read never burns your main context. Say "research 10+ references with parallel subagents" and several agents investigate different angles at once while the main session synthesizes. Being parallel, it also saves wall-clock time.</p>
+<p>A subagent is a separate agent your main session spawns like a deputy. Each one gets <strong>its own context window</strong> and reports only a summary back, which makes them perfect for read-heavy work like research and verification — whatever they read never touches your main context. And since they run in parallel, you save wall-clock time too.</p>
+<pre><code>I want to research what matters most in Instagram marketing
+for a beauty brand. Run parallel subagents and gather 10+ references —
+one agent on success stories, one on failures, one on recent algorithm
+changes — then synthesize the common threads for me at the end.</code></pre>
 
 <div class="diagram">
 <svg viewBox="0 0 720 264" role="img" aria-label="Parallel subagent structure: the main session hands research to three subagents, each works in its own context, and only summaries come back for the main session to synthesize">
@@ -97,42 +100,78 @@
 <div class="d-cap">Whatever a subagent burns is its own context — the main session receives summaries and stays light.</div>
 </div>
 
-<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/agents" target="_blank" rel="noopener">Run agents in parallel</a> · <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Create custom subagents</a>. Subagents never talk to each other — when they need to, that is the <a href="/p/en/tip-advanced/">advanced part</a>'s agent teams.</p>
+<p>This wiki runs on the same pattern, by the way. The <strong>multi-source cross-verification</strong> done before registering a news article — reading several outlets covering the same event at once and checking that figures and dates agree — is exactly this (the fact-check notes at the bottom of each article are its product). Same for any mountain-of-reading job like a <strong>style audit across a hundred-plus documents</strong>: subagents split the reading, and the main session receives summaries and only judges.</p>
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/agents" target="_blank" rel="noopener">Run agents in parallel</a> · <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Create custom subagents</a>. Subagents never talk to each other — when they need to, that's the <a href="/p/en/tip-advanced/">advanced part</a>'s agent teams.</p>
 
 <h3>11. Build your own skills</h3>
-<p>A skill is a <strong>reusable prompt file</strong> living under <code>.claude/skills/</code>. Define a long instruction once instead of pasting it every time, and Claude pulls it out when a request matches its description — or you invoke it directly with a slash. Anything you keep asking for over and over is a signal to make a skill. Making one is simple: say <strong>"turn what we just did into a skill"</strong> and Claude writes it. Devices like this, built for predictable results, are collectively called a harness — and skills are the textbook example.</p>
+<p>A skill is a <strong>reusable prompt file</strong> living under <code>.claude/skills/</code>. Define a long instruction once instead of pasting it every time, and Claude pulls it out whenever a request matches its description — or you invoke it directly with a slash. Keep asking for the same thing over and over? That's your signal to make a skill. And making one couldn't be easier: say <strong>"turn what we just did into a skill"</strong> and Claude writes it for you. Devices like this, built for predictable results, are collectively called a harness — and skills are the star example.</p>
 <p class="scn-sub">This wiki's <a href="/p/en/skl-what/">skill course</a> covers the topic in 12 parts, from principles to security. Official docs: <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Skills</a></p>
 
 <h3>12. Use a cheap model for subagents</h3>
-<p>Searching and fetching text does not need a frontier model — using one is waste. When delegating, just say <strong>"run the subagents on Haiku,"</strong> or pin it with the <code>model: haiku</code> field in a custom subagent definition. Splitting the work — fast cheap models for collection, expensive ones for synthesis and design judgment — saves tokens in a big way.</p>
+<p>Searching and fetching text doesn't need a frontier model — that's just waste. When delegating, add one phrase: <strong>"run the subagents on Haiku."</strong> Or pin it with the <code>model: haiku</code> field in a custom subagent definition. Cheap fast models for collection, expensive ones for synthesis and design judgment — that split saves serious tokens.</p>
 <p class="scn-sub">Per-model pricing: <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">official pricing docs</a> — as of this writing, Haiku 4.5 runs $1 in / $5 out per million tokens, a fraction of the top models.</p>
 
 <h3>13. Update CLAUDE.md when a session ends — capped at 150–200 lines</h3>
-<p>If a new convention or change came out of this session, put it in CLAUDE.md. Otherwise the Claude in your next session knows nothing about it. But CLAUDE.md is <strong>read unconditionally at every session start</strong>, so the longer it grows, the more startup context it eats — when you ask for the update, add "keep it under 150–200 lines" and Claude compresses accordingly. The official docs give the same advice: if you cannot skim it between meetings, it is too long.</p>
+<p>New convention this session? Way of working changed? Put it in CLAUDE.md, or the Claude in your next session won't know — it has no context. One caution though: CLAUDE.md is <strong>read unconditionally at every session start</strong>, so the longer it grows the more startup context it eats. When you ask for the update, always add "keep it under 150–200 lines" — Claude compresses it nicely. The official docs agree: if you can't skim it between meetings, it's too long.</p>
 <p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Memory — CLAUDE.md</a></p>
 
 <h3>14. Use CLAUDE.md as a router</h3>
-<p>This resolves the tension between the cap in tip 13 and wanting to hand over lots of information. Instead of putting content into CLAUDE.md, put in <strong>a pointer: "if you need X, read this file."</strong> For example: "for the code structure, read <code>docs/architecture.md</code>." Claude goes to that file only when the need arises — full context delivered, standing cost saved. This too you can delegate: "add this as a router entry to CLAUDE.md."</p>
+<p>There's a way to get both the cap from tip 13 and the "but I want to hand over lots of info" itch. Instead of putting content into CLAUDE.md, put in <strong>a pointer: "if you need X, read this file."</strong> Claude visits that file only when the need arises — full context delivered, standing cost saved. A clever little structure.</p>
+<pre><code>I've written up this project's code structure in docs/architecture.md.
+Add a router entry to CLAUDE.md telling any command or session curious
+about the code structure to read that file. Just one line in CLAUDE.md itself.</code></pre>
 
 <h3>15. When something looks wrong, interrupt — don't wait</h3>
-<p>The moment you see the direction is off, <strong>stop it</strong> (Esc). Then ask "my intent was X — why did you do it that way?" and Claude explains its reasoning; correct the course and let it continue. Waiting until the end wastes time and tokens, and worse, <strong>a wrong result sitting in the context contaminates every judgment after it</strong>. There is no reason to fear the stop button.</p>
+<p>See the direction going wrong mid-run? <strong>Stop it right away</strong> (Esc). There's zero reason to fear the stop button. Then ask "my intent was X — why did you do it that way?" and Claude explains its reasoning; correct the course and let it continue. Waiting until the end wastes time and tokens, and worse — <strong>a wrong result sitting in the context contaminates every judgment after it</strong>.</p>
 
 <h3>16. Push back — and when it lands, record it</h3>
-<p>First result disappointing, but you can't articulate the fix? Push back even abstractly — "make it more refined," "raise the completeness," "try a completely different angle." Claude now knows the first attempt missed, so the second try lands far more often. Most people try once and give up; push two or three times and you may be surprised. And <strong>the moment you get what you wanted is the moment to record it</strong> — "this is great, turn it into a skill" or "reflect this in CLAUDE.md." Skip the recording and you will walk the same road again next time.</p>
+<p>First result disappointing, but you can't put your finger on the fix? Push back anyway, even vaguely. Claude now knows the first attempt missed, so the second try lands far more often. Most people try once, shrug "guess it can't do it," and give up — push two or three times and you may be genuinely surprised. And <strong>the moment you get what you wanted is the moment to record it</strong> — walk away without recording and you'll retrace the whole path next time.</p>
+<pre><code><span class="c"># When it's not right — you don't need to know the fix</span>
+Not quite. Make it more refined, raise the polish a notch, and try again.
+Also give me one alternative from a completely different angle.
+
+<span class="c"># When it lands — don't stop here</span>
+This result is great. Turn what we just did into a skill,
+so next time "card-news style" gets me exactly this.</code></pre>
 
 <h3>17. Rewind time with <code>/rewind</code></h3>
 <p>When a mid-task result goes wrong, asking in prose to "please undo that" can introduce new errors during the undoing. Use <code>/rewind</code> instead — pick a point from the checkpoint list and <strong>every file edit after it rolls back wholesale</strong>. You can choose to restore the code, the conversation, or both.</p>
 <p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/checkpointing" target="_blank" rel="noopener">Checkpointing</a> — edits accumulate as checkpoints automatically during a session.</p>
 
 <h3>18. Get notified with hooks</h3>
-<p>A hook is a command that fires at specific moments in Claude Code's lifecycle — task finished, approval needed, and so on. Say "set up a hook that plays a sound whenever a session finishes its work" and Claude writes it into your settings file. With one session you won't need it; once you run several projects and sessions in parallel, a device that tells you <strong>what finished where</strong> becomes essential. The minimal version: set <code>preferredNotifChannel</code> to <code>terminal_bell</code>.</p>
+<p>A hook is a command that fires at specific moments in Claude Code's lifecycle — task finished, approval needed, and so on. Say "set up a hook that plays a sound whenever a session finishes" and Claude writes it into your settings. With one session you won't miss it; once you're running ten sessions across several projects, a device that tells you <strong>what finished where</strong> becomes essential. The minimal version: set <code>preferredNotifChannel</code> to <code>terminal_bell</code>.</p>
 <p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank" rel="noopener">Automate actions with hooks</a> — see also this wiki's <a href="/p/en/hooks/">Hooks intro</a>.</p>
 
 <h3>19. Claude has eyes — hand it images</h3>
-<p>Error messages, a website you like, a UI screen — anything hard to describe in words, <strong>screenshot it and paste it in</strong>. Both the terminal and the desktop app accept dragged or pasted images, and Claude reads them. Throwing in a captured error screen beats transcribing the error text by hand, in both speed and accuracy.</p>
+<p>Error messages, a website you love, a UI screen — anything hard to put into words, <strong>screenshot it and paste it in</strong>. Both the terminal and the desktop app take dragged or pasted images, and Claude reads them. Tossing in a captured error screen beats transcribing the error text by hand, on both speed and accuracy.</p>
 
 <h3>20. Turn screenshots into templates</h3>
-<p>An application of tip 19. Capture a design you want as a reference — a card-news layout, a page with great color — hand it over and say explicitly: <strong>"make a template based on this image."</strong> The point is not copying it verbatim but extracting the color and layout structure into something reusable.</p>
+<p>An application of tip 19. Capture a design you'd love as a reference — a card-news layout, a page with great color — hand it over and say it explicitly: <strong>"make a template based on this image."</strong> The point isn't copying it verbatim; it's extracting the color and layout structure into something you can reuse.</p>
+
+<h3>Intermediate commands at a glance</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Command / method</th><th>What it does</th><th>Try it like this</th></tr></thead>
+        <tbody>
+            <tr><td>"research this with parallel subagents"</td><td>Delegates research/verification to agents with their own context</td><td>Any read-heavy job. Add "subagents on Haiku" and the cost drops to a fraction</td></tr>
+            <tr><td>"turn what we just did into a skill"</td><td>Saves a reusable prompt under <code>.claude/skills/</code></td><td>The second time you paste the same instruction is your signal</td></tr>
+            <tr><td>"update CLAUDE.md, cap at 150–200 lines"</td><td>Carries this session's decisions into the next</td><td>Make it a session-closing habit — say the cap or it bloats</td></tr>
+            <tr><td><code>Esc</code></td><td>Stops the current run immediately</td><td>The moment the direction looks off. Then ask "why did you do it that way?"</td></tr>
+            <tr><td><code>/rewind</code></td><td>Restores files/conversation to a checkpoint</td><td>Don't say "undo it" in prose — this way no new errors sneak in</td></tr>
+            <tr><td>"set up a sound-notification hook"</td><td>Auto-alerts on finish / approval-needed</td><td>Essential once you run two or more sessions</td></tr>
+            <tr><td>Paste / drag an image</td><td>Claude reads the screenshot</td><td>Error screens and reference designs — a capture beats a description</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>Applying this to this wiki</h3>
+<ul>
+    <li><strong>Skills (in use)</strong> — <code>.claude/skills/im-not-ai</code> is the real thing: the checklist that strips AI-sounding prose, frozen as a skill and run on every document with the same standard. Next candidate: <strong>the registration pipeline</strong> — list node, doc-entries, regeneration, gates — one skill call instead of remembering the order every time.</li>
+    <li><strong>CLAUDE.md as a router (in use)</strong> — this wiki's CLAUDE.md is exactly this shape. Translation work? It points to <code>tools/i18n.md</code>. Change types? <code>tools/change-types.md</code>. The file itself carries only the gist of each rule.</li>
+    <li><strong>The update habit (in use)</strong> — every decision gets written in as a dated rule (e.g. "decided 2026-08-11 — companies and products by real name"). The next session's Claude never re-asks a settled question.</li>
+    <li><strong>Worth trying: hooks</strong> — not used yet. One line — "set up a hook that runs <code>python3 tools/check_all.py</code> before every commit" — and a commit that skipped the gates becomes impossible.</li>
+    <li><strong>Worth trying: /rewind</strong> — when a mass style edit or bulk replacement goes the wrong way, today it's undone with git. Before the commit, /rewind is faster.</li>
+</ul>
 
 <h3>Next</h3>
 <p>The <a href="/p/en/tip-advanced/">advanced part</a> is parallel, autonomous, and scheduled — running sessions in worktrees without collisions, scheduling recurring jobs, steering from your phone, and commanding agent teams.</p>

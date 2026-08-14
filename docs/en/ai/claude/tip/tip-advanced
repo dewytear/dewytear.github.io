@@ -1,16 +1,22 @@
 <h2>Advanced — 8 Tips for Parallel, Autonomous, Scheduled Work</h2>
 
-<p>The last part is about running Claude Code many at a time, for long stretches, hands off. From worktrees that keep sessions from colliding over files, to scheduled jobs, phone remote control, and agent teams that talk to each other — tips 21 through 28 of the public tutorial, checked against the official docs.</p>
+<p>The last part is about running Claude Code many at a time, for long stretches, hands off. From worktrees that keep sessions from colliding over files, to scheduled jobs, phone remote control, and agent teams that talk to each other — tips 21 through 28 of the series, checked against the official docs.</p>
 
 <div class="note">
     <span class="nh">About this document (sources)</span>
-    · Skeleton: the advanced part (21–28) of a <a href="https://youtu.be/i9oKsPg-AoM" target="_blank" rel="noopener">public tutorial video — 28 Claude Code tips</a><br>
-    · Verified and supplemented against the <a href="https://code.claude.com/docs" target="_blank" rel="noopener">official Claude Code docs</a> (as of 2026-08-14) — experimental features may change across versions
+    · Grounded in the <a href="https://code.claude.com/docs" target="_blank" rel="noopener">official Claude Code docs</a> (as of 2026-08-14) — experimental features may change across versions
 </div>
 
 <h3>21. Run sessions in parallel with worktrees</h3>
-<p>Two sessions editing the same project at once — one on the login feature, one on graphics logic — collide the moment they touch the same file. A worktree is git's <strong>independent working copy</strong>: it shares the repository history but keeps its own files. Give each session its own worktree and they can never overlap; merge with git when done.</p>
-<p>The tutorial shows the manual <code>git worktree</code> command, but Claude Code now manages the lifecycle for you — start with <strong><code>claude --worktree</code> (<code>-w</code>)</strong> and creation, naming, and cleanup are automatic; the desktop app creates a worktree per new session on its own. Files git does not track, like <code>.env</code>, are absent from the copy — put a <code>.worktreeinclude</code> file in the project root to have them copied automatically.</p>
+<p>Two sessions editing the same project at once — one on the login feature, one on graphics logic — collide the moment they touch the same file. A worktree is git's <strong>independent working copy</strong>: shared repository history, separate files. Give each session its own worktree and they simply can't overlap; merge with git when done.</p>
+<p>You can type the manual <code>git worktree</code> command yourself, but Claude Code now manages the whole lifecycle — start with <strong><code>claude --worktree</code> (<code>-w</code>)</strong> and creation, naming, and cleanup are automatic; the desktop app makes a worktree per new session on its own. Files git doesn't track, like <code>.env</code>, aren't in the copy — drop a <code>.worktreeinclude</code> file in the project root to have them copied over.</p>
+<pre><code><span class="c"># Terminal 1 — login feature (in its own worktree)</span>
+claude --worktree login-feature
+
+<span class="c"># Terminal 2 — graphics logic (another worktree, same time)</span>
+claude -w motion-logic
+
+<span class="c"># Merge each branch when done — no conflict anxiety</span></code></pre>
 
 <div class="diagram">
 <svg viewBox="0 0 720 262" role="img" aria-label="Worktree parallel structure: one repository spawns an independent worktree copy per session, sessions work in parallel, and a merge joins the results. Separate copies mean no file conflicts">
@@ -36,29 +42,44 @@
 <p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/worktrees" target="_blank" rel="noopener">Run parallel sessions with worktrees</a></p>
 
 <h3>22. Call the API directly instead of an MCP server</h3>
-<p>MCP (Model Context Protocol) is the standard for attaching external tools, but connecting a server has a cost: <strong>its entire tool catalog lands in your context</strong>. If you need one or two functions, having Claude call the API endpoint directly is cheaper in both tokens and context. Using most of the tools? Take MCP. Using one or two? Call directly — that distinction is the whole tip. Note that built-in tool search now loads tool definitions on demand, which shrank this cost considerably, but the principle — carry only what you use — still holds.</p>
+<p>MCP (Model Context Protocol) is the standard for attaching external tools, but connecting a server has a cost: <strong>its entire tool catalog lands in your context</strong>. If you only need one or two functions, having Claude call the API endpoint directly is cheaper on both tokens and context. Using most of the tools? Take MCP. Using one or two? Call directly — that's the whole tip. Worth noting: built-in tool search now loads tool definitions on demand, which shrank this cost a lot, but the principle — carry only what you use — still holds.</p>
 <p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — see also this wiki's <a href="#!mcp">MCP intro</a>. The big MCP spec revision is covered in <a href="#!news-20260814-auto-mode-stateless-mcp">Defaults That Stop Asking</a>.</p>
 
-<h3>23. Schedule recurring work with <code>/loop</code></h3>
-<p>Set up a recurring job like <code>/loop check the deploy status every 5 minutes</code> and Claude keeps checking on its own for as long as the session lives. Deploy monitoring, periodic checks, even time-pinned jobs like "check our Slack at 8." Watch-and-wait work you would otherwise babysit can be handed over whole.</p>
+<h3>23. Schedule recurring work with <code>/loop</code> — and hand the rest to Routines</h3>
+<p>Set up a recurring job like <code>/loop check the deploy status every 5 minutes</code> and Claude keeps checking on its own for as long as the session lives. Deploy monitoring, periodic checks, even time-pinned jobs like "check our Slack at 8." Watch-and-wait work you'd otherwise babysit — hand it over whole.</p>
+<p>But <code>/loop</code> only runs <strong>while the session is open</strong>. Work that must run independently of your session and your computer belongs to a <strong>Routine</strong> — save a prompt, repositories, and connectors as one configuration, and it runs on Anthropic-managed cloud on a schedule (hourly minimum, cron expressions supported), on an API call, or on a GitHub event. Laptop closed? Still runs. Three options, in short: <strong><code>/loop</code> for repetition inside this session, desktop scheduled tasks for jobs pinned to your machine, and Routines when it has to run without your computer</strong>. This wiki's morning briefing runs as a Routine.</p>
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/scheduled-tasks" target="_blank" rel="noopener">Run prompts on a schedule</a></p>
 
 <h3>24. Steer remotely from your phone</h3>
-<p>Run <strong><code>claude remote-control</code></strong> in the terminal and you get a link. Open it on your phone and — while the code keeps running on your local machine — <strong>only the controls move to the phone</strong>. Check progress and give the next instruction from the subway. The one condition to remember: your local machine must stay on, because that is what you are steering. You also get phone notifications when a long task finishes or approval is needed.</p>
+<p>Run <strong><code>claude remote-control</code></strong> in the terminal and you get a link. Open it on your phone and — while the code keeps running on your local machine — <strong>only the controls move to your phone</strong>. Check progress and give the next instruction from the subway. One condition: the local machine has to stay on, since that's what you're steering. You also get phone notifications when a long task finishes or approval is needed.</p>
 <p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/remote-control" target="_blank" rel="noopener">Remote Control — continue local sessions from your phone</a></p>
 
 <h3>25. Ask your database in natural language</h3>
-<p>Major databases — PostgreSQL, Supabase, and others — connect to Claude Code as MCP servers. Once connected, you can ask <strong>"what do last week's churned signups have in common?"</strong> in plain language, no SQL — schema exploration, aggregation, filtering, all handled like a data analyst would. Whatever database you use, the fastest start is simply asking Claude "connect to this DB."</p>
+<p>Major databases — PostgreSQL, Supabase, and friends — connect to Claude Code as MCP servers. Once connected, you can ask <strong>"what do last week's churned signups have in common?"</strong> in plain language, no SQL — schema exploration, aggregation, filtering, handled like a data analyst would. Whatever database you're on, the fastest start is simply asking Claude: "connect to this DB."</p>
 
 <h3>26. For deep thought, ultrathink</h3>
-<p>In the terminal, include <code>ultrathink</code> with your prompt (the input turns rainbow-colored when it takes effect) and Claude spends <strong>its maximum thinking budget</strong> before answering. It burns a lot of tokens, so it is not for everyday use — save it for genuinely hard problems and architectural judgment calls where no amount of prompt rewriting gets you a good answer.</p>
+<p>In the terminal, include <code>ultrathink</code> with your prompt (the input turning rainbow-colored means it took) and Claude spends <strong>its maximum thinking budget</strong> before answering. It burns a lot of tokens, so it's not an everyday move — save it for genuinely hard problems and architecture calls where no amount of prompt rewriting gets you a good answer.</p>
 <p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/model-config" target="_blank" rel="noopener">Model configuration — effort</a>. As of this writing, thinking depth is also adjustable via the effort setting.</p>
+<p>There's another road to deep thought — instead of raising one model's thinking budget, <strong>have several agents refine a plan until they agree</strong>. The OMC plugin's <code>ralplan</code> works that way: three roles — planner, architect, critic — review the plan until consensus (add <code>--deliberate</code> for high-stakes deliberation). For heavy design calls like architecture, databases, or security, that can fit better than ultrathink — details in <a href="#!omc-modes">OMC execution modes</a>.</p>
 
 <h3>27. Edit permissions for safe autonomy</h3>
-<p>In <code>settings.json</code> you can mark commands as <strong>always allowed / always ask</strong>. Auto-approving everything lets dangerous commands through — <code>rm</code> (file deletion), <code>git push --force</code> (a push that overrides conflicts) — so tell Claude "make these dangerous commands ask me first" and let it write the deny rules. Under auto mode, the default since 14 August 2026, these rules matter more than ever: <strong>narrowly written deny rules keep working while you are away, and overly broad allow rules get ignored</strong>. The rules have become policy that actually gets enforced.</p>
+<p>In <code>settings.json</code> you can mark commands as <strong>always allowed / always ask</strong>. Auto-approve everything and dangerous commands slip through — <code>rm</code> (file deletion), <code>git push --force</code> (a push that overrides conflicts) — so tell Claude "make these dangerous commands ask me first" and let it write the deny rules. Under auto mode, the default since 14 August 2026, these rules matter more than ever: <strong>narrowly written deny rules keep working while you're away, and overly broad allow rules get ignored</strong>. The rules became policy that actually gets enforced.</p>
+<pre><code><span class="c"># .claude/settings.json — dangerous commands must ask first</span>
+{
+  "permissions": {
+    "ask": [
+      "Bash(rm -rf:*)",
+      "Bash(git push --force:*)",
+      "Bash(git reset --hard:*)"
+    ]
+  }
+}
+<span class="c"># Not comfortable writing it by hand? One line does it:
+# "set permissions so rm and force pushes always ask me first"</span></code></pre>
 <p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permissions</a> — background in <a href="#!news-20260814-auto-mode-stateless-mcp">Defaults That Stop Asking</a>.</p>
 
 <h3>28. Agent teams — agents that talk to each other</h3>
-<p>Easy to confuse with subagents, but the structure differs. <strong>Subagents work in parallel yet never talk to each other</strong> — they only report to the main session. <strong>Agent teams are independent sessions that talk to each other, share a task list, and claim work</strong> — and you can talk to each teammate individually. If your picture is a planner, a marketer, and a designer coordinating with each other, that is an agent team, not subagents. It costs more tokens, but on tasks where teammates must challenge and complement each other's output, the results are clearly different.</p>
+<p>Easy to confuse with subagents, but the structure differs. <strong>Subagents work in parallel yet never talk to each other</strong> — they only report to the main session. <strong>Agent teams are independent sessions that talk to each other, share a task list, and claim work</strong> — and you can talk to each teammate individually. If your picture is a planner, a marketer, and a designer coordinating with each other, you want an agent team, not subagents. It costs more tokens, but on tasks where teammates should challenge and complement each other's output, the results are clearly different.</p>
 
 <div class="diagram">
 <svg viewBox="0 0 720 250" role="img" aria-label="Subagents versus agent teams: on the left, subagents only report to the main session and never talk to each other; on the right, agent team members share a task list and talk directly">
@@ -92,7 +113,34 @@
 <div class="d-cap">Different reporting structure, different use — independent research goes to subagents, collaborative work to agent teams.</div>
 </div>
 
+<p>Instead of flipping the flag and designing a team yourself, there's also <strong>a packaged team mode</strong>. The OMC plugin's <code>team</code> assigns roles to N agents and runs them as a staged pipeline, and <strong>team ralph</strong> — team combined with ralph, which loops until done — is OMC's strongest execution mode. The plugin handles team composition and role assignment for you, so if you want to try agent teams on real work today, this is the faster on-ramp — see <a href="#!omc-modes">OMC execution modes</a> and <a href="#!omc-agents">agents &amp; skills</a>.</p>
 <p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/agent-teams" target="_blank" rel="noopener">Orchestrate teams of Claude Code sessions</a> — experimental as of this writing, enabled with the <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> environment variable. For the methodology, this wiki's <a href="#!hns-overview">harness engineering course</a> covers agent team operation in 12 parts.</p>
 
+<h3>Advanced commands at a glance</h3>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Command / method</th><th>What it does</th><th>Try it like this</th></tr></thead>
+        <tbody>
+            <tr><td><code>claude --worktree &lt;name&gt;</code> (<code>-w</code>)</td><td>Starts a session in its own worktree — creation and cleanup automatic</td><td>Whenever two sessions edit the same project. The desktop app does it automatically</td></tr>
+            <tr><td><code>/loop &lt;interval&gt; &lt;job&gt;</code></td><td>Repeats while the session lives</td><td><code>/loop check the deploy status every 5 minutes</code> — any watch-and-wait work</td></tr>
+            <tr><td>Routine</td><td>Runs in the cloud on schedule / API / GitHub events</td><td>Work that must run with your computer off — like a daily morning briefing</td></tr>
+            <tr><td><code>claude remote-control</code></td><td>One link, and your phone steers the local session</td><td>Kick off a long job, then check and direct on the move. Keep the local machine on</td></tr>
+            <tr><td><code>ultrathink</code> in the prompt</td><td>Spends the maximum thinking budget</td><td>Rainbow input means it took. Save it for hard design calls</td></tr>
+            <tr><td><code>/oh-my-claudecode:ralplan</code></td><td>Consensus planning by planner·architect·critic (OMC)</td><td>For heavy architecture/DB/security design, consensus sometimes beats budget</td></tr>
+            <tr><td><code>settings.json</code> permissions</td><td>Per-command always-allow / always-ask rules</td><td>The seatbelt of the auto-mode era — start with deny rules for <code>rm</code> and force pushes</td></tr>
+            <tr><td><code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code></td><td>Enables agent teams (direct dialogue)</td><td>Team setup feels heavy? OMC's <code>team</code> mode is the packaged on-ramp</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>Applying this to this wiki</h3>
+<ul>
+    <li><strong>Routines (in use)</strong> — this wiki's morning briefing runs as a Routine. Every morning at 7 KST, the cloud scans AI news and drafts registration candidates before anyone turns a computer on.</li>
+    <li><strong>Worth trying: natural-language DB queries</strong> — this wiki's likes and view counts accumulate in a Cloudflare D1 database. Connect it over MCP and <strong>"which documents gained the most views this week?"</strong> becomes a plain-language question — a data-driven way to pick the next topic.</li>
+    <li><strong>Worth trying: worktrees</strong> — work runs sequentially on one branch today. On a day when a long translation batch collides with an urgent bugfix, two worktrees mean neither waits for the other.</li>
+    <li><strong>Worth trying: deny rules</strong> — in this repository, master is the deployment, which makes <code>git push --force</code> especially dangerous. First candidate for a deny rule.</li>
+    <li><strong>Worth trying: ralplan</strong> — for <strong>structural decisions that are hard to walk back</strong>, like reworking the knowledge-graph model or merging documents, running the planner·architect·critic consensus first is the safer path.</li>
+</ul>
+
 <h3>Closing</h3>
-<p>The 28 tips boil down to three principles. <strong>Context is a budget</strong> (beginner) — conserve it, split it, make it visible. <strong>Repetition belongs in the system</strong> (intermediate) — freeze good prompts into skills and CLAUDE.md. <strong>Parallelism starts with isolation</strong> (advanced) — put worktrees and permission rules in place first, then extend autonomy. The tools keep changing; these three will outlast them.</p>
+<p>The 28 tips boil down to three principles. <strong>Context is a budget</strong> (beginner) — conserve it, split it, make it visible. <strong>Repetition belongs in the system</strong> (intermediate) — freeze good prompts into skills and CLAUDE.md. <strong>Parallelism starts with isolation</strong> (advanced) — put worktrees and permission rules in place first, then extend autonomy. The tools will keep changing; these three should outlast them.</p>
