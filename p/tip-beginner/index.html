@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>초급 — 컨텍스트를 아끼는 습관 9가지</title>
+<meta name="description" content="Claude Code 입문 팁 9가지를 공식 문서와 대조해 정리 — /init으로 CLAUDE.md 생성, 스테이터스 라인, 컨텍스트 작게 유지, /context로 토큰 하마 찾기, /compact vs /clear, 플랜 모드(auto 기본값 시대의 의미), 문제로 묻기, 95% 되묻기 프롬프트, 투두 자가 점검">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/tip-beginner/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/tip-beginner/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/tip-beginner/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/tip-beginner/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/tip-beginner/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="초급 — 컨텍스트를 아끼는 습관 9가지">
+<meta property="og:description" content="Claude Code 입문 팁 9가지를 공식 문서와 대조해 정리 — /init으로 CLAUDE.md 생성, 스테이터스 라인, 컨텍스트 작게 유지, /context로 토큰 하마 찾기, /compact vs /clear, 플랜 모드(auto 기본값 시대의 의미), 문제로 묻기, 95% 되묻기 프롬프트, 투두 자가 점검">
+<meta property="og:url" content="https://dewytear.github.io/p/tip-beginner/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="초급 — 컨텍스트를 아끼는 습관 9가지">
+<meta name="twitter:description" content="Claude Code 입문 팁 9가지를 공식 문서와 대조해 정리 — /init으로 CLAUDE.md 생성, 스테이터스 라인, 컨텍스트 작게 유지, /context로 토큰 하마 찾기, /compact vs /clear, 플랜 모드(auto 기본값 시대의 의미), 문제로 묻기, 95% 되묻기 프롬프트, 투두 자가 점검">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "초급 — 컨텍스트를 아끼는 습관 9가지",
+ "description": "Claude Code 입문 팁 9가지를 공식 문서와 대조해 정리 — /init으로 CLAUDE.md 생성, 스테이터스 라인, 컨텍스트 작게 유지, /context로 토큰 하마 찾기, /compact vs /clear, 플랜 모드(auto 기본값 시대의 의미), 문제로 묻기, 95% 되묻기 프롬프트, 투두 자가 점검",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/tip-beginner/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!tip-beginner",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-08-14T11:44:28+09:00",
+ "dateModified": "2026-08-14T11:44:28+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!tip-beginner">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/tip-beginner/" hreflang="en">English</a>
+  &middot; <a href="/p/ja/tip-beginner/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>초급 — 컨텍스트를 아끼는 습관 9가지</h2>
+
+<p>Claude Code를 잘 쓰는 첫걸음은 화려한 기능이 아니라 <strong>컨텍스트를 아끼는 습관</strong>입니다. 컨텍스트란 모델이 한 번에 기억할 수 있는 대화·코드의 총량으로, 이게 차오르면 앞서 합의한 내용을 잊고 엉뚱한 답을 내기 시작합니다. 이 문서는 공개 강좌의 팁 28가지 중 초급 9가지를 골라, 각 팁을 Anthropic 공식 문서와 대조해 정리한 것입니다. 팁마다 공식 문서 링크를 달았으니 더 깊이 볼 때 따라가면 됩니다.</p>
+
+<div class="note">
+    <span class="nh">문서 정보 (출처)</span>
+    · 뼈대: <a href="https://youtu.be/i9oKsPg-AoM" target="_blank" rel="noopener">공개 강좌 영상 — Claude Code 꿀팁 28가지</a>의 초급 편(1~9)<br>
+    · 검증·보강: <a href="https://code.claude.com/docs" target="_blank" rel="noopener">Claude Code 공식 문서</a> 대조 (2026-08-14 기준) — 기능은 버전에 따라 달라질 수 있습니다
+</div>
+
+<h3>1. 모든 프로젝트에서 <code>/init</code>부터</h3>
+<p>이미 코드가 쌓인 프로젝트에 Claude Code를 투입할 때, 첫 명령은 <code>/init</code>입니다. Claude가 코드베이스를 읽고 빌드 명령·테스트 방법·프로젝트 관례를 담은 <code>CLAUDE.md</code>를 만들어 줍니다 — 이 파일은 세션이 시작될 때마다 자동으로 읽히는 프로젝트 안내서라, 매 세션 "이 프로젝트가 뭔지" 설명하는 수고가 사라집니다. 이미 <code>CLAUDE.md</code>가 있으면 덮어쓰지 않고 개선안을 제안합니다.</p>
+<p class="scn-sub">공식 문서: <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">How Claude remembers your project</a> — 이 위키의 <a href="/p/ccb-claudemd/">CLAUDE.md 실습</a>과 <a href="/p/claude-md-commandments/">CLAUDE.md 십계명</a>도 같은 주제를 다룹니다.</p>
+
+<h3>2. 스테이터스 라인을 켠다</h3>
+<p>터미널에서 쓴다면 <code>/statusline</code>으로 상태 표시줄을 설정하세요. 지금 쓰는 모델, git 브랜치, 그리고 <strong>남은 컨텍스트 비율</strong>이 입력창 아래에 상시 표시됩니다. 컨텍스트가 얼마나 찼는지 눈에 보이면 아래 3~5번 습관이 자연스럽게 몸에 붙습니다. 데스크톱 앱은 이미 화면에 이 정보가 있어 설정이 필요 없습니다.</p>
+<p class="scn-sub">공식 문서: <a href="https://code.claude.com/docs/en/statusline" target="_blank" rel="noopener">Status line configuration</a> — 표시 항목은 스크립트로 자유롭게 바꿀 수 있습니다.</p>
+
+<h3>3. 컨텍스트를 작게 유지한다</h3>
+<p>"코드베이스 전체를 확인해 줘" 같은 명령은 한 번에 컨텍스트를 수십 %씩 태웁니다. 큰 문제는 먼저 <strong>쪼개는 것부터</strong> 시키세요 — "결제 시스템을 수정해 줘"가 아니라 "결제 시스템 수정을 작은 단계로 나눠 줘"로 시작하고, 단계마다 별도로 진행합니다. 모델이 좋아도 컨텍스트가 부족하면 앞서 한 얘기를 잊습니다.</p>
+
+<h3>4. <code>/context</code>로 토큰 먹는 하마를 찾는다</h3>
+<p>컨텍스트가 너무 빨리 찬다면 <code>/context</code>를 치세요. 어떤 파일·도구·메시지가 컨텍스트를 얼마나 차지하는지 시각화해 보여 줍니다. 범인은 대개 통째로 읽은 큰 파일, 도구 정의를 다 실은 MCP 서버(고급 편 22번), 길어진 대화 이력 중 하나입니다.</p>
+<p class="scn-sub">공식 문서: <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">Slash commands 레퍼런스</a></p>
+
+<h3>5. 60%쯤 차면 <code>/compact</code>, 작업 사이엔 <code>/clear</code></h3>
+<p>둘의 차이가 중요합니다. <code>/compact</code>는 대화 이력을 <strong>요약해 압축</strong>합니다 — "결정 사항은 남겨 줘"처럼 남길 것을 지정할 수 있고, 맥락은 이어집니다. <code>/clear</code>는 <strong>완전 초기화</strong>라 새 대화창을 여는 것과 같습니다. 한 작업이 끝나고 다음 작업으로 넘어갈 때는 압축보다 초기화가 낫습니다 — 이전 작업의 잔재가 새 작업을 오염시키지 않습니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 268" role="img" aria-label="컨텍스트 관리 두 갈래: /compact는 대화 이력을 요약해 압축하고 맥락을 유지한다. /clear는 전부 비우고 새로 시작한다. 작업이 이어지면 compact, 새 작업이면 clear">
+    <text class="d-label" x="360" y="24" text-anchor="middle">/compact와 /clear — 남기며 압축 vs 비우고 새로</text>
+    <rect class="d-box" x="270" y="44" width="180" height="40" rx="10"/>
+    <text class="d-label sm" x="360" y="69" text-anchor="middle">컨텍스트 60%+</text>
+    <line class="d-edge" x1="320" y1="84" x2="184" y2="116"/><polygon class="d-arrow" points="188,109 180,118 190,119"/>
+    <line class="d-edge" x1="400" y1="84" x2="536" y2="116"/><polygon class="d-arrow" points="530,119 540,118 532,109"/>
+    <rect class="d-box accent" x="64" y="116" width="240" height="44" rx="10"/>
+    <text class="d-label sm" x="184" y="143" text-anchor="middle">/compact — 요약해 압축</text>
+    <rect class="d-box" x="416" y="116" width="240" height="44" rx="10"/>
+    <text class="d-label sm" x="536" y="143" text-anchor="middle">/clear — 전부 초기화</text>
+    <text class="d-sub" x="184" y="184" text-anchor="middle">결정·규칙은 남고 이력만 줄어든다</text>
+    <text class="d-sub" x="184" y="202" text-anchor="middle">같은 작업을 이어갈 때</text>
+    <text class="d-sub" x="536" y="184" text-anchor="middle">새 대화창을 여는 것과 같다</text>
+    <text class="d-sub" x="536" y="202" text-anchor="middle">다음 작업으로 넘어갈 때</text>
+    <text class="d-sub" x="360" y="244" text-anchor="middle">판단 기준은 하나 — 이 맥락이 다음 턴에도 필요한가</text>
+</svg>
+<div class="d-cap">압축은 맥락이 계속 필요할 때, 초기화는 작업이 바뀔 때. 헷갈리면 스테이터스 라인의 잔량을 본다.</div>
+</div>
+
+<h3>6. 플랜 모드로 시작한다</h3>
+<p>플랜 모드는 파일을 하나도 건드리지 않고 <strong>읽기·분석·계획만</strong> 하는 모드입니다(터미널에서 <code>Shift+Tab</code>으로 전환). 아무것도 바꾸지 않으니 마음 놓고 시킬 수 있고, 계획을 세우다 막히면 Claude가 먼저 질문을 던져 의도를 좁혀 줍니다. 프롬프트를 구체적으로 쓰기 어려울수록 플랜 모드의 값이 커집니다.</p>
+<p class="scn-sub">한 가지 배경 — 2026년 8월 14일부터 신규 세션의 기본값은 매번 승인을 묻지 않는 <strong>auto 모드</strong>입니다(<a href="/p/news-20260814-auto-mode-stateless-mcp/">묻지 않는 기본값</a>). 그래서 "손대기 전에 계획부터"라는 이 습관은 오히려 더 중요해졌습니다 — 실행이 빨라진 만큼, 방향은 먼저 합의해 두는 편이 안전합니다. 모드 상세: <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permissions and modes</a></p>
+
+<h3>7. 주니어 개발자처럼 대한다</h3>
+<p>"패딩을 화면 너비에 따라 조절하는 함수를 만들어 줘"라고 하면, 문제 정의와 해법 고민 — 가장 어려운 일 — 을 여러분이 다 한 셈입니다. 대신 <strong>"기기별로 영상이 잘려 나오는데 어떻게 해결해야 할까?"</strong>처럼 문제를 주세요. Claude는 프로젝트 전체를 읽고 해법을 제안할 수 있으니, 해법 구상부터 함께 하는 쪽이 도구를 훨씬 크게 쓰는 방법입니다.</p>
+
+<h3>8. Claude가 되묻게 만든다</h3>
+<p>요구가 추상적일 때는 프롬프트 끝에 이렇게 붙이세요 — <strong>"내가 뭘 원하는지 네가 95% 이해할 때까지 계속 질문해."</strong> Claude가 구체화 질문을 연달아 던지고, 그 문답이 끝나면 처음부터 정확한 방향으로 갑니다. 모호한 지시로 세 번 다시 시키는 것보다 질문 다섯 개에 답하는 쪽이 쌉니다.</p>
+
+<h3>9. 투두에 자가 점검을 심는다</h3>
+<p>작업 목록을 시킬 때 마지막에 점검 항목을 명시하세요 — "크롬 개발자 도구를 열어 콘솔 에러를 확인해라", "전부 통과하기 전에는 넘어가지 마라", 그리고 <strong>"현재 항목이 완료됐다고 95% 이상 확신하기 전에는 다음으로 넘어가지 마라"</strong>. 자가 점검 없이 투두 10개를 돌리면 각각 60% 완성도로 끝나 빈틈이 쌓이고, 나중에 원인을 못 찾아 토큰만 태우는 상황이 옵니다. 점검을 심으면 첫 결과물의 완성도가 달라집니다.</p>
+
+<h3>다음 편</h3>
+<p>여기까지가 세션 하나를 깨끗하게 굴리는 습관입니다. <a href="/p/tip-intermediate/">중급 편</a>은 세션을 시스템으로 만드는 이야기 — 서브에이전트 병렬, 나만의 스킬, CLAUDE.md 라우터 — 로 이어집니다.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · Tip &middot; <span class="pr-k">생성일자</span> 2026-08-14 &middot; <span class="pr-k">수정일자</span> 2026-08-14</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/commands/">일상 사용</a></li><li><a href="/p/news-20260814-auto-mode-stateless-mcp/">묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다</a></li><li><a href="/p/tip-intermediate/">중급 — 세션을 시스템으로 만드는 11가지</a></li><li><a href="/p/ccb-manage/">사용량 · 컨텍스트 · 세션 관리</a></li></ul>
+</nav>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<h2>初級 — コンテキストを節約する習慣9つ</h2>
+
+<p>Claude Code をうまく使う第一歩は、派手な機能ではなく<strong>コンテキストを節約する習慣</strong>です。コンテキストとは、モデルが一度に覚えていられる会話とコードの総量のこと。これが埋まってくると、先に合意した内容を忘れて的外れな答えを出し始めます。この文書は、公開講座の28のコツのうち初級の9つを選び、それぞれを Anthropic の公式ドキュメントと突き合わせて整理したものです。コツごとに公式ドキュメントへのリンクを付けたので、深掘りしたいときはそこから辿ってください。</p>
+
+<div class="note">
+    <span class="nh">文書情報（出典）</span>
+    · 骨組み: <a href="https://youtu.be/i9oKsPg-AoM" target="_blank" rel="noopener">公開講座の動画 — Claude Code のコツ28</a>の初級編（1〜9）<br>
+    · 検証・補強: <a href="https://code.claude.com/docs" target="_blank" rel="noopener">Claude Code 公式ドキュメント</a>との突き合わせ（2026-08-14 時点）— 機能はバージョンにより変わることがあります
+</div>
+
+<h3>1. どのプロジェクトも <code>/init</code> から</h3>
+<p>すでにコードが積み上がったプロジェクトに Claude Code を投入するとき、最初のコマンドは <code>/init</code> です。Claude がコードベースを読み、ビルドコマンド・テスト方法・プロジェクトの慣習をまとめた <code>CLAUDE.md</code> を作ってくれます — このファイルはセッション開始のたびに自動で読まれるプロジェクト案内書なので、毎回「このプロジェクトが何か」を説明する手間が消えます。すでに <code>CLAUDE.md</code> があれば、上書きせず改善案を出します。</p>
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">How Claude remembers your project</a> — この wiki の <a href="#!ccb-claudemd">CLAUDE.md 実習</a>と <a href="#!claude-md-commandments">CLAUDE.md 十戒</a>も同じ主題を扱っています。</p>
+
+<h3>2. ステータスラインを点ける</h3>
+<p>ターミナルで使うなら <code>/statusline</code> で状態表示を設定しましょう。いま使っているモデル、git のブランチ、そして何より<strong>残りコンテキストの割合</strong>が入力欄の下に常時表示されます。どれだけ埋まったかが目に見えると、下の 3〜5 番の習慣が自然と身につきます。デスクトップアプリは最初から表示されるので設定不要です。</p>
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/statusline" target="_blank" rel="noopener">Status line configuration</a> — 表示項目はスクリプトで自由に変えられます。</p>
+
+<h3>3. コンテキストを小さく保つ</h3>
+<p>「コードベース全体を確認して」のような命令は、一度でコンテキストを何十%も燃やします。大きな問題はまず<strong>分割から</strong>頼みましょう — 「決済システムを直して」ではなく「決済システムの修正を小さなステップに分けて」から始め、ステップごとに別々に進めます。モデルがどれだけ賢くても、コンテキストが足りなくなれば前の話を忘れます。</p>
+
+<h3>4. <code>/context</code> でトークンを食う犯人を探す</h3>
+<p>コンテキストの減りが早すぎるときは <code>/context</code> と打ちましょう。どのファイル・ツール・メッセージがどれだけ占めているかを可視化してくれます。犯人はたいてい三つのどれかです — 丸ごと読んだ大きなファイル、ツール定義を全部積んだ MCP サーバー（上級編の22番）、長くなった会話履歴。</p>
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">Slash commands リファレンス</a></p>
+
+<h3>5. 60%あたりで <code>/compact</code>、作業の切れ目には <code>/clear</code></h3>
+<p>二つの違いが肝心です。<code>/compact</code> は会話履歴を<strong>要約して圧縮</strong>します — 「決定事項は残して」のように残すものを指定でき、文脈は続きます。<code>/clear</code> は<strong>完全な初期化</strong>で、新しい会話を開くのと同じです。一つの作業が終わって次に移るときは、圧縮より初期化 — 前の作業の残りかすが新しい作業を汚しません。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 268" role="img" aria-label="コンテキスト管理の二つの道: /compact は会話履歴を要約して圧縮し文脈を保つ。/clear は全部空にして新しく始める。作業が続くなら compact、新しい作業なら clear">
+    <text class="d-label" x="360" y="24" text-anchor="middle">/compact と /clear — 残して圧縮 vs 空にして再出発</text>
+    <rect class="d-box" x="270" y="44" width="180" height="40" rx="10"/>
+    <text class="d-label sm" x="360" y="69" text-anchor="middle">コンテキスト 60%+</text>
+    <line class="d-edge" x1="320" y1="84" x2="184" y2="116"/><polygon class="d-arrow" points="188,109 180,118 190,119"/>
+    <line class="d-edge" x1="400" y1="84" x2="536" y2="116"/><polygon class="d-arrow" points="530,119 540,118 532,109"/>
+    <rect class="d-box accent" x="64" y="116" width="240" height="44" rx="10"/>
+    <text class="d-label sm" x="184" y="143" text-anchor="middle">/compact — 要約して圧縮</text>
+    <rect class="d-box" x="416" y="116" width="240" height="44" rx="10"/>
+    <text class="d-label sm" x="536" y="143" text-anchor="middle">/clear — 全部初期化</text>
+    <text class="d-sub" x="184" y="184" text-anchor="middle">決定とルールは残り履歴だけ縮む</text>
+    <text class="d-sub" x="184" y="202" text-anchor="middle">同じ作業を続けるとき</text>
+    <text class="d-sub" x="536" y="184" text-anchor="middle">新しい会話を開くのと同じ</text>
+    <text class="d-sub" x="536" y="202" text-anchor="middle">次の作業へ移るとき</text>
+    <text class="d-sub" x="360" y="244" text-anchor="middle">判断基準は一つ — この文脈は次のターンにも要るか</text>
+</svg>
+<div class="d-cap">文脈がまだ要るなら圧縮、作業が変わるなら初期化。迷ったらステータスラインの残量を見る。</div>
+</div>
+
+<h3>6. プランモードで始める</h3>
+<p>プランモードはファイルに一切触れず、<strong>読む・分析する・計画する</strong>だけのモードです（ターミナルでは <code>Shift+Tab</code> で切り替え）。何も変えないので安心して任せられ、計画の途中で Claude のほうから質問を投げて意図を絞り込んでくれます。要望を具体的に書きにくいときほど、プランモードの値打ちが上がります。</p>
+<p class="scn-sub">一つ背景を — 2026年8月14日から、新規セッションの既定値は毎回承認を求めない <strong>auto モード</strong>です（<a href="#!news-20260814-auto-mode-stateless-mcp">尋ねない既定値</a>）。だから「触る前にまず計画」というこの習慣は、むしろ前より大事になりました — 実行が速くなったぶん、方向は先に合意しておくのが安全です。モードの詳細: <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permissions and modes</a></p>
+
+<h3>7. ジュニア開発者のように接する</h3>
+<p>「パディングを画面幅で調整する関数を書いて」と言った時点で、いちばん大変な仕事 — 問題を定義し解き方を考える仕事 — をあなたが全部やったことになります。代わりに<strong>「機種によって映像が切れるんだけど、どう解決すべきかな？」</strong>のように問題を渡しましょう。Claude はプロジェクト全体を読んで解決策を提案できるので、構想から一緒にやって、その案を Claude 自身に実行させるのが道具をいちばん大きく使う方法です。</p>
+
+<h3>8. Claude に聞き返させる</h3>
+<p>要望が曖昧なときは、プロンプトの最後にこう付けましょう — <strong>「私が何を望んでいるか95%理解できるまで質問し続けて」</strong>。Claude が具体化の質問を次々と投げ、その問答が終われば最初から正しい方向へ進みます。曖昧な指示で三回やり直させるより、質問五つに答えるほうが安いのです。</p>
+
+<h3>9. ToDo に自己点検を植える</h3>
+<p>作業リストを任せるとき、最後に点検項目を明示しましょう — 「Chrome の開発者ツールを開いてコンソールエラーを確認しろ」「全部通るまでは先に進むな」、そして何より<strong>「現在の項目が完了した・正しいと95%以上確信するまで次の ToDo に移るな」</strong>。自己点検なしに ToDo を10個回すと、それぞれ60%の完成度で終わって隙間が積もり、あとで原因も見つからずトークンだけ燃やす羽目になります。点検を植えれば最初の成果物の完成度が変わります。</p>
+
+<h3>次の編</h3>
+<p>ここまでが、一つのセッションをきれいに回す習慣です。<a href="#!tip-intermediate">中級編</a>はセッションを仕組みに変える話 — サブエージェントの並列、自分だけのスキル、CLAUDE.md のルーター — へ続きます。</p>

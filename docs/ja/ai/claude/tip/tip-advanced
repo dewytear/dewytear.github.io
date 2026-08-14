@@ -1,0 +1,98 @@
+<h2>上級 — 並列・自律・予約の8つ</h2>
+
+<p>最後の編は、Claude Code を何本も、長く、手を離して回す話です。セッション同士がファイルを取り合わないようにするワークツリーから、予約作業、スマホの遠隔操作、そして互いに会話するエージェントチームまで — 公開講座のコツ21〜28番を公式ドキュメントと突き合わせて整理しました。</p>
+
+<div class="note">
+    <span class="nh">文書情報（出典）</span>
+    · 骨組み: <a href="https://youtu.be/i9oKsPg-AoM" target="_blank" rel="noopener">公開講座の動画 — Claude Code のコツ28</a>の上級編（21〜28）<br>
+    · 検証・補強: <a href="https://code.claude.com/docs" target="_blank" rel="noopener">Claude Code 公式ドキュメント</a>との突き合わせ（2026-08-14 時点）— 実験的な機能はバージョンにより変わることがあります
+</div>
+
+<h3>21. ワークツリーでセッションを並列に回す</h3>
+<p>同じプロジェクトで二つのセッションが同時にファイルを直すと — 片方はログイン機能、片方はグラフィックのロジック — 同じファイルに触れた瞬間に衝突します。ワークツリー（worktree）は git が提供する<strong>独立した作業コピー</strong>で、リポジトリの履歴は共有しつつファイルは別々に持ちます。セッションごとに自分のワークツリーで働けば絶対に重ならず、終わったら git のマージで合わせます。</p>
+<p>講座では <code>git worktree</code> コマンドを直接打つ方法を紹介していますが、いまは Claude Code が寿命管理までやってくれます — <strong><code>claude --worktree</code>（<code>-w</code>）</strong>で始めれば作成・命名・後片付けが自動で、デスクトップアプリは新しいセッションごとに勝手にワークツリーを作ります。<code>.env</code> のような git が追跡しないファイルはコピーに存在しないので、自動で持ち込みたければプロジェクトのルートに <code>.worktreeinclude</code> ファイルを置きます。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 262" role="img" aria-label="ワークツリー並列の構造: 一つのリポジトリからセッションごとに独立したワークツリーのコピーを作って並列に作業し、終わったらマージで合わせる。コピーが分かれているのでファイルの衝突がない">
+    <text class="d-label" x="360" y="24" text-anchor="middle">ワークツリー — 一つのリポジトリ、独立したコピーたち</text>
+    <rect class="d-box accent" x="260" y="44" width="200" height="40" rx="10"/>
+    <text class="d-label sm" x="360" y="69" text-anchor="middle">リポジトリ（履歴共有）</text>
+    <line class="d-edge" x1="320" y1="84" x2="190" y2="116"/><polygon class="d-arrow" points="194,109 186,118 196,119"/>
+    <line class="d-edge" x1="400" y1="84" x2="530" y2="116"/><polygon class="d-arrow" points="524,119 534,118 526,109"/>
+    <rect class="d-box soft" x="70" y="116" width="240" height="60" rx="10"/>
+    <text class="d-label sm" x="190" y="140" text-anchor="middle">ワークツリー A — セッション1</text>
+    <text class="d-sub" x="190" y="160" text-anchor="middle">ログイン機能 · ファイルのコピー</text>
+    <rect class="d-box soft" x="410" y="116" width="240" height="60" rx="10"/>
+    <text class="d-label sm" x="530" y="140" text-anchor="middle">ワークツリー B — セッション2</text>
+    <text class="d-sub" x="530" y="160" text-anchor="middle">グラフィック · ファイルのコピー</text>
+    <line class="d-edge accent" x1="190" y1="176" x2="320" y2="208"/><polygon class="d-arrow accent" points="313,208 323,209 316,200"/>
+    <line class="d-edge accent" x1="530" y1="176" x2="400" y2="208"/><polygon class="d-arrow accent" points="404,200 397,209 407,208"/>
+    <rect class="d-box" x="280" y="202" width="160" height="40" rx="10"/>
+    <text class="d-label sm" x="360" y="227" text-anchor="middle">git マージで合流</text>
+</svg>
+<div class="d-cap">コピーが物理的に分かれているから、衝突はそもそも起きない — 管理するのは合わせる瞬間だけ。</div>
+</div>
+
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/worktrees" target="_blank" rel="noopener">Run parallel sessions with worktrees</a></p>
+
+<h3>22. MCP サーバーの代わりに API を直接呼ぶ</h3>
+<p>MCP（Model Context Protocol）は外部ツールをつなぐ標準ですが、サーバーをつなぐと<strong>そのツール定義の一式がコンテキストに載る</strong>費用があります。要る機能が一つ二つなら、その API エンドポイントを直接呼ばせるほうがトークンもコンテキストも安い。ツールをほぼ全部使うなら MCP、一つ二つなら直接呼ぶ — この区別がこのコツの全部です。なお、いまはツール検索（Tool Search）が標準で入り、必要なツール定義だけをその都度読み込むのでこの費用は大きく減りましたが、「使う分だけ載せる」という原則そのものは変わらず有効です。</p>
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — この wiki の <a href="#!mcp">MCP 紹介</a>も参考に。MCP 仕様そのものの大改訂は<a href="#!news-20260814-auto-mode-stateless-mcp">尋ねない既定値</a>で扱いました。</p>
+
+<h3>23. <code>/loop</code> で予約作業を仕掛ける</h3>
+<p><code>/loop 5分ごとにデプロイの状態を確認して</code>のように繰り返し作業を仕掛けておくと、セッションが生きている間、Claude が定期的に自分で確認します。デプロイの監視、定期点検、「8時にうちの Slack を確認して」のような時刻指定も可能。人が見張らなくていい監視系の仕事を丸ごと渡せるので、使い道は広いです。</p>
+
+<h3>24. スマホから遠隔で操縦する</h3>
+<p>ターミナルで<strong><code>claude remote-control</code></strong>を実行するとリンクが一つ出ます。それをスマホで開くと — コードはあなたのローカルマシンでそのまま動いたまま — <strong>操作だけがスマホに</strong>移ります。地下鉄で進み具合を確かめて次の指示を出す、という使い方です。覚えておく条件は一つ、ローカルマシンが点いていること — 操縦する相手はそのマシンだからです。長い作業が終わったときや承認が要るときはスマホに通知も来ます。</p>
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/remote-control" target="_blank" rel="noopener">Remote Control — continue local sessions from your phone</a></p>
+
+<h3>25. データベースに自然言語で聞く</h3>
+<p>PostgreSQL・Supabase など主要なデータベースは MCP サーバーで Claude Code とつながります。つないでおけば<strong>「先週の登録者のうち離脱した人の共通点は？」</strong>のような質問を SQL なしの自然言語で投げられます — スキーマの探索、集計、条件検索まで、Claude がデータアナリストのように処理します。どのデータベースを使っていても、まず「この DB をつないで」と聞くのがいちばん速い始め方です。</p>
+
+<h3>26. 深く考えさせるときは ultrathink</h3>
+<p>ターミナルでプロンプトに <code>ultrathink</code> を添えると（入力欄が虹色になれば適用済み）、Claude が<strong>思考（thinking）の予算を最大まで</strong>使ってから答えます。そのぶんトークンを多く燃やすので日常使いには向かず — プロンプトをいくら変えてもよい答えが出ない難問や、構造設計の判断のような場面に取っておく切り札です。</p>
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/model-config" target="_blank" rel="noopener">Model configuration — effort</a>。執筆時点では思考の深さを effort 設定でも調節できます。</p>
+
+<h3>27. 権限を編集して安全に自律走行させる</h3>
+<p><code>settings.json</code> でコマンドごとに<strong>無条件で許可／必ず確認</strong>を決められます。全部を自動承認すると、<code>rm</code>（ファイル削除）や <code>git push --force</code>（衝突を無視する強制プッシュ）のような危険なコマンドまで通り得るので、「こういう危険なコマンドは私に聞くようにして」と頼んで拒否ルールを作らせておきましょう。2026年8月14日から既定値になった auto モードでは、このルールの重みがさらに増しました — <strong>狭く書いた拒否ルールは席を外している間も働き続け、広すぎる許可ルールはむしろ無視されます</strong>。ルールが実際に執行される方針になったわけです。</p>
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permissions</a> — 背景は<a href="#!news-20260814-auto-mode-stateless-mcp">尋ねない既定値</a>の記事を。</p>
+
+<h3>28. エージェントチーム — 互いに会話するエージェントたち</h3>
+<p>サブエージェントと混同しやすいのですが、構造が違います。<strong>サブエージェントは並列で働くものの互いに会話せず</strong>、メインに報告するだけ。<strong>エージェントチームは独立したセッション同士が会話し、作業リストを共有して仕事を分け合います</strong> — 各メンバーとあなたが個別に話すこともできます。企画・マーケティング・デザインのエージェントを置いて互いに相談させながら働かせる絵なら、サブエージェントではなくエージェントチームです。トークンは余計にかかりますが、メンバー同士が互いの結果に反論し補い合うべき課題では、成果がはっきり違います。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="サブエージェントとエージェントチームの比較: 左のサブエージェントはメインに報告するだけで互いに会話しない。右のエージェントチームは作業リストを共有し互いに直接会話する">
+    <text class="d-label" x="360" y="24" text-anchor="middle">サブエージェント vs エージェントチーム</text>
+    <line class="d-edge dash" x1="360" y1="40" x2="360" y2="236"/>
+    <text class="d-label sm" x="184" y="58" text-anchor="middle">サブ — 報告だけ</text>
+    <rect class="d-box accent" x="114" y="74" width="140" height="36" rx="9"/>
+    <text class="d-label sm" x="184" y="97" text-anchor="middle">メインセッション</text>
+    <rect class="d-box soft" x="44" y="150" width="86" height="34" rx="9"/>
+    <text class="d-label sm" x="87" y="172" text-anchor="middle">A</text>
+    <rect class="d-box soft" x="141" y="150" width="86" height="34" rx="9"/>
+    <text class="d-label sm" x="184" y="172" text-anchor="middle">B</text>
+    <rect class="d-box soft" x="238" y="150" width="86" height="34" rx="9"/>
+    <text class="d-label sm" x="281" y="172" text-anchor="middle">C</text>
+    <line class="d-edge" x1="150" y1="110" x2="92" y2="146"/><polygon class="d-arrow" points="97,140 89,148 99,148"/>
+    <line class="d-edge" x1="184" y1="110" x2="184" y2="146"/><polygon class="d-arrow" points="179,138 184,146 189,138"/>
+    <line class="d-edge" x1="218" y1="110" x2="276" y2="146"/><polygon class="d-arrow" points="269,148 279,148 271,140"/>
+    <text class="d-sub" x="184" y="212" text-anchor="middle">A・B・C は互いに会話しない</text>
+    <text class="d-label sm" x="536" y="58" text-anchor="middle">チーム — 互いに会話</text>
+    <rect class="d-box" x="446" y="90" width="86" height="34" rx="9"/>
+    <text class="d-label sm" x="489" y="112" text-anchor="middle">企画</text>
+    <rect class="d-box" x="558" y="90" width="86" height="34" rx="9"/>
+    <text class="d-label sm" x="601" y="112" text-anchor="middle">デザイン</text>
+    <rect class="d-box" x="502" y="150" width="86" height="34" rx="9"/>
+    <text class="d-label sm" x="545" y="172" text-anchor="middle">マーケ</text>
+    <line class="d-edge accent" x1="532" y1="107" x2="558" y2="107"/>
+    <line class="d-edge accent" x1="505" y1="124" x2="528" y2="150"/>
+    <line class="d-edge accent" x1="585" y1="124" x2="562" y2="150"/>
+    <text class="d-sub" x="536" y="212" text-anchor="middle">作業リストを共有 · 互いに仕事を任せる</text>
+</svg>
+<div class="d-cap">報告の構造が違えば使い道も違う — 独立した調査はサブエージェント、協業の課題はエージェントチーム。</div>
+</div>
+
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/agent-teams" target="_blank" rel="noopener">Orchestrate teams of Claude Code sessions</a> — 執筆時点では実験的な機能で、環境変数 <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> で有効化します。方法論が気になるなら、この wiki の<a href="#!hns-overview">ハーネスエンジニアリング講義</a>がエージェントチームの運用を12編で扱っています。</p>
+
+<h3>むすび</h3>
+<p>28のコツは三つの原則に縮みます。<strong>コンテキストは予算</strong>（初級）— 節約し、分割し、見えるようにする。<strong>繰り返しは仕組みへ</strong>（中級）— うまくいったプロンプトはスキルと CLAUDE.md に固める。<strong>並列は隔離から</strong>（上級）— ワークツリーと権限ルールを先に置いてから自律を広げる。道具は変わり続けますが、この三つは長持ちするはずです。</p>

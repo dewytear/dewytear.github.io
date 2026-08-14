@@ -1,4 +1,4 @@
-<h2>2026-08-14 · 콘텐츠 — 묻지 않는 기본값(auto 모드 + MCP 무상태) 기사 + 강의 2편 정합</h2>
+<h2>2026-08-14 · 콘텐츠 — 묻지 않는 기본값 기사 + AI · Claude · Tip 섹션 신설</h2>
 
 <p>아침 브리핑을 세션 안에서 직접 돌려 후보 6건을 뽑았고, 대표님이 세 건을 골랐다 — ①Claude Code auto 모드 기본값 ②MCP 2026-07-28 무상태 스펙 ⑥기업 RAG 실패 지점. 담는 방식은 <strong>①+②를 한 편으로 합본, ⑥은 다음 주제로 분리</strong>로 정했다. 변경 유형: <strong>CONTENT</strong>.</p>
 
@@ -44,4 +44,14 @@
     <li><code>python3 tools/check_all.py</code> 8게이트 — 초록. 중간에 <code>build_prerender</code> 드리프트와 플러그인 스냅샷 어긋남이 걸려 재생성·<code>--fix</code>로 맞췄고 <code>plugin.json</code> 0.29.2 → 0.29.3.</li>
     <li>관계는 5타입을 대조해 <strong>근거(evidence-for) → hns-tools</strong> 하나만 달았다. 방향상 이 기사가 MCP 강의의 선행지식일 수는 없으므로, 반대 방향은 <code>mcp</code> 엔트리에 <strong>선행지식 → 이 기사</strong>로 넣었다.</li>
     <li><code>build_dates.py</code>가 <strong>자정 표류로 멈췄다</strong> — <code>wl-20260811-ops</code>의 생성일이 08-11 → 08-12로 바뀌었다며 불변 가드가 기록을 거부했다. 08-11 23:54 KST에 커밋한 것을 08-12 00:0x KST에 스쿼시 머지해, 마스터 이력의 시각이 날짜를 넘긴 탓이다(지난주 <code>check_worklog</code>에서 고친 것과 <strong>같은 부류가 다른 도구에서</strong> 난 것). 이번은 <code>--force</code>로 재산정한 뒤 <strong>그 한 건의 생성일만 원래 값(08-11)으로 되돌렸다</strong> — 작업일은 08-11이 맞고 08-12는 머지 시각이라, 진실 쪽을 남겼다. 도구를 고치는 일은 콘텐츠 주제와 분리해 백로그에 올렸다.</li>
+</ul>
+
+<h3>AI · Claude · Tip 섹션 신설 — Claude Code 팁 3편 (초급·중급·고급)</h3>
+<p>대표님이 공개 강좌 영상의 Claude Code 팁 28가지 전사본을 주며, <strong>참고만 하되 공식 문서로 검증·보강</strong>해 팀원 소개용으로 등재를 지시했다. AI · Claude 아래 <strong>Tip 브랜치</strong>(Code·PlugIn·Skills의 형제)를 신설하고 초급·중급·고급 3편으로 나눴다 — <a href="#!tip-beginner">초급(1~9)</a>·<a href="#!tip-intermediate">중급(10~20)</a>·<a href="#!tip-advanced">고급(21~28)</a>, 3언어, 도식 4개.</p>
+<ul>
+    <li><strong>전사본을 그대로 옮기지 않았다.</strong> 28개 팁 전부를 code.claude.com 공식 문서와 대조해 팁마다 링크를 달았고(memory·commands·statusline·checkpointing·permissions·hooks-guide·sub-agents·agents·agent-teams·worktrees·mcp·model-config·remote-control), 낡은 대목을 보정했다 — 플랜 모드 팁에는 08-14부터 auto 모드가 기본값이라는 맥락을, 워크트리 팁은 수동 <code>git worktree</code>에서 <code>claude --worktree</code>·<code>.worktreeinclude</code>로, 에이전트 팀에는 실험 플래그(<code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code>) 한정 표기를, MCP 비용 팁에는 도구 검색(Tool Search)으로 상황이 바뀌었다는 주석을 붙였다.</li>
+    <li><strong>출처 표기</strong> — 채널·화자 실명은 본문에 쓰지 않고(비공인 개인 규칙), 독자가 찾아갈 수 있는 공개 영상 링크만 출처 노트에 남겼다.</li>
+    <li><strong>신규 섹션 동반물</strong> — <code>clusters.json</code> 3언어에 <code>AI · Claude · Tip</code>, ai-map ×3의 상단 계층 도식·<code>data-topics</code>·System 상세 절(15→16). 영어 도식에서 System 나열 줄이 9px 넘쳐 두 줄을 재배치했다(bounds 게이트가 잡음). 총계 125→128편·394→395개(신규 개념 <code>워크트리</code>), og-card·og-image 재생성 — 이번엔 로컬 서버 기동을 먼저 확인하고 캡처했다(593KB 정상).</li>
+    <li><strong>지식 그래프 파급</strong> — Tip 3편의 개념 공유로 <code>ccb-manage</code>·<code>sks-im-not-ai</code>의 고립 WARN이 <strong>풀렸고</strong>, 새 3편에 wrong-cluster WARN이 떴다(Tip 자체 점수보다 Introduction·Harness 클러스터 점수가 높음). 팁이 여러 System을 가로지르는 성격상 자연스러운 신호라 그대로 둔다 — 소속은 물리 위치(Tip)가 맞다.</li>
+    <li>관계는 읽기순 체인(초급→중급→고급 prerequisite)과 <code>commands</code>(일상 사용)→초급 prerequisite만 — 본문의 "다음 편" 안내와 일치한다.</li>
 </ul>
