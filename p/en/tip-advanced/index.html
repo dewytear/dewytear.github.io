@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Advanced — 8 Tips for Parallel, Autonomous, Scheduled Work</title>
+<meta name="description" content="Eight tips for parallel, autonomous, scheduled work — collision-free parallel sessions with claude --worktree, calling APIs directly instead of MCP (context cost), /loop scheduled jobs, phone remote control via claude remote-control, natural-language database queries, ultrathink&#x27;s maximum thinking budget, editing permissions in settings.json (auto mode&#x27;s hard denies), and subagents vs agent teams (report-only vs direct dialogue)">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/tip-advanced/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/tip-advanced/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/tip-advanced/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/tip-advanced/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/tip-advanced/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Advanced — 8 Tips for Parallel, Autonomous, Scheduled Work">
+<meta property="og:description" content="Eight tips for parallel, autonomous, scheduled work — collision-free parallel sessions with claude --worktree, calling APIs directly instead of MCP (context cost), /loop scheduled jobs, phone remote control via claude remote-control, natural-language database queries, ultrathink&#x27;s maximum thinking budget, editing permissions in settings.json (auto mode&#x27;s hard denies), and subagents vs agent teams (report-only vs direct dialogue)">
+<meta property="og:url" content="https://dewytear.github.io/p/en/tip-advanced/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Advanced — 8 Tips for Parallel, Autonomous, Scheduled Work">
+<meta name="twitter:description" content="Eight tips for parallel, autonomous, scheduled work — collision-free parallel sessions with claude --worktree, calling APIs directly instead of MCP (context cost), /loop scheduled jobs, phone remote control via claude remote-control, natural-language database queries, ultrathink&#x27;s maximum thinking budget, editing permissions in settings.json (auto mode&#x27;s hard denies), and subagents vs agent teams (report-only vs direct dialogue)">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Advanced — 8 Tips for Parallel, Autonomous, Scheduled Work",
+ "description": "Eight tips for parallel, autonomous, scheduled work — collision-free parallel sessions with claude --worktree, calling APIs directly instead of MCP (context cost), /loop scheduled jobs, phone remote control via claude remote-control, natural-language database queries, ultrathink's maximum thinking budget, editing permissions in settings.json (auto mode's hard denies), and subagents vs agent teams (report-only vs direct dialogue)",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/tip-advanced/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!tip-advanced",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-08-14T11:44:28+09:00",
+ "dateModified": "2026-08-14T11:44:28+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!tip-advanced">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/tip-advanced/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/ja/tip-advanced/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>Advanced — 8 Tips for Parallel, Autonomous, Scheduled Work</h2>
+
+<p>The last part is about running Claude Code many at a time, for long stretches, hands off. From worktrees that keep sessions from colliding over files, to scheduled jobs, phone remote control, and agent teams that talk to each other — tips 21 through 28 of the public tutorial, checked against the official docs.</p>
+
+<div class="note">
+    <span class="nh">About this document (sources)</span>
+    · Skeleton: the advanced part (21–28) of a <a href="https://youtu.be/i9oKsPg-AoM" target="_blank" rel="noopener">public tutorial video — 28 Claude Code tips</a><br>
+    · Verified and supplemented against the <a href="https://code.claude.com/docs" target="_blank" rel="noopener">official Claude Code docs</a> (as of 2026-08-14) — experimental features may change across versions
+</div>
+
+<h3>21. Run sessions in parallel with worktrees</h3>
+<p>Two sessions editing the same project at once — one on the login feature, one on graphics logic — collide the moment they touch the same file. A worktree is git's <strong>independent working copy</strong>: it shares the repository history but keeps its own files. Give each session its own worktree and they can never overlap; merge with git when done.</p>
+<p>The tutorial shows the manual <code>git worktree</code> command, but Claude Code now manages the lifecycle for you — start with <strong><code>claude --worktree</code> (<code>-w</code>)</strong> and creation, naming, and cleanup are automatic; the desktop app creates a worktree per new session on its own. Files git does not track, like <code>.env</code>, are absent from the copy — put a <code>.worktreeinclude</code> file in the project root to have them copied automatically.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 262" role="img" aria-label="Worktree parallel structure: one repository spawns an independent worktree copy per session, sessions work in parallel, and a merge joins the results. Separate copies mean no file conflicts">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Worktrees — one repository, independent copies</text>
+    <rect class="d-box accent" x="270" y="44" width="180" height="40" rx="10"/>
+    <text class="d-label sm" x="360" y="69" text-anchor="middle">Repo (shared history)</text>
+    <line class="d-edge" x1="320" y1="84" x2="190" y2="116"/><polygon class="d-arrow" points="194,109 186,118 196,119"/>
+    <line class="d-edge" x1="400" y1="84" x2="530" y2="116"/><polygon class="d-arrow" points="524,119 534,118 526,109"/>
+    <rect class="d-box soft" x="80" y="116" width="220" height="60" rx="10"/>
+    <text class="d-label sm" x="190" y="140" text-anchor="middle">Worktree A — session 1</text>
+    <text class="d-sub" x="190" y="160" text-anchor="middle">Login feature · file copy</text>
+    <rect class="d-box soft" x="420" y="116" width="220" height="60" rx="10"/>
+    <text class="d-label sm" x="530" y="140" text-anchor="middle">Worktree B — session 2</text>
+    <text class="d-sub" x="530" y="160" text-anchor="middle">Graphics logic · file copy</text>
+    <line class="d-edge accent" x1="190" y1="176" x2="320" y2="208"/><polygon class="d-arrow accent" points="313,208 323,209 316,200"/>
+    <line class="d-edge accent" x1="530" y1="176" x2="400" y2="208"/><polygon class="d-arrow accent" points="404,200 397,209 407,208"/>
+    <rect class="d-box" x="280" y="202" width="160" height="40" rx="10"/>
+    <text class="d-label sm" x="360" y="227" text-anchor="middle">Joined by git merge</text>
+</svg>
+<div class="d-cap">The copies are physically separate, so conflicts simply cannot happen — you only manage the moment of merging.</div>
+</div>
+
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/worktrees" target="_blank" rel="noopener">Run parallel sessions with worktrees</a></p>
+
+<h3>22. Call the API directly instead of an MCP server</h3>
+<p>MCP (Model Context Protocol) is the standard for attaching external tools, but connecting a server has a cost: <strong>its entire tool catalog lands in your context</strong>. If you need one or two functions, having Claude call the API endpoint directly is cheaper in both tokens and context. Using most of the tools? Take MCP. Using one or two? Call directly — that distinction is the whole tip. Note that built-in tool search now loads tool definitions on demand, which shrank this cost considerably, but the principle — carry only what you use — still holds.</p>
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — see also this wiki's <a href="/p/en/mcp/">MCP intro</a>. The big MCP spec revision is covered in <a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking</a>.</p>
+
+<h3>23. Schedule recurring work with <code>/loop</code></h3>
+<p>Set up a recurring job like <code>/loop check the deploy status every 5 minutes</code> and Claude keeps checking on its own for as long as the session lives. Deploy monitoring, periodic checks, even time-pinned jobs like "check our Slack at 8." Watch-and-wait work you would otherwise babysit can be handed over whole.</p>
+
+<h3>24. Steer remotely from your phone</h3>
+<p>Run <strong><code>claude remote-control</code></strong> in the terminal and you get a link. Open it on your phone and — while the code keeps running on your local machine — <strong>only the controls move to the phone</strong>. Check progress and give the next instruction from the subway. The one condition to remember: your local machine must stay on, because that is what you are steering. You also get phone notifications when a long task finishes or approval is needed.</p>
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/remote-control" target="_blank" rel="noopener">Remote Control — continue local sessions from your phone</a></p>
+
+<h3>25. Ask your database in natural language</h3>
+<p>Major databases — PostgreSQL, Supabase, and others — connect to Claude Code as MCP servers. Once connected, you can ask <strong>"what do last week's churned signups have in common?"</strong> in plain language, no SQL — schema exploration, aggregation, filtering, all handled like a data analyst would. Whatever database you use, the fastest start is simply asking Claude "connect to this DB."</p>
+
+<h3>26. For deep thought, ultrathink</h3>
+<p>In the terminal, include <code>ultrathink</code> with your prompt (the input turns rainbow-colored when it takes effect) and Claude spends <strong>its maximum thinking budget</strong> before answering. It burns a lot of tokens, so it is not for everyday use — save it for genuinely hard problems and architectural judgment calls where no amount of prompt rewriting gets you a good answer.</p>
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/model-config" target="_blank" rel="noopener">Model configuration — effort</a>. As of this writing, thinking depth is also adjustable via the effort setting.</p>
+
+<h3>27. Edit permissions for safe autonomy</h3>
+<p>In <code>settings.json</code> you can mark commands as <strong>always allowed / always ask</strong>. Auto-approving everything lets dangerous commands through — <code>rm</code> (file deletion), <code>git push --force</code> (a push that overrides conflicts) — so tell Claude "make these dangerous commands ask me first" and let it write the deny rules. Under auto mode, the default since 14 August 2026, these rules matter more than ever: <strong>narrowly written deny rules keep working while you are away, and overly broad allow rules get ignored</strong>. The rules have become policy that actually gets enforced.</p>
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permissions</a> — background in <a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking</a>.</p>
+
+<h3>28. Agent teams — agents that talk to each other</h3>
+<p>Easy to confuse with subagents, but the structure differs. <strong>Subagents work in parallel yet never talk to each other</strong> — they only report to the main session. <strong>Agent teams are independent sessions that talk to each other, share a task list, and claim work</strong> — and you can talk to each teammate individually. If your picture is a planner, a marketer, and a designer coordinating with each other, that is an agent team, not subagents. It costs more tokens, but on tasks where teammates must challenge and complement each other's output, the results are clearly different.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="Subagents versus agent teams: on the left, subagents only report to the main session and never talk to each other; on the right, agent team members share a task list and talk directly">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Subagents vs agent teams</text>
+    <line class="d-edge dash" x1="360" y1="40" x2="360" y2="236"/>
+    <text class="d-label sm" x="184" y="58" text-anchor="middle">Subagents — report only</text>
+    <rect class="d-box accent" x="124" y="74" width="120" height="36" rx="9"/>
+    <text class="d-label sm" x="184" y="97" text-anchor="middle">Main session</text>
+    <rect class="d-box soft" x="44" y="150" width="86" height="34" rx="9"/>
+    <text class="d-label sm" x="87" y="172" text-anchor="middle">A</text>
+    <rect class="d-box soft" x="141" y="150" width="86" height="34" rx="9"/>
+    <text class="d-label sm" x="184" y="172" text-anchor="middle">B</text>
+    <rect class="d-box soft" x="238" y="150" width="86" height="34" rx="9"/>
+    <text class="d-label sm" x="281" y="172" text-anchor="middle">C</text>
+    <line class="d-edge" x1="150" y1="110" x2="92" y2="146"/><polygon class="d-arrow" points="97,140 89,148 99,148"/>
+    <line class="d-edge" x1="184" y1="110" x2="184" y2="146"/><polygon class="d-arrow" points="179,138 184,146 189,138"/>
+    <line class="d-edge" x1="218" y1="110" x2="276" y2="146"/><polygon class="d-arrow" points="269,148 279,148 271,140"/>
+    <text class="d-sub" x="184" y="212" text-anchor="middle">A, B, C never talk to each other</text>
+    <text class="d-label sm" x="536" y="58" text-anchor="middle">Agent team — direct dialogue</text>
+    <rect class="d-box" x="446" y="90" width="86" height="34" rx="9"/>
+    <text class="d-label sm" x="489" y="112" text-anchor="middle">Planner</text>
+    <rect class="d-box" x="558" y="90" width="86" height="34" rx="9"/>
+    <text class="d-label sm" x="601" y="112" text-anchor="middle">Design</text>
+    <rect class="d-box" x="502" y="150" width="86" height="34" rx="9"/>
+    <text class="d-label sm" x="545" y="172" text-anchor="middle">Marketing</text>
+    <line class="d-edge accent" x1="532" y1="107" x2="558" y2="107"/>
+    <line class="d-edge accent" x1="505" y1="124" x2="528" y2="150"/>
+    <line class="d-edge accent" x1="585" y1="124" x2="562" y2="150"/>
+    <text class="d-sub" x="536" y="212" text-anchor="middle">Shared task list · they delegate to each other</text>
+</svg>
+<div class="d-cap">Different reporting structure, different use — independent research goes to subagents, collaborative work to agent teams.</div>
+</div>
+
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/agent-teams" target="_blank" rel="noopener">Orchestrate teams of Claude Code sessions</a> — experimental as of this writing, enabled with the <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> environment variable. For the methodology, this wiki's <a href="/p/en/hns-overview/">harness engineering course</a> covers agent team operation in 12 parts.</p>
+
+<h3>Closing</h3>
+<p>The 28 tips boil down to three principles. <strong>Context is a budget</strong> (beginner) — conserve it, split it, make it visible. <strong>Repetition belongs in the system</strong> (intermediate) — freeze good prompts into skills and CLAUDE.md. <strong>Parallelism starts with isolation</strong> (advanced) — put worktrees and permission rules in place first, then extend autonomy. The tools keep changing; these three will outlast them.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Tip &middot; <span class="pr-k">Created</span> 2026-08-14 &middot; <span class="pr-k">Updated</span> 2026-08-14</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking — Auto Mode and Stateless MCP</a></li><li><a href="/p/en/mcp/">MCP Servers</a></li><li><a href="/p/en/ccb-agents/">Building an Agent</a></li><li><a href="/p/en/hns-overview/">Harness Engineering — Overview and Recap</a></li></ul>
+</nav>
+</body>
+</html>

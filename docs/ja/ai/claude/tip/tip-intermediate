@@ -1,0 +1,78 @@
+<h2>中級 — セッションを仕組みに変える11の方法</h2>
+
+<p><a href="#!tip-beginner">初級編</a>が一つのセッションをきれいに回す習慣だったのに対し、中級は<strong>繰り返すものを仕組みへ移す</strong>話です。並列で調べさせ、うまくいったプロンプトをスキルに固め、CLAUDE.md をルーターとして使う — 公開講座のコツ10〜20番を公式ドキュメントと突き合わせて整理しました。</p>
+
+<div class="note">
+    <span class="nh">文書情報（出典）</span>
+    · 骨組み: <a href="https://youtu.be/i9oKsPg-AoM" target="_blank" rel="noopener">公開講座の動画 — Claude Code のコツ28</a>の中級編（10〜20）<br>
+    · 検証・補強: <a href="https://code.claude.com/docs" target="_blank" rel="noopener">Claude Code 公式ドキュメント</a>との突き合わせ（2026-08-14 時点）
+</div>
+
+<h3>10. サブエージェントを並列で回す</h3>
+<p>サブエージェントとは、メインセッションが部下のように立ち上げる別のエージェントです。それぞれが<strong>自分専用のコンテキストウィンドウ</strong>を持ち、要約だけをメインに報告するので、調査や検証のような読む量が多い仕事に特に向きます — 読んだ分がメインのコンテキストを燃やしません。「参考資料を10件以上、並列のサブエージェントで調べて」と頼めば、複数のエージェントが同時に別々の角度から調べ、メインが総合します。並列なので時間も節約できます。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 264" role="img" aria-label="サブエージェント並列の構造: メインセッションが調査を三つのサブエージェントに配り、各自が独立したコンテキストで調べ、要約だけがメインに戻って総合される">
+    <text class="d-label" x="360" y="24" text-anchor="middle">サブエージェント並列 — 読むのは外、総合はメイン</text>
+    <rect class="d-box accent" x="280" y="44" width="160" height="42" rx="10"/>
+    <text class="d-label sm" x="360" y="70" text-anchor="middle">メインセッション</text>
+    <line class="d-edge" x1="310" y1="86" x2="150" y2="120"/><polygon class="d-arrow" points="154,113 146,122 156,123"/>
+    <line class="d-edge" x1="360" y1="86" x2="360" y2="120"/><polygon class="d-arrow" points="355,112 360,120 365,112"/>
+    <line class="d-edge" x1="410" y1="86" x2="570" y2="120"/><polygon class="d-arrow" points="564,123 574,122 566,113"/>
+    <rect class="d-box soft" x="46" y="120" width="200" height="58" rx="10"/>
+    <text class="d-label sm" x="146" y="144" text-anchor="middle">サブ A</text>
+    <text class="d-sub" x="146" y="164" text-anchor="middle">ウェブ調査 · 自分の文脈</text>
+    <rect class="d-box soft" x="260" y="120" width="200" height="58" rx="10"/>
+    <text class="d-label sm" x="360" y="144" text-anchor="middle">サブ B</text>
+    <text class="d-sub" x="360" y="164" text-anchor="middle">文書読み · 自分の文脈</text>
+    <rect class="d-box soft" x="474" y="120" width="200" height="58" rx="10"/>
+    <text class="d-label sm" x="574" y="144" text-anchor="middle">サブ C</text>
+    <text class="d-sub" x="574" y="164" text-anchor="middle">コード検証 · 自分の文脈</text>
+    <line class="d-edge accent" x1="146" y1="178" x2="310" y2="212"/><polygon class="d-arrow accent" points="303,212 313,213 306,204"/>
+    <line class="d-edge accent" x1="360" y1="178" x2="360" y2="206"/><polygon class="d-arrow accent" points="355,198 360,206 365,198"/>
+    <line class="d-edge accent" x1="574" y1="178" x2="410" y2="212"/><polygon class="d-arrow accent" points="414,204 407,213 417,212"/>
+    <rect class="d-box" x="280" y="206" width="160" height="40" rx="10"/>
+    <text class="d-label sm" x="360" y="231" text-anchor="middle">要約だけ報告 · 総合</text>
+</svg>
+<div class="d-cap">サブエージェントが燃やすのは自分のコンテキスト — メインは要約だけ受け取って軽いまま。</div>
+</div>
+
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/agents" target="_blank" rel="noopener">Run agents in parallel</a> · <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Create custom subagents</a>。サブエージェント同士は会話しません — 会話が要るなら<a href="#!tip-advanced">上級編</a>のエージェントチームです。</p>
+
+<h3>11. 自分だけのスキルを作る</h3>
+<p>スキルは <code>.claude/skills/</code> フォルダに置く<strong>再利用プロンプトのファイル</strong>です。毎回コピペしていた長い指示を一度定義しておけば、説明文（description）に合う依頼が来たとき Claude が自分で取り出して使い、スラッシュで直接呼ぶこともできます。何度も同じことを頼んでいるなら、それがスキルを作る合図です。作り方は簡単 — <strong>「いまやったのをスキルにして」</strong>と言えば Claude が作ってくれます。予測できる結果を得るためのこうした装置を総称してハーネス（harness）と呼びますが、スキルはその代表例です。</p>
+<p class="scn-sub">この wiki の<a href="#!skl-what">スキル講義</a>が原理からセキュリティまで12編で扱っています。公式ドキュメント: <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Skills</a></p>
+
+<h3>12. サブエージェントには安いモデルを</h3>
+<p>検索してテキストを読んでくる仕事に最上位モデルは無駄です。任せるときに<strong>「サブエージェントは Haiku で回して」</strong>と明示すればよく、カスタムのサブエージェント定義なら <code>model: haiku</code> フィールドで固定もできます。収集は速くて安いモデルに、総合や設計判断は高いモデルに — この分業がトークンを大きく節約します。</p>
+<p class="scn-sub">モデル別の単価: <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">公式 Pricing 文書</a> — 執筆時点で Haiku 4.5 は入力 $1／出力 $5（百万トークンあたり）と、最上位モデルの数分の一です。</p>
+
+<h3>13. セッションが終わったら CLAUDE.md を更新 — ただし150〜200行の上限で</h3>
+<p>このセッションで新しい慣習ができたり、やり方が変わったりしたら、CLAUDE.md に反映しておきましょう。しなければ、次のセッションの Claude はその変化を知りません。ただし CLAUDE.md は<strong>毎セッション無条件に読まれるファイル</strong>なので、長くなるほど開始時のコンテキストを食います — 更新を頼むとき「150〜200行の上限で」と添えれば、Claude がうまく圧縮します。公式ドキュメントも「会議の合間にざっと読めなければ長すぎる」と勧めています。</p>
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Memory — CLAUDE.md</a></p>
+
+<h3>14. CLAUDE.md をルーターとして使う</h3>
+<p>13番の上限と「たくさん情報を渡したい」という欲を両立させる方法です。内容そのものを CLAUDE.md に入れる代わりに、<strong>「こういう用があればこのファイルを読め」</strong>という案内だけを入れます。例:「コード構造が知りたければ <code>docs/architecture.md</code> を読め」。必要なときだけそのファイルを読みに行くので、文脈は伝えつつ常時のコンテキストは節約できる賢い構造になります。これも「この案内を CLAUDE.md にルーターとして足して」と頼めば済みます。</p>
+
+<h3>15. おかしいと思ったら、終わるのを待たずに切る</h3>
+<p>進行中に方向が違うと見えたら<strong>すぐ止めましょう</strong>（Esc）。そして「意図はこうだったのに、なぜそうしたの？」と聞けば Claude が自分の意図を説明します。そこで方向を直してから続きをやらせればいい。終わるまで待ってから直すのは時間とトークンの無駄なうえ、<strong>間違った結果がコンテキストに残って以後の判断まで汚します</strong>。停止ボタンを怖がる理由はありません。</p>
+
+<h3>16. 突き返す — そして当たったら記録する</h3>
+<p>最初の成果物が気に入らないのに直し方を言葉にできないときは、抽象的でいいから突き返しましょう — 「もっと上質に」「完成度を上げて」「まったく別の観点でやり直して」。最初の試みが外れたという文脈を Claude が持った状態なので、二度目の的中率はずっと上がります。たいていの人は一度で諦めますが、二、三度突き返すと驚くことが多い。そして<strong>望んだ結果が出た瞬間が記録の瞬間</strong>です — 「これいいね、スキルにして」「CLAUDE.md に反映して」。記録しなければ、次も同じ道をもう一度歩くことになります。</p>
+
+<h3>17. <code>/rewind</code> で時間を巻き戻す</h3>
+<p>途中の結果が間違ったとき、「元に戻して」と言葉で頼むと、戻す過程でまた誤りが入り得ます。代わりに <code>/rewind</code> を — チェックポイントの一覧から時点を選べば、<strong>それ以降のファイル修正が丸ごと巻き戻ります</strong>。コードと会話のどちらを戻すかも選べます。</p>
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/checkpointing" target="_blank" rel="noopener">Checkpointing</a> — セッション中の修正は自動でチェックポイントとして積まれます。</p>
+
+<h3>18. フックで通知を受ける</h3>
+<p>フック（hook）は、Claude Code の特定の時点 — 作業完了、承認待ちなど — で自動実行されるコマンドです。「セッションの作業が終わるたびに音で知らせるフックを設定して」と頼めば、Claude が設定ファイルに書いてくれます。セッション一つなら要りませんが、複数のプロジェクトとセッションを並列で回し始めると、<strong>どこで何が終わったか</strong>を教えてくれるこの装置が必須になります。手軽な方法としては <code>preferredNotifChannel</code> を <code>terminal_bell</code> にする手もあります。</p>
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank" rel="noopener">Automate actions with hooks</a> — この wiki の <a href="#!hooks">Hooks 紹介</a>も参考に。</p>
+
+<h3>19. Claude には目がある — 画像を渡す</h3>
+<p>エラーメッセージ、気に入ったウェブサイト、UI の画面 — 言葉で説明しにくいものは<strong>スクリーンショットを撮ってそのまま貼りましょう</strong>。ターミナルもデスクトップアプリも、画像のドラッグや貼り付けを受け付け、Claude が読んで理解します。エラー画面を撮って投げるほうが、エラー文を手で書き写すより速くて正確です。</p>
+
+<h3>20. スクリーンショットからテンプレートを作る</h3>
+<p>19番の応用です。参考にしたいデザイン — カードニュースのレイアウト、色使いのよいページ — を撮って渡し、<strong>「この画像を参考にテンプレートを作って」</strong>と明示しましょう。要は丸写しではなく、色とレイアウトの構造を抜き出して再利用できる型にすることです。</p>
+
+<h3>次の編</h3>
+<p><a href="#!tip-advanced">上級編</a>は並列・自律・予約です — ワークツリーで衝突なくセッションを並列に回し、予約作業を仕掛け、スマホから遠隔操作し、エージェントチームを使う8つ。</p>

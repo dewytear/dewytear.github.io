@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intermediate — 11 Ways to Turn Sessions into a System</title>
+<meta name="description" content="Eleven tips for moving repetition into the system — parallel subagents (own context, summary-only reporting), building your own skills, running subagents on Haiku, updating CLAUDE.md with a 150–200 line cap, CLAUDE.md as a router, interrupting mid-run (Esc), pushing back then recording what works, /rewind checkpoints, hook notifications, image input, and screenshot-to-template">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/tip-intermediate/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/tip-intermediate/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/tip-intermediate/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/tip-intermediate/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/tip-intermediate/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Intermediate — 11 Ways to Turn Sessions into a System">
+<meta property="og:description" content="Eleven tips for moving repetition into the system — parallel subagents (own context, summary-only reporting), building your own skills, running subagents on Haiku, updating CLAUDE.md with a 150–200 line cap, CLAUDE.md as a router, interrupting mid-run (Esc), pushing back then recording what works, /rewind checkpoints, hook notifications, image input, and screenshot-to-template">
+<meta property="og:url" content="https://dewytear.github.io/p/en/tip-intermediate/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Intermediate — 11 Ways to Turn Sessions into a System">
+<meta name="twitter:description" content="Eleven tips for moving repetition into the system — parallel subagents (own context, summary-only reporting), building your own skills, running subagents on Haiku, updating CLAUDE.md with a 150–200 line cap, CLAUDE.md as a router, interrupting mid-run (Esc), pushing back then recording what works, /rewind checkpoints, hook notifications, image input, and screenshot-to-template">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Intermediate — 11 Ways to Turn Sessions into a System",
+ "description": "Eleven tips for moving repetition into the system — parallel subagents (own context, summary-only reporting), building your own skills, running subagents on Haiku, updating CLAUDE.md with a 150–200 line cap, CLAUDE.md as a router, interrupting mid-run (Esc), pushing back then recording what works, /rewind checkpoints, hook notifications, image input, and screenshot-to-template",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/tip-intermediate/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!tip-intermediate",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-08-14T11:44:28+09:00",
+ "dateModified": "2026-08-14T11:44:28+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!tip-intermediate">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/tip-intermediate/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/ja/tip-intermediate/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>Intermediate — 11 Ways to Turn Sessions into a System</h2>
+
+<p>The <a href="/p/en/tip-beginner/">beginner part</a> was about keeping one session clean; the intermediate part is about <strong>moving whatever repeats into the system</strong>. Run research in parallel, freeze a good prompt into a skill, use CLAUDE.md as a router — tips 10 through 20 of the public tutorial, checked against the official docs.</p>
+
+<div class="note">
+    <span class="nh">About this document (sources)</span>
+    · Skeleton: the intermediate part (10–20) of a <a href="https://youtu.be/i9oKsPg-AoM" target="_blank" rel="noopener">public tutorial video — 28 Claude Code tips</a><br>
+    · Verified and supplemented against the <a href="https://code.claude.com/docs" target="_blank" rel="noopener">official Claude Code docs</a> (as of 2026-08-14)
+</div>
+
+<h3>10. Run subagents in parallel</h3>
+<p>A subagent is a separate agent the main session spawns like a deputy. Each one gets <strong>its own context window</strong> and reports only a summary back, which makes them ideal for read-heavy work like research and verification — what they read never burns your main context. Say "research 10+ references with parallel subagents" and several agents investigate different angles at once while the main session synthesizes. Being parallel, it also saves wall-clock time.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 264" role="img" aria-label="Parallel subagent structure: the main session hands research to three subagents, each works in its own context, and only summaries come back for the main session to synthesize">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Parallel subagents — read outside, synthesize in the main</text>
+    <rect class="d-box accent" x="280" y="44" width="160" height="42" rx="10"/>
+    <text class="d-label sm" x="360" y="70" text-anchor="middle">Main session</text>
+    <line class="d-edge" x1="310" y1="86" x2="150" y2="120"/><polygon class="d-arrow" points="154,113 146,122 156,123"/>
+    <line class="d-edge" x1="360" y1="86" x2="360" y2="120"/><polygon class="d-arrow" points="355,112 360,120 365,112"/>
+    <line class="d-edge" x1="410" y1="86" x2="570" y2="120"/><polygon class="d-arrow" points="564,123 574,122 566,113"/>
+    <rect class="d-box soft" x="46" y="120" width="200" height="58" rx="10"/>
+    <text class="d-label sm" x="146" y="144" text-anchor="middle">Subagent A</text>
+    <text class="d-sub" x="146" y="164" text-anchor="middle">Web research · own context</text>
+    <rect class="d-box soft" x="260" y="120" width="200" height="58" rx="10"/>
+    <text class="d-label sm" x="360" y="144" text-anchor="middle">Subagent B</text>
+    <text class="d-sub" x="360" y="164" text-anchor="middle">Doc reading · own context</text>
+    <rect class="d-box soft" x="474" y="120" width="200" height="58" rx="10"/>
+    <text class="d-label sm" x="574" y="144" text-anchor="middle">Subagent C</text>
+    <text class="d-sub" x="574" y="164" text-anchor="middle">Code checks · own context</text>
+    <line class="d-edge accent" x1="146" y1="178" x2="310" y2="212"/><polygon class="d-arrow accent" points="303,212 313,213 306,204"/>
+    <line class="d-edge accent" x1="360" y1="178" x2="360" y2="206"/><polygon class="d-arrow accent" points="355,198 360,206 365,198"/>
+    <line class="d-edge accent" x1="574" y1="178" x2="410" y2="212"/><polygon class="d-arrow accent" points="414,204 407,213 417,212"/>
+    <rect class="d-box" x="280" y="206" width="160" height="40" rx="10"/>
+    <text class="d-label sm" x="360" y="231" text-anchor="middle">Summaries · synthesis</text>
+</svg>
+<div class="d-cap">Whatever a subagent burns is its own context — the main session receives summaries and stays light.</div>
+</div>
+
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/agents" target="_blank" rel="noopener">Run agents in parallel</a> · <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Create custom subagents</a>. Subagents never talk to each other — when they need to, that is the <a href="/p/en/tip-advanced/">advanced part</a>'s agent teams.</p>
+
+<h3>11. Build your own skills</h3>
+<p>A skill is a <strong>reusable prompt file</strong> living under <code>.claude/skills/</code>. Define a long instruction once instead of pasting it every time, and Claude pulls it out when a request matches its description — or you invoke it directly with a slash. Anything you keep asking for over and over is a signal to make a skill. Making one is simple: say <strong>"turn what we just did into a skill"</strong> and Claude writes it. Devices like this, built for predictable results, are collectively called a harness — and skills are the textbook example.</p>
+<p class="scn-sub">This wiki's <a href="/p/en/skl-what/">skill course</a> covers the topic in 12 parts, from principles to security. Official docs: <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Skills</a></p>
+
+<h3>12. Use a cheap model for subagents</h3>
+<p>Searching and fetching text does not need a frontier model — using one is waste. When delegating, just say <strong>"run the subagents on Haiku,"</strong> or pin it with the <code>model: haiku</code> field in a custom subagent definition. Splitting the work — fast cheap models for collection, expensive ones for synthesis and design judgment — saves tokens in a big way.</p>
+<p class="scn-sub">Per-model pricing: <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">official pricing docs</a> — as of this writing, Haiku 4.5 runs $1 in / $5 out per million tokens, a fraction of the top models.</p>
+
+<h3>13. Update CLAUDE.md when a session ends — capped at 150–200 lines</h3>
+<p>If a new convention or change came out of this session, put it in CLAUDE.md. Otherwise the Claude in your next session knows nothing about it. But CLAUDE.md is <strong>read unconditionally at every session start</strong>, so the longer it grows, the more startup context it eats — when you ask for the update, add "keep it under 150–200 lines" and Claude compresses accordingly. The official docs give the same advice: if you cannot skim it between meetings, it is too long.</p>
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Memory — CLAUDE.md</a></p>
+
+<h3>14. Use CLAUDE.md as a router</h3>
+<p>This resolves the tension between the cap in tip 13 and wanting to hand over lots of information. Instead of putting content into CLAUDE.md, put in <strong>a pointer: "if you need X, read this file."</strong> For example: "for the code structure, read <code>docs/architecture.md</code>." Claude goes to that file only when the need arises — full context delivered, standing cost saved. This too you can delegate: "add this as a router entry to CLAUDE.md."</p>
+
+<h3>15. When something looks wrong, interrupt — don't wait</h3>
+<p>The moment you see the direction is off, <strong>stop it</strong> (Esc). Then ask "my intent was X — why did you do it that way?" and Claude explains its reasoning; correct the course and let it continue. Waiting until the end wastes time and tokens, and worse, <strong>a wrong result sitting in the context contaminates every judgment after it</strong>. There is no reason to fear the stop button.</p>
+
+<h3>16. Push back — and when it lands, record it</h3>
+<p>First result disappointing, but you can't articulate the fix? Push back even abstractly — "make it more refined," "raise the completeness," "try a completely different angle." Claude now knows the first attempt missed, so the second try lands far more often. Most people try once and give up; push two or three times and you may be surprised. And <strong>the moment you get what you wanted is the moment to record it</strong> — "this is great, turn it into a skill" or "reflect this in CLAUDE.md." Skip the recording and you will walk the same road again next time.</p>
+
+<h3>17. Rewind time with <code>/rewind</code></h3>
+<p>When a mid-task result goes wrong, asking in prose to "please undo that" can introduce new errors during the undoing. Use <code>/rewind</code> instead — pick a point from the checkpoint list and <strong>every file edit after it rolls back wholesale</strong>. You can choose to restore the code, the conversation, or both.</p>
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/checkpointing" target="_blank" rel="noopener">Checkpointing</a> — edits accumulate as checkpoints automatically during a session.</p>
+
+<h3>18. Get notified with hooks</h3>
+<p>A hook is a command that fires at specific moments in Claude Code's lifecycle — task finished, approval needed, and so on. Say "set up a hook that plays a sound whenever a session finishes its work" and Claude writes it into your settings file. With one session you won't need it; once you run several projects and sessions in parallel, a device that tells you <strong>what finished where</strong> becomes essential. The minimal version: set <code>preferredNotifChannel</code> to <code>terminal_bell</code>.</p>
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank" rel="noopener">Automate actions with hooks</a> — see also this wiki's <a href="/p/en/hooks/">Hooks intro</a>.</p>
+
+<h3>19. Claude has eyes — hand it images</h3>
+<p>Error messages, a website you like, a UI screen — anything hard to describe in words, <strong>screenshot it and paste it in</strong>. Both the terminal and the desktop app accept dragged or pasted images, and Claude reads them. Throwing in a captured error screen beats transcribing the error text by hand, in both speed and accuracy.</p>
+
+<h3>20. Turn screenshots into templates</h3>
+<p>An application of tip 19. Capture a design you want as a reference — a card-news layout, a page with great color — hand it over and say explicitly: <strong>"make a template based on this image."</strong> The point is not copying it verbatim but extracting the color and layout structure into something reusable.</p>
+
+<h3>Next</h3>
+<p>The <a href="/p/en/tip-advanced/">advanced part</a> is parallel, autonomous, and scheduled — running sessions in worktrees without collisions, scheduling recurring jobs, steering from your phone, and commanding agent teams.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Tip &middot; <span class="pr-k">Created</span> 2026-08-14 &middot; <span class="pr-k">Updated</span> 2026-08-14</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/omc-concepts/">Core Terminology</a></li><li><a href="/p/en/news-20260716-kimi-k3/">Kimi K3 — a 2.8-trillion-parameter open-weight model reaches the frontier</a></li><li><a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking — Auto Mode and Stateless MCP</a></li><li><a href="/p/en/tip-beginner/">Beginner — 9 Habits That Save Context</a></li></ul>
+</nav>
+</body>
+</html>

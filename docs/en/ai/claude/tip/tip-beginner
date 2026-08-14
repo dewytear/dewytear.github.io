@@ -1,0 +1,63 @@
+<h2>Beginner — 9 Habits That Save Context</h2>
+
+<p>The first step to using Claude Code well is not a fancy feature but <strong>the habit of conserving context</strong>. Context is the total amount of conversation and code the model can hold at once; when it fills up, Claude starts forgetting what you agreed on earlier and giving odd answers. This document takes the beginner nine out of a public tutorial's 28 tips and checks each one against Anthropic's official documentation. Every tip links to the official page, so follow the links when you want to go deeper.</p>
+
+<div class="note">
+    <span class="nh">About this document (sources)</span>
+    · Skeleton: the beginner part (1–9) of a <a href="https://youtu.be/i9oKsPg-AoM" target="_blank" rel="noopener">public tutorial video — 28 Claude Code tips</a><br>
+    · Verified and supplemented against the <a href="https://code.claude.com/docs" target="_blank" rel="noopener">official Claude Code docs</a> (as of 2026-08-14) — features may change across versions
+</div>
+
+<h3>1. Start every project with <code>/init</code></h3>
+<p>When you bring Claude Code into a project that already has code, the first command is <code>/init</code>. Claude reads the codebase and writes a <code>CLAUDE.md</code> with build commands, test instructions, and project conventions — this file is a project guide that gets read automatically at the start of every session, so you stop re-explaining the project each time. If a <code>CLAUDE.md</code> already exists, it suggests improvements instead of overwriting.</p>
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">How Claude remembers your project</a> — this wiki's <a href="#!ccb-claudemd">CLAUDE.md hands-on</a> and <a href="#!claude-md-commandments">CLAUDE.md commandments</a> cover the same ground.</p>
+
+<h3>2. Turn on the status line</h3>
+<p>If you work in the terminal, set up a status bar with <code>/statusline</code>. The model in use, the git branch, and — most importantly — <strong>the remaining context percentage</strong> stay visible under the input box. Once you can see how full the context is, habits 3 through 5 below come naturally. The desktop app already shows this, so no setup needed there.</p>
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/statusline" target="_blank" rel="noopener">Status line configuration</a> — the displayed items are fully scriptable.</p>
+
+<h3>3. Keep the context small</h3>
+<p>A command like "review the entire codebase" burns tens of percent of your context in one go. Have Claude <strong>split the problem first</strong> — not "fix the payment system" but "break the payment system fix into small steps," then run each step separately. However good the model is, it forgets earlier conversation once context runs short.</p>
+
+<h3>4. Find the token hogs with <code>/context</code></h3>
+<p>If your context fills too fast, type <code>/context</code>. It visualizes which files, tools, and messages are taking how much of the window. The culprit is usually one of three things: a large file read whole, an MCP server that loaded its full tool definitions (tip 22 in the advanced part), or a long conversation history.</p>
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">Slash commands reference</a></p>
+
+<h3>5. Around 60%, run <code>/compact</code>; between tasks, run <code>/clear</code></h3>
+<p>The difference matters. <code>/compact</code> <strong>summarizes and compresses</strong> the conversation history — you can say what to keep ("keep the decisions"), and the thread continues. <code>/clear</code> is a <strong>full reset</strong>, the same as opening a new conversation. When one task ends and another begins, resetting beats compressing — leftovers from the previous task cannot contaminate the new one.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 268" role="img" aria-label="Two paths of context management: /compact summarizes the history and keeps the thread going; /clear empties everything and starts fresh. Compact when the task continues, clear when a new task begins">
+    <text class="d-label" x="360" y="24" text-anchor="middle">/compact vs /clear — compress and keep vs empty and restart</text>
+    <rect class="d-box" x="270" y="44" width="180" height="40" rx="10"/>
+    <text class="d-label sm" x="360" y="69" text-anchor="middle">Context at 60%+</text>
+    <line class="d-edge" x1="320" y1="84" x2="184" y2="116"/><polygon class="d-arrow" points="188,109 180,118 190,119"/>
+    <line class="d-edge" x1="400" y1="84" x2="536" y2="116"/><polygon class="d-arrow" points="530,119 540,118 532,109"/>
+    <rect class="d-box accent" x="64" y="116" width="240" height="44" rx="10"/>
+    <text class="d-label sm" x="184" y="143" text-anchor="middle">/compact — summarize</text>
+    <rect class="d-box" x="416" y="116" width="240" height="44" rx="10"/>
+    <text class="d-label sm" x="536" y="143" text-anchor="middle">/clear — full reset</text>
+    <text class="d-sub" x="184" y="184" text-anchor="middle">Decisions stay, history shrinks</text>
+    <text class="d-sub" x="184" y="202" text-anchor="middle">When the same task continues</text>
+    <text class="d-sub" x="536" y="184" text-anchor="middle">Same as a brand-new conversation</text>
+    <text class="d-sub" x="536" y="202" text-anchor="middle">When moving to the next task</text>
+    <text class="d-sub" x="360" y="244" text-anchor="middle">One test decides it — will this context matter next turn?</text>
+</svg>
+<div class="d-cap">Compress when the thread still matters; reset when the task changes. If unsure, check the status line.</div>
+</div>
+
+<h3>6. Start in plan mode</h3>
+<p>Plan mode touches no files — it only <strong>reads, analyzes, and plans</strong> (switch with <code>Shift+Tab</code> in the terminal). Since nothing changes, you can hand over anything with peace of mind, and while planning Claude asks you questions that narrow down your intent. The harder your request is to spell out, the more plan mode is worth.</p>
+<p class="scn-sub">One piece of background — since 14 August 2026, new sessions default to <strong>auto mode</strong>, which no longer asks approval at every step (<a href="#!news-20260814-auto-mode-stateless-mcp">Defaults That Stop Asking</a>). That makes "plan before touching anything" more important, not less — execution got faster, so agree on the direction first. Mode details: <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permissions and modes</a></p>
+
+<h3>7. Treat it like a junior developer</h3>
+<p>If you say "write a function that adjusts padding by screen width," you have already done the hardest work yourself — defining the problem and choosing the approach. Give it the problem instead: <strong>"the video gets cut off on some devices — how should we fix this?"</strong> Claude can read the whole project and propose an approach, so ideating together and letting it execute its own plan uses the tool at full size.</p>
+
+<h3>8. Make Claude ask you back</h3>
+<p>When your requirement is fuzzy, end the prompt with: <strong>"keep asking me questions until you understand what I want at 95%."</strong> Claude fires off clarifying questions, and once that exchange ends it heads in the right direction from the start. Answering five questions is cheaper than redoing vague instructions three times.</p>
+
+<h3>9. Plant self-checks into the to-dos</h3>
+<p>When you hand over a task list, spell out the checks at the end — "open Chrome DevTools and check console errors," "do not move on until everything passes," and above all <strong>"do not move to the next to-do until you are 95%+ confident the current one is complete and correct."</strong> Without self-checks, ten to-dos each finish at 60% completeness, the gaps pile up, and later you burn tokens hunting causes you can no longer find. Plant the checks and the first deliverable comes out at a different level.</p>
+
+<h3>Next</h3>
+<p>That covers keeping a single session clean. The <a href="#!tip-intermediate">intermediate part</a> is about turning sessions into a system — parallel subagents, your own skills, and CLAUDE.md as a router.</p>
