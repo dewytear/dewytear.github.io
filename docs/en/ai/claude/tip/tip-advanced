@@ -78,6 +78,53 @@ claude -w motion-logic
 # "set permissions so rm and force pushes always ask me first"</span></code></pre>
 <p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permissions</a> — background in <a href="#!news-20260814-auto-mode-stateless-mcp">Defaults That Stop Asking</a>.</p>
 
+<h3>Why separate the roles — self-preference bias and splitting the verifier</h3>
+<p>Before the next tip, let's cover why you'd bother splitting roles at all. There's a reason, and it has a name — <strong>self-approval bias</strong>, or self-preference bias in the research literature. It's an LLM's tendency to rate work more favorably when it produced that work, or when it was produced the way it would have produced it.</p>
+<p>This isn't a hunch; it's been measured. One study showed that for outputs human annotators judged <strong>equal in quality</strong>, LLM evaluators scored their own higher. The more striking part came next — <strong>the ability to recognize one's own output correlated linearly with the strength of that preference</strong>. It isn't a coincidental fondness for its own work; the evidence points to <strong>favoring it because it recognizes it</strong>.</p>
+<p>And there's one structure where this really bites: <strong>a single agent running plan → execute → verify in sequence</strong>. When the opening premise is wrong, the same judgment that made it also grades it, so "approved" keeps getting stamped on top of a bad foundation. It's grading its own paper while carrying all the earlier context forward, so the bias doesn't happen once — it becomes a <strong>loop</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="Self-approval loop versus separated roles: on the left one agent handles plan, execute, and verify, grading its own output; on the right planner, designer, and verifier are separate and the verifier can send work back to the planning stage">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Self-approval loop vs separated roles</text>
+    <line class="d-edge dash" x1="360" y1="40" x2="360" y2="288"/>
+    <text class="d-label sm" x="184" y="60" text-anchor="middle">One agent — self-approval loop</text>
+    <rect class="d-box" x="64" y="76" width="240" height="32" rx="9"/>
+    <text class="d-label sm" x="184" y="97" text-anchor="middle">Plan</text>
+    <line class="d-edge" x1="184" y1="108" x2="184" y2="124"/><polygon class="d-arrow" points="179,116 184,124 189,116"/>
+    <rect class="d-box" x="64" y="124" width="240" height="32" rx="9"/>
+    <text class="d-label sm" x="184" y="145" text-anchor="middle">Execute</text>
+    <line class="d-edge" x1="184" y1="156" x2="184" y2="172"/><polygon class="d-arrow" points="179,164 184,172 189,164"/>
+    <rect class="d-box accent" x="64" y="172" width="240" height="32" rx="9"/>
+    <text class="d-label sm" x="184" y="193" text-anchor="middle">Verify — grades its own output</text>
+    <text class="d-sub" x="184" y="232" text-anchor="middle">Even when the premise is wrong,</text>
+    <text class="d-sub" x="184" y="250" text-anchor="middle">the same judgment approves it next</text>
+    <text class="d-label sm" x="536" y="60" text-anchor="middle">Separated roles — there's a way back</text>
+    <rect class="d-box" x="416" y="76" width="230" height="32" rx="9"/>
+    <text class="d-label sm" x="531" y="97" text-anchor="middle">Planner</text>
+    <line class="d-edge" x1="531" y1="108" x2="531" y2="124"/><polygon class="d-arrow" points="526,116 531,124 536,116"/>
+    <rect class="d-box" x="416" y="124" width="230" height="32" rx="9"/>
+    <text class="d-label sm" x="531" y="145" text-anchor="middle">Designer</text>
+    <line class="d-edge" x1="531" y1="156" x2="531" y2="172"/><polygon class="d-arrow" points="526,164 531,172 536,164"/>
+    <rect class="d-box accent" x="416" y="172" width="230" height="32" rx="9"/>
+    <text class="d-label sm" x="531" y="193" text-anchor="middle">Verifier — assigned to refute</text>
+    <path class="d-edge accent" d="M646 188 L672 188 L672 92 L654 92"/><polygon class="d-arrow accent" points="656,87 648,92 656,97"/>
+    <text class="d-sub" x="688" y="144" text-anchor="middle">send back</text>
+    <text class="d-sub" x="531" y="232" text-anchor="middle">Blocked work returns to plan or design</text>
+    <text class="d-sub" x="531" y="250" text-anchor="middle">The premise gets a second chance</text>
+    <text class="d-sub" x="360" y="282" text-anchor="middle">The point isn't headcount — it's separating responsibility</text>
+</svg>
+<div class="d-cap">One side grades its own answer; the other has a way back. The difference isn't the number of agents — it's the return path.</div>
+</div>
+
+<p>So does swapping in a different model for review fix it? Half of it. Handing review to another model does push self-preference bias down. But another trap is waiting — <strong>conformity and sycophancy</strong>. Agents absorb each other's reasoning and the original conclusion ends up <strong>reinforced rather than challenged</strong>, a failure mode well documented in multi-agent debate research. The <strong>echo chamber</strong>, where minority agents drift toward whatever the majority answered, belongs to the same family.</p>
+<p>So the response comes in two layers.</p>
+<ul>
+    <li><strong>Split the roles and build a return path</strong> — <code>planner → designer → verifier</code>, and when the verifier finds a problem the work <strong>goes back</strong> to planning or design. Without a way back, half the value of splitting evaporates. Start with subagents (intermediate part, tip 10), and move up to the agent teams in the next tip when they need to talk to each other.</li>
+    <li><strong>Assign the verifier to refute</strong> — this is the real fork. "Please review this" invites conformity. Instead, make disagreement the default: <strong>"assume this plan is wrong and argue against it; if you're unsure, rule toward sending it back."</strong> That's the same reason <code>ralplan</code> in tip 26 keeps a separate critic role.</li>
+</ul>
+<p>In the end it isn't about spawning lots of agents — it's about <strong>deliberately separating responsibility for planning, execution, and verification</strong>. One agent doing everything approves itself; agents split up but getting along approve each other.</p>
+<p class="scn-sub">Sources: <a href="https://arxiv.org/pdf/2404.13076" target="_blank" rel="noopener">LLM Evaluators Recognize and Favor Their Own Generations</a> (NeurIPS 2024 — the linear correlation between self-recognition and self-preference) · <a href="https://arxiv.org/pdf/2604.22891" target="_blank" rel="noopener">Quantifying and Mitigating Self-Preference Bias of LLM Judges</a> · <a href="https://arxiv.org/html/2604.02668v2" target="_blank" rel="noopener">Sycophancy propagation in multi-agent systems</a> · <a href="https://arxiv.org/pdf/2501.13381" target="_blank" rel="noopener">The conformity of large language models</a></p>
+
 <h3>28. Agent teams — agents that talk to each other</h3>
 <p>Easy to confuse with subagents, but the structure differs. <strong>Subagents work in parallel yet never talk to each other</strong> — they only report to the main session. <strong>Agent teams are independent sessions that talk to each other, share a task list, and claim work</strong> — and you can talk to each teammate individually. If your picture is a planner, a marketer, and a designer coordinating with each other, you want an agent team, not subagents. It costs more tokens, but on tasks where teammates should challenge and complement each other's output, the results are clearly different.</p>
 
@@ -132,15 +179,6 @@ claude -w motion-logic
         </tbody>
     </table>
 </div>
-
-<h3>Applying this to this wiki</h3>
-<ul>
-    <li><strong>Routines (in use)</strong> — this wiki's morning briefing runs as a Routine. Every morning at 7 KST, the cloud scans AI news and drafts registration candidates before anyone turns a computer on.</li>
-    <li><strong>Worth trying: natural-language DB queries</strong> — this wiki's likes and view counts accumulate in a Cloudflare D1 database. Connect it over MCP and <strong>"which documents gained the most views this week?"</strong> becomes a plain-language question — a data-driven way to pick the next topic.</li>
-    <li><strong>Worth trying: worktrees</strong> — work runs sequentially on one branch today. On a day when a long translation batch collides with an urgent bugfix, two worktrees mean neither waits for the other.</li>
-    <li><strong>Worth trying: deny rules</strong> — in this repository, master is the deployment, which makes <code>git push --force</code> especially dangerous. First candidate for a deny rule.</li>
-    <li><strong>Worth trying: ralplan</strong> — for <strong>structural decisions that are hard to walk back</strong>, like reworking the knowledge-graph model or merging documents, running the planner·architect·critic consensus first is the safer path.</li>
-</ul>
 
 <h3>Closing</h3>
 <p>The 28 tips boil down to three principles. <strong>Context is a budget</strong> (beginner) — conserve it, split it, make it visible. <strong>Repetition belongs in the system</strong> (intermediate) — freeze good prompts into skills and CLAUDE.md. <strong>Parallelism starts with isolation</strong> (advanced) — put worktrees and permission rules in place first, then extend autonomy. The tools will keep changing; these three should outlast them.</p>

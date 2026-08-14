@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 
-이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 128개 문서 · 395개 개념.
+이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 128개 문서 · 396개 개념.
 
 License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 밝히면 자유롭게 인용·재사용할 수 있다.
 
@@ -133,7 +133,7 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 ## Tip (AI · Claude · Tip)
 - [초급 — 컨텍스트를 아끼는 습관 9가지](https://dewytear.github.io/docs/ko/ai/claude/tip/tip-beginner): Claude Code 입문 팁 9가지를 공식 문서와 대조해 정리 — /init으로 CLAUDE.md 생성, 스테이터스 라인, 컨텍스트 작게 유지, /context로 토큰 하마 찾기, /compact vs /clear, 플랜 모드(auto 기본값 시대의 의미), 문제로 묻기, 95% 되묻기 프롬프트, 투두 자가 점검 · [EN](https://dewytear.github.io/docs/en/ai/claude/tip/tip-beginner) · [JA](https://dewytear.github.io/docs/ja/ai/claude/tip/tip-beginner)
 - [중급 — 세션을 시스템으로 만드는 11가지](https://dewytear.github.io/docs/ko/ai/claude/tip/tip-intermediate): 반복을 시스템에 옮기는 중급 팁 11가지 — 서브에이전트 병렬(독립 컨텍스트·요약 보고), 나만의 스킬 만들기, 서브에이전트에 Haiku 분업, CLAUDE.md 150~200줄 상한 갱신 습관, CLAUDE.md 라우터, 중간에 끊기(Esc), 닦달 후 기록, /rewind 체크포인트, 훅 알림, 이미지 입력, 스크린샷 템플릿 · [EN](https://dewytear.github.io/docs/en/ai/claude/tip/tip-intermediate) · [JA](https://dewytear.github.io/docs/ja/ai/claude/tip/tip-intermediate)
-- [고급 — 병렬·자율·예약의 8가지](https://dewytear.github.io/docs/ko/ai/claude/tip/tip-advanced): 병렬·자율·예약 고급 팁 8가지 — claude --worktree로 충돌 없는 병렬 세션, MCP 대신 API 직접 호출(컨텍스트 비용), /loop와 루틴(클라우드 스케줄 실행)의 3계층 예약, claude remote-control 폰 원격 조종, DB 자연어 질의, ultrathink와 OMC ralplan(합의 기반 계획), settings.json 권한 편집(auto 모드의 hard deny), 서브에이전트 vs 에이전트 팀(+OMC team 모드) · [EN](https://dewytear.github.io/docs/en/ai/claude/tip/tip-advanced) · [JA](https://dewytear.github.io/docs/ja/ai/claude/tip/tip-advanced)
+- [고급 — 병렬·자율·예약의 8가지](https://dewytear.github.io/docs/ko/ai/claude/tip/tip-advanced): 병렬·자율·예약 고급 팁 8가지 + 자기승인 편향 — claude --worktree로 충돌 없는 병렬 세션, MCP 대신 API 직접 호출(컨텍스트 비용), /loop와 루틴(클라우드 스케줄 실행)의 3계층 예약, claude remote-control 폰 원격 조종, DB 자연어 질의, ultrathink와 OMC ralplan(합의 기반 계획), settings.json 권한 편집(auto 모드의 hard deny), 서브에이전트 vs 에이전트 팀(+OMC team 모드). 역할을 나누는 이유로 자기승인(self-preference) 편향을 다룬다 — 자기 출력을 알아보는 능력과 자기 선호가 선형 상관하고, 한 에이전트의 계획→실행→검증은 그 편향이 루프가 된다. 모델을 바꿔도 동조·에코 챔버가 남으므로 계획자→설계자→검증자 반려 경로 + 검증자에게 반박을 맡기는 두 겹 대응이 필요하다 · [EN](https://dewytear.github.io/docs/en/ai/claude/tip/tip-advanced) · [JA](https://dewytear.github.io/docs/ja/ai/claude/tip/tip-advanced)
 
 ## GraphDB (AI · GraphDB)
 - [오라클 온톨로지와 프로퍼티 그래프 — 테이블을 지식의 지도로](https://dewytear.github.io/docs/ko/ai/graphdb/news-20260710-oracle-ontology-property-graph): 오라클의 온톨로지·프로퍼티 그래프 접근을 정리 — RDF vs 프로퍼티 그래프, 메타데이터 뷰 그래프 생성, PGQL·SQL/PGQ 멀티홉·순환 질의, 그래프 알고리즘, Select AI 자연어 질의를 공식 문서 확인과 도식·용어 사전으로 설명 · [EN](https://dewytear.github.io/docs/en/ai/graphdb/news-20260710-oracle-ontology-property-graph) · [JA](https://dewytear.github.io/docs/ja/ai/graphdb/news-20260710-oracle-ontology-property-graph)
@@ -184,7 +184,6 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 ## 허브 문서 (가장 많이 참조됨 — 분석 진입점)
 - [하네스의 구성과 효과](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-anatomy): 피참조 11회
 - [설치](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-install): 피참조 10회
-- [Harness 플러그인 — 소개](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-intro): 피참조 8회
 - [볼트 체계 — 메인 볼트와 위키 볼트](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-vaults): 피참조 8회
 - [Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260724-claude-opus-5): 피참조 8회
 - [스킬 심화 — 개요](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-overview): 피참조 8회
@@ -192,13 +191,14 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다](https://dewytear.github.io/docs/ko/ai/graphdb/gdb-graphrag): 피참조 7회
 - [핵심 개념 쉽게](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-concepts): 피참조 7회
 - [첫 하네스 실행 — 영업·수주 커스터마이징](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-first-run): 피참조 7회
+- [Harness 플러그인 — 소개](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-intro): 피참조 7회
 - [메타 하네스 스킬 설치 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-install): 피참조 7회
 - [하네스 실행하기 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-run): 피참조 7회
 - [무엇을 담는가 — 지식 캡처](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-capture): 피참조 7회
 - [LLM Wiki — 개요](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-overview): 피참조 7회
 - [묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260814-auto-mode-stateless-mcp): 피참조 7회
 - [스킬의 특장점](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-strengths): 피참조 7회
+- [고급 — 병렬·자율·예약의 8가지](https://dewytear.github.io/docs/ko/ai/claude/tip/tip-advanced): 피참조 7회
 - [LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260710-llm-wiki-knowledge-context): 피참조 6회
 - [핵심 용어](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-concepts): 피참조 6회
 - [5단계 한눈에 보기](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-levels): 피참조 6회
-- [고급 — 병렬·자율·예약의 8가지](https://dewytear.github.io/docs/ko/ai/claude/tip/tip-advanced): 피참조 6회
