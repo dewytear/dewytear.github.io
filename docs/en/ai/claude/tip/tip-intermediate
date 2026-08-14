@@ -104,14 +104,5 @@ so next time "card-news style" gets me exactly this.</code></pre>
     </table>
 </div>
 
-<h3>Applying this to this wiki</h3>
-<ul>
-    <li><strong>Skills (in use)</strong> — <code>.claude/skills/im-not-ai</code> is the real thing: the checklist that strips AI-sounding prose, frozen as a skill and run on every document with the same standard. Next candidate: <strong>the registration pipeline</strong> — list node, doc-entries, regeneration, gates — one skill call instead of remembering the order every time.</li>
-    <li><strong>CLAUDE.md as a router (in use)</strong> — this wiki's CLAUDE.md is exactly this shape. Translation work? It points to <code>tools/i18n.md</code>. Change types? <code>tools/change-types.md</code>. The file itself carries only the gist of each rule.</li>
-    <li><strong>The update habit (in use)</strong> — every decision gets written in as a dated rule (e.g. "decided 2026-08-11 — companies and products by real name"). The next session's Claude never re-asks a settled question.</li>
-    <li><strong>Worth trying: hooks</strong> — not used yet. One line — "set up a hook that runs <code>python3 tools/check_all.py</code> before every commit" — and a commit that skipped the gates becomes impossible.</li>
-    <li><strong>Worth trying: /rewind</strong> — when a mass style edit or bulk replacement goes the wrong way, today it's undone with git. Before the commit, /rewind is faster.</li>
-</ul>
-
 <h3>Next</h3>
 <p>The <a href="#!tip-advanced">advanced part</a> is parallel, autonomous, and scheduled — running sessions in worktrees without collisions, scheduling recurring jobs, steering from your phone, and commanding agent teams.</p>

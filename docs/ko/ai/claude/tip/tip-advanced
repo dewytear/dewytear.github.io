@@ -78,6 +78,53 @@ claude -w motion-logic
 # 명령은 꼭 나한테 물어보게 권한 설정해 줘"</span></code></pre>
 <p class="scn-sub">공식 문서: <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permissions</a> — 배경은 <a href="#!news-20260814-auto-mode-stateless-mcp">묻지 않는 기본값</a> 기사를 보세요.</p>
 
+<h3>왜 나눠야 하나 — 자기승인 편향과 검증의 분리</h3>
+<p>다음 팁으로 넘어가기 전에, 왜 굳이 역할을 갈라야 하는지부터 짚고 갈게요. 이유가 하나 있는데 이름이 붙어 있습니다 — <strong>자기승인(self-approval) 편향</strong>, 연구 쪽 용어로는 자기 선호(self-preference) 편향이에요. LLM이 자기가 만들었거나 자기와 비슷한 방식으로 만들어진 결과를 더 타당하게 평가하는 경향입니다.</p>
+<p>감이 아니라 측정된 현상이에요. 한 연구는 사람 평가자가 <strong>동등한 품질</strong>이라고 본 결과물을, LLM 평가자는 자기 것에 더 높은 점수를 준다는 걸 보였습니다. 더 인상적인 건 그다음입니다 — <strong>자기 출력을 알아보는 능력(self-recognition)과 자기 선호의 강도가 선형으로 상관</strong>했어요. 우연히 자기 걸 좋아하는 게 아니라, <strong>알아보기 때문에 편든다</strong>는 쪽을 가리킵니다.</p>
+<p>여기서 문제가 생기는 구조가 하나 있습니다. <strong>한 에이전트가 계획 → 실행 → 검증을 순서대로 다 하는 구조</strong>예요. 처음 세운 전제가 틀려도 같은 판단이 이어서 검증을 맡으니, 틀린 전제 위에 "통과" 도장이 계속 찍힙니다. 자기 출력을 자기가 채점하는 데다 앞선 맥락까지 그대로 들고 가니, 편향이 한 번으로 끝나지 않고 <strong>루프</strong>가 되는 거죠.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="자기승인 루프와 역할 분리의 비교: 왼쪽은 한 에이전트가 계획·실행·검증을 모두 맡아 자기 출력을 자기가 평가하는 구조, 오른쪽은 계획자·설계자·검증자로 나누고 검증자가 반려하면 계획 단계로 되돌아가는 구조">
+    <text class="d-label" x="360" y="24" text-anchor="middle">자기승인 루프 vs 역할 분리</text>
+    <line class="d-edge dash" x1="360" y1="40" x2="360" y2="288"/>
+    <text class="d-label sm" x="184" y="60" text-anchor="middle">한 에이전트 — 자기승인 루프</text>
+    <rect class="d-box" x="64" y="76" width="240" height="32" rx="9"/>
+    <text class="d-label sm" x="184" y="97" text-anchor="middle">계획</text>
+    <line class="d-edge" x1="184" y1="108" x2="184" y2="124"/><polygon class="d-arrow" points="179,116 184,124 189,116"/>
+    <rect class="d-box" x="64" y="124" width="240" height="32" rx="9"/>
+    <text class="d-label sm" x="184" y="145" text-anchor="middle">실행</text>
+    <line class="d-edge" x1="184" y1="156" x2="184" y2="172"/><polygon class="d-arrow" points="179,164 184,172 189,164"/>
+    <rect class="d-box accent" x="64" y="172" width="240" height="32" rx="9"/>
+    <text class="d-label sm" x="184" y="193" text-anchor="middle">검증 — 자기 출력을 자기가</text>
+    <text class="d-sub" x="184" y="232" text-anchor="middle">처음 전제가 틀려도</text>
+    <text class="d-sub" x="184" y="250" text-anchor="middle">같은 판단이 이어서 승인한다</text>
+    <text class="d-label sm" x="536" y="60" text-anchor="middle">역할 분리 — 반려 경로가 있다</text>
+    <rect class="d-box" x="416" y="76" width="230" height="32" rx="9"/>
+    <text class="d-label sm" x="531" y="97" text-anchor="middle">계획자</text>
+    <line class="d-edge" x1="531" y1="108" x2="531" y2="124"/><polygon class="d-arrow" points="526,116 531,124 536,116"/>
+    <rect class="d-box" x="416" y="124" width="230" height="32" rx="9"/>
+    <text class="d-label sm" x="531" y="145" text-anchor="middle">설계자</text>
+    <line class="d-edge" x1="531" y1="156" x2="531" y2="172"/><polygon class="d-arrow" points="526,164 531,172 536,164"/>
+    <rect class="d-box accent" x="416" y="172" width="230" height="32" rx="9"/>
+    <text class="d-label sm" x="531" y="193" text-anchor="middle">검증자 — 반박을 맡는다</text>
+    <path class="d-edge accent" d="M646 188 L672 188 L672 92 L654 92"/><polygon class="d-arrow accent" points="656,87 648,92 656,97"/>
+    <text class="d-sub" x="688" y="144" text-anchor="middle">반려</text>
+    <text class="d-sub" x="531" y="232" text-anchor="middle">막히면 계획·설계로 되돌린다</text>
+    <text class="d-sub" x="531" y="250" text-anchor="middle">전제를 다시 세울 기회가 생긴다</text>
+    <text class="d-sub" x="360" y="282" text-anchor="middle">나누는 목적은 사람 수가 아니라 — 책임의 분리</text>
+</svg>
+<div class="d-cap">한쪽은 자기가 낸 답을 자기가 채점하고, 다른 쪽은 되돌릴 길이 있다. 차이는 에이전트 개수가 아니라 반려 경로.</div>
+</div>
+
+<p>그럼 모델을 바꿔서 교차 검토하면 해결될까요? 절반만 맞습니다. 다른 모델에게 맡기면 자기승인 편향 자체는 줄어드는 방향이 맞아요. 그런데 이번엔 다른 함정이 기다립니다 — <strong>동조(conformity)와 아첨(sycophancy)</strong>입니다. 에이전트들이 서로의 논리를 받아들이면서 <strong>기존 결론이 반박되는 게 아니라 오히려 강화</strong>되는 현상으로, 멀티에이전트 토론 연구에서 잘 문서화된 실패 모드예요. 다수가 같은 답을 내면 소수 의견이 그쪽으로 따라가는 <strong>에코 챔버</strong>도 같은 계열입니다.</p>
+<p>정리하면 대응은 두 겹이에요.</p>
+<ul>
+    <li><strong>역할을 나누고 반려 경로를 만든다</strong> — <code>계획자 → 설계자 → 검증자</code>로 갈라, 검증자가 문제를 찾으면 계획이나 설계 단계로 <strong>되돌립니다</strong>. 되돌릴 길이 없으면 나눠 놓은 의미가 절반으로 줄어요. 서브에이전트로 시작하고(중급 편 10번), 서로 대화가 필요해지면 다음 팁의 에이전트 팀으로 올라가면 됩니다.</li>
+    <li><strong>검증자에게 반박을 시킨다</strong> — 여기가 진짜 갈림길입니다. "검토해 줘"라고 하면 동조가 일어나기 쉬워요. 대신 <strong>"이 계획이 틀렸다고 가정하고 반박해. 확신이 없으면 반려 쪽으로 판정해"</strong>처럼 <strong>반대를 기본값</strong>으로 세우세요. 26번의 <code>ralplan</code>이 critic 역할을 따로 두는 것도 같은 이유입니다.</li>
+</ul>
+<p>결국 중요한 건 에이전트를 많이 만드는 게 아니라, <strong>계획·실행·검증의 책임을 의도적으로 갈라 두는 것</strong>이에요. 하나가 다 하면 자기를 승인하고, 사이좋게 나누기만 하면 서로를 승인합니다.</p>
+<p class="scn-sub">근거: <a href="https://arxiv.org/pdf/2404.13076" target="_blank" rel="noopener">LLM Evaluators Recognize and Favor Their Own Generations</a>(NeurIPS 2024 — 자기인식과 자기 선호의 선형 상관) · <a href="https://arxiv.org/pdf/2604.22891" target="_blank" rel="noopener">Quantifying and Mitigating Self-Preference Bias of LLM Judges</a> · <a href="https://arxiv.org/html/2604.02668v2" target="_blank" rel="noopener">멀티에이전트 시스템의 아첨 전파</a> · <a href="https://arxiv.org/pdf/2501.13381" target="_blank" rel="noopener">LLM의 동조 현상</a></p>
+
 <h3>28. 에이전트 팀 — 서로 대화하는 에이전트들</h3>
 <p>서브에이전트와 헷갈리기 쉬운데, 구조가 달라요. <strong>서브에이전트는 병렬로 일하되 서로 대화하지 않고</strong> 메인에게 보고만 합니다. <strong>에이전트 팀은 독립된 세션들이 서로 대화하고, 작업 목록을 공유하며 일을 나눠 가져요</strong> — 각 팀원과 여러분이 개별 대화도 할 수 있습니다. 기획자·마케터·디자이너 에이전트를 두고 서로 소통시키며 일을 시키는 그림이라면 서브에이전트가 아니라 에이전트 팀이에요. 토큰은 더 들지만, 팀원끼리 서로의 결과를 반박·보완해야 하는 과제에서는 성과가 확실히 다릅니다.</p>
 
@@ -132,15 +179,6 @@ claude -w motion-logic
         </tbody>
     </table>
 </div>
-
-<h3>이 위키에 적용하면</h3>
-<ul>
-    <li><strong>루틴 (이미 사용)</strong> — 이 위키의 아침 브리핑이 루틴으로 돌아요. 매일 아침 KST 7시에 AI 뉴스를 훑고 등재 후보를 정리해 보고하는 일을, 사람이 컴퓨터를 켜기 전에 클라우드가 끝내 둡니다.</li>
-    <li><strong>적용해 볼 것: DB 자연어 질의</strong> — 이 위키의 좋아요·조회수는 Cloudflare D1 데이터베이스에 쌓입니다. MCP로 연결하면 <strong>"이번 주 조회수가 가장 많이 오른 문서는?"</strong> 같은 질문을 SQL 없이 던질 수 있어요 — 다음 글감을 데이터로 고르는 길입니다.</li>
-    <li><strong>적용해 볼 것: 워크트리</strong> — 지금은 한 브랜치에서 순차로 작업해요. 긴 번역 배치와 급한 버그픽스가 겹치는 날엔 워크트리 두 개로 나누면 서로 기다릴 필요가 없습니다.</li>
-    <li><strong>적용해 볼 것: 거부 규칙</strong> — 이 저장소는 master가 곧 배포라 <code>git push --force</code>가 특히 위험해요. 거부 규칙 1순위 후보입니다.</li>
-    <li><strong>적용해 볼 것: ralplan</strong> — 지식 그래프 모델 개편이나 문서 병합처럼 <strong>한 번 정하면 되돌리기 어려운 구조 결정</strong>에는, planner·architect·critic 합의를 거치는 편이 안전합니다.</li>
-</ul>
 
 <h3>마치며</h3>
 <p>28가지를 관통하는 원칙은 셋으로 줄어들어요. <strong>컨텍스트는 예산이다</strong>(초급) — 아끼고, 쪼개고, 시각화하라. <strong>반복은 시스템으로</strong>(중급) — 잘 나온 프롬프트는 스킬과 CLAUDE.md에 굳혀라. <strong>병렬은 격리부터</strong>(고급) — 워크트리와 권한 규칙을 먼저 두고 자율을 늘려라. 도구는 계속 바뀌겠지만 이 세 원칙은 오래갈 겁니다.</p>

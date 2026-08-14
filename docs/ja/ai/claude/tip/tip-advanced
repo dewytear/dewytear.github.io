@@ -78,6 +78,53 @@ claude -w motion-logic
 # 危険なコマンドは必ず私に聞くよう権限を設定して」</span></code></pre>
 <p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener">Permissions</a> — 背景は<a href="#!news-20260814-auto-mode-stateless-mcp">尋ねない既定値</a>の記事をどうぞ。</p>
 
+<h3>なぜ分けるのか — 自己承認バイアスと検証の分離</h3>
+<p>次のコツに進む前に、そもそもなぜ役割を分けるのかを押さえておきましょう。理由があって、しかも名前が付いています — <strong>自己承認（self-approval）バイアス</strong>、研究の用語では自己選好（self-preference）バイアスです。LLM が、自分が作ったものや自分と似たやり方で作られたものを、より妥当に評価してしまう傾向のこと。</p>
+<p>勘ではなく、測定された現象です。ある研究では、人の評価者が<strong>同等の品質</strong>だと見た成果物を、LLM の評価者は自分のものに高い点をつけました。さらに印象的なのはその先で、<strong>自分の出力を見分ける能力（self-recognition）と自己選好の強さが線形に相関</strong>していたんです。たまたま自分のものが好きなのではなく、<strong>見分けられるから贔屓する</strong>ほうを示しています。</p>
+<p>そして、これが特に効いてくる構造がひとつあります。<strong>一つのエージェントが計画 → 実行 → 検証を順にすべてこなす構造</strong>です。最初に立てた前提が間違っていても、同じ判断がそのまま検証を担当するので、間違った土台の上に「合格」の判が押され続けます。自分の答案を自分で採点したうえ、前の文脈まで持ち越すので、バイアスは一度では終わらず<strong>ループ</strong>になります。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="自己承認ループと役割分離の比較: 左は一つのエージェントが計画・実行・検証をすべて担い自分の出力を自分で評価する構造、右は計画者・設計者・検証者に分け、検証者が差し戻すと計画の段階へ戻る構造">
+    <text class="d-label" x="360" y="24" text-anchor="middle">自己承認ループ vs 役割の分離</text>
+    <line class="d-edge dash" x1="360" y1="40" x2="360" y2="288"/>
+    <text class="d-label sm" x="184" y="60" text-anchor="middle">一つのエージェント — 自己承認</text>
+    <rect class="d-box" x="64" y="76" width="240" height="32" rx="9"/>
+    <text class="d-label sm" x="184" y="97" text-anchor="middle">計画</text>
+    <line class="d-edge" x1="184" y1="108" x2="184" y2="124"/><polygon class="d-arrow" points="179,116 184,124 189,116"/>
+    <rect class="d-box" x="64" y="124" width="240" height="32" rx="9"/>
+    <text class="d-label sm" x="184" y="145" text-anchor="middle">実行</text>
+    <line class="d-edge" x1="184" y1="156" x2="184" y2="172"/><polygon class="d-arrow" points="179,164 184,172 189,164"/>
+    <rect class="d-box accent" x="64" y="172" width="240" height="32" rx="9"/>
+    <text class="d-label sm" x="184" y="193" text-anchor="middle">検証 — 自分の出力を自分で</text>
+    <text class="d-sub" x="184" y="232" text-anchor="middle">前提が間違っていても</text>
+    <text class="d-sub" x="184" y="250" text-anchor="middle">同じ判断が続けて承認する</text>
+    <text class="d-label sm" x="536" y="60" text-anchor="middle">役割の分離 — 戻す道がある</text>
+    <rect class="d-box" x="416" y="76" width="230" height="32" rx="9"/>
+    <text class="d-label sm" x="531" y="97" text-anchor="middle">計画者</text>
+    <line class="d-edge" x1="531" y1="108" x2="531" y2="124"/><polygon class="d-arrow" points="526,116 531,124 536,116"/>
+    <rect class="d-box" x="416" y="124" width="230" height="32" rx="9"/>
+    <text class="d-label sm" x="531" y="145" text-anchor="middle">設計者</text>
+    <line class="d-edge" x1="531" y1="156" x2="531" y2="172"/><polygon class="d-arrow" points="526,164 531,172 536,164"/>
+    <rect class="d-box accent" x="416" y="172" width="230" height="32" rx="9"/>
+    <text class="d-label sm" x="531" y="193" text-anchor="middle">検証者 — 反論を担う</text>
+    <path class="d-edge accent" d="M646 188 L672 188 L672 92 L654 92"/><polygon class="d-arrow accent" points="656,87 648,92 656,97"/>
+    <text class="d-sub" x="688" y="144" text-anchor="middle">差戻</text>
+    <text class="d-sub" x="531" y="232" text-anchor="middle">詰まれば計画・設計へ戻す</text>
+    <text class="d-sub" x="531" y="250" text-anchor="middle">前提を立て直す機会ができる</text>
+    <text class="d-sub" x="360" y="282" text-anchor="middle">分ける目的は人数ではなく — 責任の分離</text>
+</svg>
+<div class="d-cap">片方は自分の答えを自分で採点し、もう片方には戻る道がある。違いはエージェントの数ではなく、差し戻しの経路。</div>
+</div>
+
+<p>ではモデルを変えて相互にレビューさせれば解決するのか。半分だけです。別のモデルに任せれば自己承認バイアス自体は下がる方向で合っています。ただ今度は別の罠が待っています — <strong>同調（conformity）とおもねり（sycophancy）</strong>です。エージェント同士が互いの論理を受け入れるうちに、もとの結論が<strong>反証されるどころか強化される</strong>現象で、マルチエージェント討論の研究でよく記録された失敗モードです。多数が同じ答えを出すと少数意見がそちらへ流れる<strong>エコーチェンバー</strong>も同じ系統。</p>
+<p>整理すると、対応は二段構えです。</p>
+<ul>
+    <li><strong>役割を分けて、戻す道を作る</strong> — <code>計画者 → 設計者 → 検証者</code>に分け、検証者が問題を見つけたら計画や設計の段階へ<strong>差し戻します</strong>。戻す道がなければ、分けた意味は半分に減ります。まずはサブエージェントから始めて（中級編の10番）、互いの会話が要るようになったら次のコツのエージェントチームへ上がればいい。</li>
+    <li><strong>検証者には反論を任せる</strong> — ここが本当の分かれ道です。「レビューして」と頼むと同調が起きやすい。代わりに<strong>「この計画は間違っているという前提で反論して。確信が持てなければ差し戻し寄りに判定して」</strong>のように、<strong>反対を既定値</strong>に置きましょう。26番の <code>ralplan</code> が critic の役割を別に立てるのも同じ理由です。</li>
+</ul>
+<p>結局のところ大事なのはエージェントをたくさん作ることではなく、<strong>計画・実行・検証の責任を意図して切り分けておくこと</strong>。一つで全部やれば自分を承認し、仲良く分けただけなら互いを承認します。</p>
+<p class="scn-sub">根拠: <a href="https://arxiv.org/pdf/2404.13076" target="_blank" rel="noopener">LLM Evaluators Recognize and Favor Their Own Generations</a>（NeurIPS 2024 — 自己認識と自己選好の線形相関） · <a href="https://arxiv.org/pdf/2604.22891" target="_blank" rel="noopener">Quantifying and Mitigating Self-Preference Bias of LLM Judges</a> · <a href="https://arxiv.org/html/2604.02668v2" target="_blank" rel="noopener">マルチエージェントにおけるおもねりの伝播</a> · <a href="https://arxiv.org/pdf/2501.13381" target="_blank" rel="noopener">大規模言語モデルの同調</a></p>
+
 <h3>28. エージェントチーム — 互いに会話するエージェントたち</h3>
 <p>サブエージェントと混同しやすいんですが、構造が違います。<strong>サブエージェントは並列で働くものの互いに会話せず</strong>、メインに報告するだけ。<strong>エージェントチームは独立したセッション同士が会話して、作業リストを共有し、仕事を分け合います</strong> — 各メンバーとあなたが個別に話すこともできます。企画・マーケティング・デザインのエージェントを置いて互いに相談させながら働かせる絵なら、サブエージェントじゃなくエージェントチームです。トークンは余計にかかりますが、メンバー同士が互いの結果に反論し補い合うべき課題では、成果がはっきり違います。</p>
 
@@ -132,15 +179,6 @@ claude -w motion-logic
         </tbody>
     </table>
 </div>
-
-<h3>この wiki に当てはめると</h3>
-<ul>
-    <li><strong>ルーティン（使用中）</strong> — この wiki の朝のブリーフィングがルーティンで動いています。毎朝 KST 7時に AI ニュースをさらって登録候補をまとめて報告する仕事を、人がパソコンを点ける前にクラウドが済ませておくんです。</li>
-    <li><strong>試してみたい: DB への自然言語クエリ</strong> — この wiki のお気に入り・閲覧数は Cloudflare D1 データベースに積まれています。MCP でつなげば<strong>「今週いちばん閲覧が伸びた文書は？」</strong>を SQL なしで聞けます — 次のネタをデータで選ぶ道です。</li>
-    <li><strong>試してみたい: ワークツリー</strong> — いまは一つのブランチで順番に作業しています。長い翻訳バッチと急ぎのバグ修正が重なる日は、ワークツリー二つに分ければ互いに待つ必要がありません。</li>
-    <li><strong>試してみたい: 拒否ルール</strong> — このリポジトリは master がそのままデプロイなので、<code>git push --force</code> が特に危険。拒否ルールの筆頭候補です。</li>
-    <li><strong>試してみたい: ralplan</strong> — 知識グラフのモデル改編や文書の統合みたいに<strong>一度決めたら戻しにくい構造の決定</strong>には、planner・architect・critic の合意を通すほうが安全です。</li>
-</ul>
 
 <h3>むすび</h3>
 <p>28のコツは三つの原則に縮みます。<strong>コンテキストは予算</strong>（初級）— 節約して、分割して、見えるようにする。<strong>繰り返しは仕組みへ</strong>（中級）— うまくいったプロンプトはスキルと CLAUDE.md に固める。<strong>並列は隔離から</strong>（上級）— ワークツリーと権限ルールを先に置いてから自律を広げる。道具は変わり続けても、この三つは長持ちするはずです。</p>
