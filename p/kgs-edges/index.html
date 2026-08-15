@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-07-28T04:43:06+09:00"
+ "dateModified": "2026-08-15T13:54:18+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -85,7 +85,7 @@
 </div>
 
 <h3>실제 엣지 해부 — Welcome ↔ "Claude Code란 무엇인가"</h3>
-<p>실제 그래프의 엣지 하나를 뜯어 보면: <a href="/p/welcome/">Welcome</a>과 <a href="/p/ccb-what/">Claude Code란 무엇인가</a>는 <strong>'Claude Code'(가중치 3.20)와 '터미널'(3.20)</strong> 두 개념을 공유합니다. 점수는 두 가중치의 합 <strong>≈ 6.40</strong> — 후보들 가운데 최상위라 Welcome의 연관 문서 1순위가 됩니다. 문서 하단의 "연관 문서"에서 이 근거 개념이 그대로 칩으로 표시되므로, <strong>왜 이어졌는지</strong>를 언제나 확인할 수 있습니다.</p>
+<p>실제 그래프의 엣지 하나를 뜯어 보면: <a href="/p/welcome/">시작하기</a>와 <a href="/p/ccb-what/">Claude Code란 무엇인가</a>는 <strong>'Claude Code'(가중치 2.63)와 '터미널'(3.44)</strong> 두 개념을 공유합니다. 점수는 두 가중치의 합 <strong>≈ 6.07</strong> — 같은 문서의 1순위는 개념 4개를 공유한 <a href="/p/tip-beginner/">Tip 초급 편</a>(≈ 11.72)이니, 공유 개념이 많고 희귀할수록 위로 올라가는 셈입니다. 문서 하단의 "연관 문서"에서 이 근거 개념이 그대로 칩으로 표시되므로, <strong>왜 이어졌는지</strong>를 언제나 확인할 수 있습니다.</p>
 
 <h3>판정 규칙 — 세 갈래</h3>
 <div class="diagram">
@@ -112,7 +112,7 @@
 
 <ul>
     <li><strong>공유 2개 이상</strong> → 연결. 서로 다른 개념 두 개가 겹치는 것은 우연이기 어렵습니다.</li>
-    <li><strong>공유 1개 + 그 개념이 3편 이하에만 등장</strong> → 연결. 실례: Welcome ↔ <a href="/p/commands/">일상 사용</a>은 '자연어' 하나만 공유하지만, '자연어'가 워낙 희귀해 인정됩니다. 반대로 '스킬' 하나만 공유한 쌍은 연결되지 않습니다 — 22편이 공유하는 개념 1개는 근거가 못 되기 때문입니다.</li>
+    <li><strong>공유 1개 + 그 개념이 3편 이하에만 등장</strong> → 연결. 실례: <a href="/p/welcome/">시작하기</a> ↔ <a href="/p/omc-tools/">OMC 고급 도구</a>는 'CLI' 하나만 공유하지만, 'CLI'가 3편에만 나올 만큼 희귀해 인정됩니다. 반대로 '스킬' 하나만 공유한 쌍은 연결되지 않습니다 — 24편이 공유하는 개념 1개는 근거가 못 되기 때문입니다.</li>
     <li><strong>그 외</strong> → 개념으로는 연결하지 않습니다. 대신 개념 연결이 2개가 안 되는 문서는 <strong>같은 System의 이웃</strong>(예: <a href="/p/ccb-claudemd/">CLAUDE.md 편</a> → 같은 Tutorial의 앞뒤 강의)으로 보완해, <strong>모든 문서가 최소 2~4개의 연결</strong>을 갖게 합니다. 현재 비율은 개념 연결 182개(77%) · 폴더 보완 54개(23%)입니다.</li>
 </ul>
 
@@ -149,7 +149,7 @@
 
 <p>현재 위키에 선언된 관계는 <strong>110건</strong>이고, 전부 이 형식입니다. 대부분은 강의형 시스템과 AI 2040 뉴스 시리즈의 <strong>읽기 순서 prerequisite 체인</strong>(앞 문서 → 다음 문서)이고, 나머지는 시스템을 가로지르는 implements·example-of·evidence-for·교차 prerequisite입니다. 타입별 실례:</p>
 <ul>
-    <li><strong>선행지식(prerequisite)</strong> — 이 시리즈 자체가 체인입니다: <a href="/p/kgs-overview/">쌓이는가</a> → 이 문서 → <a href="/p/kgs-views/">7가지 눈</a> → <a href="/p/kgs-ai-layer/">AI가 읽는 법</a> → <a href="/p/kgs-plugin/">플러그인화</a>. 각 편이 다음 편의 선행지식으로 선언돼 있어 "무엇을 먼저 읽어야 하는지"를 그래프가 압니다. <a href="/p/welcome/">Welcome</a> → <a href="/p/install/">설치와 시작</a>도 같은 타입.</li>
+    <li><strong>선행지식(prerequisite)</strong> — 이 시리즈 자체가 체인입니다: <a href="/p/kgs-overview/">쌓이는가</a> → 이 문서 → <a href="/p/kgs-views/">7가지 눈</a> → <a href="/p/kgs-ai-layer/">AI가 읽는 법</a> → <a href="/p/kgs-plugin/">플러그인화</a>. 각 편이 다음 편의 선행지식으로 선언돼 있어 "무엇을 먼저 읽어야 하는지"를 그래프가 압니다. <a href="/p/welcome/">시작하기</a> → <a href="/p/skills/">확장 기능</a>도 같은 타입.</li>
     <li><strong>구현(implements)</strong> — <a href="/p/kgs-plugin/">위키 엔진의 플러그인화</a>가 이 시리즈가 설명한 엔진을 <em>구현</em>합니다. 하네스 개념 문서 → 플러그인 아키텍처 문서도 같은 계보. World를 가로지르는 다리도 있습니다 — <a href="/p/dzp-security/">Douzone 지식 플랫폼 제안</a>이 "Reference Wiki(이 위키)"를 복제해 <a href="/p/kgs-overview/">이 등재 파이프라인</a>을 <em>구현</em>하겠다고 선언합니다.</li>
     <li><strong>사례(example-of)</strong> — <a href="/p/skl-examples/">스킬 예제 모음</a>은 <a href="/p/skl-what/">스킬이란 무엇인가</a>의 "재사용 작업 패키지" 정의의 <em>실사례</em>입니다. <a href="/p/llmw-overview/">LLM Wiki</a>도 <a href="/p/sb-level2/">세컨드 브레인 레벨 2</a>(주제로 묶기)의 구체 사례로 붙습니다.</li>
     <li><strong>근거(evidence-for)</strong> — 위의 JSON처럼, 외부 원문을 확인한 <a href="/p/news-20260711-neo4j-rdf-vs-property-graph/">기사</a>가 <a href="/p/sb-level4/">Second Brain 4단계</a> 주장의 <em>외부 근거</em>로 붙습니다. <a href="/p/news-20260709-thariq-fable5-unknowns/">타릭의 Fable 필드가이드 정리</a>도 <a href="/p/hns-what/">하네스 엔지니어링</a>의 "모델보다 환경이 결과를 좌우한다"는 주장을 받칩니다 — 기사 4편이 이 타입으로 지식 문서를 받칩니다.</li>
@@ -164,7 +164,7 @@
     개념은 <strong>큐레이션</strong>(본문 실재만) → 엣지는 <strong>희소성 가중 공유</strong>(2개↑ 또는 희귀 1개) → 부족하면 <strong>폴더 보완</strong> → 모든 문서 2~4연결·고아 0. 그 위에 본문 <code>#!</code> 링크의 역인덱스인 <strong>인용 백링크(<code>citedBy</code>)</strong>와, 큐레이션으로 선언하는 <strong>방향 있는 타입 관계(<code>relations</code>)</strong>를 별도로 얹습니다. 많이 참조되는 문서가 <strong>허브</strong>가 되어 그래프의 중심을 이룹니다(<a href="/p/kgs-views/">다음 편</a>).
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">분류</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">생성일자</span> 2026-07-11 &middot; <span class="pr-k">수정일자</span> 2026-07-28</p>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">생성일자</span> 2026-07-11 &middot; <span class="pr-k">수정일자</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>연관 문서</h2>
 <ul><li><a href="/p/kgs-overview/">지식은 어떻게 쌓이는가</a></li><li><a href="/p/kgs-views/">그래프를 읽는 9가지 눈</a></li></ul>

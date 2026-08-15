@@ -25,7 +25,7 @@
 </div>
 
 <h3>実際のエッジを解剖する — Welcome ↔「Claude Code とは何か」</h3>
-<p>実際のグラフのエッジをひとつ開けてみると: <a href="#!welcome">Welcome</a> と <a href="#!ccb-what">Claude Code とは何か</a>は<strong>「Claude Code」（重み 3.20）と「ターミナル」（3.20）</strong>のふたつの概念を共有しています。スコアはふたつの重みの合計 <strong>≈ 6.40</strong> — 候補のなかで最上位なので、Welcome の関連文書の第 1 位になります。文書下部の「関連文書」でこの根拠概念がそのままチップとして表示されるので、<strong>なぜつながったのか</strong>をいつでも確認できます。</p>
+<p>実際のグラフのエッジをひとつ開けてみると: <a href="#!welcome">はじめに</a>と <a href="#!ccb-what">Claude Code とは何か</a>は<strong>「Claude Code」（重み 2.63）と「ターミナル」（3.44）</strong>のふたつの概念を共有しています。スコアはふたつの重みの合計 <strong>≈ 6.07</strong> — 同じ文書の第 1 位は概念 4 個を共有する <a href="#!tip-beginner">Tip 初級編</a>（≈ 11.72）なので、共有概念が多くまれであるほど上に来るわけです。文書下部の「関連文書」でこの根拠概念がそのままチップとして表示されるので、<strong>なぜつながったのか</strong>をいつでも確認できます。</p>
 
 <h3>判定ルール — 三つの分かれ道</h3>
 <div class="diagram">
@@ -52,7 +52,7 @@
 
 <ul>
     <li><strong>2 個以上を共有</strong> → つなぐ。異なる概念がふたつ重なるのは偶然になりにくいからです。</li>
-    <li><strong>1 個共有 + その概念が 3 編以下にしか出てこない</strong> → つなぐ。実例: Welcome ↔ <a href="#!commands">日々の使い方</a>は「自然言語」ひとつしか共有していませんが、「自然言語」がとてもまれなので認められます。逆に「スキル」ひとつだけを共有した組はつながりません — 22 編が共有する概念ひとつは根拠になれないからです。</li>
+    <li><strong>1 個共有 + その概念が 3 編以下にしか出てこない</strong> → つなぐ。実例: <a href="#!welcome">はじめに</a> ↔ <a href="#!omc-tools">OMC 高度なツール</a>は「CLI」ひとつしか共有していませんが、「CLI」は 3 編にしか出てこないほどまれなので認められます。逆に「スキル」ひとつだけを共有した組はつながりません — 24 編が共有する概念ひとつは根拠になれないからです。</li>
     <li><strong>それ以外</strong> → 概念ではつなぎません。代わりに概念のつながりが 2 本に満たない文書は<strong>同じ System の隣</strong>（例: <a href="#!ccb-claudemd">CLAUDE.md の編</a> → 同じ Tutorial の前後の講義）で補い、<strong>すべての文書が最低 2〜4 本のつながり</strong>を持つようにします。現在の比率は概念のつながり 182 本（77%）・フォルダ補完 54 本（23%）です。</li>
 </ul>
 
@@ -89,7 +89,7 @@
 
 <p>現在ウィキに宣言された関係は <strong>110 件</strong>で、すべてこの形式です。ほとんどは講義型の System と AI 2040 ニュースシリーズの<strong>読む順序の prerequisite チェーン</strong>（前の文書 → 次の文書）で、残りは System を横切る implements・example-of・evidence-for・交差 prerequisite です。型ごとの実例:</p>
 <ul>
-    <li><strong>先行知識（prerequisite）</strong> — このシリーズ自体がチェーンです: <a href="#!kgs-overview">積み上がるのか</a> → この文書 → <a href="#!kgs-views">7 つの眼</a> → <a href="#!kgs-ai-layer">AI が読む方法</a> → <a href="#!kgs-plugin">プラグイン化</a>。各編が次の編の先行知識として宣言されているので、「何を先に読むべきか」をグラフが知っています。<a href="#!welcome">Welcome</a> → <a href="#!install">インストールと開始</a>も同じ型。</li>
+    <li><strong>先行知識（prerequisite）</strong> — このシリーズ自体がチェーンです: <a href="#!kgs-overview">積み上がるのか</a> → この文書 → <a href="#!kgs-views">7 つの眼</a> → <a href="#!kgs-ai-layer">AI が読む方法</a> → <a href="#!kgs-plugin">プラグイン化</a>。各編が次の編の先行知識として宣言されているので、「何を先に読むべきか」をグラフが知っています。<a href="#!welcome">はじめに</a> → <a href="#!skills">拡張機能</a>も同じ型。</li>
     <li><strong>実装（implements）</strong> — <a href="#!kgs-plugin">ウィキエンジンのプラグイン化</a>が、このシリーズの説明したエンジンを<em>実装</em>します。ハーネスの概念文書 → プラグインアーキテクチャ文書も同じ系譜。World を横切る橋もあります — <a href="#!dzp-security">Douzone ナレッジプラットフォーム提案</a>が「Reference Wiki（このウィキ）」を複製して<a href="#!kgs-overview">この登録パイプライン</a>を<em>実装</em>すると宣言しています。</li>
     <li><strong>事例（example-of）</strong> — <a href="#!skl-examples">スキルの例集</a>は<a href="#!skl-what">スキルとは何か</a>の「再利用できる作業パッケージ」という定義の<em>実例</em>です。<a href="#!llmw-overview">LLM Wiki</a> も<a href="#!sb-level2">セカンドブレイン レベル 2</a>（主題でまとめる）の具体事例として付きます。</li>
     <li><strong>根拠（evidence-for）</strong> — 上の JSON のように、外部の原文を確認した<a href="#!news-20260711-neo4j-rdf-vs-property-graph">記事</a>が<a href="#!sb-level4">Second Brain 4 段階</a>の主張の<em>外部根拠</em>として付きます。<a href="#!news-20260709-thariq-fable5-unknowns">タリクの Fable フィールドガイドのまとめ</a>も<a href="#!hns-what">ハーネスエンジニアリング</a>の「モデルより環境が結果を左右する」という主張を支えます — 記事 4 編がこの型で知識文書を支えています。</li>

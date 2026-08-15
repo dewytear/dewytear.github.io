@@ -1,11 +1,11 @@
 <h2>知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン</h2>
-<p>このパートは<strong>このウィキそのもの</strong>を説明します。ウィキの目標は単なる記事の寄せ集めではなく、文書が増えるほど<strong>つながりも一緒に育つ知識グラフ</strong>になることです。そのためには知識が<em>どこにでも</em>積まれてはならず、<strong>決められた構造</strong>（どこに）と<strong>決められた手順</strong>（どうやって）で積まれる必要があります。この文書では、その構造と手順を実際の文書ひとつ（<a href="#!welcome">Welcome</a>）を例に最後まで追いかけて説明します。</p>
+<p>このパートは<strong>このウィキそのもの</strong>を説明します。ウィキの目標は単なる記事の寄せ集めではなく、文書が増えるほど<strong>つながりも一緒に育つ知識グラフ</strong>になることです。そのためには知識が<em>どこにでも</em>積まれてはならず、<strong>決められた構造</strong>（どこに）と<strong>決められた手順</strong>（どうやって）で積まれる必要があります。この文書では、その構造と手順を実際の文書ひとつ（<a href="#!welcome">はじめに</a>）を例に最後まで追いかけて説明します。</p>
 
 <h3>構造 — World → Domain → System → Document</h3>
-<p>すべての文書は 4 段階の<strong>知識階層</strong>の中に居場所を持ちます。最上位の <strong>World</strong> は知識の世界（学習知識 <code>AI</code>・業務知識 <code>Douzone</code>）、<strong>Domain</strong> はその中の領域、<strong>System</strong> は具体的な主題体系、<strong>Document</strong> が個々の文書です。たとえば <a href="#!welcome">Welcome</a> 文書の住所はこう読めます:</p>
+<p>すべての文書は 4 段階の<strong>知識階層</strong>の中に居場所を持ちます。最上位の <strong>World</strong> は知識の世界（学習知識 <code>AI</code>・業務知識 <code>Douzone</code>）、<strong>Domain</strong> はその中の領域、<strong>System</strong> は具体的な主題体系、<strong>Document</strong> が個々の文書です。たとえば <a href="#!welcome">はじめに</a> 文書の住所はこう読めます:</p>
 
 <div class="diagram">
-<svg viewBox="0 0 720 128" role="img" aria-label="Welcome 文書の 4 階層の住所: World AI、Domain Claude·Code、System Introduction、Document welcome">
+<svg viewBox="0 0 720 128" role="img" aria-label="「はじめに」文書の 4 階層の住所: World AI、Domain Claude·Code、System Introduction、Document welcome">
     <rect class="d-box accent" x="14" y="34" width="120" height="46" rx="9"/>
     <text class="d-label" x="74" y="55" text-anchor="middle">AI</text>
     <text class="d-sub" x="74" y="72" text-anchor="middle">World</text>
@@ -25,7 +25,7 @@
     <text class="d-label" x="633" y="55" text-anchor="middle">welcome</text>
     <text class="d-sub" x="633" y="72" text-anchor="middle">Document</text>
 </svg>
-<div class="d-cap">Welcome の 4 階層の住所 — section 文字列では <code>AI · Claude · Code · Introduction</code>。</div>
+<div class="d-cap">「はじめに」（<code>welcome</code>）の 4 階層の住所 — section 文字列では <code>AI · Claude · Code · Introduction</code>。</div>
 </div>
 
 <p>この階層は別のデータベースではなく、<strong>ナビゲーションツリー（<code>list</code> ファイル）の入れ子そのもの</strong>から導かれます。サイドバーに見えるフォルダ構造がそのまま知識階層なので、「メニューは別・分類は別」というズレが原理的に起きません。同じ System（末端フォルダ）にある文書たちは<strong>読む順序のあるシリーズ</strong>として扱われ、このフォルダ所属は後で見る関連文書の計算のセーフティネット（フォルダ補完）としても使われます。</p>
@@ -43,11 +43,11 @@
 
 <div class="tbl-wrap">
 <table>
-<thead><tr><th>標識</th><th>どこに記録</th><th>どこで使う</th><th>Welcome の実例</th></tr></thead>
+<thead><tr><th>標識</th><th>どこに記録</th><th>どこで使う</th><th>「はじめに」（<code>welcome</code>）の実例</th></tr></thead>
 <tbody>
-<tr><td><strong>ラベル</strong>（label）</td><td><code>list</code> ノード</td><td>サイドバー・一覧の<strong>表示名</strong>（言語別 <code>label_en</code>）</td><td>&ldquo;Welcome&rdquo;</td></tr>
-<tr><td><strong>タグ</strong>（tags）</td><td><code>list</code> ノード</td><td><strong>入っていく扉</strong> — 文書下部のチップ、<a href="#!tags">Tags 索引</a>、検索の補助</td><td><code>claude-code · 紹介 · CLI · ターミナル · AI</code></td></tr>
-<tr><td><strong>概念</strong>（concepts）</td><td><code>doc-entries</code>（キュレーション）</td><td><strong>つなぐ材料</strong> — 知識グラフのエッジ計算の原料、検索で最大の重み</td><td><code>Claude Code · ターミナル · CLI · コーディングエージェント · 自然言語 · Anthropic</code></td></tr>
+<tr><td><strong>ラベル</strong>（label）</td><td><code>list</code> ノード</td><td>サイドバー・一覧の<strong>表示名</strong>（言語別 <code>label_en</code>）</td><td>「はじめに」</td></tr>
+<tr><td><strong>タグ</strong>（tags）</td><td><code>list</code> ノード</td><td><strong>入っていく扉</strong> — 文書下部のチップ、<a href="#!tags">Tags 索引</a>、検索の補助</td><td><code>claude-code · 紹介 · インストール · スラッシュコマンド · CLAUDE.md</code></td></tr>
+<tr><td><strong>概念</strong>（concepts）</td><td><code>doc-entries</code>（キュレーション）</td><td><strong>つなぐ材料</strong> — 知識グラフのエッジ計算の原料、検索で最大の重み</td><td><code>Claude Code · ターミナル · CLI · 自然言語 · インストール · 認証 · スラッシュコマンド など 10 個</code></td></tr>
 </tbody>
 </table>
 </div>

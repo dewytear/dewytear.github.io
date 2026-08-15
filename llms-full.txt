@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 > License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — cite the source when quoting.
-> 128 documents · 396 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
+> 124 documents · 389 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
 
 ---
 
@@ -12,14 +12,14 @@ URL: https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-overview
 
 지식은 어떻게 쌓이는가 — 4계층 지식계층과 등재 파이프라인
 
-이 파트는 이 위키 자체를 설명합니다. 위키의 목표는 단순한 글 모음이 아니라, 문서가 늘어날수록 연결이 함께 자라는 지식그래프가 되는 것입니다. 그러려면 지식이 아무 데나 쌓이면 안 되고, 정해진 구조(어디에)와 정해진 절차(어떻게)로 쌓여야 합니다. 이 문서는 그 구조와 절차를 실제 문서 하나(Welcome)를 예로 끝까지 따라가며 설명합니다.
+이 파트는 이 위키 자체를 설명합니다. 위키의 목표는 단순한 글 모음이 아니라, 문서가 늘어날수록 연결이 함께 자라는 지식그래프가 되는 것입니다. 그러려면 지식이 아무 데나 쌓이면 안 되고, 정해진 구조(어디에)와 정해진 절차(어떻게)로 쌓여야 합니다. 이 문서는 그 구조와 절차를 실제 문서 하나(시작하기)를 예로 끝까지 따라가며 설명합니다.
 
 구조 — World → Domain → System → Document
 
-모든 문서는 4단계 지식계층 안에 자리를 갖습니다. 최상위 World는 지식 세계(학습 지식 AI · 업무 지식 Douzone), Domain은 그 안의 영역, System은 구체적 주제 체계, Document가 개별 문서입니다. 예를 들어 Welcome 문서의 주소는 이렇게 읽힙니다:
+모든 문서는 4단계 지식계층 안에 자리를 갖습니다. 최상위 World는 지식 세계(학습 지식 AI · 업무 지식 Douzone), Domain은 그 안의 영역, System은 구체적 주제 체계, Document가 개별 문서입니다. 예를 들어 시작하기 문서의 주소는 이렇게 읽힙니다:
 
 AI World Claude · Code Domain Introduction System welcome Document
-Welcome의 4계층 주소 — section 문자열로는 AI · Claude · Code · Introduction.
+시작하기(welcome)의 4계층 주소 — section 문자열로는 AI · Claude · Code · Introduction.
 
 이 계층은 별도 데이터베이스가 아니라 내비게이션 트리(list 파일)의 중첩 그 자체에서 파생됩니다. 사이드바에서 보이는 폴더 구조가 곧 지식계층이라, "메뉴 따로 · 분류 따로"의 불일치가 원천적으로 없습니다. 같은 System(잎 폴더)에 있는 문서들은 읽는 순서가 있는 시리즈로 취급되고, 이 폴더 소속은 뒤에서 볼 연관 문서 계산의 안전망(폴더 보완)으로도 쓰입니다.
 
@@ -37,13 +37,13 @@ path — 물리 경로: docs/ko/ 아래 실제 파일 위치(예: ai/claude/code
 
 문서 하나가 등재될 때는 이름 외에 세 가지 표식이 함께 남습니다. 셋은 비슷해 보이지만 기록되는 곳도, 쓰이는 곳도 완전히 다릅니다 — 이 분담을 알아야 "태그를 달았는데 왜 그래프에 반영이 안 되지?" 같은 혼동이 없습니다.
 
-표식어디에 기록어디에 쓰임Welcome의 실례
+표식어디에 기록어디에 쓰임시작하기(welcome)의 실례
 
-라벨(label)list 노드사이드바·목록의 표시 이름 (언어별 label_en)“Welcome”
+라벨(label)list 노드사이드바·목록의 표시 이름 (언어별 label_en)“시작하기”
 
-태그(tags)list 노드찾아 들어가는 문 — 문서 하단 칩, Tags 색인, 검색 보조claude-code · 소개 · CLI · 터미널 · AI
+태그(tags)list 노드찾아 들어가는 문 — 문서 하단 칩, Tags 색인, 검색 보조claude-code · 소개 · 설치 · 슬래시명령어 · CLAUDE.md
 
-개념(concepts)doc-entries (큐레이션)잇는 재료 — 지식그래프 엣지 계산의 원료, 검색 최고 가중Claude Code · 터미널 · CLI · 코딩에이전트 · 자연어 · Anthropic
+개념(concepts)doc-entries (큐레이션)잇는 재료 — 지식그래프 엣지 계산의 원료, 검색 최고 가중Claude Code · 터미널 · CLI · 자연어 · 설치 · 인증 · 슬래시명령어 등 10개
 
 태그는 브라우징 장치입니다. 문서 본문 하단에 칩으로 표시되고, 칩을 누르면 그 태그가 붙은 문서 목록으로 이동합니다(문서가 하나뿐이면 바로 그 문서로). Tags 색인은 태그 전체를 사전처럼 펼칩니다 — 한글은 초성(ㄱ·ㄴ·ㄷ…), 영문은 알파벳 버킷으로 묶이고, 많이 쓰인 상위 10개가 밴드로 먼저 나옵니다. 통합검색에서도 태그가 매칭되면 점수를 받지만, 가중치는 개념보다 낮습니다(태그 3 < 개념 5). 언어를 바꾸면 tags_en 같은 언어별 태그가 대신 표시됩니다. 참고로 Work Log 문서는 일부러 tags: []로 두는데 — 작업 기록이 지식 태그 색인을 어지럽히지 않게 하려는 것입니다.
 
@@ -92,7 +92,7 @@ URL: https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-edges
 
 실제 엣지 해부 — Welcome ↔ "Claude Code란 무엇인가"
 
-실제 그래프의 엣지 하나를 뜯어 보면: Welcome과 Claude Code란 무엇인가는 'Claude Code'(가중치 3.20)와 '터미널'(3.20) 두 개념을 공유합니다. 점수는 두 가중치의 합 ≈ 6.40 — 후보들 가운데 최상위라 Welcome의 연관 문서 1순위가 됩니다. 문서 하단의 "연관 문서"에서 이 근거 개념이 그대로 칩으로 표시되므로, 왜 이어졌는지를 언제나 확인할 수 있습니다.
+실제 그래프의 엣지 하나를 뜯어 보면: 시작하기와 Claude Code란 무엇인가는 'Claude Code'(가중치 2.63)와 '터미널'(3.44) 두 개념을 공유합니다. 점수는 두 가중치의 합 ≈ 6.07 — 같은 문서의 1순위는 개념 4개를 공유한 Tip 초급 편(≈ 11.72)이니, 공유 개념이 많고 희귀할수록 위로 올라가는 셈입니다. 문서 하단의 "연관 문서"에서 이 근거 개념이 그대로 칩으로 표시되므로, 왜 이어졌는지를 언제나 확인할 수 있습니다.
 
 판정 규칙 — 세 갈래
 
@@ -101,7 +101,7 @@ URL: https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-edges
 
 공유 2개 이상 → 연결. 서로 다른 개념 두 개가 겹치는 것은 우연이기 어렵습니다.
 
-공유 1개 + 그 개념이 3편 이하에만 등장 → 연결. 실례: Welcome ↔ 일상 사용은 '자연어' 하나만 공유하지만, '자연어'가 워낙 희귀해 인정됩니다. 반대로 '스킬' 하나만 공유한 쌍은 연결되지 않습니다 — 22편이 공유하는 개념 1개는 근거가 못 되기 때문입니다.
+공유 1개 + 그 개념이 3편 이하에만 등장 → 연결. 실례: 시작하기 ↔ OMC 고급 도구는 'CLI' 하나만 공유하지만, 'CLI'가 3편에만 나올 만큼 희귀해 인정됩니다. 반대로 '스킬' 하나만 공유한 쌍은 연결되지 않습니다 — 24편이 공유하는 개념 1개는 근거가 못 되기 때문입니다.
 
 그 외 → 개념으로는 연결하지 않습니다. 대신 개념 연결이 2개가 안 되는 문서는 같은 System의 이웃(예: CLAUDE.md 편 → 같은 Tutorial의 앞뒤 강의)으로 보완해, 모든 문서가 최소 2~4개의 연결을 갖게 합니다. 현재 비율은 개념 연결 182개(77%) · 폴더 보완 54개(23%)입니다.
 
@@ -128,7 +128,7 @@ sb-level4 지식 그래프 접근의 전문가 근거",
 
 현재 위키에 선언된 관계는 110건이고, 전부 이 형식입니다. 대부분은 강의형 시스템과 AI 2040 뉴스 시리즈의 읽기 순서 prerequisite 체인(앞 문서 → 다음 문서)이고, 나머지는 시스템을 가로지르는 implements·example-of·evidence-for·교차 prerequisite입니다. 타입별 실례:
 
-선행지식(prerequisite) — 이 시리즈 자체가 체인입니다: 쌓이는가 → 이 문서 → 7가지 눈 → AI가 읽는 법 → 플러그인화. 각 편이 다음 편의 선행지식으로 선언돼 있어 "무엇을 먼저 읽어야 하는지"를 그래프가 압니다. Welcome → 설치와 시작도 같은 타입.
+선행지식(prerequisite) — 이 시리즈 자체가 체인입니다: 쌓이는가 → 이 문서 → 7가지 눈 → AI가 읽는 법 → 플러그인화. 각 편이 다음 편의 선행지식으로 선언돼 있어 "무엇을 먼저 읽어야 하는지"를 그래프가 압니다. 시작하기 → 확장 기능도 같은 타입.
 
 구현(implements) — 위키 엔진의 플러그인화가 이 시리즈가 설명한 엔진을 구현합니다. 하네스 개념 문서 → 플러그인 아키텍처 문서도 같은 계보. World를 가로지르는 다리도 있습니다 — Douzone 지식 플랫폼 제안이 "Reference Wiki(이 위키)"를 복제해 이 등재 파이프라인을 구현하겠다고 선언합니다.
 
@@ -768,24 +768,17 @@ LLM이 가장 자주 건너뛰는 단계다. 협상 불가 조항으로 다뤄�
 
 ---
 
-# Welcome
+# 시작하기
 Section: AI · Claude · Code · Introduction
 URL: https://dewytear.github.io/docs/ko/ai/claude/code/introduction/welcome
 
-Welcome
+시작하기
 
 Claude Code는 Anthropic이 만든 Claude 공식 CLI(명령줄 인터페이스)입니다. 터미널 안에서 살아가는 에이전틱 코딩 도구로, 여러분의 코드베이스를 이해하고 반복 작업 실행·복잡한 코드 설명·git 워크플로 처리를 대신해 줍니다 — 모두 자연어 명령만으로요.
 채팅 창과 에디터 사이에서 코드를 복사해 붙여 넣는 대신, 프로젝트 디렉터리에서 Claude Code에게 직접 말을 겁니다. 파일을 읽고 수정하고, 셸 명령을 실행하고, 코드베이스를 검색하고, 테스트를 돌리고, 커밋까지 대신해 주며 — 위험한 일은 진행 전에 허락을 구합니다.
 Claude Code는 터미널 CLI, 데스크톱 앱(Mac/Windows), 웹 앱(claude.ai/code), IDE 확장(VS Code, JetBrains)으로 쓸 수 있고, Opus·Sonnet·Haiku 같은 최신 Claude 모델로 구동됩니다.
-왼쪽 목록에서 Claude Code 설치법, 일상 사용법, 그리고 스킬·MCP 서버·훅으로 확장하는 방법을 차례로 배워 보세요.
 
 자연어 "이거 해줘…" >_ claude 터미널에서 파일 읽기·수정 명령·테스트 실행 코드베이스 검색 git 커밋
-
----
-
-# 설치와 시작
-Section: AI · Claude · Code · Introduction
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/introduction/install
 
 설치와 시작
 
@@ -813,15 +806,9 @@ claude -c — 가장 최근 대화 이어가기
 
 claude --help — 전체 옵션 보기
 
----
-
-# 일상 사용
-Section: AI · Claude · Code · Introduction
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/introduction/commands
-
 일상 사용
 
-대부분의 경우 원하는 것을 자연어로 적기만 하면 Claude Code가 알아서 일합니다 — 파일을 읽고, 코드를 고치고, 명령을 실행하고, 위험한 일 앞에서는 허락을 구하면서요. 평범한 프롬프트와 함께, 세션을 다루는 내장 슬래시 명령어도 있습니다:
+설치와 인증이 끝났다면, 대부분의 경우 원하는 것을 자연어로 적기만 하면 Claude Code가 알아서 일합니다 — 파일을 읽고, 코드를 고치고, 명령을 실행하고, 위험한 일 앞에서는 허락을 구하면서요. 평범한 프롬프트와 함께, 세션을 다루는 내장 슬래시 명령어도 있습니다:
 
 /help — 사용 가능한 명령 보기
 
@@ -841,13 +828,19 @@ CLAUDE.md — 프로젝트의 규칙·명령·컨텍스트를 적어 두는 저�
 
 Plan mode — 수정 전에 계획부터 세우게 하는 모드. 큰 작업일수록 코드가 바뀌기 전에 접근 방식을 먼저 승인할 수 있습니다.
 
+여기까지가 기본기입니다. Claude Code의 진짜 힘은 확장에서 나오는데, 스킬·MCP 서버·훅 세 갈래가 그 통로입니다 — 확장 기능 편에서 이어집니다.
+
 ---
 
-# Skills
+# 확장 기능 — Skills · MCP · Hooks
 Section: AI · Claude · Code · Introduction
 URL: https://dewytear.github.io/docs/ko/ai/claude/code/introduction/skills
 
-Skills
+확장 기능 — Skills · MCP · Hooks
+
+Claude Code를 기본기만으로 써도 충분히 일하지만, 팀과 프로젝트에 맞춰 늘리는 순간부터 진가가 나옵니다. 확장 통로는 세 갈래입니다. 반복되는 노하우를 패키지로 묶는 스킬, 외부 시스템으로 손을 뻗는 MCP 서버, 정해진 시점마다 어김없이 실행되는 훅 — 셋은 성격이 달라서 서로를 대신하지 못하고, 함께 쓸 때 가장 잘 맞물립니다.
+
+Skills — 재사용 가능한 능력
 
 스킬(Skill)은 특정 작업을 위한 전문 지식과 워크플로를 Claude Code에 부여하는, 재사용 가능한 패키지 형태의 능력입니다. 지시문(선택적으로 스크립트·리소스까지)을 하나로 묶어 두면, 요청이 그 스킬의 용도와 맞을 때 Claude가 필요한 만큼만 불러와 씁니다.
 스킬은 여느 슬래시 명령처럼 / 뒤에 스킬 이름을 쳐서 직접 부르거나, Claude Code가 작업을 알아보고 관련 스킬을 자동으로 발동하기도 합니다. 스킬이 할 수 있는 일의 예:
@@ -862,13 +855,7 @@ Skills
 
 자세한 노하우가 매번 치는 메시지가 아니라 스킬 안에 살기 때문에, 프롬프트는 짧아지고 결과는 일관돼집니다. Claude Code에 기본 탑재된 스킬을 쓰거나, 플러그인으로 설치하거나, 직접 만들 수 있습니다.
 
----
-
-# MCP Servers
-Section: AI · Claude · Code · Introduction
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/introduction/mcp
-
-MCP Servers
+MCP 서버 — 바깥세상과 연결
 
 Claude Code 허브 MCP server MCP server MCP server MCP server GitHub 데이터베이스 브라우저 이메일 · 캘린더
 
@@ -885,13 +872,7 @@ GitHub 이슈·PR을 읽고 만들 수 있습니다.
 
 서버 관리는 claude mcp 명령(add, list, remove)이나 설정 파일로 합니다. 각 서버는 자신이 노출하는 도구를 선언하고, Claude Code는 그중 규칙에 걸리는 행동만 멈춰 세웁니다 — 2026년 8월 14일부터 auto 모드가 기본값이 되면서, 매번 허락을 묻는 방식 대신 미리 적어 둔 거부 규칙과 안전 검사가 판정을 맡습니다(묻지 않는 기본값). 외부 시스템에 닿는 범위는 그 규칙과 설정으로 통제합니다.
 
----
-
-# Hooks
-Section: AI · Claude · Code · Introduction
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/introduction/hooks
-
-Hooks
+Hooks — 매번 실행되는 자동화
 
 SessionStart 세션 시작 UserPromptSubmit 프롬프트 제출 PreToolUse 도구 실행 직전 도구 실행 도구가 실제로 동작 PostToolUse 도구 실행 직후 Stop 응답 종료
 
@@ -907,6 +888,7 @@ SessionStart — 세션이 시작될 때 (예: 테스트가 돌 수 있게 의�
 Stop — Claude가 응답을 마쳤을 때 (예: 알림 발송)
 
 대표적인 쓰임새는 수정할 때마다 포매터 실행, 커밋 전 테스트 스위트 실행, 민감한 경로 보호, 긴 작업이 끝나면 데스크톱 알림 보내기 등입니다. 훅은 결국 그냥 셸 명령이므로, 프로젝트가 이미 쓰는 어떤 도구와도 Claude Code를 이어 붙일 수 있습니다.
+스킬이 아는 법을, MCP가 닿는 곳을 늘린다면, 훅은 지켜지는 규칙을 만듭니다. 셋을 어떻게 조합하는지는 Claude Code 튜토리얼에서 손으로 익힐 수 있습니다.
 
 ---
 
@@ -3330,7 +3312,7 @@ URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-install
 하네스는 Claude Code 플러그인 형태로 배포됩니다. 마켓플레이스를 한 번 등록하고 설치하면 /harness 명령을 쓸 수 있습니다.
 
 먼저 필요한 것
-Claude Code가 설치되어 있어야 합니다(Install & Start 참고). 터미널에서 작업할 프로젝트 폴더로 이동해 claude 를 실행한 상태에서 아래 슬래시 명령을 입력합니다.
+Claude Code가 설치되어 있어야 합니다(시작하기 참고). 터미널에서 작업할 프로젝트 폴더로 이동해 claude 를 실행한 상태에서 아래 슬래시 명령을 입력합니다.
 
 설치 3단계
 
@@ -4766,7 +4748,7 @@ CLAUDE.md에 라우터로 추가해 줘. CLAUDE.md 자체에는 한 줄만 남�
 
 훅(hook)은 Claude Code의 특정 시점 — 작업 완료, 승인 대기 등 — 에 자동 실행되는 명령이에요. "세션 작업이 끝날 때마다 소리로 알림 받게 훅 세팅해 줘"라고 하면 Claude가 설정 파일에 만들어 줍니다. 세션 하나만 굴릴 땐 필요 없는데, 프로젝트 여러 개에 세션 10개씩 병렬로 돌리기 시작하면 어디서 뭐가 끝났는지 알려 주는 이 장치가 필수가 돼요. 제일 간단하게는 preferredNotifChannel을 terminal_bell로 두는 방법도 있습니다.
 
-공식 문서: Automate actions with hooks — 이 위키의 Hooks 소개도 참고하세요.
+공식 문서: Automate actions with hooks — 이 위키의 기초 강의의 확장 편(Hooks 절)도 참고하세요.
 
 19. Claude에게는 눈이 있다 — 이미지를 준다
 
@@ -4834,7 +4816,7 @@ claude -w motion-logic
 
 MCP(Model Context Protocol)는 외부 도구를 붙이는 표준인데, 서버를 연결하면 그 서버의 도구 정의 전체가 컨텍스트에 실리는 비용이 있어요. 필요한 기능이 한둘뿐이라면 해당 API 엔드포인트를 직접 호출하게 하는 편이 토큰·컨텍스트 모두 쌉니다. 도구 전부를 쓸 거면 MCP, 한두 개만 쓸 거면 직접 호출 — 이 구분만 기억하세요. 참고로 지금은 도구 검색(Tool Search)이 기본 제공돼서 필요한 도구 정의만 그때그때 불러오는 식으로 이 비용이 크게 줄었는데, "쓰는 만큼만 싣는다"는 원칙 자체는 그대로 유효합니다.
 
-공식 문서: Connect Claude Code to tools via MCP — 이 위키의 MCP 소개도 참고. MCP 스펙 자체의 큰 개정은 묻지 않는 기본값에서 다뤘어요.
+공식 문서: Connect Claude Code to tools via MCP — 이 위키의 확장 편의 MCP 절도 참고. MCP 스펙 자체의 큰 개정은 묻지 않는 기본값에서 다뤘어요.
 
 23. /loop로 예약 작업을 걸고, 세션 밖은 루틴에 맡긴다
 

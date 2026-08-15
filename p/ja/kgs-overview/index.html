@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-07-28T04:43:06+09:00"
+ "dateModified": "2026-08-15T13:54:18+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -59,13 +59,13 @@
 </p>
 <article>
 <h2>知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン</h2>
-<p>このパートは<strong>このウィキそのもの</strong>を説明します。ウィキの目標は単なる記事の寄せ集めではなく、文書が増えるほど<strong>つながりも一緒に育つ知識グラフ</strong>になることです。そのためには知識が<em>どこにでも</em>積まれてはならず、<strong>決められた構造</strong>（どこに）と<strong>決められた手順</strong>（どうやって）で積まれる必要があります。この文書では、その構造と手順を実際の文書ひとつ（<a href="/p/ja/welcome/">Welcome</a>）を例に最後まで追いかけて説明します。</p>
+<p>このパートは<strong>このウィキそのもの</strong>を説明します。ウィキの目標は単なる記事の寄せ集めではなく、文書が増えるほど<strong>つながりも一緒に育つ知識グラフ</strong>になることです。そのためには知識が<em>どこにでも</em>積まれてはならず、<strong>決められた構造</strong>（どこに）と<strong>決められた手順</strong>（どうやって）で積まれる必要があります。この文書では、その構造と手順を実際の文書ひとつ（<a href="/p/ja/welcome/">はじめに</a>）を例に最後まで追いかけて説明します。</p>
 
 <h3>構造 — World → Domain → System → Document</h3>
-<p>すべての文書は 4 段階の<strong>知識階層</strong>の中に居場所を持ちます。最上位の <strong>World</strong> は知識の世界（学習知識 <code>AI</code>・業務知識 <code>Douzone</code>）、<strong>Domain</strong> はその中の領域、<strong>System</strong> は具体的な主題体系、<strong>Document</strong> が個々の文書です。たとえば <a href="/p/ja/welcome/">Welcome</a> 文書の住所はこう読めます:</p>
+<p>すべての文書は 4 段階の<strong>知識階層</strong>の中に居場所を持ちます。最上位の <strong>World</strong> は知識の世界（学習知識 <code>AI</code>・業務知識 <code>Douzone</code>）、<strong>Domain</strong> はその中の領域、<strong>System</strong> は具体的な主題体系、<strong>Document</strong> が個々の文書です。たとえば <a href="/p/ja/welcome/">はじめに</a> 文書の住所はこう読めます:</p>
 
 <div class="diagram">
-<svg viewBox="0 0 720 128" role="img" aria-label="Welcome 文書の 4 階層の住所: World AI、Domain Claude·Code、System Introduction、Document welcome">
+<svg viewBox="0 0 720 128" role="img" aria-label="「はじめに」文書の 4 階層の住所: World AI、Domain Claude·Code、System Introduction、Document welcome">
     <rect class="d-box accent" x="14" y="34" width="120" height="46" rx="9"/>
     <text class="d-label" x="74" y="55" text-anchor="middle">AI</text>
     <text class="d-sub" x="74" y="72" text-anchor="middle">World</text>
@@ -85,7 +85,7 @@
     <text class="d-label" x="633" y="55" text-anchor="middle">welcome</text>
     <text class="d-sub" x="633" y="72" text-anchor="middle">Document</text>
 </svg>
-<div class="d-cap">Welcome の 4 階層の住所 — section 文字列では <code>AI · Claude · Code · Introduction</code>。</div>
+<div class="d-cap">「はじめに」（<code>welcome</code>）の 4 階層の住所 — section 文字列では <code>AI · Claude · Code · Introduction</code>。</div>
 </div>
 
 <p>この階層は別のデータベースではなく、<strong>ナビゲーションツリー（<code>list</code> ファイル）の入れ子そのもの</strong>から導かれます。サイドバーに見えるフォルダ構造がそのまま知識階層なので、「メニューは別・分類は別」というズレが原理的に起きません。同じ System（末端フォルダ）にある文書たちは<strong>読む順序のあるシリーズ</strong>として扱われ、このフォルダ所属は後で見る関連文書の計算のセーフティネット（フォルダ補完）としても使われます。</p>
@@ -103,11 +103,11 @@
 
 <div class="tbl-wrap">
 <table>
-<thead><tr><th>標識</th><th>どこに記録</th><th>どこで使う</th><th>Welcome の実例</th></tr></thead>
+<thead><tr><th>標識</th><th>どこに記録</th><th>どこで使う</th><th>「はじめに」（<code>welcome</code>）の実例</th></tr></thead>
 <tbody>
-<tr><td><strong>ラベル</strong>（label）</td><td><code>list</code> ノード</td><td>サイドバー・一覧の<strong>表示名</strong>（言語別 <code>label_en</code>）</td><td>&ldquo;Welcome&rdquo;</td></tr>
-<tr><td><strong>タグ</strong>（tags）</td><td><code>list</code> ノード</td><td><strong>入っていく扉</strong> — 文書下部のチップ、<a href="/p/ja/tags/">Tags 索引</a>、検索の補助</td><td><code>claude-code · 紹介 · CLI · ターミナル · AI</code></td></tr>
-<tr><td><strong>概念</strong>（concepts）</td><td><code>doc-entries</code>（キュレーション）</td><td><strong>つなぐ材料</strong> — 知識グラフのエッジ計算の原料、検索で最大の重み</td><td><code>Claude Code · ターミナル · CLI · コーディングエージェント · 自然言語 · Anthropic</code></td></tr>
+<tr><td><strong>ラベル</strong>（label）</td><td><code>list</code> ノード</td><td>サイドバー・一覧の<strong>表示名</strong>（言語別 <code>label_en</code>）</td><td>「はじめに」</td></tr>
+<tr><td><strong>タグ</strong>（tags）</td><td><code>list</code> ノード</td><td><strong>入っていく扉</strong> — 文書下部のチップ、<a href="/p/ja/tags/">Tags 索引</a>、検索の補助</td><td><code>claude-code · 紹介 · インストール · スラッシュコマンド · CLAUDE.md</code></td></tr>
+<tr><td><strong>概念</strong>（concepts）</td><td><code>doc-entries</code>（キュレーション）</td><td><strong>つなぐ材料</strong> — 知識グラフのエッジ計算の原料、検索で最大の重み</td><td><code>Claude Code · ターミナル · CLI · 自然言語 · インストール · 認証 · スラッシュコマンド など 10 個</code></td></tr>
 </tbody>
 </table>
 </div>
@@ -159,7 +159,7 @@
     この手順で積み上がった知識は現在<strong>文書 115 編・固有概念 370 個・つながり 236 本</strong>（文書あたり平均 3.2 本）、さらにキュレーションで宣言した<strong>型付き関係 114 件</strong>が重なっています。孤立文書（つながり 0）は 0 編 — すべての文書がグラフの中にあります。数値は<a href="/p/ja/ai-map/">知識マップ</a>でライブ集計されます。
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Wiki · 知識体系 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-07-28</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Wiki · 知識体系 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
 <ul><li><a href="/p/ja/kgs-edges/">文書はどうつながるのか — 概念キュレーションと idf 重みつきエッジ</a></li><li><a href="/p/ja/kgs-ai-layer/">AI がこのウィキを読む方法 — 機械可読レイヤーとグラフ巡回</a></li></ul>

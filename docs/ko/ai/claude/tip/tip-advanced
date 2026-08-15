@@ -43,7 +43,7 @@ claude -w motion-logic
 
 <h3>22. MCP 서버 대신 API를 직접 부른다</h3>
 <p>MCP(Model Context Protocol)는 외부 도구를 붙이는 표준인데, 서버를 연결하면 그 서버의 <strong>도구 정의 전체가 컨텍스트에 실리는</strong> 비용이 있어요. 필요한 기능이 한둘뿐이라면 해당 API 엔드포인트를 직접 호출하게 하는 편이 토큰·컨텍스트 모두 쌉니다. 도구 전부를 쓸 거면 MCP, 한두 개만 쓸 거면 직접 호출 — 이 구분만 기억하세요. 참고로 지금은 도구 검색(Tool Search)이 기본 제공돼서 필요한 도구 정의만 그때그때 불러오는 식으로 이 비용이 크게 줄었는데, "쓰는 만큼만 싣는다"는 원칙 자체는 그대로 유효합니다.</p>
-<p class="scn-sub">공식 문서: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — 이 위키의 <a href="#!mcp">MCP 소개</a>도 참고. MCP 스펙 자체의 큰 개정은 <a href="#!news-20260814-auto-mode-stateless-mcp">묻지 않는 기본값</a>에서 다뤘어요.</p>
+<p class="scn-sub">공식 문서: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — 이 위키의 <a href="#!skills">확장 편의 MCP 절</a>도 참고. MCP 스펙 자체의 큰 개정은 <a href="#!news-20260814-auto-mode-stateless-mcp">묻지 않는 기본값</a>에서 다뤘어요.</p>
 
 <h3>23. <code>/loop</code>로 예약 작업을 걸고, 세션 밖은 루틴에 맡긴다</h3>
 <p><code>/loop 5분마다 배포 상태를 확인해 줘</code>처럼 반복 작업을 걸어 두면 세션이 살아 있는 동안 Claude가 주기적으로 알아서 확인해요. 배포 감시, 정기 점검, "8시에 슬랙 확인" 같은 시간 지정도 됩니다. 사람이 지켜보지 않아도 되는 감시성 업무를 통째로 넘길 수 있어서 활용 폭이 넓어요.</p>

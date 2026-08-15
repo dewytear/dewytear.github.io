@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-08-14T11:53:53+09:00",
- "dateModified": "2026-08-14T19:34:21+09:00"
+ "dateModified": "2026-08-15T13:54:18+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -103,7 +103,7 @@ claude -w motion-logic
 
 <h3>22. Call the API directly instead of an MCP server</h3>
 <p>MCP (Model Context Protocol) is the standard for attaching external tools, but connecting a server has a cost: <strong>its entire tool catalog lands in your context</strong>. If you only need one or two functions, having Claude call the API endpoint directly is cheaper on both tokens and context. Using most of the tools? Take MCP. Using one or two? Call directly — that's the whole tip. Worth noting: built-in tool search now loads tool definitions on demand, which shrank this cost a lot, but the principle — carry only what you use — still holds.</p>
-<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — see also this wiki's <a href="/p/en/mcp/">MCP intro</a>. The big MCP spec revision is covered in <a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking</a>.</p>
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — see also this wiki's the <a href="/p/en/skills/">extending chapter (MCP section)</a>. The big MCP spec revision is covered in <a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking</a>.</p>
 
 <h3>23. Schedule recurring work with <code>/loop</code> — and hand the rest to Routines</h3>
 <p>Set up a recurring job like <code>/loop check the deploy status every 5 minutes</code> and Claude keeps checking on its own for as long as the session lives. Deploy monitoring, periodic checks, even time-pinned jobs like "check our Slack at 8." Watch-and-wait work you'd otherwise babysit — hand it over whole.</p>
@@ -243,10 +243,10 @@ claude -w motion-logic
 <h3>Closing</h3>
 <p>The 28 tips boil down to three principles. <strong>Context is a budget</strong> (beginner) — conserve it, split it, make it visible. <strong>Repetition belongs in the system</strong> (intermediate) — freeze good prompts into skills and CLAUDE.md. <strong>Parallelism starts with isolation</strong> (advanced) — put worktrees and permission rules in place first, then extend autonomy. The tools will keep changing; these three should outlast them.</p>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Tip &middot; <span class="pr-k">Created</span> 2026-08-14 &middot; <span class="pr-k">Updated</span> 2026-08-14</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Tip &middot; <span class="pr-k">Created</span> 2026-08-14 &middot; <span class="pr-k">Updated</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
-<ul><li><a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking — Auto Mode and Stateless MCP</a></li><li><a href="/p/en/hns-overview/">Harness Engineering — Overview and Recap</a></li><li><a href="/p/en/omc-intro/">Introducing OMC</a></li><li><a href="/p/en/mcp/">MCP Servers</a></li></ul>
+<ul><li><a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking — Auto Mode and Stateless MCP</a></li><li><a href="/p/en/hns-overview/">Harness Engineering — Overview and Recap</a></li><li><a href="/p/en/omc-intro/">Introducing OMC</a></li><li><a href="/p/en/skills/">Extending Claude Code — Skills · MCP · Hooks</a></li></ul>
 </nav>
 </body>
 </html>

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Welcome</title>
-<meta name="description" content="Claude Code との出会い — ターミナルで読み、直し、走らせ、コミットする">
+<title>はじめに</title>
+<meta name="description" content="Claude Code の紹介からインストール・認証、スラッシュコマンドと CLAUDE.md まで — ターミナルで読み、直し、走らせ、コミットする">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/ja/welcome/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/welcome/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/welcome/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Welcome">
-<meta property="og:description" content="Claude Code との出会い — ターミナルで読み、直し、走らせ、コミットする">
+<meta property="og:title" content="はじめに">
+<meta property="og:description" content="Claude Code の紹介からインストール・認証、スラッシュコマンドと CLAUDE.md まで — ターミナルで読み、直し、走らせ、コミットする">
 <meta property="og:url" content="https://dewytear.github.io/p/ja/welcome/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Welcome">
-<meta name="twitter:description" content="Claude Code との出会い — ターミナルで読み、直し、走らせ、コミットする">
+<meta name="twitter:title" content="はじめに">
+<meta name="twitter:description" content="Claude Code の紹介からインストール・認証、スラッシュコマンドと CLAUDE.md まで — ターミナルで読み、直し、走らせ、コミットする">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "Welcome",
- "description": "Claude Code との出会い — ターミナルで読み、直し、走らせ、コミットする",
+ "headline": "はじめに",
+ "description": "Claude Code の紹介からインストール・認証、スラッシュコマンドと CLAUDE.md まで — ターミナルで読み、直し、走らせ、コミットする",
  "inLanguage": "ja",
  "url": "https://dewytear.github.io/p/ja/welcome/",
  "mainEntityOfPage": "https://dewytear.github.io/#!welcome",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2019-10-10T18:03:53+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T13:54:18+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,13 +58,12 @@
   &middot; <a href="/p/en/welcome/" hreflang="en">English</a>
 </p>
 <article>
-<h2>Welcome</h2>
+<h2>はじめに</h2>
             <p>
 
                 Claude Code は Anthropic がつくった Claude 公式の CLI（コマンドラインインターフェース）です。ターミナルの中で動くエージェンティックなコーディングツールで、あなたのコードベースを理解し、定型作業の実行・複雑なコードの説明・git ワークフローの処理を代行します &mdash; すべて自然言語の指示だけで。
                 チャット画面とエディタのあいだでコードをコピー＆ペーストする代わりに、プロジェクトディレクトリで Claude Code に直接話しかけます。ファイルを読んで修正し、シェルコマンドを実行し、コードベースを検索し、テストを走らせ、コミットまで代行します &mdash; 危険な操作は実行前に許可を求めます。
                 Claude Code はターミナル CLI、デスクトップアプリ（Mac/Windows）、ウェブアプリ（claude.ai/code）、IDE 拡張（VS Code、JetBrains）で使え、Opus・Sonnet・Haiku といった最新の Claude モデルで動きます。
-                左のリストから、Claude Code のインストール方法、日々の使い方、そしてスキル・MCP サーバー・フックによる拡張の方法を順に学んでください。
 
             </p>
 
@@ -98,11 +97,77 @@
     <path class="d-edge accent" d="M394 100 C430 100, 445 140, 476 166"/><polygon class="d-arrow accent" points="470,161 478,164 473,170"/>
 </svg>
 </div>
+
+            <h3>インストールと開始</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="インストールの流れ: ネイティブ導入 → プロジェクトへ移動 → claude 実行 → 認証">
+    <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="85" y="46" text-anchor="middle">① インストール</text>
+    <text class="d-sub" x="85" y="63" text-anchor="middle">ネイティブ導入ツール</text>
+
+    <rect class="d-box" x="180" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="255" y="46" text-anchor="middle">② プロジェクトへ</text>
+    <text class="d-sub" x="255" y="63" text-anchor="middle">cd your-project</text>
+
+    <rect class="d-box" x="350" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="425" y="46" text-anchor="middle">③ claude 実行</text>
+    <text class="d-sub" x="425" y="63" text-anchor="middle">claude</text>
+
+    <rect class="d-box accent" x="520" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="595" y="46" text-anchor="middle">④ 認証</text>
+    <text class="d-sub" x="595" y="63" text-anchor="middle">ログイン · API キー</text>
+
+    <line class="d-edge" x1="160" y1="48" x2="176" y2="48"/><polygon class="d-arrow" points="172,43 180,48 172,53"/>
+    <line class="d-edge" x1="330" y1="48" x2="346" y2="48"/><polygon class="d-arrow" points="342,43 350,48 342,53"/>
+    <line class="d-edge" x1="500" y1="48" x2="516" y2="48"/><polygon class="d-arrow" points="512,43 520,48 512,53"/>
+</svg>
+</div>
+            <p>
+
+                いちばん速い始め方はネイティブインストーラーです &mdash; 依存関係なしにコマンド一行で済み、Claude Code を自動で最新の状態に保ってくれます。
+                <ul>
+                    <li>macOS / Linux / WSL: <code>curl -fsSL https://claude.ai/install.sh | bash</code></li>
+                    <li>Windows (PowerShell): <code>irm https://claude.ai/install.ps1 | iex</code></li>
+                    <li>プロジェクトへ移動: <code>cd your-project</code></li>
+                    <li>実行: <code>claude</code></li>
+                </ul>
+                Homebrew（<code>brew install --cask claude-code</code>）と WinGet にも対応しています。npm でのインストール（<code>npm install -g @anthropic-ai/claude-code</code>、Node.js 22 以上が必要）も引き続き動作し、同じネイティブバイナリを入れます。
+                初回起動すると Claude Code が認証の手順を案内します &mdash; Claude アカウント（Pro/Max プラン）でログインするか、Anthropic API キーを使えます。そのあとは、やりたいことを普通の言葉で説明するだけです。例: <em>「認証フローを説明して」</em>、<em>「ダークモードのトグルを追加してテストを走らせて」</em>。
+                知っておくと便利な起動フラグをいくつか:
+                <ul>
+                    <li><code>claude</code> &mdash; 対話セッションを開始</li>
+                    <li><code>claude "プロンプト"</code> &mdash; 一度きりの作業を実行</li>
+                    <li><code>claude -c</code> &mdash; 直近の会話を再開</li>
+                    <li><code>claude --help</code> &mdash; 全オプションを表示</li>
+                </ul>
+
+            </p>
+
+            <h3>日々の使い方</h3>
+            <p>
+
+                インストールと認証が済んだら、ほとんどの場合、やりたいことを自然言語で書くだけで Claude Code は動きます &mdash; ファイルを読み、コードを直し、コマンドを実行し、危険な操作の前には許可を求めながら。普通のプロンプトに加えて、セッションを扱う組み込みのスラッシュコマンドもあります:
+                <ul>
+                    <li><code>/help</code> &mdash; 使えるコマンドを表示</li>
+                    <li><code>/clear</code> &mdash; 新しい会話を開始（コンテキストを初期化）</li>
+                    <li><code>/init</code> &mdash; プロジェクトを説明する CLAUDE.md ファイルを生成</li>
+                    <li><code>/review</code> &mdash; PR または作業中の変更をレビュー</li>
+                    <li><code>/config</code> &mdash; 設定を開く（テーマ・モデルなど）</li>
+                    <li><code>/model</code> &mdash; 使用する Claude モデルを切り替え</li>
+                </ul>
+                大きな差を生む二つのコツ:
+                <ul>
+                    <li><strong>CLAUDE.md</strong> &mdash; プロジェクトのルール・コマンド・コンテキストを書いておくリポジトリ内のファイル。Claude Code が自動で読むので、同じことを繰り返し言う必要がありません。</li>
+                    <li><strong>Plan mode</strong> &mdash; 修正の前にまず計画を立てさせるモード。大きな作業ほど、コードが変わる前にアプローチを先に承認できます。</li>
+                </ul>
+                ここまでが基本です。Claude Code の本当の力は拡張から生まれます。その通り道がスキル・MCP サーバー・フックの三つ &mdash; 続きは<a href="/p/ja/skills/">拡張機能</a>で。
+
+            </p>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Introduction &middot; <span class="pr-k">作成日</span> 2019-10-10 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Introduction &middot; <span class="pr-k">作成日</span> 2019-10-10 &middot; <span class="pr-k">更新日</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
-<ul><li><a href="/p/ja/news-20260724-claude-opus-5/">Claude Opus 5 — 半額の準 Fable がやってきた</a></li><li><a href="/p/ja/ccb-what/">Claude Code とは何か</a></li><li><a href="/p/ja/news-20260814-auto-mode-stateless-mcp/">尋ねない既定値 — 承認ボタンとセッションが同じ週に消えた</a></li><li><a href="/p/ja/news-20260803-cherny-karpathy/">消した人と、生やした人 — チェルニーの「ハーネス 80% 削除」とカパシーの「指輪物語ムービー」</a></li></ul>
+<ul><li><a href="/p/ja/tip-beginner/">初級 — コンテキストを節約する習慣9つ</a></li><li><a href="/p/ja/omc-doctor/">インストールの診断</a></li><li><a href="/p/ja/ccb-what/">Claude Code とは何か</a></li><li><a href="/p/ja/news-20260803-cherny-karpathy/">消した人と、生やした人 — チェルニーの「ハーネス 80% 削除」とカパシーの「指輪物語ムービー」</a></li></ul>
 </nav>
 </body>
 </html>

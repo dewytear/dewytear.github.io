@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-07-28T04:43:06+09:00"
+ "dateModified": "2026-08-15T13:54:18+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -85,7 +85,7 @@
 </div>
 
 <h3>Dissecting a Real Edge — Welcome ↔ "What Is Claude Code"</h3>
-<p>Take one edge from the actual graph apart: <a href="/p/en/welcome/">Welcome</a> and <a href="/p/en/ccb-what/">What Is Claude Code</a> share two concepts, <strong>'Claude Code' (weight 3.20) and 'terminal' (3.20)</strong>. The score is the sum of the two weights, <strong>≈ 6.40</strong> — the highest among the candidates, which makes it Welcome's number-one related document. The "Related docs" block at the bottom of a document shows these evidence concepts as chips, so you can always check <strong>why</strong> two documents were connected.</p>
+<p>Take one edge from the actual graph apart: <a href="/p/en/welcome/">Getting Started</a> and <a href="/p/en/ccb-what/">What Is Claude Code</a> share two concepts, <strong>'Claude Code' (weight 2.63) and 'terminal' (3.44)</strong>. The score is the sum of the two weights, <strong>≈ 6.07</strong> — the same document's number-one related entry is the <a href="/p/en/tip-beginner/">beginner tips</a> with four shared concepts (≈ 11.72), so more shared and rarer concepts climb higher. The "Related docs" block at the bottom of a document shows these evidence concepts as chips, so you can always check <strong>why</strong> two documents were connected.</p>
 
 <h3>The Decision Rule — Three Branches</h3>
 <div class="diagram">
@@ -112,7 +112,7 @@
 
 <ul>
     <li><strong>2 or more shared</strong> → connect. Two different concepts overlapping is unlikely to be coincidence.</li>
-    <li><strong>1 shared + that concept appears in 3 or fewer documents</strong> → connect. A real case: Welcome ↔ <a href="/p/en/commands/">Everyday Use</a> share only 'natural language', but 'natural language' is rare enough to count. Conversely, a pair sharing only 'skills' is not connected — one concept shared by 22 documents cannot serve as evidence.</li>
+    <li><strong>1 shared + that concept appears in 3 or fewer documents</strong> → connect. A real case: <a href="/p/en/welcome/">Getting Started</a> ↔ <a href="/p/en/omc-tools/">OMC advanced tools</a> share only 'CLI', but 'CLI' appears in just 3 documents — rare enough to count. Conversely, a pair sharing only 'skills' is not connected — one concept shared by 24 documents cannot serve as evidence.</li>
     <li><strong>Otherwise</strong> → no connection by concept. Instead, a document that does not reach two concept connections is topped up with <strong>neighbors in the same System</strong> (e.g. the <a href="/p/en/ccb-claudemd/">CLAUDE.md lesson</a> → the lessons before and after it in the same Tutorial), so that <strong>every document has at least 2 to 4 connections</strong>. The current ratio is 182 concept connections (77%) · 54 folder top-ups (23%).</li>
 </ul>
 
@@ -149,7 +149,7 @@
 
 <p>The wiki currently declares <strong>110 relations</strong>, all in this form. Most of them are <strong>reading-order prerequisite chains</strong> (previous document → next document) in the lecture-style Systems and the AI 2040 news series; the rest are implements, example-of, evidence-for, and cross prerequisites that cut across Systems. Real cases by type:</p>
 <ul>
-    <li><strong>prerequisite</strong> — this very series is a chain: <a href="/p/en/kgs-overview/">How Knowledge Accumulates</a> → this document → <a href="/p/en/kgs-views/">Seven Views</a> → <a href="/p/en/kgs-ai-layer/">How AI Reads It</a> → <a href="/p/en/kgs-plugin/">Packaging as a Plugin</a>. Each part is declared a prerequisite of the next, so the graph knows "what to read first". <a href="/p/en/welcome/">Welcome</a> → <a href="/p/en/install/">Install &amp; Start</a> is the same type.</li>
+    <li><strong>prerequisite</strong> — this very series is a chain: <a href="/p/en/kgs-overview/">How Knowledge Accumulates</a> → this document → <a href="/p/en/kgs-views/">Seven Views</a> → <a href="/p/en/kgs-ai-layer/">How AI Reads It</a> → <a href="/p/en/kgs-plugin/">Packaging as a Plugin</a>. Each part is declared a prerequisite of the next, so the graph knows "what to read first". <a href="/p/en/welcome/">Getting Started</a> → <a href="/p/en/skills/">Extending Claude Code</a> is the same type.</li>
     <li><strong>implements</strong> — <a href="/p/en/kgs-plugin/">Packaging the Wiki Engine as a Plugin</a> <em>implements</em> the engine this series describes. Harness concept document → plugin architecture document belongs to the same line. There are bridges across Worlds too — the <a href="/p/en/dzp-security/">Douzone Knowledge Platform proposal</a> declares that it will clone the "Reference Wiki (this wiki)" and <em>implement</em> <a href="/p/en/kgs-overview/">this registration pipeline</a>.</li>
     <li><strong>example-of</strong> — <a href="/p/en/skl-examples/">the collection of skill examples</a> is a <em>concrete case</em> of the "reusable task package" definition in <a href="/p/en/skl-what/">What Is a Skill</a>. <a href="/p/en/llmw-overview/">LLM Wiki</a> also attaches as a concrete case of <a href="/p/en/sb-level2/">Second Brain level 2</a> (grouping by topic).</li>
     <li><strong>evidence-for</strong> — as in the JSON above, an <a href="/p/en/news-20260711-neo4j-rdf-vs-property-graph/">article</a> that checked the external original attaches as <em>external evidence</em> for the claims of <a href="/p/en/sb-level4/">Second Brain level 4</a>. <a href="/p/en/news-20260709-thariq-fable5-unknowns/">Notes on Thariq's Fable field guide</a> likewise backs the claim in <a href="/p/en/hns-what/">harness engineering</a> that "the environment, more than the model, decides the outcome" — four articles back knowledge documents with this type.</li>
@@ -164,7 +164,7 @@
     Concepts are <strong>curated</strong> (body-real only) → edges come from <strong>rarity-weighted sharing</strong> (2 or more, or one rare concept) → shortfalls are made up by <strong>folder top-up</strong> → every document has 2–4 connections and there are no orphans. On top of that, <strong>citation backlinks (<code>citedBy</code>)</strong>, the reverse index of body <code>#!</code> links, and <strong>directed typed relations (<code>relations</code>)</strong> declared by curation are layered separately. Heavily referenced documents become <strong>hubs</strong> and form the center of the graph (<a href="/p/en/kgs-views/">next part</a>).
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · Wiki · Knowledge System &middot; <span class="pr-k">Created</span> 2026-07-11 &middot; <span class="pr-k">Updated</span> 2026-07-28</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Wiki · Knowledge System &middot; <span class="pr-k">Created</span> 2026-07-11 &middot; <span class="pr-k">Updated</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
 <ul><li><a href="/p/en/kgs-overview/">How Knowledge Accumulates — The Four-Level Hierarchy and the Registration Pipeline</a></li><li><a href="/p/en/kgs-views/">Nine Ways to Read the Graph — Each View Answers a Different Question</a></li></ul>

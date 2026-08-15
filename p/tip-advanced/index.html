@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-08-14T11:53:53+09:00",
- "dateModified": "2026-08-14T19:34:21+09:00"
+ "dateModified": "2026-08-15T13:54:18+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -103,7 +103,7 @@ claude -w motion-logic
 
 <h3>22. MCP 서버 대신 API를 직접 부른다</h3>
 <p>MCP(Model Context Protocol)는 외부 도구를 붙이는 표준인데, 서버를 연결하면 그 서버의 <strong>도구 정의 전체가 컨텍스트에 실리는</strong> 비용이 있어요. 필요한 기능이 한둘뿐이라면 해당 API 엔드포인트를 직접 호출하게 하는 편이 토큰·컨텍스트 모두 쌉니다. 도구 전부를 쓸 거면 MCP, 한두 개만 쓸 거면 직접 호출 — 이 구분만 기억하세요. 참고로 지금은 도구 검색(Tool Search)이 기본 제공돼서 필요한 도구 정의만 그때그때 불러오는 식으로 이 비용이 크게 줄었는데, "쓰는 만큼만 싣는다"는 원칙 자체는 그대로 유효합니다.</p>
-<p class="scn-sub">공식 문서: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — 이 위키의 <a href="/p/mcp/">MCP 소개</a>도 참고. MCP 스펙 자체의 큰 개정은 <a href="/p/news-20260814-auto-mode-stateless-mcp/">묻지 않는 기본값</a>에서 다뤘어요.</p>
+<p class="scn-sub">공식 문서: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — 이 위키의 <a href="/p/skills/">확장 편의 MCP 절</a>도 참고. MCP 스펙 자체의 큰 개정은 <a href="/p/news-20260814-auto-mode-stateless-mcp/">묻지 않는 기본값</a>에서 다뤘어요.</p>
 
 <h3>23. <code>/loop</code>로 예약 작업을 걸고, 세션 밖은 루틴에 맡긴다</h3>
 <p><code>/loop 5분마다 배포 상태를 확인해 줘</code>처럼 반복 작업을 걸어 두면 세션이 살아 있는 동안 Claude가 주기적으로 알아서 확인해요. 배포 감시, 정기 점검, "8시에 슬랙 확인" 같은 시간 지정도 됩니다. 사람이 지켜보지 않아도 되는 감시성 업무를 통째로 넘길 수 있어서 활용 폭이 넓어요.</p>
@@ -243,10 +243,10 @@ claude -w motion-logic
 <h3>마치며</h3>
 <p>28가지를 관통하는 원칙은 셋으로 줄어들어요. <strong>컨텍스트는 예산이다</strong>(초급) — 아끼고, 쪼개고, 시각화하라. <strong>반복은 시스템으로</strong>(중급) — 잘 나온 프롬프트는 스킬과 CLAUDE.md에 굳혀라. <strong>병렬은 격리부터</strong>(고급) — 워크트리와 권한 규칙을 먼저 두고 자율을 늘려라. 도구는 계속 바뀌겠지만 이 세 원칙은 오래갈 겁니다.</p>
 </article>
-<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · Tip &middot; <span class="pr-k">생성일자</span> 2026-08-14 &middot; <span class="pr-k">수정일자</span> 2026-08-14</p>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · Tip &middot; <span class="pr-k">생성일자</span> 2026-08-14 &middot; <span class="pr-k">수정일자</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>연관 문서</h2>
-<ul><li><a href="/p/news-20260814-auto-mode-stateless-mcp/">묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다</a></li><li><a href="/p/hns-overview/">하네스 엔지니어링 — 개요와 복습</a></li><li><a href="/p/omc-intro/">OMC 소개</a></li><li><a href="/p/mcp/">MCP Servers</a></li></ul>
+<ul><li><a href="/p/news-20260814-auto-mode-stateless-mcp/">묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다</a></li><li><a href="/p/hns-overview/">하네스 엔지니어링 — 개요와 복습</a></li><li><a href="/p/omc-intro/">OMC 소개</a></li><li><a href="/p/skills/">확장 기능 — Skills · MCP · Hooks</a></li></ul>
 </nav>
 </body>
 </html>

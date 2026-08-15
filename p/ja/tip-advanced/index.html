@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-08-14T11:53:53+09:00",
- "dateModified": "2026-08-14T19:34:21+09:00"
+ "dateModified": "2026-08-15T13:54:18+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -103,7 +103,7 @@ claude -w motion-logic
 
 <h3>22. MCP サーバーの代わりに API を直接呼ぶ</h3>
 <p>MCP（Model Context Protocol）は外部ツールをつなぐ標準ですが、サーバーをつなぐと<strong>そのツール定義の一式がコンテキストに載る</strong>費用があります。要る機能が一つ二つなら、その API エンドポイントを直接呼ばせるほうがトークンもコンテキストも安い。ツールをほぼ全部使うなら MCP、一つ二つなら直接呼ぶ — この区別だけ覚えておいてください。ちなみに、いまはツール検索（Tool Search）が標準で入って、必要なツール定義だけをその都度読み込むのでこの費用は大きく減りました。でも「使う分だけ載せる」という原則そのものは変わらず有効です。</p>
-<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — この wiki の <a href="/p/ja/mcp/">MCP 紹介</a>もどうぞ。MCP 仕様そのものの大改訂は<a href="/p/ja/news-20260814-auto-mode-stateless-mcp/">尋ねない既定値</a>で扱いました。</p>
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — この wiki の <a href="/p/ja/skills/">拡張編（MCP の節）</a>もどうぞ。MCP 仕様そのものの大改訂は<a href="/p/ja/news-20260814-auto-mode-stateless-mcp/">尋ねない既定値</a>で扱いました。</p>
 
 <h3>23. <code>/loop</code> で予約作業を仕掛け、セッションの外はルーティンに任せる</h3>
 <p><code>/loop 5分ごとにデプロイの状態を確認して</code>のように繰り返し作業を仕掛けておくと、セッションが生きている間、Claude が定期的に自分で確認してくれます。デプロイの監視、定期点検、「8時にうちの Slack を確認して」のような時刻指定もOK。人が見張らなくていい監視系の仕事を丸ごと渡せるので、使い道は広いですよ。</p>
@@ -243,10 +243,10 @@ claude -w motion-logic
 <h3>むすび</h3>
 <p>28のコツは三つの原則に縮みます。<strong>コンテキストは予算</strong>（初級）— 節約して、分割して、見えるようにする。<strong>繰り返しは仕組みへ</strong>（中級）— うまくいったプロンプトはスキルと CLAUDE.md に固める。<strong>並列は隔離から</strong>（上級）— ワークツリーと権限ルールを先に置いてから自律を広げる。道具は変わり続けても、この三つは長持ちするはずです。</p>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Tip &middot; <span class="pr-k">作成日</span> 2026-08-14 &middot; <span class="pr-k">更新日</span> 2026-08-14</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Tip &middot; <span class="pr-k">作成日</span> 2026-08-14 &middot; <span class="pr-k">更新日</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
-<ul><li><a href="/p/ja/news-20260814-auto-mode-stateless-mcp/">尋ねない既定値 — 承認ボタンとセッションが同じ週に消えた</a></li><li><a href="/p/ja/hns-overview/">ハーネスエンジニアリング — 概要と復習</a></li><li><a href="/p/ja/omc-intro/">OMC の紹介</a></li><li><a href="/p/ja/mcp/">MCP Servers</a></li></ul>
+<ul><li><a href="/p/ja/news-20260814-auto-mode-stateless-mcp/">尋ねない既定値 — 承認ボタンとセッションが同じ週に消えた</a></li><li><a href="/p/ja/hns-overview/">ハーネスエンジニアリング — 概要と復習</a></li><li><a href="/p/ja/omc-intro/">OMC の紹介</a></li><li><a href="/p/ja/skills/">拡張機能 — Skills · MCP · Hooks</a></li></ul>
 </nav>
 </body>
 </html>

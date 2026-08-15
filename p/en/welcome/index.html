@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Welcome</title>
-<meta name="description" content="Meet Claude Code — it reads, edits, runs, and commits from your terminal">
+<title>Getting Started</title>
+<meta name="description" content="From what Claude Code is to install, auth, slash commands and CLAUDE.md — read, edit, run, and commit from your terminal">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/en/welcome/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/welcome/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/welcome/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Welcome">
-<meta property="og:description" content="Meet Claude Code — it reads, edits, runs, and commits from your terminal">
+<meta property="og:title" content="Getting Started">
+<meta property="og:description" content="From what Claude Code is to install, auth, slash commands and CLAUDE.md — read, edit, run, and commit from your terminal">
 <meta property="og:url" content="https://dewytear.github.io/p/en/welcome/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Welcome">
-<meta name="twitter:description" content="Meet Claude Code — it reads, edits, runs, and commits from your terminal">
+<meta name="twitter:title" content="Getting Started">
+<meta name="twitter:description" content="From what Claude Code is to install, auth, slash commands and CLAUDE.md — read, edit, run, and commit from your terminal">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "Welcome",
- "description": "Meet Claude Code — it reads, edits, runs, and commits from your terminal",
+ "headline": "Getting Started",
+ "description": "From what Claude Code is to install, auth, slash commands and CLAUDE.md — read, edit, run, and commit from your terminal",
  "inLanguage": "en",
  "url": "https://dewytear.github.io/p/en/welcome/",
  "mainEntityOfPage": "https://dewytear.github.io/#!welcome",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2019-10-10T18:03:53+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T13:54:18+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,13 +58,12 @@
   &middot; <a href="/p/ja/welcome/" hreflang="ja">日本語</a>
 </p>
 <article>
-<h2>Welcome</h2>
+<h2>Getting Started</h2>
             <p>
 
                 Claude Code is Anthropic's official CLI (command-line interface) for Claude. It is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, explaining complex code, and handling git workflows &mdash; all through natural language commands.
                 Instead of copying and pasting code between a chat window and your editor, you talk to Claude Code directly in the project directory. It can read and edit files, run shell commands, search the codebase, run tests, and commit changes on your behalf, asking for permission along the way.
                 Claude Code is available as a terminal CLI, a desktop app (Mac/Windows), a web app (claude.ai/code), and IDE extensions (VS Code, JetBrains). It is powered by the latest Claude models, such as Opus, Sonnet, and Haiku.
-                Use the navigation on the left to learn how to install Claude Code, run everyday commands, and extend it with skills, MCP servers, and hooks.
 
             </p>
 
@@ -98,11 +97,77 @@
     <path class="d-edge accent" d="M394 100 C430 100, 445 140, 476 166"/><polygon class="d-arrow accent" points="470,161 478,164 473,170"/>
 </svg>
 </div>
+
+            <h3>Install &amp; Start</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="Install flow: install with the native installer, go to your project, run claude, then authenticate">
+    <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="85" y="46" text-anchor="middle">① Install</text>
+    <text class="d-sub" x="85" y="63" text-anchor="middle">native installer</text>
+
+    <rect class="d-box" x="180" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="255" y="46" text-anchor="middle">② Go to project</text>
+    <text class="d-sub" x="255" y="63" text-anchor="middle">cd your-project</text>
+
+    <rect class="d-box" x="350" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="425" y="46" text-anchor="middle">③ Run claude</text>
+    <text class="d-sub" x="425" y="63" text-anchor="middle">claude</text>
+
+    <rect class="d-box accent" x="520" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="595" y="46" text-anchor="middle">④ Authenticate</text>
+    <text class="d-sub" x="595" y="63" text-anchor="middle">log in · API key</text>
+
+    <line class="d-edge" x1="160" y1="48" x2="176" y2="48"/><polygon class="d-arrow" points="172,43 180,48 172,53"/>
+    <line class="d-edge" x1="330" y1="48" x2="346" y2="48"/><polygon class="d-arrow" points="342,43 350,48 342,53"/>
+    <line class="d-edge" x1="500" y1="48" x2="516" y2="48"/><polygon class="d-arrow" points="512,43 520,48 512,53"/>
+</svg>
+</div>
+            <p>
+
+                The fastest way to get started is the native installer &mdash; a single command with no dependencies, and it keeps Claude Code updated automatically.
+                <ul>
+                    <li>macOS / Linux / WSL: <code>curl -fsSL https://claude.ai/install.sh | bash</code></li>
+                    <li>Windows (PowerShell): <code>irm https://claude.ai/install.ps1 | iex</code></li>
+                    <li>Go to your project: <code>cd your-project</code></li>
+                    <li>Launch it: <code>claude</code></li>
+                </ul>
+                Homebrew (<code>brew install --cask claude-code</code>) and WinGet are also supported. Installing with npm (<code>npm install -g @anthropic-ai/claude-code</code>, requires Node.js 22 or newer) still works and installs the same native binary.
+                On first launch, Claude Code walks you through authentication &mdash; you can log in with a Claude account (Pro/Max plan) or an Anthropic API key. After that, just describe what you want in plain language, for example: <em>"explain the auth flow"</em> or <em>"add a dark mode toggle and run the tests"</em>.
+                A few handy startup flags:
+                <ul>
+                    <li><code>claude</code> &mdash; start an interactive session</li>
+                    <li><code>claude "your prompt"</code> &mdash; run a one-off task</li>
+                    <li><code>claude -c</code> &mdash; continue the most recent conversation</li>
+                    <li><code>claude --help</code> &mdash; list all options</li>
+                </ul>
+
+            </p>
+
+            <h3>Everyday Use</h3>
+            <p>
+
+                Once installed and authenticated, most of the time you simply type what you want in natural language and Claude Code does the work &mdash; reading files, editing code, running commands, and asking for permission before anything risky. Alongside plain prompts, there are built-in slash commands that control the session:
+                <ul>
+                    <li><code>/help</code> &mdash; show available commands</li>
+                    <li><code>/clear</code> &mdash; start a fresh conversation and reset context</li>
+                    <li><code>/init</code> &mdash; generate a CLAUDE.md file documenting your project</li>
+                    <li><code>/review</code> &mdash; review a pull request or your working changes</li>
+                    <li><code>/config</code> &mdash; open settings (theme, model, and more)</li>
+                    <li><code>/model</code> &mdash; switch the Claude model in use</li>
+                </ul>
+                Two tips that make a big difference:
+                <ul>
+                    <li><strong>CLAUDE.md</strong> &mdash; a file in your repo where you record project conventions, commands, and context. Claude Code reads it automatically so you don't have to repeat yourself.</li>
+                    <li><strong>Plan mode</strong> &mdash; ask Claude to plan before it edits, so you can approve the approach on larger tasks before any code changes.</li>
+                </ul>
+                That covers the basics. Claude Code's real power comes from extending it, and there are three ways in: skills, MCP servers, and hooks &mdash; the story continues in <a href="/p/en/skills/">Extending Claude Code</a>.
+
+            </p>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Introduction &middot; <span class="pr-k">Created</span> 2019-10-10 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Introduction &middot; <span class="pr-k">Created</span> 2019-10-10 &middot; <span class="pr-k">Updated</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
-<ul><li><a href="/p/en/news-20260724-claude-opus-5/">Claude Opus 5 — A Near-Fable at Half the Price Has Arrived</a></li><li><a href="/p/en/ccb-what/">What Is Claude Code</a></li><li><a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking — Auto Mode and Stateless MCP</a></li><li><a href="/p/en/news-20260803-cherny-karpathy/">The One Who Deleted and the One Who Rendered — Cherny&#x27;s “80% of the Harness” and Karpathy&#x27;s “LOTR Movie”</a></li></ul>
+<ul><li><a href="/p/en/tip-beginner/">Beginner — 9 Habits That Save Context</a></li><li><a href="/p/en/omc-doctor/">Installation Diagnosis</a></li><li><a href="/p/en/ccb-what/">What Is Claude Code</a></li><li><a href="/p/en/news-20260803-cherny-karpathy/">The One Who Deleted and the One Who Rendered — Cherny&#x27;s “80% of the Harness” and Karpathy&#x27;s “LOTR Movie”</a></li></ul>
 </nav>
 </body>
 </html>

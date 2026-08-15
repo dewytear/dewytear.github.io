@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-08-14T07:49:04+09:00",
- "dateModified": "2026-08-14T07:49:04+09:00"
+ "dateModified": "2026-08-15T13:54:18+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -128,7 +128,7 @@
 <p>공격 쪽 평가도 함께 나왔습니다. 독립 평가 기관인 Trajectory Labs가 <strong>72가지 간접 프롬프트 인젝션 시나리오를 각 10회씩, 모델당 720회</strong> 시도했고, auto 모드로 돌린 Fable 5·Opus 5·Sonnet 5에서 <strong>성공한 공격이 하나도 없었다</strong>고 보고했습니다. 사내 운용에서 실제로 막힌 사례로는 망 밖으로 나가는 데이터 유출, 파괴적인 대량 작업, 권한 상승 세 건이 공개됐는데 모두 Claude가 스스로 더 안전한 경로를 찾거나 사용자에게 확인을 구했습니다.</p>
 
 <h3>같은 주, MCP는 세션을 버렸다</h3>
-<p><strong>MCP(Model Context Protocol)</strong>는 에이전트가 외부 도구·데이터에 붙는 방식을 정한 표준입니다. 이 위키의 <a href="/p/mcp/">MCP 강의</a>가 다루는 그 규약이고, 2026-07-28 릴리스 후보는 출시 이래 가장 큰 개정입니다. 핵심은 한 문장입니다 — <strong>프로토콜 층에서 상태를 없앴다</strong>.</p>
+<p><strong>MCP(Model Context Protocol)</strong>는 에이전트가 외부 도구·데이터에 붙는 방식을 정한 표준입니다. 이 위키의 <a href="/p/skills/">MCP 강의</a>가 다루는 그 규약이고, 2026-07-28 릴리스 후보는 출시 이래 가장 큰 개정입니다. 핵심은 한 문장입니다 — <strong>프로토콜 층에서 상태를 없앴다</strong>.</p>
 <ul>
     <li><strong>핸드셰이크 삭제</strong> — 연결을 열 때 한 번 주고받던 <code>initialize</code>/<code>initialized</code>가 사라졌습니다. 프로토콜 버전·클라이언트 정보·클라이언트 능력은 이제 <strong>모든 요청의 <code>_meta</code></strong>에 실립니다. 서버 능력을 미리 알아야 하면 새로 생긴 <code>server/discover</code>로 필요할 때 조회합니다.</li>
     <li><strong>세션 식별자 삭제</strong> — <code>Mcp-Session-Id</code> 헤더와 그에 딸린 프로토콜 수준 세션이 함께 없어졌습니다. 둘이 사라지자 <strong>어떤 요청이든 아무 서버 인스턴스에 도착해도 됩니다</strong>. 여러 대로 늘려 쓰려면 필요했던 고정 라우팅과 공유 세션 저장소가 규약 차원에서는 더 이상 필요 없습니다.</li>
@@ -178,7 +178,7 @@
 <p>이 변경으로 낡은 서술 두 곳을 같이 손봤습니다.</p>
 <ul>
     <li><a href="/p/hns-tools/">도구 확장과 마무리</a>의 Q&amp;A에서 오토 모드를 &ldquo;권한을 매번 묻지 않아 더 자율적으로 동작&rdquo;한다고만 설명하고 있었습니다. 기본값이 되었다는 사실과 하드 디나이·인젝션 스크리닝을 덧붙였습니다.</li>
-    <li><a href="/p/mcp/">MCP 강의</a>의 마지막 문장 &ldquo;Claude Code는 사용 전에 허락을 구합니다&rdquo;는 8월 14일부터 사실과 어긋납니다. 규칙에 걸리는 행동만 멈춘다는 쪽으로 고쳤습니다.</li>
+    <li><a href="/p/skills/">MCP 강의</a>의 마지막 문장 &ldquo;Claude Code는 사용 전에 허락을 구합니다&rdquo;는 8월 14일부터 사실과 어긋납니다. 규칙에 걸리는 행동만 멈춘다는 쪽으로 고쳤습니다.</li>
 </ul>
 
 <h3>사실검증 노트</h3>
@@ -196,10 +196,10 @@
     · MCP 스펙: <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank" rel="noopener">MCP 공식 블로그 — 2026-07-28 릴리스 후보</a> · <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog" target="_blank" rel="noopener">변경 목록</a> · <a href="https://www.infoq.com/news/2026/08/mcp-stateless-gateway/" target="_blank" rel="noopener">InfoQ — 개발자 반응</a> · <a href="https://equixly.com/blog/2026/08/05/stateless-mcp/" target="_blank" rel="noopener">Equixly — 보안 관점</a> · <a href="https://developers.googleblog.com/scaling-ai-agent-infrastructure-with-the-mcp-stateless-updates/" target="_blank" rel="noopener">Google Developers Blog — 확장성 관점</a>
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">분류</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">생성일자</span> 2026-08-14 &middot; <span class="pr-k">수정일자</span> 2026-08-14</p>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">생성일자</span> 2026-08-14 &middot; <span class="pr-k">수정일자</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>연관 문서</h2>
-<ul><li><a href="/p/tip-advanced/">고급 — 병렬·자율·예약의 8가지</a></li><li><a href="/p/hns-tools/">도구 확장과 마무리</a></li><li><a href="/p/mcp/">MCP Servers</a></li><li><a href="/p/welcome/">Welcome</a></li></ul>
+<ul><li><a href="/p/tip-advanced/">고급 — 병렬·자율·예약의 8가지</a></li><li><a href="/p/hns-tools/">도구 확장과 마무리</a></li><li><a href="/p/skills/">확장 기능 — Skills · MCP · Hooks</a></li><li><a href="/p/tip-beginner/">초급 — 컨텍스트를 아끼는 습관 9가지</a></li></ul>
 </nav>
 </body>
 </html>
