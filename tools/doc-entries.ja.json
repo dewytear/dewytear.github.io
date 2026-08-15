@@ -295,45 +295,12 @@
  },
  {
   "name": "omc-intro",
-  "title": "OMC の紹介",
-  "summary": "OMC プラグインが Claude Code に足す自律実行・マルチエージェントでの作業・自動検証を紹介する。",
-  "relations": [
-   {
-    "target": "omc-concepts",
-    "evidenceRef": "「OMC の紹介」のあとの読む順序 — この文書を土台に「用語のポイント」へ続く"
-   }
-  ]
- },
- {
-  "name": "omc-concepts",
-  "title": "用語のポイント",
-  "summary": "スラッシュコマンド・エージェント・スキル・フックといった OMC の基本用語を整理する。",
-  "relations": [
-   {
-    "target": "omc-install",
-    "evidenceRef": "「用語のポイント」のあとの読む順序 — この文書を土台に「インストール」へ続く"
-   }
-  ]
- },
- {
-  "name": "omc-install",
-  "title": "インストール",
-  "summary": "OMC の三つのインストール方法 — プラグインのマーケットプレイス、--local、npm CLI — をたどる。",
-  "relations": [
-   {
-    "target": "omc-doctor",
-    "evidenceRef": "「インストール」のあとの読む順序 — この文書を土台に「インストールの診断」へ続く"
-   }
-  ]
- },
- {
-  "name": "omc-doctor",
-  "title": "インストールの診断",
-  "summary": "omc-doctor コマンドでインストールと設定の状態を診断する方法を扱う。",
+  "title": "OMC — 紹介とインストール",
+  "summary": "oh-my-claude-code とは何かから、主要用語、インストール、omc-doctor の診断まで — OMC を始める一編",
   "relations": [
    {
     "target": "omc-modes",
-    "evidenceRef": "「インストールの診断」のあとの読む順序 — この文書を土台に「実行モード」へ続く"
+    "evidenceRef": "紹介・用語・インストールを前提に、次の章が OMC の中核であるモード体系へ入る"
    }
   ]
  },
@@ -350,85 +317,30 @@
  },
  {
   "name": "omc-agents",
-  "title": "エージェント · スキル",
-  "summary": "指揮者の Claude が役割ごとに専門のエージェントへ委任する構造と、スキルを説明する。",
-  "relations": [
-   {
-    "target": "omc-hooks",
-    "evidenceRef": "「エージェント · スキル」のあとの読む順序 — この文書を土台に「Hook · メモリ」へ続く"
-   }
-  ]
- },
- {
-  "name": "omc-hooks",
-  "title": "Hook · メモリ",
-  "summary": "OMC のフックのイベントと、notepad・project-memory といったメモリの仕組みを説明する。",
+  "title": "エージェント・スキルと Hook・メモリ",
+  "summary": "サブエージェントへの委任と skillify、そしてフック・プロジェクトメモリ・deepinit まで — OMC の構成要素の二本柱",
   "relations": [
    {
     "target": "omc-tools",
-    "evidenceRef": "「Hook · メモリ」のあとの読む順序 — この文書を土台に「高度なツール」へ続く"
+    "evidenceRef": "構成要素を前提に、次の章がツールとワークフローの実戦的な組み合わせへ続く"
    }
   ]
  },
  {
   "name": "omc-tools",
-  "title": "高度なツール",
-  "summary": "LSP・AST Grep・Python REPL など、コードを精密に分析するツール群を紹介する。",
-  "relations": [
-   {
-    "target": "omc-workflows",
-    "evidenceRef": "「高度なツール」のあとの読む順序 — この文書を土台に「実戦のシナリオ別ワークフロー」へ続く"
-   }
-  ]
- },
- {
-  "name": "omc-workflows",
-  "title": "実戦のシナリオ別ワークフロー",
-  "summary": "キックオフ・機能の追加・リファクタリングなど、八つの実戦のワークフローを例とともに並べる。",
-  "relations": [
-   {
-    "target": "omc-windows",
-    "evidenceRef": "「実戦のシナリオ別ワークフロー」のあとの読む順序 — この文書を土台に「Windows での注意」へ続く"
-   }
-  ]
- },
- {
-  "name": "omc-windows",
-  "title": "Windows での注意",
-  "summary": "ネイティブ Windows の Hook への対応、psmux という代替、WSL2 の代替経路を扱う。",
+  "title": "高度な活用 — ツール・ワークフロー・Windows",
+  "summary": "LSP・AST grep・Python REPL などの高度なツール、シナリオ別ワークフロー、そして Windows（WSL2・psmux）の注意点",
   "relations": [
    {
     "target": "omc-cost",
-    "evidenceRef": "「Windows での注意」のあとの読む順序 — この文書を土台に「コスト · 性能」へ続く"
+    "evidenceRef": "高度な活用を前提に、次の章がコスト・性能の管理とコマンドリファレンスで締める"
    }
   ]
  },
  {
   "name": "omc-cost",
-  "title": "コスト · 性能",
-  "summary": "並列・自律の実行が速さとトークンのコストにどう効くか、その釣り合いの取り方を説明する。",
-  "relations": [
-   {
-    "target": "omc-commands",
-    "evidenceRef": "「コスト · 性能」のあとの読む順序 — この文書を土台に「コマンド集」へ続く"
-   }
-  ]
- },
- {
-  "name": "omc-commands",
-  "title": "コマンド集",
-  "summary": "インストールから実行・キャンセルまで、よく使う OMC のスラッシュコマンドを表に整理する。",
-  "relations": [
-   {
-    "target": "omc-quickref",
-    "evidenceRef": "「コマンド集」のあとの読む順序 — この文書を土台に「クイックリファレンスカード」へ続く"
-   }
-  ]
- },
- {
-  "name": "omc-quickref",
-  "title": "クイックリファレンスカード",
-  "summary": "よく使う OMC のコマンドを場面ごとにまとめたチートシート。"
+  "title": "コスト・性能とコマンドリファレンス",
+  "summary": "トークン・モデル単価と並列化のコスト感覚、全コマンド表とクイックリファレンスカードでシリーズを締める"
  },
  {
   "name": "llmw-overview",

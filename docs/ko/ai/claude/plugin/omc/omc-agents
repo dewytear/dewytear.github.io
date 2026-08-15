@@ -1,4 +1,4 @@
-<h2>에이전트 · 스킬</h2>
+<h2>에이전트·스킬과 Hook·메모리</h2>
 <p>OMC의 핵심은 <strong>위임(delegation)</strong>입니다. 메인 Claude가 지휘자 역할을 맡고, 역할이 정해진 전문 에이전트들에게 작업을 나눠 맡깁니다. 각 에이전트는 작업 난이도에 맞는 모델로 자동 배정되어(설계·분석엔 고성능 모델, 단순 조회엔 경량 모델), 한 명이 전부 처리할 때보다 정확하고 빠릅니다.</p>
 <p>에이전트는 역할에 따라 크게 네 그룹으로 나뉩니다. 아래는 그룹별 주요 에이전트와 각각이 하는 일입니다.</p>
 
@@ -75,3 +75,76 @@
 <p><code>/oh-my-claudecode:skillify</code> 는 한 세션에서 효과적이었던 작업 패턴을 재사용 가능한 스킬로 추출하는 명령입니다. 자주 반복하는 흐름을 한 번 정리해 두면 다음 작업에서 바로 불러 쓸 수 있습니다. 과거 명칭인 <code>learner</code> 는 deprecated(지원 중단 예정) 호환 별칭이므로 새 문서·교육에서는 skillify를 사용하세요.</p>
 <pre><code><span class="c"># 세션에서 효과적이었던 패턴을 재사용 스킬로 추출</span>
 /oh-my-claudecode:skillify</code></pre>
+
+<h3>Hook · 메모리</h3>
+<p>OMC는 Claude Code의 Hook 이벤트를 활용해 키워드 감지, 스킬 주입, 상태 복구, 완료 검증을 처리합니다. 최신 Reference 기준으로 Hook 이벤트는 더 세분화되어 있습니다.</p>
+
+<h4>알아둘 점</h4>
+<ul>
+    <li><strong>autopilot · ralph · ultrawork · ultraqa 는 Hook이 아니라 스킬</strong>입니다. keyword-detector가 이들을 활성화하고, persistent-mode Hook이 지속 실행을 보조합니다.</li>
+    <li>Hook을 전부 끄려면 <code>DISABLE_OMC</code>, 특정 Hook만 제외하려면 <code>OMC_SKIP_HOOKS</code> 를 사용합니다.</li>
+    <li>Windows Native Hook은 v4.14.4 이후 개선되어 그대로 사용할 수 있습니다. tmux가 필요한 일부 기능도 현행 공식 README 기준 <strong>psmux</strong>(네이티브 Windows용 tmux 호환 도구)를 쓰면 WSL 없이 동작하며, WSL2는 대안 경로입니다.</li>
+</ul>
+<pre><code><span class="c"># OMC의 모든 Hook을 한 번에 비활성화</span>
+export DISABLE_OMC=1
+<span class="c"># 지정한 Hook만 제외 (나머지는 정상 동작)</span>
+export OMC_SKIP_HOOKS=PreToolUse,PostToolUse</code></pre>
+
+<h4>Hook이 실행되는 시점</h4>
+<p>Hook은 Claude Code의 특정 이벤트마다 자동으로 끼어들어 실행되는 동작입니다. OMC는 이를 통해 컨텍스트를 주입하고 스킬을 자동으로 켭니다. 주요 타이밍은 네 가지입니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 132" role="img" aria-label="Hook 이벤트 라이프사이클: SessionStart, UserPromptSubmit, PreToolUse, PostToolUse 순서">
+    <rect class="d-box" x="8" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="83" y="48" text-anchor="middle">SessionStart</text>
+    <text class="d-sub" x="83" y="65" text-anchor="middle">세션 시작</text>
+    <rect class="d-box" x="178" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="253" y="48" text-anchor="middle">UserPromptSubmit</text>
+    <text class="d-sub" x="253" y="65" text-anchor="middle">프롬프트 제출</text>
+    <rect class="d-box" x="352" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="427" y="48" text-anchor="middle">PreToolUse</text>
+    <text class="d-sub" x="427" y="65" text-anchor="middle">도구 직전</text>
+    <rect class="d-box accent" x="522" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="597" y="48" text-anchor="middle">PostToolUse</text>
+    <text class="d-sub" x="597" y="65" text-anchor="middle">도구 직후</text>
+
+    <line class="d-edge" x1="158" y1="51" x2="171" y2="51"/><polygon class="d-arrow" points="171,46 179,51 171,56"/>
+    <line class="d-edge" x1="328" y1="51" x2="345" y2="51"/><polygon class="d-arrow" points="345,46 353,51 345,56"/>
+    <line class="d-edge accent" x1="502" y1="51" x2="515" y2="51"/><polygon class="d-arrow accent" points="515,46 523,51 515,56"/>
+    <text class="d-sub" x="340" y="118" text-anchor="middle">세션 순서대로 진행 →</text>
+</svg>
+<div class="d-cap">세션이 시작되고 프롬프트를 낼 때, 도구 <strong>직전·직후</strong>마다 Hook이 자동으로 끼어듭니다.</div>
+</div>
+
+<ul>
+    <li><strong>SessionStart</strong> — 세션이 시작될 때. OMC 초기화, notepad·project-memory 로드, 직전 실행 모드 상태 복구.</li>
+    <li><strong>UserPromptSubmit</strong> — 프롬프트를 보낼 때. 매직 키워드 감지, 알맞은 스킬 자동 연결, 컨텍스트 주입.</li>
+    <li><strong>PreToolUse</strong> — 도구를 쓰기 직전. 병렬 읽기 권장 힌트, 관련 파일 사전 로드 제안.</li>
+    <li><strong>PostToolUse</strong> — 도구를 쓴 직후. 결과 검증, 후속 조치 제안, 에러 감지 시 자동 수정 제안.</li>
+</ul>
+
+<h4>대화 중 보이는 메시지 해석</h4>
+<p>작업 중 <code>system-reminder</code> 형태의 메시지가 보일 수 있습니다. 당황하지 말고 아래처럼 이해하면 됩니다.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>메시지</th><th>의미</th></tr></thead>
+        <tbody>
+            <tr><td><code>hook success: Success</code></td><td>정상 작동 중이라는 표시입니다. 그대로 진행하면 됩니다.</td></tr>
+            <tr><td><code>hook additional context: ...</code></td><td>유용한 힌트입니다. 참고해서 적용하면 좋습니다.</td></tr>
+            <tr><td><code>[MAGIC KEYWORD: ralph detected]</code></td><td>해당 모드(여기선 ralph)가 자동으로 켜졌다는 알림입니다.</td></tr>
+            <tr><td><code>The boulder never stops rolling</code></td><td>ralph·ultrawork가 계속 실행 중이라는 표시입니다.</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h4>메모리와 프로젝트 문서화</h4>
+<p>OMC는 작업 맥락을 세션이 바뀌어도 유지하기 위해 세 가지 장치를 제공합니다. 각각 저장 위치와 역할이 다릅니다.</p>
+<ul>
+    <li><strong>deepinit</strong> — 코드베이스 전체를 훑어 디렉토리마다 <code>AGENTS.md</code> 문서를 만들어 줍니다. 각 폴더가 무엇을 담는지, 파일 간 관계, 작업 시 주의점, 의존성을 정리해 두어, AI가 매번 처음부터 구조를 탐색하지 않아도 되게 합니다. 대규모 프로젝트의 사전 정리 작업에 유용합니다.</li>
+    <li><strong>notepad</strong> — <code>.omc/notepad.md</code> 에 저장되는 작업 메모입니다. 대화가 길어져 맥락이 정리(압축)되어도 살아남습니다. 절대 잃으면 안 되는 정보(priority), 현재 진행 중인 작업 상태(working), 수동으로 기록하는 메모(manual)의 세 단계로 나뉘며, 오래된 항목 정리는 notepad_prune 도구로 처리합니다.</li>
+    <li><strong>project memory</strong> — <code>.omc/project-memory.json</code> 에 저장되며, 프로젝트의 기술 스택·코딩 컨벤션·아키텍처 지침을 기억합니다. 기본값은 <code>omc-setup</code> 으로 설정합니다.</li>
+</ul>
+<pre><code><span class="c"># 코드베이스를 분석해 디렉토리별 AGENTS.md 문서를 생성 ([path] 생략 시 현재 경로)</span>
+/oh-my-claudecode:deepinit [path]</code></pre>
+<p>구성 요소를 다뤘으니, 실전 조합은 <a href="#!omc-tools">고급 활용</a> 편에서 — 도구·시나리오별 워크플로우·Windows 주의점을 봅니다.</p>
+

@@ -953,84 +953,27 @@
  },
  {
   "name": "omc-intro",
-  "title": "OMC 소개",
-  "summary": "OMC 플러그인이 클로드 코드에 더하는 자율 실행·멀티 에이전트·자동 검증을 소개한다.",
+  "title": "OMC — 소개와 설치",
+  "summary": "oh-my-claude-code가 무엇인지부터 핵심 용어, 설치와 omc-doctor 진단까지 — OMC를 시작하는 한 편",
   "concepts": [
    "OMC",
    "플러그인",
    "클로드코드",
    "자율실행",
    "서브에이전트",
-   "자동검증"
-  ],
-  "relations": [
-   {
-    "target": "omc-concepts",
-    "type": "prerequisite",
-    "evidenceRef": "OMC 소개 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 핵심 용어로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "omc-concepts",
-  "title": "핵심 용어",
-  "summary": "슬래시 명령어·에이전트·스킬·훅 등 OMC 기본 용어를 정리한다.",
-  "concepts": [
+   "자동검증",
    "슬래시명령어",
    "네임스페이스",
-   "서브에이전트",
-   "스킬",
-   "훅",
-   "프로젝트메모리"
-  ],
-  "relations": [
-   {
-    "target": "omc-install",
-    "type": "prerequisite",
-    "evidenceRef": "핵심 용어 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 설치로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "omc-install",
-  "title": "설치",
-  "summary": "플러그인 마켓플레이스·--local·npm CLI 세 가지 OMC 설치 방법을 안내한다.",
-  "concepts": [
    "설치",
-   "플러그인",
    "마켓플레이스",
    "omc-setup",
-   "npm",
-   "슬래시명령어"
-  ],
-  "relations": [
-   {
-    "target": "omc-doctor",
-    "type": "prerequisite",
-    "evidenceRef": "설치 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 설치 진단로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "omc-doctor",
-  "title": "설치 진단",
-  "summary": "omc-doctor 명령으로 설치·설정 상태를 진단하는 방법을 다룬다.",
-  "concepts": [
-   "진단",
-   "omc-doctor",
-   "설치",
-   "슬래시명령어",
-   "CLI",
-   "문제해결"
+   "진단"
   ],
   "relations": [
    {
     "target": "omc-modes",
     "type": "prerequisite",
-    "evidenceRef": "설치 진단 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 실행 모드로 이어진다",
+    "evidenceRef": "소개·용어·설치를 전제로 다음 편이 OMC의 핵심인 실행 모드 체계로 들어간다 — 본문 말미가 지목",
     "source": "human"
    }
   ]
@@ -1058,163 +1001,73 @@
  },
  {
   "name": "omc-agents",
-  "title": "에이전트 · 스킬",
-  "summary": "지휘자 클로드가 역할별 전문 에이전트에 위임하는 구조와 스킬을 설명한다.",
+  "title": "에이전트·스킬과 Hook·메모리",
+  "summary": "서브에이전트 위임과 skillify, 그리고 훅·프로젝트 메모리·deepinit까지 — OMC의 구성 요소 두 축",
   "concepts": [
    "서브에이전트",
    "위임",
    "오케스트레이터",
    "스킬",
    "skillify",
-   "익스플로러"
-  ],
-  "relations": [
-   {
-    "target": "omc-hooks",
-    "type": "prerequisite",
-    "evidenceRef": "에이전트 · 스킬 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 Hook · 메모리로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "omc-hooks",
-  "title": "Hook · 메모리",
-  "summary": "OMC의 훅 이벤트와 notepad·project-memory 같은 메모리 장치를 설명한다.",
-  "concepts": [
+   "익스플로러",
    "훅",
    "프로젝트메모리",
    "deepinit",
    "notepad",
-   "키워드감지",
-   "세션"
+   "키워드감지"
   ],
   "relations": [
    {
     "target": "omc-tools",
     "type": "prerequisite",
-    "evidenceRef": "Hook · 메모리 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 고급 도구로 이어진다",
+    "evidenceRef": "구성 요소를 전제로 다음 편이 도구·워크플로우 실전 조합으로 이어진다 — 본문 말미가 지목",
     "source": "human"
    }
   ]
  },
  {
   "name": "omc-tools",
-  "title": "고급 도구",
-  "summary": "LSP·AST Grep·Python REPL 등 정밀 코드 분석 도구군을 소개한다.",
+  "title": "고급 활용 — 도구·워크플로우·Windows",
+  "summary": "LSP·AST 그렙·파이썬 REPL 같은 고급 도구, 시나리오별 워크플로우, 그리고 Windows(WSL2·psmux) 주의점",
   "concepts": [
    "고급도구",
    "LSP",
    "AST그렙",
    "파이썬REPL",
-   "CLI",
-   "심볼탐색"
-  ],
-  "relations": [
-   {
-    "target": "omc-workflows",
-    "type": "prerequisite",
-    "evidenceRef": "고급 도구 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 실전 시나리오별 워크플로우로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "omc-workflows",
-  "title": "실전 시나리오별 워크플로우",
-  "summary": "킥오프·기능추가·리팩토링 등 8가지 실전 워크플로우를 예시로 정리한다.",
-  "concepts": [
+   "심볼탐색",
    "워크플로우",
    "오토파일럿",
    "랄프",
    "딥인터뷰",
    "git-master",
-   "서브에이전트"
-  ],
-  "relations": [
-   {
-    "target": "omc-windows",
-    "type": "prerequisite",
-    "evidenceRef": "실전 시나리오별 워크플로우 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 Windows 주의로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "omc-windows",
-  "title": "Windows 주의",
-  "summary": "윈도우 네이티브 훅 지원과 psmux 대안, WSL2 대안 경로를 안내한다.",
-  "concepts": [
    "윈도우",
    "WSL2",
-   "tmux",
-   "psmux",
-   "훅",
-   "설치",
-   "PowerShell"
+   "psmux"
   ],
   "relations": [
    {
     "target": "omc-cost",
     "type": "prerequisite",
-    "evidenceRef": "Windows 주의 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 비용 · 성능로 이어진다",
+    "evidenceRef": "고급 활용을 전제로 다음 편이 비용·성능 관리와 명령어 참조로 마무리한다 — 본문 말미가 지목",
     "source": "human"
    }
   ]
  },
  {
   "name": "omc-cost",
-  "title": "비용 · 성능",
-  "summary": "병렬·자율 실행이 속도와 토큰 비용에 미치는 영향과 균형을 설명한다.",
+  "title": "비용·성능과 명령어 참조",
+  "summary": "토큰·모델 단가와 병렬화의 비용 감각, 그리고 전체 명령어 표와 빠른 참조 카드로 시리즈 마무리",
   "concepts": [
    "비용관리",
    "토큰",
    "병렬화",
    "재시도",
    "모델단가",
-   "성능"
-  ],
-  "relations": [
-   {
-    "target": "omc-commands",
-    "type": "prerequisite",
-    "evidenceRef": "비용 · 성능 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 명령어 모음로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "omc-commands",
-  "title": "명령어 모음",
-  "summary": "설치부터 실행·취소까지 자주 쓰는 OMC 슬래시 명령어를 표로 정리한다.",
-  "concepts": [
+   "성능",
    "슬래시명령어",
    "명령어",
-   "네임스페이스",
-   "실행모드",
-   "omc-setup",
-   "취소"
-  ],
-  "relations": [
-   {
-    "target": "omc-quickref",
-    "type": "prerequisite",
-    "evidenceRef": "명령어 모음 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 빠른 참조 카드로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "omc-quickref",
-  "title": "빠른 참조 카드",
-  "summary": "상황별로 자주 쓰는 OMC 명령을 묶은 치트시트다.",
-  "concepts": [
    "치트시트",
-   "슬래시명령어",
-   "실행모드",
-   "리뷰",
-   "멀티AI",
-   "비용관리"
+   "실행모드"
   ]
  },
  {

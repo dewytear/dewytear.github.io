@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 > License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — cite the source when quoting.
-> 91 documents · 351 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
+> 83 documents · 344 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
 
 ---
 
@@ -188,7 +188,7 @@ Matrix어느 블록이 밀집이고 어디가 공백인가?문서×문서 격자
 
 뷰가 무엇이든, 분석의 진입점은 두 가지입니다:
 
-허브(hub) — 다른 문서들이 가장 많이 참조하는 문서. 현재 1위는 하네스 실행하기(피참조 10회)이고, LLM Wiki와 날리지 컨텍스트·확장 기능이 각 9회로 뒤를 잇습니다. 어떤 주제를 처음 파악할 때는 그 클러스터의 허브부터 읽는 것이 가장 빠릅니다.
+허브(hub) — 다른 문서들이 가장 많이 참조하는 문서. 현재는 하네스 실행하기·첫 하네스 실행·LLM Wiki와 날리지 컨텍스트·확장 기능이 각 피참조 9회로 공동 1위입니다. 어떤 주제를 처음 파악할 때는 그 클러스터의 허브부터 읽는 것이 가장 빠릅니다.
 
 브리지(bridge) — 여러 System에 걸쳐 등장하는 개념. '스킬'은 7개 System에 걸쳐 있는 최대 브리지이고, '슬래시명령어'·'서브에이전트'가 각 5개 System을 잇습니다. 브리지 개념을 따라가면 주제와 주제가 실제로 만나는 지점이 드러납니다.
 
@@ -3699,11 +3699,11 @@ Shift + Tab모드 전환 (auto / accept / plan)
 
 ---
 
-# OMC 소개
+# OMC — 소개와 설치
 Section: AI · Claude · PlugIn · OMC
 URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-intro
 
-OMC 소개
+OMC — 소개와 설치
 
 oh-my-claudecode(이하 OMC)는 Claude Code에 자율 실행, 멀티 에이전트 협업, 자동 검증 기능을 더해주는 플러그인입니다.
 
@@ -3731,12 +3731,6 @@ OMC가 더하는 것 — "끝까지 알아서 구현", "여러 작업자가 분�
 
 · Claude Code Plugin 문서: code.claude.com/docs/en/discover-plugins
 
----
-
-# 핵심 용어
-Section: AI · Claude · PlugIn · OMC
-URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-concepts
-
 핵심 용어
 
 OMC 문서에는 다음 용어가 자주 나옵니다. 사전에 이해해두면 이후 내용이 훨씬 쉽게 읽힙니다.
@@ -3752,12 +3746,6 @@ OMC 문서에는 다음 용어가 자주 나옵니다. 사전에 이해해두면
 Hook(훅) — 정해진 시점(예: 파일 수정 전후)에 자동으로 끼어들어 실행되는 동작입니다. 키워드 감지나 완료 검증 등에 쓰입니다. 예: PreToolUse, PostToolUse
 
 프로젝트 메모리 — AI가 프로젝트 구조를 기억하도록 정리해 둔 문서입니다. 매번 처음부터 탐색하는 비용을 줄여줍니다. 예: deepinit, AGENTS.md
-
----
-
-# 설치
-Section: AI · Claude · PlugIn · OMC
-URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-install
 
 설치
 
@@ -3800,12 +3788,6 @@ npm i -g oh-my-claude-sisyphus@latest
 설치 · 업데이트
 플러그인 방식 사용 시 설치와 업데이트는 Claude Code의 플러그인 관리 기능으로 처리합니다. 마켓플레이스 자동 업데이트가 꺼져 있으면 /plugin marketplace update omc 로 먼저 최신 버전을 동기화한 뒤, /oh-my-claudecode:omc-setup 을 다시 실행해 최신 설정을 적용하세요.
 
----
-
-# 설치 진단
-Section: AI · Claude · PlugIn · OMC
-URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-doctor
-
 설치 진단
 
 설치 후 문제가 생기면 진단 명령으로 먼저 상태를 확인합니다.
@@ -3821,6 +3803,7 @@ CLI 런타임 경로를 별도로 쓰는 경우에는 다음 진단도 가능합
 omc doctor
 # 플러그인 설치 폴더를 직접 지정해 진단
 omc doctor --plugin-dir /path/to/oh-my-claudecode
+설치와 진단까지 끝났다면 이제 본론입니다 — 실행 모드에서 OMC의 핵심인 모드 체계를 익히고, 에이전트·스킬과 Hook·메모리로 이어 가세요.
 
 ---
 
@@ -3956,11 +3939,11 @@ CCGClaude·Codex·Gemini 세 모델의 결과를 종합/oh-my-claudecode:ccg <ta
 
 ---
 
-# 에이전트 · 스킬
+# 에이전트·스킬과 Hook·메모리
 Section: AI · Claude · PlugIn · OMC
 URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-agents
 
-에이전트 · 스킬
+에이전트·스킬과 Hook·메모리
 
 OMC의 핵심은 위임(delegation)입니다. 메인 Claude가 지휘자 역할을 맡고, 역할이 정해진 전문 에이전트들에게 작업을 나눠 맡깁니다. 각 에이전트는 작업 난이도에 맞는 모델로 자동 배정되어(설계·분석엔 고성능 모델, 단순 조회엔 경량 모델), 한 명이 전부 처리할 때보다 정확하고 빠릅니다.
 
@@ -4025,12 +4008,6 @@ skillify — 반복 작업을 스킬로 만들기
 # 세션에서 효과적이었던 패턴을 재사용 스킬로 추출
 /oh-my-claudecode:skillify
 
----
-
-# Hook · 메모리
-Section: AI · Claude · PlugIn · OMC
-URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-hooks
-
 Hook · 메모리
 
 OMC는 Claude Code의 Hook 이벤트를 활용해 키워드 감지, 스킬 주입, 상태 복구, 완료 검증을 처리합니다. 최신 Reference 기준으로 Hook 이벤트는 더 세분화되어 있습니다.
@@ -4089,14 +4066,15 @@ project memory — .omc/project-memory.json 에 저장되며, 프로젝트의 �
 
 # 코드베이스를 분석해 디렉토리별 AGENTS.md 문서를 생성 ([path] 생략 시 현재 경로)
 /oh-my-claudecode:deepinit [path]
+구성 요소를 다뤘으니, 실전 조합은 고급 활용 편에서 — 도구·시나리오별 워크플로우·Windows 주의점을 봅니다.
 
 ---
 
-# 고급 도구
+# 고급 활용 — 도구·워크플로우·Windows
 Section: AI · Claude · PlugIn · OMC
 URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-tools
 
-고급 도구
+고급 활용 — 도구·워크플로우·Windows
 
 OMC는 코드를 더 정확히 다루기 위한 도구군을 제공합니다. 텍스트 검색보다 정밀한 분석이 필요할 때 유용합니다.
 
@@ -4112,12 +4090,6 @@ Ask / Team CLIomc ask, omc team, omc session search외부 CLI 워커와 세션 �
 
 LSP 보충 설명
 LSP(Language Server Protocol)는 코드 편집기가 "이 변수의 정의는 어디?", "여기 타입 오류가 있나?"를 정확히 알아내도록 돕는 표준입니다. 단, 해당 언어의 언어 서버가 설치돼 있어야 정상 동작합니다.
-
----
-
-# 실전 시나리오별 워크플로우
-Section: AI · Claude · PlugIn · OMC
-URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-workflows
 
 실전 시나리오별 워크플로우
 
@@ -4227,12 +4199,6 @@ git-master: feature/auth 브랜치 작업 후 main에 squash merge 준비
 1 / 8
 다음 →
 
----
-
-# Windows 주의
-Section: AI · Claude · PlugIn · OMC
-URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-windows
-
 Windows 주의
 
 Windows PowerShell 환경에서는 별도 주의가 필요합니다. 핵심은 tmux 의존 기능은 psmux로 해결(WSL 불필요), WSL2는 대안 경로라는 점입니다.
@@ -4252,13 +4218,15 @@ PowerShell에서 npm view·npm ping 이 정상이어도, Claude Code 플러그�
 
 3. /omc-teams 처럼 tmux가 필요한 멀티 AI 기능까지 사용할 계획인지
 
+마지막으로 비용·성능과 명령어 참조 편이 알뜰하게 쓰는 법과 전체 명령어 표로 시리즈를 마무리합니다.
+
 ---
 
-# 비용 · 성능
+# 비용·성능과 명령어 참조
 Section: AI · Claude · PlugIn · OMC
 URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-cost
 
-비용 · 성능
+비용·성능과 명령어 참조
 
 OMC의 핵심은 작업을 여러 에이전트로 나눠 동시에 처리하는 것입니다. 그래서 전체 작업 시간은 줄일 수 있지만, 동시에 여러 작업자가 돌면 그만큼 AI 사용량(토큰)이 늘어 비용은 커질 수 있습니다. 속도와 비용은 함께 움직인다고 이해하면 됩니다.
 
@@ -4280,12 +4248,6 @@ OMC의 비용은 고정값이 아니라 작업 방식에 따라 크게 달라집
 
 한 줄 정리
 빠르다고 해서 항상 저렴한 것은 아닙니다. 작은 작업은 일반 대화로 가볍게 처리하고, 병렬·자율 모드는 그만한 가치가 있는 큰 작업에만 쓰는 식으로 조절하면 속도와 비용의 균형을 맞출 수 있습니다.
-
----
-
-# 명령어 모음
-Section: AI · Claude · PlugIn · OMC
-URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-commands
 
 명령어 모음
 
@@ -4325,12 +4287,6 @@ HUD 설정/oh-my-claudecode:hud setup작업 진행 상태를 보여주는 화면
 
 읽는 법
 <task>, <idea>, <N> 처럼 꺾쇠로 묶인 부분은 실제 값으로 바꿔 넣는 자리입니다. 예를 들어 <task> 자리에는 "로그인 API 구현"처럼 수행할 작업을 적습니다. [path] 처럼 대괄호로 묶인 부분은 생략 가능한 선택 항목입니다.
-
----
-
-# 빠른 참조 카드
-Section: AI · Claude · PlugIn · OMC
-URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-quickref
 
 빠른 참조 카드
 
