@@ -1,4 +1,4 @@
-<h2>주방 비유로 이해하는 하네스</h2>
+<h2>동작 원리 — 주방 비유·팀·3요소</h2>
 <p>하네스 엔지니어링을 <strong>주방 운영</strong>에 빗대면 이해가 쉽습니다.</p>
 
 <h3>1인 셰프 vs 멀티 에이전트</h3>
@@ -62,3 +62,134 @@
     <span class="nh">토큰 사용량</span>
     멀티로 돌리는 만큼 토큰 사용량이 늘어납니다. 특히 <strong>에이전트들끼리 대화</strong>할 때 많아지는데, 측정상 <strong>약 30% 더</strong> 쓰이는 경우도 있었습니다.
 </div>
+
+<h3>에이전트 팀과 컨텍스트 관리</h3>
+<p>여러 에이전트를 어떻게 협업시키느냐, 그리고 컨텍스트를 어떻게 관리하느냐가 하네스 품질을 좌우합니다.</p>
+
+<h4>격리형 서브에이전트 → 커뮤니케이션하는 팀</h4>
+<div class="diagram">
+<svg viewBox="0 0 700 172" role="img" aria-label="격리 서브에이전트(서로 대화 불가) vs 에이전트 팀(서로 통신) 비교">
+    <line class="d-edge dash" x1="350" y1="6" x2="350" y2="150"/>
+
+    <rect class="d-box" x="110" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="170" y="31" text-anchor="middle">오케스트레이터</text>
+    <rect class="d-box soft" x="40" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="95" y="104" text-anchor="middle">에이전트 A</text>
+    <rect class="d-box soft" x="190" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="245" y="104" text-anchor="middle">에이전트 B</text>
+    <line class="d-edge" x1="140" y1="44" x2="100" y2="78"/><polygon class="d-arrow" points="96,72 104,80 90,80"/>
+    <line class="d-edge" x1="200" y1="44" x2="240" y2="78"/><polygon class="d-arrow" points="244,72 250,80 236,80"/>
+    <text class="d-sub" x="170" y="105" text-anchor="middle">✕</text>
+    <text class="d-sub" x="170" y="140" text-anchor="middle">서로 대화 불가</text>
+    <text class="d-label sm" x="170" y="162" text-anchor="middle">격리 서브에이전트</text>
+
+    <rect class="d-box accent" x="470" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="530" y="31" text-anchor="middle">오케스트레이터</text>
+    <rect class="d-box" x="400" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="455" y="104" text-anchor="middle">에이전트 C</text>
+    <rect class="d-box" x="550" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="605" y="104" text-anchor="middle">에이전트 D</text>
+    <line class="d-edge" x1="500" y1="44" x2="460" y2="78"/><polygon class="d-arrow" points="456,72 464,80 450,80"/>
+    <line class="d-edge" x1="560" y1="44" x2="600" y2="78"/><polygon class="d-arrow" points="604,72 610,80 596,80"/>
+    <line class="d-edge accent" x1="512" y1="100" x2="548" y2="100"/>
+    <polygon class="d-arrow accent" points="542,95 550,100 542,105"/>
+    <polygon class="d-arrow accent" points="518,95 510,100 518,105"/>
+    <text class="d-accent" x="530" y="140" text-anchor="middle" font-size="11">↔ 서로 통신</text>
+    <text class="d-label sm" x="530" y="162" text-anchor="middle">에이전트 팀</text>
+</svg>
+<div class="d-cap">격리 서브에이전트는 결과만 리턴하지만, 에이전트 팀은 서로를 다시 깨워 협업합니다.</div>
+</div>
+<ul>
+    <li><strong>기존 방식</strong> — 서브에이전트들이 <strong>격리된 환경</strong>에서 각자 일하고 결과만 리턴(병렬). 서로 대화하는 방법이 없었습니다.</li>
+    <li><strong>에이전트 팀</strong> — 에이전트들이 <strong>커뮤니케이션하며</strong> 일해서 더 스마트하게 동작합니다.</li>
+</ul>
+<p>예를 들어, 리서치 에이전트가 조사를 끝내고 종료된 뒤 분석 에이전트가 스폰됐는데, 분석 중 <strong>리서치가 부족한 부분</strong>을 발견하면 — 자기가 리서치하는 게 아니라 <strong>리서치 에이전트를 다시 깨워</strong> 추가 조사를 요청합니다.</p>
+
+<h4>에이전트 팀 활성화</h4>
+<p>이 기능은 <strong>실험 버전</strong>이라 기본 비활성 상태입니다. 사용자 폴더의 <code>~/.claude/settings.json</code> 에 환경 변수를 켭니다.</p>
+<pre><code><span class="c"># ~/.claude/settings.json 의 env</span>
+"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"</code></pre>
+<ul>
+    <li>이 값을 켜야 에이전트들이 서로 대화하며 팀으로 동작합니다.</li>
+    <li>에이전트가 <strong>동적 로딩에 성공</strong>하면 팀 모드가 잘 켜지고, 실패하면 격리된 일반 서브에이전트로 뜨는 경우가 많습니다. (실험 버전의 버그)</li>
+    <li>참고로 Gemini의 <strong>Antigravity CLI</strong> 에도 에이전트 간 커뮤니케이션 기능이 추가됐습니다.</li>
+</ul>
+
+<h4>컨텍스트 = 주방의 작업대</h4>
+<p>컨텍스트는 요리를 만드는 <strong>작업대</strong>와 같습니다. 그 요리와 관련된 것만 올라와 있으면 깔끔하지만, 관련 없는 것이 섞이면 실수할 여지가 생깁니다(소금통에 설탕이 든 격). 실제로 대화가 길어지면 앞뒤 생각이 <strong>모순</strong>되기도 하는데, 그 상태로 일을 시키면 AI가 "A가 맞나 B가 맞나" 혼란스러워합니다. 그래서 <strong>컨텍스트 관리</strong>가 중요합니다.</p>
+
+<h3>핵심 3요소와 동작 구조</h3>
+<p>하네스 구성 요소는 많지만, 강사는 <strong>이 세 가지만 갖춰도 멀티 에이전트 협업이 잘 일어난다</strong>고 보고 여기에 집중합니다 — <strong>에이전트 · 스킬 · 오케스트레이터</strong>.</p>
+
+<h4>1) 에이전트 — 자연어 문서</h4>
+<p>에이전트는 코드가 아니라 <strong>자연어로 작성된 문서</strong>입니다. 다음을 담습니다.</p>
+<ul>
+    <li>역할과 <strong>원칙</strong></li>
+    <li><strong>입력 프로토콜 · 출력 프로토콜</strong>(결과를 어떤 포맷으로 낼지)</li>
+    <li><strong>협업</strong> — 다른 에이전트와 무엇을 주고받을지</li>
+    <li>재호출·<strong>에러 발생 시</strong> 행동</li>
+</ul>
+
+<h4>2) 스킬 — 반복 작업의 표준화</h4>
+<p>스킬은 <strong>name + description</strong> 에, 정해진 프로세스·지식·체크리스트를 자유롭게 담은 것입니다.</p>
+<ul>
+    <li>프로세스가 정해져 있어 <strong>일관성</strong>이 유지됩니다.</li>
+    <li>작은 스킬들을 <strong>조합</strong>해 더 큰 시스템을 구성할 수 있습니다.</li>
+    <li>표준화 덕분에 반복 작업이 빨라집니다.</li>
+</ul>
+<p>스킬 설계 요령: <strong>반복 작업을 찾아 → 단일 책임으로 분리 → 입력/출력 정의 → 예외 처리 → 에이전트에 연결.</strong></p>
+
+<h4>3) 오케스트레이터 — 마이크로매니징하지 않는 PM</h4>
+<p>전체 워크플로우가 잘 수행되는지 책임지는 <strong>PM</strong> 입니다. 망하는 PM처럼 세세하게 간섭하지 않고, "워크플로우를 잘 수행하고 있는가" 정도만 체크합니다.</p>
+
+<h4>플러그인의 6단계</h4>
+<div class="diagram">
+<svg viewBox="0 0 660 188" role="img" aria-label="하네스 6단계: 요청 분석 → 에이전트 팀 설계 → 에이전트 생성 → 스킬 생성 → 오케스트레이터·워크플로우 → 구성 검증">
+    <rect class="d-box" x="8" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="42" text-anchor="middle">① 요청 분석</text>
+    <text class="d-sub" x="108" y="59" text-anchor="middle">무엇을 원하는지</text>
+
+    <rect class="d-box" x="223" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="42" text-anchor="middle">② 에이전트 팀 설계</text>
+    <text class="d-sub" x="323" y="59" text-anchor="middle">필요한 역할 정의</text>
+
+    <rect class="d-box" x="438" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="42" text-anchor="middle">③ 에이전트 생성</text>
+    <text class="d-sub" x="538" y="59" text-anchor="middle">자연어 문서</text>
+
+    <rect class="d-box" x="8" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="134" text-anchor="middle">④ 스킬 생성</text>
+    <text class="d-sub" x="108" y="151" text-anchor="middle">반복 절차 표준화</text>
+
+    <rect class="d-box" x="223" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label sm" x="323" y="134" text-anchor="middle">⑤ 오케스트레이터·워크플로우</text>
+    <text class="d-sub" x="323" y="151" text-anchor="middle">실행 순서 수립</text>
+
+    <rect class="d-box accent" x="438" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="134" text-anchor="middle">⑥ 구성 검증</text>
+    <text class="d-sub" x="538" y="151" text-anchor="middle">제대로 짜였는지</text>
+
+    <line class="d-edge" x1="208" y1="46" x2="221" y2="46"/><polygon class="d-arrow" points="215,41 223,46 215,51"/>
+    <line class="d-edge" x1="423" y1="46" x2="436" y2="46"/><polygon class="d-arrow" points="430,41 438,46 430,51"/>
+    <path class="d-edge" d="M538 72 C538 87, 523 92, 505 92 H141 C123 92, 108 97, 108 110"/><polygon class="d-arrow" points="103,106 113,106 108,112"/><polygon class="d-arrow" points="328,87 328,97 318,92"/>
+    <line class="d-edge" x1="208" y1="138" x2="221" y2="138"/><polygon class="d-arrow" points="215,133 223,138 215,143"/>
+    <line class="d-edge" x1="423" y1="138" x2="436" y2="138"/><polygon class="d-arrow" points="430,133 438,138 430,143"/>
+</svg>
+<div class="d-cap">⑥ 검증까지 마치면 팀 구성이 끝나고, 이어서 운영 루프가 돌아갑니다.</div>
+</div>
+<p><code>/harness</code> 는 요청을 총 여섯 단계로 처리합니다.</p>
+<ol>
+    <li>요청 <strong>분석</strong></li>
+    <li>에이전트 <strong>팀 설계</strong></li>
+    <li><strong>에이전트</strong> 생성</li>
+    <li><strong>스킬</strong> 생성</li>
+    <li><strong>오케스트레이터</strong> 생성 · 워크플로우 수립</li>
+    <li>하네스 구성 <strong>검증</strong></li>
+</ol>
+
+<div class="note">
+    <span class="nh">팀 동작 6패턴</span>
+    에이전트 팀의 협업 패턴은 여섯 가지로 명시되어 있습니다 — 순차 실행, 병렬 후 통합, 리뷰 과정 등. 이 패턴들을 <strong>하이브리드로 조합</strong>해 상황에 맞춰 동작합니다.
+</div>
+<p>구조까지 이해했다면 남은 것은 응용입니다 — <a href="#!hns-usecases">활용과 확장</a> 편에서 실제 사례들과 하네스 100, 다른 도구와의 조합을 봅니다.</p>
+

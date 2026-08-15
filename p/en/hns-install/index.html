@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Installing the Meta-Harness Skill (Hands-on)</title>
-<meta name="description" content="A hands-on walkthrough of installing the meta-harness plugin from the marketplace.">
+<title>Running It — Install, Run, Review</title>
+<meta name="description" content="Install the meta-harness skill, run it with an intent statement, then review the generated agents, skills, and orchestrator">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/en/hns-install/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hns-install/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hns-install/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Installing the Meta-Harness Skill (Hands-on)">
-<meta property="og:description" content="A hands-on walkthrough of installing the meta-harness plugin from the marketplace.">
+<meta property="og:title" content="Running It — Install, Run, Review">
+<meta property="og:description" content="Install the meta-harness skill, run it with an intent statement, then review the generated agents, skills, and orchestrator">
 <meta property="og:url" content="https://dewytear.github.io/p/en/hns-install/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Installing the Meta-Harness Skill (Hands-on)">
-<meta name="twitter:description" content="A hands-on walkthrough of installing the meta-harness plugin from the marketplace.">
+<meta name="twitter:title" content="Running It — Install, Run, Review">
+<meta name="twitter:description" content="Install the meta-harness skill, run it with an intent statement, then review the generated agents, skills, and orchestrator">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "Installing the Meta-Harness Skill (Hands-on)",
- "description": "A hands-on walkthrough of installing the meta-harness plugin from the marketplace.",
+ "headline": "Running It — Install, Run, Review",
+ "description": "Install the meta-harness skill, run it with an intent statement, then review the generated agents, skills, and orchestrator",
  "inLanguage": "en",
  "url": "https://dewytear.github.io/p/en/hns-install/",
  "mainEntityOfPage": "https://dewytear.github.io/#!hns-install",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T22:09:56+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T14:58:38+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/ja/hns-install/" hreflang="ja">日本語</a>
 </p>
 <article>
-<h2>Installing the Meta-Harness Skill (Hands-on)</h2>
+<h2>Running It — Install, Run, Review</h2>
 <p>Composing a harness by hand every time (preparing each agent · skill one by one) is a hassle. So the instructor developed a <strong>"meta-harness" skill that composes the harness for you when you only give it a goal</strong>, released it on GitHub, and got a lot of user reviews and stars. Today's hands-on session starts with installing this skill.</p>
 
 <h3>Method 1 — two lines of commands</h3>
@@ -84,11 +84,139 @@
     <span class="nh">Check the marketplace path</span>
     The marketplace handle (<code>lev-factory/harness</code>) is carried over from the value mentioned in the talk, so when you actually install it, <strong>check the exact repository path</strong> on the instructor's GitHub (for example, search for <strong>"Harness 100"</strong>). If the plugin install does not go well, try the UI way and the command way alternately.
 </div>
+
+<h3>Running the Harness (Hands-on)</h3>
+<div class="diagram">
+<svg viewBox="0 0 690 100" role="img" aria-label="Run workflow: convey intent (/harness) → analyze domain → propose team → human review → approve to proceed → run in parallel">
+    <rect class="d-box" x="8" y="20" width="100" height="54" rx="10"/>
+    <text class="d-label sm" x="58" y="42" text-anchor="middle">Convey intent</text>
+    <text class="d-sub" x="58" y="59" text-anchor="middle">/harness</text>
+
+    <rect class="d-box" x="120" y="20" width="100" height="54" rx="10"/>
+    <text class="d-label sm" x="170" y="51" text-anchor="middle">Analyze domain</text>
+
+    <rect class="d-box" x="232" y="20" width="100" height="54" rx="10"/>
+    <text class="d-label sm" x="282" y="51" text-anchor="middle">Propose team</text>
+
+    <rect class="d-box soft" x="344" y="20" width="100" height="54" rx="10"/>
+    <text class="d-label sm" x="394" y="51" text-anchor="middle">Human review</text>
+
+    <rect class="d-box" x="456" y="20" width="100" height="54" rx="10"/>
+    <text class="d-label sm" x="506" y="42" text-anchor="middle">Approve</text>
+    <text class="d-sub" x="506" y="59" text-anchor="middle">Go ahead</text>
+
+    <rect class="d-box accent" x="568" y="20" width="100" height="54" rx="10"/>
+    <text class="d-label sm" x="618" y="51" text-anchor="middle">Run in parallel</text>
+
+    <line class="d-edge" x1="108" y1="47" x2="118" y2="47"/><polygon class="d-arrow" points="112,42 120,47 112,52"/>
+    <line class="d-edge" x1="220" y1="47" x2="230" y2="47"/><polygon class="d-arrow" points="224,42 232,47 224,52"/>
+    <line class="d-edge" x1="332" y1="47" x2="342" y2="47"/><polygon class="d-arrow" points="336,42 344,47 336,52"/>
+    <line class="d-edge" x1="444" y1="47" x2="454" y2="47"/><polygon class="d-arrow" points="448,42 456,47 448,52"/>
+    <line class="d-edge" x1="556" y1="47" x2="566" y2="47"/><polygon class="d-arrow" points="560,42 568,47 560,52"/>
+</svg>
+<div class="d-cap">Convey just the intent and a team gets put together; once a human reviews and approves, execution leaves your hands.</div>
+</div>
+<p>Let's give the <code>/harness</code> you installed some real work. The key difference is that you <strong>"convey only the intent"</strong>.</p>
+
+<h4>Not "write it for me" but "I would like to write it"</h4>
+<p>Normally you instruct an AI, "write me a report". But to the harness you state <strong>only the intent</strong>. Then it composes an <strong>agent team</strong> that will resolve that intent.</p>
+<pre><code>/harness I would like to research the 2026 strategic technology budget allocation
+across all national science and technology fields and the post-PBS response strategy, and write a report.</code></pre>
+<ul>
+    <li>Enter <code>/harness</code>, autocomplete it with <strong>Tab</strong>, then append your request.</li>
+    <li>When you run it, it proceeds with <strong>domain analysis → team composition</strong>.</li>
+    <li>Along the way it asks you to choose between things like <strong>"build the full harness / build only the harness"</strong>.</li>
+    <li>If you have data of your own you can hand it over along with the question. (For example, it handles analyzing a PDF of more than 1,000 pages well.)</li>
+</ul>
+
+<h4>Composition done → review → run</h4>
+<p>When the harness composition is finished, it pauses for a moment. <strong>Review</strong> the agents that were created, and if there is no problem, run it.</p>
+<pre><code><span class="c"># After the review, just tell it to proceed</span>
+Go ahead</code></pre>
+<p>At that moment the work <strong>leaves human hands</strong>, and the agent team carries research → report writing → QA all the way through <strong>in the order the orchestrator planned</strong>.</p>
+
+<h4>Several tasks in parallel</h4>
+<ul>
+    <li>You can leave one task running, bring up <strong>another terminal window</strong>, and give it yet another job. (For example, researching "can the KOSPI go up to 10,000?")</li>
+    <li>At a working developer's desk, <strong>several</strong> terminals are up like this, doing different jobs at the same time.</li>
+    <li>With <strong>Shift + arrow keys</strong> you can look at what the currently spawned agents are doing. (An agent with color on it is working.)</li>
+</ul>
+
+<div class="note">
+    <span class="nh">What is it used for</span>
+    Data analysis, research, report writing, simulation, and so on &mdash; whatever it is, give it the <strong>intent</strong> and it composes an agent team to do that job.
+</div>
+
+<h3>Reviewing the Generated Result — Agents · Skills · Orchestrator</h3>
+<div class="diagram">
+<svg viewBox="0 0 680 220" role="img" aria-label="The generated .claude architecture: the orchestrator on top coordinates the agents below it, skills are injected, and the outputs collect in the shared _workspace">
+    <rect class="d-box accent" x="255" y="10" width="170" height="46" rx="10"/>
+    <text class="d-label" x="340" y="38" text-anchor="middle">Orchestrator</text>
+
+    <rect class="d-box" x="44" y="96" width="160" height="52" rx="10"/>
+    <text class="d-label sm" x="124" y="126" text-anchor="middle">Agent A</text>
+
+    <rect class="d-box" x="260" y="96" width="160" height="52" rx="10"/>
+    <text class="d-label sm" x="340" y="126" text-anchor="middle">Agent B</text>
+
+    <rect class="d-box" x="476" y="96" width="160" height="52" rx="10"/>
+    <text class="d-label sm" x="556" y="126" text-anchor="middle">Agent C</text>
+
+    <line class="d-edge" x1="340" y1="56" x2="124" y2="94"/><polygon class="d-arrow" points="119,88 129,88 124,95"/>
+    <line class="d-edge" x1="340" y1="56" x2="340" y2="94"/><polygon class="d-arrow" points="335,88 345,88 340,95"/>
+    <line class="d-edge" x1="340" y1="56" x2="556" y2="94"/><polygon class="d-arrow" points="551,88 561,88 556,95"/>
+
+    <circle class="d-node c" cx="212" cy="112" r="5"/>
+    <circle class="d-node c" cx="212" cy="132" r="5"/>
+    <circle class="d-node c" cx="428" cy="112" r="5"/>
+    <circle class="d-node c" cx="428" cy="132" r="5"/>
+    <circle class="d-node c" cx="644" cy="112" r="5"/>
+    <circle class="d-node c" cx="644" cy="132" r="5"/>
+    <text class="d-sub" x="124" y="86" text-anchor="middle">● Injected skills</text>
+
+    <rect class="d-box soft" x="200" y="168" width="280" height="44" rx="10"/>
+    <text class="d-label sm" x="340" y="195" text-anchor="middle">_workspace (shared outputs)</text>
+
+    <line class="d-edge dash" x1="124" y1="148" x2="232" y2="168"/><polygon class="d-arrow" points="229.8,157 239.8,162 228.8,168"/>
+    <line class="d-edge dash" x1="340" y1="148" x2="340" y2="166"/><polygon class="d-arrow" points="335,162 345,162 340,168"/>
+    <line class="d-edge dash" x1="556" y1="148" x2="448" y2="168"/><polygon class="d-arrow" points="451.9,157 440.9,162 450.9,168"/>
+</svg>
+<div class="d-cap">The orchestrator coordinates the agents, skills get injected, and the outputs collect in _workspace.</div>
+</div>
+<p>Let's look at what gets created once the harness is composed. Claude Code creates the agents, skills, and so on <strong>under the <code>.claude</code> folder</strong>.</p>
+
+<h4>The agents that were created (example)</h4>
+<p>For the "national R&D budget · post-PBS" task, this was the team that got composed.</p>
+<ul>
+    <li><strong>Quantitative R&D budget analyst</strong> &mdash; breaks the budget allocation · adjustment plan down by ministry · program · year, and tracks changes in the government/government-funded ratio.</li>
+    <li><strong>Governance · finance expert for government-funded institutions</strong> &mdash; derives the strategy for the transition from PBS to a mission-oriented system.</li>
+    <li><strong>National R&D policy researcher</strong> &mdash; researches budget · policy documents · press releases · NIS/NSTC agenda items and the like from primary sources.</li>
+    <li><strong>Report writing agent</strong> &mdash; gathers the preceding outputs and writes them up as a report.</li>
+    <li><strong>QA reviewer</strong> &mdash; cross-checks not simple typos but <strong>claim–source consistency, numerical consistency, and the logical connection of the recommendations</strong>.</li>
+</ul>
+
+<h4>The skills that get injected</h4>
+<p>Agents alone are not enough, so specialized <strong>skills</strong> are created and injected. For example: a quantitative budget analysis method (standard forms · calculation rules · checklist), citation verification for policy reports (verification axes · priorities), and a government policy report writing format (table of contents).</p>
+
+<h4>Orchestrator (always one)</h4>
+<p>It is the <strong>PM role</strong> that coordinates the agents so they do not wander off. It does not look into the detailed work; it only watches "are the agents doing their jobs well". From Phase 0 on, <strong>the workflow is planned in advance</strong> as to which agent each stage needs. (It feels similar to Claude Code's plan mode.)</p>
+
+<h4>Review and getting ready to run</h4>
+<ul>
+    <li>The review step is mandatory. If you give <strong>feedback</strong> like "add more agents", "this does not match the intent, fix it", or "revise the harness", agents/skills are newly created or reinforced.</li>
+    <li>There is an issue where agents <strong>are not loaded dynamically</strong>. If you do not see them in <code>/agents</code>, they load once you <code>/exit</code> and come back in.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">The _workspace folder</span>
+    When you run with the harness, a <code>_workspace</code> folder appears where the <strong>intermediate outputs</strong> the agents produced collect &mdash; the first-pass research, the budget analysis, the QA report (critical · major · minor issues) and its fixes, the limitations, and even the <strong>supporting sources</strong>. Because it is source-based, hallucination is greatly reduced.
+</div>
+<p>Having run one, it is time to look inside — the <a href="/p/en/hns-kitchen/">How It Works</a> chapter starts with the kitchen metaphor and unpacks agent teams and the core three elements.</p>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Harness &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Harness &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
-<ul><li><a href="/p/en/hnp-install/">Installation and Setup</a></li><li><a href="/p/en/omc-install/">Installation</a></li><li><a href="/p/en/hnp-commands/">Commands · Quick Reference</a></li><li><a href="/p/en/omc-doctor/">Installation Diagnosis</a></li></ul>
+<ul><li><a href="/p/en/hnp-install/">Installation and Setup</a></li><li><a href="/p/en/hnp-commands/">Commands · Quick Reference</a></li><li><a href="/p/en/hnp-intro/">Harness Plugin — Introduction</a></li><li><a href="/p/en/hnp-first-run/">First Harness Run — Sales/Order Customization</a></li></ul>
 </nav>
 </body>
 </html>

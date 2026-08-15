@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>메타 하네스 스킬 설치 (실습)</title>
-<meta name="description" content="메타 하네스 플러그인을 마켓플레이스로 설치하는 실습이다.">
+<title>실행하기 — 설치·실행·리뷰</title>
+<meta name="description" content="메타 하네스 스킬을 설치하고 &quot;작성하고자 합니다&quot;로 실행한 뒤, 생성된 에이전트·스킬·오케스트레이터를 리뷰한다">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/hns-install/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hns-install/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hns-install/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="메타 하네스 스킬 설치 (실습)">
-<meta property="og:description" content="메타 하네스 플러그인을 마켓플레이스로 설치하는 실습이다.">
+<meta property="og:title" content="실행하기 — 설치·실행·리뷰">
+<meta property="og:description" content="메타 하네스 스킬을 설치하고 &quot;작성하고자 합니다&quot;로 실행한 뒤, 생성된 에이전트·스킬·오케스트레이터를 리뷰한다">
 <meta property="og:url" content="https://dewytear.github.io/p/hns-install/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="메타 하네스 스킬 설치 (실습)">
-<meta name="twitter:description" content="메타 하네스 플러그인을 마켓플레이스로 설치하는 실습이다.">
+<meta name="twitter:title" content="실행하기 — 설치·실행·리뷰">
+<meta name="twitter:description" content="메타 하네스 스킬을 설치하고 &quot;작성하고자 합니다&quot;로 실행한 뒤, 생성된 에이전트·스킬·오케스트레이터를 리뷰한다">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "메타 하네스 스킬 설치 (실습)",
- "description": "메타 하네스 플러그인을 마켓플레이스로 설치하는 실습이다.",
+ "headline": "실행하기 — 설치·실행·리뷰",
+ "description": "메타 하네스 스킬을 설치하고 \"작성하고자 합니다\"로 실행한 뒤, 생성된 에이전트·스킬·오케스트레이터를 리뷰한다",
  "inLanguage": "ko",
  "url": "https://dewytear.github.io/p/hns-install/",
  "mainEntityOfPage": "https://dewytear.github.io/#!hns-install",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T22:09:56+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T14:58:38+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/ja/hns-install/" hreflang="ja">日本語</a>
 </p>
 <article>
-<h2>메타 하네스 스킬 설치 (실습)</h2>
+<h2>실행하기 — 설치·실행·리뷰</h2>
 <p>하네스를 매번 손으로 구성(에이전트·스킬 등을 일일이 준비)하긴 번거롭습니다. 그래서 강사는 <strong>목표만 주면 하네스를 대신 구성해 주는 "메타 하네스" 스킬</strong>을 개발해 GitHub에 공개했고, 많은 사용 후기와 스타를 받았습니다. 오늘 실습은 이 스킬을 설치하는 것으로 시작합니다.</p>
 
 <h3>방법 1 — 명령 두 줄</h3>
@@ -84,11 +84,139 @@
     <span class="nh">마켓플레이스 경로 확인</span>
     마켓플레이스 핸들(<code>lev-factory/harness</code>)은 발표에서 언급된 값을 옮긴 것으로, 실제 설치 시에는 강사의 GitHub(예: <strong>"하네스 100"</strong> 검색)에서 <strong>정확한 저장소 경로를 확인</strong>하세요. 플러그인 설치가 잘 안 되면 UI 방식과 명령 방식을 번갈아 시도합니다.
 </div>
+
+<h3>하네스 실행하기 (실습)</h3>
+<div class="diagram">
+<svg viewBox="0 0 690 100" role="img" aria-label="실행 워크플로우: 의도 전달(/harness) → 도메인 분석 → 팀 구성 제안 → 사람 리뷰 → 진행 승인 → 병렬 실행">
+    <rect class="d-box" x="8" y="20" width="100" height="54" rx="10"/>
+    <text class="d-label sm" x="58" y="42" text-anchor="middle">의도 전달</text>
+    <text class="d-sub" x="58" y="59" text-anchor="middle">/harness</text>
+
+    <rect class="d-box" x="120" y="20" width="100" height="54" rx="10"/>
+    <text class="d-label sm" x="170" y="51" text-anchor="middle">도메인 분석</text>
+
+    <rect class="d-box" x="232" y="20" width="100" height="54" rx="10"/>
+    <text class="d-label sm" x="282" y="51" text-anchor="middle">팀 구성 제안</text>
+
+    <rect class="d-box soft" x="344" y="20" width="100" height="54" rx="10"/>
+    <text class="d-label sm" x="394" y="51" text-anchor="middle">사람 리뷰</text>
+
+    <rect class="d-box" x="456" y="20" width="100" height="54" rx="10"/>
+    <text class="d-label sm" x="506" y="42" text-anchor="middle">진행 승인</text>
+    <text class="d-sub" x="506" y="59" text-anchor="middle">진행시켜</text>
+
+    <rect class="d-box accent" x="568" y="20" width="100" height="54" rx="10"/>
+    <text class="d-label sm" x="618" y="51" text-anchor="middle">병렬 실행</text>
+
+    <line class="d-edge" x1="108" y1="47" x2="118" y2="47"/><polygon class="d-arrow" points="112,42 120,47 112,52"/>
+    <line class="d-edge" x1="220" y1="47" x2="230" y2="47"/><polygon class="d-arrow" points="224,42 232,47 224,52"/>
+    <line class="d-edge" x1="332" y1="47" x2="342" y2="47"/><polygon class="d-arrow" points="336,42 344,47 336,52"/>
+    <line class="d-edge" x1="444" y1="47" x2="454" y2="47"/><polygon class="d-arrow" points="448,42 456,47 448,52"/>
+    <line class="d-edge" x1="556" y1="47" x2="566" y2="47"/><polygon class="d-arrow" points="560,42 568,47 560,52"/>
+</svg>
+<div class="d-cap">의도만 전하면 팀이 꾸려지고, 사람이 리뷰·승인한 뒤 실행은 손을 떠납니다.</div>
+</div>
+<p>설치한 <code>/harness</code> 로 실제 일을 시켜 봅니다. 핵심 차이는 <strong>"의도만 전달"</strong> 한다는 점입니다.</p>
+
+<h4>"작성해줘"가 아니라 "작성하고자 합니다"</h4>
+<p>보통 AI에는 "보고서를 작성해줘"라고 지시합니다. 하지만 하네스에는 <strong>의도만</strong> 말합니다. 그러면 그 의도를 해결해 줄 <strong>에이전트 팀</strong>을 구성해 줍니다.</p>
+<pre><code>/harness 2026년 국가 과학기술 전 분야 전략기술 예산 배분 및
+포스트 PBS 대응 전략에 대해 조사하고 보고서를 작성하고자 합니다.</code></pre>
+<ul>
+    <li><code>/harness</code> 입력 후 <strong>Tab</strong> 으로 자동완성한 뒤 요청을 이어 붙입니다.</li>
+    <li>실행하면 <strong>도메인 분석 → 팀 구성</strong>을 진행합니다.</li>
+    <li>중간에 <strong>"하네스 풀 구축 / 하네스만 구축"</strong> 같은 선택을 물어봅니다.</li>
+    <li>내 데이터가 있으면 함께 주며 물어볼 수 있습니다. (예: 1000페이지 넘는 PDF 분석도 잘 처리)</li>
+</ul>
+
+<h4>구성 완료 → 리뷰 → 실행</h4>
+<p>하네스 구성이 완료되면 잠시 멈춥니다. 만들어진 에이전트들을 <strong>리뷰</strong>한 뒤, 문제없으면 실행합니다.</p>
+<pre><code><span class="c"># 리뷰 후 그냥 진행 지시</span>
+진행시켜</code></pre>
+<p>이 순간 작업은 <strong>사람의 손을 떠나</strong>, 에이전트 팀이 리서치 → 보고서 작성 → QA를 <strong>오케스트레이터가 계획한 순서대로</strong> 끝까지 진행합니다.</p>
+
+<h4>병렬로 여러 작업</h4>
+<ul>
+    <li>한 작업을 돌려놓고 <strong>다른 터미널 창</strong>을 띄워 또 다른 일을 시킬 수 있습니다. (예: "코스피가 만까지 갈 수 있을까?" 조사)</li>
+    <li>실무 개발자 자리에는 이렇게 터미널이 <strong>여러 개</strong> 떠서 서로 다른 일을 동시에 합니다.</li>
+    <li><strong>Shift + 방향키</strong> 로 현재 스폰된 에이전트들이 무슨 일을 하는지 살펴볼 수 있습니다. (색이 들어간 에이전트가 작업 중)</li>
+</ul>
+
+<div class="note">
+    <span class="nh">무엇에 쓰나</span>
+    데이터 분석, 리서치, 보고서 작성, 시뮬레이션 등 — 무엇이든 <strong>의도</strong>를 주면 그 일을 할 에이전트 팀을 구성해 줍니다.
+</div>
+
+<h3>생성 결과 리뷰 — 에이전트·스킬·오케스트레이터</h3>
+<div class="diagram">
+<svg viewBox="0 0 680 220" role="img" aria-label="생성된 .claude 아키텍처: 상단 오케스트레이터가 하위 에이전트들을 조율, 스킬이 주입되고 산출물은 공용 _workspace에 모임">
+    <rect class="d-box accent" x="255" y="10" width="170" height="46" rx="10"/>
+    <text class="d-label" x="340" y="38" text-anchor="middle">오케스트레이터</text>
+
+    <rect class="d-box" x="44" y="96" width="160" height="52" rx="10"/>
+    <text class="d-label sm" x="124" y="126" text-anchor="middle">에이전트 A</text>
+
+    <rect class="d-box" x="260" y="96" width="160" height="52" rx="10"/>
+    <text class="d-label sm" x="340" y="126" text-anchor="middle">에이전트 B</text>
+
+    <rect class="d-box" x="476" y="96" width="160" height="52" rx="10"/>
+    <text class="d-label sm" x="556" y="126" text-anchor="middle">에이전트 C</text>
+
+    <line class="d-edge" x1="340" y1="56" x2="124" y2="94"/><polygon class="d-arrow" points="119,88 129,88 124,95"/>
+    <line class="d-edge" x1="340" y1="56" x2="340" y2="94"/><polygon class="d-arrow" points="335,88 345,88 340,95"/>
+    <line class="d-edge" x1="340" y1="56" x2="556" y2="94"/><polygon class="d-arrow" points="551,88 561,88 556,95"/>
+
+    <circle class="d-node c" cx="212" cy="112" r="5"/>
+    <circle class="d-node c" cx="212" cy="132" r="5"/>
+    <circle class="d-node c" cx="428" cy="112" r="5"/>
+    <circle class="d-node c" cx="428" cy="132" r="5"/>
+    <circle class="d-node c" cx="644" cy="112" r="5"/>
+    <circle class="d-node c" cx="644" cy="132" r="5"/>
+    <text class="d-sub" x="124" y="86" text-anchor="middle">● 주입 스킬</text>
+
+    <rect class="d-box soft" x="200" y="168" width="280" height="44" rx="10"/>
+    <text class="d-label sm" x="340" y="195" text-anchor="middle">_workspace (공용 산출물)</text>
+
+    <line class="d-edge dash" x1="124" y1="148" x2="232" y2="168"/><polygon class="d-arrow" points="229.8,157 239.8,162 228.8,168"/>
+    <line class="d-edge dash" x1="340" y1="148" x2="340" y2="166"/><polygon class="d-arrow" points="335,162 345,162 340,168"/>
+    <line class="d-edge dash" x1="556" y1="148" x2="448" y2="168"/><polygon class="d-arrow" points="451.9,157 440.9,162 450.9,168"/>
+</svg>
+<div class="d-cap">오케스트레이터가 에이전트들을 조율하고, 스킬이 주입되며 산출물은 _workspace에 모입니다.</div>
+</div>
+<p>하네스가 구성되면 무엇이 만들어지는지 살펴봅니다. Claude Code는 에이전트·스킬 등을 <strong><code>.claude</code> 폴더 하위</strong>에 생성합니다.</p>
+
+<h4>만들어진 에이전트 (예시)</h4>
+<p>"국가 R&D 예산·포스트 PBS" 과제에서는 이런 팀이 구성됐습니다.</p>
+<ul>
+    <li><strong>R&D 예산 정량 분석가</strong> — 예산 배분·조정안을 부처·사업·연도 단위로 분해, 정부/출연 비율 변화 추적.</li>
+    <li><strong>정부출연기관 거버넌스·재정 전문가</strong> — PBS에서 임무중심형 체제로의 전환 전략 도출.</li>
+    <li><strong>국가 R&D 정책 리서처</strong> — 예산·정책 문서·보도자료·NIS/NSTC 안건 등을 1차 출처에서 조사.</li>
+    <li><strong>보고서 작성 에이전트</strong> — 앞선 산출물을 모아 보고서로 집필.</li>
+    <li><strong>QA 리뷰어</strong> — 단순 오탈자가 아니라 <strong>주장–출처 정합성, 수치 일관성, 권고 논리의 연결</strong>을 교차 확인.</li>
+</ul>
+
+<h4>주입되는 스킬</h4>
+<p>에이전트만으로는 부족해서, 전문화된 <strong>스킬</strong>을 만들어 주입합니다. 예: 예산 정량 분석법(표준 양식·계산 규칙·체크리스트), 정책 보고서 인용 검증(검증 축·우선순위), 정부 정책 보고서 작성 포맷(목차).</p>
+
+<h4>오케스트레이터 (항상 1개)</h4>
+<p>에이전트들이 딴 길로 새지 않게 조율하는 <strong>PM 역할</strong>입니다. 세부 작업을 들여다보진 않고, "에이전트들이 일을 잘하는가"만 봅니다. Phase 0부터 각 단계에 필요한 에이전트가 무엇인지 <strong>워크플로우가 사전 계획</strong>되어 있습니다. (Claude Code의 플랜 모드와 유사한 느낌)</p>
+
+<h4>리뷰와 실행 준비</h4>
+<ul>
+    <li>리뷰 과정은 필수입니다. "에이전트를 더 추가", "의도와 안 맞으니 수정", "하네스를 수정해줘" 처럼 <strong>피드백</strong>하면 에이전트/스킬이 새로 생기거나 보강됩니다.</li>
+    <li>에이전트가 <strong>동적으로 로딩되지 않는</strong> 문제가 있습니다. <code>/agents</code> 에 안 보이면 <code>/exit</code> 후 다시 들어오면 로딩됩니다.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">_workspace 폴더</span>
+    하네스로 실행하면 <code>_workspace</code> 폴더가 생겨, 에이전트들이 만든 <strong>중간 산출물</strong>이 모입니다 — 1차 리서치, 예산 분석, QA 리포트(크리티컬·메이저·마이너 이슈)와 수정안, 한계 사항, 그리고 <strong>근거 출처</strong>까지. 출처 기반이라 할루시네이션이 크게 줄어듭니다.
+</div>
+<p>돌려 봤으니 이제 속을 들여다볼 차례입니다 — <a href="/p/hns-kitchen/">동작 원리</a> 편이 주방 비유로 시작해 에이전트 팀과 핵심 3요소의 구조를 풉니다.</p>
 </article>
-<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · Code · Harness &middot; <span class="pr-k">생성일자</span> 2026-07-03 &middot; <span class="pr-k">수정일자</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · Code · Harness &middot; <span class="pr-k">생성일자</span> 2026-07-03 &middot; <span class="pr-k">수정일자</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>연관 문서</h2>
-<ul><li><a href="/p/hnp-install/">설치와 준비</a></li><li><a href="/p/omc-install/">설치</a></li><li><a href="/p/hnp-commands/">명령어 · 빠른 참조</a></li><li><a href="/p/omc-doctor/">설치 진단</a></li></ul>
+<ul><li><a href="/p/hnp-install/">설치와 준비</a></li><li><a href="/p/hnp-commands/">명령어 · 빠른 참조</a></li><li><a href="/p/hnp-intro/">Harness 플러그인 — 소개</a></li><li><a href="/p/hnp-first-run/">첫 하네스 실행 — 영업·수주 커스터마이징</a></li></ul>
 </nav>
 </body>
 </html>

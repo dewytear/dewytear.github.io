@@ -1,4 +1,4 @@
-<h2>활용 사례 — 콘텐츠부터 리서치까지</h2>
+<h2>활용과 확장 — 사례·하네스 100·도구</h2>
 <p>하네스는 개발에만 쓰기 아까울 만큼 활용 폭이 넓습니다. 강사가 만들어 본 사례들입니다.</p>
 
 <h3>소설 — "에이전트 시대"</h3>
@@ -25,4 +25,111 @@
 <div class="note">
     <span class="nh">공통점</span>
     "그냥 써줘"가 아니라, 그 일을 하기 위한 <strong>에이전트·스킬·워크플로우</strong>가 먼저 만들어지고, 사전 계획된 재료와 검증 루프 위에서 결과물이 나옵니다.
+</div>
+
+<h3>하네스 100 · 실습 아이디어 · 성능</h3>
+
+<h4>하네스 100</h4>
+<p>일상과 업무에 필요한 <strong>100가지 사례의 하네스를 미리 구성</strong>해 공개한 모음입니다. ("하네스 100" 으로 검색, 한국어 버전 제공) 분야는 다음과 같습니다.</p>
+<ul>
+    <li>콘텐츠 제작(유튜브 기획·팟캐스트·뉴스레터·온라인 강의)</li>
+    <li>소프트웨어 개발, 데이터 분석</li>
+    <li>비즈니스 전략(스타트업 아이디어 검증~피칭, <strong>정부 지원 사업계획서</strong>)</li>
+    <li>교육·학습, 법률(위험 평가), 건강·라이프스타일, 커뮤니케이션, 운영 프로세스, 전문 도메인</li>
+</ul>
+<p>예를 들어 "정부 지원 사업계획서 작성"에는 <strong>공고문 분석 전문가 · 사업성 파트 작성자 · 예산 편성 도우미</strong> 같은 에이전트와 관련 스킬이 미리 만들어져 있습니다. 사용자들은 <strong>비슷한 구성을 찾아 커스터마이징</strong>하는 식으로 활용합니다.</p>
+
+<h4>실습해 볼 만한 10가지 아이디어</h4>
+<ol>
+    <li>논문 PDF → 한 장 요약 카드</li>
+    <li>실험 데이터 정제 → 시각화 → 리포트 파이프라인</li>
+    <li>선행 기술 <strong>특허 조사</strong>(강력한 리서치 기반)</li>
+    <li>연구계획서 작성</li>
+    <li>시뮬레이션 환경 세팅·검증</li>
+    <li>레거시 코드 리팩토링</li>
+    <li>문서화</li>
+    <li>발표자료 통합 제작</li>
+    <li>국가 과제 보고서 작성</li>
+    <li>연구 데이터 큐레이션</li>
+</ol>
+<p>가져올 사이트가 API 연동이 필요하면, 그 자체를 <strong>스킬</strong>로 만들어 에이전트에 연결하면 됩니다.</p>
+
+<h4>성능 측정 — 수치화</h4>
+<div class="diagram">
+<svg viewBox="0 0 660 240" role="img" aria-label="난이도별 성능 경향: 기초·중급·고급 각 그룹에서 하네스 없음(연함) vs 있음(강조) 막대 비교, 난이도가 오를수록 격차가 커짐">
+    <rect class="d-box soft" x="392" y="12" width="16" height="12" rx="3"/>
+    <text class="d-sub" x="416" y="22" text-anchor="start">하네스 없음</text>
+    <rect class="d-box accent" x="500" y="12" width="16" height="12" rx="3"/>
+    <text class="d-sub" x="524" y="22" text-anchor="start">하네스 있음</text>
+
+    <rect class="d-box soft" x="70" y="88" width="44" height="112" rx="6"/>
+    <rect class="d-box accent" x="120" y="68" width="44" height="132" rx="6"/>
+    <text class="d-label sm" x="117" y="222" text-anchor="middle">기초</text>
+
+    <rect class="d-box soft" x="280" y="118" width="44" height="82" rx="6"/>
+    <rect class="d-box accent" x="330" y="74" width="44" height="126" rx="6"/>
+    <text class="d-label sm" x="327" y="222" text-anchor="middle">중급</text>
+
+    <rect class="d-box soft" x="490" y="152" width="44" height="48" rx="6"/>
+    <rect class="d-box accent" x="540" y="82" width="44" height="118" rx="6"/>
+    <text class="d-label sm" x="537" y="222" text-anchor="middle">고급</text>
+
+    <line class="d-edge" x1="44" y1="200" x2="616" y2="200"/>
+</svg>
+<div class="d-cap">실제 측정값이 아니라 경향입니다 — 난이도가 오를수록 하네스의 격차가 커집니다.</div>
+</div>
+<p>체감 효과를 수치로 확인하기 위해, 난이도별(기초·중급·고급) <strong>개발 과제 15개</strong>를 하네스 <strong>없을 때 vs 있을 때</strong>로 비교하고, 최종 코드를 <strong>LLM judge</strong> 로 평가했습니다.</p>
+<div class="note">
+    <span class="nh">결과</span>
+    평균 <strong>약 60% 성능 향상</strong>, 하네스 구성 시 <strong>승률 100%</strong>. 특히 과제가 <strong>어려울수록</strong> — 도구 하나만 쓰면 점수 하락폭이 컸지만, 하네스는 <strong>품질이 유지</strong>되는 효과가 있었습니다.
+</div>
+<div class="note">
+    <span class="nh">수치 참고</span>
+    위 수치는 공개 벤치마크가 아니라 <strong>강연자의 자체 측정치</strong>입니다. 참고로 Anthropic도 멀티에이전트 구성이 단일 에이전트 대비 내부 평가에서 <strong>90.2% 성능 향상</strong>을 보였다고 발표한 바 있습니다(multi-agent research system).
+</div>
+
+<h3>도구 확장과 마무리</h3>
+
+<h4>Claude Code vs Gemini(Antigravity)</h4>
+<p>AI 도구는 엎치락뒤치락 발전합니다. 현재는 Claude Code가 가장 좋지만, 강사는 <strong>Antigravity CLI</strong>(<code>agy</code> 명령)도 병행합니다.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>항목</th><th>Claude Code</th><th>Antigravity (Gemini 3.5 Flash)</th></tr></thead>
+        <tbody>
+            <tr><td>생성 속도</td><td>초당 약 50~60 토큰</td><td>약 4배 빠름</td></tr>
+            <tr><td>이미지 생성</td><td>모델 자체는 불가(codex-image 스킬로 가능)</td><td>가능(나노바나나)</td></tr>
+            <tr><td>결과 퀄리티</td><td>강사 소감상 더 예쁘게 나옴</td><td>빠르지만 다듬음 필요</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>모델별 성능·속도·가격은 <strong>Artificial Analysis</strong> 사이트에서 비교할 수 있습니다. (Opus·GPT 5.5는 가격이 비싼 편)</p>
+
+<div class="note">
+    <span class="nh">수치 참고</span>
+    표의 "약 4배 빠름"은 공개 벤치마크가 아니라 강사의 경험치입니다. 참고로 병렬 에이전트 구성의 속도 향상은 작업의 독립성에 따라 약 2배에서 최대 10배까지 보고됩니다(Anthropic은 복잡한 쿼리에서 소요 시간 90% 단축을 보고).
+</div>
+
+<h4>Codex CLI로 2차 검증</h4>
+<p>단일 모델 검증은 편향될 수 있어, <strong>Codex CLI(GPT 5.5)</strong> 를 연결하는 스킬로 QA 에이전트에 2차 검증을 붙일 수 있습니다.</p>
+<pre><code><span class="c"># 구성 변경이 필요할 때 /harness 로 지시</span>
+/harness QA 에이전트는 Codex CLI를 이용해 검증하도록 수정</code></pre>
+<ul>
+    <li>QA 에이전트가 <strong>이중 검증 프로토콜</strong>로 업데이트 — Claude로 1차, Codex CLI로 2차, 두 의견을 통합.</li>
+    <li>워크플로우를 알아야 하므로 <strong>오케스트레이터</strong>도 함께 갱신됩니다.</li>
+    <li>이런 하네스 구성 변경 이력은 <strong><code>CLAUDE.md</code></strong> 에 기록됩니다.</li>
+</ul>
+
+<h4>에이전트 1:1 (원온원)</h4>
+<p>특정 에이전트와 <strong>커피챗</strong>하듯 대화하며 재설계할 수 있는 기능도 있습니다. 에이전트 목록에서 상대를 고르면 그 에이전트가 자기 역할·원칙을 설명하고 "어떤 부분을 수정할까요?"라고 물어봅니다.</p>
+
+<h4>마무리 — 사람이 집중할 것</h4>
+<p>에이전트가 많은 일을 대신하는 초입에서, 사람은 다음에 집중해야 합니다: <strong>목표 설정, 맥락적 판단, 품질 기준, 책임·윤리, 좋은 질문, 시스템적 사고, 도메인 전문성, 평가·피드백, AI 협업.</strong></p>
+
+<div class="note">
+    <span class="nh">Q&amp;A 요점</span>
+    · 에이전트가 <code>/agents</code> 에 안 뜨면 리스트만 안 보일 뿐 재시작하면 로딩됨(동적 로딩 실패 시 일반 서브에이전트로 뜨기도).<br>
+    · <strong>오토 모드</strong> — <code>Shift+Tab</code> 으로 auto/accept/plan 모드 전환. 오토 모드는 권한을 매번 묻지 않아 더 자율적으로 동작(중간에 언제든 전환 가능). 안 보이면 클로드 코드 업데이트 필요(native 설치는 자동 업데이트, npm 설치는 수동).<br>
+    · <strong>2026-08-14부터 오토 모드가 기본값</strong>(Pro·Max·Team 신규 세션). 묻지 않는 대신 하드 디나이 규칙과 프롬프트 인젝션 스크리닝이 판정하고, 되돌릴 수 없거나 파괴적인 행동만 사람에게 올라옵니다 — 상세는 <a href="#!news-20260814-auto-mode-stateless-mcp">묻지 않는 기본값</a>.<br>
+    · 에이전트·스킬은 <strong>프로젝트별 <code>.claude</code></strong> 에 생기므로 Git으로 공유; <strong>플러그인은 환경(PC)마다 각각 설치</strong>.<br>
+    · 실무에서는 데모와 달리 <strong>상세 요구사항과 데이터</strong>를 함께 주면(길면 마크다운으로) 의도 전달이 확실해집니다.
 </div>

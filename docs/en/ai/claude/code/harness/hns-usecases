@@ -1,4 +1,4 @@
-<h2>Use Cases — From Content to Research</h2>
+<h2>Uses and Extensions — Cases, Harness 100, Tools</h2>
 <p>The harness has such a wide range of uses that it would be a waste to use it only for development. These are cases the instructor built himself.</p>
 
 <h3>Novel — "The Age of Agents"</h3>
@@ -25,4 +25,111 @@
 <div class="note">
     <span class="nh">What they have in common</span>
     Rather than "just write it", the <strong>agents · skills · workflow</strong> for doing that work are created first, and the result comes out on top of pre-planned material and a verification loop.
+</div>
+
+<h3>Harness 100 · Practice Ideas · Performance</h3>
+
+<h4>Harness 100</h4>
+<p>A published collection that <strong>composes 100 case harnesses in advance</strong> for the things you need in daily life and at work. (Search for "harness 100"; a Korean version is provided.) The fields are as follows.</p>
+<ul>
+    <li>Content production (YouTube planning · podcasts · newsletters · online courses)</li>
+    <li>Software development, data analysis</li>
+    <li>Business strategy (from validating a startup idea to pitching, <strong>government support program business plans</strong>)</li>
+    <li>Education · learning, law (risk assessment), health · lifestyle, communication, operating processes, specialized domains</li>
+</ul>
+<p>For example, "writing a government support program business plan" already comes with agents like a <strong>public notice analysis expert · business viability section writer · budget planning helper</strong> and the related skills. Users make use of it by <strong>finding a similar composition and customizing it</strong>.</p>
+
+<h4>Ten ideas worth practicing</h4>
+<ol>
+    <li>Paper PDF → one-page summary card</li>
+    <li>Experiment data cleanup → visualization → report pipeline</li>
+    <li><strong>Patent research</strong> on prior art (backed by strong research)</li>
+    <li>Writing a research proposal</li>
+    <li>Setting up and verifying a simulation environment</li>
+    <li>Refactoring legacy code</li>
+    <li>Documentation</li>
+    <li>Producing integrated presentation materials</li>
+    <li>Writing a national project report</li>
+    <li>Research data curation</li>
+</ol>
+<p>If a site you want to pull from needs an API integration, you can make that itself into a <strong>skill</strong> and connect it to an agent.</p>
+
+<h4>Measuring performance — putting numbers on it</h4>
+<div class="diagram">
+<svg viewBox="0 0 660 240" role="img" aria-label="Performance trend by difficulty: in each of the basic · intermediate · advanced groups, bars compare no harness (faint) vs with harness (highlighted), and the gap widens as the difficulty rises">
+    <rect class="d-box soft" x="392" y="12" width="16" height="12" rx="3"/>
+    <text class="d-sub" x="416" y="22" text-anchor="start">No harness</text>
+    <rect class="d-box accent" x="500" y="12" width="16" height="12" rx="3"/>
+    <text class="d-sub" x="524" y="22" text-anchor="start">With harness</text>
+
+    <rect class="d-box soft" x="70" y="88" width="44" height="112" rx="6"/>
+    <rect class="d-box accent" x="120" y="68" width="44" height="132" rx="6"/>
+    <text class="d-label sm" x="117" y="222" text-anchor="middle">Basic</text>
+
+    <rect class="d-box soft" x="280" y="118" width="44" height="82" rx="6"/>
+    <rect class="d-box accent" x="330" y="74" width="44" height="126" rx="6"/>
+    <text class="d-label sm" x="327" y="222" text-anchor="middle">Intermediate</text>
+
+    <rect class="d-box soft" x="490" y="152" width="44" height="48" rx="6"/>
+    <rect class="d-box accent" x="540" y="82" width="44" height="118" rx="6"/>
+    <text class="d-label sm" x="537" y="222" text-anchor="middle">Advanced</text>
+
+    <line class="d-edge" x1="44" y1="200" x2="616" y2="200"/>
+</svg>
+<div class="d-cap">These are trends, not actual measurements &mdash; the harness gap widens as the difficulty rises.</div>
+</div>
+<p>To check the felt effect in numbers, <strong>15 development tasks</strong> by difficulty (basic · intermediate · advanced) were compared <strong>without a harness vs with one</strong>, and the final code was evaluated by an <strong>LLM judge</strong>.</p>
+<div class="note">
+    <span class="nh">Result</span>
+    On average <strong>about a 60% performance improvement</strong>, and a <strong>100% win rate</strong> when a harness was composed. Especially the <strong>harder</strong> the task &mdash; using only a single tool made the score drop a lot, but the harness had the effect of <strong>keeping the quality</strong>.
+</div>
+<div class="note">
+    <span class="nh">About the numbers</span>
+    The numbers above are not a public benchmark but the <strong>speaker's own measurements</strong>. For reference, Anthropic has also announced that a multi-agent configuration showed a <strong>90.2% performance improvement</strong> over a single agent in its internal evaluation (multi-agent research system).
+</div>
+
+<h3>Extending the Tools and Wrap-up</h3>
+
+<h4>Claude Code vs Gemini (Antigravity)</h4>
+<p>AI tools advance by leapfrogging each other. Right now Claude Code is the best, but the instructor also uses <strong>Antigravity CLI</strong> (the <code>agy</code> command) alongside it.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Item</th><th>Claude Code</th><th>Antigravity (Gemini 3.5 Flash)</th></tr></thead>
+        <tbody>
+            <tr><td>Generation speed</td><td>About 50&ndash;60 tokens per second</td><td>About 4 times faster</td></tr>
+            <tr><td>Image generation</td><td>Not possible with the model itself (possible via the codex-image skill)</td><td>Possible (Nano Banana)</td></tr>
+            <tr><td>Output quality</td><td>Comes out prettier in the instructor's impression</td><td>Fast, but needs polishing</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>You can compare performance · speed · price by model on the <strong>Artificial Analysis</strong> site. (Opus and GPT 5.5 are on the expensive side.)</p>
+
+<div class="note">
+    <span class="nh">About the numbers</span>
+    The "about 4 times faster" in the table is not a public benchmark but the instructor's own experience. For reference, the speedup of a parallel agent configuration is reported as anywhere from about 2 times up to 10 times depending on how independent the tasks are (Anthropic reported a 90% cut in elapsed time on complex queries).
+</div>
+
+<h4>Second-pass verification with Codex CLI</h4>
+<p>Since verification by a single model can be biased, you can attach second-pass verification to the QA agent with a skill that connects <strong>Codex CLI (GPT 5.5)</strong>.</p>
+<pre><code><span class="c"># when the composition needs to change, instruct with /harness</span>
+/harness Modify the QA agent so that it verifies using Codex CLI</code></pre>
+<ul>
+    <li>The QA agent is updated to a <strong>double verification protocol</strong> &mdash; a first pass with Claude, a second pass with Codex CLI, and the two opinions combined.</li>
+    <li>Since it has to know the workflow, the <strong>orchestrator</strong> is updated along with it.</li>
+    <li>This kind of harness composition change history is recorded in <strong><code>CLAUDE.md</code></strong>.</li>
+</ul>
+
+<h4>Agent 1:1 (one-on-one)</h4>
+<p>There is also a feature that lets you talk with a specific agent as if having a <strong>coffee chat</strong> and redesign it. When you pick a counterpart from the agent list, that agent explains its own role and principles and asks "which part shall we modify?".</p>
+
+<h4>Wrap-up — what people should focus on</h4>
+<p>At the entrance to an era where agents do much of the work for us, people should focus on the following: <strong>setting goals, contextual judgment, quality standards, responsibility · ethics, good questions, systems thinking, domain expertise, evaluation · feedback, and AI collaboration.</strong></p>
+
+<div class="note">
+    <span class="nh">Q&amp;A points</span>
+    · If an agent does not show up in <code>/agents</code>, only the list is missing; restarting loads it (when dynamic loading fails it sometimes shows up as an ordinary subagent).<br>
+    · <strong>Auto mode</strong> &mdash; switch between auto/accept/plan modes with <code>Shift+Tab</code>. Auto mode does not ask for permission every time, so it operates more autonomously (you can switch at any point in the middle). If you do not see it, Claude Code needs to be updated (a native install updates automatically, an npm install manually).<br>
+    · <strong>Since 2026-08-14 auto mode is the default</strong> (new sessions on Pro, Max, and Team). Instead of asking, hard deny rules and prompt-injection screening make the call, and only irreversible or destructive actions come back to you &mdash; details in <a href="#!news-20260814-auto-mode-stateless-mcp">Defaults That Stop Asking</a>.<br>
+    · Agents · skills are created in the <strong>per-project <code>.claude</code></strong>, so share them with Git; <strong>plugins are installed separately on each environment (PC)</strong>.<br>
+    · In real work, unlike in a demo, giving <strong>detailed requirements and data</strong> together (in markdown if long) makes the intent land reliably.
 </div>

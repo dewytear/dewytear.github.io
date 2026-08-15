@@ -1,4 +1,4 @@
-<h2>厨房のたとえで理解するハーネス</h2>
+<h2>動作原理 — 厨房のたとえ・チーム・三要素</h2>
 <p>ハーネスエンジニアリングを<strong>厨房の運営</strong>にたとえると、理解しやすくなります。</p>
 
 <h3>一人シェフ vs マルチエージェント</h3>
@@ -62,3 +62,134 @@
     <span class="nh">トークンの使用量</span>
     マルチで回すぶんトークンの使用量は増えます。とくに<strong>エージェントどうしが会話する</strong>ときに多くなり、計測では<strong>約 30% 多く</strong>使われたケースもありました。
 </div>
+
+<h3>エージェントチームとコンテキスト管理</h3>
+<p>複数のエージェントをどう協業させるか、そしてコンテキストをどう管理するかが、ハーネスの品質を左右します。</p>
+
+<h4>隔離型サブエージェント → 会話するチームへ</h4>
+<div class="diagram">
+<svg viewBox="0 0 700 172" role="img" aria-label="隔離サブエージェント（互いに話せない）と、エージェントチーム（互いに通信する）の比較">
+    <line class="d-edge dash" x1="350" y1="6" x2="350" y2="150"/>
+
+    <rect class="d-box" x="110" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="170" y="31" text-anchor="middle">指揮エージェント</text>
+    <rect class="d-box soft" x="40" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="95" y="104" text-anchor="middle">エージェント A</text>
+    <rect class="d-box soft" x="190" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="245" y="104" text-anchor="middle">エージェント B</text>
+    <line class="d-edge" x1="140" y1="44" x2="100" y2="78"/><polygon class="d-arrow" points="96,72 104,80 90,80"/>
+    <line class="d-edge" x1="200" y1="44" x2="240" y2="78"/><polygon class="d-arrow" points="244,72 250,80 236,80"/>
+    <text class="d-sub" x="170" y="105" text-anchor="middle">✕</text>
+    <text class="d-sub" x="170" y="140" text-anchor="middle">互いに話せない</text>
+    <text class="d-label sm" x="170" y="162" text-anchor="middle">隔離サブエージェント</text>
+
+    <rect class="d-box accent" x="470" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="530" y="31" text-anchor="middle">指揮エージェント</text>
+    <rect class="d-box" x="400" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="455" y="104" text-anchor="middle">エージェント C</text>
+    <rect class="d-box" x="550" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="605" y="104" text-anchor="middle">エージェント D</text>
+    <line class="d-edge" x1="500" y1="44" x2="460" y2="78"/><polygon class="d-arrow" points="456,72 464,80 450,80"/>
+    <line class="d-edge" x1="560" y1="44" x2="600" y2="78"/><polygon class="d-arrow" points="604,72 610,80 596,80"/>
+    <line class="d-edge accent" x1="512" y1="100" x2="548" y2="100"/>
+    <polygon class="d-arrow accent" points="542,95 550,100 542,105"/>
+    <polygon class="d-arrow accent" points="518,95 510,100 518,105"/>
+    <text class="d-accent" x="530" y="140" text-anchor="middle" font-size="11">↔ 互いに通信</text>
+    <text class="d-label sm" x="530" y="162" text-anchor="middle">エージェントチーム</text>
+</svg>
+<div class="d-cap">隔離サブエージェントは結果を返すだけですが、エージェントチームは互いを呼び起こして協業します。</div>
+</div>
+<ul>
+    <li><strong>従来のやり方</strong> — サブエージェントたちが<strong>隔離された環境</strong>でそれぞれ働き、結果だけを返す（並列）。互いに会話する手段がありませんでした。</li>
+    <li><strong>エージェントチーム</strong> — エージェントたちが<strong>コミュニケーションしながら</strong>働くので、より賢く動きます。</li>
+</ul>
+<p>たとえば、リサーチのエージェントが調査を終えて終了したあと分析のエージェントがスポーンされ、分析中に<strong>リサーチの足りない部分</strong>を見つけたとします。このとき自分で調べるのではなく、<strong>リサーチのエージェントをもう一度呼び起こして</strong>追加の調査を依頼します。</p>
+
+<h4>エージェントチームの有効化</h4>
+<p>この機能は<strong>実験版</strong>なので、既定では無効です。ユーザーフォルダの <code>~/.claude/settings.json</code> で環境変数をオンにします。</p>
+<pre><code><span class="c"># ~/.claude/settings.json の env</span>
+"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"</code></pre>
+<ul>
+    <li>この値をオンにして初めて、エージェントたちが会話しながらチームとして動きます。</li>
+    <li>エージェントが<strong>動的ロードに成功</strong>するとチームモードがきちんと入り、失敗すると隔離された通常のサブエージェントとして立ち上がることがよくあります。（実験版のバグ）</li>
+    <li>ちなみに Gemini の <strong>Antigravity CLI</strong> にも、エージェント間のコミュニケーション機能が追加されました。</li>
+</ul>
+
+<h4>コンテキスト = 厨房の作業台</h4>
+<p>コンテキストは料理を作る<strong>作業台</strong>のようなものです。その料理に関係するものだけが載っていればすっきりしますが、関係のないものが混ざると失敗の余地が生まれます（塩の容器に砂糖が入っているようなもの）。実際、会話が長くなると前後の考えが<strong>矛盾</strong>することがあり、その状態で仕事をさせると AI は「A が正しいのか B が正しいのか」と混乱します。だから<strong>コンテキストの管理</strong>が大切なのです。</p>
+
+<h3>核となる 3 要素と動作の構造</h3>
+<p>ハーネスの構成要素は多いのですが、講師は<strong>この三つさえそろえばマルチエージェントの協業はうまく起きる</strong>と見て、ここに集中します — <strong>エージェント・スキル・オーケストレーター</strong>。</p>
+
+<h4>1）エージェント — 自然言語の文書</h4>
+<p>エージェントはコードではなく<strong>自然言語で書かれた文書</strong>です。次のものを入れます。</p>
+<ul>
+    <li>役割と<strong>原則</strong></li>
+    <li><strong>入力プロトコル・出力プロトコル</strong>（結果をどんな形式で出すか）</li>
+    <li><strong>協業</strong> — ほかのエージェントと何をやり取りするか</li>
+    <li>再呼び出しや<strong>エラーが起きたとき</strong>のふるまい</li>
+</ul>
+
+<h4>2）スキル — くり返し作業の標準化</h4>
+<p>スキルは <strong>name + description</strong> に、決められたプロセス・知識・チェックリストを自由に入れたものです。</p>
+<ul>
+    <li>プロセスが決まっているので<strong>一貫性</strong>が保たれます。</li>
+    <li>小さなスキルを<strong>組み合わせて</strong>より大きなシステムを構成できます。</li>
+    <li>標準化のおかげでくり返しの作業が速くなります。</li>
+</ul>
+<p>スキル設計のコツ: <strong>くり返し作業を見つけ → 単一の責務に分け → 入力／出力を定義 → 例外を処理 → エージェントにつなぐ。</strong></p>
+
+<h4>3）オーケストレーター — マイクロマネジメントしない PM</h4>
+<p>ワークフロー全体がきちんと回っているかに責任を持つ <strong>PM</strong> です。ダメな PM のように細かく口を出さず、「ワークフローをうまくこなしているか」くらいだけをチェックします。</p>
+
+<h4>プラグインの 6 ステップ</h4>
+<div class="diagram">
+<svg viewBox="0 0 660 188" role="img" aria-label="ハーネスの 6 ステップ: 依頼の分析 → エージェントチームの設計 → エージェント生成 → スキル生成 → オーケストレーター・ワークフロー → 構成の検証">
+    <rect class="d-box" x="8" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="42" text-anchor="middle">① 依頼の分析</text>
+    <text class="d-sub" x="108" y="59" text-anchor="middle">何を望んでいるか</text>
+
+    <rect class="d-box" x="223" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="42" text-anchor="middle">② チーム設計</text>
+    <text class="d-sub" x="323" y="59" text-anchor="middle">必要な役割の定義</text>
+
+    <rect class="d-box" x="438" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="42" text-anchor="middle">③ エージェント生成</text>
+    <text class="d-sub" x="538" y="59" text-anchor="middle">自然言語の文書</text>
+
+    <rect class="d-box" x="8" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="134" text-anchor="middle">④ スキル生成</text>
+    <text class="d-sub" x="108" y="151" text-anchor="middle">反復手順の標準化</text>
+
+    <rect class="d-box" x="223" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label sm" x="323" y="134" text-anchor="middle">⑤ オーケストレーター</text>
+    <text class="d-sub" x="323" y="151" text-anchor="middle">ワークフローの策定</text>
+
+    <rect class="d-box accent" x="438" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="134" text-anchor="middle">⑥ 構成の検証</text>
+    <text class="d-sub" x="538" y="151" text-anchor="middle">きちんと組めたか</text>
+
+    <line class="d-edge" x1="208" y1="46" x2="221" y2="46"/><polygon class="d-arrow" points="215,41 223,46 215,51"/>
+    <line class="d-edge" x1="423" y1="46" x2="436" y2="46"/><polygon class="d-arrow" points="430,41 438,46 430,51"/>
+    <path class="d-edge" d="M538 72 C538 87, 523 92, 505 92 H141 C123 92, 108 97, 108 110"/><polygon class="d-arrow" points="103,106 113,106 108,112"/><polygon class="d-arrow" points="328,87 328,97 318,92"/>
+    <line class="d-edge" x1="208" y1="138" x2="221" y2="138"/><polygon class="d-arrow" points="215,133 223,138 215,143"/>
+    <line class="d-edge" x1="423" y1="138" x2="436" y2="138"/><polygon class="d-arrow" points="430,133 438,138 430,143"/>
+</svg>
+<div class="d-cap">⑥ の検証まで終わればチーム編成は完了し、続いて運用のループが回りはじめます。</div>
+</div>
+<p><code>/harness</code> は依頼を全部で六つのステップで処理します。</p>
+<ol>
+    <li>依頼の<strong>分析</strong></li>
+    <li>エージェント<strong>チームの設計</strong></li>
+    <li><strong>エージェント</strong>の生成</li>
+    <li><strong>スキル</strong>の生成</li>
+    <li><strong>オーケストレーター</strong>の生成・ワークフローの策定</li>
+    <li>ハーネス構成の<strong>検証</strong></li>
+</ol>
+
+<div class="note">
+    <span class="nh">チームの動きの 6 パターン</span>
+    エージェントチームの協業パターンは六つが明示されています — 順次実行、並列してから統合、レビューの工程など。これらのパターンを<strong>ハイブリッドに組み合わせて</strong>状況に合わせて動きます。
+</div>
+<p>構造まで理解したら、残るのは応用です — <a href="#!hns-usecases">活用と拡張</a>の章で実際の事例とハーネス 100、他のツールとの組み合わせを見ます。</p>
+
