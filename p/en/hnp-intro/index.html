@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Harness Plugin — Introduction</title>
-<meta name="description" content="Introduces the Harness plugin concept and why it fits ERP customization.">
+<title>The Harness Plugin — Intro, Concepts, Install</title>
+<meta name="description" content="What the ERP-customization harness plugin is, its key concepts (agents, skills, orchestrator, _workspace), and installation in one chapter">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/en/hnp-intro/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hnp-intro/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hnp-intro/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Harness Plugin — Introduction">
-<meta property="og:description" content="Introduces the Harness plugin concept and why it fits ERP customization.">
+<meta property="og:title" content="The Harness Plugin — Intro, Concepts, Install">
+<meta property="og:description" content="What the ERP-customization harness plugin is, its key concepts (agents, skills, orchestrator, _workspace), and installation in one chapter">
 <meta property="og:url" content="https://dewytear.github.io/p/en/hnp-intro/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Harness Plugin — Introduction">
-<meta name="twitter:description" content="Introduces the Harness plugin concept and why it fits ERP customization.">
+<meta name="twitter:title" content="The Harness Plugin — Intro, Concepts, Install">
+<meta name="twitter:description" content="What the ERP-customization harness plugin is, its key concepts (agents, skills, orchestrator, _workspace), and installation in one chapter">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "Harness Plugin — Introduction",
- "description": "Introduces the Harness plugin concept and why it fits ERP customization.",
+ "headline": "The Harness Plugin — Intro, Concepts, Install",
+ "description": "What the ERP-customization harness plugin is, its key concepts (agents, skills, orchestrator, _workspace), and installation in one chapter",
  "inLanguage": "en",
  "url": "https://dewytear.github.io/p/en/hnp-intro/",
  "mainEntityOfPage": "https://dewytear.github.io/#!hnp-intro",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-04T08:51:27+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-16T00:30:02+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/ja/hnp-intro/" hreflang="ja">日本語</a>
 </p>
 <article>
-<h2>Harness Plugin — Introduction</h2>
+<h2>The Harness Plugin — Intro, Concepts, Install</h2>
 <p>The <strong>Harness plugin</strong> is a Claude Code plugin that <strong>"lays out the setup so that, once you give it only a goal (an intent), several AIs form a team and work on their own for a long time."</strong> Instead of throwing prompts one at a time, if I just say <em>"what I want"</em>, the plugin composes and runs the <strong>agent team · skills · orchestrator</strong> on my behalf.</p>
 
 <h3>The big picture on one page</h3>
@@ -120,11 +120,159 @@
     <li><strong>Standardized deliverables</strong> — the specification, impact analysis, tests, and migration guide are all left together in <code>_workspace</code>.</li>
 </ul>
 <p class="scn-sub">※ A concrete example (a sales/order credit-limit customization) is followed step by step in <a href="/p/en/hnp-first-run/">First harness run</a>.</p>
+
+<h3>Core Concepts Made Easy</h3>
+<p>A harness is made up of five elements. It feels hard, but it maps one-to-one onto <strong>a team working at a company</strong> — one PM, several people in charge, a manual for each of them, inspection, and a shared work folder.</p>
+
+<div class="note">
+    <span class="nh">Where the name comes from — the tack of a carriage horse</span>
+    "Harness" originally means <strong>the tack you put on a horse</strong>. No matter how good the horse (= the AI model) is, depending on <strong>how you strap it up and drive it</strong> it may run well or just spin in place. Harness engineering is exactly the work of designing that <strong>"setup that drives it"</strong>.
+</div>
+
+<h4>Structure — how the elements interlock</h4>
+<div class="diagram">
+<svg viewBox="0 0 700 288" role="img" aria-label="Harness structure: the orchestrator coordinates the analysis, development, and verification agents, and all of them leave deliverables in _workspace">
+    <!-- orchestrator -->
+    <rect class="d-box accent" x="240" y="8" width="220" height="48" rx="10"/>
+    <text class="d-label" x="350" y="30" text-anchor="middle">Orchestrator (PM)</text>
+    <text class="d-sub" x="350" y="47" text-anchor="middle">Workflow planning · coordination</text>
+
+    <!-- bus from orchestrator to agents -->
+    <line class="d-edge" x1="350" y1="56" x2="350" y2="80"/>
+    <line class="d-edge" x1="115" y1="80" x2="585" y2="80"/>
+    <line class="d-edge" x1="115" y1="80" x2="115" y2="96"/>
+    <polygon class="d-arrow" points="110,95 120,95 115,102"/>
+    <line class="d-edge" x1="350" y1="80" x2="350" y2="96"/>
+    <polygon class="d-arrow" points="345,95 355,95 350,102"/>
+    <line class="d-edge" x1="585" y1="80" x2="585" y2="96"/>
+    <polygon class="d-arrow" points="580,95 590,95 585,102"/>
+
+    <!-- agents -->
+    <rect class="d-box" x="15" y="102" width="200" height="58" rx="10"/>
+    <text class="d-label" x="115" y="128" text-anchor="middle">Analysis agent</text>
+    <text class="d-sub" x="115" y="146" text-anchor="middle">Standard source · impact</text>
+
+    <rect class="d-box" x="250" y="102" width="200" height="58" rx="10"/>
+    <text class="d-label" x="350" y="128" text-anchor="middle">Development agent</text>
+    <text class="d-sub" x="350" y="146" text-anchor="middle">Custom implementation</text>
+
+    <rect class="d-box" x="485" y="102" width="200" height="58" rx="10"/>
+    <text class="d-label" x="585" y="128" text-anchor="middle">Verification agent (QA)</text>
+    <text class="d-sub" x="585" y="146" text-anchor="middle">Regression · consistency</text>
+
+    <!-- agents to workspace -->
+    <line class="d-edge dash" x1="115" y1="160" x2="115" y2="204"/>
+    <polygon class="d-arrow" points="110,203 120,203 115,210"/>
+    <line class="d-edge dash" x1="350" y1="160" x2="350" y2="204"/>
+    <polygon class="d-arrow" points="345,203 355,203 350,210"/>
+    <line class="d-edge dash" x1="585" y1="160" x2="585" y2="204"/>
+    <polygon class="d-arrow" points="580,203 590,203 585,210"/>
+
+    <!-- workspace -->
+    <rect class="d-box soft" x="15" y="210" width="670" height="52" rx="10"/>
+    <text class="d-label sm" x="350" y="233" text-anchor="middle">Artifacts · memory &#160;(&#160;_workspace folder&#160;)</text>
+    <text class="d-sub" x="350" y="251" text-anchor="middle">Intermediate deliverables · evidence sources · QA reports pile up here</text>
+
+    <!-- skills note -->
+    <text class="d-sub" x="350" y="282" text-anchor="middle">Each agent pulls out and uses the &lt;skills · tools&gt; it needs</text>
+</svg>
+<div class="d-cap">The orchestrator coordinates the team, and every deliverable is left in the shared <code>_workspace</code>.</div>
+</div>
+
+<h4>The five elements</h4>
+<ul>
+    <li><strong>Agent</strong> — an AI worker taking on a specific role. It is a <strong>"job description" written in natural language, not in code</strong> (role · principles · inputs and outputs · how to collaborate · what to do on errors). <em>e.g. "sales standard-source analyst"</em></li>
+    <li><strong>Skill</strong> — a <strong>manual</strong> that holds a repetitive task. It consists of <code>name + description + procedure · checklist</code>. <em>e.g. the "credit-limit verification procedure" skill</em></li>
+    <li><strong>Orchestrator</strong> — the <strong>PM</strong> that coordinates the team. There is always exactly one, and before starting it <strong>plans the work order (the workflow) in advance</strong>. (Similar to Claude Code's plan mode)</li>
+    <li><strong>Evaluation · tests</strong> — the <strong>inspection</strong> that makes the results trustworthy. It cross-checks not typos but <strong>claim–evidence consistency, numerical consistency, and regression of standard features</strong>.</li>
+    <li><strong>Artifacts · memory</strong> — the <strong>shared work folder <code>_workspace</code></strong> created when it runs. Intermediate deliverables are left together with the <strong>evidence sources</strong>, so you can later trace "why it was done this way" and hallucinations (plausible falsehoods) are reduced as well.</li>
+</ul>
+
+<h4>Likened to a company team</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Harness element</th><th>Company analogy</th><th>ERP customization example</th></tr></thead>
+        <tbody>
+            <tr><td>Orchestrator</td><td>PM / team lead</td><td>The leader who lays out the CR handling order</td></tr>
+            <tr><td>Agent</td><td>The practitioner in charge</td><td>Standard-source analyst · developer · regression QA</td></tr>
+            <tr><td>Skill</td><td>Work manual</td><td>"Impact analysis procedure", "regression test checklist"</td></tr>
+            <tr><td>Evaluation · tests</td><td>Inspector</td><td>Checking for broken standard features · numerical consistency</td></tr>
+            <tr><td>Artifacts · memory</td><td>Shared drive</td><td><code>_workspace</code>: specification · impact · tests · migration guide</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">The minimum setup is three things</span>
+    At first it is enough to understand just three — <strong>agent · skill · orchestrator</strong>. Evaluation · tests and artifacts · memory are <strong>attached for you</strong> by the Harness plugin. In the next documents we install it and <a href="/p/en/hnp-first-run/">run it ourselves</a>.
+</div>
+
+<h3>Installation and Setup</h3>
+<p>The harness is distributed in the form of a <strong>Claude Code plugin</strong>. Once you register the marketplace and install it, you can use the <code>/harness</code> command.</p>
+
+<div class="note">
+    <span class="nh">What you need first</span>
+    <strong>Claude Code must be installed</strong> (see <a href="/p/en/welcome/">Getting Started</a>). In the terminal, move to the project folder you will work in, run <code>claude</code>, and then enter the slash commands below.
+</div>
+
+<h4>Installation in 3 steps</h4>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="Installation flow: add the marketplace → install the plugin → reload and verify">
+    <rect class="d-box" x="10" y="24" width="196" height="48" rx="10"/>
+    <text class="d-label" x="108" y="46" text-anchor="middle">① Add marketplace</text>
+    <text class="d-sub" x="108" y="63" text-anchor="middle">marketplace add</text>
+
+    <rect class="d-box" x="252" y="24" width="196" height="48" rx="10"/>
+    <text class="d-label" x="350" y="46" text-anchor="middle">② Install plugin</text>
+    <text class="d-sub" x="350" y="63" text-anchor="middle">install harness</text>
+
+    <rect class="d-box accent" x="494" y="24" width="196" height="48" rx="10"/>
+    <text class="d-label" x="592" y="46" text-anchor="middle">③ Reload · verify</text>
+    <text class="d-sub" x="592" y="63" text-anchor="middle">/reload → /harness</text>
+
+    <line class="d-edge" x1="208" y1="48" x2="248" y2="48"/>
+    <polygon class="d-arrow" points="244,43 252,48 244,53"/>
+    <line class="d-edge" x1="450" y1="48" x2="490" y2="48"/>
+    <polygon class="d-arrow" points="486,43 494,48 486,53"/>
+</svg>
+</div>
+
+<h4>Method 1 — two command lines (recommended)</h4>
+<pre><code><span class="c"># 1) Add the harness marketplace</span>
+/plugin marketplace add lev-factory/harness
+<span class="c"># 2) Install the harness plugin</span>
+/plugin install harness</code></pre>
+<p>When the install screen appears, install with <strong>User scope</strong> (used across my whole account). If you want to use it only in a specific project, choose project scope.</p>
+
+<h4>Method 2 — from the /plugin screen</h4>
+<ol>
+    <li>Enter <code>/plugin</code> → move to the <strong>Marketplace</strong> tab with the <strong>right arrow key</strong>.</li>
+    <li>Enter <code>lev-factory/harness</code> in <strong>Add Marketplace</strong> → Enter.</li>
+    <li>Select <strong>harness</strong> from the list → Enter on the install screen → install with <strong>User scope</strong>.</li>
+</ol>
+
+<h4>After installing — reload and verify</h4>
+<pre><code><span class="c"># Apply the plugin to the current session</span>
+/reload
+<span class="c"># If the following autocompletes/runs, the install succeeded</span>
+/harness</code></pre>
+<p>If autocomplete pops up when you type <code>/harness</code>, you are ready. Now move on to <a href="/p/en/hnp-first-run/">First harness run</a>.</p>
+
+<div class="note warn">
+    <span class="nh">Caution — check the marketplace address</span>
+    The <code>lev-factory/harness</code> above is <strong>an example value mentioned in the lecture</strong>. For an actual install, check the publisher's <strong>GitHub repository path</strong> and enter that (search term: <strong>"하네스 100"</strong>). If the install does not work, try alternating between <strong>the command approach ↔ the /plugin screen approach</strong>.
+</div>
+
+<div class="note">
+    <span class="nh">Tip for in-house environments</span>
+    In an in-house network or proxy environment, GitHub access may be restricted. If adding the marketplace fails, first check the <strong>network/proxy policy</strong> and <strong>Git access permissions</strong>. The plugin must be <strong>installed separately on each machine</strong> (agent definitions can be shared via Git, but the plugin itself is a personal install).
+</div>
+<p>With concepts and install done, we run one right away — <a href="/p/en/hnp-first-run/">The First Run and How It Works</a> builds a real sales-customization harness.</p>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · PlugIn · Harness &middot; <span class="pr-k">Created</span> 2026-07-04 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · PlugIn · Harness &middot; <span class="pr-k">Created</span> 2026-07-04 &middot; <span class="pr-k">Updated</span> 2026-08-16</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
-<ul><li><a href="/p/en/hnp-first-run/">First Harness Run — Sales/Order Customization</a></li><li><a href="/p/en/hns-install/">Running It — Install, Run, Review</a></li><li><a href="/p/en/hns-overview/">What a Harness Is — Overview, Definition, Anatomy</a></li><li><a href="/p/en/hnp-concepts/">Core Concepts Made Easy</a></li></ul>
+<ul><li><a href="/p/en/hns-install/">Running It — Install, Run, Review</a></li><li><a href="/p/en/hnp-first-run/">The First Run and How It Works</a></li><li><a href="/p/en/hnp-agents-skills/">Design and Verification — Agents, Skills, _workspace</a></li><li><a href="/p/en/hns-overview/">What a Harness Is — Overview, Definition, Anatomy</a></li></ul>
 </nav>
 </body>
 </html>

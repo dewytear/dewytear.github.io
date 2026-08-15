@@ -73,7 +73,7 @@
     "evidenceRef": "インストール・認証・日々の使い方の基本を土台に、拡張の三本道（スキル・MCP・フック）へ続く — 本文の結びが拡張編を指す"
    },
    {
-    "target": "hnp-install",
+    "target": "hnp-intro",
     "evidenceRef": "プラグインのインストールは基本のインストールを前提にする — 「Claude Code が入っていること」"
    },
    {
@@ -179,119 +179,49 @@
  },
  {
   "name": "hnp-intro",
-  "title": "Harness プラグイン — 紹介",
-  "summary": "Harness プラグインの考え方と、ERP のカスタマイズに向く理由を紹介する。",
-  "relations": [
-   {
-    "target": "hnp-concepts",
-    "evidenceRef": "「Harness プラグイン — 紹介」のあとの読む順序 — この文書を土台に「核心の概念をやさしく」へ続く"
-   }
-  ]
- },
- {
-  "name": "hnp-concepts",
-  "title": "核心の概念をやさしく",
-  "summary": "ハーネスの五つの要素を、会社のチームにたとえてやさしく説明する。",
-  "relations": [
-   {
-    "target": "hnp-install",
-    "evidenceRef": "「核心の概念をやさしく」のあとの読む順序 — この文書を土台に「インストールと準備」へ続く"
-   },
-   {
-    "target": "hns-overview",
-    "evidenceRef": "Harness プラグインの五つの要素が hns-anatomy の中心構成要素（エージェント · スキル · オーケストレーター · 検証 · メモリ）を実装している"
-   }
-  ]
- },
- {
-  "name": "hnp-install",
-  "title": "インストールと準備",
-  "summary": "Harness プラグインのマーケットプレイス登録と 3 ステップのインストールを案内する。",
+  "title": "Harness プラグイン — 紹介・概念・インストール",
+  "summary": "ERP カスタマイズ用ハーネスプラグインとは何か、主要概念（エージェント・スキル・オーケストレーター・_workspace）とインストールまでを一編に",
   "relations": [
    {
     "target": "hnp-first-run",
-    "evidenceRef": "「インストールと準備」のあとの読む順序 — この文書を土台に「はじめてのハーネス実行 — 営業・受注のカスタマイズ」へ続く"
+    "evidenceRef": "紹介・概念・インストールを前提に、次の章が最初の実行の実習へ続く"
+   },
+   {
+    "target": "hns-overview",
+    "evidenceRef": "ハーネス講義の概念（エージェント・スキル・オーケストレーター）を ERP 実戦プラグインとして実装"
    }
   ]
  },
  {
   "name": "hnp-first-run",
-  "title": "はじめてのハーネス実行 — 営業・受注のカスタマイズ",
-  "summary": "ERP 営業・受注の CR を意図として渡し、ハーネスを実際に走らせる実習。",
+  "title": "最初の実行と動作構造",
+  "summary": "営業・受注カスタマイズのハーネスを実際に作り、6 段階の動作構造と運用ループで中を覗く",
   "relations": [
    {
     "target": "hns-install",
-    "evidenceRef": "ERP 営業・受注の CR を意図として渡した初回実行 — hns-run の「意図だけを渡すチーム編成と実行」の ERP における事例"
-   },
-   {
-    "target": "hnp-architecture",
-    "evidenceRef": "「はじめてのハーネス実行 — 営業・受注のカスタマイズ」のあとの読む順序 — この文書を土台に「動作の構造と 6 ステップ」へ続く"
-   }
-  ]
- },
- {
-  "name": "hnp-architecture",
-  "title": "動作の構造と 6 ステップ",
-  "summary": "承認のあとに続く 6 ステップのチーム編成と運用のループを説明する。",
-  "relations": [
-   {
-    "target": "hns-kitchen",
-    "evidenceRef": "進行の承認 → 6 ステップのチーム編成のループが、hns-core の三要素と 6 ステップの構造をプラグインとして実装している"
+    "evidenceRef": "ハーネス講義が語る実行とレビューの ERP 実戦事例"
    },
    {
     "target": "hnp-agents-skills",
-    "evidenceRef": "「動作の構造と 6 ステップ」のあとの読む順序 — この文書を土台に「エージェントとスキルの設計」へ続く"
+    "evidenceRef": "実行の経験と構造を前提に、次の章が設計と検証へ続く"
    }
   ]
  },
  {
   "name": "hnp-agents-skills",
-  "title": "エージェントとスキルの設計",
-  "summary": "エージェントの職務記述書と、スキルのマニュアルの設計原則を扱う。",
-  "relations": [
-   {
-    "target": "hnp-verify",
-    "evidenceRef": "「エージェントとスキルの設計」のあとの読む順序 — この文書を土台に「検証・品質と _workspace」へ続く"
-   }
-  ]
- },
- {
-  "name": "hnp-verify",
-  "title": "検証・品質と _workspace",
-  "summary": "QA エージェントの検証ループと根拠の記録で品質を確保する。",
+  "title": "設計と検証 — エージェント・スキル・_workspace",
+  "summary": "エージェントとスキルを自然言語の文書として設計する方法、そして回帰・二重検証と _workspace で品質を守る方法",
   "relations": [
    {
     "target": "hnp-scenarios",
-    "evidenceRef": "「検証・品質と _workspace」のあとの読む順序 — この文書を土台に「シナリオ集」へ続く"
+    "evidenceRef": "設計と検証を前提に、最終章がシナリオ・性能・コマンドで締める"
    }
   ]
  },
  {
   "name": "hnp-scenarios",
-  "title": "シナリオ集",
-  "summary": "ERP のモジュール別にカスタマイズのシナリオとおすすめのチーム構成を集める。",
-  "relations": [
-   {
-    "target": "hnp-hundred",
-    "evidenceRef": "「シナリオ集」のあとの読む順序 — この文書を土台に「ハーネス 100・性能」へ続く"
-   }
-  ]
- },
- {
-  "name": "hnp-hundred",
-  "title": "ハーネス 100・性能",
-  "summary": "ハーネス 100 の事例を ERP カスタムへ置き換える方法と、その性能を紹介する。",
-  "relations": [
-   {
-    "target": "hnp-commands",
-    "evidenceRef": "「ハーネス 100・性能」のあとの読む順序 — この文書を土台に「コマンド・クイックリファレンス」へ続く"
-   }
-  ]
- },
- {
-  "name": "hnp-commands",
-  "title": "コマンド・クイックリファレンス",
-  "summary": "ハーネスの主なコマンド・ショートカット・設定をクイックリファレンスとして整理する。"
+  "title": "シナリオ・ハーネス 100・コマンド",
+  "summary": "実戦シナリオ掲示板と推奨チーム構成、ハーネス 100 の性能測定、コマンドのクイックリファレンスでシリーズを締める"
  },
  {
   "name": "omc-intro",

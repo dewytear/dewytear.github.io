@@ -140,7 +140,7 @@
     "source": "human"
    },
    {
-    "target": "hnp-install",
+    "target": "hnp-intro",
     "type": "prerequisite",
     "evidenceRef": "플러그인 설치가 \"Claude Code가 있어야 합니다\"로 기본 설치를 전제",
     "source": "human"
@@ -575,219 +575,107 @@
  },
  {
   "name": "hnp-intro",
-  "title": "Harness 플러그인 — 소개",
-  "summary": "하네스 플러그인 개념과 ERP 커스터마이징 적합성을 소개한다.",
+  "title": "Harness 플러그인 — 소개·개념·설치",
+  "summary": "ERP 커스터마이징용 하네스 플러그인이 무엇인지, 핵심 개념(에이전트·스킬·오케스트레이터·_workspace)과 설치까지 한 편에",
   "concepts": [
    "하네스플러그인",
    "의도전달",
    "에이전트팀",
    "ERP커스터마이징",
    "오케스트레이터",
-   "_workspace"
-  ],
-  "relations": [
-   {
-    "target": "hnp-concepts",
-    "type": "prerequisite",
-    "evidenceRef": "Harness 플러그인 — 소개 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 핵심 개념 쉽게로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "hnp-concepts",
-  "title": "핵심 개념 쉽게",
-  "summary": "하네스 다섯 요소를 회사 팀에 빗대 쉽게 설명한다.",
-  "concepts": [
+   "_workspace",
    "에이전트",
    "스킬",
-   "오케스트레이터",
    "평가테스트",
-   "_workspace",
-   "ERP커스터마이징"
-  ],
-  "relations": [
-   {
-    "target": "hnp-install",
-    "type": "prerequisite",
-    "evidenceRef": "핵심 개념 쉽게 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 설치와 준비로 이어진다",
-    "source": "human"
-   },
-   {
-    "target": "hns-overview",
-    "type": "implements",
-    "evidenceRef": "하네스 플러그인의 다섯 요소가 hns-anatomy 핵심 구성요소(에이전트·스킬·오케스트레이터·검증·메모리)를 구현",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "hnp-install",
-  "title": "설치와 준비",
-  "summary": "하네스 플러그인 마켓플레이스 등록과 설치 3단계를 안내한다.",
-  "concepts": [
-   "하네스플러그인",
    "설치",
-   "마켓플레이스",
-   "슬래시명령어",
-   "User스코프"
+   "마켓플레이스"
   ],
   "relations": [
    {
     "target": "hnp-first-run",
     "type": "prerequisite",
-    "evidenceRef": "설치와 준비 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 첫 하네스 실행 — 영업·수주 커스터마이징로 이어진다",
+    "evidenceRef": "소개·개념·설치를 전제로 다음 편이 첫 실행 실습으로 이어진다 — 본문 말미가 지목",
+    "source": "human"
+   },
+   {
+    "target": "hns-overview",
+    "type": "implements",
+    "evidenceRef": "하네스 강의의 개념(에이전트·스킬·오케스트레이터)을 ERP 실전 플러그인으로 구현",
     "source": "human"
    }
   ]
  },
  {
   "name": "hnp-first-run",
-  "title": "첫 하네스 실행 — 영업·수주 커스터마이징",
-  "summary": "ERP 영업·수주 CR을 의도로 주고 하네스를 실행하는 실습이다.",
+  "title": "첫 실행과 동작 구조",
+  "summary": "영업·수주 커스터마이징 하네스를 실제로 만들고, 6단계 동작 구조와 운영 루프로 그 속을 들여다본다",
   "concepts": [
    "의도전달",
    "ERP커스터마이징",
    "에이전트팀",
    "병렬실행",
    "회귀검증",
-   "_workspace"
+   "_workspace",
+   "6단계",
+   "오케스트레이터",
+   "운영루프",
+   "서브에이전트"
   ],
   "relations": [
    {
     "target": "hns-install",
     "type": "example-of",
-    "evidenceRef": "ERP 영업·수주 CR을 의도로 준 첫 실행은 hns-run의 의도만 전달해 팀 구성·실행의 ERP 사례",
-    "source": "human"
-   },
-   {
-    "target": "hnp-architecture",
-    "type": "prerequisite",
-    "evidenceRef": "첫 하네스 실행 — 영업·수주 커스터마이징 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 동작 구조와 6단계로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "hnp-architecture",
-  "title": "동작 구조와 6단계",
-  "summary": "진행 승인 후 6단계 팀 구성과 운영 루프 동작 구조를 설명한다.",
-  "concepts": [
-   "6단계",
-   "오케스트레이터",
-   "운영루프",
-   "에이전트팀",
-   "서브에이전트",
-   "실험기능"
-  ],
-  "relations": [
-   {
-    "target": "hns-kitchen",
-    "type": "implements",
-    "evidenceRef": "진행 버튼→6단계 팀 구성 루프가 hns-core의 3요소·6단계 구성을 플러그인으로 구현",
+    "evidenceRef": "하네스 실행 강의가 말하는 실행·리뷰의 ERP 실전 사례",
     "source": "human"
    },
    {
     "target": "hnp-agents-skills",
     "type": "prerequisite",
-    "evidenceRef": "동작 구조와 6단계 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 에이전트와 스킬 설계로 이어진다",
+    "evidenceRef": "실행 경험과 동작 구조를 전제로 다음 편이 설계·검증으로 이어진다 — 본문 말미가 지목",
     "source": "human"
    }
   ]
  },
  {
   "name": "hnp-agents-skills",
-  "title": "에이전트와 스킬 설계",
-  "summary": "에이전트 직무기술서와 스킬 매뉴얼 설계 원리를 다룬다.",
+  "title": "설계와 검증 — 에이전트·스킬·_workspace",
+  "summary": "에이전트와 스킬을 자연어 문서로 설계하는 법, 그리고 회귀·이중 검증과 _workspace로 품질을 지키는 법",
   "concepts": [
    "에이전트",
    "스킬",
    "자연어문서",
    "협업",
    "회귀검증",
-   "ERP커스터마이징"
-  ],
-  "relations": [
-   {
-    "target": "hnp-verify",
-    "type": "prerequisite",
-    "evidenceRef": "에이전트와 스킬 설계 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 검증·품질과 _workspace로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "hnp-verify",
-  "title": "검증·품질과 _workspace",
-  "summary": "QA 에이전트 검증 루프와 근거 기록으로 품질을 확보한다.",
-  "concepts": [
+   "ERP커스터마이징",
    "검증",
-   "회귀검증",
    "이중검증",
    "_workspace",
-   "할루시네이션",
-   "토큰비용"
+   "할루시네이션"
   ],
   "relations": [
    {
     "target": "hnp-scenarios",
     "type": "prerequisite",
-    "evidenceRef": "검증·품질과 _workspace 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 시나리오 게시판로 이어진다",
+    "evidenceRef": "설계·검증을 전제로 마지막 편이 시나리오·성능·명령어로 마무리한다 — 본문 말미가 지목",
     "source": "human"
    }
   ]
  },
  {
   "name": "hnp-scenarios",
-  "title": "시나리오 게시판",
-  "summary": "ERP 모듈별 커스터마이징 시나리오와 추천 팀 구성을 모았다.",
+  "title": "시나리오·하네스100·명령어",
+  "summary": "실전 시나리오 게시판과 추천 팀 구성, 하네스100 성능 측정, 그리고 명령어 빠른 참조로 시리즈 마무리",
   "concepts": [
    "ERP커스터마이징",
    "시나리오",
    "추천팀구성",
    "난이도",
-   "회귀검증"
-  ],
-  "relations": [
-   {
-    "target": "hnp-hundred",
-    "type": "prerequisite",
-    "evidenceRef": "시나리오 게시판 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 하네스100 · 성능로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "hnp-hundred",
-  "title": "하네스100 · 성능",
-  "summary": "하네스100 사례를 ERP 커스텀으로 치환하는 법과 성능을 소개한다.",
-  "concepts": [
+   "회귀검증",
    "하네스100",
-   "커스터마이징",
-   "ERP커스터마이징",
    "성능측정",
-   "LLM심판"
-  ],
-  "relations": [
-   {
-    "target": "hnp-commands",
-    "type": "prerequisite",
-    "evidenceRef": "하네스100 · 성능 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 명령어 · 빠른 참조로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "hnp-commands",
-  "title": "명령어 · 빠른 참조",
-  "summary": "하네스 핵심 명령·단축키·설정을 빠른 참조로 정리한다.",
-  "concepts": [
+   "LLM심판",
    "슬래시명령어",
-   "단축키",
-   "설치",
-   "_workspace",
-   "settings.json",
-   "의도전달"
+   "단축키"
   ]
  },
  {

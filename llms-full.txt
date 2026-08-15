@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 > License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — cite the source when quoting.
-> 78 documents · 340 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
+> 72 documents · 338 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
 
 ---
 
@@ -188,7 +188,7 @@ Matrix어느 블록이 밀집이고 어디가 공백인가?문서×문서 격자
 
 뷰가 무엇이든, 분석의 진입점은 두 가지입니다:
 
-허브(hub) — 다른 문서들이 가장 많이 참조하는 문서. 현재는 하네스 실행하기·첫 하네스 실행·LLM Wiki와 날리지 컨텍스트·확장 기능이 각 피참조 9회로 공동 1위입니다. 어떤 주제를 처음 파악할 때는 그 클러스터의 허브부터 읽는 것이 가장 빠릅니다.
+허브(hub) — 다른 문서들이 가장 많이 참조하는 문서. 현재 1위는 LLM Wiki와 날리지 컨텍스트(피참조 9회)이고, Harness 플러그인 소개·확장 기능이 각 8회로 뒤를 잇습니다. 어떤 주제를 처음 파악할 때는 그 클러스터의 허브부터 읽는 것이 가장 빠릅니다.
 
 브리지(bridge) — 여러 System에 걸쳐 등장하는 개념. '스킬'은 7개 System에 걸쳐 있는 최대 브리지이고, '슬래시명령어'·'서브에이전트'가 각 5개 System을 잇습니다. 브리지 개념을 따라가면 주제와 주제가 실제로 만나는 지점이 드러납니다.
 
@@ -3013,11 +3013,11 @@ Q&A 요점
 
 ---
 
-# Harness 플러그인 — 소개
+# Harness 플러그인 — 소개·개념·설치
 Section: AI · Claude · PlugIn · Harness
 URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-intro
 
-Harness 플러그인 — 소개
+Harness 플러그인 — 소개·개념·설치
 
 하네스(Harness) 플러그인은 "목표(의도)만 주면, 여러 AI가 팀을 이뤄 스스로 오래 일하도록 판을 깔아 주는" Claude Code 플러그인입니다. 내가 프롬프트를 하나하나 던지는 대신, "무엇을 원하는지"만 말하면 플러그인이 에이전트 팀 · 스킬 · 오케스트레이터를 대신 구성해 실행합니다.
 
@@ -3051,12 +3051,6 @@ ERP 커스터마이징에 왜 잘 맞나
 산출물 표준화 — 명세·영향도·테스트·이관 가이드가 _workspace에 함께 남습니다.
 
 ※ 구체 예제(영업·수주 여신한도 커스텀)는 첫 하네스 실행에서 단계별로 따라 해 봅니다.
-
----
-
-# 핵심 개념 쉽게
-Section: AI · Claude · PlugIn · Harness
-URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-concepts
 
 핵심 개념 쉽게
 
@@ -3099,12 +3093,6 @@ URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-concepts
 최소 구성은 3가지
 처음에는 에이전트 · 스킬 · 오케스트레이터 세 가지만 이해하면 충분합니다. 평가·테스트와 아티팩트·메모리는 하네스 플러그인이 알아서 붙여 줍니다. 다음 문서에서 설치하고 직접 실행해 봅니다.
 
----
-
-# 설치와 준비
-Section: AI · Claude · PlugIn · Harness
-URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-install
-
 설치와 준비
 
 하네스는 Claude Code 플러그인 형태로 배포됩니다. 마켓플레이스를 한 번 등록하고 설치하면 /harness 명령을 쓸 수 있습니다.
@@ -3146,13 +3134,15 @@ Add Marketplace 에 lev-factory/harness 입력 → Enter.
 사내 환경 팁
 사내망·프록시 환경에서는 GitHub 접근이 제한될 수 있습니다. 마켓플레이스 추가가 실패하면 네트워크/프록시 정책과 Git 접근 권한을 먼저 확인하세요. 플러그인은 머신마다 각각 설치해야 합니다(에이전트 정의는 Git으로 공유 가능하지만, 플러그인 자체는 개인 설치).
 
+개념과 설치가 끝났으니 바로 돌려 봅니다 — 첫 실행과 동작 구조에서 영업·수주 커스터마이징 하네스를 실제로 만듭니다.
+
 ---
 
-# 첫 하네스 실행 — 영업·수주 커스터마이징
+# 첫 실행과 동작 구조
 Section: AI · Claude · PlugIn · Harness
 URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-first-run
 
-첫 하네스 실행 — 영업·수주 커스터마이징
+첫 실행과 동작 구조
 
 실제로 한 번 돌려 봅니다. 예제는 ERP 영업·수주 모듈에 고객사 요청(CR)을 반영하는 상황입니다. 핵심은 딱 하나 — "명령"이 아니라 "의도"를 준다는 것입니다.
 
@@ -3224,12 +3214,6 @@ URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-first-run
 기억하세요 — 초안입니다
 하네스 결과는 완성품이 아니라 잘 준비된 초안입니다. 특히 ERP 커스텀은 표준 영향도와 회귀 결과를 사람이 반드시 검토한 뒤 반영해야 합니다. 검증을 더 탄탄히 하는 방법은 검증·품질에서 다룹니다. 안에서 무슨 일이 일어났는지는 동작 구조에서 확인하세요.
 
----
-
-# 동작 구조와 6단계
-Section: AI · Claude · PlugIn · Harness
-URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-architecture
-
 동작 구조와 6단계
 
 내가 진행시켜 를 누른 뒤, 하네스 내부에서 벌어지는 일을 들여다봅니다. 크게 6단계로 팀을 짜고, 그다음 운영 루프를 돌립니다.
@@ -3267,13 +3251,15 @@ Claude Code의 기본 서브에이전트는 서로 격리되어 대화하지 못
 파일은 어디에 생기나
 생성된 에이전트·스킬 정의는 프로젝트의 .claude 아래에 남아 Git으로 팀과 공유할 수 있습니다. 단, 플러그인 자체는 머신마다 각각 설치해야 합니다. 구성 변경 이력은 CLAUDE.md 에 기록됩니다. 팀 설계 자체를 더 깊이 다루는 에이전트·스킬 설계로 이어집니다.
 
+돌아가는 걸 봤으니 이제 손볼 차례입니다 — 설계와 검증 편에서 에이전트·스킬을 설계하고 _workspace로 품질을 지킵니다.
+
 ---
 
-# 에이전트와 스킬 설계
+# 설계와 검증 — 에이전트·스킬·_workspace
 Section: AI · Claude · PlugIn · Harness
 URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-agents-skills
 
-에이전트와 스킬 설계
+설계와 검증 — 에이전트·스킬·_workspace
 
 하네스가 팀을 자동으로 짜 주지만, 원리를 알면 더 정확히 지시할 수 있고, 생성된 팀을 직접 다듬을 수도 있습니다. 핵심은 두 가지 — 에이전트(누가)와 스킬(어떻게)입니다.
 
@@ -3335,12 +3321,6 @@ QA는 별도로만든 사람이 자기 걸 검수하면 놓침회귀 QA를 독�
 생성된 팀 손보기
 하네스가 만든 에이전트가 마음에 안 들면, 자연어로 수정을 요청하면 됩니다. 예: /harness QA 에이전트는 표준 주문 취소 시나리오도 반드시 검증하도록 수정. 검증을 얼마나 탄탄히 하느냐가 결과 신뢰도를 좌우합니다 → 검증·품질.
 
----
-
-# 검증·품질과 _workspace
-Section: AI · Claude · PlugIn · Harness
-URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-verify
-
 검증·품질과 _workspace
 
 ERP 커스텀은 표준 기능을 깨뜨리면 안 되므로 검증이 생명입니다. 하네스는 QA 에이전트와 근거 기록으로 이를 뒷받침합니다.
@@ -3382,13 +3362,15 @@ QA는 무엇을 확인하나
 주방 비유 — 결과는 "초안"
 1인 셰프(단일 도구)는 빠르지만 병목이 있고, 멀티 에이전트(주방 팀)는 역할을 나눠 품질을 유지하며 오래 일합니다. 다만 한 번에 완성품이 나오지는 않습니다 — 잘 준비된 초안으로 보고, ERP 반영 전에는 표준 영향도·회귀 결과를 사람이 반드시 확인하세요. 다양한 적용 사례는 시나리오 게시판에서 봅니다.
 
+마지막 편 시나리오·하네스100·명령어가 실전 게시판과 성능, 빠른 참조로 시리즈를 마무리합니다.
+
 ---
 
-# 시나리오 게시판
+# 시나리오·하네스100·명령어
 Section: AI · Claude · PlugIn · Harness
 URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-scenarios
 
-시나리오 게시판
+시나리오·하네스100·명령어
 
 ERP 고객사 커스터마이징에서 하네스를 붙일 만한 상황을 모듈별로 모았습니다. 각 카드는 모듈 · 난이도 · 상황 · 추천 팀 구성 · 기대효과 순으로 읽으면 됩니다. 비슷한 상황을 골라 의도 문장만 바꿔 실행해 보세요.
 
@@ -3542,12 +3524,6 @@ CR 영향도·공수 산정
 비슷한 구성을 빠르게 찾으려면
 이런 사례들을 미리 100가지로 묶어 둔 하네스100에서 유사 구성을 찾아 커스터마이징하면 더 빠릅니다 → 하네스100·성능. 실행에 쓰는 명령은 명령어·빠른 참조에 정리돼 있습니다.
 
----
-
-# 하네스100 · 성능
-Section: AI · Claude · PlugIn · Harness
-URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-hundred
-
 하네스100 · 성능
 
 하네스100은 자주 쓰이는 100가지 사례의 하네스를 미리 구성해 공개한 모음입니다. 매번 팀을 처음부터 짜는 대신, 비슷한 구성을 찾아 커스터마이징하면 훨씬 빠릅니다.
@@ -3599,12 +3575,6 @@ ERP 커스텀에 맞게 바꾸는 법
 
 어디서 찾나
 검색어 "하네스 100" (한국어 버전)으로 사례 모음을 찾을 수 있습니다. 마켓플레이스 주소와 함께 설치 문서의 주의사항을 참고하세요.
-
----
-
-# 명령어 · 빠른 참조
-Section: AI · Claude · PlugIn · Harness
-URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-commands
 
 명령어 · 빠른 참조
 
