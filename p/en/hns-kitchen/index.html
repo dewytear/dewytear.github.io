@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Understanding the Harness Through a Kitchen Metaphor</title>
-<meta name="description" content="Uses a restaurant kitchen to make the difference between single and multi-agent setups clear.">
+<title>How It Works — the Kitchen, Teams, the Core Three</title>
+<meta name="description" content="From the solo-chef-versus-kitchen metaphor to agent-team context management and the structure of agents, skills, and the orchestrator">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/en/hns-kitchen/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hns-kitchen/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hns-kitchen/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Understanding the Harness Through a Kitchen Metaphor">
-<meta property="og:description" content="Uses a restaurant kitchen to make the difference between single and multi-agent setups clear.">
+<meta property="og:title" content="How It Works — the Kitchen, Teams, the Core Three">
+<meta property="og:description" content="From the solo-chef-versus-kitchen metaphor to agent-team context management and the structure of agents, skills, and the orchestrator">
 <meta property="og:url" content="https://dewytear.github.io/p/en/hns-kitchen/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Understanding the Harness Through a Kitchen Metaphor">
-<meta name="twitter:description" content="Uses a restaurant kitchen to make the difference between single and multi-agent setups clear.">
+<meta name="twitter:title" content="How It Works — the Kitchen, Teams, the Core Three">
+<meta name="twitter:description" content="From the solo-chef-versus-kitchen metaphor to agent-team context management and the structure of agents, skills, and the orchestrator">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "Understanding the Harness Through a Kitchen Metaphor",
- "description": "Uses a restaurant kitchen to make the difference between single and multi-agent setups clear.",
+ "headline": "How It Works — the Kitchen, Teams, the Core Three",
+ "description": "From the solo-chef-versus-kitchen metaphor to agent-team context management and the structure of agents, skills, and the orchestrator",
  "inLanguage": "en",
  "url": "https://dewytear.github.io/p/en/hns-kitchen/",
  "mainEntityOfPage": "https://dewytear.github.io/#!hns-kitchen",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T22:09:56+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T14:58:38+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/ja/hns-kitchen/" hreflang="ja">日本語</a>
 </p>
 <article>
-<h2>Understanding the Harness Through a Kitchen Metaphor</h2>
+<h2>How It Works — the Kitchen, Teams, the Core Three</h2>
 <p>Harness engineering is easy to understand when likened to <strong>running a kitchen</strong>.</p>
 
 <h3>Solo chef vs. multi-agent</h3>
@@ -122,11 +122,141 @@
     <span class="nh">Token usage</span>
     Because you run it multi, token usage goes up. It grows especially when <strong>the agents talk to each other</strong>, and in measurements there were cases of using <strong>about 30% more</strong>.
 </div>
+
+<h3>Agent Teams and Context Management</h3>
+<p>How you make several agents collaborate, and how you manage context, decide the quality of a harness.</p>
+
+<h4>Isolated subagents → a team that communicates</h4>
+<div class="diagram">
+<svg viewBox="0 0 700 172" role="img" aria-label="Comparison of isolated subagents (cannot talk to each other) vs an agent team (they communicate with each other)">
+    <line class="d-edge dash" x1="350" y1="6" x2="350" y2="150"/>
+
+    <rect class="d-box" x="110" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="170" y="31" text-anchor="middle">Orchestrator</text>
+    <rect class="d-box soft" x="40" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="95" y="104" text-anchor="middle">Agent A</text>
+    <rect class="d-box soft" x="190" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="245" y="104" text-anchor="middle">Agent B</text>
+    <line class="d-edge" x1="140" y1="44" x2="100" y2="78"/><polygon class="d-arrow" points="96,72 104,80 90,80"/>
+    <line class="d-edge" x1="200" y1="44" x2="240" y2="78"/><polygon class="d-arrow" points="244,72 250,80 236,80"/>
+    <text class="d-sub" x="170" y="105" text-anchor="middle">✕</text>
+    <text class="d-sub" x="170" y="140" text-anchor="middle">Cannot talk to each other</text>
+    <text class="d-label sm" x="170" y="162" text-anchor="middle">Isolated subagents</text>
+
+    <rect class="d-box accent" x="470" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="530" y="31" text-anchor="middle">Orchestrator</text>
+    <rect class="d-box" x="400" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="455" y="104" text-anchor="middle">Agent C</text>
+    <rect class="d-box" x="550" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="605" y="104" text-anchor="middle">Agent D</text>
+    <line class="d-edge" x1="500" y1="44" x2="460" y2="78"/><polygon class="d-arrow" points="456,72 464,80 450,80"/>
+    <line class="d-edge" x1="560" y1="44" x2="600" y2="78"/><polygon class="d-arrow" points="604,72 610,80 596,80"/>
+    <line class="d-edge accent" x1="512" y1="100" x2="548" y2="100"/>
+    <polygon class="d-arrow accent" points="542,95 550,100 542,105"/>
+    <polygon class="d-arrow accent" points="518,95 510,100 518,105"/>
+    <text class="d-accent" x="530" y="140" text-anchor="middle" font-size="11">↔ Talk to each other</text>
+    <text class="d-label sm" x="530" y="162" text-anchor="middle">Agent team</text>
+</svg>
+<div class="d-cap">Isolated subagents only return a result, but an agent team wakes each other back up and collaborates.</div>
+</div>
+<ul>
+    <li><strong>The existing way</strong> &mdash; subagents each work in an <strong>isolated environment</strong> and only return the result (in parallel). There was no way for them to talk to each other.</li>
+    <li><strong>Agent team</strong> &mdash; the agents work <strong>while communicating</strong>, so they behave more smartly.</li>
+</ul>
+<p>For example, suppose a research agent finished its investigation and terminated, then an analysis agent was spawned, and during the analysis it finds <strong>a part where the research is lacking</strong> &mdash; instead of doing the research itself, it <strong>wakes the research agent back up</strong> and asks for additional investigation.</p>
+
+<h4>Enabling agent teams</h4>
+<p>This feature is an <strong>experimental version</strong>, so it is disabled by default. Turn on the environment variable in <code>~/.claude/settings.json</code> in your user folder.</p>
+<pre><code><span class="c"># env in ~/.claude/settings.json</span>
+"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"</code></pre>
+<ul>
+    <li>Only when this value is on do the agents talk to each other and act as a team.</li>
+    <li>When an agent <strong>succeeds at dynamic loading</strong>, team mode turns on properly; when it fails, it often comes up as an isolated ordinary subagent. (A bug of the experimental version.)</li>
+    <li>For reference, agent-to-agent communication has also been added to Gemini's <strong>Antigravity CLI</strong>.</li>
+</ul>
+
+<h4>Context = the kitchen counter</h4>
+<p>Context is like the <strong>counter</strong> on which you make a dish. It is tidy when only things related to that dish are on it, but once unrelated things get mixed in, there is room for mistakes (like sugar being in the salt shaker). In practice, when a conversation gets long the thinking before and after can end up <strong>contradictory</strong>, and if you give it work in that state the AI gets confused about "is A right or is B right". That is why <strong>context management</strong> matters.</p>
+
+<h3>The Three Core Elements and How They Work</h3>
+<p>There are many harness components, but the instructor takes the view that <strong>multi-agent collaboration happens well with just these three</strong> and focuses on them &mdash; <strong>agent · skill · orchestrator</strong>.</p>
+
+<h4>1) Agent — a natural-language document</h4>
+<p>An agent is not code but <strong>a document written in natural language</strong>. It holds the following.</p>
+<ul>
+    <li>The role and the <strong>principles</strong></li>
+    <li><strong>Input protocol · output protocol</strong> (in what format to produce the result)</li>
+    <li><strong>Collaboration</strong> &mdash; what to exchange with other agents</li>
+    <li>Behavior on re-invocation and <strong>when an error occurs</strong></li>
+</ul>
+
+<h4>2) Skill — standardizing repeated work</h4>
+<p>A skill is a <strong>name + description</strong> that freely holds a defined process, knowledge and checklist.</p>
+<ul>
+    <li>Because the process is defined, <strong>consistency</strong> is maintained.</li>
+    <li>You can <strong>combine</strong> small skills to compose a bigger system.</li>
+    <li>Thanks to the standardization, repeated work gets faster.</li>
+</ul>
+<p>A knack for designing skills: <strong>find the repeated work → separate it by single responsibility → define input/output → handle exceptions → connect it to an agent.</strong></p>
+
+<h4>3) Orchestrator — a PM that does not micromanage</h4>
+<p>It is the <strong>PM</strong> responsible for whether the whole workflow is carried out well. Unlike a failing PM it does not interfere in the details; it only checks something like "is the workflow being carried out well".</p>
+
+<h4>The plugin's six steps</h4>
+<div class="diagram">
+<svg viewBox="0 0 660 188" role="img" aria-label="The six harness steps: analyze the request → design the agent team → create agents → create skills → orchestrator and workflow → verify the setup">
+    <rect class="d-box" x="8" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="42" text-anchor="middle">① Analyze request</text>
+    <text class="d-sub" x="108" y="59" text-anchor="middle">What is wanted</text>
+
+    <rect class="d-box" x="223" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="42" text-anchor="middle">② Design agent team</text>
+    <text class="d-sub" x="323" y="59" text-anchor="middle">Define needed roles</text>
+
+    <rect class="d-box" x="438" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="42" text-anchor="middle">③ Create agents</text>
+    <text class="d-sub" x="538" y="59" text-anchor="middle">Natural-language docs</text>
+
+    <rect class="d-box" x="8" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="134" text-anchor="middle">④ Create skills</text>
+    <text class="d-sub" x="108" y="151" text-anchor="middle">Standardize repeat steps</text>
+
+    <rect class="d-box" x="223" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label sm" x="323" y="134" text-anchor="middle">⑤ Orchestrator · workflow</text>
+    <text class="d-sub" x="323" y="151" text-anchor="middle">Set execution order</text>
+
+    <rect class="d-box accent" x="438" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="134" text-anchor="middle">⑥ Verify setup</text>
+    <text class="d-sub" x="538" y="151" text-anchor="middle">Whether it is built right</text>
+
+    <line class="d-edge" x1="208" y1="46" x2="221" y2="46"/><polygon class="d-arrow" points="215,41 223,46 215,51"/>
+    <line class="d-edge" x1="423" y1="46" x2="436" y2="46"/><polygon class="d-arrow" points="430,41 438,46 430,51"/>
+    <path class="d-edge" d="M538 72 C538 87, 523 92, 505 92 H141 C123 92, 108 97, 108 110"/><polygon class="d-arrow" points="103,106 113,106 108,112"/><polygon class="d-arrow" points="328,87 328,97 318,92"/>
+    <line class="d-edge" x1="208" y1="138" x2="221" y2="138"/><polygon class="d-arrow" points="215,133 223,138 215,143"/>
+    <line class="d-edge" x1="423" y1="138" x2="436" y2="138"/><polygon class="d-arrow" points="430,133 438,138 430,143"/>
+</svg>
+<div class="d-cap">Once ⑥ verification is finished the team composition is done, and the operating loop runs next.</div>
+</div>
+<p><code>/harness</code> handles a request in six steps in total.</p>
+<ol>
+    <li><strong>Analyze</strong> the request</li>
+    <li><strong>Design</strong> the agent <strong>team</strong></li>
+    <li>Create the <strong>agents</strong></li>
+    <li>Create the <strong>skills</strong></li>
+    <li>Create the <strong>orchestrator</strong> · establish the workflow</li>
+    <li><strong>Verify</strong> the harness setup</li>
+</ol>
+
+<div class="note">
+    <span class="nh">Six team behavior patterns</span>
+    Six collaboration patterns for an agent team are specified &mdash; sequential execution, parallel then integrate, a review process, and so on. These patterns are <strong>combined as hybrids</strong> to act as the situation requires.
+</div>
+<p>With the structure understood, what remains is application — the <a href="/p/en/hns-usecases/">Uses and Extensions</a> chapter walks through real cases, Harness 100, and combinations with other tools.</p>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Harness &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Harness &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
-<ul><li><a href="/p/en/hns-anatomy/">Harness Composition and Effects</a></li><li><a href="/p/en/hns-run/">Running the Harness (Hands-on)</a></li><li><a href="/p/en/hns-what/">What Is Harness Engineering?</a></li><li><a href="/p/en/hnp-verify/">Verification · Quality and _workspace</a></li></ul>
+<ul><li><a href="/p/en/hns-overview/">What a Harness Is — Overview, Definition, Anatomy</a></li><li><a href="/p/en/hnp-architecture/">How It Works and the 6 Stages</a></li><li><a href="/p/en/hnp-first-run/">First Harness Run — Sales/Order Customization</a></li><li><a href="/p/en/hnp-intro/">Harness Plugin — Introduction</a></li></ul>
 </nav>
 </body>
 </html>

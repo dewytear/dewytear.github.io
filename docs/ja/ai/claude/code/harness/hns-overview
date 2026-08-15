@@ -1,4 +1,4 @@
-<h2>ハーネスエンジニアリング — 概要と復習</h2>
+<h2>ハーネスとは — 概要・定義・構成</h2>
 <p>この資料は<strong>「ハーネスエンジニアリング / ファン・ミンホ」</strong>の実習講義を、映像の順にパートごとに整理したものです。前回の <a href="#!ccb-overview">Claude Code 基礎</a>の講義に続き、今回のテーマは<strong>ハーネスエンジニアリング（Harness Engineering）</strong>です。</p>
 
 <div class="diagram">
@@ -49,3 +49,119 @@
     本文書セットは「ハーネスエンジニアリング / ファン・ミンホ」の実習講義の内容を順に整理・再構成したものです。講義は Claude Code 基礎の後続セッションです。
     <br>· 映像: <a href="https://www.youtube.com/live/iqoPgoYBVaM" target="_blank" rel="noopener">youtube.com/live/iqoPgoYBVaM</a>
 </div>
+
+<h3>ハーネスエンジニアリングとは？</h3>
+<p>ひと言で定義すると<strong>「AI が働くシステムを設計すること」</strong>です。同じ AI モデルでも、その<strong>モデルを取り囲む環境（ハーネス）をどう組むか</strong>によって結果の品質がまるで変わる、という発見から出発しました。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 132" role="img" aria-label="焦点がプロンプトからコンテキストへ、さらにモデルを取り囲む環境全体であるハーネスへと広がってきた">
+    <rect class="d-box soft" x="14" y="46" width="182" height="44" rx="10"/>
+    <text class="d-label sm" x="105" y="66" text-anchor="middle">プロンプト工学</text>
+    <text class="d-sub" x="105" y="82" text-anchor="middle">問い方</text>
+    <line class="d-edge" x1="196" y1="68" x2="216" y2="68"/><polygon class="d-arrow" points="216,63 224,68 216,73"/>
+
+    <rect class="d-box soft" x="228" y="38" width="188" height="60" rx="10"/>
+    <text class="d-label sm" x="322" y="62" text-anchor="middle">コンテキスト工学</text>
+    <text class="d-sub" x="322" y="80" text-anchor="middle">知識・資料の提供</text>
+    <line class="d-edge" x1="416" y1="68" x2="436" y2="68"/><polygon class="d-arrow" points="436,63 444,68 436,73"/>
+
+    <rect class="d-box accent" x="448" y="28" width="220" height="78" rx="12"/>
+    <text class="d-label" x="558" y="60" text-anchor="middle">ハーネス工学</text>
+    <text class="d-sub" x="558" y="80" text-anchor="middle">モデル + 環境全体の設計</text>
+</svg>
+<div class="d-cap">焦点が<strong>問い</strong> → <strong>資料</strong> → <strong>モデルを取り囲む環境全体</strong>へと、だんだん広がってきました。</div>
+</div>
+
+<h4>生産性の体感の変化</h4>
+<p>講師が体感した作業速度の変化です。</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>時期・ツール</th><th>同じ作業にかかった時間</th></tr></thead>
+        <tbody>
+            <tr><td>従来</td><td>約 3 か月</td></tr>
+            <tr><td>ChatGPT の登場</td><td>約 1 か月</td></tr>
+            <tr><td>Cursor · Claude Code</td><td>1〜2 週間</td></tr>
+            <tr><td><strong>ハーネスエンジニアリング</strong></td><td>MVP で約 2 時間、リリースまで 2〜3 日</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h4>パラダイムの転換</h4>
+<p>AI を扱う焦点は移りつづけてきました。</p>
+<ul>
+    <li><strong>プロンプトエンジニアリング</strong> — AI とどう会話するか（問い方）。</li>
+    <li><strong>コンテキストエンジニアリング</strong> — どんな知識・資料を一緒に渡すか。</li>
+    <li><strong>ハーネスエンジニアリング</strong> — モデルひとつではなく<strong>モデルを取り囲むすべての環境</strong>をどう組むか。</li>
+</ul>
+
+<h4>「ハンドルを AI に」</h4>
+<p>従来のやり方では、つねに<strong>人がハンドル</strong>を握り、AI は横で補助するだけでした。だから人がハンドルを握っているあいだしか生産性がありませんでした。ハーネスはその<strong>ハンドルを AI に渡し</strong>、複数の課題を同時に、長く自律的にこなさせるアプローチです。</p>
+
+<div class="note">
+    <span class="nh">「ハーネス」という言葉</span>
+    ハーネス（harness）は<strong>馬車の馬具</strong>に由来します。馬（AI）をどううまく操れるように整えるかが性能を左右する、という比喩です。単体のエージェントにも、複数のエージェントを束ねるマルチ構成にも効きます。
+</div>
+
+<h3>ハーネスの構成と効果</h3>
+<p>ハーネスを組むのに必要な要素は多いのですが、核心は次のとおりです。一部では<strong>LLM モデルを除いた、モデルを取り囲むすべて</strong>をハーネスと呼ぶこともあります。</p>
+
+<h4>中心となる構成要素</h4>
+<ul>
+    <li><strong>エージェント</strong> — 役割の決まった AI の作業者。</li>
+    <li><strong>スキル・ツール</strong> — エージェントが働くときに使う機能と接続のための道具。</li>
+    <li><strong>オーケストレーター</strong> — エージェントたちがうまく働くように整える PM の役割。</li>
+    <li><strong>評価・テスト</strong> — 成果物を検証し、品質を保つ。</li>
+    <li><strong>アーティファクト・メモリ</strong> — 成果物と文脈を継続的に管理する。</li>
+</ul>
+
+<h4>どうやって生産性が上がるのか</h4>
+<div class="diagram">
+<svg viewBox="0 0 680 150" role="img" aria-label="運用のループ: 目標の分解 → 並列実行 → テスト検証 → 問題があれば戻し、通過すれば完了">
+    <rect class="d-box" x="6" y="70" width="110" height="48" rx="10"/>
+    <text class="d-label sm" x="61" y="98" text-anchor="middle">目標の分解</text>
+
+    <rect class="d-box" x="146" y="70" width="110" height="48" rx="10"/>
+    <text class="d-label sm" x="201" y="98" text-anchor="middle">並列実行</text>
+
+    <rect class="d-box" x="286" y="70" width="112" height="48" rx="10"/>
+    <text class="d-label sm" x="342" y="98" text-anchor="middle">テスト検証</text>
+
+    <polygon class="d-box" points="470,66 512,94 470,122 428,94"/>
+    <text class="d-label sm" x="470" y="98" text-anchor="middle">問題?</text>
+
+    <rect class="d-box accent" x="548" y="70" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="608" y="98" text-anchor="middle">完了</text>
+
+    <line class="d-edge" x1="116" y1="94" x2="144" y2="94"/><polygon class="d-arrow" points="138,89 146,94 138,99"/>
+    <line class="d-edge" x1="256" y1="94" x2="284" y2="94"/><polygon class="d-arrow" points="278,89 286,94 278,99"/>
+    <line class="d-edge" x1="398" y1="94" x2="426" y2="94"/><polygon class="d-arrow" points="420,89 428,94 420,99"/>
+    <line class="d-edge" x1="512" y1="94" x2="546" y2="94"/><polygon class="d-arrow" points="540,89 548,94 540,99"/>
+    <text class="d-sub" x="530" y="84" text-anchor="middle">通過</text>
+
+    <path class="d-edge" d="M470 66 C470 46, 458 27, 436 27 H235 C214 27, 201 43, 201 68"/><polygon class="d-arrow" points="196,64 206,64 201,70"/><polygon class="d-arrow" points="340,22 340,32 330,27"/>
+    <text class="d-sub" x="430" y="20" text-anchor="middle">問題なら戻す</text>
+</svg>
+<div class="d-cap">問題があれば並列実行へ戻り、通過すれば完了します。</div>
+</div>
+<p>運用の構造は、だいたいこう流れます。</p>
+<ol>
+    <li>目標を<strong>分解</strong>して、各エージェントに<strong>分担</strong>する。</li>
+    <li>分担した作業を<strong>並列で実行</strong>する。</li>
+    <li>結果を<strong>テストで検証</strong>し、間違っている部分にはフィードバック。</li>
+    <li>検証の<strong>ループ</strong>をくり返す。</li>
+</ol>
+<p>この運用構造のおかげで<strong>人の介入が最小限</strong>になり、AI がより長く自律的に、並列で速く働き、テストにもとづく検証で<strong>品質が確保</strong>されます。</p>
+
+<h4>ビッグテックの事例と関心の急増</h4>
+<ul>
+    <li>昨年 11 月の <strong>Anthropic</strong> を皮切りに、事例があふれ出した。</li>
+    <li>1 月に <strong>OpenAI</strong> が「500 万行のコードを 6 か月間、人の介入なしにエージェントだけで開発」をブログで公開 → 大きな話題に。</li>
+    <li>シリコンバレーの開発者を中心に「ハーネスをどう組むか」の研究・試みが爆発的に増加。ひとつより<strong>マルチエージェント</strong>のほうがうまくやる、ということも発見された。</li>
+</ul>
+
+<div class="note">
+    <span class="nh">ボトルネックはモデルではなく構造</span>
+    モデルの性能はすでに十分に上がっています（Gemini 3.5 Flash、GPT 5.5/5.6、Opus 4.8、そしてセキュリティ上の懸念から限定公開の Claude Mythos など）。いまのボトルネックは<strong>モデルを包む構造（ハーネス）</strong>です。人はこれから<strong>設計・検証・意思決定</strong>に集中すればよいのです。
+</div>
+<p>ハーネスとは何か、なぜ生産性が上がるのかまでつかみました。次の章<a href="#!hns-install">実行する</a>で、メタハーネススキルを導入し、実際に回し、生成結果をレビューします。</p>
+

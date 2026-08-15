@@ -1,4 +1,4 @@
-<h2>하네스 엔지니어링 — 개요와 복습</h2>
+<h2>하네스란 — 개요·정의·구성</h2>
 <p>이 자료는 <strong>"하네스 엔지니어링 / 황민호"</strong> 실습 강의를 영상 순서대로 파트별로 정리한 것입니다. 지난 <a href="#!ccb-overview">Claude Code 기초</a> 강의에 이어, 이번 주제는 <strong>하네스 엔지니어링(Harness Engineering)</strong> 입니다.</p>
 
 <div class="diagram">
@@ -49,3 +49,119 @@
     본 문서 세트는 "하네스 엔지니어링 / 황민호" 실습 강의 내용을 순서대로 정리·재구성한 것입니다. 강의는 Claude Code 기초의 후속 세션입니다.
     <br>· 영상: <a href="https://www.youtube.com/live/iqoPgoYBVaM" target="_blank" rel="noopener">youtube.com/live/iqoPgoYBVaM</a>
 </div>
+
+<h3>하네스 엔지니어링이란?</h3>
+<p>한마디로 정의하면 <strong>"AI가 일하는 시스템을 설계하는 것"</strong> 입니다. 같은 AI 모델이라도 그 <strong>모델을 둘러싼 환경(하네스)을 어떻게 구성하느냐</strong>에 따라 결과 품질이 전혀 달라진다는 발견에서 출발했습니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 132" role="img" aria-label="초점이 프롬프트에서 컨텍스트로, 다시 모델을 둘러싼 환경 전체인 하네스로 넓어져 왔다">
+    <rect class="d-box soft" x="14" y="46" width="182" height="44" rx="10"/>
+    <text class="d-label sm" x="105" y="66" text-anchor="middle">프롬프트 엔지니어링</text>
+    <text class="d-sub" x="105" y="82" text-anchor="middle">질문법</text>
+    <line class="d-edge" x1="196" y1="68" x2="216" y2="68"/><polygon class="d-arrow" points="216,63 224,68 216,73"/>
+
+    <rect class="d-box soft" x="228" y="38" width="188" height="60" rx="10"/>
+    <text class="d-label sm" x="322" y="62" text-anchor="middle">컨텍스트 엔지니어링</text>
+    <text class="d-sub" x="322" y="80" text-anchor="middle">지식·자료 제공</text>
+    <line class="d-edge" x1="416" y1="68" x2="436" y2="68"/><polygon class="d-arrow" points="436,63 444,68 436,73"/>
+
+    <rect class="d-box accent" x="448" y="28" width="220" height="78" rx="12"/>
+    <text class="d-label" x="558" y="60" text-anchor="middle">하네스 엔지니어링</text>
+    <text class="d-sub" x="558" y="80" text-anchor="middle">모델 + 환경 전체 설계</text>
+</svg>
+<div class="d-cap">초점이 <strong>질문</strong> → <strong>자료</strong> → <strong>모델을 둘러싼 환경 전체</strong>로 점점 넓어져 왔습니다.</div>
+</div>
+
+<h4>생산성의 체감 변화</h4>
+<p>강사가 체감한 작업 속도의 변화입니다.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>시기 · 도구</th><th>같은 작업에 걸린 시간</th></tr></thead>
+        <tbody>
+            <tr><td>기존</td><td>약 3개월</td></tr>
+            <tr><td>ChatGPT 등장</td><td>약 1개월</td></tr>
+            <tr><td>Cursor · Claude Code</td><td>1~2주</td></tr>
+            <tr><td><strong>하네스 엔지니어링</strong></td><td>MVP 약 2시간, 배포까지 2~3일</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h4>패러다임의 전환</h4>
+<p>AI를 다루는 초점이 계속 옮겨 왔습니다.</p>
+<ul>
+    <li><strong>프롬프트 엔지니어링</strong> — AI와 어떻게 대화할지(질문법).</li>
+    <li><strong>컨텍스트 엔지니어링</strong> — 어떤 지식·자료를 함께 줄지.</li>
+    <li><strong>하네스 엔지니어링</strong> — 모델 하나가 아니라 <strong>모델을 둘러싼 모든 환경</strong>을 어떻게 구성할지.</li>
+</ul>
+
+<h4>"운전대를 AI에게"</h4>
+<p>기존 방식에서는 항상 <strong>사람이 운전대</strong>를 잡고, AI는 옆에서 보조만 했습니다. 그래서 사람이 운전대를 잡고 있는 동안에만 생산성이 있었습니다. 하네스는 그 <strong>운전대를 AI에게 넘겨</strong> 여러 과제를 동시에, 오래 자율적으로 수행하게 하는 접근입니다.</p>
+
+<div class="note">
+    <span class="nh">'하네스'라는 말</span>
+    하네스(harness)는 <strong>마차의 마구(馬具)</strong>에서 유래했습니다. 말(AI)을 어떻게 잘 부리도록 갖추느냐가 성능을 좌우한다는 비유입니다. 단일 에이전트에도, 여러 에이전트를 묶는 멀티 구성에도 효과가 있습니다.
+</div>
+
+<h3>하네스의 구성과 효과</h3>
+<p>하네스를 구성하는 데 필요한 요소는 많지만, 핵심은 다음과 같습니다. 일부에서는 <strong>LLM 모델을 제외한, 모델을 둘러싼 모든 것</strong>을 하네스라고 부르기도 합니다.</p>
+
+<h4>핵심 구성 요소</h4>
+<ul>
+    <li><strong>에이전트</strong> — 역할이 정해진 AI 작업자.</li>
+    <li><strong>스킬 · 도구</strong> — 에이전트가 일할 때 쓰는 기능과 연결 도구.</li>
+    <li><strong>오케스트레이터</strong> — 에이전트들이 잘 일하도록 조율하는 PM 역할.</li>
+    <li><strong>평가 · 테스트</strong> — 결과물을 검증하고 품질을 유지.</li>
+    <li><strong>아티팩트 · 메모리</strong> — 산출물과 맥락을 지속적으로 관리.</li>
+</ul>
+
+<h4>어떻게 생산성이 올라가나</h4>
+<div class="diagram">
+<svg viewBox="0 0 680 150" role="img" aria-label="운영 루프: 목표 분해 → 병렬 실행 → 테스트 검증 → 문제 있으면 되돌리고, 통과하면 완료">
+    <rect class="d-box" x="6" y="70" width="110" height="48" rx="10"/>
+    <text class="d-label sm" x="61" y="98" text-anchor="middle">목표 분해</text>
+
+    <rect class="d-box" x="146" y="70" width="110" height="48" rx="10"/>
+    <text class="d-label sm" x="201" y="98" text-anchor="middle">병렬 실행</text>
+
+    <rect class="d-box" x="286" y="70" width="112" height="48" rx="10"/>
+    <text class="d-label sm" x="342" y="98" text-anchor="middle">테스트 검증</text>
+
+    <polygon class="d-box" points="470,66 512,94 470,122 428,94"/>
+    <text class="d-label sm" x="470" y="98" text-anchor="middle">문제?</text>
+
+    <rect class="d-box accent" x="548" y="70" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="608" y="98" text-anchor="middle">완료</text>
+
+    <line class="d-edge" x1="116" y1="94" x2="144" y2="94"/><polygon class="d-arrow" points="138,89 146,94 138,99"/>
+    <line class="d-edge" x1="256" y1="94" x2="284" y2="94"/><polygon class="d-arrow" points="278,89 286,94 278,99"/>
+    <line class="d-edge" x1="398" y1="94" x2="426" y2="94"/><polygon class="d-arrow" points="420,89 428,94 420,99"/>
+    <line class="d-edge" x1="512" y1="94" x2="546" y2="94"/><polygon class="d-arrow" points="540,89 548,94 540,99"/>
+    <text class="d-sub" x="530" y="84" text-anchor="middle">통과</text>
+
+    <path class="d-edge" d="M470 66 C470 46, 458 27, 436 27 H235 C214 27, 201 43, 201 68"/><polygon class="d-arrow" points="196,64 206,64 201,70"/><polygon class="d-arrow" points="340,22 340,32 330,27"/>
+    <text class="d-sub" x="430" y="20" text-anchor="middle">문제 시 되돌림</text>
+</svg>
+<div class="d-cap">문제가 있으면 병렬 실행으로 되돌아가고, 통과하면 완료합니다.</div>
+</div>
+<p>운영 구조는 대략 이렇게 흐릅니다.</p>
+<ol>
+    <li>목표를 <strong>분해</strong>하고 각 에이전트에게 <strong>분담</strong>.</li>
+    <li>분담한 작업을 <strong>병렬로 실행</strong>.</li>
+    <li>결과를 <strong>테스트로 검증</strong>, 잘못된 부분은 피드백.</li>
+    <li>검증 <strong>루프</strong>를 반복.</li>
+</ol>
+<p>이 운영 구조 덕분에 <strong>사람의 개입이 최소화</strong>되고, AI가 더 오래 자율적으로, 병렬로 빠르게 일하며, 테스트 기반 검증으로 <strong>품질이 확보</strong>됩니다.</p>
+
+<h4>빅테크 사례와 관심 급증</h4>
+<ul>
+    <li>작년 11월 <strong>Anthropic</strong>을 시작으로 사례가 쏟아지기 시작.</li>
+    <li>1월 <strong>OpenAI</strong>가 "500만 라인의 코드를 6개월간 사람 개입 없이 에이전트 혼자 개발"을 블로그로 공개 → 큰 화두.</li>
+    <li>실리콘밸리 개발자를 중심으로 "하네스를 어떻게 구성할까"에 대한 연구·시도 폭증. 하나보다 <strong>멀티 에이전트</strong>가 더 잘한다는 것도 발견.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">병목은 모델이 아니라 구조</span>
+    모델 성능은 이미 충분히 올라왔습니다(Gemini 3.5 Flash, GPT 5.5/5.6, Opus 4.8, 그리고 보안 우려로 제한 공개인 Claude Mythos 등). 현재의 병목은 <strong>모델을 감싸는 구조(하네스)</strong>입니다. 사람은 이제 <strong>설계 · 검증 · 의사결정</strong>에 집중하면 됩니다.
+</div>
+<p>하네스가 무엇이고 왜 생산성이 오르는지까지 잡았습니다. 다음 편 <a href="#!hns-install">실행하기</a>에서 메타 하네스 스킬을 설치하고, 실제로 돌리고, 생성 결과를 리뷰합니다.</p>
+

@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 > License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — cite the source when quoting.
-> 99 documents · 353 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
+> 91 documents · 351 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
 
 ---
 
@@ -188,7 +188,7 @@ Matrix어느 블록이 밀집이고 어디가 공백인가?문서×문서 격자
 
 뷰가 무엇이든, 분석의 진입점은 두 가지입니다:
 
-허브(hub) — 다른 문서들이 가장 많이 참조하는 문서. 현재 공동 1위는 LLM Wiki와 날리지 컨텍스트·확장 기능(각 피참조 9회)이고, 하네스의 구성과 효과가 8회로 뒤를 잇습니다. 어떤 주제를 처음 파악할 때는 그 클러스터의 허브부터 읽는 것이 가장 빠릅니다.
+허브(hub) — 다른 문서들이 가장 많이 참조하는 문서. 현재 1위는 하네스 실행하기(피참조 10회)이고, LLM Wiki와 날리지 컨텍스트·확장 기능이 각 9회로 뒤를 잇습니다. 어떤 주제를 처음 파악할 때는 그 클러스터의 허브부터 읽는 것이 가장 빠릅니다.
 
 브리지(bridge) — 여러 System에 걸쳐 등장하는 개념. '스킬'은 7개 System에 걸쳐 있는 최대 브리지이고, '슬래시명령어'·'서브에이전트'가 각 5개 System을 잇습니다. 브리지 개념을 따라가면 주제와 주제가 실제로 만나는 지점이 드러납니다.
 
@@ -230,7 +230,7 @@ JS를 실행하지 않는 손님을 위한 문 — 정적 스냅샷
 ① llms.txt 표지 — 무엇이 어디 있나 ② 그래프 JSON 1회 fetch 노드·엣지·개념·URL 전부 ③ 원문 fetch·분석 필요한 노드의 url만 related를 따라 1홉·2홉 확장 — "왜 이어졌는지"는 shared 개념이 근거
 단일 fetch 순회 — 그래프 파일 하나로 계획을 세우고, 원문은 필요한 것만 가져옵니다.
 
-실제 2홉 순회를 예로 들면: 허브 하네스의 구성과 효과에서 출발하면 1홉에 이웃 4편, 2홉이면 13편에 닿습니다. AI는 이렇게 도달한 문서 집합에서 공유 개념(shared)을 근거로 "이 문서들이 왜 한 묶음인지"를 설명하며 분석할 수 있습니다 — 낱장 검색으로는 불가능한, 관계 기반 독해입니다. 여기에 relations가 더해지면 단순히 "관련 있다"를 넘어 선행·구현·근거 같은 관계의 종류와 방향까지 읽어, "무엇을 먼저 읽어야 하는지"·"어느 문서가 어느 주장의 근거인지"를 짚어 분석할 수 있습니다.
+실제 2홉 순회를 예로 들면: 허브 하네스 실행하기에서 출발하면 1홉에 이웃 4편, 2홉이면 9편에 닿습니다. AI는 이렇게 도달한 문서 집합에서 공유 개념(shared)을 근거로 "이 문서들이 왜 한 묶음인지"를 설명하며 분석할 수 있습니다 — 낱장 검색으로는 불가능한, 관계 기반 독해입니다. 여기에 relations가 더해지면 단순히 "관련 있다"를 넘어 선행·구현·근거 같은 관계의 종류와 방향까지 읽어, "무엇을 먼저 읽어야 하는지"·"어느 문서가 어느 주장의 근거인지"를 짚어 분석할 수 있습니다.
 
 절대 어긋나지 않게 — 드리프트 게이트
 
@@ -2528,11 +2528,11 @@ Q&A 요점
 
 ---
 
-# 하네스 엔지니어링 — 개요와 복습
+# 하네스란 — 개요·정의·구성
 Section: AI · Claude · Code · Harness
 URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-overview
 
-하네스 엔지니어링 — 개요와 복습
+하네스란 — 개요·정의·구성
 
 이 자료는 "하네스 엔지니어링 / 황민호" 실습 강의를 영상 순서대로 파트별로 정리한 것입니다. 지난 Claude Code 기초 강의에 이어, 이번 주제는 하네스 엔지니어링(Harness Engineering) 입니다.
 
@@ -2562,12 +2562,6 @@ AI를 다룰 때 컨텍스트의 중요성과 토큰 사용량 관리.
 본 문서 세트는 "하네스 엔지니어링 / 황민호" 실습 강의 내용을 순서대로 정리·재구성한 것입니다. 강의는 Claude Code 기초의 후속 세션입니다.
 
 · 영상: youtube.com/live/iqoPgoYBVaM
-
----
-
-# 하네스 엔지니어링이란?
-Section: AI · Claude · Code · Harness
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-what
 
 하네스 엔지니어링이란?
 
@@ -2606,12 +2600,6 @@ AI를 다루는 초점이 계속 옮겨 왔습니다.
 
 '하네스'라는 말
 하네스(harness)는 마차의 마구(馬具)에서 유래했습니다. 말(AI)을 어떻게 잘 부리도록 갖추느냐가 성능을 좌우한다는 비유입니다. 단일 에이전트에도, 여러 에이전트를 묶는 멀티 구성에도 효과가 있습니다.
-
----
-
-# 하네스의 구성과 효과
-Section: AI · Claude · Code · Harness
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-anatomy
 
 하네스의 구성과 효과
 
@@ -2657,13 +2645,15 @@ URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-anatomy
 병목은 모델이 아니라 구조
 모델 성능은 이미 충분히 올라왔습니다(Gemini 3.5 Flash, GPT 5.5/5.6, Opus 4.8, 그리고 보안 우려로 제한 공개인 Claude Mythos 등). 현재의 병목은 모델을 감싸는 구조(하네스)입니다. 사람은 이제 설계 · 검증 · 의사결정에 집중하면 됩니다.
 
+하네스가 무엇이고 왜 생산성이 오르는지까지 잡았습니다. 다음 편 실행하기에서 메타 하네스 스킬을 설치하고, 실제로 돌리고, 생성 결과를 리뷰합니다.
+
 ---
 
-# 메타 하네스 스킬 설치 (실습)
+# 실행하기 — 설치·실행·리뷰
 Section: AI · Claude · Code · Harness
 URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-install
 
-메타 하네스 스킬 설치 (실습)
+실행하기 — 설치·실행·리뷰
 
 하네스를 매번 손으로 구성(에이전트·스킬 등을 일일이 준비)하긴 번거롭습니다. 그래서 강사는 목표만 주면 하네스를 대신 구성해 주는 "메타 하네스" 스킬을 개발해 GitHub에 공개했고, 많은 사용 후기와 스타를 받았습니다. 오늘 실습은 이 스킬을 설치하는 것으로 시작합니다.
 
@@ -2692,12 +2682,6 @@ Add Marketplace 에서 lev-factory/harness 입력 → Enter (GitHub에서 다운
 
 마켓플레이스 경로 확인
 마켓플레이스 핸들(lev-factory/harness)은 발표에서 언급된 값을 옮긴 것으로, 실제 설치 시에는 강사의 GitHub(예: "하네스 100" 검색)에서 정확한 저장소 경로를 확인하세요. 플러그인 설치가 잘 안 되면 UI 방식과 명령 방식을 번갈아 시도합니다.
-
----
-
-# 하네스 실행하기 (실습)
-Section: AI · Claude · Code · Harness
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-run
 
 하네스 실행하기 (실습)
 
@@ -2740,12 +2724,6 @@ Shift + 방향키 로 현재 스폰된 에이전트들이 무슨 일을 하는�
 무엇에 쓰나
 데이터 분석, 리서치, 보고서 작성, 시뮬레이션 등 — 무엇이든 의도를 주면 그 일을 할 에이전트 팀을 구성해 줍니다.
 
----
-
-# 생성 결과 리뷰 — 에이전트·스킬·오케스트레이터
-Section: AI · Claude · Code · Harness
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-review
-
 생성 결과 리뷰 — 에이전트·스킬·오케스트레이터
 
 오케스트레이터 에이전트 A 에이전트 B 에이전트 C ● 주입 스킬 _workspace (공용 산출물)
@@ -2784,13 +2762,15 @@ QA 리뷰어 — 단순 오탈자가 아니라 주장–출처 정합성, 수치
 _workspace 폴더
 하네스로 실행하면 _workspace 폴더가 생겨, 에이전트들이 만든 중간 산출물이 모입니다 — 1차 리서치, 예산 분석, QA 리포트(크리티컬·메이저·마이너 이슈)와 수정안, 한계 사항, 그리고 근거 출처까지. 출처 기반이라 할루시네이션이 크게 줄어듭니다.
 
+돌려 봤으니 이제 속을 들여다볼 차례입니다 — 동작 원리 편이 주방 비유로 시작해 에이전트 팀과 핵심 3요소의 구조를 풉니다.
+
 ---
 
-# 주방 비유로 이해하는 하네스
+# 동작 원리 — 주방 비유·팀·3요소
 Section: AI · Claude · Code · Harness
 URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-kitchen
 
-주방 비유로 이해하는 하네스
+동작 원리 — 주방 비유·팀·3요소
 
 하네스 엔지니어링을 주방 운영에 빗대면 이해가 쉽습니다.
 
@@ -2821,12 +2801,6 @@ URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-kitchen
 
 토큰 사용량
 멀티로 돌리는 만큼 토큰 사용량이 늘어납니다. 특히 에이전트들끼리 대화할 때 많아지는데, 측정상 약 30% 더 쓰이는 경우도 있었습니다.
-
----
-
-# 에이전트 팀과 컨텍스트 관리
-Section: AI · Claude · Code · Harness
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-team
 
 에이전트 팀과 컨텍스트 관리
 
@@ -2859,12 +2833,6 @@ URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-team
 컨텍스트 = 주방의 작업대
 
 컨텍스트는 요리를 만드는 작업대와 같습니다. 그 요리와 관련된 것만 올라와 있으면 깔끔하지만, 관련 없는 것이 섞이면 실수할 여지가 생깁니다(소금통에 설탕이 든 격). 실제로 대화가 길어지면 앞뒤 생각이 모순되기도 하는데, 그 상태로 일을 시키면 AI가 "A가 맞나 B가 맞나" 혼란스러워합니다. 그래서 컨텍스트 관리가 중요합니다.
-
----
-
-# 핵심 3요소와 동작 구조
-Section: AI · Claude · Code · Harness
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-core
 
 핵심 3요소와 동작 구조
 
@@ -2920,13 +2888,15 @@ URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-core
 팀 동작 6패턴
 에이전트 팀의 협업 패턴은 여섯 가지로 명시되어 있습니다 — 순차 실행, 병렬 후 통합, 리뷰 과정 등. 이 패턴들을 하이브리드로 조합해 상황에 맞춰 동작합니다.
 
+구조까지 이해했다면 남은 것은 응용입니다 — 활용과 확장 편에서 실제 사례들과 하네스 100, 다른 도구와의 조합을 봅니다.
+
 ---
 
-# 활용 사례 — 콘텐츠부터 리서치까지
+# 활용과 확장 — 사례·하네스 100·도구
 Section: AI · Claude · Code · Harness
 URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-usecases
 
-활용 사례 — 콘텐츠부터 리서치까지
+활용과 확장 — 사례·하네스 100·도구
 
 하네스는 개발에만 쓰기 아까울 만큼 활용 폭이 넓습니다. 강사가 만들어 본 사례들입니다.
 
@@ -2960,12 +2930,6 @@ SF 소설을 쓰자고 했더니, 소설을 쓰기 위한 에이전트와 스킬
 
 공통점
 "그냥 써줘"가 아니라, 그 일을 하기 위한 에이전트·스킬·워크플로우가 먼저 만들어지고, 사전 계획된 재료와 검증 루프 위에서 결과물이 나옵니다.
-
----
-
-# 하네스 100 · 실습 아이디어 · 성능
-Section: AI · Claude · Code · Harness
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-hundred
 
 하네스 100 · 실습 아이디어 · 성능
 
@@ -3019,12 +2983,6 @@ URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-hundred
 
 수치 참고
 위 수치는 공개 벤치마크가 아니라 강연자의 자체 측정치입니다. 참고로 Anthropic도 멀티에이전트 구성이 단일 에이전트 대비 내부 평가에서 90.2% 성능 향상을 보였다고 발표한 바 있습니다(multi-agent research system).
-
----
-
-# 도구 확장과 마무리
-Section: AI · Claude · Code · Harness
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-tools
 
 도구 확장과 마무리
 

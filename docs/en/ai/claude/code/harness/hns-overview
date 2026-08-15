@@ -1,4 +1,4 @@
-<h2>Harness Engineering — Overview and Recap</h2>
+<h2>What a Harness Is — Overview, Definition, Anatomy</h2>
 <p>This material organizes the <strong>"Harness Engineering / Minho Hwang"</strong> hands-on course part by part in the order of the video. Following the previous <a href="#!ccb-overview">Claude Code Basics</a> course, this topic is <strong>Harness Engineering</strong>.</p>
 
 <div class="diagram">
@@ -49,3 +49,119 @@
     This document set organizes and restructures, in order, the content of the hands-on course "Harness Engineering / Minho Hwang". The course is a follow-up session to Claude Code Basics.
     <br>· Video: <a href="https://www.youtube.com/live/iqoPgoYBVaM" target="_blank" rel="noopener">youtube.com/live/iqoPgoYBVaM</a>
 </div>
+
+<h3>What Is Harness Engineering?</h3>
+<p>In one line, it is <strong>"designing the system in which AI works"</strong>. It started from the discovery that even with the same AI model, the quality of the result is completely different depending on <strong>how you compose the environment (the harness) surrounding that model</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 132" role="img" aria-label="The focus has widened from prompts to context, and then to the harness, the whole environment surrounding the model">
+    <rect class="d-box soft" x="14" y="46" width="182" height="44" rx="10"/>
+    <text class="d-label sm" x="105" y="66" text-anchor="middle">Prompt engineering</text>
+    <text class="d-sub" x="105" y="82" text-anchor="middle">How to ask</text>
+    <line class="d-edge" x1="196" y1="68" x2="216" y2="68"/><polygon class="d-arrow" points="216,63 224,68 216,73"/>
+
+    <rect class="d-box soft" x="228" y="38" width="188" height="60" rx="10"/>
+    <text class="d-label sm" x="322" y="62" text-anchor="middle">Context engineering</text>
+    <text class="d-sub" x="322" y="80" text-anchor="middle">Providing knowledge · data</text>
+    <line class="d-edge" x1="416" y1="68" x2="436" y2="68"/><polygon class="d-arrow" points="436,63 444,68 436,73"/>
+
+    <rect class="d-box accent" x="448" y="28" width="220" height="78" rx="12"/>
+    <text class="d-label" x="558" y="60" text-anchor="middle">Harness engineering</text>
+    <text class="d-sub" x="558" y="80" text-anchor="middle">Model + whole environment</text>
+</svg>
+<div class="d-cap">The focus has widened step by step from <strong>the question</strong> → <strong>the material</strong> → <strong>the whole environment surrounding the model</strong>.</div>
+</div>
+
+<h4>The felt change in productivity</h4>
+<p>This is the change in work speed the instructor experienced firsthand.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Period · tool</th><th>Time the same task took</th></tr></thead>
+        <tbody>
+            <tr><td>Before</td><td>About 3 months</td></tr>
+            <tr><td>ChatGPT appears</td><td>About 1 month</td></tr>
+            <tr><td>Cursor · Claude Code</td><td>1&ndash;2 weeks</td></tr>
+            <tr><td><strong>Harness engineering</strong></td><td>MVP in about 2 hours, 2&ndash;3 days to deployment</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h4>A paradigm shift</h4>
+<p>The focus in working with AI has kept moving.</p>
+<ul>
+    <li><strong>Prompt engineering</strong> &mdash; how to talk with the AI (how to ask).</li>
+    <li><strong>Context engineering</strong> &mdash; what knowledge · data to give along with it.</li>
+    <li><strong>Harness engineering</strong> &mdash; how to compose not a single model but <strong>the entire environment surrounding the model</strong>.</li>
+</ul>
+
+<h4>"Hand the steering wheel to the AI"</h4>
+<p>In the existing way, <strong>the human always held the steering wheel</strong> and the AI only assisted from the side. So there was productivity only while the human was holding the wheel. The harness is an approach that <strong>hands that steering wheel to the AI</strong> so it performs many tasks at the same time, autonomously, for a long time.</p>
+
+<div class="note">
+    <span class="nh">The word 'harness'</span>
+    Harness comes from the <strong>tack of a horse-drawn carriage</strong>. It is a metaphor that how well you equip yourself to drive the horse (the AI) determines performance. It works both for a single agent and for a multi configuration that binds several agents together.
+</div>
+
+<h3>Harness Composition and Effects</h3>
+<p>Many elements are needed to build a harness, but the core ones are as follows. Some people call <strong>everything surrounding the model, excluding the LLM model itself</strong>, the harness.</p>
+
+<h4>Core components</h4>
+<ul>
+    <li><strong>Agent</strong> &mdash; an AI worker with a defined role.</li>
+    <li><strong>Skills · tools</strong> &mdash; the capabilities and connecting tools an agent uses while working.</li>
+    <li><strong>Orchestrator</strong> &mdash; the PM role that coordinates the agents so they work well.</li>
+    <li><strong>Evaluation · tests</strong> &mdash; verify the output and keep the quality up.</li>
+    <li><strong>Artifacts · memory</strong> &mdash; continuously manage the deliverables and the context.</li>
+</ul>
+
+<h4>How productivity goes up</h4>
+<div class="diagram">
+<svg viewBox="0 0 680 150" role="img" aria-label="Operating loop: decompose the goal → run in parallel → verify with tests → loop back if there is an issue, and finish if it passes">
+    <rect class="d-box" x="6" y="70" width="110" height="48" rx="10"/>
+    <text class="d-label sm" x="61" y="98" text-anchor="middle">Decompose goal</text>
+
+    <rect class="d-box" x="146" y="70" width="110" height="48" rx="10"/>
+    <text class="d-label sm" x="201" y="98" text-anchor="middle">Run in parallel</text>
+
+    <rect class="d-box" x="286" y="70" width="112" height="48" rx="10"/>
+    <text class="d-label sm" x="342" y="98" text-anchor="middle">Verify by tests</text>
+
+    <polygon class="d-box" points="470,66 512,94 470,122 428,94"/>
+    <text class="d-label sm" x="470" y="98" text-anchor="middle">Issue?</text>
+
+    <rect class="d-box accent" x="548" y="70" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="608" y="98" text-anchor="middle">Done</text>
+
+    <line class="d-edge" x1="116" y1="94" x2="144" y2="94"/><polygon class="d-arrow" points="138,89 146,94 138,99"/>
+    <line class="d-edge" x1="256" y1="94" x2="284" y2="94"/><polygon class="d-arrow" points="278,89 286,94 278,99"/>
+    <line class="d-edge" x1="398" y1="94" x2="426" y2="94"/><polygon class="d-arrow" points="420,89 428,94 420,99"/>
+    <line class="d-edge" x1="512" y1="94" x2="546" y2="94"/><polygon class="d-arrow" points="540,89 548,94 540,99"/>
+    <text class="d-sub" x="530" y="84" text-anchor="middle">Pass</text>
+
+    <path class="d-edge" d="M470 66 C470 46, 458 27, 436 27 H235 C214 27, 201 43, 201 68"/><polygon class="d-arrow" points="196,64 206,64 201,70"/><polygon class="d-arrow" points="340,22 340,32 330,27"/>
+    <text class="d-sub" x="430" y="20" text-anchor="middle">Loop back on issue</text>
+</svg>
+<div class="d-cap">If there is an issue it goes back to parallel execution, and if it passes it is done.</div>
+</div>
+<p>The operating structure flows roughly like this.</p>
+<ol>
+    <li><strong>Decompose</strong> the goal and <strong>divide it up</strong> among the agents.</li>
+    <li><strong>Run</strong> the divided tasks <strong>in parallel</strong>.</li>
+    <li><strong>Verify</strong> the results <strong>with tests</strong>, and feed back what is wrong.</li>
+    <li>Repeat the verification <strong>loop</strong>.</li>
+</ol>
+<p>Thanks to this operating structure, <strong>human intervention is minimized</strong>, the AI works autonomously for longer and quickly in parallel, and <strong>quality is secured</strong> by test-based verification.</p>
+
+<h4>Big-tech cases and surging interest</h4>
+<ul>
+    <li>Starting with <strong>Anthropic</strong> last November, cases began pouring out.</li>
+    <li>In January <strong>OpenAI</strong> published on its blog that "agents alone developed 5 million lines of code over six months without human intervention" → a big talking point.</li>
+    <li>Research and attempts around "how should we compose a harness" exploded, led by Silicon Valley developers. It was also found that <strong>multi-agent</strong> setups do better than one.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">The bottleneck is not the model but the structure</span>
+    Model performance has already risen high enough (Gemini 3.5 Flash, GPT 5.5/5.6, Opus 4.8, and Claude Mythos, whose release is limited over security concerns, among others). The current bottleneck is <strong>the structure that wraps the model (the harness)</strong>. People can now focus on <strong>design · verification · decision-making</strong>.
+</div>
+<p>With what a harness is and why it multiplies productivity in place, the next chapter, <a href="#!hns-install">Running It</a>, installs the meta-harness skill, actually runs it, and reviews what it generates.</p>
+
