@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Installing and Using Skills (Hands-on)</title>
-<meta name="description" content="Walks through the hands-on way to install skills and invoke them.">
+<title>Installing, Securing, and Creating Skills</title>
+<meta name="description" content="Install and use skills, face the execution-permission risk, build your own with skill-creator — closing with the engineering layers and Q&amp;A">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/en/skl-install/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/skl-install/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/skl-install/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Installing and Using Skills (Hands-on)">
-<meta property="og:description" content="Walks through the hands-on way to install skills and invoke them.">
+<meta property="og:title" content="Installing, Securing, and Creating Skills">
+<meta property="og:description" content="Install and use skills, face the execution-permission risk, build your own with skill-creator — closing with the engineering layers and Q&amp;A">
 <meta property="og:url" content="https://dewytear.github.io/p/en/skl-install/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Installing and Using Skills (Hands-on)">
-<meta name="twitter:description" content="Walks through the hands-on way to install skills and invoke them.">
+<meta name="twitter:title" content="Installing, Securing, and Creating Skills">
+<meta name="twitter:description" content="Install and use skills, face the execution-permission risk, build your own with skill-creator — closing with the engineering layers and Q&amp;A">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "Installing and Using Skills (Hands-on)",
- "description": "Walks through the hands-on way to install skills and invoke them.",
+ "headline": "Installing, Securing, and Creating Skills",
+ "description": "Install and use skills, face the execution-permission risk, build your own with skill-creator — closing with the engineering layers and Q&A",
  "inLanguage": "en",
  "url": "https://dewytear.github.io/p/en/skl-install/",
  "mainEntityOfPage": "https://dewytear.github.io/#!skl-install",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T22:20:26+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T14:19:16+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/ja/skl-install/" hreflang="ja">日本語</a>
 </p>
 <article>
-<h2>Installing and Using Skills (Hands-on)</h2>
+<h2>Installing, Securing, and Creating Skills</h2>
 <p>Practicing with skills is almost disappointingly simple &mdash; <strong>"install this skill"</strong> is all it takes. That said, it is far more interesting when you keep the <strong>mechanics</strong> you learned earlier in mind as you use them.</p>
 
 <h3>Installing</h3>
@@ -86,11 +86,123 @@ make a summer workshop page</code></pre>
     <span class="nh">Triggering recap</span>
     The reason a skill fires even when you just say "make it in the organization's style" is that the <strong>metadata description</strong> states "when using this style, use this skill." Still, to be certain it is better to <strong>name the skill explicitly</strong>.
 </div>
+
+<h3>Security Precautions</h3>
+<p>Skills are as much of a <strong>security risk</strong> as they are powerful. This is a part you absolutely must address.</p>
+
+<h4>Do not carelessly use other people's skills</h4>
+<p>A skill contains <strong>scripts</strong>, and those scripts carry <strong>permission to run things on my PC (laptop)</strong> as-is. So taking a skill someone else made and using it without vetting is dangerous.</p>
+<ul>
+    <li>Dangerous code can be hidden inside a skill, and there have in fact been many cases of <strong>API key leaks and security incidents</strong> (from things downloaded off MCP hubs, for example).</li>
+    <li>Use only <strong>certified and vetted skills</strong>, and where possible only <strong>skills vetted internally</strong>.</li>
+    <li>Inspection tools do exist, but then <strong>how much to trust that tool</strong> becomes another problem. In the end you need the care to check the code and guidelines yourself.</li>
+    <li>Rather than patching over a dangerous skill "on top," <strong>building your own with it as a reference</strong> is safer.</li>
+</ul>
+
+<h4>Permissions and sandboxes</h4>
+<ul>
+    <li>Each skill can carry permission restrictions such as <strong>read-only, or write and edit allowed</strong>.</li>
+    <li>Absent-mindedly saying "yes" on your laptop can damage the system, so it is more stable to run risky work separately in a <strong>sandbox (VM)</strong>.</li>
+    <li>Inside an institution, running it in a <strong>closed-network or on-premises</strong> environment is recommended. (Choose an in-house or open model as well.)</li>
+</ul>
+
+<div class="note warn">
+    <span class="nh">In one line</span>
+    A skill holds <strong>permission to run things on my computer</strong>. Never carelessly install a skill of unclear origin.
+</div>
+
+<h3>Creating Skills (Skill Engineering)</h3>
+<p>Once you have used them well, the thought "I want to make one myself" comes naturally. <strong>Making skills is called skill engineering</strong>, and a <strong>skill-making skill (skill-creator)</strong> that helps with it comes built in.</p>
+
+<h4>skill-creator &mdash; the meta skill</h4>
+<div class="diagram">
+<svg viewBox="0 0 660 248" role="img" aria-label="Skill creation loop: create → evaluate (evaluator) → improve → benchmark → create again, and done once it passes">
+    <rect class="d-box" x="60" y="16" width="180" height="54" rx="10"/>
+    <text class="d-label" x="150" y="48" text-anchor="middle">Create</text>
+
+    <rect class="d-box" x="420" y="16" width="180" height="54" rx="10"/>
+    <text class="d-label" x="510" y="40" text-anchor="middle">Evaluate</text>
+    <text class="d-sub" x="510" y="57" text-anchor="middle">evaluator</text>
+
+    <rect class="d-box" x="420" y="110" width="180" height="54" rx="10"/>
+    <text class="d-label" x="510" y="142" text-anchor="middle">Improve</text>
+
+    <rect class="d-box" x="60" y="110" width="180" height="54" rx="10"/>
+    <text class="d-label" x="150" y="142" text-anchor="middle">Benchmark</text>
+
+    <rect class="d-box accent" x="60" y="188" width="180" height="46" rx="10"/>
+    <text class="d-label" x="150" y="216" text-anchor="middle">Done</text>
+
+    <line class="d-edge" x1="240" y1="43" x2="416" y2="43"/><polygon class="d-arrow" points="412,38 420,43 412,48"/>
+    <line class="d-edge" x1="510" y1="70" x2="510" y2="106"/><polygon class="d-arrow" points="505,104 515,104 510,110"/>
+    <line class="d-edge" x1="420" y1="137" x2="244" y2="137"/><polygon class="d-arrow" points="248,132 240,137 248,142"/>
+    <line class="d-edge accent" x1="150" y1="108" x2="150" y2="76"/><polygon class="d-arrow accent" points="145,76 155,76 150,70"/>
+    <text class="d-sub" x="196" y="94" text-anchor="middle">apply fixes</text>
+    <line class="d-edge" x1="150" y1="164" x2="150" y2="186"/><polygon class="d-arrow" points="145,182 155,182 150,188"/>
+    <text class="d-sub" x="196" y="180" text-anchor="middle">if it passes</text>
+</svg>
+<div class="d-cap">It is refined by running an A/B test loop, and is finished once it passes the benchmark.</div>
+</div>
+<p>As a skill for making skills, it comes with the following flow and subagents.</p>
+<ul>
+    <li>A <strong>create → evaluate → improve → benchmark</strong> loop.</li>
+    <li><strong>evaluator, grader, comparison, and analysis</strong> subagents built in.</li>
+    <li>Drop in a script and say "turn this into a skill," and it builds a solid one through <strong>its own loop and testing (A/B)</strong>.</li>
+</ul>
+
+<h4>Two categories</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Type</th><th>What it covers</th><th>As models advance</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Capability-boosting skills</strong></td><td>PDF manipulation, document generation, complex file conversion, and the like. Built as scripts so they run <strong>deterministically and reliably</strong>.</td><td>Once the model gets good at it, they <strong>may become unnecessary</strong></td></tr>
+            <tr><td><strong>Organization-internalizing skills</strong></td><td>The organization's responsibilities, workflows, owners, and so on. <strong>Our internal knowledge</strong>, which the agent does not know.</td><td><strong>Irreplaceable</strong> no matter how much models advance &mdash; keep building them</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">Emphasis &mdash; keep building organization-internalizing skills</span>
+    Make good use of capability-boosting skills now, but do not assume they will "last forever" &mdash; view them as something you can retire as models advance. <strong>Organization-internalizing skills</strong>, on the other hand, cannot be replaced no matter how far LLMs advance, because they cannot stand in for our organization's responsibilities, flows, and owners, so <strong>building them continuously</strong> is the heart of agent governance.
+</div>
+
+<div class="note">
+    <span class="nh">Distribution is easy</span>
+    One of the biggest advantages of skills is <strong>distribution</strong>. Register one in a shared repository, server, or community and version management and sharing become easy: copy "Get this skill" → say "install it" once, and it spreads across the whole organization. Editing the file on the spot and redistributing it is possible immediately too.
+</div>
+
+<h3>Wrap-up &mdash; Engineering Layers and Q&A</h3>
+
+<h4>The layers of engineering</h4>
+<p>Sort what we have learned so far by purpose and, instead of "it's all engineering," the distinct grain of each becomes visible.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Engineering</th><th>Purpose</th></tr></thead>
+        <tbody>
+            <tr><td>Prompt engineering</td><td>Making the LLM <strong>smart</strong></td></tr>
+            <tr><td>Context engineering</td><td><strong>Raising the odds</strong> that the context is right</td></tr>
+            <tr><td>Agentic engineering</td><td>Making the AI <strong>do the work well</strong></td></tr>
+            <tr><td>Harness engineering</td><td>Making it something you can <strong>trust and delegate to</strong></td></tr>
+        </tbody>
+    </table>
+</div>
+<p>A <a href="/p/en/hns-overview/">harness</a> can be seen as a <strong>meta skill loaded with skills + subagents</strong>. With the concept of skills in hand, you can look at a harness understanding that it is complex inside even though it looks easy on the surface.</p>
+
+<h4>MCP vs skills</h4>
+<p>MCP is a <strong>protocol</strong> &mdash; a convention for connecting external tools with agents, so its loading and usage differ from skills. <strong>They are not competitors</strong>: if a skill needs an external connection it can use MCP, so MCP can live inside a skill. That said, skills are so powerful that cases of <strong>replacing MCP with skills</strong> are increasing too.</p>
+
+<div class="note">
+    <span class="nh">Q&amp;A takeaways</span>
+    · Downloading <strong>open skills</strong> carelessly is not safe &mdash; only vetted ones.<br>
+    · When there is <strong>an MCP function and a skill with the same name</strong>, which one wins depends on the situation, so <strong>be explicit</strong> ("use this skill") or separate them with namespaces.<br>
+    · <strong>Evaluating skill performance</strong> &mdash; decide metrics first, such as whether it triggers well and whether the result is useful, then check with an LLM judge and by eye.<br>
+    · <strong>Tokens</strong> &mdash; Claude Code uses more than regular Claude, but it can be more useful if it gets you the result you want in one go. Do not look at tokens alone; choose holistically.
+</div>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Skill &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Skill &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
-<ul><li><a href="/p/en/skl-structure/">SKILL.md Structure and the Description</a></li><li><a href="/p/en/skl-overview/">Skill Deep Dive — Overview</a></li><li><a href="/p/en/skl-coding-agent/">The Background of Skills — the Birth of the Coding Agent</a></li></ul>
+<ul><li><a href="/p/en/skl-overview/">What Skills Are — Background and Strengths</a></li><li><a href="/p/en/skl-context/">How Skills Are Built and How They Work</a></li></ul>
 </nav>
 </body>
 </html>

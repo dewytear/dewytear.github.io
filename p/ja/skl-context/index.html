@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>コンテキストウィンドウとツールの問題</title>
-<meta name="description" content="コンテキストウィンドウの限界と、ツールがコンテキストを食う問題を説明する。">
+<title>スキルの構造と動作原理</title>
+<meta name="description" content="コンテキストウィンドウとツール仕様の問題から出発し、漸進的ロード・SKILL.md の構造・例のスキルまで — スキルが実際に動く仕組み">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/ja/skl-context/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/skl-context/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/skl-context/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="コンテキストウィンドウとツールの問題">
-<meta property="og:description" content="コンテキストウィンドウの限界と、ツールがコンテキストを食う問題を説明する。">
+<meta property="og:title" content="スキルの構造と動作原理">
+<meta property="og:description" content="コンテキストウィンドウとツール仕様の問題から出発し、漸進的ロード・SKILL.md の構造・例のスキルまで — スキルが実際に動く仕組み">
 <meta property="og:url" content="https://dewytear.github.io/p/ja/skl-context/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="コンテキストウィンドウとツールの問題">
-<meta name="twitter:description" content="コンテキストウィンドウの限界と、ツールがコンテキストを食う問題を説明する。">
+<meta name="twitter:title" content="スキルの構造と動作原理">
+<meta name="twitter:description" content="コンテキストウィンドウとツール仕様の問題から出発し、漸進的ロード・SKILL.md の構造・例のスキルまで — スキルが実際に動く仕組み">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "コンテキストウィンドウとツールの問題",
- "description": "コンテキストウィンドウの限界と、ツールがコンテキストを食う問題を説明する。",
+ "headline": "スキルの構造と動作原理",
+ "description": "コンテキストウィンドウとツール仕様の問題から出発し、漸進的ロード・SKILL.md の構造・例のスキルまで — スキルが実際に動く仕組み",
  "inLanguage": "ja",
  "url": "https://dewytear.github.io/p/ja/skl-context/",
  "mainEntityOfPage": "https://dewytear.github.io/#!skl-context",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T22:20:26+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T14:19:16+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/en/skl-context/" hreflang="en">English</a>
 </p>
 <article>
-<h2>コンテキストウィンドウとツールの問題</h2>
+<h2>スキルの構造と動作原理</h2>
 <p>スキルの原理を理解するには、まず<strong>コンテキストウィンドウ</strong>から知る必要があります。</p>
 
 <h3>コンテキストウィンドウ</h3>
@@ -82,11 +82,140 @@
     <span class="nh">トランクのたとえ</span>
     ツールは自動車の<strong>トランク</strong>のようなものです。大きさに限りがあるので、キャンプ道具を全部は入れられません。選択肢はふたつ — もっと大きなトランクを買うか、荷物をできるかぎり減らすか。コーディングエージェントは後者を選び、<strong>ツールを六つに減らして実行環境を一緒に渡す</strong>やり方で問題を解きました。そしてその上に<strong>スキル</strong>が登場したのです。
 </div>
+
+<h3>段階的な読み込み（スキルの中心原理）</h3>
+<p>スキルのいちばん中心にある原理は<strong>段階的な読み込み（progressive disclosure）</strong>です。スキル全体をコンテキストに載せるのではなく、<strong>メタデータだけ</strong>を先に載せておいて、必要なときに残りを取り出します。</p>
+
+<h4>図書館の本の表紙のたとえ</h4>
+<p>コンテキストに入るのは、登録されたスキルの<strong>メタデータ（名前 + 説明、3〜4 行、スキルあたり約 100 トークン）</strong>だけです。図書館に本がずらりと並んでいて、私たちは<strong>本の表紙（タイトル・簡単な説明）</strong>だけを眺め、必要になったら取り出して読むのと同じです。メタデータがとても小さいので、<strong>100 個以上</strong>入れてもコンテキストをほとんど食いません。（JSON のツールはスキーマ全体が先にコンテキストを占め、数が増えるほど負担が大きくなるのと対照的です — だから Claude Code は MCP ツールのスキーマも遅延ロードします）</p>
+
+<h4>3 段階の読み込み</h4>
+<div class="diagram">
+<svg viewBox="0 0 640 252" role="img" aria-label="スキルの 3 段階の段階的な読み込み: メタデータはつねに、指示の本文は呼ばれたとき、リソース・スクリプトは必要なときだけ読み込む">
+    <rect class="d-box accent" x="20" y="12" width="300" height="60" rx="10"/>
+    <text class="d-label" x="170" y="38" text-anchor="middle">① メタデータ</text>
+    <text class="d-sub" x="170" y="56" text-anchor="middle">名前 + 説明 · 約 100 トークン</text>
+
+    <rect class="d-box" x="20" y="96" width="300" height="60" rx="10"/>
+    <text class="d-label" x="170" y="122" text-anchor="middle">② 指示の本文</text>
+    <text class="d-sub" x="170" y="140" text-anchor="middle">SKILL.md の本文</text>
+
+    <rect class="d-box soft" x="20" y="180" width="300" height="60" rx="10"/>
+    <text class="d-label" x="170" y="206" text-anchor="middle">③ リソース · スクリプト</text>
+    <text class="d-sub" x="170" y="224" text-anchor="middle">同梱ファイル · テンプレート</text>
+
+    <line class="d-edge" x1="170" y1="72" x2="170" y2="94"/><polygon class="d-arrow" points="165,90 175,90 170,96"/>
+    <line class="d-edge" x1="170" y1="156" x2="170" y2="178"/><polygon class="d-arrow" points="165,174 175,174 170,180"/>
+
+    <line class="d-edge dash" x1="320" y1="42" x2="356" y2="42"/>
+    <text class="d-accent" x="364" y="46" text-anchor="start">つねに読み込む</text>
+    <line class="d-edge dash" x1="320" y1="126" x2="356" y2="126"/>
+    <text class="d-accent" x="364" y="130" text-anchor="start">呼ばれたら読み込む</text>
+    <line class="d-edge dash" x1="320" y1="210" x2="356" y2="210"/>
+    <text class="d-accent" x="364" y="214" text-anchor="start">必要なときだけ</text>
+</svg>
+<div class="d-cap">上へ行くほどつねに、下へ行くほど必要なときだけ — 読み込む時点が段階ごとに遅くなります。</div>
+</div>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>レベル</th><th>内容</th><th>読み込む時点</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td><strong>メタデータ</strong>（SKILL.md の名前・description）</td><td><strong>つねに</strong>読み込む（スキルあたり約 100 トークン）</td></tr>
+            <tr><td>2</td><td><strong>指示</strong>（SKILL.md の本文、マークダウンの使い方）</td><td>そのスキルが<strong>呼ばれたとき</strong></td></tr>
+            <tr><td>3</td><td><strong>リソース · スクリプト · テンプレート</strong>（同梱ファイル）</td><td><strong>必要なときだけ</strong>（スクリプトは読み込まずに実行するだけ）</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>同梱ファイルは必須ではありません。言葉（マークダウン）だけで足りるならファイルなしでもよく、実行するスクリプトやテンプレートが要るなら含めます。ファイルがあるほど、より<strong>決定論的な結果</strong>が得られます。ちなみに公式のガイドは <code>SKILL.md</code> の本文を<strong>5K トークン未満</strong>に保ち、長い内容は同梱ファイルへ分けることを勧めています。</p>
+
+<div class="note">
+    <span class="nh">マニュアルのたとえ（組み立て製品・マトリックスのヘリ）</span>
+    通販で組み立て製品を買うと、マニュアルを見ずに完成写真だけ見て組み立て、<strong>ネジが余った瞬間</strong>にマニュアルを取り出します。スキルの指示も<strong>発動したときにちょうど取り出して</strong>読み、ふだんは取り出しません。映画マトリックスで、ヘリの前で<strong>マニュアルを一瞬でロード</strong>して操縦する場面と同じ感覚です。
+</div>
+
+<div class="note">
+    <span class="nh">確認のコツ</span>
+    Claude Code で <code>/context</code> と打つと、システムプロンプト・カスタムツール・スキルなどがそれぞれ何 % を占めているかが見えます。積んだスキルが多くてもトークンをほとんど使っていないことを確認できます。
+</div>
+
+<h3>SKILL.md の構造とディスクリプション</h3>
+<p>スキルのフォルダの中心は <code>SKILL.md</code> のファイルで、そのほかに <code>reference</code>・<code>examples</code>・<code>scripts</code> といった同梱ファイルが一緒にあります。</p>
+
+<h4>フロントマター（メタデータ）</h4>
+<div class="diagram">
+<svg viewBox="0 0 640 210" role="img" aria-label="SKILL.md の解剖: フロントマター（name·description）はつねに読み込み、本文（指示）は呼ばれたときに読み込む">
+    <rect class="d-box" x="110" y="12" width="320" height="182" rx="10"/>
+    <text class="d-label" x="270" y="35" text-anchor="middle">SKILL.md</text>
+
+    <rect class="d-box accent" x="130" y="46" width="280" height="56" rx="9"/>
+    <text class="d-label" x="270" y="72" text-anchor="middle">フロントマター</text>
+    <text class="d-sub" x="270" y="90" text-anchor="middle">name · description</text>
+
+    <rect class="d-box soft" x="130" y="118" width="280" height="60" rx="9"/>
+    <text class="d-label" x="270" y="144" text-anchor="middle">本文 (指示)</text>
+    <text class="d-sub" x="270" y="162" text-anchor="middle">マークダウン · 使い方</text>
+
+    <line class="d-edge dash" x1="430" y1="74" x2="470" y2="74"/>
+    <text class="d-accent" x="478" y="78" text-anchor="start">つねに読み込む</text>
+    <line class="d-edge dash" x1="430" y1="148" x2="470" y2="148"/>
+    <text class="d-accent" x="478" y="152" text-anchor="start">呼ばれたら読む</text>
+</svg>
+<div class="d-cap">ひとつのファイルの中で、フロントマターはつねに、本文は呼ばれたときに読み込まれます。</div>
+</div>
+<p><code>SKILL.md</code> のいちばん上には YAML の<strong>フロントマター</strong>があります。たとえば PDF のスキルなら:</p>
+<pre><code><span class="c"># SKILL.md のフロントマター (つねに読み込まれる部分)</span>
+name: pdf
+description: PDF のテキスト/表の抽出、結合、分割などに使うツールキット</code></pre>
+<p>最初に読み込まれるときはこの<strong>フロントマターだけ</strong>が載り、実際の説明書（本文）は<strong>呼ばれたときに</strong>読み込まれます。</p>
+
+<h4>ディスクリプションの書き方が大事</h4>
+<p>スキルは <code>/スキル名</code> で<strong>明示的に呼び出す</strong>こともできますし、「PDF からテキストを抽出してみて」のように言えばフロントマターを根拠に<strong>自動で発動</strong>することもあります。だから <code>description</code> をうまく書く必要があります。</p>
+<ul>
+    <li><strong>呼び出されない場合</strong> — 例: PDF の編集機能があるのに description に「読むのに使う」としか書いていないと、編集を頼んでも呼び出されないことがある。</li>
+    <li><strong>不要に呼び出される場合</strong> — PDF と関係ないのに急に発動してしまう。</li>
+</ul>
+<p>だから、ちゃんと呼び出されるか、むだに発動しないかを<strong>テスト</strong>してみて、自分で作るときは description を<strong>念入りに</strong>書くべきです。</p>
+
+<h4>指示の中でファイルを参照する</h4>
+<p>本文（マークダウン）の指示の中には、<strong>「こういうときはこのファイルを見よ」</strong>のように別のファイルを参照するよう書いておけます。これは先に見た JSON のツールのスペックと違い、<strong>人に教えるように自然言語で</strong>「コマンドの実行のしかた」くらいを書くものです。</p>
+
+<div class="note">
+    <span class="nh">なぜ read と実行だけで動くのか</span>
+    コーディングエージェントは<strong>ファイルの読み・書き・編集・検索</strong>のツールを標準で備えていて、ファイルシステムを自由に扱えます。だから指示に「このファイルを読め」とあるだけで、エージェントが自分で読み込みます。スキルの内容とコーディングエージェントのツールが<strong>どう相互作用しながら読むのか</strong>を想像しながら見ると、理解しやすくなります。
+</div>
+
+<h3>例のスキルを眺める</h3>
+<p>概念をつかんだので、実際のスキルの集まりを見てみます。始めるときは、こうした例をいくつか開いてみるのがおすすめです。</p>
+
+<h4>Anthropic の標準スキル</h4>
+<p>Anthropic が公式に作った標準のスキルが GitHub に公開されています。<strong>フォルダごとコピー</strong>してノート PC の Claude Code に入れると、読み込み時に各 <code>SKILL.md</code> の <strong>YAML フロントマターだけ</strong>を先に読み、必要なときに本文を読み込みます。</p>
+
+<h4>科学エージェントのスキル集（約 140 個）</h4>
+<p>科学研究向けのスキルを集めたコレクションもあります。約 <strong>140 個の科学関連のスキル</strong>が入っていて、その分野の研究者が「うちの分野でよく使うスクリプトがここにある」と言うほどです。</p>
+<ul>
+    <li><strong>Biopython</strong> などのバイオ関連、<strong>データセットのダウンロード</strong>のスキル（どこからどう取るかまで）。</li>
+    <li><strong>Scientific Writing</strong> — 学会ごとの論文の書式、図表の規定（解像度の下限、JPG 禁止・PNG など）まで収めて、きれいな論文／PDF を生成。</li>
+</ul>
+<p>メタデータのおかげで<strong>複数のスキルを同時に読み込んで</strong><strong>融合的な研究</strong>ができます。例:「バイオのデータセットを機械学習で処理して」→ バイオを読み込み → データを読み込み → 学習 → 論文の執筆・投稿まで続きます。量子・深層学習のハイブリッドな処理も、ある程度は可能です。</p>
+
+<h4>韓国向けのスキル集</h4>
+<p>「韓国人による、韓国人のための」スキル集もあります。日常でいちいち面倒だったことを、Claude Code（およびアプリ）からそのまま処理します。</p>
+<ul>
+    <li>SRT・KTX の予約、自然休養林の空室の照会、Kakao マップ</li>
+    <li>ソウルの地下鉄の到着情報、遺失物の照会、ニュース・天気、漢江の水位</li>
+    <li>韓国の法令の検索、登記簿謄本、HWP 文書の閲覧、宅配の追跡、グルメなど</li>
+</ul>
+
+<div class="note">
+    <span class="nh">そのあいだの空白</span>
+    とても<strong>科学的な</strong>スキルと、とても<strong>日常的な</strong>スキルのあいだの広い空白を、あなたの業務のスキルで十分に埋められます。
+</div>
+<p>原理をつかんだら、あとは手を動かすだけです — <a href="/p/ja/skl-install/">導入・セキュリティ・作成</a>の章で実際にインストールして使い、セキュリティの注意点を押さえ、スキルを作るところまで進みます。</p>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Skill &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Skill &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
-<ul><li><a href="/p/ja/skl-progressive/">段階的な読み込み（スキルの中心原理）</a></li><li><a href="/p/ja/skl-wrap/">まとめ — エンジニアリングの階層と Q&amp;A</a></li><li><a href="/p/ja/skl-strengths/">スキルの強み</a></li></ul>
+<ul><li><a href="/p/ja/llmw-metadata/">ノートの構造 — メタデータと段階的な開示</a></li><li><a href="/p/ja/skl-overview/">スキルとは — 背景と強み</a></li><li><a href="/p/ja/skl-install/">スキルの導入・セキュリティ・作成</a></li></ul>
 </nav>
 </body>
 </html>

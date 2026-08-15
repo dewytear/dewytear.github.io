@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>スキルのインストールと利用（実習）</title>
-<meta name="description" content="スキルを入れて呼び出す実習のやり方をたどる。">
+<title>スキルの導入・セキュリティ・作成</title>
+<meta name="description" content="スキルを導入して使い、実行権限というセキュリティリスクを押さえ、skill-creator で自作するまで — エンジニアリングの階層整理と Q&amp;A で締める">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/ja/skl-install/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/skl-install/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/skl-install/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="スキルのインストールと利用（実習）">
-<meta property="og:description" content="スキルを入れて呼び出す実習のやり方をたどる。">
+<meta property="og:title" content="スキルの導入・セキュリティ・作成">
+<meta property="og:description" content="スキルを導入して使い、実行権限というセキュリティリスクを押さえ、skill-creator で自作するまで — エンジニアリングの階層整理と Q&amp;A で締める">
 <meta property="og:url" content="https://dewytear.github.io/p/ja/skl-install/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="スキルのインストールと利用（実習）">
-<meta name="twitter:description" content="スキルを入れて呼び出す実習のやり方をたどる。">
+<meta name="twitter:title" content="スキルの導入・セキュリティ・作成">
+<meta name="twitter:description" content="スキルを導入して使い、実行権限というセキュリティリスクを押さえ、skill-creator で自作するまで — エンジニアリングの階層整理と Q&amp;A で締める">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "スキルのインストールと利用（実習）",
- "description": "スキルを入れて呼び出す実習のやり方をたどる。",
+ "headline": "スキルの導入・セキュリティ・作成",
+ "description": "スキルを導入して使い、実行権限というセキュリティリスクを押さえ、skill-creator で自作するまで — エンジニアリングの階層整理と Q&A で締める",
  "inLanguage": "ja",
  "url": "https://dewytear.github.io/p/ja/skl-install/",
  "mainEntityOfPage": "https://dewytear.github.io/#!skl-install",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T22:20:26+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T14:19:16+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/en/skl-install/" hreflang="en">English</a>
 </p>
 <article>
-<h2>スキルのインストールと利用（実習）</h2>
+<h2>スキルの導入・セキュリティ・作成</h2>
 <p>スキルの実習は拍子抜けするほど簡単です — <strong>「このスキルを入れて」</strong>のひと言で終わります。ただし、さきほど学んだ<strong>動作の原理</strong>を思い浮かべながら使うと、ずっと面白くなります。</p>
 
 <h3>インストールする</h3>
@@ -86,11 +86,123 @@
     <span class="nh">発動の原理のおさらい</span>
     「組織のスタイルで作って」と言うだけでスキルが発動するのは、<strong>メタデータの description</strong> に「このスタイルを使うときはこのスキルを使え」と書いてあるからです。ただし確実にしたいなら<strong>スキル名を明示する</strong>ほうがよいです。
 </div>
+
+<h3>セキュリティ上の注意</h3>
+<p>スキルは強力なぶん、<strong>セキュリティのリスク</strong>も大きくなります。必ず押さえておくべきところです。</p>
+
+<h4>他人のスキルを軽々しく使わない</h4>
+<p>スキルの中には<strong>スクリプト</strong>が入っていて、このスクリプトは<strong>自分の PC（ノート）を実行させる権限</strong>をそのまま持ちます。だから、他人が作ったスキルを検証なしに持ってきて使うのは危険です。</p>
+<ul>
+    <li>スキルの中に危険なコードが隠れていることがあり、実際に <strong>API キーの漏洩・セキュリティ事故</strong>の事例が多くあります（MCP のハブから取ったものなど）。</li>
+    <li><strong>認証・検証されたスキル</strong>だけを使い、できれば<strong>社内で検証されたスキル</strong>だけを使います。</li>
+    <li>検査のツールもありますが、そのツールを<strong>どこまで信頼するか</strong>がまた問題です。結局、コードやガイドラインを自分で確かめる慎重さが要ります。</li>
+    <li>危険なスキルを「上からかぶせて」補うより、<strong>参考にして自分で作る</strong>ほうが安全です。</li>
+</ul>
+
+<h4>権限とサンドボックス</h4>
+<ul>
+    <li>スキルごとに<strong>読み取りのみ／書き込み・編集も可</strong>など、権限の制約を設けられます。</li>
+    <li>ノート PC で何気なく「はい」と答えるとシステムが壊れることもあるので、危険な作業は<strong>サンドボックス（VM）</strong>で別に回すほうが安全です。</li>
+    <li>機関の内部なら<strong>閉域網・オンプレミス</strong>の環境で動かすことを勧めます。（モデルも社内／オープンなモデルを選ぶ）</li>
+</ul>
+
+<div class="note warn">
+    <span class="nh">ひと言でいうと</span>
+    スキルは<strong>自分のコンピュータを実行する権限</strong>を持ちます。出どころのはっきりしないスキルは、絶対に軽々しく入れないでください。
+</div>
+
+<h3>スキルをつくる（スキルエンジニアリング）</h3>
+<p>うまく使えるようになると、自然と「自分で作りたい」と思うようになります。スキルを<strong>つくることをスキルエンジニアリング</strong>と呼び、それを助ける<strong>スキルをつくるスキル（skill-creator）</strong>が標準で備わっています。</p>
+
+<h4>skill-creator — メタなスキル</h4>
+<div class="diagram">
+<svg viewBox="0 0 660 248" role="img" aria-label="スキル生成のループ: 生成 → 評価(evaluator) → 改善 → ベンチマーク → また生成、通れば完了">
+    <rect class="d-box" x="60" y="16" width="180" height="54" rx="10"/>
+    <text class="d-label" x="150" y="48" text-anchor="middle">生成</text>
+
+    <rect class="d-box" x="420" y="16" width="180" height="54" rx="10"/>
+    <text class="d-label" x="510" y="40" text-anchor="middle">評価</text>
+    <text class="d-sub" x="510" y="57" text-anchor="middle">evaluator</text>
+
+    <rect class="d-box" x="420" y="110" width="180" height="54" rx="10"/>
+    <text class="d-label" x="510" y="142" text-anchor="middle">改善</text>
+
+    <rect class="d-box" x="60" y="110" width="180" height="54" rx="10"/>
+    <text class="d-label" x="150" y="142" text-anchor="middle">ベンチマーク</text>
+
+    <rect class="d-box accent" x="60" y="188" width="180" height="46" rx="10"/>
+    <text class="d-label" x="150" y="216" text-anchor="middle">完了</text>
+
+    <line class="d-edge" x1="240" y1="43" x2="416" y2="43"/><polygon class="d-arrow" points="412,38 420,43 412,48"/>
+    <line class="d-edge" x1="510" y1="70" x2="510" y2="106"/><polygon class="d-arrow" points="505,104 515,104 510,110"/>
+    <line class="d-edge" x1="420" y1="137" x2="244" y2="137"/><polygon class="d-arrow" points="248,132 240,137 248,142"/>
+    <line class="d-edge accent" x1="150" y1="108" x2="150" y2="76"/><polygon class="d-arrow accent" points="145,76 155,76 150,70"/>
+    <text class="d-sub" x="196" y="94" text-anchor="middle">改善を反映</text>
+    <line class="d-edge" x1="150" y1="164" x2="150" y2="186"/><polygon class="d-arrow" points="145,182 155,182 150,188"/>
+    <text class="d-sub" x="196" y="180" text-anchor="middle">通れば</text>
+</svg>
+<div class="d-cap">A/B テストのループを回しながら磨き、ベンチマークを通れば完成です。</div>
+</div>
+<p>スキルをつくるためのスキルで、次の流れとサブエージェントを備えています。</p>
+<ul>
+    <li><strong>create → evaluate → improve → benchmark</strong> のループ。</li>
+    <li>内部に <strong>evaluator · grader · 比較 · 分析</strong>のサブエージェントを搭載。</li>
+    <li>スクリプトを入れて「これをスキルにして」と言えば、<strong>自前のループとテスト（A/B）</strong>を経て、しっかりしたものに仕上げてくれます。</li>
+</ul>
+
+<h4>ふたつのカテゴリ</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>区分</th><th>内容</th><th>モデルが進歩したら</th></tr></thead>
+        <tbody>
+            <tr><td><strong>能力を伸ばすスキル</strong></td><td>PDF の操作・文書の生成・複雑なファイル変換など。スクリプトにして<strong>決定論的・安定的</strong>に使う。</td><td>モデルが上手になれば<strong>不要になることも</strong></td></tr>
+            <tr><td><strong>組織に根づくスキル</strong></td><td>組織の責任・業務の流れ・担当者など。エージェントが知らない<strong>社内の知識</strong>。</td><td>どれだけ進歩しても<strong>代替できない</strong> — 作りつづける必要がある</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">強調 — 組織に根づくスキルを作りつづけよう</span>
+    能力を伸ばすスキルは、いまはうまく活用しつつ「一生もの」とは思わず、モデルが進歩したら畳めるものとして見ます。いっぽう<strong>組織に根づくスキル</strong>は、LLM がどれだけ進歩しても自分たちの組織の責任・流れ・担当者を代わりにはできないので、<strong>継続的に築いていく</strong>ことがエージェントのガバナンスの核心です。
+</div>
+
+<div class="note">
+    <span class="nh">配布が簡単</span>
+    スキルの大きな長所のひとつが<strong>配布</strong>です。共有のリポジトリ／サーバー／コミュニティに登録しておけばバージョン管理と共有がしやすく、「Get this skill」をコピー →「入れて」の一度で組織全体へ広がります。現場でファイルを直して再配布するのも、すぐにできます。
+</div>
+
+<h3>まとめ — エンジニアリングの階層と Q&amp;A</h3>
+
+<h4>エンジニアリングの階層</h4>
+<p>ここまで学んだものを目的で分けると、「全部エンジニアリングだな」ではなく、それぞれの筋が見えてきます。</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>エンジニアリング</th><th>目的</th></tr></thead>
+        <tbody>
+            <tr><td>プロンプトエンジニアリング</td><td>LLM を<strong>賢く</strong>する</td></tr>
+            <tr><td>コンテキストエンジニアリング</td><td>文脈の<strong>当たる確率を上げる</strong></td></tr>
+            <tr><td>エージェンティックエンジニアリング</td><td>AI が<strong>仕事をうまくこなす</strong>ようにする</td></tr>
+            <tr><td>ハーネスエンジニアリング</td><td><strong>信じて任せられる</strong>ようにする</td></tr>
+        </tbody>
+    </table>
+</div>
+<p><a href="/p/ja/hns-overview/">ハーネス</a>は<strong>スキル + サブエージェントを搭載したメタなスキル</strong>と見ることができます。スキルの概念をつかんでおけば、ハーネスが表向きは簡単そうに見えても内部は複雑だ、と理解しながら見られます。</p>
+
+<h4>MCP vs スキル</h4>
+<p>MCP は<strong>プロトコル</strong>です — 外部のツールとエージェントをつなぐための規約なので、読み込み方も使い方もスキルとは違います。<strong>競合の関係ではありません</strong>: スキルの中で外部との接続が必要なら MCP を使えるので、スキルの中に MCP があってもよいのです。ただしスキルがあまりに強力なので、<strong>MCP の代わりにスキルで置き換える</strong>ケースも増えています。</p>
+
+<div class="note">
+    <span class="nh">Q&amp;A の要点</span>
+    · <strong>公開されたスキル</strong>を軽々しく受け取るのは安全ではない — 検証されたものだけを。<br>
+    · <strong>同じ名前の MCP の関数とスキル</strong>があると状況によって変わるので、「このスキルを使え」のように<strong>明示</strong>するか、ネームスペースで区別する。<br>
+    · <strong>スキルの性能評価</strong> — トリガーがきちんと効くか／結果が役に立つか、といった指標を先に決めてから LLM judge と目視で確認する。<br>
+    · <strong>トークン</strong> — 一般の Claude より Claude Code のほうが多く使うが、望む結果が一度で得られるならより有用なこともある。トークンだけを見ず、総合的に選ぶ。
+</div>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Skill &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Skill &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
-<ul><li><a href="/p/ja/skl-structure/">SKILL.md の構造とディスクリプション</a></li><li><a href="/p/ja/skl-overview/">スキル深掘り — 概要</a></li><li><a href="/p/ja/skl-coding-agent/">スキルの背景 — コーディングエージェントの誕生</a></li></ul>
+<ul><li><a href="/p/ja/skl-overview/">スキルとは — 背景と強み</a></li><li><a href="/p/ja/skl-context/">スキルの構造と動作原理</a></li></ul>
 </nav>
 </body>
 </html>

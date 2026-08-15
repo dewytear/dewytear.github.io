@@ -1,4 +1,4 @@
-<h2>컨텍스트 윈도우와 도구의 문제</h2>
+<h2>스킬의 구조와 동작 원리</h2>
 <p>스킬의 원리를 이해하려면 <strong>컨텍스트 윈도우</strong>부터 알아야 합니다.</p>
 
 <h3>컨텍스트 윈도우</h3>
@@ -22,3 +22,133 @@
     <span class="nh">트렁크 비유</span>
     도구는 자동차 <strong>트렁크</strong>와 같습니다. 크기가 제한적이라 캠핑 도구를 다 넣을 수 없습니다. 선택지는 둘 — 더 큰 트렁크를 사거나, 짐을 최대한 줄이거나. 코딩 에이전트는 후자를 택해 <strong>도구를 여섯 개로 줄이고 실행 환경을 함께 주는</strong> 방식으로 문제를 풀었고, 그 위에서 <strong>스킬</strong>이 등장했습니다.
 </div>
+
+<h3>점진적 로딩 (스킬의 핵심 원리)</h3>
+<p>스킬의 가장 핵심적인 원리는 <strong>점진적 로딩(progressive disclosure)</strong> 입니다. 스킬 전체를 컨텍스트에 올리는 게 아니라, <strong>메타데이터만</strong> 먼저 올려 두고 필요할 때 나머지를 꺼냅니다.</p>
+
+<h4>도서관 책 표지 비유</h4>
+<p>컨텍스트에는 등록된 스킬의 <strong>메타데이터(이름 + 설명, 3~4줄, 스킬당 약 100토큰)</strong> 만 들어갑니다. 도서관에 책이 쭉 꽂혀 있고, 우리는 <strong>책 표지(제목·간단 설명)</strong> 만 훑다가 필요할 때 꺼내 읽는 것과 같습니다. 메타데이터가 워낙 작아 <strong>100개 이상</strong> 넣어도 컨텍스트를 거의 차지하지 않습니다. (JSON 도구는 전체 스키마가 컨텍스트를 미리 차지해 수가 많아질수록 부담이 커지는 것과 대조적 — 그래서 Claude Code는 MCP 도구 스키마도 지연 로드합니다)</p>
+
+<h4>3단계 로딩</h4>
+<div class="diagram">
+<svg viewBox="0 0 640 252" role="img" aria-label="스킬 3단계 점진적 로딩: 메타데이터는 항상, 지침 본문은 호출될 때, 리소스·스크립트는 필요할 때만 로드">
+    <rect class="d-box accent" x="20" y="12" width="300" height="60" rx="10"/>
+    <text class="d-label" x="170" y="38" text-anchor="middle">① 메타데이터</text>
+    <text class="d-sub" x="170" y="56" text-anchor="middle">이름 + 설명 · 약 100토큰</text>
+
+    <rect class="d-box" x="20" y="96" width="300" height="60" rx="10"/>
+    <text class="d-label" x="170" y="122" text-anchor="middle">② 지침 본문</text>
+    <text class="d-sub" x="170" y="140" text-anchor="middle">SKILL.md 본문</text>
+
+    <rect class="d-box soft" x="20" y="180" width="300" height="60" rx="10"/>
+    <text class="d-label" x="170" y="206" text-anchor="middle">③ 리소스 · 스크립트</text>
+    <text class="d-sub" x="170" y="224" text-anchor="middle">번들 파일 · 템플릿</text>
+
+    <line class="d-edge" x1="170" y1="72" x2="170" y2="94"/><polygon class="d-arrow" points="165,90 175,90 170,96"/>
+    <line class="d-edge" x1="170" y1="156" x2="170" y2="178"/><polygon class="d-arrow" points="165,174 175,174 170,180"/>
+
+    <line class="d-edge dash" x1="320" y1="42" x2="356" y2="42"/>
+    <text class="d-accent" x="364" y="46" text-anchor="start">항상 로드</text>
+    <line class="d-edge dash" x1="320" y1="126" x2="356" y2="126"/>
+    <text class="d-accent" x="364" y="130" text-anchor="start">호출될 때 로드</text>
+    <line class="d-edge dash" x1="320" y1="210" x2="356" y2="210"/>
+    <text class="d-accent" x="364" y="214" text-anchor="start">필요할 때만 로드</text>
+</svg>
+<div class="d-cap">위로 갈수록 항상, 아래로 갈수록 필요할 때만 — 로드 시점이 단계별로 늦어집니다.</div>
+</div>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>레벨</th><th>내용</th><th>로딩 시점</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td><strong>메타데이터</strong> (SKILL.md의 이름·description)</td><td><strong>항상</strong> 로딩 (스킬당 약 100토큰)</td></tr>
+            <tr><td>2</td><td><strong>지침</strong> (SKILL.md 본문, 마크다운 사용법)</td><td>그 스킬이 <strong>호출될 때</strong></td></tr>
+            <tr><td>3</td><td><strong>리소스 · 스크립트 · 템플릿</strong> (번들 파일)</td><td><strong>필요할 때만</strong> (스크립트는 로딩 없이 실행만)</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>번들 파일은 필수가 아닙니다. 말(마크다운)로만 충분하면 파일 없이도 되고, 실행 스크립트·템플릿이 필요하면 포함합니다. 파일이 있을수록 더 <strong>결정론적인 결과</strong>를 얻습니다. 참고로 공식 가이드는 <code>SKILL.md</code> 본문을 <strong>5K 토큰 미만</strong>으로 유지하고, 긴 내용은 번들 파일로 분리할 것을 권장합니다.</p>
+
+<div class="note">
+    <span class="nh">매뉴얼 비유 (조립 제품 · 매트릭스 헬기)</span>
+    쿠팡에서 조립 제품을 사면 매뉴얼을 안 보고 완성 사진만 보고 조립하다가, <strong>나사가 빠지는 순간</strong> 매뉴얼을 꺼내 봅니다. 스킬의 지침도 <strong>발동될 때 딱 꺼내</strong> 읽고 평소엔 꺼내지 않습니다. 영화 매트릭스에서 헬기 앞에서 <strong>매뉴얼을 순식간에 로딩</strong>해 조종하는 장면과 같은 느낌입니다.
+</div>
+
+<div class="note">
+    <span class="nh">확인 팁</span>
+    Claude Code에서 <code>/context</code> 를 치면 시스템 프롬프트·커스텀 툴·스킬 등이 각각 몇 %를 차지하는지 보입니다. 탑재된 스킬이 많아도 토큰을 거의 안 쓰는 걸 확인할 수 있습니다.
+</div>
+
+<h3>SKILL.md 구조와 디스크립션</h3>
+<p>스킬 폴더의 중심은 <code>SKILL.md</code> 파일이고, 그 밖에 <code>reference</code>·<code>examples</code>·<code>scripts</code> 같은 번들 파일이 함께 있습니다.</p>
+
+<h4>프론트매터 (메타데이터)</h4>
+<div class="diagram">
+<svg viewBox="0 0 640 210" role="img" aria-label="SKILL.md 해부: 프론트매터(name·description)는 항상 로드, 본문(지침)은 호출 시 로드">
+    <rect class="d-box" x="110" y="12" width="320" height="182" rx="10"/>
+    <text class="d-label" x="270" y="35" text-anchor="middle">SKILL.md</text>
+
+    <rect class="d-box accent" x="130" y="46" width="280" height="56" rx="9"/>
+    <text class="d-label" x="270" y="72" text-anchor="middle">프론트매터</text>
+    <text class="d-sub" x="270" y="90" text-anchor="middle">name · description</text>
+
+    <rect class="d-box soft" x="130" y="118" width="280" height="60" rx="9"/>
+    <text class="d-label" x="270" y="144" text-anchor="middle">본문 (지침)</text>
+    <text class="d-sub" x="270" y="162" text-anchor="middle">마크다운 · 사용법</text>
+
+    <line class="d-edge dash" x1="430" y1="74" x2="470" y2="74"/>
+    <text class="d-accent" x="478" y="78" text-anchor="start">항상 로드</text>
+    <line class="d-edge dash" x1="430" y1="148" x2="470" y2="148"/>
+    <text class="d-accent" x="478" y="152" text-anchor="start">호출 시 로드</text>
+</svg>
+<div class="d-cap">한 파일 안에서 프론트매터는 항상, 본문은 호출될 때 로드됩니다.</div>
+</div>
+<p><code>SKILL.md</code> 맨 위에는 YAML <strong>프론트매터</strong>가 있습니다. 예를 들어 PDF 스킬이라면:</p>
+<pre><code><span class="c"># SKILL.md 프론트매터 (항상 로딩되는 부분)</span>
+name: pdf
+description: PDF 텍스트/테이블 추출, 병합, 분할 등에 사용하는 툴킷</code></pre>
+<p>처음 로딩될 때는 이 <strong>프론트매터만</strong> 올라오고, 실제 설명서(본문)는 <strong>호출될 때</strong> 로딩됩니다.</p>
+
+<h4>디스크립션 작성이 중요하다</h4>
+<p>스킬은 <code>/스킬명</code> 으로 <strong>명시적 호출</strong>할 수도 있고, "PDF에서 텍스트 추출해봐" 처럼 말하면 프론트매터를 근거로 <strong>자동 발동</strong>하기도 합니다. 그래서 <code>description</code> 을 잘 써야 합니다.</p>
+<ul>
+    <li><strong>호출이 안 되는 경우</strong> — 예: PDF 편집 기능이 있는데 description에 "읽는 데 사용"이라고만 적혀 있으면, 편집 요청 시 호출되지 않을 수 있음.</li>
+    <li><strong>불필요하게 호출되는 경우</strong> — PDF와 무관한데 갑자기 발동.</li>
+</ul>
+<p>그래서 호출이 잘 되는지, 쓸데없이 발동하지 않는지 <strong>테스트</strong>해 보고, 직접 만들 때는 description을 <strong>공들여</strong> 작성해야 합니다.</p>
+
+<h4>지침 안에서 파일 참조</h4>
+<p>본문(마크다운) 지침 안에는 <strong>"이럴 때는 이 파일을 봐라"</strong> 처럼 다른 파일을 참조하도록 적어 둘 수 있습니다. 이는 앞서 본 JSON 툴 스펙과 다르게, <strong>사람에게 알려주듯 자연어로</strong> "명령 실행하는 방법" 정도를 적는 것입니다.</p>
+
+<div class="note">
+    <span class="nh">왜 read/실행만으로 동작하나</span>
+    코딩 에이전트는 <strong>파일 읽기·쓰기·편집·찾기</strong> 도구가 기본 탑재되어 파일 시스템을 자유롭게 다룹니다. 그래서 지침에 "이 파일을 읽어라"만 있어도 에이전트가 알아서 로딩합니다. 스킬 내용과 코딩 에이전트의 도구가 <strong>어떻게 상호작용하며 읽는지</strong>를 상상하며 보면 이해가 쉽습니다.
+</div>
+
+<h3>예제 스킬 둘러보기</h3>
+<p>개념을 잡았으니 실제 스킬 모음을 살펴봅니다. 처음 시작할 때는 이런 예제를 몇 개 열어 보는 것을 추천합니다.</p>
+
+<h4>Anthropic 기본 스킬</h4>
+<p>Anthropic이 공식으로 만든 기본 스킬이 GitHub에 공개되어 있습니다. <strong>폴더째로 복사</strong>해 노트북의 Claude Code에 넣으면, 로딩 시 각 <code>SKILL.md</code> 의 <strong>YAML 프론트매터만</strong> 먼저 읽고, 필요할 때 본문을 로딩합니다.</p>
+
+<h4>과학 에이전트 스킬 모음 (약 140개)</h4>
+<p>과학 연구용 스킬을 모아 둔 컬렉션도 있습니다. 약 <strong>140개의 과학 관련 스킬</strong>이 들어 있어, 분야 연구자들이 "우리 분야에서 많이 쓰는 스크립트가 여기 있네" 할 정도입니다.</p>
+<ul>
+    <li><strong>Biopython</strong> 등 바이오 관련, <strong>데이터셋 다운로드</strong> 스킬(어디서 어떻게 받는지까지).</li>
+    <li><strong>Scientific Writing</strong> — 학회별 논문 형식, 그림·표 규정(해상도 하한, JPG 금지·PNG 등)까지 담겨 깔끔한 논문/PDF 생성.</li>
+</ul>
+<p>메타데이터 덕분에 <strong>여러 스킬을 동시에 로딩</strong>해 <strong>융합 연구</strong>가 가능합니다. 예: "바이오 데이터셋을 머신러닝으로 처리해줘" → 바이오 로딩 → 데이터 로딩 → 학습 → 논문 작성·제출까지 이어집니다. 양자·딥러닝 하이브리드 처리도 어느 정도 가능합니다.</p>
+
+<h4>한국형 스킬 모음</h4>
+<p>"한국인에 의한, 한국인을 위한" 스킬 모음도 있습니다. 일상에서 매번 번거롭게 하던 일들을 Claude Code(및 앱)에서 바로 처리합니다.</p>
+<ul>
+    <li>SRT·KTX 예매, 자연휴양림 빈 객실 조회, 카카오맵</li>
+    <li>서울 지하철 도착 정보, 분실물 조회, 뉴스·날씨, 한강 수위</li>
+    <li>한국 법령 검색, 등기부등본, HWP 문서 조회, 택배 조회, 맛집 등</li>
+</ul>
+
+<div class="note">
+    <span class="nh">그 사이의 공백</span>
+    아주 <strong>과학적인</strong> 스킬과 아주 <strong>일상적인</strong> 스킬 사이의 넓은 공백을, 여러분의 업무 스킬로 충분히 채울 수 있습니다.
+</div>
+<p>원리를 잡았으니 남은 것은 손입니다 — <a href="#!skl-install">설치·보안·제작</a> 편에서 직접 설치해 쓰고, 보안 주의점을 짚고, 스킬을 만드는 데까지 갑니다.</p>
+
