@@ -1,4 +1,4 @@
-<h2>Level 1 · Find exactly (CLAUDE.md as a router)</h2>
+<h2>Levels 1–2 — Find Precisely, Group by Topic</h2>
 <p>Every Second Brain <strong>starts here</strong>. You need exactly two things &mdash; <strong>a single <code>CLAUDE.md</code></strong> and <strong>a few folders and files</strong>. The question at this level is simple. <strong>"That word or file I wrote &mdash; where is it?"</strong></p>
 
 <div class="note">
@@ -90,5 +90,94 @@ projects/
 
 <div class="note">
     <span class="nh">Limits and the next step</span>
-    Level 1 is generally based on <strong>exact words and names</strong>. As files pile up it gets messy and things are easily missed. That is when you move on to <a href="#!sb-level2">Level 2 &mdash; the LLM wiki and memory</a>, which <strong>groups by topic</strong>. (Note: copying <code>CLAUDE.md</code> into an <code>AGENTS.md</code> for Codex lets you keep using it even when you switch tools, and this <strong>tool independence</strong> is covered at level 2.)
+    Level 1 is generally based on <strong>exact words and names</strong>. As files pile up it gets messy and things are easily missed. That is when you move on to Level 2 &mdash; the LLM wiki and memory, which <strong>groups by topic</strong>. (Note: copying <code>CLAUDE.md</code> into an <code>AGENTS.md</code> for Codex lets you keep using it even when you switch tools, and this <strong>tool independence</strong> is covered at level 2.)
 </div>
+
+<h3>Level 2 · Grouping by topic (LLM wiki + memory)</h3>
+<p>Once files pile up, you start wanting to <strong>weave them together by topic</strong>. That is where the <strong>LLM wiki</strong> comes in. The question at this level is <strong>"gather everything about this topic."</strong> Think of it as laying <strong>an index and links</strong> on top of Level 1.</p>
+
+<div class="note">
+    <span class="nh">Ties to a topic already covered</span>
+    This wiki already has an <a href="#!llmw-overview">LLM Wiki</a> set that covers the <strong>Karpathy-style LLM wiki</strong> in detail. Level 2 is exactly that world — here we only touch on the key points from a <strong>Second Brain perspective</strong>.
+</div>
+
+<h4>A wiki is "reading your way down the index"</h4>
+<p>A wiki's strength is its <strong>index</strong>. When AI enters the wiki, it goes "they asked about <em>agentic workflows</em>, so start here → drill down into the related <em>WAT framework</em> → and if needed go all the way to the <em>CLAUDE.md system prompt</em>," <strong>reading whole pages as it follows the trail.</strong></p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 210" role="img" aria-label="Wiki index drill-down: follow the trail from the index to a topic and its sub-concepts, reading whole pages along the way">
+    <rect class="d-box accent" x="20" y="80" width="140" height="52" rx="10"/>
+    <text class="d-label sm" x="90" y="102" text-anchor="middle">Wiki index</text>
+    <text class="d-sub" x="90" y="119" text-anchor="middle">Topic list</text>
+
+    <rect class="d-box" x="220" y="80" width="150" height="52" rx="10"/>
+    <text class="d-label sm" x="295" y="102" text-anchor="middle">Agentic workflows</text>
+    <text class="d-sub" x="295" y="119" text-anchor="middle">Concept page</text>
+
+    <rect class="d-box" x="430" y="26" width="150" height="50" rx="10"/>
+    <text class="d-label sm" x="505" y="50" text-anchor="middle">WAT framework</text>
+    <text class="d-sub" x="505" y="65" text-anchor="middle">Sub-concept</text>
+
+    <rect class="d-box" x="430" y="134" width="150" height="50" rx="10"/>
+    <text class="d-label sm" x="505" y="158" text-anchor="middle">CLAUDE.md</text>
+    <text class="d-sub" x="505" y="173" text-anchor="middle">Related concept</text>
+
+    <line class="d-edge accent" x1="160" y1="106" x2="218" y2="106"/><polygon class="d-arrow accent" points="212,101 220,106 212,111"/>
+    <path class="d-edge accent" d="M370 96 C400 80, 410 60, 428 52"/><polygon class="d-arrow accent" points="420,50.7 427,58.7 430,48.7"/>
+    <path class="d-edge accent" d="M370 116 C400 132, 410 152, 428 158"/><polygon class="d-arrow accent" points="420,155.4 427,164.4 430,154.4"/>
+    <text class="d-sub" x="300" y="200" text-anchor="middle">Follow the trail down only as far as needed</text>
+</svg>
+<div class="d-cap">Tell the AI to "put this in the wiki" with YouTube subtitles or meeting notes and it <strong>sorts them automatically</strong> into concepts, comparisons, sources, and techniques to build a structure like this.</div>
+</div>
+
+<h4>Memory — a file the AI writes on its own</h4>
+<p>The new axis Level 2 adds is <strong>memory</strong>. Turn on Claude Code's <strong>auto memory</strong> and the AI keeps <code>memory.md</code> <strong>updated by itself</strong>. Context accumulates without you paying attention.</p>
+<pre><code><span class="c"># Check whether auto memory is on or off</span>
+/memory
+<span class="c"># If you see an auto-memory on / off state, just turn it on when it is off</span></code></pre>
+
+<div class="diagram">
+<svg viewBox="0 0 560 150" role="img" aria-label="Auto memory loop: as the conversation proceeds the AI keeps updating the key points in memory.md">
+    <rect class="d-box" x="30" y="52" width="140" height="48" rx="10"/>
+    <text class="d-label sm" x="100" y="80" text-anchor="middle">Ongoing chat · work</text>
+
+    <rect class="d-box accent" x="230" y="52" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="290" y="80" text-anchor="middle">memory.md</text>
+
+    <rect class="d-box soft" x="410" y="52" width="130" height="48" rx="10"/>
+    <text class="d-label sm" x="475" y="80" text-anchor="middle">Next session</text>
+    <text class="d-sub" x="475" y="94" text-anchor="middle">picks up context</text>
+
+    <line class="d-edge accent" x1="170" y1="76" x2="228" y2="76"/><polygon class="d-arrow accent" points="222,71 230,76 222,81"/>
+    <text class="d-sub" x="199" y="66" text-anchor="middle">auto-record</text>
+    <line class="d-edge" x1="350" y1="76" x2="408" y2="76"/><polygon class="d-arrow" points="402,71 410,76 402,81"/>
+    <!-- loop back -->
+    <path class="d-edge dash" d="M290 100 V128 H100 V102"/><polygon class="d-arrow" points="95,106 105,106 100,100"/>
+    <text class="d-sub" x="195" y="122" text-anchor="middle">refers back to stored memory</text>
+</svg>
+</div>
+
+<h4>Tool independence — Claude Code or Codex</h4>
+<p>A Second Brain is <strong>just files and folders</strong>, so it is not tied to one tool. The file-naming conventions do differ per tool, though.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Tool</th><th>Instruction file</th><th>Memory</th></tr></thead>
+        <tbody>
+            <tr><td>Claude Code</td><td><code>CLAUDE.md</code></td><td><code>memory.md</code> updated automatically</td></tr>
+            <tr><td>Codex, etc.</td><td><code>AGENTS.md</code> (copy the same content into it)</td><td>Route it with "for memory, look at memory.md"</td></tr>
+        </tbody>
+    </table>
+</div>
+<p class="scn-sub">※ Copy <code>CLAUDE.md</code> over as <code>AGENTS.md</code> and both tools share the same brain. In the end it comes down to <strong>where you tell them to look (routing)</strong>.</p>
+
+<div class="note warn">
+    <span class="nh">Wiki links = knowledge graph? No</span>
+    Links in a wiki are closer to <strong>"see also" and backlinks</strong>. They do not carry the <strong>meaning of a relationship</strong>, as in <strong>"this endorses that / this is a competitor of that."</strong> The effect is similar, but truly <strong>relationship-based</strong> is <a href="#!sb-level3">Level 4 — the knowledge graph</a>.
+</div>
+
+<div class="note">
+    <span class="nh">Obsidian is not a requirement</span>
+    <strong>Obsidian</strong>, famous for its flashy <strong>graph view</strong>, is in the end just a layer that <strong>visualizes markdown</strong>. Use it if seeing things visually helps, and skip it if not — what matters is <strong>whether your system finds and pulls things out for you</strong>. Next comes <a href="#!sb-level3">Level 3 — searching by meaning</a>.
+</div>
+<p>That is as far as files and folders take you. From the next chapter, <a href="#!sb-level3">Levels 3–5</a>, the tools change character — semantic search, knowledge graphs, and a brain OS.</p>
+

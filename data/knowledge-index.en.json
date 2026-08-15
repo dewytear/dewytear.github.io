@@ -1,10 +1,10 @@
 {
  "schemaVersion": 2,
  "note": "Structured knowledge index built by AI from every doc (summary, key concepts, related docs). related = idf-weighted concept overlap (via:concept) topped up with same-folder neighbours (via:folder).",
- "docCount": 83,
+ "docCount": 78,
  "stats": {
-  "docCount": 83,
-  "conceptCount": 344,
+  "docCount": 78,
+  "conceptCount": 340,
   "clusters": [
    {
     "label": "Knowledge System",
@@ -69,11 +69,11 @@
    {
     "label": "Second Brain",
     "section": "AI · Claude · Code · Second Brain",
-    "count": 9,
+    "count": 4,
     "hub": {
-     "name": "sb-levels",
-     "title": "The five levels at a glance",
-     "refs": 5
+     "name": "sb-level3",
+     "title": "Levels 3–5 — Meaning, Relations, a Brain OS",
+     "refs": 6
     }
    },
    {
@@ -143,7 +143,7 @@
     "hub": {
      "name": "gdb-graphrag",
      "title": "Graph Databases & GraphRAG — Store the Relationships, Change the Answers",
-     "refs": 7
+     "refs": 5
     }
    },
    {
@@ -214,11 +214,6 @@
     "refs": 8
    },
    {
-    "name": "gdb-graphrag",
-    "title": "Graph Databases & GraphRAG — Store the Relationships, Change the Answers",
-    "refs": 7
-   },
-   {
     "name": "news-20260724-claude-opus-5",
     "title": "Claude Opus 5 — A Near-Fable at Half the Price Has Arrived",
     "refs": 7
@@ -244,6 +239,11 @@
     "refs": 6
    },
    {
+    "name": "sb-level3",
+    "title": "Levels 3–5 — Meaning, Relations, a Brain OS",
+    "refs": 6
+   },
+   {
     "name": "skl-overview",
     "title": "What Skills Are — Background and Strengths",
     "refs": 6
@@ -257,10 +257,6 @@
    {
     "c": "지식그래프",
     "n": 11
-   },
-   {
-    "c": "세컨드브레인",
-    "n": 10
    },
    {
     "c": "CLAUDE.md",
@@ -312,6 +308,10 @@
    },
    {
     "c": "온톨로지",
+    "n": 6
+   },
+   {
+    "c": "플러그인",
     "n": 6
    }
   ],
@@ -418,8 +418,8 @@
   ],
   "galaxies": {
    "AI": {
-    "docCount": 72,
-    "conceptCount": 305,
+    "docCount": 67,
+    "conceptCount": 301,
     "clusters": [
      {
       "label": "Knowledge System",
@@ -484,11 +484,11 @@
      {
       "label": "Second Brain",
       "section": "AI · Claude · Code · Second Brain",
-      "count": 9,
+      "count": 4,
       "hub": {
-       "name": "sb-levels",
-       "title": "The five levels at a glance",
-       "refs": 5
+       "name": "sb-level3",
+       "title": "Levels 3–5 — Meaning, Relations, a Brain OS",
+       "refs": 6
       }
      },
      {
@@ -558,7 +558,7 @@
       "hub": {
        "name": "gdb-graphrag",
        "title": "Graph Databases & GraphRAG — Store the Relationships, Change the Answers",
-       "refs": 7
+       "refs": 5
       }
      },
      {
@@ -609,11 +609,6 @@
       "refs": 8
      },
      {
-      "name": "gdb-graphrag",
-      "title": "Graph Databases & GraphRAG — Store the Relationships, Change the Answers",
-      "refs": 7
-     },
-     {
       "name": "news-20260724-claude-opus-5",
       "title": "Claude Opus 5 — A Near-Fable at Half the Price Has Arrived",
       "refs": 7
@@ -637,6 +632,11 @@
       "name": "hns-overview",
       "title": "What a Harness Is — Overview, Definition, Anatomy",
       "refs": 6
+     },
+     {
+      "name": "sb-level3",
+      "title": "Levels 3–5 — Meaning, Relations, a Brain OS",
+      "refs": 6
      }
     ],
     "topConcepts": [
@@ -647,10 +647,6 @@
      {
       "c": "지식그래프",
       "n": 11
-     },
-     {
-      "c": "세컨드브레인",
-      "n": 10
      },
      {
       "c": "CLAUDE.md",
@@ -702,6 +698,10 @@
      },
      {
       "c": "RAG",
+      "n": 5
+     },
+     {
+      "c": "마켓플레이스",
       "n": 5
      }
     ],
@@ -1868,59 +1868,15 @@
   },
   {
    "name": "sb-intro",
-   "title": "What is a Second Brain",
-   "summary": "Introduces the definition of a Second Brain, the data moat, and the big picture of the five levels.",
+   "title": "What a Second Brain Is — the Five Levels at a Glance",
+   "summary": "Why a second brain is a data moat, and the five-level terrain from exact search to an always-on brain OS",
    "concepts": [
     "세컨드브레인",
     "데이터해자",
     "다시찾기",
     "역설계",
     "5단계",
-    "마크다운"
-   ],
-   "relations": [
-    {
-     "target": "sb-levels",
-     "type": "prerequisite",
-     "evidenceRef": "Reading order after “What is a Second Brain” — builds on this document and leads into “The five levels at a glance”",
-     "source": "human"
-    }
-   ],
-   "section": "AI · Claude · Code · Second Brain",
-   "related": [
-    {
-     "name": "sb-levels",
-     "title": "The five levels at a glance",
-     "shared": [
-      "5단계",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-level1",
-     "title": "Level 1 · Find exactly (CLAUDE.md as a router)",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "sb-level2",
-     "title": "Level 2 · Grouping by topic (LLM wiki + memory)",
-     "shared": [],
-     "via": "folder"
-    }
-   ],
-   "citedBy": [
-    "sb-choose"
-   ]
-  },
-  {
-   "name": "sb-levels",
-   "title": "The five levels at a glance",
-   "summary": "Surveys the five Second Brain levels ranked by search and recall ability.",
-   "concepts": [
-    "세컨드브레인",
-    "5단계",
+    "마크다운",
     "정확검색",
     "시맨틱검색",
     "지식그래프",
@@ -1930,15 +1886,25 @@
     {
      "target": "sb-level1",
      "type": "prerequisite",
-     "evidenceRef": "Reading order after “The five levels at a glance” — builds on this document and leads into “Level 1 · Find exactly (CLAUDE.md as a router)”",
+     "evidenceRef": "Assumes the concept and the five-level terrain; the next chapter enters levels 1–2 in practice",
      "source": "human"
     }
    ],
    "section": "AI · Claude · Code · Second Brain",
    "related": [
     {
-     "name": "sb-choose",
-     "title": "Find Your Level · The Team Second Brain",
+     "name": "sb-level3",
+     "title": "Levels 3–5 — Meaning, Relations, a Brain OS",
+     "shared": [
+      "시맨틱검색",
+      "세컨드브레인",
+      "지식그래프"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "sb-context-connections",
+     "title": "Applying It — Context vs Connections, Finding Your Level",
      "shared": [
       "통증기반선택",
       "세컨드브레인"
@@ -1946,28 +1912,10 @@
      "via": "concept"
     },
     {
-     "name": "sb-intro",
-     "title": "What is a Second Brain",
-     "shared": [
-      "5단계",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
      "name": "sb-level1",
-     "title": "Level 1 · Find exactly (CLAUDE.md as a router)",
+     "title": "Levels 1–2 — Find Precisely, Group by Topic",
      "shared": [
       "정확검색",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-level3",
-     "title": "Level 3 · Searching by meaning (semantic search, vector DB)",
-     "shared": [
-      "시맨틱검색",
       "세컨드브레인"
      ],
      "via": "concept"
@@ -1975,65 +1923,20 @@
    ],
    "citedBy": [
     "wr-knowledge-vault",
-    "sb-intro"
+    "sb-context-connections"
    ]
   },
   {
    "name": "sb-level1",
-   "title": "Level 1 · Find exactly (CLAUDE.md as a router)",
-   "summary": "Explains level 1 exact search, using CLAUDE.md as a router.",
+   "title": "Levels 1–2 — Find Precisely, Group by Topic",
+   "summary": "CLAUDE.md as a router and folder structure (level 1), and the LLM Wiki with memory as a topic index (level 2) — the world files and folders can reach",
    "concepts": [
     "세컨드브레인",
     "레벨1",
     "정확검색",
     "CLAUDE.md",
     "라우팅",
-    "폴더구조"
-   ],
-   "relations": [
-    {
-     "target": "sb-level2",
-     "type": "prerequisite",
-     "evidenceRef": "Reading order after “Level 1 · Find exactly (CLAUDE.md as a router)” — builds on this document and leads into “Level 2 · Grouping by topic (LLM wiki + memory)”",
-     "source": "human"
-    }
-   ],
-   "section": "AI · Claude · Code · Second Brain",
-   "related": [
-    {
-     "name": "sb-levels",
-     "title": "The five levels at a glance",
-     "shared": [
-      "정확검색",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-intro",
-     "title": "What is a Second Brain",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "sb-level2",
-     "title": "Level 2 · Grouping by topic (LLM wiki + memory)",
-     "shared": [],
-     "via": "folder"
-    }
-   ],
-   "citedBy": [
-    "sb-intro",
-    "sb-levels",
-    "sb-choose"
-   ]
-  },
-  {
-   "name": "sb-level2",
-   "title": "Level 2 · Grouping by topic (LLM wiki + memory)",
-   "summary": "Explains Level 2, where topics are grouped with an LLM wiki and memory.",
-   "concepts": [
-    "세컨드브레인",
+    "폴더구조",
     "레벨2",
     "LLM위키",
     "메모리",
@@ -2044,12 +1947,21 @@
     {
      "target": "sb-level3",
      "type": "prerequisite",
-     "evidenceRef": "Reading order after “Level 2 · Grouping by topic (LLM wiki + memory)” — builds on this document and leads into “Level 3 · Searching by meaning (semantic search, vector DB)”",
+     "evidenceRef": "Assumes the file-and-folder levels; the next chapter crosses into meaning, relations, and automation",
      "source": "human"
     }
    ],
    "section": "AI · Claude · Code · Second Brain",
    "related": [
+    {
+     "name": "sb-intro",
+     "title": "What a Second Brain Is — the Five Levels at a Glance",
+     "shared": [
+      "정확검색",
+      "세컨드브레인"
+     ],
+     "via": "concept"
+    },
     {
      "name": "news-20260710-llm-wiki-knowledge-context",
      "title": "LLM Wiki and Knowledge Context — Team Knowledge Compiled at Write Time",
@@ -2080,28 +1992,34 @@
    "citedBy": [
     "kgs-edges",
     "sb-intro",
-    "sb-level1",
-    "sb-choose",
+    "sb-context-connections",
     "news-20260710-llm-wiki-knowledge-context"
    ]
   },
   {
    "name": "sb-level3",
-   "title": "Level 3 · Searching by meaning (semantic search, vector DB)",
-   "summary": "Explains embedding- and chunking-based semantic search and its limits.",
+   "title": "Levels 3–5 — Meaning, Relations, a Brain OS",
+   "summary": "Semantic search and vector DBs (level 3), knowledge graphs (level 4), and the always-on autonomous brain OS (level 5) — the upper three floors where the tools change character",
    "concepts": [
     "세컨드브레인",
     "레벨3",
     "시맨틱검색",
     "벡터검색",
     "임베딩",
-    "청킹"
+    "청킹",
+    "레벨4",
+    "지식그래프",
+    "엔티티관계",
+    "RAG",
+    "레벨5",
+    "자율브레인OS",
+    "자동화"
    ],
    "relations": [
     {
-     "target": "sb-level4",
+     "target": "sb-context-connections",
      "type": "prerequisite",
-     "evidenceRef": "Reading order after “Level 3 · Searching by meaning (semantic search, vector DB)” — builds on this document and leads into “Level 4 · Linking by relationship (knowledge graph)”",
+     "evidenceRef": "Assumes all five levels; the final chapter closes with application — what to put in and how to choose your level",
      "source": "human"
     }
    ],
@@ -2112,7 +2030,18 @@
      "title": "Graph Databases & GraphRAG — Store the Relationships, Change the Answers",
      "shared": [
       "청킹",
-      "벡터검색"
+      "벡터검색",
+      "RAG"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "sb-intro",
+     "title": "What a Second Brain Is — the Five Levels at a Glance",
+     "shared": [
+      "시맨틱검색",
+      "세컨드브레인",
+      "지식그래프"
      ],
      "via": "concept"
     },
@@ -2126,63 +2055,6 @@
      "via": "concept"
     },
     {
-     "name": "sb-levels",
-     "title": "The five levels at a glance",
-     "shared": [
-      "시맨틱검색",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    }
-   ],
-   "citedBy": [
-    "sb-intro",
-    "sb-level2",
-    "sb-level4",
-    "sb-choose"
-   ]
-  },
-  {
-   "name": "sb-level4",
-   "title": "Level 4 · Linking by relationship (knowledge graph)",
-   "summary": "Explains Level 4, the knowledge graph that links things through entities and relationships.",
-   "concepts": [
-    "세컨드브레인",
-    "레벨4",
-    "지식그래프",
-    "엔티티관계",
-    "RAG",
-    "프라이버시"
-   ],
-   "relations": [
-    {
-     "target": "sb-level5",
-     "type": "prerequisite",
-     "evidenceRef": "Reading order after “Level 4 · Linking by relationship (knowledge graph)” — builds on this document and leads into “Level 5 · The Always-On Brain OS”",
-     "source": "human"
-    }
-   ],
-   "section": "AI · Claude · Code · Second Brain",
-   "related": [
-    {
-     "name": "news-20260710-oracle-ontology-property-graph",
-     "title": "Oracle Ontology and Property Graphs — Turning Tables into a Map of Knowledge",
-     "shared": [
-      "엔티티관계",
-      "지식그래프"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "news-20260711-neo4j-rdf-vs-property-graph",
-     "title": "RDF or Property Graph — Two Models for a Knowledge Graph (Neo4j)",
-     "shared": [
-      "엔티티관계",
-      "지식그래프"
-     ],
-     "via": "concept"
-    },
-    {
      "name": "wr-knowledge-vault",
      "title": "The Man Who Records Everything, and the Wiki That Publishes — Reflections on Knowledge Vaults",
      "shared": [
@@ -2190,98 +2062,45 @@
       "세컨드브레인"
      ],
      "via": "concept"
-    },
-    {
-     "name": "gdb-graphrag",
-     "title": "Graph Databases & GraphRAG — Store the Relationships, Change the Answers",
-     "shared": [
-      "RAG",
-      "지식그래프"
-     ],
-     "via": "concept"
     }
    ],
    "citedBy": [
     "kgs-edges",
+    "wr-knowledge-vault",
     "sb-intro",
-    "sb-level2",
-    "sb-level3",
-    "sb-choose",
+    "sb-level1",
+    "sb-context-connections",
     "news-20260710-oracle-ontology-property-graph",
     "news-20260711-neo4j-rdf-vs-property-graph"
    ]
   },
   {
-   "name": "sb-level5",
-   "title": "Level 5 · The Always-On Brain OS",
-   "summary": "Explains the autonomous brain OS that keeps refreshing itself automatically with cron.",
-   "concepts": [
-    "세컨드브레인",
-    "레벨5",
-    "자율브레인OS",
-    "cron자동화",
-    "GBrain",
-    "과잉컨텍스트",
-    "자동화"
-   ],
-   "relations": [
-    {
-     "target": "sb-context-connections",
-     "type": "prerequisite",
-     "evidenceRef": "Reading order after “Level 5 · The Always-On Brain OS” — builds on this document and leads into “What to Ingest and What to Leave (Context vs Connections)”",
-     "source": "human"
-    }
-   ],
-   "section": "AI · Claude · Code · Second Brain",
-   "related": [
-    {
-     "name": "sb-intro",
-     "title": "What is a Second Brain",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "sb-levels",
-     "title": "The five levels at a glance",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "sb-level1",
-     "title": "Level 1 · Find exactly (CLAUDE.md as a router)",
-     "shared": [],
-     "via": "folder"
-    }
-   ],
-   "citedBy": [
-    "wr-knowledge-vault",
-    "sb-intro",
-    "sb-level4",
-    "sb-choose"
-   ]
-  },
-  {
    "name": "sb-context-connections",
-   "title": "What to Ingest and What to Leave (Context vs Connections)",
-   "summary": "Uses the 4C framework to separate data worth ingesting from data you should only reach into.",
+   "title": "Applying It — Context vs Connections, Finding Your Level",
+   "summary": "What to put in and what to leave out (4C, context vs connections), then choosing your level by pain and extending to a team",
    "concepts": [
     "세컨드브레인",
     "4C",
     "컨텍스트",
     "커넥션",
     "에버그린",
-    "순차폴백"
-   ],
-   "relations": [
-    {
-     "target": "sb-choose",
-     "type": "prerequisite",
-     "evidenceRef": "Reading order after “What to Ingest and What to Leave (Context vs Connections)” — builds on this document and leads into “Find Your Level · The Team Second Brain”",
-     "source": "human"
-    }
+    "순차폴백",
+    "통증기반선택",
+    "결정트리",
+    "팀세컨드브레인",
+    "변화관리"
    ],
    "section": "AI · Claude · Code · Second Brain",
    "related": [
+    {
+     "name": "sb-intro",
+     "title": "What a Second Brain Is — the Five Levels at a Glance",
+     "shared": [
+      "통증기반선택",
+      "세컨드브레인"
+     ],
+     "via": "concept"
+    },
     {
      "name": "ccb-manage",
      "title": "Operations — Usage, Sessions & Wrap-up",
@@ -2301,48 +2120,7 @@
    ],
    "citedBy": [
     "sb-intro",
-    "sb-level5"
-   ]
-  },
-  {
-   "name": "sb-choose",
-   "title": "Find Your Level · The Team Second Brain",
-   "summary": "Picks a level from the pain you actually feel and lays out how to scale it to a team.",
-   "concepts": [
-    "세컨드브레인",
-    "통증기반선택",
-    "결정트리",
-    "팀세컨드브레인",
-    "변화관리"
-   ],
-   "section": "AI · Claude · Code · Second Brain",
-   "related": [
-    {
-     "name": "sb-levels",
-     "title": "The five levels at a glance",
-     "shared": [
-      "통증기반선택",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-intro",
-     "title": "What is a Second Brain",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "sb-level1",
-     "title": "Level 1 · Find exactly (CLAUDE.md as a router)",
-     "shared": [],
-     "via": "folder"
-    }
-   ],
-   "citedBy": [
-    "sb-intro",
-    "sb-levels",
-    "sb-context-connections"
+    "sb-level3"
    ]
   },
   {
@@ -3276,7 +3054,7 @@
      "source": "human"
     },
     {
-     "target": "sb-level2",
+     "target": "sb-level1",
      "type": "example-of",
      "evidenceRef": "The LLM Wiki vault is a concrete case of Second Brain level 2 (grouping by topic)",
      "source": "human"
@@ -3317,7 +3095,7 @@
     "kgs-edges",
     "wr-knowledge-vault",
     "sb-intro",
-    "sb-level2",
+    "sb-level1",
     "news-20260710-llm-wiki-knowledge-context"
    ]
   },
@@ -3746,7 +3524,7 @@
    ],
    "relations": [
     {
-     "target": "sb-choose",
+     "target": "sb-context-connections",
      "type": "example-of",
      "evidenceRef": "A proposal that accumulates development output as organizational knowledge automatically — an in-house example of sb-choose's team Second Brain extension",
      "source": "human"
@@ -4033,8 +3811,8 @@
      "via": "concept"
     },
     {
-     "name": "sb-level2",
-     "title": "Level 2 · Grouping by topic (LLM wiki + memory)",
+     "name": "sb-level1",
+     "title": "Levels 1–2 — Find Precisely, Group by Topic",
      "shared": [
       "인덱스"
      ],
@@ -4471,8 +4249,8 @@
      "via": "concept"
     },
     {
-     "name": "sb-level2",
-     "title": "Level 2 · Grouping by topic (LLM wiki + memory)",
+     "name": "sb-level1",
+     "title": "Levels 1–2 — Find Precisely, Group by Topic",
      "shared": [
       "인덱스",
       "LLM위키"
@@ -4512,7 +4290,7 @@
    ],
    "relations": [
     {
-     "target": "sb-level4",
+     "target": "sb-level3",
      "type": "evidence-for",
      "evidenceRef": "Oracle's official blog and ISO SQL:2023 checked — external evidence for sb-level4's claim that knowledge is linked by relationship",
      "source": "human"
@@ -4541,8 +4319,8 @@
      "via": "concept"
     },
     {
-     "name": "sb-level4",
-     "title": "Level 4 · Linking by relationship (knowledge graph)",
+     "name": "sb-level3",
+     "title": "Levels 3–5 — Meaning, Relations, a Brain OS",
      "shared": [
       "엔티티관계",
       "지식그래프"
@@ -4579,7 +4357,7 @@
    ],
    "relations": [
     {
-     "target": "sb-level4",
+     "target": "sb-level3",
      "type": "evidence-for",
      "evidenceRef": "A digest of the Neo4j original by Jim Webber (2024-06-04) — expert evidence for sb-level4's knowledge-graph approach",
      "source": "human"
@@ -4608,8 +4386,8 @@
      "via": "concept"
     },
     {
-     "name": "sb-level4",
-     "title": "Level 4 · Linking by relationship (knowledge graph)",
+     "name": "sb-level3",
+     "title": "Levels 3–5 — Meaning, Relations, a Brain OS",
      "shared": [
       "엔티티관계",
       "지식그래프"
@@ -5299,19 +5077,19 @@
      "via": "concept"
     },
     {
-     "name": "gdb-graphrag",
-     "title": "Graph Databases & GraphRAG — Store the Relationships, Change the Answers",
+     "name": "sb-level1",
+     "title": "Levels 1–2 — Find Precisely, Group by Topic",
      "shared": [
-      "RAG",
-      "온톨로지"
+      "LLM위키",
+      "세컨드브레인"
      ],
      "via": "concept"
     },
     {
-     "name": "sb-level2",
-     "title": "Level 2 · Grouping by topic (LLM wiki + memory)",
+     "name": "sb-level3",
+     "title": "Levels 3–5 — Meaning, Relations, a Brain OS",
      "shared": [
-      "LLM위키",
+      "RAG",
       "세컨드브레인"
      ],
      "via": "concept"
@@ -5344,6 +5122,16 @@
    "section": "AI · GraphDB",
    "related": [
     {
+     "name": "sb-level3",
+     "title": "Levels 3–5 — Meaning, Relations, a Brain OS",
+     "shared": [
+      "청킹",
+      "벡터검색",
+      "RAG"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "gdb-vector-retriever",
      "title": "Finding a Movie by Its Story — Your First Vector Retriever on a Neo4j Sandbox",
      "shared": [
@@ -5370,15 +5158,6 @@
       "프로퍼티그래프",
       "온톨로지",
       "지식그래프"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-level3",
-     "title": "Level 3 · Searching by meaning (semantic search, vector DB)",
-     "shared": [
-      "청킹",
-      "벡터검색"
      ],
      "via": "concept"
     }
@@ -5423,7 +5202,7 @@
     },
     {
      "name": "sb-level3",
-     "title": "Level 3 · Searching by meaning (semantic search, vector DB)",
+     "title": "Levels 3–5 — Meaning, Relations, a Brain OS",
      "shared": [
       "임베딩",
       "벡터검색"

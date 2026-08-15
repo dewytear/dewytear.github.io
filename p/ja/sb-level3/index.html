@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）</title>
-<meta name="description" content="埋め込みとチャンク化にもとづくセマンティック検索と、その限界を説明する。">
+<title>レベル 3~5 — 意味・関係・ブレイン OS</title>
+<meta name="description" content="セマンティック検索とベクトル DB（レベル 3）、知識グラフ（レベル 4）、常時稼働の自律ブレイン OS（レベル 5）まで — 道具の性格が変わる上の三層">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/ja/sb-level3/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/sb-level3/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/sb-level3/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）">
-<meta property="og:description" content="埋め込みとチャンク化にもとづくセマンティック検索と、その限界を説明する。">
+<meta property="og:title" content="レベル 3~5 — 意味・関係・ブレイン OS">
+<meta property="og:description" content="セマンティック検索とベクトル DB（レベル 3）、知識グラフ（レベル 4）、常時稼働の自律ブレイン OS（レベル 5）まで — 道具の性格が変わる上の三層">
 <meta property="og:url" content="https://dewytear.github.io/p/ja/sb-level3/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）">
-<meta name="twitter:description" content="埋め込みとチャンク化にもとづくセマンティック検索と、その限界を説明する。">
+<meta name="twitter:title" content="レベル 3~5 — 意味・関係・ブレイン OS">
+<meta name="twitter:description" content="セマンティック検索とベクトル DB（レベル 3）、知識グラフ（レベル 4）、常時稼働の自律ブレイン OS（レベル 5）まで — 道具の性格が変わる上の三層">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）",
- "description": "埋め込みとチャンク化にもとづくセマンティック検索と、その限界を説明する。",
+ "headline": "レベル 3~5 — 意味・関係・ブレイン OS",
+ "description": "セマンティック検索とベクトル DB（レベル 3）、知識グラフ（レベル 4）、常時稼働の自律ブレイン OS（レベル 5）まで — 道具の性格が変わる上の三層",
  "inLanguage": "ja",
  "url": "https://dewytear.github.io/p/ja/sb-level3/",
  "mainEntityOfPage": "https://dewytear.github.io/#!sb-level3",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-04T10:06:25+09:00",
- "dateModified": "2026-08-15T14:51:59+09:00"
+ "dateModified": "2026-08-16T00:17:25+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/en/sb-level3/" hreflang="en">English</a>
 </p>
 <article>
-<h2>レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）</h2>
+<h2>レベル 3~5 — 意味・関係・ブレイン OS</h2>
 <p>レベル 1・2 はおおむね<strong>単語が一致</strong>しないと見つかりません。けれど私たちは<strong>覚えている単語とは違う単語</strong>で検索しがちです。だからレベル 3 は<strong>意味で探します。</strong>これが<strong>セマンティック検索（semantic search）</strong>で、そのエンジンが<strong>ベクトルデータベース</strong>です。</p>
 
 <h3>キーワード検索 vs セマンティック検索</h3>
@@ -188,13 +188,173 @@
 
 <div class="note">
     <span class="nh">全部をベクトルにする必要はない</span>
-    セカンドブレイン<strong>全体</strong>をベクトルにする必要はありません。たとえば <strong>YouTube の字幕フォルダだけ</strong>をベクトル DB にして、<code>context/</code>・<code>projects/</code>・<code>decisions.md</code> はそのままマークダウンで置けます。<strong>データの種類と使い道に応じてフォルダごとに違うやり方</strong>を選んでください。次は<a href="/p/ja/sb-level4/">レベル 4 — 関係でつなぐ</a>。
+    セカンドブレイン<strong>全体</strong>をベクトルにする必要はありません。たとえば <strong>YouTube の字幕フォルダだけ</strong>をベクトル DB にして、<code>context/</code>・<code>projects/</code>・<code>decisions.md</code> はそのままマークダウンで置けます。<strong>データの種類と使い道に応じてフォルダごとに違うやり方</strong>を選んでください。次はレベル 4 — 関係でつなぐ。
 </div>
+
+<h3>レベル 4 · 関係でつなぐ（知識グラフ）</h3>
+<p>レベル 3 が<strong>「意味の近いもの」</strong>を探したのに対し、レベル 4 は<strong>「何が何とどう絡んでいるか」</strong>をたどります。これが<strong>知識グラフ（knowledge graph）</strong>です。問いのかたちは<strong>「X から始めて A までつながりを追跡して」</strong>。ふつうはいちばん<strong>強力ですが、いちばん複雑で高コスト</strong>な段階です。</p>
+
+<h4>実体 + 関係 = グラフ</h4>
+<p>知識グラフはふたつでできています。<strong>実体（エンティティ: 人・会社・製品）</strong>と、それらのあいだの<strong>名前の付いた関係（誰がどこで働く、何を保証する）</strong>です。ウィキのリンクと違い、<strong>関係に意味（型）</strong>があります。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 250" role="img" aria-label="知識グラフの例: Jordan は Acme で働き、Acme は Postpilot に保証され、Postpilot は Cadently の競合である">
+    <!-- nodes -->
+    <circle class="d-node" cx="110" cy="80" r="12"/>
+    <text class="d-label sm" x="110" y="52" text-anchor="middle">Jordan</text>
+    <text class="d-sub" x="110" y="112" text-anchor="middle">人</text>
+
+    <circle class="d-node d" cx="330" cy="70" r="14"/>
+    <text class="d-label sm" x="330" y="42" text-anchor="middle">Acme</text>
+    <text class="d-sub" x="330" y="102" text-anchor="middle">会社</text>
+
+    <circle class="d-node b" cx="540" cy="120" r="13"/>
+    <text class="d-label sm" x="540" y="92" text-anchor="middle">Postpilot</text>
+    <text class="d-sub" x="540" y="152" text-anchor="middle">会社</text>
+
+    <circle class="d-node c" cx="330" cy="200" r="13"/>
+    <text class="d-label sm" x="330" y="230" text-anchor="middle">Cadently</text>
+
+    <!-- typed edges -->
+    <line class="d-edge accent" x1="123" y1="76" x2="316" y2="71"/>
+    <text class="d-accent" x="215" y="62" text-anchor="middle" font-size="11">勤務(works_at)</text>
+    <line class="d-edge accent" x1="343" y1="79" x2="527" y2="112"/>
+    <text class="d-accent" x="440" y="86" text-anchor="middle" font-size="11">保証(endorsed_by)</text>
+    <line class="d-edge dash" x1="527" y1="130" x2="343" y2="193"/>
+    <text class="d-sub" x="450" y="176" text-anchor="middle">競合(competitor_of)</text>
+    <line class="d-edge" x1="330" y1="84" x2="330" y2="187"/>
+</svg>
+<div class="d-cap">「Jordan → Acme → Postpilot → Cadently」のように<strong>関係の鎖</strong>をたどりながら答えを組み立てます。</div>
+</div>
+
+<div class="note">
+    <span class="nh">ウィキより軽いこともある</span>
+    ウィキは関連するページを<strong>まるごと読まなければ</strong>なりません（「11Labs だけ知りたいのに、AI 動画制作の文書を全部読む」ような具合）。グラフは<strong>必要なエッジ（関係）だけ</strong>を押さえればよいので、こういう場合は<strong>むしろ軽くなります。</strong>
+</div>
+
+<h4>ツール — LightRAG · Graphiti · GraphRAG</h4>
+<p>たいていは<strong>ソフトウェアが実体と関係を自動で抽出</strong>してグラフを作ってくれます。代表的なものは:</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>ツール</th><th>特徴</th></tr></thead>
+        <tbody>
+            <tr><td><strong>LightRAG</strong></td><td>グラフ + ベクトルを組み合わせた軽量な RAG。増分の更新に強い（オープンソース）。</td></tr>
+            <tr><td><strong>Graphiti</strong></td><td>時間（変化）まで収める知識グラフのフレームワーク。</td></tr>
+            <tr><td><strong>GraphRAG</strong>（Microsoft）</td><td>文書のかたまりから実体・関係・要約を構築するやり方。</td></tr>
+        </tbody>
+    </table>
+</div>
+<p class="scn-sub">※ 講義中の「グラファイファイアー」は <strong>Graphiti</strong>、「クワドラント」はレベル 3 の <strong>Qdrant</strong> を指していると思われます。</p>
+
+<h4>本当の勝負どころは検索ではなく「頭の中の取り出し」</h4>
+<p>本当のボトルネックはたいてい、<strong>システムが見つけられないこと</strong>ではなく、<strong>頭の中の知識がまだシステムに入っていないこと</strong>です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 620 130" role="img" aria-label="インタビューのスキルが自分をしつこく問いただしてブレインストーミングのファイルを作り、それが知識グラフの材料になる">
+    <rect class="d-box" x="20" y="42" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="80" y="70" text-anchor="middle">自分 (頭の中)</text>
+    <rect class="d-box accent" x="200" y="42" width="150" height="48" rx="10"/>
+    <text class="d-label sm" x="275" y="64" text-anchor="middle">インタビュー技</text>
+    <text class="d-sub" x="275" y="80" text-anchor="middle">しつこく問う(grill)</text>
+    <rect class="d-box" x="410" y="42" width="180" height="48" rx="10"/>
+    <text class="d-label sm" x="500" y="64" text-anchor="middle">ブレストのファイル</text>
+    <text class="d-sub" x="500" y="80" text-anchor="middle">→ グラフの材料</text>
+
+    <line class="d-edge accent" x1="140" y1="66" x2="198" y2="66"/><polygon class="d-arrow accent" points="192,61 200,66 192,71"/>
+    <line class="d-edge accent" x1="350" y1="66" x2="408" y2="66"/><polygon class="d-arrow accent" points="402,61 410,66 402,71"/>
+    <path class="d-edge dash" d="M275 90 V112 H80 V92"/><polygon class="d-arrow" points="75,96 85,96 80,90"/>
+    <text class="d-sub" x="180" y="106" text-anchor="middle">分からなくなるまで問い返す</text>
+</svg>
+<div class="d-cap">「私をインタビューして（grill me）」式のスキルで顧客や事業を<strong>問いただして</strong>ファイルにすれば、それがそのままグラフやウィキの材料になります。</div>
+</div>
+
+<p>だからシステムのせいにする前に、まず尋ねてみてください。<strong>「自分のフォルダは、本当に自分の頭の中と同じくらい<em>総体的（holistic）</em>か？」</strong>資料・契約書・字幕を入れながら<strong>ブレインストーミング</strong>で肉づけしていく習慣が肝心です。</p>
+
+<div class="note warn">
+    <span class="nh">プライバシー — どこへ行くデータなのか</span>
+    自分のデータを Claude のモデルで処理すれば、その内容は <strong>Anthropic へ送られます</strong>。自分の業務資料なら受け入れられても、<strong>顧客のデータや機微な情報</strong>なら話は別です。そういう場合は<strong>オープンソース・ローカルのモデル</strong>で回し、すべてを収めるセカンドブレインは<strong>クラウドではなくローカル</strong>に置くという選択も検討してください。何をどこで処理しているのかを<strong>自分で分かっている</strong>ことが先です。
+</div>
+
+<div class="note">
+    <span class="nh">次へ</span>
+    関係まで要らないなら、わざわざグラフを使わなくてもかまいません。これらすべてを<strong>自動・常時</strong>で回す最後の段階がレベル 5 — つねに動いているブレイン OSです。
+</div>
+
+<h3>レベル 5 · つねに動いているブレイン OS</h3>
+<p>最後の段階は、ここまでのすべて（ルーティング・ウィキ・ベクトル・グラフ）に<strong>「always-on（つねに動いている）」</strong>を足したものです。自分が気にかけなくても<strong>自動で吸収と更新をつづける</strong><strong>自律ブレイン OS</strong>です。代表的な事例が <strong>GBrain</strong> です。</p>
+
+<div class="note">
+    <span class="nh">GBrain とは</span>
+    <strong>Y Combinator</strong> の代表・CEO である <strong>Garry Tan（ギャリー・タン）</strong>が作って<strong>オープンソースとして公開</strong>した、個人の知識／メモリの層です。彼が実際に自分のエージェント（OpenClaw・<strong>Hermes</strong>）を回している<strong>運用のシステム</strong>で、膨大なページ・人物・会社の情報を収めていると言われています。
+</div>
+
+<h4>GBrain は何を束ねるのか</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>構成</th><th>内容</th></tr></thead>
+        <tbody>
+            <tr><td>保存</td><td><strong>マークダウン優先</strong> + Postgres のバックエンド</td></tr>
+            <tr><td>関係</td><td><strong>自分で配線される（self-wiring）知識グラフ</strong> — ページを書くたびに実体を抽出し、<em>attended·works_at·invested_in·founded</em> のような<strong>型付きエッジ</strong>を生成（LLM の呼び出しなしで）</td></tr>
+            <tr><td>検索</td><td><strong>ベクトル + BM25（キーワード）+ RRF</strong>（順位の融合）+ <strong>再ランキング</strong>のハイブリッド</td></tr>
+            <tr><td>常時性</td><td><strong>cron（予約実行）</strong>が会議・メール・ツイート・音声メモを<strong>寝ているあいだも</strong>自動でインジェスト</td></tr>
+        </tbody>
+    </table>
+</div>
+<p class="scn-sub">※ 一緒に言及される <strong>GStack</strong> は、Claude Code を「AI のエンジニアリングチーム（CEO・デザイナー・リリースマネージャー・QA など）」のように使わせてくれるツール群です。</p>
+
+<h4>つねに動いているループ</h4>
+<p>核心は<strong>人が毎回入れなくても</strong>システムが自分で材料を集め、関係をつなぎ、次の応答の前に<strong>先に読み</strong>、応答のあとに<strong>また書く</strong>という点です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 660 200" role="img" aria-label="つねに動いているループ: ソースを自動収集してブレインへインジェストし、関係を配線し、エージェントが読んで書く">
+    <!-- sources -->
+    <rect class="d-box soft" x="16" y="20" width="120" height="30" rx="7"/>
+    <text class="d-sub" x="76" y="39" text-anchor="middle">会議・メール</text>
+    <rect class="d-box soft" x="16" y="58" width="120" height="30" rx="7"/>
+    <text class="d-sub" x="76" y="77" text-anchor="middle">ツイート・音声メモ</text>
+    <rect class="d-box soft" x="16" y="96" width="120" height="30" rx="7"/>
+    <text class="d-sub" x="76" y="115" text-anchor="middle">カレンダー・文書</text>
+
+    <!-- cron -->
+    <rect class="d-box accent" x="196" y="52" width="110" height="44" rx="10"/>
+    <text class="d-label sm" x="251" y="74" text-anchor="middle">cron で自動収集</text>
+    <text class="d-sub" x="251" y="89" text-anchor="middle">常時の実行</text>
+
+    <!-- brain -->
+    <rect class="d-box accent" x="360" y="42" width="140" height="64" rx="12"/>
+    <text class="d-label sm" x="430" y="68" text-anchor="middle">ブレイン</text>
+    <text class="d-sub" x="430" y="84" text-anchor="middle">インジェスト + 関係の配線</text>
+
+    <!-- agent -->
+    <rect class="d-box" x="540" y="52" width="104" height="44" rx="10"/>
+    <text class="d-label sm" x="592" y="74" text-anchor="middle">エージェント</text>
+    <text class="d-sub" x="592" y="89" text-anchor="middle">読んで → 答える</text>
+
+    <line class="d-edge" x1="136" y1="72" x2="194" y2="72"/><polygon class="d-arrow" points="188,67 196,72 188,77"/>
+    <line class="d-edge accent" x1="306" y1="74" x2="358" y2="74"/><polygon class="d-arrow accent" points="352,69 360,74 352,79"/>
+    <line class="d-edge accent" x1="500" y1="74" x2="538" y2="74"/><polygon class="d-arrow accent" points="532,69 540,74 532,79"/>
+    <!-- write back loop -->
+    <path class="d-edge dash" d="M592 96 V150 H430 V108"/><polygon class="d-arrow" points="425,114 435,114 430,106"/>
+    <text class="d-sub" x="505" y="144" text-anchor="middle">会話のあとブレインへ書き戻す</text>
+</svg>
+<div class="d-cap">人の介入なしに回る<strong>自己更新のループ</strong>が、レベル 5 の正体です。</div>
+</div>
+
+<div class="note warn">
+    <span class="nh">注意 — コンテキスト過剰のジレンマ</span>
+    「つねに動いている」には落とし穴があります。<strong>コンテキストが多くなりすぎると</strong>かえって邪魔になります — どこからが助けより害のほうが大きくなるのか？ だから<strong>何を吸収するかを自分で制御する</strong>ほうが安全です（「今週の議事録だけ持ってきて。一緒にブレストしてから入れよう」）。自動化が<strong>ノイズの自動化</strong>にならないよう注意してください。
+</div>
+
+<div class="note">
+    <span class="nh">もう一度強調 — レベル 5 が最高ではない</span>
+    常時の同期は<strong>本当に必要なときだけ</strong>価値があります（オフラインのエージェントが多数、大量のデータ、チーム規模の自動パイプラインなど）。cron を自分で管理する負担も大きいです。<strong>何を入れて何を置くか</strong>のほうがむしろ大事になりますが、その判断の基準は<a href="/p/ja/sb-context-connections/">コンテキスト vs コネクション</a>で整理します。
+</div>
+<p>五つのレベルを登り切りました。最後の章<a href="/p/ja/sb-context-connections/">適用</a>で、何を入れて何を置くか、自分のレベルをどう選ぶかを整理します。</p>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Second Brain &middot; <span class="pr-k">作成日</span> 2026-07-04 &middot; <span class="pr-k">更新日</span> 2026-08-15</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Second Brain &middot; <span class="pr-k">作成日</span> 2026-07-04 &middot; <span class="pr-k">更新日</span> 2026-08-16</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
-<ul><li><a href="/p/ja/gdb-graphrag/">グラフデータベースとGraphRAG — 関係を保存すると答えが変わる</a></li><li><a href="/p/ja/gdb-vector-retriever/">あらすじで映画を探す — Neo4jサンドボックスで作る初めてのベクトルリトリーバー</a></li><li><a href="/p/ja/sb-levels/">5 段階をひと目で</a></li></ul>
+<ul><li><a href="/p/ja/gdb-graphrag/">グラフデータベースとGraphRAG — 関係を保存すると答えが変わる</a></li><li><a href="/p/ja/sb-intro/">セカンドブレインとは — 5 段階を一望</a></li><li><a href="/p/ja/gdb-vector-retriever/">あらすじで映画を探す — Neo4jサンドボックスで作る初めてのベクトルリトリーバー</a></li><li><a href="/p/ja/wr-knowledge-vault/">すべてを記録する人、発行するウィキ — 知識の保管庫についての考察</a></li></ul>
 </nav>
 </body>
 </html>
