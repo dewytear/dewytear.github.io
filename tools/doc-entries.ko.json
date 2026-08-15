@@ -118,68 +118,31 @@
  },
  {
   "name": "welcome",
-  "title": "Welcome",
-  "summary": "터미널에서 코드를 읽고 편집·실행·커밋하는 Claude Code 소개",
+  "title": "시작하기",
+  "summary": "Claude Code 소개부터 설치·인증, 슬래시명령어와 CLAUDE.md까지 — 터미널에서 읽고 고치고 실행하고 커밋한다",
   "concepts": [
    "Claude Code",
    "터미널",
    "CLI",
    "코딩에이전트",
    "자연어",
-   "Anthropic"
-  ],
-  "relations": [
-   {
-    "target": "install",
-    "type": "prerequisite",
-    "evidenceRef": "Claude Code가 무엇인지 소개 — install의 설치·실행·인증에 선행",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "install",
-  "title": "설치와 시작",
-  "summary": "네이티브 인스톨러로 설치하고 프로젝트에서 실행·인증하는 방법",
-  "concepts": [
    "설치",
-   "네이티브인스톨러",
-   "npm",
-   "실행",
    "인증",
-   "시작플래그"
-  ],
-  "relations": [
-   {
-    "target": "commands",
-    "type": "prerequisite",
-    "evidenceRef": "설치와 시작 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 일상 사용로 이어진다",
-    "source": "human"
-   },
-   {
-    "target": "hnp-install",
-    "type": "prerequisite",
-    "evidenceRef": "플러그인 설치가 \"Claude Code가 있어야 합니다(Install & Start 참고)\"로 기본 설치를 전제",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "commands",
-  "title": "일상 사용",
-  "summary": "자연어 프롬프트와 슬래시명령어로 세션을 다루는 일상 사용법",
-  "concepts": [
    "슬래시명령어",
-   "자연어",
    "CLAUDE.md",
-   "플랜모드",
-   "세션"
+   "플랜모드"
   ],
   "relations": [
    {
     "target": "skills",
     "type": "prerequisite",
-    "evidenceRef": "일상 사용 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 Skills로 이어진다",
+    "evidenceRef": "설치·인증·일상 사용의 기본기를 전제로 확장 기능(스킬·MCP·훅)으로 이어진다 — 본문 말미가 확장 편을 지목",
+    "source": "human"
+   },
+   {
+    "target": "hnp-install",
+    "type": "prerequisite",
+    "evidenceRef": "플러그인 설치가 \"Claude Code가 있어야 합니다\"로 기본 설치를 전제",
     "source": "human"
    },
    {
@@ -192,40 +155,25 @@
  },
  {
   "name": "skills",
-  "title": "Skills",
-  "summary": "특정 작업의 지식과 워크플로를 패키징한 재사용 스킬",
+  "title": "확장 기능 — Skills · MCP · Hooks",
+  "summary": "스킬은 아는 법을, MCP 서버는 닿는 곳을, 훅은 지켜지는 규칙을 늘린다 — Claude Code 확장의 세 갈래",
   "concepts": [
    "스킬",
-   "슬래시명령어",
    "재사용",
    "플러그인",
-   "자동트리거"
-  ],
-  "relations": [
-   {
-    "target": "mcp",
-    "type": "prerequisite",
-    "evidenceRef": "Skills 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 MCP Servers로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "mcp",
-  "title": "MCP Servers",
-  "summary": "외부 도구·데이터를 연결하는 MCP 서버 개념과 관리",
-  "concepts": [
+   "자동트리거",
    "MCP",
    "외부도구",
-   "GitHub",
    "권한",
-   "claude mcp"
+   "훅",
+   "settings.json",
+   "자동화"
   ],
   "relations": [
    {
-    "target": "hooks",
+    "target": "ccb-overview",
     "type": "prerequisite",
-    "evidenceRef": "MCP Servers 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 Hooks로 이어진다",
+    "evidenceRef": "확장 3종의 개념을 전제로 튜토리얼이 실전 조합을 익힌다 — 본문 말미가 튜토리얼을 지목",
     "source": "human"
    },
    {
@@ -234,19 +182,6 @@
     "evidenceRef": "MCP 서버 개념·허락 모델을 전제로 읽는 후속 — 2026-07-28 스펙의 무상태 전환과 auto 모드 기본값을 다룬다",
     "source": "human"
    }
-  ]
- },
- {
-  "name": "hooks",
-  "title": "Hooks",
-  "summary": "수명주기 이벤트마다 셸 명령을 자동 실행하는 훅",
-  "concepts": [
-   "훅",
-   "settings.json",
-   "PreToolUse",
-   "PostToolUse",
-   "SessionStart",
-   "자동화"
   ]
  },
  {

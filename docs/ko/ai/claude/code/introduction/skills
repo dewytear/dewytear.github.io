@@ -1,4 +1,11 @@
-            <h2>Skills</h2>
+            <h2>확장 기능 &mdash; Skills · MCP · Hooks</h2>
+            <p>
+
+                Claude Code를 기본기만으로 써도 충분히 일하지만, 팀과 프로젝트에 맞춰 늘리는 순간부터 진가가 나옵니다. 확장 통로는 세 갈래입니다. 반복되는 노하우를 패키지로 묶는 <strong>스킬</strong>, 외부 시스템으로 손을 뻗는 <strong>MCP 서버</strong>, 정해진 시점마다 어김없이 실행되는 <strong>훅</strong> &mdash; 셋은 성격이 달라서 서로를 대신하지 못하고, 함께 쓸 때 가장 잘 맞물립니다.
+
+            </p>
+
+            <h3>Skills &mdash; 재사용 가능한 능력</h3>
             <p>
 
                 스킬(Skill)은 특정 작업을 위한 전문 지식과 워크플로를 Claude Code에 부여하는, 재사용 가능한 패키지 형태의 능력입니다. 지시문(선택적으로 스크립트·리소스까지)을 하나로 묶어 두면, 요청이 그 스킬의 용도와 맞을 때 Claude가 필요한 만큼만 불러와 씁니다.
@@ -10,5 +17,104 @@
                     <li>일관된 디자인 시스템을 따르는 데이터 시각화 제작</li>
                 </ul>
                 자세한 노하우가 매번 치는 메시지가 아니라 스킬 안에 살기 때문에, 프롬프트는 짧아지고 결과는 일관돼집니다. Claude Code에 기본 탑재된 스킬을 쓰거나, 플러그인으로 설치하거나, 직접 만들 수 있습니다.
+
+            </p>
+
+            <h3>MCP 서버 &mdash; 바깥세상과 연결</h3>
+<div class="diagram">
+<svg viewBox="0 0 680 224" role="img" aria-label="MCP 허브 구조: Claude Code가 MCP 서버를 거쳐 GitHub·데이터베이스·브라우저·이메일/캘린더에 연결된다">
+    <rect class="d-box accent" x="18" y="88" width="140" height="48" rx="10"/>
+    <text class="d-label" x="88" y="110" text-anchor="middle">Claude Code</text>
+    <text class="d-sub" x="88" y="127" text-anchor="middle">허브</text>
+
+    <rect class="d-box" x="272" y="14" width="140" height="40" rx="10"/>
+    <text class="d-label sm" x="342" y="38" text-anchor="middle">MCP server</text>
+    <rect class="d-box" x="272" y="66" width="140" height="40" rx="10"/>
+    <text class="d-label sm" x="342" y="90" text-anchor="middle">MCP server</text>
+    <rect class="d-box" x="272" y="118" width="140" height="40" rx="10"/>
+    <text class="d-label sm" x="342" y="142" text-anchor="middle">MCP server</text>
+    <rect class="d-box" x="272" y="170" width="140" height="40" rx="10"/>
+    <text class="d-label sm" x="342" y="194" text-anchor="middle">MCP server</text>
+
+    <rect class="d-box soft" x="500" y="14" width="160" height="40" rx="10"/>
+    <text class="d-label sm" x="580" y="38" text-anchor="middle">GitHub</text>
+    <rect class="d-box soft" x="500" y="66" width="160" height="40" rx="10"/>
+    <text class="d-label sm" x="580" y="90" text-anchor="middle">데이터베이스</text>
+    <rect class="d-box soft" x="500" y="118" width="160" height="40" rx="10"/>
+    <text class="d-label sm" x="580" y="142" text-anchor="middle">브라우저</text>
+    <rect class="d-box soft" x="500" y="170" width="160" height="40" rx="10"/>
+    <text class="d-label sm" x="580" y="194" text-anchor="middle">이메일 · 캘린더</text>
+
+    <path class="d-edge accent" d="M158 112 C212 112 218 34 268 34"/><polygon class="d-arrow accent" points="264,29 272,34 264,39"/>
+    <path class="d-edge accent" d="M158 112 C212 112 218 86 268 86"/><polygon class="d-arrow accent" points="264,81 272,86 264,91"/>
+    <path class="d-edge accent" d="M158 112 C212 112 218 138 268 138"/><polygon class="d-arrow accent" points="264,133 272,138 264,143"/>
+    <path class="d-edge accent" d="M158 112 C212 112 218 190 268 190"/><polygon class="d-arrow accent" points="264,185 272,190 264,195"/>
+
+    <line class="d-edge" x1="412" y1="34" x2="496" y2="34"/><polygon class="d-arrow" points="492,29 500,34 492,39"/>
+    <line class="d-edge" x1="412" y1="86" x2="496" y2="86"/><polygon class="d-arrow" points="492,81 500,86 492,91"/>
+    <line class="d-edge" x1="412" y1="138" x2="496" y2="138"/><polygon class="d-arrow" points="492,133 500,138 492,143"/>
+    <line class="d-edge" x1="412" y1="190" x2="496" y2="190"/><polygon class="d-arrow" points="492,185 500,190 492,195"/>
+</svg>
+</div>
+            <p>
+
+                MCP(Model Context Protocol)는 AI 어시스턴트를 외부 도구·데이터 소스와 연결하기 위한 개방 표준입니다. Claude Code에 MCP 서버를 붙이면 로컬 파일 너머까지 손이 닿게 됩니다 &mdash; 데이터베이스, 이슈 트래커, 클라우드 서비스, 브라우저 등.
+                MCP 서버가 연결되면 그 서버의 도구들이 내장 도구와 똑같이 Claude Code에서 쓸 수 있게 됩니다. 예를 들어 적절한 서버가 구성되어 있으면 Claude는:
+                <ul>
+                    <li>GitHub 이슈·PR을 읽고 만들 수 있습니다.</li>
+                    <li>데이터베이스나 사내 API에 질의할 수 있습니다.</li>
+                    <li>이메일·캘린더·문서를 검색할 수 있습니다.</li>
+                    <li>헤드리스 브라우저를 조작해 웹 페이지를 테스트할 수 있습니다.</li>
+                </ul>
+                서버 관리는 <code>claude mcp</code> 명령(add, list, remove)이나 설정 파일로 합니다. 각 서버는 자신이 노출하는 도구를 선언하고, Claude Code는 그중 <strong>규칙에 걸리는 행동만</strong> 멈춰 세웁니다 &mdash; 2026년 8월 14일부터 <strong>auto 모드가 기본값</strong>이 되면서, 매번 허락을 묻는 방식 대신 미리 적어 둔 거부 규칙과 안전 검사가 판정을 맡습니다(<a href="#!news-20260814-auto-mode-stateless-mcp">묻지 않는 기본값</a>). 외부 시스템에 닿는 범위는 그 규칙과 설정으로 통제합니다.
+
+            </p>
+
+            <h3>Hooks &mdash; 매번 실행되는 자동화</h3>
+<div class="diagram">
+<svg viewBox="0 0 660 188" role="img" aria-label="훅 수명주기: SessionStart, UserPromptSubmit, PreToolUse, 도구 실행, PostToolUse, Stop">
+    <rect class="d-box" x="8" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="42" text-anchor="middle">SessionStart</text>
+    <text class="d-sub" x="108" y="59" text-anchor="middle">세션 시작</text>
+
+    <rect class="d-box" x="223" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="42" text-anchor="middle">UserPromptSubmit</text>
+    <text class="d-sub" x="323" y="59" text-anchor="middle">프롬프트 제출</text>
+
+    <rect class="d-box" x="438" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="42" text-anchor="middle">PreToolUse</text>
+    <text class="d-sub" x="538" y="59" text-anchor="middle">도구 실행 직전</text>
+
+    <rect class="d-box soft" x="8" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="134" text-anchor="middle">도구 실행</text>
+    <text class="d-sub" x="108" y="151" text-anchor="middle">도구가 실제로 동작</text>
+
+    <rect class="d-box" x="223" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="134" text-anchor="middle">PostToolUse</text>
+    <text class="d-sub" x="323" y="151" text-anchor="middle">도구 실행 직후</text>
+
+    <rect class="d-box accent" x="438" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="134" text-anchor="middle">Stop</text>
+    <text class="d-sub" x="538" y="151" text-anchor="middle">응답 종료</text>
+
+    <line class="d-edge" x1="208" y1="46" x2="221" y2="46"/><polygon class="d-arrow" points="215,41 223,46 215,51"/>
+    <line class="d-edge" x1="423" y1="46" x2="436" y2="46"/><polygon class="d-arrow" points="430,41 438,46 430,51"/>
+    <path class="d-edge" d="M538 72 C538 87, 523 92, 505 92 H141 C123 92, 108 97, 108 110"/><polygon class="d-arrow" points="103,106 113,106 108,112"/><polygon class="d-arrow" points="328,87 328,97 318,92"/>
+    <line class="d-edge" x1="208" y1="138" x2="221" y2="138"/><polygon class="d-arrow" points="215,133 223,138 215,143"/>
+    <line class="d-edge" x1="423" y1="138" x2="436" y2="138"/><polygon class="d-arrow" points="430,133 438,138 430,143"/>
+</svg>
+</div>
+            <p>
+
+                훅(Hook)은 Claude Code가 수명주기의 특정 시점마다 자동으로 실행하는, 사용자가 정의한 셸 명령입니다. 규칙을 강제하고 동작을 결정론적으로 자동화할 수 있습니다 &mdash; 하네스가 직접 실행하므로 Claude가 기억할 때만이 아니라 <em>매번</em> 실행됩니다.
+                훅은 <code>settings.json</code>에 설정하며, 다음과 같은 이벤트에 붙습니다:
+                <ul>
+                    <li><strong>PreToolUse</strong> &mdash; 도구 실행 직전 (예: 보호된 파일의 수정 차단)</li>
+                    <li><strong>PostToolUse</strong> &mdash; 도구 실행 직후 (예: 방금 고친 파일을 자동 포맷·린트)</li>
+                    <li><strong>SessionStart</strong> &mdash; 세션이 시작될 때 (예: 테스트가 돌 수 있게 의존성 설치)</li>
+                    <li><strong>Stop</strong> &mdash; Claude가 응답을 마쳤을 때 (예: 알림 발송)</li>
+                </ul>
+                대표적인 쓰임새는 수정할 때마다 포매터 실행, 커밋 전 테스트 스위트 실행, 민감한 경로 보호, 긴 작업이 끝나면 데스크톱 알림 보내기 등입니다. 훅은 결국 그냥 셸 명령이므로, 프로젝트가 이미 쓰는 어떤 도구와도 Claude Code를 이어 붙일 수 있습니다.
+                스킬이 <em>아는 법</em>을, MCP가 <em>닿는 곳</em>을 늘린다면, 훅은 <em>지켜지는 규칙</em>을 만듭니다. 셋을 어떻게 조합하는지는 <a href="#!ccb-overview">Claude Code 튜토리얼</a>에서 손으로 익힐 수 있습니다.
 
             </p>

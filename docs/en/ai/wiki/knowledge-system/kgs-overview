@@ -1,11 +1,11 @@
 <h2>How Knowledge Accumulates — The Four-Level Hierarchy and the Registration Pipeline</h2>
-<p>This part explains <strong>the wiki itself</strong>. The goal of the wiki is not a mere collection of articles, but a <strong>knowledge graph whose connections grow as the documents grow</strong>. For that to happen, knowledge must not pile up <em>just anywhere</em>: it has to accumulate through a <strong>fixed structure</strong> (where) and a <strong>fixed procedure</strong> (how). This document follows that structure and procedure all the way through, using one real document (<a href="#!welcome">Welcome</a>) as the example.</p>
+<p>This part explains <strong>the wiki itself</strong>. The goal of the wiki is not a mere collection of articles, but a <strong>knowledge graph whose connections grow as the documents grow</strong>. For that to happen, knowledge must not pile up <em>just anywhere</em>: it has to accumulate through a <strong>fixed structure</strong> (where) and a <strong>fixed procedure</strong> (how). This document follows that structure and procedure all the way through, using one real document (<a href="#!welcome">Getting Started</a>) as the example.</p>
 
 <h3>Structure — World → Domain → System → Document</h3>
-<p>Every document has its place inside a four-level <strong>knowledge hierarchy</strong>. At the top, <strong>World</strong> is a knowledge world (learning knowledge <code>AI</code> · work knowledge <code>Douzone</code>), <strong>Domain</strong> is an area within it, <strong>System</strong> is a concrete body of topics, and <strong>Document</strong> is the individual page. For instance, the address of the <a href="#!welcome">Welcome</a> document reads like this:</p>
+<p>Every document has its place inside a four-level <strong>knowledge hierarchy</strong>. At the top, <strong>World</strong> is a knowledge world (learning knowledge <code>AI</code> · work knowledge <code>Douzone</code>), <strong>Domain</strong> is an area within it, <strong>System</strong> is a concrete body of topics, and <strong>Document</strong> is the individual page. For instance, the address of the <a href="#!welcome">Getting Started</a> document reads like this:</p>
 
 <div class="diagram">
-<svg viewBox="0 0 720 128" role="img" aria-label="The four-level address of the Welcome document: World AI, Domain Claude·Code, System Introduction, Document welcome">
+<svg viewBox="0 0 720 128" role="img" aria-label="The four-level address of the Getting Started document: World AI, Domain Claude·Code, System Introduction, Document welcome">
     <rect class="d-box accent" x="14" y="34" width="120" height="46" rx="9"/>
     <text class="d-label" x="74" y="55" text-anchor="middle">AI</text>
     <text class="d-sub" x="74" y="72" text-anchor="middle">World</text>
@@ -25,7 +25,7 @@
     <text class="d-label" x="633" y="55" text-anchor="middle">welcome</text>
     <text class="d-sub" x="633" y="72" text-anchor="middle">Document</text>
 </svg>
-<div class="d-cap">Welcome's four-level address — as a section string, <code>AI · Claude · Code · Introduction</code>.</div>
+<div class="d-cap">The four-level address of Getting Started (<code>welcome</code>) — as a section string, <code>AI · Claude · Code · Introduction</code>.</div>
 </div>
 
 <p>This hierarchy is not a separate database: it is derived from <strong>the nesting of the navigation tree (the <code>list</code> file) itself</strong>. The folder structure you see in the sidebar <em>is</em> the knowledge hierarchy, so the mismatch of "menu over here, taxonomy over there" cannot arise in the first place. Documents in the same System (a leaf folder) are treated as a <strong>series with a reading order</strong>, and this folder membership also serves as the safety net (folder top-up) for the related-document calculation we will see later.</p>
@@ -43,11 +43,11 @@
 
 <div class="tbl-wrap">
 <table>
-<thead><tr><th>Marker</th><th>Recorded in</th><th>Used for</th><th>Welcome's actual values</th></tr></thead>
+<thead><tr><th>Marker</th><th>Recorded in</th><th>Used for</th><th>Actual values of Getting Started (<code>welcome</code>)</th></tr></thead>
 <tbody>
-<tr><td><strong>Label</strong> (label)</td><td><code>list</code> node</td><td>The <strong>display name</strong> in the sidebar and lists (per language, <code>label_en</code>)</td><td>&ldquo;Welcome&rdquo;</td></tr>
-<tr><td><strong>Tags</strong> (tags)</td><td><code>list</code> node</td><td><strong>Doors you browse in through</strong> — chips at the bottom of a document, the <a href="#!tags">Tags index</a>, search assistance</td><td><code>claude-code · Introduction · CLI · Terminal · AI</code></td></tr>
-<tr><td><strong>Concepts</strong> (concepts)</td><td><code>doc-entries</code> (curated)</td><td><strong>Material for connecting</strong> — the raw input for knowledge-graph edge calculation, the highest weight in search</td><td><code>Claude Code · Terminal · CLI · coding agent · natural language · Anthropic</code></td></tr>
+<tr><td><strong>Label</strong> (label)</td><td><code>list</code> node</td><td>The <strong>display name</strong> in the sidebar and lists (per language, <code>label_en</code>)</td><td>&ldquo;Getting Started&rdquo;</td></tr>
+<tr><td><strong>Tags</strong> (tags)</td><td><code>list</code> node</td><td><strong>Doors you browse in through</strong> — chips at the bottom of a document, the <a href="#!tags">Tags index</a>, search assistance</td><td><code>claude-code · Introduction · Install · Slash commands · CLAUDE.md</code></td></tr>
+<tr><td><strong>Concepts</strong> (concepts)</td><td><code>doc-entries</code> (curated)</td><td><strong>Material for connecting</strong> — the raw input for knowledge-graph edge calculation, the highest weight in search</td><td><code>Claude Code · Terminal · CLI · natural language · Install · Auth · Slash commands — 10 in total</code></td></tr>
 </tbody>
 </table>
 </div>

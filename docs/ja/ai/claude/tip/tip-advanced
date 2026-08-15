@@ -43,7 +43,7 @@ claude -w motion-logic
 
 <h3>22. MCP サーバーの代わりに API を直接呼ぶ</h3>
 <p>MCP（Model Context Protocol）は外部ツールをつなぐ標準ですが、サーバーをつなぐと<strong>そのツール定義の一式がコンテキストに載る</strong>費用があります。要る機能が一つ二つなら、その API エンドポイントを直接呼ばせるほうがトークンもコンテキストも安い。ツールをほぼ全部使うなら MCP、一つ二つなら直接呼ぶ — この区別だけ覚えておいてください。ちなみに、いまはツール検索（Tool Search）が標準で入って、必要なツール定義だけをその都度読み込むのでこの費用は大きく減りました。でも「使う分だけ載せる」という原則そのものは変わらず有効です。</p>
-<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — この wiki の <a href="#!mcp">MCP 紹介</a>もどうぞ。MCP 仕様そのものの大改訂は<a href="#!news-20260814-auto-mode-stateless-mcp">尋ねない既定値</a>で扱いました。</p>
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — この wiki の <a href="#!skills">拡張編（MCP の節）</a>もどうぞ。MCP 仕様そのものの大改訂は<a href="#!news-20260814-auto-mode-stateless-mcp">尋ねない既定値</a>で扱いました。</p>
 
 <h3>23. <code>/loop</code> で予約作業を仕掛け、セッションの外はルーティンに任せる</h3>
 <p><code>/loop 5分ごとにデプロイの状態を確認して</code>のように繰り返し作業を仕掛けておくと、セッションが生きている間、Claude が定期的に自分で確認してくれます。デプロイの監視、定期点検、「8時にうちの Slack を確認して」のような時刻指定もOK。人が見張らなくていい監視系の仕事を丸ごと渡せるので、使い道は広いですよ。</p>

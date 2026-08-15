@@ -65,67 +65,37 @@
  },
  {
   "name": "welcome",
-  "title": "Welcome",
-  "summary": "Claude Code との出会い — ターミナルで読み、直し、走らせ、コミットする",
-  "relations": [
-   {
-    "target": "install",
-    "evidenceRef": "Claude Code とは何かを紹介 — install のインストール・実行・認証に先行する"
-   }
-  ]
- },
- {
-  "name": "install",
-  "title": "インストールと開始",
-  "summary": "ネイティブインストーラーで入れ、プロジェクトで実行して認証する",
-  "relations": [
-   {
-    "target": "commands",
-    "evidenceRef": "「インストールと開始」のあとの読む順序 — この文書を土台に「日々の使い方」へ続く"
-   },
-   {
-    "target": "hnp-install",
-    "evidenceRef": "プラグインのインストールは基本のインストールを前提にする — 「Claude Code が入っていること（インストールと開始を参照）」"
-   }
-  ]
- },
- {
-  "name": "commands",
-  "title": "日々の使い方",
-  "summary": "自然言語のプロンプトとスラッシュコマンドでセッションを動かす",
+  "title": "はじめに",
+  "summary": "Claude Code の紹介からインストール・認証、スラッシュコマンドと CLAUDE.md まで — ターミナルで読み、直し、走らせ、コミットする",
   "relations": [
    {
     "target": "skills",
-    "evidenceRef": "「日々の使い方」のあとの読む順序 — この文書を土台に「Skills」へ続く"
+    "evidenceRef": "インストール・認証・日々の使い方の基本を土台に、拡張の三本道（スキル・MCP・フック）へ続く — 本文の結びが拡張編を指す"
+   },
+   {
+    "target": "hnp-install",
+    "evidenceRef": "プラグインのインストールは基本のインストールを前提にする — 「Claude Code が入っていること」"
+   },
+   {
+    "target": "tip-beginner",
+    "evidenceRef": "スラッシュコマンド・CLAUDE.md・プランモードの基本を前提に、Tip 初級編がその上の習慣（/init・/context・/compact など）を積む"
    }
   ]
  },
  {
   "name": "skills",
-  "title": "Skills",
-  "summary": "特定の作業のための、再利用できるパッケージ化された能力とワークフロー",
+  "title": "拡張機能 — Skills · MCP · Hooks",
+  "summary": "スキルはできることを、MCP サーバーは届く先を、フックは守られるルールを増やす — Claude Code 拡張の三本道",
   "relations": [
    {
-    "target": "mcp",
-    "evidenceRef": "「Skills」のあとの読む順序 — この文書を土台に「MCP Servers」へ続く"
-   }
-  ]
- },
- {
-  "name": "mcp",
-  "title": "MCP Servers",
-  "summary": "MCP 標準を通じて外部のツールやデータソースにつなぐ",
-  "relations": [
+    "target": "ccb-overview",
+    "evidenceRef": "拡張三種の概念を前提に、チュートリアルが実戦での組み合わせを身につけさせる — 本文の結びが指す"
+   },
    {
-    "target": "hooks",
-    "evidenceRef": "「MCP Servers」のあとの読む順序 — この文書を土台に「Hooks」へ続く"
+    "target": "news-20260814-auto-mode-stateless-mcp",
+    "evidenceRef": "MCP サーバーの概念・許可モデルを前提に読む続編 — 2026-07-28 仕様のステートレス化と auto モード既定値を扱う"
    }
   ]
- },
- {
-  "name": "hooks",
-  "title": "Hooks",
-  "summary": "ライフサイクルのイベントで自動的に走るシェルコマンド"
  },
  {
   "name": "ccb-overview",

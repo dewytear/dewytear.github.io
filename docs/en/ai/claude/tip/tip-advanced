@@ -43,7 +43,7 @@ claude -w motion-logic
 
 <h3>22. Call the API directly instead of an MCP server</h3>
 <p>MCP (Model Context Protocol) is the standard for attaching external tools, but connecting a server has a cost: <strong>its entire tool catalog lands in your context</strong>. If you only need one or two functions, having Claude call the API endpoint directly is cheaper on both tokens and context. Using most of the tools? Take MCP. Using one or two? Call directly — that's the whole tip. Worth noting: built-in tool search now loads tool definitions on demand, which shrank this cost a lot, but the principle — carry only what you use — still holds.</p>
-<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — see also this wiki's <a href="#!mcp">MCP intro</a>. The big MCP spec revision is covered in <a href="#!news-20260814-auto-mode-stateless-mcp">Defaults That Stop Asking</a>.</p>
+<p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — see also this wiki's the <a href="#!skills">extending chapter (MCP section)</a>. The big MCP spec revision is covered in <a href="#!news-20260814-auto-mode-stateless-mcp">Defaults That Stop Asking</a>.</p>
 
 <h3>23. Schedule recurring work with <code>/loop</code> — and hand the rest to Routines</h3>
 <p>Set up a recurring job like <code>/loop check the deploy status every 5 minutes</code> and Claude keeps checking on its own for as long as the session lives. Deploy monitoring, periodic checks, even time-pinned jobs like "check our Slack at 8." Watch-and-wait work you'd otherwise babysit — hand it over whole.</p>

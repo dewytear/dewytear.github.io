@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-08-14T07:49:04+09:00",
- "dateModified": "2026-08-14T07:49:04+09:00"
+ "dateModified": "2026-08-15T13:54:18+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -128,7 +128,7 @@
 <p>攻撃側の評価も一緒に出ています。独立評価機関の Trajectory Labs が <strong>72通りの間接プロンプトインジェクションのシナリオを各10回、モデルあたり720回</strong> 試み、auto モードで動かした Fable 5・Opus 5・Sonnet 5 では <strong>成功した攻撃が一つもなかった</strong>と報告しました。社内運用で実際に止まった例としては、ネットワーク外へのデータ流出、破壊的な大量操作、権限昇格の三件が公開され、いずれも Claude が自分で安全な経路を見つけるか、利用者に確認を取っています。</p>
 
 <h3>同じ週、MCPはセッションを捨てた</h3>
-<p><strong>MCP（Model Context Protocol）</strong>は、エージェントが外部のツールやデータにつながる方法を定めた標準です。この wiki の <a href="/p/ja/mcp/">MCP 講義</a>が扱っているその規約で、2026-07-28 のリリース候補は公開以来もっとも大きな改訂です。核心は一文で足ります &mdash; <strong>プロトコルの層から状態をなくした</strong>。</p>
+<p><strong>MCP（Model Context Protocol）</strong>は、エージェントが外部のツールやデータにつながる方法を定めた標準です。この wiki の <a href="/p/ja/skills/">MCP 講義</a>が扱っているその規約で、2026-07-28 のリリース候補は公開以来もっとも大きな改訂です。核心は一文で足ります &mdash; <strong>プロトコルの層から状態をなくした</strong>。</p>
 <ul>
     <li><strong>ハンドシェイクの削除</strong> &mdash; 接続を開くときに一度だけやり取りしていた <code>initialize</code>/<code>initialized</code> がなくなりました。プロトコルのバージョン・クライアント情報・クライアントの能力は、<strong>すべてのリクエストの <code>_meta</code></strong> に載ります。サーバーの能力を先に知りたいときは、新設の <code>server/discover</code> で必要なときに取得します。</li>
     <li><strong>セッション識別子の削除</strong> &mdash; <code>Mcp-Session-Id</code> ヘッダーと、それに付いていたプロトコル水準のセッションが一緒に消えました。二つが消えたことで、<strong>どのリクエストもどのサーバーインスタンスに届いてかまいません</strong>。台数を増やすために必要だった固定ルーティングや共有セッションストアが、規約の水準では要らなくなります。</li>
@@ -178,7 +178,7 @@
 <p>この変更で古くなった記述が二か所あり、あわせて直しました。</p>
 <ul>
     <li><a href="/p/ja/hns-tools/">ツールの拡張と締めくくり</a>の Q&amp;A で、オートモードを「権限を毎回たずねないのでより自律的に動く」とだけ説明していました。既定値になったことと、ハードデナイ・インジェクション検査を書き足しました。</li>
-    <li><a href="/p/ja/mcp/">MCP 講義</a>の最後の一文「Claude Code は使用の前に許可を求めます」は、8月14日から事実と合いません。ルールに触れる操作だけを止める、という形に直しました。</li>
+    <li><a href="/p/ja/skills/">MCP 講義</a>の最後の一文「Claude Code は使用の前に許可を求めます」は、8月14日から事実と合いません。ルールに触れる操作だけを止める、という形に直しました。</li>
 </ul>
 
 <h3>ファクトチェックのメモ</h3>
@@ -196,10 +196,10 @@
     · MCP 仕様: <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank" rel="noopener">MCP 公式ブログ &mdash; 2026-07-28 リリース候補</a> · <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog" target="_blank" rel="noopener">変更一覧</a> · <a href="https://www.infoq.com/news/2026/08/mcp-stateless-gateway/" target="_blank" rel="noopener">InfoQ &mdash; 開発者の反応</a> · <a href="https://equixly.com/blog/2026/08/05/stateless-mcp/" target="_blank" rel="noopener">Equixly &mdash; セキュリティの視点</a> · <a href="https://developers.googleblog.com/scaling-ai-agent-infrastructure-with-the-mcp-stateless-updates/" target="_blank" rel="noopener">Google Developers Blog &mdash; スケーリングの視点</a>
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">作成日</span> 2026-08-14 &middot; <span class="pr-k">更新日</span> 2026-08-14</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">作成日</span> 2026-08-14 &middot; <span class="pr-k">更新日</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
-<ul><li><a href="/p/ja/tip-advanced/">上級 — 並列・自律・予約の8つ</a></li><li><a href="/p/ja/hns-tools/">ツールの拡張とまとめ</a></li><li><a href="/p/ja/mcp/">MCP Servers</a></li><li><a href="/p/ja/welcome/">Welcome</a></li></ul>
+<ul><li><a href="/p/ja/tip-advanced/">上級 — 並列・自律・予約の8つ</a></li><li><a href="/p/ja/hns-tools/">ツールの拡張とまとめ</a></li><li><a href="/p/ja/skills/">拡張機能 — Skills · MCP · Hooks</a></li><li><a href="/p/ja/tip-beginner/">初級 — コンテキストを節約する習慣9つ</a></li></ul>
 </nav>
 </body>
 </html>

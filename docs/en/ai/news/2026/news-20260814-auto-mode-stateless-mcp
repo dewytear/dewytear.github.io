@@ -68,7 +68,7 @@
 <p>There is an attack-side evaluation too. Trajectory Labs, an independent evaluator, ran <strong>72 indirect prompt-injection scenarios ten times each, 720 attempts per model</strong>, and reported that <strong>no attack succeeded</strong> against Fable 5, Opus 5, or Sonnet 5 running in auto mode. Anthropic also published three cases caught in its own internal use: an off-network data leak, a destructive mass operation, and a privilege escalation. In each one Claude either found a safer path by itself or checked in with the user.</p>
 
 <h3>The same week, MCP dropped the session</h3>
-<p><strong>MCP (Model Context Protocol)</strong> is the standard that defines how an agent attaches to outside tools and data. It is the protocol covered in this wiki's <a href="#!mcp">MCP lecture</a>, and the 2026-07-28 release candidate is its largest revision since launch. One sentence covers the core of it: <strong>state is gone from the protocol layer</strong>.</p>
+<p><strong>MCP (Model Context Protocol)</strong> is the standard that defines how an agent attaches to outside tools and data. It is the protocol covered in this wiki's <a href="#!skills">MCP lecture</a>, and the 2026-07-28 release candidate is its largest revision since launch. One sentence covers the core of it: <strong>state is gone from the protocol layer</strong>.</p>
 <ul>
     <li><strong>The handshake is gone</strong> &mdash; <code>initialize</code>/<code>initialized</code>, exchanged once when a connection opened, no longer exists. Protocol version, client info, and client capabilities now travel in <strong><code>_meta</code> on every request</strong>. If a client needs server capabilities up front, the new <code>server/discover</code> method fetches them on demand.</li>
     <li><strong>The session identifier is gone</strong> &mdash; the <code>Mcp-Session-Id</code> header and the protocol-level session that came with it were removed together. With both gone, <strong>any request can arrive at any server instance</strong>. The sticky routing and shared session stores that horizontal deployments needed are no longer required at the protocol layer.</li>
@@ -118,7 +118,7 @@
 <p>Two passages went stale with this change, and both were updated in the same pass.</p>
 <ul>
     <li>The Q&amp;A in <a href="#!hns-tools">Extending tools, and wrapping up</a> described auto mode only as &ldquo;it does not ask for permission every time, so it operates more autonomously.&rdquo; The fact that it is now the default, along with hard denies and injection screening, has been added.</li>
-    <li>The closing sentence of the <a href="#!mcp">MCP lecture</a>, &ldquo;Claude Code asks for permission before using them,&rdquo; is wrong as of 14 August. It now says Claude stops only on the actions the rules catch.</li>
+    <li>The closing sentence of the <a href="#!skills">MCP lecture</a>, &ldquo;Claude Code asks for permission before using them,&rdquo; is wrong as of 14 August. It now says Claude stops only on the actions the rules catch.</li>
 </ul>
 
 <h3>Fact-check notes</h3>

@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 
-이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 128개 문서 · 396개 개념.
+이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 124개 문서 · 389개 개념.
 
 License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 밝히면 자유롭게 인용·재사용할 수 있다.
 
@@ -12,8 +12,8 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - 정적 스냅샷 `https://dewytear.github.io/p/<name>/`(English는 `https://dewytear.github.io/p/en/<name>/`, 日本語는 `https://dewytear.github.io/p/ja/<name>/`): JS 없이 읽히는 문서 페이지 — 그래프 노드의 `page` 필드가 같은 주소를 가리킨다.
 - [AI 순회 가이드](https://dewytear.github.io/docs/ko/ai/map/ai-guide): 그래프를 어떻게 질의·순회·분석하는지의 계약(노드·엣지·개념 조인·계층).
 - [지식 인덱스](https://dewytear.github.io/data/knowledge-index.ko.json) · [내비 트리](https://dewytear.github.io/list) · [문서 날짜](https://dewytear.github.io/data/doc-dates.json) · [Atom 피드](https://dewytear.github.io/feed.xml)
-- English: 128/128개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
-- 日本語: 128/128개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
+- English: 124/124개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
+- 日本語: 124/124개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
 
 ## 지식 체계 (AI · Wiki · 지식 체계)
 - [지식은 어떻게 쌓이는가](https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-overview): World→Domain→System→Document 4계층과 문서 등재 파이프라인 — 불변 ID·물리 경로·결정론적 인덱스 빌드 · [EN](https://dewytear.github.io/docs/en/ai/wiki/knowledge-system/kgs-overview) · [JA](https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-overview)
@@ -30,12 +30,8 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [CLAUDE.md의 10계명 — AI 페어 프로그래머 길들이는 열 가지 약속](https://dewytear.github.io/docs/ko/ai/claude/code/claude-md/claude-md-commandments): LLM 코딩 단골 실수 10가지를 겨냥한 범용 CLAUDE.md 지침을 인포그래픽·영어 원문·한국어 번역·활용법으로 정리 — 신중한 시작(생각 먼저·3대 아티팩트), 코드 작성 원칙(단순함·수술적 변경·한국어 헤더·콜론 금지·완료 전 테스트), 검증과 마무리(목표 중심·의미 단위 커밋·에러 정독)의 3단계, 프로젝트 루트 설치와 효과 확인 신호까지 · [EN](https://dewytear.github.io/docs/en/ai/claude/code/claude-md/claude-md-commandments) · [JA](https://dewytear.github.io/docs/ja/ai/claude/code/claude-md/claude-md-commandments)
 
 ## Introduction (AI · Claude · Code · Introduction)
-- [Welcome](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/welcome): 터미널에서 코드를 읽고 편집·실행·커밋하는 Claude Code 소개 · [EN](https://dewytear.github.io/docs/en/ai/claude/code/introduction/welcome) · [JA](https://dewytear.github.io/docs/ja/ai/claude/code/introduction/welcome)
-- [설치와 시작](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/install): 네이티브 인스톨러로 설치하고 프로젝트에서 실행·인증하는 방법 · [EN](https://dewytear.github.io/docs/en/ai/claude/code/introduction/install) · [JA](https://dewytear.github.io/docs/ja/ai/claude/code/introduction/install)
-- [일상 사용](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/commands): 자연어 프롬프트와 슬래시명령어로 세션을 다루는 일상 사용법 · [EN](https://dewytear.github.io/docs/en/ai/claude/code/introduction/commands) · [JA](https://dewytear.github.io/docs/ja/ai/claude/code/introduction/commands)
-- [Skills](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/skills): 특정 작업의 지식과 워크플로를 패키징한 재사용 스킬 · [EN](https://dewytear.github.io/docs/en/ai/claude/code/introduction/skills) · [JA](https://dewytear.github.io/docs/ja/ai/claude/code/introduction/skills)
-- [MCP Servers](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/mcp): 외부 도구·데이터를 연결하는 MCP 서버 개념과 관리 · [EN](https://dewytear.github.io/docs/en/ai/claude/code/introduction/mcp) · [JA](https://dewytear.github.io/docs/ja/ai/claude/code/introduction/mcp)
-- [Hooks](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/hooks): 수명주기 이벤트마다 셸 명령을 자동 실행하는 훅 · [EN](https://dewytear.github.io/docs/en/ai/claude/code/introduction/hooks) · [JA](https://dewytear.github.io/docs/ja/ai/claude/code/introduction/hooks)
+- [시작하기](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/welcome): Claude Code 소개부터 설치·인증, 슬래시명령어와 CLAUDE.md까지 — 터미널에서 읽고 고치고 실행하고 커밋한다 · [EN](https://dewytear.github.io/docs/en/ai/claude/code/introduction/welcome) · [JA](https://dewytear.github.io/docs/ja/ai/claude/code/introduction/welcome)
+- [확장 기능 — Skills · MCP · Hooks](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/skills): 스킬은 아는 법을, MCP 서버는 닿는 곳을, 훅은 지켜지는 규칙을 늘린다 — Claude Code 확장의 세 갈래 · [EN](https://dewytear.github.io/docs/en/ai/claude/code/introduction/skills) · [JA](https://dewytear.github.io/docs/ja/ai/claude/code/introduction/skills)
 
 ## Tutorial(입문) (AI · Claude · Code · Tutorial)
 - [강의 개요와 목표](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-overview): 강의 목표와 하네스로 책을 만드는 전체 그림 소개 · [EN](https://dewytear.github.io/docs/en/ai/claude/code/tutorial/ccb-overview) · [JA](https://dewytear.github.io/docs/ja/ai/claude/code/tutorial/ccb-overview)
@@ -182,23 +178,25 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [AI 2040: 플랜 A — 반응과 비평](https://dewytear.github.io/docs/ko/ai/news/2026/ai-2040-plan-a/news-20260709-ai-2040-reactions): 공개 후 지지·비판 게시판. 리처드 응고의 세 지적(낙관적 예측의 애매함·2040 권력 이양·낙관의 정치성, 저자 요청으로 함께 게재), 데이브 프리드먼(기술적 가독성≠정치적 실현성), 로힛 크리슈난(용어 미명세), Scott Alexander·WaPo·Axios 보도 · [EN](https://dewytear.github.io/docs/en/ai/news/2026/ai-2040-plan-a/news-20260709-ai-2040-reactions) · [JA](https://dewytear.github.io/docs/ja/ai/news/2026/ai-2040-plan-a/news-20260709-ai-2040-reactions)
 
 ## 허브 문서 (가장 많이 참조됨 — 분석 진입점)
-- [하네스의 구성과 효과](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-anatomy): 피참조 11회
-- [설치](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-install): 피참조 10회
+- [하네스의 구성과 효과](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-anatomy): 피참조 10회
+- [확장 기능 — Skills · MCP · Hooks](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/skills): 피참조 10회
 - [볼트 체계 — 메인 볼트와 위키 볼트](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-vaults): 피참조 8회
-- [Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260724-claude-opus-5): 피참조 8회
+- [묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260814-auto-mode-stateless-mcp): 피참조 8회
 - [스킬 심화 — 개요](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-overview): 피참조 8회
-- [강의 개요와 목표](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-overview): 피참조 7회
 - [그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다](https://dewytear.github.io/docs/ko/ai/graphdb/gdb-graphrag): 피참조 7회
 - [핵심 개념 쉽게](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-concepts): 피참조 7회
 - [첫 하네스 실행 — 영업·수주 커스터마이징](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-first-run): 피참조 7회
 - [Harness 플러그인 — 소개](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-intro): 피참조 7회
-- [메타 하네스 스킬 설치 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-install): 피참조 7회
 - [하네스 실행하기 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-run): 피참조 7회
 - [무엇을 담는가 — 지식 캡처](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-capture): 피참조 7회
 - [LLM Wiki — 개요](https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-overview): 피참조 7회
-- [묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260814-auto-mode-stateless-mcp): 피참조 7회
+- [Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260724-claude-opus-5): 피참조 7회
 - [스킬의 특장점](https://dewytear.github.io/docs/ko/ai/claude/code/skill/skl-strengths): 피참조 7회
 - [고급 — 병렬·자율·예약의 8가지](https://dewytear.github.io/docs/ko/ai/claude/tip/tip-advanced): 피참조 7회
+- [강의 개요와 목표](https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-overview): 피참조 6회
+- [메타 하네스 스킬 설치 (실습)](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-install): 피참조 6회
 - [LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260710-llm-wiki-knowledge-context): 피참조 6회
 - [핵심 용어](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-concepts): 피참조 6회
+- [설치](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-install): 피참조 6회
 - [5단계 한눈에 보기](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-levels): 피참조 6회
+- [시작하기](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/welcome): 피참조 6회
