@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>온보딩 (실습)</title>
-<meta name="description" content="릴리즈를 받아 /onboard로 위키 볼트를 세팅하고 옵시디언에서 여는 실습이다.">
+<title>실습과 철학 — 온보딩부터 운영까지</title>
+<meta name="description" content="볼트 온보딩 실습, Ingest·Query·Lint 세 동작, 웹 클리퍼와 인박스, 그리고 읽는 능력과 두 볼트 운영이라는 철학">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/llmw-onboard/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/llmw-onboard/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/llmw-onboard/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="온보딩 (실습)">
-<meta property="og:description" content="릴리즈를 받아 /onboard로 위키 볼트를 세팅하고 옵시디언에서 여는 실습이다.">
+<meta property="og:title" content="실습과 철학 — 온보딩부터 운영까지">
+<meta property="og:description" content="볼트 온보딩 실습, Ingest·Query·Lint 세 동작, 웹 클리퍼와 인박스, 그리고 읽는 능력과 두 볼트 운영이라는 철학">
 <meta property="og:url" content="https://dewytear.github.io/p/llmw-onboard/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="온보딩 (실습)">
-<meta name="twitter:description" content="릴리즈를 받아 /onboard로 위키 볼트를 세팅하고 옵시디언에서 여는 실습이다.">
+<meta name="twitter:title" content="실습과 철학 — 온보딩부터 운영까지">
+<meta name="twitter:description" content="볼트 온보딩 실습, Ingest·Query·Lint 세 동작, 웹 클리퍼와 인박스, 그리고 읽는 능력과 두 볼트 운영이라는 철학">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "온보딩 (실습)",
- "description": "릴리즈를 받아 /onboard로 위키 볼트를 세팅하고 옵시디언에서 여는 실습이다.",
+ "headline": "실습과 철학 — 온보딩부터 운영까지",
+ "description": "볼트 온보딩 실습, Ingest·Query·Lint 세 동작, 웹 클리퍼와 인박스, 그리고 읽는 능력과 두 볼트 운영이라는 철학",
  "inLanguage": "ko",
  "url": "https://dewytear.github.io/p/llmw-onboard/",
  "mainEntityOfPage": "https://dewytear.github.io/#!llmw-onboard",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T22:38:08+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T14:47:12+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/ja/llmw-onboard/" hreflang="ja">日本語</a>
 </p>
 <article>
-<h2>온보딩 (실습)</h2>
+<h2>실습과 철학 — 온보딩부터 운영까지</h2>
 <p>스타터 킷에는 <strong>온보딩 스킬</strong>이 들어 있어, <code>/onboard</code>(또는 "온보딩 해줘") 한마디로 개인 맞춤 세팅이 시작됩니다.</p>
 
 <div class="diagram">
@@ -119,11 +119,161 @@
     <span class="nh">깔끔하게 시작하려면</span>
     예시 데이터 없이 시작하고 싶으면 <code>concept</code>·<code>entity</code>·<code>article</code> 폴더의 예시 파일만 지우면 됩니다. 코덱스용 파일도 준비돼 있지만, <strong>Claude Code에서 쓰는 편이 더 유리</strong>합니다.
 </div>
+
+<h3>세 가지 핵심 동작 — Ingest · Query · Lint</h3>
+<p>LLM 위키의 중요한 세 가지 동작입니다. (Karpathy가 제시한 개념)</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 252" role="img" aria-label="왼쪽은 Ingest·Query·Lint 순환, 오른쪽은 BM25에서 벡터, 가설 검증으로 올라가는 쿼리 에스컬레이션">
+    <line class="d-edge dash" x1="350" y1="8" x2="350" y2="244"/>
+
+    <rect class="d-box" x="100" y="20" width="140" height="44" rx="10"/>
+    <text class="d-label sm" x="170" y="41" text-anchor="middle">Ingest</text>
+    <text class="d-sub" x="170" y="56" text-anchor="middle">소화·흡수</text>
+    <rect class="d-box" x="180" y="140" width="140" height="44" rx="10"/>
+    <text class="d-label sm" x="250" y="161" text-anchor="middle">Query</text>
+    <text class="d-sub" x="250" y="176" text-anchor="middle">꺼내 쓰기</text>
+    <rect class="d-box" x="20" y="140" width="140" height="44" rx="10"/>
+    <text class="d-label sm" x="90" y="161" text-anchor="middle">Lint</text>
+    <text class="d-sub" x="90" y="176" text-anchor="middle">최신성 유지</text>
+
+    <line class="d-edge" x1="200" y1="64" x2="250" y2="140"/>
+    <polygon class="d-arrow" points="250,140 241.8,134.7 248.4,130.3"/>
+    <line class="d-edge" x1="180" y1="162" x2="160" y2="162"/>
+    <polygon class="d-arrow" points="160,162 168,157 168,167"/>
+    <line class="d-edge" x1="90" y1="140" x2="140" y2="64"/>
+    <polygon class="d-arrow" points="140,64 138.4,73.7 131.8,69.3"/>
+    <text class="d-sub" x="175" y="232" text-anchor="middle">① Ingest·Query·Lint 순환</text>
+
+    <rect class="d-box" x="380" y="180" width="260" height="44" rx="10"/>
+    <text class="d-label sm" x="510" y="201" text-anchor="middle">BM25 (키워드)</text>
+    <text class="d-sub" x="510" y="216" text-anchor="middle">명확한 단어</text>
+    <rect class="d-box" x="400" y="110" width="240" height="44" rx="10"/>
+    <text class="d-label sm" x="520" y="131" text-anchor="middle">벡터 (의미)</text>
+    <text class="d-sub" x="520" y="146" text-anchor="middle">유사 개념까지</text>
+    <rect class="d-box accent" x="420" y="40" width="220" height="44" rx="10"/>
+    <text class="d-label sm" x="530" y="61" text-anchor="middle">가설 검증</text>
+    <text class="d-sub" x="530" y="76" text-anchor="middle">질문 재해석</text>
+
+    <path class="d-edge accent dash" d="M510 180 V158" fill="none"/>
+    <polygon class="d-arrow accent" points="510,154 505,162 515,162"/>
+    <path class="d-edge accent dash" d="M522 110 V88" fill="none"/>
+    <polygon class="d-arrow accent" points="522,84 517,92 527,92"/>
+    <text class="d-sub" x="530" y="240" text-anchor="middle">② 쿼리 에스컬레이션 (뒤로 갈수록 느림)</text>
+</svg>
+<div class="d-cap">세 동작이 <strong>순환</strong>하고, 쿼리는 <strong>BM25 → 벡터 → 가설 검증</strong>으로 단계적으로 강해집니다.</div>
+</div>
+
+<h4>1) Ingest — 소화·흡수</h4>
+<p>하나의 아티클/개념을 <strong>청크로 나눠</strong>, 인공지능도 사람도 읽기 좋은 <strong>카드</strong>로 만드는 작업입니다. 로우 자료를 넘기면 <strong>출처 기반</strong>의 위키 카드가 생성됩니다.</p>
+<pre><code>/ingest        <span class="c"># 로우 소스를 위키 카드로</span></code></pre>
+
+<h4>2) Query — 꺼내 쓰기</h4>
+<p>모아 놓기만 하면 소용없으니, 쿼리로 꺼내 씁니다. 일반 에이전트는 <strong>정규표현식(단어 빈도·매칭)</strong> 으로만 검색하지만, 여기서는 <strong>QMD(마크다운 쿼리) MCP</strong> 로 세 가지 검색을 단계적으로 씁니다.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>방식</th><th>언제</th></tr></thead>
+        <tbody>
+            <tr><td><strong>BM25</strong> (렉시콘)</td><td>사용자가 명확한 단어를 명시할 때 — 빈도 높은 단어로 검색.</td></tr>
+            <tr><td><strong>벡터 서치</strong></td><td>애매할 때 — 유사 개념까지 가져옴("물 마시고 싶어" → 물컵).</td></tr>
+            <tr><td><strong>가설 검증(hypothetical)</strong></td><td>사용자 수준이 지식 수준보다 낮을 때 — LLM이 질문을 재해석해 키워드를 만들어 재검색.</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>뒤로 갈수록 시간이 더 걸립니다. 파일을 정확히 아는 상황이면 그 주소를 직접 주는 것이 가장 빠릅니다. 결과는 <strong>query 폴더</strong>에 정리되며, 어떤 목적으로 만든 문서인지 다시 꺼내 쓸 수 있게 <strong>출처 기반</strong>으로 남습니다.</p>
+
+<h4>3) Lint — 유지보수</h4>
+<p>메인터넌스 작업입니다. 새 인제스트 때 기존 노트(예: A 개념)가 새 노트(A′)와 연관돼 <strong>낡았으면 함께 업데이트</strong>합니다. <code>/lint</code> 로 전반적인 유지보수를 돌려, 언제든 인용 가능한 <strong>최신성</strong>을 유지합니다. (감사 <code>audit</code>·검증 <code>verify</code> 스킬도 함께)</p>
+
+<div class="note">
+    <span class="nh">요약</span>
+    <strong>Ingest</strong>(로우 자료 → 카드) · <strong>Query</strong>(BM25·벡터·가설검증으로 꺼내 쓰기) · <strong>Lint</strong>(최신성 유지) — 이 세 축으로 살아 있는 지식 베이스를 굴립니다.
+</div>
+
+<h3>웹 클리퍼와 인박스, Query 실전</h3>
+
+<div class="diagram">
+<svg viewBox="0 0 660 188" role="img" aria-label="클리핑 파이프라인: 웹 기사 → 웹 클리퍼 → 인박스 폴더 → /inbox 분류 → 인제스트 → /query">
+    <rect class="d-box" x="8" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="42" text-anchor="middle">① 웹 기사</text>
+    <text class="d-sub" x="108" y="59" text-anchor="middle">읽은 아티클</text>
+    <rect class="d-box" x="223" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="42" text-anchor="middle">② 웹 클리퍼</text>
+    <text class="d-sub" x="323" y="59" text-anchor="middle">크롬 확장</text>
+    <rect class="d-box" x="438" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="42" text-anchor="middle">③ 인박스 폴더</text>
+    <text class="d-sub" x="538" y="59" text-anchor="middle">0.2 inbox/article</text>
+
+    <rect class="d-box" x="8" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="134" text-anchor="middle">④ /inbox 분류</text>
+    <text class="d-sub" x="108" y="151" text-anchor="middle">주제별 묶기</text>
+    <rect class="d-box" x="223" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="134" text-anchor="middle">⑤ 인제스트</text>
+    <text class="d-sub" x="323" y="151" text-anchor="middle">위키 카드 생성</text>
+    <rect class="d-box accent" x="438" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="134" text-anchor="middle">⑥ /query</text>
+    <text class="d-sub" x="538" y="151" text-anchor="middle">꺼내 쓰기</text>
+
+    <line class="d-edge" x1="208" y1="46" x2="221" y2="46"/><polygon class="d-arrow" points="215,41 223,46 215,51"/>
+    <line class="d-edge" x1="423" y1="46" x2="436" y2="46"/><polygon class="d-arrow" points="430,41 438,46 430,51"/>
+    <path class="d-edge" d="M538 72 C538 87, 523 92, 505 92 H141 C123 92, 108 97, 108 110" fill="none"/><polygon class="d-arrow" points="103,106 113,106 108,112"/><polygon class="d-arrow" points="328,87 328,97 318,92"/>
+    <line class="d-edge" x1="208" y1="138" x2="221" y2="138"/><polygon class="d-arrow" points="215,133 223,138 215,143"/>
+    <line class="d-edge accent" x1="423" y1="138" x2="436" y2="138"/><polygon class="d-arrow accent" points="430,133 438,138 430,143"/>
+</svg>
+<div class="d-cap">웹 기사를 클리퍼로 <strong>인박스</strong>에 모아 <code>/inbox</code>로 분류하고, 인제스트한 뒤 <code>/query</code>로 꺼내 씁니다.</div>
+</div>
+
+<h4>Obsidian 웹 클리퍼</h4>
+<p>크롬 확장 <strong>Obsidian Web Clipper</strong> 로 웹 아티클을 클리핑해 볼트의 <strong>인박스</strong>에 넣습니다. 강사는 캡처 규칙(JSON 템플릿)을 위키 볼트에 넣어 두었습니다.</p>
+<ul>
+    <li>설정 → 일반 옵션의 <strong>볼트 저장소</strong>에 볼트명들을 등록하면 어느 볼트로 보낼지 지정할 수 있습니다.</li>
+    <li>템플릿(JSON)을 임포트하고, <strong>Web Article</strong> 템플릿을 맨 위로 올립니다(먼저 발동). <code>x.com</code>·<code>youtube</code> 등 주소에 따라 트리거되는 템플릿도 있습니다.</li>
+    <li>캡처하면 미리 지정한 <code>0.2 inbox/article</code> 같은 폴더에 저장됩니다.</li>
+</ul>
+
+<h4>인박스 스킬 — 모아서 분석</h4>
+<pre><code>/inbox        <span class="c"># 인박스에 모아둔 자료를 분석·주제별로 묶어 제안</span></code></pre>
+<p>여러 개를 미리 모아 두고 <code>/inbox</code> 를 돌리면, "5개 중 3개는 같은 결이니 같이 인제스트할까?" 처럼 <strong>주제별로 나눠</strong> 제안합니다.</p>
+
+<h4>토큰 팁 — 원본 스크래핑</h4>
+<p>인제스트할 때 링크만 주면 AI가 원본을 <strong>긁어서</strong> 시작해야 해 토큰이 더 듭니다. <strong>웹 클리퍼로 미리 스크래핑</strong>해 원본을 확보한 뒤 시작하면 토큰을 아낍니다.</p>
+
+<h4>Query 실전</h4>
+<pre><code>/query LLM 위키 볼트의 학술적 가치를 정리해줘.
+나중에 레퍼런스 매니저로 서지정보를 인용할 거야.</code></pre>
+<p>위키 볼트에서 부족하면 <strong>메인 볼트까지 검색</strong>해 가져오게 되어 있고, 내가 어떻게 질문했는지도 함께 기록됩니다. 결과에는 답변뿐 아니라 <strong>Obsidian 메타데이터를 어떻게 설계하면 좋은지(author·created·source·category 등)</strong> 까지 추천해 줍니다.</p>
+
+<div class="note">
+    <span class="nh">논문은 통째로 넣지 말 것</span>
+    논문 원문을 전부 인제스트하기보다, <strong>초록(abstract)</strong> 정도로 기본 개념만 알게 하고 <strong>원문의 위치</strong>를 남기는 것이 좋습니다. 중요 키페이퍼만 풀로 읽히고, 내 코멘터리·실험 맥락을 함께 넣으면 더 유용합니다.
+</div>
+
+<h3>활용과 철학 — 읽는 능력과 두 볼트 운영</h3>
+
+<h4>위키는 재료 저장 공간</h4>
+<p>LLM 위키는 <strong>재료 저장 공간</strong>입니다. 여기서 <strong>만들어진 요리(산출물)</strong> — 커리큘럼·강의안 등 — 은 <strong>메인 볼트</strong>로 넘어옵니다. 산출물이 너무 커서 서빙이 힘들면 별도의 <strong>dev(개발) 폴더</strong>에서 관리합니다. (HTML·node_modules 등 무거운 파일은 볼트 밖에서 관리 — 렌더링 저하 방지)</p>
+
+<h4>가장 중요한 역량 — 읽는 능력</h4>
+<p>AI 시대에 가장 중요한 역량은 <strong>읽는 능력</strong>입니다. 에이전트에게 시켜 놓고 안 읽기 쉽지만, <strong>내가 읽어야 제대로 시킬 수 있습니다.</strong> 강사는 인공지능을 세팅하는 목적 자체를 <strong>"내가 읽을 시간을 확보"</strong> 하는 데 둡니다. 위키의 <code>concept</code>·<code>entity</code>·<code>guide</code>·<code>query</code> 카드는 모두 <strong>사람도 읽기 좋게</strong> 구성됩니다.</p>
+
+<h4>왜 두 볼트를 나누나</h4>
+<p>저자 명시·<code>.claude</code> 규칙이 메인 볼트(내가 관리)와 LLM 볼트(AI가 알아서)에서 서로 다릅니다. 하나로 합치면 에러와 오염된 정보가 많아져, <strong>나누는 편</strong>이 낫습니다. 기존 볼트의 일부를 위키로 옮기고 싶다면, 스타터 킷 볼트에서 에이전트를 켜고 기존 볼트 주소를 준 뒤 <strong>"위키로 만들 만한 것 옮겨줘"</strong> 로 마이그레이션할 수 있습니다.</p>
+
+<h4>마무리 — AI 지식에 직접 붙어 있어라</h4>
+<p>리더는 두 부류로 나뉩니다 — "더 알려줘"와 "멤버 시키면 되지, 내가 왜 배워?". 그런데 내 <strong>멤버(파트너)의 지식 상한선이 곧 나의 상한선</strong>이 됩니다. 그래서 우리는 <strong>AI 지식에 직접 붙어(attach)</strong> 있어야 하고, 이를 위한 나의 지식 저장소가 필요합니다. 강사는 그중 Obsidian을 가장 좋은 도구로 꼽습니다.</p>
+
+<div class="note">
+    <span class="nh">Q&amp;A 요점</span>
+    · <strong>공동 볼트</strong> — 공식 Sync / <code>osync</code> 로 셀프 호스팅(나스·클라우드·도커). 동시 편집도 1~2초 내면 대체로 안전.<br>
+    · <strong>PDF 스크랩</strong> — 정합성이 중요하면 변환, 컨텍스트만 필요하면 파이썬으로 마크다운화가 토큰 절약.<br>
+    · <strong>메타데이터 필드</strong> 는 <strong>지식을 꺼내 쓸 사람이</strong> 정한다 — 어떤 분류로 꺼낼지에 맞춰 키-값을 설계.<br>
+    · <strong>볼트 규모</strong> — 메타데이터(type 등)로 필터하면 만 개 노트도 문제없이 인덱싱·접근 가능.
+</div>
 </article>
-<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · Code · LLM Wiki &middot; <span class="pr-k">생성일자</span> 2026-07-03 &middot; <span class="pr-k">수정일자</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · Code · LLM Wiki &middot; <span class="pr-k">생성일자</span> 2026-07-03 &middot; <span class="pr-k">수정일자</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>연관 문서</h2>
-<ul><li><a href="/p/llmw-overview/">LLM Wiki — 개요</a></li><li><a href="/p/llmw-vaults/">볼트 체계 — 메인 볼트와 위키 볼트</a></li></ul>
+<ul><li><a href="/p/wr-knowledge-vault/">다 기록하는 사람, 발행하는 위키 — 지식 저장소에 대한 고찰</a></li><li><a href="/p/llmw-overview/">LLM Wiki — 체계와 캡처</a></li><li><a href="/p/news-20260710-llm-wiki-knowledge-context/">LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식</a></li><li><a href="/p/news-20260710-oracle-ontology-property-graph/">오라클 온톨로지와 프로퍼티 그래프 — 테이블을 지식의 지도로</a></li></ul>
 </nav>
 </body>
 </html>

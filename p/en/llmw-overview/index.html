@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LLM Wiki — Overview</title>
-<meta name="description" content="Introduces the overall concept and structure of the Obsidian-based LLM wiki proposed by Karpathy.">
+<title>LLM Wiki — the System and Capture</title>
+<meta name="description" content="Build a knowledge store AI can read on Obsidian vaults — the two-vault architecture of main and wiki vaults, and what to capture">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/en/llmw-overview/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/llmw-overview/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/llmw-overview/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LLM Wiki — Overview">
-<meta property="og:description" content="Introduces the overall concept and structure of the Obsidian-based LLM wiki proposed by Karpathy.">
+<meta property="og:title" content="LLM Wiki — the System and Capture">
+<meta property="og:description" content="Build a knowledge store AI can read on Obsidian vaults — the two-vault architecture of main and wiki vaults, and what to capture">
 <meta property="og:url" content="https://dewytear.github.io/p/en/llmw-overview/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="LLM Wiki — Overview">
-<meta name="twitter:description" content="Introduces the overall concept and structure of the Obsidian-based LLM wiki proposed by Karpathy.">
+<meta name="twitter:title" content="LLM Wiki — the System and Capture">
+<meta name="twitter:description" content="Build a knowledge store AI can read on Obsidian vaults — the two-vault architecture of main and wiki vaults, and what to capture">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "LLM Wiki — Overview",
- "description": "Introduces the overall concept and structure of the Obsidian-based LLM wiki proposed by Karpathy.",
+ "headline": "LLM Wiki — the System and Capture",
+ "description": "Build a knowledge store AI can read on Obsidian vaults — the two-vault architecture of main and wiki vaults, and what to capture",
  "inLanguage": "en",
  "url": "https://dewytear.github.io/p/en/llmw-overview/",
  "mainEntityOfPage": "https://dewytear.github.io/#!llmw-overview",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T22:38:08+09:00",
- "dateModified": "2026-07-06T20:12:41+09:00"
+ "dateModified": "2026-08-15T14:47:12+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/ja/llmw-overview/" hreflang="ja">日本語</a>
 </p>
 <article>
-<h2>LLM Wiki — Overview</h2>
+<h2>LLM Wiki — the System and Capture</h2>
 <p>This material organizes the <strong>"LLM Wiki / Yohan Gu"</strong> talk paragraph by paragraph, in order. In the age of artificial intelligence, <strong>where and how you organize your own material</strong> matters enormously. We have already been extending context to AI with markdown files such as Claude Code's <code>CLAUDE.md</code> and <code>memory.md</code>, and <strong>Obsidian</strong> is a system that contextualizes all of it into a single framework.</p>
 
 <div class="diagram">
@@ -111,11 +111,98 @@
     This document set organizes and reconstructs the contents of the "LLM Wiki / Yohan Gu" talk in order. The speaker built and published an Obsidian-based personal knowledge management system.
     <br>· Video: <a href="https://www.youtube.com/live/MRTQwBFURJs" target="_blank" rel="noopener">youtube.com/live/MRTQwBFURJs</a>
 </div>
+
+<h3>The Vault System — Main Vault and Wiki Vault</h3>
+<p>Obsidian is fundamentally built on the <strong>vault</strong> system. A vault is a <strong>collection of markdown files</strong> bundled under a single name, and it is read as one set. It is the same structure as Claude Code opening a particular folder, reading the <code>CLAUDE.md</code> inside it, and taking on a distinct identity.</p>
+
+<h4>Separate knowledge written by AI from knowledge written by you</h4>
+<p>Wherever possible, it is best to <strong>separate knowledge written by AI from knowledge written by you into different vaults</strong>. It is easy to mistake what AI produced for something you fully understand yourself, so it matters to <strong>draw a strict line</strong> around how far your own study has actually gone.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 660 250" role="img" aria-label="A two-vault architecture where several wiki vaults (satellites) connect bidirectionally around a central main vault (mothership)">
+    <rect class="d-box accent" x="260" y="100" width="140" height="54" rx="12"/>
+    <text class="d-label" x="330" y="124" text-anchor="middle">Main vault</text>
+    <text class="d-sub" x="330" y="142" text-anchor="middle">mothership</text>
+
+    <rect class="d-box soft" x="28" y="16" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="87" y="41" text-anchor="middle">Wiki vault</text>
+    <rect class="d-box soft" x="514" y="16" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="573" y="41" text-anchor="middle">Wiki vault</text>
+    <rect class="d-box soft" x="18" y="107" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="77" y="132" text-anchor="middle">Wiki vault</text>
+    <rect class="d-box soft" x="524" y="107" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="583" y="132" text-anchor="middle">Wiki vault</text>
+    <rect class="d-box soft" x="28" y="196" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="87" y="221" text-anchor="middle">Wiki vault</text>
+    <rect class="d-box soft" x="514" y="196" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="573" y="221" text-anchor="middle">Wiki vault</text>
+
+    <line class="d-edge accent" x1="260" y1="127" x2="136" y2="127"/>
+    <polygon class="d-arrow accent" points="136,127 144,122 144,132"/>
+    <polygon class="d-arrow accent" points="260,127 252,122 252,132"/>
+    <line class="d-edge accent" x1="400" y1="127" x2="524" y2="127"/>
+    <polygon class="d-arrow accent" points="524,127 516,122 516,132"/>
+    <polygon class="d-arrow accent" points="400,127 408,122 408,132"/>
+    <line class="d-edge accent" x1="297.1" y1="98.2" x2="140" y2="56"/>
+    <polygon class="d-arrow accent" points="140,56 149.9,54.2 147.5,62.8"/>
+    <polygon class="d-arrow accent" points="297.1,98.2 289.6,91.4 287.2,100"/>
+    <line class="d-edge accent" x1="362.9" y1="98.2" x2="520" y2="56"/>
+    <polygon class="d-arrow accent" points="520,56 512.5,62.8 510.1,54.2"/>
+    <polygon class="d-arrow accent" points="362.9,98.2 372.8,100 370.4,91.4"/>
+    <line class="d-edge accent" x1="297.3" y1="156" x2="140" y2="196"/>
+    <polygon class="d-arrow accent" points="140,196 147.5,189.4 149.9,198"/>
+    <polygon class="d-arrow accent" points="297.3,156 287.4,154 289.8,162.6"/>
+    <line class="d-edge accent" x1="362.7" y1="156" x2="520" y2="196"/>
+    <polygon class="d-arrow accent" points="520,196 510.1,198 512.5,189.4"/>
+    <polygon class="d-arrow accent" points="362.7,156 370.2,162.6 372.6,154"/>
+</svg>
+<div class="d-cap">Several <strong>wiki vaults (satellites)</strong> connect to the central <strong>main vault (mothership)</strong> through two-way sync and references.</div>
+</div>
+
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Vault</th><th>Metaphor</th><th>What it holds</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Main vault</strong></td><td>mothership</td><td>Concepts you know well and can explain to others. Finished deliverables.</td></tr>
+            <tr><td><strong>LLM wiki vault</strong></td><td>satellite (several of them)</td><td>What you want to learn, what you do not know well yet, technical concepts. A storage space for raw material.</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>The speaker actually uses <strong>about 8</strong> vaults, dividing them by purpose and by who they are shared with.</p>
+
+<h4>Local files and syncing</h4>
+<ul>
+    <li>Obsidian works with <strong>local files</strong>, which is an advantage for work where security matters. File paths are exposed as-is, so computers handle them easily and quickly.</li>
+    <li><strong>Avoid putting in files other than markdown (HTML, PDF, images, Hangul documents, and so on)</strong> — Obsidian's rendering slows down.</li>
+    <li>For syncing you can use the official Sync, or build a shared vault within an organization using a plugin such as <code>osync</code>, which mimics it and can be <strong>self-hosted</strong>.</li>
+</ul>
+
+<h3>What Goes In — Knowledge Capture</h3>
+<p>"If I just use a recent model with web search, why bother organizing things locally?" is a natural question. The answer lies in <strong>the limits of our own heads</strong> and in <strong>learning</strong>.</p>
+
+<h4>A forward base for learning — the stretched goal</h4>
+<p>The <strong>stretched goal</strong> from educational technology is the idea that learning happens smoothly only when you set a goal you can reach by stretching your arm a little further. The LLM wiki plays the role of this <strong>forward base for learning</strong>. You capture material you do not understand yet but want to learn, and inch forward with the help of AI.</p>
+
+<h4>Let AI know what you care about</h4>
+<p>Like the links and articles you pile up in KakaoTalk's "send to myself," we capture <strong>knowledge we have taken an interest in</strong>. Artificial intelligence does not know all of your tastes, but once you let it know <strong>where you showed interest and what you applied your human bias to</strong>, there is far more it can learn from there.</p>
+
+<h4>What goes into the main vault vs. the wiki vault</h4>
+<ul>
+    <li><strong>Main vault</strong> — concepts you <strong>know well</strong> enough to lecture on all day.</li>
+    <li><strong>LLM wiki</strong> — concepts you want to talk about all day but <strong>do not know well yet</strong>. Often the more technical material.</li>
+</ul>
+<p>For example, overseas cases researched while looking into mounting Starlink on a vehicle, or concepts learned while writing up BM25 (Best Matching 25, lexicon-based search), go into the wiki.</p>
+
+<div class="note">
+    <span class="nh">Key point</span>
+    What matters is organizing the concepts you intend to study <strong>in a form that not only you can read, but artificial intelligence can read alongside you</strong>.
+</div>
+<p>With the vault as the vessel and capture as the habit, the next chapter, <a href="/p/en/llmw-metadata/">Note Anatomy</a>, dissects what a single note inside that vessel looks like — metadata, links, cards, and system files.</p>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · LLM Wiki &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · LLM Wiki &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
-<ul><li><a href="/p/en/wr-knowledge-vault/">The Man Who Records Everything, and the Wiki That Publishes — Reflections on Knowledge Vaults</a></li><li><a href="/p/en/news-20260710-llm-wiki-knowledge-context/">LLM Wiki and Knowledge Context — Team Knowledge Compiled at Write Time</a></li><li><a href="/p/en/llmw-onboard/">Onboarding (Hands-on)</a></li><li><a href="/p/en/llmw-vaults/">The Vault System — Main Vault and Wiki Vault</a></li></ul>
+<ul><li><a href="/p/en/wr-knowledge-vault/">The Man Who Records Everything, and the Wiki That Publishes — Reflections on Knowledge Vaults</a></li><li><a href="/p/en/news-20260710-llm-wiki-knowledge-context/">LLM Wiki and Knowledge Context — Team Knowledge Compiled at Write Time</a></li><li><a href="/p/en/llmw-onboard/">Practice and Philosophy — from Onboarding to Operation</a></li></ul>
 </nav>
 </body>
 </html>

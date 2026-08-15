@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 > License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — cite the source when quoting.
-> 107 documents · 365 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
+> 99 documents · 353 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
 
 ---
 
@@ -188,7 +188,7 @@ Matrix어느 블록이 밀집이고 어디가 공백인가?문서×문서 격자
 
 뷰가 무엇이든, 분석의 진입점은 두 가지입니다:
 
-허브(hub) — 다른 문서들이 가장 많이 참조하는 문서. 현재 1위는 하네스의 구성과 효과(피참조 11회)이고, LLM Wiki 개요·볼트 체계가 각 8회로 뒤를 잇습니다. 어떤 주제를 처음 파악할 때는 그 클러스터의 허브부터 읽는 것이 가장 빠릅니다.
+허브(hub) — 다른 문서들이 가장 많이 참조하는 문서. 현재 공동 1위는 LLM Wiki와 날리지 컨텍스트·확장 기능(각 피참조 9회)이고, 하네스의 구성과 효과가 8회로 뒤를 잇습니다. 어떤 주제를 처음 파악할 때는 그 클러스터의 허브부터 읽는 것이 가장 빠릅니다.
 
 브리지(bridge) — 여러 System에 걸쳐 등장하는 개념. '스킬'은 7개 System에 걸쳐 있는 최대 브리지이고, '슬래시명령어'·'서브에이전트'가 각 5개 System을 잇습니다. 브리지 개념을 따라가면 주제와 주제가 실제로 만나는 지점이 드러납니다.
 
@@ -2013,7 +2013,7 @@ URL: https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-level3
 
 정확도 올리기 — 하이브리드 · 재순위화 (한 걸음 더)
 
-하이브리드 검색 — 시맨틱(의미) + BM25(키워드) 점수를 합쳐 장단점을 보완. (BM25는 LLM Wiki의 Query에서도 다룹니다.)
+하이브리드 검색 — 시맨틱(의미) + BM25(키워드) 점수를 합쳐 장단점을 보완. (BM25는 LLM Wiki 실습 편의 Query에서도 다룹니다.)
 
 재순위화(reranking) — 후보를 뽑은 뒤 더 정밀한 모델로 순서를 다시 매김.
 
@@ -2200,11 +2200,11 @@ URL: https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-choose
 
 ---
 
-# LLM Wiki — 개요
+# LLM Wiki — 체계와 캡처
 Section: AI · Claude · Code · LLM Wiki
 URL: https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-overview
 
-LLM Wiki — 개요
+LLM Wiki — 체계와 캡처
 
 이 자료는 “LLM Wiki(LLM 위키) / 구요한” 강연을 순서대로 단락별로 정리한 것입니다. 인공지능 시대에는 내 자료를 어디에 어떻게 정리해 두는지가 매우 중요합니다. 우리는 이미 Claude Code의 CLAUDE.md·memory.md 같은 마크다운으로 AI에 맥락을 확장해 왔는데, Obsidian 은 그 모든 것을 하나의 체계로 맥락화해 주는 시스템입니다.
 
@@ -2234,12 +2234,6 @@ Karpathy(카파시)가 2026년 4월 X 게시글("LLM Knowledge Bases")과 'llm-w
 
 · 영상: youtube.com/live/MRTQwBFURJs
 
----
-
-# 볼트 체계 — 메인 볼트와 위키 볼트
-Section: AI · Claude · Code · LLM Wiki
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-vaults
-
 볼트 체계 — 메인 볼트와 위키 볼트
 
 Obsidian은 근본적으로 볼트(Vault) 체계로 이루어져 있습니다. 볼트는 하나의 이름 아래 묶인 마크다운 파일들의 집합이며, 이것이 하나의 세트로 읽힙니다. Claude Code가 특정 폴더를 열어 그 안의 CLAUDE.md 를 읽고 고유한 아이덴티티를 갖는 것과 같은 구조입니다.
@@ -2267,12 +2261,6 @@ Obsidian은 로컬 파일이라 보안이 중요한 업무에 유리합니다. �
 
 동기화는 공식 Sync, 또는 이를 모방해 셀프 호스팅할 수 있는 osync 같은 플러그인으로 조직 내 공동 볼트를 구성할 수 있습니다.
 
----
-
-# 무엇을 담는가 — 지식 캡처
-Section: AI · Claude · Code · LLM Wiki
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-capture
-
 무엇을 담는가 — 지식 캡처
 
 "웹서치가 되는 최신 모델을 쓰면 되지, 왜 굳이 로컬에 정리하나?" 라는 의문이 자연스럽습니다. 답은 우리 머리의 한계와 학습에 있습니다.
@@ -2296,13 +2284,15 @@ LLM 위키 — 하루 종일 이야기하고 싶지만 아직 잘 모르는 개�
 핵심
 내가 공부하려는 개념을, 나만 읽을 수 있는 게 아니라 인공지능도 함께 읽을 수 있는 형식으로 정리하는 것이 중요합니다.
 
+볼트라는 그릇과 캡처라는 습관까지 잡았습니다. 다음 편 노트의 구조에서는 그 그릇 안의 노트 한 장이 어떻게 생겼는지 — 메타데이터·연결·카드·시스템 파일 — 를 해부합니다.
+
 ---
 
-# 노트 구조 — 메타데이터와 점진적 공개
+# 노트의 구조 — 메타데이터·연결·카드
 Section: AI · Claude · Code · LLM Wiki
 URL: https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-metadata
 
-노트 구조 — 메타데이터와 점진적 공개
+노트의 구조 — 메타데이터·연결·카드
 
 위키 노트를 열면 제목 → 메타데이터 → 본문 순으로 구성됩니다. 예컨대 본문이 38번째 줄부터 시작한다면, 앞의 37줄이 모두 메타데이터입니다.
 
@@ -2326,12 +2316,6 @@ Claude Code 같은 에이전트는 이 메타데이터를 먼저 읽습니다. �
 컨텍스트 최적화
 Obsidian의 큰 장점은, 한 파일에 모든 내용을 담지 않고 "취향은 취향.md 를 보라", "전문 페르소나는 여기를 보라" 처럼 다른 파일의 주소를 명시할 수 있다는 점입니다. 일할 때 필요한 파일만 열어 보게 해 컨텍스트를 최적화합니다. 강사는 Karpathy의 아이디어를 빌려 이런 메타데이터 작성을 자동화하는 커맨드·스킬 세트를 만들어 두었습니다.
 
----
-
-# 연결(Links)과 볼트 간 참조
-Section: AI · Claude · Code · LLM Wiki
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-links
-
 연결(Links)과 볼트 간 참조
 
 Obsidian의 가장 큰 장점은 노트 간 연결입니다. 예를 들어 "BM25" 노트에 MOC(Map of Content, 지식 지도), 하네스 엔지니어링, 로그 등 다양한 노트가 연결되어 있습니다. 이 연결이 핵심입니다.
@@ -2353,12 +2337,6 @@ Obsidian의 가장 큰 장점은 노트 간 연결입니다. 예를 들어 "BM25
 
 예 — 모바일 커맨드 센터
 차량에 스타링크와 배터리 시스템을 넣는 "모바일 커맨드 센터" 위키 카드를 만들 때, 인공지능이 위키 볼트 내부의 관련 개념(Related)뿐 아니라 메인 볼트에 정리해 둔 관련 글도 찾아 연결(메인볼트 Related)했습니다. 이렇게 내 지식 시스템 전체를 연결해, Obsidian 볼트의 태생적 한계(볼트 내 연결만 가능)를 넘어섭니다.
-
----
-
-# 위키 카드의 종류와 로우 소스
-Section: AI · Claude · Code · LLM Wiki
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-cards
 
 위키 카드의 종류와 로우 소스
 
@@ -2386,12 +2364,6 @@ Maps / Labs전체를 총망라하는 개념 카드.
 캡처 팁 — 목적을 남겨라
 지식을 캡처할 때 항상 #(샵) 뒤에 목적을 적습니다. 나중에 검색하기 위해서입니다. 캡처만 하고 절대 다시 안 보게 되므로, 미래의 내가 검색으로 접근할 힌트를 남겨 두는 것이 좋습니다. 인제스트를 맡길 때도 "왜 모았는지 / 무엇을 하려는지"를 묻게 해 두면, 그 의도를 가지고 메인 볼트의 과거 연구와 연결·추론해 줍니다.
 
----
-
-# 시스템 파일과 rules
-Section: AI · Claude · Code · LLM Wiki
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-system
-
 시스템 파일과 rules
 
 볼트에는 노트뿐 아니라 AI의 동작을 규정하는 시스템 파일이 함께 들어갑니다. 강사가 공들여 깎아 둔 이 파일들은 한 번 정독해 볼 가치가 있습니다.
@@ -2415,13 +2387,15 @@ LLM 위키는 어떤 목적으로 위키를 쓰려는지를 담는 컨텍스트 
 .claude/rules — 헌법처럼 읽는 규칙
 .claude 폴더 안 rules 폴더의 마크다운 파일은, Claude Code가 세션 시작 즉시 먼저 읽습니다(헌법처럼 엄밀히 준수). 반면 CLAUDE.md 는 가이드처럼 참고합니다. 그래서 편집 규칙·취향·중요한 강제 규칙은 rules 에 담아 두면 좋습니다.
 
+구조를 알았으니 직접 굴려 볼 차례입니다 — 실습과 철학 편에서 온보딩부터 Ingest·Query·Lint, 웹 클리퍼, 그리고 두 볼트 운영 철학까지 갑니다.
+
 ---
 
-# 온보딩 (실습)
+# 실습과 철학 — 온보딩부터 운영까지
 Section: AI · Claude · Code · LLM Wiki
 URL: https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-onboard
 
-온보딩 (실습)
+실습과 철학 — 온보딩부터 운영까지
 
 스타터 킷에는 온보딩 스킬이 들어 있어, /onboard(또는 "온보딩 해줘") 한마디로 개인 맞춤 세팅이 시작됩니다.
 
@@ -2458,12 +2432,6 @@ Ctrl/Cmd + G 로 그래프 뷰를 열면 임베딩된 노트 관계가 보입니
 깔끔하게 시작하려면
 예시 데이터 없이 시작하고 싶으면 concept·entity·article 폴더의 예시 파일만 지우면 됩니다. 코덱스용 파일도 준비돼 있지만, Claude Code에서 쓰는 편이 더 유리합니다.
 
----
-
-# 세 가지 핵심 동작 — Ingest · Query · Lint
-Section: AI · Claude · Code · LLM Wiki
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-ingest-query-lint
-
 세 가지 핵심 동작 — Ingest · Query · Lint
 
 LLM 위키의 중요한 세 가지 동작입니다. (Karpathy가 제시한 개념)
@@ -2498,12 +2466,6 @@ BM25 (렉시콘)사용자가 명확한 단어를 명시할 때 — 빈도 높은
 요약
 Ingest(로우 자료 → 카드) · Query(BM25·벡터·가설검증으로 꺼내 쓰기) · Lint(최신성 유지) — 이 세 축으로 살아 있는 지식 베이스를 굴립니다.
 
----
-
-# 웹 클리퍼와 인박스, Query 실전
-Section: AI · Claude · Code · LLM Wiki
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-clipper-query
-
 웹 클리퍼와 인박스, Query 실전
 
 ① 웹 기사 읽은 아티클 ② 웹 클리퍼 크롬 확장 ③ 인박스 폴더 0.2 inbox/article ④ /inbox 분류 주제별 묶기 ⑤ 인제스트 위키 카드 생성 ⑥ /query 꺼내 쓰기
@@ -2536,12 +2498,6 @@ Query 실전
 
 논문은 통째로 넣지 말 것
 논문 원문을 전부 인제스트하기보다, 초록(abstract) 정도로 기본 개념만 알게 하고 원문의 위치를 남기는 것이 좋습니다. 중요 키페이퍼만 풀로 읽히고, 내 코멘터리·실험 맥락을 함께 넣으면 더 유용합니다.
-
----
-
-# 활용과 철학 — 읽는 능력과 두 볼트 운영
-Section: AI · Claude · Code · LLM Wiki
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/llm-wiki/llmw-philosophy
 
 활용과 철학 — 읽는 능력과 두 볼트 운영
 

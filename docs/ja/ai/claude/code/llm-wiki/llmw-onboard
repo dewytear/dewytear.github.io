@@ -1,4 +1,4 @@
-<h2>オンボーディング（実習）</h2>
+<h2>実習と哲学 — オンボーディングから運用まで</h2>
 <p>スターターキットには<strong>オンボーディングのスキル</strong>が入っていて、<code>/onboard</code>（または「オンボーディングして」）のひと言で個人向けのセットアップが始まります。</p>
 
 <div class="diagram">
@@ -58,4 +58,154 @@
 <div class="note">
     <span class="nh">きれいに始めたいなら</span>
     サンプルのデータなしで始めたいときは、<code>concept</code>・<code>entity</code>・<code>article</code> のフォルダのサンプルファイルだけ消せば大丈夫です。Codex 用のファイルも用意されていますが、<strong>Claude Code で使うほうが有利</strong>です。
+</div>
+
+<h3>三つの中心的な動作 — Ingest · Query · Lint</h3>
+<p>LLM ウィキの重要な三つの動作です。（Karpathy が示した考え方）</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 252" role="img" aria-label="左は Ingest・Query・Lint の循環、右は BM25 からベクトル、仮説検証へと上がっていくクエリのエスカレーション">
+    <line class="d-edge dash" x1="350" y1="8" x2="350" y2="244"/>
+
+    <rect class="d-box" x="100" y="20" width="140" height="44" rx="10"/>
+    <text class="d-label sm" x="170" y="41" text-anchor="middle">Ingest</text>
+    <text class="d-sub" x="170" y="56" text-anchor="middle">消化・吸収</text>
+    <rect class="d-box" x="180" y="140" width="140" height="44" rx="10"/>
+    <text class="d-label sm" x="250" y="161" text-anchor="middle">Query</text>
+    <text class="d-sub" x="250" y="176" text-anchor="middle">取り出して使う</text>
+    <rect class="d-box" x="20" y="140" width="140" height="44" rx="10"/>
+    <text class="d-label sm" x="90" y="161" text-anchor="middle">Lint</text>
+    <text class="d-sub" x="90" y="176" text-anchor="middle">新しさを保つ</text>
+
+    <line class="d-edge" x1="200" y1="64" x2="250" y2="140"/>
+    <polygon class="d-arrow" points="250,140 241.8,134.7 248.4,130.3"/>
+    <line class="d-edge" x1="180" y1="162" x2="160" y2="162"/>
+    <polygon class="d-arrow" points="160,162 168,157 168,167"/>
+    <line class="d-edge" x1="90" y1="140" x2="140" y2="64"/>
+    <polygon class="d-arrow" points="140,64 138.4,73.7 131.8,69.3"/>
+    <text class="d-sub" x="175" y="232" text-anchor="middle">① Ingest·Query·Lint の循環</text>
+
+    <rect class="d-box" x="380" y="180" width="260" height="44" rx="10"/>
+    <text class="d-label sm" x="510" y="201" text-anchor="middle">BM25 (キーワード)</text>
+    <text class="d-sub" x="510" y="216" text-anchor="middle">はっきりした語</text>
+    <rect class="d-box" x="400" y="110" width="240" height="44" rx="10"/>
+    <text class="d-label sm" x="520" y="131" text-anchor="middle">ベクトル (意味)</text>
+    <text class="d-sub" x="520" y="146" text-anchor="middle">似た概念まで</text>
+    <rect class="d-box accent" x="420" y="40" width="220" height="44" rx="10"/>
+    <text class="d-label sm" x="530" y="61" text-anchor="middle">仮説検証</text>
+    <text class="d-sub" x="530" y="76" text-anchor="middle">問いの読み替え</text>
+
+    <path class="d-edge accent dash" d="M510 180 V158" fill="none"/>
+    <polygon class="d-arrow accent" points="510,154 505,162 515,162"/>
+    <path class="d-edge accent dash" d="M522 110 V88" fill="none"/>
+    <polygon class="d-arrow accent" points="522,84 517,92 527,92"/>
+    <text class="d-sub" x="530" y="240" text-anchor="middle">② クエリのエスカレーション (上ほど遅い)</text>
+</svg>
+<div class="d-cap">三つの動作が<strong>循環</strong>し、クエリは <strong>BM25 → ベクトル → 仮説検証</strong>へと段階的に強くなります。</div>
+</div>
+
+<h4>1）Ingest — 消化・吸収</h4>
+<p>ひとつの記事／概念を<strong>チャンクに分けて</strong>、人工知能にも人にも読みやすい<strong>カード</strong>にする作業です。生の資料を渡せば<strong>出典ベース</strong>のウィキカードが生成されます。</p>
+<pre><code>/ingest        <span class="c"># 生ソースをウィキカードへ</span></code></pre>
+
+<h4>2）Query — 取り出して使う</h4>
+<p>集めるだけでは意味がないので、クエリで取り出して使います。一般のエージェントは<strong>正規表現（語の頻度・マッチ）</strong>でしか検索しませんが、ここでは <strong>QMD（マークダウンのクエリ）MCP</strong> で三つの検索を段階的に使います。</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>方式</th><th>いつ</th></tr></thead>
+        <tbody>
+            <tr><td><strong>BM25</strong>（レキシコン）</td><td>利用者がはっきりした語を挙げているとき — 頻度の高い語で検索。</td></tr>
+            <tr><td><strong>ベクトル検索</strong></td><td>あいまいなとき — 似た概念まで持ってくる（「水が飲みたい」→ コップ）。</td></tr>
+            <tr><td><strong>仮説検証（hypothetical）</strong></td><td>利用者の水準が知識の水準より低いとき — LLM が問いを読み替えてキーワードを作り、検索し直す。</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>後ろへ行くほど時間がかかります。ファイルを正確に分かっている状況なら、その住所を直接渡すのがいちばん速いです。結果は <strong>query フォルダ</strong>に整理され、どんな目的で作った文書かを取り出し直せるように<strong>出典ベース</strong>で残ります。</p>
+
+<h4>3）Lint — 保守</h4>
+<p>メンテナンスの作業です。新しくインジェストしたときに、既存のノート（例: A という概念）が新しいノート（A′）と関係していて<strong>古くなっていれば一緒に更新</strong>します。<code>/lint</code> で全体的な保守を回し、いつでも引用できる<strong>新しさ</strong>を保ちます。（監査 <code>audit</code>・検証 <code>verify</code> のスキルも一緒に）</p>
+
+<div class="note">
+    <span class="nh">まとめ</span>
+    <strong>Ingest</strong>（生の資料 → カード）·<strong>Query</strong>（BM25・ベクトル・仮説検証で取り出す）·<strong>Lint</strong>（新しさを保つ）— この三つの軸で、生きた知識ベースを回します。
+</div>
+
+<h3>ウェブクリッパーとインボックス、Query の実戦</h3>
+
+<div class="diagram">
+<svg viewBox="0 0 660 188" role="img" aria-label="クリッピングのパイプライン: ウェブ記事 → ウェブクリッパー → インボックスのフォルダ → /inbox で仕分け → インジェスト → /query">
+    <rect class="d-box" x="8" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="42" text-anchor="middle">① ウェブ記事</text>
+    <text class="d-sub" x="108" y="59" text-anchor="middle">読んだ記事</text>
+    <rect class="d-box" x="223" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="42" text-anchor="middle">② ウェブクリッパー</text>
+    <text class="d-sub" x="323" y="59" text-anchor="middle">Chrome 拡張</text>
+    <rect class="d-box" x="438" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="42" text-anchor="middle">③ インボックス</text>
+    <text class="d-sub" x="538" y="59" text-anchor="middle">0.2 inbox/article</text>
+
+    <rect class="d-box" x="8" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="134" text-anchor="middle">④ /inbox で仕分け</text>
+    <text class="d-sub" x="108" y="151" text-anchor="middle">主題ごとにまとめる</text>
+    <rect class="d-box" x="223" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="134" text-anchor="middle">⑤ インジェスト</text>
+    <text class="d-sub" x="323" y="151" text-anchor="middle">ウィキカードの生成</text>
+    <rect class="d-box accent" x="438" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="134" text-anchor="middle">⑥ /query</text>
+    <text class="d-sub" x="538" y="151" text-anchor="middle">取り出して使う</text>
+
+    <line class="d-edge" x1="208" y1="46" x2="221" y2="46"/><polygon class="d-arrow" points="215,41 223,46 215,51"/>
+    <line class="d-edge" x1="423" y1="46" x2="436" y2="46"/><polygon class="d-arrow" points="430,41 438,46 430,51"/>
+    <path class="d-edge" d="M538 72 C538 87, 523 92, 505 92 H141 C123 92, 108 97, 108 110" fill="none"/><polygon class="d-arrow" points="103,106 113,106 108,112"/><polygon class="d-arrow" points="328,87 328,97 318,92"/>
+    <line class="d-edge" x1="208" y1="138" x2="221" y2="138"/><polygon class="d-arrow" points="215,133 223,138 215,143"/>
+    <line class="d-edge accent" x1="423" y1="138" x2="436" y2="138"/><polygon class="d-arrow accent" points="430,133 438,138 430,143"/>
+</svg>
+<div class="d-cap">ウェブ記事をクリッパーで<strong>インボックス</strong>に集め、<code>/inbox</code> で仕分けし、インジェストしてから <code>/query</code> で取り出して使います。</div>
+</div>
+
+<h4>Obsidian のウェブクリッパー</h4>
+<p>Chrome 拡張の <strong>Obsidian Web Clipper</strong> でウェブの記事をクリップし、ボルトの<strong>インボックス</strong>に入れます。講師はキャプチャのルール（JSON のテンプレート）をウィキボルトに入れてあります。</p>
+<ul>
+    <li>設定 → 一般オプションの<strong>ボルトの保存先</strong>にボルト名を登録すれば、どのボルトへ送るか指定できます。</li>
+    <li>テンプレート（JSON）をインポートし、<strong>Web Article</strong> のテンプレートをいちばん上に上げます（先に発動）。<code>x.com</code>・<code>youtube</code> など、アドレスによってトリガーされるテンプレートもあります。</li>
+    <li>キャプチャすると、あらかじめ指定した <code>0.2 inbox/article</code> のようなフォルダに保存されます。</li>
+</ul>
+
+<h4>インボックスのスキル — 集めて分析</h4>
+<pre><code>/inbox        <span class="c"># インボックスに集めた資料を分析し、主題ごとにまとめて提案</span></code></pre>
+<p>いくつかを先に集めておいて <code>/inbox</code> を回すと、「5 つのうち 3 つは同じ筋なので、一緒にインジェストしますか？」のように<strong>主題ごとに分けて</strong>提案します。</p>
+
+<h4>トークンのコツ — 原文のスクレイピング</h4>
+<p>インジェストのときにリンクだけ渡すと、AI が原文を<strong>取ってくる</strong>ところから始めることになり、トークンが余分にかかります。<strong>ウェブクリッパーで先にスクレイピング</strong>して原文を確保してから始めれば、トークンを節約できます。</p>
+
+<h4>Query の実戦</h4>
+<pre><code>/query LLM ウィキボルトの学術的な価値を整理して。
+あとでリファレンスマネージャーで書誌情報を引用するつもり。</code></pre>
+<p>ウィキボルトで足りなければ<strong>メインボルトまで検索</strong>して持ってくるようになっていて、自分がどう質問したかも一緒に記録されます。結果には答えだけでなく、<strong>Obsidian のメタデータをどう設計すればよいか（author・created・source・category など）</strong>まで薦めてくれます。</p>
+
+<div class="note">
+    <span class="nh">論文はまるごと入れないこと</span>
+    論文の原文をすべてインジェストするより、<strong>要旨（abstract）</strong>くらいで基本の概念だけ分からせ、<strong>原文の場所</strong>を残しておくのがよいです。重要なキーペーパーだけフルで読ませ、自分のコメンタリーや実験の文脈も一緒に入れると、さらに役立ちます。
+</div>
+
+<h3>活用と哲学 — 読む力とふたつのボルトの運用</h3>
+
+<h4>ウィキは材料の置き場</h4>
+<p>LLM ウィキは<strong>材料の置き場</strong>です。ここから<strong>出来上がった料理（成果物）</strong> — カリキュラムや講義案など — は<strong>メインボルト</strong>へ移ります。成果物が大きすぎて配信がつらいときは、別の <strong>dev（開発）フォルダ</strong>で管理します。（HTML や node_modules などの重いファイルはボルトの外で管理 — レンダリングの低下を防ぐため）</p>
+
+<h4>いちばん大事な力 — 読む力</h4>
+<p>AI の時代にいちばん大事な力は<strong>読む力</strong>です。エージェントにやらせておいて読まないのは簡単ですが、<strong>自分が読んでこそ、まともに任せられます。</strong>講師は人工知能をセットアップする目的そのものを<strong>「自分が読む時間を確保すること」</strong>に置いています。ウィキの <code>concept</code>・<code>entity</code>・<code>guide</code>・<code>query</code> のカードは、すべて<strong>人にも読みやすく</strong>組まれています。</p>
+
+<h4>なぜふたつのボルトに分けるのか</h4>
+<p>著者の明示や <code>.claude</code> のルールが、メインボルト（自分が管理）と LLM ボルト（AI に任せる）で互いに違います。ひとつにまとめるとエラーと汚れた情報が増えるので、<strong>分けるほうが</strong>ましです。既存のボルトの一部をウィキへ移したいなら、スターターキットのボルトでエージェントを立ち上げ、既存のボルトの住所を渡して<strong>「ウィキにする価値のあるものを移して」</strong>とマイグレーションできます。</p>
+
+<h4>締めくくり — AI の知識に直接くっついていよ</h4>
+<p>リーダーはふた通りに分かれます —「もっと教えて」と、「メンバーにやらせればいい、なぜ自分が学ぶのか」。ところが自分の<strong>メンバー（パートナー）の知識の上限が、そのまま自分の上限</strong>になります。だから私たちは<strong>AI の知識に直接くっついて（attach）</strong>いなければならず、そのための自分の知識の置き場が要ります。講師はそのなかで Obsidian をいちばん良い道具に挙げています。</p>
+
+<div class="note">
+    <span class="nh">Q&amp;A の要点</span>
+    · <strong>共同のボルト</strong> — 公式の Sync、または <code>osync</code> でセルフホスト（NAS・クラウド・Docker）。同時編集も 1〜2 秒あければおおむね安全。<br>
+    · <strong>PDF のスクラップ</strong> — 整合性が大事なら変換、コンテキストだけ要るなら Python でマークダウン化するほうがトークンを節約。<br>
+    · <strong>メタデータのフィールド</strong>は<strong>その知識を取り出して使う人が</strong>決める — どんな分類で取り出すかに合わせてキーと値を設計する。<br>
+    · <strong>ボルトの規模</strong> — メタデータ（type など）でフィルタすれば、1 万ノートでも問題なくインデックス化・アクセスできる。
 </div>

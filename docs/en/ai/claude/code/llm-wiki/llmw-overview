@@ -1,4 +1,4 @@
-<h2>LLM Wiki — Overview</h2>
+<h2>LLM Wiki — the System and Capture</h2>
 <p>This material organizes the <strong>"LLM Wiki / Yohan Gu"</strong> talk paragraph by paragraph, in order. In the age of artificial intelligence, <strong>where and how you organize your own material</strong> matters enormously. We have already been extending context to AI with markdown files such as Claude Code's <code>CLAUDE.md</code> and <code>memory.md</code>, and <strong>Obsidian</strong> is a system that contextualizes all of it into a single framework.</p>
 
 <div class="diagram">
@@ -51,3 +51,91 @@
     This document set organizes and reconstructs the contents of the "LLM Wiki / Yohan Gu" talk in order. The speaker built and published an Obsidian-based personal knowledge management system.
     <br>· Video: <a href="https://www.youtube.com/live/MRTQwBFURJs" target="_blank" rel="noopener">youtube.com/live/MRTQwBFURJs</a>
 </div>
+
+<h3>The Vault System — Main Vault and Wiki Vault</h3>
+<p>Obsidian is fundamentally built on the <strong>vault</strong> system. A vault is a <strong>collection of markdown files</strong> bundled under a single name, and it is read as one set. It is the same structure as Claude Code opening a particular folder, reading the <code>CLAUDE.md</code> inside it, and taking on a distinct identity.</p>
+
+<h4>Separate knowledge written by AI from knowledge written by you</h4>
+<p>Wherever possible, it is best to <strong>separate knowledge written by AI from knowledge written by you into different vaults</strong>. It is easy to mistake what AI produced for something you fully understand yourself, so it matters to <strong>draw a strict line</strong> around how far your own study has actually gone.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 660 250" role="img" aria-label="A two-vault architecture where several wiki vaults (satellites) connect bidirectionally around a central main vault (mothership)">
+    <rect class="d-box accent" x="260" y="100" width="140" height="54" rx="12"/>
+    <text class="d-label" x="330" y="124" text-anchor="middle">Main vault</text>
+    <text class="d-sub" x="330" y="142" text-anchor="middle">mothership</text>
+
+    <rect class="d-box soft" x="28" y="16" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="87" y="41" text-anchor="middle">Wiki vault</text>
+    <rect class="d-box soft" x="514" y="16" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="573" y="41" text-anchor="middle">Wiki vault</text>
+    <rect class="d-box soft" x="18" y="107" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="77" y="132" text-anchor="middle">Wiki vault</text>
+    <rect class="d-box soft" x="524" y="107" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="583" y="132" text-anchor="middle">Wiki vault</text>
+    <rect class="d-box soft" x="28" y="196" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="87" y="221" text-anchor="middle">Wiki vault</text>
+    <rect class="d-box soft" x="514" y="196" width="118" height="40" rx="9"/>
+    <text class="d-label sm" x="573" y="221" text-anchor="middle">Wiki vault</text>
+
+    <line class="d-edge accent" x1="260" y1="127" x2="136" y2="127"/>
+    <polygon class="d-arrow accent" points="136,127 144,122 144,132"/>
+    <polygon class="d-arrow accent" points="260,127 252,122 252,132"/>
+    <line class="d-edge accent" x1="400" y1="127" x2="524" y2="127"/>
+    <polygon class="d-arrow accent" points="524,127 516,122 516,132"/>
+    <polygon class="d-arrow accent" points="400,127 408,122 408,132"/>
+    <line class="d-edge accent" x1="297.1" y1="98.2" x2="140" y2="56"/>
+    <polygon class="d-arrow accent" points="140,56 149.9,54.2 147.5,62.8"/>
+    <polygon class="d-arrow accent" points="297.1,98.2 289.6,91.4 287.2,100"/>
+    <line class="d-edge accent" x1="362.9" y1="98.2" x2="520" y2="56"/>
+    <polygon class="d-arrow accent" points="520,56 512.5,62.8 510.1,54.2"/>
+    <polygon class="d-arrow accent" points="362.9,98.2 372.8,100 370.4,91.4"/>
+    <line class="d-edge accent" x1="297.3" y1="156" x2="140" y2="196"/>
+    <polygon class="d-arrow accent" points="140,196 147.5,189.4 149.9,198"/>
+    <polygon class="d-arrow accent" points="297.3,156 287.4,154 289.8,162.6"/>
+    <line class="d-edge accent" x1="362.7" y1="156" x2="520" y2="196"/>
+    <polygon class="d-arrow accent" points="520,196 510.1,198 512.5,189.4"/>
+    <polygon class="d-arrow accent" points="362.7,156 370.2,162.6 372.6,154"/>
+</svg>
+<div class="d-cap">Several <strong>wiki vaults (satellites)</strong> connect to the central <strong>main vault (mothership)</strong> through two-way sync and references.</div>
+</div>
+
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Vault</th><th>Metaphor</th><th>What it holds</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Main vault</strong></td><td>mothership</td><td>Concepts you know well and can explain to others. Finished deliverables.</td></tr>
+            <tr><td><strong>LLM wiki vault</strong></td><td>satellite (several of them)</td><td>What you want to learn, what you do not know well yet, technical concepts. A storage space for raw material.</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>The speaker actually uses <strong>about 8</strong> vaults, dividing them by purpose and by who they are shared with.</p>
+
+<h4>Local files and syncing</h4>
+<ul>
+    <li>Obsidian works with <strong>local files</strong>, which is an advantage for work where security matters. File paths are exposed as-is, so computers handle them easily and quickly.</li>
+    <li><strong>Avoid putting in files other than markdown (HTML, PDF, images, Hangul documents, and so on)</strong> — Obsidian's rendering slows down.</li>
+    <li>For syncing you can use the official Sync, or build a shared vault within an organization using a plugin such as <code>osync</code>, which mimics it and can be <strong>self-hosted</strong>.</li>
+</ul>
+
+<h3>What Goes In — Knowledge Capture</h3>
+<p>"If I just use a recent model with web search, why bother organizing things locally?" is a natural question. The answer lies in <strong>the limits of our own heads</strong> and in <strong>learning</strong>.</p>
+
+<h4>A forward base for learning — the stretched goal</h4>
+<p>The <strong>stretched goal</strong> from educational technology is the idea that learning happens smoothly only when you set a goal you can reach by stretching your arm a little further. The LLM wiki plays the role of this <strong>forward base for learning</strong>. You capture material you do not understand yet but want to learn, and inch forward with the help of AI.</p>
+
+<h4>Let AI know what you care about</h4>
+<p>Like the links and articles you pile up in KakaoTalk's "send to myself," we capture <strong>knowledge we have taken an interest in</strong>. Artificial intelligence does not know all of your tastes, but once you let it know <strong>where you showed interest and what you applied your human bias to</strong>, there is far more it can learn from there.</p>
+
+<h4>What goes into the main vault vs. the wiki vault</h4>
+<ul>
+    <li><strong>Main vault</strong> — concepts you <strong>know well</strong> enough to lecture on all day.</li>
+    <li><strong>LLM wiki</strong> — concepts you want to talk about all day but <strong>do not know well yet</strong>. Often the more technical material.</li>
+</ul>
+<p>For example, overseas cases researched while looking into mounting Starlink on a vehicle, or concepts learned while writing up BM25 (Best Matching 25, lexicon-based search), go into the wiki.</p>
+
+<div class="note">
+    <span class="nh">Key point</span>
+    What matters is organizing the concepts you intend to study <strong>in a form that not only you can read, but artificial intelligence can read alongside you</strong>.
+</div>
+<p>With the vault as the vessel and capture as the habit, the next chapter, <a href="#!llmw-metadata">Note Anatomy</a>, dissects what a single note inside that vessel looks like — metadata, links, cards, and system files.</p>
+
