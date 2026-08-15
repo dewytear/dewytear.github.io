@@ -1,4 +1,4 @@
-<h2>提案の概要 — GitLab をもとにした AI 開発ナレッジプラットフォーム</h2>
+<h2>提案概要 — なぜ今、何を</h2>
 <p>開発者はいまと同じように GitLab へ開発の成果を反映するだけで、<strong>AI がその成果を分析して組織の知識へ自動で変換し積み上げる</strong> <strong>Read-Only Engineering Knowledge Platform</strong> を提案する。人が文書を書くウィキではなく、<strong>開発の成果物がそのまま知識の源になる</strong>構造だ。</p>
 
 <div class="note">
@@ -38,11 +38,34 @@
 
 <h3>このシリーズの構成</h3>
 <ul>
-    <li><a href="#!dzp-why"><strong>なぜいまか</strong></a> — 散らばり消えていく開発の知識、その費用の根拠</li>
+    <li><a href="#!dzp-overview"><strong>なぜいまか</strong></a> — 散らばり消えていく開発の知識、その費用の根拠</li>
     <li><a href="#!dzp-core"><strong>提案の要</strong></a> — 開発の流れはそのまま、知識化は AI が。Event Stream と Knowledge State</li>
-    <li><a href="#!dzp-architecture"><strong>プラットフォームのアーキテクチャ</strong></a> — 7 階層の構成、知識の生成の Trigger、増分の分析、知識の無矛盾のゲート、運用の安定性</li>
+    <li><a href="#!dzp-core"><strong>プラットフォームのアーキテクチャ</strong></a> — 7 階層の構成、知識の生成の Trigger、増分の分析、知識の無矛盾のゲート、運用の安定性</li>
     <li><a href="#!dzp-knowledge"><strong>知識の管理の体系</strong></a> — 価値の判定 · 知識の原子の構造（実証のスキーマ + 拡張） · 二重の連結 · Identifier の検索 · 出典の追跡 · 信頼の等級 · 寿命の管理</li>
     <li><a href="#!dzp-security"><strong>資産の活用とセキュリティ</strong></a> — 検証された Reference Wiki のエンジン（wiki-plugin）の再利用、AI の消費の層、知識の等級とアクセスの分離</li>
-    <li><a href="#!dzp-value"><strong>付加価値と活用のシナリオ</strong></a> — API の仕様書の自動の更新、社員・パートナー・顧客・AI の対象別のビュー、AI コーディングの事前の知識、非開発の職種での活用</li>
-    <li><a href="#!dzp-roadmap"><strong>推進のロードマップ</strong></a> — 4 つの Phase、1 次の PoC（OmniEsol ERP · SCM のドメイン）、ゲートで計測する検証の KPI</li>
+    <li><a href="#!dzp-security"><strong>付加価値と活用のシナリオ</strong></a> — API の仕様書の自動の更新、社員・パートナー・顧客・AI の対象別のビュー、AI コーディングの事前の知識、非開発の職種での活用</li>
+    <li><a href="#!dzp-security"><strong>推進のロードマップ</strong></a> — 4 つの Phase、1 次の PoC（OmniEsol ERP · SCM のドメイン）、ゲートで計測する検証の KPI</li>
 </ul>
+
+<h3>なぜいまか — 散らばり消えていく開発の知識</h3>
+<p>プロジェクトを進めれば、Architecture と設計の構造、業務の Rule と状態の遷移、DB の Table・Column の意味、API の連携、障害の原因と解決の方法、性能の改善の事例、再利用できる開発のパターンといった知識が次々に生まれる。しかしこの知識のほとんどは <strong>Source Code · Commit · Merge Request · Issue · メッセンジャー · メール · 会議 · 個人の記憶</strong>に散らばったまま残り、<strong>組織の知識</strong>として積み上がらない。</p>
+
+<h4>費用はすでに数字になっている</h4>
+<ul>
+    <li>開発者の <strong>62% が毎日 30 分以上</strong>を答え探しに使い、<strong>68% は週に 1 回以上、知識のサイロ</strong>にぶつかる — <a href="https://survey.stackoverflow.co/2022/" target="_blank" rel="noopener">Stack Overflow Developer Survey 2022</a></li>
+    <li>開発者の <strong>69% が週に 8 時間以上（勤務時間のおよそ 20%）を非効率で失い</strong>、主な原因として<strong>「不十分な文書」</strong>を挙げる — <a href="https://www.atlassian.com/blog/developer/developer-experience-report-2024" target="_blank" rel="noopener">Atlassian, State of Developer Experience 2024</a></li>
+    <li>知識労働者は勤務時間の <strong>19% を情報の検索・収集</strong>に使う — <a href="https://www.mckinsey.com/industries/technology-media-and-telecommunications/our-insights/the-social-economy" target="_blank" rel="noopener">McKinsey, The Social Economy (2012)</a></li>
+    <li>職務の知識の <strong>42% はその人にしかない固有の知識</strong>なので、退職すれば同僚はその業務の 42% を行えない。大企業の基準で、非効率な知識の共有による損失は<strong>年に 4,700 万ドル</strong>と推計される — <a href="https://www.panopto.com/company/news/inefficient-knowledge-sharing-costs-large-businesses-47-million-per-year/" target="_blank" rel="noopener">Panopto Workplace Knowledge Report (2018)</a></li>
+    <li>新しい開発者が十分な生産性に達するまでには、平均で <strong>3〜9 か月</strong>かかる — <a href="https://newsletter.getdx.com/p/developer-onboarding-time" target="_blank" rel="noopener">DX, Developer Onboarding Research</a></li>
+</ul>
+<p>その結果として組織では、同じ問題のくり返しの分析、設計の意図と変更の背景の喪失、プロジェクトのあいだでの経験の再利用の不足、担当者の異動・退職にともなう知識の損失、新しい開発者の高いオンボーディングの費用、AI の開発の道具を使うたびの Context の説明のくり返しが、何度も起きる。</p>
+
+<h4>「文書をきちんと書こう」は答えにならない</h4>
+<p>オープンソースの調査では <strong>93% が「不完全あるいは古い文書」を蔓延する問題</strong>として挙げながら、60% は文書にほとんど貢献しなかった（<a href="https://opensourcesurvey.org/2017/" target="_blank" rel="noopener">GitHub Open Source Survey 2017</a>）。Stack Overflow は、社内のウィキや文書の DB が放置され信頼を失う構造的な理由を早くに分析している（<a href="https://stackoverflow.blog/2019/09/30/why-your-wikis-instant-messaging-and-documentation-databases-dont-work/" target="_blank" rel="noopener">Why Your Wikis … Don't Work, 2019</a>）。日程と優先順位に押される開発の現場では、<strong>人の真面目さに頼る文書化は続かない。</strong></p>
+
+<div class="note">
+    <span class="nh">問題の定義しなおし</span>
+    足りないのは開発者の真面目さではなく<strong>構造</strong>だ。知識はすでに GitLab に積まれている — それを読んで整理する主体が人である必要がないだけである。そしてその構造の半分（知識を収めてつなぎ検証するエンジン）は Reference Wiki として<strong>すでに運用中</strong>だ — ないのは GitLab とのつながりだけである。次の編の<a href="#!dzp-core">提案の要</a>でその構造を扱う。
+</div>
+<p>問題意識と提案の輪郭をつかんだところで、<a href="#!dzp-core">中核とアーキテクチャ</a>が「開発フローはそのまま、知識化は AI が」という設計を具体化します。</p>
+

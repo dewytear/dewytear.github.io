@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-06T02:35:24+09:00",
- "dateModified": "2026-08-12T00:20:13+09:00"
+ "dateModified": "2026-08-16T00:41:11+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -72,33 +72,27 @@
     <table>
         <thead><tr><th>System</th><th>編数</th><th>中心の主題</th><th>ハブの文書</th></tr></thead>
         <tbody id="km-clusters" data-section-prefix="Douzone" data-topics='{"AI開発ナレッジプラットフォーム":"GitLab の開発の成果の自動の知識化の提案","AI通知の送信エンジン":"Kafka をもとにした送信エンジンの実装の要請"}'>
-            <tr><td><strong>AI開発ナレッジプラットフォーム</strong></td><td>8</td><td>GitLab の開発の成果の自動の知識化の提案</td><td><a href="/p/ja/dzp-overview/">提案の概要 — GitLab をもとにした AI 開発ナレッジプラットフォーム</a></td></tr>
-            <tr><td><strong>AI通知の送信エンジン</strong></td><td>3</td><td>Kafka をもとにした送信エンジンの実装の要請</td><td><a href="/p/ja/sne-scope/">送信エンジンの実装の要請の項目</a></td></tr>
+            <tr><td><strong>AI開発ナレッジプラットフォーム</strong></td><td>4</td><td>GitLab の開発の成果の自動の知識化の提案</td><td><a href="/p/ja/dzp-core/">提案の中核とアーキテクチャ</a></td></tr>
+            <tr><td><strong>AI通知の送信エンジン</strong></td><td>1</td><td>Kafka をもとにした送信エンジンの実装の要請</td><td><a href="/p/ja/sne-overview/">送信エンジン実装依頼 — 概要・依頼事項・インターフェース</a></td></tr>
         </tbody>
     </table>
 </div>
 
 <h3>System の詳細 — 何が入っていて、どの順に読むか</h3>
 
-<h4>AI開発ナレッジプラットフォーム — GitLab をもとにした自動の知識化の提案（8 編）</h4>
+<h4>AI開発ナレッジプラットフォーム — GitLab をもとにした自動の知識化の提案（4 編）</h4>
 <p>GitLab に積み上がる開発の成果を AI が分析して<strong>組織の知識へ自動で変換し蓄積する</strong> Read-Only Engineering Knowledge Platform の提案のシリーズです。下の順に読めば、問題の定義から実行の計画までがひと続きにつながります。</p>
 <ul>
-    <li><a href="/p/ja/dzp-overview/">提案の概要</a> — 一文の要約と好循環の構造（開発の成果 → 組織の知識 → 次の開発）。シリーズの入口の文書。</li>
-    <li><a href="/p/ja/dzp-why/">なぜいまか</a> — 散らばり消えていく開発の知識の費用を、業界の統計で根拠づけた問題の定義。</li>
-    <li><a href="/p/ja/dzp-core/">提案の要</a> — 開発の流れはそのまま、知識化は AI が。Event Stream（GitLab）と Knowledge State（Wiki）の分離。</li>
-    <li><a href="/p/ja/dzp-architecture/">プラットフォームのアーキテクチャ</a> — 7 階層の構成、知識の生成の Trigger、SHA による増分の分析、知識の無矛盾のゲート、運用の二重化。</li>
-    <li><a href="/p/ja/dzp-knowledge/">知識の管理の体系</a> — 価値の判定 · 知識の原子の構造（実証されたスキーマ + 拡張のフィールド） · 二重の連結（related・relations） · Identifier での検索 · 出典の追跡 · FACT/INFERRED/DECISION の信頼の等級 · supersedes による寿命の管理。</li>
-    <li><a href="/p/ja/dzp-security/">資産の活用とセキュリティ</a> — Reference Wiki のエンジンの再利用（wiki-plugin のパッケージ化・義務の手順の図・AI の消費の層）と、PUBLIC〜RESTRICTED の等級とアクセスの分離。</li>
-    <li><a href="/p/ja/dzp-value/">付加価値と活用のシナリオ</a> — API の仕様書の自動の更新、等級のフィルタで作る社員・パートナー・顧客・AI の対象別のビュー、AI コーディングの事前の知識、非開発の職種での活用。</li>
-    <li><a href="/p/ja/dzp-roadmap/">推進のロードマップ</a> — 4 つの Phase での推進（wiki-plugin の移植から）と 1 次の PoC（OmniEsol ERP · SCM のドメイン）、ゲートで計測する検証の KPI。</li>
+    <li><a href="/p/ja/dzp-overview/">提案概要 — なぜ今、何を</a> — 一文の要約と好循環の構造、業界統計に根拠づけた問題定義。シリーズの入口。</li>
+    <li><a href="/p/ja/dzp-core/">提案の中核とアーキテクチャ</a> — 開発フローはそのまま、知識化は AI が。Event Stream（GitLab）と Knowledge State（Wiki）の分離、7 層構成・トリガー・SHA 増分分析・整合性ゲート。</li>
+    <li><a href="/p/ja/dzp-knowledge/">知識管理体系</a> — 価値判定 · 知識の原子構造 · 二重のリンク（related · relations）· Identifier 検索 · 出所追跡 · FACT/INFERRED/DECISION の信頼等級 · supersedes のライフサイクル。</li>
+    <li><a href="/p/ja/dzp-security/">セキュリティ・付加価値・ロードマップ</a> — Reference Wiki エンジンの再利用と PUBLIC~RESTRICTED の等級・アクセス分離、API 仕様書の自動更新などの対象別シナリオ、4 フェーズの推進と第 1 次 PoC・検証 KPI。</li>
 </ul>
 
-<h4>AI通知の送信エンジン — Kafka をもとにした送信エンジンの実装の要請（3 編）</h4>
+<h4>AI通知の送信エンジン — Kafka をもとにした送信エンジンの実装の要請（1 編）</h4>
 <p>AI 通知が<strong>送信要求の生成まで</strong>終えたあとの、実際の送信・タイミング・再処理・状況を、プラットフォームのチームが <strong>Kafka をもとにした共用の送信エンジン</strong>として実装してくれるよう要請する提案のシリーズです。概念を主に整理しており、具体の設計は協議で確定します。</p>
 <ul>
-    <li><a href="/p/ja/sne-overview/">概要・責任の境界</a> — 送信要求の生成までが AI 通知、それ以後の送信・タイミング・再処理・状況が送信エンジンという責任の境界。</li>
-    <li><a href="/p/ja/sne-scope/">実装の要請の項目</a> — チャネルへの送信・冪等・配送の保証・DLQ、時点の 4 つの型（即時・遅延・周期・遷移）のタイミング、送る瞬間の最新の照会、周期のバッチの寿命の管理、送信の状況の画面。</li>
-    <li><a href="/p/ja/sne-interface/">インタフェース・協議</a> — エンジンよりインタフェースを先に確定して並行して実装する。送信要求の伝達・送る時点の確定・結果の返信のインタフェースと、Phase の優先度。</li>
+    <li><a href="/p/ja/sne-overview/">送信エンジン実装依頼 — 概要・依頼事項・インターフェース</a> — 送信依頼の生成までが AI 通知、その先の送信・タイミング・再処理・現況がエンジンの責任という境界の定義から、チャネル送信・冪等・配達保証・DLQ などの依頼事項、インターフェースの事前確定・協議・期待効果までを一編に。</li>
 </ul>
 
 <h4>予定の System — 場所だけ用意されたところ</h4>
@@ -111,9 +105,9 @@
 
 <h3>おすすめの読む順</h3>
 <ul>
-    <li><strong>提案書をはじめて読むなら</strong> — <a href="/p/ja/dzp-overview/">提案の概要</a> → <a href="/p/ja/dzp-why/">なぜいまか</a> → <a href="/p/ja/dzp-core/">提案の要</a>。ここまでが「何を、なぜ」です。</li>
-    <li><strong>技術の検討が目的なら</strong> — <a href="/p/ja/dzp-architecture/">プラットフォームのアーキテクチャ</a> → <a href="/p/ja/dzp-knowledge/">知識の管理の体系</a> → <a href="/p/ja/dzp-security/">資産の活用とセキュリティ</a>。「どうやって」を扱います。</li>
-    <li><strong>実行の判断が目的なら</strong> — <a href="/p/ja/dzp-roadmap/">推進のロードマップ</a>で Phase・PoC・KPI を確かめ、背景が要るなら概要へ戻ります。</li>
+    <li><strong>提案書をはじめて読むなら</strong> — <a href="/p/ja/dzp-overview/">提案概要 — なぜ今、何を</a> → <a href="/p/ja/dzp-core/">提案の中核とアーキテクチャ</a>。ここまでが「何を、なぜ」です。</li>
+    <li><strong>技術の検討が目的なら</strong> — <a href="/p/ja/dzp-core/">中核とアーキテクチャ</a> → <a href="/p/ja/dzp-knowledge/">知識の管理の体系</a> → <a href="/p/ja/dzp-security/">セキュリティ・付加価値・ロードマップ</a>。「どうやって」を扱います。</li>
+    <li><strong>実行の判断が目的なら</strong> — <a href="/p/ja/dzp-security/">セキュリティ・付加価値・ロードマップ</a>で Phase・PoC・KPI を確かめ、背景が要るなら概要へ戻ります。</li>
 </ul>
 
 <h3>知識をつなぐ橋 — ブリッジの概念</h3>
@@ -124,14 +118,14 @@
 
 <h3>いちばん多く扱われる中心の概念</h3>
 <p>DOUZONE World でくり返し現れる上位の概念です。概念を押すと、その概念での<strong>統合の検索</strong>が開きます。</p>
-<p class="scn-sub" id="km-top">ナレッジプラットフォーム 7</p>
-<p class="scn-sub" id="km-totals">知識文書11件 · 固有概念46個。</p>
+<p class="scn-sub" id="km-top"></p>
+<p class="scn-sub" id="km-totals">知識文書5件 · 固有概念39個。</p>
 
 <div class="note">
     <span class="nh">生きている地図</span>
     この地図と <code>knowledge-index.json</code> は、AI が文書を読んで<strong>自動で生成</strong>します。関連する文書は<strong>希少性で重みづけした概念の重なり</strong>（まれな概念ほど強く）で計算し、重なる概念の少ない文書は<strong>同じフォルダの隣</strong>で補います。文書が増えたり変わったりしたら、インデックスを作り直して地図を更新します。
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> 知識の地図 &middot; <span class="pr-k">作成日</span> 2026-07-06 &middot; <span class="pr-k">更新日</span> 2026-08-12</p>
+<p class="pr-meta"><span class="pr-k">分類</span> 知識の地図 &middot; <span class="pr-k">作成日</span> 2026-07-06 &middot; <span class="pr-k">更新日</span> 2026-08-16</p>
 </body>
 </html>

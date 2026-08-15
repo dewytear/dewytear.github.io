@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Asset Reuse and Security</title>
-<meta name="description" content="Reusing the validated Reference Wiki engine — wiki-plugin packaging (18 tools, 4 skills), the mandatory registration procedure, the llms.txt and graph JSON AI consumption layer, and four security grades with separated repositories">
+<title>Security, Added Value, and the Roadmap</title>
+<meta name="description" content="Security tiers and asset use, value scenarios beyond the dev org, and the four-phase roadmap with the first PoC">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/en/dzp-security/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/dzp-security/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/dzp-security/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Asset Reuse and Security">
-<meta property="og:description" content="Reusing the validated Reference Wiki engine — wiki-plugin packaging (18 tools, 4 skills), the mandatory registration procedure, the llms.txt and graph JSON AI consumption layer, and four security grades with separated repositories">
+<meta property="og:title" content="Security, Added Value, and the Roadmap">
+<meta property="og:description" content="Security tiers and asset use, value scenarios beyond the dev org, and the four-phase roadmap with the first PoC">
 <meta property="og:url" content="https://dewytear.github.io/p/en/dzp-security/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Asset Reuse and Security">
-<meta name="twitter:description" content="Reusing the validated Reference Wiki engine — wiki-plugin packaging (18 tools, 4 skills), the mandatory registration procedure, the llms.txt and graph JSON AI consumption layer, and four security grades with separated repositories">
+<meta name="twitter:title" content="Security, Added Value, and the Roadmap">
+<meta name="twitter:description" content="Security tiers and asset use, value scenarios beyond the dev org, and the four-phase roadmap with the first PoC">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "Asset Reuse and Security",
- "description": "Reusing the validated Reference Wiki engine — wiki-plugin packaging (18 tools, 4 skills), the mandatory registration procedure, the llms.txt and graph JSON AI consumption layer, and four security grades with separated repositories",
+ "headline": "Security, Added Value, and the Roadmap",
+ "description": "Security tiers and asset use, value scenarios beyond the dev org, and the four-phase roadmap with the first PoC",
  "inLanguage": "en",
  "url": "https://dewytear.github.io/p/en/dzp-security/",
  "mainEntityOfPage": "https://dewytear.github.io/#!dzp-security",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-06T02:35:24+09:00",
- "dateModified": "2026-07-28T04:43:06+09:00"
+ "dateModified": "2026-08-16T00:41:11+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,8 +58,7 @@
   &middot; <a href="/p/ja/dzp-security/" hreflang="ja">日本語</a>
 </p>
 <article>
-<h2>Asset Reuse and Security</h2>
-
+<h2>Security, Added Value, and the Roadmap</h2>
 <h3>We do not build it from scratch</h3>
 <p>We start the PoC by cloning the features already provided by the <strong>Reference Wiki</strong> that is running for pre-validation (the very wiki explained by the <a href="/p/en/kgs-overview/">How Knowledge Accumulates</a> series), and we grow the validated features into the company platform. Scope proven as of 2026-07: HTML Fragment documents, SPA Web UI, JSON Navigation Tree (immutable IDs separated from physical paths), unified/Tag/Concept search, Knowledge Index (deterministic build + <code>--check</code> drift gate), automatic related-document recommendation (<code>related</code>) and <strong>five typed knowledge relations (<code>relations</code>)</strong>, Knowledge Map · 3D/2D knowledge graph, <strong>an AI consumption layer (llms.txt · self-contained graph JSON)</strong>, a four-layer CI validation gate, Work Log, and Git History based document history.</p>
 
@@ -124,11 +123,113 @@
     <span class="nh">Do not mix it all into one public wiki</span>
     The recommended structure separates repositories and access into <strong>General Wiki (all employees) · Engineering Wiki (development organization) · Restricted Knowledge (restricted organizations)</strong>. All security grades are not mixed into a single public wiki, and employees search and read only within the scope of their own permissions.
 </div>
+
+<h3>Added Value and Use Scenarios — Beyond the Development Organization</h3>
+<p>The previous parts dealt with the perspective inside the development organization — how knowledge is created and managed. This part deals with <strong>how many faces a single Knowledge State, once accumulated, can be consumed in</strong>. The source of added value is not writing more documents, but <strong>adding one more view per audience</strong> on the repository that has already been accumulated — accumulate once, and employees, partners, customers, and AI each pull the same knowledge within their own scope.</p>
+
+<h4>Automatic API specification updates — the first derivative product</h4>
+<p>The most immediate added value is that <strong>the API specification stays alive together with the code</strong>. The chronic problem of manual specifications is well known — updates fall behind after the first draft, and a specification that diverges from the code misleads integration developers and customers. On this platform, the API specification is not a separate deliverable but a <strong>natural output of the knowledge pipeline</strong>:</p>
+<ul>
+    <li><strong>Extraction</strong> — endpoints · parameters · response structures · error codes are read out of merged Controller · Mapper · Config changes. Because they are facts confirmed directly in the code, most of them are <strong>FACT grade</strong> — the knowledge with the highest chance of automatic publication in the <a href="/p/en/dzp-knowledge/">trust level system</a>.</li>
+    <li><strong>Update</strong> — when an API changes, the same merge trigger updates the specification document. The dual management of "specification here, code there" structurally disappears.</li>
+    <li><strong>Search</strong> — because API names and error codes are carried in the <code>identifiers</code> extension field, an integration developer reaches the relevant specification and policy document directly from a single error code.</li>
+    <li><strong>History</strong> — when an interface policy changes, the old specification is linked as superseded via <code>supersedes</code>, preserving both "the current spec" and "why it changed."</li>
+</ul>
+
+<h4>One repository, a view per audience</h4>
+<p>The four security grades are an access control mechanism and at the same time a <strong>publication channel selector</strong>. From the same repository, read-only views per audience are created simply by varying the grade filter — no repository is cloned and no document is copied over.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 220" role="img" aria-label="A single knowledge repository passes through a security grade filter and is consumed as views for four audiences: employees, partners, customers, and AI agents">
+    <rect class="d-box accent" x="8" y="80" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="83" y="103" text-anchor="middle">Knowledge store</text>
+    <text class="d-sub" x="83" y="121" text-anchor="middle">Knowledge State</text>
+    <rect class="d-box" x="196" y="80" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="271" y="103" text-anchor="middle">Security filter</text>
+    <text class="d-sub" x="271" y="121" text-anchor="middle">4-grade selection</text>
+    <line class="d-edge" x1="158" y1="108" x2="188" y2="108"/><polygon class="d-arrow" points="188,103 188,113 196,108"/>
+    <rect class="d-box" x="420" y="8" width="252" height="42" rx="9"/>
+    <text class="d-label sm" x="546" y="26" text-anchor="middle">Employees · dev organization</text>
+    <text class="d-sub" x="546" y="42" text-anchor="middle">All grades — search · AI context</text>
+    <rect class="d-box" x="420" y="62" width="252" height="42" rx="9"/>
+    <text class="d-label sm" x="546" y="80" text-anchor="middle">Partners · collaborating firms</text>
+    <text class="d-sub" x="546" y="96" text-anchor="middle">INTERNAL subset — integration guide</text>
+    <rect class="d-box" x="420" y="116" width="252" height="42" rx="9"/>
+    <text class="d-label sm" x="546" y="134" text-anchor="middle">Customers</text>
+    <text class="d-sub" x="546" y="150" text-anchor="middle">PUBLIC — product · API doc portal</text>
+    <rect class="d-box" x="420" y="170" width="252" height="42" rx="9"/>
+    <text class="d-label sm" x="546" y="188" text-anchor="middle">AI Agent</text>
+    <text class="d-sub" x="546" y="204" text-anchor="middle">llms.txt contract — auto consumption</text>
+    <path class="d-edge" d="M346 100 H380 C390 100, 394 94, 394 84 V39 C394 31, 398 29, 406 29 H412"/>
+    <polygon class="d-arrow" points="412,24 412,34 420,29"/>
+    <path class="d-edge" d="M346 104 H384 C394 104, 398 100, 398 93 C398 87, 402 83, 410 83 H412"/>
+    <polygon class="d-arrow" points="412,78 412,88 420,83"/>
+    <path class="d-edge" d="M346 112 H384 C394 112, 398 116, 398 123 C398 129, 402 133, 410 133 H412"/>
+    <polygon class="d-arrow" points="412,128 412,138 420,133"/>
+    <path class="d-edge" d="M346 116 H380 C390 116, 394 122, 394 132 V181 C394 189, 398 191, 406 191 H412"/>
+    <polygon class="d-arrow" points="412,186 412,196 420,191"/>
+</svg>
+<div class="d-cap">One repository, as many views as there are audiences — the grade filter becomes the publication channel.</div>
+</div>
+
+<ul>
+    <li><strong>Employees · development organization</strong> — identifier search, AI tool context, and onboarding paths across the full grade range. The basic view that directly reduces the losses quantified in <a href="/p/en/dzp-overview/">Why Now</a> (8 hours of inefficiency per week, 3–9 months of onboarding).</li>
+    <li><strong>Partners · collaborating firms</strong> — integration development guides, API specifications, and customization knowledge selected from INTERNAL. The integration knowledge that partners can currently learn only "by asking the person in charge" becomes self-service, and the cost of handling repeated inquiries drops.</li>
+    <li><strong>Customers</strong> — PUBLIC grade product technical documents, API guides, and release impact notices. The dual management of <strong>building a separate customer documentation site and letting it go stale again</strong> disappears — because when the code changes, the customer documents are updated through the same pipeline.</li>
+    <li><strong>AI Agent</strong> — using the llms.txt and graph JSON contracts of the AI consumption layer as they are, the in-house assistant and the customer support bot answer from the same knowledge with evidence (sources included). The human view and the machine view come out of one repository — and the foremost consumer of this machine view is <strong>AI coding</strong> below.</li>
+</ul>
+
+<h4>Prior knowledge for AI coding — where the virtuous cycle closes</h4>
+<p>The most strategic use is <strong>using the knowledge graph as prior knowledge for AI coding</strong>. Today, a developer re-explains the domain background to an AI tool such as Claude Code every single time — "the sales order status transitions like this, the credit check happens at that point…" (the cost of repeatedly re-explaining context that <a href="/p/en/dzp-overview/">Why Now</a> pointed out). On this platform, AI reads the knowledge graph first, <strong>before starting the work</strong>:</p>
+<ul>
+    <li><strong>Entry</strong> — it grasps the overall terrain of the knowledge through llms.txt, and secures nodes · relations · concepts · URLs with <strong>a single fetch</strong> of knowledge-graph.json.</li>
+    <li><strong>Selection</strong> — it reaches the related policy documents via the <code>identifiers</code> (table, rule ID, API name) it meets in the source it is working on, and expands only as far as needed by following typed relations — background through prerequisites, "the policy valid now" through supersedes, the reasons behind design decisions through the DECISION grade.</li>
+    <li><strong>Work</strong> — it reads and writes code <strong>already knowing</strong> the domain rules, status transitions, past incidents, and design intent. This procedure can be fixed as a project convention through CLAUDE.md and MCP integration.</li>
+</ul>
+<p>This is the substance of the fourth box ("Next development — Claude Code · Agent") in the virtuous cycle diagram of the <a href="/p/en/dzp-overview/">overview</a> — development results become knowledge, and that knowledge is <strong>injected as prior knowledge into the AI of the next development</strong>, raising the quality of development results again. It is a structure in which, the more knowledge accumulates, the more the accuracy of AI coding rises at organizational scale like compound interest, and the Reference Wiki's <a href="/p/en/kgs-ai-layer/">traversal contract</a> has already demonstrated this mode of consumption at small scale.</p>
+
+<h4>Reaching non-development roles too — trust grades widen the readership</h4>
+<p>Development knowledge does not belong to developers alone. <strong>Technical support and CS</strong> search incident cases and troubleshooting to raise the quality of first-line response, <strong>sales and PMs</strong> raise the accuracy of customer conversations with product feature, policy, and terminology knowledge, and <strong>new joiners</strong> use the organization's knowledge map as an onboarding path regardless of their role. The reason it is safe even when non-development readers cannot read code is that a <a href="/p/en/dzp-knowledge/">trust grade</a> is attached to every document — FACT (facts confirmed in the code) is distinguished from INFERRED (inference) and DECISION (decision), so readers do not misunderstand how certain the knowledge is.</p>
+
+<div class="note">
+    <span class="nh">Key point</span>
+    The added value of this platform does not come from creating a new documentation channel for every department. <strong>It comes from adding views with grade filters on top of a Knowledge State accumulated once</strong> — API specifications, partner guides, the customer documentation portal, and prior knowledge for AI coding are all different cross-sections of the same repository.
+</div>
+
+<h3>Rollout Roadmap — 4 Phases and the First PoC</h3>
+<p>Nothing unvalidated is introduced to the organization. Starting from pre-validation, the steps proceed in the order of team PoC, center-wide expansion, and company-wide rollout.</p>
+
+<h4>Four-phase rollout</h4>
+<ul>
+    <li><strong>Phase 1 · Porting the Reference Wiki engine</strong> — we do not start from a blank page: <strong>install wiki-plugin (v0.21.0)</strong> in the company repository to bootstrap the registration, index, and validation system as it is (the wiki-init → add-doc → validate skills of <a href="/p/en/kgs-plugin/">the plugin packaging</a>), manually curate SCM domain knowledge through Claude Code integration, and validate Knowledge Index search, HTML accumulation, and the AI Curator Prototype. First target: <strong>OmniEsol ERP · SCM domain</strong></li>
+    <li><strong>Phase 2 · Company PoC (SCM구축개발1Unit)</strong> — company Wiki Repository, GitLab Project Registry, Change Collector, SHA incremental processing, AI Knowledge Curator, introduction of extension fields (identifiers · sources · trust), Read-Only Portal. First source: the OmniEsol ERP SCM GitLab Repository</li>
+    <li><strong>Phase 3 · Expansion to the SCM Development Center</strong> — multiple projects, Product/Domain classification, knowledge links across projects (applying typed relations across projects), Knowledge Lifecycle (operating supersedes), security grades, quality KPIs</li>
+    <li><strong>Phase 4 · Company-wide expansion</strong> — in-house SSO, company-wide search, per-product Knowledge Governance, AI Agent integration (intranet llms.txt and graph JSON contracts), formalization as the in-house development platform</li>
+</ul>
+
+<h4>First PoC — OmniEsol ERP (SCM domain)</h4>
+<p>ERP is <strong>the domain with the highest density of business rules</strong>. The business rules of sales, sales orders, purchasing, and production; the document status transition system (sales order → shipment → revenue); credit and available-to-promise (ATP) check policies; inter-process integration; DB table structures and column semantics; incident cases; policy change history — <strong>elements with high value for turning into knowledge already exist</strong>, and the search and accumulation effects can be validated immediately with identifiers such as those below (for the entry structure, see the schema example in <a href="/p/en/dzp-knowledge/">Knowledge Management</a>).</p>
+<pre><code>SD_SO_HDR   SD_SO_ITEM   SO_STS_CD
+CREDIT_CHK_YN   NR_SD_SO_COMPLETED   createSalesOrder</code></pre>
+
+<h4>Validation KPIs — four axes, measured by gates</h4>
+<p>A KPI is not a declaration; <strong>it becomes a target only when a measurement method is attached</strong>. A good part of the four axes are values the Reference Wiki is already measuring with CI gates, so the company PoC does not need to invent the measuring instruments anew.</p>
+<ul>
+    <li><strong>Knowledge generation quality</strong> — accuracy of automatic generation, success rate of updating existing documents, duplicate document creation rate, rate of wrong inferences. <em>Measurement</em>: validator ERROR 0 (broken references, duplicate IDs, unregistered documents) + index drift 0 (<code>--check</code>) + orphan documents 0 (graph validation) — all judged automatically on every commit. Inference errors are sample-inspected per <code>trust</code> grade.</li>
+    <li><strong>Search quality</strong> — identifier search success rate (target direction: reaching the policy document from a single identifier met in the source ≥90%), accuracy of related document recommendations, time to reach the desired information.</li>
+    <li><strong>Development productivity</strong> — fewer repeated questions, less re-analysis of past incidents, reduced learning time for new developers (the 3–9 month onboarding and 8 hours per week loss statistics of <a href="/p/en/dzp-overview/">Why Now</a> are the baseline), less context explanation for AI tools.</li>
+    <li><strong>Operational quality</strong> — <strong>knowledge reflection rate against merges (target direction ≥90%)</strong>: "was knowledge reflection accompanied in merges with substantive changes" is measured continuously as the pass rate of the diff-based accompaniment gate (the integrity gate of the <a href="/p/en/dzp-core/">architecture</a>). Number of missed changes (aggregated by the sync-state correction batch), superseded processing rate, distribution of relation types (whether it is skewed toward prerequisites — a non-blocking review signal is surfaced for every new document).</li>
+</ul>
+
+<div class="note">
+    <span class="nh">Closing</span>
+    This proposal is about creating a <strong>virtuous cycle</strong> (<a href="/p/en/dzp-overview/">overview</a>) without changing developers' workflow, and that knowledge engine is already running as the Reference Wiki. What remains is to connect the event stream called GitLab to the validated engine.
+</div>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> Douzone · dev.Center · Proposal · AI Dev Knowledge Platform &middot; <span class="pr-k">Created</span> 2026-07-06 &middot; <span class="pr-k">Updated</span> 2026-07-28</p>
+<p class="pr-meta"><span class="pr-k">Section</span> Douzone · dev.Center · Proposal · AI Dev Knowledge Platform &middot; <span class="pr-k">Created</span> 2026-07-06 &middot; <span class="pr-k">Updated</span> 2026-08-16</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
-<ul><li><a href="/p/en/dzp-value/">Added Value and Use Scenarios — Beyond the Development Organization</a></li><li><a href="/p/en/skills/">Extending Claude Code — Skills · MCP · Hooks</a></li><li><a href="/p/en/skl-overview/">What Skills Are — Background and Strengths</a></li></ul>
+<ul><li><a href="/p/en/dzp-overview/">Proposal Overview — Why Now, What</a></li><li><a href="/p/en/skills/">Extending Claude Code — Skills · MCP · Hooks</a></li><li><a href="/p/en/dzp-core/">The Core of the Proposal and the Architecture</a></li><li><a href="/p/en/skl-overview/">What Skills Are — Background and Strengths</a></li></ul>
 </nav>
 </body>
 </html>
