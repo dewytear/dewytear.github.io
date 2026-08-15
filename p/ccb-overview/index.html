@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>강의 개요와 목표</title>
-<meta name="description" content="강의 목표와 하네스로 책을 만드는 전체 그림 소개">
+<title>기초 — 개요·터미널·CLAUDE.md</title>
+<meta name="description" content="Claude Code가 무엇인지부터 터미널 네 가지 명령, CLAUDE.md 작업 지침까지 — 폴더를 만들고 실행하는 관문을 넘는다">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/ccb-overview/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/ccb-overview/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/ccb-overview/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="강의 개요와 목표">
-<meta property="og:description" content="강의 목표와 하네스로 책을 만드는 전체 그림 소개">
+<meta property="og:title" content="기초 — 개요·터미널·CLAUDE.md">
+<meta property="og:description" content="Claude Code가 무엇인지부터 터미널 네 가지 명령, CLAUDE.md 작업 지침까지 — 폴더를 만들고 실행하는 관문을 넘는다">
 <meta property="og:url" content="https://dewytear.github.io/p/ccb-overview/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="강의 개요와 목표">
-<meta name="twitter:description" content="강의 목표와 하네스로 책을 만드는 전체 그림 소개">
+<meta name="twitter:title" content="기초 — 개요·터미널·CLAUDE.md">
+<meta name="twitter:description" content="Claude Code가 무엇인지부터 터미널 네 가지 명령, CLAUDE.md 작업 지침까지 — 폴더를 만들고 실행하는 관문을 넘는다">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "강의 개요와 목표",
- "description": "강의 목표와 하네스로 책을 만드는 전체 그림 소개",
+ "headline": "기초 — 개요·터미널·CLAUDE.md",
+ "description": "Claude Code가 무엇인지부터 터미널 네 가지 명령, CLAUDE.md 작업 지침까지 — 폴더를 만들고 실행하는 관문을 넘는다",
  "inLanguage": "ko",
  "url": "https://dewytear.github.io/p/ccb-overview/",
  "mainEntityOfPage": "https://dewytear.github.io/#!ccb-overview",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T20:36:07+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T14:35:47+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/ja/ccb-overview/" hreflang="ja">日本語</a>
 </p>
 <article>
-<h2>강의 개요와 목표</h2>
+<h2>기초 — 개요·터미널·CLAUDE.md</h2>
 <p>이 자료는 <strong>"Claude Code 기초 / 황민호"</strong> 실습 강의를 영상 순서대로 정리한 것입니다. 개발자가 아닌 분들에게 터미널은 낯선 환경이지만, <strong>딱 하나의 고비 — "폴더를 만들고 그 위치에서 <code>claude</code> 를 실행하는 것"</strong> 만 넘으면 그 다음부터는 AI가 대부분의 일을 대신 해 줍니다. 오늘의 목표는 터미널과 친숙해지는 것입니다.</p>
 
 <h3>이 강의로 할 수 있게 되는 것</h3>
@@ -121,11 +121,195 @@
     본 문서 세트는 "(트랙2) Claude Code 기초 / 황민호 / 260429" 실습 강의 내용을 순서대로 정리·재구성한 것입니다.
     <br>· 영상: youtube.com/watch?v=pHfDgZ7cll0
 </div>
+
+<h3>Claude Code란 무엇인가</h3>
+<p>Claude Code는 <strong>내 로컬 환경(내 PC)에서 돌아가는 AI 에이전트</strong>라고 생각하면 됩니다. 웹 채팅과 달리 내 컴퓨터의 파일을 직접 읽고 수정하고, 명령을 실행하며 일을 처리합니다. 작업은 <strong>프로젝트마다 폴더 하나를 만들고 그 폴더 안에서</strong> 진행합니다. Windows에서는 보통 <strong>PowerShell</strong> 터미널에서 실행합니다.</p>
+
+<h4>기존 서비스와의 차이</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr><th>형태</th><th>특징</th><th>자유도</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>웹 브라우저(Claude·ChatGPT·Gemini)</td><td>브라우저 안의 제약된 환경에서 AI 사용. 파일을 일일이 업로드해야 함</td><td>가장 제한적</td></tr>
+            <tr><td>Claude 데스크톱 앱</td><td>로컬에서 동작하지만 터미널 대비 제약이 있음</td><td>중간</td></tr>
+            <tr><td><strong>Claude Code (터미널)</strong></td><td>실행한 폴더의 파일에 직접 접근. 내가 원하는 대로 자유롭게 작업</td><td>가장 자유로움</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>터미널 환경에 조금만 익숙해지면, 평소 AI 채팅을 쓰듯이 훨씬 자유롭게 사용할 수 있습니다.</p>
+
+<h4>시연 — 회의록 세 개를 한 보고서로</h4>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="시연 흐름: 폴더 탐색 → 파일 읽기 → 분석 → 보고서 작성">
+    <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="85" y="46" text-anchor="middle">① 폴더 탐색</text>
+    <text class="d-sub" x="85" y="63" text-anchor="middle">search</text>
+
+    <rect class="d-box" x="180" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="255" y="46" text-anchor="middle">② 파일 읽기</text>
+    <text class="d-sub" x="255" y="63" text-anchor="middle">하나하나 읽기</text>
+
+    <rect class="d-box" x="350" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="425" y="46" text-anchor="middle">③ 분석</text>
+    <text class="d-sub" x="425" y="63" text-anchor="middle">내용 파악</text>
+
+    <rect class="d-box accent" x="520" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="595" y="46" text-anchor="middle">④ 보고서 작성</text>
+    <text class="d-sub" x="595" y="63" text-anchor="middle">결과물 생성</text>
+
+    <line class="d-edge" x1="160" y1="48" x2="176" y2="48"/><polygon class="d-arrow" points="172,43 180,48 172,53"/>
+    <line class="d-edge" x1="330" y1="48" x2="346" y2="48"/><polygon class="d-arrow" points="342,43 350,48 342,53"/>
+    <line class="d-edge" x1="500" y1="48" x2="516" y2="48"/><polygon class="d-arrow" points="512,43 520,48 512,53"/>
+</svg>
+<div class="d-cap">파일 목록을 알려 주지 않아도 스스로 탐색·읽기·분석해 보고서를 만듭니다.</div>
+</div>
+<p>회의록 파일 3개가 든 폴더에서 Claude Code를 실행하고 이렇게 요청합니다.</p>
+<pre><code>이 회의록 세 개를 합쳐서 한 개의 보고서로 요약해줘. 한국어로.</code></pre>
+<p>여기서 핵심은 <strong>어떤 파일이 있는지 알려 주지 않았다</strong>는 점입니다. 웹 채팅이라면 파일을 직접 업로드해야 하지만, Claude Code는</p>
+<ul>
+    <li>현재 폴더에 <strong>어떤 파일이 있는지 먼저 탐색(search)</strong> 하고,</li>
+    <li>그 파일들을 <strong>하나하나 읽어</strong> 들이며,</li>
+    <li>내용을 <strong>분석</strong>한 뒤 결과(보고서)를 만들어 줍니다.</li>
+</ul>
+<p>즉, "실행한 위치의 폴더"가 곧 작업 공간이 되고, 그 안의 파일을 스스로 다룹니다.</p>
+
+<div class="note">
+    <span class="nh">기억할 점</span>
+    Claude Code는 <code>claude</code> 를 실행한 <strong>그 폴더 전체에 접근</strong>합니다. 그래서 프로젝트별로 폴더를 나누고, 작업할 폴더 안에서 실행하는 습관이 중요합니다.
+</div>
+
+<h3>터미널 기초 명령어</h3>
+<p>터미널이 낯설어도 괜찮습니다. 우리의 목표는 딱 <strong>"새 폴더를 만들고 그 위치로 가서 <code>claude</code> 를 실행"</strong> 하는 것까지입니다. 그 다음은 AI가 다 해 줍니다. Windows는 <strong>PowerShell</strong> 을 실행하면 보통 사용자 폴더에서 시작합니다.</p>
+
+<h4>딱 네 가지만 기억하세요</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr><th>명령</th><th>뜻</th><th>하는 일</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>pwd</code></td><td>print working directory</td><td>지금 내가 어느 폴더에 있는지 보여줌</td></tr>
+            <tr><td><code>cd &lt;폴더&gt;</code></td><td>change directory</td><td>다른 폴더로 이동 (예: <code>cd Downloads</code>)</td></tr>
+            <tr><td><code>mkdir &lt;이름&gt;</code></td><td>make directory</td><td>새 폴더 만들기 (예: <code>mkdir kist-test</code>)</td></tr>
+            <tr><td><code>claude</code></td><td>—</td><td>현재 폴더에서 Claude Code 실행</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h4>실습 순서</h4>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="터미널 5단계: 위치 확인(pwd) → 이동(cd Downloads) → 폴더 생성(mkdir) → 폴더로 이동(cd) → claude 실행">
+    <rect class="d-box" x="10" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="70" y="46" text-anchor="middle">① 위치 확인</text>
+    <text class="d-sub" x="70" y="63" text-anchor="middle">pwd</text>
+
+    <rect class="d-box" x="148" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="208" y="46" text-anchor="middle">② 이동</text>
+    <text class="d-sub" x="208" y="63" text-anchor="middle">cd Downloads</text>
+
+    <rect class="d-box" x="286" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="346" y="46" text-anchor="middle">③ 폴더 생성</text>
+    <text class="d-sub" x="346" y="63" text-anchor="middle">mkdir kist-test</text>
+
+    <rect class="d-box" x="424" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="484" y="46" text-anchor="middle">④ 폴더로 이동</text>
+    <text class="d-sub" x="484" y="63" text-anchor="middle">cd kist-test</text>
+
+    <rect class="d-box accent" x="562" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="622" y="46" text-anchor="middle">⑤ claude 실행</text>
+    <text class="d-sub" x="622" y="63" text-anchor="middle">claude</text>
+
+    <line class="d-edge" x1="130" y1="48" x2="146" y2="48"/><polygon class="d-arrow" points="140,43 148,48 140,53"/>
+    <line class="d-edge" x1="268" y1="48" x2="284" y2="48"/><polygon class="d-arrow" points="278,43 286,48 278,53"/>
+    <line class="d-edge" x1="406" y1="48" x2="422" y2="48"/><polygon class="d-arrow" points="416,43 424,48 416,53"/>
+    <line class="d-edge" x1="544" y1="48" x2="560" y2="48"/><polygon class="d-arrow" points="554,43 562,48 554,53"/>
+</svg>
+<div class="d-cap">새 폴더를 만들고 그 위치로 이동해 claude 를 실행하는 것이 오늘의 관문입니다.</div>
+</div>
+<pre><code><span class="c"># 1. 지금 위치 확인</span>
+pwd
+<span class="c"># 2. 다운로드 폴더로 이동</span>
+cd Downloads
+<span class="c"># 3. 새 폴더 만들기</span>
+mkdir kist-test
+<span class="c"># 4. 만든 폴더로 이동</span>
+cd kist-test
+<span class="c"># 5. 그 폴더에서 Claude Code 실행</span>
+claude</code></pre>
+<p>이렇게 새로 만든 폴더에서 <code>claude</code> 를 실행하면, 이제 Claude Code는 <strong>그 폴더 안에서 모든 작업</strong>을 하게 됩니다.</p>
+
+<div class="note">
+    <span class="nh">오늘의 관문</span>
+    "폴더 만들기 → 그 위치로 이동 → <code>claude</code> 실행" — 여기까지만 넘어오면 이후로는 AI의 도움을 받을 수 있습니다. 막히면 주저 말고 도움을 요청하세요.
+</div>
+
+<h3>CLAUDE.md — 작업 지침 파일</h3>
+<p>Claude Code는 항상 참조하는 파일로 <code>CLAUDE.md</code> 라는 마크다운 파일을 사용합니다. <strong>AI에게 어떤 명령을 하든 항상 함께 포함되는 파일</strong>이라고 생각하면 됩니다. 그래서 <strong>너무 길지 않게, 중요한 내용을 명료하게</strong> 담아야 합니다.</p>
+
+<h4>네 가지 레이어</h4>
+<div class="diagram">
+<svg viewBox="0 0 680 236" role="img" aria-label="CLAUDE.md 적용범위 4계층: 회사 → 유저 전역 → 프로젝트 → 프로젝트 로컬, 아래로 갈수록 우선순위 높음">
+    <rect class="d-box" x="52" y="8" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="30" text-anchor="middle">회사 (매니지드)</text>
+    <text class="d-sub" x="262" y="46" text-anchor="middle">조직 전체 멤버에 적용</text>
+
+    <rect class="d-box" x="52" y="64" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="86" text-anchor="middle">유저 전역</text>
+    <text class="d-sub" x="262" y="102" text-anchor="middle">~/.claude · 내 모든 프로젝트</text>
+
+    <rect class="d-box" x="52" y="120" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="142" text-anchor="middle">프로젝트</text>
+    <text class="d-sub" x="262" y="158" text-anchor="middle">CLAUDE.md · 동료와 공유</text>
+
+    <rect class="d-box accent" x="52" y="176" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="198" text-anchor="middle">프로젝트 로컬</text>
+    <text class="d-sub" x="262" y="214" text-anchor="middle">공유 안 함 · 내 PC 전용</text>
+
+    <line class="d-edge" x1="262" y1="52" x2="262" y2="62"/><polygon class="d-arrow" points="257,58 267,58 262,64"/>
+    <line class="d-edge" x1="262" y1="108" x2="262" y2="118"/><polygon class="d-arrow" points="257,114 267,114 262,120"/>
+    <line class="d-edge" x1="262" y1="164" x2="262" y2="174"/><polygon class="d-arrow" points="257,170 267,170 262,176"/>
+
+    <text class="d-sub" x="588" y="20" text-anchor="middle">우선순위 낮음</text>
+    <line class="d-edge accent" x1="588" y1="30" x2="588" y2="204"/><polygon class="d-arrow accent" points="583,204 593,204 588,212"/>
+    <text class="d-accent" x="588" y="230" text-anchor="middle" font-size="11">우선순위 높음</text>
+</svg>
+<div class="d-cap">같은 CLAUDE.md라도 위치에 따라 적용 범위가 다르며, 아래 계층일수록 우선합니다.</div>
+</div>
+<p>같은 <code>CLAUDE.md</code> 라도 어디에 두느냐에 따라 적용 범위가 달라집니다.</p>
+<ul>
+    <li><strong>회사(매니지드)</strong> — 회사 안의 모든 멤버에게 적용.</li>
+    <li><strong>유저 전역</strong> — 내 PC에서 어떤 프로젝트를 하든 항상 적용.</li>
+    <li><strong>프로젝트</strong> — 해당 프로젝트에서만 적용(동료와 공유).</li>
+    <li><strong>프로젝트 로컬</strong> — 프로젝트 안이지만 <strong>공유하지 않는, 내 PC만을 위한</strong> 지침.</li>
+</ul>
+
+<h4>실습 — 지침 만들기</h4>
+<p>새 폴더에서 <code>claude</code> 를 실행한 뒤, 이렇게 요청해 <code>CLAUDE.md</code> 를 만듭니다.</p>
+<pre><code>이 폴더에 CLAUDE.md 파일을 만들어줘.
+지침: 답변은 항상 한글로 작성하고,
+새로 만드는 파일 이름에는 항상 _new 를 붙여줘.</code></pre>
+<p>파일이 만들어지면 그 안에는 방금 준 지침("한글로 작성한다", "새 파일에 _new 를 붙인다")이 기록됩니다. 이후의 모든 작업은 <strong>이 폴더 하위에서 항상 이 지침을 따릅니다.</strong> 예를 들어 "간단한 시를 텍스트 파일로 저장해줘" 라고 하면, 결과는 한글로 작성되고 파일명에는 <code>_new</code> 가 붙습니다.</p>
+
+<h4>무엇을 담으면 좋은가</h4>
+<ul>
+    <li>원본 파일을 수정하지 못하게 하는 규칙</li>
+    <li>코드(예: Python) 작성 시 지켜야 할 규칙</li>
+    <li>출력 형식 · 파일 저장 방식</li>
+    <li>작성물의 문체 · 언어</li>
+</ul>
+
+<div class="note">
+    <span class="nh">팁</span>
+    <code>CLAUDE.md</code> 는 AI에게 만들게 해도 되고, 직접 열어 수정해도 됩니다. Windows에서는 프롬프트에 줄바꿈이 잘 안 될 수 있는데, <strong>줄바꿈 없이 쭉 이어서 써도</strong> 무방합니다.
+</div>
+<p>여기까지가 기초입니다 — 폴더를 만들고, 실행하고, 지침을 심었습니다. 다음 편 <a href="/p/ccb-research-web/">실습</a>에서는 웹 조사부터 디자인 시스템 추출, 논문 정리까지 실제 작업을 한 흐름으로 돌려 봅니다.</p>
 </article>
-<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">생성일자</span> 2026-07-03 &middot; <span class="pr-k">수정일자</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">생성일자</span> 2026-07-03 &middot; <span class="pr-k">수정일자</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>연관 문서</h2>
-<ul><li><a href="/p/hns-anatomy/">하네스의 구성과 효과</a></li><li><a href="/p/hns-usecases/">활용 사례 — 콘텐츠부터 리서치까지</a></li><li><a href="/p/kgs-plugin/">위키 엔진의 플러그인화</a></li><li><a href="/p/skills/">확장 기능 — Skills · MCP · Hooks</a></li></ul>
+<ul><li><a href="/p/welcome/">시작하기</a></li><li><a href="/p/claude-md-commandments/">CLAUDE.md의 10계명 — AI 페어 프로그래머 길들이는 열 가지 약속</a></li><li><a href="/p/news-20260814-auto-mode-stateless-mcp/">묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다</a></li><li><a href="/p/tip-beginner/">초급 — 컨텍스트를 아끼는 습관 9가지</a></li></ul>
 </nav>
 </body>
 </html>

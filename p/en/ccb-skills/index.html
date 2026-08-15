@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Creating a Skill</title>
-<meta name="description" content="How to turn repeated tasks into reusable Skills and handle @ references and permissions">
+<title>Extending — Skills, Plugins, Agents</title>
+<meta name="description" content="Make a skill with @-references, install the document-skills plugin, and run paper-analysis agents in parallel">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/en/ccb-skills/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/ccb-skills/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/ccb-skills/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Creating a Skill">
-<meta property="og:description" content="How to turn repeated tasks into reusable Skills and handle @ references and permissions">
+<meta property="og:title" content="Extending — Skills, Plugins, Agents">
+<meta property="og:description" content="Make a skill with @-references, install the document-skills plugin, and run paper-analysis agents in parallel">
 <meta property="og:url" content="https://dewytear.github.io/p/en/ccb-skills/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Creating a Skill">
-<meta name="twitter:description" content="How to turn repeated tasks into reusable Skills and handle @ references and permissions">
+<meta name="twitter:title" content="Extending — Skills, Plugins, Agents">
+<meta name="twitter:description" content="Make a skill with @-references, install the document-skills plugin, and run paper-analysis agents in parallel">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "Creating a Skill",
- "description": "How to turn repeated tasks into reusable Skills and handle @ references and permissions",
+ "headline": "Extending — Skills, Plugins, Agents",
+ "description": "Make a skill with @-references, install the document-skills plugin, and run paper-analysis agents in parallel",
  "inLanguage": "en",
  "url": "https://dewytear.github.io/p/en/ccb-skills/",
  "mainEntityOfPage": "https://dewytear.github.io/#!ccb-skills",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T20:36:07+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T14:35:47+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/ja/ccb-skills/" hreflang="ja">日本語</a>
 </p>
 <article>
-<h2>Creating a Skill</h2>
+<h2>Extending — Skills, Plugins, Agents</h2>
 <p>A <strong>Skill</strong> is a unit of functionality that stores a task you will repeat at least once so you can keep reusing it. Turn the design system you built earlier into a Skill and you can easily stamp out many sites with the same design later on.</p>
 
 <h3>@ (the at sign) — referencing files and folders</h3>
@@ -90,11 +90,108 @@ to build a paper showcase website with the same design.</code></pre>
     <span class="nh">More Skills</span>
     Creating Skills works much the same way every time. For example, give it the developer documentation URL for OpenAI's <strong>GPT Image 2</strong> and say "turn this into a GPT image skill," and you get an infographic generation skill. Formats that are not officially supported, such as <strong>HWP</strong>, can also be turned into a Skill yourself and reused.
 </div>
+
+<h3>Plugins &middot; the marketplace</h3>
+<p>You can bundle several Skills together and distribute them as a <strong>Plugin</strong>. Since papers are mostly PDFs, let's install the <strong>official document Skills (document-skills)</strong> plugin, which contains a Skill that reads PDFs well.</p>
+
+<h4>1) Adding the marketplace</h4>
+<p>Type <code>/plugin</code> in Claude Code and press Enter to bring up the plugin screen. Use the arrow keys to select <strong>marketplace</strong> &rarr; then <strong>Add Marketplace</strong> to add Anthropic's official marketplace.</p>
+<pre><code><span class="c"># If GitHub access is blocked or the UI is awkward, run it directly as a command</span>
+/plugin marketplace add anthropics/skills</code></pre>
+
+<h4>2) Installing document-skills</h4>
+<p>The marketplace you added (Anthropic's official one) has several plugins; install only <strong>document-skills</strong> among them. Select it in the list with <strong>Space</strong> and install with <strong>Enter</strong>. A command works too.</p>
+<pre><code>/plugin install document-skills</code></pre>
+<p>This Skill lets Claude Code read documents such as <strong>PDF, PPT (pptx), and Excel</strong>.</p>
+
+<h4>3) Restart and verify</h4>
+<p>If it does not take effect after installing, leave Claude Code with <code>/exit</code> and run it again. Then type <code>/pdf</code> or <code>/pptx</code>; if the command shows up, <strong>the install succeeded</strong>. If it does not, try adding the marketplace and installing again.</p>
+
+<div class="note">
+    <span class="nh">When the install gets stuck (GitHub errors, etc.)</span>
+    Search Google for <strong>"anthropic skills github"</strong> and go to the official repository — the install commands are partway through the README. Copy the <code>plugin marketplace add ...</code> line and the <code>plugin install document-skills</code> line separately, paste each into Claude Code, and run them.
+</div>
+
+<h3>Building an Agent</h3>
+<p>An <strong>agent</strong> is a specialist worker assigned to a specific role. Creating one is as easy as creating a skill — all you need is the idea, and the AI writes the rest. Here we build a <strong>paper analysis agent</strong> and use it to analyze a downloaded PDF.</p>
+
+<h4>1) Prepare the PDF</h4>
+<pre><code><span class="c"># Give it the URL of the paper's detail page</span>
+https://arxiv.org/abs/....  Download the PDF file of this paper.</code></pre>
+<p>Claude Code finds the PDF link on arXiv and downloads it into the current folder. (Reading the PDF is handled by the document-skills we installed earlier.)</p>
+
+<h4>2) Create the agent</h4>
+<p>To scope it to this project only, tell Claude Code to create it under <code>.claude/</code>.</p>
+<pre><code>Add an agent that analyzes papers under .claude.</code></pre>
+<p>The generated agent carries <strong>metadata</strong> like the following.</p>
+<ul>
+    <li><strong>Name · description</strong> — what this agent does.</li>
+    <li><strong>Tool permissions</strong> — reading files, running Bash commands, and so on.</li>
+    <li><strong>Model selection</strong> — choose the model each agent uses (for example the best one, <code>opus</code>).</li>
+    <li><strong>Persona · principles</strong> — e.g. "an expert in academic paper analysis", "produce a report that conveys the core in five minutes".</li>
+</ul>
+<p>The analysis style (abstract-focused / limitation-focused / verification-heavy, and so on) can be <strong>refined further</strong> with follow-up requests.</p>
+
+<h4>3) Check the list · run it</h4>
+<p>An agent may not be loaded right after you create it. Use <code>/agents</code> to check which agents are available in the current folder, and if it does not show up, <code>/exit</code> and restart.</p>
+<pre><code><span class="c"># Attach the PDF as a reference and analyze it with the agent you made</span>
+@paper.pdf  Analyze this paper using the paper-analyzer agent.</code></pre>
+
+<h4>4) Parallel analysis — where Claude Code shines</h4>
+<div class="diagram">
+<svg viewBox="0 0 680 214" role="img" aria-label="Parallel spawn fan-out: prepare PDF → create agent (orchestrator) branches into several agents that analyze in parallel, then converge into aggregation">
+    <rect class="d-box" x="12" y="83" width="108" height="44" rx="10"/>
+    <text class="d-label sm" x="66" y="105" text-anchor="middle">Prepare PDF</text>
+    <text class="d-sub" x="66" y="120" text-anchor="middle">Download</text>
+
+    <rect class="d-box accent" x="148" y="83" width="132" height="44" rx="10"/>
+    <text class="d-label sm" x="214" y="105" text-anchor="middle">Create agent</text>
+    <text class="d-sub" x="214" y="120" text-anchor="middle">Orchestrator</text>
+
+    <rect class="d-box soft" x="330" y="8" width="150" height="38" rx="10"/>
+    <text class="d-label sm" x="405" y="32" text-anchor="middle">Agent 1</text>
+    <rect class="d-box soft" x="330" y="60" width="150" height="38" rx="10"/>
+    <text class="d-label sm" x="405" y="84" text-anchor="middle">Agent 2</text>
+    <rect class="d-box soft" x="330" y="112" width="150" height="38" rx="10"/>
+    <text class="d-label sm" x="405" y="136" text-anchor="middle">Agent 3</text>
+    <rect class="d-box soft" x="330" y="164" width="150" height="38" rx="10"/>
+    <text class="d-label sm" x="405" y="188" text-anchor="middle">Agent 4</text>
+
+    <rect class="d-box" x="540" y="83" width="120" height="44" rx="10"/>
+    <text class="d-label sm" x="600" y="105" text-anchor="middle">Aggregate</text>
+    <text class="d-sub" x="600" y="120" text-anchor="middle">Merge results</text>
+
+    <line class="d-edge" x1="120" y1="105" x2="144" y2="105"/><polygon class="d-arrow" points="140,100 148,105 140,110"/>
+
+    <path class="d-edge accent" d="M280 105 C305 105 308 27 328 27"/><polygon class="d-arrow accent" points="322,22 330,27 322,32"/>
+    <path class="d-edge accent" d="M280 105 C305 105 308 79 328 79"/><polygon class="d-arrow accent" points="322,74 330,79 322,84"/>
+    <path class="d-edge accent" d="M280 105 C305 105 308 131 328 131"/><polygon class="d-arrow accent" points="322,126 330,131 322,136"/>
+    <path class="d-edge accent" d="M280 105 C305 105 308 183 328 183"/><polygon class="d-arrow accent" points="322,178 330,183 322,188"/>
+
+    <path class="d-edge" d="M480 27 C512 27 512 105 536 105"/>
+    <path class="d-edge" d="M480 79 C512 79 512 105 536 105"/>
+    <path class="d-edge" d="M480 131 C512 131 512 105 536 105"/>
+    <path class="d-edge" d="M480 183 C512 183 512 105 536 105"/>
+    <polygon class="d-arrow" points="532,100 540,105 532,110"/>
+
+    <text class="d-accent" x="405" y="211" text-anchor="middle" font-size="11">Spawn multiple agents in parallel</text>
+</svg>
+<div class="d-cap">A single orchestrator spawns several agents in parallel, analyzes concurrently, then aggregates the results.</div>
+</div>
+<p>You can analyze <strong>all the remaining papers at once</strong> as long as you know their links.</p>
+<pre><code>Analyze the remaining papers too and save them to files.</code></pre>
+<p>Claude Code <strong>spawns several agents in parallel</strong> (for example 12 papers across 5–6 agents) and analyzes them at the same time. <strong>This is something a web chat cannot do.</strong> You can also turn the analysis results into <strong>detail pages</strong> for the paper showcase site you built earlier and link them up.</p>
+
+<div class="note">
+    <span class="nh">Another reason to use agents — saving context</span>
+    An agent uses a <strong>separate context window</strong> from the main session. If you hand heavy analysis to an agent and take back only the result, you barely consume the main session's context, so quality holds up far longer. (See the next document.)
+</div>
+<p>Having built everything there is to build, what remains is using it sustainably — the <a href="/p/en/ccb-manage/">Operations</a> chapter covers usage, context, session management, and closing tips.</p>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
-<ul><li><a href="/p/en/ccb-design-system/">Extracting a design system</a></li><li><a href="/p/en/skills/">Extending Claude Code — Skills · MCP · Hooks</a></li><li><a href="/p/en/skl-overview/">What Skills Are — Background and Strengths</a></li></ul>
+<ul><li><a href="/p/en/skills/">Extending Claude Code — Skills · MCP · Hooks</a></li><li><a href="/p/en/kgs-plugin/">Packaging the Wiki Engine as a Plugin — wiki-plugin and Sync Discipline</a></li><li><a href="/p/en/omc-install/">Installation</a></li><li><a href="/p/en/tip-advanced/">Advanced — 8 Tips for Parallel, Autonomous, Scheduled Work</a></li></ul>
 </nav>
 </body>
 </html>

@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 > License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — cite the source when quoting.
-> 115 documents · 373 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
+> 107 documents · 365 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
 
 ---
 
@@ -92,7 +92,7 @@ URL: https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-edges
 
 실제 엣지 해부 — Welcome ↔ "Claude Code란 무엇인가"
 
-실제 그래프의 엣지 하나를 뜯어 보면: 시작하기와 Claude Code란 무엇인가는 'Claude Code'(가중치 2.63)와 '터미널'(3.44) 두 개념을 공유합니다. 점수는 두 가중치의 합 ≈ 6.07 — 같은 문서의 1순위는 개념 4개를 공유한 Tip 초급 편(≈ 11.72)이니, 공유 개념이 많고 희귀할수록 위로 올라가는 셈입니다. 문서 하단의 "연관 문서"에서 이 근거 개념이 그대로 칩으로 표시되므로, 왜 이어졌는지를 언제나 확인할 수 있습니다.
+실제 그래프의 엣지 하나를 뜯어 보면: 시작하기와 Tutorial 기초 편은 '터미널'(가중치 3.99)·'Claude Code'(2.48)·'CLAUDE.md'(2.38) 세 개념을 공유합니다. 점수는 가중치의 합 ≈ 8.85 — 같은 문서의 1순위는 개념 4개를 공유한 Tip 초급 편(≈ 11.72)이니, 공유 개념이 많고 희귀할수록 위로 올라가는 셈입니다. 문서 하단의 "연관 문서"에서 이 근거 개념이 그대로 칩으로 표시되므로, 왜 이어졌는지를 언제나 확인할 수 있습니다.
 
 판정 규칙 — 세 갈래
 
@@ -101,9 +101,9 @@ URL: https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-edges
 
 공유 2개 이상 → 연결. 서로 다른 개념 두 개가 겹치는 것은 우연이기 어렵습니다.
 
-공유 1개 + 그 개념이 3편 이하에만 등장 → 연결. 실례: 시작하기 ↔ OMC 고급 도구는 'CLI' 하나만 공유하지만, 'CLI'가 3편에만 나올 만큼 희귀해 인정됩니다. 반대로 '스킬' 하나만 공유한 쌍은 연결되지 않습니다 — 24편이 공유하는 개념 1개는 근거가 못 되기 때문입니다.
+공유 1개 + 그 개념이 3편 이하에만 등장 → 연결. 실례: 시작하기 ↔ OMC 고급 도구는 'CLI' 하나만 공유하지만, 'CLI'가 3편에만 나올 만큼 희귀해 인정됩니다. 반대로 '스킬' 하나만 공유한 쌍은 연결되지 않습니다 — 17편이 공유하는 개념 1개는 근거가 못 되기 때문입니다.
 
-그 외 → 개념으로는 연결하지 않습니다. 대신 개념 연결이 2개가 안 되는 문서는 같은 System의 이웃(예: CLAUDE.md 편 → 같은 Tutorial의 앞뒤 강의)으로 보완해, 모든 문서가 최소 2~4개의 연결을 갖게 합니다. 현재 비율은 개념 연결 182개(77%) · 폴더 보완 54개(23%)입니다.
+그 외 → 개념으로는 연결하지 않습니다. 대신 개념 연결이 2개가 안 되는 문서는 같은 System의 이웃(예: 기초 편 → 같은 Tutorial의 앞뒤 챕터)으로 보완해, 모든 문서가 최소 2~4개의 연결을 갖게 합니다. 현재 비율은 개념 연결 182개(77%) · 폴더 보완 54개(23%)입니다.
 
 경계값의 파급 — 왜 함부로 개념을 못 늘리나
 
@@ -452,7 +452,7 @@ CLAUDE.md는 Claude Code가 매 세션 자동으로 읽는 행동 지침입니�
 
 비유하자면 이렇습니다. 실력은 뛰어난데 일하는 습관은 아직 백지인 신입사원이 매일 아침 새로 출근합니다(AI는 세션마다 기억이 리셋되니까요). 매번 말로 가르치는 대신, 책상 위에 근무 수칙 열 줄을 붙여 두는 것 — 그게 CLAUDE.md입니다.
 
-1단계 · 붙여넣기 — 아래 영어 원문을 통째로 복사해 저장소 루트에 CLAUDE.md라는 이름으로 저장합니다. 그걸로 끝입니다. Claude Code가 다음 대화부터 알아서 읽습니다. (개인 전역 규칙으로 쓰려면 ~/.claude/CLAUDE.md에 두면 모든 프로젝트에 적용됩니다 — 적용 범위 이야기는 CLAUDE.md — 작업 지침 파일 문서 참고.)
+1단계 · 붙여넣기 — 아래 영어 원문을 통째로 복사해 저장소 루트에 CLAUDE.md라는 이름으로 저장합니다. 그걸로 끝입니다. Claude Code가 다음 대화부터 알아서 읽습니다. (개인 전역 규칙으로 쓰려면 ~/.claude/CLAUDE.md에 두면 모든 프로젝트에 적용됩니다 — 적용 범위 이야기는 기초 편의 CLAUDE.md 절 참고.)
 
 2단계 · 내 프로젝트 맛 입히기 — 원문 첫 줄부터 “프로젝트 고유 지침과 병합해 쓰라”고 되어 있습니다. 빌드 명령, 코딩 컨벤션, 금지 사항 같은 우리 팀 규칙을 아래에 덧붙이세요. 십계명이 ‘헌법’이라면 프로젝트 지침은 ‘시행령’입니다.
 
@@ -764,7 +764,7 @@ LLM이 가장 자주 건너뛰는 단계다. 협상 불가 조항으로 다뤄�
 출처
 · 인포그래픽: dewytear 직접 제작 — 원문 CLAUDE.md를 3단계 × 10계명으로 시각화 · 원문: 범용 CLAUDE.md 행동 지침(dewytear 보관, 구글드라이브)
 
-· CLAUDE.md의 적용 범위(전역/프로젝트 4계층)와 작성법 일반론은 CLAUDE.md — 작업 지침 파일 참고
+· CLAUDE.md의 적용 범위(전역/프로젝트 4계층)와 작성법 일반론은 기초 편(CLAUDE.md 절) 참고
 
 ---
 
@@ -892,11 +892,11 @@ Stop — Claude가 응답을 마쳤을 때 (예: 알림 발송)
 
 ---
 
-# 강의 개요와 목표
+# 기초 — 개요·터미널·CLAUDE.md
 Section: AI · Claude · Code · Tutorial
 URL: https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-overview
 
-강의 개요와 목표
+기초 — 개요·터미널·CLAUDE.md
 
 이 자료는 "Claude Code 기초 / 황민호" 실습 강의를 영상 순서대로 정리한 것입니다. 개발자가 아닌 분들에게 터미널은 낯선 환경이지만, 딱 하나의 고비 — "폴더를 만들고 그 위치에서 claude 를 실행하는 것" 만 넘으면 그 다음부터는 AI가 대부분의 일을 대신 해 줍니다. 오늘의 목표는 터미널과 친숙해지는 것입니다.
 
@@ -938,12 +938,6 @@ CLAUDE.md 로 나만의 작업 지침을 준다.
 
 · 영상: youtube.com/watch?v=pHfDgZ7cll0
 
----
-
-# Claude Code란 무엇인가
-Section: AI · Claude · Code · Tutorial
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-what
-
 Claude Code란 무엇인가
 
 Claude Code는 내 로컬 환경(내 PC)에서 돌아가는 AI 에이전트라고 생각하면 됩니다. 웹 채팅과 달리 내 컴퓨터의 파일을 직접 읽고 수정하고, 명령을 실행하며 일을 처리합니다. 작업은 프로젝트마다 폴더 하나를 만들고 그 폴더 안에서 진행합니다. Windows에서는 보통 PowerShell 터미널에서 실행합니다.
@@ -981,12 +975,6 @@ Claude Code (터미널)실행한 폴더의 파일에 직접 접근. 내가 원�
 기억할 점
 Claude Code는 claude 를 실행한 그 폴더 전체에 접근합니다. 그래서 프로젝트별로 폴더를 나누고, 작업할 폴더 안에서 실행하는 습관이 중요합니다.
 
----
-
-# 터미널 기초 명령어
-Section: AI · Claude · Code · Tutorial
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-terminal
-
 터미널 기초 명령어
 
 터미널이 낯설어도 괜찮습니다. 우리의 목표는 딱 "새 폴더를 만들고 그 위치로 가서 claude 를 실행" 하는 것까지입니다. 그 다음은 AI가 다 해 줍니다. Windows는 PowerShell 을 실행하면 보통 사용자 폴더에서 시작합니다.
@@ -1022,12 +1010,6 @@ claude
 
 오늘의 관문
 "폴더 만들기 → 그 위치로 이동 → claude 실행" — 여기까지만 넘어오면 이후로는 AI의 도움을 받을 수 있습니다. 막히면 주저 말고 도움을 요청하세요.
-
----
-
-# CLAUDE.md — 작업 지침 파일
-Section: AI · Claude · Code · Tutorial
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-claudemd
 
 CLAUDE.md — 작업 지침 파일
 
@@ -1070,13 +1052,15 @@ Claude Code는 항상 참조하는 파일로 CLAUDE.md 라는 마크다운 파�
 팁
 CLAUDE.md 는 AI에게 만들게 해도 되고, 직접 열어 수정해도 됩니다. Windows에서는 프롬프트에 줄바꿈이 잘 안 될 수 있는데, 줄바꿈 없이 쭉 이어서 써도 무방합니다.
 
+여기까지가 기초입니다 — 폴더를 만들고, 실행하고, 지침을 심었습니다. 다음 편 실습에서는 웹 조사부터 디자인 시스템 추출, 논문 정리까지 실제 작업을 한 흐름으로 돌려 봅니다.
+
 ---
 
-# 실습: 웹 조사 → 파일 → 웹사이트
+# 실습 — 조사·디자인·논문 정리
 Section: AI · Claude · Code · Tutorial
 URL: https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-research-web
 
-실습: 웹 조사 → 파일 → 웹사이트
+실습 — 조사·디자인·논문 정리
 
 ① 웹 조사 WebSearch·WebFetch ② 파일로 저장 출처 포함 정리 ③ 웹사이트 생성 텍스트 → 사이트 ④ 디자인 수정 테마 · 브랜딩
 웹에서 조사한 내용을 파일로 저장하고, 그 파일로 사이트를 만들어 다듬습니다.
@@ -1115,12 +1099,6 @@ ESC — 진행 중인 작업을 언제든 취소.
 토큰 주의
 웹사이트 생성처럼 큰 작업은 토큰(사용량)을 빠르게 소모할 수 있습니다. 실습 중 요금제 한도에 도달할 수 있으니, 무거운 작업은 필요할 때만 돌리세요. (사용량 관리는 뒤의 "사용량·컨텍스트·세션 관리" 참고)
 
----
-
-# 디자인 시스템 추출
-Section: AI · Claude · Code · Tutorial
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-design-system
-
 디자인 시스템 추출
 
 웹서비스를 개발할 때는 보통 디자이너가 만든 디자인 시스템을 받아, 그것을 토대로 개발자가 화면을 만듭니다. Claude Code로는 이 과정을 거꾸로 — 이미 만들어진 사이트에서 디자인 요소만 뽑아 디자인 시스템을 만들 수 있습니다.
@@ -1147,13 +1125,7 @@ URL: https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-design-syste
 디자인 시스템을 한 번 만들어 두면, 앞으로 만들 사이트들을 계속 같은 디자인으로 찍어낼 수 있습니다. 사내 시스템을 개발하거나 2차·3차 사이트를 만들 때 동일한 톤을 유지할 수 있고, 동료에게 넘겨 공유하기도 좋습니다.
 
 다음 단계
-이렇게 만든 디자인 시스템은 그대로 재사용해도 되지만, "앞으로도 계속 쓰겠다"면 스킬(Skill) 로 만들어 두는 것이 더 편리합니다. (다음 문서에서 다룹니다.)
-
----
-
-# 웹 자료 정리 — 허깅페이스 논문
-Section: AI · Claude · Code · Tutorial
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-papers
+이렇게 만든 디자인 시스템은 그대로 재사용해도 되지만, "앞으로도 계속 쓰겠다"면 스킬(Skill) 로 만들어 두는 것이 더 편리합니다. (확장 편에서 다룹니다.)
 
 웹 자료 정리 — 허깅페이스 논문
 
@@ -1184,13 +1156,15 @@ https://huggingface.co/papers
 활용
 논문을 하나씩 열어 보는 대신, 관련 논문을 통째로 가져와 AI에게 1차 분석을 시킨 뒤 그 결과로 훑어보면 훨씬 빠릅니다. 이 정리 파일은 이후 "논문 소개 사이트"와 "논문 분석 에이전트"의 입력으로 이어집니다.
 
+실습에서 만든 디자인 시스템과 논문 정리는 다음 편 확장의 재료가 됩니다 — 스킬로 굳히고, 플러그인을 붙이고, 에이전트에게 맡깁니다.
+
 ---
 
-# 스킬(Skill) 만들기
+# 확장 — 스킬·플러그인·에이전트
 Section: AI · Claude · Code · Tutorial
 URL: https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-skills
 
-스킬(Skill) 만들기
+확장 — 스킬·플러그인·에이전트
 
 스킬은 한 번 이상 반복할 작업을 저장해 두고 계속 재사용하는 기능 단위입니다. 앞에서 만든 디자인 시스템을 스킬로 만들면, 이후 여러 사이트를 같은 디자인으로 쉽게 찍어낼 수 있습니다.
 
@@ -1227,12 +1201,6 @@ URL: https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-skills
 더 많은 스킬
 스킬 만드는 방식은 대부분 비슷합니다. 예를 들어 OpenAI GPT Image 2 의 개발자 문서 URL을 주고 "이 내용으로 GPT 이미지 스킬로 만들어줘" 라고 하면 인포그래픽 생성 스킬이 됩니다. HWP 처럼 공식에 없는 형식도 직접 스킬로 만들어 재사용할 수 있습니다.
 
----
-
-# 플러그인 · 마켓플레이스
-Section: AI · Claude · Code · Tutorial
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-plugins
-
 플러그인 · 마켓플레이스
 
 여러 스킬을 묶어 플러그인 형태로 배포할 수 있습니다. 논문은 대부분 PDF이므로, PDF를 잘 읽는 스킬이 든 공식 문서 스킬(document-skills) 플러그인을 설치해 봅니다.
@@ -1257,12 +1225,6 @@ Claude Code에서 /plugin 을 입력하고 Enter를 누르면 플러그인 화�
 
 설치가 막힐 때 (GitHub 오류 등)
 구글에서 "anthropic skills github" 를 검색해 공식 저장소로 들어가면, README 중간에 설치 명령이 있습니다. plugin marketplace add ... 한 줄과 plugin install document-skills 한 줄을 각각 복사해 Claude Code에 붙여 넣어 실행하면 됩니다.
-
----
-
-# 에이전트(Agent) 만들기
-Section: AI · Claude · Code · Tutorial
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-agents
 
 에이전트(Agent) 만들기
 
@@ -1311,13 +1273,15 @@ Claude Code는 에이전트를 여러 개 병렬로 스폰해(예: 12개 논문�
 에이전트를 쓰는 또 다른 이유 — 컨텍스트 절약
 에이전트는 메인 세션과 별도의 컨텍스트 윈도우를 씁니다. 무거운 분석은 에이전트에게 맡기고 결과만 받으면, 메인 세션의 컨텍스트를 거의 쓰지 않아 품질을 오래 유지할 수 있습니다. (다음 문서 참고)
 
+만들 수 있는 건 다 만들어 봤으니, 남은 것은 오래 쓰는 법입니다 — 운영 편에서 사용량·컨텍스트·세션 관리와 마무리 팁을 정리합니다.
+
 ---
 
-# 사용량 · 컨텍스트 · 세션 관리
+# 운영 — 사용량·세션과 마무리
 Section: AI · Claude · Code · Tutorial
 URL: https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-manage
 
-사용량 · 컨텍스트 · 세션 관리
+운영 — 사용량·세션과 마무리
 
 Claude Code를 잘 쓰려면 사용량(토큰) 과 컨텍스트, 그리고 세션(맥락) 을 관리할 줄 알아야 합니다. 토큰이 아주 중요한 시대가 되었습니다.
 
@@ -1359,12 +1323,6 @@ claude --resume과거 세션 목록에서 골라 그 맥락으로 복귀
 
 캐싱 주의
 AI에는 캐싱이 있어, 이어서 요청하면 새 요청분에만 과금됩니다. 하지만 캐싱에는 유효 시간이 있어, 시간이 지난 뒤 --resume 으로 다시 요청하면 쌓아둔 내용을 전부 다시 실어 보내 캐싱 이점을 못 받습니다. 이럴 때는 새 세션을 여는 편이 유리할 수도 있습니다.
-
----
-
-# 유용한 기능과 마무리
-Section: AI · Claude · Code · Tutorial
-URL: https://dewytear.github.io/docs/ko/ai/claude/code/tutorial/ccb-tips
 
 유용한 기능과 마무리
 
@@ -1917,7 +1875,7 @@ URL: https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-level1
 모든 세컨드 브레인은 여기서 시작합니다. 준비물은 딱 두 가지 — CLAUDE.md 한 장과 몇 개의 폴더·파일입니다. 이 단계의 질문은 단순합니다. "내가 쓴 그 단어·파일, 어디 있지?"
 
 CLAUDE.md 란
-프로젝트 폴더를 열 때 자동으로 읽히는 파일입니다. 그 세션의 시스템 프롬프트처럼 작동하죠(자세히는 CLAUDE.md 지침 참고). 여기서 핵심은 이 파일을 "라우터(길 안내판)"로 쓰는 것입니다.
+프로젝트 폴더를 열 때 자동으로 읽히는 파일입니다. 그 세션의 시스템 프롬프트처럼 작동하죠(자세히는 기초 편의 CLAUDE.md 절 참고). 여기서 핵심은 이 파일을 "라우터(길 안내판)"로 쓰는 것입니다.
 
 CLAUDE.md = 역할 소개 + 라우팅 규칙
 
@@ -4538,7 +4496,7 @@ Claude Code를 잘 쓰는 첫걸음은 화려한 기능이 아니에요. 컨텍�
 
 이미 코드가 쌓인 프로젝트에 Claude Code를 투입한다면, 첫 명령은 고민할 것 없이 /init이에요. Claude가 코드베이스를 쭉 읽고 빌드 명령·테스트 방법·프로젝트 관례를 담은 CLAUDE.md를 만들어 줍니다. 이 파일은 세션이 시작될 때마다 자동으로 읽히는 프로젝트 안내서라, 매번 "이 프로젝트가 뭐냐면요…" 하고 설명하는 수고가 사라져요. 이미 CLAUDE.md가 있으면 덮어쓰지 않고 개선안을 제안하니 부담 없이 돌려 보세요.
 
-공식 문서: How Claude remembers your project — 이 위키의 CLAUDE.md 실습과 CLAUDE.md 십계명도 같은 주제를 다룹니다.
+공식 문서: How Claude remembers your project — 이 위키의 기초 편 CLAUDE.md 실습과 CLAUDE.md 십계명도 같은 주제를 다룹니다.
 
 2. 스테이터스 라인을 켠다
 

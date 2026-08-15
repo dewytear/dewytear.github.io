@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>実習: ウェブ調査 → ファイル → ウェブサイト</title>
-<meta name="description" content="ウェブ調査からファイル保存、ウェブサイト生成、デザイン修正までの実習">
+<title>実習 — 調査・デザイン・論文整理</title>
+<meta name="description" content="調査→ファイル→ウェブサイトのパイプライン、完成サイトからのデザインシステム抽出、Hugging Face 論文の整理という実戦三本">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/ja/ccb-research-web/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/ccb-research-web/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/ccb-research-web/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="実習: ウェブ調査 → ファイル → ウェブサイト">
-<meta property="og:description" content="ウェブ調査からファイル保存、ウェブサイト生成、デザイン修正までの実習">
+<meta property="og:title" content="実習 — 調査・デザイン・論文整理">
+<meta property="og:description" content="調査→ファイル→ウェブサイトのパイプライン、完成サイトからのデザインシステム抽出、Hugging Face 論文の整理という実戦三本">
 <meta property="og:url" content="https://dewytear.github.io/p/ja/ccb-research-web/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="実習: ウェブ調査 → ファイル → ウェブサイト">
-<meta name="twitter:description" content="ウェブ調査からファイル保存、ウェブサイト生成、デザイン修正までの実習">
+<meta name="twitter:title" content="実習 — 調査・デザイン・論文整理">
+<meta name="twitter:description" content="調査→ファイル→ウェブサイトのパイプライン、完成サイトからのデザインシステム抽出、Hugging Face 論文の整理という実戦三本">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "実習: ウェブ調査 → ファイル → ウェブサイト",
- "description": "ウェブ調査からファイル保存、ウェブサイト生成、デザイン修正までの実習",
+ "headline": "実習 — 調査・デザイン・論文整理",
+ "description": "調査→ファイル→ウェブサイトのパイプライン、完成サイトからのデザインシステム抽出、Hugging Face 論文の整理という実戦三本",
  "inLanguage": "ja",
  "url": "https://dewytear.github.io/p/ja/ccb-research-web/",
  "mainEntityOfPage": "https://dewytear.github.io/#!ccb-research-web",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T20:36:07+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T14:35:47+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/en/ccb-research-web/" hreflang="en">English</a>
 </p>
 <article>
-<h2>実習: ウェブ調査 → ファイル → ウェブサイト</h2>
+<h2>実習 — 調査・デザイン・論文整理</h2>
 <div class="diagram">
 <svg viewBox="0 0 700 96" role="img" aria-label="パイプライン: ウェブ調査（WebSearch·WebFetch） → ファイルに保存 → ウェブサイト生成 → デザイン修正">
     <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
@@ -113,11 +113,88 @@
     <span class="nh">トークン注意</span>
     ウェブサイト生成のような大きな作業は、トークン（使用量）を速く消費します。実習中に料金プランの上限に達することがあるので、重い作業は必要なときだけ回してください。（使用量の管理はあとの「使用量・コンテキスト・セッション管理」を参照）
 </div>
+
+<h3>デザインシステムの抽出</h3>
+<p>ウェブサービスを開発するときは、ふつうデザイナーが作った<strong>デザインシステム</strong>を受け取り、それをもとに開発者が画面を作ります。Claude Code ではこの流れを<strong>逆に</strong> — すでに出来上がったサイトからデザイン要素だけを抜き出してデザインシステムを作れます。</p>
+
+<h4>抽出の依頼</h4>
+<pre><code>完成したこのサイトのデザイン要素を抽出して、
+別のデザインシステムを作って。</code></pre>
+
+<h4>何が整理されるのか</h4>
+<p>いまのサイトのデザイン要素だけを抜き出し、ひとつの文書として定義します。</p>
+<ul>
+    <li>カラーパレット</li>
+    <li>テキスト（タイポグラフィ）のスタイル</li>
+    <li>コンポーネント — ボタンのスタイル、配置（レイアウト）のスタイル</li>
+    <li>アニメーション効果</li>
+</ul>
+
+<h4>なぜ作るのか</h4>
+<p>デザインシステムをいちど作っておけば、<strong>これから作るサイトを同じデザインで</strong>いくらでも量産できます。社内システムを開発するときや、2 番目・3 番目のサイトを作るときに同じトーンを保てますし、同僚に渡して共有するのにも向いています。</p>
+
+<div class="note">
+    <span class="nh">次のステップ</span>
+    こうして作ったデザインシステムはそのまま再利用してもよいのですが、「これからもずっと使う」なら<strong>スキル（Skill）</strong>にしておくほうが便利です。（<a href="/p/ja/ccb-skills/">拡張の章</a>で扱います。）
+</div>
+
+<h3>ウェブ資料の整理 — Hugging Face の論文</h3>
+<p>URL をひとつ渡すだけで、Claude Code がそのページの内容を取ってきて整理してくれます。実習では <strong>Hugging Face のデイリーペーパー</strong>（その日に多く推薦された論文の一覧）を整理します。</p>
+
+<h4>頼み方</h4>
+<pre><code><span class="c"># huggingface.co のデイリーペーパーの URL を貼り付けて</span>
+https://huggingface.co/papers
+<span class="c"># 続けて</span>
+今日の論文を整理して。</code></pre>
+
+<h4>一覧ページだけで終わらない</h4>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="パイプライン: 論文リスト → 個別ページの WebFetch → 要旨の抽出 → 分類して整理 → ファイル保存">
+    <rect class="d-box" x="10" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="70" y="46" text-anchor="middle">① 論文リスト</text>
+    <text class="d-sub" x="70" y="63" text-anchor="middle">デイリーペーパー</text>
+
+    <rect class="d-box" x="148" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="208" y="46" text-anchor="middle">② 個別ページ</text>
+    <text class="d-sub" x="208" y="63" text-anchor="middle">WebFetch</text>
+
+    <rect class="d-box" x="286" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="346" y="46" text-anchor="middle">③ 要旨の抽出</text>
+    <text class="d-sub" x="346" y="63" text-anchor="middle">abstract</text>
+
+    <rect class="d-box" x="424" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="484" y="46" text-anchor="middle">④ 分類して整理</text>
+    <text class="d-sub" x="484" y="63" text-anchor="middle">カテゴリ化</text>
+
+    <rect class="d-box accent" x="562" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="622" y="46" text-anchor="middle">⑤ ファイル保存</text>
+    <text class="d-sub" x="622" y="63" text-anchor="middle">ひとつに</text>
+
+    <line class="d-edge" x1="130" y1="48" x2="146" y2="48"/><polygon class="d-arrow" points="140,43 148,48 140,53"/>
+    <line class="d-edge" x1="268" y1="48" x2="284" y2="48"/><polygon class="d-arrow" points="278,43 286,48 278,53"/>
+    <line class="d-edge" x1="406" y1="48" x2="422" y2="48"/><polygon class="d-arrow" points="416,43 424,48 416,53"/>
+    <line class="d-edge" x1="544" y1="48" x2="560" y2="48"/><polygon class="d-arrow" points="554,43 562,48 554,53"/>
+</svg>
+<div class="d-cap">一覧から各論文のページを開いて要旨を集め、分類してひとつのファイルに整理します。</div>
+</div>
+<p>デイリーペーパーの一覧ページには、各論文の詳しい内容までは載っていません。そこで Claude Code は</p>
+<ul>
+    <li>一覧から各論文の<strong>個別ページを探索（WebFetch）</strong>し、</li>
+    <li>それぞれのページの<strong>要旨（abstract）</strong>を取ってきて、</li>
+    <li>全体を<strong>分類ごとに整理</strong>してファイルに保存します。</li>
+</ul>
+<p>実習の時点では、計 16 本の論文が分類ごとに、それぞれの内容とともにひとつのファイルへ整理されました。</p>
+
+<div class="note">
+    <span class="nh">使いどころ</span>
+    論文をひとつずつ開いて見る代わりに、関連する論文をまるごと取ってきて AI に<strong>一次分析</strong>をさせ、その結果でざっと眺めるほうがずっと速いです。この整理ファイルは、このあとの「論文紹介サイト」と「論文分析エージェント」の入力へつながります。
+</div>
+<p>実習で作ったデザインシステムと論文整理は、次の章<a href="/p/ja/ccb-skills/">拡張</a>の材料になります — スキルとして固め、プラグインを付け、エージェントに任せます。</p>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
-<ul><li><a href="/p/ja/ccb-papers/">ウェブ資料の整理 — Hugging Face の論文</a></li><li><a href="/p/ja/ccb-overview/">講義の概要と目標</a></li><li><a href="/p/ja/ccb-what/">Claude Code とは何か</a></li></ul>
+<ul><li><a href="/p/ja/llmw-cards/">ウィキカードの種類と生ソース</a></li><li><a href="/p/ja/ccb-overview/">基礎 — 概要・ターミナル・CLAUDE.md</a></li><li><a href="/p/ja/ccb-skills/">拡張 — スキル・プラグイン・エージェント</a></li></ul>
 </nav>
 </body>
 </html>

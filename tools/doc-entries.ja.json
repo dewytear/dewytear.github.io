@@ -99,133 +99,45 @@
  },
  {
   "name": "ccb-overview",
-  "title": "講義の概要と目標",
-  "summary": "講義の目標と、ハーネスで本を作るという全体像",
-  "relations": [
-   {
-    "target": "ccb-what",
-    "evidenceRef": "「講義の概要と目標」のあとの読む順序 — この文書を土台に「Claude Code とは何か」へ続く"
-   },
-   {
-    "target": "hns-overview",
-    "evidenceRef": "ハーネス講義は「前回の Claude Code 基礎講義に続いて」と述べており、基礎講義（Tutorial）を前提にしている"
-   }
-  ]
- },
- {
-  "name": "ccb-what",
-  "title": "Claude Code とは何か",
-  "summary": "Claude Code とは何か、何が違うのか — ローカルのファイルを直接扱うエージェント",
-  "relations": [
-   {
-    "target": "ccb-terminal",
-    "evidenceRef": "「Claude Code とは何か」のあとの読む順序 — この文書を土台に「ターミナルの基本コマンド」へ続く"
-   }
-  ]
- },
- {
-  "name": "ccb-terminal",
-  "title": "ターミナルの基本コマンド",
-  "summary": "pwd・cd・mkdir の基本で、フォルダを作って claude を起動する",
-  "relations": [
-   {
-    "target": "ccb-claudemd",
-    "evidenceRef": "「ターミナルの基本コマンド」のあとの読む順序 — この文書を土台に「CLAUDE.md — 作業方針のファイル」へ続く"
-   }
-  ]
- },
- {
-  "name": "ccb-claudemd",
-  "title": "CLAUDE.md — 作業方針のファイル",
-  "summary": "CLAUDE.md という方針ファイルの四つの適用範囲と、その書き方",
+  "title": "基礎 — 概要・ターミナル・CLAUDE.md",
+  "summary": "Claude Code とは何かから、ターミナルの四つのコマンド、CLAUDE.md の作業指針まで — フォルダを作って実行する関門を越える",
   "relations": [
    {
     "target": "ccb-research-web",
-    "evidenceRef": "「CLAUDE.md — 作業方針のファイル」のあとの読む順序 — この文書を土台に「実習: ウェブ調査 → ファイル → ウェブサイト」へ続く"
+    "evidenceRef": "基礎（実行・指針）を前提に、次の章が調査・デザイン・論文の実習へ続く — 本文の結びが指す"
+   },
+   {
+    "target": "hns-overview",
+    "evidenceRef": "概要が次の段階としてハーネスのセッションを予告 — ハーネスは基礎の理解を前提にする"
    }
   ]
  },
  {
   "name": "ccb-research-web",
-  "title": "実習: ウェブ調査 → ファイル → ウェブサイト",
-  "summary": "ウェブ調査からファイル保存、ウェブサイト生成、デザイン修正までの実習",
-  "relations": [
-   {
-    "target": "ccb-design-system",
-    "evidenceRef": "「実習: ウェブ調査 → ファイル → ウェブサイト」のあとの読む順序 — この文書を土台に「デザインシステムの抽出」へ続く"
-   }
-  ]
- },
- {
-  "name": "ccb-design-system",
-  "title": "デザインシステムの抽出",
-  "summary": "完成したサイトからデザイン要素を抜き出してデザインシステムを作る",
-  "relations": [
-   {
-    "target": "ccb-papers",
-    "evidenceRef": "「デザインシステムの抽出」のあとの読む順序 — この文書を土台に「ウェブ資料の整理 — Hugging Face の論文」へ続く"
-   }
-  ]
- },
- {
-  "name": "ccb-papers",
-  "title": "ウェブ資料の整理 — Hugging Face の論文",
-  "summary": "Hugging Face デイリーペーパーの要旨を集めて分類し、ひとつのファイルにまとめる",
+  "title": "実習 — 調査・デザイン・論文整理",
+  "summary": "調査→ファイル→ウェブサイトのパイプライン、完成サイトからのデザインシステム抽出、Hugging Face 論文の整理という実戦三本",
   "relations": [
    {
     "target": "ccb-skills",
-    "evidenceRef": "「ウェブ資料の整理 — Hugging Face の論文」のあとの読む順序 — この文書を土台に「スキルを作る」へ続く"
+    "evidenceRef": "実習の成果物（デザインシステム・論文整理）が次の章のスキル・エージェントの材料になる"
    }
   ]
  },
  {
   "name": "ccb-skills",
-  "title": "スキル（Skill）を作る",
-  "summary": "くり返す作業を再利用できるスキルにする方法と、@ 参照・権限の扱い",
-  "relations": [
-   {
-    "target": "ccb-plugins",
-    "evidenceRef": "「スキルを作る」のあとの読む順序 — この文書を土台に「プラグイン・マーケットプレイス」へ続く"
-   }
-  ]
- },
- {
-  "name": "ccb-plugins",
-  "title": "プラグイン・マーケットプレイス",
-  "summary": "マーケットプレイスから document-skills プラグインを入れて確認する",
-  "relations": [
-   {
-    "target": "ccb-agents",
-    "evidenceRef": "「プラグイン・マーケットプレイス」のあとの読む順序 — この文書を土台に「エージェントを作る」へ続く"
-   }
-  ]
- },
- {
-  "name": "ccb-agents",
-  "title": "エージェント（Agent）を作る",
-  "summary": "専門の論文分析エージェントを作り、PDF を並列で分析する",
+  "title": "拡張 — スキル・プラグイン・エージェント",
+  "summary": "@参照でスキルを作り、document-skills プラグインを入れ、論文分析エージェントを並列で回す拡張の三段",
   "relations": [
    {
     "target": "ccb-manage",
-    "evidenceRef": "「エージェントを作る」のあとの読む順序 — この文書を土台に「使用量・コンテキスト・セッションの管理」へ続く"
+    "evidenceRef": "拡張機能の利用を前提に、次の章が使用量・コンテキスト・セッションの運用で締める"
    }
   ]
  },
  {
   "name": "ccb-manage",
-  "title": "使用量・コンテキスト・セッションの管理",
-  "summary": "トークンの使用量・コンテキスト・セッションを管理して品質とコストを制御する",
-  "relations": [
-   {
-    "target": "ccb-tips",
-    "evidenceRef": "「使用量・コンテキスト・セッションの管理」のあとの読む順序 — この文書を土台に「便利な機能とまとめ」へ続く"
-   }
-  ]
- },
- {
-  "name": "ccb-tips",
-  "title": "便利な機能とまとめ",
-  "summary": "便利なコマンドとスキル、そして Cowork の紹介で講義を締めくくる"
+  "title": "運用 — 使用量・セッションとまとめ",
+  "summary": "/usage・/context・コンパクトとセッションの再開、/insight と便利なスキル — 長く使うための運用習慣と講義のまとめ"
  },
  {
   "name": "hns-overview",
@@ -855,7 +767,7 @@
   "summary": "LLM がやりがちなコーディングの失敗 10 個を狙った汎用の CLAUDE.md 方針を、インフォグラフィックと英語原文・日本語訳・使い方とともに紹介する — 慎重な出だし（まず考える、三つのアーティファクト）、コーディングの原則（単純さ、外科的な変更、韓国語ヘッダー、コロン禁止、完了前のテスト）、検証と締めくくり（目標優先、意味の単位でコミット、エラーの熟読）、そしてプロジェクトのルートへの導入のしかたと効いている合図",
   "relations": [
    {
-    "target": "ccb-claudemd",
+    "target": "ccb-overview",
     "evidenceRef": "ccb-claudemd が説明する方針ファイル（CLAUDE.md）の実践的な事例 — コピーしてそのまま使える方針の一式と、その適用のしかた"
    }
   ]
