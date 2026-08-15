@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OMC の紹介</title>
-<meta name="description" content="OMC プラグインが Claude Code に足す自律実行・マルチエージェントでの作業・自動検証を紹介する。">
+<title>OMC — 紹介とインストール</title>
+<meta name="description" content="oh-my-claude-code とは何かから、主要用語、インストール、omc-doctor の診断まで — OMC を始める一編">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/ja/omc-intro/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/omc-intro/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/omc-intro/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="OMC の紹介">
-<meta property="og:description" content="OMC プラグインが Claude Code に足す自律実行・マルチエージェントでの作業・自動検証を紹介する。">
+<meta property="og:title" content="OMC — 紹介とインストール">
+<meta property="og:description" content="oh-my-claude-code とは何かから、主要用語、インストール、omc-doctor の診断まで — OMC を始める一編">
 <meta property="og:url" content="https://dewytear.github.io/p/ja/omc-intro/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="OMC の紹介">
-<meta name="twitter:description" content="OMC プラグインが Claude Code に足す自律実行・マルチエージェントでの作業・自動検証を紹介する。">
+<meta name="twitter:title" content="OMC — 紹介とインストール">
+<meta name="twitter:description" content="oh-my-claude-code とは何かから、主要用語、インストール、omc-doctor の診断まで — OMC を始める一編">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "OMC の紹介",
- "description": "OMC プラグインが Claude Code に足す自律実行・マルチエージェントでの作業・自動検証を紹介する。",
+ "headline": "OMC — 紹介とインストール",
+ "description": "oh-my-claude-code とは何かから、主要用語、インストール、omc-doctor の診断まで — OMC を始める一編",
  "inLanguage": "ja",
  "url": "https://dewytear.github.io/p/ja/omc-intro/",
  "mainEntityOfPage": "https://dewytear.github.io/#!omc-intro",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T12:15:44+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T15:10:11+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/en/omc-intro/" hreflang="en">English</a>
 </p>
 <article>
-<h2>OMC の紹介</h2>
+<h2>OMC — 紹介とインストール</h2>
 <p><strong>oh-my-claudecode（以下 OMC）</strong>は、Claude Code に自律実行・マルチエージェント協業・自動検証の機能を足してくれるプラグインです。</p>
 
 <div class="diagram">
@@ -107,11 +107,100 @@
     <br>· 公式 Releases: /releases
     <br>· Claude Code Plugin のドキュメント: code.claude.com/docs/en/discover-plugins
 </div>
+
+<h3>用語のポイント</h3>
+<p>OMC の文書には次の用語がよく出てきます。先に理解しておくと、以降の内容がぐっと読みやすくなります。</p>
+
+<ul>
+    <li><strong>スラッシュコマンド</strong> — Claude Code の入力欄で <code>/</code> から始める特別なコマンドです。普通の会話ではなく、決められた機能をすぐ実行します。<em>例: <code>/plugin install ...</code></em></li>
+    <li><strong>ネームスペース</strong> — コマンドの前にプラグイン名が付く形式です。ほかのプラグインと名前がぶつからないようにしてくれます。<em>例: <code>/oh-my-claudecode:autopilot</code></em></li>
+    <li><strong>エージェント（Agent）</strong> — 特定の役割を負った AI の作業者です。探索・実装・検証のように役割が分かれているので、大きな作業を分担させられます。<em>例: explore、executor、qa-tester</em></li>
+    <li><strong>スキル（Skill）</strong> — ひとつの作業をこなす機能の単位です。自律実行やくり返し実行といった動作がスキルとして提供されます。<em>例: autopilot、ralph、skillify</em></li>
+    <li><strong>Hook（フック）</strong> — 決められた時点（例: ファイル修正の前後）に自動で割り込んで実行される動作です。キーワードの検知や完了の検証などに使われます。<em>例: PreToolUse、PostToolUse</em></li>
+    <li><strong>プロジェクトメモリ</strong> — AI がプロジェクトの構造を覚えていられるように整理しておいた文書です。毎回ゼロから探索するコストを減らします。<em>例: deepinit、AGENTS.md</em></li>
+</ul>
+
+<h3>インストール</h3>
+<p>インストールの経路は三つに分かれます。<strong>一般の利用者はプラグインのマーケットプレイス方式</strong>を優先すれば大丈夫です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 218" role="img" aria-label="インストールの決定木: どうインストールするかによって、プラグインのマーケットプレイス・--local・npm CLI の三つに分かれる">
+    <polygon class="d-box" points="340,14 412,54 340,94 268,54"/>
+    <text class="d-label sm" x="340" y="58" text-anchor="middle">どう入れる?</text>
+
+    <path class="d-edge" d="M340 94 L115 129 Q103 132 103 138" fill="none"/>
+    <polygon class="d-arrow" points="98,132 108,132 103,140"/>
+    <line class="d-edge" x1="340" y1="94" x2="340" y2="132"/>
+    <polygon class="d-arrow" points="335,132 345,132 340,140"/>
+    <path class="d-edge" d="M340 94 L565 129 Q573 132 573 138" fill="none"/>
+    <polygon class="d-arrow" points="568,132 578,132 573,140"/>
+
+    <text class="d-accent" x="195" y="112" text-anchor="middle" font-size="11">推奨</text>
+    <text class="d-sub" x="352" y="122" text-anchor="middle">プロジェクト</text>
+    <text class="d-sub" x="500" y="112" text-anchor="middle">ターミナル</text>
+
+    <rect class="d-box accent" x="8" y="140" width="190" height="62" rx="11"/>
+    <text class="d-label sm" x="103" y="166" text-anchor="middle">マーケットプレイス</text>
+    <text class="d-sub" x="103" y="184" text-anchor="middle">一般利用者 · スラッシュ命令</text>
+    <rect class="d-box" x="243" y="140" width="190" height="62" rx="11"/>
+    <text class="d-label sm" x="338" y="166" text-anchor="middle">--local</text>
+    <text class="d-sub" x="338" y="184" text-anchor="middle">プロジェクト設定 · 全体を保存</text>
+    <rect class="d-box" x="478" y="140" width="190" height="62" rx="11"/>
+    <text class="d-label sm" x="573" y="166" text-anchor="middle">npm CLI</text>
+    <text class="d-sub" x="573" y="184" text-anchor="middle">ターミナルの omc コマンド</text>
+</svg>
+<div class="d-cap">「どう入れる?」から<strong>マーケットプレイス（推奨）</strong>・<code>--local</code>・<code>npm CLI</code> の三つに分かれます。</div>
+</div>
+
+<h4>1）推奨 — プラグインのマーケットプレイス</h4>
+<p>Claude Code の中でマーケットプレイスを追加してから OMC プラグインを入れます。入力欄で下の 2 行を順に実行します。<strong>2 行をまとめて貼り付けると失敗するので、必ず 1 行ずつ実行</strong>してください（公式 README に明記）。</p>
+<pre><code><span class="c"># ステップ 1: プラグインのリポジトリ（マーケットプレイス）を登録</span>
+/plugin marketplace add https://github.com/Yeachan-Heo/oh-my-claudecode
+<span class="c"># ステップ 2: 登録したリポジトリから OMC プラグインをインストール</span>
+/plugin install oh-my-claudecode</code></pre>
+
+<h4>2）プロジェクトの設定（--local を推奨）</h4>
+<p>インストール後はプロジェクト単位の設定をおすすめします。<code>--local</code> を付ければ既存のグローバルな <code>CLAUDE.md</code> を上書きしないので安全です。</p>
+<pre><code><span class="c"># いまのプロジェクトにだけ OMC の設定を適用 — グローバル設定はそのまま保存</span>
+/oh-my-claudecode:omc-setup --local</code></pre>
+<p>グローバルな設定がどうしても必要なときだけ下のコマンドを使います。ただし、既存の <code>~/.claude/CLAUDE.md</code> に影響が出ないかを先に確認してください。</p>
+<pre><code><span class="c"># すべてのプロジェクトに共通で適用 — 既存のグローバル CLAUDE.md への影響を要確認</span>
+/oh-my-claudecode:omc-setup</code></pre>
+
+<div class="note">
+    <span class="nh">会社の開発 PC・共用プロジェクトでの推奨</span>
+    グローバルな設定よりプロジェクトローカルの設定（<code>--local</code>）を優先することをおすすめします。プロジェクトごとにルールが違うとき、グローバルな <code>CLAUDE.md</code> が混ざるのを防げます。
+</div>
+
+<h4>3）npm でのインストール — CLI/runtime 用途の公式な別経路</h4>
+<p>一般の利用者は上のプラグイン方式で十分ですが、<strong>npm でのインストールも公式に対応した別の経路</strong>です。ただし用途が違います。プラグインのインストールは Claude Code のセッション内でスラッシュコマンド（<code>/autopilot</code> など）を使うためのもので、npm のインストールはターミナルで <code>omc</code> CLI のコマンド（<code>omc doctor</code>、<code>omc team</code>、<code>omc ask</code> など）を使うためのものです。</p>
+<pre><code><span class="c"># ターミナル CLI(omc コマンド)が必要なときだけ — npm のパッケージ名は oh-my-claude-sisyphus</span>
+npm i -g oh-my-claude-sisyphus@latest</code></pre>
+<p>注意すべきなのは<strong>npm のパッケージ名がリポジトリ名と違う</strong>ことです。プロジェクトのブランドは oh-my-claudecode ですが、npm に公開されたパッケージ名は <code>oh-my-claude-sisyphus</code> です。インストールすると <code>oh-my-claudecode</code> と <code>omc</code> のふたつのコマンドが一緒に登録されます。インストール中に <code>deprecated prebuild-install</code> の警告が見えることがありますが、上位の依存に由来する既知の警告で、インストールの失敗を意味しません。curl スクリプトによるインストールは公式ドキュメントにないので使いません。</p>
+
+<div class="note warn">
+    <span class="nh">インストール・アップデート</span>
+    プラグイン方式を使う場合、インストールとアップデートは Claude Code のプラグイン管理の機能で処理します。マーケットプレイスの自動更新がオフなら、<code>/plugin marketplace update omc</code> でまず最新版に同期してから、<code>/oh-my-claudecode:omc-setup</code> をもう一度実行して最新の設定を適用してください。
+</div>
+
+<h3>インストールの診断</h3>
+<p>インストール後に問題が起きたら、まず診断のコマンドで状態を確認します。</p>
+
+<p>プラグインの環境では下のコマンドを優先して使います。</p>
+<pre><code><span class="c"># インストール・設定の状態を点検し、問題を知らせてくれる（問題解決の第一歩）</span>
+/oh-my-claudecode:omc-doctor</code></pre>
+
+<p>CLI ランタイムの経路を別に使っている場合は、次の診断もできます。</p>
+<pre><code><span class="c"># CLI ランタイムの経路で診断</span>
+omc doctor
+<span class="c"># プラグインのインストール先を直接指定して診断</span>
+omc doctor --plugin-dir /path/to/oh-my-claudecode</code></pre>
+<p>インストールと診断まで済んだら本題です — <a href="/p/ja/omc-modes/">実行モード</a>で OMC の中核であるモード体系を身につけ、<a href="/p/ja/omc-agents/">エージェント・スキルと Hook・メモリ</a>へ進んでください。</p>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · PlugIn · OMC &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · PlugIn · OMC &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
-<ul><li><a href="/p/ja/tip-advanced/">上級 — 並列・自律・予約の8つ</a></li><li><a href="/p/ja/ccb-skills/">拡張 — スキル・プラグイン・エージェント</a></li></ul>
+<ul><li><a href="/p/ja/hnp-install/">インストールと準備</a></li><li><a href="/p/ja/hns-install/">実行する — 導入・実行・レビュー</a></li><li><a href="/p/ja/ccb-skills/">拡張 — スキル・プラグイン・エージェント</a></li><li><a href="/p/ja/tip-advanced/">上級 — 並列・自律・予約の8つ</a></li></ul>
 </nav>
 </body>
 </html>

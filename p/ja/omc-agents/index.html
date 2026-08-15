@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>エージェント・スキル</title>
-<meta name="description" content="指揮者の Claude が役割ごとに専門のエージェントへ委任する構造と、スキルを説明する。">
+<title>エージェント・スキルと Hook・メモリ</title>
+<meta name="description" content="サブエージェントへの委任と skillify、そしてフック・プロジェクトメモリ・deepinit まで — OMC の構成要素の二本柱">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/ja/omc-agents/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/omc-agents/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/omc-agents/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="エージェント・スキル">
-<meta property="og:description" content="指揮者の Claude が役割ごとに専門のエージェントへ委任する構造と、スキルを説明する。">
+<meta property="og:title" content="エージェント・スキルと Hook・メモリ">
+<meta property="og:description" content="サブエージェントへの委任と skillify、そしてフック・プロジェクトメモリ・deepinit まで — OMC の構成要素の二本柱">
 <meta property="og:url" content="https://dewytear.github.io/p/ja/omc-agents/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="エージェント・スキル">
-<meta name="twitter:description" content="指揮者の Claude が役割ごとに専門のエージェントへ委任する構造と、スキルを説明する。">
+<meta name="twitter:title" content="エージェント・スキルと Hook・メモリ">
+<meta name="twitter:description" content="サブエージェントへの委任と skillify、そしてフック・プロジェクトメモリ・deepinit まで — OMC の構成要素の二本柱">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "エージェント・スキル",
- "description": "指揮者の Claude が役割ごとに専門のエージェントへ委任する構造と、スキルを説明する。",
+ "headline": "エージェント・スキルと Hook・メモリ",
+ "description": "サブエージェントへの委任と skillify、そしてフック・プロジェクトメモリ・deepinit まで — OMC の構成要素の二本柱",
  "inLanguage": "ja",
  "url": "https://dewytear.github.io/p/ja/omc-agents/",
  "mainEntityOfPage": "https://dewytear.github.io/#!omc-agents",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T12:15:44+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T15:10:11+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/en/omc-agents/" hreflang="en">English</a>
 </p>
 <article>
-<h2>エージェント・スキル</h2>
+<h2>エージェント・スキルと Hook・メモリ</h2>
 <p>OMC の核心は<strong>委任（delegation）</strong>です。メインの Claude が指揮者の役割を負い、役割の決まった専門のエージェントたちへ作業を分けて任せます。各エージェントは作業の難しさに合うモデルへ自動で割り当てられ（設計・分析には高性能なモデル、単純な参照には軽量なモデル）、ひとりで全部こなすより正確で速くなります。</p>
 <p>エージェントは役割に応じて大きく四つのグループに分かれます。以下はグループごとの主なエージェントと、それぞれがやることです。</p>
 
@@ -135,11 +135,83 @@
 <p><code>/oh-my-claudecode:skillify</code> は、ひとつのセッションで効果的だった作業のパターンを、再利用できるスキルとして抜き出すコマンドです。よくくり返す流れをいちど整理しておけば、次の作業ですぐ呼び出して使えます。かつての名称である <code>learner</code> は deprecated（サポート終了予定）の互換エイリアスなので、新しい文書・教育では skillify を使ってください。</p>
 <pre><code><span class="c"># セッションで効果的だったパターンを再利用スキルとして抽出</span>
 /oh-my-claudecode:skillify</code></pre>
+
+<h3>Hook・メモリ</h3>
+<p>OMC は Claude Code の Hook イベントを活かして、キーワードの検知、スキルの注入、状態の復元、完了の検証を処理します。最新の Reference では Hook イベントはさらに細分化されています。</p>
+
+<h4>知っておくこと</h4>
+<ul>
+    <li><strong>autopilot・ralph・ultrawork・ultraqa は Hook ではなくスキル</strong>です。keyword-detector がこれらを有効にし、persistent-mode の Hook が継続実行を助けます。</li>
+    <li>Hook を全部オフにするには <code>DISABLE_OMC</code>、特定の Hook だけ外すには <code>OMC_SKIP_HOOKS</code> を使います。</li>
+    <li>Windows の Native Hook は v4.14.4 以降に改善され、そのまま使えます。tmux が必要な一部の機能も、現行の公式 README では <strong>psmux</strong>（ネイティブ Windows 向けの tmux 互換ツール）を使えば WSL なしで動き、WSL2 は代替の経路です。</li>
+</ul>
+<pre><code><span class="c"># OMC のすべての Hook を一度に無効化</span>
+export DISABLE_OMC=1
+<span class="c"># 指定した Hook だけ除外（残りは正常に動作）</span>
+export OMC_SKIP_HOOKS=PreToolUse,PostToolUse</code></pre>
+
+<h4>Hook が走るタイミング</h4>
+<p>Hook は Claude Code の特定のイベントごとに自動で割り込んで実行される動作です。OMC はこれを通じてコンテキストを注入し、スキルを自動でオンにします。主なタイミングは四つです。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 132" role="img" aria-label="Hook イベントのライフサイクル: SessionStart、UserPromptSubmit、PreToolUse、PostToolUse の順">
+    <rect class="d-box" x="8" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="83" y="48" text-anchor="middle">SessionStart</text>
+    <text class="d-sub" x="83" y="65" text-anchor="middle">セッション開始</text>
+    <rect class="d-box" x="178" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="253" y="48" text-anchor="middle">UserPromptSubmit</text>
+    <text class="d-sub" x="253" y="65" text-anchor="middle">プロンプト送信</text>
+    <rect class="d-box" x="352" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="427" y="48" text-anchor="middle">PreToolUse</text>
+    <text class="d-sub" x="427" y="65" text-anchor="middle">ツールの直前</text>
+    <rect class="d-box accent" x="522" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="597" y="48" text-anchor="middle">PostToolUse</text>
+    <text class="d-sub" x="597" y="65" text-anchor="middle">ツールの直後</text>
+
+    <line class="d-edge" x1="158" y1="51" x2="171" y2="51"/><polygon class="d-arrow" points="171,46 179,51 171,56"/>
+    <line class="d-edge" x1="328" y1="51" x2="345" y2="51"/><polygon class="d-arrow" points="345,46 353,51 345,56"/>
+    <line class="d-edge accent" x1="502" y1="51" x2="515" y2="51"/><polygon class="d-arrow accent" points="515,46 523,51 515,56"/>
+    <text class="d-sub" x="340" y="118" text-anchor="middle">セッションの順に進む →</text>
+</svg>
+<div class="d-cap">セッションが始まるとき、プロンプトを出すとき、ツールの<strong>直前・直後</strong>ごとに Hook が自動で割り込みます。</div>
+</div>
+
+<ul>
+    <li><strong>SessionStart</strong> — セッションが始まるとき。OMC の初期化、notepad・project-memory の読み込み、直前の実行モードの状態の復元。</li>
+    <li><strong>UserPromptSubmit</strong> — プロンプトを送るとき。マジックキーワードの検知、ふさわしいスキルの自動接続、コンテキストの注入。</li>
+    <li><strong>PreToolUse</strong> — ツールを使う直前。並列で読むことを勧めるヒント、関連ファイルの事前読み込みの提案。</li>
+    <li><strong>PostToolUse</strong> — ツールを使った直後。結果の検証、次の手の提案、エラーを検知したときの自動修正の提案。</li>
+</ul>
+
+<h4>会話中に見えるメッセージの読み方</h4>
+<p>作業中に <code>system-reminder</code> の形のメッセージが見えることがあります。慌てず、下のように理解すれば大丈夫です。</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>メッセージ</th><th>意味</th></tr></thead>
+        <tbody>
+            <tr><td><code>hook success: Success</code></td><td>正常に動いているという表示です。そのまま進めて大丈夫です。</td></tr>
+            <tr><td><code>hook additional context: ...</code></td><td>役に立つヒントです。参考にして取り入れるとよいです。</td></tr>
+            <tr><td><code>[MAGIC KEYWORD: ralph detected]</code></td><td>そのモード（ここでは ralph）が自動でオンになったという知らせです。</td></tr>
+            <tr><td><code>The boulder never stops rolling</code></td><td>ralph・ultrawork が実行しつづけているという表示です。</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h4>メモリとプロジェクトの文書化</h4>
+<p>OMC は作業の文脈をセッションをまたいでも保つために、三つの仕組みを用意しています。それぞれ保存の場所と役割が違います。</p>
+<ul>
+    <li><strong>deepinit</strong> — コードベース全体をざっと見て、ディレクトリごとに <code>AGENTS.md</code> の文書を作ってくれます。各フォルダが何を収めているのか、ファイルどうしの関係、作業時の注意点、依存関係を整理しておくので、AI が毎回ゼロから構造を探索しなくて済みます。大規模なプロジェクトの事前整理に役立ちます。</li>
+    <li><strong>notepad</strong> — <code>.omc/notepad.md</code> に保存される作業メモです。会話が長くなって文脈が整理（圧縮）されても生き残ります。絶対に失ってはいけない情報（priority）、いま進行中の作業の状態（working）、手で記録するメモ（manual）の三段階に分かれ、古い項目の整理は notepad_prune のツールで処理します。</li>
+    <li><strong>project memory</strong> — <code>.omc/project-memory.json</code> に保存され、プロジェクトの技術スタック・コーディング規約・アーキテクチャの指針を覚えます。既定値は <code>omc-setup</code> で設定します。</li>
+</ul>
+<pre><code><span class="c"># コードベースを分析してディレクトリごとに AGENTS.md を生成（[path] を省くと現在のパス）</span>
+/oh-my-claudecode:deepinit [path]</code></pre>
+<p>構成要素を押さえたら、実戦での組み合わせは<a href="/p/ja/omc-tools/">高度な活用</a>の章で — ツール・シナリオ別ワークフロー・Windows の注意点を見ます。</p>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · PlugIn · OMC &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · PlugIn · OMC &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
-<ul><li><a href="/p/ja/hnp-architecture/">動作の構造と 6 ステップ</a></li><li><a href="/p/ja/hns-kitchen/">動作原理 — 厨房のたとえ・チーム・三要素</a></li><li><a href="/p/ja/hnp-concepts/">核心の概念をやさしく</a></li><li><a href="/p/ja/ccb-skills/">拡張 — スキル・プラグイン・エージェント</a></li></ul>
+<ul><li><a href="/p/ja/tip-intermediate/">中級 — セッションを仕組みに変える11の方法</a></li><li><a href="/p/ja/skills/">拡張機能 — Skills · MCP · Hooks</a></li><li><a href="/p/ja/hnp-architecture/">動作の構造と 6 ステップ</a></li><li><a href="/p/ja/hns-kitchen/">動作原理 — 厨房のたとえ・チーム・三要素</a></li></ul>
 </nav>
 </body>
 </html>

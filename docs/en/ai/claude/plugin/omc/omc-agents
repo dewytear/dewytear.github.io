@@ -1,4 +1,4 @@
-<h2>Agents · Skills</h2>
+<h2>Agents · Skills and Hooks · Memory</h2>
 <p>The core of OMC is <strong>delegation</strong>. The main Claude takes the conductor role and splits the work among specialist agents with fixed roles. Each agent is automatically assigned a model matching the difficulty of the task (a high-performance model for design and analysis, a lightweight model for simple lookups), so it is more accurate and faster than having one person handle everything.</p>
 <p>Agents fall broadly into four groups by role. Below are the main agents in each group and what each of them does.</p>
 
@@ -75,3 +75,76 @@
 <p><code>/oh-my-claudecode:skillify</code> is the command that extracts work patterns that were effective in one session into reusable skills. Organize a flow you repeat often just once, and you can call it up right away in your next task. The former name <code>learner</code> is a deprecated (support to be discontinued) compatibility alias, so use skillify in new documents and training.</p>
 <pre><code><span class="c"># Extract patterns that were effective in the session into reusable skills</span>
 /oh-my-claudecode:skillify</code></pre>
+
+<h3>Hook · Memory</h3>
+<p>OMC makes use of Claude Code's Hook events to handle keyword detection, skill injection, state recovery, and completion verification. As of the latest Reference, the Hook events are broken down more finely.</p>
+
+<h4>Things to know</h4>
+<ul>
+    <li><strong>autopilot · ralph · ultrawork · ultraqa are skills, not Hooks</strong>. keyword-detector activates them, and the persistent-mode Hook assists with keeping them running.</li>
+    <li>To turn off all Hooks use <code>DISABLE_OMC</code>; to exclude only specific Hooks use <code>OMC_SKIP_HOOKS</code>.</li>
+    <li>Windows Native Hooks were improved after v4.14.4 and can be used as they are. Some features that require tmux also work without WSL if you use <strong>psmux</strong> (a tmux-compatible tool for native Windows), per the current official README, and WSL2 is the alternative path.</li>
+</ul>
+<pre><code><span class="c"># Disable all of OMC's Hooks at once</span>
+export DISABLE_OMC=1
+<span class="c"># Exclude only the specified Hooks (the rest work normally)</span>
+export OMC_SKIP_HOOKS=PreToolUse,PostToolUse</code></pre>
+
+<h4>When Hooks run</h4>
+<p>A Hook is an action that automatically steps in and runs at each specific event in Claude Code. OMC uses this to inject context and turn skills on automatically. There are four main timings.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 132" role="img" aria-label="Hook event lifecycle: SessionStart, UserPromptSubmit, PreToolUse, PostToolUse in order">
+    <rect class="d-box" x="8" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="83" y="48" text-anchor="middle">SessionStart</text>
+    <text class="d-sub" x="83" y="65" text-anchor="middle">Session start</text>
+    <rect class="d-box" x="178" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="253" y="48" text-anchor="middle">UserPromptSubmit</text>
+    <text class="d-sub" x="253" y="65" text-anchor="middle">Prompt submitted</text>
+    <rect class="d-box" x="352" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="427" y="48" text-anchor="middle">PreToolUse</text>
+    <text class="d-sub" x="427" y="65" text-anchor="middle">Just before a tool</text>
+    <rect class="d-box accent" x="522" y="24" width="150" height="54" rx="10"/>
+    <text class="d-label sm" x="597" y="48" text-anchor="middle">PostToolUse</text>
+    <text class="d-sub" x="597" y="65" text-anchor="middle">Just after a tool</text>
+
+    <line class="d-edge" x1="158" y1="51" x2="171" y2="51"/><polygon class="d-arrow" points="171,46 179,51 171,56"/>
+    <line class="d-edge" x1="328" y1="51" x2="345" y2="51"/><polygon class="d-arrow" points="345,46 353,51 345,56"/>
+    <line class="d-edge accent" x1="502" y1="51" x2="515" y2="51"/><polygon class="d-arrow accent" points="515,46 523,51 515,56"/>
+    <text class="d-sub" x="340" y="118" text-anchor="middle">Proceeds in session order →</text>
+</svg>
+<div class="d-cap">When a session starts and when you send a prompt, and <strong>just before and just after</strong> every tool, a Hook automatically steps in.</div>
+</div>
+
+<ul>
+    <li><strong>SessionStart</strong> — when a session starts. OMC initialization, loading notepad · project-memory, recovering the state of the mode that ran just before.</li>
+    <li><strong>UserPromptSubmit</strong> — when you send a prompt. Magic keyword detection, automatically wiring up the right skill, context injection.</li>
+    <li><strong>PreToolUse</strong> — just before using a tool. Hints recommending parallel reads, suggestions to preload related files.</li>
+    <li><strong>PostToolUse</strong> — just after using a tool. Result verification, suggestions for follow-up action, suggestions for automatic fixes when an error is detected.</li>
+</ul>
+
+<h4>Reading the messages you see mid-conversation</h4>
+<p>While working you may see messages in the form of <code>system-reminder</code>. Don't be alarmed — just understand them as below.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Message</th><th>Meaning</th></tr></thead>
+        <tbody>
+            <tr><td><code>hook success: Success</code></td><td>A sign that it is working normally. You can just go on.</td></tr>
+            <tr><td><code>hook additional context: ...</code></td><td>A useful hint. It is good to take it into account and apply it.</td></tr>
+            <tr><td><code>[MAGIC KEYWORD: ralph detected]</code></td><td>A notice that the corresponding mode (here, ralph) has been turned on automatically.</td></tr>
+            <tr><td><code>The boulder never stops rolling</code></td><td>A sign that ralph · ultrawork is still running.</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h4>Memory and project documentation</h4>
+<p>OMC provides three mechanisms for keeping the work context even across sessions. Each differs in where it is stored and what it does.</p>
+<ul>
+    <li><strong>deepinit</strong> — skims the whole codebase and creates an <code>AGENTS.md</code> document in each directory. It lays out what each folder holds, the relationships between files, things to watch out for while working, and dependencies, so the AI does not have to explore the structure from scratch every time. It is useful as preparatory groundwork on large projects.</li>
+    <li><strong>notepad</strong> — a work memo stored in <code>.omc/notepad.md</code>. It survives even when the conversation gets long and the context is compacted. It is divided into three tiers — information you must never lose (priority), the state of the work currently in progress (working), and memos you record manually (manual) — and cleaning up old items is handled with the notepad_prune tool.</li>
+    <li><strong>project memory</strong> — stored in <code>.omc/project-memory.json</code>, it remembers the project's tech stack, coding conventions, and architecture guidelines. The defaults are set with <code>omc-setup</code>.</li>
+</ul>
+<pre><code><span class="c"># Analyze the codebase and generate a per-directory AGENTS.md document (current path if [path] is omitted)</span>
+/oh-my-claudecode:deepinit [path]</code></pre>
+<p>With the building blocks covered, real-world combinations live in the <a href="#!omc-tools">Advanced Use</a> chapter — tools, scenario workflows, and Windows caveats.</p>
+

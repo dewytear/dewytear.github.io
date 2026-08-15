@@ -1,4 +1,4 @@
-<h2>コスト・性能</h2>
+<h2>コスト・性能とコマンドリファレンス</h2>
 <p>OMC の核心は、作業を複数のエージェントに分けて同時に処理することです。だから全体の作業時間は縮められますが、同時に何人もの作業者が動くぶん AI の使用量（トークン）が増え、コストは大きくなりえます。<strong>速さとコストは一緒に動く</strong>と理解しておけば大丈夫です。</p>
 
 <h3>なぜコストが変わるのか</h3>
@@ -15,4 +15,90 @@
 <div class="note">
     <span class="nh">ひと言でいうと</span>
     速いからといって、いつも安いわけではありません。小さな作業は普通の会話で軽く済ませ、並列・自律のモードはそれだけの価値がある大きな作業にだけ使う、というふうに調節すれば、速さとコストのバランスを取れます。
+</div>
+
+<h3>コマンド集</h3>
+<p>よく使うコマンドをひと目で整理し、それぞれが実際に何をするのかの説明も添えました。スラッシュコマンドはできるかぎりネームスペース（<code>/oh-my-claudecode:</code>）の形式で表記します。</p>
+
+<div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr><th>区分</th><th>コマンド</th><th>やること</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>インストール</td><td><code>/plugin marketplace add &lt;repo&gt;</code> → <code>/plugin install oh-my-claudecode</code></td><td>プラグインのリポジトリを登録してから OMC を入れます。2 行を順に実行します。</td></tr>
+            <tr><td>プロジェクト設定</td><td><code>/oh-my-claudecode:omc-setup --local</code></td><td>いまのプロジェクトにだけ適用される OMC の設定を作ります。グローバルな設定には触れません。</td></tr>
+            <tr><td>グローバル設定</td><td><code>/oh-my-claudecode:omc-setup</code></td><td>すべてのプロジェクトに共通で適用される設定を作ります。既存のグローバルな CLAUDE.md に影響することがあります。</td></tr>
+            <tr><td>診断</td><td><code>/oh-my-claudecode:omc-doctor</code></td><td>インストール・設定の状態を点検し、問題があれば知らせます。問題解決の第一歩です。</td></tr>
+            <tr><td>プロジェクトの文書化</td><td><code>/oh-my-claudecode:deepinit [path]</code></td><td>プロジェクトの構造を分析し、AI が理解しやすい文書（AGENTS.md）に整理します。</td></tr>
+            <tr><td>要件の明確化</td><td><code>/deep-interview &lt;idea&gt;</code></td><td>あいまいなアイデアに質問を投げて、具体的な要件へ磨き上げます。</td></tr>
+            <tr><td>自律実装</td><td><code>/oh-my-claudecode:autopilot &lt;task&gt;</code></td><td>要件を受け取り、実装から検証まで自分で進めます。</td></tr>
+            <tr><td>最後までやり切る</td><td><code>/oh-my-claudecode:ralph &lt;task&gt;</code></td><td>完了の条件を満たすまで止まらずくり返し実行します。</td></tr>
+            <tr><td>最大の並列</td><td><code>/oh-my-claudecode:ultrawork &lt;task&gt;</code> または <code>ulw</code></td><td>互いに独立した複数の作業を同時に処理して速度を上げます。</td></tr>
+            <tr><td>チーム実行</td><td><code>/oh-my-claudecode:team &lt;N&gt;:&lt;agent&gt; &lt;task&gt;</code></td><td>指定した数（N）のエージェントに役割（agent）を割り当てて作業を分担させます。</td></tr>
+            <tr><td>アップデート</td><td><code>/plugin marketplace update omc</code> → <code>/oh-my-claudecode:omc-setup</code></td><td>マーケットプレイスを最新に同期してから設定を再適用します。</td></tr>
+            <tr><td>計画 / 合意</td><td><code>/oh-my-claudecode:plan</code> · <code>/oh-my-claudecode:ralplan</code></td><td>作業の前に実行の計画を立てます。ralplan は合意にもとづき、より慎重に検討します。（omc-plan は plan の互換エイリアス）</td></tr>
+            <tr><td>キャンセル</td><td><code>/oh-my-claudecode:cancel</code> または <code>stopomc</code> / <code>cancelomc</code></td><td>進行中の OMC の作業を中断します。</td></tr>
+            <tr><td>パターンの抽出</td><td><code>/oh-my-claudecode:skillify</code></td><td>ひとつのセッションで効果的だった作業のパターンを、再利用できるスキルとして抜き出します。（learner は deprecated のエイリアス）</td></tr>
+            <tr><td>HUD の設定</td><td><code>/oh-my-claudecode:hud setup</code></td><td>作業の進行状況を見せる画面表示（HUD）を設定します。</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">読み方</span>
+    <code>&lt;task&gt;</code>、<code>&lt;idea&gt;</code>、<code>&lt;N&gt;</code> のように山かっこでくくられた部分は、実際の値に置き換えて入れる場所です。たとえば <code>&lt;task&gt;</code> の場所には「ログイン API の実装」のように、やってほしい作業を書きます。<code>[path]</code> のように角かっこでくくられた部分は省略できる任意の項目です。
+</div>
+
+<h3>クイックリファレンスカード</h3>
+<p>よく使うコマンドを場面ごとにまとめたチートシートです。作業中にすばやく探して使うのに向いています。</p>
+
+<h4>はじめに</h4>
+<ul>
+    <li><code>/deepinit</code> — プロジェクト構造の文書化</li>
+    <li><code>/deep-interview</code> — 要件の明確化</li>
+    <li><code>/omc-doctor</code> — インストールの診断</li>
+</ul>
+
+<h4>計画</h4>
+<ul>
+    <li><code>/plan</code> — 計画を立ててから承認（omc-plan）</li>
+    <li><code>ralplan:</code> — 専門家の合意にもとづく計画</li>
+</ul>
+
+<h4>実行（強さの順）</h4>
+<ul>
+    <li><code>autopilot:</code> — 自律実行（計画〜検証）</li>
+    <li><code>ralph:</code> — 完了までくり返す</li>
+    <li><code>ulw</code> — 最大限の並列実行</li>
+    <li><code>team N:agent</code> — N 体のエージェントによるチーム協業</li>
+</ul>
+
+<h4>分析 &amp; レビュー</h4>
+<ul>
+    <li><code>deep-analyze</code> — デバッグ・原因の分析</li>
+    <li><code>review code</code> — 総合的なコードレビュー</li>
+    <li><code>security review</code> — セキュリティの脆弱性の点検</li>
+    <li><code>fix build</code> — ビルド・型エラーの修正</li>
+    <li><code>tdd:</code> — テスト駆動開発</li>
+</ul>
+
+<h4>マルチ AI</h4>
+<ul>
+    <li><code>/omc-teams N:ai</code> — Codex・Gemini を並列で活用</li>
+    <li><code>/ccg</code> — 3 つのモデルで同時に分析</li>
+</ul>
+
+<h4>ユーティリティ</h4>
+<ul>
+    <li><code>/cancel</code> — いまのモードをキャンセル</li>
+    <li><code>/cancel --force</code> — 全体を初期化</li>
+    <li><code>/trace</code> — 証拠にもとづく原因の追跡</li>
+    <li><code>skillify</code> — パターンの抽出・再利用（旧 learner）</li>
+    <li><code>/hud setup</code> — ステータスバー（HUD）の導入</li>
+</ul>
+
+<div class="note">
+    <span class="nh">ひと目で</span>
+    モードの強さ: 会話 &lt; plan &lt; autopilot &lt; ralph &lt; team ralph · モデルのコスト: haiku &lt; sonnet &lt; opus
 </div>
