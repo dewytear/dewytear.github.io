@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>資産の活用とセキュリティ</title>
-<meta name="description" content="検証された Reference Wiki のエンジンの再利用 — wiki-plugin のパッケージ化（道具 18 種、スキル 4 種）、登録の義務の手順、llms.txt とグラフ JSON という AI の消費の層、そして 4 つのセキュリティの等級と保管庫の分離">
+<title>セキュリティ・付加価値・ロードマップ</title>
+<meta name="description" content="セキュリティ等級と資産活用、開発組織を超える付加価値シナリオ、そして 4 フェーズの推進ロードマップと第 1 次 PoC">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/ja/dzp-security/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/dzp-security/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/dzp-security/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="資産の活用とセキュリティ">
-<meta property="og:description" content="検証された Reference Wiki のエンジンの再利用 — wiki-plugin のパッケージ化（道具 18 種、スキル 4 種）、登録の義務の手順、llms.txt とグラフ JSON という AI の消費の層、そして 4 つのセキュリティの等級と保管庫の分離">
+<meta property="og:title" content="セキュリティ・付加価値・ロードマップ">
+<meta property="og:description" content="セキュリティ等級と資産活用、開発組織を超える付加価値シナリオ、そして 4 フェーズの推進ロードマップと第 1 次 PoC">
 <meta property="og:url" content="https://dewytear.github.io/p/ja/dzp-security/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="資産の活用とセキュリティ">
-<meta name="twitter:description" content="検証された Reference Wiki のエンジンの再利用 — wiki-plugin のパッケージ化（道具 18 種、スキル 4 種）、登録の義務の手順、llms.txt とグラフ JSON という AI の消費の層、そして 4 つのセキュリティの等級と保管庫の分離">
+<meta name="twitter:title" content="セキュリティ・付加価値・ロードマップ">
+<meta name="twitter:description" content="セキュリティ等級と資産活用、開発組織を超える付加価値シナリオ、そして 4 フェーズの推進ロードマップと第 1 次 PoC">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "資産の活用とセキュリティ",
- "description": "検証された Reference Wiki のエンジンの再利用 — wiki-plugin のパッケージ化（道具 18 種、スキル 4 種）、登録の義務の手順、llms.txt とグラフ JSON という AI の消費の層、そして 4 つのセキュリティの等級と保管庫の分離",
+ "headline": "セキュリティ・付加価値・ロードマップ",
+ "description": "セキュリティ等級と資産活用、開発組織を超える付加価値シナリオ、そして 4 フェーズの推進ロードマップと第 1 次 PoC",
  "inLanguage": "ja",
  "url": "https://dewytear.github.io/p/ja/dzp-security/",
  "mainEntityOfPage": "https://dewytear.github.io/#!dzp-security",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-06T02:35:24+09:00",
- "dateModified": "2026-07-28T04:43:06+09:00"
+ "dateModified": "2026-08-16T00:41:11+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,8 +58,7 @@
   &middot; <a href="/p/en/dzp-security/" hreflang="en">English</a>
 </p>
 <article>
-<h2>資産の活用とセキュリティ</h2>
-
+<h2>セキュリティ・付加価値・ロードマップ</h2>
 <h3>はじめから作り直さない</h3>
 <p>事前の検証のために運用している <strong>Reference Wiki</strong>（<a href="/p/ja/kgs-overview/">知識はどう積み上がるのか</a>のシリーズが解説する、あのウィキ）がすでに備えている機能を複製して PoC を始め、検証された機能を会社のプラットフォームへ育てる。2026-07 の時点で実証されている範囲: HTML Fragment の文書、SPA の Web UI、JSON の Navigation Tree（不変の ID と物理の経路の分離）、統合／Tag／Concept の検索、Knowledge Index（決定的なビルド + <code>--check</code> のドリフトのゲート）、自動の関連の推薦（<code>related</code>）と<strong>型つきの知識の関係 5 種（<code>relations</code>）</strong>、Knowledge Map · 3D/2D の知識グラフ、<strong>AI の消費の層（llms.txt · 自己完結のグラフ JSON）</strong>、4 層の CI の検証のゲート、Work Log、Git History にもとづく文書の履歴。</p>
 
@@ -124,11 +123,113 @@
     <span class="nh">ひとつの公開の Wiki に混ぜない</span>
     勧める構造は <strong>General Wiki（全社員） · Engineering Wiki（開発の組織） · Restricted Knowledge（限られた組織）</strong>という保管庫とアクセスの分離だ。すべてのセキュリティの等級をひとつの公開の Wiki に混ぜず、社員は自分の権限の範囲の中だけで検索し閲覧する。
 </div>
+
+<h3>付加価値と活用のシナリオ — 開発の組織を越えて</h3>
+<p>ここまでの編は開発の組織の内側の視点 — 知識がどう作られ管理されるか — を扱った。この編は、そうして積み上がった<strong>ひとつの Knowledge State が、いくつもの顔で消費されうる</strong>ことを扱う。付加価値の源は文書をもっと書くことではなく、すでに積み上がった保管庫に<strong>対象ごとのビューをもうひとつ足すこと</strong>だ — 一度積み上げれば、社員・パートナー・顧客・AI がそれぞれの範囲で同じ知識を取り出して使う。</p>
+
+<h4>API の仕様書の自動の更新 — 最初の派生の製品</h4>
+<p>いちばんすぐに効く付加価値は、<strong>API の仕様書がコードとともに生き続けるようになること</strong>だ。手で書く仕様書の持病はよく知られている — 最初に書いたあと更新が後回しになり、コードとずれた仕様が連携する開発者や顧客を誤らせる。このプラットフォームでは API の仕様は別の成果物ではなく、<strong>知識のパイプラインの自然な出力</strong>になる:</p>
+<ul>
+    <li><strong>抽出</strong> — Merge された Controller・Mapper・Config の変更から、Endpoint · Parameter · 応答の構造 · Error Code を読み取る。コードから直接に確かめられる事実なので、ほとんどが <strong>FACT の等級</strong> — <a href="/p/ja/dzp-knowledge/">信頼の水準の体系</a>で自動の掲載の可能性がいちばん高い知識だ。</li>
+    <li><strong>更新</strong> — API が変われば、同じ Merge のトリガーが仕様の文書を更新する。「仕様書は別、コードは別」という二重の管理が構造的に消える。</li>
+    <li><strong>検索</strong> — <code>identifiers</code> の拡張のフィールドに API 名や Error Code が載るので、連携する開発者がエラーのコードひとつで、その仕様と方針の文書へすぐ届く。</li>
+    <li><strong>履歴</strong> — インタフェースの方針が変われば、旧の版の仕様を <code>supersedes</code> で置換としてつなぎ、「いまの仕様」と「なぜ変わったのか」をあわせて保つ。</li>
+</ul>
+
+<h4>ひとつの保管庫、対象ごとのビュー</h4>
+<p>セキュリティの 4 等級はアクセスの統制の仕掛けであると同時に、<strong>掲載のチャネルの選別器</strong>でもある。同じ保管庫から等級のフィルタだけを変えて、対象ごとの Read-Only のビューを作る — 保管庫を複製したり、文書を書き写したりはしない。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 220" role="img" aria-label="ひとつの知識の保管庫が、セキュリティの等級のフィルタを経て、社員・パートナー・顧客・AI Agent の四つの対象のビューとして消費される">
+    <rect class="d-box accent" x="8" y="80" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="83" y="103" text-anchor="middle">知識の保管庫</text>
+    <text class="d-sub" x="83" y="121" text-anchor="middle">Knowledge State</text>
+    <rect class="d-box" x="196" y="80" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="271" y="103" text-anchor="middle">等級のフィルタ</text>
+    <text class="d-sub" x="271" y="121" text-anchor="middle">4 等級で選別</text>
+    <line class="d-edge" x1="158" y1="108" x2="188" y2="108"/><polygon class="d-arrow" points="188,103 188,113 196,108"/>
+    <rect class="d-box" x="420" y="8" width="252" height="42" rx="9"/>
+    <text class="d-label sm" x="546" y="26" text-anchor="middle">社員 · 開発の組織</text>
+    <text class="d-sub" x="546" y="42" text-anchor="middle">全等級 — 検索 · AI の文脈</text>
+    <rect class="d-box" x="420" y="62" width="252" height="42" rx="9"/>
+    <text class="d-label sm" x="546" y="80" text-anchor="middle">パートナー · 協力会社</text>
+    <text class="d-sub" x="546" y="96" text-anchor="middle">INTERNAL を選別 — 連携開発のガイド</text>
+    <rect class="d-box" x="420" y="116" width="252" height="42" rx="9"/>
+    <text class="d-label sm" x="546" y="134" text-anchor="middle">顧客</text>
+    <text class="d-sub" x="546" y="150" text-anchor="middle">PUBLIC — 製品 · API の文書ポータル</text>
+    <rect class="d-box" x="420" y="170" width="252" height="42" rx="9"/>
+    <text class="d-label sm" x="546" y="188" text-anchor="middle">AI Agent</text>
+    <text class="d-sub" x="546" y="204" text-anchor="middle">llms.txt の契約 — 自動で消費</text>
+    <path class="d-edge" d="M346 100 H380 C390 100, 394 94, 394 84 V39 C394 31, 398 29, 406 29 H412"/>
+    <polygon class="d-arrow" points="412,24 412,34 420,29"/>
+    <path class="d-edge" d="M346 104 H384 C394 104, 398 100, 398 93 C398 87, 402 83, 410 83 H412"/>
+    <polygon class="d-arrow" points="412,78 412,88 420,83"/>
+    <path class="d-edge" d="M346 112 H384 C394 112, 398 116, 398 123 C398 129, 402 133, 410 133 H412"/>
+    <polygon class="d-arrow" points="412,128 412,138 420,133"/>
+    <path class="d-edge" d="M346 116 H380 C390 116, 394 122, 394 132 V181 C394 189, 398 191, 406 191 H412"/>
+    <polygon class="d-arrow" points="412,186 412,196 420,191"/>
+</svg>
+<div class="d-cap">保管庫はひとつ、ビューは対象の数だけ — 等級のフィルタが掲載のチャネルになる。</div>
+</div>
+
+<ul>
+    <li><strong>社員 · 開発の組織</strong> — すべての等級の範囲で Identifier の検索、AI の道具の文脈、オンボーディングの経路。<a href="/p/ja/dzp-overview/">なぜいまか</a>が数字にした損失（週 8 時間の非効率・オンボーディング 3〜9 か月）を直接に減らす基本のビュー。</li>
+    <li><strong>パートナー · 協力会社</strong> — INTERNAL のうち選ばれた連携開発のガイド・API の仕様・カスタマイズの知識。パートナーがぶつかる「担当者に聞かないと分からない」連携の知識がセルフサービスになり、くり返しの問い合わせへの対応の費用が減る。</li>
+    <li><strong>顧客</strong> — PUBLIC の等級の製品の技術の文書・API のガイド・リリースの影響の案内。顧客向けの文書サイトを<strong>別に作ってまた古びさせる</strong>二重の管理が消える — コードが変われば顧客の文書も同じパイプラインで更新されるからだ。</li>
+    <li><strong>AI Agent</strong> — AI の消費の層の llms.txt とグラフ JSON の契約をそのまま使い、社内のアシスタントと顧客サポートのボットが同じ知識を根拠（出典つき）として答える。人向けのビューと機械向けのビューが、ひとつの保管庫から出てくる — そしてこの機械向けのビューのいちばんの消費者が、下の <strong>AI コーディング</strong>だ。</li>
+</ul>
+
+<h4>AI コーディングの事前の知識 — 好循環が閉じる地点</h4>
+<p>いちばん戦略的な活用は<strong>知識グラフを AI コーディングの事前の知識として使うこと</strong>だ。いまは開発者が Claude Code のような AI の道具に、毎回ドメインの背景を説明し直している — 「受注の状態はこう遷移して、与信のチェックはあの時点で行って…」（<a href="/p/ja/dzp-overview/">なぜいまか</a>が指した、Context をくり返し説明する費用）。このプラットフォームでは、AI が<strong>作業を始める前に</strong>知識グラフを先に読む:</p>
+<ul>
+    <li><strong>入口</strong> — llms.txt で知識の全体の地形をつかみ、knowledge-graph.json の<strong>一度の fetch</strong> でノード・関係・概念・URL を手に入れる。</li>
+    <li><strong>選別</strong> — 作業する対象のソースで出会った <code>identifiers</code>（Table・Rule ID・API 名）で関連する方針の文書に届き、型つきの関係をたどって必要なぶんだけ広げる — 先行知識で背景を、supersedes で「いま有効な方針」を、DECISION の等級で設計の決定の理由を。</li>
+    <li><strong>作業</strong> — ドメインの Rule・状態の遷移・過去の障害・設計の意図を<strong>すでに知った状態で</strong>コードを読み書きする。CLAUDE.md や MCP との連携で、この手順をプロジェクトの慣行として固定できる。</li>
+</ul>
+<p>これが<a href="/p/ja/dzp-overview/">概要</a>の好循環の図の四つ目の箱（「次の開発 — Claude Code · Agent」）の実体だ — 開発の成果が知識になり、その知識が<strong>次の開発の AI へ事前の知識として注入され</strong>、また開発の成果の品質を上げる。知識が積み上がるほど AI コーディングの正確さが組織の単位で複利のように上がる構造であり、Reference Wiki の<a href="/p/ja/kgs-ai-layer/">巡回の契約</a>がこの消費のしかたをすでに小さく実証している。</p>
+
+<h4>非開発の職種まで — 信頼の等級が読者を広げる</h4>
+<p>開発の知識は開発者だけのものではない。<strong>技術支援・CS</strong> は障害の事例や Troubleshooting を検索して一次の対応の品質を上げ、<strong>営業・PM</strong> は製品の機能・方針・用語の知識で顧客との会話の正確さを上げ、<strong>新しく入った人</strong>は職務にかかわらず組織の知識の地図をオンボーディングの経路として使う。非開発の読者がコードを読めなくても安全なのは、<a href="/p/ja/dzp-knowledge/">信頼の等級</a>が文書ごとに付くからだ — FACT（コードで確かめられた事実）と INFERRED（推論）・DECISION（決定）が分かれていて、読者が知識の確からしさを取り違えない。</p>
+
+<div class="note">
+    <span class="nh">要点</span>
+    このプラットフォームの付加価値は、部署ごとに文書のチャネルを新しく作ることから来るのではない。<strong>一度積み上げた Knowledge State に、等級のフィルタでビューを増やすこと</strong> — API の仕様書、パートナーのガイド、顧客の文書ポータル、そして AI コーディングの事前の知識は、すべて同じ保管庫の違う断面だ。
+</div>
+
+<h3>推進のロードマップ — 4 つの Phase と 1 次の PoC</h3>
+<p>検証されていないものを組織へ入れない。事前の検証から始めて、チームの PoC、センターへの拡大、全社への展開の順に段階を踏む。</p>
+
+<h4>4 段階での推進</h4>
+<ul>
+    <li><strong>Phase 1 · Reference Wiki のエンジンの移植</strong> — 白紙から始めない: 会社のリポジトリに <strong>wiki-plugin（v0.21.0）を入れて</strong>登録・索引・検証の体系をそのまま立ち上げ（<a href="/p/ja/kgs-plugin/">プラグイン化</a>の wiki-init → add-doc → validate のスキル）、Claude Code との連携で SCM のドメインの知識を手でキュレーションしながら、Knowledge Index の検索・HTML の蓄積・AI Curator の Prototype を検証する。最初の対象: <strong>OmniEsol ERP · SCM のドメイン</strong></li>
+    <li><strong>Phase 2 · 会社の PoC（SCM 構築開発 1 Unit）</strong> — 会社の Wiki Repository、GitLab Project Registry、Change Collector、SHA による増分の処理、AI Knowledge Curator、拡張のフィールド（identifiers・sources・trust）の導入、Read-Only の Portal。最初の Source: OmniEsol ERP SCM の GitLab Repository</li>
+    <li><strong>Phase 3 · SCM 開発センターへの拡大</strong> — 複数のプロジェクト、Product/Domain の分類、プロジェクト間の知識の連結（型つきの関係のプロジェクトをまたぐ適用）、Knowledge Lifecycle（supersedes の運用）、セキュリティの等級、品質の KPI</li>
+    <li><strong>Phase 4 · 全社への展開</strong> — 社内の SSO、全社の Search、製品ごとの Knowledge Governance、AI Agent との連携（社内網の llms.txt・グラフ JSON の契約）、社内の開発プラットフォームとしての公式化</li>
+</ul>
+
+<h4>1 次の PoC — OmniEsol ERP（SCM のドメイン）</h4>
+<p>ERP は<strong>業務の Rule の密度がいちばん高いドメイン</strong>だ。営業・受注・購買・生産の業務の Rule、伝票の状態の遷移の体系（受注 → 出荷 → 売上）、与信・引当可能在庫（ATP）のチェックの方針、プロセスのあいだの連携、DB の Table の構造と Column の意味、障害の事例、方針の変更の履歴など、<strong>知識にする価値の高い要素がすでに存在</strong>しており、下のような identifier で検索と蓄積の効果をすぐに検証できる（エントリの構造は<a href="/p/ja/dzp-knowledge/">知識の管理の体系</a>のスキーマの例を参照）。</p>
+<pre><code>SD_SO_HDR   SD_SO_ITEM   SO_STS_CD
+CREDIT_CHK_YN   NR_SD_SO_COMPLETED   createSalesOrder</code></pre>
+
+<h4>検証の KPI — 四つの軸、ゲートで計測する</h4>
+<p>KPI は宣言ではなく、<strong>計測の方法が付いてはじめて目標</strong>になる。四つの軸のかなりの部分は Reference Wiki がすでに CI のゲートで測っている値なので、会社の PoC は測定の装置を新しく発明する必要がない。</p>
+<ul>
+    <li><strong>知識の生成の品質</strong> — 自動の生成の正確さ、既存の文書の更新の成功率、重複した文書の生成率、誤った推論の割合。<em>計測</em>: 検証器の ERROR 0（切れた参照・重複した ID・未登録） + 索引のドリフト 0（<code>--check</code>） + 孤立した文書 0（グラフの検証） — すべてコミットごとに自動で判定。推論の誤りは <code>trust</code> の等級ごとに標本で検査。</li>
+    <li><strong>検索の品質</strong> — Identifier での検索の成功率（目標の方向: ソースで出会った識別子ひとつで方針の文書に届く ≥90%）、関連する文書の推薦の正確さ、望む情報に届くまでの時間。</li>
+    <li><strong>開発の生産性</strong> — くり返しの質問の減少、過去の障害の再分析の減少、新しい開発者の学習の時間の減少（<a href="/p/ja/dzp-overview/">なぜいまか</a>のオンボーディング 3〜9 か月・週 8 時間の損失の統計がベースライン）、AI の道具への Context の説明の量の減少。</li>
+    <li><strong>運用の品質</strong> — <strong>Merge に対する知識の反映率（目標の方向 ≥90%）</strong>: 「実質の変更があるマージには知識の反映が伴ったか」を、diff にもとづく同伴のゲートの通過率として常時計測する（<a href="/p/ja/dzp-core/">アーキテクチャ</a>の無矛盾のゲート）。漏れた変更の件数（sync-state を補正する Batch が集計）、superseded の処理率、関係の型の分布（先行知識に偏っていないか — 遮らないレビューの信号が新しい文書ごとに出す）。</li>
+</ul>
+
+<div class="note">
+    <span class="nh">結び</span>
+    本提案は開発者の業務の流れを変えないまま<strong>好循環</strong>（<a href="/p/ja/dzp-overview/">概要</a>）を作ることであり、その知識のエンジンは Reference Wiki としてすでに回っている。残る仕事は、検証されたエンジンに GitLab という Event Stream をつなぐことだ。
+</div>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> Douzone · dev.Center · Proposal · AI開発ナレッジプラットフォーム &middot; <span class="pr-k">作成日</span> 2026-07-06 &middot; <span class="pr-k">更新日</span> 2026-07-28</p>
+<p class="pr-meta"><span class="pr-k">分類</span> Douzone · dev.Center · Proposal · AI開発ナレッジプラットフォーム &middot; <span class="pr-k">作成日</span> 2026-07-06 &middot; <span class="pr-k">更新日</span> 2026-08-16</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
-<ul><li><a href="/p/ja/dzp-value/">付加価値と活用のシナリオ — 開発の組織を越えて</a></li><li><a href="/p/ja/skills/">拡張機能 — Skills · MCP · Hooks</a></li><li><a href="/p/ja/skl-overview/">スキルとは — 背景と強み</a></li></ul>
+<ul><li><a href="/p/ja/dzp-overview/">提案概要 — なぜ今、何を</a></li><li><a href="/p/ja/skills/">拡張機能 — Skills · MCP · Hooks</a></li><li><a href="/p/ja/dzp-core/">提案の中核とアーキテクチャ</a></li><li><a href="/p/ja/skl-overview/">スキルとは — 背景と強み</a></li></ul>
 </nav>
 </body>
 </html>

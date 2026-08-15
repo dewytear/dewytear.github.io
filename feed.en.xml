@@ -5,7 +5,7 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.en.xml"/>
   <id>https://dewytear.github.io/feed.en.xml</id>
-  <updated>2026-08-16T00:30:02+09:00</updated>
+  <updated>2026-08-16T00:41:11+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
   <entry>
@@ -162,40 +162,13 @@
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
   <entry>
-    <title>Send Engine Implementation Request — Overview and Responsibility Boundary</title>
+    <title>The Send-Engine Request — Overview, Scope, Interface</title>
     <link href="https://dewytear.github.io/p/en/sne-overview/"/>
     <id>https://dewytear.github.io/docs/en/douzone/dev-center/proposal/ai-noti-send-engine/sne-overview</id>
     <published>2026-07-16T20:45:37+09:00</published>
-    <updated>2026-07-16T20:45:37+09:00</updated>
-    <summary>AI Notification owns everything up to creating the send request, while the send engine owns the sending, timing, reprocessing, and status that follow — the overview and responsibility boundary of the Kafka-based send engine implementation request.</summary>
+    <updated>2026-08-16T00:41:11+09:00</updated>
+    <summary>The send engine's responsibility boundary and overview, the requested scope (idempotency, retries, DLQ), and interface pre-agreement with expected benefits — in one piece</summary>
     <category term="Douzone · dev.Center · Proposal · AI 알림 발송엔진"/>
-  </entry>
-  <entry>
-    <title>Send Engine Implementation Requirements</title>
-    <link href="https://dewytear.github.io/p/en/sne-scope/"/>
-    <id>https://dewytear.github.io/docs/en/douzone/dev-center/proposal/ai-noti-send-engine/sne-scope</id>
-    <published>2026-07-16T20:45:37+09:00</published>
-    <updated>2026-07-16T20:45:37+09:00</updated>
-    <summary>Requirements for channel sending, idempotency, delivery guarantee and DLQ, plus timing for the four timing types, a latest lookup at send time, recurring batch lifecycle, and a send status screen.</summary>
-    <category term="Douzone · dev.Center · Proposal · AI 알림 발송엔진"/>
-  </entry>
-  <entry>
-    <title>Interface · Scale · Alignment · Expected Benefits</title>
-    <link href="https://dewytear.github.io/p/en/sne-interface/"/>
-    <id>https://dewytear.github.io/docs/en/douzone/dev-center/proposal/ai-noti-send-engine/sne-interface</id>
-    <published>2026-07-16T20:45:37+09:00</published>
-    <updated>2026-08-12T00:20:13+09:00</updated>
-    <summary>Finalize the interface before the engine itself so the work can proceed in parallel — the send request delivery, send-time finalization and result return interfaces, plus phase priorities and open discussion items.</summary>
-    <category term="Douzone · dev.Center · Proposal · AI 알림 발송엔진"/>
-  </entry>
-  <entry>
-    <title>Added Value and Use Scenarios — Beyond the Development Organization</title>
-    <link href="https://dewytear.github.io/p/en/dzp-value/"/>
-    <id>https://dewytear.github.io/docs/en/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-value</id>
-    <published>2026-07-13T21:42:05+09:00</published>
-    <updated>2026-08-10T16:29:39+09:00</updated>
-    <summary>Added value from growing per-audience views on one Knowledge State with grade filters — automatic API specification updates (FACT, identifiers, supersedes), use by employees, partners, customers, and AI agents, the substance of the virtuous cycle that loads the knowledge graph as prior knowledge for AI coding, and trust grades widening the non-developer readership</summary>
-    <category term="Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼"/>
   </entry>
   <entry>
     <title>AI 2040: Plan A — the year-by-year scenario (2027 → 2040)</title>
@@ -265,7 +238,7 @@
     <link href="https://dewytear.github.io/p/en/kgs-views/"/>
     <id>https://dewytear.github.io/docs/en/ai/wiki/knowledge-system/kgs-views</id>
     <published>2026-07-11T19:47:53+09:00</published>
-    <updated>2026-08-16T00:30:02+09:00</updated>
+    <updated>2026-08-16T00:35:12+09:00</updated>
     <summary>Constellation, Orbits, Strata (3D), Bundling, Chord, Packing, Concepts, Arc, and Matrix — the question each view answers and how hubs and bridges reveal the center of the graph</summary>
     <category term="AI · Wiki · 지식 체계"/>
   </entry>
@@ -277,5 +250,32 @@
     <updated>2026-08-15T15:03:36+09:00</updated>
     <summary>The machine-readable layer — llms.txt, a self-contained graph JSON, and a traversal contract — that lets an external AI analyze this wiki by following its relations</summary>
     <category term="AI · Wiki · 지식 체계"/>
+  </entry>
+  <entry>
+    <title>Packaging the Wiki Engine as a Plugin — wiki-plugin and Sync Discipline</title>
+    <link href="https://dewytear.github.io/p/en/kgs-plugin/"/>
+    <id>https://dewytear.github.io/docs/en/ai/wiki/knowledge-system/kgs-plugin</id>
+    <published>2026-07-11T19:47:53+09:00</published>
+    <updated>2026-07-28T04:43:06+09:00</updated>
+    <summary>Packaging the knowledge system as wiki-plugin — four skills, a tool snapshot, the sync gate, version discipline, and dogfooding</summary>
+    <category term="AI · Wiki · 지식 체계"/>
+  </entry>
+  <entry>
+    <title>RDF or Property Graph — Two Models for a Knowledge Graph (Neo4j)</title>
+    <link href="https://dewytear.github.io/p/en/news-20260711-neo4j-rdf-vs-property-graph/"/>
+    <id>https://dewytear.github.io/docs/en/ai/graphdb/news-20260711-neo4j-rdf-vs-property-graph</id>
+    <published>2026-07-11T11:07:02+09:00</published>
+    <updated>2026-08-16T00:25:09+09:00</updated>
+    <summary>A write-up of Neo4j's Jim Webber on 'RDF vs property graphs' (2024) — a knowledge graph's entities, relationships, and organizing principle; the limits of RDF triples and the semantic web (relationships not first-class, SPARQL termination, ontology upkeep); the property graph's advantages with the NASA, Basecamp, and Novo Nordisk cases; ISO GQL; and the conclusion "property graph by default + an ontology layer when needed".</summary>
+    <category term="AI · GraphDB"/>
+  </entry>
+  <entry>
+    <title>Oracle Ontology and Property Graphs — Turning Tables into a Map of Knowledge</title>
+    <link href="https://dewytear.github.io/p/en/news-20260710-oracle-ontology-property-graph/"/>
+    <id>https://dewytear.github.io/docs/en/ai/graphdb/news-20260710-oracle-ontology-property-graph</id>
+    <published>2026-07-10T12:23:47+09:00</published>
+    <updated>2026-08-16T00:41:11+09:00</updated>
+    <summary>Organizes Oracle's ontology and property graph approach — RDF vs property graphs, building a graph as a metadata view, PGQL and SQL/PGQ multi-hop and cycle queries, graph algorithms, and Select AI natural-language querying, explained with official-doc verification, diagrams, and a glossary.</summary>
+    <category term="AI · GraphDB"/>
   </entry>
 </feed>

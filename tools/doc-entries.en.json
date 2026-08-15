@@ -385,53 +385,27 @@
  },
  {
   "name": "dzp-overview",
-  "title": "Proposal Overview — A GitLab-Based AI Development Knowledge Platform",
-  "summary": "An overview of the proposal for a Read-Only platform where AI automatically accumulates GitLab development results as organizational knowledge, and of its virtuous cycle — stated as an extension of the engine proven in the Reference Wiki",
-  "relations": [
-   {
-    "target": "sb-context-connections",
-    "evidenceRef": "A proposal that accumulates development output as organizational knowledge automatically — an in-house example of sb-choose's team Second Brain extension"
-   },
-   {
-    "target": "dzp-why",
-    "evidenceRef": "Reading order after “Proposal Overview — A GitLab-Based AI Development Knowledge Platform” — builds on this document and leads into “Why Now — Development Knowledge That Scatters and Disappears”"
-   }
-  ]
- },
- {
-  "name": "dzp-why",
-  "title": "Why Now — Development Knowledge That Scatters and Disappears",
-  "summary": "A problem definition that grounds the cost of scattered and vanishing development knowledge in industry statistics",
+  "title": "Proposal Overview — Why Now, What",
+  "summary": "The overview and problem statement of the GitLab-based AI dev-knowledge platform proposal — why scattered, vanishing dev knowledge needs capturing now",
   "relations": [
    {
     "target": "dzp-core",
-    "evidenceRef": "Reading order after “Why Now — Development Knowledge That Scatters and Disappears” — builds on this document and leads into “The Core of the Proposal — The Development Flow Stays as It Is, AI Does the Knowledge Work”"
+    "evidenceRef": "Assumes the problem and outline; the next chapter enters the core design and architecture"
+   },
+   {
+    "target": "sb-context-connections",
+    "evidenceRef": "A concrete organizational-scale proposal of what the second brain team-extension discussion describes"
    }
   ]
  },
  {
   "name": "dzp-core",
-  "title": "The Core of the Proposal — The Development Flow Stays as It Is, AI Does the Knowledge Work",
-  "summary": "The development flow stays as it is and AI does the knowledge work — separating Event Stream (GitLab) from Knowledge State (Wiki), the substance of that state as a deterministically built index, and industry cases",
+  "title": "The Core of the Proposal and the Architecture",
+  "summary": "\"The dev flow stays, AI does the knowledge-making\" — the core design plus the platform architecture of EventStream, incremental analysis, and pipelines",
   "relations": [
-   {
-    "target": "dzp-architecture",
-    "evidenceRef": "Reading order after “The Core of the Proposal — The Development Flow Stays as It Is, AI Does the Knowledge Work” — builds on this document and leads into “Platform Architecture”"
-   }
-  ]
- },
- {
-  "name": "dzp-architecture",
-  "title": "Platform Architecture",
-  "summary": "A seven-layer pipeline sourced from GitLab — knowledge generation triggers, SHA-based incremental analysis, Context expansion, a knowledge integrity gate layer separate from the trigger, and real-time plus reconciliation redundancy",
-  "relations": [
-   {
-    "target": "dzp-core",
-    "evidenceRef": "Implements dzp-core's principles (no change to the employee flow · Event/Knowledge separation) as a 7-layer pipeline"
-   },
    {
     "target": "dzp-knowledge",
-    "evidenceRef": "Reading order after “Platform Architecture” — builds on this document and leads into “Knowledge Management System — Assessment · Structure · Connection · Tracking · Trust · Lifecycle”"
+    "evidenceRef": "Assumes the core design and architecture; the next chapter covers the knowledge management system in depth"
    }
   ]
  },
@@ -452,67 +426,19 @@
  },
  {
   "name": "dzp-security",
-  "title": "Asset Reuse and Security",
-  "summary": "Reusing the validated Reference Wiki engine — wiki-plugin packaging (18 tools, 4 skills), the mandatory registration procedure, the llms.txt and graph JSON AI consumption layer, and four security grades with separated repositories",
+  "title": "Security, Added Value, and the Roadmap",
+  "summary": "Security tiers and asset use, value scenarios beyond the dev org, and the four-phase roadmap with the first PoC",
   "relations": [
-   {
-    "target": "dzp-value",
-    "evidenceRef": "Reading order after “Asset Reuse and Security” — builds on this document and leads into “Added Value and Use Scenarios”"
-   },
    {
     "target": "kgs-overview",
-    "evidenceRef": "The mandatory procedure for cloning the Reference Wiki (this wiki) and adding documents reproduces and implements kgs-overview's registration pipeline"
-   }
-  ]
- },
- {
-  "name": "dzp-value",
-  "title": "Added Value and Use Scenarios — Beyond the Development Organization",
-  "summary": "Added value from growing per-audience views on one Knowledge State with grade filters — automatic API specification updates (FACT, identifiers, supersedes), use by employees, partners, customers, and AI agents, the substance of the virtuous cycle that loads the knowledge graph as prior knowledge for AI coding, and trust grades widening the non-developer readership",
-  "relations": [
-   {
-    "target": "dzp-roadmap",
-    "evidenceRef": "Reading order after “Added Value and Use Scenarios” — builds on this document and leads into “the Rollout Roadmap”"
-   }
-  ]
- },
- {
-  "name": "dzp-roadmap",
-  "title": "Rollout Roadmap — 4 Phases and the First PoC",
-  "summary": "A four-phase rollout (porting wiki-plugin → company PoC → center-wide expansion → company-wide) and the first PoC on OmniEsol ERP SCM — four axes of validation KPIs measured by gates",
-  "relations": [
-   {
-    "target": "kgs-plugin",
-    "evidenceRef": "Phase 1 bootstraps the knowledge system by installing wiki-plugin (wiki-init · add-doc · validate)"
+    "evidenceRef": "A proposal to implement this wiki's knowledge-system principles as an organizational platform"
    }
   ]
  },
  {
   "name": "sne-overview",
-  "title": "Send Engine Implementation Request — Overview and Responsibility Boundary",
-  "summary": "AI Notification owns everything up to creating the send request, while the send engine owns the sending, timing, reprocessing, and status that follow — the overview and responsibility boundary of the Kafka-based send engine implementation request.",
-  "relations": [
-   {
-    "target": "sne-scope",
-    "evidenceRef": "Builds on the overview and the responsibility boundary, leading into the concrete requirements the engine must implement"
-   }
-  ]
- },
- {
-  "name": "sne-scope",
-  "title": "Send Engine Implementation Requirements",
-  "summary": "Requirements for channel sending, idempotency, delivery guarantee and DLQ, plus timing for the four timing types, a latest lookup at send time, recurring batch lifecycle, and a send status screen.",
-  "relations": [
-   {
-    "target": "sne-interface",
-    "evidenceRef": "Builds on the requirements, leading into the interface and alignment items to settle first"
-   }
-  ]
- },
- {
-  "name": "sne-interface",
-  "title": "Interface · Scale · Alignment · Expected Benefits",
-  "summary": "Finalize the interface before the engine itself so the work can proceed in parallel — the send request delivery, send-time finalization and result return interfaces, plus phase priorities and open discussion items."
+  "title": "The Send-Engine Request — Overview, Scope, Interface",
+  "summary": "The send engine's responsibility boundary and overview, the requested scope (idempotency, retries, DLQ), and interface pre-agreement with expected benefits — in one piece"
  },
  {
   "name": "news-20260622-mythos-looped",

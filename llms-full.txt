@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 > License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — cite the source when quoting.
-> 72 documents · 338 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
+> 66 documents · 331 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
 
 ---
 
@@ -6974,11 +6974,11 @@ MCP 강의의 마지막 문장 “Claude Code는 사용 전에 허락을 구합�
 
 ---
 
-# 제안 개요 — GitLab 기반 AI 개발 지식 플랫폼
+# 제안 개요 — 왜 지금, 무엇을
 Section: Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼
 URL: https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-overview
 
-제안 개요 — GitLab 기반 AI 개발 지식 플랫폼
+제안 개요 — 왜 지금, 무엇을
 
 개발자는 지금처럼 GitLab에 개발 결과를 반영하기만 하고, AI가 그 결과를 분석해 조직 지식으로 자동 변환·축적하는 Read-Only Engineering Knowledge Platform을 제안한다. 사람이 문서를 쓰는 위키가 아니라, 개발 결과물이 곧 지식의 원천이 되는 구조다.
 
@@ -7010,12 +7010,6 @@ GitLab에 축적되는 개발 결과물을 AI가 지속적으로 분석하여, �
 
 추진 로드맵 — 4 Phase, 1차 PoC(OmniEsol ERP · SCM 도메인), 게이트로 계측하는 검증 KPI
 
----
-
-# 왜 지금인가 — 흩어지고 사라지는 개발 지식
-Section: Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼
-URL: https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-why
-
 왜 지금인가 — 흩어지고 사라지는 개발 지식
 
 프로젝트를 수행하면 Architecture와 설계 구조, 업무 Rule과 상태 전이, DB Table·Column의 의미, API 연계, 장애 원인과 해결 방법, 성능 개선 사례, 재사용 가능한 개발 패턴 같은 지식이 계속 만들어진다. 그러나 이 지식의 대부분은 Source Code · Commit · Merge Request · Issue · 메신저 · 이메일 · 회의 · 개인 기억에 분산된 채 남고, 조직 지식으로 축적되지 못한다.
@@ -7041,13 +7035,15 @@ URL: https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowl
 문제의 재정의
 부족한 것은 개발자의 성실함이 아니라 구조다. 지식은 이미 GitLab에 쌓이고 있다 — 그것을 읽어 정리할 주체가 사람일 필요가 없을 뿐이다. 그리고 그 구조의 절반(지식을 담아 잇고 검증하는 엔진)은 Reference Wiki로 이미 운영 중이다 — 없는 것은 GitLab과의 연결뿐이다. 다음 편 제안의 핵심에서 그 구조를 다룬다.
 
+문제의식과 제안의 윤곽을 잡았으니, 핵심과 아키텍처에서 "개발 흐름은 그대로, 지식화는 AI가"라는 설계를 구체화합니다.
+
 ---
 
-# 제안의 핵심 — 개발 흐름은 그대로, 지식화는 AI가
+# 제안의 핵심과 아키텍처
 Section: Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼
 URL: https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-core
 
-제안의 핵심 — 개발 흐름은 그대로, 지식화는 AI가
+제안의 핵심과 아키텍처
 
 본 제안의 목적은 단순한 회사 Wiki 구축이 아니다. GitLab에 축적되는 개발 결과를 AI가 지속적으로 분석해 지식을 추출하고, 기존 지식과 비교해 신규 생성·갱신·폐기를 판단하는 플랫폼을 만드는 것이다. 직원의 업무 흐름은 지금과 완전히 같다 — Wiki 작성, Markdown 편집, Tag 등록, 문서 분류, 지식 정리를 아무것도 추가로 요구하지 않는다. 직원은 최종 생성된 지식을 검색하고 읽기만 한다.
 
@@ -7072,12 +7068,6 @@ Knowledge State의 실체 — 결정적으로 빌드되는 인덱스
 지식 검색 시장의 급성장 — 전사 AI 지식 검색의 Glean은 ARR $200M을 넘겼고, Atlassian은 Rovo를 클라우드 요금제에 기본 탑재했다.
 
 즉 "GitLab 개발 결과의 AI 자동 지식화"는 docs-as-code의 검증된 토대 위에, 2025년 이후 상용화된 자동 추출 기술을 조직 지식 관리에 적용하는 것이다.
-
----
-
-# 플랫폼 아키텍처
-Section: Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼
-URL: https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-architecture
 
 플랫폼 아키텍처
 
@@ -7126,6 +7116,8 @@ Wiki Repository 층의 Index와 Provenance가 구체적으로 어떤 구조인�
 운영 안정성 — 실시간과 보정의 이중화
 
 Webhook(Merge → Queue → Curator) 실시간 처리에만 의존하지 않고, 정기 Batch가 Project Registry의 현재 SHA와 sync-state를 비교해 누락 변경을 재처리한다. Webhook 실패, Network 오류, Queue 누락, Curator 장애, 일시적 API 실패에 대응하는 구조다.
+
+지식이 어떻게 판정·구조화·연결·추적되는지는 지식 관리 체계가 따로 깊게 다룹니다.
 
 ---
 
@@ -7219,11 +7211,11 @@ superseded 문서는 새 문서와 supersedes 관계로 연결된 채 남는다 
 
 ---
 
-# 자산 활용과 보안
+# 보안·부가가치·로드맵
 Section: Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼
 URL: https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-security
 
-자산 활용과 보안
+보안·부가가치·로드맵
 
 처음부터 새로 만들지 않는다
 
@@ -7260,12 +7252,6 @@ RESTRICTED — 제한 조직만 접근하는 보안 지식
 
 하나의 공개 Wiki에 섞지 않는다
 권장 구조는 General Wiki(전 직원) · Engineering Wiki(개발 조직) · Restricted Knowledge(제한 조직)의 저장소·접근 분리다. 모든 보안등급을 하나의 공개 Wiki에 혼합하지 않으며, 직원은 자신의 권한 범위 안에서만 검색·열람한다.
-
----
-
-# 부가가치와 활용 시나리오
-Section: Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼
-URL: https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-value
 
 부가가치와 활용 시나리오 — 개발 조직을 넘어
 
@@ -7317,12 +7303,6 @@ AI 코딩의 사전지식 — 선순환이 닫히는 지점
 요점
 이 플랫폼의 부가가치는 부서마다 문서 채널을 새로 만드는 데서 오지 않는다. 한 번 축적된 Knowledge State에 등급 필터로 뷰를 늘리는 것 — API 명세서, 파트너 가이드, 고객 문서 포털, 그리고 AI 코딩의 사전지식이 전부 같은 저장소의 다른 단면이다.
 
----
-
-# 추진 로드맵 — 4 Phase와 1차 PoC
-Section: Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼
-URL: https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-roadmap
-
 추진 로드맵 — 4 Phase와 1차 PoC
 
 검증되지 않은 것을 조직에 도입하지 않는다. 사전 검증에서 시작해 팀 PoC, 센터 확대, 전사 확장의 순서로 단계를 밟는다.
@@ -7361,11 +7341,11 @@ KPI는 선언이 아니라 계측 방법이 붙어야 목표다. 네 축의 상�
 
 ---
 
-# 발송엔진 구현 요청 — 개요와 책임 경계
+# 발송엔진 구현 요청 — 개요·요청 사항·인터페이스
 Section: Douzone · dev.Center · Proposal · AI 알림 발송엔진
 URL: https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-noti-send-engine/sne-overview
 
-발송엔진 구현 요청 — 개요와 책임 경계
+발송엔진 구현 요청 — 개요·요청 사항·인터페이스
 
 AI 알림은 "무엇을·언제·누구에게·어떤 채널로 보낼지" 판단해 발송요청을 만드는 데까지 완료했다. 그 이후의 실제 발송·타이밍·재처리·현황을 담당할 카프카(메시지 큐) 기반 발송엔진 구현을 플랫폼팀에 요청한다.
 
@@ -7417,12 +7397,6 @@ AI 알림은 아래 흐름으로 발송요청을 생성한다. "언제·누구�
 
 AI 알림 발송요청 발행 발송요청 큐 발송엔진 소비·타이밍·발송 재시도·멱등 채널(알림·쪽지·메일…) DLQ(격리·재처리) 현황 화면·데이터 관리 결과·상태 회신 → 이력 반영
 그림 2. 발송엔진 큐 흐름(개념) — 요청 소비 → 발송 → 채널/DLQ, 결과 회신
-
----
-
-# 발송엔진 구현 요청 사항
-Section: Douzone · dev.Center · Proposal · AI 알림 발송엔진
-URL: https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-noti-send-engine/sne-scope
 
 발송엔진 구현 요청 사항
 
@@ -7503,12 +7477,6 @@ URL: https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-noti-send
 멀티테넌시 — 회사 단위로 격리되어야 하며, 전사 일괄 발송 같은 경로는 열리지 않아야 한다.
 
 보안 — 채널 인증 정보의 안전한 관리, 수신자 개인정보 보호.
-
----
-
-# 발송엔진 인터페이스·규모·협의
-Section: Douzone · dev.Center · Proposal · AI 알림 발송엔진
-URL: https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-noti-send-engine/sne-interface
 
 인터페이스 · 규모 · 협의 · 기대효과
 

@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-06T02:35:24+09:00",
- "dateModified": "2026-08-12T00:20:13+09:00"
+ "dateModified": "2026-08-16T00:41:11+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -72,33 +72,27 @@
     <table>
         <thead><tr><th>System</th><th>Docs</th><th>Main topics</th><th>Hub doc</th></tr></thead>
         <tbody id="km-clusters" data-section-prefix="Douzone" data-topics='{"AI Dev Knowledge Platform":"Auto-knowledge platform from GitLab output","AI Notification Send Engine":"Kafka-based send engine implementation request"}'>
-            <tr><td><strong>AI Dev Knowledge Platform</strong></td><td>8</td><td>Auto-knowledge platform from GitLab output</td><td><a href="/p/en/dzp-overview/">Proposal Overview — A GitLab-Based AI Development Knowledge Platform</a></td></tr>
-            <tr><td><strong>AI Notification Send Engine</strong></td><td>3</td><td>Kafka-based send engine implementation request</td><td><a href="/p/en/sne-scope/">Send Engine Implementation Requirements</a></td></tr>
+            <tr><td><strong>AI Dev Knowledge Platform</strong></td><td>4</td><td>Auto-knowledge platform from GitLab output</td><td><a href="/p/en/dzp-core/">The Core of the Proposal and the Architecture</a></td></tr>
+            <tr><td><strong>AI Notification Send Engine</strong></td><td>1</td><td>Kafka-based send engine implementation request</td><td><a href="/p/en/sne-overview/">The Send-Engine Request — Overview, Scope, Interface</a></td></tr>
         </tbody>
     </table>
 </div>
 
 <h3>System details — what's inside, and in what order to read</h3>
 
-<h4>AI Dev Knowledge Platform — a GitLab-based automatic knowledge proposal (8 docs)</h4>
+<h4>AI Dev Knowledge Platform — a GitLab-based automatic knowledge proposal (4 docs)</h4>
 <p>A proposal series for a Read-Only Engineering Knowledge Platform in which an AI analyses the development output accumulating in GitLab and <strong>automatically converts and accumulates it as organizational knowledge</strong>. Read in the order below and it runs as one flow from problem definition to execution plan.</p>
 <ul>
-    <li><a href="/p/en/dzp-overview/">Proposal overview</a> — the one-sentence summary and the virtuous cycle (development output → organizational knowledge → the next development). The gateway document of the series.</li>
-    <li><a href="/p/en/dzp-why/">Why now</a> — a problem definition that grounds the cost of scattered, vanishing development knowledge in industry statistics.</li>
-    <li><a href="/p/en/dzp-core/">The core of the proposal</a> — the development flow stays as it is, the AI does the knowledge work. Separating the Event Stream (GitLab) from the Knowledge State (Wiki).</li>
-    <li><a href="/p/en/dzp-architecture/">Platform architecture</a> — the seven layers, the knowledge-generation Trigger, SHA incremental analysis, the knowledge integrity gate, operational redundancy.</li>
-    <li><a href="/p/en/dzp-knowledge/">Knowledge management system</a> — value judgement · the atomic structure of knowledge (proven schema + extension fields) · two layers of connection (related · relations) · Identifier search · provenance tracking · FACT/INFERRED/DECISION confidence grades · the supersedes lifecycle.</li>
-    <li><a href="/p/en/dzp-security/">Using the assets, and security</a> — reusing the Reference Wiki engine (wiki-plugin packaging · the mandatory-procedure diagram · the AI consumption layer) and the PUBLIC~RESTRICTED grades with access separation.</li>
-    <li><a href="/p/en/dzp-value/">Added value and use scenarios</a> — automatically updated API specifications, views per audience (employees, partners, customers, AI) built with grade filters, prior knowledge for AI coding, use by non-development roles.</li>
-    <li><a href="/p/en/dzp-roadmap/">Roadmap</a> — a four-phase rollout (starting with porting wiki-plugin), the first PoC (OmniEsol ERP · SCM domain), and validation KPIs measured by gates.</li>
+    <li><a href="/p/en/dzp-overview/">Proposal Overview — Why Now, What</a> — the one-sentence summary, the virtuous cycle, and the problem statement grounded in industry statistics. The series gateway.</li>
+    <li><a href="/p/en/dzp-core/">The Core and the Architecture</a> — the dev flow stays, AI does the knowledge-making; the Event Stream (GitLab) / Knowledge State (Wiki) split, the seven layers, triggers, SHA incremental analysis, and integrity gates.</li>
+    <li><a href="/p/en/dzp-knowledge/">The knowledge management system</a> — value judgment · the atomic structure of knowledge · two layers of links (related · relations) · identifier search · provenance · FACT/INFERRED/DECISION trust tiers · the supersedes lifecycle.</li>
+    <li><a href="/p/en/dzp-security/">Security, Added Value, and the Roadmap</a> — reusing the Reference Wiki engine, PUBLIC–RESTRICTED tiers, per-audience value scenarios like auto-updated API specs, and the four-phase roadmap with the first PoC and KPIs.</li>
 </ul>
 
-<h4>AI Notification Send Engine — a Kafka-based send engine implementation request (3 docs)</h4>
+<h4>AI Notification Send Engine — a Kafka-based send engine implementation request (1 doc)</h4>
 <p>A proposal series asking the Platform team to implement, as a <strong>Kafka-based shared send engine</strong>, the actual sending, timing, reprocessing, and status that follow once AI Notification has finished <strong>creating the send request</strong>. It is organized conceptually; the concrete design is settled through discussion.</p>
 <ul>
-    <li><a href="/p/en/sne-overview/">Overview and responsibility boundary</a> — the boundary that puts AI Notification up to creating the send request, and the send engine on the sending, timing, reprocessing, and status that follow.</li>
-    <li><a href="/p/en/sne-scope/">Implementation requirements</a> — channel sending · idempotency · delivery guarantee · DLQ, timing for the four timing types (immediate · delayed · recurring · transition), the latest lookup at the moment of sending, recurring batch lifecycle, the send status screen.</li>
-    <li><a href="/p/en/sne-interface/">Interface and alignment</a> — finalize the interface before the engine so the work runs in parallel. The send request delivery, send-time finalization, and result return interfaces, plus phase priorities.</li>
+    <li><a href="/p/en/sne-overview/">The Send-Engine Request — Overview, Scope, Interface</a> — the responsibility boundary (AI Notification ends at creating the send request), the requested scope (channel sends, idempotency, delivery guarantees, DLQ), and interface pre-agreement with expected benefits — in one piece.</li>
 </ul>
 
 <h4>Planned Systems — places where only the slot is ready</h4>
@@ -111,9 +105,9 @@
 
 <h3>Recommended reading paths</h3>
 <ul>
-    <li><strong>Reading the proposal for the first time?</strong> — <a href="/p/en/dzp-overview/">Proposal overview</a> → <a href="/p/en/dzp-why/">Why now</a> → <a href="/p/en/dzp-core/">The core of the proposal</a>. That much is the "what and why".</li>
-    <li><strong>Here for a technical review?</strong> — <a href="/p/en/dzp-architecture/">Platform architecture</a> → <a href="/p/en/dzp-knowledge/">Knowledge management system</a> → <a href="/p/en/dzp-security/">Using the assets, and security</a>. These cover the "how".</li>
-    <li><strong>Deciding whether to go ahead?</strong> — check the phases, PoC, and KPIs in the <a href="/p/en/dzp-roadmap/">Roadmap</a>, and go back to the overview if you need the background.</li>
+    <li><strong>Reading the proposal for the first time?</strong> — <a href="/p/en/dzp-overview/">Proposal Overview — Why Now, What</a> → <a href="/p/en/dzp-core/">The Core and the Architecture</a>. That much is the "what and why".</li>
+    <li><strong>Here for a technical review?</strong> — <a href="/p/en/dzp-core/">The Core and the Architecture</a> → <a href="/p/en/dzp-knowledge/">Knowledge management system</a> → <a href="/p/en/dzp-security/">Security, Added Value, and the Roadmap</a>. These cover the "how".</li>
+    <li><strong>Deciding whether to go ahead?</strong> — check the phases, PoC, and KPIs in the <a href="/p/en/dzp-security/">Security, Added Value, and the Roadmap</a>, and go back to the overview if you need the background.</li>
 </ul>
 
 <h3>Bridges that link knowledge — bridge concepts</h3>
@@ -124,14 +118,14 @@
 
 <h3>Most covered concepts</h3>
 <p>The top concepts that recur across the DOUZONE World. Click a concept to open a <strong>unified search</strong> for it.</p>
-<p class="scn-sub" id="km-top">Knowledge platform 7</p>
-<p class="scn-sub" id="km-totals">11 knowledge docs · 46 unique concepts.</p>
+<p class="scn-sub" id="km-top"></p>
+<p class="scn-sub" id="km-totals">5 knowledge docs · 39 unique concepts.</p>
 
 <div class="note">
     <span class="nh">A living map</span>
     This map and <code>knowledge-index.json</code> are <strong>auto-generated</strong> by an AI reading the documents. Related docs are computed by <strong>rarity-weighted concept overlap</strong> (rarer concepts weigh more), topped up with <strong>same-folder neighbours</strong> when overlap is thin. When documents are added or changed, the index is rebuilt and the map refreshes.
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> Knowledge Map &middot; <span class="pr-k">Created</span> 2026-07-06 &middot; <span class="pr-k">Updated</span> 2026-08-12</p>
+<p class="pr-meta"><span class="pr-k">Section</span> Knowledge Map &middot; <span class="pr-k">Created</span> 2026-07-06 &middot; <span class="pr-k">Updated</span> 2026-08-16</p>
 </body>
 </html>

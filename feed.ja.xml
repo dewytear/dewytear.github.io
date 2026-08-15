@@ -5,7 +5,7 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.ja.xml"/>
   <id>https://dewytear.github.io/feed.ja.xml</id>
-  <updated>2026-08-16T00:30:02+09:00</updated>
+  <updated>2026-08-16T00:41:11+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
   <entry>
@@ -162,40 +162,13 @@
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
   <entry>
-    <title>送信エンジンの実装の要請 — 概要と責任の境界</title>
+    <title>送信エンジン実装依頼 — 概要・依頼事項・インターフェース</title>
     <link href="https://dewytear.github.io/p/ja/sne-overview/"/>
     <id>https://dewytear.github.io/docs/ja/douzone/dev-center/proposal/ai-noti-send-engine/sne-overview</id>
     <published>2026-07-16T20:45:37+09:00</published>
-    <updated>2026-07-16T20:45:37+09:00</updated>
-    <summary>送信要求を作るところまでを AI 通知が受け持ち、それ以後の送信・タイミング・再処理・状況を送信エンジンが受け持つ — Kafka をもとにした送信エンジンの実装の要請の概要と責任の境界。</summary>
+    <updated>2026-08-16T00:41:11+09:00</updated>
+    <summary>送信エンジンの責任境界と概要、冪等・リトライ・DLQ などの依頼事項、インターフェースの事前確定と期待効果までを一編に</summary>
     <category term="Douzone · dev.Center · Proposal · AI 알림 발송엔진"/>
-  </entry>
-  <entry>
-    <title>送信エンジンの実装の要請の項目</title>
-    <link href="https://dewytear.github.io/p/ja/sne-scope/"/>
-    <id>https://dewytear.github.io/docs/ja/douzone/dev-center/proposal/ai-noti-send-engine/sne-scope</id>
-    <published>2026-07-16T20:45:37+09:00</published>
-    <updated>2026-07-16T20:45:37+09:00</updated>
-    <summary>チャネルへの送信、冪等、配送の保証と DLQ、加えて時点の 4 つの型のタイミング、送る瞬間の最新の照会、周期のバッチの寿命の管理、そして送信の状況の画面についての要請。</summary>
-    <category term="Douzone · dev.Center · Proposal · AI 알림 발송엔진"/>
-  </entry>
-  <entry>
-    <title>インタフェース · 規模 · 協議 · 期待される効果</title>
-    <link href="https://dewytear.github.io/p/ja/sne-interface/"/>
-    <id>https://dewytear.github.io/docs/ja/douzone/dev-center/proposal/ai-noti-send-engine/sne-interface</id>
-    <published>2026-07-16T20:45:37+09:00</published>
-    <updated>2026-08-12T00:20:13+09:00</updated>
-    <summary>エンジンの本体より先にインタフェースを確定して並行して進める — 送信要求の伝達、送る時点の確定、結果の返信のインタフェースと、Phase の優先度、そして開いたままの協議の事項。</summary>
-    <category term="Douzone · dev.Center · Proposal · AI 알림 발송엔진"/>
-  </entry>
-  <entry>
-    <title>付加価値と活用のシナリオ — 開発の組織を越えて</title>
-    <link href="https://dewytear.github.io/p/ja/dzp-value/"/>
-    <id>https://dewytear.github.io/docs/ja/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-value</id>
-    <published>2026-07-13T21:42:05+09:00</published>
-    <updated>2026-08-10T16:29:39+09:00</updated>
-    <summary>ひとつの Knowledge State に等級のフィルタで対象ごとのビューを増やすことから来る付加価値 — API の仕様書の自動の更新（FACT・identifiers・supersedes）、社員・パートナー・顧客・AI エージェントによる活用、知識グラフを AI コーディングの事前の知識として載せる好循環の実体、そして信頼の等級が非開発の読者を広げること</summary>
-    <category term="Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼"/>
   </entry>
   <entry>
     <title>AI 2040: Plan A — 年ごとのシナリオ（2027 → 2040）</title>
@@ -265,7 +238,7 @@
     <link href="https://dewytear.github.io/p/ja/kgs-views/"/>
     <id>https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-views</id>
     <published>2026-07-11T19:47:53+09:00</published>
-    <updated>2026-08-16T00:30:02+09:00</updated>
+    <updated>2026-08-16T00:35:12+09:00</updated>
     <summary>Constellation・Orbits・Strata（3D）と Bundling・Chord・Packing・Concepts・Arc・Matrix — 各ビューが答える問いと、ハブ・ブリッジがグラフの中心を示す方法</summary>
     <category term="AI · Wiki · 지식 체계"/>
   </entry>
@@ -277,5 +250,32 @@
     <updated>2026-08-15T15:03:36+09:00</updated>
     <summary>外部の AI が関連をたどってこのウィキを分析できるようにする機械可読レイヤー — llms.txt、自己完結のグラフ JSON、巡回の契約</summary>
     <category term="AI · Wiki · 지식 체계"/>
+  </entry>
+  <entry>
+    <title>ウィキエンジンのプラグイン化 — wiki-plugin と同期の規律</title>
+    <link href="https://dewytear.github.io/p/ja/kgs-plugin/"/>
+    <id>https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-plugin</id>
+    <published>2026-07-11T19:47:53+09:00</published>
+    <updated>2026-07-28T04:43:06+09:00</updated>
+    <summary>知識体系を wiki-plugin としてパッケージする — スキル 4 種、ツールのスナップショット、同期ゲート、バージョンの規律、ドッグフーディング</summary>
+    <category term="AI · Wiki · 지식 체계"/>
+  </entry>
+  <entry>
+    <title>RDF かプロパティグラフか — 知識グラフのためのふたつのモデル（Neo4j）</title>
+    <link href="https://dewytear.github.io/p/ja/news-20260711-neo4j-rdf-vs-property-graph/"/>
+    <id>https://dewytear.github.io/docs/ja/ai/graphdb/news-20260711-neo4j-rdf-vs-property-graph</id>
+    <published>2026-07-11T11:07:02+09:00</published>
+    <updated>2026-08-16T00:25:09+09:00</updated>
+    <summary>Neo4j のジム・ウェバー「RDF vs property graphs」（2024）をまとめたもの — 知識グラフのエンティティ・関係・組織の原理、RDF のトリプルとセマンティックウェブの限界（関係が一級でない、SPARQL の終了、オントロジーの維持費）、NASA・Basecamp・Novo Nordisk の事例とともに見るプロパティグラフの長所、ISO GQL、そして「既定はプロパティグラフ + 必要なときにオントロジーのレイヤー」という結論。</summary>
+    <category term="AI · GraphDB"/>
+  </entry>
+  <entry>
+    <title>オラクルのオントロジーとプロパティグラフ — テーブルを知識の地図に</title>
+    <link href="https://dewytear.github.io/p/ja/news-20260710-oracle-ontology-property-graph/"/>
+    <id>https://dewytear.github.io/docs/ja/ai/graphdb/news-20260710-oracle-ontology-property-graph</id>
+    <published>2026-07-10T12:23:47+09:00</published>
+    <updated>2026-08-16T00:41:11+09:00</updated>
+    <summary>オラクルのオントロジーとプロパティグラフのアプローチを整理する — RDF vs プロパティグラフ、メタデータのビューとしてのグラフの作り方、PGQL と SQL/PGQ の多段ホップと循環の問い合わせ、グラフのアルゴリズム、Select AI の自然言語の問い合わせを、公式の文書の確認と図と用語辞典で解説。</summary>
+    <category term="AI · GraphDB"/>
   </entry>
 </feed>
