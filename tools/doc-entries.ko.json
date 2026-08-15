@@ -1023,232 +1023,78 @@
  },
  {
   "name": "llmw-overview",
-  "title": "LLM Wiki — 개요",
-  "summary": "카파시가 제안한 옵시디언 기반 LLM 위키의 전체 개념과 구성을 소개한다.",
+  "title": "LLM Wiki — 체계와 캡처",
+  "summary": "옵시디언 볼트로 AI가 읽는 지식 저장소를 세운다 — 메인 볼트와 위키 볼트의 2-볼트 구조, 그리고 무엇을 캡처하는가",
   "concepts": [
    "LLM위키",
    "볼트",
    "옵시디언",
    "RAG",
    "라이브임베딩",
-   "지식관리"
-  ],
-  "relations": [
-   {
-    "target": "llmw-vaults",
-    "type": "prerequisite",
-    "evidenceRef": "LLM Wiki — 개요 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 볼트 체계 — 메인 볼트와 위키 볼트로 이어진다",
-    "source": "human"
-   },
-   {
-    "target": "sb-level2",
-    "type": "example-of",
-    "evidenceRef": "sb-level2가 'LLM 위키 = 레벨2 주제묶기'라 명시('레벨 2가 바로 그 세계') — LLM Wiki는 그 구체 사례",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "llmw-vaults",
-  "title": "볼트 체계 — 메인 볼트와 위키 볼트",
-  "summary": "메인 볼트와 위키 볼트로 지식을 분리하는 2-볼트 구조를 설명한다.",
-  "concepts": [
-   "볼트",
+   "지식관리",
    "메인볼트",
    "위키볼트",
-   "옵시디언",
-   "동기화",
-   "마크다운"
-  ],
-  "relations": [
-   {
-    "target": "llmw-capture",
-    "type": "prerequisite",
-    "evidenceRef": "볼트 체계 — 메인 볼트와 위키 볼트 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 무엇을 담는가 — 지식 캡처로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "llmw-capture",
-  "title": "무엇을 담는가 — 지식 캡처",
-  "summary": "학습 전초기지로서 관심 있는 지식을 캡처하는 이유와 방법을 다룬다.",
-  "concepts": [
    "캡처",
-   "학습",
-   "스트레치드골",
-   "메인볼트",
-   "위키볼트",
-   "지식관리"
+   "스트레치드골"
   ],
   "relations": [
    {
     "target": "llmw-metadata",
     "type": "prerequisite",
-    "evidenceRef": "무엇을 담는가 — 지식 캡처 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 노트 구조 — 메타데이터와 점진적 공개로 이어진다",
+    "evidenceRef": "볼트 체계와 캡처 습관을 전제로 다음 편이 노트 한 장의 구조로 들어간다 — 본문 말미가 지목",
+    "source": "human"
+   },
+   {
+    "target": "sb-level2",
+    "type": "example-of",
+    "evidenceRef": "세컨드 브레인 레벨 2(주제로 묶기)가 말하는 단계의 실사례가 LLM Wiki 볼트다",
     "source": "human"
    }
   ]
  },
  {
   "name": "llmw-metadata",
-  "title": "노트 구조 — 메타데이터와 점진적 공개",
-  "summary": "YAML 프론트매터 메타데이터와 점진적 공개로 컨텍스트를 최적화한다.",
+  "title": "노트의 구조 — 메타데이터·연결·카드",
+  "summary": "YAML 프론트매터의 점진적 공개, 볼트 안팎을 잇는 링크, 위키 카드와 로우 소스, 그리고 rules 시스템 파일까지 — 노트 한 장의 해부학",
   "concepts": [
    "메타데이터",
    "프론트매터",
    "점진적공개",
    "컨텍스트최적화",
-   "옵시디언",
-   "제목설명"
-  ],
-  "relations": [
-   {
-    "target": "llmw-links",
-    "type": "prerequisite",
-    "evidenceRef": "노트 구조 — 메타데이터와 점진적 공개 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 연결(Links)과 볼트 간 참조로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "llmw-links",
-  "title": "연결(Links)과 볼트 간 참조",
-  "summary": "노트 간 링크와 볼트를 넘는 마크다운 링크로 지식 그래프를 연결한다.",
-  "concepts": [
    "백링크",
    "지식그래프",
-   "볼트간연결",
-   "마크다운링크",
-   "메인볼트",
-   "MOC"
-  ],
-  "relations": [
-   {
-    "target": "llmw-cards",
-    "type": "prerequisite",
-    "evidenceRef": "연결(Links)과 볼트 간 참조 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 위키 카드의 종류와 로우 소스로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "llmw-cards",
-  "title": "위키 카드의 종류와 로우 소스",
-  "summary": "로우 소스를 인제스트해 개념·엔티티·가이드·맵 위키 카드로 만든다.",
-  "concepts": [
    "위키카드",
    "로우소스",
-   "인제스트",
-   "출처",
-   "캡처",
-   "분류"
-  ],
-  "relations": [
-   {
-    "target": "llmw-system",
-    "type": "prerequisite",
-    "evidenceRef": "위키 카드의 종류와 로우 소스 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 시스템 파일과 rules로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "llmw-system",
-  "title": "시스템 파일과 rules",
-  "summary": "AI 동작을 규정하는 시스템 파일과 .claude/rules 규칙을 설명한다.",
-  "concepts": [
    "시스템파일",
    "rules",
-   "core-context",
-   "저자표기",
-   "모델명시",
-   "CLAUDE.md",
-   "컨텍스트"
+   "CLAUDE.md"
   ],
   "relations": [
    {
     "target": "llmw-onboard",
     "type": "prerequisite",
-    "evidenceRef": "시스템 파일과 rules 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 온보딩 (실습)로 이어진다",
+    "evidenceRef": "노트 구조를 전제로 다음 편이 온보딩·Ingest·Query 실습으로 이어진다 — 본문 말미가 지목",
     "source": "human"
    }
   ]
  },
  {
   "name": "llmw-onboard",
-  "title": "온보딩 (실습)",
-  "summary": "릴리즈를 받아 /onboard로 위키 볼트를 세팅하고 옵시디언에서 여는 실습이다.",
+  "title": "실습과 철학 — 온보딩부터 운영까지",
+  "summary": "볼트 온보딩 실습, Ingest·Query·Lint 세 동작, 웹 클리퍼와 인박스, 그리고 읽는 능력과 두 볼트 운영이라는 철학",
   "concepts": [
    "온보딩",
    "슬래시명령어",
-   "볼트",
    "옵시디언",
    "그래프뷰",
-   "릴리즈"
-  ],
-  "relations": [
-   {
-    "target": "llmw-ingest-query-lint",
-    "type": "prerequisite",
-    "evidenceRef": "온보딩 (실습) 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 세 가지 핵심 동작 — Ingest · Query · Lint로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "llmw-ingest-query-lint",
-  "title": "세 가지 핵심 동작 — Ingest · Query · Lint",
-  "summary": "인제스트·쿼리·린트 세 축과 단계적 검색 방식으로 지식 베이스를 운영한다.",
-  "concepts": [
    "인제스트",
    "쿼리",
    "린트",
    "BM25",
-   "벡터검색",
-   "위키카드"
-  ],
-  "relations": [
-   {
-    "target": "llmw-clipper-query",
-    "type": "prerequisite",
-    "evidenceRef": "세 가지 핵심 동작 — Ingest · Query · Lint 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 웹 클리퍼와 인박스, Query 실전로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "llmw-clipper-query",
-  "title": "웹 클리퍼와 인박스, Query 실전",
-  "summary": "웹 클리퍼로 인박스에 모아 분류·인제스트하고 쿼리로 꺼내 쓴다.",
-  "concepts": [
    "웹클리퍼",
    "인박스",
-   "캡처",
-   "인제스트",
-   "쿼리",
-   "토큰절약"
-  ],
-  "relations": [
-   {
-    "target": "llmw-philosophy",
-    "type": "prerequisite",
-    "evidenceRef": "웹 클리퍼와 인박스, Query 실전 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 활용과 철학 — 읽는 능력과 두 볼트 운영로 이어진다",
-    "source": "human"
-   }
-  ]
- },
- {
-  "name": "llmw-philosophy",
-  "title": "활용과 철학 — 읽는 능력과 두 볼트 운영",
-  "summary": "위키는 재료 저장소이며 읽는 능력과 두 볼트 분리 운영의 철학을 강조한다.",
-  "concepts": [
-   "철학",
    "읽는능력",
-   "메인볼트",
-   "위키볼트",
-   "마이그레이션",
-   "지식관리"
+   "철학"
   ]
  },
  {

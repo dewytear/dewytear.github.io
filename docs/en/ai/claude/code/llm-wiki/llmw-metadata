@@ -1,4 +1,4 @@
-<h2>Note Structure — Metadata and Progressive Disclosure</h2>
+<h2>Note Anatomy — Metadata, Links, Cards</h2>
 <p>Open a wiki note and it is laid out as <strong>title → metadata → body</strong>. If the body starts on line 38, for instance, then the <strong>37 lines before it are all metadata</strong>.</p>
 
 <h3>YAML front matter is the heart of it</h3>
@@ -44,3 +44,139 @@
     <span class="nh">Context optimization</span>
     A big advantage of Obsidian is that instead of packing everything into one file, you can point to the address of another file — <strong>"for tastes, see tastes.md," "for the expert persona, look here."</strong> That way only the files needed for the work at hand get opened, which <strong>optimizes context</strong>. Borrowing Karpathy's idea, the speaker built a set of commands and skills that automate writing this metadata.
 </div>
+
+<h3>Links and Cross-Vault References</h3>
+<p>Obsidian's greatest strength is <strong>links between notes</strong>. For example, a "BM25" note has all sorts of notes linked to it — an MOC (Map of Content, a knowledge map), harness engineering, logs, and more. These <strong>links are the heart of it</strong>.</p>
+
+<h4>One address reads the linked knowledge along with it</h4>
+<p>Hand artificial intelligence just the address of the "BM25" note, and it reads <strong>the rest of the notes linked to it, strung together like sausages</strong>. That automatic linking, however, only works <strong>within the same vault</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 640 250" role="img" aria-label="A knowledge graph of notes joined by links. The blue lines are links that cross vaults">
+    <rect class="d-box soft" x="20" y="30" width="300" height="200" rx="12"/>
+    <text class="d-sub" x="170" y="50" text-anchor="middle">Wiki vault (satellite)</text>
+    <rect class="d-box soft" x="340" y="30" width="280" height="200" rx="12"/>
+    <text class="d-sub" x="480" y="50" text-anchor="middle">Main vault (mothership)</text>
+
+    <line class="d-edge" x1="170" y1="130" x2="80" y2="72"/>
+    <line class="d-edge" x1="170" y1="130" x2="92" y2="188"/>
+    <line class="d-edge" x1="170" y1="130" x2="250" y2="82"/>
+    <line class="d-edge" x1="170" y1="130" x2="250" y2="184"/>
+    <line class="d-edge accent" x1="170" y1="130" x2="430" y2="82"/>
+    <line class="d-edge accent" x1="170" y1="130" x2="470" y2="186"/>
+
+    <circle class="d-node b" cx="170" cy="130" r="8"/>
+    <text class="d-sub" x="170" y="118" text-anchor="middle">BM25</text>
+    <circle class="d-node" cx="80" cy="72" r="7"/>
+    <text class="d-sub" x="80" y="66" text-anchor="middle">MOC</text>
+    <circle class="d-node" cx="92" cy="188" r="7"/>
+    <text class="d-sub" x="92" y="206" text-anchor="middle">Harness</text>
+    <circle class="d-node" cx="250" cy="82" r="7"/>
+    <text class="d-sub" x="250" y="76" text-anchor="middle">Logs</text>
+    <circle class="d-node" cx="250" cy="184" r="7"/>
+    <text class="d-sub" x="250" y="202" text-anchor="middle">Concept A</text>
+
+    <circle class="d-node c" cx="430" cy="82" r="7"/>
+    <text class="d-sub" x="430" y="76" text-anchor="middle">Related note</text>
+    <circle class="d-node c" cx="540" cy="120" r="7"/>
+    <text class="d-sub" x="540" y="114" text-anchor="middle">Related note</text>
+    <circle class="d-node c" cx="470" cy="186" r="7"/>
+    <text class="d-sub" x="470" y="204" text-anchor="middle">Related note</text>
+    <line class="d-edge" x1="430" y1="82" x2="540" y2="120"/>
+    <line class="d-edge" x1="540" y1="120" x2="470" y2="186"/>
+</svg>
+<div class="d-cap">A small <strong>knowledge graph</strong> of notes joined by links — the blue (accent) lines are <strong>links that cross vaults</strong>.</div>
+</div>
+
+<h4>Cross-vault links — markdown links</h4>
+<p>The wikilinks (<code>[[...]]</code>) used inside a vault cannot point to notes outside it, so links to an external vault have to use the <strong>markdown link form</strong> (<code>[text](address)</code>). The speaker has set up the system files so that these cross-vault links get written automatically too.</p>
+<ul>
+    <li>During onboarding it asks, "What is your main vault?"</li>
+    <li>Give it the address of the main vault and it <strong>parses that URI value</strong> and builds the links to those addresses along the way.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">Example — mobile command center</span>
+    When building a "mobile command center" wiki card about putting Starlink and a battery system in a vehicle, the artificial intelligence found and linked not only the related concepts inside the wiki vault (Related) but also the <strong>related notes organized in the main vault</strong> (main vault Related). Connecting <strong>your entire knowledge system</strong> this way goes beyond the innate limitation of Obsidian vaults (links only within a vault).
+</div>
+
+<h3>Kinds of Wiki Cards and Raw Sources</h3>
+<p>A researcher has to state the <strong>source</strong> of their knowledge. So raw material is held as a <strong>raw source</strong>, marking where the knowledge came from. (Automated indexing and citation through a connected reference manager such as Zotero or Bookends is also planned.)</p>
+
+<h4>Raw source → wiki card</h4>
+<p>Put articles, news stories, papers, <strong>YouTube transcripts</strong>, and the like into the vault, and the LLM reads them, extracts from them, and turns them into <strong>wiki cards</strong>. If there are five things to learn from a single article, five cards can come out of it, and you can also <strong>ingest several sources at once</strong> (3 articles + 2 YouTube videos) and let the AI compile them on its own.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 660 200" role="img" aria-label="The ingest pipeline: an LLM extracts from raw sources to make wiki cards, and the cards split into concepts, entities, guides, and maps">
+    <rect class="d-box" x="20" y="34" width="150" height="60" rx="11"/>
+    <text class="d-label sm" x="95" y="60" text-anchor="middle">Raw sources</text>
+    <text class="d-sub" x="95" y="78" text-anchor="middle">Captions, articles, papers</text>
+
+    <rect class="d-box accent" x="255" y="34" width="150" height="60" rx="11"/>
+    <text class="d-label sm" x="330" y="60" text-anchor="middle">LLM extraction</text>
+    <text class="d-sub" x="330" y="78" text-anchor="middle">Reads, makes cards</text>
+
+    <rect class="d-box" x="490" y="34" width="150" height="60" rx="11"/>
+    <text class="d-label sm" x="565" y="60" text-anchor="middle">Wiki cards</text>
+    <text class="d-sub" x="565" y="78" text-anchor="middle">Source-based</text>
+
+    <line class="d-edge" x1="170" y1="64" x2="253" y2="64"/>
+    <polygon class="d-arrow" points="247,59 255,64 247,69"/>
+    <line class="d-edge accent" x1="405" y1="64" x2="488" y2="64"/>
+    <polygon class="d-arrow accent" points="482,59 490,64 482,69"/>
+
+    <line class="d-edge" x1="565" y1="94" x2="565" y2="116"/>
+    <polygon class="d-arrow" points="560,116 565,124 570,116"/>
+
+    <rect class="d-box soft" x="482" y="126" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="520" y="143" text-anchor="middle">Concept</text>
+    <rect class="d-box soft" x="566" y="126" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="604" y="143" text-anchor="middle">Entity</text>
+    <rect class="d-box soft" x="482" y="158" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="520" y="175" text-anchor="middle">Guide</text>
+    <rect class="d-box soft" x="566" y="158" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="604" y="175" text-anchor="middle">Map</text>
+</svg>
+<div class="d-cap">Raw sources become source-based <strong>wiki cards</strong> as <strong>the LLM reads them</strong> — split into concepts, entities, guides, and maps.</div>
+</div>
+
+<h4>Kinds of cards</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Kind</th><th>Content</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Concept</strong></td><td>A basic concept card.</td></tr>
+            <tr><td><strong>Entity</strong></td><td>Proper nouns, service names, people's names, and so on.</td></tr>
+            <tr><td><strong>Guide</strong></td><td>A phrase that contains concepts and entities — a how-to, like "do this with that".</td></tr>
+            <tr><td><strong>Maps / Labs</strong></td><td>Concept cards that cover the whole picture.</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">Capture tip — leave the purpose behind</span>
+    When capturing knowledge, always write <strong>the purpose after the # (hash)</strong>. This is so you can search for it later. Since you end up capturing things and never looking at them again, it is good to leave <strong>hints that future-you can reach through search</strong>. When you hand off an ingest as well, if you have it ask "why did you collect this / what are you trying to do", it takes that intent and connects and reasons with past research in the main vault.
+</div>
+
+<h3>System Files and rules</h3>
+<p>The vault holds not only notes but also <strong>system files that govern how the AI behaves</strong>. These files, carefully carved out by the instructor, are worth reading through once.</p>
+
+<h4>Stating the author and the model</h4>
+<ul>
+    <li>The main author of the main vault is <strong>a human (me)</strong>.</li>
+    <li>In the LLM wiki, <strong>which model wrote it</strong> is stated alongside my name. For example: "Opus 4.8 · effort X-high", "Fable", "Codex Fugu · Ultra", and so on.</li>
+    <li>Recording which model made a wiki lets you <strong>compare and optimize quality</strong>. Ingesting uses a lot of tokens and time, so it is best to collect <strong>only the material that really matters</strong>.</li>
+</ul>
+
+<h4>System files in the main vault</h4>
+<p>These include documents for Claude to read, documents for other agents to read, CMDS (context) related material, vault rules, writing and formatting rules, research topics, personas (brain dump), and more.</p>
+
+<h4>core-context in the LLM wiki</h4>
+<p>The LLM wiki uses a context file that holds <strong>what purpose you intend to use the wiki for</strong>. When you start onboarding, you edit <code>core-context.md</code> and fill in your name, affiliation, department, hobbies, tastes, and so on. Here too, instead of writing everything in one file, you optimize context by stating addresses like <strong>"tastes go in 취향.md, the specialist persona goes here"</strong>.</p>
+
+<div class="note">
+    <span class="nh">.claude/rules — rules read like a constitution</span>
+    Markdown files in the <strong><code>rules</code></strong> folder inside the <code>.claude</code> folder are <strong>read first, the moment a session starts (and obeyed strictly, like a constitution)</strong>. <code>CLAUDE.md</code>, by contrast, is consulted like a guide. So it is good to put editing rules, preferences, and important mandatory rules into <code>rules</code>.
+</div>
+<p>Knowing the structure, it is time to run it yourself — the <a href="#!llmw-onboard">Practice and Philosophy</a> chapter goes from onboarding through Ingest · Query · Lint, the web clipper, and the philosophy of running two vaults.</p>
+

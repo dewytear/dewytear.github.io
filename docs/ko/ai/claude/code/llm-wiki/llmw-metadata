@@ -1,4 +1,4 @@
-<h2>노트 구조 — 메타데이터와 점진적 공개</h2>
+<h2>노트의 구조 — 메타데이터·연결·카드</h2>
 <p>위키 노트를 열면 <strong>제목 → 메타데이터 → 본문</strong> 순으로 구성됩니다. 예컨대 본문이 38번째 줄부터 시작한다면, 앞의 <strong>37줄이 모두 메타데이터</strong>입니다.</p>
 
 <h3>YAML 프론트매터가 핵심</h3>
@@ -44,3 +44,139 @@
     <span class="nh">컨텍스트 최적화</span>
     Obsidian의 큰 장점은, 한 파일에 모든 내용을 담지 않고 <strong>"취향은 취향.md 를 보라", "전문 페르소나는 여기를 보라"</strong> 처럼 다른 파일의 주소를 명시할 수 있다는 점입니다. 일할 때 필요한 파일만 열어 보게 해 <strong>컨텍스트를 최적화</strong>합니다. 강사는 Karpathy의 아이디어를 빌려 이런 메타데이터 작성을 자동화하는 커맨드·스킬 세트를 만들어 두었습니다.
 </div>
+
+<h3>연결(Links)과 볼트 간 참조</h3>
+<p>Obsidian의 가장 큰 장점은 <strong>노트 간 연결</strong>입니다. 예를 들어 "BM25" 노트에 MOC(Map of Content, 지식 지도), 하네스 엔지니어링, 로그 등 다양한 노트가 연결되어 있습니다. 이 <strong>연결이 핵심</strong>입니다.</p>
+
+<h4>주소 하나로 연결된 지식을 함께 읽는다</h4>
+<p>"BM25" 노트의 주소값만 인공지능에게 넘겨 주면, 그와 <strong>연결된 나머지 노트들도 소시지처럼</strong> 이어서 읽습니다. 다만 이 자동 연결은 <strong>같은 볼트 안에서만</strong> 가능합니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 640 250" role="img" aria-label="노트들이 링크로 이어진 지식 그래프. 파란 선은 볼트를 넘는 연결이다">
+    <rect class="d-box soft" x="20" y="30" width="300" height="200" rx="12"/>
+    <text class="d-sub" x="170" y="50" text-anchor="middle">위키 볼트 (위성)</text>
+    <rect class="d-box soft" x="340" y="30" width="280" height="200" rx="12"/>
+    <text class="d-sub" x="480" y="50" text-anchor="middle">메인 볼트 (모선)</text>
+
+    <line class="d-edge" x1="170" y1="130" x2="80" y2="72"/>
+    <line class="d-edge" x1="170" y1="130" x2="92" y2="188"/>
+    <line class="d-edge" x1="170" y1="130" x2="250" y2="82"/>
+    <line class="d-edge" x1="170" y1="130" x2="250" y2="184"/>
+    <line class="d-edge accent" x1="170" y1="130" x2="430" y2="82"/>
+    <line class="d-edge accent" x1="170" y1="130" x2="470" y2="186"/>
+
+    <circle class="d-node b" cx="170" cy="130" r="8"/>
+    <text class="d-sub" x="170" y="118" text-anchor="middle">BM25</text>
+    <circle class="d-node" cx="80" cy="72" r="7"/>
+    <text class="d-sub" x="80" y="66" text-anchor="middle">MOC</text>
+    <circle class="d-node" cx="92" cy="188" r="7"/>
+    <text class="d-sub" x="92" y="206" text-anchor="middle">하네스</text>
+    <circle class="d-node" cx="250" cy="82" r="7"/>
+    <text class="d-sub" x="250" y="76" text-anchor="middle">로그</text>
+    <circle class="d-node" cx="250" cy="184" r="7"/>
+    <text class="d-sub" x="250" y="202" text-anchor="middle">개념 A</text>
+
+    <circle class="d-node c" cx="430" cy="82" r="7"/>
+    <text class="d-sub" x="430" y="76" text-anchor="middle">관련 글</text>
+    <circle class="d-node c" cx="540" cy="120" r="7"/>
+    <text class="d-sub" x="540" y="114" text-anchor="middle">관련 글</text>
+    <circle class="d-node c" cx="470" cy="186" r="7"/>
+    <text class="d-sub" x="470" y="204" text-anchor="middle">관련 글</text>
+    <line class="d-edge" x1="430" y1="82" x2="540" y2="120"/>
+    <line class="d-edge" x1="540" y1="120" x2="470" y2="186"/>
+</svg>
+<div class="d-cap">노트끼리 링크로 이어진 작은 <strong>지식 그래프</strong> — 파란 선(accent)은 <strong>볼트를 넘는 연결</strong>입니다.</div>
+</div>
+
+<h4>볼트 간 연결 — 마크다운 링크</h4>
+<p>볼트 내부에서 쓰는 위키링크(<code>[[...]]</code>)는 볼트 밖의 노트를 가리키지 못하므로, 외부 볼트에 대한 연결은 <strong>마크다운 링크 방식</strong>(<code>[텍스트](주소)</code>)으로 해야 합니다. 강사는 이 볼트 간 링크도 자동으로 작성되도록 시스템 파일에 세팅해 두었습니다.</p>
+<ul>
+    <li>온보딩 시 "당신의 메인 볼트는 무엇인가요?"를 물어봅니다.</li>
+    <li>메인 볼트의 주소값을 주면, 그 <strong>URI 값을 파싱</strong>해 해당 주소들의 연결을 함께 만들어 줍니다.</li>
+</ul>
+
+<div class="note">
+    <span class="nh">예 — 모바일 커맨드 센터</span>
+    차량에 스타링크와 배터리 시스템을 넣는 "모바일 커맨드 센터" 위키 카드를 만들 때, 인공지능이 위키 볼트 내부의 관련 개념(Related)뿐 아니라 <strong>메인 볼트에 정리해 둔 관련 글</strong>도 찾아 연결(메인볼트 Related)했습니다. 이렇게 <strong>내 지식 시스템 전체</strong>를 연결해, Obsidian 볼트의 태생적 한계(볼트 내 연결만 가능)를 넘어섭니다.
+</div>
+
+<h3>위키 카드의 종류와 로우 소스</h3>
+<p>연구자는 지식의 <strong>출처</strong>를 명시해야 합니다. 그래서 raw 자료를 <strong>로우 소스(raw source)</strong> 로 담아, 어디서 지식을 가져왔는지 표시합니다. (Zotero·Bookends 같은 레퍼런스 매니저를 연결한 인덱싱·인용 자동화도 예정)</p>
+
+<h4>로우 소스 → 위키 카드</h4>
+<p>아티클·기사·논문·<strong>유튜브 전사본</strong> 등을 볼트에 넣으면, LLM이 읽고 추출해 <strong>위키 카드</strong>로 만듭니다. 아티클 하나에서 배울 게 다섯 개면 다섯 개의 카드가 나올 수 있고, 여러 소스(아티클 3개 + 유튜브 2편)를 <strong>한 번에 인제스트</strong>해 AI가 알아서 컴파일링하게 할 수도 있습니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 660 200" role="img" aria-label="인제스트 파이프라인: 로우 소스를 LLM이 추출해 위키 카드로 만들고, 카드는 개념·엔티티·가이드·맵으로 나뉜다">
+    <rect class="d-box" x="20" y="34" width="150" height="60" rx="11"/>
+    <text class="d-label sm" x="95" y="60" text-anchor="middle">로우 소스</text>
+    <text class="d-sub" x="95" y="78" text-anchor="middle">자막·기사·논문</text>
+
+    <rect class="d-box accent" x="255" y="34" width="150" height="60" rx="11"/>
+    <text class="d-label sm" x="330" y="60" text-anchor="middle">LLM 추출</text>
+    <text class="d-sub" x="330" y="78" text-anchor="middle">읽고 카드화</text>
+
+    <rect class="d-box" x="490" y="34" width="150" height="60" rx="11"/>
+    <text class="d-label sm" x="565" y="60" text-anchor="middle">위키 카드</text>
+    <text class="d-sub" x="565" y="78" text-anchor="middle">출처 기반</text>
+
+    <line class="d-edge" x1="170" y1="64" x2="253" y2="64"/>
+    <polygon class="d-arrow" points="247,59 255,64 247,69"/>
+    <line class="d-edge accent" x1="405" y1="64" x2="488" y2="64"/>
+    <polygon class="d-arrow accent" points="482,59 490,64 482,69"/>
+
+    <line class="d-edge" x1="565" y1="94" x2="565" y2="116"/>
+    <polygon class="d-arrow" points="560,116 565,124 570,116"/>
+
+    <rect class="d-box soft" x="482" y="126" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="520" y="143" text-anchor="middle">개념</text>
+    <rect class="d-box soft" x="566" y="126" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="604" y="143" text-anchor="middle">엔티티</text>
+    <rect class="d-box soft" x="482" y="158" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="520" y="175" text-anchor="middle">가이드</text>
+    <rect class="d-box soft" x="566" y="158" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="604" y="175" text-anchor="middle">맵</text>
+</svg>
+<div class="d-cap">로우 소스를 <strong>LLM이 읽어</strong> 출처 기반 <strong>위키 카드</strong>로 — 개념·엔티티·가이드·맵으로 나뉩니다.</div>
+</div>
+
+<h4>카드의 종류</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>종류</th><th>내용</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Concept</strong></td><td>기본 개념 카드.</td></tr>
+            <tr><td><strong>Entity</strong></td><td>고유명사·서비스명·사람 이름 등.</td></tr>
+            <tr><td><strong>Guide</strong></td><td>Concept·Entity를 포함한 프레이즈 — "이걸로 무엇 하기" 같은 방법.</td></tr>
+            <tr><td><strong>Maps / Labs</strong></td><td>전체를 총망라하는 개념 카드.</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">캡처 팁 — 목적을 남겨라</span>
+    지식을 캡처할 때 항상 <strong>#(샵) 뒤에 목적</strong>을 적습니다. 나중에 검색하기 위해서입니다. 캡처만 하고 절대 다시 안 보게 되므로, <strong>미래의 내가 검색으로 접근할 힌트</strong>를 남겨 두는 것이 좋습니다. 인제스트를 맡길 때도 "왜 모았는지 / 무엇을 하려는지"를 묻게 해 두면, 그 의도를 가지고 메인 볼트의 과거 연구와 연결·추론해 줍니다.
+</div>
+
+<h3>시스템 파일과 rules</h3>
+<p>볼트에는 노트뿐 아니라 <strong>AI의 동작을 규정하는 시스템 파일</strong>이 함께 들어갑니다. 강사가 공들여 깎아 둔 이 파일들은 한 번 정독해 볼 가치가 있습니다.</p>
+
+<h4>저자와 모델 명시</h4>
+<ul>
+    <li>메인 볼트의 주 저자는 <strong>사람(나)</strong> 입니다.</li>
+    <li>LLM 위키에는 내 이름과 함께 <strong>어떤 모델이 작성했는지</strong>도 명시합니다. 예: "Opus 4.8 · effort X-high", "Fable", "Codex Fugu · Ultra" 등.</li>
+    <li>어떤 모델이 만든 위키인지 기록해 <strong>품질을 비교·최적화</strong>합니다. 인제스트는 토큰·시간을 많이 쓰므로, <strong>정말 중요한 자료만</strong> 모으는 것이 좋습니다.</li>
+</ul>
+
+<h4>메인 볼트의 시스템 파일</h4>
+<p>클로드가 읽을 문서, 다른 에이전트가 읽을 문서, CMDS(컨텍스트) 관련 내용, 볼트 규칙, 작성·포매팅 규칙, 연구 주제, 페르소나(brain dump) 등이 들어갑니다.</p>
+
+<h4>LLM 위키의 core-context</h4>
+<p>LLM 위키는 <strong>어떤 목적으로 위키를 쓰려는지</strong>를 담는 컨텍스트 파일을 씁니다. 온보딩을 시작하면 <code>core-context.md</code> 를 수정하며 이름·소속·부서·취미·취향 등을 채웁니다. 여기서도 모든 걸 한 파일에 쓰지 않고 <strong>"취향은 취향.md, 전문 페르소나는 여기"</strong> 처럼 주소를 명시해 컨텍스트를 최적화합니다.</p>
+
+<div class="note">
+    <span class="nh">.claude/rules — 헌법처럼 읽는 규칙</span>
+    <code>.claude</code> 폴더 안 <strong><code>rules</code></strong> 폴더의 마크다운 파일은, Claude Code가 <strong>세션 시작 즉시 먼저 읽습니다(헌법처럼 엄밀히 준수)</strong>. 반면 <code>CLAUDE.md</code> 는 가이드처럼 참고합니다. 그래서 편집 규칙·취향·중요한 강제 규칙은 <code>rules</code> 에 담아 두면 좋습니다.
+</div>
+<p>구조를 알았으니 직접 굴려 볼 차례입니다 — <a href="#!llmw-onboard">실습과 철학</a> 편에서 온보딩부터 Ingest·Query·Lint, 웹 클리퍼, 그리고 두 볼트 운영 철학까지 갑니다.</p>
+

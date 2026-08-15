@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ノートの構造 — メタデータと段階的な開示</title>
-<meta name="description" content="YAML フロントマターのメタデータと段階的な開示でコンテキストを最適化する。">
+<title>ノートの構造 — メタデータ・リンク・カード</title>
+<meta name="description" content="YAML フロントマターによる漸進的開示、ボルトの内外をつなぐリンク、ウィキカードとローソース、そして rules システムファイル — ノート一枚の解剖学">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/ja/llmw-metadata/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/llmw-metadata/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/llmw-metadata/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ノートの構造 — メタデータと段階的な開示">
-<meta property="og:description" content="YAML フロントマターのメタデータと段階的な開示でコンテキストを最適化する。">
+<meta property="og:title" content="ノートの構造 — メタデータ・リンク・カード">
+<meta property="og:description" content="YAML フロントマターによる漸進的開示、ボルトの内外をつなぐリンク、ウィキカードとローソース、そして rules システムファイル — ノート一枚の解剖学">
 <meta property="og:url" content="https://dewytear.github.io/p/ja/llmw-metadata/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="ノートの構造 — メタデータと段階的な開示">
-<meta name="twitter:description" content="YAML フロントマターのメタデータと段階的な開示でコンテキストを最適化する。">
+<meta name="twitter:title" content="ノートの構造 — メタデータ・リンク・カード">
+<meta name="twitter:description" content="YAML フロントマターによる漸進的開示、ボルトの内外をつなぐリンク、ウィキカードとローソース、そして rules システムファイル — ノート一枚の解剖学">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "ノートの構造 — メタデータと段階的な開示",
- "description": "YAML フロントマターのメタデータと段階的な開示でコンテキストを最適化する。",
+ "headline": "ノートの構造 — メタデータ・リンク・カード",
+ "description": "YAML フロントマターによる漸進的開示、ボルトの内外をつなぐリンク、ウィキカードとローソース、そして rules システムファイル — ノート一枚の解剖学",
  "inLanguage": "ja",
  "url": "https://dewytear.github.io/p/ja/llmw-metadata/",
  "mainEntityOfPage": "https://dewytear.github.io/#!llmw-metadata",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T22:38:08+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T14:47:12+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/en/llmw-metadata/" hreflang="en">English</a>
 </p>
 <article>
-<h2>ノートの構造 — メタデータと段階的な開示</h2>
+<h2>ノートの構造 — メタデータ・リンク・カード</h2>
 <p>ウィキのノートを開くと<strong>タイトル → メタデータ → 本文</strong>の順に並んでいます。たとえば本文が 38 行目から始まるなら、その前の<strong>37 行はすべてメタデータ</strong>です。</p>
 
 <h3>YAML フロントマターが肝</h3>
@@ -104,11 +104,146 @@
     <span class="nh">コンテキストの最適化</span>
     Obsidian の大きな長所は、ひとつのファイルにすべてを詰め込まず、<strong>「好みは 好み.md を見よ」「専門のペルソナはここを見よ」</strong>のように別ファイルの住所を書けることです。仕事のときに必要なファイルだけ開かせて<strong>コンテキストを最適化</strong>します。講師は Karpathy のアイデアを借りて、こうしたメタデータの作成を自動化するコマンド・スキルのセットを用意しています。
 </div>
+
+<h3>つながり（Links）とボルト間の参照</h3>
+<p>Obsidian のいちばんの長所は<strong>ノートどうしのつながり</strong>です。たとえば「BM25」のノートに、MOC（Map of Content、知識の地図）、ハーネスエンジニアリング、ログなど、さまざまなノートがつながっています。この<strong>つながりが核心</strong>です。</p>
+
+<h4>住所ひとつでつながった知識をまとめて読む</h4>
+<p>「BM25」のノートの住所だけを人工知能に渡せば、それと<strong>つながった残りのノートもソーセージのように</strong>連なって読まれます。ただしこの自動のつながりは<strong>同じボルトの中でだけ</strong>可能です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 640 250" role="img" aria-label="ノートがリンクでつながった知識グラフ。青い線はボルトを越えるつながり">
+    <rect class="d-box soft" x="20" y="30" width="300" height="200" rx="12"/>
+    <text class="d-sub" x="170" y="50" text-anchor="middle">ウィキボルト (衛星)</text>
+    <rect class="d-box soft" x="340" y="30" width="280" height="200" rx="12"/>
+    <text class="d-sub" x="480" y="50" text-anchor="middle">メインボルト (母船)</text>
+
+    <line class="d-edge" x1="170" y1="130" x2="80" y2="72"/>
+    <line class="d-edge" x1="170" y1="130" x2="92" y2="188"/>
+    <line class="d-edge" x1="170" y1="130" x2="250" y2="82"/>
+    <line class="d-edge" x1="170" y1="130" x2="250" y2="184"/>
+    <line class="d-edge accent" x1="170" y1="130" x2="430" y2="82"/>
+    <line class="d-edge accent" x1="170" y1="130" x2="470" y2="186"/>
+
+    <circle class="d-node b" cx="170" cy="130" r="8"/>
+    <text class="d-sub" x="170" y="118" text-anchor="middle">BM25</text>
+    <circle class="d-node" cx="80" cy="72" r="7"/>
+    <text class="d-sub" x="80" y="66" text-anchor="middle">MOC</text>
+    <circle class="d-node" cx="92" cy="188" r="7"/>
+    <text class="d-sub" x="92" y="206" text-anchor="middle">ハーネス</text>
+    <circle class="d-node" cx="250" cy="82" r="7"/>
+    <text class="d-sub" x="250" y="76" text-anchor="middle">ログ</text>
+    <circle class="d-node" cx="250" cy="184" r="7"/>
+    <text class="d-sub" x="250" y="202" text-anchor="middle">概念 A</text>
+
+    <circle class="d-node c" cx="430" cy="82" r="7"/>
+    <text class="d-sub" x="430" y="76" text-anchor="middle">関連記事</text>
+    <circle class="d-node c" cx="540" cy="120" r="7"/>
+    <text class="d-sub" x="540" y="114" text-anchor="middle">関連記事</text>
+    <circle class="d-node c" cx="470" cy="186" r="7"/>
+    <text class="d-sub" x="470" y="204" text-anchor="middle">関連記事</text>
+    <line class="d-edge" x1="430" y1="82" x2="540" y2="120"/>
+    <line class="d-edge" x1="540" y1="120" x2="470" y2="186"/>
+</svg>
+<div class="d-cap">ノートどうしがリンクでつながった小さな<strong>知識グラフ</strong> — 青い線（accent）は<strong>ボルトを越えるつながり</strong>です。</div>
+</div>
+
+<h4>ボルト間のつながり — マークダウンリンク</h4>
+<p>ボルトの内部で使うウィキリンク（<code>[[...]]</code>）はボルトの外のノートを指せないので、外部のボルトへのつながりは<strong>マークダウンリンクの方式</strong>（<code>[テキスト](住所)</code>）にする必要があります。講師はこのボルト間のリンクも自動で書かれるように、システムファイルに設定してあります。</p>
+<ul>
+    <li>オンボーディングのときに「あなたのメインボルトは何ですか？」と尋ねられます。</li>
+    <li>メインボルトの住所を渡すと、その <strong>URI の値をパース</strong>して、その住所へのつながりも一緒に作ってくれます。</li>
+</ul>
+
+<div class="note">
+    <span class="nh">例 — モバイルコマンドセンター</span>
+    車に Starlink とバッテリーのシステムを入れる「モバイルコマンドセンター」のウィキカードを作ったとき、人工知能はウィキボルトの中の関連する概念（Related）だけでなく、<strong>メインボルトに整理してあった関連記事</strong>も見つけてつなぎました（メインボルト Related）。こうして<strong>自分の知識システム全体</strong>をつなぎ、Obsidian のボルトが生まれつき持つ限界（ボルト内のつながりしかできない）を越えます。
+</div>
+
+<h3>ウィキカードの種類と生ソース</h3>
+<p>研究者は知識の<strong>出典</strong>を明示しなければなりません。だから raw の資料を<strong>生ソース（raw source）</strong>として入れ、どこから知識を持ってきたかを示します。（Zotero や Bookends のようなリファレンスマネージャーをつないだインデックス化・引用の自動化も予定されています。）</p>
+
+<h4>生ソース → ウィキカード</h4>
+<p>記事・報道・論文・<strong>YouTube の書き起こし</strong>などをボルトに入れると、LLM が読んで抽出し<strong>ウィキカード</strong>にします。ひとつの記事から学べることが五つあれば五枚のカードができますし、複数のソース（記事 3 本 + YouTube 2 本）を<strong>いっぺんにインジェスト</strong>して AI に勝手にコンパイルさせることもできます。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 660 200" role="img" aria-label="インジェストのパイプライン: 生ソースを LLM が抽出してウィキカードにし、カードは概念・エンティティ・ガイド・マップに分かれる">
+    <rect class="d-box" x="20" y="34" width="150" height="60" rx="11"/>
+    <text class="d-label sm" x="95" y="60" text-anchor="middle">生ソース</text>
+    <text class="d-sub" x="95" y="78" text-anchor="middle">字幕・記事・論文</text>
+
+    <rect class="d-box accent" x="255" y="34" width="150" height="60" rx="11"/>
+    <text class="d-label sm" x="330" y="60" text-anchor="middle">LLM が抽出</text>
+    <text class="d-sub" x="330" y="78" text-anchor="middle">読んでカード化</text>
+
+    <rect class="d-box" x="490" y="34" width="150" height="60" rx="11"/>
+    <text class="d-label sm" x="565" y="60" text-anchor="middle">ウィキカード</text>
+    <text class="d-sub" x="565" y="78" text-anchor="middle">出典ベース</text>
+
+    <line class="d-edge" x1="170" y1="64" x2="253" y2="64"/>
+    <polygon class="d-arrow" points="247,59 255,64 247,69"/>
+    <line class="d-edge accent" x1="405" y1="64" x2="488" y2="64"/>
+    <polygon class="d-arrow accent" points="482,59 490,64 482,69"/>
+
+    <line class="d-edge" x1="565" y1="94" x2="565" y2="116"/>
+    <polygon class="d-arrow" points="560,116 565,124 570,116"/>
+
+    <rect class="d-box soft" x="482" y="126" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="520" y="143" text-anchor="middle">概念</text>
+    <rect class="d-box soft" x="566" y="126" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="604" y="143" text-anchor="middle">実体</text>
+    <rect class="d-box soft" x="482" y="158" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="520" y="175" text-anchor="middle">ガイド</text>
+    <rect class="d-box soft" x="566" y="158" width="76" height="26" rx="6"/>
+    <text class="d-sub" x="604" y="175" text-anchor="middle">マップ</text>
+</svg>
+<div class="d-cap">生ソースを <strong>LLM が読んで</strong>出典ベースの<strong>ウィキカード</strong>へ — 概念・実体・ガイド・マップに分かれます。</div>
+</div>
+
+<h4>カードの種類</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>種類</th><th>内容</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Concept</strong></td><td>基本の概念カード。</td></tr>
+            <tr><td><strong>Entity</strong></td><td>固有名詞・サービス名・人の名前など。</td></tr>
+            <tr><td><strong>Guide</strong></td><td>Concept・Entity を含むフレーズ —「これで何をする」といったやり方。</td></tr>
+            <tr><td><strong>Maps / Labs</strong></td><td>全体を網羅する概念カード。</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">キャプチャのコツ — 目的を残す</span>
+    知識をキャプチャするときは、つねに <strong>#（シャープ）のうしろに目的</strong>を書きます。あとで検索するためです。キャプチャしたきり二度と見ないことになりがちなので、<strong>未来の自分が検索でたどり着けるヒント</strong>を残しておくとよいです。インジェストを任せるときも「なぜ集めたのか / 何をしたいのか」を尋ねるようにしておけば、その意図を持ってメインボルトの過去の研究とつなげて推論してくれます。
+</div>
+
+<h3>システムファイルと rules</h3>
+<p>ボルトにはノートだけでなく、<strong>AI の動きを定めるシステムファイル</strong>も一緒に入ります。講師が念入りに削り出したこれらのファイルは、いちど通読してみる価値があります。</p>
+
+<h4>著者とモデルの明示</h4>
+<ul>
+    <li>メインボルトの主な著者は<strong>人（自分）</strong>です。</li>
+    <li>LLM ウィキには自分の名前とともに、<strong>どのモデルが書いたのか</strong>も明示します。例:「Opus 4.8 · effort X-high」「Fable」「Codex Fugu · Ultra」など。</li>
+    <li>どのモデルが作ったウィキかを記録して<strong>品質を比較・最適化</strong>します。インジェストはトークンと時間を多く使うので、<strong>本当に重要な資料だけ</strong>を集めるのがよいです。</li>
+</ul>
+
+<h4>メインボルトのシステムファイル</h4>
+<p>Claude が読む文書、ほかのエージェントが読む文書、CMDS（コンテキスト）に関する内容、ボルトのルール、執筆・フォーマットのルール、研究の主題、ペルソナ（brain dump）などが入ります。</p>
+
+<h4>LLM ウィキの core-context</h4>
+<p>LLM ウィキは<strong>どんな目的でウィキを使おうとしているのか</strong>を収めるコンテキストのファイルを使います。オンボーディングを始めると <code>core-context.md</code> を直しながら、名前・所属・部署・趣味・好みなどを埋めます。ここでもすべてを 1 ファイルに書かず、<strong>「好みは 好み.md、専門のペルソナはここ」</strong>のように住所を明示してコンテキストを最適化します。</p>
+
+<div class="note">
+    <span class="nh">.claude/rules — 憲法のように読まれるルール</span>
+    <code>.claude</code> フォルダの中の <strong><code>rules</code></strong> フォルダのマークダウンファイルは、Claude Code が<strong>セッション開始のすぐに先に読みます（憲法のように厳密に守る）</strong>。一方 <code>CLAUDE.md</code> はガイドとして参考にします。だから編集のルール・好み・重要な強制のルールは <code>rules</code> に入れておくとよいです。
+</div>
+<p>構造が分かったら、自分で回してみる番です — <a href="/p/ja/llmw-onboard/">実習と哲学</a>の章で、オンボーディングから Ingest・Query・Lint、ウェブクリッパー、そして二つのボルトを運用する哲学まで進みます。</p>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · LLM Wiki &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · LLM Wiki &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
-<ul><li><a href="/p/ja/skl-context/">スキルの構造と動作原理</a></li><li><a href="/p/ja/llmw-overview/">LLM Wiki — 概要</a></li><li><a href="/p/ja/llmw-vaults/">ボルトの体系 — メインボルトとウィキボルト</a></li></ul>
+<ul><li><a href="/p/ja/skl-context/">スキルの構造と動作原理</a></li><li><a href="/p/ja/news-20260710-oracle-ontology-property-graph/">オラクルのオントロジーとプロパティグラフ — テーブルを知識の地図に</a></li><li><a href="/p/ja/news-20260711-neo4j-rdf-vs-property-graph/">RDF かプロパティグラフか — 知識グラフのためのふたつのモデル（Neo4j）</a></li></ul>
 </nav>
 </body>
 </html>
