@@ -1,4 +1,4 @@
-<h2>Managing Usage · Context · Sessions</h2>
+<h2>Operations — Usage, Sessions & Wrap-up</h2>
 <p>To use Claude Code well, you need to know how to manage <strong>usage (tokens)</strong>, <strong>context</strong>, and <strong>sessions (conversational state)</strong>. Tokens have become extremely important.</p>
 
 <h3>Usage — /usage</h3>
@@ -35,4 +35,37 @@
 <div class="note warn">
     <span class="nh">Watch out for caching</span>
     AI has caching, so when you continue a request you are billed only for the new portion. But caching has a <strong>time to live</strong>, so if you come back later and request again with <code>--resume</code>, everything accumulated is sent over again and you get no caching benefit. In that case, opening a <strong>new session</strong> may work out better.
+</div>
+
+<h3>Useful Features and Wrap-up</h3>
+<p>Finally, here are a few commands and skills for getting more out of Claude Code, plus where to go next.</p>
+
+<h4>Analyzing your own habits — /insight</h4>
+<p><code>/insight</code> analyzes how you normally use Claude Code and produces a report on how to use it more efficiently.</p>
+
+<h4>Useful skills shared in the course</h4>
+<ul>
+    <li><strong>worklog</strong> — organizes your recent work like a weekly report. For example, ask "summarize the work I did over the past week" and it analyzes the logs and neatly lays out which projects you worked on.</li>
+    <li><strong>manpower</strong> — analyzes how well you are using AI and visualizes it as an <strong>octagon (radar) chart</strong>. It shows where you fall short and your weekly growth trend. It is also useful for measuring employees' AI adoption (AX).</li>
+    <li><strong>GPT Image 2 / HWP</strong> and others — custom-built skills for image generation and Hangul document handling.</li>
+</ul>
+
+<h4>Documents in other formats</h4>
+<p>PDF, PPT, and Excel are covered by the <strong>document-skills</strong> plugin. <strong>HWP</strong>, which is not officially supported, can be used by registering a separately built skill. Other formats can also be handled by building a skill around a conversion library where one exists, though pure binary formats can be difficult.</p>
+
+<h4>Cowork</h4>
+<p><strong>Cowork</strong>, offered in the app, came out later than Claude Code and is still somewhat unstable and short on features, but <strong>1.0</strong> launched recently. If the terminal feels intimidating, starting with Cowork is one way to go.</p>
+
+<h4>Recap — what we did today</h4>
+<ol>
+    <li>Wrote guidelines in CLAUDE.md, then wrote a poem and saved it to a file (checking that the guidelines work)</li>
+    <li>Researched the Mythos model → file → generated a site, changed the theme from black to white</li>
+    <li>Extracted a design system from the white site → created the my-design skill</li>
+    <li>Organized 16 Hugging Face papers → built a paper showcase site with the skill</li>
+    <li>Installed document-skills → created a paper analysis agent → analyzed PDFs → linked detail pages</li>
+</ol>
+
+<div class="note">
+    <span class="nh">Next steps</span>
+    Review with the handout of frequently used commands and the skill archive file. The next session covers the <strong>Harness</strong> — keeping several of these agents around and having them collaborate with each other.
 </div>

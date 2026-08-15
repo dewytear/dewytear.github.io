@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>講義の概要と目標</title>
-<meta name="description" content="講義の目標と、ハーネスで本を作るという全体像">
+<title>基礎 — 概要・ターミナル・CLAUDE.md</title>
+<meta name="description" content="Claude Code とは何かから、ターミナルの四つのコマンド、CLAUDE.md の作業指針まで — フォルダを作って実行する関門を越える">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/ja/ccb-overview/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/ccb-overview/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/ccb-overview/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="講義の概要と目標">
-<meta property="og:description" content="講義の目標と、ハーネスで本を作るという全体像">
+<meta property="og:title" content="基礎 — 概要・ターミナル・CLAUDE.md">
+<meta property="og:description" content="Claude Code とは何かから、ターミナルの四つのコマンド、CLAUDE.md の作業指針まで — フォルダを作って実行する関門を越える">
 <meta property="og:url" content="https://dewytear.github.io/p/ja/ccb-overview/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="講義の概要と目標">
-<meta name="twitter:description" content="講義の目標と、ハーネスで本を作るという全体像">
+<meta name="twitter:title" content="基礎 — 概要・ターミナル・CLAUDE.md">
+<meta name="twitter:description" content="Claude Code とは何かから、ターミナルの四つのコマンド、CLAUDE.md の作業指針まで — フォルダを作って実行する関門を越える">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "講義の概要と目標",
- "description": "講義の目標と、ハーネスで本を作るという全体像",
+ "headline": "基礎 — 概要・ターミナル・CLAUDE.md",
+ "description": "Claude Code とは何かから、ターミナルの四つのコマンド、CLAUDE.md の作業指針まで — フォルダを作って実行する関門を越える",
  "inLanguage": "ja",
  "url": "https://dewytear.github.io/p/ja/ccb-overview/",
  "mainEntityOfPage": "https://dewytear.github.io/#!ccb-overview",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T20:36:07+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T14:35:47+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/en/ccb-overview/" hreflang="en">English</a>
 </p>
 <article>
-<h2>講義の概要と目標</h2>
+<h2>基礎 — 概要・ターミナル・CLAUDE.md</h2>
 <p>この資料は<strong>「Claude Code 基礎 / ファン・ミンホ」</strong>の実習講義を映像の順に整理したものです。開発者ではない方にとってターミナルは不慣れな環境ですが、<strong>たったひとつの山 — 「フォルダを作り、その場所で <code>claude</code> を実行すること」</strong>さえ越えれば、そこから先は AI がほとんどの仕事を代わりにやってくれます。今日の目標はターミナルと仲よくなることです。</p>
 
 <h3>この講義でできるようになること</h3>
@@ -121,11 +121,195 @@
     本文書セットは「（トラック 2）Claude Code 基礎 / ファン・ミンホ / 260429」の実習講義の内容を順に整理・再構成したものです。
     <br>· 映像: youtube.com/watch?v=pHfDgZ7cll0
 </div>
+
+<h3>Claude Code とは何か</h3>
+<p>Claude Code は<strong>自分のローカル環境（自分の PC）で動く AI エージェント</strong>だと考えてください。ウェブのチャットと違い、自分のコンピュータのファイルを直接読んで修正し、コマンドを実行して仕事を片づけます。作業は<strong>プロジェクトごとにフォルダをひとつ作り、そのフォルダの中で</strong>進めます。Windows では通常 <strong>PowerShell</strong> のターミナルで実行します。</p>
+
+<h4>既存のサービスとの違い</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr><th>形態</th><th>特徴</th><th>自由度</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>ウェブブラウザ（Claude・ChatGPT・Gemini）</td><td>ブラウザ内の制約された環境で AI を使う。ファイルをいちいちアップロードする必要がある</td><td>もっとも制限的</td></tr>
+            <tr><td>Claude デスクトップアプリ</td><td>ローカルで動くが、ターミナルに比べると制約がある</td><td>中間</td></tr>
+            <tr><td><strong>Claude Code（ターミナル）</strong></td><td>実行したフォルダのファイルに直接アクセス。思いどおりに自由に作業できる</td><td>もっとも自由</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>ターミナル環境に少し慣れるだけで、普段 AI チャットを使うようにずっと自由に使えるようになります。</p>
+
+<h4>実演 — 議事録 3 つをひとつのレポートに</h4>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="実演の流れ: フォルダ探索 → ファイル読み込み → 分析 → レポート作成">
+    <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="85" y="46" text-anchor="middle">① フォルダ探索</text>
+    <text class="d-sub" x="85" y="63" text-anchor="middle">search</text>
+
+    <rect class="d-box" x="180" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="255" y="46" text-anchor="middle">② ファイル読み</text>
+    <text class="d-sub" x="255" y="63" text-anchor="middle">一つずつ読む</text>
+
+    <rect class="d-box" x="350" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="425" y="46" text-anchor="middle">③ 分析</text>
+    <text class="d-sub" x="425" y="63" text-anchor="middle">内容の把握</text>
+
+    <rect class="d-box accent" x="520" y="24" width="150" height="48" rx="10"/>
+    <text class="d-label" x="595" y="46" text-anchor="middle">④ レポート作成</text>
+    <text class="d-sub" x="595" y="63" text-anchor="middle">成果物の生成</text>
+
+    <line class="d-edge" x1="160" y1="48" x2="176" y2="48"/><polygon class="d-arrow" points="172,43 180,48 172,53"/>
+    <line class="d-edge" x1="330" y1="48" x2="346" y2="48"/><polygon class="d-arrow" points="342,43 350,48 342,53"/>
+    <line class="d-edge" x1="500" y1="48" x2="516" y2="48"/><polygon class="d-arrow" points="512,43 520,48 512,53"/>
+</svg>
+<div class="d-cap">ファイル一覧を教えなくても、自分で探索・読み込み・分析してレポートを作ります。</div>
+</div>
+<p>議事録ファイル 3 つが入ったフォルダで Claude Code を実行し、こう頼みます。</p>
+<pre><code>この議事録 3 つをまとめて 1 つのレポートに要約して。日本語で。</code></pre>
+<p>ここで肝心なのは<strong>どんなファイルがあるかを教えていない</strong>という点です。ウェブのチャットならファイルを自分でアップロードする必要がありますが、Claude Code は</p>
+<ul>
+    <li>いまのフォルダに<strong>どんなファイルがあるかをまず探索（search）</strong>し、</li>
+    <li>そのファイルを<strong>一つずつ読み</strong>込み、</li>
+    <li>内容を<strong>分析</strong>したうえで結果（レポート）を作ってくれます。</li>
+</ul>
+<p>つまり「実行した場所のフォルダ」がそのまま作業空間になり、その中のファイルを自分で扱います。</p>
+
+<div class="note">
+    <span class="nh">覚えておくこと</span>
+    Claude Code は <code>claude</code> を実行した<strong>そのフォルダ全体にアクセス</strong>します。だからプロジェクトごとにフォルダを分け、作業するフォルダの中で実行する習慣が大切です。
+</div>
+
+<h3>ターミナルの基本コマンド</h3>
+<p>ターミナルに不慣れでも大丈夫です。私たちの目標は<strong>「新しいフォルダを作り、その場所へ行って <code>claude</code> を実行」</strong>するところまでです。その先は AI が全部やってくれます。Windows は <strong>PowerShell</strong> を起動すると、たいていユーザーフォルダから始まります。</p>
+
+<h4>四つだけ覚えてください</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead>
+            <tr><th>コマンド</th><th>意味</th><th>やること</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>pwd</code></td><td>print working directory</td><td>いま自分がどのフォルダにいるかを表示</td></tr>
+            <tr><td><code>cd &lt;フォルダ&gt;</code></td><td>change directory</td><td>別のフォルダへ移動（例: <code>cd Downloads</code>）</td></tr>
+            <tr><td><code>mkdir &lt;名前&gt;</code></td><td>make directory</td><td>新しいフォルダを作る（例: <code>mkdir kist-test</code>）</td></tr>
+            <tr><td><code>claude</code></td><td>—</td><td>いまのフォルダで Claude Code を実行</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h4>実習の手順</h4>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="ターミナル 5 ステップ: 位置確認（pwd） → 移動（cd Downloads） → フォルダ作成（mkdir） → そこへ移動（cd） → claude 実行">
+    <rect class="d-box" x="10" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="70" y="46" text-anchor="middle">① 位置確認</text>
+    <text class="d-sub" x="70" y="63" text-anchor="middle">pwd</text>
+
+    <rect class="d-box" x="148" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="208" y="46" text-anchor="middle">② 移動</text>
+    <text class="d-sub" x="208" y="63" text-anchor="middle">cd Downloads</text>
+
+    <rect class="d-box" x="286" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="346" y="46" text-anchor="middle">③ フォルダ作成</text>
+    <text class="d-sub" x="346" y="63" text-anchor="middle">mkdir kist-test</text>
+
+    <rect class="d-box" x="424" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="484" y="46" text-anchor="middle">④ そこへ移動</text>
+    <text class="d-sub" x="484" y="63" text-anchor="middle">cd kist-test</text>
+
+    <rect class="d-box accent" x="562" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="622" y="46" text-anchor="middle">⑤ claude 実行</text>
+    <text class="d-sub" x="622" y="63" text-anchor="middle">claude</text>
+
+    <line class="d-edge" x1="130" y1="48" x2="146" y2="48"/><polygon class="d-arrow" points="140,43 148,48 140,53"/>
+    <line class="d-edge" x1="268" y1="48" x2="284" y2="48"/><polygon class="d-arrow" points="278,43 286,48 278,53"/>
+    <line class="d-edge" x1="406" y1="48" x2="422" y2="48"/><polygon class="d-arrow" points="416,43 424,48 416,53"/>
+    <line class="d-edge" x1="544" y1="48" x2="560" y2="48"/><polygon class="d-arrow" points="554,43 562,48 554,53"/>
+</svg>
+<div class="d-cap">新しいフォルダを作り、その場所へ移動して claude を実行する — これが今日の関門です。</div>
+</div>
+<pre><code><span class="c"># 1. いまの位置を確認</span>
+pwd
+<span class="c"># 2. ダウンロードフォルダへ移動</span>
+cd Downloads
+<span class="c"># 3. 新しいフォルダを作る</span>
+mkdir kist-test
+<span class="c"># 4. 作ったフォルダへ移動</span>
+cd kist-test
+<span class="c"># 5. そのフォルダで Claude Code を実行</span>
+claude</code></pre>
+<p>こうして新しく作ったフォルダで <code>claude</code> を実行すると、これ以降 Claude Code は<strong>そのフォルダの中ですべての作業</strong>をするようになります。</p>
+
+<div class="note">
+    <span class="nh">今日の関門</span>
+    「フォルダを作る → その場所へ移動 → <code>claude</code> を実行」 — ここまで越えれば、あとは AI の助けを借りられます。詰まったら遠慮なく助けを求めてください。
+</div>
+
+<h3>CLAUDE.md — 作業方針のファイル</h3>
+<p>Claude Code は、つねに参照するファイルとして <code>CLAUDE.md</code> というマークダウンファイルを使います。<strong>AI にどんな指示を出すときも、いつも一緒に含まれるファイル</strong>だと考えてください。だから<strong>長くなりすぎないように、大事な内容を明快に</strong>入れる必要があります。</p>
+
+<h4>四つのレイヤー</h4>
+<div class="diagram">
+<svg viewBox="0 0 680 236" role="img" aria-label="CLAUDE.md の適用範囲 4 階層: 会社 → ユーザー全体 → プロジェクト → プロジェクトローカル、下へ行くほど優先度が高い">
+    <rect class="d-box" x="52" y="8" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="30" text-anchor="middle">会社（マネージド）</text>
+    <text class="d-sub" x="262" y="46" text-anchor="middle">組織の全メンバーに適用</text>
+
+    <rect class="d-box" x="52" y="64" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="86" text-anchor="middle">ユーザー全体</text>
+    <text class="d-sub" x="262" y="102" text-anchor="middle">~/.claude · 自分の全プロジェクト</text>
+
+    <rect class="d-box" x="52" y="120" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="142" text-anchor="middle">プロジェクト</text>
+    <text class="d-sub" x="262" y="158" text-anchor="middle">CLAUDE.md · 同僚と共有</text>
+
+    <rect class="d-box accent" x="52" y="176" width="420" height="44" rx="10"/>
+    <text class="d-label" x="262" y="198" text-anchor="middle">プロジェクトローカル</text>
+    <text class="d-sub" x="262" y="214" text-anchor="middle">共有しない · 自分の PC 専用</text>
+
+    <line class="d-edge" x1="262" y1="52" x2="262" y2="62"/><polygon class="d-arrow" points="257,58 267,58 262,64"/>
+    <line class="d-edge" x1="262" y1="108" x2="262" y2="118"/><polygon class="d-arrow" points="257,114 267,114 262,120"/>
+    <line class="d-edge" x1="262" y1="164" x2="262" y2="174"/><polygon class="d-arrow" points="257,170 267,170 262,176"/>
+
+    <text class="d-sub" x="588" y="20" text-anchor="middle">優先度 低</text>
+    <line class="d-edge accent" x1="588" y1="30" x2="588" y2="204"/><polygon class="d-arrow accent" points="583,204 593,204 588,212"/>
+    <text class="d-accent" x="588" y="230" text-anchor="middle" font-size="11">優先度 高</text>
+</svg>
+<div class="d-cap">同じ CLAUDE.md でも置き場所によって適用範囲が変わり、下の階層ほど優先されます。</div>
+</div>
+<p>同じ <code>CLAUDE.md</code> でも、どこに置くかで適用範囲が変わります。</p>
+<ul>
+    <li><strong>会社（マネージド）</strong> — 会社の全メンバーに適用。</li>
+    <li><strong>ユーザー全体</strong> — 自分の PC でどのプロジェクトをしていても、つねに適用。</li>
+    <li><strong>プロジェクト</strong> — そのプロジェクトでのみ適用（同僚と共有）。</li>
+    <li><strong>プロジェクトローカル</strong> — プロジェクトの中だが<strong>共有しない、自分の PC だけのための</strong>方針。</li>
+</ul>
+
+<h4>実習 — 方針を作る</h4>
+<p>新しいフォルダで <code>claude</code> を実行したあと、こう頼んで <code>CLAUDE.md</code> を作ります。</p>
+<pre><code>このフォルダに CLAUDE.md ファイルを作って。
+方針: 回答はつねに日本語で書き、
+新しく作るファイル名にはつねに _new を付けて。</code></pre>
+<p>ファイルができると、その中にいま与えた方針（「日本語で書く」「新しいファイルに _new を付ける」）が記録されます。以降のすべての作業は<strong>このフォルダ配下でつねにこの方針に従います。</strong>たとえば「簡単な詩をテキストファイルに保存して」と頼めば、結果は日本語で書かれ、ファイル名には <code>_new</code> が付きます。</p>
+
+<h4>何を入れるとよいか</h4>
+<ul>
+    <li>元のファイルを修正させないためのルール</li>
+    <li>コード（例: Python）を書くときに守るべきルール</li>
+    <li>出力の形式・ファイルの保存方法</li>
+    <li>書きものの文体・言語</li>
+</ul>
+
+<div class="note">
+    <span class="nh">コツ</span>
+    <code>CLAUDE.md</code> は AI に作らせてもよいし、自分で開いて直してもかまいません。Windows ではプロンプトの改行がうまくいかないことがありますが、<strong>改行なしでそのまま続けて書いても</strong>問題ありません。
+</div>
+<p>ここまでが基礎です — フォルダを作り、起動し、指針を植えました。次の章<a href="/p/ja/ccb-research-web/">実習</a>では、ウェブ調査からデザインシステムの抽出、論文整理まで実際の作業をひと流れで回します。</p>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">作成日</span> 2026-07-03 &middot; <span class="pr-k">更新日</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
-<ul><li><a href="/p/ja/hns-anatomy/">ハーネスの構成と効果</a></li><li><a href="/p/ja/hns-usecases/">活用の事例 — コンテンツからリサーチまで</a></li><li><a href="/p/ja/kgs-plugin/">ウィキエンジンのプラグイン化 — wiki-plugin と同期の規律</a></li><li><a href="/p/ja/skills/">拡張機能 — Skills · MCP · Hooks</a></li></ul>
+<ul><li><a href="/p/ja/welcome/">はじめに</a></li><li><a href="/p/ja/claude-md-commandments/">CLAUDE.md の十戒 — AI ペアプログラマーを飼いならす十の約束</a></li><li><a href="/p/ja/news-20260814-auto-mode-stateless-mcp/">尋ねない既定値 — 承認ボタンとセッションが同じ週に消えた</a></li><li><a href="/p/ja/tip-beginner/">初級 — コンテキストを節約する習慣9つ</a></li></ul>
 </nav>
 </body>
 </html>

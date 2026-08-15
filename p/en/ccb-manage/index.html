@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Managing Usage · Context · Sessions</title>
-<meta name="description" content="Manage token usage, context, and sessions to control quality and cost">
+<title>Operations — Usage, Sessions &amp; Wrap-up</title>
+<meta name="description" content="/usage, /context, compact, resuming sessions, /insight and handy skills — operating habits for the long run, and the course wrap-up">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/en/ccb-manage/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/ccb-manage/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/ccb-manage/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Managing Usage · Context · Sessions">
-<meta property="og:description" content="Manage token usage, context, and sessions to control quality and cost">
+<meta property="og:title" content="Operations — Usage, Sessions &amp; Wrap-up">
+<meta property="og:description" content="/usage, /context, compact, resuming sessions, /insight and handy skills — operating habits for the long run, and the course wrap-up">
 <meta property="og:url" content="https://dewytear.github.io/p/en/ccb-manage/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Managing Usage · Context · Sessions">
-<meta name="twitter:description" content="Manage token usage, context, and sessions to control quality and cost">
+<meta name="twitter:title" content="Operations — Usage, Sessions &amp; Wrap-up">
+<meta name="twitter:description" content="/usage, /context, compact, resuming sessions, /insight and handy skills — operating habits for the long run, and the course wrap-up">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "Managing Usage · Context · Sessions",
- "description": "Manage token usage, context, and sessions to control quality and cost",
+ "headline": "Operations — Usage, Sessions & Wrap-up",
+ "description": "/usage, /context, compact, resuming sessions, /insight and handy skills — operating habits for the long run, and the course wrap-up",
  "inLanguage": "en",
  "url": "https://dewytear.github.io/p/en/ccb-manage/",
  "mainEntityOfPage": "https://dewytear.github.io/#!ccb-manage",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-03T20:36:07+09:00",
- "dateModified": "2026-07-06T18:23:06+09:00"
+ "dateModified": "2026-08-15T14:35:47+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/ja/ccb-manage/" hreflang="ja">日本語</a>
 </p>
 <article>
-<h2>Managing Usage · Context · Sessions</h2>
+<h2>Operations — Usage, Sessions & Wrap-up</h2>
 <p>To use Claude Code well, you need to know how to manage <strong>usage (tokens)</strong>, <strong>context</strong>, and <strong>sessions (conversational state)</strong>. Tokens have become extremely important.</p>
 
 <h3>Usage — /usage</h3>
@@ -96,11 +96,44 @@
     <span class="nh">Watch out for caching</span>
     AI has caching, so when you continue a request you are billed only for the new portion. But caching has a <strong>time to live</strong>, so if you come back later and request again with <code>--resume</code>, everything accumulated is sent over again and you get no caching benefit. In that case, opening a <strong>new session</strong> may work out better.
 </div>
+
+<h3>Useful Features and Wrap-up</h3>
+<p>Finally, here are a few commands and skills for getting more out of Claude Code, plus where to go next.</p>
+
+<h4>Analyzing your own habits — /insight</h4>
+<p><code>/insight</code> analyzes how you normally use Claude Code and produces a report on how to use it more efficiently.</p>
+
+<h4>Useful skills shared in the course</h4>
+<ul>
+    <li><strong>worklog</strong> — organizes your recent work like a weekly report. For example, ask "summarize the work I did over the past week" and it analyzes the logs and neatly lays out which projects you worked on.</li>
+    <li><strong>manpower</strong> — analyzes how well you are using AI and visualizes it as an <strong>octagon (radar) chart</strong>. It shows where you fall short and your weekly growth trend. It is also useful for measuring employees' AI adoption (AX).</li>
+    <li><strong>GPT Image 2 / HWP</strong> and others — custom-built skills for image generation and Hangul document handling.</li>
+</ul>
+
+<h4>Documents in other formats</h4>
+<p>PDF, PPT, and Excel are covered by the <strong>document-skills</strong> plugin. <strong>HWP</strong>, which is not officially supported, can be used by registering a separately built skill. Other formats can also be handled by building a skill around a conversion library where one exists, though pure binary formats can be difficult.</p>
+
+<h4>Cowork</h4>
+<p><strong>Cowork</strong>, offered in the app, came out later than Claude Code and is still somewhat unstable and short on features, but <strong>1.0</strong> launched recently. If the terminal feels intimidating, starting with Cowork is one way to go.</p>
+
+<h4>Recap — what we did today</h4>
+<ol>
+    <li>Wrote guidelines in CLAUDE.md, then wrote a poem and saved it to a file (checking that the guidelines work)</li>
+    <li>Researched the Mythos model → file → generated a site, changed the theme from black to white</li>
+    <li>Extracted a design system from the white site → created the my-design skill</li>
+    <li>Organized 16 Hugging Face papers → built a paper showcase site with the skill</li>
+    <li>Installed document-skills → created a paper analysis agent → analyzed PDFs → linked detail pages</li>
+</ol>
+
+<div class="note">
+    <span class="nh">Next steps</span>
+    Review with the handout of frequently used commands and the skill archive file. The next session covers the <strong>Harness</strong> — keeping several of these agents around and having them collaborate with each other.
+</div>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-07-06</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Tutorial &middot; <span class="pr-k">Created</span> 2026-07-03 &middot; <span class="pr-k">Updated</span> 2026-08-15</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
-<ul><li><a href="/p/en/tip-beginner/">Beginner — 9 Habits That Save Context</a></li><li><a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking — Auto Mode and Stateless MCP</a></li><li><a href="/p/en/omc-hooks/">Hook · Memory</a></li></ul>
+<ul><li><a href="/p/en/tip-beginner/">Beginner — 9 Habits That Save Context</a></li><li><a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking — Auto Mode and Stateless MCP</a></li><li><a href="/p/en/omc-cost/">Cost · Performance</a></li><li><a href="/p/en/omc-hooks/">Hook · Memory</a></li></ul>
 </nav>
 </body>
 </html>

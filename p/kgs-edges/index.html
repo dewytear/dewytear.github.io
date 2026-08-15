@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-08-15T14:19:16+09:00"
+ "dateModified": "2026-08-15T14:35:47+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -85,7 +85,7 @@
 </div>
 
 <h3>실제 엣지 해부 — Welcome ↔ "Claude Code란 무엇인가"</h3>
-<p>실제 그래프의 엣지 하나를 뜯어 보면: <a href="/p/welcome/">시작하기</a>와 <a href="/p/ccb-what/">Claude Code란 무엇인가</a>는 <strong>'Claude Code'(가중치 2.63)와 '터미널'(3.44)</strong> 두 개념을 공유합니다. 점수는 두 가중치의 합 <strong>≈ 6.07</strong> — 같은 문서의 1순위는 개념 4개를 공유한 <a href="/p/tip-beginner/">Tip 초급 편</a>(≈ 11.72)이니, 공유 개념이 많고 희귀할수록 위로 올라가는 셈입니다. 문서 하단의 "연관 문서"에서 이 근거 개념이 그대로 칩으로 표시되므로, <strong>왜 이어졌는지</strong>를 언제나 확인할 수 있습니다.</p>
+<p>실제 그래프의 엣지 하나를 뜯어 보면: <a href="/p/welcome/">시작하기</a>와 <a href="/p/ccb-overview/">Tutorial 기초 편</a>은 <strong>'터미널'(가중치 3.99)·'Claude Code'(2.48)·'CLAUDE.md'(2.38)</strong> 세 개념을 공유합니다. 점수는 가중치의 합 <strong>≈ 8.85</strong> — 같은 문서의 1순위는 개념 4개를 공유한 <a href="/p/tip-beginner/">Tip 초급 편</a>(≈ 11.72)이니, 공유 개념이 많고 희귀할수록 위로 올라가는 셈입니다. 문서 하단의 "연관 문서"에서 이 근거 개념이 그대로 칩으로 표시되므로, <strong>왜 이어졌는지</strong>를 언제나 확인할 수 있습니다.</p>
 
 <h3>판정 규칙 — 세 갈래</h3>
 <div class="diagram">
@@ -112,8 +112,8 @@
 
 <ul>
     <li><strong>공유 2개 이상</strong> → 연결. 서로 다른 개념 두 개가 겹치는 것은 우연이기 어렵습니다.</li>
-    <li><strong>공유 1개 + 그 개념이 3편 이하에만 등장</strong> → 연결. 실례: <a href="/p/welcome/">시작하기</a> ↔ <a href="/p/omc-tools/">OMC 고급 도구</a>는 'CLI' 하나만 공유하지만, 'CLI'가 3편에만 나올 만큼 희귀해 인정됩니다. 반대로 '스킬' 하나만 공유한 쌍은 연결되지 않습니다 — 24편이 공유하는 개념 1개는 근거가 못 되기 때문입니다.</li>
-    <li><strong>그 외</strong> → 개념으로는 연결하지 않습니다. 대신 개념 연결이 2개가 안 되는 문서는 <strong>같은 System의 이웃</strong>(예: <a href="/p/ccb-claudemd/">CLAUDE.md 편</a> → 같은 Tutorial의 앞뒤 강의)으로 보완해, <strong>모든 문서가 최소 2~4개의 연결</strong>을 갖게 합니다. 현재 비율은 개념 연결 182개(77%) · 폴더 보완 54개(23%)입니다.</li>
+    <li><strong>공유 1개 + 그 개념이 3편 이하에만 등장</strong> → 연결. 실례: <a href="/p/welcome/">시작하기</a> ↔ <a href="/p/omc-tools/">OMC 고급 도구</a>는 'CLI' 하나만 공유하지만, 'CLI'가 3편에만 나올 만큼 희귀해 인정됩니다. 반대로 '스킬' 하나만 공유한 쌍은 연결되지 않습니다 — 17편이 공유하는 개념 1개는 근거가 못 되기 때문입니다.</li>
+    <li><strong>그 외</strong> → 개념으로는 연결하지 않습니다. 대신 개념 연결이 2개가 안 되는 문서는 <strong>같은 System의 이웃</strong>(예: <a href="/p/ccb-overview/">기초 편</a> → 같은 Tutorial의 앞뒤 챕터)으로 보완해, <strong>모든 문서가 최소 2~4개의 연결</strong>을 갖게 합니다. 현재 비율은 개념 연결 182개(77%) · 폴더 보완 54개(23%)입니다.</li>
 </ul>
 
 <h3>경계값의 파급 — 왜 함부로 개념을 못 늘리나</h3>

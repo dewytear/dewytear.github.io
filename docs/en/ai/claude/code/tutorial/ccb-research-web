@@ -1,4 +1,4 @@
-<h2>Hands-on: Web research &rarr; file &rarr; website</h2>
+<h2>Practice — Research, Design, Papers</h2>
 <div class="diagram">
 <svg viewBox="0 0 700 96" role="img" aria-label="Pipeline: web research (WebSearch, WebFetch) → save to a file → build a website → edit the design">
     <rect class="d-box" x="10" y="24" width="150" height="48" rx="10"/>
@@ -53,3 +53,81 @@ Rework it in the style of Apple's site, in white.</code></pre>
     <span class="nh">Watch your tokens</span>
     Big jobs like generating a website can burn through tokens (usage) quickly. You may hit your plan's limit partway through the exercises, so run heavy jobs only when you need them. (For managing usage, see "Usage, context, and session management" later on.)
 </div>
+
+<h3>Extracting a design system</h3>
+<p>When building a web service, developers usually receive a <strong>design system</strong> made by a designer and build screens on top of it. With Claude Code you can run this process <strong>in reverse</strong> — pull just the design elements out of a site that already exists and turn them into a design system.</p>
+
+<h4>Requesting the extraction</h4>
+<pre><code>Extract the design elements of this finished site
+and build a separate design system from them.</code></pre>
+
+<h4>What gets captured</h4>
+<p>It pulls only the design elements of the current site and defines them in a single document.</p>
+<ul>
+    <li>Color palette</li>
+    <li>Text (typography) styles</li>
+    <li>Components — button styles, layout styles</li>
+    <li>Animation effects</li>
+</ul>
+
+<h4>Why build one</h4>
+<p>Once you have a design system, you can <strong>keep stamping out future sites with the same design</strong>. It keeps the tone consistent when you develop an internal system or build a second or third site, and it is easy to hand over and share with colleagues.</p>
+
+<div class="note">
+    <span class="nh">Next step</span>
+    You can reuse a design system built this way as it is, but if you plan to "keep using it from now on," it is more convenient to turn it into a <strong>Skill</strong>. (Covered in the next document.)
+</div>
+
+<h3>Organizing web material — Hugging Face papers</h3>
+<p>Give it a single URL and Claude Code fetches that page's contents and organizes them for you. In this exercise we organize the <strong>Hugging Face Daily Papers</strong> (the list of papers that got the most upvotes that day).</p>
+
+<h4>How to ask</h4>
+<pre><code><span class="c"># Paste the Daily Papers URL from huggingface.co</span>
+https://huggingface.co/papers
+<span class="c"># then follow with</span>
+Organize today's papers.</code></pre>
+
+<h4>It doesn't stop at the list page</h4>
+<div class="diagram">
+<svg viewBox="0 0 700 96" role="img" aria-label="Pipeline: paper list → WebFetch each paper page → extract the abstract → group by category → save to a file">
+    <rect class="d-box" x="10" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="70" y="46" text-anchor="middle">① Paper list</text>
+    <text class="d-sub" x="70" y="63" text-anchor="middle">daily papers</text>
+
+    <rect class="d-box" x="148" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="208" y="46" text-anchor="middle">② Each page</text>
+    <text class="d-sub" x="208" y="63" text-anchor="middle">WebFetch</text>
+
+    <rect class="d-box" x="286" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="346" y="46" text-anchor="middle">③ Extract</text>
+    <text class="d-sub" x="346" y="63" text-anchor="middle">abstract</text>
+
+    <rect class="d-box" x="424" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="484" y="46" text-anchor="middle">④ Organize</text>
+    <text class="d-sub" x="484" y="63" text-anchor="middle">by category</text>
+
+    <rect class="d-box accent" x="562" y="24" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="622" y="46" text-anchor="middle">⑤ Save to file</text>
+    <text class="d-sub" x="622" y="63" text-anchor="middle">in one file</text>
+
+    <line class="d-edge" x1="130" y1="48" x2="146" y2="48"/><polygon class="d-arrow" points="140,43 148,48 140,53"/>
+    <line class="d-edge" x1="268" y1="48" x2="284" y2="48"/><polygon class="d-arrow" points="278,43 286,48 278,53"/>
+    <line class="d-edge" x1="406" y1="48" x2="422" y2="48"/><polygon class="d-arrow" points="416,43 424,48 416,53"/>
+    <line class="d-edge" x1="544" y1="48" x2="560" y2="48"/><polygon class="d-arrow" points="554,43 562,48 554,53"/>
+</svg>
+<div class="d-cap">It opens each paper's page from the list, collects the abstracts, and organizes them by category into one file.</div>
+</div>
+<p>The Daily Papers list page does not carry the details of each paper. So Claude Code</p>
+<ul>
+    <li><strong>visits each paper's individual page (WebFetch)</strong> from the list,</li>
+    <li>pulls the <strong>abstract</strong> from each page,</li>
+    <li>and <strong>organizes everything by category</strong> into a file.</li>
+</ul>
+<p>At the time of the exercise, a total of 16 papers were organized by category, each with its content, into a single file.</p>
+
+<div class="note">
+    <span class="nh">Putting it to use</span>
+    Instead of opening papers one by one, it is far faster to pull the relevant papers in wholesale, have the AI do a <strong>first-pass analysis</strong>, and skim the result. This organized file feeds into the "paper showcase site" and the "paper analysis agent" later on.
+</div>
+<p>The design system and paper digest you just built become the raw material for the next chapter, <a href="#!ccb-skills">Extending</a> — harden them into skills, attach plugins, and hand them to agents.</p>
+
