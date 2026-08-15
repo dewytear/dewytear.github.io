@@ -45,7 +45,7 @@
 
 <h3>11. 自分だけのスキルを作る</h3>
 <p>スキルは <code>.claude/skills/</code> フォルダに置く<strong>再利用プロンプトのファイル</strong>です。毎回コピペしていた長い指示を一度定義しておけば、説明文（description）に合う依頼が来たとき Claude が自分で取り出して使うし、スラッシュで直接呼ぶこともできます。何度も同じことを頼んでいる？ それがスキルを作る合図です。作り方も簡単 — <strong>「いまやったのをスキルにして」</strong>の一言で Claude が作ってくれます。こうした、予測できる結果を得るための装置を総称してハーネス（harness）と呼びますが、スキルはその代表選手です。</p>
-<p class="scn-sub">この wiki の<a href="#!skl-what">スキル講義</a>が原理からセキュリティまで12編で扱っています。公式ドキュメント: <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Skills</a></p>
+<p class="scn-sub">この wiki の<a href="#!skl-overview">スキル講義</a>が原理からセキュリティまで3章で扱っています。公式ドキュメント: <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Skills</a></p>
 
 <h3>12. サブエージェントには安いモデルを</h3>
 <p>検索してテキストを読んでくる仕事に最上位モデルはもったいない。任せるときに<strong>「サブエージェントは Haiku で回して」</strong>と一言添えるだけでOKです — カスタム定義なら <code>model: haiku</code> フィールドで固定もできます。収集は速くて安いモデルに、総合や設計判断は高いモデルに — この分業がトークンを大きく節約します。</p>

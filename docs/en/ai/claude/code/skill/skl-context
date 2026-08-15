@@ -1,4 +1,4 @@
-<h2>The Context Window and the Tool Problem</h2>
+<h2>How Skills Are Built and How They Work</h2>
 <p>To understand how skills work, you have to start with the <strong>context window</strong>.</p>
 
 <h3>The context window</h3>
@@ -22,3 +22,133 @@
     <span class="nh">The trunk analogy</span>
     Tools are like a car <strong>trunk</strong>. Its size is limited, so you cannot fit all of your camping gear in. There are two options — buy a bigger trunk, or cut the load down as much as you can. Coding agents took the latter route, solving the problem by <strong>cutting down to six tools and handing over an execution environment along with them</strong>, and <strong>skills</strong> emerged on top of that.
 </div>
+
+<h3>Progressive Loading (the Core Principle of Skills)</h3>
+<p>The most essential principle behind skills is <strong>progressive loading (progressive disclosure)</strong>. Rather than putting the whole skill into the context, <strong>only the metadata</strong> is loaded up front and the rest is pulled out when it is needed.</p>
+
+<h4>The library book cover analogy</h4>
+<p>Only the <strong>metadata (name + description, 3 to 4 lines, about 100 tokens per skill)</strong> of a registered skill goes into the context. It is like a library where the books are lined up on the shelves and you only skim the <strong>covers (title and short description)</strong>, pulling one out to read when you need it. The metadata is so small that even <strong>more than 100</strong> of them barely take up any context. (In contrast to JSON tools, whose full schema occupies the context up front so that the burden grows as their number rises — which is why Claude Code lazy-loads MCP tool schemas too.)</p>
+
+<h4>Three-level loading</h4>
+<div class="diagram">
+<svg viewBox="0 0 640 252" role="img" aria-label="Three-level progressive loading of a skill: metadata always, the instruction body when invoked, resources and scripts only when needed">
+    <rect class="d-box accent" x="20" y="12" width="300" height="60" rx="10"/>
+    <text class="d-label" x="170" y="38" text-anchor="middle">① Metadata</text>
+    <text class="d-sub" x="170" y="56" text-anchor="middle">name + description · about 100 tokens</text>
+
+    <rect class="d-box" x="20" y="96" width="300" height="60" rx="10"/>
+    <text class="d-label" x="170" y="122" text-anchor="middle">② Instruction body</text>
+    <text class="d-sub" x="170" y="140" text-anchor="middle">the SKILL.md body</text>
+
+    <rect class="d-box soft" x="20" y="180" width="300" height="60" rx="10"/>
+    <text class="d-label" x="170" y="206" text-anchor="middle">③ Resources · scripts</text>
+    <text class="d-sub" x="170" y="224" text-anchor="middle">bundled files · templates</text>
+
+    <line class="d-edge" x1="170" y1="72" x2="170" y2="94"/><polygon class="d-arrow" points="165,90 175,90 170,96"/>
+    <line class="d-edge" x1="170" y1="156" x2="170" y2="178"/><polygon class="d-arrow" points="165,174 175,174 170,180"/>
+
+    <line class="d-edge dash" x1="320" y1="42" x2="356" y2="42"/>
+    <text class="d-accent" x="364" y="46" text-anchor="start">always loaded</text>
+    <line class="d-edge dash" x1="320" y1="126" x2="356" y2="126"/>
+    <text class="d-accent" x="364" y="130" text-anchor="start">loaded when invoked</text>
+    <line class="d-edge dash" x1="320" y1="210" x2="356" y2="210"/>
+    <text class="d-accent" x="364" y="214" text-anchor="start">loaded only when needed</text>
+</svg>
+<div class="d-cap">The higher up, the more it is always loaded; the lower down, the more it is only when needed — the moment of loading gets later at each level.</div>
+</div>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Level</th><th>Content</th><th>When it loads</th></tr></thead>
+        <tbody>
+            <tr><td>1</td><td><strong>Metadata</strong> (the name and description in SKILL.md)</td><td><strong>Always</strong> loaded (about 100 tokens per skill)</td></tr>
+            <tr><td>2</td><td><strong>Instructions</strong> (the SKILL.md body, usage in markdown)</td><td>When that skill <strong>is invoked</strong></td></tr>
+            <tr><td>3</td><td><strong>Resources · scripts · templates</strong> (bundled files)</td><td><strong>Only when needed</strong> (scripts are only executed, never loaded)</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>Bundled files are not mandatory. If words (markdown) alone are enough you can do without files, and if you need an executable script or a template you include one. The more files there are, the more <strong>deterministic the result</strong> you get. For reference, the official guide recommends keeping the <code>SKILL.md</code> body <strong>under 5K tokens</strong> and splitting long content out into bundled files.</p>
+
+<div class="note">
+    <span class="nh">The manual analogy (flat-pack products · the Matrix helicopter)</span>
+    When you buy a flat-pack product online you skip the manual and assemble it from the photo of the finished item, and only <strong>the moment a screw is left out</strong> do you pull the manual out. A skill's instructions are likewise <strong>pulled out exactly when it fires</strong> and left alone the rest of the time. It feels like the scene in the film The Matrix where they <strong>load a manual in an instant</strong> in front of a helicopter and fly it.
+</div>
+
+<div class="note">
+    <span class="nh">A tip for checking</span>
+    Typing <code>/context</code> in Claude Code shows what percentage the system prompt, custom tools, skills, and so on each take up. You can confirm that even a large number of installed skills uses barely any tokens.
+</div>
+
+<h3>SKILL.md Structure and the Description</h3>
+<p>The center of a skill folder is the <code>SKILL.md</code> file, and alongside it sit bundled files such as <code>reference</code>, <code>examples</code>, and <code>scripts</code>.</p>
+
+<h4>Front matter (metadata)</h4>
+<div class="diagram">
+<svg viewBox="0 0 640 210" role="img" aria-label="Anatomy of SKILL.md: the front matter (name and description) is always loaded, the body (instructions) is loaded on call">
+    <rect class="d-box" x="110" y="12" width="320" height="182" rx="10"/>
+    <text class="d-label" x="270" y="35" text-anchor="middle">SKILL.md</text>
+
+    <rect class="d-box accent" x="130" y="46" width="280" height="56" rx="9"/>
+    <text class="d-label" x="270" y="72" text-anchor="middle">Front matter</text>
+    <text class="d-sub" x="270" y="90" text-anchor="middle">name · description</text>
+
+    <rect class="d-box soft" x="130" y="118" width="280" height="60" rx="9"/>
+    <text class="d-label" x="270" y="144" text-anchor="middle">Body (instructions)</text>
+    <text class="d-sub" x="270" y="162" text-anchor="middle">markdown · how to use</text>
+
+    <line class="d-edge dash" x1="430" y1="74" x2="470" y2="74"/>
+    <text class="d-accent" x="478" y="78" text-anchor="start">always loaded</text>
+    <line class="d-edge dash" x1="430" y1="148" x2="470" y2="148"/>
+    <text class="d-accent" x="478" y="152" text-anchor="start">loaded on call</text>
+</svg>
+<div class="d-cap">Within a single file the front matter is always loaded, while the body is loaded when the skill is invoked.</div>
+</div>
+<p>At the very top of <code>SKILL.md</code> there is YAML <strong>front matter</strong>. For a PDF skill, for example:</p>
+<pre><code><span class="c"># SKILL.md front matter (the part that is always loaded)</span>
+name: pdf
+description: Toolkit for extracting text/tables from PDFs, merging, splitting, and so on</code></pre>
+<p>On the first load only this <strong>front matter</strong> comes in, and the actual manual (the body) is loaded <strong>when the skill is invoked</strong>.</p>
+
+<h4>Writing the description matters</h4>
+<p>A skill can be <strong>invoked explicitly</strong> with <code>/skill-name</code>, and it can also <strong>fire automatically</strong> on the basis of its front matter when you say something like "extract the text from this PDF." That is why the <code>description</code> has to be written well.</p>
+<ul>
+    <li><strong>When it does not get invoked</strong> — for example, if it has a PDF editing capability but the description only says "used for reading," it may not be invoked when you ask for an edit.</li>
+    <li><strong>When it gets invoked unnecessarily</strong> — it suddenly fires on something that has nothing to do with PDFs.</li>
+</ul>
+<p>So <strong>test</strong> whether it gets invoked when it should and whether it fires when it should not, and when you build one yourself write the description <strong>with care</strong>.</p>
+
+<h4>Referencing files from the instructions</h4>
+<p>Inside the body (markdown) instructions you can write references to other files, such as <strong>"in this case, look at this file."</strong> Unlike the JSON tool specs we saw earlier, this amounts to writing something like "how to run the command" <strong>in natural language, as if you were telling a person</strong>.</p>
+
+<div class="note">
+    <span class="nh">Why read/execute alone is enough</span>
+    Coding agents come with <strong>file read, write, edit, and search</strong> tools built in, so they handle the file system freely. That is why the agent loads a file on its own even when the instructions only say "read this file." It is easier to grasp if you picture <strong>how</strong> a skill's content and the coding agent's tools <strong>interact as it reads</strong>.
+</div>
+
+<h3>A Tour of Example Skills</h3>
+<p>Now that the concepts are in place, let us look at real skill collections. When you are just getting started, opening up a few examples like these is recommended.</p>
+
+<h4>Anthropic's built-in skills</h4>
+<p>The built-in skills Anthropic made officially are published on GitHub. <strong>Copy a whole folder</strong> into Claude Code on your laptop and, on load, it reads only the <strong>YAML front matter</strong> of each <code>SKILL.md</code> first, loading the body when it is needed.</p>
+
+<h4>A science agent skill collection (about 140 of them)</h4>
+<p>There is also a collection that gathers skills for scientific research. It holds about <strong>140 science-related skills</strong>, enough for researchers in a field to say "the scripts we use a lot in our field are right here."</p>
+<ul>
+    <li>Bio-related skills such as <strong>Biopython</strong>, and a <strong>dataset download</strong> skill (down to where and how to get them).</li>
+    <li><strong>Scientific Writing</strong> — it covers paper formats by conference and the rules for figures and tables (minimum resolution, no JPG but PNG, and so on), producing clean papers and PDFs.</li>
+</ul>
+<p>Thanks to the metadata you can <strong>load several skills at once</strong> and do <strong>interdisciplinary research</strong>. For example: "process this bio dataset with machine learning" → load bio → load data → train → on through writing and submitting the paper. Quantum and deep-learning hybrid processing is also possible to a degree.</p>
+
+<h4>A Korea-focused skill collection</h4>
+<p>There are also skill collections that are "by Koreans, for Koreans." They handle, right inside Claude Code (and the app), the things that used to be a nuisance every time in daily life.</p>
+<ul>
+    <li>SRT and KTX ticket booking, checking vacancies at recreational forests, KakaoMap</li>
+    <li>Seoul subway arrival information, lost-and-found lookup, news and weather, Han River water levels</li>
+    <li>Korean statute search, property registry extracts, HWP document viewing, parcel tracking, restaurants, and more</li>
+</ul>
+
+<div class="note">
+    <span class="nh">The gap in between</span>
+    The wide gap between the very <strong>scientific</strong> skills and the very <strong>everyday</strong> ones is one you can readily fill with skills for your own work.
+</div>
+<p>With the principles in place, what remains is hands-on work — the <a href="#!skl-install">installing, securing, and creating</a> chapter installs and uses skills, covers the security caveats, and goes all the way to building your own.</p>
+
