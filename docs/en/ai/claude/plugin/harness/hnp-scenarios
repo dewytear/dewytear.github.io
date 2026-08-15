@@ -1,4 +1,4 @@
-<h2>Scenario Board</h2>
+<h2>Scenarios, Harness 100, Commands</h2>
 <p>We gathered, module by module, the <strong>situations in ERP client customization where a harness is worth attaching</strong>. Read each card in the order <strong>module · difficulty · situation · recommended team · expected effect</strong>. Pick a similar situation and try running it by changing only the <a href="#!hnp-first-run">intent sentence</a>.</p>
 
 <div class="note">
@@ -120,5 +120,153 @@
 
 <div class="note">
     <span class="nh">To find a similar setup quickly</span>
-    It is faster to find a similar setup in <strong>Harness100</strong>, which bundles cases like these into 100 in advance, and <strong>customize</strong> it → <a href="#!hnp-hundred">Harness100 · performance</a>. The commands used to run it are organized in <a href="#!hnp-commands">Commands · quick reference</a>.
+    It is faster to find a similar setup in <strong>Harness100</strong>, which bundles cases like these into 100 in advance, and <strong>customize</strong> it → Harness100 · performance. The commands used to run it are organized in Commands · quick reference.
+</div>
+
+<h3>Harness100 · Performance</h3>
+<p><strong>Harness100</strong> is a published collection that <strong>pre-builds harnesses for 100 frequently used cases</strong>. Instead of putting a team together from scratch every time, it is far faster to <strong>find a similar setup and customize it</strong>.</p>
+
+<h4>What cases are in it</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Area</th><th>Examples</th></tr></thead>
+        <tbody>
+            <tr><td>Content production</td><td>YouTube · podcasts · newsletters · online lectures</td></tr>
+            <tr><td>Software development</td><td>Feature development · refactoring · bug fixing · tests</td></tr>
+            <tr><td>Data analysis</td><td>Collection · cleaning · analysis · reports</td></tr>
+            <tr><td>Business strategy</td><td>Startup validation through pitching · <strong>government support program business plans</strong></td></tr>
+            <tr><td>Education · learning</td><td>Curricula · lecture plans · question setting</td></tr>
+            <tr><td>Legal · operations · specialist domains</td><td>Risk assessment · operational processes · domain-specific setups</td></tr>
+        </tbody>
+    </table>
+</div>
+<p>For example, the setup for a <strong>government support program business plan</strong> comes with agents such as <em>an announcement analysis specialist · a business-viability section writer · a budget planning helper</em> already in it.</p>
+
+<h4>How to adapt it to ERP customization</h4>
+<p>Pick the closest setup, then <strong>swap the roles over to the ERP customization flow</strong>.</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Original Harness100 role</th><th>→ swapped for ERP customization</th></tr></thead>
+        <tbody>
+            <tr><td>Research · analysis specialist</td><td>Standard source · impact analyst</td></tr>
+            <tr><td>Body writer</td><td>Customization designer · development agent</td></tr>
+            <tr><td>Inspection · fact-checking</td><td>Regression QA · numerical consistency verification</td></tr>
+        </tbody>
+    </table>
+</div>
+<p class="scn-sub">※ To run it, give your intent to <code>/harness</code> and then ask for the proposed team to be modified as in the table above.</p>
+
+<h4>Performance — how much better does it get</h4>
+<p><strong>15</strong> development tasks (basic · intermediate · advanced) were solved <strong>without a harness</strong> vs <strong>with a harness</strong>, and the final outputs were scored by an <strong>LLM judge</strong>. The result was an average of <strong>about 60% performance improvement</strong>, with a <strong>100% win rate</strong> when a harness was set up. In particular, <strong>the harder the task</strong>, the more the single-tool score dropped, whereas the harness <strong>kept its quality</strong>.</p>
+
+<div class="note">
+    <span class="nh">Where the numbers come from</span>
+    The "60% improvement · 100% win rate" above is <strong>the lecturer's own measurement</strong>. For reference, Anthropic has also announced that a multi-agent setup showed a <strong>90.2% performance improvement in internal evaluation</strong> compared with a single agent, so the trend itself — "splitting the roles is advantageous on hard tasks" — is consistent.
+</div>
+
+<div class="diagram">
+<svg viewBox="0 0 620 214" role="img" aria-label="Conceptual chart: as difficulty rises, a single tool drops in quality while the harness holds up">
+    <!-- baseline -->
+    <line class="d-edge" x1="40" y1="180" x2="600" y2="180"/>
+    <!-- legend -->
+    <rect class="d-box soft" x="360" y="14" width="16" height="12" rx="2"/>
+    <text class="d-sub" x="382" y="24">No harness</text>
+    <rect class="d-box accent" x="470" y="14" width="16" height="12" rx="2"/>
+    <text class="d-sub" x="492" y="24">With harness</text>
+
+    <!-- group 기초 (cx=150) -->
+    <rect class="d-box soft" x="108" y="61" width="38" height="119" rx="4"/>
+    <rect class="d-box accent" x="154" y="51" width="38" height="129" rx="4"/>
+    <text class="d-sub" x="150" y="196" text-anchor="middle">Basic</text>
+
+    <!-- group 중급 (cx=320) -->
+    <rect class="d-box soft" x="278" y="96" width="38" height="84" rx="4"/>
+    <rect class="d-box accent" x="324" y="57" width="38" height="123" rx="4"/>
+    <text class="d-sub" x="320" y="196" text-anchor="middle">Intermediate</text>
+
+    <!-- group 고급 (cx=490) -->
+    <rect class="d-box soft" x="448" y="131" width="38" height="49" rx="4"/>
+    <rect class="d-box accent" x="494" y="61" width="38" height="119" rx="4"/>
+    <text class="d-sub" x="490" y="196" text-anchor="middle">Advanced</text>
+
+    <!-- y hint -->
+    <text class="d-sub" x="40" y="46" text-anchor="start">Quality score (concept)</text>
+</svg>
+<div class="d-cap">A conceptual chart — a <strong>trend</strong>, not actual values. The harder the task, the wider the gap.</div>
+</div>
+
+<div class="note warn">
+    <span class="nh">Caution</span>
+    The graph above is <strong>a conceptual chart showing a trend</strong>; for exact numbers, check the published benchmark materials. Because in ERP customization the domain's nature makes <strong>standard impact and regression</strong> decide the quality, <strong>verification against your own field's standards</strong> matters more than benchmark numbers.
+</div>
+
+<div class="note">
+    <span class="nh">Where to find it</span>
+    You can find the case collection with the search term <strong>"하네스 100"</strong> (the Korean version). Along with the marketplace address, refer to the cautions in the <a href="#!hnp-intro">installation</a> document.
+</div>
+
+<h3>Commands · Quick Reference</h3>
+<p>The commands, controls, and settings you look up most often while using the harness, gathered in one place.</p>
+
+<h4>Core commands</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+            <tr><td><code>/plugin marketplace add &lt;repo&gt;</code></td><td>Registers the harness marketplace (e.g. <code>lev-factory/harness</code>)</td></tr>
+            <tr><td><code>/plugin install harness</code></td><td>Installs the Harness plugin</td></tr>
+            <tr><td><code>/reload</code></td><td>Applies the installed plugin to the current session</td></tr>
+            <tr><td><code>/harness &lt;intent&gt;</code></td><td>Gives an intent and runs the harness (starts forming the team)</td></tr>
+            <tr><td><code>Proceed</code></td><td>Approves execution after reviewing the proposed team</td></tr>
+            <tr><td><code>/agents</code></td><td>Checks the list of created agents</td></tr>
+            <tr><td><code>/exit</code></td><td>Ends the session (to re-enter when agents are not showing)</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h4>Controls · shortcuts</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Control</th><th>What it does</th></tr></thead>
+        <tbody>
+            <tr><td><span class="kbd">Tab</span></td><td>Autocompletes after typing <code>/harness</code></td></tr>
+            <tr><td><span class="kbd">Shift + arrow keys</span></td><td>Peeks into the work of each running agent</td></tr>
+            <tr><td><span class="kbd">Shift + Tab</span></td><td>Switches mode (auto / accept / plan)</td></tr>
+            <tr><td>A new terminal window</td><td>Runs another harness at the same time (parallel work)</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h4>Settings · where the deliverables live</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Item</th><th>Content</th></tr></thead>
+        <tbody>
+            <tr><td>Turning on agent teams</td><td><code>"CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"</code> in <code>env</code> of <code>~/.claude/settings.json</code></td></tr>
+            <tr><td>Deliverables folder</td><td><code>_workspace</code> — analysis · design · implementation · QA reports · evidence sources</td></tr>
+            <tr><td>Agent · skill definitions</td><td>Under <code>.claude</code> (shareable via Git)</td></tr>
+            <tr><td>Configuration change history</td><td><code>CLAUDE.md</code></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h4>Cheat sheet by situation</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Situation</th><th>Do this</th></tr></thead>
+        <tbody>
+            <tr><td>First install</td><td><code>/plugin marketplace add …</code> → <code>/plugin install harness</code> → <code>/reload</code> → check <code>/harness</code></td></tr>
+            <tr><td>First run</td><td><code>/harness</code> + the intent <strong>"I want to ~"</strong> → review the team → <code>Proceed</code></td></tr>
+            <tr><td>Watching progress</td><td>Check the agents with <span class="kbd">Shift + arrow keys</span></td></tr>
+            <tr><td>Strengthening verification</td><td><code>/harness Modify the QA agent to cross-verify with Codex CLI</code></td></tr>
+            <tr><td>Modifying the team</td><td><code>/harness Modify &lt;agent&gt; to also verify/handle &lt;condition&gt;</code></td></tr>
+            <tr><td>Agents not showing</td><td>Re-enter after <code>/exit</code> → check <code>/agents</code></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="note">
+    <span class="nh">Intent sentence template (copy and use)</span>
+    <code>/harness I want to proceed with a client customization in ERP &lt;module&gt; that does &lt;what&gt;. Please include impact analysis of the standard source and regression testing as well.</code>
+    <br>For the various scenarios, you only need to swap <strong>&lt;module&gt; and &lt;what&gt;</strong> in this template.
 </div>

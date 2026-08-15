@@ -1,4 +1,4 @@
-<h2>はじめてのハーネス実行 — 営業・受注のカスタマイズ</h2>
+<h2>最初の実行と動作構造</h2>
 <p>実際に一度回してみます。例は <strong>ERP の営業・受注モジュール</strong>に顧客からの要望（CR）を反映する場面です。核心はひとつだけ — <strong>「命令」ではなく「意図」を渡す</strong>ということです。</p>
 
 <div class="note">
@@ -98,5 +98,110 @@
 
 <div class="note">
     <span class="nh">覚えておいてください — これは下書きです</span>
-    ハーネスの結果は<strong>完成品ではなく、よく準備された下書き</strong>です。とくに ERP のカスタムは<strong>標準への影響範囲と回帰の結果を人が必ず検討した</strong>うえで反映してください。検証をより固くする方法は<a href="#!hnp-verify">検証・品質</a>で扱います。中で何が起きていたのかは<a href="#!hnp-architecture">動作の構造</a>で確認してください。
+    ハーネスの結果は<strong>完成品ではなく、よく準備された下書き</strong>です。とくに ERP のカスタムは<strong>標準への影響範囲と回帰の結果を人が必ず検討した</strong>うえで反映してください。検証をより固くする方法は<a href="#!hnp-agents-skills">検証・品質</a>で扱います。中で何が起きていたのかは動作の構造で確認してください。
 </div>
+
+<h3>動作の構造と 6 ステップ</h3>
+<p><code>進めて</code> を押したあと、ハーネスの<strong>内部で</strong>何が起きているのかをのぞいてみます。大きくは<strong>6 ステップでチームを組み</strong>、そのあと<strong>運用のループ</strong>を回します。</p>
+
+<h4>プラグインの 6 ステップ — チームを作る過程</h4>
+<div class="diagram">
+<svg viewBox="0 0 660 188" role="img" aria-label="ハーネスの 6 ステップ: 依頼の分析 → エージェントチームの設計 → エージェント生成 → スキル生成 → オーケストレーター・ワークフロー → 構成の検証">
+    <rect class="d-box" x="8" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="42" text-anchor="middle">① 依頼の分析</text>
+    <text class="d-sub" x="108" y="59" text-anchor="middle">何を望むのかを把握</text>
+
+    <rect class="d-box" x="223" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="323" y="42" text-anchor="middle">② チーム設計</text>
+    <text class="d-sub" x="323" y="59" text-anchor="middle">必要な役割の定義</text>
+
+    <rect class="d-box" x="438" y="20" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="42" text-anchor="middle">③ エージェント生成</text>
+    <text class="d-sub" x="538" y="59" text-anchor="middle">自然言語の職務記述書</text>
+
+    <rect class="d-box" x="8" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="108" y="134" text-anchor="middle">④ スキル生成</text>
+    <text class="d-sub" x="108" y="151" text-anchor="middle">反復手順 · チェック表</text>
+
+    <rect class="d-box" x="223" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label sm" x="323" y="134" text-anchor="middle">⑤ オーケストレーター</text>
+    <text class="d-sub" x="323" y="151" text-anchor="middle">実行順序の策定</text>
+
+    <rect class="d-box accent" x="438" y="112" width="200" height="52" rx="10"/>
+    <text class="d-label" x="538" y="134" text-anchor="middle">⑥ 構成の検証</text>
+    <text class="d-sub" x="538" y="151" text-anchor="middle">チームが正しく組めたか</text>
+
+    <!-- row1 arrows -->
+    <line class="d-edge" x1="208" y1="46" x2="221" y2="46"/><polygon class="d-arrow" points="215,41 223,46 215,51"/>
+    <line class="d-edge" x1="423" y1="46" x2="436" y2="46"/><polygon class="d-arrow" points="430,41 438,46 430,51"/>
+    <!-- snake connector ③ -> ④ -->
+    <path class="d-edge" d="M538 72 V92 H108 V110"/><polygon class="d-arrow" points="103,106 113,106 108,112"/>
+    <!-- row2 arrows -->
+    <line class="d-edge" x1="208" y1="138" x2="221" y2="138"/><polygon class="d-arrow" points="215,133 223,138 215,143"/>
+    <line class="d-edge" x1="423" y1="138" x2="436" y2="138"/><polygon class="d-arrow" points="430,133 438,138 430,143"/>
+</svg>
+<div class="d-cap">ここまでが「チーム作り」。⑥ の検証を通れば、実際の作業（運用のループ）が始まります。</div>
+</div>
+
+<h4>運用のループ — チームの働き方</h4>
+<p>チームができると、オーケストレーターが下のループを回します。核心は<strong>「分けて並列にやり、テストで検証し、間違っていればやり直す」</strong>です。</p>
+<ol>
+    <li><strong>分解</strong> — 目標を作業の単位に切り分けます。<em>例: 影響範囲の分析・保留ロジック・通知・回帰テスト</em></li>
+    <li><strong>分担 &amp; 並列実行</strong> — 各エージェントが同時に担当の作業を進めます。</li>
+    <li><strong>検証</strong> — QA が結果を突き合わせて確認（標準機能の回帰、数値の整合性）。</li>
+    <li><strong>フィードバックのループ</strong> — 問題があれば担当のエージェントへ戻してやり直し。通るまでくり返します。</li>
+</ol>
+
+<h4>エージェントチーム vs 隔離サブエージェント</h4>
+<p>Claude Code の標準の<strong>サブエージェント</strong>は互いに<strong>隔離</strong>されていて会話できません。<strong>エージェントチーム</strong>は互いに<strong>通信</strong>します — たとえば開発のエージェントが「標準ソースの情報が足りない」と気づけば、<strong>分析のエージェントを呼び起こして</strong>追加の調査をさせられます。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 172" role="img" aria-label="隔離サブエージェント（互いに話せない）と、エージェントチーム（互いに通信する）の比較">
+    <!-- divider -->
+    <line class="d-edge dash" x1="350" y1="6" x2="350" y2="150"/>
+
+    <!-- LEFT: isolated -->
+    <rect class="d-box" x="110" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="170" y="31" text-anchor="middle">指揮エージェント</text>
+    <rect class="d-box soft" x="40" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="95" y="104" text-anchor="middle">エージェント A</text>
+    <rect class="d-box soft" x="190" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="245" y="104" text-anchor="middle">エージェント B</text>
+    <line class="d-edge" x1="140" y1="44" x2="100" y2="78"/><polygon class="d-arrow" points="96,72 104,80 90,80"/>
+    <line class="d-edge" x1="200" y1="44" x2="240" y2="78"/><polygon class="d-arrow" points="244,72 250,80 236,80"/>
+    <text class="d-sub" x="170" y="105" text-anchor="middle">✕</text>
+    <text class="d-sub" x="170" y="140" text-anchor="middle">互いに話せない</text>
+    <text class="d-label sm" x="170" y="162" text-anchor="middle">隔離サブエージェント</text>
+
+    <!-- RIGHT: team -->
+    <rect class="d-box accent" x="470" y="10" width="120" height="34" rx="8"/>
+    <text class="d-label sm" x="530" y="31" text-anchor="middle">指揮エージェント</text>
+    <rect class="d-box" x="400" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="455" y="104" text-anchor="middle">エージェント C</text>
+    <rect class="d-box" x="550" y="80" width="110" height="40" rx="8"/>
+    <text class="d-label sm" x="605" y="104" text-anchor="middle">エージェント D</text>
+    <line class="d-edge" x1="500" y1="44" x2="460" y2="78"/><polygon class="d-arrow" points="456,72 464,80 450,80"/>
+    <line class="d-edge" x1="560" y1="44" x2="600" y2="78"/><polygon class="d-arrow" points="604,72 610,80 596,80"/>
+    <line class="d-edge accent" x1="512" y1="100" x2="548" y2="100"/>
+    <polygon class="d-arrow accent" points="542,95 550,100 542,105"/>
+    <polygon class="d-arrow accent" points="518,95 510,100 518,105"/>
+    <text class="d-accent" x="530" y="140" text-anchor="middle" font-size="11">↔ 互いに通信</text>
+    <text class="d-label sm" x="530" y="162" text-anchor="middle">エージェントチーム</text>
+</svg>
+</div>
+
+<div class="note warn">
+    <span class="nh">実験機能 — オンにする方法</span>
+    エージェントチームは<strong>実験機能</strong>です。<code>~/.claude/settings.json</code> の環境変数でオンにします:
+    <pre><code>"env": {
+  "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+}</code></pre>
+    動的ロードに失敗すると隔離サブエージェントとして立ち上がるバグがあるので、エージェントが見えないときは <code>/exit</code> してから入り直し、<code>/agents</code> で確認してください。
+</div>
+
+<div class="note">
+    <span class="nh">ファイルはどこにできるのか</span>
+    生成されたエージェント・スキルの定義はプロジェクトの <code>.claude</code> の下に残るので、<strong>Git でチームと共有</strong>できます。ただし<strong>プラグイン自体はマシンごとに個別インストール</strong>が必要です。構成の変更履歴は <code>CLAUDE.md</code> に記録されます。チーム設計そのものをさらに深く扱う<a href="#!hnp-agents-skills">エージェント・スキルの設計</a>へ続きます。
+</div>
+<p>動くところを見たら、今度は手を入れる番です — <a href="#!hnp-agents-skills">設計と検証</a>の章で、エージェントとスキルを設計し、_workspace で品質を守ります。</p>
+
