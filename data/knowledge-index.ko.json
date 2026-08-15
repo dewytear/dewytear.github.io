@@ -1,10 +1,10 @@
 {
  "schemaVersion": 2,
  "note": "AI가 각 문서를 읽어 만든 구조적 지식 인덱스(요약·핵심개념·연관문서). related는 희소성 가중 개념 중복(via:concept) + 같은 폴더 보완(via:folder)으로 계산.",
- "docCount": 83,
+ "docCount": 78,
  "stats": {
-  "docCount": 83,
-  "conceptCount": 344,
+  "docCount": 78,
+  "conceptCount": 340,
   "clusters": [
    {
     "label": "지식 체계",
@@ -69,11 +69,11 @@
    {
     "label": "Second Brain",
     "section": "AI · Claude · Code · Second Brain",
-    "count": 9,
+    "count": 4,
     "hub": {
-     "name": "sb-levels",
-     "title": "5단계 한눈에 보기",
-     "refs": 5
+     "name": "sb-level3",
+     "title": "레벨 3~5 — 의미·관계·브레인 OS",
+     "refs": 6
     }
    },
    {
@@ -143,7 +143,7 @@
     "hub": {
      "name": "gdb-graphrag",
      "title": "그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다",
-     "refs": 7
+     "refs": 5
     }
    },
    {
@@ -214,11 +214,6 @@
     "refs": 8
    },
    {
-    "name": "gdb-graphrag",
-    "title": "그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다",
-    "refs": 7
-   },
-   {
     "name": "news-20260724-claude-opus-5",
     "title": "Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다",
     "refs": 7
@@ -244,6 +239,11 @@
     "refs": 6
    },
    {
+    "name": "sb-level3",
+    "title": "레벨 3~5 — 의미·관계·브레인 OS",
+    "refs": 6
+   },
+   {
     "name": "skl-overview",
     "title": "스킬이란 — 배경과 특장점",
     "refs": 6
@@ -257,10 +257,6 @@
    {
     "c": "지식그래프",
     "n": 11
-   },
-   {
-    "c": "세컨드브레인",
-    "n": 10
    },
    {
     "c": "CLAUDE.md",
@@ -312,6 +308,10 @@
    },
    {
     "c": "온톨로지",
+    "n": 6
+   },
+   {
+    "c": "플러그인",
     "n": 6
    }
   ],
@@ -418,8 +418,8 @@
   ],
   "galaxies": {
    "AI": {
-    "docCount": 72,
-    "conceptCount": 305,
+    "docCount": 67,
+    "conceptCount": 301,
     "clusters": [
      {
       "label": "지식 체계",
@@ -484,11 +484,11 @@
      {
       "label": "Second Brain",
       "section": "AI · Claude · Code · Second Brain",
-      "count": 9,
+      "count": 4,
       "hub": {
-       "name": "sb-levels",
-       "title": "5단계 한눈에 보기",
-       "refs": 5
+       "name": "sb-level3",
+       "title": "레벨 3~5 — 의미·관계·브레인 OS",
+       "refs": 6
       }
      },
      {
@@ -558,7 +558,7 @@
       "hub": {
        "name": "gdb-graphrag",
        "title": "그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다",
-       "refs": 7
+       "refs": 5
       }
      },
      {
@@ -609,11 +609,6 @@
       "refs": 8
      },
      {
-      "name": "gdb-graphrag",
-      "title": "그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다",
-      "refs": 7
-     },
-     {
       "name": "news-20260724-claude-opus-5",
       "title": "Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다",
       "refs": 7
@@ -637,6 +632,11 @@
       "name": "hns-overview",
       "title": "하네스란 — 개요·정의·구성",
       "refs": 6
+     },
+     {
+      "name": "sb-level3",
+      "title": "레벨 3~5 — 의미·관계·브레인 OS",
+      "refs": 6
      }
     ],
     "topConcepts": [
@@ -647,10 +647,6 @@
      {
       "c": "지식그래프",
       "n": 11
-     },
-     {
-      "c": "세컨드브레인",
-      "n": 10
      },
      {
       "c": "CLAUDE.md",
@@ -702,6 +698,10 @@
      },
      {
       "c": "RAG",
+      "n": 5
+     },
+     {
+      "c": "마켓플레이스",
       "n": 5
      }
     ],
@@ -1862,59 +1862,15 @@
   },
   {
    "name": "sb-intro",
-   "title": "세컨드 브레인이란 무엇인가",
-   "summary": "세컨드 브레인의 정의와 데이터 해자, 5단계 큰 그림을 소개한다.",
+   "title": "세컨드 브레인이란 — 5단계 한눈에",
+   "summary": "세컨드 브레인이 왜 데이터 해자인지, 그리고 정확 검색부터 자율 브레인 OS까지 5단계 지형을 한눈에",
    "concepts": [
     "세컨드브레인",
     "데이터해자",
     "다시찾기",
     "역설계",
     "5단계",
-    "마크다운"
-   ],
-   "relations": [
-    {
-     "target": "sb-levels",
-     "type": "prerequisite",
-     "evidenceRef": "세컨드 브레인이란 무엇인가 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 5단계 한눈에 보기로 이어진다",
-     "source": "human"
-    }
-   ],
-   "section": "AI · Claude · Code · Second Brain",
-   "related": [
-    {
-     "name": "sb-levels",
-     "title": "5단계 한눈에 보기",
-     "shared": [
-      "5단계",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-level1",
-     "title": "레벨 1 · 정확히 찾기 (라우터로서의 CLAUDE.md)",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "sb-level2",
-     "title": "레벨 2 · 주제로 묶기 (LLM 위키 + 메모리)",
-     "shared": [],
-     "via": "folder"
-    }
-   ],
-   "citedBy": [
-    "sb-choose"
-   ]
-  },
-  {
-   "name": "sb-levels",
-   "title": "5단계 한눈에 보기",
-   "summary": "검색·회상 능력에 따른 세컨드 브레인 5단계를 개괄한다.",
-   "concepts": [
-    "세컨드브레인",
-    "5단계",
+    "마크다운",
     "정확검색",
     "시맨틱검색",
     "지식그래프",
@@ -1924,15 +1880,25 @@
     {
      "target": "sb-level1",
      "type": "prerequisite",
-     "evidenceRef": "5단계 한눈에 보기 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 레벨 1 · 정확히 찾기 (라우터로서의 CLAUDE.md)로 이어진다",
+     "evidenceRef": "개념과 5단계 지형을 전제로 다음 편이 레벨 1·2 실전으로 들어간다 — 본문 말미가 지목",
      "source": "human"
     }
    ],
    "section": "AI · Claude · Code · Second Brain",
    "related": [
     {
-     "name": "sb-choose",
-     "title": "내 레벨 찾기 · 팀 세컨드 브레인",
+     "name": "sb-level3",
+     "title": "레벨 3~5 — 의미·관계·브레인 OS",
+     "shared": [
+      "시맨틱검색",
+      "세컨드브레인",
+      "지식그래프"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "sb-context-connections",
+     "title": "적용 — 컨텍스트 vs 커넥션, 내 레벨 찾기",
      "shared": [
       "통증기반선택",
       "세컨드브레인"
@@ -1940,28 +1906,10 @@
      "via": "concept"
     },
     {
-     "name": "sb-intro",
-     "title": "세컨드 브레인이란 무엇인가",
-     "shared": [
-      "5단계",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
      "name": "sb-level1",
-     "title": "레벨 1 · 정확히 찾기 (라우터로서의 CLAUDE.md)",
+     "title": "레벨 1·2 — 정확히 찾고 주제로 묶기",
      "shared": [
       "정확검색",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-level3",
-     "title": "레벨 3 · 의미로 찾기 (시맨틱 검색·벡터DB)",
-     "shared": [
-      "시맨틱검색",
       "세컨드브레인"
      ],
      "via": "concept"
@@ -1969,65 +1917,20 @@
    ],
    "citedBy": [
     "wr-knowledge-vault",
-    "sb-intro"
+    "sb-context-connections"
    ]
   },
   {
    "name": "sb-level1",
-   "title": "레벨 1 · 정확히 찾기 (라우터로서의 CLAUDE.md)",
-   "summary": "CLAUDE.md를 라우터로 쓰는 레벨1 정확 검색을 설명한다.",
+   "title": "레벨 1·2 — 정확히 찾고 주제로 묶기",
+   "summary": "라우터로서의 CLAUDE.md와 폴더 구조(레벨 1), LLM 위키와 메모리로 주제를 묶는 인덱스(레벨 2) — 파일과 폴더로 되는 세계",
    "concepts": [
     "세컨드브레인",
     "레벨1",
     "정확검색",
     "CLAUDE.md",
     "라우팅",
-    "폴더구조"
-   ],
-   "relations": [
-    {
-     "target": "sb-level2",
-     "type": "prerequisite",
-     "evidenceRef": "레벨 1 · 정확히 찾기 (라우터로서의 CLAUDE.md) 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 레벨 2 · 주제로 묶기 (LLM 위키 + 메모리)로 이어진다",
-     "source": "human"
-    }
-   ],
-   "section": "AI · Claude · Code · Second Brain",
-   "related": [
-    {
-     "name": "sb-levels",
-     "title": "5단계 한눈에 보기",
-     "shared": [
-      "정확검색",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-intro",
-     "title": "세컨드 브레인이란 무엇인가",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "sb-level2",
-     "title": "레벨 2 · 주제로 묶기 (LLM 위키 + 메모리)",
-     "shared": [],
-     "via": "folder"
-    }
-   ],
-   "citedBy": [
-    "sb-intro",
-    "sb-levels",
-    "sb-choose"
-   ]
-  },
-  {
-   "name": "sb-level2",
-   "title": "레벨 2 · 주제로 묶기 (LLM 위키 + 메모리)",
-   "summary": "LLM 위키와 메모리로 주제를 묶는 레벨2를 설명한다.",
-   "concepts": [
-    "세컨드브레인",
+    "폴더구조",
     "레벨2",
     "LLM위키",
     "메모리",
@@ -2038,12 +1941,21 @@
     {
      "target": "sb-level3",
      "type": "prerequisite",
-     "evidenceRef": "레벨 2 · 주제로 묶기 (LLM 위키 + 메모리) 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 레벨 3 · 의미로 찾기 (시맨틱 검색·벡터DB)로 이어진다",
+     "evidenceRef": "파일·폴더 기반 레벨을 전제로 다음 편이 의미·관계·자동화 레벨로 넘어간다 — 본문 말미가 지목",
      "source": "human"
     }
    ],
    "section": "AI · Claude · Code · Second Brain",
    "related": [
+    {
+     "name": "sb-intro",
+     "title": "세컨드 브레인이란 — 5단계 한눈에",
+     "shared": [
+      "정확검색",
+      "세컨드브레인"
+     ],
+     "via": "concept"
+    },
     {
      "name": "news-20260710-llm-wiki-knowledge-context",
      "title": "LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식",
@@ -2074,28 +1986,34 @@
    "citedBy": [
     "kgs-edges",
     "sb-intro",
-    "sb-level1",
-    "sb-choose",
+    "sb-context-connections",
     "news-20260710-llm-wiki-knowledge-context"
    ]
   },
   {
    "name": "sb-level3",
-   "title": "레벨 3 · 의미로 찾기 (시맨틱 검색·벡터DB)",
-   "summary": "임베딩·청킹 기반 시맨틱 검색과 한계를 설명한다.",
+   "title": "레벨 3~5 — 의미·관계·브레인 OS",
+   "summary": "시맨틱 검색·벡터 DB(레벨 3), 지식 그래프(레벨 4), 항상 켜진 자율 브레인 OS(레벨 5)까지 — 도구의 결이 달라지는 상위 3층",
    "concepts": [
     "세컨드브레인",
     "레벨3",
     "시맨틱검색",
     "벡터검색",
     "임베딩",
-    "청킹"
+    "청킹",
+    "레벨4",
+    "지식그래프",
+    "엔티티관계",
+    "RAG",
+    "레벨5",
+    "자율브레인OS",
+    "자동화"
    ],
    "relations": [
     {
-     "target": "sb-level4",
+     "target": "sb-context-connections",
      "type": "prerequisite",
-     "evidenceRef": "레벨 3 · 의미로 찾기 (시맨틱 검색·벡터DB) 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 레벨 4 · 관계로 잇기 (지식 그래프)로 이어진다",
+     "evidenceRef": "다섯 레벨을 전제로 마지막 편이 적용(무엇을 넣을지·내 레벨 고르기)으로 마무리한다 — 본문 말미가 지목",
      "source": "human"
     }
    ],
@@ -2106,7 +2024,18 @@
      "title": "그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다",
      "shared": [
       "청킹",
-      "벡터검색"
+      "벡터검색",
+      "RAG"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "sb-intro",
+     "title": "세컨드 브레인이란 — 5단계 한눈에",
+     "shared": [
+      "시맨틱검색",
+      "세컨드브레인",
+      "지식그래프"
      ],
      "via": "concept"
     },
@@ -2120,63 +2049,6 @@
      "via": "concept"
     },
     {
-     "name": "sb-levels",
-     "title": "5단계 한눈에 보기",
-     "shared": [
-      "시맨틱검색",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    }
-   ],
-   "citedBy": [
-    "sb-intro",
-    "sb-level2",
-    "sb-level4",
-    "sb-choose"
-   ]
-  },
-  {
-   "name": "sb-level4",
-   "title": "레벨 4 · 관계로 잇기 (지식 그래프)",
-   "summary": "엔티티와 관계로 잇는 지식 그래프 레벨4를 설명한다.",
-   "concepts": [
-    "세컨드브레인",
-    "레벨4",
-    "지식그래프",
-    "엔티티관계",
-    "RAG",
-    "프라이버시"
-   ],
-   "relations": [
-    {
-     "target": "sb-level5",
-     "type": "prerequisite",
-     "evidenceRef": "레벨 4 · 관계로 잇기 (지식 그래프) 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 레벨 5 · 항상 켜진 브레인 OS로 이어진다",
-     "source": "human"
-    }
-   ],
-   "section": "AI · Claude · Code · Second Brain",
-   "related": [
-    {
-     "name": "news-20260710-oracle-ontology-property-graph",
-     "title": "오라클 온톨로지와 프로퍼티 그래프 — 테이블을 지식의 지도로",
-     "shared": [
-      "엔티티관계",
-      "지식그래프"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "news-20260711-neo4j-rdf-vs-property-graph",
-     "title": "RDF냐 프로퍼티 그래프냐 — 지식 그래프를 위한 두 모델 (Neo4j)",
-     "shared": [
-      "엔티티관계",
-      "지식그래프"
-     ],
-     "via": "concept"
-    },
-    {
      "name": "wr-knowledge-vault",
      "title": "다 기록하는 사람, 발행하는 위키 — 지식 저장소에 대한 고찰",
      "shared": [
@@ -2184,98 +2056,45 @@
       "세컨드브레인"
      ],
      "via": "concept"
-    },
-    {
-     "name": "gdb-graphrag",
-     "title": "그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다",
-     "shared": [
-      "RAG",
-      "지식그래프"
-     ],
-     "via": "concept"
     }
    ],
    "citedBy": [
     "kgs-edges",
+    "wr-knowledge-vault",
     "sb-intro",
-    "sb-level2",
-    "sb-level3",
-    "sb-choose",
+    "sb-level1",
+    "sb-context-connections",
     "news-20260710-oracle-ontology-property-graph",
     "news-20260711-neo4j-rdf-vs-property-graph"
    ]
   },
   {
-   "name": "sb-level5",
-   "title": "레벨 5 · 항상 켜진 브레인 OS",
-   "summary": "cron으로 상시 자동 갱신되는 자율 브레인 OS를 설명한다.",
-   "concepts": [
-    "세컨드브레인",
-    "레벨5",
-    "자율브레인OS",
-    "cron자동화",
-    "GBrain",
-    "과잉컨텍스트",
-    "자동화"
-   ],
-   "relations": [
-    {
-     "target": "sb-context-connections",
-     "type": "prerequisite",
-     "evidenceRef": "레벨 5 · 항상 켜진 브레인 OS 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 무엇을 넣고 무엇을 둘까 (컨텍스트 vs 커넥션)로 이어진다",
-     "source": "human"
-    }
-   ],
-   "section": "AI · Claude · Code · Second Brain",
-   "related": [
-    {
-     "name": "sb-intro",
-     "title": "세컨드 브레인이란 무엇인가",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "sb-levels",
-     "title": "5단계 한눈에 보기",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "sb-level1",
-     "title": "레벨 1 · 정확히 찾기 (라우터로서의 CLAUDE.md)",
-     "shared": [],
-     "via": "folder"
-    }
-   ],
-   "citedBy": [
-    "wr-knowledge-vault",
-    "sb-intro",
-    "sb-level4",
-    "sb-choose"
-   ]
-  },
-  {
    "name": "sb-context-connections",
-   "title": "무엇을 넣고 무엇을 둘까 (컨텍스트 vs 커넥션)",
-   "summary": "4C 기준으로 담을 데이터와 접근만 할 데이터를 가른다.",
+   "title": "적용 — 컨텍스트 vs 커넥션, 내 레벨 찾기",
+   "summary": "무엇을 넣고 무엇을 둘까(4C·컨텍스트 vs 커넥션), 그리고 통증 기반으로 내 레벨을 고르고 팀으로 넓히는 법",
    "concepts": [
     "세컨드브레인",
     "4C",
     "컨텍스트",
     "커넥션",
     "에버그린",
-    "순차폴백"
-   ],
-   "relations": [
-    {
-     "target": "sb-choose",
-     "type": "prerequisite",
-     "evidenceRef": "무엇을 넣고 무엇을 둘까 (컨텍스트 vs 커넥션) 다음에 읽는 시리즈 순서 — 이 문서의 내용을 전제로 내 레벨 찾기 · 팀 세컨드 브레인로 이어진다",
-     "source": "human"
-    }
+    "순차폴백",
+    "통증기반선택",
+    "결정트리",
+    "팀세컨드브레인",
+    "변화관리"
    ],
    "section": "AI · Claude · Code · Second Brain",
    "related": [
+    {
+     "name": "sb-intro",
+     "title": "세컨드 브레인이란 — 5단계 한눈에",
+     "shared": [
+      "통증기반선택",
+      "세컨드브레인"
+     ],
+     "via": "concept"
+    },
     {
      "name": "ccb-manage",
      "title": "운영 — 사용량·세션과 마무리",
@@ -2295,48 +2114,7 @@
    ],
    "citedBy": [
     "sb-intro",
-    "sb-level5"
-   ]
-  },
-  {
-   "name": "sb-choose",
-   "title": "내 레벨 찾기 · 팀 세컨드 브레인",
-   "summary": "통증 기반으로 레벨을 고르고 팀으로 확장하는 법을 정리한다.",
-   "concepts": [
-    "세컨드브레인",
-    "통증기반선택",
-    "결정트리",
-    "팀세컨드브레인",
-    "변화관리"
-   ],
-   "section": "AI · Claude · Code · Second Brain",
-   "related": [
-    {
-     "name": "sb-levels",
-     "title": "5단계 한눈에 보기",
-     "shared": [
-      "통증기반선택",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-intro",
-     "title": "세컨드 브레인이란 무엇인가",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "sb-level1",
-     "title": "레벨 1 · 정확히 찾기 (라우터로서의 CLAUDE.md)",
-     "shared": [],
-     "via": "folder"
-    }
-   ],
-   "citedBy": [
-    "sb-intro",
-    "sb-levels",
-    "sb-context-connections"
+    "sb-level3"
    ]
   },
   {
@@ -3270,7 +3048,7 @@
      "source": "human"
     },
     {
-     "target": "sb-level2",
+     "target": "sb-level1",
      "type": "example-of",
      "evidenceRef": "세컨드 브레인 레벨 2(주제로 묶기)가 말하는 단계의 실사례가 LLM Wiki 볼트다",
      "source": "human"
@@ -3311,7 +3089,7 @@
     "kgs-edges",
     "wr-knowledge-vault",
     "sb-intro",
-    "sb-level2",
+    "sb-level1",
     "news-20260710-llm-wiki-knowledge-context"
    ]
   },
@@ -3740,7 +3518,7 @@
    ],
    "relations": [
     {
-     "target": "sb-choose",
+     "target": "sb-context-connections",
      "type": "example-of",
      "evidenceRef": "개발 결과를 조직 지식으로 자동 축적하는 제안은 sb-choose 팀 세컨드 브레인 확장의 사내 사례",
      "source": "human"
@@ -4022,8 +3800,8 @@
      "via": "concept"
     },
     {
-     "name": "sb-level2",
-     "title": "레벨 2 · 주제로 묶기 (LLM 위키 + 메모리)",
+     "name": "sb-level1",
+     "title": "레벨 1·2 — 정확히 찾고 주제로 묶기",
      "shared": [
       "인덱스"
      ],
@@ -4454,8 +4232,8 @@
      "via": "concept"
     },
     {
-     "name": "sb-level2",
-     "title": "레벨 2 · 주제로 묶기 (LLM 위키 + 메모리)",
+     "name": "sb-level1",
+     "title": "레벨 1·2 — 정확히 찾고 주제로 묶기",
      "shared": [
       "인덱스",
       "LLM위키"
@@ -4495,7 +4273,7 @@
    ],
    "relations": [
     {
-     "target": "sb-level4",
+     "target": "sb-level3",
      "type": "evidence-for",
      "evidenceRef": "오라클 공식 블로그·ISO SQL:2023 확인 — sb-level4 지식을 관계로 잇는다 주장의 외부 근거",
      "source": "human"
@@ -4524,8 +4302,8 @@
      "via": "concept"
     },
     {
-     "name": "sb-level4",
-     "title": "레벨 4 · 관계로 잇기 (지식 그래프)",
+     "name": "sb-level3",
+     "title": "레벨 3~5 — 의미·관계·브레인 OS",
      "shared": [
       "엔티티관계",
       "지식그래프"
@@ -4562,7 +4340,7 @@
    ],
    "relations": [
     {
-     "target": "sb-level4",
+     "target": "sb-level3",
      "type": "evidence-for",
      "evidenceRef": "Neo4j 짐 웨버 원문(2024-06-04) 정리 — sb-level4 지식 그래프 접근의 전문가 근거",
      "source": "human"
@@ -4591,8 +4369,8 @@
      "via": "concept"
     },
     {
-     "name": "sb-level4",
-     "title": "레벨 4 · 관계로 잇기 (지식 그래프)",
+     "name": "sb-level3",
+     "title": "레벨 3~5 — 의미·관계·브레인 OS",
      "shared": [
       "엔티티관계",
       "지식그래프"
@@ -5281,19 +5059,19 @@
      "via": "concept"
     },
     {
-     "name": "gdb-graphrag",
-     "title": "그래프 데이터베이스와 GraphRAG — 관계를 저장하면 답이 달라진다",
+     "name": "sb-level1",
+     "title": "레벨 1·2 — 정확히 찾고 주제로 묶기",
      "shared": [
-      "RAG",
-      "온톨로지"
+      "LLM위키",
+      "세컨드브레인"
      ],
      "via": "concept"
     },
     {
-     "name": "sb-level2",
-     "title": "레벨 2 · 주제로 묶기 (LLM 위키 + 메모리)",
+     "name": "sb-level3",
+     "title": "레벨 3~5 — 의미·관계·브레인 OS",
      "shared": [
-      "LLM위키",
+      "RAG",
       "세컨드브레인"
      ],
      "via": "concept"
@@ -5326,6 +5104,16 @@
    "section": "AI · GraphDB",
    "related": [
     {
+     "name": "sb-level3",
+     "title": "레벨 3~5 — 의미·관계·브레인 OS",
+     "shared": [
+      "청킹",
+      "벡터검색",
+      "RAG"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "gdb-vector-retriever",
      "title": "영화 줄거리로 영화 찾기 — Neo4j 샌드박스에서 만드는 첫 벡터 리트리버",
      "shared": [
@@ -5352,15 +5140,6 @@
       "프로퍼티그래프",
       "온톨로지",
       "지식그래프"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-level3",
-     "title": "레벨 3 · 의미로 찾기 (시맨틱 검색·벡터DB)",
-     "shared": [
-      "청킹",
-      "벡터검색"
      ],
      "via": "concept"
     }
@@ -5405,7 +5184,7 @@
     },
     {
      "name": "sb-level3",
-     "title": "레벨 3 · 의미로 찾기 (시맨틱 검색·벡터DB)",
+     "title": "레벨 3~5 — 의미·관계·브레인 OS",
      "shared": [
       "임베딩",
       "벡터검색"

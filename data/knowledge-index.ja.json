@@ -1,10 +1,10 @@
 {
  "schemaVersion": 2,
  "note": "Structured knowledge index built by AI from every doc (summary, key concepts, related docs). related = idf-weighted concept overlap (via:concept) topped up with same-folder neighbours (via:folder).",
- "docCount": 83,
+ "docCount": 78,
  "stats": {
-  "docCount": 83,
-  "conceptCount": 344,
+  "docCount": 78,
+  "conceptCount": 340,
   "clusters": [
    {
     "label": "知識体系",
@@ -69,11 +69,11 @@
    {
     "label": "Second Brain",
     "section": "AI · Claude · Code · Second Brain",
-    "count": 9,
+    "count": 4,
     "hub": {
-     "name": "sb-levels",
-     "title": "5 段階をひと目で",
-     "refs": 5
+     "name": "sb-level3",
+     "title": "レベル 3~5 — 意味・関係・ブレイン OS",
+     "refs": 6
     }
    },
    {
@@ -143,7 +143,7 @@
     "hub": {
      "name": "gdb-graphrag",
      "title": "グラフデータベースとGraphRAG — 関係を保存すると答えが変わる",
-     "refs": 7
+     "refs": 5
     }
    },
    {
@@ -214,11 +214,6 @@
     "refs": 8
    },
    {
-    "name": "gdb-graphrag",
-    "title": "グラフデータベースとGraphRAG — 関係を保存すると答えが変わる",
-    "refs": 7
-   },
-   {
     "name": "news-20260724-claude-opus-5",
     "title": "Claude Opus 5 — 半額の準 Fable がやってきた",
     "refs": 7
@@ -244,6 +239,11 @@
     "refs": 6
    },
    {
+    "name": "sb-level3",
+    "title": "レベル 3~5 — 意味・関係・ブレイン OS",
+    "refs": 6
+   },
+   {
     "name": "skl-overview",
     "title": "スキルとは — 背景と強み",
     "refs": 6
@@ -257,10 +257,6 @@
    {
     "c": "지식그래프",
     "n": 11
-   },
-   {
-    "c": "세컨드브레인",
-    "n": 10
    },
    {
     "c": "CLAUDE.md",
@@ -312,6 +308,10 @@
    },
    {
     "c": "온톨로지",
+    "n": 6
+   },
+   {
+    "c": "플러그인",
     "n": 6
    }
   ],
@@ -418,8 +418,8 @@
   ],
   "galaxies": {
    "AI": {
-    "docCount": 72,
-    "conceptCount": 305,
+    "docCount": 67,
+    "conceptCount": 301,
     "clusters": [
      {
       "label": "知識体系",
@@ -484,11 +484,11 @@
      {
       "label": "Second Brain",
       "section": "AI · Claude · Code · Second Brain",
-      "count": 9,
+      "count": 4,
       "hub": {
-       "name": "sb-levels",
-       "title": "5 段階をひと目で",
-       "refs": 5
+       "name": "sb-level3",
+       "title": "レベル 3~5 — 意味・関係・ブレイン OS",
+       "refs": 6
       }
      },
      {
@@ -558,7 +558,7 @@
       "hub": {
        "name": "gdb-graphrag",
        "title": "グラフデータベースとGraphRAG — 関係を保存すると答えが変わる",
-       "refs": 7
+       "refs": 5
       }
      },
      {
@@ -609,11 +609,6 @@
       "refs": 8
      },
      {
-      "name": "gdb-graphrag",
-      "title": "グラフデータベースとGraphRAG — 関係を保存すると答えが変わる",
-      "refs": 7
-     },
-     {
       "name": "news-20260724-claude-opus-5",
       "title": "Claude Opus 5 — 半額の準 Fable がやってきた",
       "refs": 7
@@ -637,6 +632,11 @@
       "name": "hns-overview",
       "title": "ハーネスとは — 概要・定義・構成",
       "refs": 6
+     },
+     {
+      "name": "sb-level3",
+      "title": "レベル 3~5 — 意味・関係・ブレイン OS",
+      "refs": 6
      }
     ],
     "topConcepts": [
@@ -647,10 +647,6 @@
      {
       "c": "지식그래프",
       "n": 11
-     },
-     {
-      "c": "세컨드브레인",
-      "n": 10
      },
      {
       "c": "CLAUDE.md",
@@ -702,6 +698,10 @@
      },
      {
       "c": "RAG",
+      "n": 5
+     },
+     {
+      "c": "마켓플레이스",
       "n": 5
      }
     ],
@@ -1868,59 +1868,15 @@
   },
   {
    "name": "sb-intro",
-   "title": "セカンドブレインとは何か",
-   "summary": "セカンドブレインの定義、データという堀、そして 5 段階の全体像を紹介する。",
+   "title": "セカンドブレインとは — 5 段階を一望",
+   "summary": "セカンドブレインがなぜデータの堀なのか、そして正確検索から常時稼働のブレイン OS までの 5 段階の地形を一望する",
    "concepts": [
     "세컨드브레인",
     "데이터해자",
     "다시찾기",
     "역설계",
     "5단계",
-    "마크다운"
-   ],
-   "relations": [
-    {
-     "target": "sb-levels",
-     "type": "prerequisite",
-     "evidenceRef": "「セカンドブレインとは何か」のあとの読む順序 — この文書を土台に「5 段階をひと目で」へ続く",
-     "source": "human"
-    }
-   ],
-   "section": "AI · Claude · Code · Second Brain",
-   "related": [
-    {
-     "name": "sb-levels",
-     "title": "5 段階をひと目で",
-     "shared": [
-      "5단계",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-level1",
-     "title": "レベル 1 · 正確に探す（ルーターとしての CLAUDE.md）",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "sb-level2",
-     "title": "レベル 2 · 主題でまとめる（LLM ウィキ + メモリ）",
-     "shared": [],
-     "via": "folder"
-    }
-   ],
-   "citedBy": [
-    "sb-choose"
-   ]
-  },
-  {
-   "name": "sb-levels",
-   "title": "5 段階をひと目で",
-   "summary": "検索と想起の力で並べたセカンドブレインの 5 段階を見わたす。",
-   "concepts": [
-    "세컨드브레인",
-    "5단계",
+    "마크다운",
     "정확검색",
     "시맨틱검색",
     "지식그래프",
@@ -1930,15 +1886,25 @@
     {
      "target": "sb-level1",
      "type": "prerequisite",
-     "evidenceRef": "「5 段階をひと目で」のあとの読む順序 — この文書を土台に「レベル 1 · 正確に探す（ルーターとしての CLAUDE.md）」へ続く",
+     "evidenceRef": "概念と 5 段階の地形を前提に、次の章がレベル 1・2 の実戦へ入る",
      "source": "human"
     }
    ],
    "section": "AI · Claude · Code · Second Brain",
    "related": [
     {
-     "name": "sb-choose",
-     "title": "自分のレベル探し · チームのセカンドブレイン",
+     "name": "sb-level3",
+     "title": "レベル 3~5 — 意味・関係・ブレイン OS",
+     "shared": [
+      "시맨틱검색",
+      "세컨드브레인",
+      "지식그래프"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "sb-context-connections",
+     "title": "適用 — コンテキスト vs コネクション、自分のレベル探し",
      "shared": [
       "통증기반선택",
       "세컨드브레인"
@@ -1946,28 +1912,10 @@
      "via": "concept"
     },
     {
-     "name": "sb-intro",
-     "title": "セカンドブレインとは何か",
-     "shared": [
-      "5단계",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
      "name": "sb-level1",
-     "title": "レベル 1 · 正確に探す（ルーターとしての CLAUDE.md）",
+     "title": "レベル 1・2 — 正確に見つけ、主題でまとめる",
      "shared": [
       "정확검색",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-level3",
-     "title": "レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）",
-     "shared": [
-      "시맨틱검색",
       "세컨드브레인"
      ],
      "via": "concept"
@@ -1975,65 +1923,20 @@
    ],
    "citedBy": [
     "wr-knowledge-vault",
-    "sb-intro"
+    "sb-context-connections"
    ]
   },
   {
    "name": "sb-level1",
-   "title": "レベル 1 · 正確に探す（ルーターとしての CLAUDE.md）",
-   "summary": "CLAUDE.md をルーターとして使うレベル 1 の正確な検索を説明する。",
+   "title": "レベル 1・2 — 正確に見つけ、主題でまとめる",
+   "summary": "ルーターとしての CLAUDE.md とフォルダ構造（レベル 1）、LLM Wiki とメモリで主題をまとめるインデックス（レベル 2） — ファイルとフォルダで届く世界",
    "concepts": [
     "세컨드브레인",
     "레벨1",
     "정확검색",
     "CLAUDE.md",
     "라우팅",
-    "폴더구조"
-   ],
-   "relations": [
-    {
-     "target": "sb-level2",
-     "type": "prerequisite",
-     "evidenceRef": "「レベル 1 · 正確に探す（ルーターとしての CLAUDE.md）」のあとの読む順序 — この文書を土台に「レベル 2 · 主題でまとめる（LLM ウィキ + メモリ）」へ続く",
-     "source": "human"
-    }
-   ],
-   "section": "AI · Claude · Code · Second Brain",
-   "related": [
-    {
-     "name": "sb-levels",
-     "title": "5 段階をひと目で",
-     "shared": [
-      "정확검색",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-intro",
-     "title": "セカンドブレインとは何か",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "sb-level2",
-     "title": "レベル 2 · 主題でまとめる（LLM ウィキ + メモリ）",
-     "shared": [],
-     "via": "folder"
-    }
-   ],
-   "citedBy": [
-    "sb-intro",
-    "sb-levels",
-    "sb-choose"
-   ]
-  },
-  {
-   "name": "sb-level2",
-   "title": "レベル 2 · 主題でまとめる（LLM ウィキ + メモリ）",
-   "summary": "LLM ウィキとメモリで主題をまとめるレベル 2 を説明する。",
-   "concepts": [
-    "세컨드브레인",
+    "폴더구조",
     "레벨2",
     "LLM위키",
     "메모리",
@@ -2044,12 +1947,21 @@
     {
      "target": "sb-level3",
      "type": "prerequisite",
-     "evidenceRef": "「レベル 2 · 主題でまとめる（LLM ウィキ + メモリ）」のあとの読む順序 — この文書を土台に「レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）」へ続く",
+     "evidenceRef": "ファイルとフォルダのレベルを前提に、次の章が意味・関係・自動化のレベルへ渡る",
      "source": "human"
     }
    ],
    "section": "AI · Claude · Code · Second Brain",
    "related": [
+    {
+     "name": "sb-intro",
+     "title": "セカンドブレインとは — 5 段階を一望",
+     "shared": [
+      "정확검색",
+      "세컨드브레인"
+     ],
+     "via": "concept"
+    },
     {
      "name": "news-20260710-llm-wiki-knowledge-context",
      "title": "LLM Wiki とナレッジコンテキスト — 書き込みの時点でコンパイルするチームの知識",
@@ -2080,28 +1992,34 @@
    "citedBy": [
     "kgs-edges",
     "sb-intro",
-    "sb-level1",
-    "sb-choose",
+    "sb-context-connections",
     "news-20260710-llm-wiki-knowledge-context"
    ]
   },
   {
    "name": "sb-level3",
-   "title": "レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）",
-   "summary": "埋め込みとチャンク化にもとづくセマンティック検索と、その限界を説明する。",
+   "title": "レベル 3~5 — 意味・関係・ブレイン OS",
+   "summary": "セマンティック検索とベクトル DB（レベル 3）、知識グラフ（レベル 4）、常時稼働の自律ブレイン OS（レベル 5）まで — 道具の性格が変わる上の三層",
    "concepts": [
     "세컨드브레인",
     "레벨3",
     "시맨틱검색",
     "벡터검색",
     "임베딩",
-    "청킹"
+    "청킹",
+    "레벨4",
+    "지식그래프",
+    "엔티티관계",
+    "RAG",
+    "레벨5",
+    "자율브레인OS",
+    "자동화"
    ],
    "relations": [
     {
-     "target": "sb-level4",
+     "target": "sb-context-connections",
      "type": "prerequisite",
-     "evidenceRef": "「レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）」のあとの読む順序 — この文書を土台に「レベル 4 · 関係でつなぐ（知識グラフ）」へ続く",
+     "evidenceRef": "五つのレベルを前提に、最終章が適用（何を入れるか・レベルの選び方）で締める",
      "source": "human"
     }
    ],
@@ -2112,7 +2030,18 @@
      "title": "グラフデータベースとGraphRAG — 関係を保存すると答えが変わる",
      "shared": [
       "청킹",
-      "벡터검색"
+      "벡터검색",
+      "RAG"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "sb-intro",
+     "title": "セカンドブレインとは — 5 段階を一望",
+     "shared": [
+      "시맨틱검색",
+      "세컨드브레인",
+      "지식그래프"
      ],
      "via": "concept"
     },
@@ -2126,63 +2055,6 @@
      "via": "concept"
     },
     {
-     "name": "sb-levels",
-     "title": "5 段階をひと目で",
-     "shared": [
-      "시맨틱검색",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    }
-   ],
-   "citedBy": [
-    "sb-intro",
-    "sb-level2",
-    "sb-level4",
-    "sb-choose"
-   ]
-  },
-  {
-   "name": "sb-level4",
-   "title": "レベル 4 · 関係でつなぐ（知識グラフ）",
-   "summary": "実体と関係でものごとをつなぐ知識グラフのレベル 4 を説明する。",
-   "concepts": [
-    "세컨드브레인",
-    "레벨4",
-    "지식그래프",
-    "엔티티관계",
-    "RAG",
-    "프라이버시"
-   ],
-   "relations": [
-    {
-     "target": "sb-level5",
-     "type": "prerequisite",
-     "evidenceRef": "「レベル 4 · 関係でつなぐ（知識グラフ）」のあとの読む順序 — この文書を土台に「レベル 5 · つねに動いているブレイン OS」へ続く",
-     "source": "human"
-    }
-   ],
-   "section": "AI · Claude · Code · Second Brain",
-   "related": [
-    {
-     "name": "news-20260710-oracle-ontology-property-graph",
-     "title": "オラクルのオントロジーとプロパティグラフ — テーブルを知識の地図に",
-     "shared": [
-      "엔티티관계",
-      "지식그래프"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "news-20260711-neo4j-rdf-vs-property-graph",
-     "title": "RDF かプロパティグラフか — 知識グラフのためのふたつのモデル（Neo4j）",
-     "shared": [
-      "엔티티관계",
-      "지식그래프"
-     ],
-     "via": "concept"
-    },
-    {
      "name": "wr-knowledge-vault",
      "title": "すべてを記録する人、発行するウィキ — 知識の保管庫についての考察",
      "shared": [
@@ -2190,98 +2062,45 @@
       "세컨드브레인"
      ],
      "via": "concept"
-    },
-    {
-     "name": "gdb-graphrag",
-     "title": "グラフデータベースとGraphRAG — 関係を保存すると答えが変わる",
-     "shared": [
-      "RAG",
-      "지식그래프"
-     ],
-     "via": "concept"
     }
    ],
    "citedBy": [
     "kgs-edges",
+    "wr-knowledge-vault",
     "sb-intro",
-    "sb-level2",
-    "sb-level3",
-    "sb-choose",
+    "sb-level1",
+    "sb-context-connections",
     "news-20260710-oracle-ontology-property-graph",
     "news-20260711-neo4j-rdf-vs-property-graph"
    ]
   },
   {
-   "name": "sb-level5",
-   "title": "レベル 5 · つねに動いているブレイン OS",
-   "summary": "cron で自動的に更新されつづける自律ブレイン OS を説明する。",
-   "concepts": [
-    "세컨드브레인",
-    "레벨5",
-    "자율브레인OS",
-    "cron자동화",
-    "GBrain",
-    "과잉컨텍스트",
-    "자동화"
-   ],
-   "relations": [
-    {
-     "target": "sb-context-connections",
-     "type": "prerequisite",
-     "evidenceRef": "「レベル 5 · つねに動いているブレイン OS」のあとの読む順序 — この文書を土台に「何を入れて何を置くか（コンテキスト vs コネクション）」へ続く",
-     "source": "human"
-    }
-   ],
-   "section": "AI · Claude · Code · Second Brain",
-   "related": [
-    {
-     "name": "sb-intro",
-     "title": "セカンドブレインとは何か",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "sb-levels",
-     "title": "5 段階をひと目で",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "sb-level1",
-     "title": "レベル 1 · 正確に探す（ルーターとしての CLAUDE.md）",
-     "shared": [],
-     "via": "folder"
-    }
-   ],
-   "citedBy": [
-    "wr-knowledge-vault",
-    "sb-intro",
-    "sb-level4",
-    "sb-choose"
-   ]
-  },
-  {
    "name": "sb-context-connections",
-   "title": "何を入れて何を置くか（コンテキスト vs コネクション）",
-   "summary": "4C の枠組みで、取り込む価値のあるデータと、見に行くだけでよいデータを分ける。",
+   "title": "適用 — コンテキスト vs コネクション、自分のレベル探し",
+   "summary": "何を入れて何を置くか（4C・コンテキスト vs コネクション）、痛みに基づいて自分のレベルを選び、チームへ広げる方法",
    "concepts": [
     "세컨드브레인",
     "4C",
     "컨텍스트",
     "커넥션",
     "에버그린",
-    "순차폴백"
-   ],
-   "relations": [
-    {
-     "target": "sb-choose",
-     "type": "prerequisite",
-     "evidenceRef": "「何を入れて何を置くか（コンテキスト vs コネクション）」のあとの読む順序 — この文書を土台に「自分のレベル探し · チームのセカンドブレイン」へ続く",
-     "source": "human"
-    }
+    "순차폴백",
+    "통증기반선택",
+    "결정트리",
+    "팀세컨드브레인",
+    "변화관리"
    ],
    "section": "AI · Claude · Code · Second Brain",
    "related": [
+    {
+     "name": "sb-intro",
+     "title": "セカンドブレインとは — 5 段階を一望",
+     "shared": [
+      "통증기반선택",
+      "세컨드브레인"
+     ],
+     "via": "concept"
+    },
     {
      "name": "ccb-manage",
      "title": "運用 — 使用量・セッションとまとめ",
@@ -2301,48 +2120,7 @@
    ],
    "citedBy": [
     "sb-intro",
-    "sb-level5"
-   ]
-  },
-  {
-   "name": "sb-choose",
-   "title": "自分のレベル探し · チームのセカンドブレイン",
-   "summary": "実際に感じている痛みからレベルを選び、それをチームへ広げる方法を示す。",
-   "concepts": [
-    "세컨드브레인",
-    "통증기반선택",
-    "결정트리",
-    "팀세컨드브레인",
-    "변화관리"
-   ],
-   "section": "AI · Claude · Code · Second Brain",
-   "related": [
-    {
-     "name": "sb-levels",
-     "title": "5 段階をひと目で",
-     "shared": [
-      "통증기반선택",
-      "세컨드브레인"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-intro",
-     "title": "セカンドブレインとは何か",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "sb-level1",
-     "title": "レベル 1 · 正確に探す（ルーターとしての CLAUDE.md）",
-     "shared": [],
-     "via": "folder"
-    }
-   ],
-   "citedBy": [
-    "sb-intro",
-    "sb-levels",
-    "sb-context-connections"
+    "sb-level3"
    ]
   },
   {
@@ -3276,7 +3054,7 @@
      "source": "human"
     },
     {
-     "target": "sb-level2",
+     "target": "sb-level1",
      "type": "example-of",
      "evidenceRef": "LLM Wiki のボルトはセカンドブレイン レベル 2（主題でまとめる）の具体事例だ",
      "source": "human"
@@ -3317,7 +3095,7 @@
     "kgs-edges",
     "wr-knowledge-vault",
     "sb-intro",
-    "sb-level2",
+    "sb-level1",
     "news-20260710-llm-wiki-knowledge-context"
    ]
   },
@@ -3746,7 +3524,7 @@
    ],
    "relations": [
     {
-     "target": "sb-choose",
+     "target": "sb-context-connections",
      "type": "example-of",
      "evidenceRef": "開発の成果を組織の知識として自動で積み上げる提案 — sb-choose のチームのセカンドブレインの拡張の社内の事例",
      "source": "human"
@@ -4033,8 +3811,8 @@
      "via": "concept"
     },
     {
-     "name": "sb-level2",
-     "title": "レベル 2 · 主題でまとめる（LLM ウィキ + メモリ）",
+     "name": "sb-level1",
+     "title": "レベル 1・2 — 正確に見つけ、主題でまとめる",
      "shared": [
       "인덱스"
      ],
@@ -4471,8 +4249,8 @@
      "via": "concept"
     },
     {
-     "name": "sb-level2",
-     "title": "レベル 2 · 主題でまとめる（LLM ウィキ + メモリ）",
+     "name": "sb-level1",
+     "title": "レベル 1・2 — 正確に見つけ、主題でまとめる",
      "shared": [
       "인덱스",
       "LLM위키"
@@ -4512,7 +4290,7 @@
    ],
    "relations": [
     {
-     "target": "sb-level4",
+     "target": "sb-level3",
      "type": "evidence-for",
      "evidenceRef": "オラクル公式のブログと ISO SQL:2023 を確認 — 知識は関係でつながるという sb-level4 の主張に対する外部の根拠",
      "source": "human"
@@ -4541,8 +4319,8 @@
      "via": "concept"
     },
     {
-     "name": "sb-level4",
-     "title": "レベル 4 · 関係でつなぐ（知識グラフ）",
+     "name": "sb-level3",
+     "title": "レベル 3~5 — 意味・関係・ブレイン OS",
      "shared": [
       "엔티티관계",
       "지식그래프"
@@ -4579,7 +4357,7 @@
    ],
    "relations": [
     {
-     "target": "sb-level4",
+     "target": "sb-level3",
      "type": "evidence-for",
      "evidenceRef": "ジム・ウェバーによる Neo4j の原文（2024-06-04）のダイジェスト — sb-level4 の知識グラフのやり方に対する専門家の根拠",
      "source": "human"
@@ -4608,8 +4386,8 @@
      "via": "concept"
     },
     {
-     "name": "sb-level4",
-     "title": "レベル 4 · 関係でつなぐ（知識グラフ）",
+     "name": "sb-level3",
+     "title": "レベル 3~5 — 意味・関係・ブレイン OS",
      "shared": [
       "엔티티관계",
       "지식그래프"
@@ -5299,19 +5077,19 @@
      "via": "concept"
     },
     {
-     "name": "gdb-graphrag",
-     "title": "グラフデータベースとGraphRAG — 関係を保存すると答えが変わる",
+     "name": "sb-level1",
+     "title": "レベル 1・2 — 正確に見つけ、主題でまとめる",
      "shared": [
-      "RAG",
-      "온톨로지"
+      "LLM위키",
+      "세컨드브레인"
      ],
      "via": "concept"
     },
     {
-     "name": "sb-level2",
-     "title": "レベル 2 · 主題でまとめる（LLM ウィキ + メモリ）",
+     "name": "sb-level3",
+     "title": "レベル 3~5 — 意味・関係・ブレイン OS",
      "shared": [
-      "LLM위키",
+      "RAG",
       "세컨드브레인"
      ],
      "via": "concept"
@@ -5344,6 +5122,16 @@
    "section": "AI · GraphDB",
    "related": [
     {
+     "name": "sb-level3",
+     "title": "レベル 3~5 — 意味・関係・ブレイン OS",
+     "shared": [
+      "청킹",
+      "벡터검색",
+      "RAG"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "gdb-vector-retriever",
      "title": "あらすじで映画を探す — Neo4jサンドボックスで作る初めてのベクトルリトリーバー",
      "shared": [
@@ -5370,15 +5158,6 @@
       "프로퍼티그래프",
       "온톨로지",
       "지식그래프"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "sb-level3",
-     "title": "レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）",
-     "shared": [
-      "청킹",
-      "벡터검색"
      ],
      "via": "concept"
     }
@@ -5423,7 +5202,7 @@
     },
     {
      "name": "sb-level3",
-     "title": "レベル 3 · 意味で探す（セマンティック検索・ベクトル DB）",
+     "title": "レベル 3~5 — 意味・関係・ブレイン OS",
      "shared": [
       "임베딩",
       "벡터검색"

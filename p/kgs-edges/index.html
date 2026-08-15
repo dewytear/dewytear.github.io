@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-08-15T15:03:36+09:00"
+ "dateModified": "2026-08-16T00:17:25+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -151,8 +151,8 @@
 <ul>
     <li><strong>선행지식(prerequisite)</strong> — 이 시리즈 자체가 체인입니다: <a href="/p/kgs-overview/">쌓이는가</a> → 이 문서 → <a href="/p/kgs-views/">7가지 눈</a> → <a href="/p/kgs-ai-layer/">AI가 읽는 법</a> → <a href="/p/kgs-plugin/">플러그인화</a>. 각 편이 다음 편의 선행지식으로 선언돼 있어 "무엇을 먼저 읽어야 하는지"를 그래프가 압니다. <a href="/p/welcome/">시작하기</a> → <a href="/p/skills/">확장 기능</a>도 같은 타입.</li>
     <li><strong>구현(implements)</strong> — <a href="/p/kgs-plugin/">위키 엔진의 플러그인화</a>가 이 시리즈가 설명한 엔진을 <em>구현</em>합니다. 하네스 개념 문서 → 플러그인 아키텍처 문서도 같은 계보. World를 가로지르는 다리도 있습니다 — <a href="/p/dzp-security/">Douzone 지식 플랫폼 제안</a>이 "Reference Wiki(이 위키)"를 복제해 <a href="/p/kgs-overview/">이 등재 파이프라인</a>을 <em>구현</em>하겠다고 선언합니다.</li>
-    <li><strong>사례(example-of)</strong> — <a href="/p/llmw-overview/">LLM Wiki</a>는 <a href="/p/sb-level2/">세컨드 브레인 레벨 2</a>(주제로 묶기)가 말하는 단계의 <em>실사례</em>입니다. <a href="/p/hnp-first-run/">첫 하네스 실행</a>도 하네스 실행 강의의 구체 사례로 붙습니다.</li>
-    <li><strong>근거(evidence-for)</strong> — 위의 JSON처럼, 외부 원문을 확인한 <a href="/p/news-20260711-neo4j-rdf-vs-property-graph/">기사</a>가 <a href="/p/sb-level4/">Second Brain 4단계</a> 주장의 <em>외부 근거</em>로 붙습니다. <a href="/p/news-20260709-thariq-fable5-unknowns/">타릭의 Fable 필드가이드 정리</a>도 <a href="/p/hns-overview/">하네스 엔지니어링</a>의 "모델보다 환경이 결과를 좌우한다"는 주장을 받칩니다 — 기사 4편이 이 타입으로 지식 문서를 받칩니다.</li>
+    <li><strong>사례(example-of)</strong> — <a href="/p/llmw-overview/">LLM Wiki</a>는 <a href="/p/sb-level1/">세컨드 브레인 레벨 2</a>(주제로 묶기)가 말하는 단계의 <em>실사례</em>입니다. <a href="/p/hnp-first-run/">첫 하네스 실행</a>도 하네스 실행 강의의 구체 사례로 붙습니다.</li>
+    <li><strong>근거(evidence-for)</strong> — 위의 JSON처럼, 외부 원문을 확인한 <a href="/p/news-20260711-neo4j-rdf-vs-property-graph/">기사</a>가 <a href="/p/sb-level3/">Second Brain 4단계</a> 주장의 <em>외부 근거</em>로 붙습니다. <a href="/p/news-20260709-thariq-fable5-unknowns/">타릭의 Fable 필드가이드 정리</a>도 <a href="/p/hns-overview/">하네스 엔지니어링</a>의 "모델보다 환경이 결과를 좌우한다"는 주장을 받칩니다 — 기사 4편이 이 타입으로 지식 문서를 받칩니다.</li>
 </ul>
 
 <p>여기에 <strong>세 번째 연결층</strong>이 하나 더 있습니다 — <strong>인용 백링크(<code>citedBy</code>)</strong>. 문서 본문에서 다른 문서로 건 <code>#!</code> 내부 링크를 인덱스 빌드가 <strong>역방향으로 모아</strong>, 인용받은 문서 하단에 &ldquo;이 문서를 인용한 문서&rdquo;로 자동 표시합니다. 개념 공유(<code>related</code>)도 선언(<code>relations</code>)도 아닌, <strong>글을 쓰다 실제로 참조한 흔적</strong>에서 나오는 연결이라 정직성 규칙과 자연히 정합하고 — 많이 인용되는 문서가 허브임이 저절로 드러납니다. 인용자는 지식 인덱스에 든 문서만 세므로 Work Log 같은 저널의 링크는 섞이지 않습니다.</p>
@@ -164,7 +164,7 @@
     개념은 <strong>큐레이션</strong>(본문 실재만) → 엣지는 <strong>희소성 가중 공유</strong>(2개↑ 또는 희귀 1개) → 부족하면 <strong>폴더 보완</strong> → 모든 문서 2~4연결·고아 0. 그 위에 본문 <code>#!</code> 링크의 역인덱스인 <strong>인용 백링크(<code>citedBy</code>)</strong>와, 큐레이션으로 선언하는 <strong>방향 있는 타입 관계(<code>relations</code>)</strong>를 별도로 얹습니다. 많이 참조되는 문서가 <strong>허브</strong>가 되어 그래프의 중심을 이룹니다(<a href="/p/kgs-views/">다음 편</a>).
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">분류</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">생성일자</span> 2026-07-11 &middot; <span class="pr-k">수정일자</span> 2026-08-15</p>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">생성일자</span> 2026-07-11 &middot; <span class="pr-k">수정일자</span> 2026-08-16</p>
 
 <nav class="pr-rel"><h2>연관 문서</h2>
 <ul><li><a href="/p/kgs-overview/">지식은 어떻게 쌓이는가</a></li><li><a href="/p/kgs-views/">그래프를 읽는 9가지 눈</a></li></ul>

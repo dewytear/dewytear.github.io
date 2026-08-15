@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Level 3 · Searching by meaning (semantic search, vector DB)</title>
-<meta name="description" content="Explains embedding- and chunking-based semantic search and its limits.">
+<title>Levels 3–5 — Meaning, Relations, a Brain OS</title>
+<meta name="description" content="Semantic search and vector DBs (level 3), knowledge graphs (level 4), and the always-on autonomous brain OS (level 5) — the upper three floors where the tools change character">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/en/sb-level3/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/sb-level3/">
@@ -13,15 +13,15 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/sb-level3/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Level 3 · Searching by meaning (semantic search, vector DB)">
-<meta property="og:description" content="Explains embedding- and chunking-based semantic search and its limits.">
+<meta property="og:title" content="Levels 3–5 — Meaning, Relations, a Brain OS">
+<meta property="og:description" content="Semantic search and vector DBs (level 3), knowledge graphs (level 4), and the always-on autonomous brain OS (level 5) — the upper three floors where the tools change character">
 <meta property="og:url" content="https://dewytear.github.io/p/en/sb-level3/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Level 3 · Searching by meaning (semantic search, vector DB)">
-<meta name="twitter:description" content="Explains embedding- and chunking-based semantic search and its limits.">
+<meta name="twitter:title" content="Levels 3–5 — Meaning, Relations, a Brain OS">
+<meta name="twitter:description" content="Semantic search and vector DBs (level 3), knowledge graphs (level 4), and the always-on autonomous brain OS (level 5) — the upper three floors where the tools change character">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -31,8 +31,8 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "Level 3 · Searching by meaning (semantic search, vector DB)",
- "description": "Explains embedding- and chunking-based semantic search and its limits.",
+ "headline": "Levels 3–5 — Meaning, Relations, a Brain OS",
+ "description": "Semantic search and vector DBs (level 3), knowledge graphs (level 4), and the always-on autonomous brain OS (level 5) — the upper three floors where the tools change character",
  "inLanguage": "en",
  "url": "https://dewytear.github.io/p/en/sb-level3/",
  "mainEntityOfPage": "https://dewytear.github.io/#!sb-level3",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-04T10:06:25+09:00",
- "dateModified": "2026-08-15T14:51:59+09:00"
+ "dateModified": "2026-08-16T00:17:25+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -58,7 +58,7 @@
   &middot; <a href="/p/ja/sb-level3/" hreflang="ja">日本語</a>
 </p>
 <article>
-<h2>Level 3 · Searching by meaning (semantic search, vector DB)</h2>
+<h2>Levels 3–5 — Meaning, Relations, a Brain OS</h2>
 <p>Levels 1 and 2 mostly need <strong>the words to match</strong>. But we often search with <strong>words different from the ones we remember</strong>. So Level 3 <strong>searches by meaning.</strong> That is <strong>semantic search</strong>, and its engine is the <strong>vector database</strong>.</p>
 
 <h3>Keyword search vs semantic search</h3>
@@ -188,13 +188,173 @@
 
 <div class="note">
     <span class="nh">Not everything has to be vectors</span>
-    You do not need to turn <strong>the whole</strong> Second Brain into vectors. For instance you can keep <strong>only the YouTube subtitle folder</strong> in a vector DB and leave <code>context/</code>, <code>projects/</code>, and <code>decisions.md</code> as plain markdown. Pick <strong>a different approach per folder depending on the kind of data and how it is used</strong>. Next comes <a href="/p/en/sb-level4/">Level 4 — linking by relationship</a>.
+    You do not need to turn <strong>the whole</strong> Second Brain into vectors. For instance you can keep <strong>only the YouTube subtitle folder</strong> in a vector DB and leave <code>context/</code>, <code>projects/</code>, and <code>decisions.md</code> as plain markdown. Pick <strong>a different approach per folder depending on the kind of data and how it is used</strong>. Next comes Level 4 — linking by relationship.
 </div>
+
+<h3>Level 4 · Linking by relationship (knowledge graph)</h3>
+<p>Where Level 3 found <strong>"things close in meaning,"</strong> Level 4 follows <strong>"what is tied to what, and how."</strong> That is the <strong>knowledge graph</strong>. The question takes the shape <strong>"start at X and trace the connections through to A."</strong> It is usually the <strong>most powerful but also the most complex and costly</strong> stage.</p>
+
+<h4>Entities + relationships = a graph</h4>
+<p>A knowledge graph is made of two things: <strong>entities (people, companies, products)</strong> and the <strong>named relationships between them (who works where, what endorses what)</strong>. Unlike wiki links, the <strong>relationship carries meaning (a type)</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 250" role="img" aria-label="Knowledge graph example: Jordan works at Acme, Acme is endorsed by Postpilot, and Postpilot is a competitor of Cadently">
+    <!-- nodes -->
+    <circle class="d-node" cx="110" cy="80" r="12"/>
+    <text class="d-label sm" x="110" y="52" text-anchor="middle">Jordan</text>
+    <text class="d-sub" x="110" y="112" text-anchor="middle">person</text>
+
+    <circle class="d-node d" cx="330" cy="70" r="14"/>
+    <text class="d-label sm" x="330" y="42" text-anchor="middle">Acme</text>
+    <text class="d-sub" x="330" y="102" text-anchor="middle">company</text>
+
+    <circle class="d-node b" cx="540" cy="120" r="13"/>
+    <text class="d-label sm" x="540" y="92" text-anchor="middle">Postpilot</text>
+    <text class="d-sub" x="540" y="152" text-anchor="middle">company</text>
+
+    <circle class="d-node c" cx="330" cy="200" r="13"/>
+    <text class="d-label sm" x="330" y="230" text-anchor="middle">Cadently</text>
+
+    <!-- typed edges -->
+    <line class="d-edge accent" x1="123" y1="76" x2="316" y2="71"/>
+    <text class="d-accent" x="215" y="62" text-anchor="middle" font-size="11">works at (works_at)</text>
+    <line class="d-edge accent" x1="343" y1="79" x2="527" y2="112"/>
+    <text class="d-accent" x="440" y="86" text-anchor="middle" font-size="11">endorsed by (endorsed_by)</text>
+    <line class="d-edge dash" x1="527" y1="130" x2="343" y2="193"/>
+    <text class="d-sub" x="450" y="176" text-anchor="middle">competes with (competitor_of)</text>
+    <line class="d-edge" x1="330" y1="84" x2="330" y2="187"/>
+</svg>
+<div class="d-cap">You assemble the answer by following a <strong>chain of relationships</strong>, as in "Jordan → Acme → Postpilot → Cadently."</div>
+</div>
+
+<div class="note">
+    <span class="nh">It can be lighter than a wiki</span>
+    A wiki makes you <strong>read related pages in full</strong> (as in "reading the entire AI video production document when all you need is 11Labs"). A graph only needs you to touch <strong>the edges (relationships) you need</strong>, so in such cases it is <strong>actually lighter.</strong>
+</div>
+
+<h4>Tools — LightRAG · Graphiti · GraphRAG</h4>
+<p>Usually <strong>software extracts the entities and relationships automatically</strong> and builds the graph for you. The notable ones:</p>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Tool</th><th>Characteristics</th></tr></thead>
+        <tbody>
+            <tr><td><strong>LightRAG</strong></td><td>Lightweight RAG combining graph and vectors. Strong at incremental updates (open source).</td></tr>
+            <tr><td><strong>Graphiti</strong></td><td>A knowledge graph framework that also captures time (change).</td></tr>
+            <tr><td><strong>GraphRAG</strong> (Microsoft)</td><td>An approach that builds entities, relationships, and summaries from a body of documents.</td></tr>
+        </tbody>
+    </table>
+</div>
+<p class="scn-sub">※ The lecture's "graphity-fire" appears to mean <strong>Graphiti</strong>, and "quadrant" to mean the <strong>Qdrant</strong> of Level 3.</p>
+
+<h4>The real issue is not search but "getting what is in your head out"</h4>
+<p>The real bottleneck is usually not <strong>that the system cannot find things</strong>, but <strong>that the knowledge in your head has not gone into the system yet</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 620 130" role="img" aria-label="An interview skill grills you with questions to produce a brainstorming file, which becomes material for the knowledge graph">
+    <rect class="d-box" x="20" y="42" width="120" height="48" rx="10"/>
+    <text class="d-label sm" x="80" y="70" text-anchor="middle">Me (in my head)</text>
+    <rect class="d-box accent" x="200" y="42" width="150" height="48" rx="10"/>
+    <text class="d-label sm" x="275" y="64" text-anchor="middle">Interview skill</text>
+    <text class="d-sub" x="275" y="80" text-anchor="middle">grills me relentlessly</text>
+    <rect class="d-box" x="410" y="42" width="180" height="48" rx="10"/>
+    <text class="d-label sm" x="500" y="64" text-anchor="middle">Brainstorming file</text>
+    <text class="d-sub" x="500" y="80" text-anchor="middle">→ material for the graph</text>
+
+    <line class="d-edge accent" x1="140" y1="66" x2="198" y2="66"/><polygon class="d-arrow accent" points="192,61 200,66 192,71"/>
+    <line class="d-edge accent" x1="350" y1="66" x2="408" y2="66"/><polygon class="d-arrow accent" points="402,61 410,66 402,71"/>
+    <path class="d-edge dash" d="M275 90 V112 H80 V92"/><polygon class="d-arrow" points="75,96 85,96 80,90"/>
+    <text class="d-sub" x="180" y="106" text-anchor="middle">keeps asking until you run out</text>
+</svg>
+<div class="d-cap">Use an "interview me (grill me)" style skill to <strong>dig</strong> into your customers and business and turn it into a file, and that becomes material for the graph and the wiki.</div>
+</div>
+
+<p>So before blaming the system, ask yourself first: <strong>"Are my folders really as <em>holistic</em> as what is in my head?"</strong> The habit of feeding in materials, contracts, and subtitles while fleshing them out through <strong>brainstorming</strong> is the key.</p>
+
+<div class="note warn">
+    <span class="nh">Privacy — where is the data going</span>
+    Processing your data with a Claude model means the content is <strong>sent to Anthropic</strong>. That may be acceptable for your own work materials, but it is a different story for <strong>customer data or sensitive information</strong>. In those cases consider running <strong>open-source or local models</strong> and keeping the Second Brain that holds everything <strong>local rather than in the cloud</strong>. Being <strong>aware yourself</strong> of what gets processed where comes first.
+</div>
+
+<div class="note">
+    <span class="nh">Next</span>
+    If you do not need relationships, there is no need to use a graph at all. The final stage, which runs all of this <strong>automatically and always</strong>, is Level 5 — the always-on brain OS.
+</div>
+
+<h3>Level 5 · The always-on brain OS</h3>
+<p>The last level takes everything so far (routing·wiki·vectors·graph) and adds <strong>"always-on"</strong>. It is an <strong>autonomous brain OS</strong> that keeps <strong>absorbing and refreshing itself automatically</strong> without you having to think about it. The flagship example is <strong>GBrain</strong>.</p>
+
+<div class="note">
+    <span class="nh">What GBrain is</span>
+    A personal knowledge/memory layer built and <strong>released as open source</strong> by <strong>Garry Tan</strong>, president and CEO of <strong>Y Combinator</strong>. It is the <strong>operating system</strong> he actually runs his own agents (OpenClaw · <strong>Hermes</strong>) on, and it is said to hold a vast amount of information about pages, people, and companies.
+</div>
+
+<h4>What GBrain combines</h4>
+<div class="tbl-wrap">
+    <table>
+        <thead><tr><th>Part</th><th>What it is</th></tr></thead>
+        <tbody>
+            <tr><td>Storage</td><td><strong>Markdown-first</strong> + a Postgres backend</td></tr>
+            <tr><td>Relations</td><td><strong>A self-wiring knowledge graph</strong> — every time a page is written it extracts entities and creates <strong>typed edges</strong> such as <em>attended·works_at·invested_in·founded</em> (without an LLM call)</td></tr>
+            <tr><td>Search</td><td>A hybrid of <strong>vector + BM25 (keyword) + RRF</strong>(rank fusion) + <strong>reranking</strong></td></tr>
+            <tr><td>Always-on</td><td><strong>cron (scheduled jobs)</strong> auto-ingests meetings, email, tweets, and voice memos <strong>while you sleep</strong></td></tr>
+        </tbody>
+    </table>
+</div>
+<p class="scn-sub">※ <strong>GStack</strong>, which comes up alongside it, is a toolkit that lets you use Claude Code like an "AI engineering team (CEO·designer·release manager·QA and so on)".</p>
+
+<h4>The always-on loop</h4>
+<p>The key point is that <strong>without a person feeding it every time</strong>, the system gathers material by itself, connects relations, <strong>reads first</strong> before the next answer, and <strong>writes back</strong> after answering.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 660 200" role="img" aria-label="The always-on loop: sources are collected automatically, ingested into the brain with relations wired, and the agent reads and writes">
+    <!-- sources -->
+    <rect class="d-box soft" x="16" y="20" width="120" height="30" rx="7"/>
+    <text class="d-sub" x="76" y="39" text-anchor="middle">Meetings · email</text>
+    <rect class="d-box soft" x="16" y="58" width="120" height="30" rx="7"/>
+    <text class="d-sub" x="76" y="77" text-anchor="middle">Tweets · voice memos</text>
+    <rect class="d-box soft" x="16" y="96" width="120" height="30" rx="7"/>
+    <text class="d-sub" x="76" y="115" text-anchor="middle">Calendar · docs</text>
+
+    <!-- cron -->
+    <rect class="d-box accent" x="196" y="52" width="110" height="44" rx="10"/>
+    <text class="d-label sm" x="251" y="74" text-anchor="middle">cron auto-ingest</text>
+    <text class="d-sub" x="251" y="89" text-anchor="middle">always running</text>
+
+    <!-- brain -->
+    <rect class="d-box accent" x="360" y="42" width="140" height="64" rx="12"/>
+    <text class="d-label sm" x="430" y="68" text-anchor="middle">Brain</text>
+    <text class="d-sub" x="430" y="84" text-anchor="middle">ingest + wire relations</text>
+
+    <!-- agent -->
+    <rect class="d-box" x="540" y="52" width="104" height="44" rx="10"/>
+    <text class="d-label sm" x="592" y="74" text-anchor="middle">Agent</text>
+    <text class="d-sub" x="592" y="89" text-anchor="middle">read → answer</text>
+
+    <line class="d-edge" x1="136" y1="72" x2="194" y2="72"/><polygon class="d-arrow" points="188,67 196,72 188,77"/>
+    <line class="d-edge accent" x1="306" y1="74" x2="358" y2="74"/><polygon class="d-arrow accent" points="352,69 360,74 352,79"/>
+    <line class="d-edge accent" x1="500" y1="74" x2="538" y2="74"/><polygon class="d-arrow accent" points="532,69 540,74 532,79"/>
+    <!-- write back loop -->
+    <path class="d-edge dash" d="M592 96 V150 H430 V108"/><polygon class="d-arrow" points="425,114 435,114 430,106"/>
+    <text class="d-sub" x="505" y="144" text-anchor="middle">written back to the brain after</text>
+</svg>
+<div class="d-cap">A <strong>self-refreshing loop</strong> that runs without human intervention is the identity of Level 5.</div>
+</div>
+
+<div class="note warn">
+    <span class="nh">Caution — the too-much-context dilemma</span>
+    "Always-on" has a trap. <strong>When there is too much context</strong> it gets in the way instead — at what point does the harm outgrow the help? That is why it is safer to <strong>control what gets absorbed yourself</strong> ("just pull in this week's meeting notes, let's brainstorm together and then put them in together"). Be careful that automation does not turn into <strong>noise automation</strong>.
+</div>
+
+<div class="note">
+    <span class="nh">Once more — Level 5 is not the best</span>
+    Constant syncing is only worth it <strong>when you truly need it</strong> (many offline agents, bulk data, team-scale automated pipelines, and so on). The burden of managing cron yourself is heavy too. <strong>What you ingest and what you leave</strong> matters even more, and the criteria for that call are laid out in <a href="/p/en/sb-context-connections/">Context vs Connections</a>.
+</div>
+<p>All five levels climbed. The final chapter, <a href="/p/en/sb-context-connections/">Applying It</a>, sorts out what to put in, what to leave out, and how to pick your own level.</p>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Second Brain &middot; <span class="pr-k">Created</span> 2026-07-04 &middot; <span class="pr-k">Updated</span> 2026-08-15</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Second Brain &middot; <span class="pr-k">Created</span> 2026-07-04 &middot; <span class="pr-k">Updated</span> 2026-08-16</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
-<ul><li><a href="/p/en/gdb-graphrag/">Graph Databases &amp; GraphRAG — Store the Relationships, Change the Answers</a></li><li><a href="/p/en/gdb-vector-retriever/">Finding a Movie by Its Story — Your First Vector Retriever on a Neo4j Sandbox</a></li><li><a href="/p/en/sb-levels/">The five levels at a glance</a></li></ul>
+<ul><li><a href="/p/en/gdb-graphrag/">Graph Databases &amp; GraphRAG — Store the Relationships, Change the Answers</a></li><li><a href="/p/en/sb-intro/">What a Second Brain Is — the Five Levels at a Glance</a></li><li><a href="/p/en/gdb-vector-retriever/">Finding a Movie by Its Story — Your First Vector Retriever on a Neo4j Sandbox</a></li><li><a href="/p/en/wr-knowledge-vault/">The Man Who Records Everything, and the Wiki That Publishes — Reflections on Knowledge Vaults</a></li></ul>
 </nav>
 </body>
 </html>
