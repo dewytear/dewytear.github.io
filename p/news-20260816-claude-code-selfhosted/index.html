@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>내 서버에서 도는 Claude Code — 셀프호스팅 공개 베타와 8월의 릴리스들</title>
+<meta name="description" content="Claude Code의 셀프호스팅 환경이 2026-08-06 공개 베타로 열렸다 — Team·Enterprise 플랜, v2.1.224의 claude self-hosted-runner 한 명령으로 조직의 인프라가 세션 실행층이 된다(고정·온디맨드 2모드, 기본 비활성·관리자 활성화, ZDR 조직 제외). 같은 주의 GitLab MR 지원(--worktree가 MR URL을 받고 자가 호스팅 인스턴스도 판별)·auto-continue(한도 창 리셋 시 자동 재개, 8/14)·Compliance API 확장까지 — 실행 위치·대상 플랫폼·시간의 통제를 조직 쪽으로 넘기는 한 흐름으로 읽는다">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/news-20260816-claude-code-selfhosted/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260816-claude-code-selfhosted/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260816-claude-code-selfhosted/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/news-20260816-claude-code-selfhosted/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260816-claude-code-selfhosted/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="내 서버에서 도는 Claude Code — 셀프호스팅 공개 베타와 8월의 릴리스들">
+<meta property="og:description" content="Claude Code의 셀프호스팅 환경이 2026-08-06 공개 베타로 열렸다 — Team·Enterprise 플랜, v2.1.224의 claude self-hosted-runner 한 명령으로 조직의 인프라가 세션 실행층이 된다(고정·온디맨드 2모드, 기본 비활성·관리자 활성화, ZDR 조직 제외). 같은 주의 GitLab MR 지원(--worktree가 MR URL을 받고 자가 호스팅 인스턴스도 판별)·auto-continue(한도 창 리셋 시 자동 재개, 8/14)·Compliance API 확장까지 — 실행 위치·대상 플랫폼·시간의 통제를 조직 쪽으로 넘기는 한 흐름으로 읽는다">
+<meta property="og:url" content="https://dewytear.github.io/p/news-20260816-claude-code-selfhosted/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="내 서버에서 도는 Claude Code — 셀프호스팅 공개 베타와 8월의 릴리스들">
+<meta name="twitter:description" content="Claude Code의 셀프호스팅 환경이 2026-08-06 공개 베타로 열렸다 — Team·Enterprise 플랜, v2.1.224의 claude self-hosted-runner 한 명령으로 조직의 인프라가 세션 실행층이 된다(고정·온디맨드 2모드, 기본 비활성·관리자 활성화, ZDR 조직 제외). 같은 주의 GitLab MR 지원(--worktree가 MR URL을 받고 자가 호스팅 인스턴스도 판별)·auto-continue(한도 창 리셋 시 자동 재개, 8/14)·Compliance API 확장까지 — 실행 위치·대상 플랫폼·시간의 통제를 조직 쪽으로 넘기는 한 흐름으로 읽는다">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "내 서버에서 도는 Claude Code — 셀프호스팅 공개 베타와 8월의 릴리스들",
+ "description": "Claude Code의 셀프호스팅 환경이 2026-08-06 공개 베타로 열렸다 — Team·Enterprise 플랜, v2.1.224의 claude self-hosted-runner 한 명령으로 조직의 인프라가 세션 실행층이 된다(고정·온디맨드 2모드, 기본 비활성·관리자 활성화, ZDR 조직 제외). 같은 주의 GitLab MR 지원(--worktree가 MR URL을 받고 자가 호스팅 인스턴스도 판별)·auto-continue(한도 창 리셋 시 자동 재개, 8/14)·Compliance API 확장까지 — 실행 위치·대상 플랫폼·시간의 통제를 조직 쪽으로 넘기는 한 흐름으로 읽는다",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/news-20260816-claude-code-selfhosted/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260816-claude-code-selfhosted",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-08-16T11:36:12+09:00",
+ "dateModified": "2026-08-16T11:36:12+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260816-claude-code-selfhosted">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/news-20260816-claude-code-selfhosted/" hreflang="en">English</a>
+  &middot; <a href="/p/ja/news-20260816-claude-code-selfhosted/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>내 서버에서 도는 Claude Code — 셀프호스팅 공개 베타와 8월의 릴리스들</h2>
+
+<h3>세 줄 요약</h3>
+<ul>
+    <li>Claude Code의 <strong>셀프호스팅 환경</strong>(에이전트 세션을 Anthropic 클라우드가 아니라 <strong>내 조직의 인프라</strong>에서 돌리는 기능)이 2026년 8월 6일 공개 베타로 열렸다 — Team·Enterprise 플랜, 명령 하나(<code>claude self-hosted-runner</code>)로 내 머신이 실행층이 된다.</li>
+    <li>같은 주에 <strong>GitLab 머지 리퀘스트 지원</strong>(<code>--worktree</code>가 MR URL을 받음)과 <strong>auto-continue</strong>(사용량 한도에 막힌 세션을 창이 리셋되면 자동 재개, 8월 14일)가 따라붙었다.</li>
+    <li>셋의 결이 같다 — 실행 위치·대상 플랫폼·시간의 통제를 전부 <strong>조직 쪽으로</strong> 넘긴다. 승인 판정을 규칙으로 옮긴 <a href="/p/news-20260814-auto-mode-stateless-mcp/">auto 모드 기본값</a>의 다음 수순이다.</li>
+</ul>
+
+<h3>세션이 조직의 경계 안으로 들어왔다</h3>
+<p>지금까지 Claude Code의 원격 세션은 Anthropic이 관리하는 격리 컨테이너에서 돌았다. 코드는 세션 시작 때 새로 클론되고, 끝나면 컨테이너가 회수된다 — 편하지만, <strong>데이터가 조직 밖의 컴퓨터를 거친다</strong>는 사실 자체가 금융·의료·방산처럼 데이터 상주(데이터를 특정 위치 밖으로 내보내지 않는 요건)나 망 분리 규제가 있는 조직에는 도입 불가 사유였다.</p>
+<p>8월 6일 공개 베타로 열린 셀프호스팅 환경은 이 경계를 옮긴다. Claude Code v2.1.224(8월 7일)에 들어온 <code>claude self-hosted-runner</code> 한 명령으로 내 머신이나 컨테이너가 세션의 실행층이 되고, 에이전트는 <strong>내부망의 서비스·툴체인·보안 통제 옆에서</strong> 일한다. 러너 운용은 두 모드다.</p>
+<ul>
+    <li><strong>고정(fixed)</strong> — 러너를 정해진 수만큼 상시 띄워 두고 세션을 분배.</li>
+    <li><strong>온디맨드(on-demand)</strong> — 대기 중인 세션을 감시하다가 일이 오면 러너를 띄우고, 끝나면 내린다.</li>
+</ul>
+<p>기본값은 꺼짐이고 조직 관리자가 설정에서 켜야 하며, ZDR(Zero Data Retention — 데이터를 아예 저장하지 않는 계약 옵션)을 쓰는 조직은 아직 쓸 수 없다. 요컨대 "누구나 켜는 기능"이 아니라 <strong>컴플라이언스 요건 때문에 도입이 막혀 있던 조직을 위한 통로</strong>다.</p>
+
+<h3>같은 주의 나머지 — GitLab MR, auto-continue, Compliance API</h3>
+<p><strong>GitLab 머지 리퀘스트 지원.</strong> <code>claude --worktree</code>가 GitHub PR뿐 아니라 GitLab MR URL을 받게 됐고, 에이전트 목록 화면에서 MR이 <code>!N</code>으로 표시된다. 플랫폼 판별은 git remote와 API 탐지로 하기 때문에 GitLab.com만이 아니라 <strong>자가 호스팅 GitLab 인스턴스</strong>도 잡는다 — 사내 GitLab을 쓰는 조직(이 위키의 <a href="/p/dzp-overview/">AI 개발 지식 플랫폼 제안</a>이 전제하는 바로 그 환경)에 직접 닿는 변화다.</p>
+<p><strong>auto-continue.</strong> 8월 14일 데스크톱 앱에 들어온 체크박스 하나다. 사용량 한도에 걸려 멈춘 세션을, 한도 창이 리셋되는 순간 자동으로 이어서 돌린다. 한도 자체(5시간 창·주간 한도)는 그대로다 — 바뀐 것은 리셋 뒤에 <strong>사람이 돌아와 다시 시키던 일</strong>이 자동이 됐다는 점뿐이다. 긴 자율 작업을 밤새 걸어 두는 사용에서 체감이 크다.</p>
+<p><strong>Compliance API 확장.</strong> 보안 팀이 감사·전자증거개시(eDiscovery)용으로 세션 내용과 메타데이터를 통합 조회하는 API가 Cowork와 Claude Code의 데스크톱·웹·모바일·CLI 전 표면으로 넓어졌다(Enterprise 베타).</p>
+
+<h3>왜 한 흐름인가</h3>
+<p>이번 주 릴리스들은 겉보기에 잡다하지만 방향이 하나다. <a href="/p/news-20260814-auto-mode-stateless-mcp/">auto 모드 기본값</a>이 "무엇을 허용할지"의 판정을 매번 묻는 대화에서 <strong>미리 적어 둔 규칙</strong>으로 옮겼다면, 이번 주는 "어디서 돌지"(셀프호스팅), "무엇을 대상으로"(자가 호스팅 GitLab), "언제까지"(한도 창과 자동 재개)를 조직이 정하는 값으로 옮겼다. 에이전트가 강해질수록 통제 지점은 대화가 아니라 <strong>환경과 규칙</strong>으로 이동한다 — 이 위키가 <a href="/p/tip-advanced/">Tip 고급 편</a>에서 권한 편집과 검증 분리를 다루는 이유와 같은 줄기다.</p>
+
+<h3>이 위키에서 고친 것</h3>
+<ul>
+    <li><a href="/p/tip-advanced/">Tip 고급 편</a> — 21번(워크트리)에 GitLab MR 지원을, 23번(예약·루틴)에 auto-continue를 반영했다.</li>
+    <li><a href="/p/hns-usecases/">하네스 활용과 확장</a> — 도구 확장 절에 셀프호스팅 러너를 추가했다.</li>
+</ul>
+
+<h3>사실검증 노트</h3>
+<p class="scn-sub">셀프호스팅 공개 베타(8/6)·플랜 범위·러너 2모드·기본 비활성·ZDR 제외는 Anthropic 공식 블로그(<a href="https://claude.com/blog/run-claude-code-sessions-on-your-own-compute" target="_blank" rel="noopener">Run Claude Code sessions on your own compute</a>)와 공식 문서(<a href="https://code.claude.com/docs/en/self-hosted-environments" target="_blank" rel="noopener">Self-hosted environments</a>) 기준. v2.1.224의 <code>claude self-hosted-runner</code> 도입(8/7)은 <a href="https://www.joinnextdev.com/blog/claude-code-21224-brings-self-hosted-runners-to-enterprise" target="_blank" rel="noopener">nextdev 릴리스 분석</a>과 <a href="https://dev.classmethod.jp/en/articles/claude-code-self-hosted-runner/" target="_blank" rel="noopener">Classmethod의 EC2 실습기</a>로 교차 확인. auto-continue(8/14)는 Anthropic 개발자 채널 공지 기반이며 한도 자체는 불변이라는 해석은 <a href="https://explainx.ai/blog/claude-code-desktop-auto-continue-usage-limit-august-2026" target="_blank" rel="noopener">explainx 정리</a>와 일치. GitLab MR 지원의 세부(<code>--worktree</code>·<code>!N</code> 표기·자가 호스팅 판별)는 공개 릴리스 노트 요약 기준으로, 버전 단위 확정은 위 공식 문서를 우선한다.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">생성일자</span> 2026-08-16 &middot; <span class="pr-k">수정일자</span> 2026-08-16</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/news-20260814-auto-mode-stateless-mcp/">묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다</a></li><li><a href="/p/tip-advanced/">고급 — 병렬·자율·예약의 8가지</a></li><li><a href="/p/ccb-manage/">운영 — 사용량·세션과 마무리</a></li><li><a href="/p/dzp-core/">제안의 핵심과 아키텍처</a></li></ul>
+</nav>
+</body>
+</html>

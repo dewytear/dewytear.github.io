@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Code on Your Own Servers — the Self-Hosting Public Beta and August&#x27;s Releases</title>
+<meta name="description" content="Claude Code&#x27;s self-hosted environments opened as a public beta on 2026-08-06 — Team and Enterprise plans, and one command from v2.1.224, claude self-hosted-runner, turns your organization&#x27;s infrastructure into the session execution layer (fixed and on-demand modes, disabled by default with admin opt-in, ZDR organizations excluded). Together with the same week&#x27;s GitLab MR support (--worktree takes MR URLs and detects self-hosted instances), auto-continue (automatic resumption when the limit window resets, 8/14), and the Compliance API expansion, the piece reads them as one current: control over where sessions run, what they target, and when they work moves to the organization">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/news-20260816-claude-code-selfhosted/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260816-claude-code-selfhosted/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260816-claude-code-selfhosted/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/news-20260816-claude-code-selfhosted/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260816-claude-code-selfhosted/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Claude Code on Your Own Servers — the Self-Hosting Public Beta and August&#x27;s Releases">
+<meta property="og:description" content="Claude Code&#x27;s self-hosted environments opened as a public beta on 2026-08-06 — Team and Enterprise plans, and one command from v2.1.224, claude self-hosted-runner, turns your organization&#x27;s infrastructure into the session execution layer (fixed and on-demand modes, disabled by default with admin opt-in, ZDR organizations excluded). Together with the same week&#x27;s GitLab MR support (--worktree takes MR URLs and detects self-hosted instances), auto-continue (automatic resumption when the limit window resets, 8/14), and the Compliance API expansion, the piece reads them as one current: control over where sessions run, what they target, and when they work moves to the organization">
+<meta property="og:url" content="https://dewytear.github.io/p/en/news-20260816-claude-code-selfhosted/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Claude Code on Your Own Servers — the Self-Hosting Public Beta and August&#x27;s Releases">
+<meta name="twitter:description" content="Claude Code&#x27;s self-hosted environments opened as a public beta on 2026-08-06 — Team and Enterprise plans, and one command from v2.1.224, claude self-hosted-runner, turns your organization&#x27;s infrastructure into the session execution layer (fixed and on-demand modes, disabled by default with admin opt-in, ZDR organizations excluded). Together with the same week&#x27;s GitLab MR support (--worktree takes MR URLs and detects self-hosted instances), auto-continue (automatic resumption when the limit window resets, 8/14), and the Compliance API expansion, the piece reads them as one current: control over where sessions run, what they target, and when they work moves to the organization">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Claude Code on Your Own Servers — the Self-Hosting Public Beta and August's Releases",
+ "description": "Claude Code's self-hosted environments opened as a public beta on 2026-08-06 — Team and Enterprise plans, and one command from v2.1.224, claude self-hosted-runner, turns your organization's infrastructure into the session execution layer (fixed and on-demand modes, disabled by default with admin opt-in, ZDR organizations excluded). Together with the same week's GitLab MR support (--worktree takes MR URLs and detects self-hosted instances), auto-continue (automatic resumption when the limit window resets, 8/14), and the Compliance API expansion, the piece reads them as one current: control over where sessions run, what they target, and when they work moves to the organization",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/news-20260816-claude-code-selfhosted/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260816-claude-code-selfhosted",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-08-16T11:36:12+09:00",
+ "dateModified": "2026-08-16T11:36:12+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260816-claude-code-selfhosted">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/news-20260816-claude-code-selfhosted/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/ja/news-20260816-claude-code-selfhosted/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>Claude Code on Your Own Servers &mdash; the Self-Hosting Public Beta and August's Releases</h2>
+
+<h3>Three-line summary</h3>
+<ul>
+    <li>Claude Code's <strong>self-hosted environments</strong> &mdash; running agent sessions on <strong>your organization's own infrastructure</strong> instead of Anthropic's cloud &mdash; opened as a public beta on 6 August 2026. Team and Enterprise plans, one command (<code>claude self-hosted-runner</code>), and your machine becomes the execution layer.</li>
+    <li>The same week brought <strong>GitLab merge request support</strong> (<code>--worktree</code> now accepts MR URLs) and <strong>auto-continue</strong> (a session stopped by a usage limit resumes by itself when the window resets, 14 August).</li>
+    <li>The three point the same way &mdash; control over where sessions run, which platforms they target, and when they work all moves <strong>to the organization</strong>. It is the next step after the <a href="/p/en/news-20260814-auto-mode-stateless-mcp/">auto-mode default</a> moved approval decisions into written rules.</li>
+</ul>
+
+<h3>Sessions crossed into the organization's boundary</h3>
+<p>Until now, a remote Claude Code session ran in an isolated container managed by Anthropic. The code is cloned fresh when the session starts and the container is reclaimed when it ends &mdash; convenient, but the plain fact that <strong>data passes through computers outside the organization</strong> made it a non-starter for organizations bound by data residency (a requirement that data never leave a specified location) or network-separation rules, as in finance, healthcare, and defense.</p>
+<p>The self-hosted environments beta, opened on 6 August, moves that boundary. With the <code>claude self-hosted-runner</code> command that landed in Claude Code v2.1.224 (7 August), your machine or container becomes the session's execution layer, and the agent works <strong>next to your internal services, toolchains, and security controls</strong>. Runners operate in two modes.</p>
+<ul>
+    <li><strong>Fixed</strong> &mdash; keep a set number of runners up at all times and distribute sessions across them.</li>
+    <li><strong>On-demand</strong> &mdash; watch for waiting sessions, spin a runner up when work arrives, and shut it down when it finishes.</li>
+</ul>
+<p>It ships disabled by default and an organization administrator has to turn it on in settings; organizations on ZDR (Zero Data Retention &mdash; a contract option under which no data is stored at all) cannot use it yet. In short, this is not a feature everyone flips on &mdash; it is <strong>a path for organizations whose compliance requirements had blocked adoption</strong>.</p>
+
+<h3>The rest of the week &mdash; GitLab MRs, auto-continue, Compliance API</h3>
+<p><strong>GitLab merge request support.</strong> <code>claude --worktree</code> now takes GitLab MR URLs alongside GitHub PRs, and the agent list shows MRs as <code>!N</code>. Platform detection works from git remotes and API probing, so it catches <strong>self-hosted GitLab instances</strong>, not just GitLab.com &mdash; a change that lands directly on organizations running internal GitLab, the very environment this wiki's <a href="/p/en/dzp-overview/">AI development knowledge platform proposal</a> assumes.</p>
+<p><strong>Auto-continue.</strong> A single checkbox that arrived in the desktop app on 14 August. A session stopped by a usage limit resumes automatically the moment the limit window resets. The limits themselves (the 5-hour window and the weekly cap) are unchanged &mdash; what changed is only that <strong>the restart a person used to come back for</strong> now happens on its own. For long autonomous jobs left running overnight, the difference is tangible.</p>
+<p><strong>Compliance API expansion.</strong> The API that lets security teams query session content and metadata in one place for audits and eDiscovery (electronic evidence disclosure) now covers Cowork and every Claude Code surface &mdash; desktop, web, mobile, and CLI (Enterprise beta).</p>
+
+<h3>Why this is one current</h3>
+<p>This week's releases look miscellaneous but move in one direction. Where the <a href="/p/en/news-20260814-auto-mode-stateless-mcp/">auto-mode default</a> moved the question of <em>what to allow</em> from a prompt asked every time into <strong>rules written in advance</strong>, this week moved <em>where sessions run</em> (self-hosting), <em>what they target</em> (self-hosted GitLab), and <em>how long they work</em> (limit windows with automatic resumption) into values the organization sets. As agents grow stronger, the point of control shifts from the conversation to <strong>the environment and the rules</strong> &mdash; the same thread that runs through the permission editing and verification-splitting advice in this wiki's <a href="/p/en/tip-advanced/">advanced tips</a>.</p>
+
+<h3>What this wiki fixed</h3>
+<ul>
+    <li><a href="/p/en/tip-advanced/">Tips &mdash; advanced</a> &mdash; tip 21 (worktrees) now reflects GitLab MR support, and tip 23 (scheduling and Routines) covers auto-continue.</li>
+    <li><a href="/p/en/hns-usecases/">Harness use cases and extensions</a> &mdash; the tool-extension section now mentions self-hosted runners.</li>
+</ul>
+
+<h3>Fact-check notes</h3>
+<p class="scn-sub">The self-hosting public beta (8/6), plan scope, two runner modes, disabled-by-default, and the ZDR exclusion are per Anthropic's official blog (<a href="https://claude.com/blog/run-claude-code-sessions-on-your-own-compute" target="_blank" rel="noopener">Run Claude Code sessions on your own compute</a>) and official docs (<a href="https://code.claude.com/docs/en/self-hosted-environments" target="_blank" rel="noopener">Self-hosted environments</a>). The arrival of <code>claude self-hosted-runner</code> in v2.1.224 (8/7) is cross-checked against a <a href="https://www.joinnextdev.com/blog/claude-code-21224-brings-self-hosted-runners-to-enterprise" target="_blank" rel="noopener">nextdev release analysis</a> and <a href="https://dev.classmethod.jp/en/articles/claude-code-self-hosted-runner/" target="_blank" rel="noopener">Classmethod's hands-on EC2 walkthrough</a>. Auto-continue (8/14) is based on Anthropic's developer-channel announcement, and the reading that the limits themselves are unchanged matches an <a href="https://explainx.ai/blog/claude-code-desktop-auto-continue-usage-limit-august-2026" target="_blank" rel="noopener">explainx summary</a>. The GitLab MR details (<code>--worktree</code>, <code>!N</code> display, self-hosted detection) are per public release-note summaries; for version-level confirmation the official docs above take precedence.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">Created</span> 2026-08-16 &middot; <span class="pr-k">Updated</span> 2026-08-16</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking — Auto Mode and Stateless MCP</a></li><li><a href="/p/en/tip-advanced/">Advanced — 8 Tips for Parallel, Autonomous, Scheduled Work</a></li><li><a href="/p/en/ccb-manage/">Operations — Usage, Sessions &amp; Wrap-up</a></li><li><a href="/p/en/dzp-core/">The Core of the Proposal and the Architecture</a></li></ul>
+</nav>
+</body>
+</html>

@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-08-14T11:53:53+09:00",
- "dateModified": "2026-08-15T14:06:54+09:00"
+ "dateModified": "2026-08-16T11:36:12+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -69,7 +69,7 @@
 
 <h3>21. Run sessions in parallel with worktrees</h3>
 <p>Two sessions editing the same project at once — one on the login feature, one on graphics logic — collide the moment they touch the same file. A worktree is git's <strong>independent working copy</strong>: shared repository history, separate files. Give each session its own worktree and they simply can't overlap; merge with git when done.</p>
-<p>You can type the manual <code>git worktree</code> command yourself, but Claude Code now manages the whole lifecycle — start with <strong><code>claude --worktree</code> (<code>-w</code>)</strong> and creation, naming, and cleanup are automatic; the desktop app makes a worktree per new session on its own. Files git doesn't track, like <code>.env</code>, aren't in the copy — drop a <code>.worktreeinclude</code> file in the project root to have them copied over.</p>
+<p>You can type the manual <code>git worktree</code> command yourself, but Claude Code now manages the whole lifecycle — start with <strong><code>claude --worktree</code> (<code>-w</code>)</strong> and creation, naming, and cleanup are automatic; the desktop app makes a worktree per new session on its own. Files git doesn't track, like <code>.env</code>, aren't in the copy — drop a <code>.worktreeinclude</code> file in the project root to have them copied over. Since August 2026, <code>--worktree</code> also takes <strong>GitLab merge request URLs</strong>, not just GitHub PRs — it detects the platform from the git remote, so self-hosted GitLab instances count too (<a href="/p/en/news-20260816-claude-code-selfhosted/">August's releases</a>).</p>
 <pre><code><span class="c"># Terminal 1 — login feature (in its own worktree)</span>
 claude --worktree login-feature
 
@@ -108,6 +108,7 @@ claude -w motion-logic
 <h3>23. Schedule recurring work with <code>/loop</code> — and hand the rest to Routines</h3>
 <p>Set up a recurring job like <code>/loop check the deploy status every 5 minutes</code> and Claude keeps checking on its own for as long as the session lives. Deploy monitoring, periodic checks, even time-pinned jobs like "check our Slack at 8." Watch-and-wait work you'd otherwise babysit — hand it over whole.</p>
 <p>But <code>/loop</code> only runs <strong>while the session is open</strong>. Work that must run independently of your session and your computer belongs to a <strong>Routine</strong> — save a prompt, repositories, and connectors as one configuration, and it runs on Anthropic-managed cloud on a schedule (hourly minimum, cron expressions supported), on an API call, or on a GitHub event. Laptop closed? Still runs. Three options, in short: <strong><code>/loop</code> for repetition inside this session, desktop scheduled tasks for jobs pinned to your machine, and Routines when it has to run without your computer</strong>. This wiki's morning briefing runs as a Routine.</p>
+<p>One snag with long-running jobs got fixed too — sessions stopping at the usage limit. Turn on <strong>auto-continue</strong>, a checkbox that arrived in the desktop app on 14 August 2026, and a session halted by the limit resumes on its own the moment the window resets. The limits themselves (the 5-hour window and the weekly cap) are unchanged; only the restart a person used to come back for is now automatic (<a href="/p/en/news-20260816-claude-code-selfhosted/">August's releases</a>).</p>
 <p class="scn-sub">Official docs: <a href="https://code.claude.com/docs/en/scheduled-tasks" target="_blank" rel="noopener">Run prompts on a schedule</a></p>
 
 <h3>24. Steer remotely from your phone</h3>
@@ -243,10 +244,10 @@ claude -w motion-logic
 <h3>Closing</h3>
 <p>The 28 tips boil down to three principles. <strong>Context is a budget</strong> (beginner) — conserve it, split it, make it visible. <strong>Repetition belongs in the system</strong> (intermediate) — freeze good prompts into skills and CLAUDE.md. <strong>Parallelism starts with isolation</strong> (advanced) — put worktrees and permission rules in place first, then extend autonomy. The tools will keep changing; these three should outlast them.</p>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Tip &middot; <span class="pr-k">Created</span> 2026-08-14 &middot; <span class="pr-k">Updated</span> 2026-08-15</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Tip &middot; <span class="pr-k">Created</span> 2026-08-14 &middot; <span class="pr-k">Updated</span> 2026-08-16</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
-<ul><li><a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking — Auto Mode and Stateless MCP</a></li><li><a href="/p/en/hns-overview/">What a Harness Is — Overview, Definition, Anatomy</a></li><li><a href="/p/en/skills/">Extending Claude Code — Skills · MCP · Hooks</a></li><li><a href="/p/en/omc-intro/">OMC — Introduction and Install</a></li></ul>
+<ul><li><a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking — Auto Mode and Stateless MCP</a></li><li><a href="/p/en/news-20260816-claude-code-selfhosted/">Claude Code on Your Own Servers — the Self-Hosting Public Beta and August&#x27;s Releases</a></li><li><a href="/p/en/hns-overview/">What a Harness Is — Overview, Definition, Anatomy</a></li><li><a href="/p/en/skills/">Extending Claude Code — Skills · MCP · Hooks</a></li></ul>
 </nav>
 </body>
 </html>

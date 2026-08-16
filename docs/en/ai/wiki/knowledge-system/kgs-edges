@@ -5,16 +5,16 @@
 <p>Every document has <strong>five or six key concepts</strong> curated for it when it is registered (step ③ of the pipeline in the <a href="#!kgs-overview">previous part</a>). One principle governs this: <strong>write only concepts that actually exist in the body</strong>. If you add a concept that is not in the body because you want a connection, the graph stops being "a map of real knowledge". So the edges of this graph are fewer in number, but <strong>each one can present its evidence (the shared concepts)</strong>.</p>
 
 <h3>The Scale — The Rarer the Concept, the Stronger the Connection</h3>
-<p>When two documents share a concept, they become a connection candidate. But not every concept can weigh the same. Sharing 'skills', which appears in <strong>22</strong> of 115 documents, is close to coincidence, while sharing 'vector search', which appears in only <strong>2</strong>, is a strong signal. So each concept is given a <strong>rarity weight (idf)</strong> — roughly the log of "total number of documents ÷ number of documents containing that concept":</p>
+<p>When two documents share a concept, they become a connection candidate. But not every concept can weigh the same. Sharing 'skills', which appears in <strong>11</strong> of 64 documents, is close to coincidence, while sharing 'vector search', which appears in only <strong>3</strong>, is a strong signal. So each concept is given a <strong>rarity weight (idf)</strong> — roughly the log of "total number of documents ÷ number of documents containing that concept":</p>
 
 <div class="diagram">
-<svg viewBox="0 0 720 176" role="img" aria-label="The idf scale: 'skills' appears in 21 docs with a light weight of 1.54, while 'vector search' appears in only 2 docs with a heavy weight of 3.89">
+<svg viewBox="0 0 720 176" role="img" aria-label="The idf scale: 'skills' appears in 11 docs with a light weight of 1.78, while 'vector search' appears in only 3 docs with a heavy weight of 3.08">
     <rect class="d-box" x="30" y="24" width="300" height="60" rx="10"/>
-    <text class="d-label" x="180" y="49" text-anchor="middle">'skills' — appears in 21 docs</text>
-    <text class="d-sub" x="180" y="70" text-anchor="middle">common concept → weight log(98/21) ≈ 1.54</text>
+    <text class="d-label" x="180" y="49" text-anchor="middle">'skills' — appears in 11 docs</text>
+    <text class="d-sub" x="180" y="70" text-anchor="middle">common concept → weight log(65/11) ≈ 1.78</text>
     <rect class="d-box accent" x="390" y="24" width="300" height="60" rx="10"/>
     <text class="d-label" x="540" y="49" text-anchor="middle">'vector search' — only 2 docs</text>
-    <text class="d-sub" x="540" y="70" text-anchor="middle">rare concept → weight log(98/2) ≈ 3.89</text>
+    <text class="d-sub" x="540" y="70" text-anchor="middle">rare concept → weight log(65/3) ≈ 3.08</text>
     <line class="d-edge" x1="180" y1="84" x2="180" y2="116"/>
     <line class="d-edge accent" x1="540" y1="84" x2="540" y2="116"/>
     <text class="d-sub" x="180" y="138" text-anchor="middle">sharing it is a weak signal</text>
@@ -25,7 +25,7 @@
 </div>
 
 <h3>Dissecting a Real Edge — Welcome ↔ "What Is Claude Code"</h3>
-<p>Take one edge from the actual graph apart: <a href="#!welcome">Getting Started</a> and <a href="#!ccb-overview">the Tutorial basics chapter</a> share three concepts, <strong>'terminal' (weight 3.99), 'Claude Code' (2.48), and 'CLAUDE.md' (2.38)</strong>. The score is the sum of the weights, <strong>≈ 8.85</strong> — the same document's number-one related entry is the <a href="#!tip-beginner">beginner tips</a> with four shared concepts (≈ 11.72), so more shared and rarer concepts climb higher. The "Related docs" block at the bottom of a document shows these evidence concepts as chips, so you can always check <strong>why</strong> two documents were connected.</p>
+<p>Take one edge from the actual graph apart: <a href="#!welcome">Getting Started</a> and <a href="#!ccb-overview">the Tutorial basics chapter</a> share three concepts, <strong>'terminal' (weight 3.48), 'CLAUDE.md' (1.98), and 'Claude Code' (1.87)</strong>. The score is the sum of the weights, <strong>≈ 7.33</strong> — the same document's number-one related entry is the <a href="#!tip-beginner">beginner tips</a> with four shared concepts (≈ 9.56), so more shared and rarer concepts climb higher. The "Related docs" block at the bottom of a document shows these evidence concepts as chips, so you can always check <strong>why</strong> two documents were connected.</p>
 
 <h3>The Decision Rule — Three Branches</h3>
 <div class="diagram">
@@ -52,7 +52,7 @@
 
 <ul>
     <li><strong>2 or more shared</strong> → connect. Two different concepts overlapping is unlikely to be coincidence.</li>
-    <li><strong>1 shared + that concept appears in 3 or fewer documents</strong> → connect. A real case: <a href="#!welcome">Getting Started</a> ↔ <a href="#!omc-tools">OMC advanced tools</a> share only 'CLI', but 'CLI' appears in just 3 documents — rare enough to count. Conversely, a pair sharing only 'skills' is not connected — one concept shared by 17 documents cannot serve as evidence.</li>
+    <li><strong>1 shared + that concept appears in 3 or fewer documents</strong> → connect. A real case: <a href="#!dzp-overview">the proposal overview</a> ↔ <a href="#!news-20260816-claude-code-selfhosted">the self-hosting public beta</a> share only 'GitLab', but 'GitLab' appears in just 3 documents — rare enough to count. Conversely, a pair sharing only 'skills' is not connected — one concept shared by 11 documents cannot serve as evidence.</li>
     <li><strong>Otherwise</strong> → no connection by concept. Instead, a document that does not reach two concept connections is topped up with <strong>neighbors in the same System</strong> (e.g. the <a href="#!ccb-overview">Basics chapter</a> → the chapters before and after it in the same Tutorial), so that <strong>every document has at least 2 to 4 connections</strong>. The current ratio is 182 concept connections (77%) · 54 folder top-ups (23%).</li>
 </ul>
 
