@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-08-14T11:53:53+09:00",
- "dateModified": "2026-08-15T14:06:54+09:00"
+ "dateModified": "2026-08-16T11:36:12+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -69,7 +69,7 @@
 
 <h3>21. ワークツリーでセッションを並列に回す</h3>
 <p>同じプロジェクトで二つのセッションが同時にファイルを直すと — 片方はログイン機能、片方はグラフィックのロジック — 同じファイルに触れた瞬間に衝突します。ワークツリー（worktree）は git が提供する<strong>独立した作業コピー</strong>。リポジトリの履歴は共有しつつファイルは別々に持つので、セッションごとに自分のワークツリーで働けば、そもそも重なりようがありません。終わったら git のマージで合わせるだけ。</p>
-<p><code>git worktree</code> コマンドを手で打ってもいいんですが、いまは Claude Code が寿命管理までやってくれます — <strong><code>claude --worktree</code>（<code>-w</code>）</strong>で始めれば作成・命名・後片付けが自動で、デスクトップアプリは新しいセッションごとに勝手にワークツリーを作ります。<code>.env</code> のような git が追跡しないファイルはコピーに存在しないので、自動で持ち込みたければプロジェクトのルートに <code>.worktreeinclude</code> ファイルを置いてください。</p>
+<p><code>git worktree</code> コマンドを手で打ってもいいんですが、いまは Claude Code が寿命管理までやってくれます — <strong><code>claude --worktree</code>（<code>-w</code>）</strong>で始めれば作成・命名・後片付けが自動で、デスクトップアプリは新しいセッションごとに勝手にワークツリーを作ります。<code>.env</code> のような git が追跡しないファイルはコピーに存在しないので、自動で持ち込みたければプロジェクトのルートに <code>.worktreeinclude</code> ファイルを置いてください。2026年8月からは <code>--worktree</code> が GitHub PR だけでなく <strong>GitLab マージリクエストの URL</strong> も受け付けます — git remote からプラットフォームを判別するので、セルフホストの GitLab インスタンスも対象です（<a href="/p/ja/news-20260816-claude-code-selfhosted/">8月のリリース</a>）。</p>
 <pre><code><span class="c"># ターミナル1 — ログイン機能（独立ワークツリーで）</span>
 claude --worktree login-feature
 
@@ -108,6 +108,7 @@ claude -w motion-logic
 <h3>23. <code>/loop</code> で予約作業を仕掛け、セッションの外はルーティンに任せる</h3>
 <p><code>/loop 5分ごとにデプロイの状態を確認して</code>のように繰り返し作業を仕掛けておくと、セッションが生きている間、Claude が定期的に自分で確認してくれます。デプロイの監視、定期点検、「8時にうちの Slack を確認して」のような時刻指定もOK。人が見張らなくていい監視系の仕事を丸ごと渡せるので、使い道は広いですよ。</p>
 <p>ただし <code>/loop</code> が動くのは<strong>セッションが開いている間だけ</strong>。セッションやパソコンと無関係に動くべき仕事は<strong>ルーティン（Routine）</strong>の出番です — プロンプト・リポジトリ・コネクタを一つの構成として保存しておくと、Anthropic のクラウド上でスケジュール（最短1時間間隔、cron 式に対応）や API 呼び出し・GitHub のイベントで実行されます。ノートパソコンが閉じていても動きます。整理すると三つ — <strong>いまのセッション内の繰り返しは <code>/loop</code>、自分のマシンに固定する予約はデスクトップの予約タスク、パソコンなしでも動くべきならルーティン</strong>。この wiki の朝のブリーフィングもルーティンで動いています。</p>
+<p>長時間の作業のつまずきも一つ解消されました — 使用量上限で止まる問題です。2026年8月14日にデスクトップアプリへ入った <strong>auto-continue</strong> をオンにしておくと、上限で止まったセッションがウィンドウのリセットと同時に自動で再開します。上限そのもの（5時間ウィンドウ・週間上限）は変わらず、リセット後に人が戻ってきて再指示していた部分だけが自動になったわけです（<a href="/p/ja/news-20260816-claude-code-selfhosted/">8月のリリース</a>）。</p>
 <p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/scheduled-tasks" target="_blank" rel="noopener">Run prompts on a schedule</a></p>
 
 <h3>24. スマホから遠隔で操縦する</h3>
@@ -243,10 +244,10 @@ claude -w motion-logic
 <h3>むすび</h3>
 <p>28のコツは三つの原則に縮みます。<strong>コンテキストは予算</strong>（初級）— 節約して、分割して、見えるようにする。<strong>繰り返しは仕組みへ</strong>（中級）— うまくいったプロンプトはスキルと CLAUDE.md に固める。<strong>並列は隔離から</strong>（上級）— ワークツリーと権限ルールを先に置いてから自律を広げる。道具は変わり続けても、この三つは長持ちするはずです。</p>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Tip &middot; <span class="pr-k">作成日</span> 2026-08-14 &middot; <span class="pr-k">更新日</span> 2026-08-15</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Tip &middot; <span class="pr-k">作成日</span> 2026-08-14 &middot; <span class="pr-k">更新日</span> 2026-08-16</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
-<ul><li><a href="/p/ja/news-20260814-auto-mode-stateless-mcp/">尋ねない既定値 — 承認ボタンとセッションが同じ週に消えた</a></li><li><a href="/p/ja/hns-overview/">ハーネスとは — 概要・定義・構成</a></li><li><a href="/p/ja/skills/">拡張機能 — Skills · MCP · Hooks</a></li><li><a href="/p/ja/omc-intro/">OMC — 紹介とインストール</a></li></ul>
+<ul><li><a href="/p/ja/news-20260814-auto-mode-stateless-mcp/">尋ねない既定値 — 承認ボタンとセッションが同じ週に消えた</a></li><li><a href="/p/ja/news-20260816-claude-code-selfhosted/">自分のサーバーで動く Claude Code — セルフホスティング公開ベータと8月のリリース</a></li><li><a href="/p/ja/hns-overview/">ハーネスとは — 概要・定義・構成</a></li><li><a href="/p/ja/skills/">拡張機能 — Skills · MCP · Hooks</a></li></ul>
 </nav>
 </body>
 </html>

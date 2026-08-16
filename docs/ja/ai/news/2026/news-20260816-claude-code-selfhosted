@@ -1,0 +1,34 @@
+<h2>自分のサーバーで動く Claude Code &mdash; セルフホスティング公開ベータと8月のリリース</h2>
+
+<h3>三行要約</h3>
+<ul>
+    <li>Claude Code の<strong>セルフホスト環境</strong>（エージェントセッションを Anthropic のクラウドではなく<strong>自組織のインフラ</strong>で動かす機能）が2026年8月6日に公開ベータになった。Team・Enterprise プラン対象、コマンド一つ（<code>claude self-hosted-runner</code>）で自分のマシンが実行層になる。</li>
+    <li>同じ週に <strong>GitLab マージリクエスト対応</strong>（<code>--worktree</code> が MR URL を受け付ける）と <strong>auto-continue</strong>（使用量上限で止まったセッションを、ウィンドウのリセット時に自動再開 &mdash; 8月14日）が続いた。</li>
+    <li>三つの向きは同じだ &mdash; 実行場所・対象プラットフォーム・時間のコントロールをまとめて<strong>組織の側へ</strong>渡す。承認の判定を規則に移した<a href="#!news-20260814-auto-mode-stateless-mcp">auto モード既定値</a>の次の一手である。</li>
+</ul>
+
+<h3>セッションが組織の境界の内側に入った</h3>
+<p>これまで Claude Code のリモートセッションは、Anthropic が管理する隔離コンテナで動いていた。コードはセッション開始時に新しくクローンされ、終わればコンテナは回収される &mdash; 便利ではあるが、<strong>データが組織の外のコンピューターを通る</strong>という事実そのものが、金融・医療・防衛のようにデータレジデンシー（データを特定の場所の外に出さない要件）やネットワーク分離の規制を持つ組織には導入不可の理由だった。</p>
+<p>8月6日に公開ベータとなったセルフホスト環境は、この境界を動かす。Claude Code v2.1.224（8月7日）に入った <code>claude self-hosted-runner</code> という一つのコマンドで、自分のマシンやコンテナがセッションの実行層になり、エージェントは<strong>内部ネットワークのサービス・ツールチェーン・セキュリティ統制のすぐ隣で</strong>働く。ランナーの運用は二つのモードがある。</p>
+<ul>
+    <li><strong>固定（fixed）</strong> &mdash; ランナーを決まった数だけ常時立てておき、セッションを振り分ける。</li>
+    <li><strong>オンデマンド（on-demand）</strong> &mdash; 待機中のセッションを監視し、仕事が来たらランナーを立ち上げ、終われば畳む。</li>
+</ul>
+<p>既定値はオフで、組織の管理者が設定で有効化する必要がある。ZDR（Zero Data Retention &mdash; データを一切保存しない契約オプション）を使う組織はまだ使えない。要するに「誰でもオンにする機能」ではなく、<strong>コンプライアンス要件のせいで導入が塞がれていた組織のための通路</strong>だ。</p>
+
+<h3>同じ週の残り &mdash; GitLab MR・auto-continue・Compliance API</h3>
+<p><strong>GitLab マージリクエスト対応。</strong> <code>claude --worktree</code> が GitHub PR だけでなく GitLab MR URL を受け付けるようになり、エージェント一覧画面で MR が <code>!N</code> と表示される。プラットフォームの判別は git remote と API 探索で行うため、GitLab.com だけでなく<strong>セルフホストの GitLab インスタンス</strong>も捕まえる &mdash; 社内 GitLab を使う組織（この Wiki の <a href="#!dzp-overview">AI 開発ナレッジプラットフォーム提案</a>が前提とするまさにその環境）に直接届く変化だ。</p>
+<p><strong>auto-continue。</strong> 8月14日にデスクトップアプリへ入ったチェックボックス一つ。使用量上限にかかって止まったセッションを、上限ウィンドウがリセットされた瞬間に自動で再開する。上限そのもの（5時間ウィンドウ・週間上限）は変わらない &mdash; 変わったのは、リセット後に<strong>人が戻ってきて再指示していた作業</strong>が自動になった点だけだ。長い自律作業を夜通し走らせる使い方では体感が大きい。</p>
+<p><strong>Compliance API の拡張。</strong> セキュリティチームが監査・eDiscovery（電子証拠開示）用にセッション内容とメタデータを一括照会する API が、Cowork と Claude Code のデスクトップ・ウェブ・モバイル・CLI 全表面に広がった（Enterprise ベータ）。</p>
+
+<h3>なぜ一つの流れなのか</h3>
+<p>今週のリリースは一見雑多だが、方向は一つだ。<a href="#!news-20260814-auto-mode-stateless-mcp">auto モード既定値</a>が「何を許すか」の判定を毎回尋ねる対話から<strong>あらかじめ書いた規則</strong>に移したとすれば、今週は「どこで動くか」（セルフホスティング）、「何を対象に」（セルフホスト GitLab）、「いつまで」（上限ウィンドウと自動再開）を組織が決める値に移した。エージェントが強くなるほど、コントロールの拠点は対話ではなく<strong>環境と規則</strong>へ移る &mdash; この Wiki が <a href="#!tip-advanced">Tip 上級編</a>で権限編集と検証の分離を扱う理由と同じ筋だ。</p>
+
+<h3>この Wiki で直したもの</h3>
+<ul>
+    <li><a href="#!tip-advanced">Tip 上級編</a> &mdash; 21番（ワークツリー）に GitLab MR 対応を、23番（予約・ルーティン）に auto-continue を反映した。</li>
+    <li><a href="#!hns-usecases">ハーネスの活用と拡張</a> &mdash; ツール拡張の節にセルフホストランナーを追加した。</li>
+</ul>
+
+<h3>事実検証ノート</h3>
+<p class="scn-sub">セルフホスティング公開ベータ（8/6）・プラン範囲・ランナー2モード・既定オフ・ZDR 除外は Anthropic 公式ブログ（<a href="https://claude.com/blog/run-claude-code-sessions-on-your-own-compute" target="_blank" rel="noopener">Run Claude Code sessions on your own compute</a>）と公式ドキュメント（<a href="https://code.claude.com/docs/en/self-hosted-environments" target="_blank" rel="noopener">Self-hosted environments</a>）に基づく。v2.1.224 での <code>claude self-hosted-runner</code> 導入（8/7）は <a href="https://www.joinnextdev.com/blog/claude-code-21224-brings-self-hosted-runners-to-enterprise" target="_blank" rel="noopener">nextdev のリリース分析</a>と <a href="https://dev.classmethod.jp/en/articles/claude-code-self-hosted-runner/" target="_blank" rel="noopener">Classmethod の EC2 実践記</a>で相互確認。auto-continue（8/14）は Anthropic 開発者チャンネルの告知に基づき、上限自体は不変という解釈は <a href="https://explainx.ai/blog/claude-code-desktop-auto-continue-usage-limit-august-2026" target="_blank" rel="noopener">explainx の整理</a>と一致する。GitLab MR 対応の詳細（<code>--worktree</code>・<code>!N</code> 表記・セルフホスト判別）は公開リリースノート要約に基づくもので、バージョン単位の確定は上記公式ドキュメントを優先する。</p>
