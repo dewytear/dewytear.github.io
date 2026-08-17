@@ -11,15 +11,40 @@ function parseYouTubeId(input){
     return '';
 }
 
+// Accept a playlist URL (youtube.com or music.youtube.com) or a raw list
+// id; return the id, or '' when the input isn't a playlist. Checked before
+// parseYouTubeId, since a watch URL can carry both v= and list=.
+function parseYouTubeList(input){
+    input = (input || '').trim();
+    if(!input){ return ''; }
+    var m = input.match(/[?&]list=([A-Za-z0-9_-]{12,})/);
+    if(m){ return m[1]; }
+    if(/^(?:PL|OL|RD|UU|LL|FL)[A-Za-z0-9_-]{10,}$/.test(input)){ return input; }
+    return '';
+}
+
 // ---- Floating background music (YouTube IFrame API) ----
 (function(){
-    var DEFAULT_ID = 'UQd0VWWmxcY';
-    function resolveId(){
-        try{ return parseYouTubeId((effSettings().music) || '') || DEFAULT_ID; }
-        catch(e){ return DEFAULT_ID; }
+    // Site default: a YouTube Music playlist. A personal pick in settings
+    // may be either a playlist or a single video — exactly one of
+    // LIST_ID/VIDEO_ID is set at any time.
+    var DEFAULT_LIST = 'PLEaBaytKC9mQ';
+    function resolvePick(){
+        var raw = '';
+        try{ raw = (effSettings().music) || ''; }catch(e){}
+        var list = parseYouTubeList(raw);
+        if(list){ return { list: list, id: '' }; }
+        var id = parseYouTubeId(raw);
+        if(id){ return { list: '', id: id }; }
+        return { list: DEFAULT_LIST, id: '' };
     }
-    var VIDEO_ID = resolveId();
-    var VIDEO_URL = 'https://www.youtube.com/watch?v=' + VIDEO_ID;
+    var pick = resolvePick();
+    var LIST_ID = pick.list, VIDEO_ID = pick.id;
+    function trackUrl(){
+        return LIST_ID ? ('https://music.youtube.com/playlist?list=' + LIST_ID)
+                       : ('https://www.youtube.com/watch?v=' + VIDEO_ID);
+    }
+    var VIDEO_URL = trackUrl();
     var player, ready = false, playing = false, wantPlay = false, failed = false;
     var btn = document.getElementById('music-btn');
 
@@ -36,13 +61,18 @@ function parseYouTubeId(input){
 
     window.onYouTubeIframeAPIReady = function(){
         clearTimeout(apiTimer);
+        var vars = { autoplay: 0, controls: 0, loop: 1, playsinline: 1,
+                     origin: location.origin };
+        // A playlist loops through listType/list; a single video needs its
+        // own id repeated in `playlist` for loop:1 to have any effect.
+        if(LIST_ID){ vars.listType = 'playlist'; vars.list = LIST_ID; }
+        else{ vars.playlist = VIDEO_ID; }
         player = new YT.Player('yt-music', {
             // Real (off-screen) size — Safari refuses playback on a
             // zero-size/hidden media element even after a user tap.
-            height: '200', width: '200', videoId: VIDEO_ID,
-            playerVars: { autoplay: 0, controls: 0, loop: 1,
-                          playlist: VIDEO_ID, playsinline: 1,
-                          origin: location.origin },
+            height: '200', width: '200',
+            videoId: LIST_ID ? undefined : VIDEO_ID,
+            playerVars: vars,
             events: {
                 onReady: function(){
                     ready = true;
@@ -127,17 +157,23 @@ function parseYouTubeId(input){
             start();
         }
     };
-    // Settings can swap the track (a YouTube link/id). Apply live when
-    // the player exists; otherwise it takes effect on the next load
-    // (resolveId reads the saved setting at init).
+    // Settings can swap the track (a playlist or single-video link/id).
+    // Apply live when the player exists; otherwise it takes effect on the
+    // next load (resolvePick reads the saved setting at init).
     window.setMusicVideo = function(raw){
-        var id = parseYouTubeId(raw || '') || DEFAULT_ID;
-        if(id === VIDEO_ID){ return; }
-        VIDEO_ID = id;
-        VIDEO_URL = 'https://www.youtube.com/watch?v=' + id;
-        if(player && player.cueVideoById){
+        var next = { list: parseYouTubeList(raw || ''), id: '' };
+        if(!next.list){ next.id = parseYouTubeId(raw || ''); }
+        if(!next.list && !next.id){ next.list = DEFAULT_LIST; }
+        if(next.list === LIST_ID && next.id === VIDEO_ID){ return; }
+        LIST_ID = next.list; VIDEO_ID = next.id;
+        VIDEO_URL = trackUrl();
+        if(player){
             try{
-                player.cueVideoById(id);
+                if(LIST_ID && player.cuePlaylist){
+                    player.cuePlaylist({ listType: 'playlist', list: LIST_ID });
+                }else if(VIDEO_ID && player.cueVideoById){
+                    player.cueVideoById(VIDEO_ID);
+                }
                 failed = false;
                 if(btn){ btn.classList.remove('blocked'); }
             }catch(e){}
