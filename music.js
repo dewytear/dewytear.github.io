@@ -25,10 +25,10 @@ function parseYouTubeList(input){
 
 // ---- Floating background music (YouTube IFrame API) ----
 (function(){
-    // Site default: a YouTube Music playlist. A personal pick in settings
-    // may be either a playlist or a single video — exactly one of
-    // LIST_ID/VIDEO_ID is set at any time.
-    var DEFAULT_LIST = 'PLEaBaytKC9mQ';
+    // Site default: a single video. A personal pick in settings may be
+    // either a playlist or a single video — exactly one of LIST_ID/VIDEO_ID
+    // is set at any time.
+    var DEFAULT_ID = 'K6m0pbFeUW8';
     function resolvePick(){
         var raw = '';
         try{ raw = (effSettings().music) || ''; }catch(e){}
@@ -36,7 +36,7 @@ function parseYouTubeList(input){
         if(list){ return { list: list, id: '' }; }
         var id = parseYouTubeId(raw);
         if(id){ return { list: '', id: id }; }
-        return { list: DEFAULT_LIST, id: '' };
+        return { list: '', id: DEFAULT_ID };
     }
     var pick = resolvePick();
     var LIST_ID = pick.list, VIDEO_ID = pick.id;
@@ -163,7 +163,7 @@ function parseYouTubeList(input){
     window.setMusicVideo = function(raw){
         var next = { list: parseYouTubeList(raw || ''), id: '' };
         if(!next.list){ next.id = parseYouTubeId(raw || ''); }
-        if(!next.list && !next.id){ next.list = DEFAULT_LIST; }
+        if(!next.list && !next.id){ next.id = DEFAULT_ID; }
         if(next.list === LIST_ID && next.id === VIDEO_ID){ return; }
         LIST_ID = next.list; VIDEO_ID = next.id;
         VIDEO_URL = trackUrl();
