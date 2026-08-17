@@ -1,0 +1,17 @@
+            <h2>2026-08-17 — 기능</h2>
+
+            <h3>배경음악 — 단일 영상에서 재생목록으로</h3>
+            <p>
+                대표님이 새 음악 링크를 주셨는데 <strong>YouTube Music 재생목록</strong>이었다. 기존 <code>music.js</code>는 11자 영상 ID만 파싱했기 때문에(<code>parseYouTubeId</code>), 재생목록 URL을 넣으면 파싱에 실패해 조용히 기본 트랙으로 되돌아간다 — 링크만 바꾸면 "반영이 안 되는" 상태였다. 그래서 링크 교체와 함께 엔진을 재생목록까지 받도록 넓혔다.
+            </p>
+            <ul>
+                <li><strong><code>parseYouTubeList</code> 신설</strong> — <code>youtube.com</code>·<code>music.youtube.com</code>의 <code>list=</code> 파라미터와 생 재생목록 ID를 받는다. watch URL은 <code>v=</code>와 <code>list=</code>를 함께 갖는 경우가 있어 <strong>재생목록 판정을 먼저</strong> 한다.</li>
+                <li><strong>플레이어 초기화 분기</strong> — 재생목록이면 <code>listType</code>/<code>list</code>로 넘기고, 단일 영상이면 종전대로 <code>videoId</code> + <code>playlist</code>(같은 ID 반복 — 단일 영상에서 <code>loop:1</code>이 먹으려면 필요하다)를 쓴다.</li>
+                <li><strong>설정에서 바꿀 때도 양쪽</strong> — <code>setMusicVideo</code>가 재생목록이면 <code>cuePlaylist</code>, 영상이면 <code>cueVideoById</code>를 부른다. 차단 시 새 탭으로 여는 폴백 URL도 재생목록 주소로 따라간다.</li>
+            </ul>
+            <p>
+                실제 링크는 <code>music.js</code>의 하드코딩이 아니라 <strong><code>config.json</code>의 <code>music</code> 필드</strong>가 정본이었다(모듈의 <code>DEFAULT_LIST</code>는 설정이 비었을 때의 폴백). 첫 검증에서 재생목록 대신 옛 영상 ID로 초기화되길래 추적해 찾은 사실이라, 링크 교체는 config에서 하는 것이 맞다.
+            </p>
+            <p>
+                설정 화면의 문구도 3언어 모두 갱신했다 — 라벨·플레이스홀더가 "영상 링크 또는 ID"만 안내하고 있어서, 재생목록을 넣어도 되는지 알 길이 없었다. 헤드리스 브라우저에서 YT API를 스텁으로 갈아 끼워 <strong>초기화 인자·재생목록↔영상 왕복 전환</strong>을 확인했다(이 환경은 youtube.com 아웃바운드가 막혀 실제 재생은 확인 불가 — 재생목록 ID의 유효성은 대표님 쪽 브라우저 확인이 필요하다). <code>music.js</code>·<code>i18n.js</code> 캐시버스터 상향.
+            </p>
