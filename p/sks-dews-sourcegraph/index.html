@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dews-sourcegraph — 사내 코드 검색을 Claude에게 넘기는 스킬</title>
+<meta name="description" content="사내 SourceGraph 인스턴스를 Claude Code가 직접 질의하게 만드는 스킬. 비공개 인스턴스는 익명 접근이 401로 막혀 일반 웹 조회 도구로는 아무것도 못 읽는데, 이 스킬은 설치된 Edge·Chrome으로 폼 로그인을 1회 자동 수행하고 세션을 캐시해 재사용한다 — 개발자도구로 쿠키를 복사하는 절차가 없다. 캐시 브라우저를 쓰지 않는 이유(보안 에이전트가 ms-playwright 실행 파일을 차단하는 사내 PC에서 멈춤), 프로젝트 루트에 .claude 병합 + SourceGraph.md 세 줄 + npm install 로 끝나는 설치, Sourcegraph 표준 쿼리 문법, 그리고 로컬 우선 원칙과 [SG repo/파일:라인] 인용 규약을 담았다. 자격증명·세션 캐시 커밋 금지와 로그인 실패 시 재시도 금지(계정 잠금)를 함께 못 박았고, 조직 정보를 제거한 일반화 zip을 받을 수 있다">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/sks-dews-sourcegraph/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/sks-dews-sourcegraph/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/sks-dews-sourcegraph/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/sks-dews-sourcegraph/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/sks-dews-sourcegraph/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dews-sourcegraph — 사내 코드 검색을 Claude에게 넘기는 스킬">
+<meta property="og:description" content="사내 SourceGraph 인스턴스를 Claude Code가 직접 질의하게 만드는 스킬. 비공개 인스턴스는 익명 접근이 401로 막혀 일반 웹 조회 도구로는 아무것도 못 읽는데, 이 스킬은 설치된 Edge·Chrome으로 폼 로그인을 1회 자동 수행하고 세션을 캐시해 재사용한다 — 개발자도구로 쿠키를 복사하는 절차가 없다. 캐시 브라우저를 쓰지 않는 이유(보안 에이전트가 ms-playwright 실행 파일을 차단하는 사내 PC에서 멈춤), 프로젝트 루트에 .claude 병합 + SourceGraph.md 세 줄 + npm install 로 끝나는 설치, Sourcegraph 표준 쿼리 문법, 그리고 로컬 우선 원칙과 [SG repo/파일:라인] 인용 규약을 담았다. 자격증명·세션 캐시 커밋 금지와 로그인 실패 시 재시도 금지(계정 잠금)를 함께 못 박았고, 조직 정보를 제거한 일반화 zip을 받을 수 있다">
+<meta property="og:url" content="https://dewytear.github.io/p/sks-dews-sourcegraph/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="dews-sourcegraph — 사내 코드 검색을 Claude에게 넘기는 스킬">
+<meta name="twitter:description" content="사내 SourceGraph 인스턴스를 Claude Code가 직접 질의하게 만드는 스킬. 비공개 인스턴스는 익명 접근이 401로 막혀 일반 웹 조회 도구로는 아무것도 못 읽는데, 이 스킬은 설치된 Edge·Chrome으로 폼 로그인을 1회 자동 수행하고 세션을 캐시해 재사용한다 — 개발자도구로 쿠키를 복사하는 절차가 없다. 캐시 브라우저를 쓰지 않는 이유(보안 에이전트가 ms-playwright 실행 파일을 차단하는 사내 PC에서 멈춤), 프로젝트 루트에 .claude 병합 + SourceGraph.md 세 줄 + npm install 로 끝나는 설치, Sourcegraph 표준 쿼리 문법, 그리고 로컬 우선 원칙과 [SG repo/파일:라인] 인용 규약을 담았다. 자격증명·세션 캐시 커밋 금지와 로그인 실패 시 재시도 금지(계정 잠금)를 함께 못 박았고, 조직 정보를 제거한 일반화 zip을 받을 수 있다">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "dews-sourcegraph — 사내 코드 검색을 Claude에게 넘기는 스킬",
+ "description": "사내 SourceGraph 인스턴스를 Claude Code가 직접 질의하게 만드는 스킬. 비공개 인스턴스는 익명 접근이 401로 막혀 일반 웹 조회 도구로는 아무것도 못 읽는데, 이 스킬은 설치된 Edge·Chrome으로 폼 로그인을 1회 자동 수행하고 세션을 캐시해 재사용한다 — 개발자도구로 쿠키를 복사하는 절차가 없다. 캐시 브라우저를 쓰지 않는 이유(보안 에이전트가 ms-playwright 실행 파일을 차단하는 사내 PC에서 멈춤), 프로젝트 루트에 .claude 병합 + SourceGraph.md 세 줄 + npm install 로 끝나는 설치, Sourcegraph 표준 쿼리 문법, 그리고 로컬 우선 원칙과 [SG repo/파일:라인] 인용 규약을 담았다. 자격증명·세션 캐시 커밋 금지와 로그인 실패 시 재시도 금지(계정 잠금)를 함께 못 박았고, 조직 정보를 제거한 일반화 zip을 받을 수 있다",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/sks-dews-sourcegraph/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!sks-dews-sourcegraph",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-08-19T20:34:58+09:00",
+ "dateModified": "2026-08-19T20:34:58+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!sks-dews-sourcegraph">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/sks-dews-sourcegraph/" hreflang="en">English</a>
+  &middot; <a href="/p/ja/sks-dews-sourcegraph/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>dews-sourcegraph — 사내 코드 검색을 Claude에게 넘기는 스킬</h2>
+
+<p>사내에 SourceGraph를 두고 쓰는 조직이라면 이런 상황을 자주 만납니다. 지금 만드는 기능과 같은 유형이 회사 어딘가에 이미 있을 것 같은데, 내 로컬에는 그 저장소가 없습니다. 웹 UI를 열어 검색하고 결과를 눈으로 훑은 뒤 Claude에게 다시 설명하는 왕복이 생깁니다. <strong>dews-sourcegraph는 그 왕복을 없앱니다</strong> — Claude가 사내 인스턴스에 직접 질의해 <code>repo │ 파일:라인 │ 스니펫</code>을 받아오고 그 근거를 그대로 인용해 구현을 이어갑니다.</p>
+
+<p>걸림돌은 인증입니다. 비공개 인스턴스는 익명 접근이 401로 막혀 있어 일반적인 웹 조회 도구로는 아무것도 못 읽습니다. 그래서 이 스킬은 브라우저 폼 로그인을 한 번 자동으로 수행하고, 얻은 세션을 캐시해 재사용합니다. 사람이 개발자도구를 열어 쿠키를 복사하는 절차가 없습니다.</p>
+
+<div class="note">
+    <span class="nh">받기</span>
+    <a href="assets/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph/dews-sourcegraph-skill.zip" download>dews-sourcegraph-skill.zip</a> (15KB) — 스킬 본체 · 실행 도구 · 자격증명 템플릿 · 설치 README.
+    인스턴스 주소와 계정은 들어 있지 않습니다. 각자 환경 값을 채워 씁니다.
+</div>
+
+<h3>인증이 흐르는 방식</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 100" role="img" aria-label="인증 흐름: 세션 캐시 확인 → 없거나 만료면 브라우저 폼 로그인 → 검색 수행과 세션 저장">
+    <defs>
+        <marker id="sgAh" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path class="d-arrow" d="M0,0 L9,4.5 L0,9 Z"/>
+        </marker>
+    </defs>
+    <rect class="d-box" x="8" y="26" width="182" height="48" rx="10"/>
+    <text class="d-label" x="99" y="48" text-anchor="middle">① 세션 캐시 확인</text>
+    <text class="d-sub" x="99" y="64" text-anchor="middle">있으면 바로 검색</text>
+    <rect class="d-box accent" x="256" y="26" width="188" height="48" rx="10"/>
+    <text class="d-label" x="350" y="48" text-anchor="middle">② 폼 로그인 1회</text>
+    <text class="d-sub" x="350" y="64" text-anchor="middle">설치된 브라우저 구동</text>
+    <rect class="d-box soft" x="510" y="26" width="182" height="48" rx="10"/>
+    <text class="d-label" x="601" y="48" text-anchor="middle">③ 검색 · 세션 저장</text>
+    <text class="d-sub" x="601" y="64" text-anchor="middle">다음 실행부터 재사용</text>
+    <line class="d-edge" x1="190" y1="50" x2="250" y2="50" marker-end="url(#sgAh)"/>
+    <line class="d-edge" x1="444" y1="50" x2="504" y2="50" marker-end="url(#sgAh)"/>
+</svg>
+<div class="d-cap">그림 1. 세션이 살아 있으면 ②를 건너뛴다 — 브라우저는 처음 한 번과 세션이 풀렸을 때만 뜬다</div>
+</div>
+
+<p>브라우저 자동화는 <code>playwright-core</code>가 <strong>정식 설치된 Edge나 Chrome</strong>을 직접 구동합니다. 내려받는 캐시 브라우저를 쓰지 않는 이유는 실무 환경 때문입니다 — 보안 에이전트가 <code>ms-playwright</code> 캐시의 실행 파일을 차단하는 사내 PC가 있고 그런 환경에서는 캐시 브라우저가 빈 페이지조차 띄우지 못한 채 멈춥니다. 시스템 브라우저는 같은 조건에서 정상 동작합니다. 탐색 순서는 <code>SG_CHROMIUM_PATH</code> 환경변수 → 시스템 Edge/Chrome → 캐시 브라우저입니다.</p>
+
+<h3>설치</h3>
+<p>도구 경로가 프로젝트 루트 상대이므로, <strong>Claude Code를 여는 프로젝트 루트</strong>에 풀어야 합니다.</p>
+<pre><code>내 프로젝트/
+├── .claude/
+│   ├── skills/dews-sourcegraph/SKILL.md      <span class="c"># 스킬 본체</span>
+│   └── tools/sourcegraph-search.mjs …        <span class="c"># 실행 도구 + package.json</span>
+└── SourceGraph.md                            <span class="c"># 자격증명(직접 작성)</span></code></pre>
+<p>zip의 <code>.claude</code> 폴더를 프로젝트 루트에 병합하고 <code>SourceGraph.md.example</code>을 <code>SourceGraph.md</code>로 복사해 세 줄을 채웁니다.</p>
+<pre><code>URL:https://&lt;sourcegraph-호스트&gt;/
+ID:(계정 ID)
+PW:(비밀번호)</code></pre>
+<p>다른 위치에 두려면 <code>SG_CRED_FILE</code> 환경변수로 경로를 지정합니다. 그다음 의존성을 설치하고 Claude Code를 재시작하면 스킬 목록에 잡힙니다.</p>
+<pre><code>cd .claude/tools
+npm install</code></pre>
+
+<div class="note warn">
+    <span class="nh">두 가지는 꼭 지키세요</span>
+    <strong>① <code>SourceGraph.md</code>와 <code>.claude/tmp/</code>는 커밋하지 않습니다</strong> — 계정과 세션 쿠키가 저장소로 새어 나갑니다. <code>.gitignore</code>에 두 줄을 추가하세요.<br>
+    <strong>② 로그인이 실패하면 재시도하지 않습니다</strong> — 비밀번호 로그인을 연달아 실패하면 계정이 일시 잠깁니다. 도구가 출력하는 서버 메시지(<code>User or password was incorrect</code> / <code>locked out</code>)를 읽고 원인을 고친 뒤 한 번만 다시 시도합니다.
+</div>
+
+<h3>쓰는 법</h3>
+<p>Claude에게 "소스그래프에서 ○○ 찾아줘"라고 말하거나 <code>/dews-sourcegraph</code>로 직접 부릅니다. 터미널에서 바로 실행할 수도 있습니다.</p>
+<pre><code>node --no-warnings .claude/tools/sourcegraph-search.mjs --query "myFunction file:\.java$ count:30" --max 20</code></pre>
+<p>쿼리는 Sourcegraph 표준 문법을 그대로 씁니다.</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>필터</th><th>예</th><th>의미</th></tr></thead>
+    <tbody>
+        <tr><td>(본문)</td><td><code>myFunction</code></td><td>코드 내용 검색</td></tr>
+        <tr><td><code>repo:</code></td><td><code>repo:my-service</code></td><td>저장소 이름 패턴 한정</td></tr>
+        <tr><td><code>file:</code></td><td><code>file:\.java$</code></td><td>파일 경로 정규식</td></tr>
+        <tr><td><code>type:</code></td><td><code>type:path</code></td><td>파일명만 매치(내용 무시)</td></tr>
+        <tr><td><code>count:</code></td><td><code>count:all</code></td><td>서버측 결과 상한</td></tr>
+        <tr><td><code>-</code> 제외</td><td><code>-file:bin/</code></td><td>빌드 산출물 노이즈 제거</td></tr>
+    </tbody>
+</table>
+</div>
+<p>정규식이 필요하면 <code>--pattern regexp</code>를 붙입니다. 결과가 0건이면 대개 어휘가 어긋난 것이니, 필터를 걷어내고 넓게 던져 표현을 보정한 뒤 다시 좁히는 편이 빠릅니다.</p>
+
+<h3>로컬을 먼저 뒤지게 하는 이유</h3>
+<p>스킬 문서에 <strong>로컬 우선</strong>을 규칙으로 박아 두었습니다. 전사 검색이 늘 좋은 답을 주지는 않기 때문입니다. 같은 기능이라도 조직마다 관행이 다르고 내 저장소의 기존 코드와 어긋나는 패턴을 끌어오면 리뷰에서 되돌아옵니다. 그래서 발동 조건을 셋으로 좁혔습니다 — 로컬에 같은 유형의 선례가 없을 때, 파생본만 있고 원본이 어느 저장소인지 확인해야 할 때, 공통 라이브러리의 내부 구현이나 호출처를 봐야 할 때.</p>
+<p>인용 형식도 정해 두었습니다. 검색으로 얻은 근거는 <code>[SG {repo}/{파일}:{라인} → 재현할 패턴]</code>으로 남겨, 로컬 선례의 <code>파일:라인</code> 근거와 같은 등급으로 취급합니다. 원문 전체가 필요하면 그 저장소가 로컬에 있는지 먼저 확인하고 없으면 클론할지 사용자에게 묻습니다. 검색·발췌까지가 이 스킬의 경계입니다.</p>
+
+<div class="note">
+    <span class="nh">배포 범위</span>
+    공개된 zip은 특정 조직 정보를 담지 않은 일반화 버전입니다 — 인스턴스 주소·계정·조직 고유 검색 예시는 각자 환경에서 채워 씁니다.
+    검색 결과는 그 조직의 코드이므로 외부 서비스로 내보내지 않는다는 조항이 스킬 문서에 함께 들어 있습니다.
+</div>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · Skills · dews-sourcegraph &middot; <span class="pr-k">생성일자</span> 2026-08-19 &middot; <span class="pr-k">수정일자</span> 2026-08-19</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/hnp-intro/">Harness 플러그인 — 소개·개념·설치</a></li><li><a href="/p/hns-install/">실행하기 — 설치·실행·리뷰</a></li><li><a href="/p/skills/">확장 기능 — Skills · MCP · Hooks</a></li><li><a href="/p/sb-intro/">세컨드 브레인이란 — 5단계 한눈에</a></li></ul>
+</nav>
+</body>
+</html>

@@ -5,9 +5,18 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.en.xml"/>
   <id>https://dewytear.github.io/feed.en.xml</id>
-  <updated>2026-08-16T11:44:34+09:00</updated>
+  <updated>2026-08-19T20:34:58+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>dews-sourcegraph — A Skill That Hands Internal Code Search to Claude</title>
+    <link href="https://dewytear.github.io/p/en/sks-dews-sourcegraph/"/>
+    <id>https://dewytear.github.io/docs/en/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph</id>
+    <published>2026-08-19T20:34:58+09:00</published>
+    <updated>2026-08-19T20:34:58+09:00</updated>
+    <summary>A skill that lets Claude Code query an in-house SourceGraph instance directly. A private instance blocks anonymous access with a 401, so an ordinary web-fetch tool reads nothing — this skill performs a browser form login once on its own, using the Edge or Chrome already installed on the machine, and caches the session for reuse, which removes the step of copying cookies out of DevTools. It explains why the downloadable cache browser is avoided (on corporate machines a security agent blocks the ms-playwright executable, and the browser then hangs without even painting a blank page), the install that ends with merging .claude into the project root, three lines in SourceGraph.md and npm install, the standard Sourcegraph query filters, and the local-first rule with the [SG repo/file:line] citation convention. Two prohibitions are nailed down — never commit the credentials file or the session cache, and never retry a failed login, because repeated password failures lock the account. A generalized zip with all organization-specific values stripped is available for download.</summary>
+    <category term="AI · Claude · Skills · dews-sourcegraph"/>
+  </entry>
   <entry>
     <title>Claude Code on Your Own Servers — the Self-Hosting Public Beta and August's Releases</title>
     <link href="https://dewytear.github.io/p/en/news-20260816-claude-code-selfhosted/"/>
@@ -267,15 +276,6 @@
     <published>2026-07-10T09:13:02+09:00</published>
     <updated>2026-08-16T00:25:09+09:00</updated>
     <summary>Analyzes a seminar talk, with original-source checks and diagrams, covering Karpathy's LLM Wiki (write-time compilation vs RAG), the promotion flow of an Obsidian+Git team implementation, OpenViking's layered loading, and human/agent governance.</summary>
-    <category term="AI · News &amp; Articles · 2026"/>
-  </entry>
-  <entry>
-    <title>Is the Bottleneck of the Fable 5 Era the Human Rather Than the Model — Thariq Shihipar's "Map and Territory" Frame</title>
-    <link href="https://dewytear.github.io/p/en/news-20260709-thariq-fable5-unknowns/"/>
-    <id>https://dewytear.github.io/docs/en/ai/news/2026/news-20260709-thariq-fable5-unknowns</id>
-    <published>2026-07-09T00:55:15+09:00</published>
-    <updated>2026-08-10T16:29:39+09:00</updated>
-    <summary>Drawing on Thariq's Fable 5 experience, it analyzes capability overhang, map and territory, managing unknowns, and six hands-on techniques, checked against the facts and outside research.</summary>
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
 </feed>

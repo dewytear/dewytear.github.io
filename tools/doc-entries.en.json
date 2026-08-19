@@ -626,5 +626,24 @@
     "source": "human"
    }
   ]
+ },
+ {
+  "name": "sks-dews-sourcegraph",
+  "title": "dews-sourcegraph — A Skill That Hands Internal Code Search to Claude",
+  "summary": "A skill that lets Claude Code query an in-house SourceGraph instance directly. A private instance blocks anonymous access with a 401, so an ordinary web-fetch tool reads nothing — this skill performs a browser form login once on its own, using the Edge or Chrome already installed on the machine, and caches the session for reuse, which removes the step of copying cookies out of DevTools. It explains why the downloadable cache browser is avoided (on corporate machines a security agent blocks the ms-playwright executable, and the browser then hangs without even painting a blank page), the install that ends with merging .claude into the project root, three lines in SourceGraph.md and npm install, the standard Sourcegraph query filters, and the local-first rule with the [SG repo/file:line] citation convention. Two prohibitions are nailed down — never commit the credentials file or the session cache, and never retry a failed login, because repeated password failures lock the account. A generalized zip with all organization-specific values stripped is available for download.",
+  "concepts": [
+   "스킬",
+   "설치",
+   "자동화",
+   "정확검색"
+  ],
+  "relations": [
+   {
+    "target": "skl-overview",
+    "type": "prerequisite",
+    "evidenceRef": "The article skips what a skill physically is and how it triggers, covering only folder merging and invocation — it delegates the question of what a skill is to that document",
+    "source": "human"
+   }
+  ]
  }
 ]

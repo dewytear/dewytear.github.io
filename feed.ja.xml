@@ -5,9 +5,18 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.ja.xml"/>
   <id>https://dewytear.github.io/feed.ja.xml</id>
-  <updated>2026-08-16T11:44:34+09:00</updated>
+  <updated>2026-08-19T20:34:58+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>dews-sourcegraph — 社内コード検索を Claude に任せるスキル</title>
+    <link href="https://dewytear.github.io/p/ja/sks-dews-sourcegraph/"/>
+    <id>https://dewytear.github.io/docs/ja/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph</id>
+    <published>2026-08-19T20:34:58+09:00</published>
+    <updated>2026-08-19T20:34:58+09:00</updated>
+    <summary>社内の SourceGraph インスタンスを Claude Code が直接照会できるようにするスキル。非公開インスタンスは匿名アクセスが 401 で閉じられているため、ふつうのウェブ取得ツールでは何も読めない — このスキルは端末にすでに入っている Edge・Chrome でフォームログインを一度だけ自動で行い、得たセッションをキャッシュして再利用するので、開発者ツールから Cookie を写す手順がいらない。ダウンロード型のキャッシュブラウザを使わない理由（社内 PC ではセキュリティエージェントが ms-playwright の実行ファイルを遮断し、空のページさえ描けずに止まる）、プロジェクトルートへの .claude 統合と SourceGraph.md の三行、npm install で終わるインストール、Sourcegraph 標準のクエリフィルタ、そしてローカル優先の原則と [SG repo/ファイル:行] という引用の約束事をまとめた。禁止事項は二つ — 資格情報ファイルとセッションキャッシュをコミットしないこと、ログインが失敗したら再試行しないこと（パスワードの連続失敗はアカウントの一時ロックを招く）。組織固有の値を取り除いた一般化 zip を配布している。</summary>
+    <category term="AI · Claude · Skills · dews-sourcegraph"/>
+  </entry>
   <entry>
     <title>自分のサーバーで動く Claude Code — セルフホスティング公開ベータと8月のリリース</title>
     <link href="https://dewytear.github.io/p/ja/news-20260816-claude-code-selfhosted/"/>
@@ -267,15 +276,6 @@
     <published>2026-07-10T09:13:02+09:00</published>
     <updated>2026-08-16T00:25:09+09:00</updated>
     <summary>セミナーの発表を、元の出典の確認と図とともに分析する — カルパシーの LLM Wiki（書き込みの時点のコンパイル vs RAG）、Obsidian + Git のチームの実装の昇格のフロー、OpenViking の階層の読み込み、人とエージェントのガバナンス。</summary>
-    <category term="AI · News &amp; Articles · 2026"/>
-  </entry>
-  <entry>
-    <title>Fable 5 の時代のボトルネックはモデルではなく人間か — Thariq Shihipar の「地図と領土」のフレーム</title>
-    <link href="https://dewytear.github.io/p/ja/news-20260709-thariq-fable5-unknowns/"/>
-    <id>https://dewytear.github.io/docs/ja/ai/news/2026/news-20260709-thariq-fable5-unknowns</id>
-    <published>2026-07-09T00:55:15+09:00</published>
-    <updated>2026-08-10T16:29:39+09:00</updated>
-    <summary>タリクの Fable 5 の経験をもとに、capability overhang、地図と領土、unknown の管理、六つの実戦の技法を、事実関係と外部の研究に照らして分析する。</summary>
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
 </feed>
