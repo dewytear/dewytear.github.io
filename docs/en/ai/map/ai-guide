@@ -1,5 +1,5 @@
 <h2>AI Traversal Guide — how to read this wiki by machine</h2>
-<p>This page is the <strong>contract</strong> for an external AI to consult this wiki first when given a task and analyze information by its relations. It uses the same data as the human-facing <a href="#!ai-map"><strong>Knowledge Map</strong></a> / <a href="#!cosmos"><strong>Knowledge Graph</strong></a>, but specifies <strong>which files to fetch, in what order, and how to traverse and analyze</strong>.</p>
+<p>This page is the <strong>contract</strong> for an external AI to consult this wiki first when given a task and analyze information by its relations. It uses the same data as the human-facing <a href="#!ai-map"><strong>Knowledge Map</strong></a> / <a href="#!cosmos"><strong>Knowledge Graph</strong></a> (9 views) / <a href="#!graph"><strong>Graph Studio</strong></a>, but specifies <strong>which files to fetch, in what order, and how to traverse and analyze</strong>.</p>
 
 <h3>Read this first — a single file</h3>
 <p>The root <a href="https://dewytear.github.io/llms.txt"><code>llms.txt</code></a> is the sign-post; actual traversal needs only one self-contained file:</p>
@@ -7,8 +7,10 @@
     <li><strong><a href="https://dewytear.github.io/data/knowledge-graph.json"><code>data/knowledge-graph.json</code></a></strong> — every <strong>node (document)</strong> plus <strong>edges (related)</strong>, <strong>concepts</strong>, <strong>raw URL</strong>, and stats in one file. No joining required to traverse the whole graph.</li>
 </ul>
 <p>Optional: <a href="https://dewytear.github.io/data/knowledge-index.ko.json"><code>knowledge-index.ko.json</code></a> (source index) · <a href="https://dewytear.github.io/list"><code>list</code></a> (nav tree / paths) · <a href="https://dewytear.github.io/data/doc-dates.json"><code>doc-dates.json</code></a> (dates).</p>
+<p><strong>If you need the full text in one go</strong>, fetch <a href="https://dewytear.github.io/llms-full.txt"><code>llms-full.txt</code></a> — a whole-corpus dump of every document as plain text (for loading everything into context instead of traversing). <strong>To subscribe to new documents</strong>, use <a href="https://dewytear.github.io/feed.xml"><code>feed.xml</code></a> (Atom, latest 30 — English at <code>feed.en.xml</code>, Japanese at <code>feed.ja.xml</code>). Crawler policy lives in <code>robots.txt</code> (an AI-crawler allowlist), and the full URL inventory in <code>sitemap.xml</code>. Content is licensed <strong>CC BY 4.0</strong> — quote and reuse freely with attribution.</p>
 
 <h3>Node schema</h3>
+<p>Each element of <code>nodes[]</code> in <code>knowledge-graph.json</code> (the file's top-level <code>schemaVersion</code> is currently <code>2</code> — pin your consumer to it):</p>
 <pre><code>{
   "name": "welcome",                     // immutable logical id (node key)
   "title": "Welcome",
@@ -16,24 +18,39 @@
   "section": "AI · Claude · Code · Introduction",   // World · Domain · System · …
   "concepts": ["Claude Code","CLI", "..."],          // join keys (human-curated)
   "url":   "https://dewytear.github.io/docs/ko/ai/claude/code/introduction/welcome",
-  "route": "https://dewytear.github.io/#!welcome",
+  "route": "https://dewytear.github.io/#!welcome",   // human-facing SPA view
   "page":  "https://dewytear.github.io/p/welcome/",  // static snapshot (readable without JS)
   "related": [
-    { "name":"ccb-what", "shared":["Claude Code"], "via":"concept" },
-    { "name":"install",  "shared":[],              "via":"folder" }
-  ]
+    { "name":"ccb-what", "title":"...", "shared":["Claude Code"], "via":"concept" },
+    { "name":"install",  "title":"...", "shared":[],              "via":"folder" }
+  ],
+  "relations": [                          // (optional) curated, directed semantic relations — separate from computed related
+    { "target":"kgs-edges", "type":"prerequisite", "evidenceRef":"...", "source":"human" }
+  ],
+  "citedBy": ["skills", "tip-beginner"]   // (optional) documents whose body links here — citation backlinks
 }</code></pre>
 
 <h3>Traversal &amp; analysis rules</h3>
 <ul>
     <li><strong>Nodes = documents</strong> (keyed by <code>name</code>), <strong>edges = <code>related</code></strong>. <code>via:"concept"</code> is a <em>semantic</em> link via rarity-weighted shared concepts (<code>shared</code> is the evidence); <code>via:"folder"</code> is same-System adjacency (so every doc has 2–4 edges).</li>
+    <li><strong>Typed relations = <code>relations</code></strong> (optional). Where <code>related</code> is a <em>symmetric, computed</em> edge, <code>relations</code> is a human-curated <strong>directed semantic relation</strong> — <code>type</code> is one of <code>prerequisite</code>, <code>implements</code>, <code>example-of</code>, <code>evidence-for</code>, <code>supersedes</code>, with <code>evidenceRef</code> as the justification. Direction is this node → <code>target</code>; derive reverse relations by scanning all nodes (only the forward direction is stored). It is a separate signal that does not overlap <code>related</code> — use <strong>both</strong>.</li>
+    <li><strong>Citation backlinks = <code>citedBy</code></strong> (optional). The documents that <em>actually link this one from their body</em> — a <strong>third connection layer</strong>, independent of <code>related</code> (computed from concepts) and <code>relations</code> (curated). Read this layer to see which documents are cited most and which piece leans on which.</li>
     <li><strong>Concepts are the join keys.</strong> Docs sharing a concept are related; rarer concepts are stronger (idf). Reverse-index <code>concepts</code> to gather a topic.</li>
     <li><strong>Fetch raw content via <code>url</code></strong> — a static HTML fragment, no JS rendering needed. If you want a <strong>complete page with metadata</strong> (title, description, dates, license), use <code>page</code> instead (<code>/p/&lt;name&gt;/</code>, English at <code>/p/en/&lt;name&gt;/</code>, Japanese at <code>/p/ja/&lt;name&gt;/</code>): the same body plus <code>&lt;title&gt;</code>, description, canonical, hreflang and Article JSON-LD, with in-body links rewired to sibling snapshots so you can traverse without JS.</li>
-    <li><strong>Hierarchy</strong> comes from <code>section</code> (top 3 tiers) and <code>stats.clusters</code> (per-System counts / hubs). First segment = World.</li>
+    <li><strong>Hierarchy</strong> comes from <code>section</code> (the top 3 tiers of <code>"World · Domain · System · Document"</code>) and <code>stats.clusters</code> (per-System counts / hubs). The first segment is the World (e.g. <code>AI</code>, <code>Douzone</code>), and per-World summaries live in <strong><code>stats.galaxies</code></strong> (the key name is a legacy of the early schema, kept because data keys are stable). Global most-frequent concepts are in <strong><code>stats.topConcepts</code></strong>.</li>
     <li><strong>Entry points</strong>: start from <code>stats.hubs</code> (most-referenced) and expand along <code>related</code>; <code>stats.bridges</code> are concepts spanning multiple Systems.</li>
+    <li><strong>Field differences in the auxiliary indexes</strong>: <code>knowledge-index.*.json</code> is the same graph's source index but carries no <code>url</code>/<code>route</code>/<code>page</code> (those exist only in the graph file). The English and Japanese indexes may add <code>sectionL</code>, a localized display path — the join key is always the canonical <code>section</code>.</li>
+    <li><strong>Downloadable assets</strong>: some documents ship a distribution file (e.g. a zip) under <code>assets/&lt;doc path&gt;/&lt;name&gt;/&lt;file&gt;</code> (first case: the skill zip of <code>sks-dews-sourcegraph</code>). Resolve relative <code>assets/…</code> links in body fragments against the site root.</li>
 </ul>
+
+<h3>Traversal example (2 hops)</h3>
+<pre><code>1) fetch https://dewytear.github.io/data/knowledge-graph.json
+2) pick nodes whose concepts overlap the query (or start from stats.hubs)
+3) related[].name gives the 1-hop neighbors; their related gives the 2-hop set
+4) fetch the url of interesting nodes and read the raw HTML fragments
+5) use shared[] as the evidence for *why* two documents are connected</code></pre>
 
 <h3>Honesty principle</h3>
 <p>Concepts and summaries are <strong>human/AI-curated</strong>, not scraped — so edges are few but trustworthy. A sparse link is not a defect, and different Worlds (e.g. AI ↔ DOUZONE) are meant to be loosely coupled. Analyze using only the relations that exist, citing <code>via</code> and <code>shared</code>.</p>
 
-<p>These files regenerate whenever a document is added, so they always match the current graph (<code>tools/build_ai_export.py</code>).</p>
+<p>The data files above (graph, indexes, llms, feeds, sitemap) regenerate whenever a document is added, so they always match the current graph (<code>tools/build_ai_export.py</code>). The prose of this guide itself is maintained by hand — when the schema changes, this page changes with it.</p>

@@ -39,3 +39,17 @@
                 로컬에서 못 돌렸던 헤드리스 두 잡도 여기서 돌렸다 — <code>check_diagram_bounds</code> 3언어 도식 초록, <code>check_i18n_render</code> 50렌더 초록. <code>check_all</code> 8게이트 ERROR 0.
             </p>
 
+            <h3>자기기술 문서 버전업 — AI 순회 가이드·About 검증</h3>
+            <p>
+                두 자기기술 문서를 현재 시스템과 대조해 검증하라는 지시. 마지막 실질 편집이 ai-guide 07-28, About 08-04라 그 뒤의 변화(Graph Studio·citedBy·합본·피드 3종·다운로드 규칙)가 서술에 없었다. 다행히 <strong>낡은 수치는 없었다</strong> — 두 문서 모두 숫자를 거의 안 쓰는 설계라, 필요한 일은 정정 몇 건과 증보였다.
+            </p>
+            <ul>
+                <li><strong>팩트 정정 3건</strong> — ①/p/about 메타의 직함 하드코딩이 본문과 어긋나 있었다(책임연구원 vs 수석연구원 — 대표님 확인으로 <strong>수석연구원</strong>이 정답, <code>build_prerender.py</code> 정정. 본문 en의 Principal Researcher는 저자가 쓰던 수석연구원 번역이라 유지). ②일본어 About의 회사명 오역 ダウンビジョン → <strong>Douzone Bizon</strong>(라틴 표기, 2곳) + 직함 主任研究員 → 首席研究員. ③<code>config.json</code>의 tagline이 "A guide to Aaron's Claude Project"로 남아 있어 현 정체성(LLM Wiki·세컨드 브레인) 문구로 교체.</li>
+                <li><strong>en ai-guide 재동기</strong> — 영어판이 ko/ja에서 구조째 이탈해 있었다: relations 5타입 서술·노드 스키마의 relations 필드·llms-full/피드/라이선스 문단·"순회 예시(2홉)" 절이 통째로 없었다. ko 구조(h3 5·pre 2)로 다시 썼다.</li>
+                <li><strong>ai-guide 3언어 증보</strong> — 스키마에 <code>citedBy</code>(세 번째 연결층)와 <code>schemaVersion: 2</code> 고정 안내, <code>stats.galaxies</code>(키 이름이 초기 스키마의 잔재임을 명시)·<code>topConcepts</code>, 인덱스와 그래프의 필드 차이(url/route/page는 그래프에만, en/ja의 <code>sectionL</code>은 표시용), 피드 3종·robots·sitemap, <code>#!graph</code>(Graph Studio), 다운로드 자산 규약. 말미의 "자동 재생성" 문구는 데이터 파일에 한정됨을 분명히 했다 — 이 가이드의 산문은 사람이 갱신하는 계약이다.</li>
+                <li><strong>About 이중 인터페이스 카드 보강</strong> ×3언어 — "3언어 화면·검색·Graph Studio"에서 동결돼 있던 기능 서술을 통합검색·9뷰·citedBy·전문 덤프·/p/ 스냅샷·피드·4계층·관계 5타입으로 넓혔다. 인물 영역과 다른 카드는 손대지 않았고, 수치는 계속 안 넣는다 — 숫자는 낡는다.</li>
+            </ul>
+            <p>
+                ai-guide는 JSON-LD <code>Dataset.url</code>이 가리키는 계약 문서인데 생성 블록이 없어 <strong>게이트가 신선도를 지켜주지 않는다</strong> — 이번처럼 사람이 주기적으로 대조하는 수밖에 없고, 그래서 CLAUDE.md의 "엔진 변경 시 자기기술 문서 검토" 규칙이 있는 것이다. About도 check_translation·i18n-render 대상 밖이라 3언어 189줄 동형을 손으로 유지했다.
+            </p>
+
