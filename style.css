@@ -3280,11 +3280,23 @@
             color: var(--muted);
             text-shadow: 0 1px 2px color-mix(in srgb, var(--bg) 70%, transparent);
             opacity: 0;
-            transform: translateX(10px);
-            transition: opacity .45s ease, transform .45s ease;
+            transform: translateX(16px);
+            /* 버튼 쪽(오른쪽)부터 글자가 드러난다 — 왼쪽 인셋을 100%→0으로
+               풀어 두루마리가 펴지듯 열리는 느낌을 만든다. */
+            clip-path: inset(0 0 0 100%);
+            /* 나갈 때는 짧게(아래 .show가 들어올 때의 느린 값을 덮는다). */
+            transition: opacity .3s ease, transform .3s ease, clip-path .3s ease;
             pointer-events: none;
         }
-        #music-title.show{ opacity: 1; transform: translateX(0); }
+        /* 들어올 때만 느리게 — 거의 멈춘 듯 감속하는 곡선으로 스르륵 열린다. */
+        #music-title.show{
+            opacity: 1;
+            transform: translateX(0);
+            clip-path: inset(0);
+            transition: opacity .55s ease-out,
+                        transform 1.05s cubic-bezier(.42, 0, .45, 1),
+                        clip-path 1.05s cubic-bezier(.42, 0, .45, 1);
+        }
         /* Narrow phones: the corner is crowded enough without a title. */
         @media (max-width: 420px){
             #music-title{ display: none; }
