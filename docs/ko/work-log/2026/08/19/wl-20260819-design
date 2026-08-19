@@ -1,0 +1,21 @@
+            <h2>2026-08-19 — 디자인·UI</h2>
+
+            <h3>통합검색 검색 버튼 — 🔍 이모지를 걷고 먹점 하나로</h3>
+            <p>
+                검색창 오른쪽 끝 버튼이 <code>&amp;#128269;</code>, 즉 돋보기 <strong>이모지</strong>였다. 이모지는 OS가 그리는 컬러 글리프라 테마 토큰을 따르지 않는다 — 밤 테마의 청록, 낮 테마의 주황 어느 쪽에도 속하지 않고 파란 유리알 하나가 떠 있는 셈이었고, 옆의 <code>new+</code> 알약이 글자·테두리로 조용히 서 있는 것과도 결이 어긋났다.
+            </p>
+            <p>
+                대안 3안을 실제 토큰으로 렌더해 비교했다 — ①글자 알약 "검색" ②먹점 하나 ③붓획+글자. 고른 것은 <strong>②먹점</strong>이다. 원형 버튼은 그대로 두고 안을 <code>currentColor</code>로 칠한 7px 점 하나로 바꿨다. 색을 상속하므로 기본·호버·차단 상태를 버튼과 함께 따라가고, 호버·키보드 포커스 때 1.25배로 커지며 옅은 accent 링이 번진다. 평소엔 낮은 존재감, 손이 닿으면 깨어나는 이 위키의 손짓 그대로다.
+            </p>
+            <p>
+                글자가 없으니 새 문구도 필요 없다 — 버튼의 <code>aria-label</code>·<code>title</code>은 <code>STR('searchGoAria')</code>로 이미 3언어를 말하고 있어 스크린리더에는 변화가 없고, 점은 <code>aria-hidden</code>이다. 헤드리스로 이모지가 사라진 것·점이 밤(<code>#9aa4b2</code>)과 낮(<code>#5f6368</code>) 각각의 muted를 상속하는 것·호버 시 번짐을 확인했다. <code>style.css</code>·<code>search.js</code> 캐시버스터 상향.
+            </p>
+
+            <h3>검색 취소 ✕ — 브라우저가 그리던 것을 우리 획으로</h3>
+            <p>
+                검색어를 넣으면 나타나던 ✕는 <code>type="search"</code>에 브라우저가 붙여 주는 기본 버튼이었다. 이모지와 같은 문제 — UA가 그리는 글리프라 테마 토큰 밖에 있고, 크기·위치도 브라우저마다 다르다. <code>::-webkit-search-cancel-button</code>을 걷어내고 <strong>가는 획 두 개로 그은 ✕</strong>를 직접 놓았다. 테두리도 배경도 없이 <code>currentColor</code>만 쓰므로 먹점과 한 언어이고, 호버 때 accent로 깨어난다.
+            </p>
+            <p>
+                <strong>입력이 있을 때만 나타난다</strong> — 빈 검색창에 지우기 버튼이 떠 있으면 지울 것도 없는데 존재감만 남는다. <code>.search-field</code>의 <code>has-text</code> 클래스로 CSS가 여닫고, 그 클래스는 입력 때마다 도는 <code>renderSearchResults</code>가 붙였다 뗀다. 눌리면 값을 비우고 결과를 지운 뒤 <strong>입력창으로 초점을 돌려준다</strong> — 지우고 바로 다시 칠 수 있어야 하니까. 문구는 새 키 <code>searchClearAria</code>로 3언어를 채웠다(파이어폭스처럼 기본 취소 버튼이 없던 브라우저에도 이제 같은 컨트롤이 생긴다).
+            </p>
+

@@ -180,9 +180,23 @@ function setSearchShown(on){
     if(r){ r.classList.toggle('open', on); }
     if(s){ s.classList.toggle('searching', on); }
 }
+// 지우기 컨트롤은 입력이 있을 때만 — 빈 검색창에 X가 떠 있으면 지울 것도
+// 없는데 존재감만 남는다. .search-field의 클래스로 CSS가 여닫는다.
+function syncSearchClear(v){
+    var f = document.querySelector('.search-field');
+    if(f){ f.classList.toggle('has-text', !!(v || '').length); }
+}
+window.clearSearchInput = function(){
+    var b = document.getElementById('search-input');
+    if(!b){ return; }
+    b.value = '';
+    renderSearchResults('');
+    b.focus();
+};
 function renderSearchResults(query){
     var box = document.getElementById('search-results');
     if(!box){ return; }
+    syncSearchClear(query);
     paddleReset();   // typing = searching: glide the field back home
     var q = query.trim();
     if(!q){ box.innerHTML = ''; setSearchShown(false); return; }
@@ -272,12 +286,15 @@ function showSearch(){
       +         ' placeholder="' + STR('searchPh') + '"'
       +         ' oninput="renderSearchResults(this.value)">'
       +       '<span class="search-ctrls">'
+      +         '<button type="button" class="search-clear" title="' + STR('searchClearAria') + '" aria-label="' + STR('searchClearAria') + '"'
+      +           ' onpointerdown="event.stopPropagation()" onclick="clearSearchInput()"></button>'
       +         '<button type="button" class="search-new" title="' + STR('newCollect') + '" aria-label="' + STR('newCollect') + '"'
       +           ' onpointerdown="event.stopPropagation()" onclick="location.hash=\'#!new\'">'
       +           'new<span class="plus" aria-hidden="true">+</span></button>'
       +         '<button type="button" class="search-go" title="' + STR('searchGoAria') + '" aria-label="' + STR('searchGoAria') + '"'
       +           ' onpointerdown="event.stopPropagation()"'
-      +           ' onclick="var b=document.getElementById(\'search-input\'); renderSearchResults(b.value); b.focus();">&#128269;</button>'
+      +           ' onclick="var b=document.getElementById(\'search-input\'); renderSearchResults(b.value); b.focus();">'
+      +           '<span class="go-dot" aria-hidden="true"></span></button>'
       +       '</span>'
       +     '</div>'
       +     '<div id="search-results"></div>'
