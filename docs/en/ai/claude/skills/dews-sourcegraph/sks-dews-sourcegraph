@@ -1,0 +1,86 @@
+<h2>dews-sourcegraph — A Skill That Hands Internal Code Search to Claude</h2>
+
+<p>Any organization running SourceGraph in-house keeps meeting the same moment. Something of the same kind as the feature you are building almost certainly exists somewhere in the company, but that repository is not on your machine. So you open the web UI, run a search, skim the results with your eyes, and then explain them back to Claude — a round trip. <strong>dews-sourcegraph removes that round trip</strong> — Claude queries the internal instance itself, gets back <code>repo │ file:line │ snippet</code>, and carries the implementation forward citing that evidence as it stands.</p>
+
+<p>The obstacle is authentication. A private instance blocks anonymous access with a 401, so an ordinary web-fetch tool reads nothing at all. This skill therefore performs a browser form login once, by itself, and caches the session it gets for reuse. There is no step where a person opens devtools and copies a cookie out.</p>
+
+<div class="note">
+    <span class="nh">Download</span>
+    <a href="assets/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph/dews-sourcegraph-skill.zip" download>dews-sourcegraph-skill.zip</a> (15KB) — the skill body · the runner · a credentials template · an install README.
+    The instance address and the account are not in it. You fill in the values for your own environment.
+</div>
+
+<h3>How the authentication flows</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 100" role="img" aria-label="Authentication flow: check the session cache, form-login through a browser if it is missing or expired, then run the search and store the session">
+    <defs>
+        <marker id="sgAh" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path class="d-arrow" d="M0,0 L9,4.5 L0,9 Z"/>
+        </marker>
+    </defs>
+    <rect class="d-box" x="8" y="26" width="182" height="48" rx="10"/>
+    <text class="d-label" x="99" y="48" text-anchor="middle">① Check session cache</text>
+    <text class="d-sub" x="99" y="64" text-anchor="middle">goes straight to search</text>
+    <rect class="d-box accent" x="256" y="26" width="188" height="48" rx="10"/>
+    <text class="d-label" x="350" y="48" text-anchor="middle">② One-time form login</text>
+    <text class="d-sub" x="350" y="64" text-anchor="middle">launches installed browser</text>
+    <rect class="d-box soft" x="510" y="26" width="182" height="48" rx="10"/>
+    <text class="d-label" x="601" y="48" text-anchor="middle">③ Search · store session</text>
+    <text class="d-sub" x="601" y="64" text-anchor="middle">reused from the next run</text>
+    <line class="d-edge" x1="190" y1="50" x2="250" y2="50" marker-end="url(#sgAh)"/>
+    <line class="d-edge" x1="444" y1="50" x2="504" y2="50" marker-end="url(#sgAh)"/>
+</svg>
+<div class="d-cap">Figure 1. A live session skips ② — the browser comes up only on the very first run and when the session has lapsed</div>
+</div>
+
+<p>For the browser automation, <code>playwright-core</code> drives <strong>a properly installed Edge or Chrome</strong> directly. The reason it does not use the downloaded cache browser is what real corporate machines are like — on some company PCs a security agent blocks the executables under the <code>ms-playwright</code> cache, and there the cache browser hangs without bringing up even a blank page. The system browser works fine under the same conditions. The lookup order is the <code>SG_CHROMIUM_PATH</code> environment variable → the system Edge/Chrome → the cache browser.</p>
+
+<h3>Installing it</h3>
+<p>The tool paths are relative to the project root, so unpack it at <strong>the project root you open Claude Code in</strong>.</p>
+<pre><code>my-project/
+├── .claude/
+│   ├── skills/dews-sourcegraph/SKILL.md      <span class="c"># the skill body</span>
+│   └── tools/sourcegraph-search.mjs …        <span class="c"># the runner + package.json</span>
+└── SourceGraph.md                            <span class="c"># credentials (you write this)</span></code></pre>
+<p>Merge the zip's <code>.claude</code> folder into your project root, then copy <code>SourceGraph.md.example</code> to <code>SourceGraph.md</code> and fill in three lines.</p>
+<pre><code>URL:https://&lt;sourcegraph-host&gt;/
+ID:(account ID)
+PW:(password)</code></pre>
+<p>To keep it elsewhere, point the <code>SG_CRED_FILE</code> environment variable at that path. Then install the dependencies and restart Claude Code, and the skill turns up in the skill list.</p>
+<pre><code>cd .claude/tools
+npm install</code></pre>
+
+<div class="note warn">
+    <span class="nh">Two things you must not skip</span>
+    <strong>① Never commit <code>SourceGraph.md</code> or <code>.claude/tmp/</code></strong> — the account and the session cookie leak into the repository. Add the two lines to <code>.gitignore</code>.<br>
+    <strong>② When a login fails, do not retry</strong> — consecutive password failures lock the account for a while. Read the server message the tool prints (<code>User or password was incorrect</code> / <code>locked out</code>), fix the cause, and try again exactly once.
+</div>
+
+<h3>How to use it</h3>
+<p>Tell Claude "find ○○ on SourceGraph", or call it directly with <code>/dews-sourcegraph</code>. You can also run it straight from the terminal.</p>
+<pre><code>node --no-warnings .claude/tools/sourcegraph-search.mjs --query "myFunction file:\.java$ count:30" --max 20</code></pre>
+<p>Queries use Sourcegraph's standard syntax as it is.</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Filter</th><th>Example</th><th>Meaning</th></tr></thead>
+    <tbody>
+        <tr><td>(bare term)</td><td><code>myFunction</code></td><td>search the code contents</td></tr>
+        <tr><td><code>repo:</code></td><td><code>repo:my-service</code></td><td>limit to a repository-name pattern</td></tr>
+        <tr><td><code>file:</code></td><td><code>file:\.java$</code></td><td>file-path regex</td></tr>
+        <tr><td><code>type:</code></td><td><code>type:path</code></td><td>match filenames only, ignore contents</td></tr>
+        <tr><td><code>count:</code></td><td><code>count:all</code></td><td>server-side result cap</td></tr>
+        <tr><td><code>-</code> exclude</td><td><code>-file:bin/</code></td><td>drop build-artifact noise</td></tr>
+    </tbody>
+</table>
+</div>
+<p>Add <code>--pattern regexp</code> when you need a regular expression. Zero results usually means the vocabulary is off, so it is faster to strip the filters, throw one wide query, correct your wording from what comes back, and narrow again.</p>
+
+<h3>Why it digs through the local code first</h3>
+<p><strong>Local first</strong> is nailed into the skill document as a rule, because a company-wide search does not always give the better answer. Conventions differ from team to team even for the same feature, and a pattern that clashes with the existing code in your own repository comes back at review. So the trigger is narrowed to three cases — when no precedent of the same kind exists locally, when you have only a derived copy and need to confirm which repository the original lives in, and when you need to see the internals of a shared library or the places that call it.</p>
+<p>The citation format is settled too. Evidence obtained by search is left as <code>[SG {repo}/{file}:{line} → pattern to reproduce]</code> and treated at the same grade as the <code>file:line</code> evidence of a local precedent. If the whole original is needed, the skill first checks whether that repository is present locally and, if it is not, asks the user whether to clone it. Search and excerpt is where this skill's boundary lies.</p>
+
+<div class="note">
+    <span class="nh">What the release covers</span>
+    The published zip is a generalized build that holds no organization-specific information — the instance address, the account, and any organization-specific search examples are filled in per environment.
+    Because search results are that organization's code, the skill document also carries a clause against sending them out to any external service.
+</div>

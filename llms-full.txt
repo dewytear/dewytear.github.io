@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 > License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — cite the source when quoting.
-> 64 documents · 333 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
+> 65 documents · 333 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
 
 ---
 
@@ -7940,3 +7940,83 @@ AI가 쓴 글에는 티가 납니다. 문법이 틀려서가 아닙니다 — �
 · 근거 문서: Wikipedia: Signs of AI writing (WikiProject AI Cleanup)
 
 · 이 위키의 도입·전수 적용 기록: 2026-08-09 운영 로그 · 2026-08-10 콘텐츠 로그
+
+---
+
+# dews-sourcegraph — 사내 코드 검색을 Claude에게 넘기는 스킬
+Section: AI · Claude · Skills · dews-sourcegraph
+URL: https://dewytear.github.io/docs/ko/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph
+
+dews-sourcegraph — 사내 코드 검색을 Claude에게 넘기는 스킬
+
+사내에 SourceGraph를 두고 쓰는 조직이라면 이런 상황을 자주 만납니다. 지금 만드는 기능과 같은 유형이 회사 어딘가에 이미 있을 것 같은데, 내 로컬에는 그 저장소가 없습니다. 웹 UI를 열어 검색하고 결과를 눈으로 훑은 뒤 Claude에게 다시 설명하는 왕복이 생깁니다. dews-sourcegraph는 그 왕복을 없앱니다 — Claude가 사내 인스턴스에 직접 질의해 repo │ 파일:라인 │ 스니펫을 받아오고 그 근거를 그대로 인용해 구현을 이어갑니다.
+
+걸림돌은 인증입니다. 비공개 인스턴스는 익명 접근이 401로 막혀 있어 일반적인 웹 조회 도구로는 아무것도 못 읽습니다. 그래서 이 스킬은 브라우저 폼 로그인을 한 번 자동으로 수행하고, 얻은 세션을 캐시해 재사용합니다. 사람이 개발자도구를 열어 쿠키를 복사하는 절차가 없습니다.
+
+받기
+dews-sourcegraph-skill.zip (15KB) — 스킬 본체 · 실행 도구 · 자격증명 템플릿 · 설치 README.
+인스턴스 주소와 계정은 들어 있지 않습니다. 각자 환경 값을 채워 씁니다.
+
+인증이 흐르는 방식
+
+① 세션 캐시 확인 있으면 바로 검색 ② 폼 로그인 1회 설치된 브라우저 구동 ③ 검색 · 세션 저장 다음 실행부터 재사용
+그림 1. 세션이 살아 있으면 ②를 건너뛴다 — 브라우저는 처음 한 번과 세션이 풀렸을 때만 뜬다
+
+브라우저 자동화는 playwright-core가 정식 설치된 Edge나 Chrome을 직접 구동합니다. 내려받는 캐시 브라우저를 쓰지 않는 이유는 실무 환경 때문입니다 — 보안 에이전트가 ms-playwright 캐시의 실행 파일을 차단하는 사내 PC가 있고 그런 환경에서는 캐시 브라우저가 빈 페이지조차 띄우지 못한 채 멈춥니다. 시스템 브라우저는 같은 조건에서 정상 동작합니다. 탐색 순서는 SG_CHROMIUM_PATH 환경변수 → 시스템 Edge/Chrome → 캐시 브라우저입니다.
+
+설치
+
+도구 경로가 프로젝트 루트 상대이므로, Claude Code를 여는 프로젝트 루트에 풀어야 합니다.
+
+내 프로젝트/
+├── .claude/
+│ ├── skills/dews-sourcegraph/SKILL.md # 스킬 본체
+│ └── tools/sourcegraph-search.mjs … # 실행 도구 + package.json
+└── SourceGraph.md # 자격증명(직접 작성)
+zip의 .claude 폴더를 프로젝트 루트에 병합하고 SourceGraph.md.example을 SourceGraph.md로 복사해 세 줄을 채웁니다.
+
+URL:https://<sourcegraph-호스트>/
+ID:(계정 ID)
+PW:(비밀번호)
+다른 위치에 두려면 SG_CRED_FILE 환경변수로 경로를 지정합니다. 그다음 의존성을 설치하고 Claude Code를 재시작하면 스킬 목록에 잡힙니다.
+
+cd .claude/tools
+npm install
+
+두 가지는 꼭 지키세요
+① SourceGraph.md와 .claude/tmp/는 커밋하지 않습니다 — 계정과 세션 쿠키가 저장소로 새어 나갑니다. .gitignore에 두 줄을 추가하세요.
+
+② 로그인이 실패하면 재시도하지 않습니다 — 비밀번호 로그인을 연달아 실패하면 계정이 일시 잠깁니다. 도구가 출력하는 서버 메시지(User or password was incorrect / locked out)를 읽고 원인을 고친 뒤 한 번만 다시 시도합니다.
+
+쓰는 법
+
+Claude에게 "소스그래프에서 ○○ 찾아줘"라고 말하거나 /dews-sourcegraph로 직접 부릅니다. 터미널에서 바로 실행할 수도 있습니다.
+
+node --no-warnings .claude/tools/sourcegraph-search.mjs --query "myFunction file:\.java$ count:30" --max 20
+쿼리는 Sourcegraph 표준 문법을 그대로 씁니다.
+
+필터예의미
+
+(본문)myFunction코드 내용 검색
+
+repo:repo:my-service저장소 이름 패턴 한정
+
+file:file:\.java$파일 경로 정규식
+
+type:type:path파일명만 매치(내용 무시)
+
+count:count:all서버측 결과 상한
+
+- 제외-file:bin/빌드 산출물 노이즈 제거
+
+정규식이 필요하면 --pattern regexp를 붙입니다. 결과가 0건이면 대개 어휘가 어긋난 것이니, 필터를 걷어내고 넓게 던져 표현을 보정한 뒤 다시 좁히는 편이 빠릅니다.
+
+로컬을 먼저 뒤지게 하는 이유
+
+스킬 문서에 로컬 우선을 규칙으로 박아 두었습니다. 전사 검색이 늘 좋은 답을 주지는 않기 때문입니다. 같은 기능이라도 조직마다 관행이 다르고 내 저장소의 기존 코드와 어긋나는 패턴을 끌어오면 리뷰에서 되돌아옵니다. 그래서 발동 조건을 셋으로 좁혔습니다 — 로컬에 같은 유형의 선례가 없을 때, 파생본만 있고 원본이 어느 저장소인지 확인해야 할 때, 공통 라이브러리의 내부 구현이나 호출처를 봐야 할 때.
+
+인용 형식도 정해 두었습니다. 검색으로 얻은 근거는 [SG {repo}/{파일}:{라인} → 재현할 패턴]으로 남겨, 로컬 선례의 파일:라인 근거와 같은 등급으로 취급합니다. 원문 전체가 필요하면 그 저장소가 로컬에 있는지 먼저 확인하고 없으면 클론할지 사용자에게 묻습니다. 검색·발췌까지가 이 스킬의 경계입니다.
+
+배포 범위
+공개된 zip은 특정 조직 정보를 담지 않은 일반화 버전입니다 — 인스턴스 주소·계정·조직 고유 검색 예시는 각자 환경에서 채워 씁니다.
+검색 결과는 그 조직의 코드이므로 외부 서비스로 내보내지 않는다는 조항이 스킬 문서에 함께 들어 있습니다.

@@ -1,0 +1,86 @@
+<h2>dews-sourcegraph — 社内コード検索を Claude に任せるスキル</h2>
+
+<p>社内に SourceGraph を置いて使っている組織なら、こういう場面によく出会います。いま作っている機能と同じ類のものが会社のどこかにもうあるはずなのに、自分のローカルにはそのリポジトリがありません。ウェブ UI を開いて検索し、結果を目で追ってから Claude にもう一度説明しなおす往復が生まれます。<strong>dews-sourcegraph はその往復をなくします</strong> — Claude が社内インスタンスへ直接問い合わせて <code>repo │ ファイル:行 │ スニペット</code> を受け取り、その根拠をそのまま引用して実装を続けます。</p>
+
+<p>つまずくのは認証です。非公開のインスタンスは匿名アクセスが 401 で閉じられているので、ふつうのウェブ取得ツールでは何ひとつ読めません。そこでこのスキルは、ブラウザのフォームログインを一度だけ自動で済ませ、得たセッションをキャッシュして使い回します。人が開発者ツールを開いてクッキーをコピーする手順はありません。</p>
+
+<div class="note">
+    <span class="nh">入手</span>
+    <a href="assets/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph/dews-sourcegraph-skill.zip" download>dews-sourcegraph-skill.zip</a>（15KB）— スキル本体 · 実行ツール · 認証情報のテンプレート · インストール README。
+    インスタンスのアドレスとアカウントは入っていません。各自が自分の環境の値を埋めて使います。
+</div>
+
+<h3>認証が流れる仕組み</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 100" role="img" aria-label="認証の流れ: セッションキャッシュの確認 → なければ・期限切れならブラウザでフォームログイン → 検索の実行とセッションの保存">
+    <defs>
+        <marker id="sgAh" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path class="d-arrow" d="M0,0 L9,4.5 L0,9 Z"/>
+        </marker>
+    </defs>
+    <rect class="d-box" x="8" y="26" width="182" height="48" rx="10"/>
+    <text class="d-label" x="99" y="48" text-anchor="middle">① セッション確認</text>
+    <text class="d-sub" x="99" y="64" text-anchor="middle">キャッシュがあれば即検索</text>
+    <rect class="d-box accent" x="256" y="26" width="188" height="48" rx="10"/>
+    <text class="d-label" x="350" y="48" text-anchor="middle">② フォームログイン 1 回</text>
+    <text class="d-sub" x="350" y="64" text-anchor="middle">導入済みブラウザを起動</text>
+    <rect class="d-box soft" x="510" y="26" width="182" height="48" rx="10"/>
+    <text class="d-label" x="601" y="48" text-anchor="middle">③ 検索・セッション保存</text>
+    <text class="d-sub" x="601" y="64" text-anchor="middle">次回以降は再利用</text>
+    <line class="d-edge" x1="190" y1="50" x2="250" y2="50" marker-end="url(#sgAh)"/>
+    <line class="d-edge" x1="444" y1="50" x2="504" y2="50" marker-end="url(#sgAh)"/>
+</svg>
+<div class="d-cap">図 1. セッションが生きていれば ② を飛ばす — ブラウザが立ち上がるのは最初の一度と、セッションが切れたときだけ</div>
+</div>
+
+<p>ブラウザの自動化は <code>playwright-core</code> が<strong>正式にインストールされた Edge や Chrome</strong> を直接動かします。ダウンロードしてくるキャッシュブラウザを使わない理由は、現場の環境にあります — セキュリティエージェントが <code>ms-playwright</code> キャッシュの実行ファイルをブロックする社内 PC があり、そういう環境ではキャッシュブラウザが空のページさえ出せないまま止まります。システムのブラウザは同じ条件で問題なく動きます。探索の順番は <code>SG_CHROMIUM_PATH</code> 環境変数 → システムの Edge/Chrome → キャッシュブラウザです。</p>
+
+<h3>インストール</h3>
+<p>ツールのパスがプロジェクトルートからの相対なので、<strong>Claude Code を開くプロジェクトルート</strong>で展開します。</p>
+<pre><code>自分のプロジェクト/
+├── .claude/
+│   ├── skills/dews-sourcegraph/SKILL.md      <span class="c"># スキル本体</span>
+│   └── tools/sourcegraph-search.mjs …        <span class="c"># 実行ツール + package.json</span>
+└── SourceGraph.md                            <span class="c"># 認証情報(自分で作成)</span></code></pre>
+<p>zip の <code>.claude</code> フォルダをプロジェクトルートへマージし、<code>SourceGraph.md.example</code> を <code>SourceGraph.md</code> にコピーして三行を埋めます。</p>
+<pre><code>URL:https://&lt;sourcegraph-ホスト&gt;/
+ID:(アカウント ID)
+PW:(パスワード)</code></pre>
+<p>別の場所に置きたいときは <code>SG_CRED_FILE</code> 環境変数でパスを指定します。あとは依存をインストールして Claude Code を再起動すれば、スキルの一覧に載ります。</p>
+<pre><code>cd .claude/tools
+npm install</code></pre>
+
+<div class="note warn">
+    <span class="nh">二つだけは必ず守ってください</span>
+    <strong>① <code>SourceGraph.md</code> と <code>.claude/tmp/</code> はコミットしません</strong> — アカウントとセッションのクッキーがリポジトリへ漏れます。<code>.gitignore</code> に二行を足してください。<br>
+    <strong>② ログインに失敗したら再試行しません</strong> — パスワードのログインを続けて失敗するとアカウントが一時的にロックされます。ツールが出すサーバーのメッセージ(<code>User or password was incorrect</code> / <code>locked out</code>)を読んで原因を直したうえで、一度だけやり直します。
+</div>
+
+<h3>使い方</h3>
+<p>Claude に「ソースグラフで ○○ を探して」と言うか、<code>/dews-sourcegraph</code> で直接呼びます。ターミナルからそのまま実行することもできます。</p>
+<pre><code>node --no-warnings .claude/tools/sourcegraph-search.mjs --query "myFunction file:\.java$ count:30" --max 20</code></pre>
+<p>クエリは Sourcegraph 標準の文法をそのまま使います。</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>フィルタ</th><th>例</th><th>意味</th></tr></thead>
+    <tbody>
+        <tr><td>(本文)</td><td><code>myFunction</code></td><td>コードの中身を検索</td></tr>
+        <tr><td><code>repo:</code></td><td><code>repo:my-service</code></td><td>リポジトリ名のパターン限定</td></tr>
+        <tr><td><code>file:</code></td><td><code>file:\.java$</code></td><td>ファイルパスの正規表現</td></tr>
+        <tr><td><code>type:</code></td><td><code>type:path</code></td><td>ファイル名だけ照合(中身は無視)</td></tr>
+        <tr><td><code>count:</code></td><td><code>count:all</code></td><td>サーバー側の件数上限</td></tr>
+        <tr><td><code>-</code> 除外</td><td><code>-file:bin/</code></td><td>ビルド成果物のノイズを除く</td></tr>
+    </tbody>
+</table>
+</div>
+<p>正規表現が必要なら <code>--pattern regexp</code> を付けます。結果が 0 件のときはたいてい語彙がずれているので、フィルタを外して広く投げ、言い方を直してから絞りなおすほうが速いです。</p>
+
+<h3>ローカルを先に探させる理由</h3>
+<p>スキルの文書には<strong>ローカル優先</strong>をルールとして書き込んであります。全社の検索がいつも良い答えをくれるわけではないからです。同じ機能でも組織ごとに慣習が違い、自分のリポジトリの既存コードと食い違うパターンを引いてくれば、レビューで戻ってきます。そこで発動の条件を三つに絞りました — ローカルに同じ類の先例がないとき、派生版しかなく原本がどのリポジトリなのか確かめたいとき、共通ライブラリの内部実装や呼び出し元を見たいとき。</p>
+<p>引用の形も決めてあります。検索で得た根拠は <code>[SG {repo}/{ファイル}:{行} → 再現するパターン]</code> として残し、ローカルの先例の <code>ファイル:行</code> という根拠と同じ格で扱います。原文の全体が必要なら、そのリポジトリがローカルにあるかを先に確かめ、なければクローンするかどうかをユーザーに尋ねます。検索と抜粋までがこのスキルの境界です。</p>
+
+<div class="note">
+    <span class="nh">配布の範囲</span>
+    公開している zip は特定の組織の情報を含まない一般化版です — インスタンスのアドレス · アカウント · 組織固有の検索例は各自の環境で埋めて使います。
+    検索の結果はその組織のコードなので、外部のサービスへ持ち出さないという条項もスキルの文書に入れてあります。
+</div>

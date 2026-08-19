@@ -1,0 +1,41 @@
+            <h2>2026-08-19 — 콘텐츠</h2>
+
+            <h3>Skills 카테고리 2번째 등재 — dews-sourcegraph, 그리고 이 위키의 첫 다운로드</h3>
+            <p>
+                사내 SourceGraph 인스턴스를 Claude Code가 직접 검색하게 만드는 스킬을 팀에 나눠 주려고 zip으로 묶었는데, 배포처를 이 위키로 잡으면서 성격이 달라졌다. 팀 내부 전달이면 그대로 보내면 되지만 <strong>이 사이트는 공개</strong>다. 원본 패키지에는 내부 호스트명, 그 인스턴스의 인증 특성(ID/PW API 로그인이 거부된다는 실측), 내부 저장소 명명 패턴, 그리고 개인 워크스페이스 절대경로가 박혀 있었다. 게시 전에 일반화하는 쪽으로 정했다.
+            </p>
+            <p>
+                위생화는 문서만 손대는 일이 아니었다. 도구의 자격증명 경로가 <code>E:\…\SourceGraph.md</code>로 하드코딩돼 있어서, 사실 그 zip은 받은 사람의 환경에서 애초에 동작하지 않았다 — 내부 정보를 걷어내려고 들여다보다 발견한 결함이다. <code>process.env.SG_CRED_FILE || join(process.cwd(), 'SourceGraph.md')</code>로 바꿔 프로젝트 루트 기준으로 해석하게 했고, 인스턴스 호스트를 참조하던 안내 문구도 설정값에서 끌어오도록 고쳤다. 결과적으로 위생화가 이식성 수정을 겸했다.
+            </p>
+            <ul>
+                <li><strong>본문</strong> — <code>ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph</code>. 인증 3단계 도식(세션 캐시 → 폼 로그인 1회 → 검색·저장), 설치 절차, Sourcegraph 표준 쿼리 표, 로컬 우선 원칙과 <code>[SG repo/파일:라인]</code> 인용 규약. 자격증명·세션 캐시 커밋 금지와 로그인 실패 시 재시도 금지(계정 잠금)는 <code>note warn</code>으로 못 박았다.</li>
+                <li><strong>왜 캐시 브라우저를 안 쓰는지</strong>를 본문에 남겼다 — 보안 에이전트가 <code>ms-playwright</code> 실행 파일을 차단하는 사내 PC에서 캐시 브라우저는 빈 페이지조차 못 띄우고 멈춘다. 시스템 Edge/Chrome은 같은 조건에서 정상이다. 설치 안내에서 자주 빠지는 대목이라 이유까지 적었다.</li>
+                <li><strong>자산</strong> — <code>assets/ai/claude/skills/dews-sourcegraph/dews-sourcegraph-skill.zip</code>(15KB). 이 위키가 파일을 내려받게 하는 첫 사례다. 이미지 규칙(문서 트리를 미러하는 <code>assets/</code> 경로, <code>docs/</code> 안에 두지 않기)을 그대로 준용했다.</li>
+                <li><strong>관계 검토</strong> — 5타입을 훑고 <code>skl-overview</code> 선행지식 하나만 달았다. 본문이 스킬의 실체·발동 원리를 설명하지 않고 폴더 병합과 호출만 다루기 때문이다. 구현·사례·근거·대체는 본문에 실재하는 관계가 없어 억지로 만들지 않았다.</li>
+            </ul>
+            <p>
+                번역은 같은 PR에 담았다. 처음에는 한국어만 올리려 했는데 <code>check_translation.py</code>가 막았다 — 신규 인덱스 문서는 en·ja 본문 동반이 기계 강제다(워크로그는 제외). 두 언어 본문과 <code>label_en</code>·<code>label_ja</code>·<code>tags_*</code>·<code>doc-entries.{en,ja}.json</code> 오버레이를 함께 넣었고, 오버레이의 <code>concepts</code>는 그래프 키라서 한국어를 유지하고 <code>title</code>·<code>summary</code>·<code>evidenceRef</code>만 번역했다(선례와 동일).
+            </p>
+            <p>
+                번역 도식은 폭을 다시 잰다. 영어는 소문자가 좁은 대신 단어가 길고 일본어는 가나가 전각이라, 같은 상자에 같은 뜻을 넣어도 넘칠 수 있다. <code>validate_design.py</code>의 문자별 하한 폭 검사로 세 언어 도식 모두 ERROR 0을 확인했다(헤드리스 렌더 전수 검사 <code>check_diagram_bounds.mjs</code>는 로컬 Node가 18이라 전역 <code>WebSocket</code>이 없어 돌리지 못했다 — CI의 <code>diagram-bounds</code> 잡이 본다).
+            </p>
+
+            <h3>등재 마무리 — 새 master 위에서 재정합하고 빠진 규칙 반영</h3>
+            <p>
+                푸시만 되어 있던 이 작업을 PR로 올리며 점검했더니, 브랜치의 기준이 그사이 세 번 바뀐 master보다 뒤였다(배경음악 설정·버튼·검색창 컨트롤 PR 세 건). 소스 파일은 겹치지 않았지만 <strong>재생성물이 옛 기준으로 만들어져 있었다</strong> — 프리렌더·사이트맵·인덱스가 옛 캐시버스터를 물고 있는 상태다. 그래서 브랜치의 소스(본문 3언어·<code>list</code> 노드·doc-entries·자산)만 새 master 위에 얹고 파생물을 전부 다시 만들었다. <code>list</code>는 그 사이 늘어난 워크로그 노드 두 개가 브랜치 사본에는 없어 손으로 합쳤다.
+            </p>
+            <p>
+                이어 규칙 점검에서 세 가지가 걸렸다.
+            </p>
+            <ul>
+                <li><strong>지식지도 편수</strong> — Skills 상세 절이 "1편"에 머물러 있었다(인덱스는 2편). 편수와 소개 문장을 3언어로 다시 썼다 — 문서를 더하면 지도가 따라와야 한다는 규칙이 <code>map-section-count</code> WARN으로 드러난 자리다.</li>
+                <li><strong>OG 카드</strong> — 카드의 문서 수가 64로 남아 있었다. 65로 고치고 <code>og-image.png</code>를 재생성했으며, 번들 스냅샷 동기와 플러그인 버전(0.29.17)도 같이 올렸다.</li>
+                <li><strong>자산 경로</strong> — 규칙은 <code>assets/&lt;docs 경로&gt;/&lt;문서 name&gt;/&lt;역할&gt;</code>인데 <code>&lt;문서 name&gt;</code> 한 단이 빠져 있었다. zip을 <code>…/dews-sourcegraph/sks-dews-sourcegraph/</code> 아래로 옮기고 본문 링크 3언어를 고쳤다. 같은 폴더에 다음 문서가 생겨도 자산이 섞이지 않게 하는 것이 그 한 단의 목적이다.</li>
+            </ul>
+            <p>
+                <strong>규칙 문서도 갱신했다</strong> — CLAUDE.md의 자산 규칙은 이미지만 다루고 있었는데, 이번에 내려받는 파일이라는 새 종류가 생겼다. 같은 경로 규약·저장소 커밋·<code>download</code> 링크 표기에 더해 <strong>배포 전 위생 점검</strong>(내부 호스트명·계정·개인 절대경로 제거 확인)을 한 줄로 못 박았다. 실제로 배포본 압축을 풀어 조직 식별 정보가 없는 것을 확인했다.
+            </p>
+            <p>
+                로컬에서 못 돌렸던 헤드리스 두 잡도 여기서 돌렸다 — <code>check_diagram_bounds</code> 3언어 도식 초록, <code>check_i18n_render</code> 50렌더 초록. <code>check_all</code> 8게이트 ERROR 0.
+            </p>
+
