@@ -1,0 +1,17 @@
+            <h2>2026-08-19 — 기능</h2>
+
+            <h3>배경음악 설정 — 서버 값을 따르도록, 개인 값은 비우고 시작</h3>
+            <p>
+                대표님이 로컬 저장소를 비우고 설정 화면을 열었더니 음악 주소가 이미 채워져 있었다. 설정 대화상자가 입력칸을 <code>effSettings()</code>(사이트 기본 + 개인 값)로 채우고 있어서, 개인이 고른 적 없는 <code>config.json</code>의 값이 마치 자기 설정처럼 보인 것이다. 보기만 하면 무해하지만, 그 상태로 설정을 저장한 뒤 서버 쪽 트랙이 바뀌면 <strong>브라우저에 박힌 옛 주소가 새 값을 가린다</strong> — 저장 시점의 문자열이 그때의 기본값과 같아야만 지워지기 때문이다(<code>setOrClear</code>).
+            </p>
+            <ul>
+                <li><strong>입력칸은 개인 값만</strong> — <code>loadSettings().music</code>을 읽는다. 사이트 기본은 더 이상 미리 채우지 않으니, 비어 있음이 곧 "사이트를 따름"이다.</li>
+                <li><strong>이미 저장된 값은 1회 정리</strong> — <code>migrateSettings()</code>가 첫 로드에서 저장된 <code>music</code>을 지우고 <code>wikiSettingsMigration</code> 표식을 남긴다. 표식이 있으므로 이 배포 <em>이후</em> 일부러 고른 트랙은 다시 지워지지 않고, 테마 같은 다른 설정도 건드리지 않는다.</li>
+                <li><strong>플레이스홀더 문구 3언어 갱신</strong> — "비우면 기본 재생목록"이 단일 영상으로 되돌린 뒤로 낡은 안내였다. "비우면 사이트 기본 음악을 따릅니다"로 바꿔 빈 칸의 의미를 화면에서 읽히게 했다.</li>
+            </ul>
+            <p>
+                호출 순서가 조건이다 — <code>migrateSettings()</code>는 <code>app.js</code> 최상위에서 돌고, <code>music.js</code>는 그 뒤에 로드되며 초기화 때 <code>effSettings()</code>를 읽는다. 즉 정리가 끝난 상태에서 트랙이 결정된다.
+            </p>
+            <p>
+                헤드리스 브라우저로 네 가지를 확인했다: ①처음 오는 방문자 — 입력칸 빈 값, 재생은 config의 트랙 ②옛 재생목록이 저장돼 있던 브라우저 — 그 값만 지워지고 <code>theme</code> 등은 유지, 이후 사이트 트랙을 따름 ③이 배포 뒤 일부러 넣은 값은 새로고침해도 살아남음 ④3언어 플레이스홀더 노출. <code>app.js</code>·<code>i18n.js</code> 캐시버스터 상향.
+            </p>

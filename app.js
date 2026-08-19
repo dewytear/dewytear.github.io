@@ -1199,6 +1199,22 @@ function loadSettings(){
 function saveSettings(s){
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
 }
+// One-time cleanup (2026-08-19): the settings dialog used to prefill the
+// music field with the site default, so saving settings froze that track in
+// this browser and later config.json changes never arrived. Drop a stored
+// pick once — an empty field means "follow the site" from now on. The marker
+// keeps a deliberate pick made after this release from being wiped again.
+var SETTINGS_MIGRATION_KEY = 'wikiSettingsMigration';
+function migrateSettings(){
+    try{
+        if(localStorage.getItem(SETTINGS_MIGRATION_KEY) === 'music-follow-site'){ return; }
+        var s = loadSettings();
+        if(s.music !== undefined){ delete s.music; saveSettings(s); }
+        localStorage.setItem(SETTINGS_MIGRATION_KEY, 'music-follow-site');
+    }catch(e){}
+}
+// Runs at load, before music.js reads the effective settings (script order).
+migrateSettings();
 // ---- Site-wide defaults (config.json "defaults") ----
 // The repo serves defaults to every visitor; a personal value saved
 // in this browser wins on top. Hard-coded fallbacks keep the site
@@ -1428,7 +1444,10 @@ function showSettings(){
     var curTitle = s.title || document.querySelector('#masthead h1 a').textContent;
     var curTagline = s.tagline != null ? s.tagline
                    : document.getElementById('tagline').textContent;
-    var curMusic = s.music || '';
+    // Personal pick only — the site default must NOT be prefilled here.
+    // A prefilled default gets saved back as a personal value, which
+    // freezes this browser on that track and hides later site changes.
+    var curMusic = loadSettings().music || '';
     var curPhotoLine = s.photoLine != null ? s.photoLine
                      : ((document.querySelector('#profile-tagline .ptl-text') || {}).textContent || '');
     var curNavStyle = s.navLineStyle || 'dashed';
