@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-08-15T15:03:36+09:00"
+ "dateModified": "2026-08-20T08:17:48+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -100,7 +100,7 @@
 <div class="d-cap">Single-fetch traversal — plan from one graph file, and pull only the source documents you need.</div>
 </div>
 
-<p>Take a real two-hop traversal as an example: starting from the hub <a href="/p/en/hns-install/">Running the Harness</a>, one hop reaches 4 neighbors, and two hops reach <strong>9 documents</strong>. From the set of documents reached this way, AI can analyze while explaining "why these documents belong together," grounded in the <strong>shared concepts (shared)</strong> — a <strong>relationship-based</strong> reading that page-by-page search cannot achieve. Add <code>relations</code> and it goes beyond a bare "these are related" to read <strong>the type and direction of the relationship, such as prerequisite, implements, or evidence</strong>, so it can pin down "what to read first" and "which document is the evidence for which claim" in its analysis.</p>
+<p>Take a real two-hop traversal as an example: starting from the hub <a href="/p/en/hns-install/">Running the Harness</a>, one hop reaches 4 neighbors, and two hops reach <strong>6 documents</strong>. From the set of documents reached this way, AI can analyze while explaining "why these documents belong together," grounded in the <strong>shared concepts (shared)</strong> — a <strong>relationship-based</strong> reading that page-by-page search cannot achieve. Add <code>relations</code> and it goes beyond a bare "these are related" to read <strong>the type and direction of the relationship, such as prerequisite, implements, or evidence</strong>, so it can pin down "what to read first" and "which document is the evidence for which claim" in its analysis.</p>
 
 <h3>Never Out of Sync — the Drift Gate</h3>
 <p>A machine-readable file that has drifted from the actual knowledge is worse than none at all. So these files are not written by hand; they are <strong>generated automatically from the knowledge index</strong> (robots.txt and the feed are generated artifacts too), and CI's <code>--check</code> gate enforces "no merge if you add or edit a document without regenerating." Even the timestamps in the feed come from git history (<code>doc-dates.json</code>) rather than the build time, so regenerating never shakes the result. The outcome: <strong>the moment a document is added, llms.txt, llms-full.txt, the feed, the graph JSON, the sitemap, and the static snapshots are always brought up to date together</strong>. The snapshot gate goes one step further and also catches <strong>stale snapshots</strong> that are no longer produced — when a document is renamed, the old page would otherwise linger like a ghost and stay exposed to search engines. At validation time we mechanically confirmed that the URLs of all 97 nodes match real files and that broken references (dangling) number 0.</p>
@@ -110,7 +110,7 @@
     One line in the prompt is enough — <em>"Read dewytear.github.io/llms.txt first, then analyze by following the relationships in knowledge-graph.json (related, relations, concepts)."</em> Schema details and traversal rules are guaranteed as a contract by the <a href="/p/en/ai-guide/">AI Traversal Guide</a>. Thanks to this knowledge-management structure, the bigger the wiki grows, the wider AI's analysis radius automatically grows with it.
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · Wiki · Knowledge System &middot; <span class="pr-k">Created</span> 2026-07-11 &middot; <span class="pr-k">Updated</span> 2026-08-15</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Wiki · Knowledge System &middot; <span class="pr-k">Created</span> 2026-07-11 &middot; <span class="pr-k">Updated</span> 2026-08-20</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
 <ul><li><a href="/p/en/kgs-overview/">How Knowledge Accumulates — The Four-Level Hierarchy and the Registration Pipeline</a></li><li><a href="/p/en/kgs-edges/">How Documents Connect — Concept Curation and idf-Weighted Edges</a></li><li><a href="/p/en/kgs-views/">Nine Ways to Read the Graph — Each View Answers a Different Question</a></li></ul>

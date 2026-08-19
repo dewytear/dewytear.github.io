@@ -1,0 +1,30 @@
+<h2>판정을 누구에게 맡길 것인가 — 8월의 네 장면</h2>
+
+<h3>세 줄 요약</h3>
+<ul>
+    <li>8월 둘째 주, 서로 다른 회사의 발표 넷이 같은 질문을 건드렸다 — <strong>에이전트 시대의 판정(judgment)은 누가 내리는가</strong>. Claude Tag는 "언제 나설지"를 모델의 맥락 읽기에, Grok Bot은 "어디까지 실행할지"를 승인 에스컬레이션에 맡겼다.</li>
+    <li>Cursor Origin은 코드 보관이라는 무거운 판정을 <strong>약관 없는 기본값</strong>으로 흘려보냈고, GPT-5.6-Cyber는 위험한 능력의 판정을 모델의 거절에서 <strong>사람 심사 프로그램</strong>으로 옮겼다.</li>
+    <li>판정은 사라지지 않고 자리를 옮긴다 — <a href="#!news-20260814-auto-mode-stateless-mcp">auto 모드 기본값</a>(대화→규칙)·<a href="#!news-20260816-claude-code-selfhosted">셀프호스팅</a>(실행 위치→조직)에 이은 세 번째 관찰이다.</li>
+</ul>
+
+<h3>Claude Tag — 나설 때를 모델이 고른다</h3>
+<p>Slack에서 <code>@Claude</code>를 부르면 일하는 Claude Tag가 8월 13일부터 <strong>채널 전체의 맥락</strong>을 읽고 움직인다. 이전에는 멘션된 메시지 하나만 보고 판단했는데, 이제 채널의 흐름·축적된 메모리·상시 지침(standing instructions)을 함께 읽어 <strong>먼저 나설지 말지</strong>를 정한다 — Anthropic은 이 판정이 약 30% 정확해졌다고 밝혔다.</p>
+<p>움직임도 네 갈래로 나뉜다. 답이 짧고 검증 가능하면 인라인으로 바로 답하고, 시간을 들일 일이면 스레드에서 깊은 작업을 시작하고, 이미 진행 중인 작업과 겹치면 그쪽으로 라우팅하고, 부를 일이 아니면 <strong>침묵한다</strong>. 흥미로운 대목은 비용 처리다 — 맥락을 더 읽는 만큼 사용량은 늘지만, 추가 컨텍스트는 어느 플랜에서도 한도에 계상하지 않기로 했다. "언제 나설지"라는 판정을 잘 내리는 것 자체를 제품의 값어치로 본다는 뜻이다.</p>
+
+<h3>Grok Bot — 사람에게는 승인만 남긴다</h3>
+<p>xAI가 8월 11일 베타로 연 Grok Bot은 반대쪽 끝의 설계다. 봇이 클라우드 컴퓨터에서 상주하며 <strong>사용자가 쓰는 앱에 직접 로그인해</strong> 여러 단계의 일을 밤낮없이 처리하고, <strong>사람의 판단이 필요한 순간에만 승인을 받으러 돌아온다</strong>. 작업을 한 번 시연해 보이면 그 흐름을 루틴으로 저장해 일정에 따라 반복하고, 베타는 SuperGrok Heavy(월 300달러)와 Cursor Ultra·Teams Premium 구독자에게 열렸다.</p>
+<p>판정의 기본값이 뒤집힌 구조다 — 실행이 기본이고 사람은 예외 처리 지점이 된다. 그래서 자격증명(로그인 정보)의 소재가 곧 쟁점이 됐다: 공식 소개는 봇마다 자기 클라우드 컴퓨터를 갖는다고 설명하지만, 보안 분석 기사는 한 계정의 봇들이 <strong>컴퓨터 하나와 모든 로그인을 공유</strong>한다고 지적한다 — 표기가 갈리는 지점 자체가, 승인 요청 화면만으로는 보이지 않는 위임의 폭을 말해 준다.</p>
+
+<h3>Cursor Origin — 아무도 판정하지 않은 기본값</h3>
+<p>SpaceX의 Cursor 인수(6월 합의, 8월 14일 600억 달러 전액 주식으로 완결 — 통합 조직은 SpaceXAI)가 마무리되자마자, Cursor는 8월 17일 <strong>코드 호스팅 서비스 Origin</strong>을 얼리 베타로 열었다. AI 에이전트가 쓰기 좋게 설계된 저장소로 풀 리퀘스트·코드 리뷰·GitHub 동기화를 갖췄고, GitHub의 장애(오류율 20%대)가 이어지던 시점이라 "GitHub의 해자를 친다"는 평이 따랐다.</p>
+<p>문제는 열리는 방식이었다. 유료 플랜 전체에 <strong>옵트아웃</strong>(기본 가입, 원하면 빠지기)으로 켜졌는데, 출시 시점에 <strong>데이터 보존·학습 사용에 대한 약관이 공개돼 있지 않았다</strong>. 유료 고객의 코드가 어떤 정책 아래 보관되는지 아무도 판정하지 않은 채 배포부터 된 셈이다 — 판정을 모델에 줄지 사람에 줄지를 다투는 다른 세 장면과 달리, 여기서는 판정 자체가 비어 있었다.</p>
+
+<h3>GPT-5.6-Cyber — 거절 대신 심사</h3>
+<p>OpenAI가 8월 10일 발표한 GPT-5.6-Cyber는 GPT-5.6 Sol에서 갈라져 나와 <strong>제로데이</strong>(패치가 나오기 전의 미공개 취약점) 발굴과 익스플로잇 체인 구성을 학습한 보안 특화 모델이다. 자체 평가(Advanced Cybersecurity Completion Rate)에서 표준 Sol이 1.5%만 응답하는 고급 보안 요청에 95.0%를 응답하고, 실제로 Chrome V8 엔진에서 미공개 취약점 2건(CVE-2026-15903으로 패치)과 모바일 OS 권한 상승 체인을 찾아냈다.</p>
+<p>이 능력을 다루는 방식이 이 글의 주제와 닿는다 — 모델이 요청을 <strong>거절하는 대신</strong>, 신원 확인·계정 보안 요건·모니터링·용도 제한·법적 서약을 요구하는 <strong>Daybreak Red</strong>(심사제 방어자 프로그램) 뒤에만 존재한다. 위험 분류는 OpenAI Preparedness 프레임워크 기준 "High". 판정이 모델의 응답 단계에서 프로그램의 입장 심사로 옮겨 간 것이다.</p>
+
+<h3>왜 한 흐름인가</h3>
+<p><a href="#!news-20260814-auto-mode-stateless-mcp">auto 모드 기본값</a>이 승인 판정을 매번 묻는 대화에서 미리 적은 규칙으로 옮겼고, <a href="#!news-20260816-claude-code-selfhosted">셀프호스팅</a>이 실행 위치의 통제를 조직으로 넘겼다면, 이번 네 장면은 그 이동이 어디까지 가는지 보여 준다. 판정은 모델의 맥락 읽기로(Claude Tag), 승인 에스컬레이션으로(Grok Bot), 프로그램 입장 심사로(GPT-5.6-Cyber) 옮겨 갔고 — Origin처럼 <strong>옮겨 놓을 자리를 정하지 않으면 기본값이 대신 판정한다</strong>. 이 위키가 <a href="#!tip-advanced">Tip 고급 편</a>에서 거부 규칙 편집과 자기승인 편향을 다루는 이유도 같다: 에이전트에게 일을 맡길수록, 정작 설계해야 하는 것은 일이 아니라 판정의 자리다.</p>
+
+<h3>사실검증 노트</h3>
+<p class="scn-sub">Claude Tag(8/13 — 채널 맥락·약 30% 향상·추가 컨텍스트 한도 미계상)는 <a href="https://claude.com/blog/claude-tag-now-reads-even-more-of-the-room" target="_blank" rel="noopener">Anthropic 공식 블로그</a> 기준. Grok Bot(8/11 베타·승인 에스컬레이션·시연 학습·가격)은 <a href="https://memeburn.com/grok-bot-launches-as-spacexais-first-ai-agent/" target="_blank" rel="noopener">Memeburn</a>·<a href="https://www.digitalapplied.com/blog/grok-bot-ai-teammates-launch-cloud-computer-2026" target="_blank" rel="noopener">Digital Applied 정리</a>로 교차 확인했고, 클라우드 컴퓨터·로그인 공유 구조의 상세는 <a href="https://www.techtimes.com/articles/324176/20260812/grok-bot-launches-any-app-no-api-all-bots-share-one-cloud-computer-every-login.htm" target="_blank" rel="noopener">TechTimes 분석</a>과 공식 소개의 표기가 갈려 본문에 그 갈림을 명시했다. Cursor Origin(8/17 얼리 베타·GitHub 동기화·옵트아웃)은 <a href="https://siliconangle.com/2026/08/17/cursor-launches-origin-code-hosting-service-to-compete-with-github/" target="_blank" rel="noopener">SiliconANGLE</a>·<a href="https://techstartups.com/2026/08/17/cursor-launches-origin-a-github-rival-built-for-ai-coding-agents/" target="_blank" rel="noopener">Tech Startups</a>, 약관 부재 지적은 <a href="https://www.techtimes.com/articles/324838/20260818/cursor-origin-ships-no-data-terms-spacex-now-holds-paid-developers-code.htm" target="_blank" rel="noopener">TechTimes(8/18)</a>, 인수 완결(8/14)은 <a href="https://www.bloomberg.com/news/articles/2026-08-14/spacex-completes-its-60-billion-cursor-acquisition" target="_blank" rel="noopener">Bloomberg</a> 기준 — 일부 매체는 6월 인수 합의 시점을 인수일로 적는다. GPT-5.6-Cyber(8/10·ACCR 95.0% vs 1.5%·CVE-2026-15903·Daybreak Red·Preparedness High)는 <a href="https://www.securityweek.com/openai-unveils-new-cybersecurity-model-gpt-5-6-cyber/" target="_blank" rel="noopener">SecurityWeek</a>·<a href="https://thehackernews.com/2026/08/openai-launches-gpt-56-cyber-with.html" target="_blank" rel="noopener">The Hacker News</a>·<a href="https://www.helpnetsecurity.com/2026/08/11/openai-gpt-5-6-cyber-model/" target="_blank" rel="noopener">Help Net Security</a>로 교차 확인. 벤치마크 수치는 OpenAI 자체 평가다.</p>
