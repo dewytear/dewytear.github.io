@@ -47,6 +47,8 @@ function parseYouTubeList(input){
     var VIDEO_URL = trackUrl();
     var player, ready = false, playing = false, wantPlay = false, failed = false;
     var btn = document.getElementById('music-btn');
+    var titleEl = document.getElementById('music-title');
+    var titleTimer = null;
 
     // If the API never loads (offline / blocked by an ad- or tracker
     // blocker), tell the user instead of leaving a dead button.
@@ -105,6 +107,7 @@ function parseYouTubeList(input){
             btn.setAttribute('aria-label', btn.title);
         }
         showMusicNote();
+        if(titleEl){ clearTimeout(titleTimer); titleEl.classList.remove('show'); }
         try{ console.warn('[music] ' + msg); }catch(e){}
     }
     // A one-time bubble explaining the block (usually Safari's tracker
@@ -120,6 +123,29 @@ function parseYouTubeList(input){
         setTimeout(function(){ if(n.parentNode){ n.classList.remove('show'); } }, 9000);
         setTimeout(function(){ if(n.parentNode){ n.remove(); } }, 9400);
     }
+    // Now-playing title. getVideoData() can still be empty for a beat after
+    // the PLAYING event (and after a playlist advances), so a miss retries a
+    // few times instead of settling on a blank line.
+    function trackTitle(){
+        try{
+            var d = player && player.getVideoData && player.getVideoData();
+            return (d && d.title) ? String(d.title) : '';
+        }catch(e){ return ''; }
+    }
+    function renderTitle(tries){
+        if(!titleEl){ return; }
+        clearTimeout(titleTimer);
+        if(!playing || failed){ titleEl.classList.remove('show'); return; }
+        var t = trackTitle();
+        if(t){
+            titleEl.textContent = t;
+            titleEl.classList.add('show');
+            return;
+        }
+        if((tries || 0) < 6){
+            titleTimer = setTimeout(function(){ renderTitle((tries || 0) + 1); }, 400);
+        }
+    }
     function render(){
         if(!btn || failed){ return; }
         btn.classList.toggle('playing', playing);
@@ -130,6 +156,7 @@ function parseYouTubeList(input){
         btn.setAttribute('aria-label', playing ? S('musicAriaStop') : S('musicAria'));
         btn.setAttribute('aria-pressed', playing ? 'true' : 'false');
         btn.title = playing ? S('musicTitleStop') : S('musicTitle');
+        renderTitle(0);
     }
     window.toggleMusic = function(){
         // Blocked (e.g. Safari tracker prevention): open the track on
