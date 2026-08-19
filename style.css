@@ -1276,7 +1276,8 @@
         }
         #search-input{
             width: 100%;
-            /* 왼쪽 아이콘 제거 → 왼쪽 일반 여백, 오른쪽에 new+·🔍 두 컨트롤 자리. */
+            /* 왼쪽 아이콘 제거 → 왼쪽 일반 여백, 오른쪽에 지우기·new+·검색
+               세 컨트롤 자리(지우기는 입력이 있을 때만 나타난다). */
             padding: 16px 116px 16px 22px;
             font-size: 17px;
             color: var(--text);
@@ -1287,6 +1288,10 @@
             transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
         }
         #search-input::placeholder{ color: var(--muted); }
+        /* 브라우저가 그리는 기본 취소 버튼(✕)은 UA 글리프라 테마를 따르지
+           않는다 — 걷어내고 아래 .search-clear를 우리 언어로 직접 그린다. */
+        #search-input::-webkit-search-cancel-button{ -webkit-appearance: none; appearance: none; }
+        .search-field.has-text #search-input{ padding-right: 152px; }
         /* Calm focus: just a gentle tint on the border — no glow ring, no
            heavier shadow, and the global focus outline stays off since the
            border change already signals focus. */
@@ -1328,6 +1333,43 @@
             border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
             color: var(--accent-ink);
         }
+        /* 지우기 — 검색 버튼의 먹점과 한 언어. 테두리도 배경도 없이 가는 획
+           두 개로 그은 ✕이고, currentColor라 테마를 그대로 따라간다. 입력이
+           있을 때만 스르륵 나타난다(빈 창에는 지울 것이 없다). */
+        .search-clear{
+            width: 26px;
+            height: 26px;
+            padding: 0;
+            border: 0;
+            background: none;
+            color: var(--muted);
+            position: relative;
+            cursor: pointer;
+            opacity: 0;
+            transform: scale(.85);
+            pointer-events: none;
+            transition: opacity .2s ease, transform .2s ease, color .15s ease;
+        }
+        .search-field.has-text .search-clear{ opacity: 1; transform: none; pointer-events: auto; }
+        .search-clear::before,
+        .search-clear::after{
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 12px;
+            height: 1.5px;
+            border-radius: 2px;
+            background: currentColor;
+        }
+        .search-clear::before{ transform: translate(-50%, -50%) rotate(45deg); }
+        .search-clear::after{ transform: translate(-50%, -50%) rotate(-45deg); }
+        .search-clear:hover{ color: var(--accent-ink); }
+        .search-clear:focus-visible{
+            outline: 2px solid color-mix(in srgb, var(--accent) 55%, var(--border));
+            outline-offset: 2px;
+            border-radius: 50%;
+        }
         .search-go{
             width: 38px;
             height: 38px;
@@ -1343,6 +1385,24 @@
             transition: color 0.15s ease, border-color 0.15s ease;
         }
         .search-go:hover{ color: var(--accent-ink); border-color: var(--accent); }
+        /* 먹점 — 아이콘 대신 붓점 하나(수묵 모티프). currentColor를 쓰므로
+           버튼의 기본·호버·차단 색 상태를 그대로 따라간다. 호버 때 한 번
+           번지듯 커진다 — 평소엔 낮은 존재감, 손이 닿으면 깨어남. */
+        .search-go .go-dot{
+            display: block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 40%, transparent);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .search-go:hover .go-dot,
+        .search-go:focus-visible .go-dot{
+            transform: scale(1.25);
+            box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 16%, transparent);
+        }
+        .search-go:active .go-dot{ transform: scale(1.05); }
 
         /* ① 폴더 새 글 수 — 모아보기(⧉) 왼쪽. 배경 없이 숫자만, 옅은 accent 색. */
         #navigation .nav-newbadge{
