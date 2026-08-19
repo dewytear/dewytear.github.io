@@ -1,5 +1,5 @@
 <h2>AI 순회 가이드 — 이 위키를 기계로 읽는 법</h2>
-<p>이 페이지는 <strong>외부 AI가 이 위키를 업무의 첫 참고처로 삼아, 정보의 연관 관계에 따라 분석</strong>하도록 돕는 <strong>계약(contract)</strong>입니다. 사람이 읽는 <a href="#!ai-map"><strong>Knowledge Map</strong></a>·<a href="#!cosmos"><strong>Knowledge Graph</strong></a>와 같은 데이터를 쓰되, 여기서는 <strong>어떤 파일을 어떤 순서로 fetch하고 어떻게 순회·분석하는지</strong>를 규정합니다.</p>
+<p>이 페이지는 <strong>외부 AI가 이 위키를 업무의 첫 참고처로 삼아, 정보의 연관 관계에 따라 분석</strong>하도록 돕는 <strong>계약(contract)</strong>입니다. 사람이 읽는 <a href="#!ai-map"><strong>Knowledge Map</strong></a>·<a href="#!cosmos"><strong>Knowledge Graph</strong></a>(9뷰)·<a href="#!graph"><strong>Graph Studio</strong></a>와 같은 데이터를 쓰되, 여기서는 <strong>어떤 파일을 어떤 순서로 fetch하고 어떻게 순회·분석하는지</strong>를 규정합니다.</p>
 
 <h3>먼저 읽을 것 — 단 하나의 파일</h3>
 <p>루트의 <a href="https://dewytear.github.io/llms.txt"><code>llms.txt</code></a>가 표지이고, 실제 순회는 아래 <strong>자기완결 그래프 파일 하나</strong>로 충분합니다:</p>
@@ -7,10 +7,10 @@
     <li><strong><a href="https://dewytear.github.io/data/knowledge-graph.json"><code>data/knowledge-graph.json</code></a></strong> — 모든 <strong>노드(문서)</strong>와 <strong>엣지(related)</strong>·<strong>개념</strong>·<strong>원문 URL</strong>·통계를 한 파일에 담았습니다. 다른 파일을 조인하지 않아도 전 그래프를 순회할 수 있습니다.</li>
 </ul>
 <p>보조 파일(필요 시): <a href="https://dewytear.github.io/data/knowledge-index.ko.json"><code>knowledge-index.ko.json</code></a>(같은 그래프의 원본 인덱스) · <a href="https://dewytear.github.io/list"><code>list</code></a>(내비 트리·문서 경로) · <a href="https://dewytear.github.io/data/doc-dates.json"><code>doc-dates.json</code></a>(생성·수정일).</p>
-<p><strong>전체 본문이 한 번에 필요하면</strong> <a href="https://dewytear.github.io/llms-full.txt"><code>llms-full.txt</code></a> — 모든 문서의 평문 본문을 한 파일에 담은 전체 코퍼스 덤프다(그래프 순회 없이 통째로 컨텍스트에 적재할 때). <strong>새 문서를 구독하려면</strong> <a href="https://dewytear.github.io/feed.xml"><code>feed.xml</code></a>(Atom, 최신 30편). 콘텐츠 라이선스는 <strong>CC BY 4.0</strong> — 출처를 밝히면 자유롭게 인용·재사용할 수 있다.</p>
+<p><strong>전체 본문이 한 번에 필요하면</strong> <a href="https://dewytear.github.io/llms-full.txt"><code>llms-full.txt</code></a> — 모든 문서의 평문 본문을 한 파일에 담은 전체 코퍼스 덤프다(그래프 순회 없이 통째로 컨텍스트에 적재할 때). <strong>새 문서를 구독하려면</strong> <a href="https://dewytear.github.io/feed.xml"><code>feed.xml</code></a>(Atom, 최신 30편 — 영어는 <code>feed.en.xml</code>, 일본어는 <code>feed.ja.xml</code>). 크롤러 정책은 <code>robots.txt</code>(AI 크롤러 허용 목록), 전체 URL 목록은 <code>sitemap.xml</code>. 콘텐츠 라이선스는 <strong>CC BY 4.0</strong> — 출처를 밝히면 자유롭게 인용·재사용할 수 있다.</p>
 
 <h3>노드 스키마</h3>
-<p><code>knowledge-graph.json</code>의 <code>nodes[]</code> 각 원소:</p>
+<p><code>knowledge-graph.json</code>의 <code>nodes[]</code> 각 원소(파일 최상위의 <code>schemaVersion</code>은 현재 <code>2</code> — 소비자는 이 값으로 스키마를 고정하라):</p>
 <pre><code>{
   "name": "welcome",                     // 불변 논리 ID (노드 키)
   "title": "Welcome",
@@ -26,17 +26,21 @@
   ],
   "relations": [                          // (선택) 큐레이트된 방향 있는 의미 관계 — related(계산)와 별개
     { "target":"kgs-edges", "type":"prerequisite", "evidenceRef":"...", "source":"human" }
-  ]
+  ],
+  "citedBy": ["skills", "tip-beginner"]   // (선택) 이 문서를 본문에서 링크한 문서들 — 인용 역링크
 }</code></pre>
 
 <h3>순회·분석 규칙</h3>
 <ul>
     <li><strong>노드 = 문서</strong>(<code>name</code>이 키), <strong>엣지 = <code>related</code></strong>. 엣지는 두 종류다 — <code>via:"concept"</code>는 <strong>희소성 가중 공유 개념</strong>으로 이어진 <em>의미</em> 관계(<code>shared</code>가 근거 개념), <code>via:"folder"</code>는 같은 System 내 <strong>인접 보완</strong> 관계(모든 문서가 최소 2~4개 엣지를 갖도록).</li>
     <li><strong>타입 있는 관계 = <code>relations</code></strong>(선택). <code>related</code>가 <em>대칭·계산</em> 엣지라면, <code>relations</code>는 사람이 큐레이트한 <strong>방향 있는 의미 관계</strong>다 — <code>type</code>은 <code>prerequisite</code>(선행)·<code>implements</code>(구현)·<code>example-of</code>(사례)·<code>evidence-for</code>(근거)·<code>supersedes</code>(대체), <code>evidenceRef</code>가 근거. 방향은 이 노드 → <code>target</code>이며 역관계는 전 노드를 스캔해 유도한다(저장은 정방향 1회). <code>related</code>와 겹치지 않는 별도 신호이니 <strong>둘 다</strong> 활용하라.</li>
+    <li><strong>인용 역링크 = <code>citedBy</code></strong>(선택). 이 문서를 <em>본문에서 실제로 링크한</em> 문서들의 목록으로, <code>related</code>(개념 계산)·<code>relations</code>(큐레이트)와 독립인 <strong>세 번째 연결층</strong>이다. 어떤 문서가 많이 인용되는지, 어느 글이 어느 글에 기대는지를 이 층으로 읽어라.</li>
     <li><strong>개념(<code>concepts</code>)이 조인 키</strong>다. 두 문서가 같은 개념을 공유하면 관련. 희귀 개념일수록 강한 신호(idf 가중). 특정 개념으로 관련 문서를 모으려면 <code>concepts</code>를 역인덱싱하라.</li>
     <li><strong>원문은 <code>url</code>로 바로 fetch</strong> — JS 렌더 없이 정적 HTML 조각(<code>&lt;h2&gt;…&lt;/h2&gt;&lt;p&gt;…</code>)이 그대로 온다. 본문 분석은 이 조각을 파싱하면 된다. 제목·요약·생성일·라이선스가 <strong>메타데이터로 붙은 완성 페이지</strong>가 필요하면 <code>page</code>(<code>/p/&lt;name&gt;/</code>, 영어는 <code>/p/en/&lt;name&gt;/</code>, 일본어는 <code>/p/ja/&lt;name&gt;/</code>)를 쓰라 — 같은 본문에 <code>&lt;title&gt;</code>·description·canonical·hreflang·Article JSON-LD가 얹혀 있고, 본문의 내부 링크도 스냅샷끼리 이어져 JS 없이 순회할 수 있다.</li>
-    <li><strong>계층은 <code>section</code></strong>(<code>"World · Domain · System · Document"</code>의 상위 3계층)과 <strong><code>stats.clusters</code></strong>(System별 문서 수·허브)로 파악한다. 첫 세그먼트가 World(예: <code>AI</code>, <code>Douzone</code>).</li>
+    <li><strong>계층은 <code>section</code></strong>(<code>"World · Domain · System · Document"</code>의 상위 3계층)과 <strong><code>stats.clusters</code></strong>(System별 문서 수·허브)로 파악한다. 첫 세그먼트가 World(예: <code>AI</code>, <code>Douzone</code>)이고, World 단위 요약은 <strong><code>stats.galaxies</code></strong>에 따로 있다(키 이름은 초기 스키마의 잔재로 데이터 키라 유지). 전역 최빈 개념은 <strong><code>stats.topConcepts</code></strong>.</li>
     <li><strong>진입점</strong>: <code>stats.hubs</code>(피참조 최다 문서)에서 시작해 <code>related</code>를 따라 넓히면 주제의 핵심에서 주변으로 분석이 퍼진다. <code>stats.bridges</code>는 여러 System을 잇는 다리 개념이다.</li>
+    <li><strong>보조 인덱스의 필드 차이</strong>: <code>knowledge-index.*.json</code>은 같은 그래프의 원본 인덱스지만 <code>url</code>·<code>route</code>·<code>page</code>가 없다(그래프 파일에만 있음). 영어·일본어 인덱스에는 표시용 현지화 경로 <code>sectionL</code>이 추가로 붙을 수 있는데, 조인 키는 언제나 <code>section</code>(canonical)이다.</li>
+    <li><strong>내려받는 자산</strong>: 일부 문서는 배포 파일(zip 등)을 <code>assets/&lt;문서 경로&gt;/&lt;name&gt;/&lt;파일&gt;</code>에 동반한다(첫 사례: <code>sks-dews-sourcegraph</code>의 스킬 zip). 본문 조각의 상대경로 <code>assets/…</code> 링크는 사이트 루트 기준으로 fetch하면 된다.</li>
 </ul>
 
 <h3>순회 예시 (2홉)</h3>
@@ -49,4 +53,4 @@
 <h3>정직성 원칙</h3>
 <p>개념과 요약은 <strong>사람/AI가 문서를 읽고 큐레이트</strong>한 것이지 본문에서 무차별 추출한 것이 아니다. 그래서 엣지는 적지만 신뢰도가 높다 — <strong>연결이 옅다고 결함이 아니며</strong>, World가 다르면(예: AI ↔ DOUZONE) 사이가 성긴 것이 정상이다. 분석 시 <code>via</code>와 <code>shared</code>를 근거로 삼아 <strong>있는 관계만</strong> 사용하라.</p>
 
-<p>이 파일들은 문서가 추가될 때마다 자동 재생성되어 항상 현재 그래프와 일치한다(<code>tools/build_ai_export.py</code>).</p>
+<p>위의 데이터 파일들(그래프·인덱스·llms·피드·sitemap)은 문서가 추가될 때마다 자동 재생성되어 항상 현재 그래프와 일치한다(<code>tools/build_ai_export.py</code>). 이 가이드의 산문 자체는 사람이 갱신하는 계약 문서다 — 스키마가 바뀌면 여기도 함께 고친다.</p>

@@ -62,9 +62,9 @@ EXTRA_PAGES = {
         'path': 'about',
         'section': {'ko': '소개', 'en': 'About', 'ja': '紹介'},
         'summary': {
-            'ko': '곽영진 — 더존비즈온 책임연구원. 복잡한 일을 구조화하고 반복된 경험을 '
+            'ko': '곽영진 — 더존비즈온 수석연구원. 복잡한 일을 구조화하고 반복된 경험을 '
                   '시스템과 지식으로 바꾸는 일을 합니다.',
-            'ja': '郭永珍（クァク・ヨンジン）— ダウンビジョン主任研究員。複雑な仕事を構造化し、'
+            'ja': '郭永珍（クァク・ヨンジン）— Douzone Bizon 首席研究員。複雑な仕事を構造化し、'
                   '繰り返した経験をシステムと知識に変える仕事をしています。',
             'en': 'Youngjin Kwak — Principal Researcher at Douzone Bizon. I structure '
                   'complex work and turn repeated experience into systems and knowledge.',
