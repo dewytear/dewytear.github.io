@@ -5,16 +5,16 @@
 <p>모든 문서는 등재될 때 <strong>핵심 개념 5~6개</strong>를 큐레이션받습니다(<a href="#!kgs-overview">앞 편</a>의 파이프라인 ③). 여기에 한 가지 원칙이 있습니다: <strong>개념은 본문에 실재하는 것만 적는다</strong>. 연결을 만들고 싶다고 본문에 없는 개념을 넣으면 그래프가 "실제 지식의 지도"이기를 멈추기 때문입니다. 그래서 이 그래프의 엣지는 수가 적은 대신, <strong>하나하나가 근거(공유 개념)를 제시할 수 있습니다</strong>.</p>
 
 <h3>저울 — 희귀한 개념일수록 강한 연결</h3>
-<p>두 문서가 개념을 공유하면 연결 후보가 됩니다. 그런데 모든 개념이 같은 무게일 수는 없습니다. 64편 중 <strong>11편</strong>에 나오는 '스킬'을 공유하는 것은 우연에 가깝지만, 단 <strong>3편</strong>에만 나오는 '벡터검색'을 공유하는 것은 강한 신호입니다. 그래서 개념마다 <strong>희소성 가중치(idf)</strong> — 대략 "전체 문서 수 ÷ 그 개념이 나오는 문서 수"의 로그 — 를 부여합니다:</p>
+<p>두 문서가 개념을 공유하면 연결 후보가 됩니다. 그런데 모든 개념이 같은 무게일 수는 없습니다. 66편 중 <strong>12편</strong>에 나오는 '스킬'을 공유하는 것은 우연에 가깝지만, 단 <strong>3편</strong>에만 나오는 '벡터검색'을 공유하는 것은 강한 신호입니다. 그래서 개념마다 <strong>희소성 가중치(idf)</strong> — 대략 "전체 문서 수 ÷ 그 개념이 나오는 문서 수"의 로그 — 를 부여합니다:</p>
 
 <div class="diagram">
-<svg viewBox="0 0 720 176" role="img" aria-label="idf 저울: 스킬은 11편에 나와 가중치 1.78로 가볍고, 벡터검색은 3편에만 나와 3.08로 무겁다">
+<svg viewBox="0 0 720 176" role="img" aria-label="idf 저울: 스킬은 12편에 나와 가중치 1.72로 가볍고, 벡터검색은 3편에만 나와 3.11로 무겁다">
     <rect class="d-box" x="30" y="24" width="300" height="60" rx="10"/>
-    <text class="d-label" x="180" y="49" text-anchor="middle">'스킬' — 11편에 등장</text>
-    <text class="d-sub" x="180" y="70" text-anchor="middle">흔한 개념 → 가중치 log(65/11) ≈ 1.78</text>
+    <text class="d-label" x="180" y="49" text-anchor="middle">'스킬' — 12편에 등장</text>
+    <text class="d-sub" x="180" y="70" text-anchor="middle">흔한 개념 → 가중치 log(67/12) ≈ 1.72</text>
     <rect class="d-box accent" x="390" y="24" width="300" height="60" rx="10"/>
     <text class="d-label" x="540" y="49" text-anchor="middle">'벡터검색' — 3편에만 등장</text>
-    <text class="d-sub" x="540" y="70" text-anchor="middle">희귀 개념 → 가중치 log(65/3) ≈ 3.08</text>
+    <text class="d-sub" x="540" y="70" text-anchor="middle">희귀 개념 → 가중치 log(67/3) ≈ 3.11</text>
     <line class="d-edge" x1="180" y1="84" x2="180" y2="116"/>
     <line class="d-edge accent" x1="540" y1="84" x2="540" y2="116"/>
     <text class="d-sub" x="180" y="138" text-anchor="middle">공유해도 약한 연결 신호</text>
@@ -25,7 +25,7 @@
 </div>
 
 <h3>실제 엣지 해부 — Welcome ↔ "Claude Code란 무엇인가"</h3>
-<p>실제 그래프의 엣지 하나를 뜯어 보면: <a href="#!welcome">시작하기</a>와 <a href="#!ccb-overview">Tutorial 기초 편</a>은 <strong>'터미널'(가중치 3.48)·'CLAUDE.md'(1.98)·'Claude Code'(1.87)</strong> 세 개념을 공유합니다. 점수는 가중치의 합 <strong>≈ 7.33</strong> — 같은 문서의 1순위는 개념 4개를 공유한 <a href="#!tip-beginner">Tip 초급 편</a>(≈ 9.56)이니, 공유 개념이 많고 희귀할수록 위로 올라가는 셈입니다. 문서 하단의 "연관 문서"에서 이 근거 개념이 그대로 칩으로 표시되므로, <strong>왜 이어졌는지</strong>를 언제나 확인할 수 있습니다.</p>
+<p>실제 그래프의 엣지 하나를 뜯어 보면: <a href="#!welcome">시작하기</a>와 <a href="#!ccb-overview">Tutorial 기초 편</a>은 <strong>'터미널'(가중치 3.51)·'CLAUDE.md'(2.01)·'Claude Code'(1.90)</strong> 세 개념을 공유합니다. 점수는 가중치의 합 <strong>≈ 7.42</strong> — 같은 문서의 1순위는 개념 4개를 공유한 <a href="#!tip-beginner">Tip 초급 편</a>(≈ 9.68)이니, 공유 개념이 많고 희귀할수록 위로 올라가는 셈입니다. 문서 하단의 "연관 문서"에서 이 근거 개념이 그대로 칩으로 표시되므로, <strong>왜 이어졌는지</strong>를 언제나 확인할 수 있습니다.</p>
 
 <h3>판정 규칙 — 세 갈래</h3>
 <div class="diagram">
@@ -52,7 +52,7 @@
 
 <ul>
     <li><strong>공유 2개 이상</strong> → 연결. 서로 다른 개념 두 개가 겹치는 것은 우연이기 어렵습니다.</li>
-    <li><strong>공유 1개 + 그 개념이 3편 이하에만 등장</strong> → 연결. 실례: <a href="#!dzp-overview">제안 개요</a> ↔ <a href="#!news-20260816-claude-code-selfhosted">셀프호스팅 공개 베타</a>는 'GitLab' 하나만 공유하지만, 'GitLab'이 3편에만 나올 만큼 희귀해 인정됩니다. 반대로 '스킬' 하나만 공유한 쌍은 연결되지 않습니다 — 11편이 공유하는 개념 1개는 근거가 못 되기 때문입니다.</li>
+    <li><strong>공유 1개 + 그 개념이 3편 이하에만 등장</strong> → 연결. 실례: <a href="#!dzp-overview">제안 개요</a> ↔ <a href="#!news-20260816-claude-code-selfhosted">셀프호스팅 공개 베타</a>는 'GitLab' 하나만 공유하지만, 'GitLab'이 3편에만 나올 만큼 희귀해 인정됩니다. 반대로 '스킬' 하나만 공유한 쌍은 연결되지 않습니다 — 12편이 공유하는 개념 1개는 근거가 못 되기 때문입니다.</li>
     <li><strong>그 외</strong> → 개념으로는 연결하지 않습니다. 대신 개념 연결이 2개가 안 되는 문서는 <strong>같은 System의 이웃</strong>(예: <a href="#!ccb-overview">기초 편</a> → 같은 Tutorial의 앞뒤 챕터)으로 보완해, <strong>모든 문서가 최소 2~4개의 연결</strong>을 갖게 합니다. 현재 비율은 개념 연결 182개(77%) · 폴더 보완 54개(23%)입니다.</li>
 </ul>
 

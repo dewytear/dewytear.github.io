@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-08-16T11:44:34+09:00"
+ "dateModified": "2026-08-20T08:17:48+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -65,16 +65,16 @@
 <p>すべての文書は登録されるときに<strong>中心概念 5〜6 個</strong>をキュレーションされます（<a href="/p/ja/kgs-overview/">前編</a>のパイプライン ③）。ここにひとつの原則があります: <strong>概念は本文に実在するものだけを書く</strong>。つながりを作りたいからといって本文にない概念を入れると、グラフが「実際の知識の地図」であることをやめてしまうからです。だからこのグラフのエッジは数が少ない代わりに、<strong>ひとつひとつが根拠（共有した概念）を示せます</strong>。</p>
 
 <h3>はかり — まれな概念ほど強いつながり</h3>
-<p>ふたつの文書が概念を共有すると、つながりの候補になります。ところが、すべての概念が同じ重さであるはずはありません。64 編のうち <strong>11 編</strong>に出てくる「スキル」を共有するのは偶然に近いですが、たった <strong>3 編</strong>にしか出てこない「ベクトル検索」を共有するのは強い信号です。そこで概念ごとに<strong>希少性の重み（idf）</strong> — ざっくり「全文書数 ÷ その概念が出てくる文書数」の対数 — を与えます:</p>
+<p>ふたつの文書が概念を共有すると、つながりの候補になります。ところが、すべての概念が同じ重さであるはずはありません。66 編のうち <strong>12 編</strong>に出てくる「スキル」を共有するのは偶然に近いですが、たった <strong>3 編</strong>にしか出てこない「ベクトル検索」を共有するのは強い信号です。そこで概念ごとに<strong>希少性の重み（idf）</strong> — ざっくり「全文書数 ÷ その概念が出てくる文書数」の対数 — を与えます:</p>
 
 <div class="diagram">
-<svg viewBox="0 0 720 176" role="img" aria-label="idf のはかり: スキルは 11 編に出て重み 1.78 と軽く、ベクトル検索は 3 編にしか出ず 3.08 と重い">
+<svg viewBox="0 0 720 176" role="img" aria-label="idf のはかり: スキルは 12 編に出て重み 1.72 と軽く、ベクトル検索は 3 編にしか出ず 3.11 と重い">
     <rect class="d-box" x="30" y="24" width="300" height="60" rx="10"/>
-    <text class="d-label" x="180" y="49" text-anchor="middle">「スキル」 — 11 編に登場</text>
-    <text class="d-sub" x="180" y="70" text-anchor="middle">よくある概念 → 重み log(65/11) ≈ 1.78</text>
+    <text class="d-label" x="180" y="49" text-anchor="middle">「スキル」 — 12 編に登場</text>
+    <text class="d-sub" x="180" y="70" text-anchor="middle">よくある概念 → 重み log(67/12) ≈ 1.72</text>
     <rect class="d-box accent" x="390" y="24" width="300" height="60" rx="10"/>
     <text class="d-label" x="540" y="49" text-anchor="middle">「ベクトル検索」 — 3 編のみ登場</text>
-    <text class="d-sub" x="540" y="70" text-anchor="middle">まれな概念 → 重み log(65/3) ≈ 3.08</text>
+    <text class="d-sub" x="540" y="70" text-anchor="middle">まれな概念 → 重み log(67/3) ≈ 3.11</text>
     <line class="d-edge" x1="180" y1="84" x2="180" y2="116"/>
     <line class="d-edge accent" x1="540" y1="84" x2="540" y2="116"/>
     <text class="d-sub" x="180" y="138" text-anchor="middle">共有しても弱いつながりの信号</text>
@@ -85,7 +85,7 @@
 </div>
 
 <h3>実際のエッジを解剖する — Welcome ↔「Claude Code とは何か」</h3>
-<p>実際のグラフのエッジをひとつ開けてみると: <a href="/p/ja/welcome/">はじめに</a>と <a href="/p/ja/ccb-overview/">Tutorial 基礎の章</a>は<strong>「ターミナル」（重み 3.48）・「CLAUDE.md」（1.98）・「Claude Code」（1.87）</strong>の三つの概念を共有しています。スコアは重みの合計 <strong>≈ 7.33</strong> — 同じ文書の第 1 位は概念 4 個を共有する <a href="/p/ja/tip-beginner/">Tip 初級編</a>（≈ 9.56）なので、共有概念が多くまれであるほど上に来るわけです。文書下部の「関連文書」でこの根拠概念がそのままチップとして表示されるので、<strong>なぜつながったのか</strong>をいつでも確認できます。</p>
+<p>実際のグラフのエッジをひとつ開けてみると: <a href="/p/ja/welcome/">はじめに</a>と <a href="/p/ja/ccb-overview/">Tutorial 基礎の章</a>は<strong>「ターミナル」（重み 3.51）・「CLAUDE.md」（2.01）・「Claude Code」（1.90）</strong>の三つの概念を共有しています。スコアは重みの合計 <strong>≈ 7.42</strong> — 同じ文書の第 1 位は概念 4 個を共有する <a href="/p/ja/tip-beginner/">Tip 初級編</a>（≈ 9.68）なので、共有概念が多くまれであるほど上に来るわけです。文書下部の「関連文書」でこの根拠概念がそのままチップとして表示されるので、<strong>なぜつながったのか</strong>をいつでも確認できます。</p>
 
 <h3>判定ルール — 三つの分かれ道</h3>
 <div class="diagram">
@@ -112,7 +112,7 @@
 
 <ul>
     <li><strong>2 個以上を共有</strong> → つなぐ。異なる概念がふたつ重なるのは偶然になりにくいからです。</li>
-    <li><strong>1 個共有 + その概念が 3 編以下にしか出てこない</strong> → つなぐ。実例: <a href="/p/ja/dzp-overview/">提案の概要</a> ↔ <a href="/p/ja/news-20260816-claude-code-selfhosted/">セルフホスティング公開ベータ</a>は「GitLab」ひとつしか共有していませんが、「GitLab」は 3 編にしか出てこないほどまれなので認められます。逆に「スキル」ひとつだけを共有した組はつながりません — 11 編が共有する概念ひとつは根拠になれないからです。</li>
+    <li><strong>1 個共有 + その概念が 3 編以下にしか出てこない</strong> → つなぐ。実例: <a href="/p/ja/dzp-overview/">提案の概要</a> ↔ <a href="/p/ja/news-20260816-claude-code-selfhosted/">セルフホスティング公開ベータ</a>は「GitLab」ひとつしか共有していませんが、「GitLab」は 3 編にしか出てこないほどまれなので認められます。逆に「スキル」ひとつだけを共有した組はつながりません — 12 編が共有する概念ひとつは根拠になれないからです。</li>
     <li><strong>それ以外</strong> → 概念ではつなぎません。代わりに概念のつながりが 2 本に満たない文書は<strong>同じ System の隣</strong>（例: <a href="/p/ja/ccb-overview/">基礎の章</a> → 同じ Tutorial の前後の章）で補い、<strong>すべての文書が最低 2〜4 本のつながり</strong>を持つようにします。現在の比率は概念のつながり 182 本（77%）・フォルダ補完 54 本（23%）です。</li>
 </ul>
 
@@ -164,7 +164,7 @@
     概念は<strong>キュレーション</strong>（本文実在のみ）→ エッジは<strong>希少性で重みづけした共有</strong>（2 個↑ またはまれな 1 個）→ 足りなければ<strong>フォルダ補完</strong> → すべての文書が 2〜4 つながり・孤立 0。その上に、本文 <code>#!</code> リンクの逆インデックスである<strong>引用バックリンク（<code>citedBy</code>）</strong>と、キュレーションで宣言する<strong>向きのある型付き関係（<code>relations</code>）</strong>を別に重ねます。よく参照される文書が<strong>ハブ</strong>となってグラフの中心をつくります（<a href="/p/ja/kgs-views/">次の編</a>）。
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Wiki · 知識体系 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-08-16</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Wiki · 知識体系 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-08-20</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
 <ul><li><a href="/p/ja/kgs-overview/">知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン</a></li><li><a href="/p/ja/kgs-views/">グラフを読む 9 つの眼 — ビューごとに違う問いに答える</a></li></ul>
