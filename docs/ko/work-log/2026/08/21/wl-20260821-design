@@ -51,3 +51,14 @@
             <p>
                 동작 검증은 실제 위키를 띄워 스위치를 눌러 했다 — 캔버스가 떴다가 끝나면 사라지는 것, 테마와 저장값이 함께 바뀌는 것, 남은 옛 화면 비율이 길이 전체에 고르게 퍼지는 것(0.25:97% · 0.48:80% · 0.71:47% · 0.94:17%), 네 모서리가 완전히 마르는 것, 모션 최소화에서는 마스크조차 굽지 않고 즉시 전환되는 것, 양방향을 끄면 한쪽만 번지는 것, 효과를 끄면 캔버스가 아예 만들어지지 않는 것. <code>style.css</code>·<code>colors.js</code>·<code>i18n.js</code>·<code>app.js</code> 캐시버스터 상향.
             </p>
+
+            <h3>3D 그래프 둥글기 — 폴백을 사이트 기본값에 맞췄다</h3>
+            <p>
+                둥글기는 값이 세 층이었다. <code>config.json</code>의 사이트 기본 <strong>55</strong>, <code>app.js</code>의 <code>HARD_DEFAULTS</code> <strong>100</strong>, 그리고 <code>cosmos.js</code>가 <code>effSettings()</code>로 값을 못 받았을 때 쓰는 리터럴 <strong>100</strong>. 개인 설정이 없는 방문자는 사이트 기본을 받으니 화면은 늘 55였고, 100은 <code>config.json</code>이 비었을 때만 닿는 최후 폴백이라 겉으로는 드러나지 않았다.
+            </p>
+            <p>
+                문제는 그 폴백이 <strong>드러나는 순간에 화면을 바꿔 버린다</strong>는 것이다. <code>config.json</code>에서 키가 빠지거나 파일을 못 읽으면 완전한 둥근 공(100)으로 튀어, 원래 의도한 분류별로 갈린 형태(55)와 눈에 띄게 달라진다. 폴백은 값이 없을 때 <strong>같은 화면을 유지하는 쪽</strong>이어야 하므로 네 군데를 모두 55로 맞췄다 — <code>HARD_DEFAULTS</code>, 설정 화면의 현재값 폴백, 저장 시 <code>NaN</code> 클램프 기본, 그리고 <code>cosmos.js</code>의 리터럴.
+            </p>
+            <p>
+                저장 동작은 달라지지 않는다. <code>setOrClear</code>는 <code>SITE_DEFAULTS</code>를 먼저 보므로 55는 전에도 저장되지 않았고, 100을 명시해 저장해 둔 값도 그대로 남는다. <code>app.js</code>·<code>cosmos.js</code> 캐시버스터 상향. 자기기술 문서(<code>kgs-views</code>)는 둥글기를 "0~100 조절"로만 서술해 기본값을 적지 않으므로 고칠 것이 없었다.
+            </p>

@@ -511,9 +511,11 @@ function startCosmos(){
         // Roundness (설정 → 디자인 탭): 100 = 완전한 둥근 공(모든 노드를
         // 공유 구에 균일 분포), 0 = 분류(클러스터)별로 분리된 원래 배치.
         // 그 사이는 클러스터 위치 ↔ 구면 위치를 lerp. effSettings()는
-        // HARD_DEFAULTS를 안 읽으므로 리터럴 100으로 폴백.
+        // HARD_DEFAULTS를 안 읽으므로 리터럴로 폴백한다 — config.json의
+        // 사이트 기본값(55)과 같은 값이어야 config.json이 비었을 때도
+        // 화면이 달라지지 않는다.
         var cr = eff.cosmosRoundness;
-        var round = (cr == null ? 100 : cr) / 100;
+        var round = (cr == null ? 55 : cr) / 100;
         if(round < 0){ round = 0; }
         if(round > 1){ round = 1; }
         var dirs = {};
