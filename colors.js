@@ -9,7 +9,7 @@
 // 저장 경로라 사용자가 스위치를 누른 것이 아니므로 즉시 전환이어야 한다.
 function nightDayHandler(target){
     var isDay = target.checked;
-    themeInk(isDay, function(){ document.body.classList.toggle('day', isDay); });
+    themeInk(function(){ document.body.classList.toggle('day', isDay); }, isDay);
     try{
         var s = JSON.parse(localStorage.getItem('wikiSettings')) || {};
         s.theme = isDay ? 'day' : 'night';
@@ -18,11 +18,60 @@ function nightDayHandler(target){
 }
 
 // ---- 테마 전환의 먹 번짐 ----
-// 페이지를 캔버스로 떠오지 않는다. 옛 --bg 색 한 겹을 화면에 덮고 그 아래에서 테마를
-// 즉시 바꾼 뒤, 그 겹을 먹이 번지듯 파내면 이미 바뀐 새 테마가 드러난다 — 그래서
-// 크롬 전용 실험 API(html-in-canvas) 없이도 전 브라우저에서 같게 돈다.
-// 지우개는 검색 화면 커서 자취와 같은 난류 마스크(style.css의 --ink-erase)다.
-var THEME_FX = { mask: null, ready: false, busy: false };
+// 브라우저의 View Transitions가 옛 화면과 새 화면을 각각 스냅샷으로 떠 준다. 그래서
+// 전환 중에도 글자·카드가 사라지지 않고, 먹 경계 안쪽은 새 테마, 바깥쪽은 옛 테마의
+// 같은 화면이 보인다. 실제 애니메이션은 style.css의 ::view-transition-new(root)가
+// 마스크를 키우며 하고, 이 함수는 좌표·길이·마스크만 넘긴 뒤 손을 뗀다 — 프레임당
+// 자바스크립트 계산이 없다.
+//
+// 옛 방식(캔버스로 옛 배경색 한 겹을 덮고 먹으로 파내기)은 전환 구간에서 화면이
+// 통째로 비었다. 페이지를 스냅샷으로 뜰 방법이 없었기 때문인데, 그건 캔버스에
+// html을 그리는 크롬 전용 실험 API를 전제한 이야기였다. View Transitions는 표준으로
+// 같은 것을 해 주므로 스냅샷을 브라우저에서 받아 쓴다.
+var THEME_FX_BUSY = false;
+// 마스크를 SVG 데이터 URI 그대로 넘기면 크롬이 mask-size가 바뀔 때마다 feTurbulence를
+// 다시 래스터한다 — 실측 17fps. 검색 화면이 라이브 필터로 5fps까지 떨어졌던 그 함정이
+// CSS 마스크 쪽에서 되풀이되는 것이다. 한가할 때 캔버스에 한 번 굽고 비트맵 URL로
+// 넘기면 이후엔 브라우저가 배율만 바꿔 그린다.
+var THEME_FX_MASK = '';
+
+function themeFxBake(){
+    if(THEME_FX_MASK){ return; }
+    if(themeFxOpts().mode === 'off'){ return; }
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ return; }
+    var host = document.getElementById('theme-switch');
+    if(!host){ return; }
+    var raw = getComputedStyle(host).getPropertyValue('--ink-erase').trim();
+    var m = /^url\(\s*"?([\s\S]*?)"?\s*\)$/.exec(raw);
+    if(!m){ return; }
+    var S = 512, c = document.createElement('canvas');
+    c.width = c.height = S;
+    var cx = c.getContext('2d');
+    if(!cx){ return; }
+    var img = new Image();
+    img.onload = function(){
+        cx.drawImage(img, 0, 0, S, S);
+        try{
+            if(c.toBlob){
+                c.toBlob(function(blob){
+                    if(blob){ THEME_FX_MASK = 'url("' + URL.createObjectURL(blob) + '")'; }
+                }, 'image/png');
+            }else{
+                THEME_FX_MASK = 'url("' + c.toDataURL('image/png') + '")';
+            }
+        }catch(e){}
+    };
+    img.src = m[1];
+}
+
+// 마스크는 첫 전환 전에 준비돼 있어야 하지만 로드와 경쟁하면 안 된다 — 한가할 때 굽는다.
+(function(){
+    var idle = window.requestIdleCallback || function(f){ return setTimeout(f, 1500); };
+    function go(){ idle(themeFxBake); }
+    if(document.readyState === 'loading'){
+        document.addEventListener('DOMContentLoaded', go);
+    }else{ go(); }
+})();
 
 // 설정값. 사이트 기본(config.json → SITE_DEFAULTS)을 개인 저장값이 덮는다.
 // app.js에 의존하지 않도록 localStorage를 직접 읽는다(로드 순서 무관).
@@ -41,154 +90,54 @@ function themeFxOpts(){
              both: pick('themeFxBoth', true) !== false };
 }
 
-// 마스크를 SVG <img>로 두고 매 프레임 그리면 크롬이 그때마다 feTurbulence를 다시
-// 래스터한다 — 검색 화면이 5fps로 떨어졌던 그 라이브 필터다. 한가할 때 일반 캔버스에
-// 한 번 구워 두고, 이후엔 캔버스끼리만 블릿한다(필터 재평가 0). 1024²라 4MB쯤 잡으므로
-// 효과를 끈 사람·모션 최소화를 켠 사람에게는 굽지 않는다.
-function themeFxBake(){
-    if(THEME_FX.mask){ return; }
-    if(themeFxOpts().mode === 'off'){ return; }
-    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ return; }
-    var host = document.getElementById('theme-switch');
-    if(!host){ return; }
-    var raw = getComputedStyle(host).getPropertyValue('--ink-erase').trim();
-    var m = /^url\(\s*"?([\s\S]*?)"?\s*\)$/.exec(raw);
-    if(!m){ return; }
-    var S = 1024, c = document.createElement('canvas');
-    c.width = c.height = S;
-    var cx = c.getContext('2d');
-    if(!cx){ return; }
-    var img = new Image();
-    img.onload = function(){
-        cx.drawImage(img, 0, 0, S, S);
-        THEME_FX.mask = c;
-        THEME_FX.ready = true;
-    };
-    img.src = m[1];
-}
-
-// 확대된 마스크를 그대로 그리면 화면 밖까지 래스터해 비용이 폭발한다(실측 10fps).
-// 보이는 만큼만 — 소스 부분사각형을 계산해 뷰포트로 잘라 그린다. R이 커질수록 소스
-// 영역이 작아지므로 프레임 비용이 화면 면적 이상으로는 절대 늘지 않는다.
-function themeFxBlit(g, img, cx, cy, R, W, H){
-    var x0 = Math.max(0, cx - R), y0 = Math.max(0, cy - R);
-    var x1 = Math.min(W, cx + R), y1 = Math.min(H, cy + R);
-    if(x1 <= x0 || y1 <= y0){ return; }
-    var k = (img.width || img.naturalWidth) / (R * 2);
-    var sw = (x1 - x0) * k, sh = (y1 - y0) * k;
-    if(sw <= 0 || sh <= 0){ return; }
-    g.drawImage(img, (x0 - cx + R) * k, (y0 - cy + R) * k, sw, sh,
-                     x0, y0, x1 - x0, y1 - y0);
-}
-
-// 젖은 테두리용 고리 — 마스크를 accent로 물들인 뒤 안쪽을 파낸다. 실제 먹도 번짐의
-// 끝에서 안료가 몰려 진해진다. 색이 새 테마 값이라 전환마다 한 번 굽는다.
-function themeFxRim(img, color, size){
-    var c = document.createElement('canvas');
-    c.width = c.height = size;
-    var x = c.getContext('2d');
-    x.drawImage(img, 0, 0, size, size);
-    x.globalCompositeOperation = 'source-in';
-    x.fillStyle = color;
-    x.fillRect(0, 0, size, size);
-    x.globalCompositeOperation = 'destination-out';
-    x.drawImage(img, size * 0.10, size * 0.10, size * 0.80, size * 0.80);
-    return c;
-}
-
-// toDay: 이제부터 낮인가. flip: 실제로 클래스를 뒤집는 함수(반드시 한 번 호출된다).
-function themeInk(toDay, flip){
+// flip: 실제로 클래스를 뒤집는 함수(어느 경로로도 반드시 한 번 호출된다).
+// toDay: 이제부터 낮인가 — 양방향을 끈 경우의 방향 판정에 쓴다.
+function themeInk(flip, toDay){
     var o = themeFxOpts();
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var W = window.innerWidth, H = window.innerHeight;
     // 양방향이 꺼져 있으면 밤 → 낮으로 갈 때만 번진다.
-    if(o.mode === 'off' || reduce || THEME_FX.busy || !THEME_FX.ready
-       || (!o.both && !toDay) || !W || !H){
+    if(o.mode === 'off' || reduce || THEME_FX_BUSY || !document.startViewTransition
+       || (!o.both && !toDay)){
         flip(); return;
     }
-    var cv = document.createElement('canvas');
-    cv.id = 'theme-fx';
-    cv.setAttribute('aria-hidden', 'true');
-    var eff = Math.min(window.devicePixelRatio || 1, 2) * 0.5;   // 먹은 본래 흐리다
-    cv.width = Math.max(1, Math.round(W * eff));
-    cv.height = Math.max(1, Math.round(H * eff));
-    var ctx = cv.getContext('2d');
-    var hole = document.createElement('canvas');
-    hole.width = cv.width; hole.height = cv.height;
-    var hx = hole.getContext('2d');
-    if(!ctx || !hx){ flip(); return; }
-    hx.setTransform(eff, 0, 0, eff, 0, 0);
+    var W = window.innerWidth, H = window.innerHeight;
+    if(!W || !H){ flip(); return; }
 
-    // 옛 배경색은 반드시 뒤집기 '전에' 읽는다.
-    var oldBg = getComputedStyle(document.body).getPropertyValue('--bg').trim();
-    if(!oldBg){ flip(); return; }
     // 번짐은 누른 자리에서 시작한다. 사이드바가 접혀 있으면 화면 중앙에서.
     var host = document.getElementById('theme-switch');
     var r = host ? host.getBoundingClientRect() : null;
     var ox = (r && r.width) ? r.left + r.width / 2 : W / 2;
     var oy = (r && r.height) ? r.top + r.height / 2 : H / 2;
-    var diag = Math.sqrt(W * W + H * H);
-    // 마스크 알파가 바깥에서 0이라 전선이 화면 모서리를 '지나가야' 그 자리가 마른다.
-    var RMAX = diag * 1.5;
-    var far = Math.max(Math.sqrt(ox * ox + oy * oy), Math.sqrt((W - ox) * (W - ox) + oy * oy),
+    // 마스크 안쪽 '고원'(불투명 구간)이 화면의 가장 먼 구석까지 닿아야 전환이
+    // 완결된다. 고원 반지름은 마스크 한 변의 약 0.29배이므로 3.6배를 잡는다.
+    var far = Math.max(Math.sqrt(ox * ox + oy * oy),
+                       Math.sqrt((W - ox) * (W - ox) + oy * oy),
                        Math.sqrt(ox * ox + (H - oy) * (H - oy)),
                        Math.sqrt((W - ox) * (W - ox) + (H - oy) * (H - oy)));
-    var ink = THEME_FX.mask;
+    // 마스크는 style.css가 정본이다(난류 파라미터의 단일 출처). 구운 비트맵이 있으면
+    // 그것을 쓰고, 아직 없으면 SVG 원본으로 돈다(느리지만 한 번뿐이다). 전환 때만
+    // 루트로 옮겨 준다 — 뷰 트랜지션 의사요소는 루트의 자식이라 거기서 상속받는다.
+    var mask = THEME_FX_MASK;
+    if(!mask){
+        mask = host ? getComputedStyle(host).getPropertyValue('--ink-erase').trim() : '';
+        themeFxBake();          /* 다음 전환은 비트맵으로 */
+    }
+    if(!mask){ flip(); return; }
 
-    THEME_FX.busy = true;
-    document.body.appendChild(cv);
-    flip();                                   /* 아래에서 테마는 이미 바뀐다 */
-    var accent = getComputedStyle(document.body).getPropertyValue('--accent').trim() || '#888';
-    var rim = themeFxRim(ink, accent, 512);
-    var t0 = 0, prev = 0;
+    var root = document.documentElement.style;
+    root.setProperty('--tfx-mask', mask);
+    root.setProperty('--tfx-x', ox.toFixed(1) + 'px');
+    root.setProperty('--tfx-y', oy.toFixed(1) + 'px');
+    root.setProperty('--tfx-r', Math.round(far * 3.6) + 'px');
+    root.setProperty('--tfx-dur', o.ms + 'ms');
 
-    requestAnimationFrame(function frame(now){
-        if(!cv.isConnected){ THEME_FX.busy = false; return; }
-        if(!t0){ t0 = prev = now; }
-        var p = Math.min(1, (now - t0) / o.ms);
-        var dt = Math.min(50, Math.max(4, now - prev)); prev = now;
-        // p^0.95면 처음부터 먹이 트고, 전선이 모서리에 닿는 게 ≈0.73, 다 마르는 게
-        // ≈0.96으로 진행이 길이 전체에 퍼진다.
-        var R = Math.pow(p, 0.95) * RMAX;
-
-        // ① 구멍을 누적한다 — 지운 자리를 되돌리지 않으므로 중심은 금세 완전히 젖고
-        //    전선은 옅게 남는다. 프레임 시간으로 정규화해 길이·프레임률이 달라도 같게
-        //    스미고, 뒤로 갈수록 진하게(1+5p³) 해 끝에 모서리까지 확실히 마른다.
-        hx.globalCompositeOperation = 'source-over';
-        hx.globalAlpha = Math.min(1, dt / 16.7 * 0.5 * (1 + 5 * p * p * p));
-        themeFxBlit(hx, ink, ox, oy, R, W, H);
-
-        // ② 아직 마르지 않은 종이 + 젖은 테두리. 불투명이라 clearRect가 필요 없다.
-        ctx.setTransform(eff, 0, 0, eff, 0, 0);
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = oldBg;
-        ctx.fillRect(0, 0, W, H);
-        if(R * 1.03 * 0.8 < far){        /* 고리가 화면을 다 지나가면 그릴 것이 없다 */
-            ctx.globalAlpha = 0.8 * (1 - p * 0.4);
-            themeFxBlit(ctx, rim, ox, oy, R * 1.03, W, H);
-        }
-
-        // ③ 누적한 구멍으로 파낸다 — 경계가 스트로크가 아니라 마스크 알파라
-        //    자를 곳이 없다. 이게 "먹이 스민" 느낌의 전부다.
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.globalAlpha = 1;
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.drawImage(hole, 0, 0);
-
-        if(p < 1){ requestAnimationFrame(frame); }
-        else{
-            if(cv.parentNode){ cv.parentNode.removeChild(cv); }
-            THEME_FX.busy = false;
-        }
-    });
+    THEME_FX_BUSY = true;
+    var done = function(){
+        THEME_FX_BUSY = false;
+        root.removeProperty('--tfx-mask');   // 마스크 문자열을 계속 물고 있지 않는다
+    };
+    var vt;
+    try{ vt = document.startViewTransition(flip); }
+    catch(e){ done(); flip(); return; }
+    vt.finished.then(done, done);
 }
-
-// 마스크는 첫 전환 전에 준비돼 있어야 하지만 로드와 경쟁하면 안 된다 — 한가할 때 굽는다.
-(function(){
-    var idle = window.requestIdleCallback || function(f){ return setTimeout(f, 1500); };
-    function go(){ idle(themeFxBake); }
-    if(document.readyState === 'loading'){
-        document.addEventListener('DOMContentLoaded', go);
-    }else{ go(); }
-})();
