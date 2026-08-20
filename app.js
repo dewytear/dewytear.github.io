@@ -1226,7 +1226,9 @@ var HARD_DEFAULTS = { navLineStyle: 'dashed', navLineWidth: '1px',
                       // 기본값과 같다며 지워 자동 감지(en)로 되돌아가는 버그가 된다.
                       searchGame: 'g2048', music: '', lang: '',
                       hideRecent: false, hideRelated: false, newDays: 7,
-                      cosmosRoundness: 100, cosmosLabelMin: 5 };
+                      cosmosRoundness: 100, cosmosLabelMin: 5,
+                      // 테마 전환의 먹 번짐 — colors.js가 읽는다.
+                      themeFx: 'ink', themeFxMs: 750, themeFxBoth: true };
 // Effective settings = site defaults overlaid with personal values.
 function effSettings(){
     var out = {}, k;
@@ -1468,6 +1470,10 @@ function showSettings(){
     var curAccentNight = s.accentNight || accentDefault('night');
     var curRound = (s.cosmosRoundness != null ? s.cosmosRoundness : 100);
     var curLabelMin = (s.cosmosLabelMin != null ? s.cosmosLabelMin : 5);
+    // 먹 번짐: 저장은 ms, 입력은 초 단위(사람이 읽기 쉬운 쪽).
+    var curFx = s.themeFx === 'off' ? 'off' : 'ink';
+    var curFxSec = ((s.themeFxMs != null ? s.themeFxMs : 750) / 1000).toFixed(2);
+    var curFxBoth = s.themeFxBoth !== false;
     var basic =
         '<div id="settings-panel-basic" class="settings-panel"'
       +   (SETTINGS_TAB === 'basic' ? '' : ' hidden') + '>'
@@ -1559,6 +1565,21 @@ function showSettings(){
       +   '</div>'
       + '</div>'
       + '<div class="settings-field">'
+      +   '<label for="settings-themefx">' + STR('fThemeFx') + '</label>'
+      +   '<select id="settings-themefx">'
+      +     opt('ink', STR('optFxInk'), curFx)
+      +     opt('off', STR('optFxOff'), curFx)
+      +   '</select>'
+      + '</div>'
+      + '<div class="settings-field">'
+      +   '<label for="settings-themefx-ms">' + STR('fThemeFxMs') + '</label>'
+      +   '<input id="settings-themefx-ms" type="number" min="0.4" max="1.4" step="0.05" value="'
+      +     curFxSec + '">'
+      +   '<label class="settings-check"><input type="checkbox" id="settings-themefx-both"'
+      +     (curFxBoth ? ' checked' : '') + '> ' + STR('themeFxBothL') + '</label>'
+      +   '<p class="settings-hint">' + STR('fThemeFxMsHint') + '</p>'
+      + '</div>'
+      + '<div class="settings-field">'
       +   '<label for="settings-navstyle">' + STR('fNavStyle') + '</label>'
       +   '<select id="settings-navstyle">'
       +     opt('dashed', STR('optDashed'), curNavStyle)
@@ -1628,7 +1649,8 @@ function renderSettingsDump(){
     var eff = effSettings();
     var KEYS = ['theme', 'lang', 'accentDay', 'accentNight', 'searchGame',
                 'navLineStyle', 'navLineWidth', 'hideRecent', 'hideRelated', 'newDays',
-                'cosmosRoundness', 'cosmosLabelMin', 'music', 'title', 'tagline', 'photoLine', 'hiddenCats'];
+                'cosmosRoundness', 'cosmosLabelMin', 'themeFx', 'themeFxMs', 'themeFxBoth',
+                'music', 'title', 'tagline', 'photoLine', 'hiddenCats'];
     var rows = KEYS.map(function(k){
         var v = eff[k];
         var src = personal[k] !== undefined ? STR('srcPersonal')
@@ -1758,6 +1780,13 @@ function saveSettingsForm(){
     if(lm < 1){ lm = 1; }
     if(lm > 20){ lm = 20; }
     setOrClear(s, 'cosmosLabelMin', lm);
+    // 먹 번짐: 초 입력 → ms 저장, 0.4~1.4초로 클램프.
+    setOrClear(s, 'themeFx', document.getElementById('settings-themefx').value === 'off' ? 'off' : 'ink');
+    var fx = Math.round((parseFloat(document.getElementById('settings-themefx-ms').value) || 0.75) * 1000);
+    if(fx < 400){ fx = 400; }
+    if(fx > 1400){ fx = 1400; }
+    setOrClear(s, 'themeFxMs', fx);
+    setOrClear(s, 'themeFxBoth', document.getElementById('settings-themefx-both').checked);
     var prevLang = currentLang();
     setOrClear(s, 'lang', document.getElementById('settings-lang').value);
     // Accent overrides: the (site) default value = no override stored.
