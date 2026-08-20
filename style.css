@@ -913,6 +913,12 @@
         #theme-fx{
             position: fixed;
             inset: 0;
+            /* 캔버스는 대체 요소(replaced element)다 — width가 auto면 inset:0을 줘도
+               고유 크기(백킹 스토어)를 쓰고 right를 무시한다. 백킹 스토어는 반해상도라
+               dpr 1인 화면에서는 좌상단 1/4만 덮는 사고가 난다(dpr 2에서는 우연히
+               맞아떨어져 안 보인다). 크기를 명시해 늘 뷰포트를 채우게 한다. */
+            width: 100%;
+            height: 100%;
             z-index: 1200;
             pointer-events: none;
         }

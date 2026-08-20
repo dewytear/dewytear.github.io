@@ -62,3 +62,11 @@
             <p>
                 저장 동작은 달라지지 않는다. <code>setOrClear</code>는 <code>SITE_DEFAULTS</code>를 먼저 보므로 55는 전에도 저장되지 않았고, 100을 명시해 저장해 둔 값도 그대로 남는다. <code>app.js</code>·<code>cosmos.js</code> 캐시버스터 상향. 자기기술 문서(<code>kgs-views</code>)는 둥글기를 "0~100 조절"로만 서술해 기본값을 적지 않으므로 고칠 것이 없었다.
             </p>
+
+            <h3>먹 겹이 화면의 1/4만 덮던 사고 — 캔버스는 대체 요소다</h3>
+            <p>
+                배포 뒤 전환을 보니 어두운 겹이 <strong>좌상단 1/4에 딱 맞는 직사각형</strong>이었다. 먹 모양이 아니라 캔버스 자체의 크기가 틀렸다. <code>#theme-fx</code>에 <code>position: fixed; inset: 0</code>만 주고 <code>width/height</code>를 주지 않았는데, 캔버스는 <strong>대체 요소(replaced element)</strong>라 <code>width: auto</code>면 고유 크기(백킹 스토어)를 쓰고 과잉 지정된 <code>right</code>를 무시한다. 백킹 스토어는 반해상도(<code>min(dpr,2) × 0.5</code>)이므로 dpr 1인 화면에서는 CSS 픽셀의 절반, 즉 면적의 1/4만 덮는다.
+            </p>
+            <p>
+                하필 <strong>dpr 2에서는 배율이 1이 되어 우연히 맞아떨어진다</strong>. 데모는 인라인으로 <code>cv.style.width/height</code>를 지정했는데 위키로 옮기며 규칙을 CSS로 뺄 때 그 두 줄이 빠졌고, 검증을 dpr 2로만 돌려 통과했다. <code>width: 100%; height: 100%</code>를 명시해 고정하고, 왜 필요한지를 주석으로 박았다 — 캔버스에 <code>inset: 0</code>만 주는 실수는 다시 하기 쉽다.
+            </p>
