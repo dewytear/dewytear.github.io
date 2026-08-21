@@ -51,3 +51,36 @@
             <p>
                 동작 검증은 실제 위키를 띄워 스위치를 눌러 했다 — 캔버스가 떴다가 끝나면 사라지는 것, 테마와 저장값이 함께 바뀌는 것, 남은 옛 화면 비율이 길이 전체에 고르게 퍼지는 것(0.25:97% · 0.48:80% · 0.71:47% · 0.94:17%), 네 모서리가 완전히 마르는 것, 모션 최소화에서는 마스크조차 굽지 않고 즉시 전환되는 것, 양방향을 끄면 한쪽만 번지는 것, 효과를 끄면 캔버스가 아예 만들어지지 않는 것. <code>style.css</code>·<code>colors.js</code>·<code>i18n.js</code>·<code>app.js</code> 캐시버스터 상향.
             </p>
+
+            <h3>3D 그래프 둥글기 — 폴백을 사이트 기본값에 맞췄다</h3>
+            <p>
+                둥글기는 값이 세 층이었다. <code>config.json</code>의 사이트 기본 <strong>55</strong>, <code>app.js</code>의 <code>HARD_DEFAULTS</code> <strong>100</strong>, 그리고 <code>cosmos.js</code>가 <code>effSettings()</code>로 값을 못 받았을 때 쓰는 리터럴 <strong>100</strong>. 개인 설정이 없는 방문자는 사이트 기본을 받으니 화면은 늘 55였고, 100은 <code>config.json</code>이 비었을 때만 닿는 최후 폴백이라 겉으로는 드러나지 않았다.
+            </p>
+            <p>
+                문제는 그 폴백이 <strong>드러나는 순간에 화면을 바꿔 버린다</strong>는 것이다. <code>config.json</code>에서 키가 빠지거나 파일을 못 읽으면 완전한 둥근 공(100)으로 튀어, 원래 의도한 분류별로 갈린 형태(55)와 눈에 띄게 달라진다. 폴백은 값이 없을 때 <strong>같은 화면을 유지하는 쪽</strong>이어야 하므로 네 군데를 모두 55로 맞췄다 — <code>HARD_DEFAULTS</code>, 설정 화면의 현재값 폴백, 저장 시 <code>NaN</code> 클램프 기본, 그리고 <code>cosmos.js</code>의 리터럴.
+            </p>
+            <p>
+                저장 동작은 달라지지 않는다. <code>setOrClear</code>는 <code>SITE_DEFAULTS</code>를 먼저 보므로 55는 전에도 저장되지 않았고, 100을 명시해 저장해 둔 값도 그대로 남는다. <code>app.js</code>·<code>cosmos.js</code> 캐시버스터 상향. 자기기술 문서(<code>kgs-views</code>)는 둥글기를 "0~100 조절"로만 서술해 기본값을 적지 않으므로 고칠 것이 없었다.
+            </p>
+
+            <h3>먹 겹이 화면의 1/4만 덮던 사고 — 캔버스는 대체 요소다</h3>
+            <p>
+                배포 뒤 전환을 보니 어두운 겹이 <strong>좌상단 1/4에 딱 맞는 직사각형</strong>이었다. 먹 모양이 아니라 캔버스 자체의 크기가 틀렸다. <code>#theme-fx</code>에 <code>position: fixed; inset: 0</code>만 주고 <code>width/height</code>를 주지 않았는데, 캔버스는 <strong>대체 요소(replaced element)</strong>라 <code>width: auto</code>면 고유 크기(백킹 스토어)를 쓰고 과잉 지정된 <code>right</code>를 무시한다. 백킹 스토어는 반해상도(<code>min(dpr,2) × 0.5</code>)이므로 dpr 1인 화면에서는 CSS 픽셀의 절반, 즉 면적의 1/4만 덮는다.
+            </p>
+            <p>
+                하필 <strong>dpr 2에서는 배율이 1이 되어 우연히 맞아떨어진다</strong>. 데모는 인라인으로 <code>cv.style.width/height</code>를 지정했는데 위키로 옮기며 규칙을 CSS로 뺄 때 그 두 줄이 빠졌고, 검증을 dpr 2로만 돌려 통과했다. <code>width: 100%; height: 100%</code>를 명시해 고정하고, 왜 필요한지를 주석으로 박았다 — 캔버스에 <code>inset: 0</code>만 주는 실수는 다시 하기 쉽다.
+            </p>
+
+            <h3>같은 날 방향을 틀었다 — 캔버스를 걷고 View Transitions로</h3>
+            <p>
+                배포하고 보니 결함이 하나 더 있었다. 옛 배경색 한 겹으로 화면을 덮는 방식이라 <strong>전환 구간 동안 글자·카드가 통째로 사라진다</strong>. 앞의 기록에서 "페이지를 스냅샷으로 뜨려면 크롬 전용 실험 API가 필요하다"고 적었는데, 그건 <em>캔버스에</em> html을 그리는 방법만 본 것이었다. 옛 화면과 새 화면을 각각 스냅샷으로 떠 주는 표준 수단이 이미 있다 — <code>View Transitions</code>다. 데모의 C안으로 옆에 두고도 알아보지 못했다.
+            </p>
+            <p>
+                그래서 캔버스·누적 구멍·젖은 테두리·뷰포트 클리핑 블릿을 전부 걷고, <code>::view-transition-old(root)</code>는 그대로 두고(<code>animation: none</code>) <code>::view-transition-new(root)</code>만 먹 마스크로 드러내게 했다. 이제 경계 안쪽은 새 테마, 바깥쪽은 옛 테마의 <strong>같은 화면</strong>이고 내용이 사라지지 않는다. 자바스크립트는 좌표·길이·마스크만 넘기고 손을 뗀다 — 프레임당 계산이 없다.
+            </p>
+            <p>
+                마스크의 알파에 <strong>고원</strong>을 뒀다(0~86% 불투명, 86~100% 램프). 앞의 캔버스 방식은 알파를 겹겹이 <em>누적</em>해 안쪽을 채웠지만, CSS 마스크는 한 겹이라 원본 램프(중심만 불투명)로는 전환이 끝나도 화면 대부분이 반투명하게 남아 마지막에 툭 튄다. 고원 반지름이 마스크 한 변의 약 0.29배이므로 끝 크기를 가장 먼 구석의 3.6배로 잡아 완결시켰다.
+            </p>
+            <p>
+                <strong>계측에서 한 번 헛짚었다.</strong> <code>mask-size</code> 애니가 컴포지터를 타지 않아 매 프레임 전체 화면을 리페인트한다는 것은 사실이고, 그래서 마스크를 비트맵으로 굽는 최적화(SVG를 그대로 넘기면 크기가 바뀔 때마다 <code>feTurbulence</code>가 다시 도는 것)도 넣었다. 다만 그 뒤 "17fps라 못 쓴다"고 판단한 근거가 틀렸다 — GPU 없는 헤드리스에서 스크린캐스트로 재면 <strong>알려진 정상 동작인 원형 클립도 25fps로 나온다</strong>. 이 환경에서는 뷰 트랜지션의 절대 프레임률을 잴 수 없고, 읽을 수 있는 것은 상대 순서(마스크 17 &lt; 다각형 23 ≈ 원형 25)뿐이다. 이미지 마스크가 기하 클립보다 약 30% 비싸다는 정도로만 적어 둔다. 실제 기기 확인이 남았고, 무겁다면 설정에서 끄거나 길이를 줄일 수 있다.
+            </p>

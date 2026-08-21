@@ -893,28 +893,50 @@
         .search-screen:hover .search-ink{ opacity: 1; }
 
         /* ---- 테마 전환의 먹 번짐 (colors.js) ---- */
-        /* 지우개로 쓰는 먹 마스크. 위 --ink-mask와 같은 난류를 쓴다
-           (fractalNoise 0.035 · numOctaves 2 · seed 7 · 변위 34 · r 82) — 같은 먹이라야
-           검색 화면의 커서 자취와 한 계보로 읽힌다. 두 가지만 다르다:
-           ① 알파 램프를 압축했다(55% → 70%). 여기서 마스크는 색이 아니라 '지우개'라,
-              원본 램프로는 반투명 띠가 화면의 절반을 덮어 글자가 오래 흐리고 전선이
-              화면을 다 지나기도 전에 전환이 끝나 보인다.
-           ② width/height를 1024로 올리고 viewBox로 기하를 고정했다 — 스탬프는 15vmax로
-              쓰지만 이 마스크는 화면 전체까지 키우므로, 래스터가 240이면 윤곽이 뭉개진다.
-           난류 파라미터의 단일 출처는 이 파일이다 — colors.js가 이 값을 읽어 캔버스에
-           한 번 굽는다(SVG를 매 프레임 그리면 필터가 매번 다시 돌아 위 주석의 5fps로
-           떨어진다). 스위치 자신에 얹어 두어 문서 전체로 상속되지 않게 한다. */
+        /* 브라우저가 옛 화면과 새 화면을 각각 스냅샷으로 떠 주는 View Transitions를
+           쓴다 — 그래야 전환 중에도 글자·카드가 사라지지 않고, 먹 경계 안쪽은 새
+           테마, 바깥쪽은 옛 테마의 같은 화면이 보인다. 옛 스냅샷은 손대지 않고
+           (animation: none) 새 스냅샷만 먹 마스크로 드러낸다.
+           마스크의 난류는 검색 화면 커서 자취(--ink-mask)와 같은 값이다
+           (fractalNoise 0.035 · numOctaves 2 · seed 7 · 변위 34 · r 82).
+           다른 것은 둘:
+           ① 알파에 '고원'을 뒀다(0~86% 불투명, 86~100% 램프). 원본처럼 중심만
+              불투명하면 전환이 끝나도 화면 대부분이 반투명하게 남아 마지막에
+              툭 튀는 사고가 난다 — 안쪽이 완전히 덮여야 전환이 완결된다.
+           ② 래스터를 1024로 올리고 viewBox로 기하를 고정했다 — 스탬프는 15vmax로
+              쓰지만 이 마스크는 화면 몇 배까지 키운다.
+           난류 파라미터의 단일 출처는 이 파일이고, colors.js는 이 값을 읽어
+           전환할 때 루트로 옮겨 준다(문서 전체로 상속되지 않게 스위치에 얹는다). */
         #theme-switch{
-            --ink-erase: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1024' height='1024' viewBox='0 0 240 240'%3E%3Cdefs%3E%3CradialGradient id='g'%3E%3Cstop offset='0%25' stop-color='%23fff' stop-opacity='1'/%3E%3Cstop offset='70%25' stop-color='%23fff' stop-opacity='.6'/%3E%3Cstop offset='100%25' stop-color='%23fff' stop-opacity='0'/%3E%3C/radialGradient%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='2' seed='7' result='n'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='n' scale='34'/%3E%3C/filter%3E%3C/defs%3E%3Ccircle cx='120' cy='120' r='82' fill='url(%23g)' filter='url(%23f)'/%3E%3C/svg%3E");
+            --ink-erase: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1024' height='1024' viewBox='0 0 240 240'%3E%3Cdefs%3E%3CradialGradient id='g'%3E%3Cstop offset='0%25' stop-color='%23fff' stop-opacity='1'/%3E%3Cstop offset='86%25' stop-color='%23fff' stop-opacity='1'/%3E%3Cstop offset='100%25' stop-color='%23fff' stop-opacity='0'/%3E%3C/radialGradient%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='2' seed='7' result='n'/%3E%3CfeDisplacementMap in='SourceGraphic' in2='n' scale='34'/%3E%3C/filter%3E%3C/defs%3E%3Ccircle cx='120' cy='120' r='82' fill='url(%23g)' filter='url(%23f)'/%3E%3C/svg%3E");
         }
-        /* 전환 중에만 존재하는 겹 — colors.js가 만들고 끝나면 지운다. 옛 배경색을
-           칠한 뒤 먹으로 파내면 아래에서 이미 바뀐 새 테마가 드러난다(페이지를
-           스냅샷으로 뜨지 않는 이유). z-index는 설정 모달(1000)보다 위. */
-        #theme-fx{
-            position: fixed;
-            inset: 0;
-            z-index: 1200;
-            pointer-events: none;
+        ::view-transition-old(root){ animation: none; }
+        ::view-transition-new(root){
+            -webkit-mask-image: var(--tfx-mask); mask-image: var(--tfx-mask);
+            -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+            /* 기본은 '다 드러난' 상태 — 마스크나 애니를 못 쓰는 브라우저에서
+               새 화면이 안 보이는 사고를 막는다(즉시 전환으로 떨어질 뿐). */
+            -webkit-mask-size: 400% 400%; mask-size: 400% 400%;
+            -webkit-mask-position: center; mask-position: center;
+            animation: theme-ink var(--tfx-dur, 750ms) linear forwards;
+        }
+        /* 누른 자리에서 자란다 — 크기가 커지는 만큼 위치를 반씩 당겨야 중심이
+           그 자리에 머문다. 두 속성을 같은 키프레임에서 함께 움직인다. */
+        @keyframes theme-ink{
+            from{
+                -webkit-mask-size: 0 0; mask-size: 0 0;
+                -webkit-mask-position: var(--tfx-x) var(--tfx-y);
+                mask-position: var(--tfx-x) var(--tfx-y);
+            }
+            to{
+                -webkit-mask-size: var(--tfx-r) var(--tfx-r);
+                mask-size: var(--tfx-r) var(--tfx-r);
+                -webkit-mask-position: calc(var(--tfx-x) - var(--tfx-r) / 2) calc(var(--tfx-y) - var(--tfx-r) / 2);
+                mask-position: calc(var(--tfx-x) - var(--tfx-r) / 2) calc(var(--tfx-y) - var(--tfx-r) / 2);
+            }
+        }
+        @media (prefers-reduced-motion: reduce){
+            ::view-transition-new(root){ animation: none; }
         }
         /* Breakout layer: a ball drifting behind the field, breaking bricks.
            Sits above the blobs, below the search card; never breathes so its

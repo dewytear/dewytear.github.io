@@ -1226,7 +1226,7 @@ var HARD_DEFAULTS = { navLineStyle: 'dashed', navLineWidth: '1px',
                       // 기본값과 같다며 지워 자동 감지(en)로 되돌아가는 버그가 된다.
                       searchGame: 'g2048', music: '', lang: '',
                       hideRecent: false, hideRelated: false, newDays: 7,
-                      cosmosRoundness: 100, cosmosLabelMin: 5,
+                      cosmosRoundness: 55, cosmosLabelMin: 5,
                       // 테마 전환의 먹 번짐 — colors.js가 읽는다.
                       themeFx: 'ink', themeFxMs: 750, themeFxBoth: true };
 // Effective settings = site defaults overlaid with personal values.
@@ -1468,7 +1468,7 @@ function showSettings(){
                       exposed: cats.filter(function(c){ return hiddenCats.indexOf(c) === -1; }) };
     var curAccentDay = s.accentDay || accentDefault('day');
     var curAccentNight = s.accentNight || accentDefault('night');
-    var curRound = (s.cosmosRoundness != null ? s.cosmosRoundness : 100);
+    var curRound = (s.cosmosRoundness != null ? s.cosmosRoundness : 55);
     var curLabelMin = (s.cosmosLabelMin != null ? s.cosmosLabelMin : 5);
     // 먹 번짐: 저장은 ms, 입력은 초 단위(사람이 읽기 쉬운 쪽).
     var curFx = s.themeFx === 'off' ? 'off' : 'ink';
@@ -1768,9 +1768,9 @@ function saveSettingsForm(){
     setOrClear(s, 'hideRelated', document.getElementById('settings-hiderelated').checked);
     setOrClear(s, 'newDays', parseInt(document.getElementById('settings-newdays').value, 10) || 7);
     setOrClear(s, 'searchGame', document.getElementById('settings-game').value);
-    // 3D 그래프 둥글기 (%): 0~100 클램프, 기본 100.
+    // 3D 그래프 둥글기 (%): 0~100 클램프, 기본 55.
     var rv = parseInt(document.getElementById('settings-roundness').value, 10);
-    if(isNaN(rv)){ rv = 100; }
+    if(isNaN(rv)){ rv = 55; }
     if(rv < 0){ rv = 0; }
     if(rv > 100){ rv = 100; }
     setOrClear(s, 'cosmosRoundness', rv);
