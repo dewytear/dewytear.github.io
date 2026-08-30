@@ -1226,7 +1226,7 @@ var HARD_DEFAULTS = { navLineStyle: 'dashed', navLineWidth: '1px',
                       // 기본값과 같다며 지워 자동 감지(en)로 되돌아가는 버그가 된다.
                       searchGame: 'g2048', music: '', lang: '',
                       hideRecent: false, hideRelated: false, newDays: 7,
-                      cosmosRoundness: 55, cosmosLabelMin: 5,
+                      cosmosRoundness: 55, cosmosLabelMin: 4,
                       // 테마 전환의 먹 번짐 — colors.js가 읽는다.
                       themeFx: 'ink', themeFxMs: 750, themeFxBoth: true };
 // Effective settings = site defaults overlaid with personal values.
@@ -1469,7 +1469,7 @@ function showSettings(){
     var curAccentDay = s.accentDay || accentDefault('day');
     var curAccentNight = s.accentNight || accentDefault('night');
     var curRound = (s.cosmosRoundness != null ? s.cosmosRoundness : 55);
-    var curLabelMin = (s.cosmosLabelMin != null ? s.cosmosLabelMin : 5);
+    var curLabelMin = (s.cosmosLabelMin != null ? s.cosmosLabelMin : 4);
     // 먹 번짐: 저장은 ms, 입력은 초 단위(사람이 읽기 쉬운 쪽).
     var curFx = s.themeFx === 'off' ? 'off' : 'ink';
     var curFxSec = ((s.themeFxMs != null ? s.themeFxMs : 750) / 1000).toFixed(2);
@@ -1774,9 +1774,9 @@ function saveSettingsForm(){
     if(rv < 0){ rv = 0; }
     if(rv > 100){ rv = 100; }
     setOrClear(s, 'cosmosRoundness', rv);
-    // 3D 이름표 기준(피참조 수): 1~20 클램프, 기본 5.
+    // 3D 이름표 기준(피참조 수): 1~20 클램프, 기본 4.
     var lm = parseInt(document.getElementById('settings-labelmin').value, 10);
-    if(isNaN(lm)){ lm = 5; }
+    if(isNaN(lm)){ lm = 4; }
     if(lm < 1){ lm = 1; }
     if(lm > 20){ lm = 20; }
     setOrClear(s, 'cosmosLabelMin', lm);
