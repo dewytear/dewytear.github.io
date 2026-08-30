@@ -28,7 +28,7 @@ function parseYouTubeList(input){
     // Site default: a single video. A personal pick in settings may be
     // either a playlist or a single video — exactly one of LIST_ID/VIDEO_ID
     // is set at any time.
-    var DEFAULT_ID = 'K6m0pbFeUW8';
+    var DEFAULT_ID = 'WGkaOMBaiEo';   // config.json defaults.music와 같은 곡
     function resolvePick(){
         var raw = '';
         try{ raw = (effSettings().music) || ''; }catch(e){}

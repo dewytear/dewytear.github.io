@@ -1,0 +1,12 @@
+            <h2>2026-08-31 — 기능</h2>
+
+            <h3>배경음악 트랙 교체 — 사이트 기본값과 폴백을 함께</h3>
+            <p>
+                배경음악을 새 트랙(<code>WGkaOMBaiEo</code>)으로 바꿨다. 값이 두 곳에 있어 <strong>둘 다 맞췄다</strong> — <code>config.json</code>의 <code>defaults.music</code>(사이트 기본값)과 <code>music.js</code>의 <code>DEFAULT_ID</code>(설정에서 아무것도 못 받았을 때 쓰는 하드 폴백). 열흘 전 3D 그래프 둥글기에서 겪은 것과 같은 구조라, 그때 세운 원칙을 그대로 적용했다: <strong>폴백은 값이 없을 때 같은 화면(같은 곡)을 유지하는 쪽</strong>이어야 한다. 한쪽만 고치면 <code>config.json</code>을 못 읽는 순간 옛 곡이 흘러나온다.
+            </p>
+            <p>
+                방문자에게 닿는 경로는 8월 19일에 정리해 둔 그대로다. 설정의 뮤직 칸은 <strong>개인이 직접 고른 값만</strong> 보여 주고 사이트 기본을 미리 채우지 않으므로, 개인 저장값이 없는 방문자는 <code>config.json</code>을 따라간다. 그래서 이 커밋 하나로 모두에게 새 곡이 간다. 개인적으로 다른 곡을 지정해 둔 사람은 그 값이 그대로 남는다.
+            </p>
+            <p>
+                실렌더로 확인했다 — <code>SITE_DEFAULTS.music</code>과 <code>effSettings().music</code>이 새 주소를 가리키고, 개인 저장값은 비어 있으며, 설정의 뮤직 칸도 빈 칸으로 뜬다(사이트 기본이 개인값으로 굳지 않는다는 뜻). <code>music.js</code> 캐시버스터 상향. <code>config.json</code>은 <code>cache: 'no-store'</code>로 받으므로 캐시버스터가 없다.
+            </p>
