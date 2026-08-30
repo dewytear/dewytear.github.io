@@ -1,0 +1,15 @@
+            <h2>2026-08-31 — 디자인·UI</h2>
+
+            <h3>3D 이름표 기준을 5에서 4로</h3>
+            <p>
+                3D 지식 그래프에서 문서 이름이 상시 표시되는 최소 피참조 수를 <strong>5에서 4로</strong> 낮췄다. 다른 문서가 연관으로 지목한 횟수가 그 값 이상인 문서만 이름표를 늘 달고 있고, 나머지는 마우스를 올렸을 때만 이름이 뜬다. 낮췄으니 상시 표시되는 이름이 늘고, 중심 문서만 남던 화면이 조금 더 촘촘해진다.
+            </p>
+            <p>
+                값이 있는 자리를 먼저 세어 보고 <strong>다섯 곳을 함께</strong> 바꿨다 — <code>config.json</code>의 사이트 기본값, <code>app.js</code>의 <code>HARD_DEFAULTS</code>, 설정 화면이 현재값을 못 받았을 때의 폴백, 저장할 때 입력이 숫자가 아니면 쓰는 클램프 기본, 그리고 <code>cosmos.js</code>·<code>cosmos2.js</code>가 <code>effSettings()</code>에서 값을 못 받았을 때의 리터럴. 열흘 전 둥글기에서 세운 원칙 그대로다: <strong>폴백은 값이 없을 때 같은 화면을 유지하는 쪽</strong>이어야 한다.
+            </p>
+            <p>
+                이번에는 어긋난 곳이 없었다는 점도 기록해 둔다. 둥글기는 사이트 기본이 55인데 폴백이 100이라 <code>config.json</code>을 못 읽는 순간 화면이 튀었지만, 이름표 기준은 다섯 자리가 모두 5로 맞아 있었다. 그래서 이번 작업은 어긋남을 고치는 일이 아니라 <strong>맞아 있는 다섯 자리를 함께 옮기는</strong> 일이었다.
+            </p>
+            <p>
+                문구는 손대지 않았다 — <code>fCosmosLabelMinHint</code>는 "낮출수록 더 많은 이름이 뜨고, 높일수록 중심 문서만 남습니다"처럼 기본값 숫자를 박지 않고 설명해서, 값이 바뀌어도 3언어 모두 그대로 맞다. 실렌더로 설정 표시값·<code>SITE_DEFAULTS</code>·<code>HARD_DEFAULTS</code>·<code>effSettings()</code>가 모두 4이고 <code>config.json</code> 키를 지웠을 때 <code>cosmos</code> 리터럴 경로로 떨어지는 것, 3D 캔버스가 정상 렌더되는 것을 확인했다. <code>app.js</code>·<code>cosmos.js</code>·<code>cosmos2.js</code> 캐시버스터 상향.
+            </p>

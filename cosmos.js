@@ -467,7 +467,7 @@ function startCosmos(){
         // 3D 이름표 기준(개인 설정) — 이 값 이상 피참조된 문서만 상시 이름표.
         // 지도·stats.hubs의 구조적 허브 임계값과 별개인 "표시 밀도" 취향.
         labelMin = (eff.cosmosLabelMin != null && !isNaN(eff.cosmosLabelMin))
-                 ? eff.cosmosLabelMin : 5;
+                 ? eff.cosmosLabelMin : 4;   // config.json defaults.cosmosLabelMin과 같은 값
         if(hidden.length){
             names = names.filter(function(n){
                 var top = (KNOWLEDGE[n].section || '').split(' · ')[0];

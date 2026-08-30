@@ -276,7 +276,7 @@
         var eff = (typeof effSettings === 'function') ? effSettings() : {};
         var hidden = eff.hiddenCats || [];
         var labelMin = (eff.cosmosLabelMin != null && !isNaN(eff.cosmosLabelMin))
-                     ? eff.cosmosLabelMin : 5;
+                     ? eff.cosmosLabelMin : 4;   // config.json defaults.cosmosLabelMin과 같은 값
         var names = Object.keys(K).filter(function (n) {
             var top = (K[n].section || '').split(' · ')[0];
             return hidden.indexOf(top) === -1;
