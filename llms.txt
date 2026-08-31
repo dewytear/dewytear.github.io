@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 
-이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 66개 문서 · 336개 개념.
+이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 67개 문서 · 336개 개념.
 
 License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 밝히면 자유롭게 인용·재사용할 수 있다.
 
@@ -12,8 +12,8 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - 정적 스냅샷 `https://dewytear.github.io/p/<name>/`(English는 `https://dewytear.github.io/p/en/<name>/`, 日本語는 `https://dewytear.github.io/p/ja/<name>/`): JS 없이 읽히는 문서 페이지 — 그래프 노드의 `page` 필드가 같은 주소를 가리킨다.
 - [AI 순회 가이드](https://dewytear.github.io/docs/ko/ai/map/ai-guide): 그래프를 어떻게 질의·순회·분석하는지의 계약(노드·엣지·개념 조인·계층).
 - [지식 인덱스](https://dewytear.github.io/data/knowledge-index.ko.json) · [내비 트리](https://dewytear.github.io/list) · [문서 날짜](https://dewytear.github.io/data/doc-dates.json) · [Atom 피드](https://dewytear.github.io/feed.xml)
-- English: 66/66개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
-- 日本語: 66/66개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
+- English: 67/67개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
+- 日本語: 67/67개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
 
 ## 지식 체계 (AI · Wiki · 지식 체계)
 - [지식은 어떻게 쌓이는가](https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-overview): World→Domain→System→Document 4계층과 문서 등재 파이프라인 — 불변 ID·물리 경로·결정론적 인덱스 빌드 · [EN](https://dewytear.github.io/docs/en/ai/wiki/knowledge-system/kgs-overview) · [JA](https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-overview)
@@ -103,6 +103,7 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260814-auto-mode-stateless-mcp): 같은 주에 난 두 변경을 한 편으로 — Claude Code는 2026-08-14부터 Pro·Max·Team 신규 세션의 기본값을 auto 모드로 바꿨고(승인률 97%·심어 둔 위험 명령을 사람은 13.6%만 거절·분류기는 89% 저지·Trajectory Labs 720회 인젝션 전부 실패), MCP 2026-07-28 스펙은 initialize 핸드셰이크와 Mcp-Session-Id를 삭제해 프로토콜에서 상태를 없앴다(_meta·server/discover·서버 발급 핸들·Tasks/MCP Apps/기업 인가 확장·양방향 와이어 비호환). 공통 구조: 런타임의 고정점을 걷어내고 선언된 규칙과 요청 단위 데이터로 판정을 옮긴다 · [EN](https://dewytear.github.io/docs/en/ai/news/2026/news-20260814-auto-mode-stateless-mcp) · [JA](https://dewytear.github.io/docs/ja/ai/news/2026/news-20260814-auto-mode-stateless-mcp)
 - [내 서버에서 도는 Claude Code — 셀프호스팅 공개 베타와 8월의 릴리스들](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260816-claude-code-selfhosted): Claude Code의 셀프호스팅 환경이 2026-08-06 공개 베타로 열렸다 — Team·Enterprise 플랜, v2.1.224의 claude self-hosted-runner 한 명령으로 조직의 인프라가 세션 실행층이 된다(고정·온디맨드 2모드, 기본 비활성·관리자 활성화, ZDR 조직 제외). 같은 주의 GitLab MR 지원(--worktree가 MR URL을 받고 자가 호스팅 인스턴스도 판별)·auto-continue(한도 창 리셋 시 자동 재개, 8/14)·Compliance API 확장까지 — 실행 위치·대상 플랫폼·시간의 통제를 조직 쪽으로 넘기는 한 흐름으로 읽는다 · [EN](https://dewytear.github.io/docs/en/ai/news/2026/news-20260816-claude-code-selfhosted) · [JA](https://dewytear.github.io/docs/ja/ai/news/2026/news-20260816-claude-code-selfhosted)
 - [판정을 누구에게 맡길 것인가 — 8월의 네 장면](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260820-who-makes-the-call): 8월 둘째 주의 발표 넷을 '판정의 이동'이라는 한 프레임으로 묶었다 — Claude Tag는 채널 전체 맥락으로 '언제 나설지'를 모델이 판정하고(8/13, 약 30% 향상, 추가 컨텍스트 한도 미계상), Grok Bot은 실행을 기본값으로 두고 사람에게 승인만 남기며(8/11 베타, 자격증명 공유 구조의 표기 갈림), Cursor Origin은 약관 없는 옵트아웃 기본값으로 코드 보관 판정을 비워 둔 채 열렸고(8/17, SpaceX 인수 8/14 완결), GPT-5.6-Cyber는 제로데이 발굴 능력을 거절 대신 심사제 프로그램(Daybreak Red) 뒤에 뒀다(8/10, ACCR 95.0% vs 1.5%). auto 모드·셀프호스팅에 이어 판정은 사라지지 않고 자리를 옮긴다는 세 번째 관찰 · [EN](https://dewytear.github.io/docs/en/ai/news/2026/news-20260820-who-makes-the-call) · [JA](https://dewytear.github.io/docs/ja/ai/news/2026/news-20260820-who-makes-the-call)
+- [내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260901-whose-usage): Claude 사용량을 둘러싼 9월 초 소식 셋을 한 프레임으로 묶었다 — 인포스틸러가 로그인 세션 쿠키를 훔쳐 남의 계정으로 한도를 소진했고(2단계 인증은 로그인 순간만 지킨다, Anthropic은 강제 로그아웃·저장 결제수단 삭제·무단 과금 환불으로 대응, 지목된 악성코드는 Vidar·LummaC2·StealC·RedLine·Acreed와 소수의 Mac Atomic Stealer, 로그아웃은 감염을 지우지 않는다), 9월 14일 Claude Code 주간 한도는 임시 50% 증량이 상시 25% 증량으로 대체돼 현재 기준 순 약 17% 감소이며(같은 변경이 +25%로도 -17%로도 서술되는 이유는 기준선 차이), Claude Code 2.1.251은 /usage 지출 한도 막대·세션별 프롬프트 캐시 줄과 PreModelSwitch·PostModelSwitch 훅을 더했다. 누가 쓰는가·얼마나 남았는가·무엇이 보여 주는가라는 같은 계량기의 세 면 · [EN](https://dewytear.github.io/docs/en/ai/news/2026/news-20260901-whose-usage) · [JA](https://dewytear.github.io/docs/ja/ai/news/2026/news-20260901-whose-usage)
 
 ## AI 개발 지식 플랫폼 (Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼)
 - [제안 개요 — 왜 지금, 무엇을](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-overview): GitLab 기반 AI 개발 지식 플랫폼 제안의 개요와 문제의식 — 흩어지고 사라지는 개발 지식을 왜 지금 지식화해야 하는가 · [EN](https://dewytear.github.io/docs/en/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-overview) · [JA](https://dewytear.github.io/docs/ja/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-overview)
@@ -123,10 +124,11 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [Harness 플러그인 — 소개·개념·설치](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-intro): 피참조 9회
 - [LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260710-llm-wiki-knowledge-context): 피참조 9회
 - [실행하기 — 설치·실행·리뷰](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-install): 피참조 8회
-- [확장 기능 — Skills · MCP · Hooks](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/skills): 피참조 8회
 - [첫 실행과 동작 구조](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-first-run): 피참조 7회
 - [묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260814-auto-mode-stateless-mcp): 피참조 7회
+- [내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260901-whose-usage): 피참조 7회
 - [레벨 3~5 — 의미·관계·브레인 OS](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-level3): 피참조 7회
+- [확장 기능 — Skills · MCP · Hooks](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/skills): 피참조 7회
 - [하네스란 — 개요·정의·구성](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-overview): 피참조 6회
 - [Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260724-claude-opus-5): 피참조 6회
 - [내 서버에서 도는 Claude Code — 셀프호스팅 공개 베타와 8월의 릴리스들](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260816-claude-code-selfhosted): 피참조 6회
