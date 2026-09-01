@@ -1,0 +1,49 @@
+<h2>私の上限を使っているのは誰か — Claude の使用量をめぐる三つの場面</h2>
+
+<h3>三行要約</h3>
+<ul>
+    <li>マルウェアが利用者の PC から<strong>ログインセッション</strong>を盗み、他人のアカウントで Claude を使って上限を消費した事例が確認された。Anthropic は該当アカウントを強制ログアウトし、保存された支払い方法を削除し、不正と確認された請求を返金した。</li>
+    <li>9月14日には Claude Code の週次上限が変わる。一時的に上乗せされていた 50% 増量が<strong>恒久的な 25% 増量</strong>に置き換わり、いま手元にある上限を基準にすると実質は減少だ。</li>
+    <li>同じ時期、ハーネスは逆に動いた。<code>/usage</code> に支出上限のバーとセッション別のプロンプトキャッシュ行が付き、モデルが切り替わる瞬間を挟むフックが入った。</li>
+</ul>
+
+<h3>盗まれたセッションで他人のアカウントを使う</h3>
+<p>
+    ログインの確認が済むと、サイトはブラウザに<strong>セッションクッキー</strong>（ログイン状態を証明し続ける小さな印）を発行する。それ以降はこの印がそのまま身元になる。インフォスティーラー（感染した端末から保存済みの資格情報やクッキーを抜き取るマルウェア）が持ち去るのは、まさにこの印だ。攻撃者がそれを再生すると、サーバーは<strong>すでにログインを終えた利用者</strong>として扱う。
+</p>
+<p>
+    二要素認証があってもこの経路は塞がらない。二要素認証が守るのはログインする<em>瞬間</em>であり、盗まれたのはその瞬間を通過したあとの印だからだ。兆候は静かだ。使っていないのに使用上限が満たされては減っていたなら、この事例を疑う価値がある。
+</p>
+<p>
+    Anthropic の対応は三つだ。該当アカウントを<strong>強制ログアウト</strong>して盗まれたセッションを無効にし、<strong>保存された支払い方法を削除</strong>してそれ以上請求されないようにし、不正と確認された請求を返金した。支払い方法が消えているので、更新や追加購入には再登録が要る。名指しされたマルウェアは Windows の Vidar・LummaC2・StealC・RedLine・Acreed と、少数の Mac で見つかった Atomic Stealer だ。
+</p>
+<p>
+    ここで見落としやすい点がある。<strong>ログアウトは盗まれたセッションを断つだけで、マルウェアを消さない。</strong>感染が残っていれば、次にログインした瞬間に新しい印がまた漏れる。支払い方法の再登録は、感染を取り除いたあとにするべきだ。
+</p>
+
+<h3>9月14日、週次上限が実質下がる</h3>
+<p>
+    Claude Code の週次使用上限に一時的に上乗せされていた 50% 増量が、9月14日に<strong>恒久的な 25% 増量</strong>へ変わる。一時措置を恒久化するという側から見れば増える話だが、いま手元にある上限を基準にすれば減る話で、おおむね<strong>17% ほど減る</strong>。
+</p>
+<p>
+    同じ変更の書かれ方が割れるのはこのためだ。基準線を元の上限に取れば +25%、いまの一時的な上限に取れば -17% になる。どちらも誤りではないが、来週実際に何が変わるかを語るのは後者の数字だ。
+</p>
+
+<h3>ハーネスが使った分を出し始めた</h3>
+<p>
+    8月28日の Claude Code 2.1.251 は、使用量が見える面を広げた。<code>/usage</code> に<strong>支出上限のバー</strong>が付いて残りが目盛りで読め、<strong>セッション別のプロンプトキャッシュ行</strong>ができてキャッシュがどれだけ効いたかがセッション単位で見える。フォアグラウンドのサブエージェントのツール呼び出しは、リモートコントロールのクライアントへ実時間で中継される。
+</p>
+<p>
+    同じリリースに <code>PreModelSwitch</code>・<code>PostModelSwitch</code> フック（決まった時点で利用者の指定した処理を差し込む拡張点）が入った。<strong>モデルが切り替わる瞬間</strong>を前後から挟めるということだ。モデルごとに単価が違うので、この地点はそのまま費用が分かれる地点でもある。
+</p>
+
+<h3>なぜ一つの流れなのか</h3>
+<p>
+    三つの知らせは同じメーターを別の角度から触る。一つ目は<strong>誰がそれを使っているか</strong>、二つ目は<strong>どれだけ残っているか</strong>、三つ目は<strong>何がそれを見せるか</strong>だ。使用量をアカウントに付随する副次的な数字と見れば三つは無関係に見えるが、毎日ハーネスを立ち上げて働く側からは一つの問題になる。
+</p>
+<p>
+    <a href="#!news-20260820-who-makes-the-call">判定を誰に任せるのか</a>が扱った資格情報の委任は、承認画面で見える問題だった。今回のセッション奪取は、同じ委任が<strong>承認画面より一段下</strong>で崩れた場合だ。押して許可した覚えがないのにすでに許可されたものとして処理されたのだから、設計すべきだったのは承認ボタンではなく、その下で身元を証明する物のほうだった。
+</p>
+
+<h3>事実検証ノート</h3>
+<p class="scn-sub">セッション奪取（強制ログアウト・支払い方法の削除・返金、マルウェアの一覧、ログアウトが感染を消さないという但し書き）は <a href="https://www.bleepingcomputer.com/news/artificial-intelligence/anthropic-warns-infostealer-malware-is-hijacking-claude-sessions-to-drain-usage/" target="_blank" rel="noopener">BleepingComputer</a>・<a href="https://www.securityweek.com/anthropic-warns-claude-users-of-infostealer-malware-infections/" target="_blank" rel="noopener">SecurityWeek</a>・<a href="https://www.helpnetsecurity.com/2026/08/31/claude-accounts-compromised-through-infostealer/" target="_blank" rel="noopener">Help Net Security</a>・<a href="https://securityaffairs.com/198166/ai/infostealers-are-hijacking-claude-sessions-and-draining-subscriptions.html" target="_blank" rel="noopener">Security Affairs</a> で相互確認した。9月14日の週次上限の変更（一時 50% → 恒久 25%、実質およそ 17% 減）は<a href="https://www.explainx.ai/blog/claude-usage-limits-2026-timeline-explained" target="_blank" rel="noopener">使用上限の変更年表</a>に基づき、<strong>同じ変更が +25% とも -17% とも書かれる</strong> — 基準線を元の上限に取るか現在の一時的な上限に取るかの違いなので、本文にその割れを併記した。Claude Code 2.1.251 の項目（モデル切り替えフック、支出上限のバー、セッション別プロンプトキャッシュ行、サブエージェントのツール呼び出し中継）は<a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">公式チェンジログ</a>に従った。なお同時期に「9月1日に Claude Sonnet 5 が値上げ」という整理が出回ったが、<a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">公式の価格ドキュメント</a>は導入価格の据え置きと値上げ不実施を明記している。この記事は公式ドキュメントに従った。</p>

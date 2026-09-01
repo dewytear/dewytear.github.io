@@ -1,0 +1,49 @@
+<h2>내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면</h2>
+
+<h3>세 줄 요약</h3>
+<ul>
+    <li>악성코드가 이용자 PC에서 <strong>로그인 세션</strong>을 훔쳐 남의 계정으로 Claude를 쓰고 한도를 소진한 사례가 확인됐다. Anthropic은 해당 계정을 강제 로그아웃하고 저장된 결제수단을 지웠으며 확인된 무단 과금을 환불했다.</li>
+    <li>9월 14일에는 Claude Code의 주간 한도가 바뀐다 — 임시로 얹혀 있던 50% 증량이 <strong>상시 25% 증량</strong>으로 대체되어, 지금 기준으로는 순감이다.</li>
+    <li>같은 시기 하네스는 반대로 움직였다. <code>/usage</code>에 지출 한도 막대와 세션별 프롬프트 캐시 줄이 붙고, 모델이 바뀌는 순간을 가로채는 훅이 생겼다.</li>
+</ul>
+
+<h3>훔친 세션으로 남의 계정을 쓴다</h3>
+<p>
+    로그인할 때 아이디와 비밀번호를 확인하고 나면, 사이트는 브라우저에 <strong>세션 쿠키</strong>(로그인 상태를 계속 증명하는 작은 표식)를 하나 발급한다. 그 뒤로는 이 표식이 곧 신원이다. 인포스틸러(감염된 PC에서 저장된 자격증명과 쿠키를 긁어 가는 악성코드)는 바로 이 표식을 복사해 간다. 공격자가 그것을 그대로 재생하면 서버는 <strong>이미 로그인을 마친 사용자</strong>로 대한다.
+</p>
+<p>
+    2단계 인증이 있어도 이 경로는 막히지 않는다. 2단계 인증이 지키는 것은 로그인하는 <em>순간</em>이고, 훔쳐 간 것은 그 순간을 이미 통과한 뒤의 표식이기 때문이다. 증상은 조용하다 — 쓰지도 않았는데 사용 한도가 채워졌다가 빠져 있으면 이 경우를 의심할 만하다.
+</p>
+<p>
+    Anthropic의 대응은 세 가지다. 영향받은 계정을 <strong>강제 로그아웃</strong>해 훔쳐 간 세션을 무효로 만들고, <strong>저장된 결제수단을 삭제</strong>해 더 이상 과금되지 않게 했으며, 무단 과금으로 확인된 건을 환불했다. 결제수단이 지워졌으므로 갱신이나 추가 구매를 하려면 다시 등록해야 한다. 지목된 악성코드는 윈도우의 Vidar·LummaC2·StealC·RedLine·Acreed와, 소수의 맥에서 발견된 Atomic Stealer다.
+</p>
+<p>
+    여기서 한 가지를 놓치기 쉽다. <strong>로그아웃은 훔쳐 간 세션을 끊을 뿐 악성코드를 지우지 않는다.</strong> 감염이 남아 있으면 다시 로그인하는 순간 새 표식이 또 새어 나간다. 결제수단을 다시 등록하는 것은 감염을 걷어낸 뒤여야 한다.
+</p>
+
+<h3>9월 14일, 주간 한도가 순감한다</h3>
+<p>
+    Claude Code의 주간 사용 한도에 임시로 얹혀 있던 50% 증량이 9월 14일에 <strong>상시 25% 증량</strong>으로 바뀐다. 임시 조치를 영구화한다는 쪽에서 보면 늘어나는 이야기지만, 지금 손에 쥔 한도를 기준으로 보면 줄어드는 이야기다. 정리하면 대체로 <strong>17%가량 줄어든다</strong>.
+</p>
+<p>
+    같은 변경을 두고 서술이 갈리는 이유가 이것이다. 기준선을 원래 한도로 잡으면 +25%이고, 지금의 임시 한도로 잡으면 -17%다. 어느 쪽도 틀리지 않지만, 실제로 다음 주에 무엇이 달라지는지는 뒤쪽 숫자가 말해 준다.
+</p>
+
+<h3>하네스가 쓴 만큼을 내놓기 시작했다</h3>
+<p>
+    8월 28일 Claude Code 2.1.251은 사용량이 보이는 면을 넓혔다. <code>/usage</code>에 <strong>지출 한도 막대</strong>가 붙어 남은 여유가 눈금으로 보이고, <strong>세션별 프롬프트 캐시 줄</strong>이 생겨 캐시가 실제로 얼마나 먹혔는지 세션 단위로 드러난다. 포그라운드 서브에이전트의 도구 호출은 리모트 컨트롤 클라이언트로 실시간 중계된다.
+</p>
+<p>
+    같은 릴리스에 <code>PreModelSwitch</code>·<code>PostModelSwitch</code> 훅(특정 시점에 사용자가 정한 명령을 끼워 넣는 확장점)이 들어왔다. <strong>모델이 바뀌는 순간</strong>을 앞뒤로 가로챌 수 있다는 뜻이다. 모델마다 단가가 다르니 이 지점은 곧 비용이 갈리는 지점이기도 하다.
+</p>
+
+<h3>왜 한 흐름인가</h3>
+<p>
+    세 소식은 같은 계량기를 다른 각도에서 건드린다. 첫째는 <strong>누가 그것을 쓰고 있는가</strong>, 둘째는 <strong>얼마나 남아 있는가</strong>, 셋째는 <strong>무엇이 그것을 보여 주는가</strong>다. 사용량을 계정에 딸린 부수적인 숫자로 보면 셋은 서로 무관해 보이지만, 매일 하네스를 켜 두고 일하는 쪽에서는 하나의 문제다.
+</p>
+<p>
+    <a href="#!news-20260820-who-makes-the-call">판정을 누구에게 맡길 것인가</a>가 다룬 자격증명 위임은 승인 화면에서 보이는 문제였다. 이번 세션 탈취는 같은 위임이 <strong>승인 화면보다 한 층 아래</strong>에서 무너진 경우다. 눌러서 허락한 적이 없는데 이미 허락된 것으로 처리됐으니, 설계해야 할 것은 승인 버튼이 아니라 그 아래에서 신원을 증명하는 물건이었다.
+</p>
+
+<h3>사실검증 노트</h3>
+<p class="scn-sub">세션 탈취(강제 로그아웃·결제수단 삭제·환불, 악성코드 목록, 로그아웃이 감염을 지우지 않는다는 단서)는 <a href="https://www.bleepingcomputer.com/news/artificial-intelligence/anthropic-warns-infostealer-malware-is-hijacking-claude-sessions-to-drain-usage/" target="_blank" rel="noopener">BleepingComputer</a>·<a href="https://www.securityweek.com/anthropic-warns-claude-users-of-infostealer-malware-infections/" target="_blank" rel="noopener">SecurityWeek</a>·<a href="https://www.helpnetsecurity.com/2026/08/31/claude-accounts-compromised-through-infostealer/" target="_blank" rel="noopener">Help Net Security</a>·<a href="https://securityaffairs.com/198166/ai/infostealers-are-hijacking-claude-sessions-and-draining-subscriptions.html" target="_blank" rel="noopener">Security Affairs</a>에서 교차 확인했다. 9월 14일 주간 한도 변경(임시 50% → 상시 25%, 순 약 17% 감소)은 <a href="https://www.explainx.ai/blog/claude-usage-limits-2026-timeline-explained" target="_blank" rel="noopener">사용 한도 변경 연표</a> 기준이며, <strong>같은 변경이 +25%로도 -17%로도 서술된다</strong> — 기준선을 원래 한도로 잡느냐 현재의 임시 한도로 잡느냐의 차이라 본문에 그 갈림을 함께 적었다. Claude Code 2.1.251의 항목(모델 전환 훅, 지출 한도 막대, 세션별 프롬프트 캐시 줄, 서브에이전트 도구 호출 중계)은 <a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">공식 체인지로그</a>에 따랐다. 한편 같은 시기 "9월 1일 Claude Sonnet 5 가격 인상"이라는 정리가 돌았으나 <a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">공식 가격 문서</a>는 도입가 유지와 인상 미시행을 명시한다 — 이 기사에서는 공식 문서를 따랐다.</p>
