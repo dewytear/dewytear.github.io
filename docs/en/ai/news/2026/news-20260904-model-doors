@@ -2,37 +2,48 @@
 
 <h3>Three-line summary</h3>
 <ul>
-    <li>Google shipped one model behind <strong>two doors</strong>. Gemini 3.8 Flash is open to everyone; 3.8 Flash Cyber, tuned for finding and patching vulnerabilities, opens only to vetted defenders.</li>
-    <li>Anthropic put <strong>conditions on the call</strong> in Fable 5.1. You can no longer force a tool call, and rewinding the conversation to edit it invalidates the reasoning that came after.</li>
-    <li>One vets people, the other vets requests, but both block the same thing — <strong>a capability being separated from the conditions that produced it</strong>.</li>
+    <li>Fable 5.1 and Mythos 5.1 are <strong>one model with the same capabilities</strong>. Anyone can call Fable 5.1 through the API; Mythos 5.1 opens only to Project Glasswing participants.</li>
+    <li>The price dropped <strong>on a single line</strong> — cache reads, from $1 to $0.25 per million tokens. Base input and output rates are unchanged from Fable 5.</li>
+    <li>The same release changed <strong>three things about how you call it</strong>. You cannot force a tool call, earlier models cannot read its reasoning, and editing the conversation history invalidates the reasoning that came after.</li>
 </ul>
 
-<h3>One model, two doors</h3>
+<h3>One model, two names</h3>
 <p>
-    Google released Gemini 3.8 Flash on September 2. It sits in the cheap tier yet moved sharply on coding and tool use, scoring <strong>90.8%</strong> on Terminal-Bench 2.1 against 81.6% for 3.7 Flash. Pricing stays at $0.75 per million input tokens and $3.75 per million output.
+    Fable 5.1 and Mythos 5.1, both out on September 1, have <strong>identical capabilities, specs and pricing.</strong> The only difference is who may call them. Fable 5.1 is open to every customer on the Claude API and through AWS, Google Cloud and Microsoft Foundry. Mythos 5.1 goes only to approved customers in <strong>Project Glasswing</strong>, Anthropic's program for securing software in fields where the stakes run high, such as cybersecurity and the life sciences. The same capability ships under two names, with a door on one of them.
 </p>
 <p>
-    The variant released alongside it is the real story. 3.8 Flash Cyber is tuned for security work and scored 86.2% on <strong>CyberGym</strong>, a widely used evaluation for finding vulnerabilities in C and C++ code. On the patching side, CWE-Bench, it scored 47.2%, effectively tying a much larger rival at a much lower price. In Google's own testing it cleared a 70% discovery rate across 20 programming languages, and the Chrome security team reported 2.6 times more correct patches than the best commercial models, all of them far larger.
+    The specs are a 1M token context window and up to 128k output tokens, with the same per-token price across the whole window. Adaptive thinking is always on and cannot be turned off; <code>effort</code> controls its depth. Both models carry 30-day data retention, so neither is available under zero data retention without express authorization.
 </p>
 <p>
-    This variant never reaches the API. It opens only through a separate program called <strong>Fairwind</strong>, where applicants explain what their organization is, what defensive purpose they serve, and what safeguards they operate. Government authorities, critical-infrastructure operators and software maintainers qualify, and acceptance is not guaranteed. Finding a vulnerability well and breaking one well are the same skill, so shipping it openly would arm attackers and defenders in the same motion. Google broke that symmetry not with price or capability but with <strong>an identity check</strong>.
+    One more thing splits them. <strong>Mythos 5.1 does not run the history-editing check</strong> described below. The same model can therefore be subject to different conditions, which is worth remembering if your code moves between the two names.
 </p>
 
-<h3>Conditions on the call</h3>
+<h3>The price dropped on the cache line</h3>
 <p>
-    Fable 5.1, out a day earlier on September 1, is the other side. Anyone can call it, and the price and tokenizer are unchanged, but three things about how you call it are different.
+    Only one cell in the table changed. Base input stays at $10 per million tokens, output at $50, five-minute cache writes at $12.50 and one-hour cache writes at $20, exactly as on Fable 5. <strong>Cache reads went from $1 to $0.25.</strong> As a ratio, what used to be 0.1 times the base input price is now <strong>0.025 times</strong>, against 0.1 on every other Claude model. The 512-token minimum cacheable length is unchanged.
 </p>
 <p>
-    First, <strong>you cannot force a tool call.</strong> Until now you could put <code>any</code> or a specific tool name in <code>tool_choice</code> and pin the turn to that tool. Fable 5.1 returns a 400 error for those requests. Instead you append a <code>role: "system"</code> message mid-conversation naming the tool, and set <code>strict: true</code> on the tool so the arguments match your schema. Compulsion became <strong>instruction</strong>.
+    One cell moves the whole bill because of how agents work. A long session re-reads its opening every turn: the system prompt, the tool definitions, the conversation so far. When that opening sits in the cache, most of what gets billed is <strong>cache reads</strong>, so cutting that line to a quarter pulls the total down noticeably. The "25% on typical workloads, up to 45% on highly agentic work" figures from launch coverage all come out of this one line.
 </p>
 <p>
-    Second, <strong>thinking blocks</strong> — the fragments that carry the reasoning a model ran before answering and stay in the history — now have a direction. Fable 5.1 reads blocks from Opus 5, Fable 5 and earlier models, but none of those can read its own. When a router switches models or a fallback drops to an older one, the API strips the blocks that model cannot read and lets the request through. You are not billed for the stripped tokens, but that model <strong>re-plans from nothing</strong>, which raises cost and latency for the first turn after the switch.
+    The model itself is better than Fable 5 at agentic coding over long sessions, at documents, spreadsheets and slides, at multistep research, at reading charts and tables buried in dense PDFs, at reasoning across the full 1M context, and at operating a browser or desktop. The gap widens at higher effort. But as the price table shows, <strong>the improvement arrived as a discount on the cache rather than a markup on the model.</strong> Anthropic's own guidance is to start most workloads on <a href="#!news-20260724-claude-opus-5">Opus 5</a> and move to Fable 5.1 when Opus 5 at higher effort still falls short.
+</p>
+
+<h3>Three changes in how you call it</h3>
+<p>
+    Swap the model ID on the strength of the price alone and you snag in three places.
 </p>
 <p>
-    The third change touches the most code. A Fable 5.1 thinking block is valid only against the <strong>system prompt, tool list and conversation history that preceded it.</strong> Edit an earlier turn, rebuild the tools array, or compact the history on the client and then send the old blocks back, and the request fails with a 400. The check is on by default only for <strong>API accounts created on or after August 31, 2026.</strong> Older accounts record the mismatch without acting on it, though Anthropic says it plans to enforce the check for every account on future models.
+    First, <strong>you cannot force a tool call.</strong> Putting <code>any</code> or a specific tool name in <code>tool_choice</code> to pin the turn to that tool now returns a 400 error. The documentation gives the reason: thinking is always on for this model, and forcing a tool call skips it, so the model ends up <strong>writing its working-out into the tool arguments</strong> instead. Argument quality drops. Leave <code>tool_choice</code> at <code>auto</code> and set <code>strict: true</code> on the tool to enforce the schema, or say in the prompt when the tool applies.
 </p>
 <p>
-    It is clear enough who this lands on. If a tool manages the conversation history for you — Claude Code, claude.ai, the Agent SDK — <strong>the prefix is already kept intact.</strong> Code that assembles the <code>messages</code> array itself is what breaks, especially an agent framework that folds history behind a summary. Anyone shipping such a tool for others to run should be more careful still: a developer's API account is usually an older one with the check off, so users on new accounts hit it first.
+    Second, <strong>thinking blocks</strong> — the fragments that carry the reasoning a model ran before answering and stay in the history — now have a direction. Fable 5.1 reads blocks from Opus 5, Fable 5 and earlier models, but none of those can read its own. When a router switches models or a refusal fallback drops to an older one, the API strips the blocks that model cannot read and lets the request through. The stripped tokens are not billed, but that model <strong>re-plans from nothing.</strong> Without the beta header, the strip happens silently.
+</p>
+<p>
+    The third change touches the most code. A Fable 5.1 thinking block is valid only against the <strong>system prompt, tool list and conversation history that preceded it.</strong> Editing, reordering or removing an earlier turn, injecting a reminder line into an earlier turn and taking it out on the next request, rebuilding <code>system</code> or <code>tools</code> mid-conversation — each invalidates every thinking block after it. What does not invalidate them: removing a leading run of thinking blocks oldest first, server-side compaction and context editing, moving <code>cache_control</code> markers, and changing <code>effort</code> between requests.
+</p>
+<p>
+    The check is enforced by default only for <strong>API accounts created on or after August 31, 2026.</strong> Older accounts record the mismatch and move on. And if a tool manages the history for you — Claude Code, claude.ai, Managed Agents, the Agent SDK — the prefix is already kept intact. Code that assembles the <code>messages</code> array itself is what breaks, especially an agent framework that folds history behind a summary on the client. Anyone shipping such a tool for others to run should be more careful still: a developer's account is usually an older one with the check off, so users on new accounts hit it first.
 </p>
 
 <h3>How to check</h3>
@@ -42,17 +53,20 @@
 <p>
     What to run in production depends on the design. If a changed history can only mean a bug, leave the default <code>"error"</code> and let it fail. If you compact history on purpose, set <code>"drop_block"</code> so only the affected blocks fall away. Either way, watch the 400s or the <code>input_transformations</code> entries.
 </p>
+<p>
+    A few other things are worth picking up while you are in there. The same release added betas for changing effort mid-conversation, for system messages scoped to a single turn, and for receiving inter-tool progress updates as text via <code>display: "updates"</code>. Default behavior shifted slightly too: where Fable 5 batched several tool calls, Fable 5.1 more often issues one per turn. Answer quality holds, but the extra round trips cost tokens and time.
+</p>
 
 <h3>Why these belong together</h3>
 <p>
-    The two items look nothing alike. One is a deployment policy for a security model, the other a change to an API specification. Yet both <strong>tie a capability to the conditions that produced it</strong>. Fairwind keeps the ability to find vulnerabilities from coming apart from the standing to use it; block binding keeps reasoning from coming apart from the context that produced it. Swapping the context and laying old reasoning on top no longer passes quietly.
+    The cheaper-model story and the breaking-change story circulated separately, yet both sentences ask for the same thing — <strong>leave the opening alone and only append to the end.</strong> The conditions that keep the cache warm and the conditions that keep thinking blocks valid are the same conditions. The documentation says as much: describing the append-only patterns, it adds that they also keep the prompt cache warm. The cache discount is the reward for that discipline; the history check is the penalty for breaking it. Migrate for the reward alone and you meet the penalty.
 </p>
 <p>
-    <a href="#!news-20260820-who-makes-the-call">Who Gets to Make the Call</a> traced a movement that pushes judgment toward the machine. Fairwind is a case from the other side, where a person reads the paperwork and verifies the organization before the door opens. How far automation goes there is set not by capability but by <strong>the size of the damage</strong>.
+    <a href="#!news-20260820-who-makes-the-call">Who Gets to Make the Call</a> traced a movement that pushes judgment toward the machine. How Mythos 5.1 ships is a case from the other side: given the same capability, <strong>a person verifies the organization before the door opens.</strong> How far automation goes there is set not by capability but by the size of the damage.
 </p>
 <p>
-    The stateless turn covered in <a href="#!news-20260814-auto-mode-stateless-mcp">Defaults That Stop Asking</a> comes back here too. Remove the session as a container and the question of where state lives is still open. Signing a thinking block and binding it to the history before it is one answer to that question: instead of holding a connection open, <strong>each fragment carries where it came from</strong>.
+    The stateless turn covered in <a href="#!news-20260814-auto-mode-stateless-mcp">Defaults That Stop Asking</a> comes back here too. Remove the session as a container and the question of where state lives is still open. Stamping each thinking block with which model produced it and over which history is one answer: instead of holding a connection open, <strong>each fragment carries where it came from</strong>.
 </p>
 
 <h3>Fact-check note</h3>
-<p class="scn-sub">The three Fable 5.1 changes, along with <code>prefix_mismatch_behavior</code>, <code>input_transformations</code> and the August 31 account condition, follow the <a href="https://platform.claude.com/docs/en/models/fable-5-1/migration-guide" target="_blank" rel="noopener">official migration guide</a>. For Gemini 3.8 Flash Cyber, the 86.2% CyberGym figure is a public evaluation over C and C++ while "over 70% across 20 languages" comes from Google's own testing, so they are <strong>two different measurements</strong>; some summaries merged them into one, and they are kept apart here (<a href="https://www.scworld.com/brief/google-launches-gemini-3-8-flash-and-gemini-3-8-flash-cyber" target="_blank" rel="noopener">SC Media</a>, <a href="https://venturebeat.com/security/googles-gemini-3-8-flash-is-built-for-agents-while-its-cyber-twin-hunts-vulnerabilities" target="_blank" rel="noopener">VentureBeat</a>). Fairwind's eligibility and vetting criteria were cross-checked against <a href="https://www.techtimes.com/articles/326403/20260903/google-launches-gemini-38-flash-cyber-ai-patches-26x-faster-restricted-vetted-defenders.htm" target="_blank" rel="noopener">TechTimes</a> and <a href="https://cybersecuritynews.com/gemini-3-8-flash-cyber/" target="_blank" rel="noopener">CybersecurityNews</a>. The CWE-Bench and CyberGym scores are all as announced by Google, not independently reproduced.</p>
+<p class="scn-sub">The price table ($10 base input, $50 output, $0.25 cache reads, a 0.025 cache multiplier), the specs (1M context, 128k output, 30-day retention), the three breaking changes and their stated reasons, <code>prefix_mismatch_behavior</code>, <code>input_transformations</code>, the August 31 account condition, and the facts that Mythos 5.1 skips the history check and ships only to Project Glasswing all follow the <a href="https://platform.claude.com/docs/en/models/fable-5-1/whats-new-fable-5-1" target="_blank" rel="noopener">official release documentation</a> and the <a href="https://platform.claude.com/docs/en/models/fable-5-1/migration-guide" target="_blank" rel="noopener">migration guide</a>. Multipliers reported at launch, such as "double the Terminal-Bench-Science score" and "over 30% better agentic coding," <strong>do not appear in the official capability write-up</strong> and are not used here; that evaluation carries a reported standard error of 3.5 to 4.5 points per model, which makes a single comparison a weak basis for a multiplier. The 25% and 45% savings figures are Anthropic's own, and a workload where cache reads are a small share of spend will not fall by that much.</p>
