@@ -5,15 +5,24 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.ja.xml"/>
   <id>https://dewytear.github.io/feed.ja.xml</id>
-  <updated>2026-09-01T08:57:58+09:00</updated>
+  <updated>2026-09-04T07:30:26+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>モデルに扉がついた — 誰が使うのか、どう呼ぶのか</title>
+    <link href="https://dewytear.github.io/p/ja/news-20260904-model-doors/"/>
+    <id>https://dewytear.github.io/docs/ja/ai/news/2026/news-20260904-model-doors</id>
+    <published>2026-09-04T07:30:26+09:00</published>
+    <updated>2026-09-04T07:30:26+09:00</updated>
+    <summary>9月初めの二日のあいだに出た二つの変化をひとつのフレームで束ねた。グーグルは Gemini 3.8 Flash を公開しながら（Terminal-Bench 2.1 で 90.8%、100万トークンあたり入力 $0.75・出力 $3.75）、同系の 3.8 Flash Cyber は API に載せず、Fairwind プログラムの身元審査を通った政府機関・重要インフラ事業者・ソフトウェア保守者にだけ開いた（CyberGym 86.2% は C・C++ の公開評価、20言語で70%以上は自社試験、Chrome の正確な修正は2.6倍）。Anthropic は Fable 5.1 で呼び出しに条件をつけた — tool_choice の any・tool による強制は 400 エラーで塞がれ role: system メッセージと strict: true に置き換わり、思考ブロックはそれを生んだモデルと、その前のシステムプロンプト・ツール一覧・対話履歴に対してのみ有効で、履歴を書き換えると無効になる（既定で入るのは 2026-08-31 以降に作ったアカウントのみ、prefix_mismatch_behavior と input_transformations で確認・緩和できる）。能力をそれが生まれた条件につなぎ止める二つのやり方</summary>
+    <category term="AI · News &amp; Articles · 2026"/>
+  </entry>
   <entry>
     <title>私の上限を使っているのは誰か — Claude の使用量をめぐる三つの場面</title>
     <link href="https://dewytear.github.io/p/ja/news-20260901-whose-usage/"/>
     <id>https://dewytear.github.io/docs/ja/ai/news/2026/news-20260901-whose-usage</id>
-    <published>2026-09-01T08:57:58+09:00</published>
-    <updated>2026-09-01T08:57:58+09:00</updated>
+    <published>2026-09-01T19:20:42+09:00</published>
+    <updated>2026-09-01T19:20:42+09:00</updated>
     <summary>Claude の使用量をめぐる9月初めの三つの知らせをひとつのフレームで束ねた。インフォスティーラーがログインセッションのクッキーを盗み、他人のアカウントで上限を消費した（二要素認証が守るのはログインの瞬間だけ。Anthropic は強制ログアウト・保存された支払い方法の削除・不正と確認された請求の返金で対応。名指しされたのは Vidar・LummaC2・StealC・RedLine・Acreed と少数の Mac の Atomic Stealer。ログアウトはマルウェアを消さない）。9月14日には Claude Code の週次上限で一時 50% 増量が恒久 25% 増量に置き換わり、いまの上限を基準にすると実質およそ 17% 減で、同じ変更が +25% とも -17% とも書かれるのは基準線の違いによる。Claude Code 2.1.251 は /usage に支出上限のバーとセッション別プロンプトキャッシュ行、さらに PreModelSwitch・PostModelSwitch フックを加えた。誰が使うか・どれだけ残るか・何が見せるかという同じメーターの三つの面</summary>
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
@@ -268,14 +277,5 @@
     <updated>2026-07-28T04:43:06+09:00</updated>
     <summary>知識体系を wiki-plugin としてパッケージする — スキル 4 種、ツールのスナップショット、同期ゲート、バージョンの規律、ドッグフーディング</summary>
     <category term="AI · Wiki · 지식 체계"/>
-  </entry>
-  <entry>
-    <title>RDF かプロパティグラフか — 知識グラフのためのふたつのモデル（Neo4j）</title>
-    <link href="https://dewytear.github.io/p/ja/news-20260711-neo4j-rdf-vs-property-graph/"/>
-    <id>https://dewytear.github.io/docs/ja/ai/graphdb/news-20260711-neo4j-rdf-vs-property-graph</id>
-    <published>2026-07-11T11:07:02+09:00</published>
-    <updated>2026-08-16T00:25:09+09:00</updated>
-    <summary>Neo4j のジム・ウェバー「RDF vs property graphs」（2024）をまとめたもの — 知識グラフのエンティティ・関係・組織の原理、RDF のトリプルとセマンティックウェブの限界（関係が一級でない、SPARQL の終了、オントロジーの維持費）、NASA・Basecamp・Novo Nordisk の事例とともに見るプロパティグラフの長所、ISO GQL、そして「既定はプロパティグラフ + 必要なときにオントロジーのレイヤー」という結論。</summary>
-    <category term="AI · GraphDB"/>
   </entry>
 </feed>
