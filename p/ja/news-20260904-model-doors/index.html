@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>モデルに扉がついた — 誰が使うのか、どう呼ぶのか</title>
+<meta name="description" content="9月初めの二日のあいだに出た二つの変化をひとつのフレームで束ねた。グーグルは Gemini 3.8 Flash を公開しながら（Terminal-Bench 2.1 で 90.8%、100万トークンあたり入力 $0.75・出力 $3.75）、同系の 3.8 Flash Cyber は API に載せず、Fairwind プログラムの身元審査を通った政府機関・重要インフラ事業者・ソフトウェア保守者にだけ開いた（CyberGym 86.2% は C・C++ の公開評価、20言語で70%以上は自社試験、Chrome の正確な修正は2.6倍）。Anthropic は Fable 5.1 で呼び出しに条件をつけた — tool_choice の any・tool による強制は 400 エラーで塞がれ role: system メッセージと strict: true に置き換わり、思考ブロックはそれを生んだモデルと、その前のシステムプロンプト・ツール一覧・対話履歴に対してのみ有効で、履歴を書き換えると無効になる（既定で入るのは 2026-08-31 以降に作ったアカウントのみ、prefix_mismatch_behavior と input_transformations で確認・緩和できる）。能力をそれが生まれた条件につなぎ止める二つのやり方">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/news-20260904-model-doors/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260904-model-doors/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260904-model-doors/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/news-20260904-model-doors/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260904-model-doors/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="モデルに扉がついた — 誰が使うのか、どう呼ぶのか">
+<meta property="og:description" content="9月初めの二日のあいだに出た二つの変化をひとつのフレームで束ねた。グーグルは Gemini 3.8 Flash を公開しながら（Terminal-Bench 2.1 で 90.8%、100万トークンあたり入力 $0.75・出力 $3.75）、同系の 3.8 Flash Cyber は API に載せず、Fairwind プログラムの身元審査を通った政府機関・重要インフラ事業者・ソフトウェア保守者にだけ開いた（CyberGym 86.2% は C・C++ の公開評価、20言語で70%以上は自社試験、Chrome の正確な修正は2.6倍）。Anthropic は Fable 5.1 で呼び出しに条件をつけた — tool_choice の any・tool による強制は 400 エラーで塞がれ role: system メッセージと strict: true に置き換わり、思考ブロックはそれを生んだモデルと、その前のシステムプロンプト・ツール一覧・対話履歴に対してのみ有効で、履歴を書き換えると無効になる（既定で入るのは 2026-08-31 以降に作ったアカウントのみ、prefix_mismatch_behavior と input_transformations で確認・緩和できる）。能力をそれが生まれた条件につなぎ止める二つのやり方">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/news-20260904-model-doors/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="モデルに扉がついた — 誰が使うのか、どう呼ぶのか">
+<meta name="twitter:description" content="9月初めの二日のあいだに出た二つの変化をひとつのフレームで束ねた。グーグルは Gemini 3.8 Flash を公開しながら（Terminal-Bench 2.1 で 90.8%、100万トークンあたり入力 $0.75・出力 $3.75）、同系の 3.8 Flash Cyber は API に載せず、Fairwind プログラムの身元審査を通った政府機関・重要インフラ事業者・ソフトウェア保守者にだけ開いた（CyberGym 86.2% は C・C++ の公開評価、20言語で70%以上は自社試験、Chrome の正確な修正は2.6倍）。Anthropic は Fable 5.1 で呼び出しに条件をつけた — tool_choice の any・tool による強制は 400 エラーで塞がれ role: system メッセージと strict: true に置き換わり、思考ブロックはそれを生んだモデルと、その前のシステムプロンプト・ツール一覧・対話履歴に対してのみ有効で、履歴を書き換えると無効になる（既定で入るのは 2026-08-31 以降に作ったアカウントのみ、prefix_mismatch_behavior と input_transformations で確認・緩和できる）。能力をそれが生まれた条件につなぎ止める二つのやり方">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "モデルに扉がついた — 誰が使うのか、どう呼ぶのか",
+ "description": "9月初めの二日のあいだに出た二つの変化をひとつのフレームで束ねた。グーグルは Gemini 3.8 Flash を公開しながら（Terminal-Bench 2.1 で 90.8%、100万トークンあたり入力 $0.75・出力 $3.75）、同系の 3.8 Flash Cyber は API に載せず、Fairwind プログラムの身元審査を通った政府機関・重要インフラ事業者・ソフトウェア保守者にだけ開いた（CyberGym 86.2% は C・C++ の公開評価、20言語で70%以上は自社試験、Chrome の正確な修正は2.6倍）。Anthropic は Fable 5.1 で呼び出しに条件をつけた — tool_choice の any・tool による強制は 400 エラーで塞がれ role: system メッセージと strict: true に置き換わり、思考ブロックはそれを生んだモデルと、その前のシステムプロンプト・ツール一覧・対話履歴に対してのみ有効で、履歴を書き換えると無効になる（既定で入るのは 2026-08-31 以降に作ったアカウントのみ、prefix_mismatch_behavior と input_transformations で確認・緩和できる）。能力をそれが生まれた条件につなぎ止める二つのやり方",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/news-20260904-model-doors/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260904-model-doors",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-09-04T07:30:26+09:00",
+ "dateModified": "2026-09-04T07:30:26+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260904-model-doors">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/news-20260904-model-doors/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/news-20260904-model-doors/" hreflang="en">English</a>
+</p>
+<article>
+<h2>モデルに扉がついた — 誰が使うのか、どう呼ぶのか</h2>
+
+<h3>三行まとめ</h3>
+<ul>
+    <li>グーグルは同じモデルを<strong>二つの扉</strong>に分けて出した。一般版の Gemini 3.8 Flash は誰でも使えるが、脆弱性の発見と修正に特化した 3.8 Flash Cyber は審査を通った防御側にだけ開かれる。</li>
+    <li>Anthropic は Fable 5.1 で<strong>呼び出し方に条件</strong>をつけた。ツール呼び出しを強制できなくなり、対話履歴を巻き戻して書き換えるとその後の推論が無効になる。</li>
+    <li>片方は人を審査し、もう片方は要求を審査するが、防いでいるものは同じだ — <strong>能力がそれを生んだ条件から切り離されること</strong>である。</li>
+</ul>
+
+<h3>同じモデル、二つの扉</h3>
+<p>
+    9月2日、グーグルが Gemini 3.8 Flash を公開した。安価な段に属しながらコーディングとツール利用が大きく伸び、Terminal-Bench 2.1 で <strong>90.8%</strong> を記録した（直前の 3.7 Flash は 81.6%）。価格は100万トークンあたり入力 $0.75・出力 $3.75 のままだ。
+</p>
+<p>
+    同じ日に並んで出た 3.8 Flash Cyber こそがこの知らせの本体である。セキュリティ作業に合わせた版で、C・C++ コードの脆弱性を探す <strong>CyberGym</strong>（業界で広く使われる脆弱性発見の評価）で 86.2% を取った。修正側の CWE-Bench では 47.2% で、はるかに大きい競合モデルと事実上並ぶ値をずっと安く出している。グーグル自身の試験では20のプログラミング言語にわたって発見成功率が70%を超え、Chrome のセキュリティチームは、はるかに大きい商用モデルより正確な修正を2.6倍多く受け取ったと述べた。
+</p>
+<p>
+    ところがこの版は API には載らない。<strong>Fairwind</strong> という別のプログラムを通してのみ開かれ、申請者は組織が何であるか、防御上の目的が何か、どんな安全装置を備えているかを説明しなければならない。対象は政府機関・重要インフラ事業者・ソフトウェアの保守者で、通過が保証されるわけでもない。脆弱性をうまく見つける能力とうまく突く能力は同じ能力なので、配布を開けば防御側と攻撃側に同時に開くことになる。グーグルはその対称性を、価格でも性能でもなく<strong>身元の審査</strong>で断ち切った。
+</p>
+
+<h3>呼び出しに条件がついた</h3>
+<p>
+    一日早い9月1日に出た Fable 5.1 は反対側である。誰でも API で使えて価格もトークナイザもそのままだが、呼び方が三か所変わった。
+</p>
+<p>
+    第一に、<strong>ツール呼び出しを強制できない。</strong> これまでは <code>tool_choice</code> に <code>any</code> や特定のツール名を入れて「このターンでは必ずこのツールを呼べ」と釘を刺せた。Fable 5.1 はそうした要求に 400 エラーを返す。代わりに対話の途中で <code>role: "system"</code> のメッセージを足してツールを指名し、ツール定義に <code>strict: true</code> をつけて引数がスキーマに合うようにする。強制から<strong>指示</strong>へ変わったわけだ。
+</p>
+<p>
+    第二に、<strong>思考ブロック</strong>（モデルが答えを出す前に回した推論を収めて履歴に残す断片）に向きができた。Fable 5.1 は Opus 5・Fable 5 をはじめとする以前のモデルの思考ブロックを読むが、それらのモデルは Fable 5.1 のものを読めない。ルータがモデルを切り替えたりフォールバックで古いモデルに下りたりすると、API は読めないブロックをあらかじめ取り除いて要求を通す。取り除かれた分のトークンは請求されないが、そのモデルは<strong>推論なしで一から計画を立て直す</strong> — 切り替え直後の一ターンで費用と待ち時間が上がる。
+</p>
+<p>
+    第三の変更がいちばん多くのコードに触れる。Fable 5.1 の思考ブロックは、<strong>その前にあったシステムプロンプト・ツール一覧・対話履歴に対してのみ有効だ。</strong> 前のターンを書き換えたり、ツール配列を作り直したり、クライアント側で履歴を圧縮したうえで古い思考ブロックをそのまま送り返すと 400 エラーになる。この検査が既定で入るのは <strong>2026年8月31日以降に作った API アカウントだけ</strong>である。それ以前のアカウントはずれを記録するだけで通すが、Anthropic は今後のモデルではすべてのアカウントに適用する計画だと述べている。
+</p>
+<p>
+    この第三の条件が他人事でない場合ははっきりしている。Claude Code・claude.ai・Agent SDK のように<strong>履歴を代わりに管理してくれる道具を使っていれば、すでに守られている。</strong> 自分で <code>messages</code> 配列を組み立てるコード、とりわけ要約で履歴をたたむ圧縮を入れているエージェントのフレームワークが引っかかる。自作の道具を他人に配っているならさらに用心がいる — 開発者の API アカウントはたいてい古い側で検査が切れており、新しいアカウントで使う利用者のほうが先にぶつかるからだ。
+</p>
+
+<h3>確かめ方</h3>
+<p>
+    自分のコードが履歴を書き換えるかどうかは、推し量らずに測ればよい。<code>thinking-binding-controls-2026-08-01</code> のベータヘッダをつけ <code>prefix_mismatch_behavior</code> を <code>"drop_block"</code> にすると、検査が切れているアカウントでも検査が入り、応答に <code>input_transformations</code> の配列が載ってくる。複数ターンのセッションを一度回してこの配列を記録してみるとよい。毎ターン空なら履歴は無傷で、<code>prefix_binding_mismatch</code> が出ればそのブロックの前で何かが変わっている。モデルを乗り換えたあとに出る <code>model_binding_mismatch</code> は不具合ではなく想定どおりの動きだ。
+</p>
+<p>
+    本番で何を選ぶかは設計しだいである。履歴が変わること自体が不具合なら既定の <code>"error"</code> のままにして失敗させ、圧縮のようにわざと履歴をたたむ設計なら <code>"drop_block"</code> にして該当ブロックだけ落とす。どちらにせよ 400 の件数か <code>input_transformations</code> の項目を見張ることは併せて要る。
+</p>
+
+<h3>なぜ一つの流れなのか</h3>
+<p>
+    二つの知らせは形がまるで違う。片方はセキュリティモデルの配布方針で、もう片方は API 仕様の変更だ。それでも両方とも<strong>能力を、それが生まれた条件につなぎ止める</strong>仕掛けである。Fairwind は脆弱性を見つける能力がそれを使う資格から切り離されないようにつなぎ止め、思考ブロックの結び付けは推論がそれを生んだ文脈から切り離されないようにつなぎ止める。文脈をすげ替えたうえで古い推論をその上に載せることが、静かに通らなくなった。
+</p>
+<p>
+    <a href="/p/ja/news-20260820-who-makes-the-call/">判定を誰に任せるのか</a>で見た流れは、判定を機械の側へ寄せる向きだった。Fairwind はその反対側の事例である — 人が書類を読み、組織を確かめてから扉を開ける。自動化がどこまで行けるかを、能力ではなく<strong>被害の大きさ</strong>が決めるという側に近い。
+</p>
+<p>
+    <a href="/p/ja/news-20260814-auto-mode-stateless-mcp/">尋ねない既定値</a>が扱った無状態への転換も、ここで再び顔を出す。セッションという器をなくすと、状態をどこに置くかという問いが残る。思考ブロックに署名をつけて前の履歴に結び付けるやり方は、その場所に置かれた一つの答えだ。接続を開いたままにする代わりに、<strong>断片ごとに自分がどこから来たかを持たせる</strong>のである。
+</p>
+
+<h3>事実確認ノート</h3>
+<p class="scn-sub">Fable 5.1 の三つの変更と <code>prefix_mismatch_behavior</code>・<code>input_transformations</code>・8月31日のアカウント条件は<a href="https://platform.claude.com/docs/en/models/fable-5-1/migration-guide" target="_blank" rel="noopener">公式の移行ガイド</a>に従った。Gemini 3.8 Flash Cyber の数値は、CyberGym の 86.2% が C・C++ を対象とする公開評価であるのに対し「20言語で70%以上」はグーグル自身の試験で、<strong>互いに別の測定</strong>である。両者を一つの指標のように移した整理があったため、ここでは分けて記した（<a href="https://www.scworld.com/brief/google-launches-gemini-3-8-flash-and-gemini-3-8-flash-cyber" target="_blank" rel="noopener">SC Media</a>・<a href="https://venturebeat.com/security/googles-gemini-3-8-flash-is-built-for-agents-while-its-cyber-twin-hunts-vulnerabilities" target="_blank" rel="noopener">VentureBeat</a>）。Fairwind の対象と審査項目は <a href="https://www.techtimes.com/articles/326403/20260903/google-launches-gemini-38-flash-cyber-ai-patches-26x-faster-restricted-vetted-defenders.htm" target="_blank" rel="noopener">TechTimes</a>・<a href="https://cybersecuritynews.com/gemini-3-8-flash-cyber/" target="_blank" rel="noopener">CybersecurityNews</a> で照合した。CWE-Bench・CyberGym の点数はいずれもグーグル発表によるもので、独立に再現された値ではない。</p>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">作成日</span> 2026-09-04 &middot; <span class="pr-k">更新日</span> 2026-09-04</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/news-20260820-who-makes-the-call/">判定を誰に任せるのか — 8月の四つの場面</a></li><li><a href="/p/ja/news-20260709-thariq-fable5-unknowns/">Fable 5 の時代のボトルネックはモデルではなく人間か — Thariq Shihipar の「地図と領土」のフレーム</a></li><li><a href="/p/ja/news-20260710-llm-wiki-knowledge-context/">LLM Wiki とナレッジコンテキスト — 書き込みの時点でコンパイルするチームの知識</a></li><li><a href="/p/ja/ccb-skills/">拡張 — スキル・プラグイン・エージェント</a></li></ul>
+</nav>
+</body>
+</html>

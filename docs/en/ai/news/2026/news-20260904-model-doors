@@ -1,0 +1,58 @@
+<h2>Doors on the Model — Who May Use It, and How You May Call It</h2>
+
+<h3>Three-line summary</h3>
+<ul>
+    <li>Google shipped one model behind <strong>two doors</strong>. Gemini 3.8 Flash is open to everyone; 3.8 Flash Cyber, tuned for finding and patching vulnerabilities, opens only to vetted defenders.</li>
+    <li>Anthropic put <strong>conditions on the call</strong> in Fable 5.1. You can no longer force a tool call, and rewinding the conversation to edit it invalidates the reasoning that came after.</li>
+    <li>One vets people, the other vets requests, but both block the same thing — <strong>a capability being separated from the conditions that produced it</strong>.</li>
+</ul>
+
+<h3>One model, two doors</h3>
+<p>
+    Google released Gemini 3.8 Flash on September 2. It sits in the cheap tier yet moved sharply on coding and tool use, scoring <strong>90.8%</strong> on Terminal-Bench 2.1 against 81.6% for 3.7 Flash. Pricing stays at $0.75 per million input tokens and $3.75 per million output.
+</p>
+<p>
+    The variant released alongside it is the real story. 3.8 Flash Cyber is tuned for security work and scored 86.2% on <strong>CyberGym</strong>, a widely used evaluation for finding vulnerabilities in C and C++ code. On the patching side, CWE-Bench, it scored 47.2%, effectively tying a much larger rival at a much lower price. In Google's own testing it cleared a 70% discovery rate across 20 programming languages, and the Chrome security team reported 2.6 times more correct patches than the best commercial models, all of them far larger.
+</p>
+<p>
+    This variant never reaches the API. It opens only through a separate program called <strong>Fairwind</strong>, where applicants explain what their organization is, what defensive purpose they serve, and what safeguards they operate. Government authorities, critical-infrastructure operators and software maintainers qualify, and acceptance is not guaranteed. Finding a vulnerability well and breaking one well are the same skill, so shipping it openly would arm attackers and defenders in the same motion. Google broke that symmetry not with price or capability but with <strong>an identity check</strong>.
+</p>
+
+<h3>Conditions on the call</h3>
+<p>
+    Fable 5.1, out a day earlier on September 1, is the other side. Anyone can call it, and the price and tokenizer are unchanged, but three things about how you call it are different.
+</p>
+<p>
+    First, <strong>you cannot force a tool call.</strong> Until now you could put <code>any</code> or a specific tool name in <code>tool_choice</code> and pin the turn to that tool. Fable 5.1 returns a 400 error for those requests. Instead you append a <code>role: "system"</code> message mid-conversation naming the tool, and set <code>strict: true</code> on the tool so the arguments match your schema. Compulsion became <strong>instruction</strong>.
+</p>
+<p>
+    Second, <strong>thinking blocks</strong> — the fragments that carry the reasoning a model ran before answering and stay in the history — now have a direction. Fable 5.1 reads blocks from Opus 5, Fable 5 and earlier models, but none of those can read its own. When a router switches models or a fallback drops to an older one, the API strips the blocks that model cannot read and lets the request through. You are not billed for the stripped tokens, but that model <strong>re-plans from nothing</strong>, which raises cost and latency for the first turn after the switch.
+</p>
+<p>
+    The third change touches the most code. A Fable 5.1 thinking block is valid only against the <strong>system prompt, tool list and conversation history that preceded it.</strong> Edit an earlier turn, rebuild the tools array, or compact the history on the client and then send the old blocks back, and the request fails with a 400. The check is on by default only for <strong>API accounts created on or after August 31, 2026.</strong> Older accounts record the mismatch without acting on it, though Anthropic says it plans to enforce the check for every account on future models.
+</p>
+<p>
+    It is clear enough who this lands on. If a tool manages the conversation history for you — Claude Code, claude.ai, the Agent SDK — <strong>the prefix is already kept intact.</strong> Code that assembles the <code>messages</code> array itself is what breaks, especially an agent framework that folds history behind a summary. Anyone shipping such a tool for others to run should be more careful still: a developer's API account is usually an older one with the check off, so users on new accounts hit it first.
+</p>
+
+<h3>How to check</h3>
+<p>
+    Rather than guessing whether your code edits history, measure it. Send the <code>thinking-binding-controls-2026-08-01</code> beta header with <code>prefix_mismatch_behavior</code> set to <code>"drop_block"</code>: that turns the check on even for an account where it is off, and responses come back carrying an <code>input_transformations</code> array. Run one multi-turn session and log it. Empty on every turn means the history is intact. A <code>prefix_binding_mismatch</code> entry means something before that block changed. A <code>model_binding_mismatch</code> entry after a model switch is expected behavior, not a bug.
+</p>
+<p>
+    What to run in production depends on the design. If a changed history can only mean a bug, leave the default <code>"error"</code> and let it fail. If you compact history on purpose, set <code>"drop_block"</code> so only the affected blocks fall away. Either way, watch the 400s or the <code>input_transformations</code> entries.
+</p>
+
+<h3>Why these belong together</h3>
+<p>
+    The two items look nothing alike. One is a deployment policy for a security model, the other a change to an API specification. Yet both <strong>tie a capability to the conditions that produced it</strong>. Fairwind keeps the ability to find vulnerabilities from coming apart from the standing to use it; block binding keeps reasoning from coming apart from the context that produced it. Swapping the context and laying old reasoning on top no longer passes quietly.
+</p>
+<p>
+    <a href="#!news-20260820-who-makes-the-call">Who Gets to Make the Call</a> traced a movement that pushes judgment toward the machine. Fairwind is a case from the other side, where a person reads the paperwork and verifies the organization before the door opens. How far automation goes there is set not by capability but by <strong>the size of the damage</strong>.
+</p>
+<p>
+    The stateless turn covered in <a href="#!news-20260814-auto-mode-stateless-mcp">Defaults That Stop Asking</a> comes back here too. Remove the session as a container and the question of where state lives is still open. Signing a thinking block and binding it to the history before it is one answer to that question: instead of holding a connection open, <strong>each fragment carries where it came from</strong>.
+</p>
+
+<h3>Fact-check note</h3>
+<p class="scn-sub">The three Fable 5.1 changes, along with <code>prefix_mismatch_behavior</code>, <code>input_transformations</code> and the August 31 account condition, follow the <a href="https://platform.claude.com/docs/en/models/fable-5-1/migration-guide" target="_blank" rel="noopener">official migration guide</a>. For Gemini 3.8 Flash Cyber, the 86.2% CyberGym figure is a public evaluation over C and C++ while "over 70% across 20 languages" comes from Google's own testing, so they are <strong>two different measurements</strong>; some summaries merged them into one, and they are kept apart here (<a href="https://www.scworld.com/brief/google-launches-gemini-3-8-flash-and-gemini-3-8-flash-cyber" target="_blank" rel="noopener">SC Media</a>, <a href="https://venturebeat.com/security/googles-gemini-3-8-flash-is-built-for-agents-while-its-cyber-twin-hunts-vulnerabilities" target="_blank" rel="noopener">VentureBeat</a>). Fairwind's eligibility and vetting criteria were cross-checked against <a href="https://www.techtimes.com/articles/326403/20260903/google-launches-gemini-38-flash-cyber-ai-patches-26x-faster-restricted-vetted-defenders.htm" target="_blank" rel="noopener">TechTimes</a> and <a href="https://cybersecuritynews.com/gemini-3-8-flash-cyber/" target="_blank" rel="noopener">CybersecurityNews</a>. The CWE-Bench and CyberGym scores are all as announced by Google, not independently reproduced.</p>

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>모델에 문이 달렸다 — 누가 쓰는가와, 어떻게 부르는가</title>
+<meta name="description" content="9월 초 이틀 사이에 나온 두 변화를 한 프레임으로 묶었다 — 구글은 Gemini 3.8 Flash를 공개하면서(Terminal-Bench 2.1 90.8%, 100만 토큰당 입력 $0.75·출력 $3.75) 같은 계열의 3.8 Flash Cyber는 API에 올리지 않고 Fairwind 프로그램의 신원 심사를 통과한 정부기관·기간시설 운영자·소프트웨어 메인테이너에게만 열었고(CyberGym 86.2%는 C·C++ 공개 평가, 20개 언어 70% 이상은 자체 시험, 크롬 정확 패치 2.6배), Anthropic은 Fable 5.1에서 호출에 조건을 걸었다 — tool_choice의 any·tool 강제는 400 오류로 막히고 role: system 메시지와 strict: true로 대체되며, 사고 블록은 그것을 만든 모델과 그 앞의 시스템 프롬프트·도구 목록·대화 이력에만 유효해 이력을 고치면 무효가 된다(2026-08-31 이후 생성 계정에만 기본 적용, prefix_mismatch_behavior와 input_transformations로 확인·완화). 능력을 그것이 만들어진 조건에 붙들어 매는 두 가지 방식">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/news-20260904-model-doors/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260904-model-doors/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20260904-model-doors/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/news-20260904-model-doors/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260904-model-doors/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="모델에 문이 달렸다 — 누가 쓰는가와, 어떻게 부르는가">
+<meta property="og:description" content="9월 초 이틀 사이에 나온 두 변화를 한 프레임으로 묶었다 — 구글은 Gemini 3.8 Flash를 공개하면서(Terminal-Bench 2.1 90.8%, 100만 토큰당 입력 $0.75·출력 $3.75) 같은 계열의 3.8 Flash Cyber는 API에 올리지 않고 Fairwind 프로그램의 신원 심사를 통과한 정부기관·기간시설 운영자·소프트웨어 메인테이너에게만 열었고(CyberGym 86.2%는 C·C++ 공개 평가, 20개 언어 70% 이상은 자체 시험, 크롬 정확 패치 2.6배), Anthropic은 Fable 5.1에서 호출에 조건을 걸었다 — tool_choice의 any·tool 강제는 400 오류로 막히고 role: system 메시지와 strict: true로 대체되며, 사고 블록은 그것을 만든 모델과 그 앞의 시스템 프롬프트·도구 목록·대화 이력에만 유효해 이력을 고치면 무효가 된다(2026-08-31 이후 생성 계정에만 기본 적용, prefix_mismatch_behavior와 input_transformations로 확인·완화). 능력을 그것이 만들어진 조건에 붙들어 매는 두 가지 방식">
+<meta property="og:url" content="https://dewytear.github.io/p/news-20260904-model-doors/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="모델에 문이 달렸다 — 누가 쓰는가와, 어떻게 부르는가">
+<meta name="twitter:description" content="9월 초 이틀 사이에 나온 두 변화를 한 프레임으로 묶었다 — 구글은 Gemini 3.8 Flash를 공개하면서(Terminal-Bench 2.1 90.8%, 100만 토큰당 입력 $0.75·출력 $3.75) 같은 계열의 3.8 Flash Cyber는 API에 올리지 않고 Fairwind 프로그램의 신원 심사를 통과한 정부기관·기간시설 운영자·소프트웨어 메인테이너에게만 열었고(CyberGym 86.2%는 C·C++ 공개 평가, 20개 언어 70% 이상은 자체 시험, 크롬 정확 패치 2.6배), Anthropic은 Fable 5.1에서 호출에 조건을 걸었다 — tool_choice의 any·tool 강제는 400 오류로 막히고 role: system 메시지와 strict: true로 대체되며, 사고 블록은 그것을 만든 모델과 그 앞의 시스템 프롬프트·도구 목록·대화 이력에만 유효해 이력을 고치면 무효가 된다(2026-08-31 이후 생성 계정에만 기본 적용, prefix_mismatch_behavior와 input_transformations로 확인·완화). 능력을 그것이 만들어진 조건에 붙들어 매는 두 가지 방식">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "모델에 문이 달렸다 — 누가 쓰는가와, 어떻게 부르는가",
+ "description": "9월 초 이틀 사이에 나온 두 변화를 한 프레임으로 묶었다 — 구글은 Gemini 3.8 Flash를 공개하면서(Terminal-Bench 2.1 90.8%, 100만 토큰당 입력 $0.75·출력 $3.75) 같은 계열의 3.8 Flash Cyber는 API에 올리지 않고 Fairwind 프로그램의 신원 심사를 통과한 정부기관·기간시설 운영자·소프트웨어 메인테이너에게만 열었고(CyberGym 86.2%는 C·C++ 공개 평가, 20개 언어 70% 이상은 자체 시험, 크롬 정확 패치 2.6배), Anthropic은 Fable 5.1에서 호출에 조건을 걸었다 — tool_choice의 any·tool 강제는 400 오류로 막히고 role: system 메시지와 strict: true로 대체되며, 사고 블록은 그것을 만든 모델과 그 앞의 시스템 프롬프트·도구 목록·대화 이력에만 유효해 이력을 고치면 무효가 된다(2026-08-31 이후 생성 계정에만 기본 적용, prefix_mismatch_behavior와 input_transformations로 확인·완화). 능력을 그것이 만들어진 조건에 붙들어 매는 두 가지 방식",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/news-20260904-model-doors/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20260904-model-doors",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-09-04T07:30:26+09:00",
+ "dateModified": "2026-09-04T07:30:26+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20260904-model-doors">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/news-20260904-model-doors/" hreflang="en">English</a>
+  &middot; <a href="/p/ja/news-20260904-model-doors/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>모델에 문이 달렸다 — 누가 쓰는가와, 어떻게 부르는가</h2>
+
+<h3>세 줄 요약</h3>
+<ul>
+    <li>구글은 같은 모델을 <strong>두 개의 문</strong>으로 나눠 냈다. 일반판 Gemini 3.8 Flash는 누구나 쓰고, 취약점 탐지·패치에 특화한 3.8 Flash Cyber는 심사받은 방어자에게만 열린다.</li>
+    <li>Anthropic은 Fable 5.1에서 <strong>호출 방식에 조건</strong>을 걸었다. 도구 호출을 강제할 수 없고, 대화 이력을 되감아 고치면 그 뒤의 추론이 무효가 된다.</li>
+    <li>한쪽은 사람을 심사하고 다른 쪽은 요청을 심사하지만, 막으려는 것은 같다 — <strong>능력이 만들어진 조건에서 떼어내지는 것</strong>이다.</li>
+</ul>
+
+<h3>같은 모델, 두 개의 문</h3>
+<p>
+    9월 2일 구글이 Gemini 3.8 Flash를 냈다. 값싼 등급에 속하면서 코딩·도구 사용이 눈에 띄게 올라, Terminal-Bench 2.1에서 <strong>90.8%</strong>를 기록했다(직전 3.7 Flash는 81.6%). 가격은 100만 토큰당 입력 $0.75·출력 $3.75로 그대로다.
+</p>
+<p>
+    같은 날 함께 나온 3.8 Flash Cyber가 이 소식의 진짜 몫이다. 보안 작업에 맞춘 판으로, C·C++ 코드의 취약점을 찾는 <strong>CyberGym</strong>(업계에서 널리 쓰는 취약점 발견 평가)에서 86.2%를 받았다. 고쳐 놓는 쪽인 CWE-Bench에서는 47.2%로, 훨씬 큰 경쟁 모델과 사실상 동률을 훨씬 싼 값에 냈다. 구글 자체 시험에서는 20개 프로그래밍 언어에 걸쳐 발견 성공률 70%를 넘겼고, 크롬 보안팀은 훨씬 큰 상용 모델들보다 정확한 패치를 2.6배 더 받았다고 밝혔다.
+</p>
+<p>
+    그런데 이 판은 API에 올라오지 않는다. <strong>Fairwind</strong>라는 별도 프로그램을 통해서만 열리고, 신청자는 조직이 무엇인지, 방어 목적이 무엇인지, 어떤 안전장치를 갖췄는지를 설명해야 한다. 정부기관·기간시설 운영자·소프트웨어 메인테이너가 대상이며 통과가 보장되지도 않는다. 취약점을 잘 찾는 능력과 잘 뚫는 능력은 같은 능력이라, 배포를 열면 방어자와 공격자에게 동시에 열린다. 구글은 그 대칭을 값이나 성능이 아니라 <strong>신원 심사</strong>로 깼다.
+</p>
+
+<h3>호출에 조건이 붙었다</h3>
+<p>
+    하루 앞선 9월 1일에 나온 Fable 5.1은 반대쪽이다. 누구나 API로 쓸 수 있고 가격도 토크나이저도 그대로지만, 부르는 방법 세 군데가 달라졌다.
+</p>
+<p>
+    첫째, <strong>도구 호출을 강제할 수 없다.</strong> 지금까지는 <code>tool_choice</code>에 <code>any</code>나 특정 도구 이름을 넣어 "이번 턴에는 반드시 이 도구를 불러라"라고 못박을 수 있었다. Fable 5.1은 그런 요청에 400 오류를 돌려준다. 대신 대화 중간에 <code>role: "system"</code> 메시지를 덧붙여 도구를 지정하고, 도구 정의에 <code>strict: true</code>를 걸어 인자가 스키마에 맞게 만든다. 강제에서 <strong>지시</strong>로 바뀐 셈이다.
+</p>
+<p>
+    둘째, <strong>사고 블록</strong>(모델이 답을 내기 전에 굴린 추론을 담아 이력에 남기는 조각)에 방향이 생겼다. Fable 5.1은 Opus 5·Fable 5를 비롯한 이전 모델들의 사고 블록을 읽지만, 그 모델들은 Fable 5.1의 것을 읽지 못한다. 라우터가 모델을 바꾸거나 폴백이 걸려 옛 모델로 내려가면 API가 읽을 수 없는 블록을 미리 걷어내고 요청을 통과시킨다. 걷어낸 토큰 값은 청구되지 않지만, 그 모델은 <strong>추론 없이 처음부터 다시 계획을 세운다</strong> — 전환 직후 한 턴의 비용과 지연이 올라간다.
+</p>
+<p>
+    셋째가 가장 많은 코드를 건드린다. Fable 5.1의 사고 블록은 <strong>그 앞에 있던 시스템 프롬프트·도구 목록·대화 이력에만 유효하다.</strong> 앞선 턴을 고치거나, 도구 배열을 다시 만들거나, 클라이언트에서 이력을 압축한 뒤 옛 사고 블록을 그대로 되돌려 보내면 400 오류가 난다. 이 검사는 <strong>2026년 8월 31일 이후에 만든 API 계정에서만 기본으로 켜진다.</strong> 그 전에 만든 계정은 어긋남을 기록만 하고 넘어가지만, Anthropic은 앞으로 나올 모델에서는 모든 계정에 적용할 계획이라고 밝혔다.
+</p>
+<p>
+    이 셋째 조건이 남 일이 아닌 경우는 분명하다. Claude Code·claude.ai·Agent SDK처럼 <strong>이력을 대신 관리해 주는 도구를 쓰면 이미 지켜지고 있다.</strong> 직접 <code>messages</code> 배열을 조립하는 코드, 특히 요약으로 이력을 접는 압축을 넣어 둔 에이전트 프레임워크가 걸린다. 직접 만든 도구를 남에게 배포한다면 더 조심할 일이다 — 개발자의 API 계정은 대개 오래된 쪽이라 검사가 꺼져 있고, 새 계정으로 쓰는 사용자가 먼저 부딪힌다.
+</p>
+
+<h3>확인하는 법</h3>
+<p>
+    자기 코드가 이력을 고치는지는 짐작하지 말고 재 보면 된다. <code>thinking-binding-controls-2026-08-01</code> 베타 헤더를 달고 <code>prefix_mismatch_behavior</code>를 <code>"drop_block"</code>으로 두면, 검사가 꺼져 있는 계정에서도 검사가 켜지고 응답에 <code>input_transformations</code> 배열이 실려 온다. 여러 턴짜리 세션을 한 번 돌려 이 배열을 남겨 보라. 매 턴 비어 있으면 이력이 온전한 것이고, <code>prefix_binding_mismatch</code>가 찍히면 그 블록 앞의 무언가가 바뀐 것이다. 모델을 갈아탄 뒤 나오는 <code>model_binding_mismatch</code>는 버그가 아니라 예정된 동작이다.
+</p>
+<p>
+    운영에서 무엇을 고를지는 성격에 달렸다. 이력이 바뀌는 것이 곧 버그라면 기본값 <code>"error"</code>로 두어 실패시키고, 압축처럼 일부러 이력을 접는 설계라면 <code>"drop_block"</code>으로 두어 해당 블록만 떨어뜨린다. 어느 쪽이든 400 건수나 <code>input_transformations</code> 항목을 지켜보는 것이 함께 가야 한다.
+</p>
+
+<h3>왜 한 흐름인가</h3>
+<p>
+    두 소식은 형태가 딴판이다. 하나는 보안 모델의 배포 정책이고 하나는 API 스펙 변경이다. 그런데 둘 다 <strong>능력을 그것이 만들어진 조건에 붙들어 매는</strong> 장치다. Fairwind는 취약점을 찾는 능력이 그 능력을 쓸 자격과 분리되지 않게 붙들고, 사고 블록 바인딩은 추론이 그 추론을 낳은 맥락과 분리되지 않게 붙든다. 맥락을 바꿔치기한 뒤 옛 추론을 그 위에 얹는 일이 조용히 통과하지 않게 된 것이다.
+</p>
+<p>
+    <a href="/p/news-20260820-who-makes-the-call/">판정을 누구에게 맡길 것인가</a>에서 본 흐름은 판정을 기계 쪽으로 미는 방향이었다. Fairwind는 그 반대편의 사례다 — 사람이 서류를 읽고 조직을 확인해서 문을 연다. 자동화가 어디까지 갈 수 있는지를 능력이 아니라 <strong>피해의 크기</strong>가 정한다는 쪽에 가깝다.
+</p>
+<p>
+    <a href="/p/news-20260814-auto-mode-stateless-mcp/">묻지 않는 기본값</a>이 다룬 무상태 전환도 여기서 다시 만난다. 세션이라는 그릇을 없애면 상태를 어디에 둘지가 문제로 남는데, 사고 블록에 서명을 붙여 앞선 이력에 묶는 방식은 그 자리에 놓인 한 가지 답이다. 연결을 열어 두는 대신 <strong>조각마다 자기가 어디서 나왔는지를 지니게</strong> 한다.
+</p>
+
+<h3>사실검증 노트</h3>
+<p class="scn-sub">Fable 5.1의 세 가지 변경과 <code>prefix_mismatch_behavior</code>·<code>input_transformations</code>·8월 31일 계정 조건은 <a href="https://platform.claude.com/docs/en/models/fable-5-1/migration-guide" target="_blank" rel="noopener">공식 마이그레이션 가이드</a>에 따랐다. Gemini 3.8 Flash Cyber 수치는 CyberGym 86.2%가 C·C++ 대상 공개 평가이고 "20개 언어 70% 이상"은 구글 자체 시험이라 <strong>서로 다른 측정</strong>인데, 두 숫자를 한 지표처럼 옮긴 정리가 있어 여기서는 나눠 적었다(<a href="https://www.scworld.com/brief/google-launches-gemini-3-8-flash-and-gemini-3-8-flash-cyber" target="_blank" rel="noopener">SC Media</a>·<a href="https://venturebeat.com/security/googles-gemini-3-8-flash-is-built-for-agents-while-its-cyber-twin-hunts-vulnerabilities" target="_blank" rel="noopener">VentureBeat</a>). Fairwind의 대상과 심사 항목은 <a href="https://www.techtimes.com/articles/326403/20260903/google-launches-gemini-38-flash-cyber-ai-patches-26x-faster-restricted-vetted-defenders.htm" target="_blank" rel="noopener">TechTimes</a>·<a href="https://cybersecuritynews.com/gemini-3-8-flash-cyber/" target="_blank" rel="noopener">CybersecurityNews</a>에서 교차 확인했다. CWE-Bench·CyberGym 점수는 모두 구글 발표 기준이며 독립 재현치가 아니다.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">생성일자</span> 2026-09-04 &middot; <span class="pr-k">수정일자</span> 2026-09-04</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/news-20260820-who-makes-the-call/">판정을 누구에게 맡길 것인가 — 8월의 네 장면</a></li><li><a href="/p/news-20260709-thariq-fable5-unknowns/">Fable 5 시대의 병목은 모델이 아니라 인간인가 — 타릭의 지도와 영토 프레임</a></li><li><a href="/p/news-20260710-llm-wiki-knowledge-context/">LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식</a></li><li><a href="/p/ccb-skills/">확장 — 스킬·플러그인·에이전트</a></li></ul>
+</nav>
+</body>
+</html>
