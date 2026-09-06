@@ -654,11 +654,62 @@
  {
   "name": "news-20260901-whose-usage",
   "title": "Who Is Spending My Limit — Three Scenes from Claude Usage",
-  "summary": "Three early-September items about Claude usage, bound into one frame. An infostealer copied login session cookies and spent other people's limits (two-factor authentication guards only the moment of logging in; Anthropic signed accounts out, deleted saved payment methods and refunded charges identified as unauthorized; the named families are Vidar, LummaC2, StealC, RedLine and Acreed plus Atomic Stealer on a small number of Macs; signing out does not remove the malware). On September 14 Claude Code's weekly limit replaces a temporary 50% boost with a permanent 25% increase, a net drop of roughly 17% against today's limit, which is why the same change is written as both +25% and -17%. Claude Code 2.1.251 added a spend-limit bar and a per-session prompt-cache line to /usage plus PreModelSwitch and PostModelSwitch hooks. Three sides of one meter: who spends it, how much is left, and what shows it"
+  "summary": "Three early-September items about Claude usage, bound into one frame. An infostealer copied login session cookies and spent other people's limits (two-factor authentication guards only the moment of logging in; Anthropic signed accounts out, deleted saved payment methods and refunded charges identified as unauthorized; the named families are Vidar, LummaC2, StealC, RedLine and Acreed plus Atomic Stealer on a small number of Macs; signing out does not remove the malware). On September 14 Claude Code's weekly limit replaces a temporary 50% boost with a permanent 25% increase, a net drop of roughly 17% against today's limit, which is why the same change is written as both +25% and -17%. Claude Code 2.1.251 added a spend-limit bar and a per-session prompt-cache line to /usage plus PreModelSwitch and PostModelSwitch hooks. Three sides of one meter: who spends it, how much is left, and what shows it",
+  "relations": [
+   {
+    "target": "ccb-manage",
+    "evidenceRef": "The section on the harness reporting what it spent assumes a reader who already knows /usage, sessions and the prompt cache, and covers only what changed — the operating screens themselves are left to that document"
+   },
+   {
+    "target": "news-20260820-who-makes-the-call",
+    "evidenceRef": "The closing section supports that article's argument about delegated credentials with a case where the delegation broke one layer below the approval screen, at the session cookie"
+   },
+   {
+    "target": "hns-overview",
+    "evidenceRef": "Treats the PreModelSwitch and PostModelSwitch hooks as a concrete case of a harness's extension points reaching as far as the moment the model changes"
+   }
+  ]
  },
  {
   "name": "news-20260904-model-doors",
   "title": "Doors on the Model — Who May Use It, and How You May Call It",
-  "summary": "Fable 5.1 and Mythos 5.1 are one model with identical capabilities, specs and pricing; only access differs. Fable 5.1 is open to every customer, Mythos 5.1 only to approved Project Glasswing participants, and Mythos 5.1 does not run the history-editing check (1M context, 128k output, adaptive thinking always on, 30-day retention). One cell in the price table moved: cache reads from $1 to $0.25 per million tokens, a multiplier of 0.025 times base input where it used to be 0.1 (base input $10, output $50, cache writes and the 512-token minimum unchanged), and the 25% and 45% savings reported at launch all come from that line. The same release changed three things about the call: forcing a tool returns a 400 (thinking is always on, and forcing a call skips it so the working-out leaks into the tool arguments and their quality drops; use strict: true plus a prompt instruction instead), thinking blocks are readable only by the model that produced them or a newer one, and editing the preceding system prompt, tools or history invalidates every later block (enforced by default only for accounts created on or after 2026-08-31, testable via prefix_mismatch_behavior and input_transformations). Keeping the cache warm and keeping thinking blocks valid are the same discipline: the discount is the reward, the check is the penalty"
+  "summary": "Fable 5.1 and Mythos 5.1 are one model with identical capabilities, specs and pricing; only access differs. Fable 5.1 is open to every customer, Mythos 5.1 only to approved Project Glasswing participants, and Mythos 5.1 does not run the history-editing check (1M context, 128k output, adaptive thinking always on, 30-day retention). One cell in the price table moved: cache reads from $1 to $0.25 per million tokens, a multiplier of 0.025 times base input where it used to be 0.1 (base input $10, output $50, cache writes and the 512-token minimum unchanged), and the 25% and 45% savings reported at launch all come from that line. The same release changed three things about the call: forcing a tool returns a 400 (thinking is always on, and forcing a call skips it so the working-out leaks into the tool arguments and their quality drops; use strict: true plus a prompt instruction instead), thinking blocks are readable only by the model that produced them or a newer one, and editing the preceding system prompt, tools or history invalidates every later block (enforced by default only for accounts created on or after 2026-08-31, testable via prefix_mismatch_behavior and input_transformations). Keeping the cache warm and keeping thinking blocks valid are the same discipline: the discount is the reward, the check is the penalty",
+  "relations": [
+   {
+    "target": "skills",
+    "evidenceRef": "The section on conditions attached to the call assumes a reader who already knows tool_choice, tool definitions and system messages, and covers only what changed — tool use itself is left to that document"
+   },
+   {
+    "target": "news-20260724-claude-opus-5",
+    "evidenceRef": "The pricing section repeats the official guidance to start most workloads on Opus 5 and move to Fable 5.1 when that falls short, which rests on the price-and-character comparison that article set up"
+   },
+   {
+    "target": "news-20260820-who-makes-the-call",
+    "evidenceRef": "The closing section supports that article's argument about delegated judgment with the opposite case: given the same capability, a person verifies the organization before the door opens, as Mythos 5.1 ships through Project Glasswing"
+   },
+   {
+    "target": "news-20260814-auto-mode-stateless-mcp",
+    "evidenceRef": "Treats stamping each thinking block with the model and history that produced it as one concrete answer to that article's question of where state lives once the session is gone"
+   }
+  ]
+ },
+ {
+  "name": "claude-md-intent",
+  "title": "intent.md — Writing Down the Why Before the Code, and the AI-Native SDLC",
+  "summary": "A read of Anthropic's AI-Native SDLC playbook, published 2026-08-21, and intent.md at its starting line. intent.md is committed before any code and records what is wanted, why, and under which constraints, in five suggested sections (Problem, Proposed outcome, Affected users and systems, Constraints, Open questions). A table separates the layers: CLAUDE.md holds rules that are always true, intent.md a reason true for one change only. Crucially intent.md is not among the files loaded automatically at session start (CLAUDE.md, CLAUDE.local.md, .claude/rules/ and the auto-memory index), a point checked against the official memory documentation, so four ways to wire it are compared by cost and certainty: one line of guidance in CLAUDE.md, an @ import, a skill, a hook. Guidance raises the odds; hooks decide. Six stages (plan, design, build, test, deploy, maintain) each commit one artifact - intent.md, spec.md, plan.md, code and tests, REVIEW.md and review findings, the incident record - forming a loop whose commits are the audit trail, with skills making violations rare, hooks making them close to impossible, and evals over 20 to 50 real tasks regression-testing the configuration itself. The intent/ folder holds one folder per change and one artifact per pull request, so merging is the approval. The critiques are included: no measurement layer, thin requirements engineering, and only three deterministic controls (plan mode, a PreToolUse hook, the eval suite), so at every other joint a wrong translation flows downstream wearing the shape of a well-formed artifact",
+  "relations": [
+   {
+    "target": "ccb-overview",
+    "evidenceRef": "The section on how it differs from CLAUDE.md assumes a reader who already knows where CLAUDE.md sits and how far it applies, and covers only the difference in layer from intent.md"
+   },
+   {
+    "target": "skills",
+    "evidenceRef": "Two of the four ways to wire intent.md to an agent are a skill and a hook; how those two work is left to that document"
+   },
+   {
+    "target": "kgs-gates",
+    "evidenceRef": "The section on how this wiki does it supports the argument that guidance raises the odds while gates decide, using this wiki's own practice of writing rules in CLAUDE.md and leaving the actual blocking to eight stages of gates"
+   }
+  ]
  }
 ]

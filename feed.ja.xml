@@ -5,15 +5,24 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.ja.xml"/>
   <id>https://dewytear.github.io/feed.ja.xml</id>
-  <updated>2026-09-04T08:03:31+09:00</updated>
+  <updated>2026-09-06T10:07:42+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>intent.md — コードより先に残す意図と、AI ネイティブ SDLC</title>
+    <link href="https://dewytear.github.io/p/ja/claude-md-intent/"/>
+    <id>https://dewytear.github.io/docs/ja/ai/claude/code/claude-md/claude-md-intent</id>
+    <published>2026-09-06T10:07:42+09:00</published>
+    <updated>2026-09-06T10:07:42+09:00</updated>
+    <summary>Anthropic が2026-08-21に公開した AI ネイティブ SDLC プレイブックと、その出発点である intent.md を整理した。intent.md はコードより先にコミットし、何を望むのか・なぜ・どんな制約の下でかを記すファイルで、推奨の書式は五つの節(Problem・Proposed outcome・Affected users and systems・Constraints・Open questions)である。CLAUDE.md はつねに真である規則、intent.md はこの変更にだけ真である理由という層の違いを表で分け、とりわけ intent.md はセッション開始時に自動で読み込まれる対象(CLAUDE.md・CLAUDE.local.md・.claude/rules/・自動メモリの索引)に含まれないことを公式のメモリ文書で確認し、つなぐ四つの方法(CLAUDE.md の一行の指示・@ インポート・スキル・フック)をコストと確実さで比べた — 指針は確率を上げ、フックは決める。六段階(計画・設計・ビルド・テスト・デプロイ・運用)がそれぞれ intent.md→spec.md→plan.md→コードとテスト→REVIEW.md とレビュー記録→障害記録をコミットして輪をなし、そのコミットが監査証跡になる。スキルは違反をまれにし、フックはほぼ不可能にし、評価(実際の作業20〜50件)は設定そのものを回帰検査する。intent/ フォルダは変更一つにフォルダ一つ・成果物一つにプルリクエスト一つで置き、マージが承認になる。批判も併せて収めた — 測定の層がなく、要求工学が薄く、決定論的な統制は計画モード・PreToolUse フック・評価の三箇所だけで、残りの継ぎ目では誤った翻訳が非の打ちどころのない成果物の姿で流れていく</summary>
+    <category term="AI · Claude · Code · CLAUDE.md"/>
+  </entry>
   <entry>
     <title>モデルに扉がついた — 誰が使うのか、どう呼ぶのか</title>
     <link href="https://dewytear.github.io/p/ja/news-20260904-model-doors/"/>
     <id>https://dewytear.github.io/docs/ja/ai/news/2026/news-20260904-model-doors</id>
     <published>2026-09-04T07:39:54+09:00</published>
-    <updated>2026-09-04T08:03:31+09:00</updated>
+    <updated>2026-09-04T08:10:43+09:00</updated>
     <summary>Fable 5.1 と Mythos 5.1 は能力も仕様も価格も同じ一つのモデルで、分かれるのはアクセスだけだ — Fable 5.1 はすべての顧客に、Mythos 5.1 は Project Glasswing の承認顧客にのみ開かれ、Mythos 5.1 は履歴編集の検査を走らせない（コンテキスト100万・出力12.8万・適応的思考は常時・30日のデータ保持）。価格表で動いたのはキャッシュ読み取りの一マスだけで、100万トークンあたり $1 から $0.25 へ、基本入力価格の 0.1 倍だった倍率が 0.025 倍になった（基本入力 $10・出力 $50・キャッシュ書き込み・512トークンの最小は据え置き）。報道の25%・45%の削減はすべてこの一行から出ている。同じリリースが呼び方を三つ変えた — ツール呼び出しの強制は 400 エラー（思考が常に入っており強制すると検討の中身がツール引数に漏れて質が落ちるため、strict: true とプロンプトの指示で置き換える）、思考ブロックはそれを生んだモデルとそれより新しいモデルだけが読め、前のシステムプロンプト・ツール一覧・履歴を書き換えるとその後のブロックが無効になる（既定で入るのは 2026-08-31 以降のアカウントのみ、prefix_mismatch_behavior と input_transformations で確認できる）。キャッシュを温かく保つ条件と思考ブロックを生かす条件は同じで、値下げは褒美、検査は罰である</summary>
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
@@ -267,15 +276,6 @@
     <published>2026-07-11T19:47:53+09:00</published>
     <updated>2026-08-20T08:28:19+09:00</updated>
     <summary>外部の AI が関連をたどってこのウィキを分析できるようにする機械可読レイヤー — llms.txt、自己完結のグラフ JSON、巡回の契約</summary>
-    <category term="AI · Wiki · 지식 체계"/>
-  </entry>
-  <entry>
-    <title>ウィキエンジンのプラグイン化 — wiki-plugin と同期の規律</title>
-    <link href="https://dewytear.github.io/p/ja/kgs-plugin/"/>
-    <id>https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-plugin</id>
-    <published>2026-07-11T19:47:53+09:00</published>
-    <updated>2026-07-28T04:43:06+09:00</updated>
-    <summary>知識体系を wiki-plugin としてパッケージする — スキル 4 種、ツールのスナップショット、同期ゲート、バージョンの規律、ドッグフーディング</summary>
     <category term="AI · Wiki · 지식 체계"/>
   </entry>
 </feed>

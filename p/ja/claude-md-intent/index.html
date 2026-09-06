@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>intent.md — コードより先に残す意図と、AI ネイティブ SDLC</title>
+<meta name="description" content="Anthropic が2026-08-21に公開した AI ネイティブ SDLC プレイブックと、その出発点である intent.md を整理した。intent.md はコードより先にコミットし、何を望むのか・なぜ・どんな制約の下でかを記すファイルで、推奨の書式は五つの節(Problem・Proposed outcome・Affected users and systems・Constraints・Open questions)である。CLAUDE.md はつねに真である規則、intent.md はこの変更にだけ真である理由という層の違いを表で分け、とりわけ intent.md はセッション開始時に自動で読み込まれる対象(CLAUDE.md・CLAUDE.local.md・.claude/rules/・自動メモリの索引)に含まれないことを公式のメモリ文書で確認し、つなぐ四つの方法(CLAUDE.md の一行の指示・@ インポート・スキル・フック)をコストと確実さで比べた — 指針は確率を上げ、フックは決める。六段階(計画・設計・ビルド・テスト・デプロイ・運用)がそれぞれ intent.md→spec.md→plan.md→コードとテスト→REVIEW.md とレビュー記録→障害記録をコミットして輪をなし、そのコミットが監査証跡になる。スキルは違反をまれにし、フックはほぼ不可能にし、評価(実際の作業20〜50件)は設定そのものを回帰検査する。intent/ フォルダは変更一つにフォルダ一つ・成果物一つにプルリクエスト一つで置き、マージが承認になる。批判も併せて収めた — 測定の層がなく、要求工学が薄く、決定論的な統制は計画モード・PreToolUse フック・評価の三箇所だけで、残りの継ぎ目では誤った翻訳が非の打ちどころのない成果物の姿で流れていく">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/claude-md-intent/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/claude-md-intent/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/claude-md-intent/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/claude-md-intent/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/claude-md-intent/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="intent.md — コードより先に残す意図と、AI ネイティブ SDLC">
+<meta property="og:description" content="Anthropic が2026-08-21に公開した AI ネイティブ SDLC プレイブックと、その出発点である intent.md を整理した。intent.md はコードより先にコミットし、何を望むのか・なぜ・どんな制約の下でかを記すファイルで、推奨の書式は五つの節(Problem・Proposed outcome・Affected users and systems・Constraints・Open questions)である。CLAUDE.md はつねに真である規則、intent.md はこの変更にだけ真である理由という層の違いを表で分け、とりわけ intent.md はセッション開始時に自動で読み込まれる対象(CLAUDE.md・CLAUDE.local.md・.claude/rules/・自動メモリの索引)に含まれないことを公式のメモリ文書で確認し、つなぐ四つの方法(CLAUDE.md の一行の指示・@ インポート・スキル・フック)をコストと確実さで比べた — 指針は確率を上げ、フックは決める。六段階(計画・設計・ビルド・テスト・デプロイ・運用)がそれぞれ intent.md→spec.md→plan.md→コードとテスト→REVIEW.md とレビュー記録→障害記録をコミットして輪をなし、そのコミットが監査証跡になる。スキルは違反をまれにし、フックはほぼ不可能にし、評価(実際の作業20〜50件)は設定そのものを回帰検査する。intent/ フォルダは変更一つにフォルダ一つ・成果物一つにプルリクエスト一つで置き、マージが承認になる。批判も併せて収めた — 測定の層がなく、要求工学が薄く、決定論的な統制は計画モード・PreToolUse フック・評価の三箇所だけで、残りの継ぎ目では誤った翻訳が非の打ちどころのない成果物の姿で流れていく">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/claude-md-intent/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="intent.md — コードより先に残す意図と、AI ネイティブ SDLC">
+<meta name="twitter:description" content="Anthropic が2026-08-21に公開した AI ネイティブ SDLC プレイブックと、その出発点である intent.md を整理した。intent.md はコードより先にコミットし、何を望むのか・なぜ・どんな制約の下でかを記すファイルで、推奨の書式は五つの節(Problem・Proposed outcome・Affected users and systems・Constraints・Open questions)である。CLAUDE.md はつねに真である規則、intent.md はこの変更にだけ真である理由という層の違いを表で分け、とりわけ intent.md はセッション開始時に自動で読み込まれる対象(CLAUDE.md・CLAUDE.local.md・.claude/rules/・自動メモリの索引)に含まれないことを公式のメモリ文書で確認し、つなぐ四つの方法(CLAUDE.md の一行の指示・@ インポート・スキル・フック)をコストと確実さで比べた — 指針は確率を上げ、フックは決める。六段階(計画・設計・ビルド・テスト・デプロイ・運用)がそれぞれ intent.md→spec.md→plan.md→コードとテスト→REVIEW.md とレビュー記録→障害記録をコミットして輪をなし、そのコミットが監査証跡になる。スキルは違反をまれにし、フックはほぼ不可能にし、評価(実際の作業20〜50件)は設定そのものを回帰検査する。intent/ フォルダは変更一つにフォルダ一つ・成果物一つにプルリクエスト一つで置き、マージが承認になる。批判も併せて収めた — 測定の層がなく、要求工学が薄く、決定論的な統制は計画モード・PreToolUse フック・評価の三箇所だけで、残りの継ぎ目では誤った翻訳が非の打ちどころのない成果物の姿で流れていく">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "intent.md — コードより先に残す意図と、AI ネイティブ SDLC",
+ "description": "Anthropic が2026-08-21に公開した AI ネイティブ SDLC プレイブックと、その出発点である intent.md を整理した。intent.md はコードより先にコミットし、何を望むのか・なぜ・どんな制約の下でかを記すファイルで、推奨の書式は五つの節(Problem・Proposed outcome・Affected users and systems・Constraints・Open questions)である。CLAUDE.md はつねに真である規則、intent.md はこの変更にだけ真である理由という層の違いを表で分け、とりわけ intent.md はセッション開始時に自動で読み込まれる対象(CLAUDE.md・CLAUDE.local.md・.claude/rules/・自動メモリの索引)に含まれないことを公式のメモリ文書で確認し、つなぐ四つの方法(CLAUDE.md の一行の指示・@ インポート・スキル・フック)をコストと確実さで比べた — 指針は確率を上げ、フックは決める。六段階(計画・設計・ビルド・テスト・デプロイ・運用)がそれぞれ intent.md→spec.md→plan.md→コードとテスト→REVIEW.md とレビュー記録→障害記録をコミットして輪をなし、そのコミットが監査証跡になる。スキルは違反をまれにし、フックはほぼ不可能にし、評価(実際の作業20〜50件)は設定そのものを回帰検査する。intent/ フォルダは変更一つにフォルダ一つ・成果物一つにプルリクエスト一つで置き、マージが承認になる。批判も併せて収めた — 測定の層がなく、要求工学が薄く、決定論的な統制は計画モード・PreToolUse フック・評価の三箇所だけで、残りの継ぎ目では誤った翻訳が非の打ちどころのない成果物の姿で流れていく",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/claude-md-intent/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!claude-md-intent",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-09-06T10:07:42+09:00",
+ "dateModified": "2026-09-06T10:07:42+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!claude-md-intent">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/claude-md-intent/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/claude-md-intent/" hreflang="en">English</a>
+</p>
+<article>
+<h2>intent.md — コードより先に残す意図と、AI ネイティブ SDLC</h2>
+
+<p>コードレビューをしていると、こういう瞬間が来ます。何を変えたのかは diff にすべて書いてあるのに、<strong>なぜ変えたのかはどこにもない。</strong> だからレビューがコードを検査する作業ではなく、<strong>意図を推し量る作業</strong>になってしまう。エージェントが一日にプルリクエストを十件も上げはじめると、この推測のコストがそのまま十倍になります。Anthropic が2026年8月21日に公開した <strong>AI ネイティブ SDLC プレイブック</strong>は、まさにその地点を狙っています。そして出発点に置かれたファイルが <code>intent.md</code> です。</p>
+
+<h3>三行まとめ</h3>
+<ul>
+    <li><code>intent.md</code> は、<strong>何を望むのか・なぜ望むのか・どんな制約の下でか</strong>をコードより先に書いてリポジトリにコミットするマークダウンファイルです。五つの節が推奨の書式です。</li>
+    <li>これは規則ファイルではありません — <strong>CLAUDE.md が「どう働くか」なら、intent.md は「今回はなぜこれをやるのか」</strong>です。そして <strong>Claude Code が自動では読んでくれない</strong>ので、両者をつなぐ配線は自分でやる必要があります。</li>
+    <li>ファイル一つに見えますが、背後には六段階の絵があります — <strong>intent.md → spec.md → plan.md → diff → レビュー記録 → 障害記録 → ふたたび意図</strong>と回る輪であり、各段階の成果物がそのまま監査証跡になります。</li>
+</ul>
+
+<h3>intent.md には何を書くのか</h3>
+<p>プレイブックが示す書式は五つの節です。文書というより、<strong>答えを埋めないと先へ進めない質問票</strong>に近いものです。</p>
+<pre><code>Intent: [機能または問題の名前]
+Author: [名前]
+Status: draft
+
+## Problem
+- いま誰がどんな問題を抱えているか。そう判断した根拠は?
+
+## Proposed outcome
+- 解決したら何が変わるか?
+
+## Affected users and systems
+- ユーザー: / システム:
+
+## Constraints
+- 必ず守ること: / 範囲の外:
+
+## Open questions
+- まだ決めていないこと:
+</code></pre>
+<p>プレイブックに載る実例を見ると、抽象的な文書でないことがはっきりします。問題の節には「顧客が請求の進み具合を訊くためにコールセンターへ電話する — 対応者の通話時間のおよそ三分の一が状況確認だけに費やされる」が入り、成果の節には「顧客がポータルで請求の状況・次の手順・見込み日を見られる」が、影響の節には「請求担当者、ポータルチーム、請求コア API」が入ります。根拠のついた問題と、確かめられる成果と、<strong>これから触ることになるシステムの名前</strong>が一枚に集まります。</p>
+<p>最後の節である<strong>まだ決めていないこと</strong>が、実務でとりわけ効きます。この種の項目はたいてい文書から消され、誰かの頭の中にだけ残り、実装の途中で「あれはどうすることにしましたっけ」と再び顔を出します。書いておけば、<strong>わからないという事実そのものが成果物</strong>になります。</p>
+
+<h3>CLAUDE.md とは何が違うのか</h3>
+<p>名前が似ていて紛らわしいのですが、二つのファイルは層が違います。一方は<strong>つねに真である規則</strong>で、もう一方は<strong>この変更にだけ真である理由</strong>です。</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th></th><th>CLAUDE.md</th><th>intent.md</th></tr></thead>
+    <tbody>
+        <tr><td><strong>収めるもの</strong></td><td>ビルドコマンド、規約、触ってはいけない場所 — つねに当てはまる指針</td><td>この変更一つの問題・成果・制約</td></tr>
+        <tr><td><strong>寿命</strong></td><td>プロジェクトが生きているあいだ</td><td>機能一つが終わるまで</td></tr>
+        <tr><td><strong>書く人</strong></td><td>主に開発者</td><td>意図を持つ人なら誰でも — 企画・サポート・運用</td></tr>
+        <tr><td><strong>承認</strong></td><td>とくになし(レビューで代える)</td><td>プロダクトオーナーが承認</td></tr>
+        <tr><td><strong>読まれ方</strong></td><td><strong>セッションごとに自動で</strong>コンテキストに入る</td><td><strong>自動では入らない</strong> — 配線が要る</td></tr>
+    </tbody>
+</table>
+</div>
+<p>最後の行が、この文書でいちばん実用的な箇所です。Claude Code が起動時に自分で読み込むのは <code>CLAUDE.md</code>・<code>CLAUDE.local.md</code>・<code>.claude/rules/</code> と自動メモリの索引であり、<strong><code>intent.md</code> はその一覧に入っていません。</strong> フォルダにきれいに積んでおけばエージェントが勝手に参照してくれる、という期待は外れます。つなぐ方法は四つあり、コストと確実さがそれぞれ違います。</p>
+<ul>
+    <li><strong>CLAUDE.md に一行の指示</strong> — 「変更を計画する前に <code>intent/&lt;スラッグ&gt;/intent.md</code> を読め」。コンテキストの費用がほぼなく最初に試す価値がありますが、指針は強制ではなく<strong>確率</strong>です。</li>
+    <li><strong><code>@</code> インポート</strong> — CLAUDE.md に <code>@intent/現在の作業/intent.md</code> のように書けば中身は確実に入ります。ただしインポートは<strong>セッション開始時にすべて読み込まれる</strong>ので、意図が溜まるほど誰も触っていない分までコンテキストを食います。いま作業中の一つにだけ使う手です。</li>
+    <li><strong>スキル</strong> — 「意図を読んで仕様を書く」をスキルに包めば<strong>必要なときだけ読み込まれます</strong>。組織の intent.md の書式そのものをスキルにしておくのも、プレイブックが直接すすめる方法です。</li>
+    <li><strong>フック</strong> — 必ず守らせたいなら指針ではなくフックです。承認済みの意図ファイルがないときに編集を止めるようにすれば、<strong>モデルの判断とは無関係に</strong>掛かります。</li>
+</ul>
+<p>まとめると、<strong>指針は確率を上げ、フックは決めます。</strong> どちらが要るかは、その規則を破ったときの被害の大きさが決めてくれます。</p>
+
+<h3>なぜいまこのファイルなのか</h3>
+<p>プレイブックの前提は一文です — <strong>コードはもはやボトルネックではない。</strong> 従来の開発ライフサイクルは、実装がいちばん長くいちばん高くついた時代に、その区間を節約するために設計されたものです。要求文書もスプリント計画も段階ごとの承認も、<strong>これから何週間もかかる仕事の向きを先に合わせる</strong>ための装置でした。</p>
+<p>エージェントが実装の区間を数時間に縮めた途端、その前提が崩れました。ところが前後の区間 — 要求の確定、レビュー、リリース — はいまも人の速度で回ります。開発者三人が一日にプルリクエストを何十件も上げ、レビューするのも同じ三人なら、起きることは二つに一つです。<strong>待ち行列が積み上がるか、ざっと見てマージされるか。</strong> 縮めて浮いた時間が後ろで淀むわけです。</p>
+<p>ここから出る結論は「もっと熱心にレビューしよう」ではありません。人が一行ずつ打っていた時代には行単位のレビューが正しかったのであって、diff の大半をエージェントが書くいまは、<strong>人の注意を diff からその上の層へ移す</strong>べきだという方向です。何をなぜ作るのかが正確なら、間違ったコードが5,000行生まれることはありません。</p>
+
+<h3>六段階と成果物の鎖</h3>
+<p>プレイブックはライフサイクルを六段階に置きますが、一方向に流れる線ではなく<strong>輪</strong>として見ます。段階ごとに次の段階が読める成果物を一つコミットし、そのコミットが集まればそのまま監査証跡になります。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 196" role="img" aria-label="六つの段階がそれぞれ成果物をコミットして輪をなす: 計画が intent.md を、設計が spec.md を、ビルドが plan.md を、テストがコードとテストを、デプロイが REVIEW.md を、運用が障害記録を残し、ふたたび計画に戻る">
+    <rect class="d-box accent" x="10" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="60" y="80" text-anchor="middle">計画</text><text class="d-sub" x="60" y="100" text-anchor="middle">intent.md</text>
+    <line class="d-edge" x1="110" y1="85" x2="120" y2="85"/><polygon class="d-arrow" points="120,80 128,85 120,90"/>
+    <rect class="d-box" x="128" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="178" y="80" text-anchor="middle">設計</text><text class="d-sub" x="178" y="100" text-anchor="middle">spec.md</text>
+    <line class="d-edge" x1="228" y1="85" x2="238" y2="85"/><polygon class="d-arrow" points="238,80 246,85 238,90"/>
+    <rect class="d-box" x="246" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="296" y="80" text-anchor="middle">ビルド</text><text class="d-sub" x="296" y="100" text-anchor="middle">plan.md</text>
+    <line class="d-edge" x1="346" y1="85" x2="356" y2="85"/><polygon class="d-arrow" points="356,80 364,85 356,90"/>
+    <rect class="d-box" x="364" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="414" y="80" text-anchor="middle">テスト</text><text class="d-sub" x="414" y="100" text-anchor="middle">コード・テスト</text>
+    <line class="d-edge" x1="464" y1="85" x2="474" y2="85"/><polygon class="d-arrow" points="474,80 482,85 474,90"/>
+    <rect class="d-box" x="482" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="532" y="80" text-anchor="middle">デプロイ</text><text class="d-sub" x="532" y="100" text-anchor="middle">REVIEW.md</text>
+    <line class="d-edge" x1="582" y1="85" x2="592" y2="85"/><polygon class="d-arrow" points="592,80 600,85 592,90"/>
+    <rect class="d-box" x="600" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="650" y="80" text-anchor="middle">運用</text><text class="d-sub" x="650" y="100" text-anchor="middle">障害記録</text>
+    <path class="d-edge accent" d="M650 114 L650 146 Q650 152 644 152 L66 152 Q60 152 60 146 L60 124"/>
+    <polygon class="d-arrow accent" points="56,126 60,116 64,126"/>
+    <text class="d-sub" x="360" y="176" text-anchor="middle">運用から出たものがまた意図になります — 線ではなく輪です</text>
+    <text class="d-sub" x="360" y="34" text-anchor="middle">段階ごとに成果物を一つコミット · 承認が次の段階を起動する</text>
+</svg>
+<div class="d-cap">六つの段階がそれぞれ<strong>読める成果物を一つ</strong>残し、そのコミットが集まって監査証跡になります。</div>
+</div>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>段階</th><th>残るもの</th><th>草案</th><th>承認</th></tr></thead>
+    <tbody>
+        <tr><td><strong>計画</strong></td><td><code>intent.md</code> — なぜ作るのか</td><td>エージェント</td><td>プロダクトオーナー</td></tr>
+        <tr><td><strong>設計</strong></td><td><code>spec.md</code> — 何をどんな要求・設計で</td><td>エージェント</td><td>プロダクトオーナー</td></tr>
+        <tr><td><strong>ビルド</strong></td><td><code>plan.md</code> — どこをどの順で、何で検証するか</td><td>エージェント</td><td>開発者</td></tr>
+        <tr><td><strong>テスト</strong></td><td>コードとテスト、そして通過の証拠</td><td>エージェント</td><td>ゲート(自動)</td></tr>
+        <tr><td><strong>デプロイ</strong></td><td><code>REVIEW.md</code> に書いたレビュー方針と、その記録</td><td>エージェント</td><td>人(危ない箇所だけ)</td></tr>
+        <tr><td><strong>運用</strong></td><td>障害記録 — そこから出てくる新しい意図</td><td>エージェント</td><td>人</td></tr>
+    </tbody>
+</table>
+</div>
+<p>段階の継ぎ目を守る装置は三つに整理されます。<strong>スキル</strong>は規則違反をまれにし、<strong>フック</strong>はほぼ不可能にし、<strong>評価(eval)</strong>は設定そのものが古びていないかを回帰検査します。三つめが耳慣れないところで、プレイブックが力を入れる箇所です — コードだけをテストするのではなく、<strong>規則・スキル・フックが変わったときにエージェントが同じ水準で働けているか</strong>を検査せよ、というものです。実際に最近終えた作業を20〜50件そろえて評価の束とし、設定を触るたびに通過率を測るやり方が示されています。</p>
+<p>テスト段階でよく踏む落とし穴も挙げておく価値があります。失敗するテストを先に書かせておくと、エージェントがときどき<strong>テストのほうを直して</strong>通してしまいます。これは指針では防ぎにくく、実装中はテストファイルの編集を拒むフックが確実です。先に述べた「指針は確率、フックは決定」の具体例です。</p>
+
+<h3>フォルダはこう置きます</h3>
+<p>プレイブックが定めているのは<strong>リポジトリ内の <code>intent/</code> フォルダ</strong>までです。コードの隣に置くことに意味があり、成果物の鎖とそこから生まれたコードが一つのリポジトリで一緒に動きます。その内側をどう分けるかはチームに委ねられていて、変更一つにフォルダ一つという構成が無難です。</p>
+<pre><code>intent/
+  README.md              # フォルダの規則、何がどこにあるか
+  ship-tracking/         # 変更一つ = フォルダ一つ
+    intent.md            # なぜ作るのか (プロダクトオーナー承認)
+    spec.md              # 何をどんな要求・設計で (プロダクトオーナー承認)
+    plan.md              # どこをどの順で (開発者)
+</code></pre>
+<p>規則は二行で足ります。<strong>フォルダごとに intent・spec・plan を一つずつ</strong>置き、<strong>プルリクエスト一つに成果物一つ</strong>を入れて、マージがそのまま承認になるようにします。仕様が二つ必要になったら仕様を割るのではなく、<strong>そもそも意図が二つだった</strong>と見てフォルダを分けるほうがよいでしょう。機能が大きすぎて割れないなら、それはたいてい機能がまだ大きすぎるという合図です。</p>
+<p>承認をわざわざプルリクエストで受けるのは、新しい道具を持ち込まないためです。意図だけを載せたプルリクエストを上げれば、レビュー画面も承認記録も取り消しの道も、すでにある仕組みで片づきます。チャットでエージェントを呼んで草案を作らせ、その草案がプルリクエストとして上がり、責任者がマージすれば次の段階が起動する、という流れを<strong>一つのリポジトリの中で</strong>終えられます。</p>
+
+<h3>軽く始める</h3>
+<p>あらゆる変更に意図の文書を求めれば、すぐに形式だけが残ります。誤字の修正や明らかなバグのように<strong>何をすべきかがすでに明確な仕事</strong>は、そのまま直すほうがよいです。一人で使うリポジトリなら、機能の単位に育ったときだけ書けば十分です。</p>
+<p>導入はこの順序が無難です。まず書式を一枚決めてチームに配る。次に、コードベースを知らない人でもエージェントと話しながら草案を作れるように開いておく — 意図を持つ人がそのまま作成者なので、開発者にだけ開くとこのファイルの意味が消えます。三つめに、草案はプルリクエストとして上げ、プロダクトオーナーがマージで承認する。四つめに、ここまで回りはじめたら、チケットの登録や指標の逸脱といった<strong>出来事が草案を自動で作る</strong>ところまで広げます。</p>
+<p>すでに別の道具に要求が溜まっているなら、一度に移す必要はありません。成果物ごとに<strong>原本がどこにあるかのリンクを一行</strong>差しておくだけでも鎖は始まります。</p>
+
+<h3>批判的に読む — まだ空いている枠</h3>
+<p>このプレイブックは標準ではありません。Anthropic の企業導入支援チームが顧客と実際にやってきたやり方をまとめたガイドであり、公開直後から空白を指摘する反応がつきました。そのまま倣う前に知っておくほうがよいでしょう。</p>
+<ul>
+    <li><strong>測定の層がありません。</strong> どの信号がどこにあるかは教えてくれますが、その信号を<strong>段階をまたいで集め、基準線を引き、時間に沿って追う方法</strong>が空いています。指標の名前を挙げることと、ダッシュボードを持つことは別の仕事です。</li>
+    <li><strong>要求工学が薄いです。</strong> 意図から仕様へ渡る区間が事実上「intent.md を読んで spec.md を書け」の一行です。コードが安くなるほど<strong>残る梃子は要求の品質</strong>なのに、悪い仕様を渡されたエージェントは5,000行の正確に間違ったコードを作り上げます。</li>
+    <li><strong>決定論的な統制はフックだけです。</strong> 鎖の継ぎ目のうち実際に何かを止めてくれるのは三箇所だけ — 計画モードが承認まで編集を押さえる箇所、<code>PreToolUse</code> フックがツール呼び出しを拒む箇所、評価の束が通過率を下回るとパイプラインを落とす箇所。残りの継ぎ目では、<strong>誤った翻訳が非の打ちどころのない成果物の姿をして</strong>下流へ流れていきます。</li>
+</ul>
+<p>三つめがこの構造の本当の危うさです。鎖は各枠が埋まったことは保証しますが、<strong>枠と枠のあいだが正しく訳されたことは保証しません。</strong> 承認の判が六つ押してあっても、二つめと三つめのあいだで意味がずれていたなら、残るのはよく整理された監査証跡と、間違った製品です。</p>
+
+<h3>このウィキではどうしているか</h3>
+<p>このウィキは成果物の鎖ではなく<strong>ゲートのほう</strong>に寄っています。文書を一つ登録すると索引・地図のフォールバック・翻訳の同伴物・作成日・プラグインの同梱物がすべて揃っている必要があり、その検査を人の記憶ではなく<a href="/p/ja/kgs-gates/">八段階のゲート</a>が代わりに行います。規則は <code>CLAUDE.md</code> に書いてありますが、破ったときに実際に止めるのは CI です — 上で述べた「指針は確率、ゲートは決定」をそのまま選んだかたちです。</p>
+<p>逆に<strong>意図のほうは事後に残します。</strong> 作業が終わると作業ログに何をなぜそう決めたのかを書き、それが次の作業の根拠になります。プレイブックの言い方をすれば、鎖の前ではなく後ろに意図を置く方式であり、一人あるいは少人数が一つの主題を最初から最後まで引き受けるあいだはこちらのほうが煩わしくありません。ただし<strong>承認を要する人が複数</strong>になった瞬間、順序を逆にする価値が生まれます — 後から書かれた意図は、反対する機会をすでに逃したあとだからです。</p>
+
+<h3>事実確認ノート</h3>
+<p class="scn-sub">プレイブックの公開日(2026年8月21日)、六段階の構成、成果物の鎖(<code>intent.md</code> → <code>spec.md</code> → <code>plan.md</code> → diff → レビュー記録 → 障害記録)、<code>intent.md</code> の五つの節と請求ポータルの実例、デプロイ段階の <code>REVIEW.md</code>、20〜50件の評価の束は、いずれも <a href="https://claude.com/blog/the-ai-native-sdlc-playbook" target="_blank" rel="noopener">Anthropic の公式プレイブック</a>とその<a href="https://academy.claude.com/courses/ai-native-sdlc-playbook" target="_blank" rel="noopener">無料コース</a>に従いました。<strong>「Claude Code が <code>intent.md</code> を自動で読む」と書いた二次的なまとめがありますが、セッション開始時に自動で読み込まれるのは <code>CLAUDE.md</code>・<code>CLAUDE.local.md</code>・<code>.claude/rules/</code> と自動メモリの索引であり、任意のファイルはここに含まれません</strong>(<a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">公式のメモリ文書</a>) — この文書では公式の記述に従い、つなぐ方法を四つに整理しました。欠けた測定の層・薄い要求工学・決定論的な統制がフックだけだという指摘は、公開後に出た外部の分析であって Anthropic の記述ではありません。<code>intent/</code> の内側のスラッグ構造と「プルリクエスト一つに成果物一つ」は公式の規定ではなく、実務で使われている推奨案です。</p>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · Code · CLAUDE.md &middot; <span class="pr-k">作成日</span> 2026-09-06 &middot; <span class="pr-k">更新日</span> 2026-09-06</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/tip-intermediate/">中級 — セッションを仕組みに変える11の方法</a></li><li><a href="/p/ja/news-20260901-whose-usage/">私の上限を使っているのは誰か — Claude の使用量をめぐる三つの場面</a></li><li><a href="/p/ja/hnp-intro/">Harness プラグイン — 紹介・概念・インストール</a></li><li><a href="/p/ja/hns-overview/">ハーネスとは — 概要・定義・構成</a></li></ul>
+</nav>
+</body>
+</html>

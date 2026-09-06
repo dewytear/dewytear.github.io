@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 
-이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 68개 문서 · 338개 개념.
+이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 69개 문서 · 338개 개념.
 
 License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 밝히면 자유롭게 인용·재사용할 수 있다.
 
@@ -12,8 +12,8 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - 정적 스냅샷 `https://dewytear.github.io/p/<name>/`(English는 `https://dewytear.github.io/p/en/<name>/`, 日本語는 `https://dewytear.github.io/p/ja/<name>/`): JS 없이 읽히는 문서 페이지 — 그래프 노드의 `page` 필드가 같은 주소를 가리킨다.
 - [AI 순회 가이드](https://dewytear.github.io/docs/ko/ai/map/ai-guide): 그래프를 어떻게 질의·순회·분석하는지의 계약(노드·엣지·개념 조인·계층).
 - [지식 인덱스](https://dewytear.github.io/data/knowledge-index.ko.json) · [내비 트리](https://dewytear.github.io/list) · [문서 날짜](https://dewytear.github.io/data/doc-dates.json) · [Atom 피드](https://dewytear.github.io/feed.xml)
-- English: 68/68개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
-- 日本語: 68/68개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
+- English: 69/69개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
+- 日本語: 69/69개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
 
 ## 지식 체계 (AI · Wiki · 지식 체계)
 - [지식은 어떻게 쌓이는가](https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-overview): World→Domain→System→Document 4계층과 문서 등재 파이프라인 — 불변 ID·물리 경로·결정론적 인덱스 빌드 · [EN](https://dewytear.github.io/docs/en/ai/wiki/knowledge-system/kgs-overview) · [JA](https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-overview)
@@ -28,6 +28,7 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 
 ## CLAUDE.md (AI · Claude · Code · CLAUDE.md)
 - [CLAUDE.md의 10계명 — AI 페어 프로그래머 길들이는 열 가지 약속](https://dewytear.github.io/docs/ko/ai/claude/code/claude-md/claude-md-commandments): LLM 코딩 단골 실수 10가지를 겨냥한 범용 CLAUDE.md 지침을 인포그래픽·영어 원문·한국어 번역·활용법으로 정리 — 신중한 시작(생각 먼저·3대 아티팩트), 코드 작성 원칙(단순함·수술적 변경·한국어 헤더·콜론 금지·완료 전 테스트), 검증과 마무리(목표 중심·의미 단위 커밋·에러 정독)의 3단계, 프로젝트 루트 설치와 효과 확인 신호까지 · [EN](https://dewytear.github.io/docs/en/ai/claude/code/claude-md/claude-md-commandments) · [JA](https://dewytear.github.io/docs/ja/ai/claude/code/claude-md/claude-md-commandments)
+- [intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC](https://dewytear.github.io/docs/ko/ai/claude/code/claude-md/claude-md-intent): Anthropic이 2026-08-21 공개한 AI 네이티브 SDLC 플레이북과 그 출발점인 intent.md를 정리했다. intent.md는 무엇을 원하는지·왜·어떤 제약 아래인지를 코드보다 먼저 커밋하는 파일이고 권장 서식은 다섯 절(Problem·Proposed outcome·Affected users and systems·Constraints·Open questions)이다. CLAUDE.md는 늘 참인 규칙이고 intent.md는 이번 변경에만 참인 이유라는 층위 차이를 표로 갈랐으며, 특히 intent.md는 세션 시작 시 자동 로드 대상(CLAUDE.md·CLAUDE.local.md·.claude/rules/·자동 메모리 색인)에 들어 있지 않으므로 배선이 필요하다는 점을 공식 메모리 문서로 확인하고 네 가지 방법(CLAUDE.md 지시 한 줄·@ 임포트·스킬·훅)을 비용과 확실성으로 비교했다 — 지침은 확률을 올리고 훅은 결정한다. 여섯 단계(계획·설계·빌드·테스트·배포·운영)가 각각 intent.md→spec.md→plan.md→코드와 테스트→REVIEW.md와 리뷰 기록→장애 기록을 커밋해 고리를 이루고 그 커밋들이 감사 추적이 되며, 스킬은 위반을 드물게·훅은 거의 불가능하게·평가(20~50건 실제 작업)는 설정 자체를 회귀 검사한다. intent/ 폴더는 변경 하나에 폴더 하나·산출물 하나에 PR 하나로 두고 머지가 승인이 된다. 비판도 함께 담았다 — 측정 계층이 없고, 요구공학이 얇으며, 결정론적 통제는 계획 모드·PreToolUse 훅·평가 세 곳뿐이라 나머지 이음매에서는 잘못된 번역이 흠 없는 산출물의 모습으로 흘러간다 · [EN](https://dewytear.github.io/docs/en/ai/claude/code/claude-md/claude-md-intent) · [JA](https://dewytear.github.io/docs/ja/ai/claude/code/claude-md/claude-md-intent)
 
 ## Introduction (AI · Claude · Code · Introduction)
 - [시작하기](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/welcome): Claude Code 소개부터 설치·인증, 슬래시명령어와 CLAUDE.md까지 — 터미널에서 읽고 고치고 실행하고 커밋한다 · [EN](https://dewytear.github.io/docs/en/ai/claude/code/introduction/welcome) · [JA](https://dewytear.github.io/docs/ja/ai/claude/code/introduction/welcome)
@@ -122,15 +123,15 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [dews-sourcegraph — 사내 코드 검색을 Claude에게 넘기는 스킬](https://dewytear.github.io/docs/ko/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph): 사내 SourceGraph 인스턴스를 Claude Code가 직접 질의하게 만드는 스킬. 비공개 인스턴스는 익명 접근이 401로 막혀 일반 웹 조회 도구로는 아무것도 못 읽는데, 이 스킬은 설치된 Edge·Chrome으로 폼 로그인을 1회 자동 수행하고 세션을 캐시해 재사용한다 — 개발자도구로 쿠키를 복사하는 절차가 없다. 캐시 브라우저를 쓰지 않는 이유(보안 에이전트가 ms-playwright 실행 파일을 차단하는 사내 PC에서 멈춤), 프로젝트 루트에 .claude 병합 + SourceGraph.md 세 줄 + npm install 로 끝나는 설치, Sourcegraph 표준 쿼리 문법, 그리고 로컬 우선 원칙과 [SG repo/파일:라인] 인용 규약을 담았다. 자격증명·세션 캐시 커밋 금지와 로그인 실패 시 재시도 금지(계정 잠금)를 함께 못 박았고, 조직 정보를 제거한 일반화 zip을 받을 수 있다 · [EN](https://dewytear.github.io/docs/en/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph) · [JA](https://dewytear.github.io/docs/ja/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph)
 
 ## 허브 문서 (가장 많이 참조됨 — 분석 진입점)
-- [LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260710-llm-wiki-knowledge-context): 피참조 10회
-- [Harness 플러그인 — 소개·개념·설치](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-intro): 피참조 9회
+- [Harness 플러그인 — 소개·개념·설치](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-intro): 피참조 10회
+- [intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC](https://dewytear.github.io/docs/ko/ai/claude/code/claude-md/claude-md-intent): 피참조 9회
+- [LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260710-llm-wiki-knowledge-context): 피참조 9회
 - [실행하기 — 설치·실행·리뷰](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-install): 피참조 8회
 - [내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260901-whose-usage): 피참조 8회
 - [첫 실행과 동작 구조](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-first-run): 피참조 7회
 - [묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260814-auto-mode-stateless-mcp): 피참조 7회
 - [모델에 문이 달렸다 — 누가 쓰는가와, 어떻게 부르는가](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260904-model-doors): 피참조 7회
 - [레벨 3~5 — 의미·관계·브레인 OS](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-level3): 피참조 7회
-- [확장 기능 — Skills · MCP · Hooks](https://dewytear.github.io/docs/ko/ai/claude/code/introduction/skills): 피참조 7회
 - [하네스란 — 개요·정의·구성](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-overview): 피참조 6회
 - [Fable 5 시대의 병목은 모델이 아니라 인간인가 — 타릭의 지도와 영토 프레임](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260709-thariq-fable5-unknowns): 피참조 6회
 - [Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260724-claude-opus-5): 피참조 6회

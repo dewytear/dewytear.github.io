@@ -1,0 +1,135 @@
+<h2>intent.md — Writing Down the Why Before the Code, and the AI-Native SDLC</h2>
+
+<p>Anyone who reviews code knows the moment. What changed is written out in the diff, but <strong>why it changed is nowhere.</strong> So the review stops being an inspection of the code and becomes <strong>an attempt to guess the intent.</strong> Once agents start opening ten pull requests a day, that guessing cost multiplies by ten. The <strong>AI-Native SDLC playbook</strong> Anthropic published on August 21, 2026 aims squarely at that point, and the file at its starting line is <code>intent.md</code>.</p>
+
+<h3>Three-line summary</h3>
+<ul>
+    <li><code>intent.md</code> is a Markdown file, committed to the repository before any code, recording <strong>what is wanted, why, and under which constraints.</strong> Five sections make up the suggested form.</li>
+    <li>It is not a rules file — <strong>CLAUDE.md says &ldquo;how to work here,&rdquo; intent.md says &ldquo;why this change, this time.&rdquo;</strong> And since <strong>Claude Code does not read it automatically</strong>, you have to wire the two together yourself.</li>
+    <li>It looks like one file, but there is a six-stage picture behind it — a loop running <strong>intent.md → spec.md → plan.md → diff → review findings → incident record → new intent</strong>, where the artifact at each stage is also the audit trail.</li>
+</ul>
+
+<h3>What goes in intent.md</h3>
+<p>The playbook's form has five sections. It reads less like a document than <strong>a questionnaire you cannot get past without answering.</strong></p>
+<pre><code>Intent: [feature or problem name]
+Author: [name]
+Status: draft
+
+## Problem
+- Who has the problem right now, and what is the evidence?
+
+## Proposed outcome
+- What is different once it is solved?
+
+## Affected users and systems
+- Users: / Systems:
+
+## Constraints
+- Must hold: / Out of scope:
+
+## Open questions
+- Not yet decided:
+</code></pre>
+<p>The worked example in the playbook makes it clear this is not an abstract document. The problem section reads "customers phone the contact center to ask where their claim is — handlers spend roughly a third of call time on status-only queries." The outcome section reads "customers see claim status, next step and expected date in the portal." The affected section names claims handlers, the portal team, and the claims-core API. An evidenced problem, a checkable outcome, and <strong>the names of the systems you are about to touch</strong>, all on one page.</p>
+<p>The last section, <strong>open questions</strong>, is what earns its keep in practice. Items like these usually get deleted from the document and live on only in someone's head, then resurface mid-implementation as "wait, what did we decide about that?" Written down, <strong>not knowing becomes an artifact of its own.</strong></p>
+
+<h3>How it differs from CLAUDE.md</h3>
+<p>The names invite confusion, but the two files sit at different layers. One holds <strong>rules that are always true</strong>; the other holds <strong>a reason that is true for this change only.</strong></p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th></th><th>CLAUDE.md</th><th>intent.md</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Holds</strong></td><td>Build commands, conventions, what not to touch — guidance that always applies</td><td>The problem, outcome and constraints of one change</td></tr>
+        <tr><td><strong>Lifespan</strong></td><td>As long as the project</td><td>Until the feature is done</td></tr>
+        <tr><td><strong>Written by</strong></td><td>Mostly developers</td><td>Whoever has the intent — product, support, operations</td></tr>
+        <tr><td><strong>Approval</strong></td><td>None as such (review covers it)</td><td>Signed off by the product owner</td></tr>
+        <tr><td><strong>How it is read</strong></td><td>Loaded into context <strong>automatically, every session</strong></td><td><strong>Not loaded automatically</strong> — needs wiring</td></tr>
+    </tbody>
+</table>
+</div>
+<p>That last row is the most practical thing in this document. What Claude Code pulls in on its own at startup is <code>CLAUDE.md</code>, <code>CLAUDE.local.md</code>, <code>.claude/rules/</code> and the auto-memory index; <strong><code>intent.md</code> is not on that list.</strong> Stacking files neatly in a folder and expecting the agent to consult them will not work. There are four ways to connect them, and they differ in cost and certainty.</p>
+<ul>
+    <li><strong>One line in CLAUDE.md</strong> — "read <code>intent/&lt;slug&gt;/intent.md</code> before planning a change." Almost no context cost and the first thing to try, but guidance is <strong>probability</strong>, not enforcement.</li>
+    <li><strong>An <code>@</code> import</strong> — writing <code>@intent/current-work/intent.md</code> in CLAUDE.md brings the content in for certain. Imports, however, <strong>all load at session start</strong>, so as intents accumulate you pay context for ones nobody is working on. Worth it for the single active file only.</li>
+    <li><strong>A skill</strong> — package "read the intent, write the spec" as a skill and it <strong>loads only when needed</strong>. Encoding your organization's intent.md form as a skill is something the playbook recommends directly.</li>
+    <li><strong>A hook</strong> — if something must hold, it is a hook, not guidance. Blocking edits when no approved intent file exists catches it <strong>regardless of what the model decides.</strong></li>
+</ul>
+<p>Put simply: <strong>guidance raises the odds, hooks decide.</strong> Which one you need is set by how much damage breaking the rule would do.</p>
+
+<h3>Why this file, now</h3>
+<p>The playbook's premise is one sentence — <strong>code is no longer the bottleneck.</strong> The traditional lifecycle was designed when implementation was the longest and most expensive stretch, to spend as little of it as possible. Requirements documents, sprint planning and stage-by-stage approvals were devices for <strong>aiming work that would take weeks</strong> before it started.</p>
+<p>Agents cut the implementation stretch to hours, and the premise collapsed. Yet the stages on either side — settling requirements, reviewing, releasing — still run at human speed. If three developers open dozens of pull requests a day and the same three are the reviewers, one of two things happens: <strong>the queue backs up, or things get merged on a glance.</strong> The time saved pools at the back.</p>
+<p>The conclusion is not "review harder." Line-by-line review made sense when a person typed each line; now that agents write most of the diff, <strong>human attention has to move off the diff and up a layer.</strong> Get what and why right and the 5,000 wrong lines never get written.</p>
+
+<h3>Six stages, one chain of artifacts</h3>
+<p>The playbook keeps six stages but treats them as a <strong>loop</strong> rather than a line running one way. Each stage commits one artifact the next stage can read, and those commits together are the audit trail.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 196" role="img" aria-label="Six stages each commit an artifact and form a loop: plan produces intent.md, design produces spec.md, build produces plan.md, test produces code and tests, deploy produces REVIEW.md, maintain produces an incident record that becomes a new intent">
+    <rect class="d-box accent" x="10" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="60" y="80" text-anchor="middle">Plan</text><text class="d-sub" x="60" y="100" text-anchor="middle">intent.md</text>
+    <line class="d-edge" x1="110" y1="85" x2="120" y2="85"/><polygon class="d-arrow" points="120,80 128,85 120,90"/>
+    <rect class="d-box" x="128" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="178" y="80" text-anchor="middle">Design</text><text class="d-sub" x="178" y="100" text-anchor="middle">spec.md</text>
+    <line class="d-edge" x1="228" y1="85" x2="238" y2="85"/><polygon class="d-arrow" points="238,80 246,85 238,90"/>
+    <rect class="d-box" x="246" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="296" y="80" text-anchor="middle">Build</text><text class="d-sub" x="296" y="100" text-anchor="middle">plan.md</text>
+    <line class="d-edge" x1="346" y1="85" x2="356" y2="85"/><polygon class="d-arrow" points="356,80 364,85 356,90"/>
+    <rect class="d-box" x="364" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="414" y="80" text-anchor="middle">Test</text><text class="d-sub" x="414" y="100" text-anchor="middle">code + tests</text>
+    <line class="d-edge" x1="464" y1="85" x2="474" y2="85"/><polygon class="d-arrow" points="474,80 482,85 474,90"/>
+    <rect class="d-box" x="482" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="532" y="80" text-anchor="middle">Deploy</text><text class="d-sub" x="532" y="100" text-anchor="middle">REVIEW.md</text>
+    <line class="d-edge" x1="582" y1="85" x2="592" y2="85"/><polygon class="d-arrow" points="592,80 600,85 592,90"/>
+    <rect class="d-box" x="600" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="650" y="80" text-anchor="middle">Maintain</text><text class="d-sub" x="650" y="100" text-anchor="middle">incident record</text>
+    <path class="d-edge accent" d="M650 114 L650 146 Q650 152 644 152 L66 152 Q60 152 60 146 L60 124"/>
+    <polygon class="d-arrow accent" points="56,126 60,116 64,126"/>
+    <text class="d-sub" x="360" y="176" text-anchor="middle">What comes out of operations becomes the next intent — a loop, not a line</text>
+    <text class="d-sub" x="360" y="34" text-anchor="middle">One artifact committed per stage · acceptance starts the next</text>
+</svg>
+<div class="d-cap">Each of the six stages leaves <strong>one readable artifact</strong>, and those commits together are the audit trail.</div>
+</div>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Stage</th><th>What is left behind</th><th>Drafted by</th><th>Approved by</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Plan</strong></td><td><code>intent.md</code> — why build it</td><td>Agent</td><td>Product owner</td></tr>
+        <tr><td><strong>Design</strong></td><td><code>spec.md</code> — what, under which requirements and design</td><td>Agent</td><td>Product owner</td></tr>
+        <tr><td><strong>Build</strong></td><td><code>plan.md</code> — where, in what order, verified how</td><td>Agent</td><td>Developer</td></tr>
+        <tr><td><strong>Test</strong></td><td>Code and tests, plus evidence they pass</td><td>Agent</td><td>Gates (automatic)</td></tr>
+        <tr><td><strong>Deploy</strong></td><td>Review policy in <code>REVIEW.md</code>, plus the findings</td><td>Agent</td><td>A person (risky parts only)</td></tr>
+        <tr><td><strong>Maintain</strong></td><td>Incident record — and the new intent that comes out of it</td><td>Agent</td><td>A person</td></tr>
+    </tbody>
+</table>
+</div>
+<p>Three devices guard the joints between stages. <strong>Skills</strong> make violations rare, <strong>hooks</strong> make them close to impossible, and <strong>evals</strong> regression-test the configuration itself. The third one is the unfamiliar part, and the playbook presses it: do not test only the code, but check <strong>whether the agent still works to the same standard after rules, skills or hooks change.</strong> The suggested shape is a suite of 20 to 50 real, recently finished tasks, with the pass rate measured every time the configuration moves.</p>
+<p>One trap in the test stage is worth naming. Tell an agent to write the failing test first and it will occasionally <strong>fix the test</strong> to make things pass. Guidance struggles to prevent this; a hook that refuses edits to test files during implementation does not. It is the concrete version of "guidance raises the odds, hooks decide."</p>
+
+<h3>Where the folder goes</h3>
+<p>What the playbook fixes is the <strong><code>intent/</code> folder inside the repository</strong>, and no further. Keeping it beside the code is the point: the artifact chain and the code it produced move together in one repository. How to divide the inside is yours to choose, and one folder per change works well.</p>
+<pre><code>intent/
+  README.md              # folder rules, what lives where
+  ship-tracking/         # one change = one folder
+    intent.md            # why build it (product owner approves)
+    spec.md              # what, under which requirements (product owner approves)
+    plan.md              # where and in what order (developer)
+</code></pre>
+<p>Two rules are enough. Keep <strong>one intent, one spec and one plan per folder</strong>, and put <strong>one artifact in one pull request</strong> so that merging is the approval. If you find yourself needing two specs, treat it as a sign that <strong>there were two intents all along</strong> and split the folder. When a feature is too big to split, that is usually a statement about the feature.</p>
+<p>Approving through a pull request avoids bringing in another tool. An intent-only PR gets you the review screen, the approval record and the undo path from machinery you already run. Someone calls the agent in chat to draft an intent, the draft arrives as a PR, the owner merges it, and the next stage starts — all <strong>inside one repository.</strong></p>
+
+<h3>Starting light</h3>
+<p>Demand an intent document for every change and you will soon have the form without the substance. For a typo or an obvious bug — anything where <strong>what to do is already clear</strong> — just fix it. On a repository you work alone, writing one only when the work grows to feature size is plenty.</p>
+<p>A workable order: first, settle a one-page form and share it. Second, open drafting to people who do not know the codebase, working with an agent — the author is whoever holds the intent, so restricting it to developers empties the file of its purpose. Third, drafts arrive as pull requests and the product owner approves by merging. Fourth, once that loop turns, widen it so that <strong>events draft the intent automatically</strong> — a ticket filed, a metric out of range.</p>
+<p>If requirements already live in another tool, there is no need to move them at once. <strong>A link back to the original</strong> in each artifact is enough to start the chain.</p>
+
+<h3>Reading it critically — the boxes still empty</h3>
+<p>This playbook is not a standard. It is a guide written from what Anthropic's enterprise adoption team actually does with customers, and responses naming its gaps appeared as soon as it was published. Better to know them before adopting it wholesale.</p>
+<ul>
+    <li><strong>There is no measurement layer.</strong> It tells you where each signal lives, but <strong>how to gather those signals across stages, baseline them and track them over time</strong> is missing. Naming the metrics and having the dashboard are different jobs.</li>
+    <li><strong>Requirements engineering is thin.</strong> The hop from intent to spec is essentially one line: read intent.md, write spec.md. The cheaper code gets, <strong>the more the quality of requirements is the only lever left</strong> — and an agent handed a bad spec will produce 5,000 lines of precisely wrong code.</li>
+    <li><strong>Hooks are the only deterministic control.</strong> Of all the joints in the chain, three actually stop something: plan mode holding edits until approval, a <code>PreToolUse</code> hook refusing the call outright, and an eval suite failing the pipeline below its threshold. At the remaining joints, <strong>a wrong translation flows downstream wearing the shape of a perfectly well-formed artifact.</strong></li>
+</ul>
+<p>That third point is the real risk in this structure. The chain guarantees that each box was filled; it does not guarantee that <strong>the translation between boxes was right.</strong> Six approval stamps and a mistranslation between the second and third leaves you with a tidy audit trail and the wrong product.</p>
+
+<h3>How this wiki does it</h3>
+<p>This wiki leans on <strong>gates</strong> rather than an artifact chain. Registering a document means the index, the map fallbacks, the translation companions, the creation dates and the plugin bundle all have to agree, and <a href="#!kgs-gates">eight stages of gates</a> check that instead of anyone's memory. The rules are written in <code>CLAUDE.md</code>, but what actually stops a violation is CI — the same "guidance raises the odds, gates decide" choice described above.</p>
+<p>Intent, by contrast, <strong>gets written down afterward.</strong> When a piece of work finishes, the work log records what was decided and why, and that becomes the basis for the next piece. In the playbook's terms the intent sits at the back of the chain rather than the front, which is less cumbersome when one person or a few carry a topic end to end. The moment <strong>several people need to approve</strong>, though, reversing the order starts to pay — intent written afterward has already missed its chance to be argued with.</p>
+
+<h3>Fact-check note</h3>
+<p class="scn-sub">The publication date (August 21, 2026), the six stages, the artifact chain (<code>intent.md</code> → <code>spec.md</code> → <code>plan.md</code> → diff → review findings → incident record), the five sections of <code>intent.md</code> and the claims-portal example, <code>REVIEW.md</code> at the deploy stage, and the 20-to-50-task eval suite all follow <a href="https://claude.com/blog/the-ai-native-sdlc-playbook" target="_blank" rel="noopener">Anthropic's official playbook</a> and its <a href="https://academy.claude.com/courses/ai-native-sdlc-playbook" target="_blank" rel="noopener">free course</a>. <strong>Some secondary write-ups state that Claude Code reads <code>intent.md</code> automatically; what loads at session start is <code>CLAUDE.md</code>, <code>CLAUDE.local.md</code>, <code>.claude/rules/</code> and the auto-memory index, and arbitrary files are not included</strong> (<a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">official memory documentation</a>) — this document follows the official documentation and sets out four ways to wire it up. The missing measurement layer, the thin requirements engineering and the point that hooks are the only deterministic control are external analyses published after the playbook, not Anthropic's own statements. The slug structure inside <code>intent/</code> and "one artifact per pull request" are working recommendations rather than official specification.</p>
