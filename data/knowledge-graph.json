@@ -2,9 +2,9 @@
  "schemaVersion": 2,
  "note": "자기완결 지식 그래프 — 노드=문서(name), 엣지=related (via:concept 희소성 가중 개념 중복 / via:folder 같은 폴더 보완), concepts=조인 키, url=원문(HTML 조각) fetch 주소. 계층은 section(\"World · Domain · System · Document\")과 stats.clusters. 순회 가이드: https://dewytear.github.io/docs/ko/ai/map/ai-guide",
  "base": "https://dewytear.github.io/",
- "docCount": 68,
+ "docCount": 69,
  "stats": {
-  "docCount": 68,
+  "docCount": 69,
   "conceptCount": 338,
   "clusters": [
    {
@@ -30,11 +30,11 @@
    {
     "label": "CLAUDE.md",
     "section": "AI · Claude · Code · CLAUDE.md",
-    "count": 1,
+    "count": 2,
     "hub": {
-     "name": "claude-md-commandments",
-     "title": "CLAUDE.md의 10계명 — AI 페어 프로그래머 길들이는 열 가지 약속",
-     "refs": 2
+     "name": "claude-md-intent",
+     "title": "intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC",
+     "refs": 9
     }
    },
    {
@@ -44,7 +44,7 @@
     "hub": {
      "name": "skills",
      "title": "확장 기능 — Skills · MCP · Hooks",
-     "refs": 7
+     "refs": 5
     }
    },
    {
@@ -104,7 +104,7 @@
     "hub": {
      "name": "hnp-intro",
      "title": "Harness 플러그인 — 소개·개념·설치",
-     "refs": 9
+     "refs": 10
     }
    },
    {
@@ -164,7 +164,7 @@
     "hub": {
      "name": "news-20260710-llm-wiki-knowledge-context",
      "title": "LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식",
-     "refs": 10
+     "refs": 9
     }
    },
    {
@@ -190,13 +190,18 @@
   ],
   "hubs": [
    {
-    "name": "news-20260710-llm-wiki-knowledge-context",
-    "title": "LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식",
+    "name": "hnp-intro",
+    "title": "Harness 플러그인 — 소개·개념·설치",
     "refs": 10
    },
    {
-    "name": "hnp-intro",
-    "title": "Harness 플러그인 — 소개·개념·설치",
+    "name": "claude-md-intent",
+    "title": "intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC",
+    "refs": 9
+   },
+   {
+    "name": "news-20260710-llm-wiki-knowledge-context",
+    "title": "LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식",
     "refs": 9
    },
    {
@@ -230,11 +235,6 @@
     "refs": 7
    },
    {
-    "name": "skills",
-    "title": "확장 기능 — Skills · MCP · Hooks",
-    "refs": 7
-   },
-   {
     "name": "hns-overview",
     "title": "하네스란 — 개요·정의·구성",
     "refs": 6
@@ -253,11 +253,11 @@
   "topConcepts": [
    {
     "c": "스킬",
-    "n": 12
+    "n": 13
    },
    {
     "c": "Claude Code",
-    "n": 11
+    "n": 12
    },
    {
     "c": "지식그래프",
@@ -265,11 +265,11 @@
    },
    {
     "c": "CLAUDE.md",
-    "n": 9
+    "n": 10
    },
    {
     "c": "검증",
-    "n": 9
+    "n": 10
    },
    {
     "c": "서브에이전트",
@@ -277,7 +277,11 @@
    },
    {
     "c": "Anthropic",
-    "n": 7
+    "n": 8
+   },
+   {
+    "c": "에이전트",
+    "n": 8
    },
    {
     "c": "권한",
@@ -285,10 +289,6 @@
    },
    {
     "c": "슬래시명령어",
-    "n": 7
-   },
-   {
-    "c": "에이전트",
     "n": 7
    },
    {
@@ -319,8 +319,9 @@
   "bridges": [
    {
     "c": "스킬",
-    "n": 12,
+    "n": 13,
     "clusters": [
+     "CLAUDE.md",
      "Harness 엔지니어링",
      "Harness 플러그인",
      "Introduction",
@@ -335,7 +336,7 @@
    },
    {
     "c": "CLAUDE.md",
-    "n": 9,
+    "n": 10,
     "clusters": [
      "CLAUDE.md",
      "Introduction",
@@ -349,14 +350,27 @@
    },
    {
     "c": "검증",
-    "n": 9,
+    "n": 10,
     "clusters": [
+     "CLAUDE.md",
      "Harness 엔지니어링",
      "Harness 플러그인",
      "News & Articles",
      "Ontology",
      "Tip",
      "지식 체계"
+    ]
+   },
+   {
+    "c": "Claude Code",
+    "n": 12,
+    "clusters": [
+     "CLAUDE.md",
+     "Harness 엔지니어링",
+     "Introduction",
+     "News & Articles",
+     "Tip",
+     "Tutorial(입문)"
     ]
    },
    {
@@ -384,17 +398,6 @@
     ]
    },
    {
-    "c": "Claude Code",
-    "n": 11,
-    "clusters": [
-     "Harness 엔지니어링",
-     "Introduction",
-     "News & Articles",
-     "Tip",
-     "Tutorial(입문)"
-    ]
-   },
-   {
     "c": "지식관리",
     "n": 7,
     "clusters": [
@@ -419,8 +422,8 @@
   ],
   "galaxies": {
    "AI": {
-    "docCount": 63,
-    "conceptCount": 308,
+    "docCount": 64,
+    "conceptCount": 309,
     "clusters": [
      {
       "label": "지식 체계",
@@ -445,11 +448,11 @@
      {
       "label": "CLAUDE.md",
       "section": "AI · Claude · Code · CLAUDE.md",
-      "count": 1,
+      "count": 2,
       "hub": {
-       "name": "claude-md-commandments",
-       "title": "CLAUDE.md의 10계명 — AI 페어 프로그래머 길들이는 열 가지 약속",
-       "refs": 2
+       "name": "claude-md-intent",
+       "title": "intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC",
+       "refs": 8
       }
      },
      {
@@ -459,7 +462,7 @@
       "hub": {
        "name": "skills",
        "title": "확장 기능 — Skills · MCP · Hooks",
-       "refs": 6
+       "refs": 4
       }
      },
      {
@@ -519,7 +522,7 @@
       "hub": {
        "name": "hnp-intro",
        "title": "Harness 플러그인 — 소개·개념·설치",
-       "refs": 9
+       "refs": 10
       }
      },
      {
@@ -577,9 +580,9 @@
       "section": "AI · News & Articles · 2026",
       "count": 15,
       "hub": {
-       "name": "news-20260710-llm-wiki-knowledge-context",
-       "title": "LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식",
-       "refs": 9
+       "name": "news-20260901-whose-usage",
+       "title": "내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면",
+       "refs": 8
       }
      }
     ],
@@ -587,16 +590,21 @@
      {
       "name": "hnp-intro",
       "title": "Harness 플러그인 — 소개·개념·설치",
-      "refs": 9
+      "refs": 10
      },
      {
-      "name": "news-20260710-llm-wiki-knowledge-context",
-      "title": "LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식",
-      "refs": 9
+      "name": "claude-md-intent",
+      "title": "intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC",
+      "refs": 8
      },
      {
       "name": "hns-install",
       "title": "실행하기 — 설치·실행·리뷰",
+      "refs": 8
+     },
+     {
+      "name": "news-20260710-llm-wiki-knowledge-context",
+      "title": "LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식",
       "refs": 8
      },
      {
@@ -638,21 +646,16 @@
       "name": "news-20260904-model-doors",
       "title": "모델에 문이 달렸다 — 누가 쓰는가와, 어떻게 부르는가",
       "refs": 6
-     },
-     {
-      "name": "skills",
-      "title": "확장 기능 — Skills · MCP · Hooks",
-      "refs": 6
      }
     ],
     "topConcepts": [
      {
       "c": "스킬",
-      "n": 12
+      "n": 13
      },
      {
       "c": "Claude Code",
-      "n": 11
+      "n": 12
      },
      {
       "c": "지식그래프",
@@ -660,11 +663,11 @@
      },
      {
       "c": "CLAUDE.md",
-      "n": 9
+      "n": 10
      },
      {
       "c": "검증",
-      "n": 9
+      "n": 10
      },
      {
       "c": "서브에이전트",
@@ -672,7 +675,11 @@
      },
      {
       "c": "Anthropic",
-      "n": 7
+      "n": 8
+     },
+     {
+      "c": "에이전트",
+      "n": 8
      },
      {
       "c": "권한",
@@ -680,10 +687,6 @@
      },
      {
       "c": "슬래시명령어",
-      "n": 7
-     },
-     {
-      "c": "에이전트",
       "n": 7
      },
      {
@@ -714,8 +717,9 @@
     "bridges": [
      {
       "c": "스킬",
-      "n": 12,
+      "n": 13,
       "clusters": [
+       "CLAUDE.md",
        "Harness 엔지니어링",
        "Harness 플러그인",
        "Introduction",
@@ -730,7 +734,7 @@
      },
      {
       "c": "CLAUDE.md",
-      "n": 9,
+      "n": 10,
       "clusters": [
        "CLAUDE.md",
        "Introduction",
@@ -744,14 +748,27 @@
      },
      {
       "c": "검증",
-      "n": 9,
+      "n": 10,
       "clusters": [
+       "CLAUDE.md",
        "Harness 엔지니어링",
        "Harness 플러그인",
        "News & Articles",
        "Ontology",
        "Tip",
        "지식 체계"
+      ]
+     },
+     {
+      "c": "Claude Code",
+      "n": 12,
+      "clusters": [
+       "CLAUDE.md",
+       "Harness 엔지니어링",
+       "Introduction",
+       "News & Articles",
+       "Tip",
+       "Tutorial(입문)"
       ]
      },
      {
@@ -776,17 +793,6 @@
        "LLM Wiki",
        "OMC 플러그인",
        "Tip"
-      ]
-     },
-     {
-      "c": "Claude Code",
-      "n": 11,
-      "clusters": [
-       "Harness 엔지니어링",
-       "Introduction",
-       "News & Articles",
-       "Tip",
-       "Tutorial(입문)"
       ]
      },
      {
@@ -1240,6 +1246,7 @@
    "relations": [],
    "citedBy": [
     "kgs-plugin",
+    "claude-md-intent",
     "dzp-core"
    ]
   },
@@ -1379,10 +1386,10 @@
      "via": "concept"
     },
     {
-     "name": "news-20260901-whose-usage",
-     "title": "내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면",
+     "name": "tip-advanced",
+     "title": "고급 — 병렬·자율·예약의 8가지",
      "shared": [
-      "훅",
+      "MCP",
       "권한"
      ],
      "via": "concept"
@@ -1452,8 +1459,8 @@
      "via": "concept"
     },
     {
-     "name": "news-20260814-auto-mode-stateless-mcp",
-     "title": "묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다",
+     "name": "claude-md-intent",
+     "title": "intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC",
      "shared": [
       "CLAUDE.md",
       "Claude Code"
@@ -1461,8 +1468,8 @@
      "via": "concept"
     },
     {
-     "name": "tip-beginner",
-     "title": "초급 — 컨텍스트를 아끼는 습관 9가지",
+     "name": "news-20260814-auto-mode-stateless-mcp",
+     "title": "묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다",
      "shared": [
       "CLAUDE.md",
       "Claude Code"
@@ -2236,8 +2243,8 @@
      "title": "첫 실행과 동작 구조",
      "shared": [
       "병렬실행",
-      "의도전달",
-      "에이전트팀"
+      "에이전트팀",
+      "오케스트레이터"
      ],
      "via": "concept"
     },
@@ -2245,9 +2252,9 @@
      "name": "hnp-intro",
      "title": "Harness 플러그인 — 소개·개념·설치",
      "shared": [
-      "의도전달",
       "에이전트팀",
-      "오케스트레이터"
+      "오케스트레이터",
+      "의도전달"
      ],
      "via": "concept"
     },
@@ -2308,7 +2315,7 @@
      "shared": [
       "하네스플러그인",
       "_workspace",
-      "의도전달"
+      "마켓플레이스"
      ],
      "via": "concept"
     },
@@ -2333,12 +2340,12 @@
      "via": "concept"
     },
     {
-     "name": "hns-overview",
-     "title": "하네스란 — 개요·정의·구성",
+     "name": "omc-intro",
+     "title": "OMC — 소개와 설치",
      "shared": [
-      "병렬실행",
-      "의도전달",
-      "검증"
+      "마켓플레이스",
+      "설치",
+      "슬래시명령어"
      ],
      "via": "concept"
     }
@@ -2516,7 +2523,7 @@
      "shared": [
       "하네스플러그인",
       "_workspace",
-      "의도전달"
+      "마켓플레이스"
      ],
      "via": "concept"
     },
@@ -2526,7 +2533,7 @@
      "shared": [
       "ERP커스터마이징",
       "_workspace",
-      "의도전달"
+      "에이전트팀"
      ],
      "via": "concept"
     },
@@ -2544,9 +2551,9 @@
      "name": "hns-overview",
      "title": "하네스란 — 개요·정의·구성",
      "shared": [
-      "의도전달",
       "에이전트팀",
-      "오케스트레이터"
+      "오케스트레이터",
+      "의도전달"
      ],
      "via": "concept"
     }
@@ -2592,16 +2599,6 @@
    "page": "https://dewytear.github.io/p/hnp-first-run/",
    "related": [
     {
-     "name": "hnp-intro",
-     "title": "Harness 플러그인 — 소개·개념·설치",
-     "shared": [
-      "ERP커스터마이징",
-      "_workspace",
-      "의도전달"
-     ],
-     "via": "concept"
-    },
-    {
      "name": "hns-kitchen",
      "title": "동작 원리 — 주방 비유·팀·3요소",
      "shared": [
@@ -2612,12 +2609,22 @@
      "via": "concept"
     },
     {
+     "name": "hnp-intro",
+     "title": "Harness 플러그인 — 소개·개념·설치",
+     "shared": [
+      "ERP커스터마이징",
+      "_workspace",
+      "에이전트팀"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "hns-overview",
      "title": "하네스란 — 개요·정의·구성",
      "shared": [
       "병렬실행",
-      "의도전달",
-      "에이전트팀"
+      "에이전트팀",
+      "오케스트레이터"
      ],
      "via": "concept"
     },
@@ -3147,8 +3154,8 @@
      "via": "concept"
     },
     {
-     "name": "skills",
-     "title": "확장 기능 — Skills · MCP · Hooks",
+     "name": "claude-md-intent",
+     "title": "intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC",
      "shared": [
       "훅",
       "스킬"
@@ -3203,16 +3210,12 @@
      "via": "concept"
     },
     {
-     "name": "omc-intro",
-     "title": "OMC — 소개와 설치",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "omc-agents",
-     "title": "에이전트·스킬과 Hook·메모리",
-     "shared": [],
-     "via": "folder"
+     "name": "claude-md-intent",
+     "title": "intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC",
+     "shared": [
+      "워크플로우"
+     ],
+     "via": "concept"
     }
    ],
    "relations": [
@@ -3325,18 +3328,18 @@
      "via": "concept"
     },
     {
-     "name": "skl-overview",
-     "title": "스킬이란 — 배경과 특장점",
+     "name": "claude-md-intent",
+     "title": "intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC",
      "shared": [
-      "조직지식"
+      "문서화"
      ],
      "via": "concept"
     },
     {
-     "name": "news-20260816-claude-code-selfhosted",
-     "title": "내 서버에서 도는 Claude Code — 셀프호스팅 공개 베타와 8월의 릴리스들",
+     "name": "skl-overview",
+     "title": "스킬이란 — 배경과 특장점",
      "shared": [
-      "GitLab"
+      "조직지식"
      ],
      "via": "concept"
     }
@@ -3706,6 +3709,15 @@
       "에이전트"
      ],
      "via": "concept"
+    },
+    {
+     "name": "claude-md-intent",
+     "title": "intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC",
+     "shared": [
+      "에이전트",
+      "Claude Code"
+     ],
+     "via": "concept"
     }
    ],
    "relations": [
@@ -4053,6 +4065,14 @@
       "하네스"
      ],
      "via": "concept"
+    },
+    {
+     "name": "claude-md-intent",
+     "title": "intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC",
+     "shared": [
+      "코드리뷰"
+     ],
+     "via": "concept"
     }
    ],
    "relations": [
@@ -4351,16 +4371,6 @@
    "page": "https://dewytear.github.io/p/news-20260814-auto-mode-stateless-mcp/",
    "related": [
     {
-     "name": "news-20260816-claude-code-selfhosted",
-     "title": "내 서버에서 도는 Claude Code — 셀프호스팅 공개 베타와 8월의 릴리스들",
-     "shared": [
-      "세션",
-      "오토모드",
-      "Anthropic"
-     ],
-     "via": "concept"
-    },
-    {
      "name": "tip-advanced",
      "title": "고급 — 병렬·자율·예약의 8가지",
      "shared": [
@@ -4371,12 +4381,22 @@
      "via": "concept"
     },
     {
+     "name": "news-20260816-claude-code-selfhosted",
+     "title": "내 서버에서 도는 Claude Code — 셀프호스팅 공개 베타와 8월의 릴리스들",
+     "shared": [
+      "세션",
+      "오토모드",
+      "Anthropic"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "news-20260901-whose-usage",
      "title": "내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면",
      "shared": [
       "세션",
-      "Anthropic",
-      "권한"
+      "권한",
+      "Anthropic"
      ],
      "via": "concept"
     },
@@ -4385,8 +4405,8 @@
      "title": "판정을 누구에게 맡길 것인가 — 8월의 네 장면",
      "shared": [
       "오토모드",
-      "Anthropic",
-      "권한"
+      "권한",
+      "Anthropic"
      ],
      "via": "concept"
     }
@@ -4519,8 +4539,8 @@
      "title": "모델에 문이 달렸다 — 누가 쓰는가와, 어떻게 부르는가",
      "shared": [
       "컨텍스트",
-      "Anthropic",
-      "권한"
+      "권한",
+      "Anthropic"
      ],
      "via": "concept"
     },
@@ -4529,8 +4549,8 @@
      "title": "내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면",
      "shared": [
       "자격증명",
-      "Anthropic",
-      "권한"
+      "권한",
+      "Anthropic"
      ],
      "via": "concept"
     },
@@ -4539,17 +4559,17 @@
      "title": "묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다",
      "shared": [
       "오토모드",
-      "Anthropic",
-      "권한"
+      "권한",
+      "Anthropic"
      ],
      "via": "concept"
     },
     {
-     "name": "news-20260710-llm-wiki-knowledge-context",
-     "title": "LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식",
+     "name": "tip-advanced",
+     "title": "고급 — 병렬·자율·예약의 8가지",
      "shared": [
-      "컨텍스트",
-      "에이전트"
+      "오토모드",
+      "권한"
      ],
      "via": "concept"
     }
@@ -4788,6 +4808,15 @@
    "page": "https://dewytear.github.io/p/sks-im-not-ai/",
    "related": [
     {
+     "name": "claude-md-intent",
+     "title": "intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC",
+     "shared": [
+      "CLAUDE.md",
+      "스킬"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "tip-intermediate",
      "title": "중급 — 세션을 시스템으로 만드는 11가지",
      "shared": [
@@ -4844,8 +4873,8 @@
      "via": "concept"
     },
     {
-     "name": "news-20260814-auto-mode-stateless-mcp",
-     "title": "묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다",
+     "name": "claude-md-intent",
+     "title": "intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC",
      "shared": [
       "CLAUDE.md",
       "Claude Code"
@@ -4853,8 +4882,8 @@
      "via": "concept"
     },
     {
-     "name": "tip-intermediate",
-     "title": "중급 — 세션을 시스템으로 만드는 11가지",
+     "name": "news-20260814-auto-mode-stateless-mcp",
+     "title": "묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다",
      "shared": [
       "CLAUDE.md",
       "Claude Code"
@@ -4893,6 +4922,16 @@
    "page": "https://dewytear.github.io/p/tip-intermediate/",
    "related": [
     {
+     "name": "claude-md-intent",
+     "title": "intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC",
+     "shared": [
+      "훅",
+      "CLAUDE.md",
+      "Claude Code"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "news-20260901-whose-usage",
      "title": "내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면",
      "shared": [
@@ -4908,15 +4947,6 @@
      "shared": [
       "훅",
       "서브에이전트",
-      "스킬"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "skills",
-     "title": "확장 기능 — Skills · MCP · Hooks",
-     "shared": [
-      "훅",
       "스킬"
      ],
      "via": "concept"
@@ -5186,8 +5216,8 @@
      "title": "묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다",
      "shared": [
       "세션",
-      "Anthropic",
-      "권한"
+      "권한",
+      "Anthropic"
      ],
      "via": "concept"
     },
@@ -5196,8 +5226,18 @@
      "title": "판정을 누구에게 맡길 것인가 — 8월의 네 장면",
      "shared": [
       "자격증명",
-      "Anthropic",
-      "권한"
+      "권한",
+      "Anthropic"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "news-20260904-model-doors",
+     "title": "모델에 문이 달렸다 — 누가 쓰는가와, 어떻게 부르는가",
+     "shared": [
+      "토큰비용",
+      "권한",
+      "Anthropic"
      ],
      "via": "concept"
     },
@@ -5208,16 +5248,6 @@
       "훅",
       "토큰비용",
       "Claude Code"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "news-20260904-model-doors",
-     "title": "모델에 문이 달렸다 — 누가 쓰는가와, 어떻게 부르는가",
-     "shared": [
-      "토큰비용",
-      "Anthropic",
-      "권한"
      ],
      "via": "concept"
     }
@@ -5271,8 +5301,8 @@
      "title": "판정을 누구에게 맡길 것인가 — 8월의 네 장면",
      "shared": [
       "컨텍스트",
-      "Anthropic",
-      "권한"
+      "권한",
+      "Anthropic"
      ],
      "via": "concept"
     },
@@ -5281,8 +5311,8 @@
      "title": "내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면",
      "shared": [
       "토큰비용",
-      "Anthropic",
-      "권한"
+      "권한",
+      "Anthropic"
      ],
      "via": "concept"
     },
@@ -5328,6 +5358,91 @@
      "target": "news-20260814-auto-mode-stateless-mcp",
      "type": "example-of",
      "evidenceRef": "세션이라는 그릇을 없앤 뒤 상태를 어디에 두는가라는 그 기사의 물음에 대해, 사고 블록마다 어느 모델이 어떤 이력 위에서 만들었는지를 새겨 두는 방식을 구체적인 한 가지 답으로 다룬다",
+     "source": "human"
+    }
+   ],
+   "citedBy": []
+  },
+  {
+   "name": "claude-md-intent",
+   "title": "intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC",
+   "summary": "Anthropic이 2026-08-21 공개한 AI 네이티브 SDLC 플레이북과 그 출발점인 intent.md를 정리했다. intent.md는 무엇을 원하는지·왜·어떤 제약 아래인지를 코드보다 먼저 커밋하는 파일이고 권장 서식은 다섯 절(Problem·Proposed outcome·Affected users and systems·Constraints·Open questions)이다. CLAUDE.md는 늘 참인 규칙이고 intent.md는 이번 변경에만 참인 이유라는 층위 차이를 표로 갈랐으며, 특히 intent.md는 세션 시작 시 자동 로드 대상(CLAUDE.md·CLAUDE.local.md·.claude/rules/·자동 메모리 색인)에 들어 있지 않으므로 배선이 필요하다는 점을 공식 메모리 문서로 확인하고 네 가지 방법(CLAUDE.md 지시 한 줄·@ 임포트·스킬·훅)을 비용과 확실성으로 비교했다 — 지침은 확률을 올리고 훅은 결정한다. 여섯 단계(계획·설계·빌드·테스트·배포·운영)가 각각 intent.md→spec.md→plan.md→코드와 테스트→REVIEW.md와 리뷰 기록→장애 기록을 커밋해 고리를 이루고 그 커밋들이 감사 추적이 되며, 스킬은 위반을 드물게·훅은 거의 불가능하게·평가(20~50건 실제 작업)는 설정 자체를 회귀 검사한다. intent/ 폴더는 변경 하나에 폴더 하나·산출물 하나에 PR 하나로 두고 머지가 승인이 된다. 비판도 함께 담았다 — 측정 계층이 없고, 요구공학이 얇으며, 결정론적 통제는 계획 모드·PreToolUse 훅·평가 세 곳뿐이라 나머지 이음매에서는 잘못된 번역이 흠 없는 산출물의 모습으로 흘러간다",
+   "section": "AI · Claude · Code · CLAUDE.md",
+   "concepts": [
+    "의도전달",
+    "문서화",
+    "코드리뷰",
+    "스킬",
+    "훅",
+    "검증",
+    "워크플로우",
+    "에이전트",
+    "CLAUDE.md",
+    "Claude Code",
+    "Anthropic"
+   ],
+   "url": "https://dewytear.github.io/docs/ko/ai/claude/code/claude-md/claude-md-intent",
+   "route": "https://dewytear.github.io/#!claude-md-intent",
+   "page": "https://dewytear.github.io/p/claude-md-intent/",
+   "related": [
+    {
+     "name": "tip-intermediate",
+     "title": "중급 — 세션을 시스템으로 만드는 11가지",
+     "shared": [
+      "훅",
+      "CLAUDE.md",
+      "Claude Code"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "news-20260901-whose-usage",
+     "title": "내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면",
+     "shared": [
+      "훅",
+      "Anthropic",
+      "Claude Code"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "hnp-intro",
+     "title": "Harness 플러그인 — 소개·개념·설치",
+     "shared": [
+      "의도전달",
+      "에이전트",
+      "스킬"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "hns-overview",
+     "title": "하네스란 — 개요·정의·구성",
+     "shared": [
+      "의도전달",
+      "검증",
+      "Claude Code"
+     ],
+     "via": "concept"
+    }
+   ],
+   "relations": [
+    {
+     "target": "ccb-overview",
+     "type": "prerequisite",
+     "evidenceRef": "'CLAUDE.md와는 무엇이 다른가' 절이 CLAUDE.md의 위치와 적용 범위를 이미 아는 독자를 전제하고 intent.md와의 층위 차이만 다룬다",
+     "source": "human"
+    },
+    {
+     "target": "skills",
+     "type": "prerequisite",
+     "evidenceRef": "intent.md를 에이전트에 잇는 네 가지 방법 가운데 스킬과 훅이 두 자리를 차지하는데, 그 둘의 동작 자체는 그 문서에 위임한다",
+     "source": "human"
+    },
+    {
+     "target": "kgs-gates",
+     "type": "evidence-for",
+     "evidenceRef": "'이 위키는 어떻게 하고 있나' 절이 지침은 확률·게이트는 결정이라는 이 문서의 논지를, 규칙을 CLAUDE.md에 적고 실제 차단은 여덟 단계 게이트에 맡긴 이 위키의 운영으로 뒷받침한다",
      "source": "human"
     }
    ],

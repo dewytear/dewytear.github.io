@@ -5,15 +5,24 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.en.xml"/>
   <id>https://dewytear.github.io/feed.en.xml</id>
-  <updated>2026-09-04T08:03:31+09:00</updated>
+  <updated>2026-09-06T10:07:42+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>intent.md — Writing Down the Why Before the Code, and the AI-Native SDLC</title>
+    <link href="https://dewytear.github.io/p/en/claude-md-intent/"/>
+    <id>https://dewytear.github.io/docs/en/ai/claude/code/claude-md/claude-md-intent</id>
+    <published>2026-09-06T10:07:42+09:00</published>
+    <updated>2026-09-06T10:07:42+09:00</updated>
+    <summary>A read of Anthropic's AI-Native SDLC playbook, published 2026-08-21, and intent.md at its starting line. intent.md is committed before any code and records what is wanted, why, and under which constraints, in five suggested sections (Problem, Proposed outcome, Affected users and systems, Constraints, Open questions). A table separates the layers: CLAUDE.md holds rules that are always true, intent.md a reason true for one change only. Crucially intent.md is not among the files loaded automatically at session start (CLAUDE.md, CLAUDE.local.md, .claude/rules/ and the auto-memory index), a point checked against the official memory documentation, so four ways to wire it are compared by cost and certainty: one line of guidance in CLAUDE.md, an @ import, a skill, a hook. Guidance raises the odds; hooks decide. Six stages (plan, design, build, test, deploy, maintain) each commit one artifact - intent.md, spec.md, plan.md, code and tests, REVIEW.md and review findings, the incident record - forming a loop whose commits are the audit trail, with skills making violations rare, hooks making them close to impossible, and evals over 20 to 50 real tasks regression-testing the configuration itself. The intent/ folder holds one folder per change and one artifact per pull request, so merging is the approval. The critiques are included: no measurement layer, thin requirements engineering, and only three deterministic controls (plan mode, a PreToolUse hook, the eval suite), so at every other joint a wrong translation flows downstream wearing the shape of a well-formed artifact</summary>
+    <category term="AI · Claude · Code · CLAUDE.md"/>
+  </entry>
   <entry>
     <title>Doors on the Model — Who May Use It, and How You May Call It</title>
     <link href="https://dewytear.github.io/p/en/news-20260904-model-doors/"/>
     <id>https://dewytear.github.io/docs/en/ai/news/2026/news-20260904-model-doors</id>
     <published>2026-09-04T07:39:54+09:00</published>
-    <updated>2026-09-04T08:03:31+09:00</updated>
+    <updated>2026-09-04T08:10:43+09:00</updated>
     <summary>Fable 5.1 and Mythos 5.1 are one model with identical capabilities, specs and pricing; only access differs. Fable 5.1 is open to every customer, Mythos 5.1 only to approved Project Glasswing participants, and Mythos 5.1 does not run the history-editing check (1M context, 128k output, adaptive thinking always on, 30-day retention). One cell in the price table moved: cache reads from $1 to $0.25 per million tokens, a multiplier of 0.025 times base input where it used to be 0.1 (base input $10, output $50, cache writes and the 512-token minimum unchanged), and the 25% and 45% savings reported at launch all come from that line. The same release changed three things about the call: forcing a tool returns a 400 (thinking is always on, and forcing a call skips it so the working-out leaks into the tool arguments and their quality drops; use strict: true plus a prompt instruction instead), thinking blocks are readable only by the model that produced them or a newer one, and editing the preceding system prompt, tools or history invalidates every later block (enforced by default only for accounts created on or after 2026-08-31, testable via prefix_mismatch_behavior and input_transformations). Keeping the cache warm and keeping thinking blocks valid are the same discipline: the discount is the reward, the check is the penalty</summary>
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
@@ -267,15 +276,6 @@
     <published>2026-07-11T19:47:53+09:00</published>
     <updated>2026-08-20T08:28:19+09:00</updated>
     <summary>The machine-readable layer — llms.txt, a self-contained graph JSON, and a traversal contract — that lets an external AI analyze this wiki by following its relations</summary>
-    <category term="AI · Wiki · 지식 체계"/>
-  </entry>
-  <entry>
-    <title>Packaging the Wiki Engine as a Plugin — wiki-plugin and Sync Discipline</title>
-    <link href="https://dewytear.github.io/p/en/kgs-plugin/"/>
-    <id>https://dewytear.github.io/docs/en/ai/wiki/knowledge-system/kgs-plugin</id>
-    <published>2026-07-11T19:47:53+09:00</published>
-    <updated>2026-07-28T04:43:06+09:00</updated>
-    <summary>Packaging the knowledge system as wiki-plugin — four skills, a tool snapshot, the sync gate, version discipline, and dogfooding</summary>
     <category term="AI · Wiki · 지식 체계"/>
   </entry>
 </feed>

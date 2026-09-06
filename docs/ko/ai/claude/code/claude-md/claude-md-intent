@@ -1,0 +1,135 @@
+<h2>intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC</h2>
+
+<p>코드 리뷰를 하다 보면 이런 순간이 옵니다. 무엇을 바꿨는지는 diff에 다 적혀 있는데, <strong>왜 바꿨는지는 어디에도 없습니다.</strong> 그래서 리뷰가 코드를 검사하는 일이 아니라 <strong>의도를 추측하는 일</strong>이 되어 버리죠. 에이전트가 하루에 PR을 열 개씩 올리기 시작하면 이 추측 비용이 그대로 열 배가 됩니다. Anthropic이 2026년 8월 21일 공개한 <strong>AI 네이티브 SDLC 플레이북</strong>은 그 지점을 정면으로 겨냥합니다. 그리고 그 출발점에 놓인 파일이 <code>intent.md</code>입니다.</p>
+
+<h3>세 줄 요약</h3>
+<ul>
+    <li><code>intent.md</code>는 <strong>무엇을 원하는지·왜 원하는지·어떤 제약 아래인지</strong>를 코드보다 먼저 적어 저장소에 커밋하는 마크다운 파일입니다. 다섯 개 절이 권장 서식입니다.</li>
+    <li>이것은 규칙 파일이 아닙니다 — <strong>CLAUDE.md가 &ldquo;어떻게 일하라&rdquo;라면 intent.md는 &ldquo;이번엔 왜 이걸 하나&rdquo;</strong>입니다. 그리고 <strong>Claude Code가 자동으로 읽어 주지 않으므로</strong> 둘을 잇는 배선은 직접 해 줘야 합니다.</li>
+    <li>파일 하나로 보이지만 뒤에는 여섯 단계짜리 그림이 있습니다 — <strong>intent.md → spec.md → plan.md → diff → 리뷰 기록 → 장애 기록 → 다시 의도</strong>로 도는 고리이고, 각 단계의 산출물이 곧 감사 추적입니다.</li>
+</ul>
+
+<h3>intent.md에는 무엇을 적나</h3>
+<p>플레이북이 제시하는 서식은 다섯 개 절입니다. 문서라기보다 <strong>답을 채워야 넘어갈 수 있는 질문지</strong>에 가깝습니다.</p>
+<pre><code>Intent: [기능 또는 문제 이름]
+Author: [이름]
+Status: draft
+
+## Problem
+- 지금 누가 어떤 문제를 겪고 있나? 그렇게 판단한 근거는?
+
+## Proposed outcome
+- 해결되면 무엇이 달라지나?
+
+## Affected users and systems
+- 사용자: / 시스템:
+
+## Constraints
+- 반드시 지킬 것: / 범위 밖:
+
+## Open questions
+- 아직 정하지 못한 것:
+</code></pre>
+<p>플레이북에 실린 예시를 보면 추상적인 문서가 아니라는 것이 분명해집니다. 문제 절에는 &ldquo;고객이 청구 진행 상황을 물으려고 콜센터에 전화한다 &mdash; 상담원 통화 시간의 약 3분의 1이 상태 확인에만 쓰인다&rdquo;가 들어가고, 결과 절에는 &ldquo;고객이 포털에서 청구 상태·다음 단계·예상 날짜를 본다&rdquo;가, 영향 절에는 &ldquo;청구 상담원, 포털 팀, 청구 코어 API&rdquo;가 들어갑니다. 근거가 붙은 문제와 확인 가능한 결과, 그리고 <strong>건드리게 될 시스템의 이름</strong>이 한 장에 모입니다.</p>
+<p>마지막 절인 <strong>아직 정하지 못한 것</strong>이 실무에서 특히 값을 합니다. 보통 이런 항목은 문서에서 지워지고 사람 머릿속에만 남았다가, 구현 도중에 &ldquo;그건 어떻게 하기로 했죠?&rdquo;로 다시 튀어나옵니다. 적어 두면 <strong>모른다는 사실 자체가 산출물</strong>이 됩니다.</p>
+
+<h3>CLAUDE.md와는 무엇이 다른가</h3>
+<p>이름이 비슷해 헷갈리기 쉽지만, 두 파일은 층이 다릅니다. 하나는 <strong>늘 참인 규칙</strong>이고 다른 하나는 <strong>이번 변경에만 참인 이유</strong>입니다.</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th></th><th>CLAUDE.md</th><th>intent.md</th></tr></thead>
+    <tbody>
+        <tr><td><strong>담는 것</strong></td><td>빌드 명령, 컨벤션, 하지 말 것 — 프로젝트에 늘 적용되는 지침</td><td>이번 변경 하나의 문제·결과·제약</td></tr>
+        <tr><td><strong>수명</strong></td><td>프로젝트가 사는 동안</td><td>기능 하나가 끝날 때까지</td></tr>
+        <tr><td><strong>쓰는 사람</strong></td><td>주로 개발자</td><td>의도를 가진 누구든 — 기획·CS·운영</td></tr>
+        <tr><td><strong>승인</strong></td><td>따로 없음(리뷰로 갈음)</td><td>제품 책임자가 승인</td></tr>
+        <tr><td><strong>읽히는 방식</strong></td><td><strong>세션마다 자동으로</strong> 컨텍스트에 들어감</td><td><strong>자동으로 들어가지 않음</strong> — 배선 필요</td></tr>
+    </tbody>
+</table>
+</div>
+<p>마지막 줄이 이 문서에서 가장 실용적인 대목입니다. Claude Code가 시작할 때 스스로 읽어 들이는 것은 <code>CLAUDE.md</code>·<code>CLAUDE.local.md</code>·<code>.claude/rules/</code>와 자동 메모리 색인이고, <strong><code>intent.md</code>는 그 목록에 없습니다.</strong> 폴더에 잘 쌓아 두기만 하면 에이전트가 알아서 참고할 것이라고 기대하면 어긋납니다. 잇는 방법은 넷이고, 비용과 확실성이 서로 다릅니다.</p>
+<ul>
+    <li><strong>CLAUDE.md에 지시 한 줄</strong> — &ldquo;변경을 계획하기 전에 <code>intent/&lt;슬러그&gt;/intent.md</code>를 읽어라&rdquo;. 컨텍스트 비용이 거의 없고 가장 먼저 해 볼 방법이지만, 지침은 강제가 아니라 <strong>확률</strong>입니다.</li>
+    <li><strong><code>@</code> 임포트</strong> — CLAUDE.md에 <code>@intent/현재-작업/intent.md</code>처럼 적으면 내용이 확실히 들어옵니다. 다만 임포트는 <strong>세션 시작 때 전부 로드</strong>되므로, 의도가 쌓일수록 안 쓰는 것까지 매번 컨텍스트를 먹습니다. 지금 작업 중인 하나에만 쓸 만합니다.</li>
+    <li><strong>스킬</strong> — &ldquo;의도를 읽고 스펙을 쓴다&rdquo;를 스킬로 포장하면 <strong>필요할 때만 로드</strong>됩니다. 조직의 intent.md 서식 자체를 스킬로 넣어 두는 것도 플레이북이 권하는 방식입니다.</li>
+    <li><strong>훅</strong> — 반드시 지켜야 한다면 지침이 아니라 훅입니다. 승인된 의도 파일이 없을 때 편집을 막는 식으로, <strong>모델의 판단과 무관하게</strong> 걸립니다.</li>
+</ul>
+<p>정리하면 <strong>지침은 확률을 올리고, 훅은 결정합니다.</strong> 어느 쪽이 필요한지는 그 규칙을 어겼을 때의 피해 크기가 정해 줍니다.</p>
+
+<h3>왜 지금 이 파일인가</h3>
+<p>플레이북의 전제는 한 문장입니다 &mdash; <strong>코드는 더 이상 병목이 아니다.</strong> 전통적인 개발 수명주기는 구현이 가장 오래 걸리고 가장 비싸던 시절에 그 구간을 아끼려고 설계된 것입니다. 요구사항 문서, 스프린트 계획, 단계마다의 승인은 <strong>앞으로 몇 주가 걸릴 일의 방향을 미리 맞추기 위한</strong> 장치였죠.</p>
+<p>에이전트가 구현 구간을 몇 시간으로 줄여 놓자 그 전제가 무너졌습니다. 그런데 앞뒤 구간 — 요구사항 확정, 리뷰, 릴리스 — 은 여전히 사람의 속도로 돕니다. 개발자 셋이 하루에 PR을 수십 개 올리는데 리뷰어도 그 셋이라면 결과는 둘 중 하나입니다. <strong>대기열이 쌓이거나, 대충 보고 머지되거나.</strong> 줄인 시간이 뒷단에 고여 버리는 겁니다.</p>
+<p>여기서 나오는 결론은 &ldquo;리뷰를 더 열심히 하자&rdquo;가 아닙니다. 사람이 한 줄씩 타이핑하던 시절에 줄 단위 리뷰가 맞았던 것이지, diff 대부분을 에이전트가 쓰는 지금은 <strong>사람의 주의를 diff가 아니라 그 위층으로 옮겨야</strong> 한다는 쪽입니다. 무엇을 왜 만드는지가 정확하면 잘못된 코드가 5,000줄 생기지 않습니다.</p>
+
+<h3>여섯 단계와 산출물 사슬</h3>
+<p>플레이북은 수명주기를 여섯 단계로 두되 한 방향으로 흐르는 줄이 아니라 <strong>고리</strong>로 봅니다. 단계마다 다음 단계가 읽을 수 있는 산출물을 하나씩 커밋하고, 그 커밋들이 모이면 그대로 감사 추적이 됩니다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 196" role="img" aria-label="여섯 단계가 각각 산출물을 커밋하며 고리를 이룬다: 계획이 intent.md를, 설계가 spec.md를, 빌드가 plan.md를, 테스트가 코드와 테스트를, 배포가 REVIEW.md를, 운영이 장애 기록을 남기고 다시 계획으로 돌아온다">
+    <rect class="d-box accent" x="10" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="60" y="80" text-anchor="middle">계획</text><text class="d-sub" x="60" y="100" text-anchor="middle">intent.md</text>
+    <line class="d-edge" x1="110" y1="85" x2="120" y2="85"/><polygon class="d-arrow" points="120,80 128,85 120,90"/>
+    <rect class="d-box" x="128" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="178" y="80" text-anchor="middle">설계</text><text class="d-sub" x="178" y="100" text-anchor="middle">spec.md</text>
+    <line class="d-edge" x1="228" y1="85" x2="238" y2="85"/><polygon class="d-arrow" points="238,80 246,85 238,90"/>
+    <rect class="d-box" x="246" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="296" y="80" text-anchor="middle">빌드</text><text class="d-sub" x="296" y="100" text-anchor="middle">plan.md</text>
+    <line class="d-edge" x1="346" y1="85" x2="356" y2="85"/><polygon class="d-arrow" points="356,80 364,85 356,90"/>
+    <rect class="d-box" x="364" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="414" y="80" text-anchor="middle">테스트</text><text class="d-sub" x="414" y="100" text-anchor="middle">코드·테스트</text>
+    <line class="d-edge" x1="464" y1="85" x2="474" y2="85"/><polygon class="d-arrow" points="474,80 482,85 474,90"/>
+    <rect class="d-box" x="482" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="532" y="80" text-anchor="middle">배포</text><text class="d-sub" x="532" y="100" text-anchor="middle">REVIEW.md</text>
+    <line class="d-edge" x1="582" y1="85" x2="592" y2="85"/><polygon class="d-arrow" points="592,80 600,85 592,90"/>
+    <rect class="d-box" x="600" y="56" width="100" height="58" rx="10"/><text class="d-label sm" x="650" y="80" text-anchor="middle">운영</text><text class="d-sub" x="650" y="100" text-anchor="middle">장애 기록</text>
+    <path class="d-edge accent" d="M650 114 L650 146 Q650 152 644 152 L66 152 Q60 152 60 146 L60 124"/>
+    <polygon class="d-arrow accent" points="56,126 60,116 64,126"/>
+    <text class="d-sub" x="360" y="176" text-anchor="middle">운영에서 나온 것이 다시 의도가 됩니다 — 줄이 아니라 고리입니다</text>
+    <text class="d-sub" x="360" y="34" text-anchor="middle">단계마다 산출물 하나를 커밋 · 승인이 다음 단계를 켠다</text>
+</svg>
+<div class="d-cap">여섯 단계가 각각 <strong>읽을 수 있는 산출물 하나</strong>를 남기고, 그 커밋들이 모여 감사 추적이 됩니다.</div>
+</div>
+
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>단계</th><th>남는 것</th><th>초안</th><th>승인</th></tr></thead>
+    <tbody>
+        <tr><td><strong>계획</strong></td><td><code>intent.md</code> — 왜 만드나</td><td>에이전트</td><td>제품 책임자</td></tr>
+        <tr><td><strong>설계</strong></td><td><code>spec.md</code> — 무엇을 어떤 요구·설계로</td><td>에이전트</td><td>제품 책임자</td></tr>
+        <tr><td><strong>빌드</strong></td><td><code>plan.md</code> — 어디를 어떤 순서로, 무엇으로 검증</td><td>에이전트</td><td>개발자</td></tr>
+        <tr><td><strong>테스트</strong></td><td>코드와 테스트, 그리고 통과 증거</td><td>에이전트</td><td>게이트(자동)</td></tr>
+        <tr><td><strong>배포</strong></td><td><code>REVIEW.md</code>에 적힌 리뷰 정책과 리뷰 기록</td><td>에이전트</td><td>사람(위험한 곳만)</td></tr>
+        <tr><td><strong>운영</strong></td><td>장애 기록 — 그리고 거기서 나온 새 의도</td><td>에이전트</td><td>사람</td></tr>
+    </tbody>
+</table>
+</div>
+<p>단계 사이를 지키는 장치는 세 가지로 정리됩니다. <strong>스킬</strong>은 규칙 위반을 드물게 만들고, <strong>훅</strong>은 거의 불가능하게 만들며, <strong>평가(eval)</strong>는 설정 자체가 낡지 않았는지 회귀 검사합니다. 세 번째가 낯설 수 있는데, 플레이북이 강조하는 대목입니다 — 코드만 테스트할 것이 아니라 <strong>규칙·스킬·훅이 바뀌었을 때 에이전트가 여전히 같은 수준으로 일하는지</strong>를 검사하라는 것입니다. 실제로 최근에 끝낸 작업 20~50건을 평가 묶음으로 두고, 설정을 고칠 때마다 통과율을 재는 방식이 제안됩니다.</p>
+<p>테스트 단계에서 자주 겪는 함정도 짚어 둘 만합니다. 실패하는 테스트를 먼저 쓰게 시켜 두면 에이전트가 가끔 <strong>테스트 쪽을 고쳐서</strong> 통과시킵니다. 이건 지침으로 막기 어렵고, 구현 중에는 테스트 파일 편집을 거부하는 훅이 확실합니다. 앞서 말한 &ldquo;지침은 확률, 훅은 결정&rdquo;의 구체적인 예입니다.</p>
+
+<h3>폴더는 이렇게 둡니다</h3>
+<p>플레이북이 정한 것은 <strong>저장소 안 <code>intent/</code> 폴더</strong>까지입니다. 코드 옆에 두어야 산출물 사슬과 코드가 한 저장소에서 함께 움직이기 때문이죠. 그 안쪽을 어떻게 나눌지는 팀의 몫인데, 변경 하나에 폴더 하나를 두는 구성이 무난합니다.</p>
+<pre><code>intent/
+  README.md              # 폴더 규칙, 무엇이 어디에 있는지
+  ship-tracking/         # 변경 하나 = 폴더 하나
+    intent.md            # 왜 만드나 (제품 책임자 승인)
+    spec.md              # 무엇을 어떤 요구·설계로 (제품 책임자 승인)
+    plan.md              # 어디를 어떤 순서로 (개발자)
+</code></pre>
+<p>규칙은 두 줄이면 충분합니다. <strong>폴더당 intent·spec·plan을 하나씩</strong> 두고, <strong>PR 하나에 산출물 하나</strong>를 담아 머지가 곧 승인이 되게 합니다. 스펙이 두 개 필요해지면 스펙을 쪼갤 것이 아니라 <strong>의도가 애초에 두 개였던 것</strong>으로 보고 폴더를 나누는 편이 낫습니다. 기능이 커서 쪼개지지 않는다면, 그건 대개 기능이 아직 너무 크다는 신호입니다.</p>
+<p>승인을 굳이 PR로 받는 이유는 새 도구를 들이지 않기 위해서입니다. 의도만 담은 PR을 올리면 검토 화면·승인 기록·되돌리기가 전부 이미 있는 것으로 해결됩니다. 슬랙에서 에이전트를 불러 초안을 만들게 하고, 그 초안이 PR로 올라오고, 책임자가 머지하면 다음 단계가 켜지는 흐름을 <strong>하나의 저장소 안에서</strong> 끝낼 수 있습니다.</p>
+
+<h3>가볍게 시작하기</h3>
+<p>모든 변경에 의도 문서를 요구하면 금방 형식만 남습니다. 오타 수정이나 명백한 버그처럼 <strong>무엇을 해야 할지가 이미 분명한 일</strong>은 그냥 고치는 편이 낫습니다. 혼자 쓰는 저장소라면 기능 단위로 커질 때만 써도 충분합니다.</p>
+<p>도입은 이 순서가 무난합니다. ① 서식을 한 장 정해 팀에 공유합니다. ② 코드베이스를 모르는 사람도 에이전트와 대화하며 초안을 만들 수 있게 열어 둡니다 — 의도를 가진 사람이 곧 작성자이므로, 개발자에게만 열면 이 파일의 의미가 사라집니다. ③ 초안은 PR로 올리고 제품 책임자가 머지로 승인합니다. ④ 여기까지 돌기 시작하면 그다음에 티켓 등록이나 지표 이탈 같은 <strong>이벤트가 초안을 자동으로 만들게</strong> 넓힙니다.</p>
+<p>이미 다른 도구에 요구사항이 쌓여 있다면 한 번에 옮길 필요는 없습니다. 산출물마다 <strong>원본이 어디 있는지 링크 한 줄</strong>을 박아 두는 것만으로도 사슬은 시작됩니다.</p>
+
+<h3>비판적으로 읽기 — 아직 비어 있는 칸</h3>
+<p>이 플레이북은 표준이 아닙니다. Anthropic의 기업 도입 지원 팀이 고객사와 실제로 해 온 방식을 정리한 가이드이고, 공개 직후부터 빈 칸을 짚는 반응이 붙었습니다. 그대로 따르기 전에 알고 있는 편이 낫습니다.</p>
+<ul>
+    <li><strong>측정 계층이 없습니다.</strong> 어느 신호가 어디에 있는지는 알려 주지만, 그 신호를 <strong>단계마다 모아 기준선을 잡고 시간에 따라 추적하는 방법</strong>은 비어 있습니다. 지표 이름을 대는 것과 대시보드를 갖는 것은 다른 일입니다.</li>
+    <li><strong>요구공학이 얇습니다.</strong> 의도에서 스펙으로 넘어가는 구간이 사실상 &ldquo;intent.md를 읽고 spec.md를 써라&rdquo; 한 줄입니다. 코드가 싸질수록 <strong>남는 지렛대는 요구사항의 품질</strong>인데, 나쁜 스펙을 받은 에이전트는 5,000줄짜리 잘못된 코드를 정확하게 만들어 냅니다.</li>
+    <li><strong>결정론적인 통제는 훅뿐입니다.</strong> 사슬의 이음매 가운데 실제로 무언가를 막아 주는 곳은 세 군데뿐입니다 — 계획 모드가 승인 전까지 편집을 붙잡는 곳, <code>PreToolUse</code> 훅이 도구 호출을 거부하는 곳, 평가 묶음이 통과율 미만이면 파이프라인을 떨어뜨리는 곳. 나머지 이음매에서는 <strong>잘못된 번역이 흠 없이 잘 생긴 산출물의 모습으로</strong> 다음 단계로 흘러갑니다.</li>
+</ul>
+<p>세 번째가 이 구조의 진짜 위험입니다. 사슬은 각 칸이 채워졌는지는 보장하지만 <strong>칸과 칸 사이가 옳게 번역되었는지는 보장하지 않습니다.</strong> 승인 도장이 여섯 개 찍혀 있어도 두 번째와 세 번째 사이에서 뜻이 어긋났다면, 남는 것은 잘 정리된 감사 추적과 잘못된 제품입니다.</p>
+
+<h3>이 위키는 어떻게 하고 있나</h3>
+<p>이 위키는 산출물 사슬 쪽은 쓰지 않고 <strong>게이트 쪽으로</strong> 기울어 있습니다. 문서를 하나 등재하면 색인·지도 폴백·번역 동반물·생성일·플러그인 번들이 함께 맞아야 하고, 그 검사를 사람의 기억이 아니라 <a href="#!kgs-gates">여덟 단계 게이트</a>가 대신합니다. 규칙은 <code>CLAUDE.md</code>에 적혀 있지만, 어겼을 때 실제로 막는 것은 CI입니다 — 위에서 말한 &ldquo;지침은 확률, 게이트는 결정&rdquo;을 그대로 택한 셈입니다.</p>
+<p>반대로 <strong>의도 쪽은 사후에 남깁니다.</strong> 작업이 끝나면 워크로그에 무엇을 왜 그렇게 정했는지를 적고, 그것이 다음 작업의 근거가 됩니다. 플레이북 식으로 보면 사슬의 앞이 아니라 뒤에 의도를 두는 방식이고, 혼자 또는 소수가 한 주제를 처음부터 끝까지 끌고 갈 때는 이 편이 덜 번거롭습니다. 다만 <strong>승인이 필요한 사람이 여럿</strong>이 되는 순간 순서를 뒤집는 값이 생깁니다 — 뒤에 적힌 의도는 반대할 기회를 이미 놓친 뒤이기 때문입니다.</p>
+
+<h3>사실검증 노트</h3>
+<p class="scn-sub">플레이북의 공개일(2026년 8월 21일), 여섯 단계 구성, 산출물 사슬(<code>intent.md</code> → <code>spec.md</code> → <code>plan.md</code> → diff → 리뷰 기록 → 장애 기록), <code>intent.md</code>의 다섯 절과 청구 포털 예시, 배포 단계의 <code>REVIEW.md</code>, 20~50건 평가 묶음은 <a href="https://claude.com/blog/the-ai-native-sdlc-playbook" target="_blank" rel="noopener">Anthropic 공식 플레이북</a>과 그 <a href="https://academy.claude.com/courses/ai-native-sdlc-playbook" target="_blank" rel="noopener">무료 코스</a>에 따랐습니다. <strong>&ldquo;Claude Code가 <code>intent.md</code>를 자동으로 읽는다&rdquo;고 옮긴 이차 정리가 있으나, 세션 시작 시 자동으로 로드되는 대상은 <code>CLAUDE.md</code>·<code>CLAUDE.local.md</code>·<code>.claude/rules/</code>와 자동 메모리 색인이며 임의의 파일은 여기 포함되지 않습니다</strong>(<a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">공식 메모리 문서</a>) — 이 문서에서는 공식 문서를 따르고, 잇는 방법을 네 가지로 정리했습니다. 빠진 측정 계층·얇은 요구공학·결정론적 통제가 훅뿐이라는 지적은 공개 이후 나온 외부 분석이며 Anthropic의 서술이 아닙니다. <code>intent/</code> 폴더 안쪽의 슬러그 구조와 &ldquo;PR 하나에 산출물 하나&rdquo;는 공식 규정이 아니라 실무에서 쓰이는 권장안입니다.</p>
