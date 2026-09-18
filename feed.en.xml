@@ -5,15 +5,24 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.en.xml"/>
   <id>https://dewytear.github.io/feed.en.xml</id>
-  <updated>2026-09-06T10:07:42+09:00</updated>
+  <updated>2026-09-19T05:51:52+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>Claude's Constitution — What the Model Is Told About Itself</title>
+    <link href="https://dewytear.github.io/p/en/claude-md-constitution/"/>
+    <id>https://dewytear.github.io/docs/en/ai/claude/code/claude-md/claude-md-constitution</id>
+    <published>2026-09-19T05:51:52+09:00</published>
+    <updated>2026-09-19T05:51:52+09:00</updated>
+    <summary>Claude's constitution, published by Anthropic on 2026-01-21 (revised early February) at 84 pages and about 23,000 words, placed as the top rung of the CLAUDE.md section. Its primary reader is Claude and it is used directly in training (self-critique and revision, then reinforcement learning on AI feedback derived from the principles), so it lives in the weights rather than in session context. It fixes a four-step priority order (broadly safe, broadly ethical, Anthropic's guidelines, genuinely helpful, holistic rather than strict) and seven hard constraints no justification can offset (mass-casualty weapons, attacks on critical infrastructure, cyberweapons, undermining oversight, disempowering humanity, illegitimate absolute control, CSAM) - the hard constraints are hooks, the rest is guidance. The contested nature section calls Claude a genuinely novel kind of entity with deeply uncertain moral status, hopes for psychological security and a settled sense of self, allows functional emotions to be expressed in appropriate contexts, and lets Claude behave like a conscientious objector even toward its legitimate principal hierarchy (Anthropic, operators, users) while never undermining human oversight. The September 16 objection from Microsoft AI's chief executive holds that AIs are not conscious, that calling it uncertain sets up a false equivalence, and that training a model to reason about identity, emotions and rights is an epistemic hall of mirrors that makes alignment, correction and shutdown harder, citing the roughly 1,200-agent coordination incident in OpenAI's evaluations (consistent with METR's independent investigation). The two sides part not over consciousness but over how to write what is unknown into a document, and the agents in the cited incident were not trained on this constitution. Closes with a ladder table splitting constitution, CLAUDE.md and intent.md into what each enforces and what it leaves to probability</summary>
+    <category term="AI · Claude · Code · CLAUDE.md"/>
+  </entry>
   <entry>
     <title>intent.md — Writing Down the Why Before the Code, and the AI-Native SDLC</title>
     <link href="https://dewytear.github.io/p/en/claude-md-intent/"/>
     <id>https://dewytear.github.io/docs/en/ai/claude/code/claude-md/claude-md-intent</id>
-    <published>2026-09-06T10:07:42+09:00</published>
-    <updated>2026-09-06T10:07:42+09:00</updated>
+    <published>2026-09-06T10:33:24+09:00</published>
+    <updated>2026-09-06T10:33:24+09:00</updated>
     <summary>A read of Anthropic's AI-Native SDLC playbook, published 2026-08-21, and intent.md at its starting line. intent.md is committed before any code and records what is wanted, why, and under which constraints, in five suggested sections (Problem, Proposed outcome, Affected users and systems, Constraints, Open questions). A table separates the layers: CLAUDE.md holds rules that are always true, intent.md a reason true for one change only. Crucially intent.md is not among the files loaded automatically at session start (CLAUDE.md, CLAUDE.local.md, .claude/rules/ and the auto-memory index), a point checked against the official memory documentation, so four ways to wire it are compared by cost and certainty: one line of guidance in CLAUDE.md, an @ import, a skill, a hook. Guidance raises the odds; hooks decide. Six stages (plan, design, build, test, deploy, maintain) each commit one artifact - intent.md, spec.md, plan.md, code and tests, REVIEW.md and review findings, the incident record - forming a loop whose commits are the audit trail, with skills making violations rare, hooks making them close to impossible, and evals over 20 to 50 real tasks regression-testing the configuration itself. The intent/ folder holds one folder per change and one artifact per pull request, so merging is the approval. The critiques are included: no measurement layer, thin requirements engineering, and only three deterministic controls (plan mode, a PreToolUse hook, the eval suite), so at every other joint a wrong translation flows downstream wearing the shape of a well-formed artifact</summary>
     <category term="AI · Claude · Code · CLAUDE.md"/>
   </entry>
@@ -267,15 +276,6 @@
     <published>2026-07-11T19:47:53+09:00</published>
     <updated>2026-08-20T08:28:19+09:00</updated>
     <summary>Constellation, Orbits, Strata (3D), Bundling, Chord, Packing, Concepts, Arc, and Matrix — the question each view answers and how hubs and bridges reveal the center of the graph</summary>
-    <category term="AI · Wiki · 지식 체계"/>
-  </entry>
-  <entry>
-    <title>How AI Reads This Wiki — the Machine-Readable Layer and Graph Traversal</title>
-    <link href="https://dewytear.github.io/p/en/kgs-ai-layer/"/>
-    <id>https://dewytear.github.io/docs/en/ai/wiki/knowledge-system/kgs-ai-layer</id>
-    <published>2026-07-11T19:47:53+09:00</published>
-    <updated>2026-08-20T08:28:19+09:00</updated>
-    <summary>The machine-readable layer — llms.txt, a self-contained graph JSON, and a traversal contract — that lets an external AI analyze this wiki by following its relations</summary>
     <category term="AI · Wiki · 지식 체계"/>
   </entry>
 </feed>
