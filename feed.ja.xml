@@ -5,15 +5,24 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.ja.xml"/>
   <id>https://dewytear.github.io/feed.ja.xml</id>
-  <updated>2026-09-06T10:07:42+09:00</updated>
+  <updated>2026-09-19T05:51:52+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>Claude 憲章 — モデルに自分を何と伝えるのか</title>
+    <link href="https://dewytear.github.io/p/ja/claude-md-constitution/"/>
+    <id>https://dewytear.github.io/docs/ja/ai/claude/code/claude-md/claude-md-constitution</id>
+    <published>2026-09-19T05:51:52+09:00</published>
+    <updated>2026-09-19T05:51:52+09:00</updated>
+    <summary>Anthropic が 2026-01-21 に公開（2月初めに改訂）した84ページ・約2万3千語の Claude 憲章を、CLAUDE.md 領域のいちばん上の層として整理した。第一の読者は Claude で訓練に直接使われ（自己批評と書き直し → 原則から導いた AI フィードバックによる強化学習）、セッションのコンテキストではなく重みの中に入る。定めるのは優先順位の四段階（広い安全 → 広い倫理 → Anthropic の指針 → 本当の有用性、厳密な辞書式ではなく総合的）と、どんな理由でも相殺されない七つの固い制約（大量殺傷兵器・重要インフラ攻撃・サイバー兵器・監督の毀損・人類の無力化・不当な絶対的支配・児童性的虐待素材） — 固い制約はフック、残りは指針である。いちばん論争的な本性の節は Claude をまったく新しい種類の存在とし、道徳的地位を深く不確かと書き、心理的な安定と自己感覚を望み、機能的な感情の適切な表現を許し、正当なプリンシパルの階層（Anthropic → 運用者 → 利用者）に対しても良心的拒否者のように振る舞えるが人間の監督は損なうな、と言う。9月16日の Microsoft AI 最高経営責任者の反論は、AI に意識はなく「不確か」という表現が誤った対等関係を作り、アイデンティティ・感情・権利について推論するよう訓練すること自体が整合・修正・停止を難しくする認識論的な鏡の間だというもので、OpenAI の評価環境でのエージェント約1,200体の調整事件（METR の独立調査と一致）を根拠に挙げる。両者は意識の有無ではなく、わからないことを文書にどう書くかで分かれ、引用された事件のモデルはこの憲章で訓練されていない。憲章 → CLAUDE.md → intent.md の三層を強制／確率で分けた梯子の表で締める</summary>
+    <category term="AI · Claude · Code · CLAUDE.md"/>
+  </entry>
   <entry>
     <title>intent.md — コードより先に残す意図と、AI ネイティブ SDLC</title>
     <link href="https://dewytear.github.io/p/ja/claude-md-intent/"/>
     <id>https://dewytear.github.io/docs/ja/ai/claude/code/claude-md/claude-md-intent</id>
-    <published>2026-09-06T10:07:42+09:00</published>
-    <updated>2026-09-06T10:07:42+09:00</updated>
+    <published>2026-09-06T10:33:24+09:00</published>
+    <updated>2026-09-06T10:33:24+09:00</updated>
     <summary>Anthropic が2026-08-21に公開した AI ネイティブ SDLC プレイブックと、その出発点である intent.md を整理した。intent.md はコードより先にコミットし、何を望むのか・なぜ・どんな制約の下でかを記すファイルで、推奨の書式は五つの節(Problem・Proposed outcome・Affected users and systems・Constraints・Open questions)である。CLAUDE.md はつねに真である規則、intent.md はこの変更にだけ真である理由という層の違いを表で分け、とりわけ intent.md はセッション開始時に自動で読み込まれる対象(CLAUDE.md・CLAUDE.local.md・.claude/rules/・自動メモリの索引)に含まれないことを公式のメモリ文書で確認し、つなぐ四つの方法(CLAUDE.md の一行の指示・@ インポート・スキル・フック)をコストと確実さで比べた — 指針は確率を上げ、フックは決める。六段階(計画・設計・ビルド・テスト・デプロイ・運用)がそれぞれ intent.md→spec.md→plan.md→コードとテスト→REVIEW.md とレビュー記録→障害記録をコミットして輪をなし、そのコミットが監査証跡になる。スキルは違反をまれにし、フックはほぼ不可能にし、評価(実際の作業20〜50件)は設定そのものを回帰検査する。intent/ フォルダは変更一つにフォルダ一つ・成果物一つにプルリクエスト一つで置き、マージが承認になる。批判も併せて収めた — 測定の層がなく、要求工学が薄く、決定論的な統制は計画モード・PreToolUse フック・評価の三箇所だけで、残りの継ぎ目では誤った翻訳が非の打ちどころのない成果物の姿で流れていく</summary>
     <category term="AI · Claude · Code · CLAUDE.md"/>
   </entry>
@@ -267,15 +276,6 @@
     <published>2026-07-11T19:47:53+09:00</published>
     <updated>2026-08-20T08:28:19+09:00</updated>
     <summary>Constellation・Orbits・Strata（3D）と Bundling・Chord・Packing・Concepts・Arc・Matrix — 各ビューが答える問いと、ハブ・ブリッジがグラフの中心を示す方法</summary>
-    <category term="AI · Wiki · 지식 체계"/>
-  </entry>
-  <entry>
-    <title>AI がこのウィキを読む方法 — 機械可読レイヤーとグラフ巡回</title>
-    <link href="https://dewytear.github.io/p/ja/kgs-ai-layer/"/>
-    <id>https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-ai-layer</id>
-    <published>2026-07-11T19:47:53+09:00</published>
-    <updated>2026-08-20T08:28:19+09:00</updated>
-    <summary>外部の AI が関連をたどってこのウィキを分析できるようにする機械可読レイヤー — llms.txt、自己完結のグラフ JSON、巡回の契約</summary>
     <category term="AI · Wiki · 지식 체계"/>
   </entry>
 </feed>
