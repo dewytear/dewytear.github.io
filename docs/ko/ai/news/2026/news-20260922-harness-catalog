@@ -1,0 +1,94 @@
+<h2>부를 수 있는 목록 — 하네스 167종 순위표를 받아서 뜯어봤다</h2>
+
+<h3>세 줄 요약</h3>
+<ul>
+    <li>공개 저장소 <strong>best-of-Agent-Harnesses</strong>는 에이전트 하네스 167종을 12개 범주로 매주 다시 채점한다. 사람용 순위표만 내놓는 게 아니라 <strong>MCP 서버를 함께 배포해</strong> 에이전트가 목록을 도구로 부르게 했다.</li>
+    <li>저장소를 받아 직접 돌려 보니 항목 수·범주 수·주간 재채점 주기·MCP 도구 8종이 모두 주장대로였다. 다만 추천 로직은 의미 검색이 아니라 <strong>단어 겹침에 별 수 로그를 더한 점수</strong>다.</li>
+    <li>이 목록이 내건 간판 수치(&ldquo;같은 가중치가 30%에서 95.5%로&rdquo;)는 <strong>자기 근거표에서 가장 약한 고리</strong>다. 공식 리더보드와 자체 보고를 나란히 놓은 비교이고, 재현에 필요한 설정이 공개돼 있지 않다.</li>
+</ul>
+
+<p>하네스(harness)는 상태 없는 모델과 바깥 세상 사이의 고리를 닫는 실행 환경이다. 도구 목록, 승인 규칙, 매 턴 모델이 보는 것, 죽었을 때 살아남는 것이 여기 들어간다. 이 위키는 <a href="#!hns-overview">하네스란 무엇인가</a>에서 그 구성을 다뤘는데, 그 뒤로 하네스를 <strong>고르는</strong> 문제가 따로 생겼다. 167종을 늘어놓고 매주 순위를 다시 매기는 목록이 나온 배경이 그것이다.</p>
+
+<h3>받아서 확인한 것</h3>
+<p>주장을 그대로 옮기지 않으려고 저장소를 통째로 받아 확인했다. <code>harnesses.json</code>은 421KB짜리 단일 파일이고, 그 안에 항목 167개·범주 12개가 들어 있다. 21개 필드가 167개 항목 전부에 빠짐없이 채워져 있어서, 빈 칸을 건너뛰는 처리가 필요 없다.</p>
+<p>&ldquo;매주 재채점&rdquo;도 커밋 이력으로 확인된다. <code>harnesses.json</code>을 건드린 커밋을 날짜순으로 뽑으면 <code>weekly rescore 2026-09-20</code>·<code>2026-09-13</code>·<code>2026-09-06</code>처럼 일요일마다 한 줄씩 찍혀 있다. 별 수는 2026년 9월 20일에 포착한 값으로 명시돼 있다.</p>
+<p>MCP 서버는 실제로 돌려 봤다. MCP(Model Context Protocol)는 에이전트가 바깥 도구를 부르는 표준 규약이고, 이 저장소는 <code>mcp/server.py</code> 한 파일에 도구 8개를 담아 PyPI와 공식 MCP 레지스트리에 올려 뒀다. 의존성만 대체해 함수를 직접 호출하니 이런 답이 나왔다.</p>
+<ul>
+    <li>&ldquo;중간에 죽어도 살아남는 무인 코딩 에이전트&rdquo;를 물으면 자율성 <code>headless</code>·복구 <code>resumable</code> 항목을 골라 대안과 함께 돌려준다.</li>
+    <li>두 항목을 비교시키면 축별 등급에 <strong>근거 URL과 조사 날짜</strong>가 붙어 나온다. 167종 중 87종에 이 심화 조사가 채워져 있다.</li>
+    <li>범주를 물으면 12개 범주와 각 범주의 항목 수를 돌려준다.</li>
+</ul>
+<p>추천이 어떻게 계산되는지도 코드에 그대로 있다. 손으로 고른 용도별 추천이 먼저 걸리고, 걸리지 않으면 <strong>질의 단어와 설명 단어의 겹친 개수에 3을 곱하고 별 수의 상용로그를 더한다.</strong> 임베딩도 의미 검색도 없다. 실제로 답에 붙어 나온 이유가 <code>matches: coding, mid-run, survives, that</code>였는데, <code>that</code>까지 점수에 들어간 것이 이 방식의 성격을 보여 준다. 말을 바꿔 물으면 다른 답이 나올 수 있고, 별이 많은 항목이 구조적으로 유리하다.</p>
+
+<h3>한 데이터, 두 개의 문</h3>
+<p>이 목록의 설계에서 가져올 것은 순위 자체가 아니다. <strong>같은 데이터를 사람과 에이전트가 서로 다른 방식으로 집어 가게 문을 두 개 낸 것</strong>이다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 680 206" role="img" aria-label="하나의 원본에서 자기완결 JSON을 만들고, 당겨 읽는 문과 부르는 문 두 갈래로 내보낸다">
+    <rect class="d-box soft" x="12" y="79" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="87" y="103" text-anchor="middle">하나의 원본</text>
+    <text class="d-sub" x="87" y="121" text-anchor="middle">스크립트가 생성</text>
+
+    <line class="d-edge" x1="162" y1="107" x2="194" y2="107"/>
+    <polygon class="d-arrow" points="194,102 202,107 194,112"/>
+
+    <rect class="d-box accent" x="202" y="79" width="160" height="56" rx="10"/>
+    <text class="d-label sm" x="282" y="103" text-anchor="middle">자기완결 JSON</text>
+    <text class="d-sub" x="282" y="121" text-anchor="middle">167종 · 축과 근거 포함</text>
+
+    <line class="d-edge" x1="362" y1="107" x2="387" y2="107"/>
+    <line class="d-edge" x1="387" y1="56" x2="387" y2="158"/>
+    <line class="d-edge" x1="387" y1="56" x2="396" y2="56"/>
+    <polygon class="d-arrow" points="396,51 404,56 396,61"/>
+    <line class="d-edge accent" x1="387" y1="158" x2="396" y2="158"/>
+    <polygon class="d-arrow accent" points="396,153 404,158 396,163"/>
+
+    <rect class="d-box" x="412" y="28" width="256" height="56" rx="10"/>
+    <text class="d-label sm" x="540" y="52" text-anchor="middle">당겨 읽는 문</text>
+    <text class="d-sub" x="540" y="70" text-anchor="middle">llms.txt · JSON을 직접 fetch</text>
+
+    <rect class="d-box accent" x="412" y="130" width="256" height="56" rx="10"/>
+    <text class="d-label sm" x="540" y="154" text-anchor="middle">부르는 문</text>
+    <text class="d-sub" x="540" y="172" text-anchor="middle">MCP 서버 — 도구 8개</text>
+</svg>
+</div>
+<div class="d-cap">위쪽 문은 에이전트가 <strong>찾아와서 파싱</strong>해야 하고, 아래쪽 문은 에이전트가 <strong>이미 가진 도구로 부른다</strong>. 원본은 하나다.</div>
+
+<p>두 문의 차이는 누가 일을 하느냐다. 당겨 읽는 문에서는 에이전트가 주소를 알아야 하고, 받아서 해석해야 하고, 컨텍스트에 통째로 올려야 한다. 부르는 문에서는 질문만 던지면 골라진 답이 온다. 목록 쪽은 두 번째 문을 &ldquo;표 100줄을 읽는 대신&rdquo;이라고 설명하는데, 실제로 컨텍스트에 들어가는 양이 421KB와 한 문단 차이로 갈린다.</p>
+
+<h3>이 위키의 기계 계층과 나란히 놓으면</h3>
+<p>이 위키도 <a href="#!kgs-ai-layer">AI가 이 위키를 읽는 법</a>에서 기계판독 계층을 세 개의 문으로 정리해 뒀다. 같은 축으로 두 쪽을 놓아 봤다. 왼쪽은 이 위키의 현재 값이고, 오른쪽은 받아서 잰 값이다.</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>축</th><th>이 위키 (문서 70편)</th><th>하네스 목록 (항목 167종)</th></tr></thead>
+    <tbody>
+        <tr><td><strong>표지</strong></td><td><code>llms.txt</code> 52KB</td><td><code>llms.txt</code> 77KB</td></tr>
+        <tr><td><strong>자기완결 데이터</strong></td><td><code>knowledge-graph.json</code> 167KB — 노드 70, 연관 엣지 247, 타입 관계 76</td><td><code>harnesses.json</code> 421KB — 항목 167, 21개 필드 전부 채움</td></tr>
+        <tr><td><strong>전문 덤프</strong></td><td><code>llms-full.txt</code> 685KB</td><td>없음 (항목 설명이 곧 전문)</td></tr>
+        <tr><td><strong>표준 어휘</strong></td><td>자체 스키마 + <a href="#!ai-guide">순회 가이드</a></td><td>schema.org JSON-LD 93KB</td></tr>
+        <tr><td><strong>구독</strong></td><td>Atom <code>feed.xml</code></td><td>JSON Feed</td></tr>
+        <tr><td><strong>부르는 문</strong></td><td><strong>없음</strong></td><td>MCP 서버 도구 8종 (PyPI·공식 레지스트리 등록)</td></tr>
+        <tr><td><strong>생성 규율</strong></td><td><code>build_*.py</code> → <code>check_all.py</code></td><td><code>generate.py</code> → <code>check_integrity.py</code></td></tr>
+        <tr><td><strong>죽은 항목</strong></td><td>고아 파일 검사</td><td>무덤 3종 + 관찰 대기 24종</td></tr>
+        <tr><td><strong>언어</strong></td><td>한국어·영어·일본어</td><td>영어</td></tr>
+    </tbody>
+</table>
+</div>
+<p>겹치는 대목이 많다. 둘 다 출력 파일을 손으로 고치지 않고 스크립트로 생성하며, 커밋 전에 게이트를 돌려 정합을 지킨다. 저쪽 게이트는 &ldquo;빈 범주가 없을 것&rdquo;·&ldquo;비교 글이 일정 분량 이상일 것&rdquo;에 더해 <strong>직전 커밋보다 항목이 급감하면 실패시키는 검사</strong>를 둔다. 생성 스크립트가 잘못 돌아 데이터가 통째로 날아가는 사고를 겨냥한 장치인데, 이 위키의 <code>--check</code> 드리프트 차단과 같은 계열이면서 노리는 사고가 다르다.</p>
+<p>갈리는 지점은 두 가지다. 이 위키는 문서 사이의 <strong>방향 있는 타입 관계</strong>(선행지식·구현·사례·근거·대체)를 가졌고 저쪽은 그게 없다. 대신 저쪽은 <strong>부르는 문</strong>을 가졌고 이 위키는 그게 없다. 이 위키의 그래프는 찾아온 에이전트에게 풍부하지만, 찾아오지 않은 에이전트에게는 존재하지 않는 것과 같다.</p>
+
+<h3>간판 수치는 자기 근거표에서 가장 약한 고리다</h3>
+<p>이 목록은 첫 문장부터 &ldquo;하네스가 모델보다 중요하다&rdquo;를 내걸고, 근거로 <strong>같은 가중치가 ARC-AGI-3에서 맨몸 약 30%, 좋은 하네스 안에서 95.5%</strong>라는 수치를 든다. ARC-AGI-3는 추상 추론을 재는 공개 시험이다. 이 수치를 따라가 봤다.</p>
+<p>공식 리더보드에서 30.2%는 <strong>Claude Opus 5의 정식 등재 점수</strong>다. 95.5%는 Prime Intellect가 자사 하네스 Prime Agent로 냈다고 <strong>스스로 보고한 값</strong>이고, 공개 저장소에는 그 결과를 재현할 어댑터·프롬프트·실행 로그·설정이 들어 있지 않다. 독립 재현도 확인되지 않는다. 게다가 공식 리더보드는 그 사이에 GPT-6 Astra가 62.7%로 올라가 있어서, &ldquo;맨몸 30%&rdquo;는 이제 천장도 아니다. 두 수를 빼서 얻은 65포인트는 하네스 효과가 아니라 <strong>서로 다른 조건의 두 실행을 뺀 값</strong>이다.</p>
+<p>여기서 목록을 통째로 깎아내리면 오히려 틀린다. 같은 근거표에 실린 다른 측정들은 훨씬 단단하다. 모델을 고정하고 하네스만 바꾼 SWE-bench Pro 실험에서 GLM-5.2가 pass@1(한 번에 통과한 비율) 23%에서 52%로, Gemma 4 26B가 15%에서 36%로 움직였다. Cursor의 자체 벤치마크에서는 같은 모델이 한 하네스에서 46%, 다른 하네스에서 80%였다. Harness-Bench는 모델이 달라지면 하네스 순위가 거의 옮겨 가지 않는다고 보고했다(순위 상관 약 -0.05). 이쪽이 실제 주장이고, 간판 수치는 그중 가장 극적이면서 가장 약한 한 줄이다.</p>
+<p>그래서 이 목록에서 배울 점은 순위표가 아니라 그 옆에 붙은 태도다. 저쪽은 근거표의 각 행에 <strong>측정인지 실무자 발언인지 논평인지를 표시하고</strong> 링크를 언제 확인했는지까지 적어 둔다. 그렇게 해 뒀기 때문에 바깥 사람이 간판 수치만 따로 떼어 검증할 수 있었다. 등급에 근거 URL을 붙이는 습관도 같은 성격이다 — 틀렸을 때 어디가 틀렸는지 짚을 수 있게 만드는 것.</p>
+
+<h3>이 위키가 가져갈 것</h3>
+<p>비교에서 나온 항목은 세 갈래인데, 값이 서로 다르다.</p>
+<p>가장 큰 것은 <strong>부르는 문</strong>이다. 이 위키의 기계 계층은 전부 당겨 읽는 방식이라, 에이전트가 <code>llms.txt</code>를 알고 찾아와야 시작된다. 지식 그래프를 MCP 서버로 감싸면 &ldquo;이 개념을 다루는 문서&rdquo;·&ldquo;이 문서의 선행지식&rdquo;·&ldquo;두 문서를 잇는 경로&rdquo; 같은 질의가 도구 호출 한 번이 된다. 타입 관계를 이미 가지고 있어서, 남의 목록보다 도구로 만들 거리가 오히려 많다. <a href="#!kgs-plugin">위키 엔진의 플러그인화</a>에서 스킬로 묶어 둔 것들과도 겹치는 자리다.</p>
+<p>둘째는 <strong>schema.org JSON-LD</strong>다. 저쪽은 검색엔진과 답변엔진이 읽는 표준 어휘로 같은 데이터를 한 벌 더 낸다. 이 위키는 자체 스키마와 순회 가이드로 계약을 세워 뒀는데, 그건 가이드를 읽은 에이전트에게만 통한다. 다만 이건 표지 파일이 이미 하는 일과 겹치는 부분이 있어 우선순위는 낮다.</p>
+<p>셋째는 <strong>죽은 것을 지우지 않고 무덤에 두는 방식</strong>이다. 저쪽은 버린 항목 3종과 아직 판단하지 않은 관찰 대기 24종을 데이터에 남겨 둔다. 지워 버리면 &ldquo;왜 없지&rdquo;라는 질문이 매번 새로 생기고, 남겨 두면 한 번 내린 판단이 재사용된다. 이 위키에는 <a href="#!wl-backlog">Backlog</a>가 비슷한 자리에 있지만 그건 할 일 목록이지 <strong>기각 기록</strong>은 아니다.</p>
+<p>셋 중 첫째만 성격이 다르다. 나머지 둘은 지금 있는 것을 한 벌 더 내놓는 일이고, 첫째는 이 위키가 아직 열지 않은 문이다.</p>
+
+<h3>사실검증 노트</h3>
+<p class="scn-sub">항목 167종·범주 12개·필드 21종의 전수 충족·심화 조사 87종·주간 재채점 커밋·MCP 도구 8종·추천 점수식은 2026년 9월 21일에 <a href="https://github.com/RyanAlberts/best-of-Agent-Harnesses" target="_blank" rel="noopener">저장소</a>를 받아 직접 세고 실행해 확인했다. 파일 크기와 그래프 수치는 같은 날 이 위키의 생성물에서 잰 값이다. 별 수는 목록이 2026년 9월 20일에 포착했다고 밝힌 값이며, 이 글을 쓴 환경에서는 GitHub API가 막혀 있어 <strong>제3자 대조를 하지 못했다</strong>. ARC-AGI-3 공식 점수(Opus 5 30.2%, GPT-6 Astra 62.7%)와 Prime Agent의 95.5%가 자체 보고이고 재현 자료가 공개돼 있지 않다는 점은 <a href="https://arcprize.org/leaderboard" target="_blank" rel="noopener">ARC Prize 리더보드</a>와 복수의 검증 정리에서 교차 확인했다. SWE-bench Pro의 23→52·15→36, Cursor의 46→80, Harness-Bench의 순위 상관 -0.05는 목록의 근거표가 링크한 1차 자료를 따랐으나 <strong>arXiv가 이 환경에서 열리지 않아 논문 본문은 확인하지 못했고</strong>, 수치는 저장소의 인용과 이차 정리가 일치하는 범위만 옮겼다. 저장소 관리자는 개인이라 이름을 적지 않았다.</p>

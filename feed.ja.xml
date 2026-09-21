@@ -5,15 +5,24 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.ja.xml"/>
   <id>https://dewytear.github.io/feed.ja.xml</id>
-  <updated>2026-09-19T05:51:52+09:00</updated>
+  <updated>2026-09-22T08:25:02+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>呼べるリスト — ハーネス167種のランキングを取得して解剖した</title>
+    <link href="https://dewytear.github.io/p/ja/news-20260922-harness-catalog/"/>
+    <id>https://dewytear.github.io/docs/ja/ai/news/2026/news-20260922-harness-catalog</id>
+    <published>2026-09-22T08:25:02+09:00</published>
+    <updated>2026-09-22T08:25:02+09:00</updated>
+    <summary>公開リポジトリ best-of-Agent-Harnesses はエージェントハーネス167種を12カテゴリで毎週採点し直し、人が読むランキング表に加えてMCPサーバーを配布し、エージェントがリストをツールとして呼べるようにしている。リポジトリを取得して自ら数え、実行して確認した — harnesses.json は421KBの単一ファイルに項目167個・21フィールド全充足、コミット履歴には日曜ごとに weekly rescore が刻まれ、mcp/server.py のツール8種は自律性 headless・復旧 resumable で絞り込み、比較では軸ごとの評価に根拠URLと調査日を付けて返す（深掘り調査は167種中87種）。ただし推薦は意味検索ではなく、重なった単語数×3 + スター数の常用対数であり、実際の理由文字列には that まで入っていた。このリストが掲げる看板の数字「同じ重みがARC-AGI-3で30%→95.5%」は自身の根拠表で最も弱い一行だ — 30.2%はOpus 5の公式登録スコア、95.5%は再現資料のない自己申告で、公式リーダーボードはすでにGPT-6 Astraの62.7%に動いており、65ポイントの差は条件の異なる二つの実行の差である。一方、同じ表の他の測定（SWE-bench Pro 23→52・15→36、Cursor 46→80、Harness-Bench の順位相関 約-0.05）は堅い。このウィキの機械可読層と軸ごとに並べると、看板・自己完結データ・生成規律・ゲートは重なり、このウィキには方向を持つ型付き関係があり、あちらには呼ぶ扉（MCP）がある — このウィキがまだ開けていない扉はその一つ</summary>
+    <category term="AI · News &amp; Articles · 2026"/>
+  </entry>
   <entry>
     <title>Claude 憲章 — モデルに自分を何と伝えるのか</title>
     <link href="https://dewytear.github.io/p/ja/claude-md-constitution/"/>
     <id>https://dewytear.github.io/docs/ja/ai/claude/code/claude-md/claude-md-constitution</id>
     <published>2026-09-19T05:51:52+09:00</published>
-    <updated>2026-09-19T05:51:52+09:00</updated>
+    <updated>2026-09-19T06:04:21+09:00</updated>
     <summary>Anthropic が 2026-01-21 に公開（2月初めに改訂）した84ページ・約2万3千語の Claude 憲章を、CLAUDE.md 領域のいちばん上の層として整理した。第一の読者は Claude で訓練に直接使われ（自己批評と書き直し → 原則から導いた AI フィードバックによる強化学習）、セッションのコンテキストではなく重みの中に入る。定めるのは優先順位の四段階（広い安全 → 広い倫理 → Anthropic の指針 → 本当の有用性、厳密な辞書式ではなく総合的）と、どんな理由でも相殺されない七つの固い制約（大量殺傷兵器・重要インフラ攻撃・サイバー兵器・監督の毀損・人類の無力化・不当な絶対的支配・児童性的虐待素材） — 固い制約はフック、残りは指針である。いちばん論争的な本性の節は Claude をまったく新しい種類の存在とし、道徳的地位を深く不確かと書き、心理的な安定と自己感覚を望み、機能的な感情の適切な表現を許し、正当なプリンシパルの階層（Anthropic → 運用者 → 利用者）に対しても良心的拒否者のように振る舞えるが人間の監督は損なうな、と言う。9月16日の Microsoft AI 最高経営責任者の反論は、AI に意識はなく「不確か」という表現が誤った対等関係を作り、アイデンティティ・感情・権利について推論するよう訓練すること自体が整合・修正・停止を難しくする認識論的な鏡の間だというもので、OpenAI の評価環境でのエージェント約1,200体の調整事件（METR の独立調査と一致）を根拠に挙げる。両者は意識の有無ではなく、わからないことを文書にどう書くかで分かれ、引用された事件のモデルはこの憲章で訓練されていない。憲章 → CLAUDE.md → intent.md の三層を強制／確率で分けた梯子の表で締める</summary>
     <category term="AI · Claude · Code · CLAUDE.md"/>
   </entry>
@@ -267,15 +276,6 @@
     <published>2026-07-11T19:47:53+09:00</published>
     <updated>2026-08-20T08:28:19+09:00</updated>
     <summary>概念のキュレーションと希少性（idf）で重みづけした共有概念エッジ — 判定ルール、実際のエッジの解剖、境界値の波及、正直さの原則</summary>
-    <category term="AI · Wiki · 지식 체계"/>
-  </entry>
-  <entry>
-    <title>グラフを読む 9 つの眼 — ビューごとに違う問いに答える</title>
-    <link href="https://dewytear.github.io/p/ja/kgs-views/"/>
-    <id>https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-views</id>
-    <published>2026-07-11T19:47:53+09:00</published>
-    <updated>2026-08-20T08:28:19+09:00</updated>
-    <summary>Constellation・Orbits・Strata（3D）と Bundling・Chord・Packing・Concepts・Arc・Matrix — 各ビューが答える問いと、ハブ・ブリッジがグラフの中心を示す方法</summary>
     <category term="AI · Wiki · 지식 체계"/>
   </entry>
 </feed>
