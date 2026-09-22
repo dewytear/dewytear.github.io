@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 
-이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 70개 문서 · 338개 개념.
+이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 71개 문서 · 338개 개념.
 
 License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 밝히면 자유롭게 인용·재사용할 수 있다.
 
@@ -12,8 +12,8 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - 정적 스냅샷 `https://dewytear.github.io/p/<name>/`(English는 `https://dewytear.github.io/p/en/<name>/`, 日本語는 `https://dewytear.github.io/p/ja/<name>/`): JS 없이 읽히는 문서 페이지 — 그래프 노드의 `page` 필드가 같은 주소를 가리킨다.
 - [AI 순회 가이드](https://dewytear.github.io/docs/ko/ai/map/ai-guide): 그래프를 어떻게 질의·순회·분석하는지의 계약(노드·엣지·개념 조인·계층).
 - [지식 인덱스](https://dewytear.github.io/data/knowledge-index.ko.json) · [내비 트리](https://dewytear.github.io/list) · [문서 날짜](https://dewytear.github.io/data/doc-dates.json) · [Atom 피드](https://dewytear.github.io/feed.xml)
-- English: 70/70개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
-- 日本語: 70/70개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
+- English: 71/71개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
+- 日本語: 71/71개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
 
 ## 지식 체계 (AI · Wiki · 지식 체계)
 - [지식은 어떻게 쌓이는가](https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-overview): World→Domain→System→Document 4계층과 문서 등재 파이프라인 — 불변 ID·물리 경로·결정론적 인덱스 빌드 · [EN](https://dewytear.github.io/docs/en/ai/wiki/knowledge-system/kgs-overview) · [JA](https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-overview)
@@ -107,6 +107,7 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [판정을 누구에게 맡길 것인가 — 8월의 네 장면](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260820-who-makes-the-call): 8월 둘째 주의 발표 넷을 '판정의 이동'이라는 한 프레임으로 묶었다 — Claude Tag는 채널 전체 맥락으로 '언제 나설지'를 모델이 판정하고(8/13, 약 30% 향상, 추가 컨텍스트 한도 미계상), Grok Bot은 실행을 기본값으로 두고 사람에게 승인만 남기며(8/11 베타, 자격증명 공유 구조의 표기 갈림), Cursor Origin은 약관 없는 옵트아웃 기본값으로 코드 보관 판정을 비워 둔 채 열렸고(8/17, SpaceX 인수 8/14 완결), GPT-5.6-Cyber는 제로데이 발굴 능력을 거절 대신 심사제 프로그램(Daybreak Red) 뒤에 뒀다(8/10, ACCR 95.0% vs 1.5%). auto 모드·셀프호스팅에 이어 판정은 사라지지 않고 자리를 옮긴다는 세 번째 관찰 · [EN](https://dewytear.github.io/docs/en/ai/news/2026/news-20260820-who-makes-the-call) · [JA](https://dewytear.github.io/docs/ja/ai/news/2026/news-20260820-who-makes-the-call)
 - [내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260901-whose-usage): Claude 사용량을 둘러싼 9월 초 소식 셋을 한 프레임으로 묶었다 — 인포스틸러가 로그인 세션 쿠키를 훔쳐 남의 계정으로 한도를 소진했고(2단계 인증은 로그인 순간만 지킨다, Anthropic은 강제 로그아웃·저장 결제수단 삭제·무단 과금 환불으로 대응, 지목된 악성코드는 Vidar·LummaC2·StealC·RedLine·Acreed와 소수의 Mac Atomic Stealer, 로그아웃은 감염을 지우지 않는다), 9월 14일 Claude Code 주간 한도는 임시 50% 증량이 상시 25% 증량으로 대체돼 현재 기준 순 약 17% 감소이며(같은 변경이 +25%로도 -17%로도 서술되는 이유는 기준선 차이), Claude Code 2.1.251은 /usage 지출 한도 막대·세션별 프롬프트 캐시 줄과 PreModelSwitch·PostModelSwitch 훅을 더했다. 누가 쓰는가·얼마나 남았는가·무엇이 보여 주는가라는 같은 계량기의 세 면 · [EN](https://dewytear.github.io/docs/en/ai/news/2026/news-20260901-whose-usage) · [JA](https://dewytear.github.io/docs/ja/ai/news/2026/news-20260901-whose-usage)
 - [모델에 문이 달렸다 — 누가 쓰는가와, 어떻게 부르는가](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260904-model-doors): Fable 5.1과 Mythos 5.1은 능력·규격·가격이 같은 한 모델이고 갈리는 것은 접근뿐이다 — Fable 5.1은 모든 고객에게, Mythos 5.1은 Project Glasswing 승인 고객에게만 열리며 Mythos 5.1은 이력 편집 검사를 돌리지 않는다(컨텍스트 100만·출력 12.8만·적응형 사고 상시·30일 데이터 보존). 값이 내려간 칸은 캐시 읽기 하나로 100만 토큰당 $1 → $0.25, 기본 입력가의 0.1배이던 배수가 0.025배가 됐고(기본 입력 $10·출력 $50·캐시 쓰기·512토큰 최소는 그대로) 보도의 25%·45% 절감은 전부 이 한 줄에서 나온다. 같은 릴리스가 호출을 셋 바꿨다 — 도구 호출 강제는 400 오류(사고가 늘 켜져 있어 강제하면 따져 볼 내용이 도구 인자로 새어 인자 품질이 떨어지기 때문, strict: true와 프롬프트 지시로 대체), 사고 블록은 만든 모델과 그보다 새 모델만 읽고, 앞선 시스템 프롬프트·도구 목록·이력을 고치면 그 뒤 블록이 무효가 된다(2026-08-31 이후 계정만 기본 적용, prefix_mismatch_behavior·input_transformations로 확인). 캐시를 따뜻하게 두는 조건과 사고 블록을 살려 두는 조건이 같아, 인하는 상이고 검사는 벌이다 · [EN](https://dewytear.github.io/docs/en/ai/news/2026/news-20260904-model-doors) · [JA](https://dewytear.github.io/docs/ja/ai/news/2026/news-20260904-model-doors)
+- [부를 수 있는 목록 — 하네스 167종 순위표를 받아서 뜯어봤다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260922-harness-catalog): 공개 저장소 best-of-Agent-Harnesses는 에이전트 하네스 167종을 12개 범주로 매주 재채점하고, 사람용 순위표에 더해 MCP 서버를 배포해 에이전트가 목록을 도구로 부르게 한다. 저장소를 받아 직접 세고 실행해 확인했다 — harnesses.json은 421KB 단일 파일에 항목 167개·21개 필드 전수 충족, 커밋 이력에 일요일마다 weekly rescore가 찍혀 있고, mcp/server.py의 도구 8종은 자율성 headless·복구 resumable로 걸러 주고 비교 시 축별 등급에 근거 URL과 조사 날짜를 붙여 돌려준다(심화 조사 87/167). 다만 추천은 의미 검색이 아니라 겹친 단어 수×3 + 별 수의 상용로그이고, 실제 이유 문자열에 that까지 들어갔다. 이 목록이 내건 간판 수치 '같은 가중치가 ARC-AGI-3에서 30%→95.5%'는 자기 근거표에서 가장 약한 고리다 — 30.2%는 Opus 5의 공식 등재 점수, 95.5%는 재현 자료 없는 자체 보고이고 공식 리더보드는 이미 GPT-6 Astra 62.7%로 올라가 두 수의 차 65포인트는 조건이 다른 두 실행의 차다. 반면 같은 표의 다른 측정(SWE-bench Pro 23→52·15→36, Cursor 46→80, Harness-Bench 순위 상관 -0.05)은 단단하다. 이 위키의 기계 계층과 축별로 나란히 놓으면 표지·자기완결 데이터·생성 규율·게이트는 겹치고, 이 위키에는 방향 있는 타입 관계가 있고 저쪽에는 부르는 문(MCP)이 있다 — 이 위키가 아직 열지 않은 문은 그 하나 · [EN](https://dewytear.github.io/docs/en/ai/news/2026/news-20260922-harness-catalog) · [JA](https://dewytear.github.io/docs/ja/ai/news/2026/news-20260922-harness-catalog)
 
 ## AI 개발 지식 플랫폼 (Douzone · dev.Center · Proposal · AI 개발 지식 플랫폼)
 - [제안 개요 — 왜 지금, 무엇을](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-overview): GitLab 기반 AI 개발 지식 플랫폼 제안의 개요와 문제의식 — 흩어지고 사라지는 개발 지식을 왜 지금 지식화해야 하는가 · [EN](https://dewytear.github.io/docs/en/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-overview) · [JA](https://dewytear.github.io/docs/ja/douzone/dev-center/proposal/ai-dev-knowledge-platform/dzp-overview)
@@ -124,14 +125,14 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [dews-sourcegraph — 사내 코드 검색을 Claude에게 넘기는 스킬](https://dewytear.github.io/docs/ko/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph): 사내 SourceGraph 인스턴스를 Claude Code가 직접 질의하게 만드는 스킬. 비공개 인스턴스는 익명 접근이 401로 막혀 일반 웹 조회 도구로는 아무것도 못 읽는데, 이 스킬은 설치된 Edge·Chrome으로 폼 로그인을 1회 자동 수행하고 세션을 캐시해 재사용한다 — 개발자도구로 쿠키를 복사하는 절차가 없다. 캐시 브라우저를 쓰지 않는 이유(보안 에이전트가 ms-playwright 실행 파일을 차단하는 사내 PC에서 멈춤), 프로젝트 루트에 .claude 병합 + SourceGraph.md 세 줄 + npm install 로 끝나는 설치, Sourcegraph 표준 쿼리 문법, 그리고 로컬 우선 원칙과 [SG repo/파일:라인] 인용 규약을 담았다. 자격증명·세션 캐시 커밋 금지와 로그인 실패 시 재시도 금지(계정 잠금)를 함께 못 박았고, 조직 정보를 제거한 일반화 zip을 받을 수 있다 · [EN](https://dewytear.github.io/docs/en/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph) · [JA](https://dewytear.github.io/docs/ja/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph)
 
 ## 허브 문서 (가장 많이 참조됨 — 분석 진입점)
-- [intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC](https://dewytear.github.io/docs/ko/ai/claude/code/claude-md/claude-md-intent): 피참조 10회
 - [Harness 플러그인 — 소개·개념·설치](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-intro): 피참조 10회
+- [intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC](https://dewytear.github.io/docs/ko/ai/claude/code/claude-md/claude-md-intent): 피참조 9회
 - [실행하기 — 설치·실행·리뷰](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-install): 피참조 8회
 - [내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260901-whose-usage): 피참조 8회
 - [모델에 문이 달렸다 — 누가 쓰는가와, 어떻게 부르는가](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260904-model-doors): 피참조 8회
 - [첫 실행과 동작 구조](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-first-run): 피참조 7회
 - [LLM Wiki와 날리지 컨텍스트 — 쓰기 시점에 컴파일하는 팀 지식](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260710-llm-wiki-knowledge-context): 피참조 7회
-- [묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260814-auto-mode-stateless-mcp): 피참조 7회
 - [레벨 3~5 — 의미·관계·브레인 OS](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-level3): 피참조 7회
 - [Fable 5 시대의 병목은 모델이 아니라 인간인가 — 타릭의 지도와 영토 프레임](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260709-thariq-fable5-unknowns): 피참조 6회
 - [Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260724-claude-opus-5): 피참조 6회
+- [묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260814-auto-mode-stateless-mcp): 피참조 6회
