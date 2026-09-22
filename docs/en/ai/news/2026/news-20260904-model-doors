@@ -5,6 +5,7 @@
     <li>Fable 5.1 and Mythos 5.1 are <strong>one model with the same capabilities</strong>. Anyone can call Fable 5.1 through the API; Mythos 5.1 opens only to Project Glasswing participants.</li>
     <li>The price dropped <strong>on a single line</strong> — cache reads, from $1 to $0.25 per million tokens. Base input and output rates are unchanged from Fable 5.</li>
     <li>The same release changed <strong>three things about how you call it</strong>. You cannot force a tool call, earlier models cannot read its reasoning, and editing the conversation history invalidates the reasoning that came after.</li>
+    <li>Three weeks later <strong>the same rules arrived on Opus 5.5</strong> (22 September). What had been the terms of a specialty model became the terms of the model you get by default, and this time the price fell on the base rate rather than on cache reads.</li>
 </ul>
 
 <h3>One model, two names</h3>
@@ -57,9 +58,42 @@
     A few other things are worth picking up while you are in there. The same release added betas for changing effort mid-conversation, for system messages scoped to a single turn, and for receiving inter-tool progress updates as text via <code>display: "updates"</code>. Default behavior shifted slightly too: where Fable 5 batched several tool calls, Fable 5.1 more often issues one per turn. Answer quality holds, but the extra round trips cost tokens and time.
 </p>
 
+<h3>22 September — the exception became the default</h3>
+<p>
+    Three weeks after this was written, <strong>Opus 5.5</strong> arrived (22 September). The specs match Fable 5.1 at 1M context and 128k output, and adaptive thinking is always on there too. The pricing is what differs. Fable 5.1 left the base rate alone and cut a single cache line; <strong>Opus 5.5 cut the base rate itself.</strong>
+</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Per million tokens</th><th>Opus 5</th><th>Opus 5.5</th><th>Fable 5.1</th></tr></thead>
+    <tbody>
+        <tr><td>Input / output</td><td>$5 / $25</td><td><strong>$4 / $20</strong></td><td>$10 / $50</td></tr>
+        <tr><td>Cache reads</td><td>$0.50 (10% of input)</td><td>$0.20 (<strong>5%</strong>)</td><td>$0.25 (2.5%)</td></tr>
+        <tr><td>Default effort</td><td><code>high</code></td><td><strong><code>medium</code></strong></td><td><code>high</code></td></tr>
+    </tbody>
+</table>
+</div>
+<p>
+    Four things now return an error, and three of them are the ones above: thinking cannot be disabled, tool calls cannot be forced, and thinking blocks are bound to the model and the history. Only the fourth is new. On the Claude API and Google Cloud the older <strong>computer use tool</strong> (<code>computer_20251124</code>) returns a 400, so integrations move to the <code>computer_toolset_20260801</code> toolset. On Amazon Bedrock the older tool keeps working, so the answer differs by platform.
+</p>
+<p>
+    Two changes that fail nothing may be the more dangerous pair. The first is that <strong>the default effort dropped from <code>high</code> to <code>medium</code></strong>. Swap the model ID without setting <code>effort</code> and you get a model that thinks less than before, with no error and no warning. Carrying the old value over is not right either, since at the same effort setting this model tends to think more per turn; the official guidance is to measure again rather than reuse the setting.
+</p>
+<p>
+    The second is that <strong>the short notes written between tool calls now arrive as thinking blocks rather than <code>text</code></strong>. At the default setting those blocks come back with empty text, so an interface that streamed them to users as progress goes quiet between tool calls. Nothing errors, which makes it easy to miss, and the text returns only once <code>display</code> is set.
+</p>
+<p>
+    The direction of thinking blocks now needs a map. Opus 5.5 reads blocks from Opus 5 and earlier Opus, Sonnet and Haiku models, but <strong>not from Fable or Mythos models.</strong> Going the other way, Fable 5.1 and Mythos 5.1 do read Opus 5.5 blocks (on the Claude API). So reasoning survives on the way <strong>up</strong> — Opus 5 to Opus 5.5 to Fable 5.1 — and is dropped on other moves. The history check applies identically, on by default for accounts created on or after 31 August 2026.
+</p>
+<p>
+    What makes this matter is not that the rules changed but that <strong>the place they sit changed.</strong> In early September these conditions were attached to an expensive specialty model and to one behind a door, which made them a question of whether to migrate. Claude Code 2.1.280, released the same day, made Opus 5.5 the <strong>default Opus model</strong> and switched the default on Pro and Team Standard plans from Sonnet to Opus. The model you get without choosing now carries these conditions.
+</p>
+
 <h3>Why these belong together</h3>
 <p>
     The cheaper-model story and the breaking-change story circulated separately, yet both sentences ask for the same thing — <strong>leave the opening alone and only append to the end.</strong> The conditions that keep the cache warm and the conditions that keep thinking blocks valid are the same conditions. The documentation says as much: describing the append-only patterns, it adds that they also keep the prompt cache warm. The cache discount is the reward for that discipline; the history check is the penalty for breaking it. Migrate for the reward alone and you meet the penalty.
+</p>
+<p>
+    Opus 5.5 pushed both a step further. The reward widened from one cache line to the base rate, and the penalty now reaches people who <strong>took the default</strong> rather than people who picked a specialty model. The stretch where following the discipline was optional has ended.
 </p>
 <p>
     <a href="#!news-20260820-who-makes-the-call">Who Gets to Make the Call</a> traced a movement that pushes judgment toward the machine. How Mythos 5.1 ships is a case from the other side: given the same capability, <strong>a person verifies the organization before the door opens.</strong> How far automation goes there is set not by capability but by the size of the damage.
@@ -69,4 +103,4 @@
 </p>
 
 <h3>Fact-check note</h3>
-<p class="scn-sub">The price table ($10 base input, $50 output, $0.25 cache reads, a 0.025 cache multiplier), the specs (1M context, 128k output, 30-day retention), the three breaking changes and their stated reasons, <code>prefix_mismatch_behavior</code>, <code>input_transformations</code>, the August 31 account condition, and the facts that Mythos 5.1 skips the history check and ships only to Project Glasswing all follow the <a href="https://platform.claude.com/docs/en/models/fable-5-1/whats-new-fable-5-1" target="_blank" rel="noopener">official release documentation</a> and the <a href="https://platform.claude.com/docs/en/models/fable-5-1/migration-guide" target="_blank" rel="noopener">migration guide</a>. Multipliers reported at launch, such as "double the Terminal-Bench-Science score" and "over 30% better agentic coding," <strong>do not appear in the official capability write-up</strong> and are not used here; that evaluation carries a reported standard error of 3.5 to 4.5 points per model, which makes a single comparison a weak basis for a multiplier. The 25% and 45% savings figures are Anthropic's own, and a workload where cache reads are a small share of spend will not fall by that much.</p>
+<p class="scn-sub">The price table ($10 base input, $50 output, $0.25 cache reads, a 0.025 cache multiplier), the specs (1M context, 128k output, 30-day retention), the three breaking changes and their stated reasons, <code>prefix_mismatch_behavior</code>, <code>input_transformations</code>, the August 31 account condition, and the facts that Mythos 5.1 skips the history check and ships only to Project Glasswing all follow the <a href="https://platform.claude.com/docs/en/models/fable-5-1/whats-new-fable-5-1" target="_blank" rel="noopener">official release documentation</a> and the <a href="https://platform.claude.com/docs/en/models/fable-5-1/migration-guide" target="_blank" rel="noopener">migration guide</a>. Multipliers reported at launch, such as "double the Terminal-Bench-Science score" and "over 30% better agentic coding," <strong>do not appear in the official capability write-up</strong> and are not used here; that evaluation carries a reported standard error of 3.5 to 4.5 points per model, which makes a single comparison a weak basis for a multiplier. The 25% and 45% savings figures are Anthropic's own, and a workload where cache reads are a small share of spend will not fall by that much. The Opus 5.5 material (release date, $4/$20 pricing, $0.20 cache reads at a 5% multiplier, the <code>medium</code> default effort, the 1M and 128k specs, the four breaking changes, the thinking-block direction, and the platform split on the computer use toolset) follows the <a href="https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5" target="_blank" rel="noopener">official release documentation</a> and the <a href="https://platform.claude.com/docs/en/models/opus-5-5/overview" target="_blank" rel="noopener">model page</a>; the default-model change was confirmed in the <a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">Claude Code 2.1.280 changelog</a>. <strong>The "40% cheaper to run" figure some coverage carried is not used here</strong> — the official rates move from $5 to $4 and $25 to $20, a 20% cut per token, and 40% appears to be a per-task estimate that folds in the lower default effort spending fewer tokens, a multiplier the official documentation does not give.</p>

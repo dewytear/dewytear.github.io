@@ -5,6 +5,7 @@
     <li>Fable 5.1 と Mythos 5.1 は<strong>能力が同じ一つのモデル</strong>である。Fable 5.1 は誰でも API で使えるが、Mythos 5.1 は Project Glasswing の参加者にだけ開かれる。</li>
     <li>値段が下がったのは<strong>キャッシュ読み取りの一行だけ</strong>だ — 100万トークンあたり $1 から $0.25 へ。基本の入力・出力単価は Fable 5 のままである。</li>
     <li>同じリリースが<strong>呼び方を三か所</strong>変えた。ツール呼び出しを強制できず、以前のモデルはこのモデルの推論を読めず、対話履歴を書き換えるとその後の推論が無効になる。</li>
+    <li>3週間後、<strong>同じ規則が Opus 5.5 に来た</strong>（9月22日）。特殊なモデルの条件だったものが、既定で受け取るモデルの条件になり、値下げはキャッシュではなく基本単価で起きた。</li>
 </ul>
 
 <h3>同じモデル、二つの名前</h3>
@@ -57,9 +58,42 @@
     移行のついでに見ておくものがいくつかある。同じリリースには、対話の途中で effort を変えるベータ、一ターンだけ生きて消えるシステムメッセージのベータ、ツール呼び出しの合間の進行状況をテキストで受け取る <code>display: "updates"</code> のベータが入った。既定の挙動も少し変わり、以前は複数のツールをまとめて呼んでいた場面で一ターンに一つずつ呼ぶことが増えた。答えの質が落ちるわけではないが、往復が増えてトークンと時間を余分に使う。
 </p>
 
+<h3>9月22日 — 例外が既定になった</h3>
+<p>
+    この記事を書いてから3週間後、<strong>Opus 5.5</strong> が出た（9月22日）。仕様は Fable 5.1 と同じくコンテキスト100万・出力12.8万で、適応的思考が常に入っている点も同じだ。違うのは値段である。Fable 5.1 は基本単価をそのままにキャッシュ読み取りの一行だけを削ったが、<strong>Opus 5.5 は基本単価そのものが下がった。</strong>
+</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>100万トークンあたり</th><th>Opus 5</th><th>Opus 5.5</th><th>Fable 5.1</th></tr></thead>
+    <tbody>
+        <tr><td>入力 / 出力</td><td>$5 / $25</td><td><strong>$4 / $20</strong></td><td>$10 / $50</td></tr>
+        <tr><td>キャッシュ読み取り</td><td>$0.50（入力の10%）</td><td>$0.20（<strong>5%</strong>）</td><td>$0.25（2.5%）</td></tr>
+        <tr><td>既定の effort</td><td><code>high</code></td><td><strong><code>medium</code></strong></td><td><code>high</code></td></tr>
+    </tbody>
+</table>
+</div>
+<p>
+    エラーになる箇所は四つで、そのうち三つは上で見たものと同じだ — 思考を切れない、ツール呼び出しを強制できない、思考ブロックがモデルと履歴に縛られる。新しいのは四つ目だけである。Claude API と Google Cloud では旧来の<strong>コンピュータ使用ツール</strong>（<code>computer_20251124</code>）が400を返すので、<code>computer_toolset_20260801</code> ツールセットへ移す必要がある。Amazon Bedrock では旧ツールがそのまま動くため、プラットフォームごとに答えが違う。
+</p>
+<p>
+    リクエストを失敗させない変更の二つのほうが、むしろ危ないかもしれない。一つは<strong>既定の effort が <code>high</code> から <code>medium</code> に下がったこと</strong>だ。モデル名だけ差し替えて <code>effort</code> を書かなければ、以前より考えないモデルを受け取ることになる。エラーも警告も出ない。同じ effort 値でもこのモデルはターンあたり多く考える傾向なので、値をそのまま移すのも正しくない — 公式の案内は測り直せというものだ。
+</p>
+<p>
+    もう一つは<strong>ツール呼び出しのあいだに書かれる短いメモが <code>text</code> ではなく思考ブロックで返ること</strong>である。既定の設定ではそのブロックの文字が空なので、進捗を利用者に流して見せていた画面がツール呼び出しのあいだ静かになる。エラーが出ないので気づきにくく、<code>display</code> の値を変えて初めて文字が戻る。
+</p>
+<p>
+    思考ブロックの向きは、もはや地図が要るほど分かれた。Opus 5.5 は Opus 5 とそれ以前の Opus・Sonnet・Haiku のブロックを読むが、<strong>Fable・Mythos のものは読めない。</strong>逆に Fable 5.1 と Mythos 5.1 は Opus 5.5 のブロックを読む（Claude API の場合）。つまり Opus 5 → Opus 5.5 → Fable 5.1 と<strong>上がる道では推論がつながり</strong>、それ以外の移動では切れる。履歴編集の検査が2026年8月31日以降のアカウントで既定で入る点も同じだ。
+</p>
+<p>
+    この変化が重要なのは、規則が変わったからではなく<strong>規則の置かれた場所が変わったから</strong>である。9月初めにはこれらの条件が高価な特殊モデルと扉の向こうのモデルにだけ付いていたので、移るか移らないかを選ぶ問題だった。同じ日に出た Claude Code 2.1.280 は Opus 5.5 を<strong>既定の Opus モデル</strong>に入れ、Pro・Team Standard プランの既定モデルを Sonnet から Opus に変えた。選ばなくても受け取るモデルが、これらの条件を帯びているということだ。
+</p>
+
 <h3>なぜ一つの流れなのか</h3>
 <p>
     安くなったという知らせと壊れるという知らせは別々に回ったが、二つの文が求めているものは同じだ — <strong>冒頭には触れず、後ろに足していけ。</strong> キャッシュが温かいまま保たれる条件と、思考ブロックが生きている条件が同じ条件だからである。公式文書も、履歴に足していくだけのパターンを説明したうえで「これらのパターンはプロンプトキャッシュも温かく保つ」と付け加えている。キャッシュ読み取りの値下げはその規律への褒美であり、履歴編集の検査は破ったときの罰だ。褒美だけを見て移ると罰のほうで引っかかる。
+</p>
+<p>
+    Opus 5.5 はその褒美と罰を一歩先へ進めた。褒美はキャッシュの一行から基本単価まで広がり、罰は特殊モデルを選んだ人ではなく<strong>既定を受け取った人</strong>にもかかる。規律を守るかどうかが選択だった区間が終わったわけだ。
 </p>
 <p>
     <a href="#!news-20260820-who-makes-the-call">判定を誰に任せるのか</a>で見た流れは、判定を機械の側へ寄せる向きだった。Mythos 5.1 の配り方はその反対側の事例である — 同じ能力を前にして、<strong>人が組織を確かめてから扉を開ける。</strong> 自動化がどこまで行けるかを、能力ではなく被害の大きさが決めるという側に近い。
@@ -69,4 +103,4 @@
 </p>
 
 <h3>事実確認ノート</h3>
-<p class="scn-sub">価格表（基本入力 $10・出力 $50・キャッシュ読み取り $0.25・キャッシュ倍率 0.025）、仕様（コンテキスト100万・出力12.8万・30日保持）、三つの破壊的変更とその理由、<code>prefix_mismatch_behavior</code>・<code>input_transformations</code>・8月31日のアカウント条件、Mythos 5.1 が履歴検査を走らせない点と Project Glasswing 限定の提供は、すべて<a href="https://platform.claude.com/docs/en/models/fable-5-1/whats-new-fable-5-1" target="_blank" rel="noopener">公式のリリース文書</a>と<a href="https://platform.claude.com/docs/en/models/fable-5-1/migration-guide" target="_blank" rel="noopener">移行ガイド</a>に従った。公開時の報道が併せて伝えた「Terminal-Bench-Science の点数が2倍」「エージェント的コーディングが30%以上向上」といった倍率は<strong>公式文書の性能記述に入っていない</strong>ため、この記事では使わなかった — 当該評価はモデルごとの標準誤差が ±3.5〜4.5 ポイントとされ、一度の比較で倍率を語りにくい。削減幅の25%・45%は Anthropic 発表によるもので、キャッシュ読み取りの比重が小さいワークロードではそこまで下がらない。</p>
+<p class="scn-sub">価格表（基本入力 $10・出力 $50・キャッシュ読み取り $0.25・キャッシュ倍率 0.025）、仕様（コンテキスト100万・出力12.8万・30日保持）、三つの破壊的変更とその理由、<code>prefix_mismatch_behavior</code>・<code>input_transformations</code>・8月31日のアカウント条件、Mythos 5.1 が履歴検査を走らせない点と Project Glasswing 限定の提供は、すべて<a href="https://platform.claude.com/docs/en/models/fable-5-1/whats-new-fable-5-1" target="_blank" rel="noopener">公式のリリース文書</a>と<a href="https://platform.claude.com/docs/en/models/fable-5-1/migration-guide" target="_blank" rel="noopener">移行ガイド</a>に従った。公開時の報道が併せて伝えた「Terminal-Bench-Science の点数が2倍」「エージェント的コーディングが30%以上向上」といった倍率は<strong>公式文書の性能記述に入っていない</strong>ため、この記事では使わなかった — 当該評価はモデルごとの標準誤差が ±3.5〜4.5 ポイントとされ、一度の比較で倍率を語りにくい。削減幅の25%・45%は Anthropic 発表によるもので、キャッシュ読み取りの比重が小さいワークロードではそこまで下がらない。Opus 5.5 の部分（公開日、単価 $4・$20、キャッシュ読み取り $0.20 と5%の倍率、既定の effort <code>medium</code>、仕様100万・12.8万、四つの破壊的変更と思考ブロックの向き、コンピュータ使用ツールセットのプラットフォーム差）は<a href="https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5" target="_blank" rel="noopener">公式のリリース文書</a>と<a href="https://platform.claude.com/docs/en/models/opus-5-5/overview" target="_blank" rel="noopener">モデルページ</a>に従い、既定モデルの変更は <a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">Claude Code 2.1.280 の changelog</a> で確認した。<strong>一部の報道が伝えた「運用費40%削減」はこの記事では使わなかった</strong> — 公式単価では $5→$4、$25→$20 でトークンあたり20%の値下げであり、40%は既定の effort が下がってトークンを使わなくなる効果まで含めた作業あたりの推定と見られるが、その倍率は公式文書にない。</p>
