@@ -5,9 +5,18 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.ja.xml"/>
   <id>https://dewytear.github.io/feed.ja.xml</id>
-  <updated>2026-09-23T08:04:19+09:00</updated>
+  <updated>2026-09-24T19:57:46+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>このウィキはどれだけ当てるのか — 検索とグラフ巡回を測ってみた</title>
+    <link href="https://dewytear.github.io/p/ja/kgs-accuracy/"/>
+    <id>https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-accuracy</id>
+    <published>2026-09-24T19:57:46+09:00</published>
+    <updated>2026-09-24T19:57:46+09:00</updated>
+    <summary>「RAG-ready」を掲げ、エンジンをプラグインとして配りながら一度も測っていなかった精度を初めて測った — 9月23日に Claude Marketplace が約2,000件のカタログへ広がりプラグインが棚の商品になったこと、同じ日にカルパシーの LLM Wiki の gist に「主張をベンチマークで検証したのか」という質問が付いたことがきっかけ。検索はヘッドレスブラウザでサイトの searchDocs() をそのまま呼び、結果を見る前に固定した107問(一、二語・内容語の組み合わせ・文・二文書の質問、韓・英・日)で測った。内容語の組み合わせは韓国語で1位的中100%だが、文は韓国語20問すべて0件、英語と日本語は10% — スペースで切ったすべての断片が一つの文書になければ結果に出ない規則のため、疑問符付きの語尾のような断片が一つあるだけで丸ごと0件になり(韓国語17/20)、日本語は文全体が一つの断片になる。死んだ断片だけを落とす仮定の実験では英語が10%→70%、韓国語は助詞の付いた断片どうしの共通部分が空になり0%→15%。「ハーネス」にあたる一語は、その概念を持つ8件が8点で同点となり新しい順に並ぶため定義の文書が6位で、英語は語幹を揃えないので adoption が Adopting を見つけない。関連ブロックのエッジ252本は本文リンク・型付き関係で34.5%が裏付けられ、残り165本を判定すると関連63・弱い68・無関係34で、弱いまで含め86.5%が正しく無駄足は13.5% — 無関係34本のうち20本がありふれた概念語(プラグイン・インストール・スキル・トークン費用の二つが重なり二つ以上共有の規則を通る)、10本が意味の違う同音語(メタデータ・再試行など)、4本がフォルダ補充。一方、著者が張った本文リンク159本のうち関連ブロックの1ホップにあるのは32.7%(フォルダ外のリンクは19.3%)。二文書の質問12問で検索上位3件に両方入ったのは8.3%だが、検索が片方でも見つけた4問のうち3問では関連ブロックが残りを補った — ボトルネックはグラフではなく入口。道具・問題・判定は tools/eval/ に公開し、判定はこの記事を書いたAIが行った</summary>
+    <category term="AI · Wiki · 지식 체계"/>
+  </entry>
   <entry>
     <title>呼べるリスト — ハーネス167種のランキングを取得して解剖した</title>
     <link href="https://dewytear.github.io/p/ja/news-20260922-harness-catalog/"/>
@@ -40,7 +49,7 @@
     <link href="https://dewytear.github.io/p/ja/news-20260904-model-doors/"/>
     <id>https://dewytear.github.io/docs/ja/ai/news/2026/news-20260904-model-doors</id>
     <published>2026-09-04T07:39:54+09:00</published>
-    <updated>2026-09-23T08:04:19+09:00</updated>
+    <updated>2026-09-23T08:12:24+09:00</updated>
     <summary>Fable 5.1 と Mythos 5.1 は能力も仕様も価格も同じ一つのモデルで、分かれるのはアクセスだけだ — Fable 5.1 はすべての顧客に、Mythos 5.1 は Project Glasswing の承認顧客にのみ開かれ、Mythos 5.1 は履歴編集の検査を走らせない（コンテキスト100万・出力12.8万・適応的思考は常時・30日のデータ保持）。価格表で動いたのはキャッシュ読み取りの一マスだけで、100万トークンあたり $1 から $0.25 へ、基本入力価格の 0.1 倍だった倍率が 0.025 倍になった（基本入力 $10・出力 $50・キャッシュ書き込み・512トークンの最小は据え置き）。報道の25%・45%の削減はすべてこの一行から出ている。同じリリースが呼び方を三つ変えた — ツール呼び出しの強制は 400 エラー（思考が常に入っており強制すると検討の中身がツール引数に漏れて質が落ちるため、strict: true とプロンプトの指示で置き換える）、思考ブロックはそれを生んだモデルとそれより新しいモデルだけが読め、前のシステムプロンプト・ツール一覧・履歴を書き換えるとその後のブロックが無効になる（既定で入るのは 2026-08-31 以降のアカウントのみ、prefix_mismatch_behavior と input_transformations で確認できる）。キャッシュを温かく保つ条件と思考ブロックを生かす条件は同じで、値下げは褒美、検査は罰である 3週間後の9月22日、Opus 5.5 が同じ条件を既定で受け取るモデルへ持ち込んだ — 仕様は100万・12.8万で同じだが、値下げはキャッシュではなく基本単価で起き（入力 $4・出力 $20 で Opus 5 の $5・$25 より低く、キャッシュ読み取りは $0.20 で入力の5%）、四つの破壊的変更のうち三つは Fable 5.1 と同じ、四つ目は Claude API と Google Cloud で旧来のコンピュータ使用ツールが400を返す点である（Bedrock は動作継続）。失敗させない変更の二つのほうが危ない — 既定の effort が high から medium に下がり、名前だけ差し替えると警告なく考えないモデルを受け取り、ツール呼び出しのあいだのメモが思考ブロックで返るため既定設定では進捗表示が静かになる。思考ブロックは Opus 5→Opus 5.5→Fable 5.1 と上がる道でのみつながる。同じ日の Claude Code 2.1.280 が Opus 5.5 を既定の Opus モデルにし、Pro・Team Standard の既定を Sonnet から Opus へ変えたので、これらの条件は選ばなくても受け取るモデルの条件になった</summary>
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
@@ -267,15 +276,6 @@
     <published>2026-07-11T19:47:53+09:00</published>
     <updated>2026-08-15T14:06:54+09:00</updated>
     <summary>World→Domain→System→Document の 4 階層と文書の登録パイプライン — 不変 ID・物理パス・決定論的なインデックスビルド</summary>
-    <category term="AI · Wiki · 지식 체계"/>
-  </entry>
-  <entry>
-    <title>文書はどうつながるのか — 概念キュレーションと idf 重みつきエッジ</title>
-    <link href="https://dewytear.github.io/p/ja/kgs-edges/"/>
-    <id>https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-edges</id>
-    <published>2026-07-11T19:47:53+09:00</published>
-    <updated>2026-08-20T08:28:19+09:00</updated>
-    <summary>概念のキュレーションと希少性（idf）で重みづけした共有概念エッジ — 判定ルール、実際のエッジの解剖、境界値の波及、正直さの原則</summary>
     <category term="AI · Wiki · 지식 체계"/>
   </entry>
 </feed>

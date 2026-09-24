@@ -64,6 +64,25 @@
   "summary": "Deterministic builds with --check drift blocking, four PR companion gates, --fix auto-restore, and change-type declarations — how verification-first automation keeps the knowledge system coherent"
  },
  {
+  "name": "kgs-accuracy",
+  "title": "How Often Does This Wiki Get It Right — Measuring Search and Graph Traversal",
+  "summary": "The first measurement of an accuracy this wiki never had, despite calling itself RAG-ready and shipping its engine as a plugin — prompted by Claude Marketplace widening into a catalog of about 2,000 items on 23 September, turning plugins into products on a shelf, and by a comment the same day on Karpathy's LLM Wiki gist asking whether anyone had benchmarked its claims. Search was measured by calling the site's own searchDocs() in a headless browser against 107 queries frozen before any results were seen (one or two words, content words, sentences, two-page questions; Korean, English, Japanese). Content-word queries hit rank 1 at 100% in Korean, but all 20 Korean sentences returned nothing and English and Japanese sentences managed 10%: every space-separated piece must appear in one page, so a single piece like a verb ending with a question mark empties the whole query (17 of 20 Korean), and a Japanese sentence becomes one piece. A what-if dropping only dead pieces lifted English from 10% to 70% but Korean only from 0% to 15%, because pieces with particles attached scatter across pages. The single word for harness puts the defining page sixth, since eight pages tie at the top score of 8 and ties go to the newest; English lacks stemming, so adoption misses Adopting. Of 252 related-block edges, 34.5% are backed by a body link or typed relation; judging the other 165 gave related 63, weak 68, unrelated 34, so 86.5% are right counting weak and 13.5% lead nowhere — 20 of the 34 from over-common concepts (two light ones like plugin, install, skill or token cost clearing the two-shared-concepts rule), 10 from homonyms such as metadata and retry, 4 from folder fill. Yet of 159 body links authors wrote, only 32.7% sit in the related block at one hop (19.3% for links leaving their folder). On 12 two-page questions both pages reached search's top three only 8.3% of the time, but in 3 of the 4 cases where search found one, the related block supplied the other — the bottleneck is the entrance, not the graph. The harness, queries and judgments are public in tools/eval/; the judgments were made by the AI that wrote the page",
+  "relations": [
+   {
+    "target": "kgs-ai-layer",
+    "evidenceRef": "What is measured is the machine-readable layer that page defines — traversal recall is measured on the premise that the related block is the same related an AI follows in knowledge-graph.json"
+   },
+   {
+    "target": "kgs-edges",
+    "evidenceRef": "The graph section assumes that page's rarity weighting and its rule that sharing two or more concepts passes, and the judgments show two light, common concepts together clearing that bar"
+   },
+   {
+    "target": "wr-knowledge-vault",
+    "evidenceRef": "The need for the question-answering entrance that page proposes in its conclusion is backed by the measurement that all 20 Korean questions asked as sentences return nothing in site search"
+   }
+  ]
+ },
+ {
   "name": "welcome",
   "title": "Getting Started",
   "summary": "From what Claude Code is to install, auth, slash commands and CLAUDE.md — read, edit, run, and commit from your terminal",

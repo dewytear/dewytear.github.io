@@ -5,9 +5,18 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.xml"/>
   <id>https://dewytear.github.io/</id>
-  <updated>2026-09-23T08:04:19+09:00</updated>
+  <updated>2026-09-24T19:57:46+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>이 위키는 얼마나 맞히는가 — 검색과 그래프 순회를 재 봤다</title>
+    <link href="https://dewytear.github.io/p/kgs-accuracy/"/>
+    <id>https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-accuracy</id>
+    <published>2026-09-24T19:57:46+09:00</published>
+    <updated>2026-09-24T19:57:46+09:00</updated>
+    <summary>'RAG-ready'를 내세우고 엔진을 플러그인으로 내보내면서 한 번도 재지 않았던 정확도를 처음 쟀다 — 9월 23일 Claude Marketplace가 약 2,000개 카탈로그로 넓어져 플러그인이 진열 상품이 되고, 같은 날 카파시의 LLM Wiki 지스트에 '주장을 벤치마크로 검증했느냐'는 질문이 달린 것이 계기다. 검색은 헤드리스 브라우저에서 사이트의 searchDocs()를 그대로 호출해, 결과를 보기 전에 고정한 107문항(한두 단어·내용어 조합·문장·두 문서 질문, 한·영·일)으로 쟀다. 내용어 조합은 한국어 1위 적중 100%지만 문장은 한국어 20문항 전부 0건·영어와 일본어 10% — 띄어쓰기로 자른 모든 조각이 한 문서에 있어야 결과에 오르는 규칙에서, '불러와지나요?' 같은 어미·물음표 조각이 하나만 있어도 통째로 0건이 되고(한국어 17/20), 일본어는 문장 전체가 한 조각이 된다. 죽은 조각만 떨어뜨리는 가정 실험에서 영어는 10%→70%, 한국어는 조사 붙은 조각끼리 교집합이 비어 0%→15%. '하네스' 한 단어는 개념을 가진 8편이 8점 동점이라 최신순으로 밀려 정의 문서가 6위이고, 영어는 어간을 맞추지 않아 adoption이 Adopting을 못 찾는다. 연관 블록 엣지 252개는 본문 링크·타입 관계로 34.5%가 뒷받침되고, 나머지 165개를 판정하니 관련 63·약함 68·무관 34로 약함까지 86.5%가 맞고 헛걸음은 13.5% — 무관 34개 중 20개가 흔한 개념어(플러그인·설치·스킬·토큰비용 둘이 겹쳐 두 개 이상 공유 규칙을 통과), 10개가 뜻이 다른 동음어(메타데이터·재시도 등), 4개가 폴더 보충이다. 반면 작가가 건 본문 링크 159개 중 연관 블록 1홉에 있는 것은 32.7%(폴더 밖 링크는 19.3%). 두 문서 질문 12개에서 검색 상위 3건에 둘 다 든 것은 8.3%지만, 검색이 한 편이라도 찾은 4문항 중 3문항은 연관 블록이 나머지를 채웠다 — 병목은 그래프가 아니라 입구다. 도구·문항·판정은 tools/eval/에 공개했고, 판정은 이 글을 쓴 AI가 했다</summary>
+    <category term="AI · Wiki · 지식 체계"/>
+  </entry>
   <entry>
     <title>부를 수 있는 목록 — 하네스 167종 순위표를 받아서 뜯어봤다</title>
     <link href="https://dewytear.github.io/p/news-20260922-harness-catalog/"/>
@@ -40,7 +49,7 @@
     <link href="https://dewytear.github.io/p/news-20260904-model-doors/"/>
     <id>https://dewytear.github.io/docs/ko/ai/news/2026/news-20260904-model-doors</id>
     <published>2026-09-04T07:39:54+09:00</published>
-    <updated>2026-09-23T08:04:19+09:00</updated>
+    <updated>2026-09-23T08:12:24+09:00</updated>
     <summary>Fable 5.1과 Mythos 5.1은 능력·규격·가격이 같은 한 모델이고 갈리는 것은 접근뿐이다 — Fable 5.1은 모든 고객에게, Mythos 5.1은 Project Glasswing 승인 고객에게만 열리며 Mythos 5.1은 이력 편집 검사를 돌리지 않는다(컨텍스트 100만·출력 12.8만·적응형 사고 상시·30일 데이터 보존). 값이 내려간 칸은 캐시 읽기 하나로 100만 토큰당 $1 → $0.25, 기본 입력가의 0.1배이던 배수가 0.025배가 됐고(기본 입력 $10·출력 $50·캐시 쓰기·512토큰 최소는 그대로) 보도의 25%·45% 절감은 전부 이 한 줄에서 나온다. 같은 릴리스가 호출을 셋 바꿨다 — 도구 호출 강제는 400 오류(사고가 늘 켜져 있어 강제하면 따져 볼 내용이 도구 인자로 새어 인자 품질이 떨어지기 때문, strict: true와 프롬프트 지시로 대체), 사고 블록은 만든 모델과 그보다 새 모델만 읽고, 앞선 시스템 프롬프트·도구 목록·이력을 고치면 그 뒤 블록이 무효가 된다(2026-08-31 이후 계정만 기본 적용, prefix_mismatch_behavior·input_transformations로 확인). 캐시를 따뜻하게 두는 조건과 사고 블록을 살려 두는 조건이 같아, 인하는 상이고 검사는 벌이다 3주 뒤 9월 22일 Opus 5.5가 나오면서 같은 조건이 기본으로 받는 모델에 왔다 — 규격은 100만·12.8만으로 같고 값은 캐시가 아니라 기본 단가에서 내려가(입력 $4·출력 $20, Opus 5의 $5·$25보다 낮고 캐시 읽기는 $0.20으로 입력의 5%), 막히는 자리 넷 중 셋이 Fable 5.1과 같으며 넷째로 Claude API·구글 클라우드에서 구형 컴퓨터 사용 도구가 400을 돌려준다(베드록은 계속 동작). 실패시키지 않는 변경 둘이 더 위험하다 — 기본 effort가 high에서 medium으로 내려가 이름만 갈아 끼우면 덜 생각하는 모델을 경고 없이 받고, 도구 호출 사이의 메모가 사고 블록으로 와 기본 설정에서는 진행 표시가 조용해진다. 사고 블록의 방향은 Opus 5→Opus 5.5→Fable 5.1로 올라갈 때만 이어진다. 같은 날 Claude Code 2.1.280이 Opus 5.5를 기본 Opus로 넣고 Pro·Team Standard 기본 모델을 Sonnet에서 Opus로 바꿔, 이 조건들은 고르지 않아도 받게 되는 모델의 조건이 됐다</summary>
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
@@ -267,15 +276,6 @@
     <published>2026-07-11T19:47:53+09:00</published>
     <updated>2026-08-15T14:06:54+09:00</updated>
     <summary>World→Domain→System→Document 4계층과 문서 등재 파이프라인 — 불변 ID·물리 경로·결정론적 인덱스 빌드</summary>
-    <category term="AI · Wiki · 지식 체계"/>
-  </entry>
-  <entry>
-    <title>문서는 어떻게 이어지는가</title>
-    <link href="https://dewytear.github.io/p/kgs-edges/"/>
-    <id>https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-edges</id>
-    <published>2026-07-11T19:47:53+09:00</published>
-    <updated>2026-08-20T08:28:19+09:00</updated>
-    <summary>개념 큐레이션과 희소성(idf) 가중 공유 개념 엣지 — 판정 규칙·실제 엣지 해부·경계값 파급과 정직성 원칙</summary>
     <category term="AI · Wiki · 지식 체계"/>
   </entry>
 </feed>
