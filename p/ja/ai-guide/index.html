@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:14:04+09:00",
- "dateModified": "2026-08-19T22:46:30+09:00"
+ "dateModified": "2026-09-24T21:23:15+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -92,7 +92,7 @@
 
 <h3>巡回と分析の規則</h3>
 <ul>
-    <li><strong>ノード = 文書</strong>（<code>name</code> がキー）、<strong>エッジ = <code>related</code></strong>。エッジは二種類ある — <code>via:"concept"</code> は<strong>希少性で重みづけした共有の概念</strong>でつながった<em>意味</em>の関係（<code>shared</code> が根拠の概念）、<code>via:"folder"</code> は同じ System の中での<strong>隣接による補完</strong>の関係（すべての文書が最低 2〜4 のエッジを持つように）。</li>
+    <li><strong>ノード = 文書</strong>（<code>name</code> がキー）、<strong>エッジ = <code>related</code></strong>。エッジは二種類ある — <code>via:"concept"</code> は<strong>希少性で重みづけした共有の概念</strong>でつながった<em>意味</em>の関係（<code>shared</code> が根拠の概念）、<code>via:"folder"</code> は同じ System の中での<strong>隣接による補完</strong>の関係（概念のつながりが2個未満の文書を埋める — 日付記事のフォルダは除く）。概念エッジは System の中では共有2個以上かまれな1個で、System をまたぐときは3個以上かまれな錨を含む2個でのみできる — そのためつながりが0〜1個の文書もある。</li>
     <li><strong>型のある関係 = <code>relations</code></strong>（任意）。<code>related</code> が<em>対称で計算された</em>エッジなのに対し、<code>relations</code> は人がキュレートした<strong>方向のある意味の関係</strong>だ — <code>type</code> は <code>prerequisite</code>（先行）・<code>implements</code>（実装）・<code>example-of</code>（事例）・<code>evidence-for</code>（根拠）・<code>supersedes</code>（置換）で、<code>evidenceRef</code> が根拠。方向はこのノード → <code>target</code> であり、逆の関係は全ノードを走査して導く（保存は正方向に一度だけ）。<code>related</code> と重ならない別の信号なので、<strong>両方</strong>を活かせ。</li>
     <li><strong>引用の逆リンク = <code>citedBy</code></strong>（任意）。この文書を<em>本文から実際にリンクした</em>文書たちの一覧で、<code>related</code>（概念の計算）とも <code>relations</code>（キュレート）とも独立な<strong>第三の接続の層</strong>だ。どの文書が多く引用されるか、どの文章がどの文章に寄りかかるかを、この層で読め。</li>
     <li><strong>概念（<code>concepts</code>）が結合のキー</strong>だ。ふたつの文書が同じ概念を共有すれば関連する。まれな概念ほど強い信号（idf の重み）。ある概念で関連する文書を集めたければ <code>concepts</code> を逆索引せよ。</li>
@@ -115,6 +115,6 @@
 
 <p>上のデータのファイルたち（グラフ・索引・llms・フィード・sitemap）は文書が加わるたびに自動で再生成され、いつも現在のグラフと一致する（<code>tools/build_ai_export.py</code>）。このガイドの散文そのものは人が更新する契約の文書だ — スキーマが変わればここも一緒に直す。</p>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> 知識の地図 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-08-19</p>
+<p class="pr-meta"><span class="pr-k">分類</span> 知識の地図 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-09-24</p>
 </body>
 </html>

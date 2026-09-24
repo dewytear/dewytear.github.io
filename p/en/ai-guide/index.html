@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:14:04+09:00",
- "dateModified": "2026-08-19T22:46:30+09:00"
+ "dateModified": "2026-09-24T21:23:15+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -92,7 +92,7 @@
 
 <h3>Traversal &amp; analysis rules</h3>
 <ul>
-    <li><strong>Nodes = documents</strong> (keyed by <code>name</code>), <strong>edges = <code>related</code></strong>. <code>via:"concept"</code> is a <em>semantic</em> link via rarity-weighted shared concepts (<code>shared</code> is the evidence); <code>via:"folder"</code> is same-System adjacency (so every doc has 2–4 edges).</li>
+    <li><strong>Nodes = documents</strong> (keyed by <code>name</code>), <strong>edges = <code>related</code></strong>. <code>via:"concept"</code> is a <em>semantic</em> link via rarity-weighted shared concepts (<code>shared</code> is the evidence); <code>via:"folder"</code> is same-System adjacency (filling in documents with fewer than 2 concept links, except dated article folders). Concept edges form inside a System on 2+ shared concepts or 1 rare one, and across Systems only on 3+ or on 2 with a rare anchor — so some documents have 0–1 edges.</li>
     <li><strong>Typed relations = <code>relations</code></strong> (optional). Where <code>related</code> is a <em>symmetric, computed</em> edge, <code>relations</code> is a human-curated <strong>directed semantic relation</strong> — <code>type</code> is one of <code>prerequisite</code>, <code>implements</code>, <code>example-of</code>, <code>evidence-for</code>, <code>supersedes</code>, with <code>evidenceRef</code> as the justification. Direction is this node → <code>target</code>; derive reverse relations by scanning all nodes (only the forward direction is stored). It is a separate signal that does not overlap <code>related</code> — use <strong>both</strong>.</li>
     <li><strong>Citation backlinks = <code>citedBy</code></strong> (optional). The documents that <em>actually link this one from their body</em> — a <strong>third connection layer</strong>, independent of <code>related</code> (computed from concepts) and <code>relations</code> (curated). Read this layer to see which documents are cited most and which piece leans on which.</li>
     <li><strong>Concepts are the join keys.</strong> Docs sharing a concept are related; rarer concepts are stronger (idf). Reverse-index <code>concepts</code> to gather a topic.</li>
@@ -115,6 +115,6 @@
 
 <p>The data files above (graph, indexes, llms, feeds, sitemap) regenerate whenever a document is added, so they always match the current graph (<code>tools/build_ai_export.py</code>). The prose of this guide itself is maintained by hand — when the schema changes, this page changes with it.</p>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> Knowledge Map &middot; <span class="pr-k">Created</span> 2026-07-11 &middot; <span class="pr-k">Updated</span> 2026-08-19</p>
+<p class="pr-meta"><span class="pr-k">Section</span> Knowledge Map &middot; <span class="pr-k">Created</span> 2026-07-11 &middot; <span class="pr-k">Updated</span> 2026-09-24</p>
 </body>
 </html>

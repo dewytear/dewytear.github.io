@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-08-20T08:28:19+09:00"
+ "dateModified": "2026-09-24T21:23:15+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -87,34 +87,36 @@
 <h3>実際のエッジを解剖する — Welcome ↔「Claude Code とは何か」</h3>
 <p>実際のグラフのエッジをひとつ開けてみると: <a href="/p/ja/welcome/">はじめに</a>と <a href="/p/ja/ccb-overview/">Tutorial 基礎の章</a>は<strong>「ターミナル」（重み 3.51）・「CLAUDE.md」（2.01）・「Claude Code」（1.90）</strong>の三つの概念を共有しています。スコアは重みの合計 <strong>≈ 7.42</strong> — 同じ文書の第 1 位は概念 4 個を共有する <a href="/p/ja/tip-beginner/">Tip 初級編</a>（≈ 9.68）なので、共有概念が多くまれであるほど上に来るわけです。文書下部の「関連文書」でこの根拠概念がそのままチップとして表示されるので、<strong>なぜつながったのか</strong>をいつでも確認できます。</p>
 
-<h3>判定ルール — 三つの分かれ道</h3>
+<h3>判定ルール — System の中は密に、あいだは疎に</h3>
 <div class="diagram">
-<svg viewBox="0 0 720 234" role="img" aria-label="エッジの判定: 共有 2 個以上ならつなぐ、共有 1 個ならその概念が 3 編以下のときだけつなぐ、それ以外はフォルダ補完">
+<svg viewBox="0 0 720 262" role="img" aria-label="エッジの判定：同じ System の中では共有が2個以上か、まれな概念1個ならつなぎ、System をまたぐときは3個以上か、2個のうち一つがまれな場合だけつなぎ、概念一つではまたがない。概念のつながりが2個未満なら同じ System の隣で補完するが、日付記事のフォルダは補完しない">
     <rect class="d-box" x="230" y="14" width="260" height="46" rx="9"/>
-    <text class="d-label" x="360" y="42" text-anchor="middle">ふたつの文書の共有概念は？</text>
-    <line class="d-edge" x1="290" y1="60" x2="128" y2="96"/>
-    <line class="d-edge" x1="360" y1="60" x2="360" y2="96"/>
-    <line class="d-edge" x1="430" y1="60" x2="592" y2="96"/>
-    <rect class="d-box accent" x="24" y="100" width="210" height="58" rx="9"/>
-    <text class="d-label" x="129" y="124" text-anchor="middle">2 個以上を共有</text>
-    <text class="d-sub" x="129" y="144" text-anchor="middle">つなぐ (via:concept)</text>
-    <rect class="d-box accent" x="254" y="100" width="212" height="58" rx="9"/>
-    <text class="d-label" x="360" y="124" text-anchor="middle">1 個共有 + 3 編以下</text>
-    <text class="d-sub" x="360" y="144" text-anchor="middle">まれな概念のみ認定 (concept)</text>
-    <rect class="d-box soft" x="486" y="100" width="210" height="58" rx="9"/>
-    <text class="d-label" x="591" y="124" text-anchor="middle">それ以外 (0〜1 個)</text>
-    <text class="d-sub" x="591" y="144" text-anchor="middle">つながない</text>
-    <line class="d-edge dash" x1="591" y1="158" x2="591" y2="188"/>
-    <text class="d-sub" x="360" y="208" text-anchor="middle">概念のつながりが 2 本未満の文書は同じ System の隣で補完 (via:folder) — すべての文書が 2〜4 本を持つ</text>
+    <text class="d-label" x="360" y="42" text-anchor="middle">二つの文書の共有概念は?</text>
+    <line class="d-edge" x1="300" y1="60" x2="190" y2="96"/>
+    <line class="d-edge" x1="420" y1="60" x2="530" y2="96"/>
+    <rect class="d-box accent" x="40" y="96" width="300" height="74" rx="9"/>
+    <text class="d-label" x="190" y="120" text-anchor="middle">同じ System の中</text>
+    <text class="d-sub" x="190" y="140" text-anchor="middle">2個以上の共有でつなぐ</text>
+    <text class="d-sub" x="190" y="158" text-anchor="middle">1個だけならその概念が3編以下のとき</text>
+    <rect class="d-box accent" x="380" y="96" width="300" height="74" rx="9"/>
+    <text class="d-label" x="530" y="120" text-anchor="middle">System をまたぐとき</text>
+    <text class="d-sub" x="530" y="140" text-anchor="middle">3個以上、または2個のうち一つがまれ</text>
+    <text class="d-sub" x="530" y="158" text-anchor="middle">概念一つではまたがない</text>
+    <line class="d-edge dash" x1="190" y1="170" x2="190" y2="196"/>
+    <line class="d-edge dash" x1="530" y1="170" x2="530" y2="196"/>
+    <rect class="d-box soft" x="40" y="196" width="640" height="52" rx="9"/>
+    <text class="d-sub" x="360" y="217" text-anchor="middle">概念のつながりが2個未満なら同じ System の隣で補完 (via:folder)</text>
+    <text class="d-sub" x="360" y="235" text-anchor="middle">日付記事のフォルダ(news-YYYYMMDD)は補完しない</text>
 </svg>
-<div class="d-cap">判定フロー — 偶然の 1 個共有は捨てつつ、まれな概念（3 編以下）の 1 個共有は認めます。</div>
+<div class="d-cap">判定フロー — 2026年9月24日の<a href="/p/ja/kgs-accuracy/">精度の測定</a>でエッジを判定した結果から生まれた規則です。「まれ」の基準(3編以下)は以前の規則のものをそのまま使います。</div>
 </div>
 
 <ul>
-    <li><strong>2 個以上を共有</strong> → つなぐ。異なる概念がふたつ重なるのは偶然になりにくいからです。</li>
-    <li><strong>1 個共有 + その概念が 3 編以下にしか出てこない</strong> → つなぐ。実例: <a href="/p/ja/dzp-overview/">提案の概要</a> ↔ <a href="/p/ja/news-20260816-claude-code-selfhosted/">セルフホスティング公開ベータ</a>は「GitLab」ひとつしか共有していませんが、「GitLab」は 3 編にしか出てこないほどまれなので認められます。逆に「スキル」ひとつだけを共有した組はつながりません — 12 編が共有する概念ひとつは根拠になれないからです。</li>
-    <li><strong>それ以外</strong> → 概念ではつなぎません。代わりに概念のつながりが 2 本に満たない文書は<strong>同じ System の隣</strong>（例: <a href="/p/ja/ccb-overview/">基礎の章</a> → 同じ Tutorial の前後の章）で補い、<strong>すべての文書が最低 2〜4 本のつながり</strong>を持つようにします。現在の比率は概念のつながり 182 本（77%）・フォルダ補完 54 本（23%）です。</li>
+    <li><strong>同じ System の中</strong> → 共有が2個以上ならつなぎ、1個だけでもその概念が3編以下にしか出なければつなぎます。実例:<a href="/p/ja/skl-overview/">スキルとは</a> ↔ <a href="/p/ja/skl-install/">スキルのインストール</a>は「サンドボックス」一つだけを共有しますが、2編にしか出ないまれな概念なので認められます。連載の中の文書はたいてい同じ主題を続けるので、敷居を低く置きます。</li>
+    <li><strong>System をまたぐとき</strong> → 共有が3個以上か、2個のうち一つがまれ(3編以下)な場合だけつなぎます。<strong>概念一つでは、どれほどまれでもまたぎません。</strong>実例:<a href="/p/ja/ccb-overview/">Tutorial の基礎編</a> ↔ <a href="/p/ja/claude-md-commandments/">CLAUDE.md の十戒</a>は「CLAUDE.md」(11編)と「作業指針」(2編)を共有し、まれな方が錨になってつながります。逆に<a href="/p/ja/welcome/">はじめに</a> ↔ <a href="/p/ja/omc-intro/">OMC の紹介</a>は「インストール」「スラッシュコマンド」を共有しますが、どちらもありふれているのでつながらず、<a href="/p/ja/dzp-overview/">提案の概要</a> ↔ <a href="/p/ja/news-20260816-claude-code-selfhosted/">セルフホスティング公開ベータ</a>は「GitLab」一つで World までまたいでいたエッジなので切れました。</li>
+    <li><strong>それ以外</strong> → 概念ではつなぎません。概念のつながりが2個に満たない文書は<strong>同じ System の隣</strong>(例:<a href="/p/ja/ccb-overview/">基礎編</a> → 同じ Tutorial の前後の章)で補完します。ただし<strong>日付記事のフォルダは補完しません</strong> — 日付順に積まれたニュースは読む順序ではなく、隣にあることが関係があることを意味しないからです。そのため一部の文書はつながりが0〜1個のまま残ります — 日付記事と、フォルダに一つだけで補完する隣のない文書(<a href="/p/ja/sne-overview/">送信エンジンの依頼</a>・個別のスキル紹介の二編)です。無理に隣をつけなかった誠実な結果です。現在の比率は概念のつながり183個(88%)・フォルダ補完25個(12%)です。</li>
 </ul>
+<p>以前の規則は System を問わず「異なる概念が二つ重なるのは偶然とは考えにくい」と見ていました。測ってみるとそうではありませんでした。エッジを一本ずつ判定すると、無駄足34本のうち20本が「インストール」「プラグイン」のような<strong>ありふれた概念二つ</strong>で、10本が「メタデータ」「クエリ」のような<strong>意味の違う同じ語一つ</strong>で System をまたいだエッジでした。同じ System の中では、ありふれた概念二つの共有もたいてい本当の関係なので規則をそのまま残し、境界をまたぐエッジにだけより多くの証拠を求めるように変えました。このウィキが World のあいだに望む構造 — 中は密に、あいだは疎に — を System の単位にも当てはめたものです。</p>
 
 <h3>境界値の波及 — なぜ概念を安易に増やせないのか</h3>
 <p>「3 編以下」ルールには微妙な波及があります。あるまれな概念がいま 3 編に出ているとして、新しい文書がその概念をもうひとつ使うと、<strong>4 編になった瞬間</strong>にその概念ひとつでつながっていた既存のエッジが<strong>資格を失って切れます</strong>。だからこのウィキのルール集（CLAUDE.md）は「孤立をなくすために本文にない概念を追加すること」を禁じています — 無理につないだひとつが、隣の文書の本物のつながりを切りかねないからです。つながりの薄い文書は欠陥ではなく<strong>検討の合図</strong>としてだけ扱います。これがこのグラフの<strong>正直さの原則</strong>です: エッジはつねに実際の本文に根拠を持ち、キュレーションはグラフをよく見せるための道具ではありません。</p>
@@ -161,10 +163,10 @@
 
 <div class="note">
     <span class="nh">ひと目でまとめ</span>
-    概念は<strong>キュレーション</strong>（本文実在のみ）→ エッジは<strong>希少性で重みづけした共有</strong>（2 個↑ またはまれな 1 個）→ 足りなければ<strong>フォルダ補完</strong> → すべての文書が 2〜4 つながり・孤立 0。その上に、本文 <code>#!</code> リンクの逆インデックスである<strong>引用バックリンク（<code>citedBy</code>）</strong>と、キュレーションで宣言する<strong>向きのある型付き関係（<code>relations</code>）</strong>を別に重ねます。よく参照される文書が<strong>ハブ</strong>となってグラフの中心をつくります（<a href="/p/ja/kgs-views/">次の編</a>）。
+    概念は<strong>キュレーション</strong>（本文実在のみ）→ エッジは<strong>希少性で重みづけした共有</strong>（System の中は 2 個↑ またはまれな 1 個、あいだは 3 個↑ かまれな錨を含む 2 個）→ 足りなければ<strong>フォルダ補完</strong>(日付記事は除く) → ほとんどの文書が 2〜4 つながり、概念の届く隣がない文書は 0〜1 個のまま。その上に、本文 <code>#!</code> リンクの逆インデックスである<strong>引用バックリンク（<code>citedBy</code>）</strong>と、キュレーションで宣言する<strong>向きのある型付き関係（<code>relations</code>）</strong>を別に重ねます。よく参照される文書が<strong>ハブ</strong>となってグラフの中心をつくります（<a href="/p/ja/kgs-views/">次の編</a>）。
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Wiki · 知識体系 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-08-20</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Wiki · 知識体系 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-09-24</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
 <ul><li><a href="/p/ja/kgs-accuracy/">このウィキはどれだけ当てるのか — 検索とグラフ巡回を測ってみた</a></li><li><a href="/p/ja/kgs-views/">グラフを読む 9 つの眼 — ビューごとに違う問いに答える</a></li><li><a href="/p/ja/kgs-overview/">知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン</a></li><li><a href="/p/ja/news-20260922-harness-catalog/">呼べるリスト — ハーネス167種のランキングを取得して解剖した</a></li></ul>

@@ -1,5 +1,5 @@
 {
- "about": "본문 링크나 타입 관계로 뒷받침되지 않는 related 엣지 165개(2026-09-24 빌드 기준)의 판정. 판정한 쪽은 이 글을 쓴 AI이며 사람의 판정이 아니다. 기준 — related: 출발 문서를 읽은 사람이 다음에 읽을 만함(같은 주제·연재·선후·직접 비교). weak: 주제는 진짜 겹치나 자연스러운 다음 읽을거리는 아님. unrelated: 흔한 개념어나 뜻이 다른 동음어 하나로만 이어져 따라가면 헛걸음. 방향이 있다 — A>B와 B>A는 따로 판정했다.",
+ "about": "본문 링크나 타입 관계로 뒷받침되지 않는 related 엣지 165개(2026-09-24 빌드 기준)의 판정. 판정한 쪽은 이 글을 쓴 AI이며 사람의 판정이 아니다. 기준 — related: 출발 문서를 읽은 사람이 다음에 읽을 만함(같은 주제·연재·선후·직접 비교). weak: 주제는 진짜 겹치나 자연스러운 다음 읽을거리는 아님. unrelated: 흔한 개념어나 뜻이 다른 동음어 하나로만 이어져 따라가면 헛걸음. 방향이 있다 — A>B와 B>A는 따로 판정했다. 2차(round 2, 2026-09-24): 엣지 규칙을 고친 뒤 새로 생긴 뒷받침 없는 엣지 10개와, 1차 판정 뒤 이 측정 글의 등재로 생긴 엣지 3개를 같은 기준으로 추가 판정했다(역시 AI 판정).",
  "built": "2026-09-24",
  "verdicts": {
   "kgs-overview>news-20260922-harness-catalog": {
@@ -1484,6 +1484,123 @@
     "큐레이션",
     "지식그래프"
    ]
+  },
+  "kgs-gates>kgs-accuracy": {
+   "v": "related",
+   "why": "같은 지식 체계 연재 — 게이트가 지키는 것을 정확도 측정이 이어서 잰다",
+   "via": "concept",
+   "shared": [
+    "플러그인",
+    "검증"
+   ],
+   "round": 2
+  },
+  "kgs-accuracy>news-20260922-harness-catalog": {
+   "v": "weak",
+   "why": "둘 다 직접 재 본 측정 글이지만 대상이 달라 다음 읽을거리는 아님",
+   "via": "concept",
+   "shared": [
+    "벤치마크",
+    "검증",
+    "지식그래프"
+   ],
+   "round": 2
+  },
+  "news-20260922-harness-catalog>kgs-accuracy": {
+   "v": "weak",
+   "why": "측정 방법이 닮았을 뿐 하네스 순위표 독자의 다음 글은 아님",
+   "via": "concept",
+   "shared": [
+    "벤치마크",
+    "검증",
+    "지식그래프"
+   ],
+   "round": 2
+  },
+  "ccb-manage>ccb-overview": {
+   "v": "related",
+   "why": "같은 입문 연재의 첫 편",
+   "via": "folder",
+   "shared": [],
+   "round": 2
+  },
+  "ccb-manage>ccb-research-web": {
+   "v": "related",
+   "why": "같은 입문 연재의 실습 편",
+   "via": "folder",
+   "shared": [],
+   "round": 2
+  },
+  "skl-overview>skl-install": {
+   "v": "related",
+   "why": "스킬 연재의 다음 편(설치·보안)",
+   "via": "concept",
+   "shared": [
+    "샌드박스"
+   ],
+   "round": 2
+  },
+  "omc-tools>omc-intro": {
+   "v": "related",
+   "why": "같은 OMC 연재의 첫 편",
+   "via": "folder",
+   "shared": [],
+   "round": 2
+  },
+  "omc-cost>omc-intro": {
+   "v": "related",
+   "why": "같은 OMC 연재의 첫 편",
+   "via": "folder",
+   "shared": [],
+   "round": 2
+  },
+  "omc-cost>omc-agents": {
+   "v": "related",
+   "why": "같은 OMC 연재의 앞 편",
+   "via": "folder",
+   "shared": [],
+   "round": 2
+  },
+  "news-20260901-whose-usage>news-20260816-claude-code-selfhosted": {
+   "v": "weak",
+   "why": "Claude Code 운영이라는 주제는 겹치나 사용량 글의 다음 읽을거리는 아님",
+   "via": "concept",
+   "shared": [
+    "세션",
+    "Anthropic",
+    "Claude Code"
+   ],
+   "round": 2
+  },
+  "kgs-accuracy>sb-level1": {
+   "v": "weak",
+   "why": "정확검색이라는 말은 겹치나 세컨드 브레인 입문과 위키 측정은 다음 읽을거리 관계가 아님",
+   "via": "concept",
+   "shared": [
+    "정확검색",
+    "LLM위키"
+   ],
+   "round": 2
+  },
+  "sb-intro>kgs-accuracy": {
+   "v": "weak",
+   "why": "정확검색이라는 말은 겹치나 세컨드 브레인 입문과 위키 측정은 다음 읽을거리 관계가 아님",
+   "via": "concept",
+   "shared": [
+    "정확검색",
+    "지식그래프"
+   ],
+   "round": 2
+  },
+  "sb-level1>kgs-accuracy": {
+   "v": "weak",
+   "why": "정확검색이라는 말은 겹치나 세컨드 브레인 입문과 위키 측정은 다음 읽을거리 관계가 아님",
+   "via": "concept",
+   "shared": [
+    "정확검색",
+    "LLM위키"
+   ],
+   "round": 2
   }
  }
 }

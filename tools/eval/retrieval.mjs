@@ -36,7 +36,7 @@
 // Usage:
 //   python3 -m http.server 8799 &                       # serve repo root
 //   chromium --headless --remote-debugging-port=9333 &  # any Chromium
-//   node tools/eval/retrieval.mjs [--json out.json]
+//   node tools/eval/retrieval.mjs [--set tools/eval/retrieval-set-fresh.json] [--json out.json]
 //
 // Env: CDP_PORT (9333), HTTP_PORT (8799).
 
@@ -48,9 +48,15 @@ const CDP = process.env.CDP_PORT || '9333';
 const HTTP = process.env.HTTP_PORT || '8799';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.dirname(path.dirname(HERE));
-const SET = JSON.parse(fs.readFileSync(path.join(HERE, 'retrieval-set.json'), 'utf8'));
+const argOf = (flag) => { const i = process.argv.indexOf(flag); return i > 0 ? process.argv[i + 1] : null; };
+const SET_PATH = argOf('--set') || path.join(HERE, 'retrieval-set.json');
+const SET = JSON.parse(fs.readFileSync(SET_PATH, 'utf8'));
+// Pages that quote the test queries verbatim would match them spuriously
+// (evaluation leakage). The accuracy write-up itself does exactly that, so it
+// is filtered out of every ranked list and related block before scoring.
+const EXCLUDE = ['kgs-accuracy'];
 const AUDIT_PATH = path.join(HERE, 'edge-audit.json');
-const jsonOut = (() => { const i = process.argv.indexOf('--json'); return i > 0 ? process.argv[i + 1] : null; })();
+const jsonOut = argOf('--json');
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const pct = (n, d) => (d ? (100 * n / d) : 0);
@@ -97,11 +103,16 @@ async function runLang(cdp, lang, queries) {
   if (!ready.ready || ready.lang !== lang) throw new Error(`index not ready for ${lang}: ${JSON.stringify(ready)}`);
   const out = await cdp.ev(`(()=>{
     const QS = ${JSON.stringify(queries.map((q) => q.q))};
-    const top = (q, n) => searchDocs(q).slice(0, n).map(x => x.d.name);
-    const rel = (nm) => ((KNOWLEDGE[nm] && KNOWLEDGE[nm].related) || []).map(r => r.name);
+    const EX = ${JSON.stringify(EXCLUDE)};
+    // Take excluded pages out of the pool itself, not just out of the results:
+    // a page quoting the query verbatim would otherwise satisfy the strict pass
+    // and keep the engine's fallback passes from ever running.
+    EX.forEach(nm => { const i = DOCS.findIndex(d => d.name === nm); if (i >= 0) DOCS.splice(i, 1); });
+    const top = (q, n) => searchDocs(q).map(x => x.d.name).filter(nm => EX.indexOf(nm) === -1).slice(0, n);
+    const rel = (nm) => ((KNOWLEDGE[nm] && KNOWLEDGE[nm].related) || []).map(r => r.name).filter(x => EX.indexOf(x) === -1);
     return QS.map(q => {
       const terms = q.trim().toLowerCase().split(/\\s+/);
-      const dead = terms.filter(t => searchDocs(t).length === 0);
+      const dead = terms.filter(t => top(t, 1).length === 0);
       const live = terms.filter(t => dead.indexOf(t) === -1).join(' ');
       const ranked = top(q, 20);
       return { ranked, dead, relaxed: live && dead.length ? top(live, 20) : null,
@@ -127,18 +138,24 @@ function searchStats(rows) {
 }
 
 // ------------------------------------------------------------------ graph ---
+// --graph-root <dir> reads the graph and ko bodies from another checkout (e.g.
+// a worktree of the commit before a change) so a before/after pair shares one
+// harness. Excluded pages leave the graph too: their edges and links vanish.
+const GRAPH_ROOT = argOf('--graph-root') || ROOT;
 function graphStats() {
-  const g = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'knowledge-graph.json'), 'utf8'));
-  const nodes = g.nodes; const names = new Set(nodes.map((n) => n.name));
+  const g = JSON.parse(fs.readFileSync(path.join(GRAPH_ROOT, 'data', 'knowledge-graph.json'), 'utf8'));
+  const nodes = g.nodes.filter((n) => !EXCLUDE.includes(n.name))
+    .map((n) => ({ ...n, related: (n.related || []).filter((r) => !EXCLUDE.includes(r.name)) }));
+  const names = new Set(nodes.map((n) => n.name));
   const byName = Object.fromEntries(nodes.map((n) => [n.name, n]));
   const key = (a, b) => (a < b ? `${a}|${b}` : `${b}|${a}`);
   // author-drawn body links, ko bodies (the canonical source)
   const links = []; const linkPairs = new Set();
-  const lst = JSON.parse(fs.readFileSync(path.join(ROOT, 'list'), 'utf8'));
+  const lst = JSON.parse(fs.readFileSync(path.join(GRAPH_ROOT, 'list'), 'utf8'));
   const pathOf = {};
   (function walk(ns) { for (const n of ns) { if (n.children) walk(n.children); else if (n.name && n.path) pathOf[n.name] = n.path; } })(lst);
   for (const a of names) {
-    const p = path.join(ROOT, 'docs', 'ko', pathOf[a] || a);
+    const p = path.join(GRAPH_ROOT, 'docs', 'ko', pathOf[a] || a);
     if (!fs.existsSync(p)) continue;
     const seen = new Set();
     for (const m of fs.readFileSync(p, 'utf8').matchAll(/href="#!([a-z0-9-]+)"/g)) {
@@ -188,7 +205,7 @@ async function main() {
   }
   cdp.close();
 
-  const report = { set: SET.frozen, when: new Date().toISOString(), search: {}, pairs: null, relaxed: {}, graph: null };
+  const report = { set: path.basename(SET_PATH), frozen: SET.frozen, excluded: EXCLUDE, when: new Date().toISOString(), search: {}, pairs: null, relaxed: {}, graph: null };
   console.log('\n== SEARCH (single-answer queries) ==');
   console.log('lang type      n  Hit@1  Hit@3  Hit@8   MRR  zero%');
   const single = rows.filter((r) => r.type !== 'pair');

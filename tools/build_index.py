@@ -12,9 +12,19 @@ Usage:  python3 tools/build_index.py           # build + write
 
 related[]: rarity-weighted (idf) concept overlap. Two docs sharing rare concepts
 rank higher than docs sharing common ones. Docs with little concept overlap are
-topped up with same-folder neighbours (via: "folder") so every doc gets 2-4.
+topped up with same-folder neighbours (via: "folder") so most docs get 2-4.
+
+Acceptance (2026-09-24, from the kgs-accuracy edge audit — dense inside a
+System, sparse between Systems):
+  · same folder (System): 2+ shared concepts, or 1 shared concept with df <= 3
+  · across folders: 3+ shared, or 2 shared of which one has df <= 3 — a single
+    shared concept, however rare, does not cross a System boundary
+  · folder top-up skips dated articles (news-YYYYMMDD-*): a date folder is not
+    a reading sequence, so its neighbours are not related by being neighbours
 """
 import glob, json, math, os, re, sys
+
+DATED = re.compile(r'^news-\d{8}-')   # dated articles: no folder top-up
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LIST = os.path.join(ROOT, 'list')
@@ -165,15 +175,22 @@ def build(lang='ko'):
         scored.sort(key=lambda t: (-t[0], -t[1], t[2]))
         rel, picked = [], set()
         for score, ns, nm, sh in scored:
-            if ns >= 2 or (ns == 1 and df[sh[0]] <= 3):
+            if by_name[nm].get('section') == d.get('section'):
+                ok = ns >= 2 or (ns == 1 and df[sh[0]] <= 3)
+            else:
+                # Crossing a System needs more than one shared word: 3+, or 2
+                # with a rare anchor. Two common concepts (install + slash
+                # command) or one homonym (metadata, query) no longer bridge.
+                ok = ns >= 3 or (ns == 2 and min(df[c] for c in sh) <= 3)
+            if ok:
                 rel.append({'name': nm, 'title': by_name[nm]['title'],
                             'shared': sh[:3], 'via': 'concept'})
                 picked.add(nm)
             if len(rel) >= 4:
                 break
-        if len(rel) < 2 and d.get('section'):
+        if len(rel) < 2 and d.get('section') and not DATED.match(d['name']):
             for nm in folder_docs.get(d['section'], []):
-                if nm == d['name'] or nm in picked:
+                if nm == d['name'] or nm in picked or DATED.match(nm):
                     continue
                 rel.append({'name': nm, 'title': by_name[nm]['title'],
                             'shared': [], 'via': 'folder'})

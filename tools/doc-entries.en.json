@@ -66,7 +66,7 @@
  {
   "name": "kgs-accuracy",
   "title": "How Often Does This Wiki Get It Right — Measuring Search and Graph Traversal",
-  "summary": "The first measurement of an accuracy this wiki never had, despite calling itself RAG-ready and shipping its engine as a plugin — prompted by Claude Marketplace widening into a catalog of about 2,000 items on 23 September, turning plugins into products on a shelf, and by a comment the same day on Karpathy's LLM Wiki gist asking whether anyone had benchmarked its claims. Search was measured by calling the site's own searchDocs() in a headless browser against 107 queries frozen before any results were seen (one or two words, content words, sentences, two-page questions; Korean, English, Japanese). Content-word queries hit rank 1 at 100% in Korean, but all 20 Korean sentences returned nothing and English and Japanese sentences managed 10%: every space-separated piece must appear in one page, so a single piece like a verb ending with a question mark empties the whole query (17 of 20 Korean), and a Japanese sentence becomes one piece. A what-if dropping only dead pieces lifted English from 10% to 70% but Korean only from 0% to 15%, because pieces with particles attached scatter across pages. The single word for harness puts the defining page sixth, since eight pages tie at the top score of 8 and ties go to the newest; English lacks stemming, so adoption misses Adopting. Of 252 related-block edges, 34.5% are backed by a body link or typed relation; judging the other 165 gave related 63, weak 68, unrelated 34, so 86.5% are right counting weak and 13.5% lead nowhere — 20 of the 34 from over-common concepts (two light ones like plugin, install, skill or token cost clearing the two-shared-concepts rule), 10 from homonyms such as metadata and retry, 4 from folder fill. Yet of 159 body links authors wrote, only 32.7% sit in the related block at one hop (19.3% for links leaving their folder). On 12 two-page questions both pages reached search's top three only 8.3% of the time, but in 3 of the 4 cases where search found one, the related block supplied the other — the bottleneck is the entrance, not the graph. The harness, queries and judgments are public in tools/eval/; the judgments were made by the AI that wrote the page",
+  "summary": "Measures, twice, an accuracy this wiki never had despite calling itself RAG-ready and shipping its engine as a plugin, prompted by Claude Marketplace widening into a catalog of about 2,000 items on 23 September and by a comment the same day on Karpathy's LLM Wiki gist asking whether anyone had benchmarked its claims. Search was measured by calling the site's own searchDocs() in a headless browser. Round 1 (107 queries frozen before results; Korean, English, Japanese) put content-word queries almost always first, but all 20 Korean sentences returned nothing: every space-separated piece had to appear in one page, so one piece like a verb ending with a question mark emptied the query, a Japanese sentence became a single piece, the single word for harness left the defining page sixth because eight pages tied and ties went to the newest, and English without stemming let adoption miss Adopting. Of 252 related-block edges, 86.5% were right counting weak and 13.5% led nowhere (20 common concepts, 10 homonyms, 4 folder fill), and only 32.7% of authors' body links sat at one hop (19.3% across folders). These were fixed: search strips punctuation, Korean endings and particles, adds English stems, cuts Japanese into katakana and kanji runs, drops question words, runs three passes (all pieces, then without dead pieces, then at least half, with a partial-results notice) and breaks ties by title and evergreen pages first; the graph requires three shared concepts (or two including a rare one) only across folders, skips folder fill for dated folders and drops two unsupported concepts; 13 missing relation-evidence translations were filled and gated. Round 2 on 48 fresh queries committed before the engine changed: top-eight hits 20% to 87.5% (Korean sentences 0% to 93.8%, English and Japanese sentences 0% to 75%), empty results 80% to 0%. The graph went from 34 dead ends to 4, strict precision 59.5% to 78.9%, correct edges 150 to 157, World-crossing pairs 9 to 2. The cost: cross-folder recall at one hop fell from 19.3% to 14.8%, 12 good edges were lost, three pages have no related pages, and 21 of 36 Korean sentences return partial matches. Most remaining misses are vocabulary mismatches. The harness, queries and judgments are public in tools/eval/; the judgments were made by the AI that wrote the page",
   "relations": [
    {
     "target": "kgs-ai-layer",
@@ -522,7 +522,13 @@
  {
   "name": "news-20260728-software-factories-fail",
   "title": "The Harness Is Not Enough — Why Software Factories Fail",
-  "summary": "Dex Horthy (HumanLayer) at AI Engineer World's Fair 2026 — models are rewarded only for passing tests, never for design quality, so no harness can close the gap; Faros telemetry (bugs +54%, incidents tripled), a failed four-month lights-out experiment, FrontierCode scoring maintainability, and 30 minutes of four-step alignment before any code"
+  "summary": "Dex Horthy (HumanLayer) at AI Engineer World's Fair 2026 — models are rewarded only for passing tests, never for design quality, so no harness can close the gap; Faros telemetry (bugs +54%, incidents tripled), a failed four-month lights-out experiment, FrontierCode scoring maintainability, and 30 minutes of four-step alignment before any code",
+  "relations": [
+   {
+    "target": "hns-install",
+    "evidenceRef": "Faros measurements (PRs merged without review +31.3%, incidents tripled) and HumanLayer's four-month lights-out failure — external evidence for hns-review's point that generated output needs human review"
+   }
+  ]
  },
  {
   "name": "news-20260724-snucatch-ai-coding",
@@ -547,37 +553,91 @@
  {
   "name": "news-20260803-cherny-karpathy",
   "title": "The One Who Deleted and the One Who Rendered — Cherny's “80% of the Harness” and Karpathy's “LOTR Movie”",
-  "summary": "Two scenes from right after Opus 5, cross-verified into one piece — Claude Code creator Cherny deleted 80%+ of the system prompt and the model got smarter (ablation methodology, 'sabotage yourselves every six months', 'loops prompt Claude'), while Karpathy turned LOTR's first paragraph plus $10 into a 5,500-line three.js 3D movie, embedded playable in the article. The shared structure: scaffolding shrinks × output scale jumps × the bottleneck moves to verification and perception"
+  "summary": "Two scenes from right after Opus 5, cross-verified into one piece — Claude Code creator Cherny deleted 80%+ of the system prompt and the model got smarter (ablation methodology, 'sabotage yourselves every six months', 'loops prompt Claude'), while Karpathy turned LOTR's first paragraph plus $10 into a 5,500-line three.js 3D movie, embedded playable in the article. The shared structure: scaffolding shrinks × output scale jumps × the bottleneck moves to verification and perception",
+  "relations": [
+   {
+    "target": "hns-overview",
+    "evidenceRef": "A talk by the person who built the harness (Cherny) — first-hand external testimony supporting hns-what's framing of the harness concept, its importance, and the shift from instructions to structure"
+   }
+  ]
  },
  {
   "name": "news-20260814-auto-mode-stateless-mcp",
   "title": "Defaults That Stop Asking — Auto Mode and Stateless MCP",
-  "summary": "Two changes from the same week in one piece — from 2026-08-14 Claude Code makes auto mode the default for new Pro, Max, and Team sessions (97% of prompts approved, people refused a planted dangerous command only 13.6% of the time, the classifier blocked 89%, and Trajectory Labs saw zero successes across 720 injection attempts), while the MCP 2026-07-28 spec deleted the initialize handshake and Mcp-Session-Id to take state out of the protocol (_meta, server/discover, server-minted handles, Tasks/MCP Apps/enterprise authorization extensions, wire-incompatible both ways). The shared structure: remove the fixed point held at runtime and move the decision to declared rules and per-request data"
+  "summary": "Two changes from the same week in one piece — from 2026-08-14 Claude Code makes auto mode the default for new Pro, Max, and Team sessions (97% of prompts approved, people refused a planted dangerous command only 13.6% of the time, the classifier blocked 89%, and Trajectory Labs saw zero successes across 720 injection attempts), while the MCP 2026-07-28 spec deleted the initialize handshake and Mcp-Session-Id to take state out of the protocol (_meta, server/discover, server-minted handles, Tasks/MCP Apps/enterprise authorization extensions, wire-incompatible both ways). The shared structure: remove the fixed point held at runtime and move the decision to declared rules and per-request data",
+  "relations": [
+   {
+    "target": "hns-usecases",
+    "evidenceRef": "External evidence that supports and updates hns-tools' description of auto mode (it stops asking for permission each time) — the default-change notice and what the hard denies and injection screening actually do"
+   }
+  ]
  },
  {
   "name": "news-20260816-claude-code-selfhosted",
   "title": "Claude Code on Your Own Servers — the Self-Hosting Public Beta and August's Releases",
-  "summary": "Claude Code's self-hosted environments opened as a public beta on 2026-08-06 — Team and Enterprise plans, and one command from v2.1.224, claude self-hosted-runner, turns your organization's infrastructure into the session execution layer (fixed and on-demand modes, disabled by default with admin opt-in, ZDR organizations excluded). Together with the same week's GitLab MR support (--worktree takes MR URLs and detects self-hosted instances), auto-continue (automatic resumption when the limit window resets, 8/14), and the Compliance API expansion, the piece reads them as one current: control over where sessions run, what they target, and when they work moves to the organization"
+  "summary": "Claude Code's self-hosted environments opened as a public beta on 2026-08-06 — Team and Enterprise plans, and one command from v2.1.224, claude self-hosted-runner, turns your organization's infrastructure into the session execution layer (fixed and on-demand modes, disabled by default with admin opt-in, ZDR organizations excluded). Together with the same week's GitLab MR support (--worktree takes MR URLs and detects self-hosted instances), auto-continue (automatic resumption when the limit window resets, 8/14), and the Compliance API expansion, the piece reads them as one current: control over where sessions run, what they target, and when they work moves to the organization",
+  "relations": [
+   {
+    "target": "news-20260814-auto-mode-stateless-mcp",
+    "evidenceRef": "The section on why these belong together takes the auto-mode default change (moving the decision into rules) as given and reads this week's releases as the next step in the same direction"
+   },
+   {
+    "target": "tip-advanced",
+    "evidenceRef": "Release evidence behind Tip 21 (worktrees) on GitLab MR support and Tip 23 (scheduling and routines) on auto-continue"
+   },
+   {
+    "target": "hns-usecases",
+    "evidenceRef": "Public-beta announcement and documentation behind the tool-extension section's description of self-hosted runners"
+   }
+  ]
  },
  {
   "name": "news-20260820-who-makes-the-call",
   "title": "Who Gets to Make the Call — Four Scenes from August",
-  "summary": "Four announcements from the second week of August, bound into one frame — the migration of judgment. Claude Tag lets the model judge when to step in using whole-channel context (8/13, ~30% more accurate, extra context not counted toward limits); Grok Bot makes execution the default and leaves people only the approvals (8/11 beta, with diverging accounts of its credential-sharing structure); Cursor Origin opened as an opt-out default with no published data terms, leaving the code-custody call empty (8/17, after SpaceX closed the acquisition 8/14); and GPT-5.6-Cyber puts zero-day-finding capability behind a vetted program (Daybreak Red) instead of refusals (8/10, ACCR 95.0% vs 1.5%). After auto mode and self-hosting, the third observation: judgment does not disappear, it relocates"
+  "summary": "Four announcements from the second week of August, bound into one frame — the migration of judgment. Claude Tag lets the model judge when to step in using whole-channel context (8/13, ~30% more accurate, extra context not counted toward limits); Grok Bot makes execution the default and leaves people only the approvals (8/11 beta, with diverging accounts of its credential-sharing structure); Cursor Origin opened as an opt-out default with no published data terms, leaving the code-custody call empty (8/17, after SpaceX closed the acquisition 8/14); and GPT-5.6-Cyber puts zero-day-finding capability behind a vetted program (Daybreak Red) instead of refusals (8/10, ACCR 95.0% vs 1.5%). After auto mode and self-hosting, the third observation: judgment does not disappear, it relocates",
+  "relations": [
+   {
+    "target": "news-20260814-auto-mode-stateless-mcp",
+    "evidenceRef": "The section on why these belong together starts its argument from the auto-mode default (the decision moving from conversation to rules)"
+   },
+   {
+    "target": "news-20260816-claude-code-selfhosted",
+    "evidenceRef": "Supports and extends that article's claim that the point of control moves from the conversation to the environment and its rules, through four scenes (model context, approval escalation, defaults, admission review)"
+   }
+  ]
  },
  {
   "name": "wr-knowledge-vault",
   "title": "The Man Who Records Everything, and the Wiki That Publishes — Reflections on Knowledge Vaults",
-  "summary": "Starting from the questions 'is this wiki RAG, an LLM wiki, or a second brain?', this reflection dissects the conversation transcript of a lifelogging practitioner who streams his entire life — 24-hour audio and screen capture — into a note vault, and compares his system with this wiki: the five-layer daily note (intent, execution, reality, interpretation, AI logs), the raw/wiki vault split and an ingest that asks back 'why did you keep this?' (motive as data), RAG vs LLM wiki as query-time vs keep-time tidying, the maxim that an ontology is a document rather than a graph, and the failure theory that purposeless hoarding breeds tombs of knowledge. It closes with four steps for this wiki: explicit capture motives, automated monthly retrospectives, a private inbox layer, and a conversational QA entry point"
+  "summary": "Starting from the questions 'is this wiki RAG, an LLM wiki, or a second brain?', this reflection dissects the conversation transcript of a lifelogging practitioner who streams his entire life — 24-hour audio and screen capture — into a note vault, and compares his system with this wiki: the five-layer daily note (intent, execution, reality, interpretation, AI logs), the raw/wiki vault split and an ingest that asks back 'why did you keep this?' (motive as data), RAG vs LLM wiki as query-time vs keep-time tidying, the maxim that an ontology is a document rather than a graph, and the failure theory that purposeless hoarding breeds tombs of knowledge. It closes with four steps for this wiki: explicit capture motives, automated monthly retrospectives, a private inbox layer, and a conversational QA entry point",
+  "relations": [
+   {
+    "target": "llmw-overview",
+    "evidenceRef": "First-hand account from a practitioner who actually lives by Karpathy's proposal — field support for the LLM Wiki series' frame of refined documents, incremental links and two vaults"
+   }
+  ]
  },
  {
   "name": "gdb-graphrag",
   "title": "Graph Databases & GraphRAG — Store the Relationships, Change the Answers",
-  "summary": "An introductory explainer that chains graph databases to GraphRAG in one pass — property graphs that walk edges instead of computing JOINs and Cypher, the query language that looks like the drawing; GraphRAG stitching vector RAG's severed chunks back into a web so retrieval brings the whole neighborhood (multi-hop reasoning, preserved hierarchy, drawable evidence); ontology and graph schema as the web's blueprint (prerequisite relations in an education knowledge map); the similarly named stranger LangGraph (map of knowledge vs flowchart of work); domain cases from manufacturing failure logs to news categories; and a getting-started path from arrows.app sketches through Cypher export to turning a PDF into a knowledge graph with the neo4j-graphrag package (SimpleKGPipeline)"
+  "summary": "An introductory explainer that chains graph databases to GraphRAG in one pass — property graphs that walk edges instead of computing JOINs and Cypher, the query language that looks like the drawing; GraphRAG stitching vector RAG's severed chunks back into a web so retrieval brings the whole neighborhood (multi-hop reasoning, preserved hierarchy, drawable evidence); ontology and graph schema as the web's blueprint (prerequisite relations in an education knowledge map); the similarly named stranger LangGraph (map of knowledge vs flowchart of work); domain cases from manufacturing failure logs to news categories; and a getting-started path from arrows.app sketches through Cypher export to turning a PDF into a knowledge graph with the neo4j-graphrag package (SimpleKGPipeline)",
+  "relations": [
+   {
+    "target": "kgs-edges",
+    "evidenceRef": "Explains the property graph (nodes and edges with labels and properties) from the ground up — the background that this wiki's knowledge-graph model page assumes"
+   }
+  ]
  },
  {
   "name": "gdb-vector-retriever",
   "title": "Finding a Movie by Its Story — Your First Vector Retriever on a Neo4j Sandbox",
-  "summary": "The hands-on companion to the concepts piece — borrow a graph DB in the browser with Neo4j Sandbox (the MovieLens-family Recommendations dataset: Movie, Genre, Actor, Director and User nodes, plus a RATED relationship that carries data), stroll the data with a few lines of Cypher, embed 100 movie plots into 1,536-dimensional vectors with an OpenAI embedding model and plant them as a plotEmbedding property, add a CREATE VECTOR INDEX (cosine similarity), then assemble a searcher with neo4j-graphrag's VectorRetriever (four parameters: driver, index, embedder, return properties). Summarise Toy Story's plot and the movie comes back in first place without its title ever being mentioned — the feel of vector search finding stories rather than words, and the next step toward GraphRAG: cast with vectors, walk with the graph"
+  "summary": "The hands-on companion to the concepts piece — borrow a graph DB in the browser with Neo4j Sandbox (the MovieLens-family Recommendations dataset: Movie, Genre, Actor, Director and User nodes, plus a RATED relationship that carries data), stroll the data with a few lines of Cypher, embed 100 movie plots into 1,536-dimensional vectors with an OpenAI embedding model and plant them as a plotEmbedding property, add a CREATE VECTOR INDEX (cosine similarity), then assemble a searcher with neo4j-graphrag's VectorRetriever (four parameters: driver, index, embedder, return properties). Summarise Toy Story's plot and the movie comes back in first place without its title ever being mentioned — the feel of vector search finding stories rather than words, and the next step toward GraphRAG: cast with vectors, walk with the graph",
+  "relations": [
+   {
+    "target": "gdb-graphrag",
+    "evidenceRef": "A hands-on build that carries the concept page's vector search, retriever and neo4j-graphrag package all the way through on real sandbox data"
+   }
+  ]
  },
  {
   "name": "sks-im-not-ai",
@@ -601,12 +661,24 @@
  {
   "name": "tip-beginner",
   "title": "Beginner — 9 Habits That Save Context",
-  "summary": "Nine starter tips for Claude Code, each checked against the official docs — /init to generate CLAUDE.md, the status line, keeping context small, hunting token hogs with /context, /compact vs /clear, plan mode (and what it means now that auto mode is the default), asking with problems not functions, the 95% ask-me-back prompt, and planting self-checks into to-dos"
+  "summary": "Nine starter tips for Claude Code, each checked against the official docs — /init to generate CLAUDE.md, the status line, keeping context small, hunting token hogs with /context, /compact vs /clear, plan mode (and what it means now that auto mode is the default), asking with problems not functions, the 95% ask-me-back prompt, and planting self-checks into to-dos",
+  "relations": [
+   {
+    "target": "tip-intermediate",
+    "evidenceRef": "Builds on the beginner habits of saving context and leads into the intermediate systematizing (subagents, skills, routers) — the text's 'next part' says so"
+   }
+  ]
  },
  {
   "name": "tip-intermediate",
   "title": "Intermediate — 11 Ways to Turn Sessions into a System",
-  "summary": "Eleven tips for moving repetition into the system — parallel subagents (own context, summary-only reporting), building your own skills, running subagents on Haiku, updating CLAUDE.md with a 150–200 line cap, CLAUDE.md as a router, interrupting mid-run (Esc), pushing back then recording what works, /rewind checkpoints, hook notifications, image input, and screenshot-to-template"
+  "summary": "Eleven tips for moving repetition into the system — parallel subagents (own context, summary-only reporting), building your own skills, running subagents on Haiku, updating CLAUDE.md with a 150–200 line cap, CLAUDE.md as a router, interrupting mid-run (Esc), pushing back then recording what works, /rewind checkpoints, hook notifications, image input, and screenshot-to-template",
+  "relations": [
+   {
+    "target": "tip-advanced",
+    "evidenceRef": "Builds on the intermediate concepts of subagents and hooks and leads into the advanced worktrees and agent teams — the text's 'next part' says so"
+   }
+  ]
  },
  {
   "name": "tip-advanced",
