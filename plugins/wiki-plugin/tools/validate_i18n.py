@@ -316,6 +316,43 @@ def run(root):
                                         'doc-entries.%s.json entry has no %s body file'
                                         % (lang, lang)))
 
+    # 4b. <lang>-relation-evidence: every typed relation in doc-entries.ko.json
+    # needs a translated evidenceRef in each language overlay, whenever either
+    # end of the relation has a body in that language. The relation block is
+    # drawn on BOTH pages (outgoing on the source, incoming on the target), so
+    # a missing translation puts a Korean sentence on a translated screen.
+    # check_i18n_render.mjs renders a fixed list of screens and cannot see
+    # these pages — 13 such leaks sat on master until 2026-09-24 (found while
+    # measuring kgs-accuracy). A file check does not depend on which screens
+    # a browser happens to visit.
+    if ko_entry_names is not None:
+        ko_entries = json.load(open(ko_entries_path, encoding='utf-8'))
+        for lang in tr_langs:
+            check = '%s-relation-evidence' % lang
+            path = os.path.join(root, 'tools', 'doc-entries.%s.json' % lang)
+            if not os.path.isfile(path):
+                continue
+            try:
+                overlay = {e.get('name'): e for e in json.load(open(path, encoding='utf-8'))}
+            except (OSError, json.JSONDecodeError):
+                continue   # 4번이 이미 ERROR로 보고함
+            def has_body(nm):
+                rel = path_by_name.get(nm)
+                return rel is not None and rel in lang_files[lang]
+            for e in ko_entries:
+                for r in e.get('relations', []):
+                    tgt = r.get('target')
+                    if not (has_body(e['name']) or has_body(tgt)):
+                        continue   # 양쪽 다 ko 폴백 화면 — 한국어가 정상
+                    ov = overlay.get(e['name'], {})
+                    ok = any(x.get('target') == tgt and (x.get('evidenceRef') or '').strip()
+                             for x in ov.get('relations', []))
+                    if not ok:
+                        findings.append(_f('ERROR', check, '%s->%s' % (e['name'], tgt),
+                                            'relation evidenceRef has no %s translation in '
+                                            'doc-entries.%s.json — the relation block shows '
+                                            'Korean on the %s screen' % (lang, lang, lang)))
+
     # 5. data-topics: map docs' data-topics keys vs. that language's cluster
     # labels for the relevant galaxy.
     try:

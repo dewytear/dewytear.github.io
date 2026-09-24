@@ -5,9 +5,18 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.en.xml"/>
   <id>https://dewytear.github.io/feed.en.xml</id>
-  <updated>2026-09-23T08:04:19+09:00</updated>
+  <updated>2026-09-24T21:23:15+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>How Often Does This Wiki Get It Right — Measuring Search and Graph Traversal</title>
+    <link href="https://dewytear.github.io/p/en/kgs-accuracy/"/>
+    <id>https://dewytear.github.io/docs/en/ai/wiki/knowledge-system/kgs-accuracy</id>
+    <published>2026-09-24T19:57:46+09:00</published>
+    <updated>2026-09-24T21:23:15+09:00</updated>
+    <summary>Measures, twice, an accuracy this wiki never had despite calling itself RAG-ready and shipping its engine as a plugin, prompted by Claude Marketplace widening into a catalog of about 2,000 items on 23 September and by a comment the same day on Karpathy's LLM Wiki gist asking whether anyone had benchmarked its claims. Search was measured by calling the site's own searchDocs() in a headless browser. Round 1 (107 queries frozen before results; Korean, English, Japanese) put content-word queries almost always first, but all 20 Korean sentences returned nothing: every space-separated piece had to appear in one page, so one piece like a verb ending with a question mark emptied the query, a Japanese sentence became a single piece, the single word for harness left the defining page sixth because eight pages tied and ties went to the newest, and English without stemming let adoption miss Adopting. Of 252 related-block edges, 86.5% were right counting weak and 13.5% led nowhere (20 common concepts, 10 homonyms, 4 folder fill), and only 32.7% of authors' body links sat at one hop (19.3% across folders). These were fixed: search strips punctuation, Korean endings and particles, adds English stems, cuts Japanese into katakana and kanji runs, drops question words, runs three passes (all pieces, then without dead pieces, then at least half, with a partial-results notice) and breaks ties by title and evergreen pages first; the graph requires three shared concepts (or two including a rare one) only across folders, skips folder fill for dated folders and drops two unsupported concepts; 13 missing relation-evidence translations were filled and gated. Round 2 on 48 fresh queries committed before the engine changed: top-eight hits 20% to 87.5% (Korean sentences 0% to 93.8%, English and Japanese sentences 0% to 75%), empty results 80% to 0%. The graph went from 34 dead ends to 4, strict precision 59.5% to 78.9%, correct edges 150 to 157, World-crossing pairs 9 to 2. The cost: cross-folder recall at one hop fell from 19.3% to 14.8%, 12 good edges were lost, three pages have no related pages, and 21 of 36 Korean sentences return partial matches. Most remaining misses are vocabulary mismatches. The harness, queries and judgments are public in tools/eval/; the judgments were made by the AI that wrote the page</summary>
+    <category term="AI · Wiki · 지식 체계"/>
+  </entry>
   <entry>
     <title>A List You Can Call — Taking Apart a Ranked Catalog of 167 Agent Harnesses</title>
     <link href="https://dewytear.github.io/p/en/news-20260922-harness-catalog/"/>
@@ -40,7 +49,7 @@
     <link href="https://dewytear.github.io/p/en/news-20260904-model-doors/"/>
     <id>https://dewytear.github.io/docs/en/ai/news/2026/news-20260904-model-doors</id>
     <published>2026-09-04T07:39:54+09:00</published>
-    <updated>2026-09-23T08:04:19+09:00</updated>
+    <updated>2026-09-23T08:12:24+09:00</updated>
     <summary>Fable 5.1 and Mythos 5.1 are one model with identical capabilities, specs and pricing; only access differs. Fable 5.1 is open to every customer, Mythos 5.1 only to approved Project Glasswing participants, and Mythos 5.1 does not run the history-editing check (1M context, 128k output, adaptive thinking always on, 30-day retention). One cell in the price table moved: cache reads from $1 to $0.25 per million tokens, a multiplier of 0.025 times base input where it used to be 0.1 (base input $10, output $50, cache writes and the 512-token minimum unchanged), and the 25% and 45% savings reported at launch all come from that line. The same release changed three things about the call: forcing a tool returns a 400 (thinking is always on, and forcing a call skips it so the working-out leaks into the tool arguments and their quality drops; use strict: true plus a prompt instruction instead), thinking blocks are readable only by the model that produced them or a newer one, and editing the preceding system prompt, tools or history invalidates every later block (enforced by default only for accounts created on or after 2026-08-31, testable via prefix_mismatch_behavior and input_transformations). Keeping the cache warm and keeping thinking blocks valid are the same discipline: the discount is the reward, the check is the penalty Three weeks later, on 22 September, Opus 5.5 brought the same terms to the model you get by default: the specs match at 1M and 128k, but the price fell on the base rate rather than on cache reads ($4 input, $20 output against Opus 5's $5 and $25, with cache reads at $0.20, 5% of input). Three of its four breaking changes are Fable 5.1's; the fourth rejects the older computer use tool on the Claude API and Google Cloud while Bedrock keeps working. Two changes that fail nothing are the more dangerous pair: the default effort dropped from high to medium, so swapping the model ID silently buys less thinking, and the notes written between tool calls now arrive as thinking blocks, so progress displays go quiet at the default setting. Thinking survives only on the way up, Opus 5 to Opus 5.5 to Fable 5.1. The same day, Claude Code 2.1.280 made Opus 5.5 the default Opus model and switched Pro and Team Standard from Sonnet to Opus, so these terms now ride on the model you get without choosing</summary>
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
@@ -267,15 +276,6 @@
     <published>2026-07-11T19:47:53+09:00</published>
     <updated>2026-08-15T14:06:54+09:00</updated>
     <summary>The World→Domain→System→Document hierarchy and the document registration pipeline — immutable IDs, physical paths, and deterministic index builds</summary>
-    <category term="AI · Wiki · 지식 체계"/>
-  </entry>
-  <entry>
-    <title>How Documents Connect — Concept Curation and idf-Weighted Edges</title>
-    <link href="https://dewytear.github.io/p/en/kgs-edges/"/>
-    <id>https://dewytear.github.io/docs/en/ai/wiki/knowledge-system/kgs-edges</id>
-    <published>2026-07-11T19:47:53+09:00</published>
-    <updated>2026-08-20T08:28:19+09:00</updated>
-    <summary>Concept curation and rarity(idf)-weighted shared-concept edges — the selection rules, an anatomy of real edges, threshold ripple effects, and the honesty principle</summary>
     <category term="AI · Wiki · 지식 체계"/>
   </entry>
 </feed>

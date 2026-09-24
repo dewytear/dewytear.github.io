@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-08-20T08:28:19+09:00"
+ "dateModified": "2026-09-24T21:23:15+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -87,34 +87,36 @@
 <h3>실제 엣지 해부 — Welcome ↔ "Claude Code란 무엇인가"</h3>
 <p>실제 그래프의 엣지 하나를 뜯어 보면: <a href="/p/welcome/">시작하기</a>와 <a href="/p/ccb-overview/">Tutorial 기초 편</a>은 <strong>'터미널'(가중치 3.51)·'CLAUDE.md'(2.01)·'Claude Code'(1.90)</strong> 세 개념을 공유합니다. 점수는 가중치의 합 <strong>≈ 7.42</strong> — 같은 문서의 1순위는 개념 4개를 공유한 <a href="/p/tip-beginner/">Tip 초급 편</a>(≈ 9.68)이니, 공유 개념이 많고 희귀할수록 위로 올라가는 셈입니다. 문서 하단의 "연관 문서"에서 이 근거 개념이 그대로 칩으로 표시되므로, <strong>왜 이어졌는지</strong>를 언제나 확인할 수 있습니다.</p>
 
-<h3>판정 규칙 — 세 갈래</h3>
+<h3>판정 규칙 — System 안은 촘촘하게, 사이는 성기게</h3>
 <div class="diagram">
-<svg viewBox="0 0 720 234" role="img" aria-label="엣지 판정: 공유 2개 이상이면 연결, 공유 1개면 그 개념이 3편 이하일 때만 연결, 그 외엔 폴더 보완">
+<svg viewBox="0 0 720 262" role="img" aria-label="엣지 판정: 같은 System 안에서는 공유 2개 이상이거나 희귀 개념 1개면 연결, System을 넘을 때는 공유 3개 이상이거나 2개 중 하나가 희귀해야 연결하고 개념 하나로는 넘지 않으며, 개념 연결이 2개 미만이면 같은 System 이웃으로 보완하되 날짜 기사 폴더는 보완하지 않는다">
     <rect class="d-box" x="230" y="14" width="260" height="46" rx="9"/>
     <text class="d-label" x="360" y="42" text-anchor="middle">두 문서의 공유 개념은?</text>
-    <line class="d-edge" x1="290" y1="60" x2="128" y2="96"/>
-    <line class="d-edge" x1="360" y1="60" x2="360" y2="96"/>
-    <line class="d-edge" x1="430" y1="60" x2="592" y2="96"/>
-    <rect class="d-box accent" x="24" y="100" width="210" height="58" rx="9"/>
-    <text class="d-label" x="129" y="124" text-anchor="middle">2개 이상 공유</text>
-    <text class="d-sub" x="129" y="144" text-anchor="middle">연결 (via:concept)</text>
-    <rect class="d-box accent" x="254" y="100" width="212" height="58" rx="9"/>
-    <text class="d-label" x="360" y="124" text-anchor="middle">1개 공유 + 3편 이하</text>
-    <text class="d-sub" x="360" y="144" text-anchor="middle">희귀 개념만 인정 (concept)</text>
-    <rect class="d-box soft" x="486" y="100" width="210" height="58" rx="9"/>
-    <text class="d-label" x="591" y="124" text-anchor="middle">그 외 (0~1개 공유)</text>
-    <text class="d-sub" x="591" y="144" text-anchor="middle">연결하지 않음</text>
-    <line class="d-edge dash" x1="591" y1="158" x2="591" y2="188"/>
-    <text class="d-sub" x="360" y="208" text-anchor="middle">개념 연결이 2개 미만인 문서는 같은 System 이웃으로 보완 (via:folder) — 모든 문서가 2~4개 연결을 가짐</text>
+    <line class="d-edge" x1="300" y1="60" x2="190" y2="96"/>
+    <line class="d-edge" x1="420" y1="60" x2="530" y2="96"/>
+    <rect class="d-box accent" x="40" y="96" width="300" height="74" rx="9"/>
+    <text class="d-label" x="190" y="120" text-anchor="middle">같은 System 안</text>
+    <text class="d-sub" x="190" y="140" text-anchor="middle">2개 이상 공유하면 연결</text>
+    <text class="d-sub" x="190" y="158" text-anchor="middle">1개뿐이면 그 개념이 3편 이하일 때</text>
+    <rect class="d-box accent" x="380" y="96" width="300" height="74" rx="9"/>
+    <text class="d-label" x="530" y="120" text-anchor="middle">System을 넘을 때</text>
+    <text class="d-sub" x="530" y="140" text-anchor="middle">3개 이상, 또는 2개 중 하나가 희귀</text>
+    <text class="d-sub" x="530" y="158" text-anchor="middle">개념 하나로는 넘지 않는다</text>
+    <line class="d-edge dash" x1="190" y1="170" x2="190" y2="196"/>
+    <line class="d-edge dash" x1="530" y1="170" x2="530" y2="196"/>
+    <rect class="d-box soft" x="40" y="196" width="640" height="52" rx="9"/>
+    <text class="d-sub" x="360" y="217" text-anchor="middle">개념 연결이 2개 미만이면 같은 System 이웃으로 보완 (via:folder)</text>
+    <text class="d-sub" x="360" y="235" text-anchor="middle">날짜 기사 폴더(news-YYYYMMDD)는 보완하지 않는다</text>
 </svg>
-<div class="d-cap">판정 플로우 — 우연한 1개 공유는 버리되, 희귀 개념(3편 이하)의 1개 공유는 인정합니다.</div>
+<div class="d-cap">판정 플로우 — 2026-09-24 <a href="/p/kgs-accuracy/">정확도 측정</a>의 엣지 판정에서 나온 규칙입니다. 희귀의 기준(3편 이하)은 예전 규칙의 것을 그대로 씁니다.</div>
 </div>
 
 <ul>
-    <li><strong>공유 2개 이상</strong> → 연결. 서로 다른 개념 두 개가 겹치는 것은 우연이기 어렵습니다.</li>
-    <li><strong>공유 1개 + 그 개념이 3편 이하에만 등장</strong> → 연결. 실례: <a href="/p/dzp-overview/">제안 개요</a> ↔ <a href="/p/news-20260816-claude-code-selfhosted/">셀프호스팅 공개 베타</a>는 'GitLab' 하나만 공유하지만, 'GitLab'이 3편에만 나올 만큼 희귀해 인정됩니다. 반대로 '스킬' 하나만 공유한 쌍은 연결되지 않습니다 — 12편이 공유하는 개념 1개는 근거가 못 되기 때문입니다.</li>
-    <li><strong>그 외</strong> → 개념으로는 연결하지 않습니다. 대신 개념 연결이 2개가 안 되는 문서는 <strong>같은 System의 이웃</strong>(예: <a href="/p/ccb-overview/">기초 편</a> → 같은 Tutorial의 앞뒤 챕터)으로 보완해, <strong>모든 문서가 최소 2~4개의 연결</strong>을 갖게 합니다. 현재 비율은 개념 연결 182개(77%) · 폴더 보완 54개(23%)입니다.</li>
+    <li><strong>같은 System 안</strong> → 공유 2개 이상이면 연결하고, 1개뿐이어도 그 개념이 3편 이하에만 나오면 연결합니다. 실례: <a href="/p/skl-overview/">스킬 개요</a> ↔ <a href="/p/skl-install/">스킬 설치</a>는 '샌드박스' 하나만 공유하지만, 2편에만 나오는 희귀 개념이라 인정됩니다. 연재 안의 문서는 대개 같은 주제를 이어 가므로 문턱을 낮게 둡니다.</li>
+    <li><strong>System을 넘을 때</strong> → 공유 3개 이상이거나, 2개 중 하나가 희귀(3편 이하)해야 연결합니다. <strong>개념 하나로는 아무리 희귀해도 넘지 않습니다.</strong> 실례: <a href="/p/ccb-overview/">Tutorial 기초 편</a> ↔ <a href="/p/claude-md-commandments/">CLAUDE.md의 10계명</a>은 'CLAUDE.md'(11편)와 '작업지침'(2편)을 공유해, 희귀한 쪽이 닻이 되어 연결됩니다. 반대로 <a href="/p/welcome/">시작하기</a> ↔ <a href="/p/omc-intro/">OMC 소개</a>는 '설치'·'슬래시명령어'를 공유하지만 둘 다 흔해서 이어지지 않고, <a href="/p/dzp-overview/">제안 개요</a> ↔ <a href="/p/news-20260816-claude-code-selfhosted/">셀프호스팅 공개 베타</a>는 'GitLab' 하나로 World까지 넘던 엣지라 끊겼습니다.</li>
+    <li><strong>그 외</strong> → 개념으로는 연결하지 않습니다. 개념 연결이 2개가 안 되는 문서는 <strong>같은 System의 이웃</strong>(예: <a href="/p/ccb-overview/">기초 편</a> → 같은 Tutorial의 앞뒤 챕터)으로 보완합니다. 다만 <strong>날짜 기사 폴더는 보완하지 않습니다</strong> — 날짜순으로 쌓인 뉴스는 읽는 순서가 아니어서, 옆에 있다는 것이 관련 있다는 뜻이 아니기 때문입니다. 그래서 일부 문서는 연결이 0~1개로 남습니다 — 날짜 기사, 그리고 폴더에 혼자 있어 보완할 이웃이 없는 문서(<a href="/p/sne-overview/">발송엔진 요청</a>·개별 스킬 소개 두 편)입니다. 억지 이웃을 붙이지 않은 정직한 결과입니다. 현재 비율은 개념 연결 183개(88%) · 폴더 보완 25개(12%)입니다.</li>
 </ul>
+<p>예전 규칙은 System을 가리지 않고 "서로 다른 개념 두 개가 겹치는 것은 우연이기 어렵다"고 보았습니다. 측정해 보니 그렇지 않았습니다. 엣지를 하나씩 판정했더니 헛걸음 34개 가운데 20개가 '설치'·'플러그인'처럼 <strong>흔한 개념 둘</strong>로, 10개가 '메타데이터'·'쿼리'처럼 <strong>뜻이 다른 같은 말 하나</strong>로 System을 넘은 엣지였습니다. 같은 System 안에서는 흔한 개념 둘의 공유도 대개 진짜 관련이라 규칙을 그대로 두고, 경계를 넘는 엣지에만 증거를 더 요구하게 바꿨습니다. 이 위키가 World 사이에 바라는 구조 — 내부는 촘촘, 사이는 성긴 — 를 System 단위에도 적용한 것입니다.</p>
 
 <h3>경계값의 파급 — 왜 함부로 개념을 못 늘리나</h3>
 <p>"3편 이하" 규칙에는 미묘한 파급이 있습니다. 어떤 희귀 개념이 지금 3편에 등장하는데, 새 문서가 그 개념을 하나 더 쓰면 <strong>4편이 되는 순간</strong> 그 개념 하나로 이어져 있던 기존 엣지가 <strong>자격을 잃고 끊어집니다</strong>. 그래서 이 위키의 규칙집(CLAUDE.md)은 "고립을 없애려 본문에 없는 개념을 추가하는 것"을 금지합니다 — 억지 연결 하나가 옆 문서의 진짜 연결을 끊을 수 있기 때문입니다. 연결이 옅은 문서는 결함이 아니라 <strong>검토 신호</strong>로만 다룹니다. 이것이 이 그래프의 <strong>정직성 원칙</strong>입니다: 엣지는 늘 실제 본문에 근거하고, 큐레이션은 그래프를 좋게 보이게 하는 도구가 아닙니다.</p>
@@ -161,13 +163,13 @@
 
 <div class="note">
     <span class="nh">한눈 요약</span>
-    개념은 <strong>큐레이션</strong>(본문 실재만) → 엣지는 <strong>희소성 가중 공유</strong>(2개↑ 또는 희귀 1개) → 부족하면 <strong>폴더 보완</strong> → 모든 문서 2~4연결·고아 0. 그 위에 본문 <code>#!</code> 링크의 역인덱스인 <strong>인용 백링크(<code>citedBy</code>)</strong>와, 큐레이션으로 선언하는 <strong>방향 있는 타입 관계(<code>relations</code>)</strong>를 별도로 얹습니다. 많이 참조되는 문서가 <strong>허브</strong>가 되어 그래프의 중심을 이룹니다(<a href="/p/kgs-views/">다음 편</a>).
+    개념은 <strong>큐레이션</strong>(본문 실재만) → 엣지는 <strong>희소성 가중 공유</strong>(System 안은 2개↑ 또는 희귀 1개, 사이는 3개↑ 또는 희귀한 닻을 낀 2개) → 부족하면 <strong>폴더 보완</strong>(날짜 기사 제외) → 대부분 2~4연결, 개념이 닿는 이웃이 없으면 0~1개로 둡니다. 그 위에 본문 <code>#!</code> 링크의 역인덱스인 <strong>인용 백링크(<code>citedBy</code>)</strong>와, 큐레이션으로 선언하는 <strong>방향 있는 타입 관계(<code>relations</code>)</strong>를 별도로 얹습니다. 많이 참조되는 문서가 <strong>허브</strong>가 되어 그래프의 중심을 이룹니다(<a href="/p/kgs-views/">다음 편</a>).
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">분류</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">생성일자</span> 2026-07-11 &middot; <span class="pr-k">수정일자</span> 2026-08-20</p>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">생성일자</span> 2026-07-11 &middot; <span class="pr-k">수정일자</span> 2026-09-24</p>
 
 <nav class="pr-rel"><h2>연관 문서</h2>
-<ul><li><a href="/p/kgs-views/">그래프를 읽는 9가지 눈</a></li><li><a href="/p/kgs-overview/">지식은 어떻게 쌓이는가</a></li><li><a href="/p/news-20260922-harness-catalog/">부를 수 있는 목록 — 하네스 167종 순위표를 받아서 뜯어봤다</a></li></ul>
+<ul><li><a href="/p/kgs-accuracy/">이 위키는 얼마나 맞히는가 — 검색과 그래프 순회를 재 봤다</a></li><li><a href="/p/kgs-views/">그래프를 읽는 9가지 눈</a></li><li><a href="/p/kgs-overview/">지식은 어떻게 쌓이는가</a></li><li><a href="/p/news-20260922-harness-catalog/">부를 수 있는 목록 — 하네스 167종 순위표를 받아서 뜯어봤다</a></li></ul>
 </nav>
 </body>
 </html>

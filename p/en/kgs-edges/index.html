@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-08-20T08:28:19+09:00"
+ "dateModified": "2026-09-24T21:23:15+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -87,34 +87,36 @@
 <h3>Dissecting a Real Edge — Welcome ↔ "What Is Claude Code"</h3>
 <p>Take one edge from the actual graph apart: <a href="/p/en/welcome/">Getting Started</a> and <a href="/p/en/ccb-overview/">the Tutorial basics chapter</a> share three concepts, <strong>'terminal' (weight 3.51), 'CLAUDE.md' (2.01), and 'Claude Code' (1.90)</strong>. The score is the sum of the weights, <strong>≈ 7.42</strong> — the same document's number-one related entry is the <a href="/p/en/tip-beginner/">beginner tips</a> with four shared concepts (≈ 9.68), so more shared and rarer concepts climb higher. The "Related docs" block at the bottom of a document shows these evidence concepts as chips, so you can always check <strong>why</strong> two documents were connected.</p>
 
-<h3>The Decision Rule — Three Branches</h3>
+<h3>The Decision Rule — Dense Inside a System, Sparse Between</h3>
 <div class="diagram">
-<svg viewBox="0 0 720 234" role="img" aria-label="Edge decision: two or more shared concepts means connect, one shared concept connects only if it appears in 3 or fewer docs, otherwise folder top-up">
+<svg viewBox="0 0 720 262" role="img" aria-label="Edge decision: inside one System, connect on two or more shared concepts or one rare concept; across Systems, connect only on three or more, or two with one rare, never on a single concept; documents with fewer than two concept links are topped up with same-System neighbours, except dated article folders">
     <rect class="d-box" x="230" y="14" width="260" height="46" rx="9"/>
-    <text class="d-label" x="360" y="42" text-anchor="middle">Shared concepts of the two docs?</text>
-    <line class="d-edge" x1="290" y1="60" x2="128" y2="96"/>
-    <line class="d-edge" x1="360" y1="60" x2="360" y2="96"/>
-    <line class="d-edge" x1="430" y1="60" x2="592" y2="96"/>
-    <rect class="d-box accent" x="24" y="100" width="210" height="58" rx="9"/>
-    <text class="d-label" x="129" y="124" text-anchor="middle">2 or more shared</text>
-    <text class="d-sub" x="129" y="144" text-anchor="middle">connect (via:concept)</text>
-    <rect class="d-box accent" x="254" y="100" width="212" height="58" rx="9"/>
-    <text class="d-label" x="360" y="124" text-anchor="middle">1 shared + in ≤3 docs</text>
-    <text class="d-sub" x="360" y="144" text-anchor="middle">rare concepts only (concept)</text>
-    <rect class="d-box soft" x="486" y="100" width="210" height="58" rx="9"/>
-    <text class="d-label" x="591" y="124" text-anchor="middle">otherwise (0–1 shared)</text>
-    <text class="d-sub" x="591" y="144" text-anchor="middle">no connection</text>
-    <line class="d-edge dash" x1="591" y1="158" x2="591" y2="188"/>
-    <text class="d-sub" x="360" y="208" text-anchor="middle">docs with fewer than 2 concept edges get same-System neighbors (via:folder) — every doc has 2–4 edges</text>
+    <text class="d-label" x="360" y="42" text-anchor="middle">Shared concepts?</text>
+    <line class="d-edge" x1="300" y1="60" x2="190" y2="96"/>
+    <line class="d-edge" x1="420" y1="60" x2="530" y2="96"/>
+    <rect class="d-box accent" x="40" y="96" width="300" height="74" rx="9"/>
+    <text class="d-label" x="190" y="120" text-anchor="middle">Inside one System</text>
+    <text class="d-sub" x="190" y="140" text-anchor="middle">2 or more shared: connect</text>
+    <text class="d-sub" x="190" y="158" text-anchor="middle">only 1: when it is in 3 docs or fewer</text>
+    <rect class="d-box accent" x="380" y="96" width="300" height="74" rx="9"/>
+    <text class="d-label" x="530" y="120" text-anchor="middle">Across Systems</text>
+    <text class="d-sub" x="530" y="140" text-anchor="middle">3 or more, or 2 with one rare</text>
+    <text class="d-sub" x="530" y="158" text-anchor="middle">a single concept never crosses</text>
+    <line class="d-edge dash" x1="190" y1="170" x2="190" y2="196"/>
+    <line class="d-edge dash" x1="530" y1="170" x2="530" y2="196"/>
+    <rect class="d-box soft" x="40" y="196" width="640" height="52" rx="9"/>
+    <text class="d-sub" x="360" y="217" text-anchor="middle">Fewer than 2 concept links: top up with same-System neighbours (via:folder)</text>
+    <text class="d-sub" x="360" y="235" text-anchor="middle">Dated article folders (news-YYYYMMDD) are not topped up</text>
 </svg>
-<div class="d-cap">The decision flow — a coincidental single share is discarded, but a single share of a rare concept (in 3 or fewer docs) counts.</div>
+<div class="d-cap">The decision flow — a rule that came out of the edge audit in the 24 September 2026 <a href="/p/en/kgs-accuracy/">accuracy measurement</a>. "Rare" keeps the old threshold of three documents or fewer.</div>
 </div>
 
 <ul>
-    <li><strong>2 or more shared</strong> → connect. Two different concepts overlapping is unlikely to be coincidence.</li>
-    <li><strong>1 shared + that concept appears in 3 or fewer documents</strong> → connect. A real case: <a href="/p/en/dzp-overview/">the proposal overview</a> ↔ <a href="/p/en/news-20260816-claude-code-selfhosted/">the self-hosting public beta</a> share only 'GitLab', but 'GitLab' appears in just 3 documents — rare enough to count. Conversely, a pair sharing only 'skills' is not connected — one concept shared by 12 documents cannot serve as evidence.</li>
-    <li><strong>Otherwise</strong> → no connection by concept. Instead, a document that does not reach two concept connections is topped up with <strong>neighbors in the same System</strong> (e.g. the <a href="/p/en/ccb-overview/">Basics chapter</a> → the chapters before and after it in the same Tutorial), so that <strong>every document has at least 2 to 4 connections</strong>. The current ratio is 182 concept connections (77%) · 54 folder top-ups (23%).</li>
+    <li><strong>Inside one System</strong> → connect on two or more shared concepts, or on a single one if it appears in three documents or fewer. Example: <a href="/p/en/skl-overview/">What Skills Are</a> ↔ <a href="/p/en/skl-install/">Installing Skills</a> share only "sandbox," but it appears in just two documents, so it counts. Pages in one series usually continue the same subject, so the bar stays low.</li>
+    <li><strong>Across Systems</strong> → connect only on three or more shared concepts, or on two where one is rare (three documents or fewer). <strong>A single concept never crosses, however rare.</strong> Example: <a href="/p/en/ccb-overview/">the Tutorial basics</a> ↔ <a href="/p/en/claude-md-commandments/">the Ten Commandments of CLAUDE.md</a> share "CLAUDE.md" (11 docs) and "working instructions" (2 docs), and the rare one anchors the link. By contrast <a href="/p/en/welcome/">Welcome</a> ↔ <a href="/p/en/omc-intro/">the OMC introduction</a> share "install" and "slash commands," both common, so they no longer connect; and <a href="/p/en/dzp-overview/">the proposal overview</a> ↔ <a href="/p/en/news-20260816-claude-code-selfhosted/">the self-hosting beta</a> crossed even a World on "GitLab" alone, so that edge is gone.</li>
+    <li><strong>Otherwise</strong> → no concept link. A document with fewer than two concept links is topped up with <strong>neighbours in the same System</strong> (for example <a href="/p/en/ccb-overview/">the basics</a> → the chapters around it in the Tutorial). <strong>Dated article folders are not topped up</strong>: news piled up by date is not a reading order, so sitting next to each other does not make articles related. Some documents therefore keep zero or one link — dated articles, and documents alone in their folder with no neighbour to borrow (<a href="/p/en/sne-overview/">the delivery engine request</a> and two individual skill pages). That is the honest result of not inventing neighbours. The current split is 183 concept links (88%) and 25 folder top-ups (12%).</li>
 </ul>
+<p>The old rule held, regardless of System, that "two different concepts overlapping is unlikely to be chance." Measurement said otherwise. Judging edges one by one, 20 of the 34 dead ends crossed a System on <strong>two common concepts</strong> such as install and plugin, and 10 on <strong>one word with two meanings</strong> such as metadata or query. Inside a System, two common concepts usually do signal a real relation, so that rule stays; only edges that cross a boundary now need more evidence. It applies to Systems the structure this wiki wants between Worlds — dense inside, sparse between.</p>
 
 <h3>The Ripple of a Threshold — Why You Cannot Add Concepts Casually</h3>
 <p>The "3 or fewer" rule has a subtle ripple. Suppose a rare concept currently appears in 3 documents and a new document uses that concept once more: <strong>the moment it becomes 4</strong>, an existing edge that hung on that single concept <strong>loses its qualification and is cut</strong>. That is why this wiki's rulebook (CLAUDE.md) forbids "adding a concept that is not in the body in order to remove an isolation" — one forced connection can cut a neighboring document's real connection. A document with thin connections is treated not as a defect but only as a <strong>review signal</strong>. This is this graph's <strong>honesty principle</strong>: edges are always grounded in the actual body, and curation is not a tool for making the graph look good.</p>
@@ -161,13 +163,13 @@
 
 <div class="note">
     <span class="nh">In a nutshell</span>
-    Concepts are <strong>curated</strong> (body-real only) → edges come from <strong>rarity-weighted sharing</strong> (2 or more, or one rare concept) → shortfalls are made up by <strong>folder top-up</strong> → every document has 2–4 connections and there are no orphans. On top of that, <strong>citation backlinks (<code>citedBy</code>)</strong>, the reverse index of body <code>#!</code> links, and <strong>directed typed relations (<code>relations</code>)</strong> declared by curation are layered separately. Heavily referenced documents become <strong>hubs</strong> and form the center of the graph (<a href="/p/en/kgs-views/">next part</a>).
+    Concepts are <strong>curated</strong> (body-real only) → edges come from <strong>rarity-weighted sharing</strong> (inside a System, 2 or more or one rare concept; across Systems, 3 or more or 2 with a rare anchor) → shortfalls are made up by <strong>folder top-up</strong> (not for dated articles) → most documents have 2–4 connections, and those with no neighbour a concept reaches keep 0–1. On top of that, <strong>citation backlinks (<code>citedBy</code>)</strong>, the reverse index of body <code>#!</code> links, and <strong>directed typed relations (<code>relations</code>)</strong> declared by curation are layered separately. Heavily referenced documents become <strong>hubs</strong> and form the center of the graph (<a href="/p/en/kgs-views/">next part</a>).
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">Section</span> AI · Wiki · Knowledge System &middot; <span class="pr-k">Created</span> 2026-07-11 &middot; <span class="pr-k">Updated</span> 2026-08-20</p>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Wiki · Knowledge System &middot; <span class="pr-k">Created</span> 2026-07-11 &middot; <span class="pr-k">Updated</span> 2026-09-24</p>
 
 <nav class="pr-rel"><h2>Related documents</h2>
-<ul><li><a href="/p/en/kgs-views/">Nine Ways to Read the Graph — Each View Answers a Different Question</a></li><li><a href="/p/en/kgs-overview/">How Knowledge Accumulates — The Four-Level Hierarchy and the Registration Pipeline</a></li><li><a href="/p/en/news-20260922-harness-catalog/">A List You Can Call — Taking Apart a Ranked Catalog of 167 Agent Harnesses</a></li></ul>
+<ul><li><a href="/p/en/kgs-accuracy/">How Often Does This Wiki Get It Right — Measuring Search and Graph Traversal</a></li><li><a href="/p/en/kgs-views/">Nine Ways to Read the Graph — Each View Answers a Different Question</a></li><li><a href="/p/en/kgs-overview/">How Knowledge Accumulates — The Four-Level Hierarchy and the Registration Pipeline</a></li><li><a href="/p/en/news-20260922-harness-catalog/">A List You Can Call — Taking Apart a Ranked Catalog of 167 Agent Harnesses</a></li></ul>
 </nav>
 </body>
 </html>

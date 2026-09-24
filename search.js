@@ -46,56 +46,206 @@ function ensureTextIndex(){
     buildTextIndex();
 }
 
-// Concept-aware ranked search. Every term must still match somewhere
-// (label / section / tags / AI concepts / AI summary / body), but hits
-// are SCORED and ranked so meaning-level matches (the knowledge index's
-// concepts) rise above incidental body mentions. Returns
-// [{d, score, concepts:[matched concept names]}], best first.
-// Field weights: concept 5 (exact 8) > label 4 > tag 3 > summary/section 2 > body 1.
-function searchDocs(query){
-    var q = query.trim().toLowerCase();
-    if(!q){ return []; }
-    var terms = q.split(/\s+/);
+// ---- Query normalisation ----
+// Measured on 2026-09-24 (kgs-accuracy): every sentence query failed, because
+// a page is listed only if every space-separated piece appears in it, and
+// pieces such as "불러와지나요?" or "documents?" appear nowhere. Each piece is
+// now turned into the forms worth matching — punctuation trimmed, a Korean
+// particle/ending or an English suffix peeled off as an alternative stem,
+// Japanese split into script runs — and question words are dropped. Matching
+// stays substring-based, so a stem like "adopt" still finds "adopting".
+var SEARCH_PUNCT = /^[\s?!.,;:\"'`()\[\]{}<>…·‧–—\-？！。、「」『』（）【】“”‘’]+|[\s?!.,;:\"'`()\[\]{}<>…·‧–—\-？！。、「」『』（）【】“”‘’]+$/g;
+var SEARCH_STOP = {
+    // English function and question words
+    'a':1,'an':1,'the':1,'is':1,'are':1,'was':1,'were':1,'be':1,'do':1,'does':1,'did':1,
+    'how':1,'what':1,'why':1,'when':1,'where':1,'which':1,'who':1,'can':1,'could':1,
+    'should':1,'would':1,'will':1,'i':1,'my':1,'me':1,'you':1,'your':1,'it':1,'its':1,
+    'this':1,'that':1,'these':1,'those':1,'of':1,'to':1,'in':1,'on':1,'for':1,'with':1,
+    'and':1,'or':1,'from':1,'into':1,'about':1,'if':1,'much':1,'many':1,
+    // Korean question words and fillers that carry no topic
+    '어떻게':1,'언제':1,'무엇':1,'무엇이':1,'무엇을':1,'뭐':1,'뭐가':1,'뭘':1,'무슨':1,
+    '뭔가요':1,'뭐예요':1,'왜':1,'어디':1,'어떤':1,'어느':1,
+    '누가':1,'얼마':1,'얼마나':1,'이':1,'그':1,'저':1,'좀':1,'더':1,'잘':1,'수':1,
+    // Korean question verbs that stand alone as a piece
+    '있나요':1,'없나요':1,'하나요':1,'되나요':1,'있어요':1,'없어요':1,'해요':1,'돼요':1,
+    '됩니다':1,'합니다':1,'있습니다':1,'궁금해요':1,'궁금합니다':1,'싶어요':1,'싶습니다':1,
+    '할까요':1,'될까요':1,'알려줘':1,'알려주세요':1
+};
+// Longest first. Peeled only when a stem of 2+ syllables remains.
+var KO_ENDINGS = ['인가요','하나요','되나요','있나요','없나요','습니까','싶어요','려면요',
+    '으려면','하려면','이에요','에서는','에게서','으로는','으로서','으로써','이라는','이라고',
+    '나요','가요','까요','세요','어요','아요','해요','예요','에요','려면','인지',
+    '에서','에게','으로','까지','부터','처럼','보다','이랑','하고','이나','이란','라는','라고',
+    '에는','와는','과는','은','는','이','가','을','를','의','에','로','와','과','도','만','랑','란'];
+var EN_SUFFIXES = ['ations','ation','ments','ment','ings','ing','ions','ion','ness','ers','er',
+    'ies','ied','es','ed','ly','s'];
+var HANGUL = /[가-힣]/, JA = /[぀-ヿ一-鿿]/;
+
+function koStems(t){
     var out = [];
-    DOCS.forEach(function(d){
-        if(!isSearchableDoc(d)){ return; }
-        var info = KNOWLEDGE ? KNOWLEDGE[d.name] : null;
-        var concepts = (info && info.concepts) || [];
-        // 개념은 키(canonical)와 현지화 표시명 **둘 다로** 매칭한다 — 영어로
-        // 'knowledge graph'를 쳐도 '지식그래프' 키를 가진 문서가 잡히게. 다만
-        // 결과 칩에 담는 것은 언제나 키(표시는 렌더 시 conceptLabel이 맡는다).
-        var conceptHay = [];
-        concepts.forEach(function(c){
-            conceptHay.push({ key: c, s: c.toLowerCase() });
-            var cl = conceptLabel(c);
-            if(cl !== c){ conceptHay.push({ key: c, s: cl.toLowerCase() }); }
-        });
-        var label = d.label.toLowerCase();
-        var section = d.section.toLowerCase();
-        var tagsLow = d.tags.join(' ').toLowerCase();
-        var summaryLow = ((info && info.summary) || '').toLowerCase();
-        var body = DOC_TEXT[d.name] || '';
-        var score = 0, matched = [], ok = true;
-        terms.forEach(function(t){
-            var s = 0;
-            for(var i = 0; i < conceptHay.length; i++){
-                if(conceptHay[i].s.indexOf(t) !== -1){
-                    s = Math.max(s, conceptHay[i].s === t ? 8 : 5);
-                    if(matched.indexOf(conceptHay[i].key) === -1){ matched.push(conceptHay[i].key); }
-                }
+    for(var i = 0; i < KO_ENDINGS.length; i++){
+        var e = KO_ENDINGS[i];
+        if(t.length > e.length && t.slice(-e.length) === e){
+            var st = t.slice(0, -e.length);
+            // 'code에서' → 'code': a latin word with a Korean particle glued on
+            if(st.length >= 2 && (HANGUL.test(st) || /^[a-z0-9.+#\-]+$/.test(st))){
+                out.push(st);
+                // light verbs: 연결하(다)·사용되(다) → 연결·사용
+                var last = st.slice(-1);
+                if((last === '하' || last === '되') && st.length >= 3){ out.push(st.slice(0, -1)); }
             }
-            if(label.indexOf(t) !== -1){ s = Math.max(s, 4); }
-            if(tagsLow.indexOf(t) !== -1){ s = Math.max(s, 3); }
-            if(summaryLow.indexOf(t) !== -1){ s = Math.max(s, 2); }
-            if(section.indexOf(t) !== -1){ s = Math.max(s, 2); }
-            if(body.indexOf(t) !== -1){ s = Math.max(s, 1); }
-            if(s === 0){ ok = false; }
-            score += s;
-        });
-        if(ok && score > 0){ out.push({ d: d, score: score, concepts: matched }); }
-    });
-    out.sort(function(a, b){ return b.score - a.score; });
+            break;
+        }
+    }
     return out;
+}
+function enStem(t){
+    if(!/^[a-z]+$/.test(t)){ return null; }
+    for(var i = 0; i < EN_SUFFIXES.length; i++){
+        var x = EN_SUFFIXES[i];
+        if(t.length > x.length && t.slice(-x.length) === x){
+            var st = t.slice(0, -x.length);
+            return st.length >= 4 ? st : null;
+        }
+    }
+    return null;
+}
+// Japanese has no spaces: keep katakana, kanji and latin runs (2+ chars),
+// drop hiragana runs (particles and okurigana).
+function jaRuns(t){
+    var runs = [], cur = '', kind = '';
+    function cls(ch){
+        if(/[゠-ヿ]/.test(ch)){ return 'kata'; }
+        if(/[一-鿿㐀-䶿]/.test(ch)){ return 'kanji'; }
+        if(/[぀-ゟ]/.test(ch)){ return 'hira'; }
+        if(/[a-z0-9.\-]/.test(ch)){ return 'latin'; }
+        return 'other';
+    }
+    for(var i = 0; i < t.length; i++){
+        var k = cls(t[i]);
+        if(k !== kind && cur){ runs.push([kind, cur]); cur = ''; }
+        kind = k; cur += t[i];
+    }
+    if(cur){ runs.push([kind, cur]); }
+    return runs.filter(function(r){ return r[0] !== 'hira' && r[0] !== 'other' && r[1].length >= 2; })
+               .map(function(r){ return r[1]; });
+}
+// query -> [{raw, forms:[...]}]; forms are what each piece may match as.
+function normalizeQuery(query){
+    var pieces = [];
+    query.trim().toLowerCase().split(/\s+/).forEach(function(p){
+        p = p.replace(SEARCH_PUNCT, '');
+        if(!p){ return; }
+        if(JA.test(p) && !HANGUL.test(p)){
+            var runs = jaRuns(p);
+            if(runs.length){ runs.forEach(function(r){ pieces.push(r); }); return; }
+        }
+        pieces.push(p);
+    });
+    var terms = pieces.map(function(p){
+        var forms = [p];
+        if(HANGUL.test(p)){ koStems(p).forEach(function(s){ if(forms.indexOf(s) === -1){ forms.push(s); } }); }
+        var es = enStem(p); if(es && forms.indexOf(es) === -1){ forms.push(es); }
+        return { raw: p, forms: forms };
+    });
+    var kept = terms.filter(function(t){
+        return !SEARCH_STOP[t.raw] && !(t.forms[1] && SEARCH_STOP[t.forms[1]]);
+    });
+    return kept.length ? kept : terms;   // a query of only stopwords still searches
+}
+
+function isDatedArticle(d){ return /^news-\d{8}-/.test(d.name); }
+
+// Score one piece against one doc: the best field weight over its forms —
+// concept 5 (exact 8) > label 4 > tag 3 > summary/section 2 > body 1 — plus a
+// title bonus (+3 when the title starts with it, +1 when it merely contains
+// it) so the page ABOUT a word outranks pages that carry it as one concept.
+function scoreTerm(t, f){
+    var s = 0, matched = [];
+    t.forms.forEach(function(form){
+        for(var i = 0; i < f.conceptHay.length; i++){
+            if(f.conceptHay[i].s.indexOf(form) !== -1){
+                s = Math.max(s, f.conceptHay[i].s === form ? 8 : 5);
+                if(matched.indexOf(f.conceptHay[i].key) === -1){ matched.push(f.conceptHay[i].key); }
+            }
+        }
+        if(f.label.indexOf(form) !== -1){ s = Math.max(s, 4); }
+        if(f.tags.indexOf(form) !== -1){ s = Math.max(s, 3); }
+        if(f.summary.indexOf(form) !== -1){ s = Math.max(s, 2); }
+        if(f.section.indexOf(form) !== -1){ s = Math.max(s, 2); }
+        if(f.body.indexOf(form) !== -1){ s = Math.max(s, 1); }
+    });
+    if(s > 0){
+        var bonus = 0;
+        t.forms.forEach(function(form){
+            if(f.label.indexOf(form) === 0){ bonus = Math.max(bonus, 3); }
+            else if(f.label.indexOf(form) !== -1){ bonus = Math.max(bonus, 1); }
+        });
+        s += bonus;
+    }
+    return { s: s, matched: matched };
+}
+
+function docFields(d){
+    var info = KNOWLEDGE ? KNOWLEDGE[d.name] : null;
+    var concepts = (info && info.concepts) || [];
+    // 개념은 키(canonical)와 현지화 표시명 **둘 다로** 매칭한다 — 영어로
+    // 'knowledge graph'를 쳐도 '지식그래프' 키를 가진 문서가 잡히게. 다만
+    // 결과 칩에 담는 것은 언제나 키(표시는 렌더 시 conceptLabel이 맡는다).
+    var conceptHay = [];
+    concepts.forEach(function(c){
+        conceptHay.push({ key: c, s: c.toLowerCase() });
+        var cl = conceptLabel(c);
+        if(cl !== c){ conceptHay.push({ key: c, s: cl.toLowerCase() }); }
+    });
+    return { conceptHay: conceptHay, label: d.label.toLowerCase(), section: d.section.toLowerCase(),
+             tags: d.tags.join(' ').toLowerCase(), summary: ((info && info.summary) || '').toLowerCase(),
+             body: DOC_TEXT[d.name] || '' };
+}
+
+// Concept-aware ranked search in three passes. (1) Every piece must match
+// somewhere in the page. (2) If nothing does, pieces that match no page at
+// all are dropped and (1) is retried. (3) If still nothing, pages matching at
+// least half of the remaining pieces are listed (any one piece, if none
+// reach half), most pieces first. Results
+// of (2) and (3) carry `partial` so the screen can say so. Ties: evergreen
+// pages before dated articles, then newest (DOCS order).
+// Returns [{d, score, concepts}] with .partial and .terms (forms to highlight).
+function searchDocs(query){
+    var terms = normalizeQuery(query || '');
+    var out = [];
+    out.partial = false; out.terms = [];
+    if(!terms.length){ return out; }
+    var docs = DOCS.filter(isSearchableDoc).map(function(d){ return { d: d, f: docFields(d) }; });
+    function run(ts, need){
+        var res = [];
+        docs.forEach(function(x){
+            var score = 0, hit = 0, matched = [];
+            ts.forEach(function(t){
+                var r = scoreTerm(t, x.f);
+                if(r.s > 0){ hit++; score += r.s; r.matched.forEach(function(c){ if(matched.indexOf(c) === -1){ matched.push(c); } }); }
+            });
+            if(hit >= need && score > 0){ res.push({ d: x.d, score: score, hit: hit, concepts: matched }); }
+        });
+        res.sort(function(a, b){
+            return (b.hit - a.hit) || (b.score - a.score) ||
+                   ((isDatedArticle(a.d) ? 1 : 0) - (isDatedArticle(b.d) ? 1 : 0));
+        });
+        return res;
+    }
+    var flat = function(ts){ var f = []; ts.forEach(function(t){ f = f.concat(t.forms); }); return f; };
+    var res = run(terms, terms.length);
+    if(res.length){ res.terms = flat(terms); res.partial = false; return res; }
+    var live = terms.filter(function(t){ return docs.some(function(x){ return scoreTerm(t, x.f).s > 0; }); });
+    if(!live.length){ return out; }
+    if(live.length < terms.length){
+        res = run(live, live.length);
+        if(res.length){ res.terms = flat(live); res.partial = true; return res; }
+    }
+    res = run(live, Math.max(1, Math.ceil(live.length / 2)));
+    if(!res.length){ res = run(live, 1); }   // still ranked: most pieces first
+    res.terms = flat(live); res.partial = true;
+    return res;
 }
 
 // Concept names containing the query — offered as one-tap pivots so a
@@ -200,8 +350,8 @@ function renderSearchResults(query){
     paddleReset();   // typing = searching: glide the field back home
     var q = query.trim();
     if(!q){ box.innerHTML = ''; setSearchShown(false); return; }
-    var terms = q.toLowerCase().split(/\s+/);
     var hits = searchDocs(query);
+    var terms = hits.terms && hits.terms.length ? hits.terms : q.toLowerCase().split(/\s+/);
     var indexing = !TEXT_INDEX_READY
                  ? '<p class="search-indexing">' + STR('searchIndexing') + '</p>' : '';
     // Meaning-level pivots: concepts the query partially names.
@@ -223,6 +373,8 @@ function renderSearchResults(query){
         return;
     }
     var html = suggestHtml;
+    // Fallback results (not every word found in one page) say so.
+    if(hits.partial){ html += '<p class="search-indexing search-partial">' + STR('searchPartial') + '</p>'; }
     hits.slice(0, SEARCH_LIMIT).forEach(function(h){
         var d = h.d;
         html += '<a class="search-hit" href="#!' + d.name + '">'
