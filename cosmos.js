@@ -758,8 +758,11 @@ function startCosmos(){
             var ac = neb[nk];
             if(ac[3] < 2){ continue; }
             var rad = Math.max(90, ac[4] * 1.9 + 60) * (0.6 + ac[2] / ac[3] * 0.6);
+            // 성운 세기는 예전(낮 0.4·밤 0.6)의 25% — 번짐이 별·선·글자를 흐려
+            // 2026-09-28 비교(현재·35%·없앰) 뒤 25%로 낮췄다. 색 구름으로
+            // 클러스터가 읽힐 만큼만 남긴다.
             drawGlow(secColor[nk] || col, ac[0] / ac[3], ac[1] / ac[3], rad,
-                     isDay ? 0.4 : 0.6, 0);
+                     isDay ? 0.1 : 0.15, 0);
         }
         // Name plates — dim, behind everything. World(대분류) plates
         // read bigger than the System plates inside them.
