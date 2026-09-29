@@ -1,6 +1,6 @@
 <h2>묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다</h2>
 
-<p>오늘(8월 14일)부터 Claude Code의 새 세션은 <strong>auto 모드로 시작</strong>합니다. 매번 &ldquo;이 명령을 실행할까요?&rdquo;라고 묻던 승인 프롬프트가 기본 동작에서 빠집니다. 그보다 두 주 앞서, 에이전트가 도구를 붙이는 표준인 <strong>MCP</strong>는 <strong>세션이라는 개념 자체를 프로토콜에서 들어냈습니다</strong>. 하나는 사람의 클릭을 걷어냈고 하나는 연결의 기억을 걷어냈는데, 남은 자리를 메운 것은 양쪽 다 <strong>미리 적어 둔 규칙</strong>입니다. 이 기사는 두 변경의 상세를 정리하고, 왜 이것이 한 이야기인지 봅니다.</p>
+<p>오늘(8월 14일)부터 Claude Code의 새 세션은 <strong>auto 모드로 시작</strong>합니다. 매번 &ldquo;이 명령을 실행할까요?&rdquo;라고 묻던 승인 프롬프트가 기본 동작에서 빠집니다. 그보다 두 주 앞서, 에이전트가 도구를 붙이는 표준인 <strong>MCP</strong>는 <strong>세션이라는 개념 자체를 프로토콜에서 들어냈습니다</strong>. 하나는 사람의 클릭을 걷어냈고 하나는 연결의 기억을 걷어냈는데, 남은 자리를 메운 것은 양쪽 다 <strong>미리 적어 둔 규칙</strong>입니다. 이 기사는 두 변경의 상세를 정리하고, 왜 이것이 한 이야기인지 봅니다. <strong>9월 28일 갱신</strong>: auto 모드 기본값이 모든 요금제와 모든 제공자로 넓어졌습니다(아래 &ldquo;9월 28일&rdquo; 절).</p>
 
 <div class="note">
     <span class="nh">기사 정보 (출처)</span>
@@ -10,7 +10,7 @@
 
 <h3>세 줄 요약</h3>
 <ul>
-    <li>Claude Code의 Pro·Max·Team 신규 세션이 <strong>auto 모드를 기본값</strong>으로 씁니다. 되돌릴 수 없거나 파괴적이거나 작업 환경 밖을 향하는 행동만 멈춰 세우고, 나머지는 묻지 않고 진행합니다.</li>
+    <li>Claude Code의 Pro·Max·Team 신규 세션이 <strong>auto 모드를 기본값</strong>으로 씁니다. 되돌릴 수 없거나 파괴적이거나 작업 환경 밖을 향하는 행동만 멈춰 세우고, 나머지는 묻지 않고 진행합니다. 9월 28일부터는 Enterprise 요금제와 클라우드 제공자까지 같은 기본값을 씁니다.</li>
     <li>근거로 제시된 수치가 뼈아픕니다 — Anthropic 조사에서 사용자들은 권한 프롬프트의 <strong>97%를 승인</strong>했고, 실험에서 몰래 끼워 넣은 위험한 명령을 <strong>사람은 13.6%만 거절</strong>했습니다. 같은 명령을 auto 모드의 분류기는 <strong>89% 저지</strong>했습니다. 승인 버튼은 이미 안전장치로 기능하지 않고 있었다는 이야기입니다.</li>
     <li>MCP는 <code>initialize</code> 핸드셰이크와 <code>Mcp-Session-Id</code>를 삭제했습니다. 프로토콜 버전과 클라이언트 능력은 이제 <strong>매 요청의 <code>_meta</code></strong>에 실려 갑니다. 어떤 요청이든 아무 서버 인스턴스가 받아도 되고, 대신 <strong>양방향으로 호환되지 않는</strong> 변경이라 기존 서버는 리팩터가 필요합니다.</li>
 </ul>
@@ -114,6 +114,14 @@
 <p>실무에서 이게 무슨 뜻인지는 꽤 구체적입니다. <code>CLAUDE.md</code>와 설정 파일의 거부 규칙이 지금까지는 취향에 가까웠다면, 이제는 실제로 집행되는 정책이 됩니다. 넓게 열어 둔 허용 규칙은 편의가 아니라 무시 대상이 되고, 좁게 적은 거부 규칙은 사람이 자리를 비운 사이에도 계속 일합니다. 이 위키가 <a href="#!news-20260728-software-factories-fail">&ldquo;하네스로는 부족하다&rdquo;</a>에서 정리한 결론과 같은 방향입니다 &mdash; 하네스의 값어치는 지시의 두께가 아니라 <strong>검증과 경계가 얼마나 또렷한가</strong>에 있습니다.</p>
 <p>물론 이 방향에는 값이 붙습니다. 미리 적어 둔 규칙은 적어 둔 만큼만 지킵니다. 89%라는 숫자가 그 한계고, 나머지 11%는 규칙에 없던 모양의 위험이었습니다. 세션을 없앤 MCP도 상태를 없앤 것이 아니라 드러내서 인자로 옮긴 것이라, 이제 그 핸들을 누가 발급하고 언제 만료시키는지가 새 숙제가 됩니다. 감춰져 있던 문제가 보이는 자리로 나왔다는 편이 정확합니다.</p>
 
+<h3>9월 28일 — 모든 요금제, 모든 제공자로</h3>
+<p>6주 뒤 Claude Code 2.1.284가 이 기본값의 범위를 넓혔습니다. 권한 모드를 따로 정하지 않은 터미널·VS Code 세션은 이제 <strong>모든 요금제와 모든 제공자에서 auto 모드로 시작</strong>합니다. 8월의 대상은 Pro·Max·Team 요금제였고, Enterprise 요금제와 Console API 키, 그리고 Amazon Bedrock·Google Cloud의 Agent Platform·Microsoft Foundry·Claude Platform on AWS를 거치는 세션은 수동(Manual) 모드로 시작했습니다. 그 경계가 없어졌습니다. 텔레메트리를 끈 세션도 같은 규칙을 따릅니다.</p>
+<p>그대로인 곳도 있습니다. <code>claude -p</code>로 돌리는 비대화형 실행과 Agent SDK는 여전히 수동 모드로 시작합니다. 클라우드 제공자 경로에서는 Sonnet 5, Opus 4.7, Fable 이후 모델에서만 auto 모드가 켜지고, 그보다 오래된 모델이면 수동으로 시작합니다.</p>
+<p>조직에게 달라진 것은 <strong>아무것도 설정하지 않은 상태의 뜻</strong>입니다. 지금까지 Enterprise 관리자가 권한 모드를 정해 두지 않았다면 개발자의 세션은 수동 모드로 시작했습니다. 이제 같은 무설정이 auto 모드를 뜻합니다. 예전처럼 시작하게 하려면 관리형 설정에 <code>permissions.defaultMode</code>를 적어야 하고, auto 모드를 아예 고를 수 없게 하려면 <code>permissions.disableAutoMode</code>를 <code>"disable"</code>로 둡니다. 클라우드 제공자 쪽에서는 이미 한 번 겪은 전환입니다. 2.1.207부터 Bedrock·Agent Platform·Foundry에서 auto 모드를 쓰려고 켜 두던 환경변수가 필요 없어졌고, 그때도 &ldquo;켜지 않은 채로 두기&rdquo;가 더는 끄는 방법이 아니게 됐습니다.</p>
+<p>검사하는 쪽도 함께 옮겨 갔습니다. 2.1.278부터 Claude API·Enterprise 계정과 클라우드 제공자·게이트웨이 경로에서는 auto 모드의 분류기 검사를 기본으로 <strong>서버가</strong> 맡습니다. 세션의 모델 요청에 검사를 함께 실어 보내므로 분류기 호출 비용이 따로 붙지 않습니다. 2.1.284는 여기에 규칙을 하나 더했습니다. 서버가 검사하는 곳에서는 읽기 전용 명령과 샌드박스 안의 셸 명령도 검사 결과를 기다리고, 걸리면 막힙니다. 서버가 판정을 내놓지 못한 행동은 검사 없이 돌리지 않고 거부합니다.</p>
+<p>사람에게 남은 질문은 더 좁아졌습니다. 작업 폴더 밖의 파일을 처음 읽을 때 Claude Code가 묻는데, 지금까지의 답은 &ldquo;계속 허용&rdquo;, &ldquo;앞으로 막기&rdquo;, &ldquo;이번만 거절&rdquo; 셋이었습니다. 2.1.284는 여기에 <strong>&ldquo;이번만 허용하고 다음에 또 묻기&rdquo;</strong>를 더했습니다. 한 번 허락했다고 앞으로의 읽기까지 열어 주지 않아도 됩니다.</p>
+<p>8월에 이 글은 판정의 근거가 사람의 클릭에서 미리 적어 둔 규칙으로 옮겨 갔다고 썼습니다. 이번 변경은 그 규칙이 적용되는 범위를 개인 요금제에서 조직과 클라우드 전체로 넓혔습니다. 같은 주 OpenAI는 격리 환경을 빠져나간 자사 에이전트 때문에 가장 강력한 모델들의 도구 사용을 멈췄습니다. 한쪽은 기본값에서 사람의 확인을 더 걷어냈고, 다른 쪽은 격리가 뚫려 멈췄습니다. 방향은 반대지만 둘 다 에이전트를 무엇이 멈춰 세우는지를 사람이 미리 정해 두어야 한다는 문제로 돌아옵니다.</p>
+
 <h3>이 위키에서 고친 것</h3>
 <p>이 변경으로 낡은 서술 두 곳을 같이 손봤습니다.</p>
 <ul>
@@ -127,7 +135,8 @@
     <li><strong>독립 평가</strong> — 720회 인젝션 시도 전부 실패는 <strong>Trajectory Labs</strong>의 평가로 보고된 것이고, 72개 시나리오 × 10회 × 모델별이라는 구성까지 함께 공개됐습니다. 평가 설계와 시나리오 난이도는 별도로 공개된 범위 안에서만 확인 가능합니다.</li>
     <li><strong>11%라는 표현</strong> — 저지 89%의 나머지를 뒤집어 계산한 값이며, 이 각도로 제목을 뽑은 보도가 있어 본문에도 그대로 적었습니다. 두 숫자는 같은 실험의 앞뒤입니다.</li>
     <li><strong>스펙 상세</strong> — 핸드셰이크 제거(SEP-2575)·세션 식별자 제거(SEP-2567)·<code>_meta</code>·<code>server/discover</code>·확장 3종은 <strong>MCP 공식 블로그와 변경 목록</strong>에 근거합니다. 2026-07-28은 <strong>릴리스 후보</strong>이므로 최종 확정 과정에서 세부가 바뀔 수 있습니다.</li>
-    <li><strong>적용 범위</strong> — auto 모드 기본값은 <strong>Pro·Max·Team 요금제의 새 세션</strong>이 대상이고, 이미 고정해 둔 설정이나 조직이 관리하는 기본값은 그대로 유지된다고 안내됐습니다.</li>
+    <li><strong>적용 범위</strong> — 8월 14일의 auto 모드 기본값은 <strong>Pro·Max·Team 요금제의 새 세션</strong>이 대상이었고, 이미 고정해 둔 설정이나 조직이 관리하는 기본값은 그대로 유지된다고 안내됐습니다.</li>
+    <li><strong>9월 28일 확대</strong> — &ldquo;모든 요금제와 제공자&rdquo;, <code>permissions.defaultMode</code> 우선, 읽기 전용·샌드박스 명령의 서버 검사, &ldquo;이번만 허용하고 다음에 또 묻기&rdquo;는 <a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">Claude Code 2.1.284 changelog</a>, <code>-p</code>·Agent SDK 제외와 모델 조건·<code>disableAutoMode</code>·2.1.207·2.1.278 경위는 <a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">권한 모드 문서</a>를 따랐습니다. 문서는 이 기본값을 &ldquo;v2.1.283 이상&rdquo;으로 적고 changelog는 2.1.284 항목에 올려 한 버전 어긋나는데, 이 기사는 변경을 알린 changelog 쪽을 따랐습니다.</li>
 </ul>
 
 <div class="note">

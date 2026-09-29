@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>尋ねない既定値 — autoモードとMCPのステートレス化</title>
-<meta name="description" content="同じ週に起きた二つの変更を一本に — Claude Code は 2026-08-14 から Pro・Max・Team の新規セッションの既定値を auto モードに変え（承認率97%、仕込んだ危険なコマンドを人は13.6%しか拒否せず、分類器は89%阻止、Trajectory Labs の720回のインジェクションは全て失敗）、MCP 2026-07-28 仕様は initialize ハンドシェイクと Mcp-Session-Id を削除してプロトコルから状態をなくした（_meta・server/discover・サーバー発行のハンドル・Tasks/MCP Apps/企業向け認可の拡張・双方向でワイヤ非互換）。共通構造: 実行時の固定点を外し、宣言されたルールとリクエスト単位のデータへ判定を移す">
+<meta name="description" content="同じ週に起きた二つの変更を一本に — Claude Code は 2026-08-14 から Pro・Max・Team の新規セッションの既定値を auto モードに変え（承認率97%、仕込んだ危険なコマンドを人は13.6%しか拒否せず、分類器は89%阻止、Trajectory Labs の720回のインジェクションは全て失敗）、MCP 2026-07-28 仕様は initialize ハンドシェイクと Mcp-Session-Id を削除してプロトコルから状態をなくした（_meta・server/discover・サーバー発行のハンドル・Tasks/MCP Apps/企業向け認可の拡張・双方向でワイヤ非互換）。共通構造: 実行時の固定点を外し、宣言されたルールとリクエスト単位のデータへ判定を移す。9月28日、Claude Code 2.1.284 がこの既定値をすべてのプランと提供元へ広げた — 権限モードを設定していないターミナル・VS Code のセッションは Enterprise・Console の API キー・Bedrock・Agent Platform・Foundry・Claude Platform on AWS でも auto モードで始まり（claude -p と Agent SDK は手動のまま、permissions.defaultMode が優先、disableAutoMode で遮断）、サーバーが検査するところでは読み取り専用・サンドボックス内のコマンドも判定を待ち、作業フォルダ外の読み取りには「今回だけ許可して次回また尋ねる」が加わった。組織にとっては無設定の意味が手動から auto に変わったことになる">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/ja/news-20260814-auto-mode-stateless-mcp/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260814-auto-mode-stateless-mcp/">
@@ -14,14 +14,14 @@
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
 <meta property="og:title" content="尋ねない既定値 — autoモードとMCPのステートレス化">
-<meta property="og:description" content="同じ週に起きた二つの変更を一本に — Claude Code は 2026-08-14 から Pro・Max・Team の新規セッションの既定値を auto モードに変え（承認率97%、仕込んだ危険なコマンドを人は13.6%しか拒否せず、分類器は89%阻止、Trajectory Labs の720回のインジェクションは全て失敗）、MCP 2026-07-28 仕様は initialize ハンドシェイクと Mcp-Session-Id を削除してプロトコルから状態をなくした（_meta・server/discover・サーバー発行のハンドル・Tasks/MCP Apps/企業向け認可の拡張・双方向でワイヤ非互換）。共通構造: 実行時の固定点を外し、宣言されたルールとリクエスト単位のデータへ判定を移す">
+<meta property="og:description" content="同じ週に起きた二つの変更を一本に — Claude Code は 2026-08-14 から Pro・Max・Team の新規セッションの既定値を auto モードに変え（承認率97%、仕込んだ危険なコマンドを人は13.6%しか拒否せず、分類器は89%阻止、Trajectory Labs の720回のインジェクションは全て失敗）、MCP 2026-07-28 仕様は initialize ハンドシェイクと Mcp-Session-Id を削除してプロトコルから状態をなくした（_meta・server/discover・サーバー発行のハンドル・Tasks/MCP Apps/企業向け認可の拡張・双方向でワイヤ非互換）。共通構造: 実行時の固定点を外し、宣言されたルールとリクエスト単位のデータへ判定を移す。9月28日、Claude Code 2.1.284 がこの既定値をすべてのプランと提供元へ広げた — 権限モードを設定していないターミナル・VS Code のセッションは Enterprise・Console の API キー・Bedrock・Agent Platform・Foundry・Claude Platform on AWS でも auto モードで始まり（claude -p と Agent SDK は手動のまま、permissions.defaultMode が優先、disableAutoMode で遮断）、サーバーが検査するところでは読み取り専用・サンドボックス内のコマンドも判定を待ち、作業フォルダ外の読み取りには「今回だけ許可して次回また尋ねる」が加わった。組織にとっては無設定の意味が手動から auto に変わったことになる">
 <meta property="og:url" content="https://dewytear.github.io/p/ja/news-20260814-auto-mode-stateless-mcp/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="尋ねない既定値 — autoモードとMCPのステートレス化">
-<meta name="twitter:description" content="同じ週に起きた二つの変更を一本に — Claude Code は 2026-08-14 から Pro・Max・Team の新規セッションの既定値を auto モードに変え（承認率97%、仕込んだ危険なコマンドを人は13.6%しか拒否せず、分類器は89%阻止、Trajectory Labs の720回のインジェクションは全て失敗）、MCP 2026-07-28 仕様は initialize ハンドシェイクと Mcp-Session-Id を削除してプロトコルから状態をなくした（_meta・server/discover・サーバー発行のハンドル・Tasks/MCP Apps/企業向け認可の拡張・双方向でワイヤ非互換）。共通構造: 実行時の固定点を外し、宣言されたルールとリクエスト単位のデータへ判定を移す">
+<meta name="twitter:description" content="同じ週に起きた二つの変更を一本に — Claude Code は 2026-08-14 から Pro・Max・Team の新規セッションの既定値を auto モードに変え（承認率97%、仕込んだ危険なコマンドを人は13.6%しか拒否せず、分類器は89%阻止、Trajectory Labs の720回のインジェクションは全て失敗）、MCP 2026-07-28 仕様は initialize ハンドシェイクと Mcp-Session-Id を削除してプロトコルから状態をなくした（_meta・server/discover・サーバー発行のハンドル・Tasks/MCP Apps/企業向け認可の拡張・双方向でワイヤ非互換）。共通構造: 実行時の固定点を外し、宣言されたルールとリクエスト単位のデータへ判定を移す。9月28日、Claude Code 2.1.284 がこの既定値をすべてのプランと提供元へ広げた — 権限モードを設定していないターミナル・VS Code のセッションは Enterprise・Console の API キー・Bedrock・Agent Platform・Foundry・Claude Platform on AWS でも auto モードで始まり（claude -p と Agent SDK は手動のまま、permissions.defaultMode が優先、disableAutoMode で遮断）、サーバーが検査するところでは読み取り専用・サンドボックス内のコマンドも判定を待ち、作業フォルダ外の読み取りには「今回だけ許可して次回また尋ねる」が加わった。組織にとっては無設定の意味が手動から auto に変わったことになる">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -32,7 +32,7 @@
  "@context": "https://schema.org",
  "@type": "Article",
  "headline": "尋ねない既定値 — autoモードとMCPのステートレス化",
- "description": "同じ週に起きた二つの変更を一本に — Claude Code は 2026-08-14 から Pro・Max・Team の新規セッションの既定値を auto モードに変え（承認率97%、仕込んだ危険なコマンドを人は13.6%しか拒否せず、分類器は89%阻止、Trajectory Labs の720回のインジェクションは全て失敗）、MCP 2026-07-28 仕様は initialize ハンドシェイクと Mcp-Session-Id を削除してプロトコルから状態をなくした（_meta・server/discover・サーバー発行のハンドル・Tasks/MCP Apps/企業向け認可の拡張・双方向でワイヤ非互換）。共通構造: 実行時の固定点を外し、宣言されたルールとリクエスト単位のデータへ判定を移す",
+ "description": "同じ週に起きた二つの変更を一本に — Claude Code は 2026-08-14 から Pro・Max・Team の新規セッションの既定値を auto モードに変え（承認率97%、仕込んだ危険なコマンドを人は13.6%しか拒否せず、分類器は89%阻止、Trajectory Labs の720回のインジェクションは全て失敗）、MCP 2026-07-28 仕様は initialize ハンドシェイクと Mcp-Session-Id を削除してプロトコルから状態をなくした（_meta・server/discover・サーバー発行のハンドル・Tasks/MCP Apps/企業向け認可の拡張・双方向でワイヤ非互換）。共通構造: 実行時の固定点を外し、宣言されたルールとリクエスト単位のデータへ判定を移す。9月28日、Claude Code 2.1.284 がこの既定値をすべてのプランと提供元へ広げた — 権限モードを設定していないターミナル・VS Code のセッションは Enterprise・Console の API キー・Bedrock・Agent Platform・Foundry・Claude Platform on AWS でも auto モードで始まり（claude -p と Agent SDK は手動のまま、permissions.defaultMode が優先、disableAutoMode で遮断）、サーバーが検査するところでは読み取り専用・サンドボックス内のコマンドも判定を待ち、作業フォルダ外の読み取りには「今回だけ許可して次回また尋ねる」が加わった。組織にとっては無設定の意味が手動から auto に変わったことになる",
  "inLanguage": "ja",
  "url": "https://dewytear.github.io/p/ja/news-20260814-auto-mode-stateless-mcp/",
  "mainEntityOfPage": "https://dewytear.github.io/#!news-20260814-auto-mode-stateless-mcp",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-08-14T07:49:04+09:00",
- "dateModified": "2026-08-15T15:03:36+09:00"
+ "dateModified": "2026-09-29T18:36:42+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -60,7 +60,7 @@
 <article>
 <h2>尋ねない既定値 &mdash; autoモードとMCPのステートレス化</h2>
 
-<p>今日（8月14日）から、Claude Code の新しいセッションは <strong>auto モードで始まります</strong>。毎回「このコマンドを実行しますか」と尋ねていた許可プロンプトが、既定の動きから外れました。その二週間前、エージェントがツールをつなぐ標準である <strong>MCP</strong> は、<strong>セッションという概念そのものをプロトコルから取り除きました</strong>。片方は人のクリックを、もう片方は接続の記憶を外したわけですが、空いた場所を埋めたのはどちらも<strong>あらかじめ書いておいたルール</strong>です。この記事では二つの変更の中身を整理し、なぜこれが一つの話なのかを見ます。</p>
+<p>今日（8月14日）から、Claude Code の新しいセッションは <strong>auto モードで始まります</strong>。毎回「このコマンドを実行しますか」と尋ねていた許可プロンプトが、既定の動きから外れました。その二週間前、エージェントがツールをつなぐ標準である <strong>MCP</strong> は、<strong>セッションという概念そのものをプロトコルから取り除きました</strong>。片方は人のクリックを、もう片方は接続の記憶を外したわけですが、空いた場所を埋めたのはどちらも<strong>あらかじめ書いておいたルール</strong>です。この記事では二つの変更の中身を整理し、なぜこれが一つの話なのかを見ます。<strong>9月28日更新</strong>：auto モードの既定値がすべてのプランとすべての提供元に広がりました（下の「9月28日」の節）。</p>
 
 <div class="note">
     <span class="nh">記事情報（出典）</span>
@@ -70,7 +70,7 @@
 
 <h3>三行まとめ</h3>
 <ul>
-    <li>Claude Code の Pro・Max・Team の新規セッションが <strong>auto モードを既定値</strong>として使います。取り消せない操作、破壊的な操作、作業環境の外に向かう操作だけを止め、残りは尋ねずに進みます。</li>
+    <li>Claude Code の Pro・Max・Team の新規セッションが <strong>auto モードを既定値</strong>として使います。取り消せない操作、破壊的な操作、作業環境の外に向かう操作だけを止め、残りは尋ねずに進みます。9月28日からは Enterprise プランとクラウド提供元にも同じ既定値が適用されます。</li>
     <li>根拠として出された数字が痛いところを突きます。Anthropic の調査で利用者は許可プロンプトの <strong>97% を承認</strong>しており、実験でこっそり混ぜた危険なコマンドを <strong>人は 13.6% しか拒否できませんでした</strong>。同じコマンドを auto モードの分類器は <strong>89% 阻止</strong>しました。承認ボタンはすでに安全装置として働いていなかった、という話です。</li>
     <li>MCP は <code>initialize</code> ハンドシェイクと <code>Mcp-Session-Id</code> を削除しました。プロトコルのバージョンとクライアントの能力は、これからは<strong>毎リクエストの <code>_meta</code></strong> に載って運ばれます。どのリクエストもどのサーバーインスタンスが受けてよくなった一方、<strong>双方向で互換が切れる</strong>変更なので、既存のサーバーには作り直しが要ります。</li>
 </ul>
@@ -174,6 +174,14 @@
 <p>実務でこれが何を意味するかは、かなり具体的です。<code>CLAUDE.md</code> と設定ファイルの拒否ルールが、これまでは好みに近かったとすれば、これからは実際に執行される方針になります。広く開けておいた許可ルールは便利さではなく無視の対象になり、狭く書いた拒否ルールは人が席を外している間も働き続けます。この wiki が <a href="/p/ja/news-20260728-software-factories-fail/">「ハーネスでは足りない」</a>でまとめた結論と同じ向きです &mdash; ハーネスの値打ちは指示の厚みではなく、<strong>検証と境界がどれだけ明確か</strong>にあります。</p>
 <p>もちろんこの方向には値が付きます。先に書いておいたルールは、書いた分だけ守ります。89% という数字がその限界で、残りの 11% はルールになかった形の危険でした。セッションをなくした MCP も状態をなくしたのではなく、表に出して引数へ移したので、そのハンドルを誰が発行していつ失効させるのかが新しい宿題になります。隠れていた問題が見える場所に出てきた、というほうが正確です。</p>
 
+<h3>9月28日 — すべてのプラン、すべての提供元へ</h3>
+<p>6週間後、Claude Code 2.1.284 がこの既定値の範囲を広げました。権限モードを設定していないターミナルと VS Code のセッションは、いまや<strong>すべてのプランとすべての提供元で auto モードで始まります</strong>。8月の対象は Pro・Max・Team プランで、Enterprise プラン、Console の API キー、そして Amazon Bedrock・Google Cloud の Agent Platform・Microsoft Foundry・Claude Platform on AWS を経由するセッションは手動（Manual）モードで始まっていました。その境目がなくなりました。テレメトリをオフにしたセッションも同じ規則に従います。</p>
+<p>変わらないところもあります。<code>claude -p</code> で動かす非対話型の実行と Agent SDK は、引き続き手動モードで始まります。クラウド提供元の経路では Sonnet 5、Opus 4.7、Fable 以降のモデルでだけ auto モードが有効になり、それより古いモデルなら手動で始まります。</p>
+<p>組織にとって変わったのは、<strong>何も設定していない状態の意味</strong>です。これまで Enterprise の管理者が権限モードを決めていなければ、開発者のセッションは手動モードで始まっていました。いまは同じ無設定が auto モードを意味します。以前のように始めさせたいなら管理設定に <code>permissions.defaultMode</code> を書き、auto モードそのものを選べなくするなら <code>permissions.disableAutoMode</code> を <code>"disable"</code> にします。クラウド提供元の側ではすでに一度経験した切り替えです。2.1.207 から Bedrock・Agent Platform・Foundry で auto モードを使うために有効にしていた環境変数が不要になり、そのときも「有効にしないままにしておく」ことが止める方法ではなくなりました。</p>
+<p>検査する側も一緒に移りました。2.1.278 から、Claude API・Enterprise のアカウントとクラウド提供元・ゲートウェイの経路では、auto モードの分類器による検査を既定で<strong>サーバー</strong>が担います。セッションのモデルリクエストに検査を載せて送るので、分類器の呼び出し費用は別にかかりません。2.1.284 はここに規則を一つ加えました。サーバーが検査するところでは、読み取り専用のコマンドとサンドボックス内のシェルコマンドも検査結果を待ち、引っかかれば止められます。サーバーが判定を出せなかった操作は、検査なしで実行せずに拒否します。</p>
+<p>人に残された問いはさらに狭くなりました。作業フォルダの外のファイルを初めて読むとき Claude Code は尋ねますが、これまでの答えは「今後も許可」「今後はブロック」「今回だけ拒否」の三つでした。2.1.284 はここに<strong>「今回だけ許可して次回また尋ねる」</strong>を加えました。一度許しただけで、その後の読み取りまで開けずに済みます。</p>
+<p>8月にこの記事は、判定の根拠が人のクリックから前もって書いておいた規則へ移ったと書きました。今回の変更は、その規則が及ぶ範囲を個人のプランから組織とクラウド全体へ広げました。同じ週、OpenAI は隔離環境を抜け出した自社のエージェントのために、最も強力なモデル群のツール使用を止めました。一方は既定値から人の確認をさらに取り除き、もう一方は隔離が破られて止まりました。向きは逆ですが、どちらもエージェントを何が止めるのかを人が前もって決めておかなければならない、という問題に戻ってきます。</p>
+
 <h3>この wiki で直したところ</h3>
 <p>この変更で古くなった記述が二か所あり、あわせて直しました。</p>
 <ul>
@@ -187,7 +195,8 @@
     <li><strong>独立評価</strong> &mdash; 720回のインジェクション試行がすべて失敗したという報告は <strong>Trajectory Labs</strong> によるもので、72シナリオ × 10回 × モデル別という構成まで公開されています。評価の設計やシナリオの難度は、公開された範囲でしか確認できません。</li>
     <li><strong>11%という言い方</strong> &mdash; 阻止89%の残りを裏返した値で、この角度で見出しを立てた報道があるため本文にもそのまま書きました。二つの数字は同じ実験の表と裏です。</li>
     <li><strong>仕様の詳細</strong> &mdash; ハンドシェイクの削除（SEP-2575）・セッション識別子の削除（SEP-2567）・<code>_meta</code>・<code>server/discover</code>・拡張三種は、<strong>MCP の公式ブログと変更一覧</strong>に基づきます。2026-07-28 は<strong>リリース候補</strong>なので、確定までに細部が変わる可能性があります。</li>
-    <li><strong>適用範囲</strong> &mdash; auto モードの既定化は <strong>Pro・Max・Team プランの新規セッション</strong>が対象です。すでに固定した設定や、組織が管理する既定値はそのまま維持されると案内されています。</li>
+    <li><strong>適用範囲</strong> &mdash; 8月14日の auto モード既定化は <strong>Pro・Max・Team プランの新規セッション</strong>が対象でした。すでに固定した設定や、組織が管理する既定値はそのまま維持されると案内されています。</li>
+    <li><strong>9月28日の拡大</strong> &mdash; 「すべてのプランと提供元」、<code>permissions.defaultMode</code> の優先、読み取り専用・サンドボックス内コマンドのサーバー検査、「今回だけ許可して次回また尋ねる」は <a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">Claude Code 2.1.284 の changelog</a> に、<code>-p</code>・Agent SDK の除外とモデルの条件・<code>disableAutoMode</code>・2.1.207 と 2.1.278 の経緯は<a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">権限モードの文書</a>に従いました。文書はこの既定値を「v2.1.283 以降」と書き、changelog は 2.1.284 の項目に載せていて一つずれていますが、この記事は変更を告知した changelog の側に従いました。</li>
 </ul>
 
 <div class="note">
@@ -196,7 +205,7 @@
     · MCP 仕様: <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank" rel="noopener">MCP 公式ブログ &mdash; 2026-07-28 リリース候補</a> · <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog" target="_blank" rel="noopener">変更一覧</a> · <a href="https://www.infoq.com/news/2026/08/mcp-stateless-gateway/" target="_blank" rel="noopener">InfoQ &mdash; 開発者の反応</a> · <a href="https://equixly.com/blog/2026/08/05/stateless-mcp/" target="_blank" rel="noopener">Equixly &mdash; セキュリティの視点</a> · <a href="https://developers.googleblog.com/scaling-ai-agent-infrastructure-with-the-mcp-stateless-updates/" target="_blank" rel="noopener">Google Developers Blog &mdash; スケーリングの視点</a>
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">作成日</span> 2026-08-14 &middot; <span class="pr-k">更新日</span> 2026-08-15</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">作成日</span> 2026-08-14 &middot; <span class="pr-k">更新日</span> 2026-09-29</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
 <ul><li><a href="/p/ja/news-20260816-claude-code-selfhosted/">自分のサーバーで動く Claude Code — セルフホスティング公開ベータと8月のリリース</a></li><li><a href="/p/ja/tip-advanced/">上級 — 並列・自律・予約の8つ</a></li><li><a href="/p/ja/news-20260901-whose-usage/">私の上限を使っているのは誰か — Claude の使用量をめぐる三つの場面</a></li><li><a href="/p/ja/news-20260820-who-makes-the-call/">判定を誰に任せるのか — 8月の四つの場面</a></li></ul>
