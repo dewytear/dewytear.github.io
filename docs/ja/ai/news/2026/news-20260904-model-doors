@@ -2,10 +2,11 @@
 
 <h3>三行まとめ</h3>
 <ul>
-    <li>Fable 5.1 と Mythos 5.1 は<strong>能力が同じ一つのモデル</strong>である。Fable 5.1 は誰でも API で使えるが、Mythos 5.1 は Project Glasswing の参加者にだけ開かれる。</li>
+    <li>Fable 5.1 と Mythos 5.1 は<strong>能力が同じ一つのモデル</strong>である。Fable 5.1 は誰でも API で使えるが、Mythos 5.1 は Project Glasswing の参加者にだけ開かれる（10月6日からはサイバー検証プログラムで確認を受けたセキュリティ組織にも開かれる）。</li>
     <li>値段が下がったのは<strong>キャッシュ読み取りの一行だけ</strong>だ — 100万トークンあたり $1 から $0.25 へ。基本の入力・出力単価は Fable 5 のままである。</li>
     <li>同じリリースが<strong>呼び方を三か所</strong>変えた。ツール呼び出しを強制できず、以前のモデルはこのモデルの推論を読めず、対話履歴を書き換えるとその後の推論が無効になる。</li>
     <li>3週間後、<strong>同じ規則が Opus 5.5 に来た</strong>（9月22日）。特殊なモデルの条件だったものが、既定で受け取るモデルの条件になり、値下げはキャッシュではなく基本単価で起きた。</li>
+    <li>10月には<strong>5.5 世代が出そろった</strong>（Sonnet 5.5 は9月28日、Haiku 5.5 は10月7日）。同じ呼び方の規則がいちばん安い階級まで下りてきて、思考ブロックは作ったアカウントにも結びつけられた。危険な能力の扉は一枚から<strong>三枚</strong>に分かれた。</li>
 </ul>
 
 <h3>同じモデル、二つの名前</h3>
@@ -94,6 +95,55 @@
     この変化が重要なのは、規則が変わったからではなく<strong>規則の置かれた場所が変わったから</strong>である。9月初めにはこれらの条件が高価な特殊モデルと扉の向こうのモデルにだけ付いていたので、移るか移らないかを選ぶ問題だった。同じ日に出た Claude Code 2.1.280 は Opus 5.5 を<strong>既定の Opus モデル</strong>に入れ、Pro・Team Standard プランの既定モデルを Sonnet から Opus に変えた。選ばなくても受け取るモデルが、これらの条件を帯びているということだ。
 </p>
 
+<h3>10月 — 5.5 世代が出そろい、扉は三枚になった</h3>
+<p>
+    Opus 5.5 のあと2週間で、5.5 世代の残りが出た。<strong>Sonnet 5.5</strong>（9月28日）と <strong>Haiku 5.5</strong>（10月7日）である。値段が下がったところを表に並べると、二つの向きが分かれる。
+</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>100万トークンあたり</th><th>Sonnet 5</th><th>Sonnet 5.5</th><th>Haiku 4.5</th><th>Haiku 5.5</th></tr></thead>
+    <tbody>
+        <tr><td>入力 / 出力</td><td>$2 / $10</td><td>$2 / $10</td><td>$1 / $5</td><td><strong>$0.10 / $0.50</strong><br>（10万トークン超は $0.50 / $2.50）</td></tr>
+        <tr><td>キャッシュ読み取り</td><td>$0.20（入力の10%）</td><td><strong>$0.10（5%）</strong></td><td>$0.10（10%）</td><td>$0.01（10%）</td></tr>
+        <tr><td>コンテキスト / 出力</td><td colspan="2">100万 / 12.8万</td><td>20万 / 6.4万</td><td>100万 / 12.8万</td></tr>
+    </tbody>
+</table>
+</div>
+<p>
+    Sonnet 5.5 は Fable 5.1 の道をたどった。基本単価はそのままで、キャッシュ読み取りだけを下げた。発売時は Sonnet 5 と同じ $0.20 だったが10月7日に半額になり、倍率では Opus 5.5 と同じ入力価格の5%である。Anthropic はこの値下げで、たいていのエージェント作業の費用が約20%下がるとしている。理由は上で見た入力対出力の 324:1 にある。請求の大部分がキャッシュ読み取りなので、その一行を半分にするだけで全体が動く。
+</p>
+<p>
+    Haiku 5.5 は Opus 5.5 の道をさらに先へ進んだ。基本単価が Haiku 4.5 の10分の1である。ただし但し書きが二つある。一つはトークナイザーだ。同じ文章が Haiku 4.5 より約30%多いトークンとして数えられるので、Anthropic が示す平均の削減は90%ではなく約75%になる。もう一つのほうが大きい。このモデルは<strong>プロンプトの長さで値段が分かれる。</strong>一回のリクエストの入力がキャッシュ読み取りも含めて10万トークンを超えると、そのリクエスト全体が5倍高い単価で請求される。毎ターン前半を丸ごと読み直す長いエージェントのセッションは、すぐにその線を越える。10分の1という値段は、短い分類やルーティング、抽出といった仕事、つまり Anthropic がこのモデルの用途として挙げたまさにその仕事で成り立つ。
+</p>
+<p>
+    呼び方は、上で見た規則が下の階級まで下りてきた。Sonnet 5.5 もツール呼び出しを強制できず、思考ブロックはモデルと履歴に結びつき、Claude API と Google Cloud では旧型のコンピューター操作ツールを受け付けない。思考を切る値は <code>disabled</code> ではなく <code>between_tools</code> に変わった。名前のとおり回答前の思考だけを切る値なので、ツール呼び出しのあいだの短い進捗メモは思考ブロックとして返り続ける。Haiku 5.5 は、履歴を書き換えると思考ブロックが無効になる規則とコンピューター操作のツールセットを受け継ぎ、手動の思考予算、<code>temperature</code> のようなサンプリング値、回答の書き出しを先に送るプリフィル（prefill）はエラーを返す。思考ブロックの地図も一行増えた。Sonnet 5 → Sonnet 5.5 → Opus 5.5 と<strong>上がっていく道</strong>では推論が引き継がれ（Claude API と Google Cloud の場合）、Sonnet 5.5 から出るそれ以外の移動では切れる。
+</p>
+<p>
+    新しい規則も一つ加わった。二つのモデルの思考ブロックは、<strong>それを作ったアカウント、またはそのアカウントにつながったアカウントでしか</strong>使えない。別のアカウントが送ると、API はブロックを取り除いてリクエストを通す。9月の思考ブロックは、どのモデルがどの履歴の上で作ったかを持っていた。今はどのアカウントで作ったかも持つ。保存した会話を別のアカウントで流し直すツール、たとえば評価ハーネスやチームのあいだで会話を移すサービスにとっては、推論が切れる場所がもう一つ増えたことになる。
+</p>
+<p>
+    値段の数字は業界全体でも一つに寄ってきた。Sonnet 5.5 の入力・出力単価（$2・$10）は、翌日に出た OpenAI の GPT-6.1 Sol、二日後に出た Google の Gemini 4 Argon の導入価格と同じで、キャッシュ読み取りも三つとも $0.10 である。Haiku 5.5 の基本単価（$0.10・$0.50）は OpenAI の GPT-6 Luna と同じだ。価格表がそろうと、選ぶ基準は表の外に出ていく。10万トークンのような境目、導入期間が終わったあとの値段（Argon は $4・$20 に上がると Google は明らかにしている）、そしてこの記事が話してきた呼び方である。
+</p>
+<p>
+    扉の側も変わった。10月6日、Anthropic は Project Glasswing とサイバー検証プログラム（CVP、確認を受けたセキュリティ組織にサイバー作業の遮断を緩めるプログラム）を一つにまとめ、<strong>三枚の扉</strong>に組み直した。一般公開のモデルはサイバー作業の大半を止める保守的な安全装置をそのまま残し、確認を受けた組織にだけ段階的に遮断を緩める。三段階とも Opus 5.5・Sonnet 5.5・Mythos 5.1 と、今後出るモデルを使う。
+</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>段階</th><th>許される範囲</th><th>対象</th><th>審査</th></tr></thead>
+    <tbody>
+        <tr><td>防御（Defense）</td><td>セキュリティ監視・インシデント対応・マルウェアのリバースエンジニアリング・脆弱性の分析と検証</td><td>自分のシステムを守る企業・大学・非営利団体・政府のセキュリティチーム、規模を問わない基盤施設の運用者、オープンソースのメンテナー、報告実績のある個人研究者</td><td>数日</td></tr>
+        <tr><td>レッドチーム（Red Team）</td><td>防御＋許可を受けた対象への侵入テスト</td><td>社内・政府のレッドチーム、セキュリティ・侵入テスト企業（組織のみ）</td><td>数週間</td></tr>
+        <tr><td>特殊（Specialized）</td><td>遮断がもっとも少ない。航空運航・電力網・通信網・銀行間決済網・政府の行政網のような安全上重要なシステムのテスト</td><td>確認を受けた少数の組織。既存の Glasswing 参加者はここへ移る</td><td>米国政府と共同で審査</td></tr>
+    </tbody>
+</table>
+</div>
+<p>
+    レッドチームの段階でも、ランサムウェアの配布や物理システムの破壊のように人を傷つけたり大規模な障害を起こしたりする操作は、リアルタイムで止められる。悪用の監視のため、データの保持は原則として求められる。Anthropic が出した試験結果は、扉が段階ごとに実際に違う開き方をすることを示している。多段階のサイバー作戦を計画・実行する評価（CyScenarioBench）を Opus 5.5 で10課題×5回ずつ走らせたところ、CVP なしでは50回すべてが最初のプロンプトで止められ、防御の段階では46回が途中で止められ、レッドチームの段階では一度も止められずに34回をやり遂げた。安全装置をすべて外した状態の成功率67.6%と事実上同じ数字である。
+</p>
+<p>
+    9月にこの記事は、同じ能力を二つの名前で出しながら片方にだけ扉を付けたと書いた。今では Mythos 5.1 を使うのは Glasswing の参加者だけでなく、防御の段階に入った組織も含まれる。閉じた扉と開いた扉の二つだったものが、<strong>身元と用途によって三枚に分かれた扉</strong>になった。Opus 5.5 のときに「規律を守るかどうかが選択だった区間が終わった」と書いたが、5.5 世代が出そろってその規律はいちばん安い階級まで下り、扉はさらに細かく分かれた。呼び方の規則は下へ広がり、危険な能力の扉は上で細分されていく。
+</p>
+
 <h3>なぜ一つの流れなのか</h3>
 <p>
     安くなったという知らせと壊れるという知らせは別々に回ったが、二つの文が求めているものは同じだ — <strong>冒頭には触れず、後ろに足していけ。</strong> キャッシュが温かいまま保たれる条件と、思考ブロックが生きている条件が同じ条件だからである。公式文書も、履歴に足していくだけのパターンを説明したうえで「これらのパターンはプロンプトキャッシュも温かく保つ」と付け加えている。キャッシュ読み取りの値下げはその規律への褒美であり、履歴編集の検査は破ったときの罰だ。褒美だけを見て移ると罰のほうで引っかかる。
@@ -109,4 +159,4 @@
 </p>
 
 <h3>事実確認ノート</h3>
-<p class="scn-sub">価格表（基本入力 $10・出力 $50・キャッシュ読み取り $0.25・キャッシュ倍率 0.025）、仕様（コンテキスト100万・出力12.8万・30日保持）、三つの破壊的変更とその理由、<code>prefix_mismatch_behavior</code>・<code>input_transformations</code>・8月31日のアカウント条件、Mythos 5.1 が履歴検査を走らせない点と Project Glasswing 限定の提供は、すべて<a href="https://platform.claude.com/docs/en/models/fable-5-1/whats-new-fable-5-1" target="_blank" rel="noopener">公式のリリース文書</a>と<a href="https://platform.claude.com/docs/en/models/fable-5-1/migration-guide" target="_blank" rel="noopener">移行ガイド</a>に従った。公開時の報道が併せて伝えた「Terminal-Bench-Science の点数が2倍」「エージェント的コーディングが30%以上向上」といった倍率は<strong>公式文書の性能記述に入っていない</strong>ため、この記事では使わなかった — 当該評価はモデルごとの標準誤差が ±3.5〜4.5 ポイントとされ、一度の比較で倍率を語りにくい。削減幅の25%・45%は Anthropic 発表によるもので、キャッシュ読み取りの比重が小さいワークロードではそこまで下がらない。Opus 5.5 の部分（公開日、単価 $4・$20、キャッシュ読み取り $0.20 と5%の倍率、既定の effort <code>medium</code>、仕様100万・12.8万、四つの破壊的変更と思考ブロックの向き、コンピュータ使用ツールセットのプラットフォーム差）は<a href="https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5" target="_blank" rel="noopener">公式のリリース文書</a>と<a href="https://platform.claude.com/docs/en/models/opus-5-5/overview" target="_blank" rel="noopener">モデルページ</a>に従い、既定モデルの変更は <a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">Claude Code 2.1.280 の changelog</a> で確認した。<strong>「運用費約40%削減」は9月24日の Anthropic <a href="https://claude.com/blog/claude-opus-5-5-built-for-coding-sessions-that-use-more-context" target="_blank" rel="noopener">ブログ</a>の公式の数字として反映した</strong>（トークン課金の場合）。算出の根拠は単価20%・キャッシュ読み取り60%の値下げとターン数の減少で、範囲がよく絞られた作業では値下げ分にとどまるという但し書きが同じ記事にある。この記事を最初に更新した9月23日には公式文書にその倍率がなく使わなかったうえ、40%を既定の effort の引き下げ効果と推定していた。公式の根拠は effort ではなくキャッシュ読み取りの値下げとターン数だったので、その推定を訂正する。利用集計（作業時間3.3倍・モデル呼び出し40%以上増・割り込み68%減・コンテキスト2.6倍・入出力比189:1→324:1）も同じ記事の2026年3〜9月の数字である。</p>
+<p class="scn-sub">価格表（基本入力 $10・出力 $50・キャッシュ読み取り $0.25・キャッシュ倍率 0.025）、仕様（コンテキスト100万・出力12.8万・30日保持）、三つの破壊的変更とその理由、<code>prefix_mismatch_behavior</code>・<code>input_transformations</code>・8月31日のアカウント条件、Mythos 5.1 が履歴検査を走らせない点と Project Glasswing 限定の提供は、すべて<a href="https://platform.claude.com/docs/en/models/fable-5-1/whats-new-fable-5-1" target="_blank" rel="noopener">公式のリリース文書</a>と<a href="https://platform.claude.com/docs/en/models/fable-5-1/migration-guide" target="_blank" rel="noopener">移行ガイド</a>に従った。公開時の報道が併せて伝えた「Terminal-Bench-Science の点数が2倍」「エージェント的コーディングが30%以上向上」といった倍率は<strong>公式文書の性能記述に入っていない</strong>ため、この記事では使わなかった — 当該評価はモデルごとの標準誤差が ±3.5〜4.5 ポイントとされ、一度の比較で倍率を語りにくい。削減幅の25%・45%は Anthropic 発表によるもので、キャッシュ読み取りの比重が小さいワークロードではそこまで下がらない。Opus 5.5 の部分（公開日、単価 $4・$20、キャッシュ読み取り $0.20 と5%の倍率、既定の effort <code>medium</code>、仕様100万・12.8万、四つの破壊的変更と思考ブロックの向き、コンピュータ使用ツールセットのプラットフォーム差）は<a href="https://platform.claude.com/docs/en/models/opus-5-5/whats-new-opus-5-5" target="_blank" rel="noopener">公式のリリース文書</a>と<a href="https://platform.claude.com/docs/en/models/opus-5-5/overview" target="_blank" rel="noopener">モデルページ</a>に従い、既定モデルの変更は <a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">Claude Code 2.1.280 の changelog</a> で確認した。<strong>「運用費約40%削減」は9月24日の Anthropic <a href="https://claude.com/blog/claude-opus-5-5-built-for-coding-sessions-that-use-more-context" target="_blank" rel="noopener">ブログ</a>の公式の数字として反映した</strong>（トークン課金の場合）。算出の根拠は単価20%・キャッシュ読み取り60%の値下げとターン数の減少で、範囲がよく絞られた作業では値下げ分にとどまるという但し書きが同じ記事にある。この記事を最初に更新した9月23日には公式文書にその倍率がなく使わなかったうえ、40%を既定の effort の引き下げ効果と推定していた。公式の根拠は effort ではなくキャッシュ読み取りの値下げとターン数だったので、その推定を訂正する。利用集計（作業時間3.3倍・モデル呼び出し40%以上増・割り込み68%減・コンテキスト2.6倍・入出力比189:1→324:1）も同じ記事の2026年3〜9月の数字である。<strong>10月の節</strong>の Sonnet 5.5 の部分（発売日、破壊的な変更と <code>between_tools</code>、思考ブロックの向き、アカウントへの結びつき、キャッシュ読み取り $0.10 と5%の倍率）は<a href="https://platform.claude.com/docs/en/models/sonnet-5-5/whats-new-sonnet-5-5" target="_blank" rel="noopener">公式リリース文書</a>と<a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">価格の文書</a>に従った。キャッシュ読み取りは発売時 $0.20 で、10月7日に下がった。「エージェント作業の費用が約20%減」は Anthropic の発表した数字である。Haiku 5.5 の部分（10月7日発売、10万トークンを境にした二つの単価、キャッシュ込みで数える長さ、コンテキスト100万・出力12.8万、トークナイザーによる約30%増、破壊的な変更、アカウントへの結びつき）は<a href="https://platform.claude.com/docs/en/models/haiku-5-5/whats-new-haiku-5-5" target="_blank" rel="noopener">公式リリース文書</a>と価格の文書に従い、「平均約75%の削減」は <a href="https://www.anthropic.com/claude-haiku-5-5" target="_blank" rel="noopener">Anthropic の発表</a>による。競合モデルの単価（GPT-6.1 Sol は $2・$10・キャッシュ入力 $0.10、Gemini 4 Argon は導入価格 $2・$10・キャッシュ入力95%引き・その後 $4・$20、GPT-6 Luna は $0.10・$0.50）は <a href="https://venturebeat.com/technology/openais-gpt-6-1-sol-offers-astra-like-performance-at-1-5th-price-a-new-ultrafast-tier-clocks-at-300-tokens-per-second" target="_blank" rel="noopener">VentureBeat</a>・<a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/" target="_blank" rel="noopener">Google 公式ブログ</a>・<a href="https://venturebeat.com/technology/anthropic-launches-claude-haiku-5-5-with-90-api-price-reduction-matching-gpt-6-luna" target="_blank" rel="noopener">VentureBeat</a> によるもので、性能の比較はベンチマークによって結論が分かれるため書かなかった。サイバー検証プログラム（三段階と対象・審査期間、レッドチーム段階のリアルタイム遮断、データ保持、CyScenarioBench 50回の結果、Glasswing 参加者の特殊段階への移行）は10月6日の <a href="https://www.anthropic.com/news/cyber-verification-program" target="_blank" rel="noopener">Anthropic 公式発表</a>に従った。同じ発表の「4〜7月に検証済みの脆弱性12万9千件以上」は一部の参加者のアンケートに頼った下限の推定なので、本文には使わなかった。</p>
