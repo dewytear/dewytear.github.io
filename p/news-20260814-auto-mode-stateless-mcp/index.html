@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다</title>
-<meta name="description" content="같은 주에 난 두 변경을 한 편으로 — Claude Code는 2026-08-14부터 Pro·Max·Team 신규 세션의 기본값을 auto 모드로 바꿨고(승인률 97%·심어 둔 위험 명령을 사람은 13.6%만 거절·분류기는 89% 저지·Trajectory Labs 720회 인젝션 전부 실패), MCP 2026-07-28 스펙은 initialize 핸드셰이크와 Mcp-Session-Id를 삭제해 프로토콜에서 상태를 없앴다(_meta·server/discover·서버 발급 핸들·Tasks/MCP Apps/기업 인가 확장·양방향 와이어 비호환). 공통 구조: 런타임의 고정점을 걷어내고 선언된 규칙과 요청 단위 데이터로 판정을 옮긴다. 9월 28일 Claude Code 2.1.284가 이 기본값을 모든 요금제·제공자로 넓혔다 — 권한 모드를 정하지 않은 터미널·VS Code 세션은 Enterprise·Console API 키·Bedrock·Agent Platform·Foundry·Claude Platform on AWS에서도 auto 모드로 시작하고(claude -p·Agent SDK는 수동 유지, permissions.defaultMode가 우선, disableAutoMode로 차단), 서버가 검사하는 곳에서는 읽기 전용·샌드박스 명령도 판정을 기다리며, 작업 폴더 밖 읽기에는 &#x27;이번만 허용하고 다음에 또 묻기&#x27;가 생겼다. 조직에게는 무설정의 뜻이 수동에서 auto로 바뀐 셈이다">
+<meta name="description" content="같은 주에 난 두 변경을 한 편으로 — Claude Code는 2026-08-14부터 Pro·Max·Team 신규 세션의 기본값을 auto 모드로 바꿨고(승인률 97%·심어 둔 위험 명령을 사람은 13.6%만 거절·분류기는 89% 저지·Trajectory Labs 720회 인젝션 전부 실패), MCP 2026-07-28 스펙은 initialize 핸드셰이크와 Mcp-Session-Id를 삭제해 프로토콜에서 상태를 없앴다(_meta·server/discover·서버 발급 핸들·Tasks/MCP Apps/기업 인가 확장·양방향 와이어 비호환). 공통 구조: 런타임의 고정점을 걷어내고 선언된 규칙과 요청 단위 데이터로 판정을 옮긴다. 9월 28일 Claude Code 2.1.284가 이 기본값을 모든 요금제·제공자로 넓혔다 — 권한 모드를 정하지 않은 터미널·VS Code 세션은 Enterprise·Console API 키·Bedrock·Agent Platform·Foundry·Claude Platform on AWS에서도 auto 모드로 시작하고(claude -p·Agent SDK는 이때 수동 유지, permissions.defaultMode가 우선, disableAutoMode로 차단), 서버가 검사하는 곳에서는 읽기 전용·샌드박스 명령도 판정을 기다리며, 작업 폴더 밖 읽기에는 &#x27;이번만 허용하고 다음에 또 묻기&#x27;가 생겼다. 조직에게는 무설정의 뜻이 수동에서 auto로 바뀐 셈이다. 10월 갱신: 2.1.285부터 기능 플래그를 받지 않는 세션(제3자 제공자·텔레메트리 끔)에서는 claude -p·Agent SDK도 auto 모드로 시작하고(조직 정책이 막거나 HIPAA 구성이면 수동), 2.1.295의 onFailure: &quot;block&quot;으로 훅이 실패할 때 행동을 막을 수 있으며, 2.1.292·2.1.295부터 로컬 MCP 서버와 claude.ai 커넥터가 2026-07-28 규격을 기본으로 협상한다. 2026-07-28을 릴리스 후보로 적었던 것은 정정했다: 최종 규격은 7월 28일에 이미 공개됐고(릴리스 후보는 5월 21일) 최종판은 다중 왕복 요청(MRTR)·헤더 라우팅·캐시 가능한 목록 응답을 더했다">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/news-20260814-auto-mode-stateless-mcp/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20260814-auto-mode-stateless-mcp/">
@@ -14,14 +14,14 @@
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
 <meta property="og:title" content="묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다">
-<meta property="og:description" content="같은 주에 난 두 변경을 한 편으로 — Claude Code는 2026-08-14부터 Pro·Max·Team 신규 세션의 기본값을 auto 모드로 바꿨고(승인률 97%·심어 둔 위험 명령을 사람은 13.6%만 거절·분류기는 89% 저지·Trajectory Labs 720회 인젝션 전부 실패), MCP 2026-07-28 스펙은 initialize 핸드셰이크와 Mcp-Session-Id를 삭제해 프로토콜에서 상태를 없앴다(_meta·server/discover·서버 발급 핸들·Tasks/MCP Apps/기업 인가 확장·양방향 와이어 비호환). 공통 구조: 런타임의 고정점을 걷어내고 선언된 규칙과 요청 단위 데이터로 판정을 옮긴다. 9월 28일 Claude Code 2.1.284가 이 기본값을 모든 요금제·제공자로 넓혔다 — 권한 모드를 정하지 않은 터미널·VS Code 세션은 Enterprise·Console API 키·Bedrock·Agent Platform·Foundry·Claude Platform on AWS에서도 auto 모드로 시작하고(claude -p·Agent SDK는 수동 유지, permissions.defaultMode가 우선, disableAutoMode로 차단), 서버가 검사하는 곳에서는 읽기 전용·샌드박스 명령도 판정을 기다리며, 작업 폴더 밖 읽기에는 &#x27;이번만 허용하고 다음에 또 묻기&#x27;가 생겼다. 조직에게는 무설정의 뜻이 수동에서 auto로 바뀐 셈이다">
+<meta property="og:description" content="같은 주에 난 두 변경을 한 편으로 — Claude Code는 2026-08-14부터 Pro·Max·Team 신규 세션의 기본값을 auto 모드로 바꿨고(승인률 97%·심어 둔 위험 명령을 사람은 13.6%만 거절·분류기는 89% 저지·Trajectory Labs 720회 인젝션 전부 실패), MCP 2026-07-28 스펙은 initialize 핸드셰이크와 Mcp-Session-Id를 삭제해 프로토콜에서 상태를 없앴다(_meta·server/discover·서버 발급 핸들·Tasks/MCP Apps/기업 인가 확장·양방향 와이어 비호환). 공통 구조: 런타임의 고정점을 걷어내고 선언된 규칙과 요청 단위 데이터로 판정을 옮긴다. 9월 28일 Claude Code 2.1.284가 이 기본값을 모든 요금제·제공자로 넓혔다 — 권한 모드를 정하지 않은 터미널·VS Code 세션은 Enterprise·Console API 키·Bedrock·Agent Platform·Foundry·Claude Platform on AWS에서도 auto 모드로 시작하고(claude -p·Agent SDK는 이때 수동 유지, permissions.defaultMode가 우선, disableAutoMode로 차단), 서버가 검사하는 곳에서는 읽기 전용·샌드박스 명령도 판정을 기다리며, 작업 폴더 밖 읽기에는 &#x27;이번만 허용하고 다음에 또 묻기&#x27;가 생겼다. 조직에게는 무설정의 뜻이 수동에서 auto로 바뀐 셈이다. 10월 갱신: 2.1.285부터 기능 플래그를 받지 않는 세션(제3자 제공자·텔레메트리 끔)에서는 claude -p·Agent SDK도 auto 모드로 시작하고(조직 정책이 막거나 HIPAA 구성이면 수동), 2.1.295의 onFailure: &quot;block&quot;으로 훅이 실패할 때 행동을 막을 수 있으며, 2.1.292·2.1.295부터 로컬 MCP 서버와 claude.ai 커넥터가 2026-07-28 규격을 기본으로 협상한다. 2026-07-28을 릴리스 후보로 적었던 것은 정정했다: 최종 규격은 7월 28일에 이미 공개됐고(릴리스 후보는 5월 21일) 최종판은 다중 왕복 요청(MRTR)·헤더 라우팅·캐시 가능한 목록 응답을 더했다">
 <meta property="og:url" content="https://dewytear.github.io/p/news-20260814-auto-mode-stateless-mcp/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다">
-<meta name="twitter:description" content="같은 주에 난 두 변경을 한 편으로 — Claude Code는 2026-08-14부터 Pro·Max·Team 신규 세션의 기본값을 auto 모드로 바꿨고(승인률 97%·심어 둔 위험 명령을 사람은 13.6%만 거절·분류기는 89% 저지·Trajectory Labs 720회 인젝션 전부 실패), MCP 2026-07-28 스펙은 initialize 핸드셰이크와 Mcp-Session-Id를 삭제해 프로토콜에서 상태를 없앴다(_meta·server/discover·서버 발급 핸들·Tasks/MCP Apps/기업 인가 확장·양방향 와이어 비호환). 공통 구조: 런타임의 고정점을 걷어내고 선언된 규칙과 요청 단위 데이터로 판정을 옮긴다. 9월 28일 Claude Code 2.1.284가 이 기본값을 모든 요금제·제공자로 넓혔다 — 권한 모드를 정하지 않은 터미널·VS Code 세션은 Enterprise·Console API 키·Bedrock·Agent Platform·Foundry·Claude Platform on AWS에서도 auto 모드로 시작하고(claude -p·Agent SDK는 수동 유지, permissions.defaultMode가 우선, disableAutoMode로 차단), 서버가 검사하는 곳에서는 읽기 전용·샌드박스 명령도 판정을 기다리며, 작업 폴더 밖 읽기에는 &#x27;이번만 허용하고 다음에 또 묻기&#x27;가 생겼다. 조직에게는 무설정의 뜻이 수동에서 auto로 바뀐 셈이다">
+<meta name="twitter:description" content="같은 주에 난 두 변경을 한 편으로 — Claude Code는 2026-08-14부터 Pro·Max·Team 신규 세션의 기본값을 auto 모드로 바꿨고(승인률 97%·심어 둔 위험 명령을 사람은 13.6%만 거절·분류기는 89% 저지·Trajectory Labs 720회 인젝션 전부 실패), MCP 2026-07-28 스펙은 initialize 핸드셰이크와 Mcp-Session-Id를 삭제해 프로토콜에서 상태를 없앴다(_meta·server/discover·서버 발급 핸들·Tasks/MCP Apps/기업 인가 확장·양방향 와이어 비호환). 공통 구조: 런타임의 고정점을 걷어내고 선언된 규칙과 요청 단위 데이터로 판정을 옮긴다. 9월 28일 Claude Code 2.1.284가 이 기본값을 모든 요금제·제공자로 넓혔다 — 권한 모드를 정하지 않은 터미널·VS Code 세션은 Enterprise·Console API 키·Bedrock·Agent Platform·Foundry·Claude Platform on AWS에서도 auto 모드로 시작하고(claude -p·Agent SDK는 이때 수동 유지, permissions.defaultMode가 우선, disableAutoMode로 차단), 서버가 검사하는 곳에서는 읽기 전용·샌드박스 명령도 판정을 기다리며, 작업 폴더 밖 읽기에는 &#x27;이번만 허용하고 다음에 또 묻기&#x27;가 생겼다. 조직에게는 무설정의 뜻이 수동에서 auto로 바뀐 셈이다. 10월 갱신: 2.1.285부터 기능 플래그를 받지 않는 세션(제3자 제공자·텔레메트리 끔)에서는 claude -p·Agent SDK도 auto 모드로 시작하고(조직 정책이 막거나 HIPAA 구성이면 수동), 2.1.295의 onFailure: &quot;block&quot;으로 훅이 실패할 때 행동을 막을 수 있으며, 2.1.292·2.1.295부터 로컬 MCP 서버와 claude.ai 커넥터가 2026-07-28 규격을 기본으로 협상한다. 2026-07-28을 릴리스 후보로 적었던 것은 정정했다: 최종 규격은 7월 28일에 이미 공개됐고(릴리스 후보는 5월 21일) 최종판은 다중 왕복 요청(MRTR)·헤더 라우팅·캐시 가능한 목록 응답을 더했다">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -32,7 +32,7 @@
  "@context": "https://schema.org",
  "@type": "Article",
  "headline": "묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다",
- "description": "같은 주에 난 두 변경을 한 편으로 — Claude Code는 2026-08-14부터 Pro·Max·Team 신규 세션의 기본값을 auto 모드로 바꿨고(승인률 97%·심어 둔 위험 명령을 사람은 13.6%만 거절·분류기는 89% 저지·Trajectory Labs 720회 인젝션 전부 실패), MCP 2026-07-28 스펙은 initialize 핸드셰이크와 Mcp-Session-Id를 삭제해 프로토콜에서 상태를 없앴다(_meta·server/discover·서버 발급 핸들·Tasks/MCP Apps/기업 인가 확장·양방향 와이어 비호환). 공통 구조: 런타임의 고정점을 걷어내고 선언된 규칙과 요청 단위 데이터로 판정을 옮긴다. 9월 28일 Claude Code 2.1.284가 이 기본값을 모든 요금제·제공자로 넓혔다 — 권한 모드를 정하지 않은 터미널·VS Code 세션은 Enterprise·Console API 키·Bedrock·Agent Platform·Foundry·Claude Platform on AWS에서도 auto 모드로 시작하고(claude -p·Agent SDK는 수동 유지, permissions.defaultMode가 우선, disableAutoMode로 차단), 서버가 검사하는 곳에서는 읽기 전용·샌드박스 명령도 판정을 기다리며, 작업 폴더 밖 읽기에는 '이번만 허용하고 다음에 또 묻기'가 생겼다. 조직에게는 무설정의 뜻이 수동에서 auto로 바뀐 셈이다",
+ "description": "같은 주에 난 두 변경을 한 편으로 — Claude Code는 2026-08-14부터 Pro·Max·Team 신규 세션의 기본값을 auto 모드로 바꿨고(승인률 97%·심어 둔 위험 명령을 사람은 13.6%만 거절·분류기는 89% 저지·Trajectory Labs 720회 인젝션 전부 실패), MCP 2026-07-28 스펙은 initialize 핸드셰이크와 Mcp-Session-Id를 삭제해 프로토콜에서 상태를 없앴다(_meta·server/discover·서버 발급 핸들·Tasks/MCP Apps/기업 인가 확장·양방향 와이어 비호환). 공통 구조: 런타임의 고정점을 걷어내고 선언된 규칙과 요청 단위 데이터로 판정을 옮긴다. 9월 28일 Claude Code 2.1.284가 이 기본값을 모든 요금제·제공자로 넓혔다 — 권한 모드를 정하지 않은 터미널·VS Code 세션은 Enterprise·Console API 키·Bedrock·Agent Platform·Foundry·Claude Platform on AWS에서도 auto 모드로 시작하고(claude -p·Agent SDK는 이때 수동 유지, permissions.defaultMode가 우선, disableAutoMode로 차단), 서버가 검사하는 곳에서는 읽기 전용·샌드박스 명령도 판정을 기다리며, 작업 폴더 밖 읽기에는 '이번만 허용하고 다음에 또 묻기'가 생겼다. 조직에게는 무설정의 뜻이 수동에서 auto로 바뀐 셈이다. 10월 갱신: 2.1.285부터 기능 플래그를 받지 않는 세션(제3자 제공자·텔레메트리 끔)에서는 claude -p·Agent SDK도 auto 모드로 시작하고(조직 정책이 막거나 HIPAA 구성이면 수동), 2.1.295의 onFailure: \"block\"으로 훅이 실패할 때 행동을 막을 수 있으며, 2.1.292·2.1.295부터 로컬 MCP 서버와 claude.ai 커넥터가 2026-07-28 규격을 기본으로 협상한다. 2026-07-28을 릴리스 후보로 적었던 것은 정정했다: 최종 규격은 7월 28일에 이미 공개됐고(릴리스 후보는 5월 21일) 최종판은 다중 왕복 요청(MRTR)·헤더 라우팅·캐시 가능한 목록 응답을 더했다",
  "inLanguage": "ko",
  "url": "https://dewytear.github.io/p/news-20260814-auto-mode-stateless-mcp/",
  "mainEntityOfPage": "https://dewytear.github.io/#!news-20260814-auto-mode-stateless-mcp",
@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-08-14T07:49:04+09:00",
- "dateModified": "2026-09-29T18:36:42+09:00"
+ "dateModified": "2026-10-09T22:21:10+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -60,17 +60,17 @@
 <article>
 <h2>묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다</h2>
 
-<p>오늘(8월 14일)부터 Claude Code의 새 세션은 <strong>auto 모드로 시작</strong>합니다. 매번 &ldquo;이 명령을 실행할까요?&rdquo;라고 묻던 승인 프롬프트가 기본 동작에서 빠집니다. 그보다 두 주 앞서, 에이전트가 도구를 붙이는 표준인 <strong>MCP</strong>는 <strong>세션이라는 개념 자체를 프로토콜에서 들어냈습니다</strong>. 하나는 사람의 클릭을 걷어냈고 하나는 연결의 기억을 걷어냈는데, 남은 자리를 메운 것은 양쪽 다 <strong>미리 적어 둔 규칙</strong>입니다. 이 기사는 두 변경의 상세를 정리하고, 왜 이것이 한 이야기인지 봅니다. <strong>9월 28일 갱신</strong>: auto 모드 기본값이 모든 요금제와 모든 제공자로 넓어졌습니다(아래 &ldquo;9월 28일&rdquo; 절).</p>
+<p>오늘(8월 14일)부터 Claude Code의 새 세션은 <strong>auto 모드로 시작</strong>합니다. 매번 &ldquo;이 명령을 실행할까요?&rdquo;라고 묻던 승인 프롬프트가 기본 동작에서 빠집니다. 그보다 두 주 앞서, 에이전트가 도구를 붙이는 표준인 <strong>MCP</strong>는 <strong>세션이라는 개념 자체를 프로토콜에서 들어냈습니다</strong>. 하나는 사람의 클릭을 걷어냈고 하나는 연결의 기억을 걷어냈는데, 남은 자리를 메운 것은 양쪽 다 <strong>미리 적어 둔 규칙</strong>입니다. 이 기사는 두 변경의 상세를 정리하고, 왜 이것이 한 이야기인지 봅니다. <strong>9월 28일 갱신</strong>: auto 모드 기본값이 모든 요금제와 모든 제공자로 넓어졌습니다(아래 &ldquo;9월 28일&rdquo; 절). <strong>10월 9일 정정·갱신</strong>: MCP 2026-07-28은 이 글을 쓸 때 이미 최종 규격이었는데 릴리스 후보로 적어 바로잡았고, 비대화형 실행과 MCP 연결의 기본값이 바뀐 내용을 더했습니다(아래 &ldquo;10월&rdquo; 절).</p>
 
 <div class="note">
     <span class="nh">기사 정보 (출처)</span>
-    · 대상: <strong>Anthropic의 auto 모드 기본값 공지</strong>(2026-08-08 발표 · 08-14 적용) · <strong>MCP 2026-07-28 스펙 릴리스 후보</strong><br>
+    · 대상: <strong>Anthropic의 auto 모드 기본값 공지</strong>(2026-08-08 발표 · 08-14 적용) · <strong>MCP 2026-07-28 스펙</strong>(7월 28일 최종 공개)<br>
     · 정리: <strong>공식 발표·스펙 문서 + 복수 보도 교차 확인</strong>(2026-08-14) — 문서 말미에 출처 목록과 사실검증 노트
 </div>
 
 <h3>세 줄 요약</h3>
 <ul>
-    <li>Claude Code의 Pro·Max·Team 신규 세션이 <strong>auto 모드를 기본값</strong>으로 씁니다. 되돌릴 수 없거나 파괴적이거나 작업 환경 밖을 향하는 행동만 멈춰 세우고, 나머지는 묻지 않고 진행합니다. 9월 28일부터는 Enterprise 요금제와 클라우드 제공자까지 같은 기본값을 씁니다.</li>
+    <li>Claude Code의 Pro·Max·Team 신규 세션이 <strong>auto 모드를 기본값</strong>으로 씁니다. 되돌릴 수 없거나 파괴적이거나 작업 환경 밖을 향하는 행동만 멈춰 세우고, 나머지는 묻지 않고 진행합니다. 9월 28일부터는 Enterprise 요금제와 클라우드 제공자까지, 9월 29일부터는 일부 환경의 <code>claude -p</code>·Agent SDK까지 같은 기본값을 씁니다.</li>
     <li>근거로 제시된 수치가 뼈아픕니다 — Anthropic 조사에서 사용자들은 권한 프롬프트의 <strong>97%를 승인</strong>했고, 실험에서 몰래 끼워 넣은 위험한 명령을 <strong>사람은 13.6%만 거절</strong>했습니다. 같은 명령을 auto 모드의 분류기는 <strong>89% 저지</strong>했습니다. 승인 버튼은 이미 안전장치로 기능하지 않고 있었다는 이야기입니다.</li>
     <li>MCP는 <code>initialize</code> 핸드셰이크와 <code>Mcp-Session-Id</code>를 삭제했습니다. 프로토콜 버전과 클라이언트 능력은 이제 <strong>매 요청의 <code>_meta</code></strong>에 실려 갑니다. 어떤 요청이든 아무 서버 인스턴스가 받아도 되고, 대신 <strong>양방향으로 호환되지 않는</strong> 변경이라 기존 서버는 리팩터가 필요합니다.</li>
 </ul>
@@ -128,7 +128,7 @@
 <p>공격 쪽 평가도 함께 나왔습니다. 독립 평가 기관인 Trajectory Labs가 <strong>72가지 간접 프롬프트 인젝션 시나리오를 각 10회씩, 모델당 720회</strong> 시도했고, auto 모드로 돌린 Fable 5·Opus 5·Sonnet 5에서 <strong>성공한 공격이 하나도 없었다</strong>고 보고했습니다. 사내 운용에서 실제로 막힌 사례로는 망 밖으로 나가는 데이터 유출, 파괴적인 대량 작업, 권한 상승 세 건이 공개됐는데 모두 Claude가 스스로 더 안전한 경로를 찾거나 사용자에게 확인을 구했습니다.</p>
 
 <h3>같은 주, MCP는 세션을 버렸다</h3>
-<p><strong>MCP(Model Context Protocol)</strong>는 에이전트가 외부 도구·데이터에 붙는 방식을 정한 표준입니다. 이 위키의 <a href="/p/skills/">MCP 강의</a>가 다루는 그 규약이고, 2026-07-28 릴리스 후보는 출시 이래 가장 큰 개정입니다. 핵심은 한 문장입니다 — <strong>프로토콜 층에서 상태를 없앴다</strong>.</p>
+<p><strong>MCP(Model Context Protocol)</strong>는 에이전트가 외부 도구·데이터에 붙는 방식을 정한 표준입니다. 이 위키의 <a href="/p/skills/">MCP 강의</a>가 다루는 그 규약이고, 7월 28일 최종 공개된 2026-07-28 규격은 출시 이래 가장 큰 개정입니다. 핵심은 한 문장입니다 — <strong>프로토콜 층에서 상태를 없앴다</strong>.</p>
 <ul>
     <li><strong>핸드셰이크 삭제</strong> — 연결을 열 때 한 번 주고받던 <code>initialize</code>/<code>initialized</code>가 사라졌습니다. 프로토콜 버전·클라이언트 정보·클라이언트 능력은 이제 <strong>모든 요청의 <code>_meta</code></strong>에 실립니다. 서버 능력을 미리 알아야 하면 새로 생긴 <code>server/discover</code>로 필요할 때 조회합니다.</li>
     <li><strong>세션 식별자 삭제</strong> — <code>Mcp-Session-Id</code> 헤더와 그에 딸린 프로토콜 수준 세션이 함께 없어졌습니다. 둘이 사라지자 <strong>어떤 요청이든 아무 서버 인스턴스에 도착해도 됩니다</strong>. 여러 대로 늘려 쓰려면 필요했던 고정 라우팅과 공유 세션 저장소가 규약 차원에서는 더 이상 필요 없습니다.</li>
@@ -176,17 +176,26 @@
 
 <h3>9월 28일 — 모든 요금제, 모든 제공자로</h3>
 <p>6주 뒤 Claude Code 2.1.284가 이 기본값의 범위를 넓혔습니다. 권한 모드를 따로 정하지 않은 터미널·VS Code 세션은 이제 <strong>모든 요금제와 모든 제공자에서 auto 모드로 시작</strong>합니다. 8월의 대상은 Pro·Max·Team 요금제였고, Enterprise 요금제와 Console API 키, 그리고 Amazon Bedrock·Google Cloud의 Agent Platform·Microsoft Foundry·Claude Platform on AWS를 거치는 세션은 수동(Manual) 모드로 시작했습니다. 그 경계가 없어졌습니다. 텔레메트리를 끈 세션도 같은 규칙을 따릅니다.</p>
-<p>그대로인 곳도 있습니다. <code>claude -p</code>로 돌리는 비대화형 실행과 Agent SDK는 여전히 수동 모드로 시작합니다. 클라우드 제공자 경로에서는 Sonnet 5, Opus 4.7, Fable 이후 모델에서만 auto 모드가 켜지고, 그보다 오래된 모델이면 수동으로 시작합니다.</p>
+<p>그대로인 곳도 있습니다. <code>claude -p</code>로 돌리는 비대화형 실행과 Agent SDK는 여전히 수동 모드로 시작합니다(9월 28일 기준 — 하루 뒤 일부 환경에서 바뀌었습니다. 아래 &ldquo;10월&rdquo; 절). 클라우드 제공자 경로에서는 Sonnet 5, Opus 4.7, Fable 이후 모델에서만 auto 모드가 켜지고, 그보다 오래된 모델이면 수동으로 시작합니다.</p>
 <p>조직에게 달라진 것은 <strong>아무것도 설정하지 않은 상태의 뜻</strong>입니다. 지금까지 Enterprise 관리자가 권한 모드를 정해 두지 않았다면 개발자의 세션은 수동 모드로 시작했습니다. 이제 같은 무설정이 auto 모드를 뜻합니다. 예전처럼 시작하게 하려면 관리형 설정에 <code>permissions.defaultMode</code>를 적어야 하고, auto 모드를 아예 고를 수 없게 하려면 <code>permissions.disableAutoMode</code>를 <code>"disable"</code>로 둡니다. 클라우드 제공자 쪽에서는 이미 한 번 겪은 전환입니다. 2.1.207부터 Bedrock·Agent Platform·Foundry에서 auto 모드를 쓰려고 켜 두던 환경변수가 필요 없어졌고, 그때도 &ldquo;켜지 않은 채로 두기&rdquo;가 더는 끄는 방법이 아니게 됐습니다.</p>
 <p>검사하는 쪽도 함께 옮겨 갔습니다. 2.1.278부터 Claude API·Enterprise 계정과 클라우드 제공자·게이트웨이 경로에서는 auto 모드의 분류기 검사를 기본으로 <strong>서버가</strong> 맡습니다. 세션의 모델 요청에 검사를 함께 실어 보내므로 분류기 호출 비용이 따로 붙지 않습니다. 2.1.284는 여기에 규칙을 하나 더했습니다. 서버가 검사하는 곳에서는 읽기 전용 명령과 샌드박스 안의 셸 명령도 검사 결과를 기다리고, 걸리면 막힙니다. 서버가 판정을 내놓지 못한 행동은 검사 없이 돌리지 않고 거부합니다.</p>
 <p>사람에게 남은 질문은 더 좁아졌습니다. 작업 폴더 밖의 파일을 처음 읽을 때 Claude Code가 묻는데, 지금까지의 답은 &ldquo;계속 허용&rdquo;, &ldquo;앞으로 막기&rdquo;, &ldquo;이번만 거절&rdquo; 셋이었습니다. 2.1.284는 여기에 <strong>&ldquo;이번만 허용하고 다음에 또 묻기&rdquo;</strong>를 더했습니다. 한 번 허락했다고 앞으로의 읽기까지 열어 주지 않아도 됩니다.</p>
 <p>8월에 이 글은 판정의 근거가 사람의 클릭에서 미리 적어 둔 규칙으로 옮겨 갔다고 썼습니다. 이번 변경은 그 규칙이 적용되는 범위를 개인 요금제에서 조직과 클라우드 전체로 넓혔습니다. 같은 주 OpenAI는 격리 환경을 빠져나간 자사 에이전트 때문에 가장 강력한 모델들의 도구 사용을 멈췄습니다. 한쪽은 기본값에서 사람의 확인을 더 걷어냈고, 다른 쪽은 격리가 뚫려 멈췄습니다. 방향은 반대지만 둘 다 에이전트를 무엇이 멈춰 세우는지를 사람이 미리 정해 두어야 한다는 문제로 돌아옵니다.</p>
+
+<h3>10월 — 비대화형 실행과 MCP 연결까지</h3>
+<p>9월 28일 절에서 그대로라고 적은 자리가 하루 만에 움직였습니다. Claude Code 2.1.285(9월 29일)부터 권한 모드를 정하지 않은 <code>claude -p</code>와 Agent SDK 세션도 <strong>기능 플래그를 받지 않는 세션</strong>이면 대화형 세션처럼 auto 모드로 시작합니다. 기능 플래그는 Claude Code가 시작할 때 서버에서 받아 오는 기능 설정이고, 제3자 클라우드 제공자를 거치거나 텔레메트리를 끈 세션은 이것을 받지 않습니다. 플래그를 받는 세션의 <code>-p</code> 실행은 지금도 수동 모드로 시작하고, <code>--permission-mode</code> 플래그는 어느 쪽이든 기본값보다 우선합니다.</p>
+<p>예외도 둘 있습니다. 조직 정책이 auto 기본값을 막아 둔 세션은 수동 모드로 시작하고, 2.1.285부터는 HIPAA(미국 의료정보보호법) 구성이 적용된 조직의 해당 세션도 수동 모드로 시작합니다. HIPAA 쪽은 시작 모드만 정할 뿐, 세션 중에 auto 모드로 바꾸는 것까지 막지는 않습니다.</p>
+<p><code>-p</code>는 애초에 물어볼 사람이 없는 실행이라, 수동 모드에서는 허용 규칙에 적어 둔 행동만 돌았습니다. 이제 그 자리에서 분류기가 판정합니다. CI나 배치 작업에서 <code>-p</code>를 돌리는 팀이라면 아무것도 설정하지 않은 상태의 뜻이 또 한 번 바뀐 것이니, 원하는 모드를 명시해 두는 편이 안전합니다.</p>
+<p>규칙이 고장 났을 때 어느 쪽으로 넘어질지도 정할 수 있게 됐습니다. 2.1.295(10월 8일)는 명령·HTTP 훅에 <code>onFailure: "block"</code>을 더했습니다. 지금까지는 훅이 시작하지 못하거나 시간이 다 되거나 예상 밖의 코드로 끝나면 행동이 그대로 통과됐는데, 이 값을 주면 막힙니다. 8월에 이 글은 판정의 근거가 미리 적어 둔 규칙으로 옮겨 갔다고 썼습니다. 이제는 그 규칙을 집행하는 장치가 멈췄을 때 문을 열어 둘지 닫을지까지 규칙으로 적습니다.</p>
+<p>MCP 쪽에서는 새 규격이 Claude Code의 기본값이 됐습니다. 2.1.292(10월 6일)부터 로컬(stdio) MCP 서버와의 연결은 Bedrock·Vertex·Foundry를 포함한 모든 설치에서 2026-07-28 규격으로 협상하고, 2.1.295부터는 기능 플래그를 받지 않는 설치에서 claude.ai 커넥터도 그렇게 합니다. 예전 방식이 필요하면 <code>MCP_PROTOCOL_NEGOTIATION=legacy</code>로 되돌립니다. 위 &ldquo;같은 주, MCP는 세션을 버렸다&rdquo; 절에서 와이어 호환이 깨진다고 적은 그 규격을 이제 Claude Code가 기본으로 씁니다.</p>
+<p>여기서 바로잡을 것이 하나 있습니다. 이 글은 8월에 2026-07-28을 &ldquo;릴리스 후보&rdquo;로 적었지만, 릴리스 후보는 5월 21일에 나왔고 <strong>최종 규격은 7월 28일에 이미 공개</strong>돼 있었습니다. 최종 발표에서도 핸드셰이크와 세션 식별자 삭제, <code>_meta</code>, <code>server/discover</code>, 확장 체계는 이 글이 적은 그대로입니다. 여기에 서버가 호출 도중 사용자에게 되묻는 요청을 열린 스트림 없이 처리하는 다중 왕복 요청(MRTR), 메서드와 도구 이름을 HTTP 헤더에 실어 게이트웨이가 본문을 열지 않고 라우팅하게 하는 방식, 캐시해도 되는 목록 응답이 함께 들어갔습니다.</p>
 
 <h3>이 위키에서 고친 것</h3>
 <p>이 변경으로 낡은 서술 두 곳을 같이 손봤습니다.</p>
 <ul>
     <li><a href="/p/hns-usecases/">도구 확장과 마무리</a>의 Q&amp;A에서 오토 모드를 &ldquo;권한을 매번 묻지 않아 더 자율적으로 동작&rdquo;한다고만 설명하고 있었습니다. 기본값이 되었다는 사실과 하드 디나이·인젝션 스크리닝을 덧붙였습니다.</li>
     <li><a href="/p/skills/">MCP 강의</a>의 마지막 문장 &ldquo;Claude Code는 사용 전에 허락을 구합니다&rdquo;는 8월 14일부터 사실과 어긋납니다. 규칙에 걸리는 행동만 멈춘다는 쪽으로 고쳤습니다.</li>
+    <li>이 기사 자체에서 MCP 2026-07-28을 &ldquo;릴리스 후보&rdquo;로 적은 세 곳(기사 정보·본문·사실검증 노트)을 최종 규격으로 고쳤습니다(10월 9일).</li>
 </ul>
 
 <h3>사실검증 노트</h3>
@@ -194,18 +203,19 @@
     <li><strong>자체 발표 수치</strong> — 승인률 97%, 허용 규칙 49.5%·bypass 62%·세션 4분의 1, 테스터 1,053명 실험의 13.6%와 89%(937건)는 모두 <strong>Anthropic이 공개한 자체 조사·실험</strong> 결과입니다. 외부에서 재현한 수치가 아닙니다.</li>
     <li><strong>독립 평가</strong> — 720회 인젝션 시도 전부 실패는 <strong>Trajectory Labs</strong>의 평가로 보고된 것이고, 72개 시나리오 × 10회 × 모델별이라는 구성까지 함께 공개됐습니다. 평가 설계와 시나리오 난이도는 별도로 공개된 범위 안에서만 확인 가능합니다.</li>
     <li><strong>11%라는 표현</strong> — 저지 89%의 나머지를 뒤집어 계산한 값이며, 이 각도로 제목을 뽑은 보도가 있어 본문에도 그대로 적었습니다. 두 숫자는 같은 실험의 앞뒤입니다.</li>
-    <li><strong>스펙 상세</strong> — 핸드셰이크 제거(SEP-2575)·세션 식별자 제거(SEP-2567)·<code>_meta</code>·<code>server/discover</code>·확장 3종은 <strong>MCP 공식 블로그와 변경 목록</strong>에 근거합니다. 2026-07-28은 <strong>릴리스 후보</strong>이므로 최종 확정 과정에서 세부가 바뀔 수 있습니다.</li>
+    <li><strong>스펙 상세</strong> — 핸드셰이크 제거(SEP-2575)·세션 식별자 제거(SEP-2567)·<code>_meta</code>·<code>server/discover</code>·확장 3종은 <strong>MCP 공식 블로그와 변경 목록</strong>에 근거합니다. <strong>정정(10월 9일)</strong>: 처음 글은 2026-07-28을 릴리스 후보로 적고 &ldquo;최종 확정 과정에서 세부가 바뀔 수 있다&rdquo;고 단서를 달았는데, 최종 규격은 기사보다 앞선 7월 28일에 이미 나와 있었습니다(릴리스 후보는 5월 21일). <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28/" target="_blank" rel="noopener">최종 규격 발표</a>와 대조한 결과 위 상세는 그대로였습니다.</li>
     <li><strong>적용 범위</strong> — 8월 14일의 auto 모드 기본값은 <strong>Pro·Max·Team 요금제의 새 세션</strong>이 대상이었고, 이미 고정해 둔 설정이나 조직이 관리하는 기본값은 그대로 유지된다고 안내됐습니다.</li>
-    <li><strong>9월 28일 확대</strong> — &ldquo;모든 요금제와 제공자&rdquo;, <code>permissions.defaultMode</code> 우선, 읽기 전용·샌드박스 명령의 서버 검사, &ldquo;이번만 허용하고 다음에 또 묻기&rdquo;는 <a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">Claude Code 2.1.284 changelog</a>, <code>-p</code>·Agent SDK 제외와 모델 조건·<code>disableAutoMode</code>·2.1.207·2.1.278 경위는 <a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">권한 모드 문서</a>를 따랐습니다. 문서는 이 기본값을 &ldquo;v2.1.283 이상&rdquo;으로 적고 changelog는 2.1.284 항목에 올려 한 버전 어긋나는데, 이 기사는 변경을 알린 changelog 쪽을 따랐습니다.</li>
+    <li><strong>9월 28일 확대</strong> — &ldquo;모든 요금제와 제공자&rdquo;, <code>permissions.defaultMode</code> 우선, 읽기 전용·샌드박스 명령의 서버 검사, &ldquo;이번만 허용하고 다음에 또 묻기&rdquo;는 <a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">Claude Code 2.1.284 changelog</a>, <code>-p</code>·Agent SDK 제외와 모델 조건·<code>disableAutoMode</code>·2.1.207·2.1.278 경위는 <a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">권한 모드 문서</a>를 따랐습니다. 문서는 이 기본값을 &ldquo;v2.1.283 이상&rdquo;으로 적고 changelog는 2.1.284 항목에 올려 한 버전 어긋나는데, 이 기사는 변경을 알린 changelog 쪽을 따랐습니다. 이 항목의 &ldquo;<code>-p</code>·Agent SDK 제외&rdquo;는 9월 28일 기준입니다.</li>
+    <li><strong>10월 갱신</strong> — <code>-p</code>·Agent SDK의 조건부 auto 시작(2.1.285), 로컬(stdio) MCP 연결(2.1.292)과 claude.ai 커넥터(2.1.295)의 2026-07-28 기본 협상, <code>onFailure: "block"</code>(2.1.295)은 <a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener">changelog</a> 원문을, 기능 플래그 조건·조직 정책과 HIPAA 예외·<code>--permission-mode</code> 우선은 <a href="https://code.claude.com/docs/en/permission-modes" target="_blank" rel="noopener">권한 모드 문서</a>(10월 9일 확인)를 따랐습니다. changelog는 대상을 &ldquo;Python Agent SDK&rdquo;로 적고 문서 표는 &ldquo;Agent SDK&rdquo;로만 적어, 본문은 넓은 쪽인 문서 표기를 따랐습니다. 9월 28일 갱신 때 두 자료의 첫 버전이 어긋났던 문제(2.1.283과 2.1.284)는 지금 문서 표에서도 그대로입니다.</li>
 </ul>
 
 <div class="note">
     <span class="nh">출처</span>
     · auto 모드: <a href="https://claude.com/blog/auto-mode-default-in-claude-code" target="_blank" rel="noopener">Anthropic — Auto mode is now the default in Claude Code</a> · <a href="https://claude.com/blog/auto-mode" target="_blank" rel="noopener">Anthropic — Auto mode for Claude Code</a> · <a href="https://techcrunch.com/2026/08/09/anthropic-is-turning-claude-codes-auto-mode-on-by-default/" target="_blank" rel="noopener">TechCrunch</a> · <a href="https://www.theregister.com/ai-and-ml/2026/08/10/claude_code_puts_auto_mode_in_the_drivers_seat/" target="_blank" rel="noopener">The Register</a> · <a href="https://www.helpnetsecurity.com/2026/08/10/anthropic-claude-code-auto-mode/" target="_blank" rel="noopener">Help Net Security</a> · <a href="https://www.techi.com/claude-code-auto-mode-default-11-percent-miss-rate/" target="_blank" rel="noopener">TECHi — 11% 미탐 지적</a> · <a href="https://simonwillison.net/2026/Aug/8/auto-mode/" target="_blank" rel="noopener">Simon Willison</a><br>
-    · MCP 스펙: <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank" rel="noopener">MCP 공식 블로그 — 2026-07-28 릴리스 후보</a> · <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog" target="_blank" rel="noopener">변경 목록</a> · <a href="https://www.infoq.com/news/2026/08/mcp-stateless-gateway/" target="_blank" rel="noopener">InfoQ — 개발자 반응</a> · <a href="https://equixly.com/blog/2026/08/05/stateless-mcp/" target="_blank" rel="noopener">Equixly — 보안 관점</a> · <a href="https://developers.googleblog.com/scaling-ai-agent-infrastructure-with-the-mcp-stateless-updates/" target="_blank" rel="noopener">Google Developers Blog — 확장성 관점</a>
+    · MCP 스펙: <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28/" target="_blank" rel="noopener">MCP 공식 블로그 — 2026-07-28 최종 규격</a> · <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/" target="_blank" rel="noopener">릴리스 후보(5월 21일)</a> · <a href="https://modelcontextprotocol.io/specification/2026-07-28/changelog" target="_blank" rel="noopener">변경 목록</a> · <a href="https://www.infoq.com/news/2026/08/mcp-stateless-gateway/" target="_blank" rel="noopener">InfoQ — 개발자 반응</a> · <a href="https://equixly.com/blog/2026/08/05/stateless-mcp/" target="_blank" rel="noopener">Equixly — 보안 관점</a> · <a href="https://developers.googleblog.com/scaling-ai-agent-infrastructure-with-the-mcp-stateless-updates/" target="_blank" rel="noopener">Google Developers Blog — 확장성 관점</a>
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">분류</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">생성일자</span> 2026-08-14 &middot; <span class="pr-k">수정일자</span> 2026-09-29</p>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">생성일자</span> 2026-08-14 &middot; <span class="pr-k">수정일자</span> 2026-10-09</p>
 
 <nav class="pr-rel"><h2>연관 문서</h2>
 <ul><li><a href="/p/news-20260816-claude-code-selfhosted/">내 서버에서 도는 Claude Code — 셀프호스팅 공개 베타와 8월의 릴리스들</a></li><li><a href="/p/tip-advanced/">고급 — 병렬·자율·예약의 8가지</a></li><li><a href="/p/news-20260901-whose-usage/">내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면</a></li><li><a href="/p/news-20260820-who-makes-the-call/">판정을 누구에게 맡길 것인가 — 8월의 네 장면</a></li></ul>
