@@ -828,5 +828,20 @@
     "evidenceRef": "The side-by-side section takes the three doors that document defines (sign-post, self-contained graph, traversal contract) as its axes and drops an outside catalog into the same cells — the catalog is an external instance of the same pattern over different data, and the comparison is what exposes the missing call door"
    }
   ]
+ },
+ {
+  "name": "news-20261014-ledger-write-mcp",
+  "title": "Agents That Write to the Ledger — Digits Write MCP and the Locked-Period Answer",
+  "summary": "On 2026-10-13 the accounting SaaS company Digits launched Write MCP, widening the free MCP server it opened on April 21 as read-only by design so that agents customers bring (Claude, ChatGPT, Cursor and others) can edit transactions (recategorize, fix split lines, write journal entries), bills, invoices and the chart of accounts. The safeguards are inherited user permissions and Locked Periods: edits touching a closed period post only after an admin approves them in a review queue (the lock cascades to earlier months), while open periods apply edits immediately. The company argues that warning popups and shared passwords (such as the QuickBooks closing-date password) cannot stop an agent; every safety claim rests on its press release alone. Industry comparison: QuickBooks' official open-source server is read-write by default (control left to the client); Xero's open-source server writes invoices, manual journals and payments while its hosted connection is read-only; NetSuite's AI Connector relies on role permissions and refuses administrator roles; the Dynamics 365 ERP MCP server offers data-entity CRUD with role security, Cowork's up-front plan approval and 0.1 Copilot Credits per call from outside agents; finance writes for SAP and Sage Intacct are unconfirmed; Douzone Bizon's ONE AI PE uses MCP-based integration with permission checks and execution history. Control sits in one of three places: client, roles or ledger. Five open questions (unreviewed writes in open periods, agent identity, segregation of duties and amount thresholds, reversal and evidence, prompt injection inside invoices), practitioner notes that the PCAOB has no AI-specific standard, and a design checklist for ERP vendors (agents stop at draft vouchers and people approve, reversing entries, outside text treated only as data)",
+  "relations": [
+   {
+    "target": "news-20260814-auto-mode-stateless-mcp",
+    "evidenceRef": "The opening defines MCP in one line as the standard protocol agents use to call outside systems as tools, leaves recent changes to the spec to that article, and moves straight to the read-only versus write question for accounting and ERP servers"
+   },
+   {
+    "target": "news-20260820-who-makes-the-call",
+    "evidenceRef": "The section on where the industry puts the control compares three seats (client, role permissions, ledger) and treats Digits putting the period lock in the data layer as that article's observation, that judgment doesn't disappear but changes seats, applied to accounting"
+   }
+  ]
  }
 ]

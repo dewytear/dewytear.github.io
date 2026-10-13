@@ -5,9 +5,18 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.ja.xml"/>
   <id>https://dewytear.github.io/feed.ja.xml</id>
-  <updated>2026-10-09T22:21:10+09:00</updated>
+  <updated>2026-10-14T08:33:20+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>帳簿に書くエージェント — Digits Write MCPと「締め期間ロック」という答え</title>
+    <link href="https://dewytear.github.io/p/ja/news-20261014-ledger-write-mcp/"/>
+    <id>https://dewytear.github.io/docs/ja/ai/news/2026/news-20261014-ledger-write-mcp</id>
+    <published>2026-10-14T08:33:20+09:00</published>
+    <updated>2026-10-14T08:33:20+09:00</updated>
+    <summary>会計SaaSのDigitsが2026-10-13にWrite MCPを公開した。4月21日に「設計上読み取り専用」として始めた無料MCPサーバーを半年で書き込みまで広げ、顧客が持ち込むエージェント（Claude・ChatGPT・Cursorなど）が取引（再分類・分割行・仕訳作成）・買掛・売掛・勘定科目表を修正できる。安全装置はユーザー権限の継承とLocked Periodsで、締めた期間に触れる修正はレビューキューで管理者が承認してから転記され（ロックは過去の月へ連鎖）、開いている期間は即時反映される。警告ポップアップや共有パスワード（QuickBooksの締め日パスワード）はエージェントを止められないというのが同社の主張で、安全性の主張はすべてプレスリリースのみ。業界比較 — QuickBooks公式オープンソースは既定で読み書き可（統制はクライアント任せ）、Xeroのオープンソース版は請求書・手動仕訳・支払いまで書けてホスト型接続は読み取り専用、NetSuite AI Connectorはロール権限に置き管理者ロールの接続を拒否、Dynamics 365 ERP MCPはデータエンティティのCRUDにロールセキュリティ・Coworkの事前要約承認・外部エージェントの呼び出しごとに0.1 Copilot Credit、SAP・Sage Intacctの財務書き込みは未確認、Douzone Bizon ONE AI PEはMCPベースの連携に権限確認・実行履歴 — 統制の置き場所はクライアント・ロール・帳簿の三つに分かれる。残る五つの問い（開いている期間のレビューなしの書き込み、エージェントの識別、職務分掌と金額基準、取り消しと証跡、請求書の中のプロンプトインジェクション）、PCAOBにAI専用基準がないという実務解説、ERPベンダー向けの設計チェックリスト（仮伝票まで・承認は人、反対仕訳、外部テキストはデータとしてのみ扱う）</summary>
+    <category term="AI · News &amp; Articles · 2026"/>
+  </entry>
   <entry>
     <title>このウィキはどれだけ当てるのか — 検索とグラフ巡回を測ってみた</title>
     <link href="https://dewytear.github.io/p/ja/kgs-accuracy/"/>
@@ -267,15 +276,6 @@
     <published>2026-07-11T23:17:32+09:00</published>
     <updated>2026-07-28T03:55:23+09:00</updated>
     <summary>決定論的ビルドと --check によるドリフト遮断、PR の同伴ゲート 4 種、--fix の自動復元、変更タイプの宣言 — 検証中心の自動化が知識体系の整合を保つ仕組み</summary>
-    <category term="AI · Wiki · 지식 체계"/>
-  </entry>
-  <entry>
-    <title>知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン</title>
-    <link href="https://dewytear.github.io/p/ja/kgs-overview/"/>
-    <id>https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-overview</id>
-    <published>2026-07-11T19:47:53+09:00</published>
-    <updated>2026-08-15T14:06:54+09:00</updated>
-    <summary>World→Domain→System→Document の 4 階層と文書の登録パイプライン — 不変 ID・物理パス・決定論的なインデックスビルド</summary>
     <category term="AI · Wiki · 지식 체계"/>
   </entry>
 </feed>
