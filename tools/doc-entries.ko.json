@@ -1739,5 +1739,34 @@
     "source": "human"
    }
   ]
+ },
+ {
+  "name": "news-20261014-ledger-write-mcp",
+  "title": "장부에 쓰는 에이전트 — Digits Write MCP와 '마감 잠금'이라는 답",
+  "summary": "회계 SaaS Digits가 2026-10-13 Write MCP를 냈다 — 4월 21일 '설계상 읽기 전용'으로 연 무료 MCP 서버를 반년 만에 쓰기로 넓혀, 고객이 가져온 에이전트(Claude·ChatGPT·Cursor 등)가 거래(재분류·분할 라인·분개 작성)·매입·매출·계정과목표를 고친다. 안전장치는 사용자 권한 상속과 Locked Periods: 마감된 기간에 닿는 수정은 검토 큐에서 관리자 승인 뒤에만 전기되고(잠금은 이전 달까지 연쇄), 열린 기간은 즉시 반영. 경고 팝업·공유 비밀번호(QuickBooks 마감일 비밀번호)는 에이전트를 못 막는다는 게 회사 주장이고 안전 주장은 모두 보도자료뿐이다. 업계 비교 — QuickBooks 공식 오픈소스는 기본값이 읽기·쓰기(통제는 클라이언트), Xero 오픈소스는 송장·수동 분개·지급까지 쓰고 호스팅 연결은 읽기 전용, NetSuite AI Connector는 역할 권한에 두고 관리자 역할 연결을 거부, Dynamics 365 ERP MCP는 데이터 엔터티 CRUD에 역할 보안·Cowork 사전 요약 승인·외부 에이전트 호출당 0.1 Copilot Credit, SAP·Sage Intacct의 재무 쓰기는 미확인, 더존비즈온 ONE AI PE는 MCP 기반 연계에 권한 확인·실행 이력 — 통제 위치는 클라이언트·역할·장부 셋으로 갈린다. 남은 질문 다섯(열린 기간의 무검토 쓰기, 에이전트 신원, 직무 분리·금액 기준, 되돌리기·증적, 송장 속 프롬프트 인젝션)과 PCAOB에 AI 전용 기준이 없다는 실무 해설, ERP 벤더용 설계 점검표(임시전표까지만·승인은 사람, 반대 분개, 외부 텍스트는 데이터로만)",
+  "concepts": [
+   "MCP",
+   "에이전트",
+   "권한",
+   "Read-Only",
+   "프롬프트인젝션",
+   "ERP",
+   "회계",
+   "내부통제"
+  ],
+  "relations": [
+   {
+    "target": "news-20260814-auto-mode-stateless-mcp",
+    "type": "prerequisite",
+    "evidenceRef": "도입부가 MCP를 '에이전트가 바깥 시스템의 기능을 도구로 불러 쓰는 표준 규약'으로 한 줄 정의하고 규격의 최근 변화는 그 기사에 맡긴 채, 곧바로 회계·ERP 서버의 읽기 전용과 쓰기 문제로 넘어간다",
+    "source": "human"
+   },
+   {
+    "target": "news-20260820-who-makes-the-call",
+    "type": "example-of",
+    "evidenceRef": "'업계는 통제를 어디에 두나' 절이 통제 위치를 클라이언트·역할 권한·장부 세 자리로 나눠 비교하고, Digits가 마감 잠금을 데이터 계층에 둔 것을 그 기사의 '판정은 사라지지 않고 자리를 옮긴다'는 관찰을 회계에 적용한 경우로 놓는다",
+    "source": "human"
+   }
+  ]
  }
 ]

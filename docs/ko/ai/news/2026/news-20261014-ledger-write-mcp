@@ -1,0 +1,79 @@
+<h2>장부에 쓰는 에이전트 — Digits Write MCP와 '마감 잠금'이라는 답</h2>
+
+<h3>세 줄 요약</h3>
+<ul>
+    <li>회계 SaaS Digits가 10월 13일 <strong>Write MCP</strong>를 내놨다. 4월에 &ldquo;읽기 전용&rdquo;으로 연 MCP 서버를 반년 만에 쓰기로 넓혀, 고객의 AI 에이전트가 총계정원장의 거래·매입·매출·계정과목표를 직접 고친다. 고객에게는 무료다.</li>
+    <li>안전장치는 둘이다. 에이전트는 로그인한 사용자의 권한만큼만 움직이고, <strong>마감된 기간</strong>에 닿는 수정은 검토 큐에 올라 관리자가 승인해야 반영된다. 통제를 클라이언트의 경고창이 아니라 <strong>장부 쪽</strong>에 둔 것이 이 발표의 요점이다.</li>
+    <li>QuickBooks·Xero·NetSuite·Dynamics 365도 MCP로 쓰기를 열었다. 업계의 질문은 &ldquo;쓰게 할 것인가&rdquo;에서 <strong>&ldquo;통제를 어디에 둘 것인가&rdquo;</strong>로 옮겨 갔다. 다만 열린 기간의 쓰기, 에이전트 신원, 직무 분리, 송장 속 프롬프트 인젝션에는 아직 공개된 답이 없다.</li>
+</ul>
+
+<p>MCP(Model Context Protocol)는 AI 에이전트가 바깥 시스템의 기능을 도구로 불러 쓰는 표준 규약이다(규격의 최근 변화는 <a href="#!news-20260814-auto-mode-stateless-mcp">묻지 않는 기본값</a>에서 다뤘다). 회계·ERP 쪽 MCP 서버는 지금까지 대개 &ldquo;읽기 전용&rdquo;을 안전의 근거로 내세웠다. 에이전트가 장부를 들여다보고 질문에 답할 수는 있어도 한 줄도 고치지는 못한다는 약속이다. Digits도 4월 21일 MCP 서버를 내면서 &ldquo;모든 접근은 설계상 읽기 전용이며 장부의 무결성을 지킨다&rdquo;고 밝혔다. 그 약속을 회사 스스로 반년 만에 넘었다. 이 글은 무엇이 열렸고 무엇으로 막았는지, 같은 문제를 다른 회계·ERP 벤더는 어디서 풀고 있는지를 정리한다.</p>
+
+<h3>Digits는 어떤 회사인가</h3>
+<p>Digits는 2018년 설립된 회계 소프트웨어 회사다. 2025년 3월 &ldquo;자율 총계정원장(Autonomous General Ledger)&rdquo;을 내놓으면서 소규모 기업 회계 시장에서 QuickBooks를 대체하겠다고 공개적으로 밝혔다. 총계정원장은 회사의 모든 거래가 계정별로 모이는 장부로, 회계 소프트웨어의 몸통에 해당한다. 출시 당시 소규모 기업 요금은 월 100달러부터였고, 같은 때 Xero 공동창업자가 경영진에 합류했다. 누적 투자는 회사 발표 기준으로 1억 달러에 조금 못 미친다.</p>
+<p>이 회사가 내세우는 것은 &ldquo;기장을 기계가 한다&rdquo;는 것이다. 거래의 90% 넘게를 자동으로 분류해 장부에 올린다고 하는데, 수치는 자료에 따라 93%와 95%로 다르고 독립 검증은 없다. 제품은 한 단계씩 넓어졌다. 2025년 6월 회계 업무를 수행하는 에이전트, 2026년 4월 읽기 전용 MCP 서버, 5월 발생주의 스케줄 자동화, 그리고 10월의 Write MCP다. 자사 화면 안에서 돌던 자동화가 이번에는 고객이 가져온 외부 에이전트에게 문을 연 셈이다.</p>
+
+<h3>무엇을 쓰고, 무엇이 막히나</h3>
+<p>Write MCP는 기존 MCP 서버의 무료 업데이트이고, Claude·ChatGPT·Cursor처럼 MCP를 지원하는 도구라면 어디서든 붙는다. 쓸 수 있는 범위는 네 영역이다.</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>영역</th><th>에이전트가 할 수 있는 일</th></tr></thead>
+    <tbody>
+        <tr><td>거래</td><td>계정 재분류, 필드 수정, 분할 라인 수정, <strong>분개 작성</strong></td></tr>
+        <tr><td>매입(bill)</td><td>생성, 계정 코딩, 수정</td></tr>
+        <tr><td>매출(invoice)</td><td>초안 작성, 수정, 정리</td></tr>
+        <tr><td>계정과목표</td><td>계정 추가, 이름 변경, 수정</td></tr>
+    </tbody>
+</table>
+</div>
+<p>분개(journal entry)는 거래를 차변과 대변으로 나눠 장부에 적는 기록이다. 에이전트가 분개를 쓸 수 있다는 것은 장부의 숫자를 직접 만들 수 있다는 뜻이다. 거래처 마스터를 쓸 수 있는지는 발표 어디에도 나오지 않는다.</p>
+<p>안전장치는 두 겹이다. 첫째, 에이전트는 로그인한 사용자의 권한으로 움직인다. 그 사람이 손댈 수 없는 데이터에는 에이전트도 손댈 수 없다. 둘째는 이번에 함께 들어온 <strong>Locked Periods</strong>다. 마감(close)은 한 달이나 분기의 장부를 확정하고 더는 고치지 않기로 하는 절차다. 마감된 기간은 사람이든 에이전트든 조용히 고칠 수 없고, 그 기간에 닿는 수정은 모두 검토 큐에 올라 관리자가 승인하거나 거절해야 장부에 반영된다. Digits 도움말에 따르면 잠금은 연쇄식이라 한 달을 잠그면 그 이전 달도 함께 잠긴다. 아직 열려 있는 기간에서는 평소처럼 바로 반영된다.</p>
+<p>Digits는 기존 회계 소프트웨어와의 차이를 이렇게 설명한다. 대부분은 마감된 기간을 경고 팝업이나 공유 비밀번호로 지키는데, 팝업은 에이전트를 멈추지 못하고 에이전트가 비밀번호를 알게 되는 순간 보호가 사라진다는 것이다. 실제로 QuickBooks에는 마감일에 비밀번호를 걸어 이전 기간의 수정을 막는 기능이 있다. 사람의 실수를 막으려고 만든 장치라서, 비밀번호를 아는 쪽이면 누구든 열 수 있다. 회사 CEO는 &ldquo;에이전트에게 장부 쓰기 권한을 주는 건 쉽다. 안전하게 하는 것이 어렵고, 회계사가 가장 신경 쓰는 게 그 부분&rdquo;이라고 말했다.</p>
+
+<h3>업계는 통제를 어디에 두나</h3>
+<p>쓰기를 연 곳은 Digits만이 아니다. 주요 회계·ERP 벤더가 MCP 서버를 내놨고, 상당수가 쓰기를 지원한다. 차이는 통제를 놓는 자리에서 난다.</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>벤더</th><th>MCP 형태</th><th>쓰기</th><th>통제를 두는 곳</th></tr></thead>
+    <tbody>
+        <tr><td>Digits</td><td>호스팅 서버, 무료</td><td>거래·매입·매출·계정과목표</td><td><strong>장부</strong>(마감 기간 승인 큐) + 사용자 권한</td></tr>
+        <tr><td>QuickBooks(Intuit)</td><td>공식 오픈소스, 사용자 PC에서 실행</td><td><strong>기본값이 읽기·쓰기</strong></td><td>환경 설정으로 쓰기·수정·삭제 도구를 끈다. 승인 절차는 운영자가 설계</td></tr>
+        <tr><td>Xero</td><td>공식 오픈소스 서버 + Claude·ChatGPT용 호스팅 연결</td><td>오픈소스 서버는 송장·수동 분개·지급까지. 호스팅 연결은 읽기 전용</td><td>매입은 초안으로 생성</td></tr>
+        <tr><td>NetSuite(Oracle)</td><td>AI Connector Service</td><td>레코드 생성·수정</td><td>역할 권한. <strong>관리자·전권 역할로는 연결을 거부</strong></td></tr>
+        <tr><td>Dynamics 365(Microsoft)</td><td>ERP MCP 서버, 정식 출시</td><td>데이터 엔터티 생성·조회·수정·삭제</td><td>역할 기반 보안. Copilot Cowork는 쓰기 전에 계획을 요약해 승인을 받는다</td></tr>
+        <tr><td>SAP</td><td>Joule이 MCP·A2A를 지원</td><td>파트너 구현에서만 확인</td><td>공식 S/4HANA MCP의 재무 쓰기는 확인하지 못함</td></tr>
+        <tr><td>Sage Intacct</td><td>2026 R2의 AI Gateway와 MCP 서버</td><td>확인하지 못함</td><td>전용 저권한 사용자로 시작하라는 권고</td></tr>
+        <tr><td>더존비즈온 ONE AI PE</td><td>MCP 기반 표준 연계(서울시 행정 AI 에이전트 사업)</td><td>내부 시스템에서 실행</td><td>권한 확인과 실행 이력 관리. 외부 AI용 공개 엔드포인트는 확인하지 못함</td></tr>
+    </tbody>
+</table>
+</div>
+<p>표를 통제 위치로 다시 묶으면 세 갈래가 나온다. QuickBooks 오픈소스 서버는 통제를 <strong>클라이언트</strong>에 맡긴다. 쓰기를 열지, 바꾸기 전에 사람에게 물을지를 에이전트를 돌리는 쪽이 정한다. NetSuite와 Dynamics 365는 <strong>역할과 권한</strong>에 둔다. ERP가 오래 써 온 권한 체계를 에이전트에게 그대로 적용하는데, NetSuite는 가장 센 역할로는 아예 연결을 받지 않는다. Digits는 <strong>장부</strong>에 둔다. 누가 어떤 권한으로 오든 마감된 기간은 데이터 계층에서 잠긴다.</p>
+<p>세 번째 방식은 이 위키가 다른 자리에서 본 흐름과 방향이 같다. 판단을 에이전트 안에 두지 않고 에이전트가 손댈 수 없는 곳으로 옮기는 흐름이다. <a href="#!news-20260820-who-makes-the-call">판정을 누구에게 맡길 것인가</a>가 8월에 정리한 &ldquo;판정은 사라지지 않고 자리를 옮긴다&rdquo;는 관찰을 회계에 적용한 경우라고 할 수 있다. 경고 팝업은 사람에게 묻는 장치라 에이전트 앞에서는 효력이 없다. 서버가 거절하는 규칙은 묻지 않고 막는다.</p>
+
+<h3>아직 답이 없는 것들</h3>
+<p>공개된 자료는 회사 보도자료와 그 전재가 전부라서, 안전 주장을 독립적으로 확인한 곳은 아직 없다. 그 범위 안에서 ERP 실무자가 물을 만한 질문이 다섯 있다.</p>
+<ul>
+    <li><strong>열린 기간.</strong> 승인 큐는 마감된 기간에만 걸린다. 한 달 장부 작업의 대부분은 마감 전에 일어나므로, 에이전트가 실제로 하는 쓰기의 대부분은 검토 없이 반영된다. 이 장치는 지난 기간을 지키는 데는 강하지만 이번 달을 통제하지는 않는다.</li>
+    <li><strong>에이전트 신원.</strong> 에이전트가 사용자의 권한으로 움직이면 변경 이력에 사람의 이름이 남을 수 있다. 에이전트가 한 일을 따로 표시하는지는 공개되지 않았다.</li>
+    <li><strong>직무 분리.</strong> 직무 분리(segregation of duties)는 거래를 만드는 사람과 승인하는 사람을 나눠 한 사람이 장부를 마음대로 바꾸지 못하게 하는 내부통제 원칙이다. 같은 사용자 권한을 쓰는 에이전트가 만들기와 승인을 모두 할 수 있는지는 알 수 없다. 일정 금액 이상의 분개에 승인을 요구하는 금액 기준도 언급이 없다.</li>
+    <li><strong>되돌리기와 증적.</strong> 에이전트의 변경을 어떻게 되돌리는지(지우는지, 반대 분개를 넣는지), 감사인이 볼 이력이 어떻게 남는지는 공개 자료에 없다.</li>
+    <li><strong>송장 속 지시.</strong> 매입 송장에는 거래처가 쓴 글이 들어간다. 프롬프트 인젝션은 모델이 읽는 데이터 안에 지시를 숨겨 모델의 행동을 바꾸는 공격인데, 송장 서명란에 숨긴 지시로 회계 에이전트를 조종하는 시나리오가 보안 업계에서 꾸준히 거론된다. 보안업체 Forcepoint는 2026년 4월 실제 웹에서 찾은 간접 인젝션 문구 열 개 중 하나가 5,000달러짜리 PayPal 결제를 실행시키려는 것이었다고 보고했다.</li>
+</ul>
+<p>감사 기준도 아직 따라오지 않았다. 실무 해설들에 따르면 2026년 중반까지 미국 상장사 감사 기준을 정하는 PCAOB에 AI 전용 기준은 없고, 감사인들은 기존 기준을 유추해 적용한다. 해설들이 공통으로 짚는 원칙은 하나다. &ldquo;AI는 일정 금액이 넘는 분개를 승인 없이 전기할 수 없다&rdquo;는 문장이 정책 문서에만 있으면 통제가 아니고, 시스템이 실제로 막아야 통제라는 것이다. 전기(posting)는 기록을 장부에 확정해 반영하는 일이다.</p>
+
+<h3>ERP를 만드는 쪽에서 볼 것</h3>
+<p>이 발표를 ERP 벤더의 자리에서 읽으면 세 가지가 남는다.</p>
+<p>첫째, &ldquo;읽기 전용이라 안전하다&rdquo;는 말은 오래가지 않는다. Digits는 반년 만에 쓰기를 열었고, QuickBooks 오픈소스 서버는 처음부터 쓰기가 기본값이다. 고객이 결국 원하는 것은 장부를 들여다보는 에이전트가 아니라 전표를 대신 쳐 주는 에이전트다.</p>
+<p>둘째, ERP는 이미 쓸 만한 통제 장치를 갖고 있다. 전표를 임시저장과 승인·전기로 나누는 흐름, 결산 마감, 결재선이 그렇다. Digits가 새로 한 일은 마감 잠금이 에이전트 앞에서도 통하게 만든 것이다. 같은 장치들을 에이전트가 우회할 수 없는 서버 쪽 규칙으로 MCP에 드러내면 더 촘촘하게 나눌 수 있다. 에이전트는 임시전표를 만드는 데까지만 하고, 승인은 사람이 하는 식이다. 위의 다섯 질문은 그대로 설계 점검표가 된다.</p>
+<ul>
+    <li>에이전트 전용 신원을 두고 변경 이력에 따로 남기는가.</li>
+    <li>같은 신원이 만들기와 승인을 함께 하지 못하게 막는가.</li>
+    <li>금액 기준 승인을 서버가 강제하는가.</li>
+    <li>지우는 대신 반대 분개로 되돌리는가.</li>
+    <li>세금계산서 적요처럼 바깥에서 들어온 글을 지시가 아니라 데이터로만 다루는가.</li>
+</ul>
+<p>셋째, 값을 매기는 방식이 갈린다. Digits는 Write MCP를 무료로 풀어 고객이 가져오는 에이전트를 판매 경로로 삼았다. Microsoft는 Copilot Studio 밖에서 만든 에이전트가 ERP MCP 서버를 한 번 부를 때마다 0.1 Copilot Credit을 받는다. 바깥 에이전트가 ERP에 쓰는 일을 비용으로 볼지 수익원으로 볼지 정해야 하는 시점이다.</p>
+<p>이 위키에 실린 <a href="#!dzp-overview">GitLab 기반 AI 개발 지식 플랫폼 제안</a>도 AI가 원천 시스템을 읽기만 하는 Read-Only 구조를 출발점으로 삼았다. 읽기 전용은 시작하기 좋은 자리다. 쓰기로 넘어가는 날이 오면, 어떤 규칙을 에이전트가 아니라 서버에 박아 둘지가 그때의 설계 문제가 된다.</p>
+
+<h3>사실검증 노트</h3>
+<p class="scn-sub">Write MCP의 출시일(2026년 10월 13일), 네 영역의 쓰기 범위, 사용자 권한 상속, Locked Periods의 검토 큐와 열린 기간의 즉시 반영, 무료 제공, 지원 클라이언트, 경고 팝업·공유 비밀번호에 대한 비교, CEO 발언은 Digits의 <a href="https://www.globenewswire.com/news-release/2026/10/13/3379749/0/en/digits-launches-write-mcp-the-safe-way-for-ai-agents-to-do-accounting.html" target="_blank" rel="noopener">보도자료</a>와 그 전재(<a href="https://www.cpapracticeadvisor.com/2026/10/13/digits-launches-write-mcp-the-safe-way-for-ai-agents-to-do-accounting/191655/" target="_blank" rel="noopener">CPA Practice Advisor</a>·Yahoo Finance)를 따랐다. 이 글을 쓴 환경에서는 네트워크 정책 때문에 보도자료 원문을 직접 열지 못해, 여러 전재본의 요약이 일치하는 범위만 옮겼다. <strong>안전 주장은 모두 회사 발표이며 독립 검증은 없다.</strong> 4월의 읽기 전용 설계와 무료 제공은 4월 21일 <a href="https://www.globenewswire.com/news-release/2026/04/21/3278035/0/en/digits-launches-mcp-server-connecting-ai-tools-directly-to-its-real-time-ai-native-ledger.html" target="_blank" rel="noopener">출시 보도자료</a>, 잠금의 연쇄 방식은 <a href="https://help.digits.com/firms-agentic-general-ledger/close-date" target="_blank" rel="noopener">Digits 도움말</a> 기준이다. 회사 연혁(2018년 설립, 2025년 3월 총계정원장 출시와 월 100달러 요금, Xero 공동창업자 합류)은 <a href="https://accountingtoday.com/news/digits-announces-autonomous-general-ledger" target="_blank" rel="noopener">Accounting Today</a>와 회사 프로필을 따랐다. 자동 기장 비율은 회사 페이지가 93%, 업계지가 95%로 적어 수치를 하나로 정하지 않았다. QuickBooks 오픈소스 서버의 기본값과 끄는 방식은 <a href="https://www.scalekit.com/blog/quickbooks-mcp-vs-api" target="_blank" rel="noopener">Scalekit</a>·<a href="https://kipper.com/blog/quickbooks-mcp-server-options-compared/" target="_blank" rel="noopener">Kipper</a>의 제3자 정리이고, 도구 수(144·145)는 자료마다 달라 쓰지 않았다. Xero는 <a href="https://mcpservers.org/servers/XeroAPI/xero-mcp-server" target="_blank" rel="noopener">공식 서버 목록</a>과 리뷰 글, NetSuite는 <a href="https://www.netsuite.com/portal/collateral/public/ds-ns-ai-connector-service.pdf" target="_blank" rel="noopener">Oracle 데이터시트</a>와 제3자 가이드(권한 이름은 가이드 기준), Dynamics 365는 <a href="https://learn.microsoft.com/en-us/dynamics365/fin-ops-core/dev-itpro/copilot/copilot-mcp" target="_blank" rel="noopener">Microsoft Learn</a>과 <a href="https://erp.today/microsoft-dynamics-365-ai-agents-erp/" target="_blank" rel="noopener">ERP Today</a>를 따랐다. Dynamics 365 ERP MCP의 정식 출시일은 Microsoft 릴리스 계획(2026년 1월 27일)과 제3자 글(2월, 10월 1일)이 달라 날짜를 적지 않았다. SAP는 <a href="https://erp.today/sap-anthropic-claude-joule-mcp/" target="_blank" rel="noopener">ERP Today</a>(5월 Claude의 Joule 통합)와 Sapphire 2026 발표, Sage Intacct는 <a href="https://www.eisneramper.com/insights/sage-intacct-insights/sage-intacct-2026-r2-releases-0626/" target="_blank" rel="noopener">EisnerAmper</a>의 2026 R2 정리, 더존비즈온은 10월 초 <a href="https://www.dataeconomy.co.kr/news/articleView.html?idxno=43060" target="_blank" rel="noopener">한국데이터경제신문</a>·<a href="https://www.etoday.co.kr/news/view/2631928" target="_blank" rel="noopener">이투데이</a> 보도를 따랐다. Forcepoint의 4월 발견 사례는 <a href="https://atlan.com/know/prompt-injection-attacks-ai-agents/" target="_blank" rel="noopener">보안 정리 글</a>을 거친 이차 인용이라 원 보고서는 확인하지 못했다. PCAOB에 AI 전용 기준이 없다는 서술과 &ldquo;시스템이 막아야 통제&rdquo;라는 원칙은 <a href="https://www.kognitos.com/blog/sox-auditor-questions-ai-automation/" target="_blank" rel="noopener">Kognitos</a>·<a href="https://www.floqast.com/blog/what-ai-audit-controls-actually-look-like" target="_blank" rel="noopener">FloQast</a> 등 실무 해설에 기댔으며, PCAOB 원문과는 대조하지 못했다. &ldquo;ERP를 만드는 쪽에서 볼 것&rdquo; 절은 이 위키의 해석이다. CEO 등 개인의 이름은 적지 않았다.</p>
