@@ -13,3 +13,23 @@
             <p>
                 <strong>지식 체계 반영.</strong> concepts는 본문에 실재하는 것만 골랐다: MCP·에이전트·권한·Read-Only·프롬프트인젝션·ERP·회계·내부통제. 새 개념 '회계'·'내부통제'는 <code>concepts.en/ja.json</code>에 라벨을 넣었다. 'Read-Only'는 DOUZONE 대분류의 <a href="#!dzp-overview">AI 개발 지식 플랫폼 제안</a>이 쓰던 개념이다. 본문 마지막 단락이 그 제안의 Read-Only 출발점을 실제로 다루기 때문에 넣었고, 이 공유로 AI ↔ DOUZONE 교차 다리가 하나 생긴다. df가 2에서 3이 되어 제안 문서 두 편 사이의 기존 엣지는 유지된다. 관계는 5타입을 검토해 둘만 달았다. <a href="#!news-20260814-auto-mode-stateless-mcp">묻지 않는 기본값</a>은 선행지식으로 넣었다(MCP 정의와 규격 변화를 위임). <a href="#!news-20260820-who-makes-the-call">판정을 누구에게 맡길 것인가</a>에는 사례 관계를 달았다(통제 위치 비교가 "판정은 자리를 옮긴다"를 회계에 적용한 경우). 구현·근거·대체에 해당하는 관계는 본문에 없어서 달지 않았다. 제안 문서와의 관계는 개념 공유로 충분하다고 보고 타입 관계를 만들지 않았다. <code>list</code> 노드의 <code>model</code> 필드는 이번에도 의도적으로 비워 뒀다.
             </p>
+
+            <h3>후속 — 저작 모델 표기 정정과 기본값 폴백 폐지</h3>
+            <p>
+                <strong>무엇이 틀렸나.</strong> 대표님이 이 기사를 Opus 5.5로 작성했는데 화면에는 "Claude Fable 5"로 나온다고 짚었다. 원인은 <code>list</code> 노드의 <code>model</code> 필드를 비워 둔 데 있었다. 필드가 비면 <code>app.js</code>가 <code>DOC_MODEL</code> 기본값(<code>'Claude Fable 5'</code>)을 대신 그렸다. AI 쪽 작업 규칙상 저장소에 모델 이름을 적지 않으려고 9월부터 이 필드를 일부러 비워 왔는데, 그 결과 실제와 다른 모델이 표시되고 있었다. 대표님은 작성한 모델을 받아서 그대로 표기해야 한다고 정리했다.
+            </p>
+            <p>
+                <strong>정정 8편.</strong> 추정하지 않고 증거가 있는 값만 적었다. 이 세션의 대화 기록에는 응답마다 실제로 응답한 모델이 남아 있어서, 문서 파일을 만든 응답의 모델을 커밋 시각과 맞춰 확인했다. 이 기사는 세션 정보(<code>last_served_model</code>)로도 한 번 더 확인했다.
+            </p>
+            <ul>
+                <li>Claude Opus 5.5: <a href="#!news-20261014-ledger-write-mcp">장부에 쓰는 에이전트</a>, <a href="#!kgs-accuracy">정확도 측정</a></li>
+                <li>Claude Opus 5: <a href="#!news-20260901-whose-usage">내 한도를 누가 쓰고 있나</a>, <a href="#!news-20260904-model-doors">모델에 문이 달렸다</a>, <a href="#!news-20260922-harness-catalog">부를 수 있는 목록</a>, <a href="#!claude-md-intent">intent.md</a></li>
+                <li>Claude Fable 5.1: <a href="#!claude-md-constitution">Claude 헌장</a></li>
+                <li>Claude Fable 5: <code>omc-modes</code>. 이 문서만 대화 기록보다 앞선 7월 3일 문서라 기록으로 확인할 수 없었다. 같은 커밋(#16)으로 함께 등재된 OMC 형제 문서들이 모두 Fable 5로 기록돼 있어 같은 값을 적었다.</li>
+            </ul>
+            <p>
+                <a href="#!news-20260904-model-doors">모델에 문이 달렸다</a>의 9월 26일·10월 9일 갱신 절은 Opus 5.5가 썼지만, 필드 하나에 값 하나라는 규약에 따라 처음 쓴 모델(Opus 5)을 적었다.
+            </p>
+            <p>
+                <strong>재발 방지.</strong> 첫째, <code>app.js</code>의 <code>DOC_MODEL</code> 폴백을 없앴다. <code>model</code>이 없으면 배지를 그리지 않는다. 지금 필드가 없는 문서는 메타 페이지 셋(ai-map·ai-guide·dz-map)뿐이고, 이들은 배지가 사라진다. 둘째, <code>tools/check_translation.py</code>에 model-gate를 더했다. 새 인덱스 문서의 <code>list</code> 노드에 <code>model</code>이 없으면 PR이 ERROR로 막힌다. 이 기사의 필드를 지운 사본으로 차단되는 것을 확인했다. <code>README.md</code>·<code>tools/curator.md</code>의 "없으면 기본값 표시" 서술도 고쳤다. 앞으로 AI가 문서를 등재할 때는 세션 정보의 실제 모델을 받아 이 필드에 기록한다.
+            </p>
