@@ -5,7 +5,7 @@ window.App = window.App || {};
 // 전역 상태 프록시 — 기존 전역명(var = window.*)을 그대로 비추므로
 // 전환기 동안 두 이름이 항상 같은 값을 가리킨다. 새 코드는 App.state를 쓴다.
 App.state = {};
-['DOCS', 'TAG_INDEX', 'DOC_BY_NAME', 'FOLDER_DOCS', 'DOC_MODEL',
+['DOCS', 'TAG_INDEX', 'DOC_BY_NAME', 'FOLDER_DOCS',
  'KNOWLEDGE', 'KNOWLEDGE_STATS', 'CURRENT_DOC', 'ALL_CONCEPTS'
 ].forEach(function(k){
     Object.defineProperty(App.state, k, {

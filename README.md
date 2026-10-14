@@ -78,7 +78,7 @@ GitHub Pages로 배포됩니다: https://dewytear.github.io
 
 1. 새 문서 파일을 `docs/ko/` 아래 **해당 도메인 폴더**에 만듭니다 (예: `docs/ko/ai/claude/code/introduction/settings`). 내용은 `<h2>...</h2><p>...</p>` 형태의 HTML 조각으로 작성합니다.
 2. `list`(JSON) 트리에 노드를 추가합니다. 링크 노드는 `{ "name": "settings", "path": "ai/claude/code/introduction/settings", "label": "Settings", "tags": ["config", "settings"] }`, 섹션은 `{ "title": "...", "children": [ ... ] }` 형태이며 `children`으로 얼마든지 중첩할 수 있습니다. **`name`은 불변 논리 ID(해시 라우트 `#!name`), `path`는 `docs/<lang>/` 아래의 물리 위치**입니다 — `path`가 없으면 flat(`docs/<lang>/<name>`)으로 폴백합니다. `tags`는 선택 사항이며, 지정하면 문서 하단과 태그 인덱스에 자동으로 반영됩니다.
-3. **작성 AI·모델 표기** — AI가 문서를 추가하거나 대폭 다시 쓸 때는 노드에 `"model": "<작성 세션의 모델명>"`을 함께 기록합니다(제목 우측 배지로 표시). 이 값은 **그 문서를 실제로 쓴 세션의 정보**를 따르며, 없으면 기본값(`DOC_MODEL`)이 표시됩니다.
+3. **작성 AI·모델 표기** — AI가 문서를 추가하거나 대폭 다시 쓸 때는 노드에 `"model": "<작성 세션의 모델명>"`을 함께 기록합니다(제목 우측 배지로 표시). 이 값은 **그 문서를 실제로 쓴 세션의 정보**를 따릅니다. 필드가 없으면 배지를 표시하지 않으며(기본값으로 추정하지 않음), 신규 문서는 `tools/check_translation.py`의 model-gate가 누락을 막습니다.
 4. 커밋하면 사이드바 트리에 자동으로 나타납니다.
 
 ## 언어 추가하기 (다국어)

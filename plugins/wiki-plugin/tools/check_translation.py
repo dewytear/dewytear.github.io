@@ -20,6 +20,11 @@
 
 work-log는 병행 대상이 아니므로 양방향 모두 제외한다.
 
+model-gate (2026-10-14 추가, 언어 무관): PR에서 docs/ko/<p>가 **추가(A)** 됐고
+인덱스 문서라면 `list` 노드에 `model`(저작 세션의 모델)이 있어야 한다. 화면이
+기본값으로 모델을 추정 표기하던 폴백을 없앴으므로, 빠뜨리면 배지가 비는 대신
+여기서 막힌다(실사고: model 미기재 문서 8편이 'Claude Fable 5'로 오표기).
+
 Usage:
   python tools/check_translation.py --base origin/master [--head HEAD]
 """
@@ -138,10 +143,30 @@ def main():
                     f"{p}: 신규 인덱스 문서인데 docs/{lang}/{rel} 없음 — 신규 문서는 "
                     f"{'/'.join(ENFORCED_LANGS)} 본문 동반이 규칙")
 
+    # model-gate — 신규 ko 인덱스 문서는 list 노드에 저작 모델 기록 (언어 무관)
+    model_errors = []
+    for s, p in files:
+        m = KO_DOC_RE.match(p)
+        if not m or s[:1] != 'A' or WORKLOG_RE.match(p):
+            continue
+        node = by_path.get(m.group(1))
+        if node is None or node['name'] not in ko_entries:
+            continue
+        if not node.get('model'):
+            model_errors.append(
+                f"{p}: list 노드 '{node['name']}'에 model 없음 — 저작 세션의 모델을 기록할 것 "
+                f"(화면은 기본값으로 추정하지 않는다)")
+    if model_errors:
+        print('[ERROR] model-gate | - | 신규 문서의 저작 모델 누락:')
+        for e in model_errors[:20]:
+            print(f'  - {e}')
+
     if errors:
         print('[ERROR] translation-gate | - | 번역 병행 동반물 누락:')
         for e in errors[:20]:
             print(f'  - {e}')
+        sys.exit(1)
+    if model_errors:
         sys.exit(1)
     print('OK: translation-gate — 번역 병행 동반물 이상 없음 (%s)' % ', '.join(ENFORCED_LANGS))
 

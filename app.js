@@ -7,11 +7,12 @@ var DOCS = [];         // real docs: {name, label, section, tags:[]}
 var TAG_INDEX = {};    // tag -> [doc, ...]
 var DOC_BY_NAME = {};  // name -> doc
 var FOLDER_DOCS = {};  // section (parent-folder path) -> [doc, ...] in tree order
-// Authoring-model badge. Per-doc truth lives in the list node's
-// "model" field — set it from the AUTHORING SESSION's model when a
-// doc is added or substantially rewritten. This constant is only
-// the fallback for docs that predate the rule.
-var DOC_MODEL = 'Claude Fable 5';
+// Authoring-model badge. The only truth is the list node's "model"
+// field — set it from the AUTHORING SESSION's model when a doc is added
+// or substantially rewritten. There is deliberately NO fallback: a
+// missing field used to render a default ('Claude Fable 5') that
+// mislabeled docs written by other models (2026-10-14). No field → no
+// badge; check_translation.py's model-gate requires it on new docs.
 
 function buildIndexes(tree){
     // `path` is canonical (node.title, Korean) — it keys FOLDER_DOCS and
@@ -534,7 +535,7 @@ function fetchPage(filename){
             // 확보하려 생성일자와 같은 라인(.doc-meta)의 왼쪽으로 옮겼다. 등재된
             // 지식 문서만 표시(About 등 미등재 특수 페이지는 모델 표기 없음).
             // Work Log는 사람/AI가 함께 큐레이트하는 데브 저널이라 저작-모델 배지를
-            // 달지 않는다(list 노드에 model 없음 → DOC_MODEL 폴백으로 오표기되던 것 차단).
+            // 달지 않는다. model 필드가 없는 문서도 배지 없음(기본값으로 추정 표기하지 않는다).
             // 본문이 실제로 들어온 지금이 제목을 가장 정확히 아는 순간이다 —
             // 라벨은 내비게이션용 축약이라 문서의 진짜 제목(h2)과 다를 수 있다.
             var h2 = art && art.querySelector('h2');
@@ -543,7 +544,7 @@ function fetchPage(filename){
                             (KNOWLEDGE && KNOWLEDGE[filename] || {}).summary);
             }
             var isWorklog = doc && doc.section && doc.section.indexOf('Work Log') === 0;
-            var label = (doc && !isWorklog) ? (doc.model || DOC_MODEL) : '';
+            var label = (doc && !isWorklog && doc.model) ? doc.model : '';
             if(art && label){
                 var meta = document.createElement('div');
                 meta.className = 'doc-meta';
