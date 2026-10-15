@@ -315,7 +315,7 @@ This is the step LLMs skip most often after "run tests". They guess from error k
     <li><code>npm test</code>, <code>pytest</code>, <code>cargo test</code> &mdash; run whatever the project uses.</li>
     <li>If they pass, report the results; if they fail, fix and run them again.</li>
     <li>If there are no tests, at least verify that the project builds/compiles.</li>
-    <li>Run them proactively, <strong>before</strong> the user says &ldquo;끝&rdquo; or &ldquo;완료&rdquo;.</li>
+    <li>Run them proactively, <strong>before</strong> the user says &ldquo;done&rdquo; or &ldquo;finished&rdquo;.</li>
 </ul>
 <p>This is the step LLMs skip most often. <strong>Treat it as non-negotiable.</strong></p>
 
@@ -323,7 +323,7 @@ This is the step LLMs skip most often after "run tests". They guess from error k
 <p><strong>Commit when one logical change is complete. Don't wait for the user to ask.</strong></p>
 <ul>
     <li>The test &mdash; &ldquo;Can I describe this commit in one sentence?&rdquo; If yes, commit; if not, the changes are still mixed, so split them.</li>
-    <li>Good: &ldquo;auth 미들웨어 추가&rdquo;. Bad: &ldquo;auth 추가하고 UI도 고치고 버그도 수정&rdquo; (split into three).</li>
+    <li>Good: &ldquo;Add auth middleware&rdquo;. Bad: &ldquo;Add auth, fix the UI, and fix a bug&rdquo; (split into three).</li>
     <li>Don't pile up 20 unrelated edits and lose the ability to roll back individually. Don't commit just to commit either &mdash; meaningful units only.</li>
 </ul>
 <p>Note &mdash; for a solo prototype or a throwaway script, grouping commits loosely for speed is fine. The point is not ceremony but <strong>reversibility</strong>.</p>

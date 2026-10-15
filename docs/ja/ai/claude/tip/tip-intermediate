@@ -40,12 +40,12 @@
 <div class="d-cap">サブエージェントが燃やすのは自分のコンテキスト — メインは要約だけ受け取って軽いまま。</div>
 </div>
 
-<p>実はこの wiki も同じパターンで動いています。ニュース記事を一本載せる前の<strong>複数報道のクロス検証</strong> — 同じ出来事を扱う複数の出典を同時に読んで、数値や日付が合うか突き合わせる仕事 — がまさにこれです（各記事の末尾のファクトチェックのメモがその成果物）。百編を超える文書を総ざらいする<strong>文体の全数監査</strong>みたいな、読む量が山ほどある仕事も同じ — 読むのはサブエージェントが分担して、メインは要約を受けて判定だけ。</p>
+<p>実はこのウィキも同じパターンで動いています。ニュース記事を一本載せる前の<strong>複数報道のクロス検証</strong> — 同じ出来事を扱う複数の出典を同時に読んで、数値や日付が合うか突き合わせる仕事 — がまさにこれです（各記事の末尾のファクトチェックのメモがその成果物）。百編を超える文書を総ざらいする<strong>文体の全数監査</strong>みたいな、読む量が山ほどある仕事も同じ — 読むのはサブエージェントが分担して、メインは要約を受けて判定だけ。</p>
 <p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/agents" target="_blank" rel="noopener">Run agents in parallel</a> · <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener">Create custom subagents</a>。サブエージェント同士は会話しません — 会話が要るなら<a href="#!tip-advanced">上級編</a>のエージェントチームです。</p>
 
 <h3>11. 自分だけのスキルを作る</h3>
 <p>スキルは <code>.claude/skills/</code> フォルダに置く<strong>再利用プロンプトのファイル</strong>です。毎回コピペしていた長い指示を一度定義しておけば、説明文（description）に合う依頼が来たとき Claude が自分で取り出して使うし、スラッシュで直接呼ぶこともできます。何度も同じことを頼んでいる？ それがスキルを作る合図です。作り方も簡単 — <strong>「いまやったのをスキルにして」</strong>の一言で Claude が作ってくれます。こうした、予測できる結果を得るための装置を総称してハーネス（harness）と呼びますが、スキルはその代表選手です。</p>
-<p class="scn-sub">この wiki の<a href="#!skl-overview">スキル講義</a>が原理からセキュリティまで3章で扱っています。公式ドキュメント: <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Skills</a></p>
+<p class="scn-sub">このウィキの<a href="#!skl-overview">スキル講義</a>が原理からセキュリティまで3章で扱っています。公式ドキュメント: <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Skills</a></p>
 
 <h3>12. サブエージェントには安いモデルを</h3>
 <p>検索してテキストを読んでくる仕事に最上位モデルはもったいない。任せるときに<strong>「サブエージェントは Haiku で回して」</strong>と一言添えるだけでOKです — カスタム定義なら <code>model: haiku</code> フィールドで固定もできます。収集は速くて安いモデルに、総合や設計判断は高いモデルに — この分業がトークンを大きく節約します。</p>
@@ -80,7 +80,7 @@ CLAUDE.md にルーターとして足して。CLAUDE.md 本体には一行だけ
 
 <h3>18. フックで通知を受ける</h3>
 <p>フック（hook）は、Claude Code の特定の時点 — 作業完了、承認待ちなど — で自動実行されるコマンドです。「セッションの作業が終わるたびに音で知らせるフックを設定して」と頼めば、Claude が設定ファイルに書いてくれます。セッション一つなら要らないんですが、プロジェクト複数にセッション10本と並列で回し始めると、<strong>どこで何が終わったか</strong>を教えてくれるこの装置が必須になります。いちばん手軽なのは <code>preferredNotifChannel</code> を <code>terminal_bell</code> にする方法。</p>
-<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank" rel="noopener">Automate actions with hooks</a> — この wiki の 基礎講義の<a href="#!skills">拡張編（Hooks の節）</a>もどうぞ。</p>
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/hooks-guide" target="_blank" rel="noopener">Automate actions with hooks</a> — このウィキの 基礎講義の<a href="#!skills">拡張編（Hooks の節）</a>もどうぞ。</p>
 
 <h3>19. Claude には目がある — 画像を渡す</h3>
 <p>エラーメッセージ、気に入ったウェブサイト、UI の画面 — 言葉で説明しにくいものは<strong>スクリーンショットを撮ってそのまま貼りましょう</strong>。ターミナルもデスクトップアプリも、画像のドラッグや貼り付けを受け付けて、Claude が読んで理解します。エラー画面を撮って投げるほうが、エラー文を手で書き写すより速くて正確です。</p>

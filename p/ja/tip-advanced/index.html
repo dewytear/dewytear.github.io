@@ -103,11 +103,11 @@ claude -w motion-logic
 
 <h3>22. MCP サーバーの代わりに API を直接呼ぶ</h3>
 <p>MCP（Model Context Protocol）は外部ツールをつなぐ標準ですが、サーバーをつなぐと<strong>そのツール定義の一式がコンテキストに載る</strong>費用があります。要る機能が一つ二つなら、その API エンドポイントを直接呼ばせるほうがトークンもコンテキストも安い。ツールをほぼ全部使うなら MCP、一つ二つなら直接呼ぶ — この区別だけ覚えておいてください。ちなみに、いまはツール検索（Tool Search）が標準で入って、必要なツール定義だけをその都度読み込むのでこの費用は大きく減りました。でも「使う分だけ載せる」という原則そのものは変わらず有効です。</p>
-<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — この wiki の <a href="/p/ja/skills/">拡張編（MCP の節）</a>もどうぞ。MCP 仕様そのものの大改訂は<a href="/p/ja/news-20260814-auto-mode-stateless-mcp/">尋ねない既定値</a>で扱いました。</p>
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener">Connect Claude Code to tools via MCP</a> — このウィキの <a href="/p/ja/skills/">拡張編（MCP の節）</a>もどうぞ。MCP 仕様そのものの大改訂は<a href="/p/ja/news-20260814-auto-mode-stateless-mcp/">尋ねない既定値</a>で扱いました。</p>
 
 <h3>23. <code>/loop</code> で予約作業を仕掛け、セッションの外はルーティンに任せる</h3>
 <p><code>/loop 5分ごとにデプロイの状態を確認して</code>のように繰り返し作業を仕掛けておくと、セッションが生きている間、Claude が定期的に自分で確認してくれます。デプロイの監視、定期点検、「8時にうちの Slack を確認して」のような時刻指定もOK。人が見張らなくていい監視系の仕事を丸ごと渡せるので、使い道は広いですよ。</p>
-<p>ただし <code>/loop</code> が動くのは<strong>セッションが開いている間だけ</strong>。セッションやパソコンと無関係に動くべき仕事は<strong>ルーティン（Routine）</strong>の出番です — プロンプト・リポジトリ・コネクタを一つの構成として保存しておくと、Anthropic のクラウド上でスケジュール（最短1時間間隔、cron 式に対応）や API 呼び出し・GitHub のイベントで実行されます。ノートパソコンが閉じていても動きます。整理すると三つ — <strong>いまのセッション内の繰り返しは <code>/loop</code>、自分のマシンに固定する予約はデスクトップの予約タスク、パソコンなしでも動くべきならルーティン</strong>。この wiki の朝のブリーフィングもルーティンで動いています。</p>
+<p>ただし <code>/loop</code> が動くのは<strong>セッションが開いている間だけ</strong>。セッションやパソコンと無関係に動くべき仕事は<strong>ルーティン（Routine）</strong>の出番です — プロンプト・リポジトリ・コネクタを一つの構成として保存しておくと、Anthropic のクラウド上でスケジュール（最短1時間間隔、cron 式に対応）や API 呼び出し・GitHub のイベントで実行されます。ノートパソコンが閉じていても動きます。整理すると三つ — <strong>いまのセッション内の繰り返しは <code>/loop</code>、自分のマシンに固定する予約はデスクトップの予約タスク、パソコンなしでも動くべきならルーティン</strong>。このウィキの朝のブリーフィングもルーティンで動いています。</p>
 <p>長時間の作業のつまずきも一つ解消されました — 使用量上限で止まる問題です。2026年8月14日にデスクトップアプリへ入った <strong>auto-continue</strong> をオンにしておくと、上限で止まったセッションがウィンドウのリセットと同時に自動で再開します。上限そのもの（5時間ウィンドウ・週間上限）は変わらず、リセット後に人が戻ってきて再指示していた部分だけが自動になったわけです（<a href="/p/ja/news-20260816-claude-code-selfhosted/">8月のリリース</a>）。</p>
 <p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/scheduled-tasks" target="_blank" rel="noopener">Run prompts on a schedule</a></p>
 
@@ -222,7 +222,7 @@ claude -w motion-logic
 </div>
 
 <p>自分でフラグを立ててチームを設計する代わりに、<strong>パッケージ化されたチームモード</strong>を使う道もあります。OMC プラグインの <code>team</code> は N 人のエージェントに役割を与えて段階型のパイプラインで協業させるモードで、完了まで繰り返す ralph と組み合わせた <strong>team ralph</strong> が OMC で最も強い実行強度。チームの構成と役割の割り当てをプラグインが代わりにやってくれるので、エージェントチームを実務ですぐ試したいならこちらの入口が速いです — <a href="/p/ja/omc-modes/">OMC 実行モード</a>・<a href="/p/ja/omc-agents/">エージェントとスキル</a>を参照。</p>
-<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/agent-teams" target="_blank" rel="noopener">Orchestrate teams of Claude Code sessions</a> — 執筆時点では実験的な機能で、環境変数 <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> で有効化します。方法論が気になるなら、この wiki の<a href="/p/ja/hns-overview/">ハーネスエンジニアリング講義</a>がエージェントチームの運用を12編で扱っています。</p>
+<p class="scn-sub">公式ドキュメント: <a href="https://code.claude.com/docs/en/agent-teams" target="_blank" rel="noopener">Orchestrate teams of Claude Code sessions</a> — 執筆時点では実験的な機能で、環境変数 <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code> で有効化します。方法論が気になるなら、このウィキの<a href="/p/ja/hns-overview/">ハーネスエンジニアリング講義</a>がエージェントチームの運用を12編で扱っています。</p>
 
 <h3>上級コマンドをひと目で</h3>
 <div class="tbl-wrap">

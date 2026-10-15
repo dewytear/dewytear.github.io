@@ -68,7 +68,7 @@
     <text class="d-sub" x="358" y="58" text-anchor="middle">name(불변) + path(물리)</text>
     <rect class="d-box accent" x="502" y="18" width="204" height="52" rx="9"/>
     <text class="d-label" x="604" y="40" text-anchor="middle">③ 큐레이션</text>
-    <text class="d-sub" x="604" y="58" text-anchor="middle">요약 + 핵심 개념 5~6개</text>
+    <text class="d-sub" x="604" y="58" text-anchor="middle">요약 + 핵심 개념 9개 안팎</text>
     <line class="d-edge" x1="214" y1="44" x2="250" y2="44"/>
     <polygon class="d-arrow" points="250,39 258,44 250,49"/>
     <line class="d-edge" x1="458" y1="44" x2="494" y2="44"/>
@@ -88,7 +88,7 @@
 <ol>
     <li><strong>본문 작성</strong> — 도메인 트리 자리에 HTML 조각으로 저장.</li>
     <li><strong><code>list</code> 등록</strong> — <code>name</code>·<code>path</code>·라벨·태그를 트리에 추가. 이 순간 내비게이션과 지식계층에 자리가 생깁니다.</li>
-    <li><strong>큐레이션</strong> — 문서를 읽고 <code>doc-entries</code>에 <strong>요약 1줄 + 핵심 개념(평균 6개)</strong>을 기록. 개념은 본문에 실재하는 것만 적는 것이 원칙입니다(<a href="#!kgs-edges">다음 편</a>의 정직성 원칙).</li>
+    <li><strong>큐레이션</strong> — 문서를 읽고 <code>doc-entries</code>에 <strong>요약 1줄 + 핵심 개념(평균 9개 안팎)</strong>을 기록. 개념은 본문에 실재하는 것만 적는 것이 원칙입니다(<a href="#!kgs-edges">다음 편</a>의 정직성 원칙).</li>
     <li><strong>인덱스 재생성</strong> — 빌드 도구가 ②의 계층과 ③의 개념으로 <strong>연관 문서(related)를 계산</strong>해 지식 인덱스를 다시 만듭니다. 이 빌드는 <strong>결정론적</strong>(같은 입력 → 언제나 같은 출력)이라, CI의 <code>--check</code>가 "인덱스가 소스와 어긋나면 머지 불가"를 기계적으로 강제합니다.</li>
 </ol>
 
@@ -96,5 +96,5 @@
 
 <div class="note">
     <span class="nh">현재 규모</span>
-    이 절차로 쌓인 지식은 현재 <strong>문서 115편 · 고유 개념 370개 · 연결 236개</strong>(문서당 평균 3.2개), 여기에 큐레이션으로 선언한 <strong>타입 관계 114건</strong>이 얹혀 있습니다. 고아 문서(연결 0)는 0편 — 모든 문서가 그래프 안에 있습니다. 숫자는 <a href="#!ai-map">지식지도</a>에서 라이브로 집계됩니다.
+    이 절차로 쌓인 지식은 2026년 10월 16일 기준 <strong>문서 74편 · 고유 개념 344개 · 연결 216개</strong>(문서당 평균 2.9개)이고, 여기에 큐레이션으로 선언한 <strong>타입 관계 84건</strong>이 얹혀 있습니다. 연관 문서가 하나도 없는 문서는 3편(<a href="#!sne-overview">발송엔진 요청</a>과 개별 스킬 소개 두 편)입니다. 폴더에 혼자 있고 다른 문서와 개념을 나누지 않아서 억지로 잇지 않았습니다. 지금 숫자는 <a href="#!ai-map">지식지도</a>에서 라이브로 집계됩니다.
 </div>

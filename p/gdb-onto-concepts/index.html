@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>온톨로지란 무엇인가 — 데이터의 창고가 아니라 의미의 지도</title>
-<meta name="description" content="기업 실무자들이 가장 자주 묻는 온톨로지 개념 질문들을 국내 웨비나 대담(익명 처리)의 FAQ 뼈대로 정리한 개념 편 — 데이터베이스는 값을 저장하는 창고, 온톨로지는 의미·관계·규칙을 정의하는 지도라는 구분(그루버의 &#x27;개념화의 명시적 명세&#x27;, W3C OWL 2), 핵심 개념·관계·데이터·규칙의 4대 구성 요소, 레거시(ERP·CRM·MES)와 생성형 AI 사이의 통역자인 시맨틱 레이어(마이그레이션 아님, 팔란티어의 &#x27;조직의 디지털 트윈&#x27; 선례), LLM이 발달해도 온톨로지가 필요한 이유(환각 — OG-RAG의 사실 회수 +55%, 임상 QA 환각 63%→1.7% 연구, 온톨로지 쿼리 언어로 LLM의 자유도를 제약), 그리고 그래프 DB는 온톨로지가 부리는 세 저장소(RDB·벡터·그래프) 중 하나일 뿐이라는 정리까지">
+<meta name="description" content="기업 실무자들이 가장 자주 묻는 온톨로지 개념 질문들을 FAQ 형식으로 정리한 개념 편 — 데이터베이스는 값을 저장하는 창고, 온톨로지는 의미·관계·규칙을 정의하는 지도라는 구분(그루버의 &#x27;개념화의 명시적 명세&#x27;, W3C OWL 2), 핵심 개념·관계·데이터·규칙의 4대 구성 요소, 레거시(ERP·CRM·MES)와 생성형 AI 사이의 통역자인 시맨틱 레이어(마이그레이션 아님, 팔란티어의 &#x27;조직의 디지털 트윈&#x27; 선례), LLM이 발달해도 온톨로지가 필요한 이유(환각 — OG-RAG의 사실 회수 +55%, 임상 QA 환각 63%→1.7% 연구, 온톨로지 쿼리 언어로 LLM의 자유도를 제약), 그리고 그래프 DB는 온톨로지가 부리는 세 저장소(RDB·벡터·그래프) 중 하나일 뿐이라는 정리까지">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/gdb-onto-concepts/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/gdb-onto-concepts/">
@@ -14,14 +14,14 @@
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
 <meta property="og:title" content="온톨로지란 무엇인가 — 데이터의 창고가 아니라 의미의 지도">
-<meta property="og:description" content="기업 실무자들이 가장 자주 묻는 온톨로지 개념 질문들을 국내 웨비나 대담(익명 처리)의 FAQ 뼈대로 정리한 개념 편 — 데이터베이스는 값을 저장하는 창고, 온톨로지는 의미·관계·규칙을 정의하는 지도라는 구분(그루버의 &#x27;개념화의 명시적 명세&#x27;, W3C OWL 2), 핵심 개념·관계·데이터·규칙의 4대 구성 요소, 레거시(ERP·CRM·MES)와 생성형 AI 사이의 통역자인 시맨틱 레이어(마이그레이션 아님, 팔란티어의 &#x27;조직의 디지털 트윈&#x27; 선례), LLM이 발달해도 온톨로지가 필요한 이유(환각 — OG-RAG의 사실 회수 +55%, 임상 QA 환각 63%→1.7% 연구, 온톨로지 쿼리 언어로 LLM의 자유도를 제약), 그리고 그래프 DB는 온톨로지가 부리는 세 저장소(RDB·벡터·그래프) 중 하나일 뿐이라는 정리까지">
+<meta property="og:description" content="기업 실무자들이 가장 자주 묻는 온톨로지 개념 질문들을 FAQ 형식으로 정리한 개념 편 — 데이터베이스는 값을 저장하는 창고, 온톨로지는 의미·관계·규칙을 정의하는 지도라는 구분(그루버의 &#x27;개념화의 명시적 명세&#x27;, W3C OWL 2), 핵심 개념·관계·데이터·규칙의 4대 구성 요소, 레거시(ERP·CRM·MES)와 생성형 AI 사이의 통역자인 시맨틱 레이어(마이그레이션 아님, 팔란티어의 &#x27;조직의 디지털 트윈&#x27; 선례), LLM이 발달해도 온톨로지가 필요한 이유(환각 — OG-RAG의 사실 회수 +55%, 임상 QA 환각 63%→1.7% 연구, 온톨로지 쿼리 언어로 LLM의 자유도를 제약), 그리고 그래프 DB는 온톨로지가 부리는 세 저장소(RDB·벡터·그래프) 중 하나일 뿐이라는 정리까지">
 <meta property="og:url" content="https://dewytear.github.io/p/gdb-onto-concepts/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="온톨로지란 무엇인가 — 데이터의 창고가 아니라 의미의 지도">
-<meta name="twitter:description" content="기업 실무자들이 가장 자주 묻는 온톨로지 개념 질문들을 국내 웨비나 대담(익명 처리)의 FAQ 뼈대로 정리한 개념 편 — 데이터베이스는 값을 저장하는 창고, 온톨로지는 의미·관계·규칙을 정의하는 지도라는 구분(그루버의 &#x27;개념화의 명시적 명세&#x27;, W3C OWL 2), 핵심 개념·관계·데이터·규칙의 4대 구성 요소, 레거시(ERP·CRM·MES)와 생성형 AI 사이의 통역자인 시맨틱 레이어(마이그레이션 아님, 팔란티어의 &#x27;조직의 디지털 트윈&#x27; 선례), LLM이 발달해도 온톨로지가 필요한 이유(환각 — OG-RAG의 사실 회수 +55%, 임상 QA 환각 63%→1.7% 연구, 온톨로지 쿼리 언어로 LLM의 자유도를 제약), 그리고 그래프 DB는 온톨로지가 부리는 세 저장소(RDB·벡터·그래프) 중 하나일 뿐이라는 정리까지">
+<meta name="twitter:description" content="기업 실무자들이 가장 자주 묻는 온톨로지 개념 질문들을 FAQ 형식으로 정리한 개념 편 — 데이터베이스는 값을 저장하는 창고, 온톨로지는 의미·관계·규칙을 정의하는 지도라는 구분(그루버의 &#x27;개념화의 명시적 명세&#x27;, W3C OWL 2), 핵심 개념·관계·데이터·규칙의 4대 구성 요소, 레거시(ERP·CRM·MES)와 생성형 AI 사이의 통역자인 시맨틱 레이어(마이그레이션 아님, 팔란티어의 &#x27;조직의 디지털 트윈&#x27; 선례), LLM이 발달해도 온톨로지가 필요한 이유(환각 — OG-RAG의 사실 회수 +55%, 임상 QA 환각 63%→1.7% 연구, 온톨로지 쿼리 언어로 LLM의 자유도를 제약), 그리고 그래프 DB는 온톨로지가 부리는 세 저장소(RDB·벡터·그래프) 중 하나일 뿐이라는 정리까지">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -32,7 +32,7 @@
  "@context": "https://schema.org",
  "@type": "Article",
  "headline": "온톨로지란 무엇인가 — 데이터의 창고가 아니라 의미의 지도",
- "description": "기업 실무자들이 가장 자주 묻는 온톨로지 개념 질문들을 국내 웨비나 대담(익명 처리)의 FAQ 뼈대로 정리한 개념 편 — 데이터베이스는 값을 저장하는 창고, 온톨로지는 의미·관계·규칙을 정의하는 지도라는 구분(그루버의 '개념화의 명시적 명세', W3C OWL 2), 핵심 개념·관계·데이터·규칙의 4대 구성 요소, 레거시(ERP·CRM·MES)와 생성형 AI 사이의 통역자인 시맨틱 레이어(마이그레이션 아님, 팔란티어의 '조직의 디지털 트윈' 선례), LLM이 발달해도 온톨로지가 필요한 이유(환각 — OG-RAG의 사실 회수 +55%, 임상 QA 환각 63%→1.7% 연구, 온톨로지 쿼리 언어로 LLM의 자유도를 제약), 그리고 그래프 DB는 온톨로지가 부리는 세 저장소(RDB·벡터·그래프) 중 하나일 뿐이라는 정리까지",
+ "description": "기업 실무자들이 가장 자주 묻는 온톨로지 개념 질문들을 FAQ 형식으로 정리한 개념 편 — 데이터베이스는 값을 저장하는 창고, 온톨로지는 의미·관계·규칙을 정의하는 지도라는 구분(그루버의 '개념화의 명시적 명세', W3C OWL 2), 핵심 개념·관계·데이터·규칙의 4대 구성 요소, 레거시(ERP·CRM·MES)와 생성형 AI 사이의 통역자인 시맨틱 레이어(마이그레이션 아님, 팔란티어의 '조직의 디지털 트윈' 선례), LLM이 발달해도 온톨로지가 필요한 이유(환각 — OG-RAG의 사실 회수 +55%, 임상 QA 환각 63%→1.7% 연구, 온톨로지 쿼리 언어로 LLM의 자유도를 제약), 그리고 그래프 DB는 온톨로지가 부리는 세 저장소(RDB·벡터·그래프) 중 하나일 뿐이라는 정리까지",
  "inLanguage": "ko",
  "url": "https://dewytear.github.io/p/gdb-onto-concepts/",
  "mainEntityOfPage": "https://dewytear.github.io/#!gdb-onto-concepts",

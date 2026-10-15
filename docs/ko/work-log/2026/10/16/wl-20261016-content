@@ -1,0 +1,27 @@
+            <h2>2026-10-16 — 콘텐츠</h2>
+
+            <h3>전수 결함 분석 ② — 낡은 수치·규칙 위반·번역 지연 정정 (3언어)</h3>
+            <p>
+                <a href="#!wl-20261016-features">기능 로그</a>의 전수 분석에서 나온 콘텐츠 쪽 결함을 고쳤다. 검증 게이트는 본문 서술이 사실과 맞는지까지는 보지 않아서, 모두 초록 상태에서 남아 있던 것들이다.
+            </p>
+            <p><strong>낡은 수치.</strong> 지식 체계 문서들이 "현재"라고 적은 숫자가 몇 달 전 값이었다. 인덱스(<code>data/knowledge-index.ko.json</code>)에서 다시 계산해 고치고, 다시 낡지 않도록 "2026년 10월 16일 기준"으로 시점을 박았다. 실시간 값은 지식지도가 보여 준다.</p>
+            <ul>
+                <li><a href="#!kgs-overview">kgs-overview</a>: 문서 115편·개념 370개·연결 236개·관계 114건·고아 0편 → 74편·344개·216개·84건, 연관 문서 없는 문서 3편(이유와 함께). 큐레이션 개념 수 "평균 6개"는 실제 평균 8.8개라 "9개 안팎"으로.</li>
+                <li><a href="#!kgs-edges">kgs-edges</a>: idf 예시를 66편 시점 값(스킬 12편 1.72·벡터검색 3.11)에서 74편 값(13편 1.75·3.22)으로, 그래서 "2.5배 이상"이던 무게 차이를 "2배 가까이"로 고쳤다. 엣지 해부 예시(7.42→7.38, 9.68→9.75)와 사라진 문서를 가리키던 소제목, 개념 연결 183→191개, 관계 110→84건(AI 2040 시리즈는 한 편으로 합쳐져 체인이 없어짐), evidence-for 기사 4→12편을 맞췄다. 시리즈 체인의 "7가지 눈"은 "9가지 눈"으로 바로잡고 마지막 편(게이트)까지 이었다. en 도식만 "only 2 docs"로 틀려 있던 것도 3으로.</li>
+                <li><a href="#!kgs-views">kgs-views</a> 허브·브리지 순위, <a href="#!dz-map">dz-map</a>의 관문 문서(실제로는 6회 기준에 이른 문서가 없음), <a href="#!kgs-plugin">kgs-plugin</a> 도식의 "현재 0.21.0"(버전 숫자를 뺐다), <a href="#!kgs-ai-layer">kgs-ai-layer</a>의 "97개 노드"(집필 시점 2026년 7월로 한정).</li>
+            </ul>
+            <p><strong>집필 규칙 위반.</strong></p>
+            <ul>
+                <li>요약문: <code>gdb-onto-concepts</code>의 "국내 웨비나 대담", <code>wr-knowledge-vault</code>의 "대담 녹취"(3언어)를 내용 서술로 바꿨다. 본문은 8월에 고쳐졌는데 요약만 남아 검색·피드에 그대로 나가고 있었다.</li>
+                <li><a href="#!llmw-overview">llmw-overview</a>의 "해외 사례"(3언어), en <a href="#!llmw-metadata">llmw-metadata</a>의 "We are Korean"(영어 독자를 한국인으로 전제), en 번역에서 위키 자신을 "we"로 부른 9곳을 "this wiki"나 주어 없는 문장으로.</li>
+                <li>자기지칭 표기 통일: ko "본 위키" → "이 위키", ja "本ウィキ"·"この wiki" → "このウィキ".</li>
+            </ul>
+            <p><strong>합본 잔재.</strong> <a href="#!news-20260709-ai-2040-plan-a">AI 2040</a>은 8월에 네 편을 한 편으로 합쳤는데, 각 절이 여전히 "이 편은 개요의 후속으로"라며 자기 자신에게 링크를 걸고 있었고 끝에는 연재 내비게이션 줄이 남아 있었다(3언어 × 4곳). 절 단위 문장으로 고치고 내비게이션 줄을 지웠다. 분석 2차 스윕에서 자기 링크를 전수로 찾다가 나온 것이다.</p>
+            <p><strong>번역 지연·누락.</strong> en·ja <a href="#!wl-guide">wl-guide</a>가 옛 규칙("하루 8개 문서", 자동 로그, <code>wl-YYYYMMDD-topic</code>)을 설명하고 Backlog 절이 없었다. 현재 ko를 기준으로 다시 옮겼다. en <code>claude-md-commandments</code>의 번역 안 된 한국어 예문 두 곳, en <code>dzp-security</code>의 조직명, en <code>ccb-research-web</code>에서 빠진 확장 편 링크도 채웠다.</p>
+            <p><strong>제목·메타.</strong> doc-entries 제목이 본문 제목과 어긋난 세 건(ja <code>auto-mode</code>의 h2, ko <code>dzp-knowledge</code>, ko <code>thariq</code>), "3계층"이라면서 둘만 적은 <code>tip-advanced</code> ko 요약, 문서 2편인데 하나만 적은 지식지도의 Skills 설명(3언어), 사이드바 워크로그 월·일 번역 표기 혼재(en <code>July</code>/<code>Aug</code>·<code>Day 01</code>/<code>Day 2</code>, ja <code>7月</code>/<code>08月</code>)를 하나로 맞췄다.</p>
+            <p>
+                <strong>2차 검증.</strong> 고친 뒤 새 에이전트에 1차 결함 목록을 그대로 넘겨 항목별로 다시 확인하게 했다. 1차 항목은 모두 고쳐졌고, 같은 종류의 잔여가 더 나와 함께 고쳤다: <a href="#!kgs-edges">kgs-edges</a> 첫 절의 "핵심 개념 5~6개"(kgs-overview와 모순), <a href="#!kgs-ai-layer">kgs-ai-layer</a>의 2홉 순회 예시(더는 허브가 아닌 문서를 "허브"라 부름 — 집필 시점으로 한정), AI 2040 첫 문단의 "이 폴더의 4편 시리즈"와 "…편에 있습니다" 문구·구성표 머리글, ja의 "この Wiki"와 앞서 바꾼 "このウィキ" 뒤에 남은 띄어쓰기(17곳), en <code>auto-mode</code> 제목이 ko 제목 대신 목록 라벨을 옮긴 것, ja 제목 따옴표·표기 두 건, en·ja <code>wl-guide</code>가 폴더를 여전히 <code>07월 &gt; 03일</code>로 설명하던 것.
+            </p>
+            <p>
+                <strong>남긴 것.</strong> <a href="#!kgs-views">kgs-views</a>가 Orbits 뷰를 "World는 항성, System은 행성, 문서는 위성"으로 설명하는 대목은 실제 화면 묘사로는 정확하지만 천문 은유 금지 규칙과 부딪힌다. 대표님 판단이 필요해 손대지 않았다.
+            </p>
