@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>オントロジーとは何か — データの倉庫ではなく、意味の地図</title>
-<meta name="description" content="企業の実務者がいちばんよく尋ねるオントロジーの概念質問を、匿名処理した韓国のウェビナー FAQ を骨組みに整理した概念編 — データベースは値を保存する倉庫、オントロジーは意味・関係・ルールを定義する地図という区別（グルーバーの「概念化の明示的な仕様」、W3C OWL 2）、中心概念・関係・データ・ルールの四大構成要素、レガシー（ERP・CRM・MES）と生成 AI のあいだの通訳者であるセマンティックレイヤー（マイグレーションではない、パランティアの「組織のデジタルツイン」の先例）、LLM が発達してもオントロジーが要る理由（幻覚 — OG-RAG の事実再現 +55%、臨床 QA の幻覚 63%→1.7% の研究、オントロジークエリ言語で LLM の自由度を制約）、そしてグラフ DB はオントロジーが操る三つの保存先（RDB・ベクトル・グラフ）のひとつにすぎないという整理まで">
+<meta name="description" content="企業の実務者がいちばんよく尋ねるオントロジーの概念質問を FAQ の形で整理した概念編 — データベースは値を保存する倉庫、オントロジーは意味・関係・ルールを定義する地図という区別（グルーバーの「概念化の明示的な仕様」、W3C OWL 2）、中心概念・関係・データ・ルールの四大構成要素、レガシー（ERP・CRM・MES）と生成 AI のあいだの通訳者であるセマンティックレイヤー（マイグレーションではない、パランティアの「組織のデジタルツイン」の先例）、LLM が発達してもオントロジーが要る理由（幻覚 — OG-RAG の事実再現 +55%、臨床 QA の幻覚 63%→1.7% の研究、オントロジークエリ言語で LLM の自由度を制約）、そしてグラフ DB はオントロジーが操る三つの保存先（RDB・ベクトル・グラフ）のひとつにすぎないという整理まで">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/ja/gdb-onto-concepts/">
     <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/gdb-onto-concepts/">
@@ -14,14 +14,14 @@
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
 <meta property="og:title" content="オントロジーとは何か — データの倉庫ではなく、意味の地図">
-<meta property="og:description" content="企業の実務者がいちばんよく尋ねるオントロジーの概念質問を、匿名処理した韓国のウェビナー FAQ を骨組みに整理した概念編 — データベースは値を保存する倉庫、オントロジーは意味・関係・ルールを定義する地図という区別（グルーバーの「概念化の明示的な仕様」、W3C OWL 2）、中心概念・関係・データ・ルールの四大構成要素、レガシー（ERP・CRM・MES）と生成 AI のあいだの通訳者であるセマンティックレイヤー（マイグレーションではない、パランティアの「組織のデジタルツイン」の先例）、LLM が発達してもオントロジーが要る理由（幻覚 — OG-RAG の事実再現 +55%、臨床 QA の幻覚 63%→1.7% の研究、オントロジークエリ言語で LLM の自由度を制約）、そしてグラフ DB はオントロジーが操る三つの保存先（RDB・ベクトル・グラフ）のひとつにすぎないという整理まで">
+<meta property="og:description" content="企業の実務者がいちばんよく尋ねるオントロジーの概念質問を FAQ の形で整理した概念編 — データベースは値を保存する倉庫、オントロジーは意味・関係・ルールを定義する地図という区別（グルーバーの「概念化の明示的な仕様」、W3C OWL 2）、中心概念・関係・データ・ルールの四大構成要素、レガシー（ERP・CRM・MES）と生成 AI のあいだの通訳者であるセマンティックレイヤー（マイグレーションではない、パランティアの「組織のデジタルツイン」の先例）、LLM が発達してもオントロジーが要る理由（幻覚 — OG-RAG の事実再現 +55%、臨床 QA の幻覚 63%→1.7% の研究、オントロジークエリ言語で LLM の自由度を制約）、そしてグラフ DB はオントロジーが操る三つの保存先（RDB・ベクトル・グラフ）のひとつにすぎないという整理まで">
 <meta property="og:url" content="https://dewytear.github.io/p/ja/gdb-onto-concepts/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="オントロジーとは何か — データの倉庫ではなく、意味の地図">
-<meta name="twitter:description" content="企業の実務者がいちばんよく尋ねるオントロジーの概念質問を、匿名処理した韓国のウェビナー FAQ を骨組みに整理した概念編 — データベースは値を保存する倉庫、オントロジーは意味・関係・ルールを定義する地図という区別（グルーバーの「概念化の明示的な仕様」、W3C OWL 2）、中心概念・関係・データ・ルールの四大構成要素、レガシー（ERP・CRM・MES）と生成 AI のあいだの通訳者であるセマンティックレイヤー（マイグレーションではない、パランティアの「組織のデジタルツイン」の先例）、LLM が発達してもオントロジーが要る理由（幻覚 — OG-RAG の事実再現 +55%、臨床 QA の幻覚 63%→1.7% の研究、オントロジークエリ言語で LLM の自由度を制約）、そしてグラフ DB はオントロジーが操る三つの保存先（RDB・ベクトル・グラフ）のひとつにすぎないという整理まで">
+<meta name="twitter:description" content="企業の実務者がいちばんよく尋ねるオントロジーの概念質問を FAQ の形で整理した概念編 — データベースは値を保存する倉庫、オントロジーは意味・関係・ルールを定義する地図という区別（グルーバーの「概念化の明示的な仕様」、W3C OWL 2）、中心概念・関係・データ・ルールの四大構成要素、レガシー（ERP・CRM・MES）と生成 AI のあいだの通訳者であるセマンティックレイヤー（マイグレーションではない、パランティアの「組織のデジタルツイン」の先例）、LLM が発達してもオントロジーが要る理由（幻覚 — OG-RAG の事実再現 +55%、臨床 QA の幻覚 63%→1.7% の研究、オントロジークエリ言語で LLM の自由度を制約）、そしてグラフ DB はオントロジーが操る三つの保存先（RDB・ベクトル・グラフ）のひとつにすぎないという整理まで">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -32,7 +32,7 @@
  "@context": "https://schema.org",
  "@type": "Article",
  "headline": "オントロジーとは何か — データの倉庫ではなく、意味の地図",
- "description": "企業の実務者がいちばんよく尋ねるオントロジーの概念質問を、匿名処理した韓国のウェビナー FAQ を骨組みに整理した概念編 — データベースは値を保存する倉庫、オントロジーは意味・関係・ルールを定義する地図という区別（グルーバーの「概念化の明示的な仕様」、W3C OWL 2）、中心概念・関係・データ・ルールの四大構成要素、レガシー（ERP・CRM・MES）と生成 AI のあいだの通訳者であるセマンティックレイヤー（マイグレーションではない、パランティアの「組織のデジタルツイン」の先例）、LLM が発達してもオントロジーが要る理由（幻覚 — OG-RAG の事実再現 +55%、臨床 QA の幻覚 63%→1.7% の研究、オントロジークエリ言語で LLM の自由度を制約）、そしてグラフ DB はオントロジーが操る三つの保存先（RDB・ベクトル・グラフ）のひとつにすぎないという整理まで",
+ "description": "企業の実務者がいちばんよく尋ねるオントロジーの概念質問を FAQ の形で整理した概念編 — データベースは値を保存する倉庫、オントロジーは意味・関係・ルールを定義する地図という区別（グルーバーの「概念化の明示的な仕様」、W3C OWL 2）、中心概念・関係・データ・ルールの四大構成要素、レガシー（ERP・CRM・MES）と生成 AI のあいだの通訳者であるセマンティックレイヤー（マイグレーションではない、パランティアの「組織のデジタルツイン」の先例）、LLM が発達してもオントロジーが要る理由（幻覚 — OG-RAG の事実再現 +55%、臨床 QA の幻覚 63%→1.7% の研究、オントロジークエリ言語で LLM の自由度を制約）、そしてグラフ DB はオントロジーが操る三つの保存先（RDB・ベクトル・グラフ）のひとつにすぎないという整理まで",
  "inLanguage": "ja",
  "url": "https://dewytear.github.io/p/ja/gdb-onto-concepts/",
  "mainEntityOfPage": "https://dewytear.github.io/#!gdb-onto-concepts",

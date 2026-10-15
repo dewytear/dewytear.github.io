@@ -77,14 +77,14 @@
 <p>既定値はオフで、組織の管理者が設定で有効化する必要がある。ZDR（Zero Data Retention &mdash; データを一切保存しない契約オプション）を使う組織はまだ使えない。要するに「誰でもオンにする機能」ではなく、<strong>コンプライアンス要件のせいで導入が塞がれていた組織のための通路</strong>だ。</p>
 
 <h3>同じ週の残り &mdash; GitLab MR・auto-continue・Compliance API</h3>
-<p><strong>GitLab マージリクエスト対応。</strong> <code>claude --worktree</code> が GitHub PR だけでなく GitLab MR URL を受け付けるようになり、エージェント一覧画面で MR が <code>!N</code> と表示される。プラットフォームの判別は git remote と API 探索で行うため、GitLab.com だけでなく<strong>セルフホストの GitLab インスタンス</strong>も捕まえる &mdash; 社内 GitLab を使う組織（この Wiki の <a href="/p/ja/dzp-overview/">AI 開発ナレッジプラットフォーム提案</a>が前提とするまさにその環境）に直接届く変化だ。</p>
+<p><strong>GitLab マージリクエスト対応。</strong> <code>claude --worktree</code> が GitHub PR だけでなく GitLab MR URL を受け付けるようになり、エージェント一覧画面で MR が <code>!N</code> と表示される。プラットフォームの判別は git remote と API 探索で行うため、GitLab.com だけでなく<strong>セルフホストの GitLab インスタンス</strong>も捕まえる &mdash; 社内 GitLab を使う組織（このウィキの <a href="/p/ja/dzp-overview/">AI 開発ナレッジプラットフォーム提案</a>が前提とするまさにその環境）に直接届く変化だ。</p>
 <p><strong>auto-continue。</strong> 8月14日にデスクトップアプリへ入ったチェックボックス一つ。使用量上限にかかって止まったセッションを、上限ウィンドウがリセットされた瞬間に自動で再開する。上限そのもの（5時間ウィンドウ・週間上限）は変わらない &mdash; 変わったのは、リセット後に<strong>人が戻ってきて再指示していた作業</strong>が自動になった点だけだ。長い自律作業を夜通し走らせる使い方では体感が大きい。</p>
 <p><strong>Compliance API の拡張。</strong> セキュリティチームが監査・eDiscovery（電子証拠開示）用にセッション内容とメタデータを一括照会する API が、Cowork と Claude Code のデスクトップ・ウェブ・モバイル・CLI 全表面に広がった（Enterprise ベータ）。</p>
 
 <h3>なぜ一つの流れなのか</h3>
-<p>今週のリリースは一見雑多だが、方向は一つだ。<a href="/p/ja/news-20260814-auto-mode-stateless-mcp/">auto モード既定値</a>が「何を許すか」の判定を毎回尋ねる対話から<strong>あらかじめ書いた規則</strong>に移したとすれば、今週は「どこで動くか」（セルフホスティング）、「何を対象に」（セルフホスト GitLab）、「いつまで」（上限ウィンドウと自動再開）を組織が決める値に移した。エージェントが強くなるほど、コントロールの拠点は対話ではなく<strong>環境と規則</strong>へ移る &mdash; この Wiki が <a href="/p/ja/tip-advanced/">Tip 上級編</a>で権限編集と検証の分離を扱う理由と同じ筋だ。</p>
+<p>今週のリリースは一見雑多だが、方向は一つだ。<a href="/p/ja/news-20260814-auto-mode-stateless-mcp/">auto モード既定値</a>が「何を許すか」の判定を毎回尋ねる対話から<strong>あらかじめ書いた規則</strong>に移したとすれば、今週は「どこで動くか」（セルフホスティング）、「何を対象に」（セルフホスト GitLab）、「いつまで」（上限ウィンドウと自動再開）を組織が決める値に移した。エージェントが強くなるほど、コントロールの拠点は対話ではなく<strong>環境と規則</strong>へ移る &mdash; このウィキが <a href="/p/ja/tip-advanced/">Tip 上級編</a>で権限編集と検証の分離を扱う理由と同じ筋だ。</p>
 
-<h3>この Wiki で直したもの</h3>
+<h3>このウィキで直したもの</h3>
 <ul>
     <li><a href="/p/ja/tip-advanced/">Tip 上級編</a> &mdash; 21番（ワークツリー）に GitLab MR 対応を、23番（予約・ルーティン）に auto-continue を反映した。</li>
     <li><a href="/p/ja/hns-usecases/">ハーネスの活用と拡張</a> &mdash; ツール拡張の節にセルフホストランナーを追加した。</li>

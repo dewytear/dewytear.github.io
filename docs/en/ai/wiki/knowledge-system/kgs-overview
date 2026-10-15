@@ -68,7 +68,7 @@
     <text class="d-sub" x="358" y="58" text-anchor="middle">name (immutable) + path (physical)</text>
     <rect class="d-box accent" x="502" y="18" width="204" height="52" rx="9"/>
     <text class="d-label" x="604" y="40" text-anchor="middle">③ Curation</text>
-    <text class="d-sub" x="604" y="58" text-anchor="middle">summary + 5–6 key concepts</text>
+    <text class="d-sub" x="604" y="58" text-anchor="middle">summary + about 9 key concepts</text>
     <line class="d-edge" x1="214" y1="44" x2="250" y2="44"/>
     <polygon class="d-arrow" points="250,39 258,44 250,49"/>
     <line class="d-edge" x1="458" y1="44" x2="494" y2="44"/>
@@ -88,7 +88,7 @@
 <ol>
     <li><strong>Write the body</strong> — save it as an HTML fragment at its place in the domain tree.</li>
     <li><strong>Register in <code>list</code></strong> — add <code>name</code>, <code>path</code>, label, and tags to the tree. At this moment the document gains a place in the navigation and in the knowledge hierarchy.</li>
-    <li><strong>Curation</strong> — read the document and record <strong>a one-line summary + key concepts (six on average)</strong> in <code>doc-entries</code>. The rule is to write only concepts that actually exist in the body (the honesty principle of the <a href="#!kgs-edges">next part</a>).</li>
+    <li><strong>Curation</strong> — read the document and record <strong>a one-line summary + key concepts (about nine on average)</strong> in <code>doc-entries</code>. The rule is to write only concepts that actually exist in the body (the honesty principle of the <a href="#!kgs-edges">next part</a>).</li>
     <li><strong>Rebuild the index</strong> — the build tool <strong>computes related documents (related)</strong> from the hierarchy of ② and the concepts of ③, and regenerates the knowledge index. This build is <strong>deterministic</strong> (same input → always the same output), so CI's <code>--check</code> mechanically enforces "if the index diverges from the source, it cannot be merged".</li>
 </ol>
 
@@ -96,5 +96,5 @@
 
 <div class="note">
     <span class="nh">Current scale</span>
-    The knowledge accumulated through this procedure currently stands at <strong>115 documents · 370 unique concepts · 236 connections</strong> (3.2 per document on average), with <strong>114 typed relations</strong> declared through curation layered on top. Orphan documents (zero connections) number 0 — every document is inside the graph. The numbers are aggregated live on the <a href="#!ai-map">knowledge map</a>.
+    As of October 16, 2026, the knowledge accumulated through this procedure stands at <strong>74 documents · 344 unique concepts · 216 connections</strong> (2.9 per document on average), with <strong>84 typed relations</strong> declared through curation layered on top. Three documents have no related documents at all (<a href="#!sne-overview">the delivery engine request</a> and the two individual skill introductions). Each sits alone in its folder and shares no concepts with other documents, so they were not forced into links. The current numbers are aggregated live on the <a href="#!ai-map">knowledge map</a>.
 </div>

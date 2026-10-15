@@ -3,17 +3,17 @@
 
 <div class="note">
     <span class="nh">フォルダの構造</span>
-    <code>Work Log &gt; 2026 &gt; 07월 &gt; 03일 &gt; (主題の文書)</code><br>
+    <code>Work Log &gt; 2026 &gt; 7月 &gt; 3日 &gt; (主題の文書)</code>（韓国語のフォルダ名は <code>07월</code>・<code>03일</code>）<br>
     · <strong>年</strong> — 4 桁（例: <code>2026</code>）<br>
-    · <strong>月</strong> — 2 桁 + 「월」（例: <code>07월</code>）<br>
-    · <strong>日</strong> — 2 桁 + 「일」（例: <code>03일</code>）<br>
+    · <strong>月</strong> — 数字 + 「月」（韓国語のフォルダ名は 2 桁 + 「월」、例: <code>07월</code>）<br>
+    · <strong>日</strong> — 数字 + 「日」（韓国語のフォルダ名は 2 桁 + 「일」、例: <code>03일</code>）<br>
     · <strong>主題</strong> — その日にした作業ひとつにつき文書ひとつ。ひとつの日にいくつかの作業があれば、その数だけ文書ができます。<br>
     · <strong>日付の基準</strong> — <strong>韓国標準時（KST, UTC+9）</strong>。深夜をまたいだ作業は次の日のフォルダに入ります。
 </div>
 
 <div class="note warn">
-    <span class="nh">1 日 = 複数の主題の文書</span>
-    同じ日のうちでも、<strong>全体の主題が異なる作業は別の文書に分けます</strong>。関わりのない主題をひとつのログに混ぜると、あとから文脈を取り戻しにくくなるからです。例: 5 日は <strong>8 つの文書</strong>に分かれています — 知識体系 · コスモス · ミニゲーム · デザイン · 設定 · ログの整理 · 全体の点検 · 多言語対応。自動のログ記録（キュレーター）も同じルールに従います。
+    <span class="nh">1 日 = 4 つのビッグフレームにまとめる</span>
+    同じ日のログは<strong>4 つのビッグフレーム</strong>単位でまとめます — <strong>①コンテンツ</strong>（文書・記事・講義）・<strong>②機能</strong>（動作の追加・変更）・<strong>③デザイン・UI</strong>・<strong>④運用・ツール</strong>（検証器・CI・ログの体系・リファクタ）。1 日に最大 4 文書が基本で、<strong>同じ日に同じフレームのログがすでにあれば、新しいファイルを作らずにそのログへ <code>&lt;h3&gt;</code> の節として追加</strong>します（作業ひとつ = 節ひとつ）。細かく分けすぎると一覧が細切れになり、逆にフレームの違うものをひとつの文書に混ぜると文脈を取り戻しにくくなります。例: 5 日は機能（知識体系・コスモス・ミニゲーム・多言語対応）・デザイン（精緻化・設定）・運用（ログの体系・全面点検）の <strong>3 つの文書</strong>です。
 </div>
 
 <h3>なぜ記録するのか</h3>
@@ -24,12 +24,22 @@
     <li><strong>概要</strong> — 何をしたのかを 1〜2 行で。</li>
     <li><strong>変更・決定</strong> — 実際に何が変わり、なぜそう決めたのか。</li>
     <li><strong>結果</strong> — 成果物・PR・マージの状態など。</li>
-    <li><strong>次にすること</strong> — 残っていること、続けること。</li>
+    <li><strong>次にすること</strong>（任意） — その時点で続けること。<strong>ただしこれは書いた時点のスナップショット</strong>で、あとから直しません（その日の考えを残す記録）。実際に追いかける未完了の作業は、下のルールどおり Backlog で管理します。</li>
 </ul>
 
 <div class="note">
+    <span class="nh">未完了の作業はログではなく Backlog で追う</span>
+    ログの「次にすること」は<strong>その日のスナップショット</strong>にすぎないので、散らばったログを探って作業を追うのは現実的ではありません。いま<strong>未完了の作業</strong>は <a href="#!wl-backlog"><strong>☐ やること · Backlog</strong></a> の<strong>ただひとつの文書</strong>だけで管理します:
+    <ul>
+        <li>新しい後続作業が出たら → Backlog に追加</li>
+        <li>作業を終えたら → Backlog のその項目を<strong>「最近の完了」へ移し、✅ と解決したログへのリンク</strong>を付けます。完了の<strong>恒久的な記録はその日の Work Log</strong> が担うので、「最近の完了」がたまったら<strong>古いものから外します</strong>（ログに残るので失われません）。</li>
+    </ul>
+    → ログを探らなくても、<strong>Backlog だけ見れば</strong>いま何が残っているかがわかります。
+</div>
+
+<div class="note">
     <span class="nh">ファイル名のルール</span>
-    文書のファイル名は <code>wl-YYYYMMDD-主題</code> に従います（例: <code>wl-20260703-wiki</code>）。list の <code>label</code> が人の読む主題名を担います。
+    文書のファイル名は <code>wl-YYYYMMDD-&lt;frame&gt;</code> を推奨します — frame は <code>content</code>・<code>features</code>・<code>design</code>・<code>ops</code>（例: <code>wl-20260709-ops</code>）。list の <code>label</code> には「フレーム — 要約」（例: 「運用 — 図式・Work Log の再発防止 6 件」）のように人が読みやすい題名を書きます。
 </div>
 
 <div class="note warn">

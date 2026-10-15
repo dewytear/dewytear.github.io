@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>尋ねない既定値 — autoモードとMCPのステートレス化</title>
+<title>尋ねない既定値 — 承認ボタンとセッションが同じ週に消えた</title>
 <meta name="description" content="同じ週に起きた二つの変更を一本に — Claude Code は 2026-08-14 から Pro・Max・Team の新規セッションの既定値を auto モードに変え（承認率97%、仕込んだ危険なコマンドを人は13.6%しか拒否せず、分類器は89%阻止、Trajectory Labs の720回のインジェクションは全て失敗）、MCP 2026-07-28 仕様は initialize ハンドシェイクと Mcp-Session-Id を削除してプロトコルから状態をなくした（_meta・server/discover・サーバー発行のハンドル・Tasks/MCP Apps/企業向け認可の拡張・双方向でワイヤ非互換）。共通構造: 実行時の固定点を外し、宣言されたルールとリクエスト単位のデータへ判定を移す。9月28日、Claude Code 2.1.284 がこの既定値をすべてのプランと提供元へ広げた — 権限モードを設定していないターミナル・VS Code のセッションは Enterprise・Console の API キー・Bedrock・Agent Platform・Foundry・Claude Platform on AWS でも auto モードで始まり（claude -p と Agent SDK はこの時点では手動のまま、permissions.defaultMode が優先、disableAutoMode で遮断）、サーバーが検査するところでは読み取り専用・サンドボックス内のコマンドも判定を待ち、作業フォルダ外の読み取りには「今回だけ許可して次回また尋ねる」が加わった。組織にとっては無設定の意味が手動から auto に変わったことになる。10月の更新：2.1.285 から、機能フラグを取得しないセッション（サードパーティの提供元・テレメトリオフ）では claude -p と Agent SDK も auto モードで始まり（組織のポリシーが差し止めるか HIPAA 構成なら手動）、2.1.295 の onFailure: &quot;block&quot; でフックが失敗したときに操作を止められるようになり、2.1.292 と 2.1.295 からローカル MCP サーバーと claude.ai のコネクタが 2026-07-28 仕様を既定でネゴシエートする。2026-07-28 をリリース候補と書いていた点は訂正した：最終仕様は7月28日にすでに公開されており（リリース候補は5月21日）、最終版は多重往復リクエスト（MRTR）・ヘッダーによるルーティング・キャッシュ可能な一覧応答を加えた">
 <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://dewytear.github.io/p/ja/news-20260814-auto-mode-stateless-mcp/">
@@ -13,14 +13,14 @@
     <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20260814-auto-mode-stateless-mcp/">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="尋ねない既定値 — autoモードとMCPのステートレス化">
+<meta property="og:title" content="尋ねない既定値 — 承認ボタンとセッションが同じ週に消えた">
 <meta property="og:description" content="同じ週に起きた二つの変更を一本に — Claude Code は 2026-08-14 から Pro・Max・Team の新規セッションの既定値を auto モードに変え（承認率97%、仕込んだ危険なコマンドを人は13.6%しか拒否せず、分類器は89%阻止、Trajectory Labs の720回のインジェクションは全て失敗）、MCP 2026-07-28 仕様は initialize ハンドシェイクと Mcp-Session-Id を削除してプロトコルから状態をなくした（_meta・server/discover・サーバー発行のハンドル・Tasks/MCP Apps/企業向け認可の拡張・双方向でワイヤ非互換）。共通構造: 実行時の固定点を外し、宣言されたルールとリクエスト単位のデータへ判定を移す。9月28日、Claude Code 2.1.284 がこの既定値をすべてのプランと提供元へ広げた — 権限モードを設定していないターミナル・VS Code のセッションは Enterprise・Console の API キー・Bedrock・Agent Platform・Foundry・Claude Platform on AWS でも auto モードで始まり（claude -p と Agent SDK はこの時点では手動のまま、permissions.defaultMode が優先、disableAutoMode で遮断）、サーバーが検査するところでは読み取り専用・サンドボックス内のコマンドも判定を待ち、作業フォルダ外の読み取りには「今回だけ許可して次回また尋ねる」が加わった。組織にとっては無設定の意味が手動から auto に変わったことになる。10月の更新：2.1.285 から、機能フラグを取得しないセッション（サードパーティの提供元・テレメトリオフ）では claude -p と Agent SDK も auto モードで始まり（組織のポリシーが差し止めるか HIPAA 構成なら手動）、2.1.295 の onFailure: &quot;block&quot; でフックが失敗したときに操作を止められるようになり、2.1.292 と 2.1.295 からローカル MCP サーバーと claude.ai のコネクタが 2026-07-28 仕様を既定でネゴシエートする。2026-07-28 をリリース候補と書いていた点は訂正した：最終仕様は7月28日にすでに公開されており（リリース候補は5月21日）、最終版は多重往復リクエスト（MRTR）・ヘッダーによるルーティング・キャッシュ可能な一覧応答を加えた">
 <meta property="og:url" content="https://dewytear.github.io/p/ja/news-20260814-auto-mode-stateless-mcp/">
 <meta property="og:image" content="https://dewytear.github.io/og-image.png">
 <meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="尋ねない既定値 — autoモードとMCPのステートレス化">
+<meta name="twitter:title" content="尋ねない既定値 — 承認ボタンとセッションが同じ週に消えた">
 <meta name="twitter:description" content="同じ週に起きた二つの変更を一本に — Claude Code は 2026-08-14 から Pro・Max・Team の新規セッションの既定値を auto モードに変え（承認率97%、仕込んだ危険なコマンドを人は13.6%しか拒否せず、分類器は89%阻止、Trajectory Labs の720回のインジェクションは全て失敗）、MCP 2026-07-28 仕様は initialize ハンドシェイクと Mcp-Session-Id を削除してプロトコルから状態をなくした（_meta・server/discover・サーバー発行のハンドル・Tasks/MCP Apps/企業向け認可の拡張・双方向でワイヤ非互換）。共通構造: 実行時の固定点を外し、宣言されたルールとリクエスト単位のデータへ判定を移す。9月28日、Claude Code 2.1.284 がこの既定値をすべてのプランと提供元へ広げた — 権限モードを設定していないターミナル・VS Code のセッションは Enterprise・Console の API キー・Bedrock・Agent Platform・Foundry・Claude Platform on AWS でも auto モードで始まり（claude -p と Agent SDK はこの時点では手動のまま、permissions.defaultMode が優先、disableAutoMode で遮断）、サーバーが検査するところでは読み取り専用・サンドボックス内のコマンドも判定を待ち、作業フォルダ外の読み取りには「今回だけ許可して次回また尋ねる」が加わった。組織にとっては無設定の意味が手動から auto に変わったことになる。10月の更新：2.1.285 から、機能フラグを取得しないセッション（サードパーティの提供元・テレメトリオフ）では claude -p と Agent SDK も auto モードで始まり（組織のポリシーが差し止めるか HIPAA 構成なら手動）、2.1.295 の onFailure: &quot;block&quot; でフックが失敗したときに操作を止められるようになり、2.1.292 と 2.1.295 からローカル MCP サーバーと claude.ai のコネクタが 2026-07-28 仕様を既定でネゴシエートする。2026-07-28 をリリース候補と書いていた点は訂正した：最終仕様は7月28日にすでに公開されており（リリース候補は5月21日）、最終版は多重往復リクエスト（MRTR）・ヘッダーによるルーティング・キャッシュ可能な一覧応答を加えた">
 <meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -31,7 +31,7 @@
 {
  "@context": "https://schema.org",
  "@type": "Article",
- "headline": "尋ねない既定値 — autoモードとMCPのステートレス化",
+ "headline": "尋ねない既定値 — 承認ボタンとセッションが同じ週に消えた",
  "description": "同じ週に起きた二つの変更を一本に — Claude Code は 2026-08-14 から Pro・Max・Team の新規セッションの既定値を auto モードに変え（承認率97%、仕込んだ危険なコマンドを人は13.6%しか拒否せず、分類器は89%阻止、Trajectory Labs の720回のインジェクションは全て失敗）、MCP 2026-07-28 仕様は initialize ハンドシェイクと Mcp-Session-Id を削除してプロトコルから状態をなくした（_meta・server/discover・サーバー発行のハンドル・Tasks/MCP Apps/企業向け認可の拡張・双方向でワイヤ非互換）。共通構造: 実行時の固定点を外し、宣言されたルールとリクエスト単位のデータへ判定を移す。9月28日、Claude Code 2.1.284 がこの既定値をすべてのプランと提供元へ広げた — 権限モードを設定していないターミナル・VS Code のセッションは Enterprise・Console の API キー・Bedrock・Agent Platform・Foundry・Claude Platform on AWS でも auto モードで始まり（claude -p と Agent SDK はこの時点では手動のまま、permissions.defaultMode が優先、disableAutoMode で遮断）、サーバーが検査するところでは読み取り専用・サンドボックス内のコマンドも判定を待ち、作業フォルダ外の読み取りには「今回だけ許可して次回また尋ねる」が加わった。組織にとっては無設定の意味が手動から auto に変わったことになる。10月の更新：2.1.285 から、機能フラグを取得しないセッション（サードパーティの提供元・テレメトリオフ）では claude -p と Agent SDK も auto モードで始まり（組織のポリシーが差し止めるか HIPAA 構成なら手動）、2.1.295 の onFailure: \"block\" でフックが失敗したときに操作を止められるようになり、2.1.292 と 2.1.295 からローカル MCP サーバーと claude.ai のコネクタが 2026-07-28 仕様を既定でネゴシエートする。2026-07-28 をリリース候補と書いていた点は訂正した：最終仕様は7月28日にすでに公開されており（リリース候補は5月21日）、最終版は多重往復リクエスト（MRTR）・ヘッダーによるルーティング・キャッシュ可能な一覧応答を加えた",
  "inLanguage": "ja",
  "url": "https://dewytear.github.io/p/ja/news-20260814-auto-mode-stateless-mcp/",
@@ -58,7 +58,7 @@
   &middot; <a href="/p/en/news-20260814-auto-mode-stateless-mcp/" hreflang="en">English</a>
 </p>
 <article>
-<h2>尋ねない既定値 &mdash; autoモードとMCPのステートレス化</h2>
+<h2>尋ねない既定値 &mdash; 承認ボタンとセッションが同じ週に消えた</h2>
 
 <p>今日（8月14日）から、Claude Code の新しいセッションは <strong>auto モードで始まります</strong>。毎回「このコマンドを実行しますか」と尋ねていた許可プロンプトが、既定の動きから外れました。その二週間前、エージェントがツールをつなぐ標準である <strong>MCP</strong> は、<strong>セッションという概念そのものをプロトコルから取り除きました</strong>。片方は人のクリックを、もう片方は接続の記憶を外したわけですが、空いた場所を埋めたのはどちらも<strong>あらかじめ書いておいたルール</strong>です。この記事では二つの変更の中身を整理し、なぜこれが一つの話なのかを見ます。<strong>9月28日更新</strong>：auto モードの既定値がすべてのプランとすべての提供元に広がりました（下の「9月28日」の節）。<strong>10月9日訂正・更新</strong>：MCP 2026-07-28 はこの記事を書いた時点ですでに最終仕様だったのに、リリース候補と書いていたので直しました。あわせて、非対話型の実行と MCP 接続の既定値が変わった内容を加えました（下の「10月」の節）。</p>
 
@@ -128,7 +128,7 @@
 <p>攻撃側の評価も一緒に出ています。独立評価機関の Trajectory Labs が <strong>72通りの間接プロンプトインジェクションのシナリオを各10回、モデルあたり720回</strong> 試み、auto モードで動かした Fable 5・Opus 5・Sonnet 5 では <strong>成功した攻撃が一つもなかった</strong>と報告しました。社内運用で実際に止まった例としては、ネットワーク外へのデータ流出、破壊的な大量操作、権限昇格の三件が公開され、いずれも Claude が自分で安全な経路を見つけるか、利用者に確認を取っています。</p>
 
 <h3>同じ週、MCPはセッションを捨てた</h3>
-<p><strong>MCP（Model Context Protocol）</strong>は、エージェントが外部のツールやデータにつながる方法を定めた標準です。この wiki の <a href="/p/ja/skills/">MCP 講義</a>が扱っているその規約で、7月28日に最終版が公開された 2026-07-28 仕様は、公開以来もっとも大きな改訂です。核心は一文で足ります &mdash; <strong>プロトコルの層から状態をなくした</strong>。</p>
+<p><strong>MCP（Model Context Protocol）</strong>は、エージェントが外部のツールやデータにつながる方法を定めた標準です。このウィキの <a href="/p/ja/skills/">MCP 講義</a>が扱っているその規約で、7月28日に最終版が公開された 2026-07-28 仕様は、公開以来もっとも大きな改訂です。核心は一文で足ります &mdash; <strong>プロトコルの層から状態をなくした</strong>。</p>
 <ul>
     <li><strong>ハンドシェイクの削除</strong> &mdash; 接続を開くときに一度だけやり取りしていた <code>initialize</code>/<code>initialized</code> がなくなりました。プロトコルのバージョン・クライアント情報・クライアントの能力は、<strong>すべてのリクエストの <code>_meta</code></strong> に載ります。サーバーの能力を先に知りたいときは、新設の <code>server/discover</code> で必要なときに取得します。</li>
     <li><strong>セッション識別子の削除</strong> &mdash; <code>Mcp-Session-Id</code> ヘッダーと、それに付いていたプロトコル水準のセッションが一緒に消えました。二つが消えたことで、<strong>どのリクエストもどのサーバーインスタンスに届いてかまいません</strong>。台数を増やすために必要だった固定ルーティングや共有セッションストアが、規約の水準では要らなくなります。</li>
@@ -171,7 +171,7 @@
 <h3>なぜこれが一つの話なのか</h3>
 <p>二つの変更は別々の会社の、別々の層で起きましたが、外したものは同じです。<strong>実行時に握られていた固定点</strong>です。auto モードが外したのは、その都度人が文脈を見て下していた判定であり、MCP が外したのは、接続が勝手に抱えていた記憶です。どちらも、あるうちは楽でも回数が増えるほど高くつく種類でした。人の承認はエージェントが一日に何百回も動いた瞬間に反射的なクリックになり、セッションはサーバーを何台かに増やした瞬間に固定ルーティングという荷物になります。</p>
 <p>代わりに入ったものも性格が同じです。ハードデナイのルールは「何を絶対にしないか」を、事が起きる前に書いておいた文書です。<code>_meta</code> は逆の向きで、毎回のリクエストが自分は誰で何ができるかを載せて運ぶほうです。先に書いておくか、毎回持って行くか &mdash; どちらにせよ判定の根拠が、その場の人と接続から<strong>宣言されたルールとデータへ</strong>移りました。</p>
-<p>実務でこれが何を意味するかは、かなり具体的です。<code>CLAUDE.md</code> と設定ファイルの拒否ルールが、これまでは好みに近かったとすれば、これからは実際に執行される方針になります。広く開けておいた許可ルールは便利さではなく無視の対象になり、狭く書いた拒否ルールは人が席を外している間も働き続けます。この wiki が <a href="/p/ja/news-20260728-software-factories-fail/">「ハーネスでは足りない」</a>でまとめた結論と同じ向きです &mdash; ハーネスの値打ちは指示の厚みではなく、<strong>検証と境界がどれだけ明確か</strong>にあります。</p>
+<p>実務でこれが何を意味するかは、かなり具体的です。<code>CLAUDE.md</code> と設定ファイルの拒否ルールが、これまでは好みに近かったとすれば、これからは実際に執行される方針になります。広く開けておいた許可ルールは便利さではなく無視の対象になり、狭く書いた拒否ルールは人が席を外している間も働き続けます。このウィキが <a href="/p/ja/news-20260728-software-factories-fail/">「ハーネスでは足りない」</a>でまとめた結論と同じ向きです &mdash; ハーネスの値打ちは指示の厚みではなく、<strong>検証と境界がどれだけ明確か</strong>にあります。</p>
 <p>もちろんこの方向には値が付きます。先に書いておいたルールは、書いた分だけ守ります。89% という数字がその限界で、残りの 11% はルールになかった形の危険でした。セッションをなくした MCP も状態をなくしたのではなく、表に出して引数へ移したので、そのハンドルを誰が発行していつ失効させるのかが新しい宿題になります。隠れていた問題が見える場所に出てきた、というほうが正確です。</p>
 
 <h3>9月28日 — すべてのプラン、すべての提供元へ</h3>
@@ -190,7 +190,7 @@
 <p>MCP の側では、新しい仕様が Claude Code の既定値になりました。2.1.292（10月6日）から、ローカル（stdio）MCP サーバーとの接続は Bedrock・Vertex・Foundry を含むすべてのインストールで 2026-07-28 を既定でネゴシエートし、2.1.295 からはフラグを取得しないインストールで claude.ai のコネクタも同じようにします。以前の方式が必要なら <code>MCP_PROTOCOL_NEGOTIATION=legacy</code> で戻せます。上の「同じ週、MCPはセッションを捨てた」の節でワイヤ互換が崩れると書いたその仕様を、今は Claude Code が既定で使っています。</p>
 <p>ここで一つ訂正があります。この記事は8月に 2026-07-28 を「リリース候補」と書きましたが、リリース候補が出たのは5月21日で、<strong>最終仕様は7月28日にすでに公開</strong>されていました。最終版の発表でも、ハンドシェイクとセッション識別子の削除、<code>_meta</code>、<code>server/discover</code>、拡張の枠組みはこの記事が書いたとおりです。そこに、サーバーが呼び出しの途中でユーザーに問い返す要求を開いたままのストリームなしで扱う多重往復リクエスト（MRTR）、メソッド名とツール名を HTTP ヘッダーに載せてゲートウェイが本文を開かずにルーティングできるようにする方式、キャッシュしてよい一覧応答が加わりました。</p>
 
-<h3>この wiki で直したところ</h3>
+<h3>このウィキで直したところ</h3>
 <p>この変更で古くなった記述が二か所あり、あわせて直しました。</p>
 <ul>
     <li><a href="/p/ja/hns-usecases/">ツールの拡張と締めくくり</a>の Q&amp;A で、オートモードを「権限を毎回たずねないのでより自律的に動く」とだけ説明していました。既定値になったことと、ハードデナイ・インジェクション検査を書き足しました。</li>

@@ -68,7 +68,7 @@
     <text class="d-sub" x="358" y="58" text-anchor="middle">name(不変) + path(物理)</text>
     <rect class="d-box accent" x="502" y="18" width="204" height="52" rx="9"/>
     <text class="d-label" x="604" y="40" text-anchor="middle">③ キュレーション</text>
-    <text class="d-sub" x="604" y="58" text-anchor="middle">要約 + 中心概念 5〜6 個</text>
+    <text class="d-sub" x="604" y="58" text-anchor="middle">要約 + 中心概念 9 個前後</text>
     <line class="d-edge" x1="214" y1="44" x2="250" y2="44"/>
     <polygon class="d-arrow" points="250,39 258,44 250,49"/>
     <line class="d-edge" x1="458" y1="44" x2="494" y2="44"/>
@@ -88,7 +88,7 @@
 <ol>
     <li><strong>本文の作成</strong> — ドメインツリーの位置に HTML 断片として保存。</li>
     <li><strong><code>list</code> 登録</strong> — <code>name</code>・<code>path</code>・ラベル・タグをツリーに追加。この瞬間にナビゲーションと知識階層の中に居場所ができます。</li>
-    <li><strong>キュレーション</strong> — 文書を読んで <code>doc-entries</code> に<strong>要約 1 行 + 中心概念（平均 6 個）</strong>を記録。概念は本文に実在するものだけを書くのが原則です（<a href="#!kgs-edges">次の編</a>の正直さの原則）。</li>
+    <li><strong>キュレーション</strong> — 文書を読んで <code>doc-entries</code> に<strong>要約 1 行 + 中心概念（平均 9 個前後）</strong>を記録。概念は本文に実在するものだけを書くのが原則です（<a href="#!kgs-edges">次の編</a>の正直さの原則）。</li>
     <li><strong>インデックス再生成</strong> — ビルドツールが ② の階層と ③ の概念から<strong>関連文書（related）を計算</strong>し、知識インデックスを作り直します。このビルドは<strong>決定論的</strong>（同じ入力 → いつも同じ出力）なので、CI の <code>--check</code> が「インデックスがソースと食い違えばマージ不可」を機械的に強制します。</li>
 </ol>
 
@@ -96,5 +96,5 @@
 
 <div class="note">
     <span class="nh">現在の規模</span>
-    この手順で積み上がった知識は現在<strong>文書 115 編・固有概念 370 個・つながり 236 本</strong>（文書あたり平均 3.2 本）、さらにキュレーションで宣言した<strong>型付き関係 114 件</strong>が重なっています。孤立文書（つながり 0）は 0 編 — すべての文書がグラフの中にあります。数値は<a href="#!ai-map">知識マップ</a>でライブ集計されます。
+    この手順で積み上がった知識は 2026 年 10 月 16 日時点で<strong>文書 74 編・固有概念 344 個・つながり 216 本</strong>（文書あたり平均 2.9 本）、さらにキュレーションで宣言した<strong>型付き関係 84 件</strong>が重なっています。関連文書がひとつもない文書は 3 編（<a href="#!sne-overview">送信エンジンの依頼</a>と個別スキル紹介の 2 編）です。フォルダにひとつだけで、ほかの文書と概念を共有しないので、無理につないでいません。最新の数値は<a href="#!ai-map">知識マップ</a>でライブ集計されます。
 </div>

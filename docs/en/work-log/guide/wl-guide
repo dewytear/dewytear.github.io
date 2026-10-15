@@ -3,20 +3,20 @@
 
 <div class="note">
     <span class="nh">Folder structure</span>
-    <code>Work Log &gt; 2026 &gt; 07월 &gt; 03일 &gt; (topic doc)</code><br>
+    <code>Work Log &gt; 2026 &gt; July &gt; Day 3 &gt; (topic doc)</code> (the folders are named <code>07월</code>·<code>03일</code> in Korean)<br>
     · <strong>Year</strong> — four digits (e.g. <code>2026</code>)<br>
-    · <strong>Month</strong> — two digits + "월" (e.g. <code>07월</code>)<br>
-    · <strong>Day</strong> — two digits + "일" (e.g. <code>03일</code>)<br>
+    · <strong>Month</strong> — the month name (Korean folder title: two digits + "월", e.g. <code>07월</code>)<br>
+    · <strong>Day</strong> — "Day" + the day (Korean folder title: two digits + "일", e.g. <code>03일</code>)<br>
     · <strong>Topic</strong> — one doc per piece of work done that day. Several pieces in a day mean several docs.<br>
     · <strong>Date basis</strong> — <strong>Korea Standard Time (KST, UTC+9)</strong>. Work past midnight goes into the next day's folder.
 </div>
 
 <div class="note warn">
-    <span class="nh">One day = multiple topic docs</span>
-    Even within the same day, <strong>work that differs in its overall topic must be split into separate docs</strong>. Mixing unrelated topics in a single log makes the context hard to recover later. Example: the 5th splits into <strong>8 docs</strong> — knowledge system · cosmos · mini games · design · settings · log housekeeping · full review · i18n. Automated logging (the curator) follows the same rule.
+    <span class="nh">One day = grouped into four big frames</span>
+    Logs from the same day are grouped into <strong>four big frames</strong>: <strong>① content</strong> (docs, articles, lectures) · <strong>② features</strong> (behaviour added or changed) · <strong>③ design &amp; UI</strong> · <strong>④ ops &amp; tooling</strong> (validators, CI, the log system, refactors). The default is at most four docs a day, and <strong>if a log for the same frame already exists that day, add an <code>&lt;h3&gt;</code> section to it instead of creating a new file</strong> (one piece of work = one section). Splitting too finely clutters the list, while mixing different frames in one doc makes the context hard to recover. Example: the 5th has <strong>3 docs</strong> — features (knowledge system · cosmos · mini games · i18n) · design (refinement · settings) · ops (log system · full review).
 </div>
 
-<h3>Why we log</h3>
+<h3>Why log</h3>
 <p>When you have AI do the work, the output survives but <strong>the "what, why, and how" of the decisions</strong> tends to scatter. This log preserves that context, so the next time you rerun or continue the same work you can <strong>recover the context immediately</strong>.</p>
 
 <h3>What to include (recommended)</h3>
@@ -24,12 +24,22 @@
     <li><strong>Overview</strong> — one or two lines on what was done.</li>
     <li><strong>Changes / decisions</strong> — what actually changed, and why it was decided that way.</li>
     <li><strong>Results</strong> — deliverables, PRs, merge status, and so on.</li>
-    <li><strong>Next steps</strong> — what remains, what to continue.</li>
+    <li><strong>Next steps</strong> (optional) — what to continue at that point. <strong>This is a snapshot taken at the time of writing</strong> and is not edited later (it records that day's thinking). Open items that actually need tracking live in the Backlog, as the rule below describes.</li>
 </ul>
 
 <div class="note">
+    <span class="nh">Open items live in the Backlog, not in logs</span>
+    A log's &ldquo;next steps&rdquo; are only <strong>a snapshot of that day</strong>, so tracking work by digging through scattered logs is unrealistic. Items that are <strong>open (not yet done)</strong> are managed in <strong>one document only</strong>: <a href="#!wl-backlog"><strong>☐ To-do · Backlog</strong></a>.
+    <ul>
+        <li>A new follow-up comes up → add it to the Backlog.</li>
+        <li>An item is finished → move it to <strong>&ldquo;Recently done&rdquo; in the Backlog with a ✅ and a link to the log that resolved it</strong>. The <strong>permanent record of the work is that day's Work Log</strong>, so once &ldquo;Recently done&rdquo; piles up, <strong>clear out the oldest entries first</strong> (nothing is lost; the log keeps it).</li>
+    </ul>
+    → No need to dig through logs: <strong>the Backlog alone</strong> shows what is left right now.
+</div>
+
+<div class="note">
     <span class="nh">File naming rule</span>
-    Doc file names should follow <code>wl-YYYYMMDD-topic</code> (e.g. <code>wl-20260703-wiki</code>). The <code>label</code> in the list carries a human-friendly topic name.
+    Doc file names should follow <code>wl-YYYYMMDD-&lt;frame&gt;</code>, where frame is <code>content</code>, <code>features</code>, <code>design</code>, or <code>ops</code> (e.g. <code>wl-20260709-ops</code>). The <code>label</code> in the list carries a readable title in the form "frame — summary" (e.g. "Ops — 6 recurrence guards for diagrams and the Work Log").
 </div>
 
 <div class="note warn">
