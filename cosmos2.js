@@ -524,6 +524,15 @@
     // ---- 런타임 ----
     var RUN = null;
 
+    // 장면을 다시 지을지 판단하는 키 — body 클래스에서 사이드바 토글(nav-*)처럼
+    // 색과 무관한 상태는 뺀다. 그대로 비교하면 사이드바를 여닫을 때마다 GL 버퍼를
+    // 새로 만들었다.
+    function themeKey() {
+        return document.body.className.split(/\s+/).filter(function (c) {
+            return c && c.indexOf('nav-') !== 0;
+        }).sort().join(' ');
+    }
+
     function stop() {
         if (!RUN) { return; }
         if (RUN.overlay && RUN.overlay.parentNode) { RUN.overlay.parentNode.removeChild(RUN.overlay); }
@@ -573,11 +582,14 @@
                 wantDist: scene.camDist, drag: null, moved: 0, lastTouch: 0, auto: !reduce,
                 hover: null, focus: null, reduce: reduce, t0: 0, focusLines: focusLines,
                 labelPool: [], W: 0, H: 0, dpr: Math.min(window.devicePixelRatio || 1, 2),
-                theme: document.body.className };
+                theme: themeKey() };
 
         bindInput(RUN);
         resize(RUN);
-        window.addEventListener('resize', function () { if (RUN) { resize(RUN); } });
+        // 마운트마다 새 리스너가 붙으므로 핸들러를 RUN에 쥐고 있다가 프레임 종료 때 뗀다
+        // (예전엔 익명 함수라 화면에 들어올 때마다 하나씩 쌓였다).
+        RUN.onResize = function () { if (RUN) { resize(RUN); } };
+        window.addEventListener('resize', RUN.onResize);
         if (window.ResizeObserver) {
             RUN.ro = new ResizeObserver(function () { if (RUN) { resize(RUN); } });
             RUN.ro.observe(canvas.parentNode);
@@ -726,14 +738,15 @@
         if (!R || R.dead || !R.canvas.isConnected) {
             if (R) {
                 document.removeEventListener('keydown', R.keyHandler);
+                if (R.onResize) { window.removeEventListener('resize', R.onResize); }
                 if (R.ro) { R.ro.disconnect(); }
                 if (R === RUN) { stop(); }
             }
             return;
         }
         // 테마·accent가 바뀌면 팔레트와 정적 지오메트리를 다시 만든다.
-        if (document.body.className !== R.theme) {
-            R.theme = document.body.className;
+        if (themeKey() !== R.theme) {
+            R.theme = themeKey();
             R.pal = palette(R.model);
             R.scene = R.kind === 'strata' ? sceneStrata(R.gl, R.model, R.pal)
                                           : sceneOrbit(R.gl, R.model, R.pal);

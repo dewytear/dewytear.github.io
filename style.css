@@ -2346,6 +2346,12 @@
             padding: 1px 6px;
             font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
             font-size: 0.9em;
+            /* 긴 토큰(파일 경로·이름 나열)이 좁은 화면에서 잘리지 않게, 넘칠 때만 접는다.
+               anywhere가 아니라 break-word인 이유: anywhere는 최소 폭(min-content)까지
+               줄여 표의 자동 열 폭이 코드 칸을 좁혀 식별자를 데스크톱에서도 중간에서
+               끊었다(check_cachebust|er). break-word는 최소 폭을 바꾸지 않는다.
+               pre 안의 code는 white-space: pre라 영향 없음. */
+            overflow-wrap: break-word;
         }
         article h3{
             margin: 30px 0 12px;
@@ -2471,8 +2477,9 @@
             color: var(--accent-ink);
         }
         article .carousel-dots button.active{
-            background: var(--accent);
-            border-color: var(--accent);
+            /* accent-ink: 낮 테마에서 흰 글자와 대비 3:1 이상(accent #ff6600은 2.9:1) */
+            background: var(--accent-ink);
+            border-color: var(--accent-ink);
             color: var(--bg);
             font-weight: 700;
         }

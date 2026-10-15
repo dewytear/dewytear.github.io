@@ -1,0 +1,20 @@
+            <h2>2026-10-16 — 기능</h2>
+
+            <h3>전수 결함 분석 ① — 화면 엔진 버그 묶음 수정</h3>
+            <p>
+                대표님이 위키의 결함을 하나하나 반복 분석하라고 지시했다. 검증 게이트(<code>check_all</code>)는 ERROR 0으로 초록이었지만, 게이트가 보지 않는 곳을 찾으려고 여섯 갈래(본문 무결성·집필 규칙·JS 엔진·실제 화면 크롤링·데이터 정합성·검증기 사각지대)로 나눠 분석했다. 화면 크롤링은 187개 문서를 3언어·데스크톱/모바일·낮/밤 조합으로 약 1,870번 그렸다. 찾은 것을 기능·콘텐츠·운영 세 묶음으로 나눠 차례로 고친다. 이 로그는 첫 묶음인 화면 엔진(JS·CSS)이다.
+            </p>
+            <p><strong>고친 것.</strong></p>
+            <ul>
+                <li><strong>늦은 응답이 다른 화면을 덮어씀.</strong> 문서 A를 여는 중에 B나 태그 화면으로 옮기면, 늦게 도착한 A 본문이 지금 화면을 덮었다(제목·탭 이름·좋아요·연관 문서까지 A로). 폴더 모아보기도 같은 구조였다. <code>route()</code>가 올리는 라우팅 세대 값(<code>ROUTE_SEQ</code>)을 <code>fetchPage</code>·<code>showFolder</code>가 쥐고 있다가, 도착했을 때 값이 바뀌었으면 그리지 않게 했다.</li>
+                <li><strong>없는 경로가 빈 화면.</strong> 지워진 문서나 오타 링크를 열면 안내 없이 빈 본문이 떴다. "문서를 찾을 수 없습니다" 화면(<code>showNotFound</code>)을 그리고 3언어 문구를 <code>STRINGS</code>에 넣었다. 문서가 하나도 없는 태그 화면에도 빈 상태 문구를 단다.</li>
+                <li><strong>경로형 링크 8개.</strong> 7/30·7/31 로그 세 편이 <code>#!이름</code> 대신 <code>href="#work-log/2026/07/29/…"</code>을 써서, 라우터가 앞 두 글자를 잘라 <code>ork-log/…</code>를 찾다 빈 화면이 됐다. 링크를 <code>#!wl-…</code>로 고쳤고, 라우터도 <code>#!</code>로 시작하지 않는 해시의 마지막 조각이 문서 이름이면 그리로 보내게 했다.</li>
+                <li><strong>About의 좋아요 버튼이 남음.</strong> 태그 줄이 없는 About에선 좋아요 독이 <code>&lt;article&gt;</code> 밖에 붙어, 태그·설정 화면으로 옮겨도 남았고 누르면 About에 좋아요가 올라갔다. 본문 교체 때 걷어 내는 목록에 넣었다.</li>
+                <li><strong>첫 방문 테마 깜빡임.</strong> 첫 페인트 스크립트는 개인 설정이 없으면 낮 테마를 칠하고, <code>config.json</code>(사이트 기본 밤)이 도착하면 밤으로 바꿨다. 사이트 기본 테마를 기억해 두고(<code>siteThemeDefault</code>) 첫 방문은 밤으로 칠하게 했다.</li>
+                <li><strong>설정 저장이 사이트 값을 굳힘.</strong> 설정 창에서 언어만 바꿔 저장해도 미리 채워진 제목·태그라인·사진 문구가 개인 값으로 저장돼, 이후 <code>config.json</code>을 바꿔도 그 브라우저엔 안 닿았다. 손댄 칸만 저장한다. 검증하다가 같은 계열 두 건을 더 찾았다. 빈 음악 칸이 <code>music:""</code>으로 저장돼 그 브라우저의 배경음악이 꺼졌고, 자동 감지 언어가 고정돼 <code>?lang=</code> 링크가 더는 먹지 않았다. 둘 다 고쳤다.</li>
+                <li><strong>태그 화면의 하드코딩 문구.</strong> <code>Tags</code>·<code>Search tags...</code>·<code>No matching tags.</code>·<code>← All tags</code>가 ko·ja에서도 영어로 나왔다. <code>STRINGS</code> 키로 옮겼다. 폴더 화면의 탭 제목도 en·ja에서 한국어 경로가 뜨던 것을 현지화된 폴더 이름으로 바꿨다.</li>
+                <li><strong>작은 것들.</strong> 깨진 퍼센트 인코딩 해시(<code>#!tag:%</code>)가 URIError로 라우팅을 멈추던 것(<code>safeDecode</code>), 검색어의 <code>$&amp;</code>가 안내 문구 치환에서 해석되던 것(<code>STRF</code>를 split/join으로), 설정 저장·초기화의 저장소 접근 예외, Orbits·Strata 뷰에 들어갈 때마다 resize 리스너가 쌓이고 사이드바 토글마다 GL 장면을 다시 짓던 것, 모바일에서 긴 인라인 <code>code</code>가 잘리던 것(워크로그 18편, <code>overflow-wrap: break-word</code> — 처음 넣은 <code>anywhere</code>는 표의 자동 열 폭까지 줄여 데스크톱에서도 표 안 식별자를 중간에서 끊었다. 2차 적대적 검토가 잡아 바꿨다), 낮 테마 캐러셀 활성 알약의 대비 2.9:1(<code>--accent-ink</code>로 4.5:1), en·ja에서 워크로그를 열 때마다 번역 경로를 먼저 두드려 나던 404.</li>
+            </ul>
+            <p>
+                <strong>검증.</strong> 결함마다 재현 스크립트를 먼저 돌려 실패를 확인하고, 고친 뒤 같은 스크립트 17항목이 모두 통과하는 것을 봤다(늦은 응답 두 경우·폴더 경합·경로형 링크·없는 경로·좋아요 잔존·깨진 해시·<code>$&amp;</code>·설정 저장·첫 방문 테마·ja 태그와 폴더 제목·워크로그 번역 경로·모바일 코드 폭·페이지 오류 0). <code>check_i18n_render</code>(50화면)와 <code>check_all</code>도 초록이다.
+            </p>
