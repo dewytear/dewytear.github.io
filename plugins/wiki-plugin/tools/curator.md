@@ -9,8 +9,8 @@
 | `tools/doc-entries.ko.json` | **원료** — 문서별 `{name, title, summary, concepts}` (AI가 문서를 읽고 작성). |
 | `tools/build_index.py` | **결정적 빌드** — `doc-entries.ko.json` + `list`로부터 `section`·`related`를 계산해 `data/knowledge-index.ko.json`을 생성. 같은 입력이면 항상 같은 출력. |
 | `data/knowledge-index.ko.json` | 사이트가 읽는 최종 산출물(요약·개념·연관문서). **직접 편집 금지** — 항상 스크립트로 생성. |
-| `ai-map` | 사람이 보는 "🧭 AI 지식 지도" 문서(클러스터 표·집계). 숫자는 수동 갱신. |
-| `wl-<YYYYMMDD>` · `list` | 변경이 있는 날, 그날 Work Log에 큐레이터 활동을 한 줄 기록(필요 시 새 wl 문서 생성 + `list` 등록). |
+| `ai-map` | 사람이 보는 "🧭 AI 지식 지도" 문서(클러스터 표·집계). 숫자는 인덱스 `stats`에서 사이트가 실시간 렌더하고, 첫 페인트·스냅샷용 정적 폴백은 `tools/build_map_fallbacks.py`가 생성한다(손으로 고치지 않는다). |
+| `wl-<YYYYMMDD>-content` · `list` | 변경이 있는 날, 그날의 콘텐츠 프레임 Work Log에 큐레이터 활동을 `<h3>` 절로 기록(없으면 새로 만들고 `list`에 등록). |
 
 ## 매일 실행 절차
 
@@ -40,7 +40,7 @@
   "name": "<파일명>",
   "title": "<첫 <h2>의 텍스트, 태그·엔티티 제거>",
   "summary": "<이 문서가 가르치는 핵심 한 문장 (한글 15~40자)>",
-  "concepts": ["<핵심 개념 3~6개>"]
+  "concepts": ["<본문에 실재하는 핵심 개념 — 보통 7~11개>"]
 }
 ```
 개념(`concepts`) 규칙:
@@ -48,36 +48,43 @@
 - 잘 알려진 기술어는 원형 유지(RAG, SKILL.md, MCP, BM25 등).
 - 문서 순서는 가급적 `list`의 네비 순서를 따른다(안정적 diff).
 
+**번역 동반 규칙:** 신규 문서를 등재하면 `docs/en`·`docs/ja` 본문, `list`의 `label_<lang>`·`tags_<lang>`, `tools/doc-entries.{en,ja}.json` 오버레이를 **같은 PR에** 싣는다(CLAUDE.md 다국어 규칙 — `check_translation`과 `validate_i18n`의 `indexed-doc-missing-<lang>`이 막는다). 번역까지 마칠 수 없으면 등재하지 말고 PR 본문·리포트에 "번역 필요"로만 남긴다. **관계(relations)**는 선행지식으로 기본값 처리하지 말고 5타입(선행지식·구현·사례·근거·대체)을 본문과 대조해 실재하는 것만 단다.
+
 **작성 AI·모델 표기 규칙:** AI가 새 문서를 만들거나 기존 문서를 대폭 다시 쓸 때는, `list`의 해당 노드에 `"model": "<이 작업을 수행한 세션의 모델명>"`을 기록한다(제목 우측 배지로 표시됨). 값은 반드시 **그 세션의 실제 정보**를 따르고, 남의 세션 값이나 임의 추정값을 쓰지 않는다. 필드가 없으면 배지를 표시하지 않는다(기본값 추정 표기는 2026-10-14 폐지). 신규 문서에서 빠뜨리면 `check_translation.py`의 model-gate가 PR을 막는다.
 
 ### 3. 인덱스 재생성 (결정적)
 ```
-python3 tools/build_index.py            # data/knowledge-index.ko.json 재생성
-python3 tools/build_index.py --check    # 재생성 결과와 파일이 일치하는지 확인(0이어야 함)
-python3 tools/build_dates.py            # data/doc-dates.json 재생성 (문서 생성/수정일자 — git 이력 기반)
+python3 tools/build_index.py            # data/knowledge-index.{ko,en,ja}.json 재생성
+python3 tools/build_map_fallbacks.py    # 지식 지도 정적 폴백 재생성
+python3 tools/build_ai_export.py        # llms.txt·knowledge-graph.json·feed·sitemap
+python3 tools/build_prerender.py        # /p/ 스냅샷
+# — 여기까지 커밋한 뒤 —
+python3 tools/build_dates.py            # data/doc-dates.json (새 문서는 커밋 후에야 git 이력이 있다)
+python3 tools/build_ai_export.py && python3 tools/build_prerender.py   # 날짜 반영 후 한 번 더, 그다음 amend
+python3 tools/check_all.py              # 마지막에 — 커밋되지 않은 변경이 있으면 판정을 거부한다
 ```
 `build_index.py`는 손대지 않는다(로직 변경 필요 시 사람이 검토).
 산출물의 **스키마 계약(동결)**은 `tools/schema.md` — 필드 추가는 하위호환, 의미 변경·제거는 `schemaVersion` 증가.
 
 ### 4. 지도 갱신(대부분 불필요)
-지도 페이지의 표·수치(클러스터·허브·브리지·핵심 개념·총계)는 `data/knowledge-index.ko.json`의 `stats`에서 **사이트가 실시간 렌더**하므로 인덱스만 재생성하면 자동으로 맞는다. `ai-map`을 손댈 일은 **새 클러스터(폴더)가 생겼을 때뿐**이다: 그때는 `tools/clusters.json`에 [섹션 경로, 표시명]을 **모든 언어**에 추가하고(build_index.py 코드는 수정하지 않는다), `ai-map`의 `#km-clusters` `data-topics`에 그 클러스터의 "중심 주제" 문구를 더한 뒤, 정적 폴백 행도 하나 추가한다. SVG·본문 문구 개편은 사람 몫이므로 PR 본문에 제안만 남긴다.
+지도 페이지의 표·수치(클러스터·허브·브리지·핵심 개념·총계)는 `data/knowledge-index.ko.json`의 `stats`에서 **사이트가 실시간 렌더**하므로 인덱스만 재생성하면 자동으로 맞는다. `ai-map`을 손댈 일은 **새 클러스터(폴더)가 생겼을 때뿐**이다: 그때는 `tools/clusters.json`에 [섹션 경로, 표시명]을 **모든 언어**에 추가하고(build_index.py 코드는 수정하지 않는다), 3언어 `ai-map`의 `#km-clusters` `data-topics`에 그 클러스터의 "중심 주제" 문구를 더한 뒤 `build_map_fallbacks.py`로 정적 폴백을 재생성한다. SVG·본문 문구 개편은 사람 몫이므로 PR 본문에 제안만 남긴다.
 
 ### 5. Work Log 기록 (변경이 있을 때)
 인덱스에 변경이 생겼으면(2~4단계에서 무언가 바뀌었으면) **오늘 날짜의 Work Log**도 같은 PR에 함께 갱신한다. 오늘 날짜는 시스템에서 확인한다(예: 커밋 시각 기준 `YYYY-MM-DD`, KST). Work Log는 개발 일지이며 **태그를 달지 않는다.**
 
-Work Log는 **하루 = 여러 주제 문서** 규칙(`wl-guide` 참고)을 따른다 — 큐레이터 활동은 그 자체가 하나의 주제이므로 **전용 문서** `wl-<YYYYMMDD>-curate`에 기록한다(다른 주제 문서에 섞지 않는다).
+Work Log는 **하루 = 빅 프레임 4종** 규칙(`wl-guide`·CLAUDE.md 규칙 4)을 따른다 — 큐레이터 활동은 ①콘텐츠 프레임이므로 그날의 `wl-<YYYYMMDD>-content`에 `<h3>` 절로 적는다(전용 `-curate` 문서는 2026-10-16 폐지 — 빅 프레임 규칙과 충돌했다).
 
-- **오늘 큐레이터 문서가 이미 있으면**(`wl-<YYYYMMDD>-curate` 파일 존재) 그 문서에 활동을 한 줄 추가한다. 예:
-  `<li><strong>AI 지식 큐레이터</strong> — 지식 인덱스 자동 갱신: 신규 X · 변경 Y · 삭제 Z편. <span class="scn-sub">(자동 PR)</span></li>`
+- **오늘 콘텐츠 로그가 이미 있으면** 그 문서 끝에 `<h3>AI 지식 큐레이터 — 인덱스 갱신</h3>` 절을 더하고 신규 X · 변경 Y · 삭제 Z편을 적는다.
 - **없으면** 새로 만든다:
-  1. 파일 `docs/ko/work-log/<YYYY>/<MM>/<DD>/wl-<YYYYMMDD>-curate` 생성(다른 wl 문서 형식을 따름 — `<h2>YYYY-MM-DD · AI 지식 큐레이터</h2>` + `<p>` 요약 + `<ul><li>` 항목). 첫 항목으로 위 큐레이터 활동 줄을 넣는다.
-  2. `list`의 `Work Log → 2026 → MM월` 아래 `DD일` 브랜치에 리프를 등록한다(월/일 브랜치가 없으면 만든다; 같은 날 다른 주제 문서가 있으면 나란히 둔다). 리프 형식: `{"name": "wl-<YYYYMMDD>-curate", "path": "work-log/<YYYY>/<MM>/<DD>/wl-<YYYYMMDD>-curate", "label": "AI 지식 큐레이터"}` — **tags 없음**. `list`은 유효한 JSON이어야 한다.
+  1. 파일 `docs/ko/work-log/<YYYY>/<MM>/<DD>/wl-<YYYYMMDD>-content` 생성(`<h2>YYYY-MM-DD — 콘텐츠</h2>` + 위 `<h3>` 절).
+  2. `list`의 `Work Log → 2026 → MM월` 아래 `DD일` 브랜치에 리프를 등록한다. 월/일 브랜치가 없으면 만들고 **`title_en`·`title_ja`도 함께 넣는다**(en `October`·`Day 16`, ja `10月`·`16日` — 빠지면 `branch-label-parity` ERROR). 리프 형식: `{"name": "wl-<YYYYMMDD>-content", "path": "work-log/<YYYY>/<MM>/<DD>/wl-<YYYYMMDD>-content", "label": "콘텐츠 — <요약>", "tags": []}`. `list`은 유효한 JSON이어야 한다.
+- 날짜는 **KST** 기준이다(`check_worklog`가 커밋 시각의 KST 날짜와 대조한다).
 
 인덱스 변경이 없으면 Work Log도 건드리지 않는다.
 
 ### 6. PR 제안 (변경이 있을 때만)
 ```
-git add tools/doc-entries.ko.json data/knowledge-index.ko.json docs/ko/ai/map/ai-map docs/ko/work-log list
+git add tools/doc-entries.*.json data/ docs/ list llms.txt llms-full.txt feed*.xml sitemap.xml p/ 404.html
 git diff --cached --quiet && echo "no change → stop" && exit 0
 git commit -m "지식 인덱스 자동 갱신 (<YYYY-MM-DD>)"    # 트레일러 포함
 git push -u origin <branch>
@@ -90,5 +97,5 @@ git push -u origin <branch>
 
 ## 커밋 트레일러
 ```
-Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
+Co-Authored-By: <이 세션의 실제 모델명> <noreply@anthropic.com>
 ```

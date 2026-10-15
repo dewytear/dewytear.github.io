@@ -21,7 +21,12 @@ SPECIAL_PREFIXES = ('tag:', 'folder:')
 # Deliberately nav-less doc files (reachable by dedicated UI, not the list
 # tree): the About page opens from the sidebar profile photo.
 UNLISTED_DOCS = {'about'}
-LINK_RE = re.compile(r'href="#!([^"]*)"')
+LINK_RE = re.compile(r'href=(["\'])#!(.*?)\1')
+# 라우터는 #!이름만 문서로 연다 — #work-log/… 같은 경로형·앵커형 해시 링크는
+# 빈 화면이 됐다(2026-10-16, 7/30·7/31 로그의 링크 8개). 따옴표 종류도 둘 다 본다.
+# <a>의 href만 본다 — SVG <use href="#id">·xlink:href는 문서 링크가 아니다.
+HASH_LINK_RE = re.compile(r'<a\b[^>]*?\shref=(["\'])#(?!!)(.*?)\1')
+WL_NAME_DATE_RE = re.compile(r'^work-log/(\d{4})/(\d{2})/(\d{2})/wl-(\d{8})')
 
 
 def iter_nodes(nodes):
@@ -198,7 +203,11 @@ def run(root):
 
     # 5. broken-link: href="#!..." targets that resolve to nothing.
     names = {n['name'] for n in docs}
-    for lang, base in (('ko', ko_dir), ('en', en_dir)):
+    # 모든 언어 폴더를 본다 — 예전엔 ko·en만 돌아 ja 본문의 깨진 링크가 통과했다.
+    docs_root = os.path.dirname(ko_dir)
+    all_langs = sorted(d for d in os.listdir(docs_root) if os.path.isdir(os.path.join(docs_root, d)))
+    for lang in all_langs:
+        base = os.path.join(docs_root, lang)
         for rel, abspath in sorted(walk_files(base).items()):
             try:
                 with open(abspath, encoding='utf-8') as f:
@@ -208,14 +217,18 @@ def run(root):
                                     "could not read docs/%s/%s: %s" % (lang, rel, e)))
                 continue
             doc_name = path_to_name.get(rel, '%s:%s' % (lang, rel))
+            for m in HASH_LINK_RE.finditer(text):
+                findings.append(_f('ERROR', 'broken-link', doc_name,
+                                    'docs/%s: href="#%s" — 문서 링크는 #!이름 형식이어야 한다 '
+                                    '(라우터가 #!로 시작하지 않는 해시를 열지 못한다)' % (lang, m.group(2))))
             for m in LINK_RE.finditer(text):
-                target = m.group(1)
+                target = m.group(2)
                 if (target in SPECIAL_ROUTES
                         or target.startswith(SPECIAL_PREFIXES)
                         or target in names):
                     continue
                 findings.append(_f('ERROR', 'broken-link', doc_name,
-                                    'href="#!%s" has no matching route' % target))
+                                    'docs/%s: href="#!%s" has no matching route' % (lang, target)))
 
     # 6. path-name-mismatch: path basename should equal the logical name.
     for n in docs:
@@ -225,13 +238,24 @@ def run(root):
             findings.append(_f('WARN', 'path-name-mismatch', n['name'],
                                 "path '%s' basename '%s' != name '%s'" % (rel, base, n['name'])))
 
-    # 7. en-orphan: docs/en file whose relative path has no ko list node.
-    for rel in sorted(walk_files(en_dir)):
-        if rel in UNLISTED_DOCS:
+    # 7. <lang>-orphan: 번역 폴더 파일인데 list에 그 경로의 노드가 없음 (모든 번역 언어).
+    for lang in all_langs:
+        if lang == 'ko':
             continue
-        if rel not in doc_paths:
-            findings.append(_f('ERROR', 'en-orphan', path_to_name.get(rel, rel),
-                                "docs/en/%s has no matching path in list" % rel))
+        for rel in sorted(walk_files(os.path.join(docs_root, lang))):
+            if rel in UNLISTED_DOCS:
+                continue
+            if rel not in doc_paths:
+                findings.append(_f('ERROR', '%s-orphan' % lang, path_to_name.get(rel, rel),
+                                    "docs/%s/%s has no matching path in list" % (lang, rel)))
+
+    # 8. worklog-name-date: 로그 파일명의 날짜와 날짜 폴더가 같아야 한다
+    # (docs/ko/work-log/2026/10/15/wl-20261014-ops 같은 엇갈림이 두 게이트를 다 통과했다).
+    for n in docs:
+        m = WL_NAME_DATE_RE.match(n.get('path', ''))
+        if m and m.group(4) != m.group(1) + m.group(2) + m.group(3):
+            findings.append(_f('ERROR', 'worklog-name-date', n['name'],
+                                "파일명 날짜 %s ≠ 폴더 날짜 %s/%s/%s" % (m.group(4), m.group(1), m.group(2), m.group(3))))
 
     return findings
 

@@ -58,6 +58,9 @@
 <div class="d-cap">Every PR has to pass four layers of gates — a single ERROR means no merge.</div>
 </div>
 
+<h3>Checking Again by State What a Diff Cannot See</h3>
+<p>Companion gates read a PR's change list, so splitting one piece of work across two PRs could slip past them. For example, if the first PR only put a document in the list and the second PR added it to the index, the translation gate never saw a "newly indexed document" in either. So the key rules are also checked against <strong>the repository's current state</strong>, regardless of the PR: an indexed document must have a body in every translation language and an authoring model, and a document that sits in the list without being indexed is blocked unless it is a meta page. A folder with a Korean name must have translated titles, and document links in the body must use the <code>#!name</code> form in every language. The October 2026 full audit confirmed these gaps in practice, and they were closed.</p>
+
 <h3>Gates That Fix Themselves — --fix</h3>
 <p>Once a gate has ruled that something "has drifted," the restoration is mostly labor that needs no judgment: the bundle copy only has to be <em>copied</em> from the root, and the cache buster only needs its number <em>+1</em>. So two gates have a <code>--fix</code> mode — <code>check_plugin_sync --fix</code> automatically restores a drifted snapshot, and <code>check_cachebuster --fix</code> automatically bumps a stale <code>?v</code>. The boundary is clear: <strong>restoration by machine, judgment by human.</strong> How far to raise the plugin version (content update = minor, bug fix = patch), and whether a feature change has made an explanatory document stale, are things --fix does not touch.</p>
 
@@ -66,7 +69,7 @@
 <ul>
     <li><code>ENGINE</code> viewer behavior — review self-describing docs · bump ?v &nbsp;/&nbsp; <code>STYLE</code> design and diagrams — design rules · bump ?v</li>
     <li><code>TOOL</code> build and validation tools — bundle sync + version &nbsp;/&nbsp; <code>SCHEMA</code> artifact contract — accompany with schema.md · judge backward compatibility · review explanatory docs</li>
-    <li><code>PLUGIN</code> skills and metadata — version bump &nbsp;/&nbsp; <code>CONTENT</code> body text and lists — the 5 registration steps · no plugin changes</li>
+    <li><code>PLUGIN</code> skills and metadata — version bump &nbsp;/&nbsp; <code>CONTENT</code> body text and lists — the 5 registration steps · bundle sync when the concept dictionary or og-card changes</li>
 </ul>
 <p>The declaration needs only one line in the plan or the PR body (for example, <em>"Change type: TOOL + PLUGIN"</em>). Multiple declarations are normal — the relation-type feature cut across five types, and had it been declared at the start, "review explanatory docs" on the <code>SCHEMA</code> row would have been caught inside the implementation PR. This is not a gate (enforcement) but a <strong>judgment aid</strong> — instead of mechanizing the areas that need judgment, it pulls the moment of judgment earlier.</p>
 

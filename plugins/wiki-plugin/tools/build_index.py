@@ -114,7 +114,10 @@ def build(lang='ko'):
     if lang != 'ko':
         overlay = {e['name']: e for e in json.load(open(entries_path(lang), encoding='utf-8'))}
         entries = [dict(base, **{k: v for k, v in overlay.get(base['name'], {}).items()
-                                 if k not in ('name', 'relations')})
+                                 # concepts도 덮지 않는다 — 개념은 언어 공통 구조라 ko가
+                                 # 정본이다. 오버레이에 복사본이 있으면 ko를 고쳤을 때
+                                 # 그 언어 그래프만 조용히 갈라졌다(2026-10-16 발견·제거).
+                                 if k not in ('name', 'relations', 'concepts')})
                    for base in entries]
         # relations는 통째로 덮지 않는다 — target·type·source는 구조(언어 무관)라
         # ko가 정본이고, 화면에 보이는 근거 문구(evidenceRef)만 번역본으로 갈아끼운다.

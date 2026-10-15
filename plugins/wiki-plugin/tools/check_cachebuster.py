@@ -30,7 +30,8 @@ import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ASSET_RE = re.compile(r'(?:href|src)="([^"?]+)\?v=(\d+)"')
+# 큰따옴표·작은따옴표 둘 다 (2026-10-16 — 작은따옴표 src는 검사 밖이었다)
+ASSET_RE = re.compile(r'(?:href|src)=["\']([^"\'?]+)\?v=(\d+)["\']')
 
 
 def git(args, **kw):
@@ -62,11 +63,11 @@ def apply_fix(stale):
     with open(path, encoding='utf-8') as f:
         html = f.read()
     for asset, v in stale:
-        old, new = f'{asset}?v={v}"', f'{asset}?v={v + 1}"'
-        if html.count(old) != 1:
+        old, new = f'{asset}?v={v}', f'{asset}?v={v + 1}'
+        if len(re.findall(re.escape(old) + r'["\']', html)) != 1:
             print(f'[ERROR] cachebuster-fix | {asset} — index.html에서 `{old}` 유일 매치 실패')
             sys.exit(1)
-        html = html.replace(old, new)
+        html = re.sub(re.escape(old) + r'(["\'])', lambda m: new + m.group(1), html)
         print(f'  fixed: {asset} ?v={v} → {v + 1}')
     with open(path, 'w', encoding='utf-8') as f:
         f.write(html)
@@ -81,7 +82,11 @@ def main():
     args = parser.parse_args()
 
     try:
-        base_v = versions_at(args.base)
+        # 기준 ?v는 변경 목록과 같은 지점(merge-base)에서 읽는다. base tip에서 읽으면
+        # master보다 뒤처진 브랜치에서 master가 이미 올린 ?v를 '상향 동반'으로
+        # 착각해 통과시켰다(2026-10-16 발견 — CI의 병합 ref에선 안 드러나고 로컬에서만).
+        mb = git(['merge-base', args.base, args.head]).strip() or args.base
+        base_v = versions_at(mb)
         head_v = versions_at(args.head)
         files = changed_files(args.base, args.head)
     except subprocess.CalledProcessError as e:

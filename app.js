@@ -2388,7 +2388,7 @@ function jumpRecentWorklog(ev){
 }
 
 // 첫 방문 자동 언어 — 저장된 값(개인·사이트 기본)이 없으면 브라우저 언어로
-// 정한다: 한국어 계열(ko*)이 아니면 영어. LANGS_READY에 en이 있어야 발동.
+// 정한다: LANGS_READY에 있는 브라우저 언어면 그 언어, 아니면 영어(아래 본문 참조).
 function detectLang(){
     // `?lang=en` — 링크 하나로 언어를 지정할 수 있어야 한다. 영어 스냅샷
     // (/p/en/<name>/)이 사라졌을 때 404가 이 형태로 SPA에 넘겨주고, 영어권

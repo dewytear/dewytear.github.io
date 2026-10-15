@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T23:17:32+09:00",
- "dateModified": "2026-07-28T03:55:23+09:00"
+ "dateModified": "2026-10-16T00:44:47+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -118,6 +118,9 @@
 <div class="d-cap">모든 PR은 네 층의 게이트를 지나야 합니다 — 하나라도 ERROR면 머지 불가.</div>
 </div>
 
+<h3>diff가 못 보는 것은 상태로 한 번 더</h3>
+<p>동반 게이트는 PR의 변경 목록을 보기 때문에, 한 일을 PR 두 개로 나누면 빠져나갈 수 있습니다. 예를 들어 첫 PR에서 문서를 목록에만 올리고 두 번째 PR에서 인덱스에 등재하면, 번역 게이트는 어느 쪽에서도 "새로 등재된 문서"를 보지 못했습니다. 그래서 핵심 규칙은 PR과 상관없이 <strong>저장소의 현재 상태</strong>로도 검사합니다: 인덱스에 오른 문서는 모든 번역 언어의 본문과 저작 모델을 가져야 하고, 목록에만 있고 인덱스에 없는 문서는 메타 페이지가 아니면 막힙니다. 한글 이름의 폴더는 번역 제목이 있어야 하고, 본문의 문서 링크는 모든 언어에서 <code>#!이름</code> 형식이어야 합니다. 2026년 10월 전수 점검에서 이 빈틈들이 실제로 확인돼 메웠습니다.</p>
+
 <h3>스스로 고치는 게이트 — --fix</h3>
 <p>게이트가 "어긋났다"고 판정한 뒤의 복원은 대부분 판단이 필요 없는 노동입니다: 번들 사본은 루트에서 <em>복사</em>하면 되고, 캐시버스터는 숫자를 <em>+1</em>하면 됩니다. 그래서 두 게이트에 <code>--fix</code> 모드가 있습니다 — <code>check_plugin_sync --fix</code>는 어긋난 스냅샷을 자동 복원하고, <code>check_cachebuster --fix</code>는 낡은 <code>?v</code>를 자동 상향합니다. 경계는 명확합니다: <strong>복원은 기계, 판단은 사람.</strong> 플러그인 버전을 얼마나 올릴지(내용 갱신=minor, 버그픽스=patch), 기능 변경이 해설 문서를 낡게 했는지는 --fix가 건드리지 않습니다.</p>
 
@@ -126,7 +129,7 @@
 <ul>
     <li><code>ENGINE</code> 뷰어 동작 — 자기기술 문서 검토 · ?v 상향 &nbsp;/&nbsp; <code>STYLE</code> 디자인·도식 — 디자인 규칙 · ?v 상향</li>
     <li><code>TOOL</code> 빌드·검증 도구 — 번들 동기 + 버전 &nbsp;/&nbsp; <code>SCHEMA</code> 산출물 계약 — schema.md 동반 · 하위호환 판단 · 해설 문서 검토</li>
-    <li><code>PLUGIN</code> 스킬·메타 — 버전 상향 &nbsp;/&nbsp; <code>CONTENT</code> 본문·목록 — 등재 5단계 · 플러그인 반영 금지</li>
+    <li><code>PLUGIN</code> 스킬·메타 — 버전 상향 &nbsp;/&nbsp; <code>CONTENT</code> 본문·목록 — 등재 5단계 · 개념 사전·og-card를 고치면 번들 동기</li>
 </ul>
 <p>선언은 플랜·PR 본문에 한 줄이면 됩니다(예: <em>"변경 유형: TOOL + PLUGIN"</em>). 복수 선언이 정상입니다 — 관계 타입 기능은 다섯 유형을 관통했고, 시작 때 선언했다면 <code>SCHEMA</code> 행의 "해설 문서 검토"가 구현 PR 안에서 걸렸을 것입니다. 이것은 게이트(강제)가 아니라 <strong>판단 보조</strong>입니다 — 판단이 필요한 영역을 기계화하는 대신, 판단할 시점을 앞으로 당깁니다.</p>
 
@@ -135,7 +138,7 @@
     산출물은 <strong>결정적 빌드</strong>로만 생성(직접 편집 금지) → <code>--check</code>가 드리프트를 차단 → 동반 게이트 6종이 "짝이 함께 왔는지" 검사 → <strong>ERROR 0가 머지 조건</strong>. 복원 노동은 <code>--fix</code>가 대신하고, 기계가 판정 못 하는 서술·버전 판단은 <strong>변경 유형 선언</strong>으로 사람이 시작 시점에 챙깁니다. 게이트는 전부 실제 사고의 재발 방지로 태어났습니다.
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">분류</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">생성일자</span> 2026-07-11 &middot; <span class="pr-k">수정일자</span> 2026-07-28</p>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">생성일자</span> 2026-07-11 &middot; <span class="pr-k">수정일자</span> 2026-10-16</p>
 
 <nav class="pr-rel"><h2>연관 문서</h2>
 <ul><li><a href="/p/kgs-accuracy/">이 위키는 얼마나 맞히는가 — 검색과 그래프 순회를 재 봤다</a></li><li><a href="/p/kgs-overview/">지식은 어떻게 쌓이는가</a></li><li><a href="/p/kgs-edges/">문서는 어떻게 이어지는가</a></li></ul>

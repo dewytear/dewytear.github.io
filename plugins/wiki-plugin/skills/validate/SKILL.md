@@ -11,10 +11,14 @@ description: 위키 품질 검증 일괄 실행 — validate_all(라우트·문�
 ## 명령
 
 ```bash
-python3 tools/validate_all.py                                # 상태 검사 5종 일괄 — ERROR 0가 머지 조건
-python3 tools/check_worklog.py --base origin/master          # PR 게이트: Work Log 추가(A) 또는 갱신(M) 동반 확인
-python3 tools/check_cachebuster.py --base origin/master      # PR 게이트: ?v 자산 변경 시 index.html ?v 상향 확인
+python3 tools/check_all.py                                   # 머지 판정 — CI 파이썬 게이트 전부를 같은 순서로(커밋 후 실행)
+python3 tools/validate_all.py                                # (디버깅) 상태 검사 5종 일괄
+python3 tools/check_worklog.py --base origin/master          # (디버깅) PR 게이트: 날짜 로그 추가·갱신 동반
+python3 tools/check_cachebuster.py --base origin/master      # (디버깅) PR 게이트: ?v 자산 변경 시 index.html ?v 상향
+node tools/check_diagram_bounds.mjs                          # 도식을 만졌다면 — 실렌더 경계 전수
+node tools/check_i18n_render.mjs                             # UI 문구를 만졌다면 — 언어별 화면 실렌더
 ```
+`check_all.py`는 커밋하지 않은 변경이 남아 있으면 판정을 거부한다 — diff 게이트는 커밋된 것만 보기 때문이다.
 
 ## ERROR / WARN 해석
 

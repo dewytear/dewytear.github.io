@@ -314,11 +314,17 @@ def check_diagram_bounds(bodies, M):
                 else:
                     lo, hi = x, x + wlb
                 # containing box (text anchor point inside a box)
+                # 글자를 감싸는 **가장 작은** 박스와 비교한다(2026-10-16). 예전엔 소스
+                # 순서상 첫 박스를 잡아, 큰 패널 rect가 앞에 있으면 그 안의 작은 알약을
+                # 넘친 글자가 패널 기준으로 '들어간다'고 판정됐다. 아이콘용 작은
+                # 사각형(폭 20·높이 12 미만)은 글자 박스가 아니므로 제외한다.
                 host = None
                 for (bx, by, bw, bh) in boxes:
+                    if bw < 20 or bh < 12:
+                        continue
                     if bx - 2 <= x <= bx + bw + 2 and by - 2 <= y <= by + bh + 2:
-                        host = (bx, by, bw, bh)
-                        break
+                        if host is None or bw * bh < host[2] * host[3]:
+                            host = (bx, by, bw, bh)
                 if host:
                     bx, by, bw, bh = host
                     over = max(bx - lo, hi - (bx + bw))

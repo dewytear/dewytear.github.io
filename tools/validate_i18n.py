@@ -100,6 +100,97 @@ def galaxy_labels(cluster_labels, lang, galaxy):
 
 # --- string-aware brace matcher, used for extracting the STRINGS.<lang>
 # object literals out of index.html without a JS parser. ---
+
+
+def _mask_js_comments(text):
+    """JS 주석(//…, /*…*/)을 같은 길이의 공백으로 바꾼다(줄바꿈 보존). 문자열 안의
+    //·/*는 주석이 아니므로 따옴표 상태를 따라간다(정규식 리터럴은 근사)."""
+    out, i, n, q = list(text), 0, len(text), None
+    while i < n:
+        c = text[i]
+        if q:
+            if c == '\\':
+                i += 2
+                continue
+            if c == q:
+                q = None
+            i += 1
+            continue
+        if c in '\'"`':
+            q = c
+            i += 1
+            continue
+        if text.startswith('//', i):
+            j = text.find('\n', i)
+            j = n if j == -1 else j
+            for k in range(i, j):
+                out[k] = ' '
+            i = j
+            continue
+        if text.startswith('/*', i):
+            j = text.find('*/', i + 2)
+            j = n if j == -1 else j + 2
+            for k in range(i, j):
+                if out[k] != '\n':
+                    out[k] = ' '
+            i = j
+            continue
+        i += 1
+    return ''.join(out)
+
+def _enclosing_brace(text, pos):
+    """pos가 `{` 자체이면 그 위치, 아니면 pos를 감싸는 가장 가까운 여는 `{`."""
+    if text[pos] == '{':
+        return pos
+    depth = 0
+    i = pos
+    while i >= 0:
+        c = text[i]
+        if c == '}':
+            depth += 1
+        elif c == '{':
+            if depth == 0:
+                return i
+            depth -= 1
+        i -= 1
+    return None
+
+
+def _top_keys(block):
+    """객체 리터럴 문자열의 최상위 키 집합 (문자열·중첩 괄호는 건너뛴다)."""
+    keys, depth, i, n = set(), 0, 0, len(block)
+    expect_key = False
+    while i < n:
+        c = block[i]
+        if c in '"\'`':
+            j = i + 1
+            while j < n and block[j] != c:
+                j += 2 if block[j] == '\\' else 1
+            if depth == 1 and expect_key:
+                k = re.match(r'\s*:', block[j + 1:])
+                if k:
+                    keys.add(block[i + 1:j])
+            expect_key = False
+            i = j + 1
+            continue
+        if c in '{[(':
+            depth += 1
+            expect_key = depth == 1
+        elif c in '}])':
+            depth -= 1
+        elif c == ',' and depth == 1:
+            expect_key = True
+        elif depth == 1 and expect_key and (c.isalpha() or c in '_$'):
+            m = re.match(r'([A-Za-z_$][\w$]*)\s*:', block[i:])
+            if m:
+                keys.add(m.group(1))
+                i += m.end()
+                expect_key = False
+                continue
+            expect_key = False
+        i += 1
+    return keys
+
 def extract_balanced(text, open_brace_index):
     depth = 0
     i = open_brace_index
@@ -197,17 +288,54 @@ def run(root):
     # 잡지 못했다(2026-07-28). 어떤 언어든 라벨을 하나 달았다면 나머지 번역
     # 언어에도 달아야 한다 — 라틴 문자라 번역이 불필요한 폴더(AI·Code·2026 등)는
     # 어느 언어에도 라벨이 없으므로 이 대칭 규칙에 걸리지 않는다.
+    # 2026-10-16 확장: 폴더 노드의 번역은 대부분 `title_<lang>`에 있다(라벨형은
+    # Wiki 등 3개뿐) — 예전 검사는 label_<lang>만 봐서 사실상 아무것도 막지
+    # 못했다(title_ja를 지워도 0건). 이제 두 필드를 함께 보고, 한글 제목인
+    # 폴더가 어떤 번역 언어에서든 번역 제목이 없으면 ERROR다(CLAUDE.md 규칙 1의
+    # "새 폴더면 title_<lang>도 같이" — 빠지면 그 언어 사이드바·빵부스러기에
+    # 한국어가 뜬다). 라틴 문자 폴더(AI·Code·2026 등)는 번역이 필요 없어 제외.
+    def _tr(n, l):
+        return ('label_%s' % l) in n or ('title_%s' % l) in n
     for n in branches:
-        have = [l for l in tr_langs if ('label_%s' % l) in n]
-        if not have:
-            continue
         label = n.get('title') or n.get('label') or '-'
+        hangul = any('\uac00' <= ch <= '\ud7a3' for ch in label)
+        have = [l for l in tr_langs if _tr(n, l)]
         for l in tr_langs:
-            if ('label_%s' % l) not in n:
+            if _tr(n, l):
+                continue
+            if hangul:
+                findings.append(_f('ERROR', 'branch-label-parity', label,
+                                    "한글 폴더 제목에 title_%s(또는 label_%s)가 없음 — %s "
+                                    "사이드바·빵부스러기에 한국어가 그대로 뜬다" % (l, l, l)))
+            elif have:
                 findings.append(_f('WARN', 'branch-label-parity', label,
-                                    "폴더 노드에 label_%s가 있는데 label_%s가 없음 — %s "
-                                    "사이드바에 한국어 라벨이 그대로 뜬다"
-                                    % (have[0], l, l)))
+                                    "폴더 노드에 %s 번역이 있는데 %s 번역이 없음" % (have[0], l)))
+
+    # 3b'. indexed-doc-parity (2026-10-16): 인덱스에 등재된 문서(doc-entries.ko)는
+    # 번역 언어 본문과 list의 model을 모두 가져야 한다. check_translation·model-gate는
+    # PR diff에서 "ko 파일이 새로 추가(A)되고 이미 등재된" 경우만 봐서, 등재를 다음
+    # PR로 미루면(1단계: 미등재로 추가, 2단계: doc-entries만 추가) 둘 다 우회됐다.
+    # 상태 기반 검사라 PR을 몇 개로 나눠도 결과가 같다.
+    try:
+        with open(os.path.join(root, 'tools', 'doc-entries.ko.json'), encoding='utf-8') as f:
+            _ent = json.load(f)
+        indexed = {e['name'] for e in (_ent if isinstance(_ent, list) else _ent.get('entries', []))}
+    except (OSError, ValueError):
+        indexed = set()
+    for name in sorted(indexed):
+        n = doc_by_name.get(name)
+        if not n:
+            continue
+        rel = n.get('path', name)
+        for l in tr_langs:
+            if rel not in lang_files[l]:
+                findings.append(_f('ERROR', 'indexed-doc-missing-%s' % l, name,
+                                    "인덱스 등재 문서인데 docs/%s/%s가 없음 — 신규 문서는 "
+                                    "번역 본문 동반이 규칙(CLAUDE.md 다국어 규칙)" % (l, rel)))
+        if not n.get('model'):
+            findings.append(_f('ERROR', 'indexed-doc-missing-model', name,
+                                "인덱스 등재 문서인데 list 노드에 model이 없음 — 저작 모델을 "
+                                "세션 정보에서 받아 기록한다(기본값 표기 없음)"))
 
     # 3c. concept-dict-coverage: 개념 표시명 사전(tools/concepts.<lang>.json)이
     # 인덱스의 한국어 개념을 전부 덮는지. 이 층은 2026-07-28까지 **완전히
@@ -268,17 +396,35 @@ def run(root):
                 text = open(os.path.join(root, fn), encoding='utf-8').read()
             except OSError:
                 continue
-            for m in re.finditer(r'var\s+([A-Za-z_$][\w$]*)\s*=\s*\{\s*ko\s*:\s*\{', text):
-                name = m.group(1)
-                if name == 'STRINGS':
-                    continue   # 본체는 strings-parity가 따로 검사한다
-                block = extract_balanced(text, text.index('{', m.start()))
+            # 주석은 공백으로 지운다 — 주석 속 `{ko:'가'}` 예시가 ERROR가 되거나, 주석의
+            # 아포스트로피(it's)가 괄호 짝 맞추기를 망쳐 진짜 사전을 놓치지 않게.
+            text = _mask_js_comments(text)
+            # 2026-10-16 확장: 예전엔 `var X = { ko: {` 한 모양만 봤다 — const·따옴표 키·
+            # {en:…, ko:…} 순서·문자열 값({ko:'예', en:'yes'})·배열 안 객체 등은 전부
+            # 통과했다. 이제 `ko` 키를 가진 **모든 객체 리터럴**을 찾아, 같은 객체의
+            # 최상위 키에 LANGS_READY 언어가 다 있는지 본다. STRINGS 본체는 제외.
+            skip = []
+            sm = re.search(r'var\s+STRINGS\s*=\s*\{', text)
+            if sm:
+                blk = extract_balanced(text, text.index('{', sm.start()))
+                if blk is not None:
+                    skip.append((sm.start(), sm.start() + len(blk) + 64))
+            seen = set()
+            for m in re.finditer(r'[{,]\s*([\'"]?)ko\1\s*:', text):
+                if any(a <= m.start() <= b for a, b in skip):
+                    continue
+                open_at = _enclosing_brace(text, m.start() + (0 if text[m.start()] == '{' else 0))
+                if open_at is None or open_at in seen:
+                    continue
+                seen.add(open_at)
+                block = extract_balanced(text, open_at)
                 if block is None:
                     continue
-                have = set(re.findall(r'[{,]\s*([A-Za-z_][A-Za-z0-9_]*)\s*:\s*\{', block))
+                have = _top_keys(block)
                 missing = [l for l in ready if l not in have]
                 if missing:
-                    findings.append(_f('ERROR', 'hidden-lang-dict', '%s:%s' % (fn, name),
+                    line = text.count('\n', 0, open_at) + 1
+                    findings.append(_f('ERROR', 'hidden-lang-dict', '%s:%d' % (fn, line),
                                         'STRINGS 밖의 언어 사전에 %s 항목이 없다 — 그 언어에서만 '
                                         '다른 언어 문구가 나온다. STRINGS로 옮기거나 항목을 채울 것'
                                         % ', '.join(missing)))

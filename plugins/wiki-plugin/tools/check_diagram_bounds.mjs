@@ -101,7 +101,10 @@ async function main() {
           const b=t.getBBox(), cx=b.x+b.width/2, cy=b.y+b.height/2, txt=(t.textContent||'').slice(0,24);
           if(b.x<vb.x-EPS||b.x+b.width>vb.x+vb.width+EPS)
             out.push({di,kind:'viewbox',what:'label "'+txt+'" x'+Math.round(b.x)+'~'+Math.round(b.x+b.width)});
-          const h=boxes.find(r=>cx>=r.x-2&&cx<=r.x+r.w+2&&cy>=r.y-2&&cy<=r.y+r.h+2);
+          // 가장 작은 포함 박스(아이콘용 20x12 미만 제외) — 소스 순서상 첫 박스를 잡으면
+          // 큰 패널 rect가 앞에 있을 때 그 안 알약의 넘침을 놓쳤다(2026-10-16).
+          let h=null; boxes.forEach(r=>{ if(r.w<20||r.h<12) return;
+            if(cx>=r.x-2&&cx<=r.x+r.w+2&&cy>=r.y-2&&cy<=r.y+r.h+2&&(!h||r.w*r.h<h.w*h.h)) h=r; });
           if(h){ const over=Math.max(h.x-b.x,(b.x+b.width)-(h.x+h.w));
             if(over>TOL) out.push({di,kind:'text',what:'label "'+txt+'" +'+Math.round(over)+'px (w'+Math.round(b.width)+' > box '+Math.round(h.w)+')'}); }
         });

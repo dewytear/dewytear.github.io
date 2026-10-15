@@ -25,10 +25,19 @@ missing-date **ERROR**가 막는다. 2026-07-13 dzp-value 생성일 미표시 �
   - **얕은 클론 가드**: shallow 저장소면 `git fetch --unshallow origin`을 자동
     시도하고, 여전히 shallow면 **파일을 쓰지 않고 exit 1** — 잘린 이력으로
     날짜를 계산해 덮어쓰는 일이 구조적으로 불가능하다.
-  - **생성일 불변 가드**: 기존 doc-dates.json 대비 이미 있던 문서의 c(생성일)
-    **날짜부(KST)**가 달라지면 목록을 출력하고 **exit 1**(미기록). 생성일은
-    정의상 불변 — 달라졌다면 이력 결손 신호다. 스쿼시 머지로 인한 같은 날짜
-    안의 시분초 표류는 정상이라 관용한다. 의도적 재산정은 --force로만.
+  - **생성일 보존** (2026-10-16 개정): 이미 기록된 문서의 c(생성일)는 **다시
+    계산하지 않고 그대로 둔다** — 새 문서만 git에서 c를 구한다. 예전에는 재계산
+    결과의 날짜부가 다르면 exit 1로 막았는데, 깨끗한 master에서도 5건이 걸렸다
+    (KST 자정을 넘긴 squash 머지, 여러 문서를 하나로 합친 #426에서 끊긴 --follow).
+    그래서 새 문서를 낼 때마다 --force로 그 5건을 틀린 날짜로 덮어쓰거나 손으로
+    되돌려야 했다. 생성일은 정의상 불변이니 기록을 정본으로 삼는다. 재계산 값이
+    기록과 다른 문서는 참고용으로만 출력한다. 의도적 재산정은 --recompute-created.
+  - **수정일 안정화**: u(수정일)는 git 최신 커밋에서 다시 구하되, 기록과 **날짜부가
+    같으면 기록을 유지**한다 — 같은 날의 squash 머지 시분초 표류로 매번 파일 전체가
+    바뀌던 소음을 없앤다.
+  - **수동 보정**: git 이력이 위키 이전까지 거슬러 올라가는 문서(welcome은 2019년
+    옛 홈페이지 파일이 이름을 바꿔 이어져 2019-10-10이 나왔다)는 기록값을 직접
+    고치면 이 보존 규칙 덕에 다음 실행에서도 유지된다.
 """
 import argparse
 import json
@@ -67,8 +76,8 @@ def ensure_full_history(root):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--force', action='store_true',
-                        help='생성일 불변 가드를 무시하고 재산정 결과를 기록')
+    parser.add_argument('--recompute-created', '--force', dest='recompute', action='store_true',
+                        help='기록된 생성일(c)을 무시하고 git에서 다시 계산해 기록 (의도적 재산정)')
     args = parser.parse_args()
 
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -102,26 +111,36 @@ def main():
 
     out_path = os.path.join(root, 'data', 'doc-dates.json')
 
-    # 생성일 불변 가드 — 기존 파일의 c와 날짜부(KST)가 달라지면 이력 결손 신호.
-    # 스쿼시 머지의 같은 날짜 안 시분초 표류는 정상이라 날짜부만 비교한다.
-    if not args.force and os.path.exists(out_path):
+    prev = {}
+    if os.path.exists(out_path):
         try:
             with open(out_path, encoding='utf-8') as f:
                 prev = json.load(f).get('docs', {})
         except (json.JSONDecodeError, OSError):
             prev = {}
-        drifted = [(n, prev[n]['c'], docs[n]['c']) for n in prev
-                   if n in docs and prev[n]['c'][:10] != docs[n]['c'][:10]]
-        if drifted:
-            print(f'[ERROR] dates-created-drift | - | 기존 문서 {len(drifted)}건의 '
-                  '생성일(c) 날짜부가 달라졌습니다 — 이력 결손(얕은 클론 등) 신호. '
-                  '기록하지 않습니다 (의도적 재산정은 --force):')
-            for n, old_c, new_c in drifted[:10]:
-                print(f'  - {n}: {old_c[:10]} → {new_c[:10]}')
-            return 1
+    # 생성일 보존 — 기록이 정본. 재계산 값이 날짜부부터 다르면 참고로만 알린다.
+    differ = []
+    for n, rec in docs.items():
+        old = prev.get(n)
+        if not old:
+            continue
+        if old['c'][:10] != rec['c'][:10]:
+            differ.append((n, old['c'][:10], rec['c'][:10]))
+        if not args.recompute:
+            rec['c'] = old['c']
+        if old.get('u', '')[:10] == rec['u'][:10]:
+            rec['u'] = old['u']        # 같은 날 안의 시분초 표류는 무시
+        if rec['u'] < rec['c']:
+            rec['u'] = rec['c']
+    if differ:
+        print(f'[INFO] dates-created-kept | - | git 재계산과 기록의 생성일이 다른 문서 '
+              f'{len(differ)}건 — 기록을 유지합니다' + (' (--recompute-created: 재계산 값으로 덮어씀)' if args.recompute else '') + ':')
+        for n, old_c, new_c in differ[:10]:
+            print(f'  - {n}: 기록 {old_c} / git {new_c}')
 
     with open(out_path, 'w', encoding='utf-8') as f:
-        json.dump({'docs': docs}, f, ensure_ascii=False, separators=(',', ':'))
+        json.dump({'docs': docs}, f, ensure_ascii=False)
+        f.write('\n')
     print(f'OK: doc-dates.json — {len(docs)} docs', end='')
     if missing:
         print(f' (git 이력 없음 {len(missing)}건: {", ".join(missing[:5])}…)' if len(missing) > 5
