@@ -17,7 +17,12 @@ same flags). The two browser jobs (diagram-bounds · i18n-render) are separate
 CI jobs and need a headless Chromium — run them per their headers when you
 touched diagrams or UI strings; this script reminds you when to.
 
-Usage:  python3 tools/check_all.py [--base origin/master]
+Diff gates (worklog·cachebuster·translation·plugin version) compare COMMITS
+(base...HEAD) — uncommitted edits are invisible to them. So this script refuses
+to call a dirty working tree green: commit first (amend is fine), then run it.
+`--allow-dirty` runs anyway for debugging, but the verdict is then not CI's.
+
+Usage:  python3 tools/check_all.py [--base origin/master] [--allow-dirty]
 """
 import argparse
 import os
@@ -29,6 +34,10 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # (label, argv builder, needs_base) — mirrors .github/workflows/validate.yml
 STEPS = [
     ('validate_all',          lambda b: ['tools/validate_all.py'],                 False),
+    # 사이트가 실제로 읽는 data/knowledge-index.*.json의 신선도. export·prerender는
+    # build_index.build()를 메모리에서 다시 돌려 이 파일을 보지 않으므로, 이 단계가
+    # 없으면 인덱스를 재생성하지 않은 PR이 전부 초록으로 지나갔다(2026-10-16 발견).
+    ('build_index chk',       lambda b: ['tools/build_index.py', '--check'],      False),
     ('build_ai_export chk',   lambda b: ['tools/build_ai_export.py', '--check'],   False),
     ('build_prerender chk',   lambda b: ['tools/build_prerender.py', '--check'],   False),
     ('map fallbacks chk',     lambda b: ['tools/build_map_fallbacks.py', '--check'], False),
@@ -45,14 +54,30 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--base', default='origin/master',
                     help='diff base for the PR gates (default: origin/master)')
+    ap.add_argument('--allow-dirty', action='store_true',
+                    help='run even with uncommitted changes (verdict is then not CI-equivalent)')
     args = ap.parse_args()
 
     sys.stdout.reconfigure(encoding='utf-8')
+    dirty = subprocess.run(['git', 'status', '--porcelain', '--untracked-files=normal'],
+                           cwd=REPO, capture_output=True, text=True).stdout.splitlines()
+    if dirty and not args.allow_dirty:
+        print('FAIL: 커밋하지 않은 변경 %d건 — diff 게이트(worklog·cachebuster·translation·'
+              'plugin version)는 커밋된 것만 본다. 커밋(또는 amend)한 뒤 다시 실행하세요.' % len(dirty))
+        for line in dirty[:10]:
+            print('  ' + line)
+        print('  (디버깅용으로 그대로 돌리려면 --allow-dirty — 그때의 초록은 CI 초록이 아니다)')
+        return 1
     failed = []
     for label, argv, _needs_base in STEPS:
         cmd = [sys.executable] + [os.path.join(REPO, a) if a.startswith('tools/') else a
                                   for a in argv(args.base)]
         print('\n== %s ==' % label, flush=True)
+        # 플러그인 번들로 배포된 사본에는 check_plugin_sync.py가 없다(이 저장소 전용
+        # 게이트라 번들 제외). 다운스트림 위키에서 그 단계가 늘 실패하지 않게 건너뛴다.
+        if not os.path.isfile(cmd[1]):
+            print('SKIP: %s 없음 (이 설치본에 포함되지 않은 게이트)' % os.path.relpath(cmd[1], REPO))
+            continue
         rc = subprocess.call(cmd, cwd=REPO)
         if rc != 0 and label != 'relations review':
             failed.append(label)

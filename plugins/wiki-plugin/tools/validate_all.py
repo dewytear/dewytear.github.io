@@ -76,7 +76,7 @@ def main():
             for f in findings:
                 all_findings.append({'module': name, **f})
         for name in missing:
-            all_findings.append({'module': name, 'level': 'WARN', 'check': 'validate-all',
+            all_findings.append({'module': name, 'level': 'ERROR', 'check': 'validate-all',
                                   'name': '-', 'message': f'{name} not found'})
         print(json.dumps(all_findings, ensure_ascii=False, indent=2))
         total_errors = sum(1 for f in all_findings if f['level'] == 'ERROR')
@@ -88,9 +88,11 @@ def main():
     for name in MODULE_NAMES:
         print(f"== {name} ==")
         if name in missing:
-            print(f"[WARN] validate-all | - | {name} not found")
-            summary_rows.append((name, 0, 1, 0))
-            total['WARN'] += 1
+            # 검증기 파일이 없으면 그 검사 전체가 조용히 빠진다 — 예전엔 WARN이라
+            # validate_design을 지워도 도식 넘침 ERROR가 0으로 집계됐다(2026-10-16).
+            print(f"[ERROR] validate-all | - | {name} not found — 이 검증기의 검사가 통째로 빠집니다")
+            summary_rows.append((name, 1, 0, 0))
+            total['ERROR'] += 1
             continue
         findings = sorted(per_module.get(name, []), key=_sort_key)
         counts = {'ERROR': 0, 'WARN': 0, 'INFO': 0}

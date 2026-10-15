@@ -51,8 +51,11 @@ LLM 위키(세컨드 브레인)를 **구축·운영**하는 Claude Code 플러�
 ## 도구 (tools/)
 
 위키 운영 스크립트 스냅샷을 동봉한다: `build_index.py`(지식 인덱스, schemaVersion 2),
-`build_dates.py`(문서 일자, KST), `validate_*.py`(라우트·문서·i18n·그래프·도식),
-`check_worklog.py`·`check_cachebuster.py`(PR 게이트), 그리고 계약 문서
+`build_dates.py`(문서 일자, KST — 기록된 생성일 보존), `build_ai_export.py`(llms.txt·그래프 JSON·
+피드·sitemap), `build_prerender.py`(/p/ 스냅샷), `build_map_fallbacks.py`(지식 지도 정적 폴백),
+`validate_*.py`(라우트·문서·i18n·그래프·도식), `check_worklog.py`·`check_cachebuster.py`·
+`check_translation.py`·`check_relations_review.py`(PR 게이트), 이 모두를 CI와 같은 순서로
+돌리는 `check_all.py`(커밋 후 실행), 실렌더 검사 `check_i18n_render.mjs`, 그리고 계약 문서
 `schema.md`·`i18n.md`·`curator.md`. 도식 경계 게이트는 `validate_design.py`가
 문자별 폭 실측(`diagram_metrics.json`)으로 확실한 초과만 ERROR로 잡고,
 `check_diagram_bounds.mjs`가 헤드리스 브라우저로 전수 확인한다(CI).

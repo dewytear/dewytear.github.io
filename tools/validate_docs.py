@@ -128,14 +128,27 @@ def check_similar_doc(bodies):
             for j in range(i + 1, len(group)):
                 yield group[i], group[j]
 
+    # 사전 필터를 SequenceMatcher 밖에서 계산한다(2026-10-16). 예전엔 쌍마다
+    # SequenceMatcher를 먼저 만들었는데(autojunk=False라 b쪽 전체 색인) 그 생성
+    # 자체가 check_all 3분 40초 중 2분 30초를 먹었다. ratio() ≤ quick_ratio() ≤
+    # real_quick_ratio()이므로 같은 상한을 문자 빈도만으로 먼저 걸러도 결과는 같다.
+    from collections import Counter
+    counts = {n: Counter(bodies[n][1]) for n in names if bodies[n][1]}
+
+    def upper_bound(a, b):
+        la, lb = len(bodies[a][1]), len(bodies[b][1])
+        if 2.0 * min(la, lb) / (la + lb) <= floor_:   # real_quick_ratio
+            return 0.0
+        inter = sum((counts[a] & counts[b]).values())   # quick_ratio
+        return 2.0 * inter / (la + lb)
+
+    floor_ = 0.75
     for a, b in pairs(other_names):
-        text_a, text_b = bodies[a][1], bodies[b][1]
-        if not text_a or not text_b:
+        if a not in counts or b not in counts:
             continue
-        sm = difflib.SequenceMatcher(None, text_a, text_b, autojunk=False)
-        if sm.quick_ratio() <= 0.75:
+        if upper_bound(a, b) <= 0.75:
             continue
-        ratio = sm.ratio()
+        ratio = difflib.SequenceMatcher(None, bodies[a][1], bodies[b][1], autojunk=False).ratio()
         if ratio >= 0.90:
             findings.append({'level': 'WARN', 'check': 'similar-doc', 'name': a,
                               'message': '%s 와(과) 거의 동일 (유사도 %.2f)' % (b, ratio)})
@@ -143,14 +156,14 @@ def check_similar_doc(bodies):
             findings.append({'level': 'INFO', 'check': 'similar-doc', 'name': a,
                               'message': '%s 와(과) 유사 (유사도 %.2f)' % (b, ratio)})
 
+    # Work Log는 0.95 이상만 보고하므로 상한이 0.95 미만이면 비교할 필요가 없다.
+    floor_ = 0.95
     for a, b in pairs(wl_names):
-        text_a, text_b = bodies[a][1], bodies[b][1]
-        if not text_a or not text_b:
+        if a not in counts or b not in counts:
             continue
-        sm = difflib.SequenceMatcher(None, text_a, text_b, autojunk=False)
-        if sm.quick_ratio() <= 0.75:
+        if upper_bound(a, b) < 0.95:
             continue
-        ratio = sm.ratio()
+        ratio = difflib.SequenceMatcher(None, bodies[a][1], bodies[b][1], autojunk=False).ratio()
         if ratio >= 0.95:
             findings.append({'level': 'WARN', 'check': 'similar-doc', 'name': a,
                               'message': '%s 와(과) 거의 동일 (Work Log, 유사도 %.2f)' % (b, ratio)})
@@ -633,9 +646,12 @@ def check_cluster_coverage(root):
 
 
 def check_unindexed_sanity(doc_nodes, entries):
-    """INFO-level sanity note: doc nodes that are neither indexed nor in the
-    known-unindexed allowlist. Cheap cross-check that doesn't fit the other
-    checks but is useful signal without inventing a new required check id."""
+    """Doc nodes that are neither indexed nor in the known-unindexed allowlist.
+
+    2026-10-16 INFO → ERROR: 등재(doc-entries) 없이 list에만 단 문서는 번역 게이트
+    (check_translation)·model-gate가 "새로 등재된 문서"로 보지 않아 en/ja 본문과
+    model 없이 통과했다. 지식 문서는 반드시 인덱스에 오르고, 그러면
+    validate_i18n의 indexed-doc-parity가 번역·model을 상태로 강제한다."""
     findings = []
     indexed = {e['name'] for e in entries}
     for n in doc_nodes:
@@ -643,7 +659,7 @@ def check_unindexed_sanity(doc_nodes, entries):
         if name in indexed or is_unindexed(name):
             continue
         findings.append({
-            'level': 'INFO', 'check': 'unindexed-doc', 'name': name,
+            'level': 'ERROR', 'check': 'unindexed-doc', 'name': name,
             'message': 'doc-entries.ko.json에 없고 허용 목록(wl-*, ai-map, dz-map)에도 없음',
         })
     return findings

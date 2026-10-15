@@ -2,7 +2,7 @@
 
 **[dewytear.github.io](https://dewytear.github.io)** — a personal wiki about Claude Code,
 plugins, harnesses, LLM wikis and second brains. Written in Korean, published in
-**Korean, English and Japanese** (all 115 indexed documents in all three), CC BY 4.0.
+**Korean, English and Japanese** (every indexed document in all three), CC BY 4.0.
 
 ![Aaron's Claude Wiki](og-image.png)
 
@@ -33,9 +33,9 @@ GitHub Pages로 배포됩니다: https://dewytear.github.io
 ## 주요 기능
 
 ### 콘텐츠 · 탐색
-- **동적 콘텐츠 로딩** — `index.html`이 `fetch()`로 문서 조각(90여 편)을 불러와 렌더링합니다.
+- **동적 콘텐츠 로딩** — `index.html`이 `fetch()`로 문서 조각(2026년 10월 기준 인덱스 문서 74편 + 워크로그 등 약 190편)을 불러와 렌더링합니다.
 - **트리형 네비게이션** — `list`(JSON) 트리로 사이드바를 자동 생성. 폴더 옆 ⧉ 아이콘으로 그 폴더의 문서를 **한 페이지로 모아보기**.
-- **URL 해시 라우팅** — `#!install`(문서), `#!tags`(태그), `#!folder:…`(모아보기), `#!cosmos`(코스모스), `#!search`(검색), `#!settings`(설정).
+- **URL 해시 라우팅** — `#!welcome`(문서), `#!tags`(태그), `#!folder:…`(모아보기), `#!cosmos`(코스모스), `#!search`(검색), `#!settings`(설정).
 - **통합 검색** — 제목·태그·본문 전문에 더해 지식 인덱스의 **개념까지 가중 랭킹**으로 검색(개념 매칭 문서가 상단, 관련 개념 피벗 칩 제공). 배경엔 호흡 애니메이션과 미니게임.
 - **태그 인덱스** — 사전식 초성/알파벳 그룹, 최다 사용 태그 밴드, 즉시 필터.
 
@@ -47,7 +47,7 @@ GitHub Pages로 배포됩니다: https://dewytear.github.io
 - **AI 큐레이터** — `tools/curator.md` 절차대로 변경 감지 → 재인덱싱 → 검토용 PR 제안(자동 머지 없음).
 
 ### 놀이
-- **미니게임 4종** — 통합검색 배경에서 벽돌깨기(검색창=드래그 패들, 반사각 조절) · 개념 별똥별 받기(받으면 그 개념으로 검색) · 퐁 랠리 · 종이비행기 글라이딩. 화면 하단 **게임 독**에서 방문자가 직접 선택(브라우저별 기억), 설정에선 기본 게임 지정.
+- **미니게임 5종** — 통합검색 배경에서 2048(기본) · 벽돌깨기(검색창=드래그 패들, 반사각 조절) · 개념 별똥별 받기(받으면 그 개념으로 검색) · 퐁 랠리 · 종이비행기 글라이딩. 화면 하단 **게임 독**에서 방문자가 직접 선택(브라우저별 기억), 설정에선 기본 게임 지정.
 
 ### 디자인 · 설정
 - **클로드식 셸 레이아웃** — 데스크톱에서 틴트 배경이 본문 카드를 감싸고, 좌측 메뉴는 부드러운 슬라이드 개폐(기본 = 접힘, 선택 기억). 메뉴가 열릴 때만 카드가 은은하게 나타나는 모핑.
@@ -67,12 +67,12 @@ GitHub Pages로 배포됩니다: https://dewytear.github.io
 | `list` | 네비게이션 트리 정의 (JSON) |
 | `config.json` | 서버 전역 설정 — 타이틀·프로필 사진 + `defaults`(모든 방문자의 설정 기본값) |
 | `docs/ko/` | **모든 문서 콘텐츠(한국어 원본)** — 안정적 도메인 트리로 배치: `ai/claude/code/{introduction,tutorial,skill,harness,llm-wiki,second-brain}/`, `ai/claude/plugin/{harness,omc}/`, `ai/map/`, `douzone/…`, `work-log/YYYY/MM/DD/` |
-| `docs/en/`·`docs/zh/`·`docs/ja/` | 번역 문서 — **한국어와 같은 상대 경로**에 두면 언어 설정에 따라 로드, 없으면 한국어 폴백 |
+| `docs/en/`·`docs/ja/` | 번역 문서 — **한국어와 같은 상대 경로**에 두면 언어 설정에 따라 로드, 없으면 한국어 폴백 |
 | `data/knowledge-index.ko.json` | AI 지식 인덱스(요약·개념·연관·stats) — 직접 편집 금지, 언어별로 `.{lang}.json` |
 | `tools/build_index.py` | 인덱스 결정적 빌드(`--check` 검증) |
 | `tools/doc-entries.ko.json` | 인덱스 원료(문서별 AI 작성 엔트리, 언어별) |
 | `tools/curator.md` | AI 큐레이터 절차서 |
-| `tools/validate_all.py` | 지식 품질 검증 스위트 통합 실행(문서·라우트·i18n·그래프) — PR 전 실행, ERROR 0가 머지 조건 |
+| `tools/validate_all.py` | 지식 품질 검증 스위트 통합 실행(문서·라우트·i18n·그래프·디자인) — 디버깅용. 머지 판정은 이것을 포함해 CI 파이썬 게이트 전부를 같은 순서로 돌리는 `tools/check_all.py`(커밋 후 실행, ERROR 0가 머지 조건) |
 
 ## 문서 추가하기
 
@@ -83,7 +83,7 @@ GitHub Pages로 배포됩니다: https://dewytear.github.io
 
 ## 언어 추가하기 (다국어)
 
-설정 → 기본 설정의 **언어** 선택(한국어/English/中文/日本語)이 사이트 전체(문서·내비 라벨·태그·화면 문구·지식 인덱스·지도·그래프)를 전환합니다. 번역이 없는 조각은 자동으로 한국어에 폴백하므로, 채우는 만큼만 그 언어가 살아납니다. **현재 en·ja는 전면 병행**(인덱스 문서 115편 전부)이고 zh는 미착수입니다 — en·ja는 신규 문서 동반이 PR CI(`tools/check_translation.py`)로 강제됩니다.
+설정 → 기본 설정의 **언어** 선택(한국어/English/中文/日本語)이 사이트 전체(문서·내비 라벨·태그·화면 문구·지식 인덱스·지도·그래프)를 전환합니다. 번역이 없는 조각은 자동으로 한국어에 폴백하므로, 채우는 만큼만 그 언어가 살아납니다. **현재 en·ja는 전면 병행**(인덱스 문서 전부)이고 zh는 미착수입니다 — en·ja는 신규 문서 동반이 PR CI(`tools/check_translation.py`)로 강제됩니다.
 
 **전체 절차·원칙·검증 체크리스트는 [`tools/i18n.md`](tools/i18n.md)를 따릅니다.** 핵심 원칙: 문서의 라벨·태그·인덱스 오버레이는 그 문서의 **본문 번역과 같은 PR에서 함께** 갱신하고(제목↔본문 불일치 방지), UI 문구는 `STRINGS` 사전으로만 넣습니다.
 

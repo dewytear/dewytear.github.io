@@ -1,0 +1,35 @@
+            <h2>2026-10-16 — 운영</h2>
+
+            <h3>전수 결함 분석 ③ — 게이트 사각지대 메우기</h3>
+            <p>
+                <a href="#!wl-20261016-features">기능 로그</a>의 전수 분석 가운데 "검증기 사각지대" 갈래는 CLAUDE.md가 "게이트가 막는다"고 적은 규칙을 저장소 사본에서 일부러 어겨 보고, 게이트가 실제로 잡는지 확인했다. 잡지 못한 것들을 고쳤고, 고친 뒤 같은 돌연변이로 다시 막히는지 확인했다.
+            </p>
+            <p><strong>판정 자체가 틀리던 것.</strong></p>
+            <ul>
+                <li><strong>인덱스 신선도 미검사.</strong> CLAUDE.md는 <code>build_index.py --check</code>를 요구했지만 <code>check_all</code>에도 CI에도 없었다. export·prerender는 인덱스를 메모리에서 다시 만들어 사이트가 읽는 <code>data/knowledge-index.*.json</code>을 보지 않으므로, 인덱스를 재생성하지 않은 PR이 전부 초록이었다. 두 곳에 넣었다.</li>
+                <li><strong>"check_all 초록 = CI 초록"이 거짓.</strong> diff 게이트 네 개는 커밋된 것만 보는데 규칙은 "커밋 직전에 실행"이었다. 커밋하지 않은 <code>app.js</code> 변경이 있어도 OK가 나왔다. 이제 작업트리가 더러우면 <code>check_all</code>이 판정을 거부하고, CLAUDE.md 규칙 5를 "커밋(amend 포함) 뒤 마지막에"로 고쳤다.</li>
+                <li><strong>build_dates가 깨끗한 master에서도 실패.</strong> KST 자정을 넘긴 squash 머지와 #426 합본 때문에 5편의 생성일이 재계산 때마다 하루씩 달라져 "생성일 불변 가드"가 걸렸고, 새 문서를 낼 때마다 <code>--force</code>로 그 5편을 틀린 날짜로 덮거나 손으로 되돌려야 했다. 기록된 생성일은 다시 계산하지 않고 보존하게 바꿨다(새 문서만 계산, 의도적 재산정은 <code>--recompute-created</code>). 같은 날 안의 수정일 시분초 표류도 무시한다. <code>welcome</code>의 생성일이 2019-10-10(옛 홈페이지 파일의 이력)으로 나오던 것은 위키 전환 커밋 날짜(2026-07-02)로 고쳤고, 보존 규칙 덕에 유지된다.</li>
+                <li><strong>폴더 번역 검사가 사실상 없음.</strong> <code>branch-label-parity</code>는 <code>label_&lt;lang&gt;</code>만 봤는데 폴더 번역 71개는 전부 <code>title_&lt;lang&gt;</code>에 있다. <code>title_ja</code>를 지워도 0건이었다. 두 필드를 보고, 한글 제목 폴더의 번역 누락은 ERROR로 올렸다.</li>
+            </ul>
+            <p><strong>우회로가 있던 것.</strong></p>
+            <ul>
+                <li>번역 게이트·model-gate는 "ko 파일이 새로 추가되고 이미 등재된" 경우만 봐서, 등재를 다음 PR로 미루면 둘 다 통과했다. 상태 검사 <code>indexed-doc-missing-&lt;lang&gt;</code>·<code>indexed-doc-missing-model</code>을 더하고, 미등재 문서(<code>unindexed-doc</code>)를 INFO에서 ERROR로 올렸다(메타 페이지 셋은 허용 목록).</li>
+                <li>워크로그 게이트는 <code>wl-backlog</code>만 고쳐도 통과하고 날짜 게이트까지 건너뛰었다. 실질 변경이 있으면 날짜 로그를 건드려야 한다. 날짜 판정은 작성 시각만 봐서 amend 관례와 부딪혔으므로 커밋 시각도 인정하고, 로컬에서 master를 병합한 브랜치를 PR 병합 커밋으로 오인하던 것도 CI에서만 그렇게 보도록 고쳤다.</li>
+                <li>링크 검사는 ko·en만 돌고 <code>#!</code> 링크만 봤다. 7/30·7/31 로그의 경로형 링크 8개가 이 틈으로 들어왔다. 모든 언어를 보고, 따옴표 종류와 상관없이 <code>#!</code>가 아닌 해시 링크를 ERROR로 잡는다. 로그 파일명 날짜와 폴더 날짜가 어긋나는 것도 검사한다.</li>
+                <li><code>hidden-lang-dict</code>는 <code>var X = { ko: {</code> 한 모양만 봤다. const·따옴표 키·순서 바뀜·문자열 값·배열 안 객체 7가지 변형을 넣어 보니 하나만 잡혔다. 이제 <code>ko</code> 키를 가진 모든 객체 리터럴의 최상위 키를 본다(7/7 검출, 3언어를 갖춘 사전은 통과).</li>
+                <li>도식 검사 두 겹 모두 글자를 소스 순서상 첫 박스와 비교해, 큰 패널 rect 안 작은 알약의 넘침을 놓쳤다. 가장 작은 포함 박스(아이콘용 20×12 미만 제외)와 비교한다. 전체 196개 렌더에서 새 오탐은 없었다.</li>
+                <li><code>check_i18n_render</code>는 #419에서 사라진 <code>ccb-what</code>을 검사 대상으로 둬, 빈 화면을 열고 통과하고 있었다. 실재 문서로 바꾸고, 화면이 "찾을 수 없음"이거나 준비 동작이 실패하면 실패로 센다.</li>
+                <li>그 밖에: 검증기 파일이 없으면 ERROR(전엔 WARN이라 <code>validate_design</code>을 지워도 0건), 캐시버스터가 작은따옴표 <code>src</code>를 보고 기준 <code>?v</code>를 merge-base에서 읽음, master 직접 push에도 캐시버스터·번역 동반을 검사(워크로그 날짜 게이트는 squash 머지 시각 문제로 push에선 제외), en·ja 오버레이의 개념 복사본 제거와 오버레이가 개념을 덮지 못하게 함, 번들에 없는 게이트를 <code>check_all</code>이 건너뜀, <code>tools/eval/</code>을 번들 제외로 명시.</li>
+            </ul>
+            <p>
+                <strong>속도.</strong> <code>similar-doc</code> 검사가 쌍마다 비교기를 먼저 만들어 <code>check_all</code> 3분 40초 중 2분 30초를 먹었다. 문자 빈도로 같은 상한을 먼저 걸러 <code>validate_docs</code>가 178초에서 57초가 됐다. 결과(INFO 40건)는 같다.
+            </p>
+            <p>
+                <strong>서술 정합.</strong> <code>change-types.md</code>·<a href="#!kgs-gates">kgs-gates</a>의 "CONTENT는 플러그인 반영 금지"는 틀렸다(개념 사전·og-card는 번들 대상). <code>curator.md</code>는 전용 <code>-curate</code> 로그·수동 지도 수치·재생성 누락·번역 동반 없음·옛 트레일러 등 현재 파이프라인과 어긋나 다시 썼다. <code>i18n.md</code>의 언어 감지·지도 경로, README의 문서 수·게임 수·<code>docs/zh</code>·<code>#!install</code> 예시, 플러그인 README·validate 스킬의 도구 목록도 맞췄다. kgs-gates에는 "diff가 못 보는 것은 상태로 한 번 더" 절을 3언어로 더했다. 플러그인 0.30.0.
+            </p>
+            <p>
+                <strong>2차 적대적 검토.</strong> 세 묶음 diff 전체를 새 에이전트가 따로 뜯어 회귀를 찾게 했다. 확인된 회귀는 하나였다: 기능 묶음의 <code>overflow-wrap: anywhere</code>가 표 안 식별자를 끊었다(기능 로그에 기록·수정). 재현은 안 됐지만 근거가 분명한 것도 고쳤다: master force-push 때 <code>github.event.before</code>가 이력에 없어 push 검사가 빨개지는 경로(<code>forced</code>면 건너뜀), 주석 속 <code>{ko:…}</code> 예시가 <code>hidden-lang-dict</code> ERROR가 되거나 주석의 아포스트로피가 괄호 짝 맞추기를 망치던 것(주석을 먼저 지움), 비<code>#!</code> 해시 검사가 SVG <code>&lt;use href="#id"&gt;</code>까지 잡을 수 있던 것(<code>&lt;a&gt;</code>만), 로그 이름 변경(R)을 "건드림"으로 안 치던 것과 CLAUDE.md·스크립트 설명의 갱신. 하위 위키에서 새 ERROR(미등재 문서·model·한글 폴더 번역)가 한꺼번에 뜰 수 있어 플러그인 버전을 0.30.0으로 올렸다.
+            </p>
+            <p>
+                <strong>코드로 못 하는 것.</strong> master 브랜치 보호가 꺼져 있어 CI가 빨간 PR도 머지할 수 있고, 직접 push는 diff 게이트를 건너뛴다. 저장소 설정이라 이 PR로는 바꿀 수 없어 대표님께 따로 보고했다.
+            </p>

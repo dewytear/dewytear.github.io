@@ -114,7 +114,9 @@ const SCREENS = [
   { id: 'knowledge-map', hash: '#!ai-map' },
   { id: 'dz-map', hash: '#!dz-map' },
   { id: 'doc:kgs-overview', hash: '#!kgs-overview' },
-  { id: 'doc:ccb-what', hash: '#!ccb-what' },
+  // ccb-what은 #419에서 다른 문서로 합쳐져 사라졌는데 이 목록에 남아, 빈 화면을
+  // 열고 통과하고 있었다(2026-10-16). 아래 화면 유효성 검사가 이제 그걸 잡는다.
+  { id: 'doc:ccb-research-web', hash: '#!ccb-research-web' },
   { id: 'folder:tutorial', hash: '#!ccb-overview' },
   // work-log의 안내 문서. 날짜 붙은 일지와 달리 본문도 병행 대상이라
   // 여기서 검사한다 — 2026-07-28에 라벨만 번역되고 ja 본문이 없어
@@ -214,13 +216,21 @@ async function main() {
       const hits = await ev(`(async()=>{
         location.hash = ${JSON.stringify(scr.hash)};
         await new Promise(r=>setTimeout(r,900));
-        ${scr.prep ? `try{ ${scr.prep} }catch(e){}` : ''}
+        let prepErr = null;
+        ${scr.prep ? `try{ ${scr.prep} }catch(e){ prepErr = String(e && e.message || e); }` : ''}
         await new Promise(r=>setTimeout(r,1400));
         const ALLOW = ${JSON.stringify(ALLOW_STRINGS)};
         const EXCLUDE = ${JSON.stringify(EXCLUDE)};
         const HAN = /[\\uac00-\\ud7a3]/;
         const SKIP_BODY = ${skipBody ? 'true' : 'false'};
         const out = [], seen = new Set();
+        // 화면 유효성 — 사라진 문서·바뀐 버튼으로 화면이 안 그려지면 검사할 것이
+        // 없는데도 통과하던 사각(2026-10-16). 그런 화면은 실패로 센다.
+        if(prepErr) out.push({ where: 'screen', text: 'prep failed: ' + prepErr });
+        const art = document.getElementById('article');
+        const h2 = art && art.querySelector('h2');
+        if(h2 && typeof STR === 'function' && h2.textContent.trim() === STR('notFoundHead'))
+          out.push({ where: 'screen', text: 'route not found: ' + location.hash });
         function record(where, text){
           let t = (text||'').replace(/\\s+/g,' ').trim();
           if(!t || !HAN.test(t)) return;

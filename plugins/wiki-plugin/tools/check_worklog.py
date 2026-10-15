@@ -8,7 +8,10 @@ Work Log 문서를 추가한다 — 기준은 변경의 크기가 아니라 주�
 스크립트는 그 규칙을 PR CI에서 기계적으로 강제한다.
 
 판정 ①  로그를 건드렸는가:
-  - PR diff에 work-log 문서가 하나라도 **추가(A) 또는 수정(M)** 됐으면 통과.
+  - PR diff에 work-log 문서가 하나라도 **추가(A)·수정(M)·이름 변경(R)** 됐으면 통과.
+    단 실질 변경이 있는데 건드린 로그가 날짜 없는 상태판(wl-backlog·wl-guide)뿐이면
+    ERROR다(2026-10-16) — 그건 그날의 기록이 아니라서, 예전엔 이 경로로 통과하면서
+    판정 ②까지 건너뛰었다.
     로그는 PR 단위가 아니라 **주제 단위**다 — 새 주제면 새 로그를 추가하고,
     같은 주제의 후속(추가 수정·버그픽스)이면 그 주제의 **기존 로그를 갱신**하면
     된다. 변경마다 새 로그를 만들 필요가 없다(그러면 로그가 과분할된다).
@@ -71,6 +74,11 @@ def work_head(head):
     넘어 만들어진 병합 커밋 때문에 '작업일 08-12'로 읽고, 08-11 로그를
     건드렸다는 이유로 실패시켰다. 병합 커밋의 부모는 (1) 베이스 (2) PR 헤드
     순서이므로 두 번째 부모가 실제 작업 커밋이다."""
+    # 로컬에서 master를 병합한 브랜치 HEAD도 부모가 둘이다 — 그때 두 번째 부모는
+    # master tip이라 작업일을 엉뚱하게 읽는다(2026-10-16 발견). GitHub이 만든 PR
+    # 병합 커밋은 CI에서만 생기므로 CI일 때만 두 번째 부모로 내려간다.
+    if not os.environ.get('GITHUB_ACTIONS'):
+        return head
     parents = subprocess.run(
         ['git', 'rev-list', '--parents', '-n', '1', head],
         capture_output=True, text=True, check=True,
@@ -79,17 +87,25 @@ def work_head(head):
     return parents[2] if len(parents) == 3 else head
 
 
-def kst_date_of_head(head):
-    """작업 커밋의 **작성 시각을 KST로** 본 날짜 (YYYY, MM, DD).
+def kst_dates_of_head(head):
+    """작업 커밋의 **작성 시각·커밋 시각을 KST로** 본 날짜들 [(YYYY, MM, DD), …].
 
-    '지금'이 아니라 커밋 작성 시각을 쓴다 — 어제 만든 PR을 오늘 CI가 돌려도
-    판정이 흔들리지 않아야 하고, build_dates.py의 KST 정규화 규약과도 같다."""
+    '지금'이 아니라 커밋 시각을 쓴다 — 어제 만든 PR을 오늘 CI가 돌려도 판정이
+    흔들리지 않아야 하고, build_dates.py의 KST 정규화 규약과도 같다.
+    작성 시각(%ad)만 보던 시절엔 `git commit --amend`(CLAUDE.md 규칙 6의 관례)가
+    작성 시각을 그대로 두는 탓에, 자정 전에 만든 커밋을 다음 날 아침 amend하며
+    새 날짜 로그를 달면 '전날 작업'으로 읽혀 막혔다. 둘 중 하나라도 맞으면 통과."""
     out = subprocess.run(
-        ['git', 'log', '-1', '--date=iso-strict-local', '--format=%ad', work_head(head)],
+        ['git', 'log', '-1', '--date=iso-strict-local', '--format=%ad%n%cd', work_head(head)],
         capture_output=True, text=True, check=True,
         env={**os.environ, 'TZ': 'Asia/Seoul'},
-    ).stdout.strip()
-    return out[:4], out[5:7], out[8:10]
+    ).stdout.split()
+    days = []
+    for s in out:
+        d = (s[:4], s[5:7], s[8:10])
+        if d not in days:
+            days.append(d)
+    return days
 
 
 def head_messages(base, head):
@@ -132,10 +148,11 @@ def check_dates(touched_logs, base, head):
     if not dated:
         return   # backlog·guide만 갱신 — 날짜 개념이 없다
 
-    y, mo, d = kst_date_of_head(head)
-    today = '%s-%s-%s' % (y, mo, d)
-    if today in dated:
+    days = kst_dates_of_head(head)
+    if any('%s-%s-%s' % k in dated for k in days):
         return
+    y, mo, d = days[0]
+    today = '%s-%s-%s' % (y, mo, d)
 
     newest = max(dated)
     if BACKDATE_RE.search(head_messages(base, head)):
@@ -174,7 +191,17 @@ def main():
     # 새 주제 로그 추가(A) 또는 기존 주제 로그 갱신(M) 중 하나면 통과 —
     # 주제 단위 로그 원칙(한 주제=한 로그, 후속은 갱신)을 강제하되 허용한다.
     touched_logs = [p for s, p in files
-                    if s[:1] in ('A', 'M') and WORKLOG_DOC_RE.match(p)]
+                    if s[:1] in ('A', 'M', 'R') and WORKLOG_DOC_RE.match(p)]
+    substantive = [p for _, p in files if not BOOKKEEPING_RE.match(p)]
+    # 날짜 없는 상태판(wl-backlog·wl-guide)만 고친 것은 그날의 기록이 아니다 — 실질
+    # 변경이 있는데 이것만 건드리면 예전엔 통과했고 날짜 게이트까지 건너뛰었다.
+    dated_touched = [p for p in touched_logs if DATED_LOG_RE.match(p)]
+    if touched_logs and substantive and not dated_touched:
+        print('[ERROR] worklog-gate | - | 실질 변경이 있는데 날짜 로그 없이 '
+              'Backlog·가이드만 갱신했습니다 — 그날의 Work Log에 기록하세요')
+        for p in substantive[:20]:
+            print(f'  - {p}')
+        sys.exit(1)
     if touched_logs:
         added_new = [p for s, p in files
                      if s[:1] == 'A' and NEW_WORKLOG_RE.match(p)]
@@ -182,7 +209,6 @@ def main():
         print(f'OK: Work Log {kind} 확인 — {", ".join(touched_logs[:5])}')
         return check_dates(touched_logs, args.base, args.head)
 
-    substantive = [p for _, p in files if not BOOKKEEPING_RE.match(p)]
     if not substantive:
         print('OK: 기록·부산물 변경만 있음 (work-log/doc-dates) — 새 로그 불요')
         return
