@@ -26,7 +26,13 @@ function docPath(name, lang){
 // 현재 언어로 본문을 가져오되, 번역 파일이 없으면(부분 번역 상태)
 // 한국어 원본으로 폴백한다.
 function fetchDoc(name){
-    var p = docPath(name), ko = 'docs/ko/' + docRel(name);
+    var d = DOC_BY_NAME[name];
+    // 워크로그는 한국어 기록뿐이라(번역하지 않는다) 번역 경로를 먼저 두드리면
+    // en/ja에서 열 때마다 404가 한 번씩 난다 — 곧장 한국어를 가져온다.
+    // (wl-guide처럼 번역 본문이 있는 워크로그 문서는 예외 — tl에 그 언어가 있다.)
+    var wl = d && d.section && d.section.indexOf('Work Log') === 0
+          && (d.tl || []).indexOf(currentLang()) === -1;
+    var p = wl ? 'docs/ko/' + docRel(name) : docPath(name), ko = 'docs/ko/' + docRel(name);
     return fetch(p).then(function(r){
         if(r.ok){ return r.text(); }
         if(p !== ko){ return fetch(ko).then(function(r2){ return r2.ok ? r2.text() : ''; }); }
@@ -125,6 +131,8 @@ var STRINGS = {
         relTypePrerequisite: '선행지식', relTypeImplements: '구현',
         relTypeExampleOf: '사례', relTypeEvidenceFor: '근거', relTypeSupersedes: '대체',
         tagsTop: '많이 쓰인 태그',
+        tagsSearchPh: '태그 검색…', tagsNone: '일치하는 태그가 없습니다.', tagsAll: '← 전체 태그',
+        notFoundHead: '문서를 찾을 수 없습니다', notFoundBody: '주소가 바뀌었거나 없어진 문서입니다. 검색이나 사이드바에서 찾아 주세요.',
         folderEmpty: '이 폴더에는 모아 볼 문서가 없습니다.',
         folderCount: '문서 {n}개', loading: '불러오는 중…',
         newPageHead: '새 글', newEmpty: '최근 새 글이 없습니다.',
@@ -280,6 +288,8 @@ var STRINGS = {
         relTypePrerequisite: 'Prerequisite', relTypeImplements: 'Implements',
         relTypeExampleOf: 'Example of', relTypeEvidenceFor: 'Evidence for', relTypeSupersedes: 'Supersedes',
         tagsTop: 'Most used tags',
+        tagsSearchPh: 'Search tags…', tagsNone: 'No matching tags.', tagsAll: '← All tags',
+        notFoundHead: 'Page not found', notFoundBody: 'This page has moved or no longer exists. Try search or the sidebar.',
         folderEmpty: 'This folder has no docs to gather.',
         folderCount: '{n} docs', loading: 'Loading…',
         newPageHead: 'New', newEmpty: 'No recent new docs.',
@@ -435,6 +445,8 @@ var STRINGS = {
         relTypePrerequisite: '前提知識', relTypeImplements: '実装',
         relTypeExampleOf: '事例', relTypeEvidenceFor: '根拠', relTypeSupersedes: '置き換え',
         tagsTop: 'よく使われるタグ',
+        tagsSearchPh: 'タグを検索…', tagsNone: '一致するタグはありません。', tagsAll: '← すべてのタグ',
+        notFoundHead: '文書が見つかりません', notFoundBody: 'アドレスが変わったか、削除された文書です。検索かサイドバーから探してください。',
         folderEmpty: 'このフォルダにまとめて読む文書はありません。',
         folderCount: '文書{n}件', loading: '読み込み中…',
         newPageHead: '新着', newEmpty: '最近の新着はありません。',
@@ -539,7 +551,9 @@ function STR(k){
 function STRF(k, vars){
     var t = STR(k);
     Object.keys(vars || {}).forEach(function(x){
-        t = t.replace('{' + x + '}', vars[x]);
+        // 문자열 치환은 $&·$' 같은 패턴을 해석한다 — 검색어가 그대로 끼어드는
+        // 자리라 split/join으로 글자 그대로 넣는다.
+        t = t.split('{' + x + '}').join(String(vars[x]));
     });
     return t;
 }

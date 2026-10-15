@@ -4,7 +4,7 @@
 
 <div class="note">
     <span class="nh">하루 만에 두 번 깎았고, 두 번째는 축이 아니라 존재였다</span>
-    <a href="#work-log/2026/07/29/wl-20260729-features">전날</a>에는 &ldquo;오늘(UTC)&rdquo;을 떼고 누적만 남겼다. 그때 근거는 <strong>고칠 수 없는 축</strong>이었다 &mdash; GoatCounter의 <code>start</code>가 UTC 자정 고정이라 한국에서 &ldquo;오늘&rdquo;이 09:00 KST에 초기화됐다. 이번엔 축의 문제가 아니다. 남은 누적은 <strong>정확한 숫자였지만 사이드바에 상주할 이유가 없었다</strong> &mdash; 모든 페이지에 따라다니면서 읽는 사람의 어떤 행동으로도 이어지지 않는다.
+    <a href="#!wl-20260729-features">전날</a>에는 &ldquo;오늘(UTC)&rdquo;을 떼고 누적만 남겼다. 그때 근거는 <strong>고칠 수 없는 축</strong>이었다 &mdash; GoatCounter의 <code>start</code>가 UTC 자정 고정이라 한국에서 &ldquo;오늘&rdquo;이 09:00 KST에 초기화됐다. 이번엔 축의 문제가 아니다. 남은 누적은 <strong>정확한 숫자였지만 사이드바에 상주할 이유가 없었다</strong> &mdash; 모든 페이지에 따라다니면서 읽는 사람의 어떤 행동으로도 이어지지 않는다.
     <br><br>
     <strong>고칠 수 없어서 떼는 것과, 맞지만 필요 없어서 떼는 것은 다른 판단이다.</strong> 전날의 정정은 후자를 미룬 것이기도 했다 &mdash; 틀린 축을 떼고 나니 남은 값이 왜 거기 있는지가 비로소 보였다.
 </div>
@@ -48,7 +48,7 @@
 
 <h3>이관을 사람에게 미루지 않았다</h3>
 
-<p>원래 설계는 <code>worker/seed_views.py</code>를 로컬에서 돌려 SQL을 붙여넣는 것이었다. 그런데 AI 작업 샌드박스는 프록시가 goatcounter.com을 막아(<code>CONNECT tunnel failed, 403</code>) 그 스크립트를 <strong>내가 돌릴 수 없다</strong>. 남는 건 &ldquo;PC에 Python과 wrangler를 갖추고 로그인하세요&rdquo;인데, 그건 <a href="#work-log/2026/07/30/wl-20260730-ops">전날 이 로그의 짝</a>에서 &ldquo;설계가 사람에게 일을 미룬 것&rdquo;이라고 적어 둔 모양 그대로다. <strong>Cloudflare에는 네트워크 제약이 없으니 거기서 하는 것이 맞다</strong> &mdash; Worker에 <code>GET /v1/seed</code>를 뒀다. 주소 하나를 열면 진행 상황이 보이고 끝난다.</p>
+<p>원래 설계는 <code>worker/seed_views.py</code>를 로컬에서 돌려 SQL을 붙여넣는 것이었다. 그런데 AI 작업 샌드박스는 프록시가 goatcounter.com을 막아(<code>CONNECT tunnel failed, 403</code>) 그 스크립트를 <strong>내가 돌릴 수 없다</strong>. 남는 건 &ldquo;PC에 Python과 wrangler를 갖추고 로그인하세요&rdquo;인데, 그건 <a href="#!wl-20260730-ops">전날 이 로그의 짝</a>에서 &ldquo;설계가 사람에게 일을 미룬 것&rdquo;이라고 적어 둔 모양 그대로다. <strong>Cloudflare에는 네트워크 제약이 없으니 거기서 하는 것이 맞다</strong> &mdash; Worker에 <code>GET /v1/seed</code>를 뒀다. 주소 하나를 열면 진행 상황이 보이고 끝난다.</p>
 
 <ul>
     <li><strong>멱등하다</strong> &mdash; <code>ON CONFLICT … WHERE counters.base = 0</code>이 전부다. 여러 번 열어도 수치가 겹쳐 오르지 않는다.</li>
@@ -112,7 +112,7 @@
 
 <div class="note warn">
     <span class="nh">같은 CI 사고를 하루 안에 두 번 냈다 &mdash; 진짜 원인은 앞단이었다</span>
-    이 PR도 CI가 발동하지 않았다. 원인은 <a href="#work-log/2026/07/30/wl-20260730-ops">아침에 진단해 적어 둔 것</a>과 같다 &mdash; 스쿼시 머지로 master가 전진했는데 브랜치가 <strong>이미 머지된 커밋을 그대로 안고 있어</strong> 충돌이 생기고, 그러면 GitHub이 머지 ref를 못 만들어 Actions가 <strong>실패도 아니고 발동을 안 한다</strong>.
+    이 PR도 CI가 발동하지 않았다. 원인은 <a href="#!wl-20260730-ops">아침에 진단해 적어 둔 것</a>과 같다 &mdash; 스쿼시 머지로 master가 전진했는데 브랜치가 <strong>이미 머지된 커밋을 그대로 안고 있어</strong> 충돌이 생기고, 그러면 GitHub이 머지 ref를 못 만들어 Actions가 <strong>실패도 아니고 발동을 안 한다</strong>.
     <br><br>
     아침의 교훈(&ldquo;체크가 없으면 <code>mergeable_state</code>부터 본다&rdquo;)은 <strong>작동했다</strong> &mdash; 이번엔 몇 분 안에 원인을 찾았다. 그런데 그 교훈은 <strong>진단 속도만</strong> 고쳤고 재발은 못 막았다. 실제 분기점은 더 앞이었다: 규칙에 &ldquo;머지된 PR의 브랜치는 master에서 다시 시작한다&rdquo;가 명시돼 있고 <code>#368</code> 뒤에는 그렇게 했는데 <code>#369</code> 뒤에는 안 했다. 그 사이에 <code>git pull</code>이 <code>Need to specify how to reconcile divergent branches</code>로 <strong>실패했고 나는 그 실패를 지나쳤다</strong>.
     <br><br>

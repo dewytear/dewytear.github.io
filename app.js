@@ -35,7 +35,10 @@ function buildIndexes(tree){
                     sectionL: dpath.join(' · '),
                     tags: tagsFor(node),
                     model: node.model || '',   // optional per-doc override
-                    nonum: !!node.nonum   // meta/nav page (지식지도 등) — 최근 문서에서 제외
+                    nonum: !!node.nonum,   // meta/nav page (지식지도 등) — 최근 문서에서 제외
+                    // 번역 본문이 있는 언어 — label_<lang>은 그 언어 본문이 있을 때만 단다.
+                    tl: Object.keys(node).filter(function(k){ return k.indexOf('label_') === 0; })
+                                         .map(function(k){ return k.substr(6); })
                 };
                 DOCS.push(doc);
                 DOC_BY_NAME[doc.name] = doc;
@@ -209,7 +212,9 @@ function setArticle(html){
     // authoring-model badge and the AI related-docs block both live on
     // the #article wrapper (outside <article>), so replacing the body
     // alone would leave them showing the PREVIOUS doc's content.
-    document.querySelectorAll('#article .doc-model, #article .related, #article .relations')
+    // 좋아요 독도 같다 — 태그 줄이 없는 화면(About)에선 <article> 밖에 붙어서,
+    // 문서가 아닌 화면(태그·설정 등)으로 옮겨도 남아 About에 좋아요를 보냈다.
+    document.querySelectorAll('#article .doc-model, #article .related, #article .relations, #article > .like-dock')
         .forEach(function(el){ el.remove(); });
     // Only the content pane resets; the sidebar and masthead stay put.
     var scroller = document.getElementById('content-scroll');
@@ -521,8 +526,13 @@ function injectDocDate(name){
 }
 
 function fetchPage(filename){
+    var seq = ROUTE_SEQ;
     fetchDoc(filename).then(function(text){
+            // 그사이 다른 화면으로 옮겼으면 늦게 온 본문은 버린다 — 안 그러면
+            // 지금 화면(다른 문서·태그·설정)을 이전 문서가 덮어쓴다.
+            if(seq !== ROUTE_SEQ){ return; }
             var doc = DOC_BY_NAME[filename];
+            if(!text && !doc){ showNotFound(); return; }
             if(doc && doc.tags.length){
                 text += renderDocTags(doc.tags);
             }
@@ -571,6 +581,23 @@ function fetchPage(filename){
             injectCitedBy();   // 반드시 injectRelated 뒤 (related 가드 충돌 방지)
             hydrateAiMap();
     })
+}
+
+// 없는 경로(지워진 문서·오타 링크) — 빈 화면 대신 안내를 그린다.
+function showNotFound(){
+    setArticle('<h2>' + escapeHtml(STR('notFoundHead')) + '</h2>'
+             + '<p class="empty">' + escapeHtml(STR('notFoundBody')) + '</p>');
+    setPageMeta(STR('notFoundHead'));
+}
+
+// 라우팅 세대 — route()가 부를 때마다 올라간다. 비동기로 그리는 화면은 시작할
+// 때 값을 쥐고 있다가, 도착했을 때 값이 바뀌었으면(사용자가 이미 다른 화면으로
+// 갔으면) 그리지 않는다.
+var ROUTE_SEQ = 0;
+// 깨진 퍼센트 인코딩(#!tag:% 등)에서 decodeURIComponent가 던지는 URIError로
+// 라우팅이 중간에 멈추지 않게 — 실패하면 원문 그대로 쓴다.
+function safeDecode(s){
+    try{ return decodeURIComponent(s); }catch(e){ return s; }
 }
 
 // ---- AI knowledge index (structural embedding) ----
@@ -774,8 +801,8 @@ function hydrateAiMap(){
 
 // ---- Tag index (all tags) with instant search ----
 function showTagIndex(){
-    var html = '<h2>Tags</h2>'
-             + '<input id="tag-search" type="search" placeholder="Search tags..."'
+    var html = '<h2>' + escapeHtml(STR('tagsTitle')) + '</h2>'
+             + '<input id="tag-search" type="search" placeholder="' + escapeHtml(STR('tagsSearchPh')) + '"'
              + ' oninput="filterTags(this.value)" autocomplete="off">'
              + '<div id="tag-top"></div>'
              + '<div id="tag-cloud"></div>';
@@ -860,7 +887,7 @@ function filterTags(query){
         });
         html += '</div></section>';
     });
-    if(!html){ html = '<p class="empty">No matching tags.</p>'; }
+    if(!html){ html = '<p class="empty">' + escapeHtml(STR('tagsNone')) + '</p>'; }
     var cloud = document.getElementById('tag-cloud');
     if(cloud){ cloud.innerHTML = html; }
     // The "most used" band belongs to the full index, not a search.
@@ -876,7 +903,7 @@ function showTag(tag){
     // 다시 문서로 튕기는 루프 방지.
     if(docs.length === 1){ location.replace('#!' + docs[0].name); return; }
     var html = '<h2>' + escapeHtml(tag) + '</h2>'
-             + '<p class="tag-back"><a href="#!tags">&larr; All tags</a></p>'
+             + '<p class="tag-back"><a href="#!tags">' + escapeHtml(STR('tagsAll')) + '</a></p>'
              + '<ul class="more-list">';
     docs.forEach(function(d){
         html += '<li><a href="#!' + d.name + '">'
@@ -884,6 +911,7 @@ function showTag(tag){
              +  '<span class="more-meta">' + escapeHtml(d.sectionL) + '</span></a></li>';
     });
     html += '</ul>';
+    if(!docs.length){ html += '<p class="empty">' + escapeHtml(STR('tagsNone')) + '</p>'; }
     setArticle(html);
 }
 
@@ -942,6 +970,7 @@ function showFolder(section){
     var disp = (docs[0] && docs[0].sectionL) || section;
     var parts = disp.split(' · ');
     var title = parts[parts.length - 1] || disp;
+    setPageMeta(title);   // 탭 제목도 현지화된 폴더 이름으로
     if(!docs.length){
         setArticle('<h2>' + escapeHtml(title) + '</h2>'
                  + '<p class="empty">' + STR('folderEmpty') + '</p>');
@@ -960,9 +989,11 @@ function showFolder(section){
     });
     toc += '</ol></div>';
     setArticle(toc + '<div class="folder-body"><p class="empty">' + STR('loading') + '</p></div>');
+    var seq = ROUTE_SEQ;
     Promise.all(docs.map(function(d){
         return fetchDoc(d.name);
     })).then(function(texts){
+        if(seq !== ROUTE_SEQ){ return; }   // 다른 폴더로 옮겼으면 버린다
         var html = '';
         docs.forEach(function(d, i){
             // Each doc already opens with its own heading, so no extra
@@ -1198,7 +1229,8 @@ function loadSettings(){
     catch(e){ return {}; }
 }
 function saveSettings(s){
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+    // 저장소가 막힌 브라우저(사이트 데이터 차단·용량 초과)에서도 예외로 멈추지 않게.
+    try{ localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); }catch(e){}
 }
 // One-time cleanup (2026-08-19): the settings dialog used to prefill the
 // music field with the site default, so saving settings froze that track in
@@ -1296,7 +1328,7 @@ function applySettings(){
     document.body.classList.toggle('hide-related', !!s.hideRelated);
     // Top-level category visibility.
     applyCategoryVisibility(s.hiddenCats);
-    // Light (day) theme is the default; a saved choice wins.
+    // 사이트 기본(config.json defaults.theme)이 있으면 그것, 없으면 day — 개인 선택이 우선.
     var isDay = (s.theme || 'day') === 'day';
     document.body.classList.toggle('day', isDay);
     var toggle = document.getElementById('theme-toggle');
@@ -1343,6 +1375,9 @@ function applyRepoConfig(){
         // Site-wide defaults for visitor-facing settings; personal
         // localStorage values overlay these (see effSettings).
         SITE_DEFAULTS = cfg.defaults || {};
+        // index.html의 첫 페인트 스크립트가 config.json을 기다리지 않고 같은
+        // 테마로 그리도록 사이트 기본 테마를 기억해 둔다(깜빡임 방지).
+        try{ localStorage.setItem('siteThemeDefault', SITE_DEFAULTS.theme || 'day'); }catch(e){}
         if(cfg.title){
             var h = document.querySelector('#masthead h1 a');
             if(h){ h.textContent = cfg.title; }
@@ -1455,7 +1490,7 @@ function showSettings(){
                      : ((document.querySelector('#profile-tagline .ptl-text') || {}).textContent || '');
     var curNavStyle = s.navLineStyle || 'dashed';
     var curNavWidth = s.navLineWidth || '1px';
-    var curGame = s.searchGame || 'breakout';
+    var curGame = s.searchGame || HARD_DEFAULTS.searchGame;
     var curLang = s.lang || currentLang();   // 자동 감지 언어가 선택돼 보이게
     var hiddenCats = s.hiddenCats || [];
     function opt(val, label, cur){
@@ -1756,13 +1791,26 @@ function saveSettingsForm(){
     var s = loadSettings();
     // Empty title = no override → fall back to config/default (so the
     // shown value matches the applied value on reopen).
-    var titleVal = document.getElementById('settings-title').value.trim();
-    if(titleVal){ s.title = titleVal; } else { delete s.title; }
-    s.tagline = document.getElementById('settings-tagline').value;
-    s.photoLine = document.getElementById('settings-photoline').value;
+    // 제목·태그라인·사진 문구는 사이트 값이 미리 채워져 있다. 손대지 않은 칸까지
+    // 저장하면 그 값이 개인 설정으로 굳어 이후 config.json 변경이 이 브라우저에
+    // 안 닿는다(음악 칸과 같은 함정) — 사용자가 실제로 고친 칸만 저장한다.
+    // (defaultValue = 폼을 그릴 때 채운 값)
+    var tEl = document.getElementById('settings-title');
+    if(tEl.value !== tEl.defaultValue){
+        var titleVal = tEl.value.trim();
+        if(titleVal){ s.title = titleVal; } else { delete s.title; }
+    }
+    var tgEl = document.getElementById('settings-tagline');
+    if(tgEl.value !== tgEl.defaultValue){ s.tagline = tgEl.value; }
+    var plEl = document.getElementById('settings-photoline');
+    if(plEl.value !== plEl.defaultValue){ s.photoLine = plEl.value; }
     // Design/feature fields store only deviations from the site
     // default, so config.json changes keep reaching this browser.
-    setOrClear(s, 'music', document.getElementById('settings-music').value.trim());
+    // 음악 칸은 개인 선택만 담는다(사이트 기본을 미리 채우지 않음) — 빈 칸은
+    // "사이트 기본을 따른다"는 뜻이라 저장하지 않는다. setOrClear에 그대로 넘기면
+    // ''이 사이트 기본과 다르다며 저장돼 이 브라우저의 배경음악이 꺼졌다.
+    var mus = document.getElementById('settings-music').value.trim();
+    if(mus){ setOrClear(s, 'music', mus); } else { delete s.music; }
     setOrClear(s, 'navLineStyle', document.getElementById('settings-navstyle').value);
     setOrClear(s, 'navLineWidth', document.getElementById('settings-navwidth').value);
     setOrClear(s, 'hideRecent', document.getElementById('settings-hiderecent').checked);
@@ -1789,7 +1837,12 @@ function saveSettingsForm(){
     setOrClear(s, 'themeFxMs', fx);
     setOrClear(s, 'themeFxBoth', document.getElementById('settings-themefx-both').checked);
     var prevLang = currentLang();
-    setOrClear(s, 'lang', document.getElementById('settings-lang').value);
+    // 언어 칸은 자동 감지된 언어가 선택돼 보인다 — 개인 언어가 없던 사람이
+    // 손대지 않고 저장하면 감지값이 고정돼 ?lang= 링크·브라우저 감지가 더는
+    // 먹지 않았다. 감지값 그대로면 저장하지 않는다.
+    var langVal = document.getElementById('settings-lang').value;
+    if(!loadSettings().lang && langVal === currentLang()){ delete s.lang; }
+    else { setOrClear(s, 'lang', langVal); }
     // Accent overrides: the (site) default value = no override stored.
     var ad = document.getElementById('settings-accent-day').value;
     var an = document.getElementById('settings-accent-night').value;
@@ -1821,7 +1874,7 @@ function saveSettingsForm(){
 
 function resetSettings(){
     if(!window.confirm(STR('resetConfirm'))){ return; }
-    localStorage.removeItem(SETTINGS_KEY);
+    try{ localStorage.removeItem(SETTINGS_KEY); }catch(e){}
     SETTINGS_UNLOCKED = false;
     location.reload();
 }
@@ -2178,7 +2231,7 @@ function setPageMeta(title, desc){
 function routeTitle(path){
     var doc = DOC_BY_NAME[path];
     if(doc){ return String(labelFor(doc) || '').replace(/^[\s❖✦§·⤓\-–—•*#>:]+/, ''); }
-    if(path.indexOf('folder:') === 0){ return decodeURIComponent(path.substr(7)); }
+    if(path.indexOf('folder:') === 0){ return safeDecode(path.substr(7)); }
     var screens = { cosmos: 'cosmosTitle', tags: 'tagsTitle', settings: 'settings',
                     'new': 'newPageHead', about: 'aboutTitle', liked: 'likedDocs',
                     graph: 'glTitle' };
@@ -2188,8 +2241,15 @@ function routeTitle(path){
 
 function route(){
     document.body.classList.remove('nav-open');   // close mobile drawer
+    ROUTE_SEQ++;
     var h = location.hash;
-    var path = h ? h.substr(2) : '';               // strip "#!"
+    // 문서 링크는 #!이름 형식이다. 예전 일부 로그가 쓴 경로형 링크
+    // (#work-log/2026/07/29/wl-…)는 마지막 조각이 문서 이름이면 그리로 보낸다.
+    if(h && h.indexOf('#!') !== 0){
+        var seg = safeDecode(h.substr(1)).split('/').pop();
+        if(DOC_BY_NAME[seg]){ location.replace('#!' + seg); return; }
+    }
+    var path = !h ? '' : (h.indexOf('#!') === 0 ? h.substr(2) : h.substr(1));   // strip "#!"
     countPageview(path === 'search' ? '' : path);  // 홈·검색은 한 경로로 합친다
     setPageMeta(routeTitle(path), (KNOWLEDGE && KNOWLEDGE[path] || {}).summary);
     // Left the jumped Work Log page → restore the ⤓ icon to default.
@@ -2215,7 +2275,7 @@ function route(){
     // module stays out of them — Work Log 폴더 모아보기(folder:Work Log …)도 동일.
     var doc = DOC_BY_NAME[path];
     var wlFolder = path.indexOf('folder:') === 0
-                && decodeURIComponent(path.substr(7)).indexOf('Work Log') === 0;
+                && safeDecode(path.substr(7)).indexOf('Work Log') === 0;
     document.body.classList.toggle('worklog-view',
         !!(doc && doc.section.indexOf('Work Log') === 0) || wlFolder);
     CURRENT_DOC = null;   // cleared here; fetchPage sets it for real docs
@@ -2223,8 +2283,8 @@ function route(){
     if(path === 'cosmos'){ showCosmos(); markActiveNav(null); return; }
     if(path === 'graph'){ showGraphLab(); markActiveNav(null); return; }
     if(path === 'tags'){ showTagIndex(); markActiveNav(null); }
-    else if(path.indexOf('tag:') === 0){ showTag(decodeURIComponent(path.substr(4))); markActiveNav(null); }
-    else if(path.indexOf('folder:') === 0){ showFolder(decodeURIComponent(path.substr(7))); markActiveNav(null); }
+    else if(path.indexOf('tag:') === 0){ showTag(safeDecode(path.substr(4))); markActiveNav(null); }
+    else if(path.indexOf('folder:') === 0){ showFolder(safeDecode(path.substr(7))); markActiveNav(null); }
     else if(path === 'new'){ showNew(); markActiveNav(null); }
     else if(path === 'liked'){ showLiked(); markActiveNav(null); }
     else if(path === 'settings'){ openSettings(); markActiveNav(null); }
@@ -2232,7 +2292,7 @@ function route(){
 }
 
 function toggleNav(){
-    // Desktop: collapse/expand the sidebar column (default expanded;
+    // Desktop: collapse/expand the sidebar column (default collapsed on first visit;
     // the choice is remembered per browser). Mobile: slide the drawer.
     if(window.matchMedia && window.matchMedia('(min-width: 801px)').matches){
         var on = document.body.classList.toggle('nav-collapsed');
@@ -2378,7 +2438,7 @@ App.data.loadList().then(function(tree){
           + '<div id="nav-scroll">'
           + renderNodes(tree.filter(function(n){ return !(n.route && !n.children); }), [])
           + '</div>';
-        applyCategoryVisibility(loadSettings().hiddenCats);   // nav now exists
+        applyCategoryVisibility(effSettings().hiddenCats);   // nav now exists (사이트 기본 포함)
         document.querySelector('#more').innerHTML = renderMore();
         refreshRecentDocs();   // reorder by last-modified once dates load
         route();   // render the initial page once indexes exist
@@ -2417,9 +2477,9 @@ var poShowTimer = null, poHideTimer = null, poCard = null, poAnchor = null;
 function poLinkTarget(a){
     var href = a.getAttribute('href') || '';
     if(href.slice(0, 2) !== '#!') return null;
-    var name = decodeURIComponent(href.slice(2));
+    var name = safeDecode(href.slice(2));
     if(!name || name.indexOf(':') !== -1) return null;
-    if(name === decodeURIComponent(location.hash.slice(2))) return null;
+    if(name === safeDecode(location.hash.slice(2))) return null;
     return name;
 }
 
