@@ -1293,6 +1293,23 @@
             color: var(--muted);
             font-size: 14px;
         }
+        /* 검색 홈 '최근 등재' 알약(2026-10-19 검토 C) — 게임 독과 같은 반투명·blur 언어,
+           평소엔 낮은 존재감, 호버 시 깨어난다. 첫 방문자에게 무엇이 있는 위키인지 한 줄 힌트. */
+        #search-recent{
+            display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+            gap: 8px 10px; margin: 14px auto 0; max-width: 720px; font-size: 13px;
+        }
+        #search-recent .k{ color: var(--muted); font-size: 12px; letter-spacing: .04em; }
+        #search-recent a{
+            color: var(--text); text-decoration: none; padding: 6px 12px;
+            border: 1px solid var(--border); border-radius: 999px;
+            background: color-mix(in srgb, var(--bg) 55%, transparent);
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            opacity: .75; transition: opacity .2s, border-color .2s;
+            max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        #search-recent a:hover{ opacity: 1; border-color: var(--accent); }
+        .search-screen.searching #search-recent{ display: none; }
         .search-field{
             position: relative;
             display: flex;
@@ -3178,6 +3195,10 @@
             #masthead h1{
                 font-size: 24px;
             }
+            /* 모바일 상단 밀도(2026-10-19 디자인 검토 A): 두 줄 태그라인을 숨기고
+               문서 제목을 22px로 — 첫 화면의 1/3이 제목 영역이던 것을 본문 한 문단만큼 올린다. */
+            #tagline{ display: none; }
+            article h2{ font-size: 22px; }
             #article{
                 padding: 20px;
             }
@@ -3359,11 +3380,11 @@
         /* One-time note above the button explaining the block + fallback. */
         #music-note{
             position: fixed;
-            right: 22px;
-            bottom: 78px;
+            right: 16px;
+            bottom: 92px;   /* 게임 독·음악 버튼 위 — 본문을 덜 가린다(2026-10-19 검토 B) */
             z-index: 851;
-            max-width: 246px;
-            padding: 10px 13px;
+            max-width: 230px;
+            padding: 9px 30px 9px 12px;
             font-size: 12px;
             line-height: 1.5;
             color: var(--text);
@@ -3376,8 +3397,16 @@
             transition: opacity 0.25s ease, transform 0.25s ease;
             pointer-events: none;
         }
-        #music-note.show{ opacity: 1; transform: translateY(0); }
+        #music-note.show{ opacity: 1; transform: translateY(0); pointer-events: auto; }
         #music-note b{ color: var(--accent-ink); }
+        /* 탭 한 번으로 치우는 닫기 — 9초를 기다리지 않아도 된다. */
+        #music-note .mn-x{
+            position: absolute; top: 4px; right: 6px;
+            width: 22px; height: 22px; border: 0; border-radius: 50%;
+            background: transparent; color: var(--muted); font-size: 13px; line-height: 22px;
+            cursor: pointer; padding: 0;
+        }
+        #music-note .mn-x:hover{ color: var(--text); background: var(--border); }
 
         @media (prefers-reduced-motion: reduce){
             /* The global rule already stops animation; keep a defined static
@@ -3388,6 +3417,13 @@
         /* ==== Harness plugin docs: scenario board + SVG diagrams ==== */
 
         /* Scenario board — a responsive card grid (게시판). */
+        /* 태그 색인의 긴 꼬리(2026-10-19 검토 E) — 한 번만 쓰인 태그는 접어 둔다. */
+        .idx-rare{ margin-top: 18px; border-top: 1px solid var(--border); padding-top: 10px; }
+        .idx-rare > summary{ cursor: pointer; color: var(--muted); font-size: 13px; list-style: none; }
+        .idx-rare > summary::before{ content: '▸ '; }
+        .idx-rare[open] > summary::before{ content: '▾ '; }
+        .idx-rare .idx-group{ opacity: .85; }
+
         article .scn-board{
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
