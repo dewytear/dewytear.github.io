@@ -28,6 +28,7 @@ SYNONYM_RATIO = 0.8
 SYNONYM_MAX_LEN_DIFF = 4
 WRONG_CLUSTER_MARGIN = 2
 WRONG_CLUSTER_MIN_CONCEPTS = 3
+WRONG_CLUSTER_DENSITY_RATIO = 1.5   # 상대 클러스터 밀도가 자기 밀도의 1.5배를 넘어야 WARN
 OVER_CONNECTED_MIN_INDEGREE = 8
 
 
@@ -185,10 +186,19 @@ def _check_wrong_cluster(docs, cluster_labels):
             score = sum(1 for c in concepts if c in other_pool)
             if score > best_other_score:
                 best_other_label, best_other_score = label, score
-        if best_other_label is not None and best_other_score >= own_score + WRONG_CLUSTER_MARGIN:
+        # 2026-10-19: 원점수는 큰 클러스터에 끌린다 — 뉴스(18편)는 어휘 풀이 넓어 거의
+        # 모든 문서가 '뉴스가 더 맞다'로 나와 WARN 26건 중 대부분이 소음이었다. 풀 크기의
+        # 제곱근으로 나눈 밀도로 한 번 더 걸러, 원점수 차이와 밀도 차이가 둘 다 날 때만 띄운다.
+        def density(label, score):
+            n_docs = max(1, len(docs_by_label.get(label, [])) - (1 if label == own_label else 0))
+            return score / (n_docs ** 0.5)
+        if (best_other_label is not None
+                and best_other_score >= own_score + WRONG_CLUSTER_MARGIN
+                and density(best_other_label, best_other_score) > density(own_label, own_score) * WRONG_CLUSTER_DENSITY_RATIO):
             findings.append(_finding(
                 'WARN', 'wrong-cluster', name,
-                f"own {own_label} {own_score}점 vs {best_other_label}클러스터 {best_other_score}점"))
+                f"own {own_label} {own_score}점 vs {best_other_label}클러스터 {best_other_score}점 "
+                f"(밀도 {density(own_label, own_score):.2f} vs {density(best_other_label, best_other_score):.2f})"))
     return findings
 
 

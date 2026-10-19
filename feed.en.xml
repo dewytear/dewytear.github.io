@@ -5,7 +5,7 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.en.xml"/>
   <id>https://dewytear.github.io/feed.en.xml</id>
-  <updated>2026-10-16T00:19:20+09:00</updated>
+  <updated>2026-10-19T22:03:58+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
   <entry>
@@ -31,7 +31,7 @@
     <link href="https://dewytear.github.io/p/en/kgs-accuracy/"/>
     <id>https://dewytear.github.io/docs/en/ai/wiki/knowledge-system/kgs-accuracy</id>
     <published>2026-09-24T19:57:46+09:00</published>
-    <updated>2026-09-25T00:32:20+09:00</updated>
+    <updated>2026-10-19T22:03:58+09:00</updated>
     <summary>Measures how often this wiki's site search and related-pages block get it right today, for a wiki that calls itself RAG-ready and ships its engine as a plugin, prompted by Claude Marketplace widening into a catalog of about 2,000 items on 23 September and by a comment the same day on Karpathy's LLM Wiki gist asking whether anyone had benchmarked its claims. Search was measured by calling the screen's own searchDocs() in a headless browser against two query sets: 48 frozen queries committed before the current engine was built (the headline numbers) and 107 tuning queries frozen before results but consulted while refining the engine (reference only). The engine strips punctuation and Korean endings and particles from each piece, adds English stems, cuts Japanese into katakana and kanji runs and drops question words, then looks in three passes: every piece, then without dead pieces, then half or more, with a partial-results notice on the last two. Word and content-word queries all landed in the top three in both sets; on the frozen set, sentences put the answer in the top eight 93.8% of the time in Korean and 75% in English and Japanese, and no query came back empty. Of 36 Korean sentences, 15 were answered in pass 1, 9 in pass 2 and 12 in pass 3, with pass 2 weakest at 4 of 9, because the dead piece it discards is usually the conjugated verb carrying the meaning and only common nouns remain. Different wording (company server versus self-hosting) and neighbours that match more pieces also cause misses. Of 199 related edges, 47.2% are backed by a body link or typed relation and the other 105 were judged related 63, weak 38, unrelated 4, for strict precision of 78.9% and 2.0% dead ends. But only 32.9% of authors' body links sit at one hop, and 14.8% of those crossing folders, the price of requiring three shared concepts (or two including a rare one) across folders; three pages alone in their folders have an empty related block. On two-page questions the related block lifts the tuning set from 25% to 75% but adds nothing on the frozen set, and 18 of the 20 pairs sit in one folder. The harness, queries and judgments are public in tools/eval/; the judgments were made by the AI that wrote the page</summary>
     <category term="AI · Wiki · 지식 체계"/>
   </entry>
@@ -92,11 +92,11 @@
   <entry>
     <title>dews-sourcegraph — A Skill That Hands Internal Code Search to Claude</title>
     <link href="https://dewytear.github.io/p/en/sks-dews-sourcegraph/"/>
-    <id>https://dewytear.github.io/docs/en/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph</id>
+    <id>https://dewytear.github.io/docs/en/ai/claude/skills/sks-dews-sourcegraph</id>
     <published>2026-08-19T20:43:27+09:00</published>
-    <updated>2026-08-19T20:43:27+09:00</updated>
+    <updated>2026-10-19T22:03:58+09:00</updated>
     <summary>A skill that lets Claude Code query an in-house SourceGraph instance directly. A private instance blocks anonymous access with a 401, so an ordinary web-fetch tool reads nothing — this skill performs a browser form login once on its own, using the Edge or Chrome already installed on the machine, and caches the session for reuse, which removes the step of copying cookies out of DevTools. It explains why the downloadable cache browser is avoided (on corporate machines a security agent blocks the ms-playwright executable, and the browser then hangs without even painting a blank page), the install that ends with merging .claude into the project root, three lines in SourceGraph.md and npm install, the standard Sourcegraph query filters, and the local-first rule with the [SG repo/file:line] citation convention. Two prohibitions are nailed down — never commit the credentials file or the session cache, and never retry a failed login, because repeated password failures lock the account. A generalized zip with all organization-specific values stripped is available for download.</summary>
-    <category term="AI · Claude · Skills · dews-sourcegraph"/>
+    <category term="AI · Claude · 스킬 카탈로그"/>
   </entry>
   <entry>
     <title>Claude Code on Your Own Servers — the Self-Hosting Public Beta and August's Releases</title>
@@ -164,11 +164,11 @@
   <entry>
     <title>im-not-ai (Humanize KR) — An Editing Skill That Erases the AI Tell</title>
     <link href="https://dewytear.github.io/p/en/sks-im-not-ai/"/>
-    <id>https://dewytear.github.io/docs/en/ai/claude/skills/im-not-ai/sks-im-not-ai</id>
+    <id>https://dewytear.github.io/docs/en/ai/claude/skills/sks-im-not-ai</id>
     <published>2026-08-10T19:15:41+09:00</published>
-    <updated>2026-08-15T14:26:16+09:00</updated>
+    <updated>2026-10-19T22:03:58+09:00</updated>
     <summary>AI-written text gives itself away through habits, not grammar — an introduction to im-not-ai, an editing skill that finds and removes 33 traces such as inflated significance, aphorism formulas, signposting, fake candor, mechanical rule-of-three, and vague attribution. The body is blader's humanizer (MIT) vendored verbatim; its root is Wikipedia's "Signs of AI writing". Covers the equally important false-positive half (judge by clusters of tells, preserve human signals, the author's sample outranks the rules, facts are immutable, respect the genre), the draft → two-question audit → final loop, installation and invocation, and this wiki's field record of passing all 121 indexed documents × 3 languages through it — only about 22 sentences of edits, with the style audit catching factual errors (7→9 views, a table summing wrong) along the way</summary>
-    <category term="AI · Claude · Skills · im-not-ai"/>
+    <category term="AI · Claude · 스킬 카탈로그"/>
   </entry>
   <entry>
     <title>Finding a Movie by Its Story — Your First Vector Retriever on a Neo4j Sandbox</title>
