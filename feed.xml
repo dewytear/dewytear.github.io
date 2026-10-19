@@ -5,7 +5,7 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.xml"/>
   <id>https://dewytear.github.io/</id>
-  <updated>2026-10-16T00:19:20+09:00</updated>
+  <updated>2026-10-19T22:03:58+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
   <entry>
@@ -31,7 +31,7 @@
     <link href="https://dewytear.github.io/p/kgs-accuracy/"/>
     <id>https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-accuracy</id>
     <published>2026-09-24T19:57:46+09:00</published>
-    <updated>2026-09-25T00:32:20+09:00</updated>
+    <updated>2026-10-19T22:03:58+09:00</updated>
     <summary>'RAG-ready'를 내세우고 엔진을 플러그인으로 내보내는 이 위키의 사이트 검색과 연관 문서 블록이 지금 얼마나 맞히는지 쟀다 — 9월 23일 Claude Marketplace가 약 2,000개 카탈로그로 넓어지고, 같은 날 카파시의 LLM Wiki 지스트에 '주장을 벤치마크로 검증했느냐'는 질문이 달린 것이 계기다. 검색은 헤드리스 브라우저에서 화면의 searchDocs()를 그대로 호출했고, 문항은 두 묶음이다 — 지금의 엔진을 만들기 전에 커밋한 고정 문항 48개(대표 숫자)와, 결과 전 고정했지만 엔진 조정에 실패를 참고한 조정 문항 107개(참고). 엔진은 조각마다 문장부호·한국어 어미·조사를 떼고 영어 어간을 더하며 일본어는 가타카나·한자 덩어리로 자르고 의문사를 버린 뒤, 모든 조각 → 죽은 조각 빼고 → 절반 이상의 3단계로 찾는다(뒤 두 단계는 '일부 단어 결과' 안내). 단어·내용어 조합은 두 묶음 모두 3위 안에 전부 들었고, 문장은 고정 문항에서 화면 8건 안 적중이 한국어 93.8%·영어와 일본어 75%, 결과 0건은 없다. 한국어 문장 36개 중 15개는 1단계, 9개는 2단계, 12개는 3단계에서 답을 얻었고 2단계 적중이 9개 중 4개로 가장 낮다 — 버려지는 죽은 조각이 대개 뜻을 실은 활용 동사('불러와지나요')라 흔한 명사만 남기 때문이다. 다른 어휘('회사 서버'↔'셀프호스팅')와 조각을 더 맞힌 이웃 문서도 실패 원인이다. 연관 블록 엣지 199개는 47.2%가 본문 링크·타입 관계로 뒷받침되고 나머지 105개 판정은 관련 63·약함 38·무관 4로, 엄격 정밀도 78.9%·헛걸음 2.0%다. 반면 작가 본문 링크의 1홉 재현율은 32.9%, 폴더를 넘는 링크는 14.8%로, 폴더 밖 엣지에 개념 3개(또는 희귀 포함 2개)를 요구하는 문턱의 대가다. 폴더에 혼자인 3편은 연관 블록이 비어 있다. 두 문서 질문은 조정 문항에서 상위 3건 25%가 연관 블록 1홉으로 75%가 되지만 고정 문항에서는 1홉이 보탠 것이 없고, 짝 20개 중 18개가 같은 폴더라 폴더를 넘는 순회는 이 문항으로 말하기 어렵다. 도구·문항·판정은 tools/eval/에 공개했고, 판정은 이 글을 쓴 AI가 했다</summary>
     <category term="AI · Wiki · 지식 체계"/>
   </entry>
@@ -92,11 +92,11 @@
   <entry>
     <title>dews-sourcegraph — 사내 코드 검색을 Claude에게 넘기는 스킬</title>
     <link href="https://dewytear.github.io/p/sks-dews-sourcegraph/"/>
-    <id>https://dewytear.github.io/docs/ko/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph</id>
+    <id>https://dewytear.github.io/docs/ko/ai/claude/skills/sks-dews-sourcegraph</id>
     <published>2026-08-19T20:43:27+09:00</published>
-    <updated>2026-08-19T20:43:27+09:00</updated>
+    <updated>2026-10-19T22:03:58+09:00</updated>
     <summary>사내 SourceGraph 인스턴스를 Claude Code가 직접 질의하게 만드는 스킬. 비공개 인스턴스는 익명 접근이 401로 막혀 일반 웹 조회 도구로는 아무것도 못 읽는데, 이 스킬은 설치된 Edge·Chrome으로 폼 로그인을 1회 자동 수행하고 세션을 캐시해 재사용한다 — 개발자도구로 쿠키를 복사하는 절차가 없다. 캐시 브라우저를 쓰지 않는 이유(보안 에이전트가 ms-playwright 실행 파일을 차단하는 사내 PC에서 멈춤), 프로젝트 루트에 .claude 병합 + SourceGraph.md 세 줄 + npm install 로 끝나는 설치, Sourcegraph 표준 쿼리 문법, 그리고 로컬 우선 원칙과 [SG repo/파일:라인] 인용 규약을 담았다. 자격증명·세션 캐시 커밋 금지와 로그인 실패 시 재시도 금지(계정 잠금)를 함께 못 박았고, 조직 정보를 제거한 일반화 zip을 받을 수 있다</summary>
-    <category term="AI · Claude · Skills · dews-sourcegraph"/>
+    <category term="AI · Claude · 스킬 카탈로그"/>
   </entry>
   <entry>
     <title>내 서버에서 도는 Claude Code — 셀프호스팅 공개 베타와 8월의 릴리스들</title>
@@ -164,11 +164,11 @@
   <entry>
     <title>im-not-ai(Humanize KR) — AI 티를 지우는 편집 스킬</title>
     <link href="https://dewytear.github.io/p/sks-im-not-ai/"/>
-    <id>https://dewytear.github.io/docs/ko/ai/claude/skills/im-not-ai/sks-im-not-ai</id>
+    <id>https://dewytear.github.io/docs/ko/ai/claude/skills/sks-im-not-ai</id>
     <published>2026-08-10T19:15:41+09:00</published>
-    <updated>2026-08-15T14:26:16+09:00</updated>
+    <updated>2026-10-19T22:03:58+09:00</updated>
     <summary>AI가 쓴 글의 티는 문법이 아니라 버릇에서 난다 — 의의 부풀리기·아포리즘 공식·시그널포스팅·가짜 솔직 어투·기계적 3항·막연 귀속 같은 흔적 33종을 찾아 지우는 편집 스킬 im-not-ai의 소개. 본체는 blader의 humanizer(MIT) 원문 그대로이고 뿌리는 위키백과 "Signs of AI writing"이다. 목록만큼 중요한 오탐 방지 반쪽(티의 군집으로 판단·사람 글 신호 보존·저자 표본 우선·사실 불변·장르 존중), 초안→두 질문 감사→최종본의 동작 원리, 설치·호출 방법, 그리고 이 위키가 인덱스 문서 121편×3언어를 전부 통과시킨 실전 기록 — 수정은 22문장에 그쳤고 문체 감사가 사실 오류(7→9 뷰, 표 합산 등)까지 잡았다 — 를 담았다</summary>
-    <category term="AI · Claude · Skills · im-not-ai"/>
+    <category term="AI · Claude · 스킬 카탈로그"/>
   </entry>
   <entry>
     <title>영화 줄거리로 영화 찾기 — Neo4j 샌드박스에서 만드는 첫 벡터 리트리버</title>

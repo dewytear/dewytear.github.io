@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 
-이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 74개 문서 · 344개 개념.
+이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 74개 문서 · 318개 개념.
 
 License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 밝히면 자유롭게 인용·재사용할 수 있다.
 
@@ -77,6 +77,10 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [고급 활용 — 도구·워크플로우·Windows](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-tools): LSP·AST 그렙·파이썬 REPL 같은 고급 도구, 시나리오별 워크플로우, 그리고 Windows(WSL2·psmux) 주의점 · [EN](https://dewytear.github.io/docs/en/ai/claude/plugin/omc/omc-tools) · [JA](https://dewytear.github.io/docs/ja/ai/claude/plugin/omc/omc-tools)
 - [비용·성능과 명령어 참조](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-cost): 토큰·모델 단가와 병렬화의 비용 감각, 그리고 전체 명령어 표와 빠른 참조 카드로 시리즈 마무리 · [EN](https://dewytear.github.io/docs/en/ai/claude/plugin/omc/omc-cost) · [JA](https://dewytear.github.io/docs/ja/ai/claude/plugin/omc/omc-cost)
 
+## 스킬 카탈로그 (AI · Claude · 스킬 카탈로그)
+- [im-not-ai(Humanize KR) — AI 티를 지우는 편집 스킬](https://dewytear.github.io/docs/ko/ai/claude/skills/sks-im-not-ai): AI가 쓴 글의 티는 문법이 아니라 버릇에서 난다 — 의의 부풀리기·아포리즘 공식·시그널포스팅·가짜 솔직 어투·기계적 3항·막연 귀속 같은 흔적 33종을 찾아 지우는 편집 스킬 im-not-ai의 소개. 본체는 blader의 humanizer(MIT) 원문 그대로이고 뿌리는 위키백과 "Signs of AI writing"이다. 목록만큼 중요한 오탐 방지 반쪽(티의 군집으로 판단·사람 글 신호 보존·저자 표본 우선·사실 불변·장르 존중), 초안→두 질문 감사→최종본의 동작 원리, 설치·호출 방법, 그리고 이 위키가 인덱스 문서 121편×3언어를 전부 통과시킨 실전 기록 — 수정은 22문장에 그쳤고 문체 감사가 사실 오류(7→9 뷰, 표 합산 등)까지 잡았다 — 를 담았다 · [EN](https://dewytear.github.io/docs/en/ai/claude/skills/sks-im-not-ai) · [JA](https://dewytear.github.io/docs/ja/ai/claude/skills/sks-im-not-ai)
+- [dews-sourcegraph — 사내 코드 검색을 Claude에게 넘기는 스킬](https://dewytear.github.io/docs/ko/ai/claude/skills/sks-dews-sourcegraph): 사내 SourceGraph 인스턴스를 Claude Code가 직접 질의하게 만드는 스킬. 비공개 인스턴스는 익명 접근이 401로 막혀 일반 웹 조회 도구로는 아무것도 못 읽는데, 이 스킬은 설치된 Edge·Chrome으로 폼 로그인을 1회 자동 수행하고 세션을 캐시해 재사용한다 — 개발자도구로 쿠키를 복사하는 절차가 없다. 캐시 브라우저를 쓰지 않는 이유(보안 에이전트가 ms-playwright 실행 파일을 차단하는 사내 PC에서 멈춤), 프로젝트 루트에 .claude 병합 + SourceGraph.md 세 줄 + npm install 로 끝나는 설치, Sourcegraph 표준 쿼리 문법, 그리고 로컬 우선 원칙과 [SG repo/파일:라인] 인용 규약을 담았다. 자격증명·세션 캐시 커밋 금지와 로그인 실패 시 재시도 금지(계정 잠금)를 함께 못 박았고, 조직 정보를 제거한 일반화 zip을 받을 수 있다 · [EN](https://dewytear.github.io/docs/en/ai/claude/skills/sks-dews-sourcegraph) · [JA](https://dewytear.github.io/docs/ja/ai/claude/skills/sks-dews-sourcegraph)
+
 ## Tip (AI · Claude · Tip)
 - [초급 — 컨텍스트를 아끼는 습관 9가지](https://dewytear.github.io/docs/ko/ai/claude/tip/tip-beginner): Claude Code 입문 팁 9가지를 공식 문서와 대조해 정리 — /init으로 CLAUDE.md 생성, 스테이터스 라인, 컨텍스트 작게 유지, /context로 토큰 하마 찾기, /compact vs /clear, 플랜 모드(auto 기본값 시대의 의미), 문제로 묻기, 95% 되묻기 프롬프트, 투두 자가 점검 · [EN](https://dewytear.github.io/docs/en/ai/claude/tip/tip-beginner) · [JA](https://dewytear.github.io/docs/ja/ai/claude/tip/tip-beginner)
 - [중급 — 세션을 시스템으로 만드는 11가지](https://dewytear.github.io/docs/ko/ai/claude/tip/tip-intermediate): 반복을 시스템에 옮기는 중급 팁 11가지 — 서브에이전트 병렬(독립 컨텍스트·요약 보고), 나만의 스킬 만들기, 서브에이전트에 Haiku 분업, CLAUDE.md 150~200줄 상한 갱신 습관, CLAUDE.md 라우터, 중간에 끊기(Esc), 닦달 후 기록, /rewind 체크포인트, 훅 알림, 이미지 입력, 스크린샷 템플릿 · [EN](https://dewytear.github.io/docs/en/ai/claude/tip/tip-intermediate) · [JA](https://dewytear.github.io/docs/ja/ai/claude/tip/tip-intermediate)
@@ -121,18 +125,12 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 ## AI 알림 발송엔진 (Douzone · dev.Center · Proposal · AI 알림 발송엔진)
 - [발송엔진 구현 요청 — 개요·요청 사항·인터페이스](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-noti-send-engine/sne-overview): 발송엔진의 책임 경계와 개요, 멱등·재시도·DLQ 등 구현 요청 사항, 인터페이스 선확정과 기대효과까지 한 편에 · [EN](https://dewytear.github.io/docs/en/douzone/dev-center/proposal/ai-noti-send-engine/sne-overview) · [JA](https://dewytear.github.io/docs/ja/douzone/dev-center/proposal/ai-noti-send-engine/sne-overview)
 
-## im-not-ai (AI · Claude · Skills · im-not-ai)
-- [im-not-ai(Humanize KR) — AI 티를 지우는 편집 스킬](https://dewytear.github.io/docs/ko/ai/claude/skills/im-not-ai/sks-im-not-ai): AI가 쓴 글의 티는 문법이 아니라 버릇에서 난다 — 의의 부풀리기·아포리즘 공식·시그널포스팅·가짜 솔직 어투·기계적 3항·막연 귀속 같은 흔적 33종을 찾아 지우는 편집 스킬 im-not-ai의 소개. 본체는 blader의 humanizer(MIT) 원문 그대로이고 뿌리는 위키백과 "Signs of AI writing"이다. 목록만큼 중요한 오탐 방지 반쪽(티의 군집으로 판단·사람 글 신호 보존·저자 표본 우선·사실 불변·장르 존중), 초안→두 질문 감사→최종본의 동작 원리, 설치·호출 방법, 그리고 이 위키가 인덱스 문서 121편×3언어를 전부 통과시킨 실전 기록 — 수정은 22문장에 그쳤고 문체 감사가 사실 오류(7→9 뷰, 표 합산 등)까지 잡았다 — 를 담았다 · [EN](https://dewytear.github.io/docs/en/ai/claude/skills/im-not-ai/sks-im-not-ai) · [JA](https://dewytear.github.io/docs/ja/ai/claude/skills/im-not-ai/sks-im-not-ai)
-
-## dews-sourcegraph (AI · Claude · Skills · dews-sourcegraph)
-- [dews-sourcegraph — 사내 코드 검색을 Claude에게 넘기는 스킬](https://dewytear.github.io/docs/ko/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph): 사내 SourceGraph 인스턴스를 Claude Code가 직접 질의하게 만드는 스킬. 비공개 인스턴스는 익명 접근이 401로 막혀 일반 웹 조회 도구로는 아무것도 못 읽는데, 이 스킬은 설치된 Edge·Chrome으로 폼 로그인을 1회 자동 수행하고 세션을 캐시해 재사용한다 — 개발자도구로 쿠키를 복사하는 절차가 없다. 캐시 브라우저를 쓰지 않는 이유(보안 에이전트가 ms-playwright 실행 파일을 차단하는 사내 PC에서 멈춤), 프로젝트 루트에 .claude 병합 + SourceGraph.md 세 줄 + npm install 로 끝나는 설치, Sourcegraph 표준 쿼리 문법, 그리고 로컬 우선 원칙과 [SG repo/파일:라인] 인용 규약을 담았다. 자격증명·세션 캐시 커밋 금지와 로그인 실패 시 재시도 금지(계정 잠금)를 함께 못 박았고, 조직 정보를 제거한 일반화 zip을 받을 수 있다 · [EN](https://dewytear.github.io/docs/en/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph) · [JA](https://dewytear.github.io/docs/ja/ai/claude/skills/dews-sourcegraph/sks-dews-sourcegraph)
-
 ## 허브 문서 (가장 많이 참조됨 — 분석 진입점)
+- [Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260724-claude-opus-5): 피참조 8회
 - [내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260901-whose-usage): 피참조 8회
-- [Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260724-claude-opus-5): 피참조 7회
 - [부를 수 있는 목록 — 하네스 167종 순위표를 받아서 뜯어봤다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260922-harness-catalog): 피참조 7회
+- [OMC — 소개와 설치](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-intro): 피참조 7회
 - [첫 실행과 동작 구조](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-first-run): 피참조 6회
 - [Harness 플러그인 — 소개·개념·설치](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-intro): 피참조 6회
 - [모델에 문이 달렸다 — 누가 쓰는가와, 어떻게 부르는가](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260904-model-doors): 피참조 6회
-- [OMC — 소개와 설치](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-intro): 피참조 6회
 - [레벨 3~5 — 의미·관계·브레인 OS](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-level3): 피참조 6회

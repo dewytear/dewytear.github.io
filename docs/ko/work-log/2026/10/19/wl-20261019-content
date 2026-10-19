@@ -1,0 +1,14 @@
+            <h2>2026-10-19 — 콘텐츠</h2>
+
+            <h3>지식 구조 점검 — 개념 어휘 정리·스킬 카탈로그 평탄화·자기기술 수치 갱신</h3>
+            <p>
+                대표님이 위키의 지식 구조 관점에서 개선점을 찾아 반영하고, 더 고칠 게 없다고 판단될 때까지 반복하라고 지시했다. 그래프를 먼저 재서(문서 74편·개념 344개·연결 216개·관계 84건) 약한 곳을 골랐고, 세 차례 돌면서 고친 뒤 다시 쟀다.
+            </p>
+            <p><strong>개념 어휘.</strong> 개념 344개 가운데 235개가 한 문서에만 나왔다. 둘로 갈린다. 하나는 같은 뜻을 다르게 적은 것 — 할루시네이션(3편)과 환각(2편), 클로드코드와 Claude Code, AI 에이전트와 에이전트, 프로그레시브공개와 점진적공개 — 를 하나로 합쳤다(본문이 그 말을 실제로 쓰는지 확인한 것만). 다른 하나는 지식 개념이 아니라 <em>절 제목</em>에 가까운 것 — 강의개요·활용사례·유용한명령·치트시트·난이도·초록·레벨1~5·5단계·6단계·기초명령어·고급도구·구현노트·적용범위·저장위치·다시찾기·철학·생태계 21개 — 를 걷어냈다. 이런 개념은 연결을 만들지 않으면서 개념 칩·검색·그래프를 흐린다. <code>news-20260724-snucatch-ai-coding</code>에는 본문이 여덟 번 다루는 '검증'이 개념에 빠져 있어 더했다(opus-5·cherny-karpathy와 새 연결). <code>omc-cost</code>의 '명령어'는 '슬래시명령어'와 겹쳐 지웠다. 결과: 개념 318개, 연결 221개(+6, −1 — 할루시네이션이 환각으로 합쳐져 df가 2→5가 되면서 hns-usecases↔hns-install의 단일 공유 엣지는 자격을 잃었다. 둘은 같은 폴더 앞뒤라 읽기 흐름에는 영향이 없다).
+            </p>
+            <p><strong>스킬 카탈로그.</strong> 개별 스킬 소개 두 편(<a href="#!sks-im-not-ai">im-not-ai</a>·<a href="#!sks-dews-sourcegraph">dews-sourcegraph</a>)이 각자 한 편짜리 하위 폴더(<code>skills/im-not-ai/</code>, <code>skills/dews-sourcegraph/</code>)에 들어 있어 폴더 보완 연결조차 못 받고 고립돼 있었다. 하위 폴더를 없애고 둘을 <code>ai/claude/skills/</code> 바로 아래에 두어 같은 System의 이웃이 되게 했다(3언어 본문과 dews 스킬 zip 자산 경로 이동). 폴더 이름도 바꿨다 — 강의 System '<code>Skill</code>'과 한 글자 차이인 '<code>Skills</code>'는 영어 사이드바에서 구분이 안 됐다. '스킬 카탈로그'(en Skill Catalog · ja スキルカタログ)로 고치고 <code>clusters.json</code>·지식지도 <code>data-topics</code>·소제목·<a href="#!kgs-accuracy">정확도 측정</a>의 언급을 맞췄다. 고립 문서는 5편(in-degree 0)에서 3편으로, 연관 문서가 전혀 없는 문서는 3편에서 1편(<a href="#!sne-overview">발송엔진 요청</a> — 도메인이 달라 정직한 고립)으로 줄었다.
+            </p>
+            <p><strong>관계(relations) 검토.</strong> 타입 관계가 하나도 없는 문서 5편(mythos-looped·ai-2040·snucatch·astra-math·sne-overview)을 본문과 대조했다. 후보로 본 "model-doors가 mythos-looped의 추정을 대체(supersedes)한다"는 model-doors 본문에 루프드 트랜스포머·미소스 호재론 언급이 없어 달지 않았다. 다섯 편 모두 실재하는 타입 관계가 없다고 판단해 그대로 둔다.
+            </p>
+            <p><strong>남긴 판단.</strong> 개념 계층(서브에이전트⊂에이전트 같은 상하위 사전)을 데이터로 들이는 안은 보류했다 — 검색이 이미 부분 일치로 좁은 개념을 넓은 질의에 잡고 있어 스키마를 늘릴 만큼의 이득이 없다. 하네스 강의(<code>Code · Harness</code>)와 하네스 플러그인(<code>PlugIn · Harness</code>)이 서로의 클러스터로 끌리는 신호는 두 System이 같은 주제를 강의와 매뉴얼로 나눈 구조에서 오는 것이라 계층을 합치지 않았다. GraphDB 폴더의 <code>news-</code> 접두 문서 두 편은 이름이 경로(라우트)라 바꾸지 않았다. <a href="#!kgs-overview">kgs-overview</a>·<a href="#!kgs-edges">kgs-edges</a>의 "현재" 수치와 og 카드(개념 318)를 이날 기준으로 갱신했다.
+            </p>
