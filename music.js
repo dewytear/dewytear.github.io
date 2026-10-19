@@ -116,7 +116,9 @@ function parseYouTubeList(input){
         if(document.getElementById('music-note')){ return; }
         var n = document.createElement('div');
         n.id = 'music-note';
-        n.innerHTML = STR('musicNotice');
+        n.innerHTML = STR('musicNotice')
+                    + '<button type="button" class="mn-x" aria-label="' + STR('musicNoteClose') + '">&#x2715;</button>';
+        n.querySelector('.mn-x').addEventListener('click', function(){ n.remove(); });
         document.body.appendChild(n);
         void n.offsetWidth;
         n.classList.add('show');

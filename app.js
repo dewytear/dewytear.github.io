@@ -866,27 +866,39 @@ function filterTags(query){
         return a.toLowerCase().localeCompare(b.toLowerCase(), 'ko');
     });
     var ranks = topTagRanks();
-    var groups = {}, letters = [];
-    tags.forEach(function(t){
-        if(q && t.toLowerCase().indexOf(q) === -1){ return; }
-        var k = tagInitial(t);
-        if(!groups[k]){ groups[k] = []; letters.push(k); }
-        groups[k].push(t);
-    });
-    letters.sort(function(a, b){
-        var ra = initialRank(a), rb = initialRank(b);
-        return ra[0] - rb[0] || ra[1] - rb[1];
-    });
-    var html = '';
-    letters.forEach(function(k){
-        html += '<section class="idx-group">'
-             +  '<h3 class="idx-letter">' + escapeHtml(k) + '</h3>'
-             +  '<div class="idx-list">';
-        groups[k].forEach(function(t){
-            html += tagIndexEntry(t, TAG_INDEX[t].length, ranks[t]);
+    // 한 번만 쓰인 태그는 전체의 3/4라 알파벳 색인을 길게만 만든다(2026-10-19 검토 E).
+    // 검색 중이 아니면 접힌 절로 내려보내고, 2회 이상만 본 색인에 둔다.
+    function build(list){
+        var groups = {}, letters = [];
+        list.forEach(function(t){
+            var k = tagInitial(t);
+            if(!groups[k]){ groups[k] = []; letters.push(k); }
+            groups[k].push(t);
         });
-        html += '</div></section>';
-    });
+        letters.sort(function(a, b){
+            var ra = initialRank(a), rb = initialRank(b);
+            return ra[0] - rb[0] || ra[1] - rb[1];
+        });
+        var out = '';
+        letters.forEach(function(k){
+            out += '<section class="idx-group">'
+                +  '<h3 class="idx-letter">' + escapeHtml(k) + '</h3>'
+                +  '<div class="idx-list">';
+            groups[k].forEach(function(t){
+                out += tagIndexEntry(t, TAG_INDEX[t].length, ranks[t]);
+            });
+            out += '</div></section>';
+        });
+        return out;
+    }
+    var shown = tags.filter(function(t){ return !q || t.toLowerCase().indexOf(q) !== -1; });
+    var main = q ? shown : shown.filter(function(t){ return TAG_INDEX[t].length >= 2; });
+    var rare = q ? [] : shown.filter(function(t){ return TAG_INDEX[t].length < 2; });
+    var html = build(main);
+    if(rare.length){
+        html += '<details class="idx-rare"><summary>' + escapeHtml(STRF('tagsRare', { n: rare.length })) + '</summary>'
+              + build(rare) + '</details>';
+    }
     if(!html){ html = '<p class="empty">' + escapeHtml(STR('tagsNone')) + '</p>'; }
     var cloud = document.getElementById('tag-cloud');
     if(cloud){ cloud.innerHTML = html; }
@@ -1206,6 +1218,8 @@ function applyDocDates(dd){
     });
     morePage = 0;   // reordering restarts the board at page one
     document.querySelector('#more').innerHTML = renderMore();
+    // 검색 홈의 '최근 등재' 알약도 날짜순으로 다시(날짜가 오기 전엔 list 순서였다).
+    if(typeof renderSearchRecent === 'function'){ renderSearchRecent(); }
     applyNavNewMarkers();   // nav 새 글 표시 갱신
     // #!new 화면에 이미 있었다면(날짜 로드 전 렌더된 경우) 다시 그린다.
     if(location.hash === '#!new'){ showNew(); }

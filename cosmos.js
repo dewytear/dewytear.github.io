@@ -830,14 +830,37 @@ function startCosmos(){
             }
         }
         // Labels: hubs stay named; the hovered star gets a bold label.
+        // 겹침 회피(2026-10-19 검토 D): 피참조가 많은 순으로 그리되, 이미 그린 이름표와
+        // 화면에서 겹치는 것은 이번 프레임에 건너뛴다 — 기본 줌에서 글자가 포개져
+        // 읽히지 않던 문제. 확대하면 자리가 생겨 자연히 더 많이 드러난다. 호버는 항상.
         ctx.textAlign = 'center';
-        for(var L2 = 0; L2 < nodes.length; L2++){
-            var nd3 = nodes[L2];
-            if(L2 !== hover && nd3.ref < labelMin){ continue; }
-            ctx.font = (L2 === hover ? '700 14px ' : '600 12px ') + GAME_FONT;
-            ctx.globalAlpha = L2 === hover ? 1 : Math.max(0.25, nd3.ss * 0.55);
+        var order = [], placed = [];
+        for(var L1 = 0; L1 < nodes.length; L1++){
+            if(L1 === hover || nodes[L1].ref >= labelMin){ order.push(L1); }
+        }
+        order.sort(function(a, b){
+            if(a === hover) return -1; if(b === hover) return 1;
+            return nodes[b].ref - nodes[a].ref || nodes[b].ss - nodes[a].ss;
+        });
+        for(var oi = 0; oi < order.length; oi++){
+            var L2 = order[oi], nd3 = nodes[L2];
+            var isH = L2 === hover;
+            ctx.font = (isH ? '700 14px ' : '600 12px ') + GAME_FONT;
+            var tw = ctx.measureText(nd3.title).width, th = isH ? 16 : 14;
+            var ty = nd3.sy - (8 + nd3.ref / maxRef * 5);
+            var box = [nd3.sx - tw / 2 - 4, ty - th, nd3.sx + tw / 2 + 4, ty + 4];
+            var clash = false;
+            if(!isH){
+                for(var pi = 0; pi < placed.length; pi++){
+                    var b = placed[pi];
+                    if(box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1]){ clash = true; break; }
+                }
+            }
+            if(clash){ continue; }
+            placed.push(box);
+            ctx.globalAlpha = isH ? 1 : Math.max(0.25, nd3.ss * 0.55);
             ctx.fillStyle = ink;
-            ctx.fillText(nd3.title, nd3.sx, nd3.sy - (8 + nd3.ref / maxRef * 5));
+            ctx.fillText(nd3.title, nd3.sx, ty);
         }
         ctx.globalAlpha = 1;
         requestAnimationFrame(frame);

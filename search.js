@@ -414,6 +414,17 @@ function renderSearchResults(query){
     setSearchShown(true);
 }
 
+// 검색창 아래 '최근 등재' 알약 3개 — 생성일순(recentDocs)에서 메타 페이지·워크로그를 뺀 앞 셋.
+function renderSearchRecent(){
+    var el = document.getElementById('search-recent');
+    if(!el){ return; }
+    var docs = (typeof recentDocs === 'function' ? recentDocs() : []).slice(0, 3);
+    if(!docs.length){ el.innerHTML = ''; return; }
+    el.innerHTML = '<span class="k">' + escapeHtml(STR('searchRecent')) + '</span>'
+        + docs.map(function(d){
+            return '<a href="#!' + escapeHtml(d.name) + '">' + escapeHtml(d.label) + '</a>';
+        }).join('');
+}
 function showSearch(){
     var html =
         '<div class="search-screen">'
@@ -449,6 +460,7 @@ function showSearch(){
       +           '<span class="go-dot" aria-hidden="true"></span></button>'
       +       '</span>'
       +     '</div>'
+      +     '<div id="search-recent"></div>'
       +     '<div id="search-results"></div>'
       +   '</div>'
       +   (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? '' :
@@ -482,6 +494,7 @@ function showSearch(){
         + '</div>')
       + '</div>';
     setArticle(html);
+    renderSearchRecent();
     ensureTextIndex();   // start fetching doc bodies in the background
     startSearchGame();   // ambient mini game behind the field
     startInkDrift();     // 웅덩이(대·중·소)가 랜덤 경로로 흐르고 진하기가 변한다
