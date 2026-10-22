@@ -1,9 +1,9 @@
 {
  "schemaVersion": 2,
  "note": "Structured knowledge index built by AI from every doc (summary, key concepts, related docs). related = idf-weighted concept overlap (via:concept) topped up with same-folder neighbours (via:folder).",
- "docCount": 75,
+ "docCount": 77,
  "stats": {
-  "docCount": 75,
+  "docCount": 77,
   "conceptCount": 319,
   "clusters": [
    {
@@ -43,7 +43,7 @@
     "hub": {
      "name": "skills",
      "title": "拡張機能 — Skills · MCP · Hooks",
-     "refs": 3
+     "refs": 4
     }
    },
    {
@@ -53,7 +53,7 @@
     "hub": {
      "name": "ccb-skills",
      "title": "拡張 — スキル・プラグイン・エージェント",
-     "refs": 4
+     "refs": 5
     }
    },
    {
@@ -117,13 +117,23 @@
     }
    },
    {
+    "label": "プラグインカタログ",
+    "section": "AI · Claude · PlugIn · 플러그인 카탈로그",
+    "count": 1,
+    "hub": {
+     "name": "plc-popular-2026h2",
+     "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
+     "refs": 7
+    }
+   },
+   {
     "label": "スキルカタログ",
     "section": "AI · Claude · 스킬 카탈로그",
-    "count": 2,
+    "count": 3,
     "hub": {
-     "name": "sks-im-not-ai",
-     "title": "im-not-ai（Humanize KR）— AIっぽさを消す編集スキル",
-     "refs": 1
+     "name": "sks-popular-2026h2",
+     "title": "2026年下半期の人気スキル — インストール数上位7つと使い方",
+     "refs": 4
     }
    },
    {
@@ -204,6 +214,11 @@
     "refs": 7
    },
    {
+    "name": "plc-popular-2026h2",
+    "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
+    "refs": 7
+   },
+   {
     "name": "hnp-first-run",
     "title": "最初の実行と動作構造",
     "refs": 6
@@ -236,11 +251,11 @@
   ],
   "topConcepts": [
    {
-    "c": "검증",
-    "n": 13
+    "c": "스킬",
+    "n": 14
    },
    {
-    "c": "스킬",
+    "c": "검증",
     "n": 13
    },
    {
@@ -252,11 +267,15 @@
     "n": 13
    },
    {
+    "c": "CLAUDE.md",
+    "n": 12
+   },
+   {
     "c": "Claude Code",
     "n": 12
    },
    {
-    "c": "CLAUDE.md",
+    "c": "서브에이전트",
     "n": 11
    },
    {
@@ -268,42 +287,38 @@
     "n": 10
    },
    {
-    "c": "서브에이전트",
-    "n": 9
+    "c": "마켓플레이스",
+    "n": 8
+   },
+   {
+    "c": "슬래시명령어",
+    "n": 8
+   },
+   {
+    "c": "플러그인",
+    "n": 8
    },
    {
     "c": "하네스",
     "n": 8
    },
    {
-    "c": "벤치마크",
+    "c": "MCP",
     "n": 7
    },
    {
-    "c": "슬래시명령어",
+    "c": "벤치마크",
     "n": 7
    },
    {
     "c": "지식관리",
     "n": 7
-   },
-   {
-    "c": "코딩에이전트",
-    "n": 7
-   },
-   {
-    "c": "플러그인",
-    "n": 7
-   },
-   {
-    "c": "MCP",
-    "n": 6
    }
   ],
   "bridges": [
    {
     "c": "스킬",
-    "n": 13,
+    "n": 14,
     "clusters": [
      "CLAUDE.md",
      "Harness エンジニアリング",
@@ -320,7 +335,7 @@
    },
    {
     "c": "CLAUDE.md",
-    "n": 11,
+    "n": 12,
     "clusters": [
      "CLAUDE.md",
      "Introduction",
@@ -329,7 +344,22 @@
      "Second Brain",
      "Tip",
      "Tutorial（入門）",
-     "スキルカタログ"
+     "スキルカタログ",
+     "プラグインカタログ"
+    ]
+   },
+   {
+    "c": "서브에이전트",
+    "n": 11,
+    "clusters": [
+     "Harness エンジニアリング",
+     "Harness プラグイン",
+     "News & Articles",
+     "OMC プラグイン",
+     "Tip",
+     "Tutorial（入門）",
+     "スキルカタログ",
+     "プラグインカタログ"
     ]
    },
    {
@@ -346,6 +376,32 @@
     ]
    },
    {
+    "c": "마켓플레이스",
+    "n": 8,
+    "clusters": [
+     "Harness エンジニアリング",
+     "Harness プラグイン",
+     "OMC プラグイン",
+     "Tutorial（入門）",
+     "スキルカタログ",
+     "プラグインカタログ",
+     "知識体系"
+    ]
+   },
+   {
+    "c": "슬래시명령어",
+    "n": 8,
+    "clusters": [
+     "Harness エンジニアリング",
+     "Harness プラグイン",
+     "Introduction",
+     "LLM Wiki",
+     "OMC プラグイン",
+     "Tip",
+     "プラグインカタログ"
+    ]
+   },
+   {
     "c": "Claude Code",
     "n": 12,
     "clusters": [
@@ -358,55 +414,21 @@
     ]
    },
    {
-    "c": "서브에이전트",
-    "n": 9,
+    "c": "플러그인",
+    "n": 8,
     "clusters": [
-     "Harness エンジニアリング",
-     "Harness プラグイン",
-     "News & Articles",
-     "OMC プラグイン",
-     "Tip",
-     "Tutorial（入門）"
-    ]
-   },
-   {
-    "c": "슬래시명령어",
-    "n": 7,
-    "clusters": [
-     "Harness エンジニアリング",
-     "Harness プラグイン",
+     "AI開発ナレッジプラットフォーム",
      "Introduction",
-     "LLM Wiki",
      "OMC プラグイン",
-     "Tip"
-    ]
-   },
-   {
-    "c": "지식그래프",
-    "n": 13,
-    "clusters": [
-     "GraphDB",
-     "LLM Wiki",
-     "News & Articles",
-     "Second Brain",
+     "Tutorial（入門）",
+     "プラグインカタログ",
      "知識体系"
-    ]
-   },
-   {
-    "c": "권한",
-    "n": 10,
-    "clusters": [
-     "CLAUDE.md",
-     "Introduction",
-     "News & Articles",
-     "Tip",
-     "Tutorial（入門）"
     ]
    }
   ],
   "galaxies": {
    "AI": {
-    "docCount": 70,
+    "docCount": 72,
     "conceptCount": 290,
     "clusters": [
      {
@@ -444,9 +466,9 @@
       "section": "AI · Claude · Code · Introduction",
       "count": 2,
       "hub": {
-       "name": "welcome",
-       "title": "はじめに",
-       "refs": 2
+       "name": "skills",
+       "title": "拡張機能 — Skills · MCP · Hooks",
+       "refs": 3
       }
      },
      {
@@ -456,7 +478,7 @@
       "hub": {
        "name": "ccb-skills",
        "title": "拡張 — スキル・プラグイン・エージェント",
-       "refs": 4
+       "refs": 5
       }
      },
      {
@@ -520,13 +542,23 @@
       }
      },
      {
+      "label": "プラグインカタログ",
+      "section": "AI · Claude · PlugIn · 플러그인 카탈로그",
+      "count": 1,
+      "hub": {
+       "name": "plc-popular-2026h2",
+       "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
+       "refs": 7
+      }
+     },
+     {
       "label": "スキルカタログ",
       "section": "AI · Claude · 스킬 카탈로그",
-      "count": 2,
+      "count": 3,
       "hub": {
-       "name": "sks-im-not-ai",
-       "title": "im-not-ai（Humanize KR）— AIっぽさを消す編集スキル",
-       "refs": 1
+       "name": "sks-popular-2026h2",
+       "title": "2026年下半期の人気スキル — インストール数上位7つと使い方",
+       "refs": 4
       }
      },
      {
@@ -587,6 +619,11 @@
       "refs": 7
      },
      {
+      "name": "plc-popular-2026h2",
+      "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
+      "refs": 7
+     },
+     {
       "name": "hnp-first-run",
       "title": "最初の実行と動作構造",
       "refs": 6
@@ -619,11 +656,11 @@
     ],
     "topConcepts": [
      {
-      "c": "검증",
-      "n": 13
+      "c": "스킬",
+      "n": 14
      },
      {
-      "c": "스킬",
+      "c": "검증",
       "n": 13
      },
      {
@@ -635,11 +672,15 @@
       "n": 13
      },
      {
+      "c": "CLAUDE.md",
+      "n": 12
+     },
+     {
       "c": "Claude Code",
       "n": 12
      },
      {
-      "c": "CLAUDE.md",
+      "c": "서브에이전트",
       "n": 11
      },
      {
@@ -651,19 +692,23 @@
       "n": 10
      },
      {
-      "c": "서브에이전트",
-      "n": 9
+      "c": "마켓플레이스",
+      "n": 8
+     },
+     {
+      "c": "슬래시명령어",
+      "n": 8
      },
      {
       "c": "하네스",
       "n": 8
      },
      {
-      "c": "벤치마크",
+      "c": "MCP",
       "n": 7
      },
      {
-      "c": "슬래시명령어",
+      "c": "벤치마크",
       "n": 7
      },
      {
@@ -671,22 +716,14 @@
       "n": 7
      },
      {
-      "c": "MCP",
-      "n": 6
-     },
-     {
-      "c": "마켓플레이스",
-      "n": 6
-     },
-     {
-      "c": "오토모드",
-      "n": 6
+      "c": "플러그인",
+      "n": 7
      }
     ],
     "bridges": [
      {
       "c": "스킬",
-      "n": 13,
+      "n": 14,
       "clusters": [
        "CLAUDE.md",
        "Harness エンジニアリング",
@@ -703,7 +740,7 @@
      },
      {
       "c": "CLAUDE.md",
-      "n": 11,
+      "n": 12,
       "clusters": [
        "CLAUDE.md",
        "Introduction",
@@ -712,7 +749,22 @@
        "Second Brain",
        "Tip",
        "Tutorial（入門）",
-       "スキルカタログ"
+       "スキルカタログ",
+       "プラグインカタログ"
+      ]
+     },
+     {
+      "c": "서브에이전트",
+      "n": 11,
+      "clusters": [
+       "Harness エンジニアリング",
+       "Harness プラグイン",
+       "News & Articles",
+       "OMC プラグイン",
+       "Tip",
+       "Tutorial（入門）",
+       "スキルカタログ",
+       "プラグインカタログ"
       ]
      },
      {
@@ -729,6 +781,32 @@
       ]
      },
      {
+      "c": "마켓플레이스",
+      "n": 8,
+      "clusters": [
+       "Harness エンジニアリング",
+       "Harness プラグイン",
+       "OMC プラグイン",
+       "Tutorial（入門）",
+       "スキルカタログ",
+       "プラグインカタログ",
+       "知識体系"
+      ]
+     },
+     {
+      "c": "슬래시명령어",
+      "n": 8,
+      "clusters": [
+       "Harness エンジニアリング",
+       "Harness プラグイン",
+       "Introduction",
+       "LLM Wiki",
+       "OMC プラグイン",
+       "Tip",
+       "プラグインカタログ"
+      ]
+     },
+     {
       "c": "Claude Code",
       "n": 12,
       "clusters": [
@@ -741,49 +819,15 @@
       ]
      },
      {
-      "c": "서브에이전트",
-      "n": 9,
-      "clusters": [
-       "Harness エンジニアリング",
-       "Harness プラグイン",
-       "News & Articles",
-       "OMC プラグイン",
-       "Tip",
-       "Tutorial（入門）"
-      ]
-     },
-     {
-      "c": "슬래시명령어",
-      "n": 7,
-      "clusters": [
-       "Harness エンジニアリング",
-       "Harness プラグイン",
-       "Introduction",
-       "LLM Wiki",
-       "OMC プラグイン",
-       "Tip"
-      ]
-     },
-     {
-      "c": "지식그래프",
-      "n": 13,
-      "clusters": [
-       "GraphDB",
-       "LLM Wiki",
-       "News & Articles",
-       "Second Brain",
-       "知識体系"
-      ]
-     },
-     {
-      "c": "권한",
-      "n": 10,
+      "c": "훅",
+      "n": 6,
       "clusters": [
        "CLAUDE.md",
        "Introduction",
        "News & Articles",
+       "OMC プラグイン",
        "Tip",
-       "Tutorial（入門）"
+       "プラグインカタログ"
       ]
      }
     ]
@@ -1156,22 +1200,22 @@
    "sectionL": "AI · Wiki · 知識体系",
    "related": [
     {
-     "name": "ccb-skills",
-     "title": "拡張 — スキル・プラグイン・エージェント",
-     "shared": [
-      "마켓플레이스",
-      "플러그인",
-      "스킬"
-     ],
-     "via": "concept"
-    },
-    {
      "name": "kgs-accuracy",
      "title": "このウィキはどれだけ当てるのか — 検索とグラフ巡回を測ってみた",
      "shared": [
       "마켓플레이스",
       "플러그인",
       "지식그래프"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "ccb-skills",
+     "title": "拡張 — スキル・プラグイン・エージェント",
+     "shared": [
+      "마켓플레이스",
+      "플러그인",
+      "스킬"
      ],
      "via": "concept"
     }
@@ -1407,6 +1451,16 @@
    "section": "AI · Claude · Code · Introduction",
    "related": [
     {
+     "name": "plc-popular-2026h2",
+     "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
+     "shared": [
+      "훅",
+      "MCP",
+      "플러그인"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "ccb-skills",
      "title": "拡張 — スキル・プラグイン・エージェント",
      "shared": [
@@ -1438,6 +1492,7 @@
    "citedBy": [
     "kgs-edges",
     "welcome",
+    "plc-popular-2026h2",
     "tip-intermediate",
     "tip-advanced",
     "news-20260814-auto-mode-stateless-mcp"
@@ -1546,6 +1601,7 @@
    "citedBy": [
     "kgs-edges",
     "claude-md-constitution",
+    "plc-popular-2026h2",
     "tip-beginner"
    ]
   },
@@ -1635,6 +1691,16 @@
      "via": "concept"
     },
     {
+     "name": "plc-popular-2026h2",
+     "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
+     "shared": [
+      "마켓플레이스",
+      "플러그인",
+      "서브에이전트"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "kgs-plugin",
      "title": "ウィキエンジンのプラグイン化 — wiki-plugin と同期の規律",
      "shared": [
@@ -1653,20 +1719,11 @@
       "스킬"
      ],
      "via": "concept"
-    },
-    {
-     "name": "hnp-intro",
-     "title": "Harness プラグイン — 紹介・概念・インストール",
-     "shared": [
-      "마켓플레이스",
-      "스킬",
-      "에이전트"
-     ],
-     "via": "concept"
     }
    ],
    "citedBy": [
-    "ccb-research-web"
+    "ccb-research-web",
+    "plc-popular-2026h2"
    ]
   },
   {
@@ -1772,6 +1829,7 @@
    "citedBy": [
     "kgs-edges",
     "sks-im-not-ai",
+    "sks-popular-2026h2",
     "tip-intermediate"
    ]
   },
@@ -1826,7 +1884,8 @@
     }
    ],
    "citedBy": [
-    "skl-overview"
+    "skl-overview",
+    "sks-popular-2026h2"
    ]
   },
   {
@@ -1848,23 +1907,27 @@
    "section": "AI · Claude · Code · Skill",
    "related": [
     {
+     "name": "sks-popular-2026h2",
+     "title": "2026年下半期の人気スキル — インストール数上位7つと使い方",
+     "shared": [
+      "스킬설치",
+      "자동발동"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "skl-overview",
      "title": "スキルとは — 背景と強み",
      "shared": [
       "샌드박스"
      ],
      "via": "concept"
-    },
-    {
-     "name": "skl-context",
-     "title": "スキルの構造と動作原理",
-     "shared": [],
-     "via": "folder"
     }
    ],
    "citedBy": [
     "kgs-edges",
-    "skl-context"
+    "skl-context",
+    "sks-popular-2026h2"
    ]
   },
   {
@@ -2235,12 +2298,12 @@
      "via": "concept"
     },
     {
-     "name": "omc-intro",
-     "title": "OMC — 紹介とインストール",
+     "name": "hns-overview",
+     "title": "ハーネスとは — 概要・定義・構成",
      "shared": [
-      "설치",
-      "마켓플레이스",
-      "슬래시명령어"
+      "병렬실행",
+      "의도전달",
+      "검증"
      ],
      "via": "concept"
     }
@@ -2405,7 +2468,7 @@
      "shared": [
       "ERP커스터마이징",
       "_workspace",
-      "스킬"
+      "에이전트"
      ],
      "via": "concept"
     },
@@ -2534,7 +2597,7 @@
      "shared": [
       "ERP커스터마이징",
       "_workspace",
-      "스킬"
+      "에이전트"
      ],
      "via": "concept"
     },
@@ -2813,6 +2876,16 @@
    "section": "AI · Claude · PlugIn · OMC",
    "related": [
     {
+     "name": "plc-popular-2026h2",
+     "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
+     "shared": [
+      "마켓플레이스",
+      "슬래시명령어",
+      "플러그인"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "hns-install",
      "title": "実行する — 導入・実行・レビュー",
      "shared": [
@@ -2872,8 +2945,17 @@
      "name": "omc-tools",
      "title": "高度な活用 — ツール・ワークフロー・Windows",
      "shared": [
+      "오토파일럿",
+      "랄프"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "plc-popular-2026h2",
+     "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
+     "shared": [
       "랄프",
-      "오토파일럿"
+      "서브에이전트"
      ],
      "via": "concept"
     },
@@ -2888,6 +2970,7 @@
    ],
    "citedBy": [
     "omc-intro",
+    "plc-popular-2026h2",
     "tip-advanced"
    ]
   },
@@ -2978,8 +3061,8 @@
      "name": "omc-modes",
      "title": "実行モード",
      "shared": [
-      "랄프",
-      "오토파일럿"
+      "오토파일럿",
+      "랄프"
      ],
      "via": "concept"
     },
@@ -3039,6 +3122,83 @@
    ],
    "citedBy": [
     "omc-tools"
+   ]
+  },
+  {
+   "name": "plc-popular-2026h2",
+   "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
+   "summary": "2026年10月23日の公式 Claude プラグインディレクトリ(271個)のインストール数上位を、anthropics/claude-plugins-official などの元のリポジトリの plugin.json・README・コマンド・エージェント・フックのファイルで確かめ、原文カードの画像・実行画面・図4点・表3点で整理 — 上位15個のうち10個が Anthropic 製で、残りは Superpowers と MCP プラグイン(Context7・Playwright・GitHub・Vercel)。プラグインはスキル・コマンド・エージェント・フック・MCP の束なので、どの部品かが使い方を決める(構成マップ)。Code Review(四つのエージェントが CLAUDE.md 準拠・バグ・git 履歴を別々に見て信頼度80未満は捨てる)、Context7(リモート MCP の resolve-library-id・query-docs で今のバージョンの文書、use context7)、Code Simplifier(最近の変更だけを動作を保って整える Opus のエージェント)、Playwright(アクセシビリティツリーの MCP、Microsoft もコーディングエージェントには CLI+スキルのほうがトークンが少ないとする)、GitHub(リモート MCP、トークンの権限がそのままエージェントの権限)、CLAUDE.md Management(claude-md-improver の採点と /revise-claude-md)、Feature Dev(調査のあとに質問する七段階・エージェント三つ)、Security Guidance(編集時のパターン警告・ターン終わりの LLM 差分レビュー・コミット時のエージェントレビューの三層)、Ralph Loop(Stop フックが同じプロンプトを入れ直すループ、完了の文句・最大反復)を扱い、1・2位はスキルの記事に渡す",
+   "concepts": [
+    "플러그인",
+    "마켓플레이스",
+    "MCP",
+    "서브에이전트",
+    "훅",
+    "슬래시명령어",
+    "코드리뷰",
+    "CLAUDE.md",
+    "랄프"
+   ],
+   "relations": [
+    {
+     "target": "sks-popular-2026h2",
+     "type": "prerequisite",
+     "evidenceRef": "順位の節が、中身がスキルである1・2位(Frontend Design・Superpowers)はその記事で詳しく扱ったと渡し、3位から見る",
+     "source": "human"
+    },
+    {
+     "target": "skills",
+     "type": "prerequisite",
+     "evidenceRef": "冒頭がスキル・コマンド・サブエージェント・フック・MCP サーバーを一行ずつだけ説明し、各部品の定義はその文書に任せて、上位プラグインがどの部品でできているかへ進む",
+     "source": "human"
+    }
+   ],
+   "section": "AI · Claude · PlugIn · 플러그인 카탈로그",
+   "sectionL": "AI · Claude · PlugIn · プラグインカタログ",
+   "related": [
+    {
+     "name": "omc-intro",
+     "title": "OMC — 紹介とインストール",
+     "shared": [
+      "마켓플레이스",
+      "슬래시명령어",
+      "플러그인"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "claude-md-intent",
+     "title": "intent.md — コードより先に残す意図と、AI ネイティブ SDLC",
+     "shared": [
+      "코드리뷰",
+      "훅",
+      "CLAUDE.md"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "skills",
+     "title": "拡張機能 — Skills · MCP · Hooks",
+     "shared": [
+      "훅",
+      "MCP",
+      "플러그인"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "sks-popular-2026h2",
+     "title": "2026年下半期の人気スキル — インストール数上位7つと使い方",
+     "shared": [
+      "코드리뷰",
+      "마켓플레이스",
+      "서브에이전트"
+     ],
+     "via": "concept"
+    }
+   ],
+   "citedBy": [
+    "sks-popular-2026h2"
    ]
   },
   {
@@ -3996,21 +4156,21 @@
      "via": "concept"
     },
     {
-     "name": "tip-advanced",
-     "title": "上級 — 並列・自律・予約の8つ",
-     "shared": [
-      "MCP",
-      "오토모드",
-      "권한"
-     ],
-     "via": "concept"
-    },
-    {
      "name": "news-20260901-whose-usage",
      "title": "私の上限を使っているのは誰か — Claude の使用量をめぐる三つの場面",
      "shared": [
       "세션",
       "Anthropic",
+      "권한"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "tip-advanced",
+     "title": "上級 — 並列・自律・予約の8つ",
+     "shared": [
+      "오토모드",
+      "MCP",
       "권한"
      ],
      "via": "concept"
@@ -4381,6 +4541,12 @@
      "title": "dews-sourcegraph — 社内コード検索を Claude に任せるスキル",
      "shared": [],
      "via": "folder"
+    },
+    {
+     "name": "sks-popular-2026h2",
+     "title": "2026年下半期の人気スキル — インストール数上位7つと使い方",
+     "shared": [],
+     "via": "folder"
     }
    ]
   },
@@ -4467,9 +4633,19 @@
      "name": "news-20260901-whose-usage",
      "title": "私の上限を使っているのは誰か — Claude の使用量をめぐる三つの場面",
      "shared": [
-      "훅",
       "토큰비용",
+      "훅",
       "Claude Code"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "plc-popular-2026h2",
+     "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
+     "shared": [
+      "훅",
+      "서브에이전트",
+      "CLAUDE.md"
      ],
      "via": "concept"
     },
@@ -4480,15 +4656,6 @@
       "훅",
       "서브에이전트",
       "스킬"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "tip-advanced",
-     "title": "上級 — 並列・自律・予約の8つ",
-     "shared": [
-      "서브에이전트",
-      "Claude Code"
      ],
      "via": "concept"
     }
@@ -4519,8 +4686,8 @@
      "name": "news-20260814-auto-mode-stateless-mcp",
      "title": "尋ねない既定値 — 承認ボタンとセッションが同じ週に消えた",
      "shared": [
-      "MCP",
       "오토모드",
+      "MCP",
       "권한"
      ],
      "via": "concept"
@@ -4658,7 +4825,85 @@
      "title": "im-not-ai（Humanize KR）— AIっぽさを消す編集スキル",
      "shared": [],
      "via": "folder"
+    },
+    {
+     "name": "sks-popular-2026h2",
+     "title": "2026年下半期の人気スキル — インストール数上位7つと使い方",
+     "shared": [],
+     "via": "folder"
     }
+   ]
+  },
+  {
+   "name": "sks-popular-2026h2",
+   "title": "2026年下半期の人気スキル — インストール数上位7つと使い方",
+   "summary": "2026年10月22日の skills.sh 累計インストール(オープンデータ LinklyAI best-skills)と10月23日の公式 Claude プラグインディレクトリのインストール数をもとに上位スキル七つを選び、各リポジトリの SKILL.md の原文を直接読んで、原文カードの画像・図4点・表3点で整理 — 三つの計数器(skills.sh・公式ディレクトリ・ClawHub/SkillHub)は単位が違い、同じ frontend-design も101万・113万と異なり、skills.sh はリポジトリ単位で数えるので mattpocock/skills が上位10のうち5行を占める。find-skills(398万、検索→インストール数・出どころ・スターで検証→インストール)、grill-me(141万、7行が grilling を呼ぶ構成・決定の木のフロンティアをラウンドごとに推奨の答えつきで聞き、事実はサブエージェントが調べる、grill-with-docs は用語集・ADR)、agent-browser(総合点1位、アクセシビリティツリーのスナップショットの @eN 参照で200〜400トークンだけ読む Rust の CLI)、hyperframes(HTML をフレーム単位でレンダーする動画、7日成長1位)、frontend-design(公式ディレクトリ1位、ありきたりな AI デザインのよくある跡を禁止)、Superpowers(公式2位、スキル15個・七段階が自動発動する開発方法論)、vercel-react-best-practices(ルール70個を影響度順に)を五つの種類(探す・問う・手足・好み/ルール・方法論)に分け、インストール数は人気でありセキュリティ検査ではないこと、自動発動の有無を選ぶときの注意として挙げる",
+   "concepts": [
+    "스킬",
+    "마켓플레이스",
+    "스킬설치",
+    "자동발동",
+    "디스크립션",
+    "딥인터뷰",
+    "서브에이전트",
+    "테스트",
+    "코드리뷰"
+   ],
+   "relations": [
+    {
+     "target": "skl-overview",
+     "type": "example-of",
+     "evidenceRef": "grill-me の節が、7行の SKILL.md が別のスキル(grilling)を呼ぶ構成を挙げ、スキルが「マークダウン一枚でできた再利用の単位」というその文書の説明が実際にどう使われるかを示す例とする",
+     "source": "human"
+    },
+    {
+     "target": "skl-context",
+     "type": "prerequisite",
+     "evidenceRef": "冒頭がフロントマターの description がいつスキルを取り出すかを決めるという原理だけを一行で述べ、詳しい動作はその文書に任せて順位と使い方へ進む",
+     "source": "human"
+    },
+    {
+     "target": "skl-install",
+     "type": "prerequisite",
+     "evidenceRef": "「選ぶときに見ること」の節がスキルはエージェントの権限で動くという点だけを指摘し、何を実行しどこへつなぐかを確かめる方法はその文書に任せる",
+     "source": "human"
+    }
+   ],
+   "section": "AI · Claude · 스킬 카탈로그",
+   "sectionL": "AI · Claude · スキルカタログ",
+   "related": [
+    {
+     "name": "skl-install",
+     "title": "スキルの導入・セキュリティ・作成",
+     "shared": [
+      "스킬설치",
+      "자동발동"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "plc-popular-2026h2",
+     "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
+     "shared": [
+      "코드리뷰",
+      "마켓플레이스",
+      "서브에이전트"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "ccb-skills",
+     "title": "拡張 — スキル・プラグイン・エージェント",
+     "shared": [
+      "마켓플레이스",
+      "서브에이전트",
+      "스킬"
+     ],
+     "via": "concept"
+    }
+   ],
+   "citedBy": [
+    "plc-popular-2026h2"
    ]
   },
   {
@@ -4732,8 +4977,8 @@
      "name": "tip-intermediate",
      "title": "中級 — セッションを仕組みに変える11の方法",
      "shared": [
-      "훅",
       "토큰비용",
+      "훅",
       "Claude Code"
      ],
      "via": "concept"
@@ -4892,22 +5137,22 @@
      "via": "concept"
     },
     {
+     "name": "plc-popular-2026h2",
+     "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
+     "shared": [
+      "코드리뷰",
+      "훅",
+      "CLAUDE.md"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "news-20260901-whose-usage",
      "title": "私の上限を使っているのは誰か — Claude の使用量をめぐる三つの場面",
      "shared": [
       "훅",
       "Anthropic",
       "Claude Code"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "hns-overview",
-     "title": "ハーネスとは — 概要・定義・構成",
-     "shared": [
-      "의도전달",
-      "Claude Code",
-      "검증"
      ],
      "via": "concept"
     }

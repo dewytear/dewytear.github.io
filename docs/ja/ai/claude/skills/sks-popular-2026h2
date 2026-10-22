@@ -1,0 +1,300 @@
+<h2>2026年下半期の人気スキル — インストール数上位7つと使い方</h2>
+
+<h3>三行まとめ</h3>
+<ul>
+    <li>2026年10月22日時点で skills.sh の累計インストール1位は <strong>find-skills</strong>(約398万)だ。公式の Claude プラグインディレクトリでは <strong>frontend-design</strong>(約113万)と <strong>Superpowers</strong>(約101万)が1・2位だ。</li>
+    <li>上位は大きく五種類に分かれる。スキルを探すスキル、計画を問い詰めるスキル、ブラウザや動画のような手足を与えるスキル、好みとルールを植えるスキル、開発方法論をまるごと束ねたスキルだ。</li>
+    <li>インストール数は品質の点数ではない。計数器ごとに数える単位が違い、skills.sh はリポジトリ単位で数えるので、スキルの多いリポジトリが一度に何行も占める。</li>
+</ul>
+
+<p>スキルは、エージェントが必要なときに読み込むマークダウン一枚(<code>SKILL.md</code>)とそのフォルダだ。冒頭のフロントマターの <code>description</code> が、いつこのスキルを取り出すかを決める。詳しい仕組みは<a href="#!skl-overview">スキルとは</a>と<a href="#!skl-context">構造と動作</a>にある。本記事は2026年下半期に最も多くインストールされたスキルを選び、それぞれの元の <code>SKILL.md</code> を直接読んで、何をするのか、どう使うのか、どこで役に立つのかを整理する。</p>
+
+<h3>順位はどこで数えるのか</h3>
+<p>「最も人気のあるスキル」を一つの数字で言うのは難しい。スキルを数える場所がいくつもあり、単位もばらばらだからだ。同じ frontend-design でも、どこで数えるかで数字が変わる。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 262" role="img" aria-label="スキルのインストール数を数える三つの場所:skills.sh(npx skills CLI のインストール数、リポジトリ単位でまとめて数える)、Claude 公式ディレクトリ(プラグインのインストール数、スキルの束もプラグインとして)、ClawHub・SkillHub(OpenClaw・中国のインストール数)。同じ frontend-design が skills.sh では 1,016,129、公式ディレクトリでは 1,134,112 と異なる">
+    <text class="d-label" x="360" y="24" text-anchor="middle">同じスキル、三つの計数器</text>
+    <rect class="d-box" x="12" y="42" width="216" height="92" rx="12"/>
+    <text class="d-label" x="120" y="70" text-anchor="middle">skills.sh</text>
+    <text class="d-sub" x="120" y="94" text-anchor="middle">npx skills CLI のインストール数</text>
+    <text class="d-sub" x="120" y="114" text-anchor="middle">リポジトリ単位でまとめて数える</text>
+    <rect class="d-box" x="252" y="42" width="216" height="92" rx="12"/>
+    <text class="d-label" x="360" y="70" text-anchor="middle">Claude 公式ディレクトリ</text>
+    <text class="d-sub" x="360" y="94" text-anchor="middle">プラグインのインストール数</text>
+    <text class="d-sub" x="360" y="114" text-anchor="middle">スキルの束もプラグインとして</text>
+    <rect class="d-box soft" x="492" y="42" width="216" height="92" rx="12"/>
+    <text class="d-label" x="600" y="70" text-anchor="middle">ClawHub · SkillHub</text>
+    <text class="d-sub" x="600" y="94" text-anchor="middle">OpenClaw・中国のインストール数</text>
+    <text class="d-sub" x="600" y="114" text-anchor="middle">別の生態系、別の単位</text>
+    <line class="d-edge" x1="120" y1="134" x2="250" y2="170"/>
+    <line class="d-edge" x1="360" y1="134" x2="360" y2="170"/>
+    <rect class="d-box accent" x="90" y="170" width="540" height="62" rx="12"/>
+    <text class="d-label" x="360" y="196" text-anchor="middle">frontend-design ひとつの数字</text>
+    <text class="d-sub" x="360" y="217" text-anchor="middle">skills.sh 1,016,129 · 公式ディレクトリ 1,134,112(10月22〜23日)</text>
+    <text class="d-sub" x="360" y="252" text-anchor="middle">数字は足さず、同じ計数器の中だけで比べる</text>
+</svg>
+</div>
+<p>skills.sh は Vercel が運営するスキルのディレクトリで、<code>npx skills</code> コマンドでインストールされた回数を数える。ここに注意点がある。インストールをリポジトリ単位で数えるため、一つのリポジトリにスキルが複数あると、一緒にインストールされたスキルが並んで上位に来る。下の上位10のうち5行が <code>mattpocock/skills</code>、2行が <code>heygen-com/hyperframes</code> から来ているのもそのためだ。複数の順位をまとめて毎日公開するオープンデータ(LinklyAI best-skills、CC BY 4.0)が、この限界を自ら書いている。</p>
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>skills.sh 累計インストール(2026-10-22)</th><th>リポジトリ</th><th>インストール数</th></tr></thead>
+    <tbody>
+        <tr><td><strong>find-skills</strong></td><td>vercel-labs/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>3,977,808</strong></td></tr>
+        <tr><td><strong>grill-me</strong></td><td>mattpocock/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:35%"></span></span>1,408,491</td></tr>
+        <tr><td><strong>agent-browser</strong></td><td>vercel-labs/agent-browser</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:30%"></span></span>1,206,479</td></tr>
+        <tr><td>grill-with-docs</td><td>mattpocock/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:30%"></span></span>1,206,243</td></tr>
+        <tr><td>hyperframes-cli</td><td>heygen-com/hyperframes</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:29%"></span></span>1,169,530</td></tr>
+        <tr><td>improve-codebase-architecture</td><td>mattpocock/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:29%"></span></span>1,150,698</td></tr>
+        <tr><td><strong>hyperframes</strong></td><td>heygen-com/hyperframes</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:28%"></span></span>1,130,394</td></tr>
+        <tr><td>tdd</td><td>mattpocock/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:28%"></span></span>1,127,010</td></tr>
+        <tr><td>media-use</td><td>heygen-com/hyperframes</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:26%"></span></span>1,040,244</td></tr>
+        <tr><td>setup-matt-pocock-skills</td><td>mattpocock/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:26%"></span></span>1,040,124</td></tr>
+    </tbody>
+</table>
+</div>
+<p>そこで本記事は<strong>同じリポジトリを一行に畳んで</strong>選ぶ。skills.sh 上位のリポジトリ四つ(find-skills・grill-me・agent-browser・hyperframes)に、公式ディレクトリ1・2位の frontend-design と Superpowers、さらに同じオープンデータの総合点(インストール・成長・言及・信頼を混ぜた「入れる価値」の数値)で上位10に入った Vercel の React ルールスキルを加えて七つだ。総合点1位は agent-browser(77.3)だった。</p>
+
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>スキル</th><th>種類</th><th>一行の用途</th></tr></thead>
+    <tbody>
+        <tr><td><strong>find-skills</strong></td><td>探す</td><td>必要なスキルを検索・検証してインストールまで</td></tr>
+        <tr><td><strong>grill-me</strong></td><td>問う</td><td>計画をラウンドごとに問い詰めて穴をなくす</td></tr>
+        <tr><td><strong>agent-browser</strong></td><td>手足</td><td>エージェントがブラウザを直接操作する</td></tr>
+        <tr><td><strong>hyperframes</strong></td><td>手足</td><td>HTML で動画を作ってレンダーする</td></tr>
+        <tr><td><strong>frontend-design</strong></td><td>好み</td><td>ありきたりな AI デザインを避ける視覚判断</td></tr>
+        <tr><td><strong>Superpowers</strong></td><td>方法論</td><td>設計からマージまでの開発手順のすべて</td></tr>
+        <tr><td><strong>vercel-react-best-practices</strong></td><td>ルール</td><td>React・Next.js の性能ルール70個</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>1. find-skills — スキルを探すスキル</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/find-skills.webp" width="1440" height="624"
+         alt="vercel-labs/skills リポジトリの find-skills SKILL.md のフロントマター(name・description)とインストールコマンド npx skills add vercel-labs/skills --skill find-skills、skills.sh インストール 3,977,808 を記したカード">
+    <figcaption>find-skills の SKILL.md フロントマターとインストールコマンド — 出典:vercel-labs/skills(MIT)、原文をこのウィキがカードにレンダー</figcaption>
+</figure>
+<p><strong>何をするか。</strong>ユーザーが「X はどうやるの?」「X をするスキルはある?」のように尋ねると、このスキルが目を覚ます。エージェントはまず skills.sh の順位表に実績のあるスキルがあるかを見て、なければ <code>npx skills find</code> で検索する。すぐには勧めず、三つを確かめる。インストール数が1,000以上か、出どころが信頼できるか(vercel-labs・anthropics・microsoft のような公式の出どころ)、元のリポジトリの GitHub スターが100を超えるかだ。通ったものだけを、名前・用途・インストール数・インストールコマンドと一緒に示し、ユーザーが望めばインストールまで行う。</p>
+<pre><code>npx skills add vercel-labs/skills --skill find-skills   # インストール
+# その後の会話で
+「PR レビューを手伝うスキルはある?」 → npx skills find pr review
+                                  → 候補を検証 → インストールコマンドを提示
+npx skills add &lt;owner/repo@skill&gt; -g -y                 # ユーザー単位でインストール</code></pre>
+<p><strong>どこで役に立つか。</strong>スキルの生態系の入口の役目だ。1位の理由もここにある。初めてスキルを入れる人がまず入れ、その後のスキルはこのスキルを通って入ってくる。検証の基準をスキルの中に書いておいた点も目を引く。ただしその基準もインストール数とスター数なので、本記事の結論どおり、数字を超える判断は人がする。</p>
+
+<h3>2. grill-me — 計画をとことん問い詰めるインタビュー</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/grill-me.webp" width="1440" height="624"
+         alt="mattpocock/skills リポジトリの grill-me SKILL.md のフロントマター(name: grill-me、disable-model-invocation: true、description: A relentless interview to sharpen a plan or design.)とインストールコマンドを記したカード">
+    <figcaption>grill-me の SKILL.md はこのフロントマターと一行の本文がすべてだ — 出典:mattpocock/skills(MIT)、原文をこのウィキがカードにレンダー</figcaption>
+</figure>
+<p><strong>何をするか。</strong>grill-me の <code>SKILL.md</code> は7行だ。本文は「grilling スキルを呼べ」の一行だけで、実際のルールは同じリポジトリの <code>grilling</code> スキルにある。フロントマターの <code>disable-model-invocation: true</code> は、モデルが勝手に取り出さず、ユーザーが <code>/grill-me</code> で呼んだときだけ使えという意味だ。小さなスキルが別のスキルを呼ぶ構成で、スキルが「マークダウン一枚でできた再利用の単位」だということが実際にどう使われるかをよく示している。</p>
+<p>grilling は計画を<strong>決定の木</strong>として見る。一つの決定には、その決定にぶら下がる次の決定が枝のようにつく。エージェントは、前提の決定がもう決まっていて<em>今</em>聞ける質問(フロンティア)を一つのラウンドでまとめて聞く。質問ごとに番号をつけて推奨の答えを添え、「yes」とだけ答えれば推奨を受け入れるように文を組む。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 268" role="img" aria-label="grill-me のラウンド:計画を /grill-me に渡すと、今聞ける質問をすべて番号と推奨の答えつきで聞くラウンドが回り、ユーザーが答えると(yes は推奨を採用)フロンティアが更新され次のラウンドへ進む。事実はサブエージェントがユーザーに聞かずに調べる。フロンティアが空になれば終わり、合意を確かめてから実行する">
+    <text class="d-label" x="360" y="24" text-anchor="middle">grill-me 一回 — フロンティアが空になるまでラウンドを回す</text>
+    <rect class="d-box soft" x="14" y="52" width="140" height="62" rx="10"/>
+    <text class="d-label sm" x="84" y="78" text-anchor="middle">計画・設計案</text>
+    <text class="d-sub" x="84" y="98" text-anchor="middle">/grill-me で開始</text>
+    <line class="d-edge" x1="154" y1="83" x2="174" y2="83"/>
+    <polygon class="d-arrow" points="172,79 180,83 172,87"/>
+    <rect class="d-box accent" x="180" y="52" width="210" height="62" rx="10"/>
+    <text class="d-label sm" x="285" y="78" text-anchor="middle">1 ラウンド</text>
+    <text class="d-sub" x="285" y="98" text-anchor="middle">今聞ける質問をすべて</text>
+    <line class="d-edge" x1="390" y1="83" x2="410" y2="83"/>
+    <polygon class="d-arrow" points="408,79 416,83 408,87"/>
+    <rect class="d-box" x="416" y="52" width="140" height="62" rx="10"/>
+    <text class="d-label sm" x="486" y="78" text-anchor="middle">ユーザーの答え</text>
+    <text class="d-sub" x="486" y="98" text-anchor="middle">yes = 推奨を採用</text>
+    <line class="d-edge" x1="556" y1="83" x2="576" y2="83"/>
+    <polygon class="d-arrow" points="574,79 582,83 574,87"/>
+    <rect class="d-box" x="582" y="52" width="124" height="62" rx="10"/>
+    <text class="d-label sm" x="644" y="78" text-anchor="middle">フロンティア更新</text>
+    <text class="d-sub" x="644" y="98" text-anchor="middle">次のラウンドへ</text>
+    <path class="d-edge dash" d="M644,114 L644,140 L285,140 L285,120"/>
+    <polygon class="d-arrow" points="281,122 285,115 289,122"/>
+    <rect class="d-box soft" x="180" y="168" width="210" height="62" rx="10"/>
+    <text class="d-label sm" x="285" y="194" text-anchor="middle">事実はサブエージェントが</text>
+    <text class="d-sub" x="285" y="214" text-anchor="middle">ユーザーに聞かずに調べる</text>
+    <line class="d-edge dash" x1="230" y1="114" x2="230" y2="168"/>
+    <rect class="d-box accent" x="416" y="168" width="290" height="62" rx="10"/>
+    <text class="d-label sm" x="561" y="194" text-anchor="middle">フロンティアが空になれば終わり</text>
+    <text class="d-sub" x="561" y="214" text-anchor="middle">合意を確かめてから実行する</text>
+    <text class="d-sub" x="360" y="256" text-anchor="middle">事実はエージェントが調べ、決定は人に聞く</text>
+</svg>
+</div>
+<pre><code>npx skills add mattpocock/skills --skill grill-me
+# または Claude Code プラグインとしてリポジトリ全体を
+claude plugin install mattpocock-skills@claude-plugins-official
+
+/grill-me   ← 計画や設計を貼りつけて呼ぶ
+❓ Q1 - 保存場所: …   ➡️ 推奨の答え
+❓ Q2 - 失敗時の動作: … ➡️ 推奨の答え
+(答えると次のラウンドへ)</code></pre>
+<p><strong>どこで役に立つか。</strong>コードを書く前に、計画に隠れた前提をあぶり出すのに使う。事実の確認はエージェントがサブエージェントで自分で調べ、ユーザーには決定だけを聞く。質問がむやみに増えない理由だ。一緒に上位にいる <strong>grill-with-docs</strong>(約121万)は、同じインタビューをしながら <code>domain-modeling</code> スキルで用語集(<code>GLOSSARY.md</code>)と決定の記録(ADR)をその場で書く。ADR は三つの条件がすべてそろうときだけ提案する。取り消しにくく、文脈なしでは驚かれ、実際の代替案の中から選んだ決定のときだ。直近7日のソーシャルでの言及数1位も grill-me だった。</p>
+
+<h3>3. agent-browser — エージェントにブラウザを</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/agent-browser.webp" width="1440" height="624"
+         alt="vercel-labs/agent-browser リポジトリの agent-browser SKILL.md のフロントマター(Browser automation CLI for AI agents…)とインストールコマンド npm i -g agent-browser && agent-browser install を記したカード">
+    <figcaption>agent-browser の SKILL.md フロントマターとインストールコマンド — 出典:vercel-labs/agent-browser(Apache-2.0)、原文をこのウィキがカードにレンダー</figcaption>
+</figure>
+<p><strong>何をするか。</strong>Rust で作ったブラウザ自動化の CLI だ。Chrome DevTools プロトコルで Chrome を直接動かし、Playwright や Puppeteer に頼らない。要はページを HTML のまま読まないことにある。アクセシビリティツリーを撮った<strong>スナップショット</strong>で、ボタンや入力欄ごとに <code>@e1</code>、<code>@e2</code> のような短い参照をつけ、エージェントはその参照でクリックし入力する。元の文書は、こうすると HTML の代わりに200〜400トークンだけ読めばよいと説明する。<code>SKILL.md</code> 自体は案内板で、実際の使い方はインストールされたバージョンから <code>agent-browser skills get core</code> で読み込む。だから説明書が古びない。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 220" role="img" aria-label="agent-browser の作業ループ:open でページを開き、snapshot -i でアクセシビリティツリーと @eN 参照を得て、click @e3・fill @e1 で参照を押して行動し、ページが変わったら再びスナップショットを撮る。HTML の代わりに200〜400トークンの参照一覧を読む">
+    <text class="d-label" x="360" y="24" text-anchor="middle">撮って、参照で押して、また撮る</text>
+    <rect class="d-box soft" x="18" y="52" width="156" height="66" rx="10"/>
+    <text class="d-label sm" x="96" y="78" text-anchor="middle">open &lt;url&gt;</text>
+    <text class="d-sub" x="96" y="100" text-anchor="middle">ページを開く</text>
+    <line class="d-edge" x1="174" y1="85" x2="194" y2="85"/>
+    <polygon class="d-arrow" points="192,81 200,85 192,89"/>
+    <rect class="d-box accent" x="200" y="52" width="156" height="66" rx="10"/>
+    <text class="d-label sm" x="278" y="78" text-anchor="middle">snapshot -i</text>
+    <text class="d-sub" x="278" y="100" text-anchor="middle">要素ごとに @eN 参照</text>
+    <line class="d-edge" x1="356" y1="85" x2="376" y2="85"/>
+    <polygon class="d-arrow" points="374,81 382,85 374,89"/>
+    <rect class="d-box" x="382" y="52" width="156" height="66" rx="10"/>
+    <text class="d-label sm" x="460" y="78" text-anchor="middle">click @e3</text>
+    <text class="d-sub" x="460" y="100" text-anchor="middle">fill @e1 "検索語"</text>
+    <line class="d-edge" x1="538" y1="85" x2="558" y2="85"/>
+    <polygon class="d-arrow" points="556,81 564,85 556,89"/>
+    <rect class="d-box" x="564" y="52" width="140" height="66" rx="10"/>
+    <text class="d-label sm" x="634" y="78" text-anchor="middle">変わったら再び</text>
+    <text class="d-sub" x="634" y="100" text-anchor="middle">snapshot -i</text>
+    <path class="d-edge dash" d="M634,118 L634,148 L278,148 L278,124"/>
+    <polygon class="d-arrow" points="274,126 278,119 282,126"/>
+    <text class="d-sub" x="456" y="168" text-anchor="middle">参照は次のスナップショットでも再利用</text>
+    <text class="d-sub" x="360" y="204" text-anchor="middle">HTML の代わりに200〜400トークンの参照一覧を読む(元の文書の説明)</text>
+</svg>
+</div>
+<pre><code>npm i -g agent-browser &amp;&amp; agent-browser install   # CLI と Chrome
+npx skills add vercel-labs/agent-browser           # スキル
+
+agent-browser open https://example.com
+agent-browser snapshot -i          # 操作できる要素だけ
+agent-browser click @e3
+agent-browser skills get electron  # Slack・VS Code など Electron アプリ用のサブスキル</code></pre>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/agent-browser-contact-sheet.webp" width="1440" height="438"
+         alt="agent-browser の録画機能で作ったコンタクトシート:ダッシュボード画面を時間順に撮った6コマがタイムスタンプとともに並び、一部のコマには強調表示がある">
+    <figcaption>agent-browser がブラウザ作業を録画して作ったコンタクトシートの例 — 出典:vercel-labs/agent-browser の文書(Apache-2.0)</figcaption>
+</figure>
+<p><strong>どこで役に立つか。</strong>Web アプリのテスト、フォーム入力、画面キャプチャ、データ抽出のように、エージェントが実際の Web ページを扱う仕事だ。サブスキルで Electron アプリ(VS Code・Slack・Figma)、探索型の QA、サイトのリクエストを録画して API クライアントを作る仕事、クラウドブラウザまで広がる。公式ディレクトリ6位の Playwright MCP と仕事が重なる。違いは MCP ツールの代わりに短い CLI コマンドで動く点で、Playwright 側の文書もコーディングエージェントには CLI とスキルの組み合わせのほうがトークンが少なくて済むと書いている。</p>
+
+<h3>4. hyperframes — HTML で動画を作る</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/hyperframes.webp" width="1440" height="624"
+         alt="heygen-com/hyperframes リポジトリのロゴ(緑と水色の三角形二つ)と hyperframes SKILL.md のフロントマター(HTML rendered to video…)、インストールコマンド npx skills add heygen-com/hyperframes を記したカード">
+    <figcaption>hyperframes の SKILL.md フロントマター、インストールコマンドとロゴ — 出典:heygen-com/hyperframes(Apache-2.0)、原文をこのウィキがカードにレンダー</figcaption>
+</figure>
+<p><strong>何をするか。</strong>HeyGen が公開したオープンソースのフレームワークで、HTML・CSS で組んだ場面を動画にレンダーする。止めたタイムラインを1フレームずつ進めて撮るので、同じファイルはいつレンダーしても同じ動画になる。<code>index.html</code> が動画全体を、<code>compositions/</code> 以下のファイルが場面一つずつを受け持つ。スキルはこのレンダーの規則と作業の順序、動画の種類ごとに必要なもの(音・字幕・画面比)を収めている。Web サイトを題材にするときは、サイトをそのままキャプチャして素材にする。</p>
+<pre><code>npx hyperframes skills update        # コアのスキル一式(エージェント向け推奨)
+npx skills add heygen-com/hyperframes   # または選んでインストール
+
+npx hyperframes init my-video
+npx hyperframes capture https://example.com --json   # サイトを素材に
+npx hyperframes check --json                         # 規則違反の検査
+npx hyperframes render --quality looks --output out.mp4</code></pre>
+<p><strong>どこで役に立つか。</strong>製品紹介の動画、説明動画、グラフのアニメーション、縦型クリップのように、何度も直す動画だ。動画編集ソフトではなくコードなので、エージェントが直して再レンダーしやすい。直近7日の成長率1位(+13.3%)で、リポジトリのスキル七つがそろって上位40に入った。</p>
+
+<h3>5. frontend-design — ありきたりな AI デザインを避ける方法</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/frontend-design.webp" width="1440" height="624"
+         alt="anthropics/skills リポジトリの frontend-design SKILL.md のフロントマター(Guidance for distinctive, intentional visual design…)とインストールコマンド /plugin install frontend-design@claude-plugins-official を記したカード">
+    <figcaption>frontend-design の SKILL.md フロントマターとインストールコマンド — 出典:anthropics/skills(Apache-2.0)、原文をこのウィキがカードにレンダー</figcaption>
+</figure>
+<p><strong>何をするか。</strong>Anthropic が作ったデザイン判断のスキルだ。エージェントに「どの顧客にも他と取り違えられない個性を与えるデザインスタジオの責任者」という役を与える。まずこの画面が何についてのものか、誰が見るのか、何をすべきかを決め、その題材の世界(業種・素材・使う言葉)から色と書体を選ばせる。そして生成されたページによくある跡を具体的に禁じる。見出しの一語だけを強調する、ラベルをすべて大文字にする、順序のない内容に01・02・03の番号をつける、すべての区画に同じフェードインを入れる、といったものだ。作業の順序は計画、依頼との照合、制作、自己批評だ。</p>
+<pre><code>/plugin install frontend-design@claude-plugins-official
+# または
+npx skills add anthropics/skills --skill frontend-design
+
+「近所のパン屋の予約ページを作って」   ← UI の作業なら自分で目を覚ます</code></pre>
+<p><strong>どこで役に立つか。</strong>ランディングページ、ダッシュボード、アプリ画面のように、UI を一から作る仕事だ。公式ディレクトリのインストール1位(1,134,112)で、総合点でも3位だった。同じオープンデータの直近7日の成長順位に、UI の好みを扱う別のスキル(ui-taste)が2位で入っているのを見ると、「AI が作った跡が出る画面」はいま多くの人が抱えている問題だ。</p>
+
+<h3>6. Superpowers — 開発方法論をまるごと</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/superpowers.webp" width="1440" height="624"
+         alt="obra/superpowers リポジトリのアイコン(黒い輪の形)と using-superpowers SKILL.md のフロントマター(Use when starting any conversation…)、インストールコマンド /plugin install superpowers@claude-plugins-official を記したカード">
+    <figcaption>Superpowers の入口スキル using-superpowers のフロントマター、インストールコマンドとアイコン — 出典:obra/superpowers(MIT)、原文をこのウィキがカードにレンダー</figcaption>
+</figure>
+<p><strong>何をするか。</strong>スキル15個を束ねた開発方法論だ。入口の <code>using-superpowers</code> が会話を始めるたびに目を覚まし、「スキルが当てはまる可能性が1%でもあれば必ず先に呼べ」と念を押す。その後、下の七段階のスキルが順に自動で発動する。計画は熱意はあるが文脈のない新人エンジニアでもたどれるほど細かく刻み(作業あたり2〜5分)、実装は失敗するテストを先に書く TDD で行う。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 268" role="img" aria-label="Superpowers の基本の流れ七段階:brainstorming(何を、なぜ作るか)、using-git-worktrees(隔離された作業場所)、writing-plans(2〜5分単位の作業)、subagent-driven-development(作業ごとに新しいサブエージェント)、test-driven-development(失敗するテストを先に)、requesting-code-review(作業の合間のレビュー)、finishing-a-development-branch(マージ・PR・保管・破棄を選ぶ)">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Superpowers の流れ — 段階ごとにスキルが自ら目を覚ます</text>
+    <rect class="d-box accent" x="12" y="44" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="124" y="68" text-anchor="middle">1 何を、なぜ作るか</text>
+    <text class="d-sub" x="124" y="88" text-anchor="middle">brainstorming</text>
+    <line class="d-edge" x1="236" y1="73" x2="242" y2="73"/>
+    <polygon class="d-arrow" points="240,69 247,73 240,77"/>
+    <rect class="d-box" x="248" y="44" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="360" y="68" text-anchor="middle">2 隔離された作業場所</text>
+    <text class="d-sub" x="360" y="88" text-anchor="middle">using-git-worktrees</text>
+    <line class="d-edge" x1="472" y1="73" x2="478" y2="73"/>
+    <polygon class="d-arrow" points="476,69 483,73 476,77"/>
+    <rect class="d-box" x="484" y="44" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="596" y="68" text-anchor="middle">3 2〜5分単位の計画</text>
+    <text class="d-sub" x="596" y="88" text-anchor="middle">writing-plans</text>
+    <path class="d-edge dash" d="M596,102 L596,112 L124,112 L124,122"/>
+    <polygon class="d-arrow" points="120,120 124,127 128,120"/>
+    <rect class="d-box" x="12" y="128" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="124" y="152" text-anchor="middle">4 作業ごとに新しいサブエージェント</text>
+    <text class="d-sub" x="124" y="172" text-anchor="middle">subagent-driven-development</text>
+    <line class="d-edge" x1="236" y1="157" x2="242" y2="157"/>
+    <polygon class="d-arrow" points="240,153 247,157 240,161"/>
+    <rect class="d-box" x="248" y="128" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="360" y="152" text-anchor="middle">5 失敗するテストを先に</text>
+    <text class="d-sub" x="360" y="172" text-anchor="middle">test-driven-development</text>
+    <line class="d-edge" x1="472" y1="157" x2="478" y2="157"/>
+    <polygon class="d-arrow" points="476,153 483,157 476,161"/>
+    <rect class="d-box" x="484" y="128" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="596" y="152" text-anchor="middle">6 作業の合間のレビュー</text>
+    <text class="d-sub" x="596" y="172" text-anchor="middle">requesting-code-review</text>
+    <path class="d-edge dash" d="M596,186 L596,196 L360,196 L360,206"/>
+    <polygon class="d-arrow" points="356,204 360,211 364,204"/>
+    <rect class="d-box accent" x="248" y="212" width="224" height="50" rx="10"/>
+    <text class="d-label sm" x="360" y="234" text-anchor="middle">7 マージ・PR・保管・破棄を選ぶ</text>
+    <text class="d-sub" x="360" y="252" text-anchor="middle">finishing-a-development-branch</text>
+</svg>
+</div>
+<pre><code>/plugin install superpowers@claude-plugins-official
+
+「ToDo アプリに繰り返し予定の機能を入れたい」
+→ brainstorming が先に目を覚まし、目的を聞いて設計を短く区切って見せる
+→ 承認すると作業場所・計画・実装・レビューが順に進む</code></pre>
+<p><strong>どこで役に立つか。</strong>エージェントに数時間の仕事を任せるときだ。元の説明によれば、計画を承認するとエージェントが計画から外れずに二時間ほど一人で働くことはよくある。公式ディレクトリのインストール2位(1,009,371)で、Claude Code のほか Codex・Cursor・Gemini CLI など多くのハーネス向けのインストール方法も出している。逆に短い質問でもブレインストーミングから始まるので、軽い作業が多い人には重く感じられるかもしれない。</p>
+
+<h3>7. vercel-react-best-practices — 70のルールを優先順位で</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/vercel-react.webp" width="1440" height="624"
+         alt="vercel-labs/agent-skills リポジトリの vercel-react-best-practices SKILL.md のフロントマター(React and Next.js performance optimization guidelines from Vercel Engineering…)とインストールコマンドを記したカード">
+    <figcaption>vercel-react-best-practices の SKILL.md フロントマターとインストールコマンド — 出典:vercel-labs/agent-skills(MIT)、原文をこのウィキがカードにレンダー</figcaption>
+</figure>
+<p><strong>何をするか。</strong>Vercel のエンジニアリングがまとめた React・Next.js の性能ルール70個を8つの範疇に分け、影響度の順に並べた。最上位はリクエストが順番待ちになる滝(waterfall)をなくすことと、バンドルサイズを減らすこと(どちらも CRITICAL)で、サーバー側の性能、クライアントのデータ取得、再レンダーの順に下がる。エージェントは React のコードを書いたりレビューしたりするとき、この順に見る。同じリポジトリの <strong>web-design-guidelines</strong>(総合9位)は、レビューのたびに最新の指針を URL から取り直し、<code>ファイル:行</code> の形式で違反を書く。</p>
+<pre><code>npx skills add vercel-labs/agent-skills --skill vercel-react-best-practices
+npx skills add vercel-labs/agent-skills --skill web-design-guidelines -a claude-code
+
+「このページはなぜ遅い?」 ← React・Next.js の作業なら自分で目を覚ます
+「UI をレビューして」     ← web-design-guidelines</code></pre>
+<p><strong>どこで役に立つか。</strong>チームのコードのルールを文書ではなくエージェントに直接植える方法の手本だ。ルールが優先順位と接頭辞(<code>async-</code>、<code>bundle-</code>)で整理されているので、社内ルールのスキルを作るときにそのまま倣う価値がある。</p>
+
+<h3>選ぶときに見ること</h3>
+<ul>
+    <li><strong>インストール数は人気の数字だ。</strong>同じ計数器の中だけで比べ、リポジトリ単位で一緒に数える効果を差し引く。総合点も公式の出どころかどうかを信頼の点に使うだけで、まだセキュリティ検査はしていないとデータの提供者が明かしている。</li>
+    <li><strong>スキルはエージェントの権限で動く。</strong>インストールの前に <code>SKILL.md</code> と付属のスクリプトを読む。何を実行し、どこへつなぐのかを確かめる方法は<a href="#!skl-install">導入・セキュリティ・作成</a>にまとめた。</li>
+    <li><strong>自動で発動するかを見る。</strong>frontend-design・Superpowers のように自分で目を覚ますスキルは便利だが、望まないときにも割り込む。grill-me のように <code>disable-model-invocation</code> で直接呼んだときだけ使うようにしたスキルもある。</li>
+    <li><strong>プラグインの順位は別にある。</strong>公式ディレクトリ上位のプラグインとその構成は<a href="#!plc-popular-2026h2">2026年下半期の人気プラグイン</a>にまとめた。</li>
+</ul>
+
+<h3>事実確認ノート</h3>
+<p class="scn-sub">skills.sh のインストール数と総合点(Worth-Installing Score)・直近7日の成長率・ソーシャルでの言及順位は、LinklyAI のオープンデータ <a href="https://github.com/LinklyAI/best-skills" target="_blank" rel="noopener">best-skills</a>(CC BY 4.0)の 2026-10-22(UTC)スナップショットの CSV を直接取得して移した。リポジトリ単位の集計の限界と点数の構成(人気0.30・成長0.15・評判0.20・保守0.15・信頼0.20、セキュリティ検査なし)は同じリポジトリの方法論の文書による。skills.sh のサイトは本記事を書いた環境から開けず、元のサイトの数値と直接照合はできなかった。公式 Claude プラグインディレクトリのインストール数(frontend-design 1,134,112・Superpowers 1,009,371)は 2026-10-23(KST)の <a href="https://claude.com/plugins" target="_blank" rel="noopener">claude.com/plugins</a> ページのデータから読んだ。各スキルの動作・コマンド・ルールは、該当する GitHub リポジトリ(vercel-labs/skills、mattpocock/skills、vercel-labs/agent-browser、heygen-com/hyperframes、anthropics/skills、obra/superpowers、vercel-labs/agent-skills)を取得し、<code>SKILL.md</code> と README の原文を直接読んで整理した。「200〜400トークン」と「二時間ほど一人で働く」はそれぞれ元の文書自身の説明だ。カード画像は原文のフロントマターを変えずにこのウィキがレンダーしたもので(長い説明は&hellip;で省略)、ロゴ・アイコンと録画の例は各リポジトリにコミットされたファイルをライセンスに従って載せた。リポジトリ作者の個人名は書かず、リポジトリ名で示した。</p>

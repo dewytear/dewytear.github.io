@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 > License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — cite the source when quoting.
-> 75 documents · 319 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
+> 77 documents · 319 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
 
 ---
 
@@ -4686,6 +4686,228 @@ skillify — 패턴 추출·재사용 (구 learner)
 
 ---
 
+# 2026년 하반기 인기 플러그인 — 공식 디렉터리 상위권과 쓰는 법
+Section: AI · Claude · PlugIn · 플러그인 카탈로그
+URL: https://dewytear.github.io/docs/ko/ai/claude/plugin/catalog/plc-popular-2026h2
+
+2026년 하반기 인기 플러그인 — 공식 디렉터리 상위권과 쓰는 법
+
+세 줄 요약
+
+2026년 10월 23일 기준 공식 Claude 플러그인 디렉터리(271개)의 설치 1·2위는 Frontend Design(약 113만)과 Superpowers(약 101만)다. 3위 이하는 Code Review·Context7·Code Simplifier·Playwright·GitHub 순이다.
+
+상위 15개 중 10개는 Anthropic이 만들었다. 나머지 다섯은 Superpowers와 외부 서비스를 붙이는 MCP 플러그인(Context7·Playwright·GitHub·Vercel)이다.
+
+플러그인은 스킬·명령·에이전트·훅·MCP 서버를 한 번에 설치하는 묶음이다. 상위권은 어느 부품을 쓰느냐에 따라 쓰는 법이 크게 다르다.
+
+플러그인은 Claude Code에 기능 묶음을 한 번에 설치하는 단위다. 한 플러그인에 스킬(필요할 때 읽는 지침), 슬래시 명령, 서브에이전트, 훅(정해진 시점에 자동으로 도는 스크립트), MCP 서버(외부 서비스를 도구로 붙이는 연결)가 섞여 들어간다. 각 부품이 무엇인지는 확장 기능 — Skills · MCP · Hooks에, 설치 화면은 확장 — 스킬·플러그인·에이전트에 정리했다. 이 글은 공식 디렉터리의 설치 수 상위 플러그인을 골라, 각 플러그인의 원본 파일을 직접 읽고 쓰는 법을 정리한다.
+
+플러그인은 무엇을 담나
+
+같은 "플러그인"이라도 속은 다르다. 상위권의 구성을 원본 저장소의 파일 구조로 확인하면 아래와 같다. 어느 칸에 점이 찍혔는지가 쓰는 법을 정한다. 명령이 있으면 직접 부르고, 스킬이나 훅만 있으면 알아서 돌며, MCP만 있으면 새 도구가 생긴다.
+
+상위 플러그인은 무엇으로 만들어졌나 스킬 명령 에이전트 훅 MCP 1 Frontend Design 2 Superpowers ×15 3 Code Review 4 Context7 5 Code Simplifier 6 Playwright 7 GitHub 8 CLAUDE.md Management 9 Feature Dev ×3 10 Security Guidance 13 Ralph Loop
+
+설치 순위
+
+공식 디렉터리 페이지가 보여 주는 플러그인별 누적 설치 수다(2026-10-23 KST 기준). 막대는 1위 대비 비율이다.
+
+플러그인만든 곳설치 수
+
+Frontend DesignAnthropic
+1,134,112
+
+Superpowersobra/superpowers
+1,009,371
+
+Code ReviewAnthropic
+438,525
+
+Context7Upstash
+417,801
+
+Code SimplifierAnthropic
+346,763
+
+PlaywrightMicrosoft
+319,887
+
+GitHubGitHub
+319,381
+
+CLAUDE.md ManagementAnthropic
+287,247
+
+Feature DevAnthropic
+256,017
+
+Security GuidanceAnthropic
+241,800
+
+VercelVercel
+227,688
+
+TypeScript LSPAnthropic
+212,522
+
+Ralph LoopAnthropic
+196,527
+
+Claude Code SetupAnthropic
+195,067
+
+Commit CommandsAnthropic
+171,244
+
+1·2위는 플러그인이지만 속은 스킬이라 2026년 하반기 인기 스킬에서 자세히 다뤘다. 여기서는 3위부터 살핀다. 13위 Ralph Loop는 이 위키가 OMC의 ralph 모드로 다룬 기법을 플러그인 하나로 만든 것이라 함께 넣었다.
+
+3. Code Review — 네 에이전트가 따로 보고, 확신 80 이상만 남긴다
+
+Code Review의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official (Apache-2.0), 이 위키가 원문을 카드로 렌더
+
+무엇을 하나. 풀 리퀘스트(PR) 브랜치에서 /code-review를 부르면, 먼저 리뷰할 필요가 있는지 본다. 닫혔거나 초안이거나 사소하거나 이미 리뷰한 PR은 건너뛴다. 그다음 저장소의 CLAUDE.md 지침을 모으고 변경을 요약한 뒤, 에이전트 넷을 동시에 띄운다. 둘은 CLAUDE.md 준수를, 하나는 바뀐 코드 속 버그를, 하나는 git 이력(blame)으로 맥락상 문제를 본다. 찾은 문제마다 0~100의 신뢰도를 매기고 80 미만은 버린다.
+
+/code-review — 넓게 찾고, 좁게 남긴다 /code-review PR 브랜치에서 실행 리뷰할 PR인가 닫힘·초안·사소함 제외 CLAUDE.md 수집 변경 내용 요약 ① CLAUDE.md 준수 ② CLAUDE.md 준수 ③ 변경 속 버그 ④ git 이력·blame 신뢰도 0~100 채점 찾은 문제마다 80 미만은 버림 오탐을 걸러 냄 PR에 코멘트 전체 SHA·줄 범위 링크 남길 문제가 없으면 코멘트도 남기지 않는다
+
+/plugin install code-review@claude-plugins-official
+
+# PR 브랜치에서
+/code-review
+## Code review
+Found 3 issues:
+1. Missing error handling for OAuth callback (CLAUDE.md says "Always handle OAuth errors")
+https://github.com/owner/repo/blob/abc123…/src/auth.ts#L67-L72
+어디서 쓸모 있나. 리뷰 봇이 귀찮은 이유는 대개 오탐이다. 이 플러그인은 일부러 여러 시각으로 넓게 찾은 뒤, 확신이 낮은 것을 버려서 사람이 읽을 코멘트만 남긴다. 팀의 CLAUDE.md를 기준으로 삼으므로, 규칙을 잘 적어 둔 저장소일수록 리뷰가 날카로워진다.
+
+4. Context7 — 최신 문서를 컨텍스트에 끌어온다
+
+Context7 표지 이미지 — 출처: upstash/context7 저장소 (MIT)
+
+Context7의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official external_plugins/context7, 이 위키가 원문을 카드로 렌더
+
+무엇을 하나. Upstash가 운영하는 원격 MCP 서버를 붙인다. 플러그인 안에는 서버 주소(https://mcp.context7.com/mcp) 한 줄만 있어 로컬에 Node.js를 깔 필요가 없다. 도구는 둘이다. resolve-library-id가 "next.js" 같은 이름을 Context7의 라이브러리 ID로 바꾸고, query-docs가 그 라이브러리의 해당 버전 문서와 코드 예시를 원본 저장소에서 가져온다.
+
+/plugin install context7@claude-plugins-official
+
+"Next.js 16에서 proxy 설정은 어떻게 해? use context7"
+→ resolve-library-id("next.js") → query-docs(…, "proxy")
+→ 지금 버전 문서를 읽고 답함
+어디서 쓸모 있나. 모델은 학습 시점 이후 바뀐 API를 모른다. 빠르게 바뀌는 프레임워크를 쓸 때 옛 문법으로 코드를 짜는 일을 막는다. 질문 끝에 use context7을 붙이는 것이 원본 문서가 권하는 사용법이다.
+
+5. Code Simplifier — 방금 고친 코드를 다듬는 에이전트
+
+Code Simplifier의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official (Apache-2.0), 이 위키가 원문을 카드로 렌더
+
+무엇을 하나. 서브에이전트 하나(code-simplifier, Opus 지정)로 된 플러그인이다. 따로 지시하지 않으면 최근에 바뀐 코드만 본다. 첫 원칙은 동작을 바꾸지 않는 것이고, 그 안에서 중첩을 줄이고, 겹치는 코드와 쓸데없는 추상화를 걷어 내고, 이름을 분명히 한다. 짧은 코드보다 읽히는 코드를 고르라고 적혀 있고, 중첩 삼항 연산자는 금지한다. 기준은 프로젝트의 CLAUDE.md다.
+
+/plugin install code-simplifier@claude-plugins-official
+
+"방금 작업한 파일들 정리해 줘" ← code-simplifier 에이전트에 위임
+어디서 쓸모 있나. 에이전트가 기능을 빨리 붙이고 나면 코드가 덕지덕지해지기 쉽다. 커밋 전에 한 번 돌려 정리하는 용도다. 범위를 최근 변경으로 묶어 두어서 오래된 코드를 함부로 뒤집지 않는다.
+
+6. Playwright — Microsoft의 브라우저 자동화 MCP
+
+Playwright의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official external_plugins/playwright, 이 위키가 원문을 카드로 렌더
+
+무엇을 하나. npx @playwright/mcp@latest로 로컬 MCP 서버를 띄워 Claude가 웹페이지를 열고, 누르고, 입력하고, 화면을 찍게 한다. 픽셀이 아니라 접근성 트리로 페이지를 읽어서, 화면을 보는 모델이 없어도 움직인다.
+
+/plugin install playwright@claude-plugins-official
+
+"로그인 페이지에서 잘못된 비밀번호를 넣으면 어떤 오류가 뜨는지 확인해 줘"
+어디서 쓸모 있나. 끝에서 끝까지(E2E) 테스트와 화면 확인이다. 스킬 순위의 agent-browser와 하는 일이 겹친다. Microsoft 문서도 코딩 에이전트에게는 큰 도구 스키마와 긴 접근성 트리를 싣는 MCP보다 CLI와 스킬 조합이 토큰을 덜 쓴다고 적고, 별도의 Playwright CLI를 안내한다. 대화형으로 페이지를 살펴볼 때는 MCP가, 긴 코딩 세션 안에서는 CLI 쪽이 맞다.
+
+7. GitHub — 저장소를 대화로 다룬다
+
+GitHub의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official external_plugins/github, 이 위키가 원문을 카드로 렌더
+
+무엇을 하나. GitHub이 운영하는 원격 MCP 서버(api.githubcopilot.com/mcp/)를 붙인다. 이슈 만들기, PR 관리, 코드 리뷰, 저장소 검색처럼 GitHub API가 하는 일을 도구로 쓴다. 인증은 환경 변수 GITHUB_PERSONAL_ACCESS_TOKEN의 개인 접근 토큰으로 한다.
+
+export GITHUB_PERSONAL_ACCESS_TOKEN=… # 필요한 권한만 준 토큰
+/plugin install github@claude-plugins-official
+
+"지난주에 닫힌 이슈 중 버그 라벨 붙은 것만 정리해 줘"
+어디서 쓸모 있나. 터미널과 브라우저를 오가지 않고 이슈·PR 작업을 처리한다. 토큰의 권한이 곧 에이전트의 권한이므로, 쓰기 권한은 필요한 저장소에만 준다.
+
+8. CLAUDE.md Management — 프로젝트 기억을 최신으로
+
+claude-md-improver가 데이터베이스 변경으로 낡은 CLAUDE.md를 잡아내는 실행 화면 — 출처: anthropics/claude-plugins-official plugins/claude-md-management (Apache-2.0)
+
+무엇을 하나. 두 도구가 들어 있다. 스킬 claude-md-improver는 저장소의 모든 CLAUDE.md를 찾아 지금 코드와 맞는지 채점한다. 위 화면처럼 명령·워크플로, 구조 설명, 비자명한 패턴, 간결성, 최신성, 실행 가능성을 따로 매기고 고칠 곳을 제안한다. 명령 /revise-claude-md는 세션을 마칠 때 이번 작업에서 배운 것을 CLAUDE.md에 적는다.
+
+/plugin install claude-md-management@claude-plugins-official
+
+"내 CLAUDE.md가 최신인지 점검해 줘" ← claude-md-improver 스킬 발동
+/revise-claude-md ← 세션에서 배운 것 기록
+어디서 쓸모 있나. CLAUDE.md는 코드가 바뀌면 조용히 낡는다. 이 위키도 같은 문제를 규칙과 검증기로 다룬다(CLAUDE.md의 10계명). 정기 점검은 스킬로, 세션 끝의 기록은 명령으로 나눈 설계가 실용적이다.
+
+9. Feature Dev — 7단계로 기능을 만든다
+
+Feature Dev의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official (Apache-2.0), 이 위키가 원문을 카드로 렌더
+
+무엇을 하나. /feature-dev 명령 하나가 일곱 단계를 이끈다. 에이전트 셋(code-explorer·code-architect·code-reviewer)이 단계마다 나뉘어 일한다.
+
+단계하는 일
+
+1 Discovery무엇을 왜 만드는지, 제약은 무엇인지 확인
+
+2 Codebase Explorationcode-explorer 2~3개를 동시에 띄워 비슷한 기능·구조·UI 패턴 조사
+
+3 Clarifying Questions조사 뒤에 남은 모호한 점을 질문
+
+4 Architecture Designcode-architect가 설계안 제시
+
+5 Implementation승인된 설계대로 구현
+
+6 Quality Reviewcode-reviewer가 품질 검토
+
+7 Summary한 일과 남은 일 정리
+
+/plugin install feature-dev@claude-plugins-official
+/feature-dev OAuth로 사용자 인증 추가
+어디서 쓸모 있나. 낯선 코드베이스에 기능을 붙일 때 바로 코드부터 쓰는 실수를 막는다. 질문 단계가 탐색 뒤에 있다는 점이 핵심이다. 코드를 먼저 읽었기 때문에 쓸데없는 질문이 줄어든다.
+
+10. Security Guidance — 세 번 거르는 보안 검사
+
+Security Guidance의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official (Apache-2.0), 이 위키가 원문을 카드로 렌더
+
+무엇을 하나. 훅으로 도는 보안 검사다. Claude가 만든 코드를 세 시점에서 거른다. 가벼운 검사는 자주, 무거운 검사는 드물게 도는 구조다.
+
+가벼운 검사는 자주, 무거운 검사는 드물게 파일을 고칠 때 턴이 끝날 때 커밋할 때 ① 패턴 경고 정규식 약 25종 yaml.load·innerHTML·비밀키 ② LLM 차이 리뷰 최신 Opus가 diff를 검토 심각한 것만 Claude에 되돌림 ③ 에이전트 커밋 리뷰 관련 파일을 따라 데이터 흐름 IDOR·인증 우회·SSRF 패턴 매칭이 놓치는 여러 파일에 걸친 취약점은 커밋 리뷰가 잡는다
+
+/plugin install security-guidance@claude-plugins-official
+# 필요: Claude Code 2.1.144 이상, Python 3.8 이상
+# 설정은 모두 환경 변수(선택). 기본값으로 바로 동작
+어디서 쓸모 있나. 사람이 리뷰하기 전에 Claude가 스스로 고치게 만드는 데 있다. 두 번째 층은 턴이 끝날 때 diff를 검토해 심각한 문제를 Claude에게 돌려주므로, 사용자가 답을 보기 전에 수정이 끝난다. 명령이 없으니 설치만 해 두면 된다.
+
+13. Ralph Loop — 끝날 때까지 같은 프롬프트를 다시
+
+Ralph Loop의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official (Apache-2.0), 이 위키가 원문을 카드로 렌더
+
+무엇을 하나. 개발자 Geoffrey Huntley가 “Ralph는 Bash 루프다”라고 설명한 기법을 Claude Code 세션 안에서 구현했다. 바깥에 셸 루프를 두는 대신 Stop 훅이 Claude의 종료 시도를 막고 같은 프롬프트를 다시 넣는다. 프롬프트는 그대로지만 이전 작업은 파일과 git 이력에 남으므로, Claude는 매번 자기가 남긴 결과를 읽고 이어 간다.
+
+Stop 훅이 문을 막고 같은 프롬프트를 다시 넣는다 /ralph-loop 작업·완료 문구 지정 작업 파일·git에 흔적이 남음 끝내려 함 턴 종료 시도 Stop 훅 같은 프롬프트를 다시 완료 문구 출력 · 최대 반복 도달 이때만 루프가 끝난다
+
+/plugin install ralph-loop@claude-plugins-official
+
+/ralph-loop "할 일 REST API를 만들어라. CRUD·입력 검증·테스트 포함.
+끝나면 <promise>COMPLETE</promise>를 출력" --completion-promise "COMPLETE" --max-iterations 50
+/cancel-ralph # 중간에 멈추기
+어디서 쓸모 있나. 테스트 통과처럼 끝이 분명한 일을 밤새 맡길 때다. 반대로 끝 조건이 흐린 일은 반복만 늘린다. --max-iterations로 상한을 꼭 둔다.
+
+고를 때 볼 것
+
+부품을 먼저 본다. 훅이 든 플러그인(Security Guidance·Ralph Loop)은 설치만 해도 매 턴 동작한다. 명령만 든 플러그인은 부를 때만 돈다.
+
+MCP 플러그인은 권한이 바깥으로 이어진다. GitHub처럼 토큰을 쓰는 플러그인은 토큰의 권한이 곧 에이전트의 권한이다.
+
+같은 일을 하는 스킬과 비교한다. 브라우저 자동화는 Playwright 플러그인과 agent-browser 스킬이 겹친다. 1·2위가 사실상 스킬이고, Microsoft 문서도 코딩 에이전트에게는 CLI와 스킬이 토큰을 덜 쓴다고 적었다. 긴 작업 세션이라면 가벼운 쪽부터 본다.
+
+사실검증 노트
+
+설치 수와 만든 곳, 디렉터리의 플러그인 수(271개)는 2026-10-23(KST) claude.com/plugins 페이지에 실린 데이터를 직접 읽었다. 숫자는 매일 바뀌는 누적값이다. 각 플러그인의 구성(스킬·명령·에이전트·훅·MCP)과 동작·명령은 Anthropic의 공식 마켓플레이스 저장소 anthropics/claude-plugins-official을 내려받아 plugin.json·README·명령·에이전트·훅 파일을 직접 읽어 정리했고, Context7은 upstash/context7, Playwright는 microsoft/playwright-mcp의 README를 함께 읽었다. Code Review의 에이전트 넷과 신뢰도 80 기준, Security Guidance의 세 층과 요구 버전, Feature Dev의 일곱 단계, Ralph Loop의 Stop 훅 구조는 해당 README의 설명이다. 카드 이미지는 원본 plugin.json의 이름과 설명을 바꾸지 않고 이 위키가 렌더한 것이며(긴 설명은 …로 줄임), Context7 표지와 CLAUDE.md Improver 실행 화면은 각 저장소에 커밋된 파일을 라이선스에 따라 실었다. Ralph 기법의 이름을 붙인 개발자는 플러그인 README가 인용한 개념 제안자라 이름을 적었고, 그 밖의 저장소 작성자 개인의 이름은 적지 않았다.
+
+---
+
 # im-not-ai(Humanize KR) — AI 티를 지우는 편집 스킬
 Section: AI · Claude · 스킬 카탈로그
 URL: https://dewytear.github.io/docs/ko/ai/claude/skills/sks-im-not-ai
@@ -4847,6 +5069,205 @@ count:count:all서버측 결과 상한
 배포 범위
 공개된 zip은 특정 조직 정보를 담지 않은 일반화 버전입니다 — 인스턴스 주소·계정·조직 고유 검색 예시는 각자 환경에서 채워 씁니다.
 검색 결과는 그 조직의 코드이므로 외부 서비스로 내보내지 않는다는 조항이 스킬 문서에 함께 들어 있습니다.
+
+---
+
+# 2026년 하반기 인기 스킬 — 설치 순위 상위 7개와 쓰는 법
+Section: AI · Claude · 스킬 카탈로그
+URL: https://dewytear.github.io/docs/ko/ai/claude/skills/sks-popular-2026h2
+
+2026년 하반기 인기 스킬 — 설치 순위 상위 7개와 쓰는 법
+
+세 줄 요약
+
+2026년 10월 22일 기준 skills.sh 누적 설치 1위는 find-skills(약 398만)다. 공식 Claude 플러그인 디렉터리에서는 frontend-design(약 113만)과 Superpowers(약 101만)가 1·2위다.
+
+상위권은 크게 다섯 종류다. 스킬을 찾아 주는 스킬, 계획을 캐묻는 스킬, 브라우저·영상 같은 손발을 주는 스킬, 취향과 규칙을 심는 스킬, 개발 방법론 전체를 묶은 스킬이다.
+
+설치 수는 품질 점수가 아니다. 계수기마다 세는 단위가 다르고, skills.sh는 저장소 단위로 세서 스킬이 많은 저장소가 여러 칸을 한꺼번에 차지한다.
+
+스킬은 에이전트가 필요할 때 읽어 들이는 마크다운 한 장(SKILL.md)과 그 폴더다. 맨 위 머리말(frontmatter)의 description이 언제 이 스킬을 꺼낼지 정한다. 자세한 원리는 스킬이란과 스킬의 구조와 동작 원리에 있다. 이 글은 2026년 하반기에 가장 많이 설치된 스킬을 고르고, 각 스킬의 원본 SKILL.md를 직접 읽어 무엇을 하는지, 어떻게 쓰는지, 어디서 쓸모 있는지를 정리한다.
+
+순위는 어디서 세나
+
+"가장 인기 있는 스킬"을 한 숫자로 말하기는 어렵다. 스킬을 세는 곳이 여럿이고 단위가 제각각이기 때문이다. 같은 frontend-design도 어디서 세느냐에 따라 숫자가 다르다.
+
+같은 스킬, 세 개의 계수기 skills.sh npx skills CLI 설치 수 저장소 단위로 함께 셈 Claude 공식 디렉터리 플러그인 설치 수 스킬 묶음도 플러그인으로 ClawHub · SkillHub OpenClaw·중국 설치 수 다른 생태계, 다른 단위 frontend-design 한 스킬의 숫자 skills.sh 1,016,129 · 공식 디렉터리 1,134,112 (10월 22~23일) 숫자를 더하지 말고, 같은 계수기 안에서만 비교한다
+
+skills.sh는 Vercel이 운영하는 스킬 디렉터리로, npx skills 명령으로 설치된 횟수를 센다. 여기서 주의할 점이 있다. 설치를 저장소 단위로 세기 때문에, 한 저장소에 스킬이 여러 개면 함께 설치된 스킬들이 나란히 상위에 오른다. 아래 상위 10개 가운데 다섯 칸이 mattpocock/skills, 두 칸이 heygen-com/hyperframes에서 나온 것도 그래서다. 여러 순위를 모아 매일 공개하는 오픈 데이터(LinklyAI best-skills, CC BY 4.0)가 이 한계를 직접 적어 두었다.
+
+skills.sh 누적 설치 (2026-10-22)저장소설치 수
+
+find-skillsvercel-labs/skills
+3,977,808
+
+grill-memattpocock/skills
+1,408,491
+
+agent-browservercel-labs/agent-browser
+1,206,479
+
+grill-with-docsmattpocock/skills
+1,206,243
+
+hyperframes-cliheygen-com/hyperframes
+1,169,530
+
+improve-codebase-architecturemattpocock/skills
+1,150,698
+
+hyperframesheygen-com/hyperframes
+1,130,394
+
+tddmattpocock/skills
+1,127,010
+
+media-useheygen-com/hyperframes
+1,040,244
+
+setup-matt-pocock-skillsmattpocock/skills
+1,040,124
+
+그래서 이 글은 같은 저장소를 한 칸으로 접어 고른다. skills.sh 상위 저장소 넷(find-skills·grill-me·agent-browser·hyperframes)에, 공식 디렉터리 1·2위인 frontend-design과 Superpowers, 그리고 같은 오픈 데이터의 종합 점수(설치·성장·언급·신뢰를 섞은 “설치할 만한 정도”) 상위 10위 안에 든 Vercel의 React 규칙 스킬을 더해 일곱이다. 종합 점수 1위는 agent-browser(77.3)였다.
+
+스킬종류한 줄 용도
+
+find-skills찾기필요한 스킬을 검색·검증해 설치까지
+
+grill-me묻기계획을 라운드마다 캐물어 빈틈을 없앰
+
+agent-browser손발에이전트가 브라우저를 직접 조작
+
+hyperframes손발HTML로 영상을 만들고 렌더
+
+frontend-design취향뻔한 AI 디자인을 피하는 시각 판단
+
+Superpowers방법론설계부터 머지까지 개발 절차 전체
+
+vercel-react-best-practices규칙React·Next.js 성능 규칙 70개
+
+1. find-skills — 스킬을 찾아 주는 스킬
+
+find-skills의 SKILL.md 머리말과 설치 명령 — 출처: vercel-labs/skills (MIT), 이 위키가 원문을 카드로 렌더
+
+무엇을 하나. 사용자가 "X는 어떻게 해?", "X 하는 스킬 있어?"처럼 물으면 이 스킬이 깨어난다. 에이전트는 먼저 skills.sh 순위표에서 이미 검증된 스킬이 있는지 보고, 없으면 npx skills find로 검색한다. 그다음 바로 추천하지 않고 세 가지를 확인한다. 설치 수가 1천 이상인지, 출처가 믿을 만한지(vercel-labs·anthropics·microsoft 같은 공식 출처), 원본 저장소의 GitHub 별이 100개를 넘는지다. 통과한 것만 이름·용도·설치 수·설치 명령과 함께 보여 주고, 사용자가 원하면 설치까지 한다.
+
+npx skills add vercel-labs/skills --skill find-skills # 설치
+# 이후 대화에서
+"PR 리뷰를 도와주는 스킬 있어?" → npx skills find pr review
+→ 후보 검증 → 설치 명령 제시
+npx skills add <owner/repo@skill> -g -y # 사용자 수준 설치
+어디서 쓸모 있나. 스킬 생태계의 입구 역할이다. 1위인 이유도 여기 있다. 처음 스킬을 들이는 사람이 가장 먼저 설치하고, 이후 다른 스킬은 이 스킬을 거쳐 들어온다. 검증 기준을 스킬 안에 적어 둔 점도 눈여겨볼 만하다. 다만 그 기준 역시 설치 수와 별 수라, 이 글의 결론처럼 숫자 이상의 판단은 사람이 해야 한다.
+
+2. grill-me — 계획을 끝까지 캐묻는 인터뷰
+
+grill-me의 SKILL.md는 이 머리말과 한 줄 본문이 전부다 — 출처: mattpocock/skills (MIT), 이 위키가 원문을 카드로 렌더
+
+무엇을 하나. grill-me의 SKILL.md는 일곱 줄이다. 본문은 "grilling 스킬을 불러라" 한 줄뿐이고, 실제 규칙은 같은 저장소의 grilling 스킬에 있다. 머리말의 disable-model-invocation: true는 모델이 알아서 꺼내지 말고 사용자가 /grill-me로 부를 때만 쓰라는 뜻이다. 작은 스킬이 다른 스킬을 부르는 구성이라, 스킬이 "마크다운 한 장으로 된 재사용 단위"라는 말이 실제로 어떻게 쓰이는지 잘 보여 준다.
+
+grilling은 계획을 결정 나무로 본다. 하나의 결정에는 그 결정에 달린 다음 결정들이 가지처럼 붙는다. 에이전트는 선행 결정이 이미 정해져서 지금 물을 수 있는 질문(프런티어)을 한 라운드에 모두 묻는다. 질문마다 번호를 달고 추천 답을 함께 적으며, "yes"라고만 답하면 추천을 받아들이도록 문장을 짠다.
+
+grill-me 한 판 — 프런티어가 빌 때까지 라운드를 돈다 계획·설계안 /grill-me로 시작 한 라운드 지금 물을 수 있는 질문 전부 사용자 답 yes = 추천 수락 프런티어 갱신 다음 라운드로 사실은 서브에이전트가 사용자에게 묻지 않고 찾음 프런티어가 비면 끝 합의를 확인한 뒤에야 실행한다 사실은 에이전트가 찾고, 결정은 사람에게 묻는다
+
+npx skills add mattpocock/skills --skill grill-me
+# 또는 Claude Code 플러그인으로 저장소 전체를
+claude plugin install mattpocock-skills@claude-plugins-official
+
+/grill-me ← 계획이나 설계를 붙여 넣고 호출
+❓ Q1 - 저장 위치: … ➡️ 추천 답
+❓ Q2 - 실패 시 동작: … ➡️ 추천 답
+(답하면 다음 라운드)
+어디서 쓸모 있나. 코드를 짜기 전, 계획에 숨은 가정을 드러내는 데 쓴다. 사실 확인은 에이전트가 서브에이전트로 직접 찾고, 사용자에게는 결정만 묻는다. 질문이 쓸데없이 늘지 않는 이유다. 함께 상위권인 grill-with-docs(약 121만)는 같은 인터뷰를 하면서 domain-modeling 스킬로 용어집(GLOSSARY.md)과 결정 기록(ADR)을 그 자리에서 쓴다. ADR은 세 조건이 모두 맞을 때만 제안한다. 되돌리기 어렵고, 맥락 없이 보면 놀랍고, 실제 대안 사이에서 고른 결정일 때다. 소셜 언급량 1위(최근 7일)도 grill-me였다.
+
+3. agent-browser — 에이전트에게 브라우저를
+
+agent-browser의 SKILL.md 머리말과 설치 명령 — 출처: vercel-labs/agent-browser (Apache-2.0), 이 위키가 원문을 카드로 렌더
+
+무엇을 하나. Rust로 만든 브라우저 자동화 CLI다. Chrome DevTools 프로토콜로 Chrome을 직접 움직이며, Playwright나 Puppeteer에 기대지 않는다. 핵심은 페이지를 HTML 그대로 읽지 않는 데 있다. 접근성 트리를 찍은 스냅숏에서 버튼·입력칸마다 @e1, @e2 같은 짧은 참조를 붙여 주고, 에이전트는 그 참조로 클릭하고 입력한다. 원본 문서는 이렇게 하면 HTML 대신 200~400토큰만 읽으면 된다고 설명한다. SKILL.md 자체는 안내판이라, 실제 사용법은 설치된 버전에서 agent-browser skills get core로 불러온다. 그래서 설명서가 낡지 않는다.
+
+찍고, 참조로 누르고, 다시 찍는다 open <url> 페이지 열기 snapshot -i 요소마다 @eN 참조 click @e3 fill @e1 "검색어" 바뀌면 다시 snapshot -i 참조는 다음 스냅숏에서도 재사용 HTML 대신 200~400토큰의 참조 목록을 읽는다 (원본 문서 설명)
+
+npm i -g agent-browser && agent-browser install # CLI와 Chrome 설치
+npx skills add vercel-labs/agent-browser # 스킬 설치
+
+agent-browser open https://example.com
+agent-browser snapshot -i # 상호작용 요소만
+agent-browser click @e3
+agent-browser skills get electron # Slack·VS Code 같은 Electron 앱용 하위 스킬
+
+agent-browser가 브라우저 작업을 녹화해 만든 접촉 인화 예시 — 출처: vercel-labs/agent-browser 문서 (Apache-2.0)
+
+어디서 쓸모 있나. 웹앱 테스트, 폼 입력, 화면 캡처, 데이터 추출처럼 에이전트가 실제 웹페이지를 다뤄야 하는 일이다. 하위 스킬로 Electron 앱(VS Code·Slack·Figma), 탐색형 QA, 사이트의 요청을 녹화해 API 클라이언트를 만드는 일, 클라우드 브라우저까지 넓어진다. 공식 디렉터리 6위인 Playwright MCP와 하는 일이 겹친다. 차이는 MCP 도구 대신 짧은 CLI 명령으로 움직인다는 데 있다. Playwright 쪽 문서도 코딩 에이전트에게는 CLI와 스킬 조합이 토큰을 덜 쓴다고 적었다.
+
+4. hyperframes — HTML로 영상을 만든다
+
+hyperframes의 SKILL.md 머리말과 설치 명령, 로고 — 출처: heygen-com/hyperframes (Apache-2.0), 이 위키가 원문을 카드로 렌더
+
+무엇을 하나. HeyGen이 공개한 오픈소스 프레임워크로, HTML·CSS로 짠 장면을 영상으로 렌더한다. 멈춰 둔 타임라인을 한 프레임씩 넘기며 찍기 때문에 같은 파일은 언제 렌더해도 같은 영상이 나온다. index.html이 영상 전체를, compositions/ 아래 파일이 장면 하나씩을 맡는다. 스킬은 이 렌더 규칙과 작업 순서, 영상 종류별로 필요한 것(소리·자막·화면비)을 담고 있다. 웹사이트를 주제로 할 때는 사이트를 그대로 캡처해 재료로 쓴다.
+
+npx hyperframes skills update # 핵심 스킬 묶음 설치(에이전트용 권장)
+npx skills add heygen-com/hyperframes # 또는 선택 설치
+
+npx hyperframes init my-video
+npx hyperframes capture https://example.com --json # 사이트를 재료로
+npx hyperframes check --json # 규칙 위반 검사
+npx hyperframes render --quality looks --output out.mp4
+어디서 쓸모 있나. 제품 소개 영상, 설명 영상, 차트 애니메이션, 세로 클립처럼 반복해서 고쳐야 하는 영상이다. 영상 편집기 대신 코드라서 에이전트가 고치고 다시 렌더하기 쉽다. 최근 7일 성장률 1위(+13.3%)였고, 저장소의 스킬 일곱 개가 함께 상위 40위 안에 들었다.
+
+5. frontend-design — 뻔한 AI 디자인을 피하는 법
+
+frontend-design의 SKILL.md 머리말과 설치 명령 — 출처: anthropics/skills (Apache-2.0), 이 위키가 원문을 카드로 렌더
+
+무엇을 하나. Anthropic이 만든 디자인 판단 스킬이다. 에이전트에게 "모든 고객에게 남과 헷갈리지 않는 정체성을 주는 디자인 스튜디오의 책임자"라는 역할을 준다. 먼저 이 화면이 무엇에 관한 것인지, 누가 보는지, 무엇을 해야 하는지를 정하고, 그 주제의 세계(업종·재료·쓰는 말)에서 색과 글꼴을 고르게 한다. 그리고 생성된 페이지의 흔한 티를 구체적으로 금지한다. 제목에서 한 단어만 강조하기, 라벨 전부 대문자, 순서가 없는 내용에 01·02·03 번호 붙이기, 모든 구역에 같은 페이드인 넣기 같은 것들이다. 작업 순서는 계획, 요청과 대조, 제작, 자기 비평이다.
+
+/plugin install frontend-design@claude-plugins-official
+# 또는
+npx skills add anthropics/skills --skill frontend-design
+
+"우리 동네 빵집 예약 페이지를 만들어 줘" ← UI 작업이면 스스로 깨어남
+어디서 쓸모 있나. 랜딩 페이지, 대시보드, 앱 화면처럼 처음부터 UI를 만드는 일이다. 공식 디렉터리 설치 1위(1,134,112)이고, 종합 점수에서도 3위였다. 같은 오픈 데이터의 최근 7일 성장 순위에 UI 취향을 다루는 다른 스킬(ui-taste)이 2위로 올라 있는 것을 보면, "AI가 만든 티가 나는 화면"은 지금 많은 사람이 겪는 문제다.
+
+6. Superpowers — 개발 방법론을 통째로
+
+Superpowers의 진입 스킬 using-superpowers 머리말과 설치 명령, 아이콘 — 출처: obra/superpowers (MIT), 이 위키가 원문을 카드로 렌더
+
+무엇을 하나. 스킬 15개를 묶은 개발 방법론이다. 진입점인 using-superpowers가 대화를 시작할 때마다 깨어나 "스킬이 맞을 가능성이 1%라도 있으면 반드시 먼저 부르라"고 못 박는다. 그 뒤 아래 일곱 단계 스킬이 차례로 자동 발동한다. 계획은 열정적이지만 맥락이 없는 신입 개발자도 따라 할 수 있을 만큼 잘게 쪼개고(작업당 2~5분), 구현은 실패하는 테스트를 먼저 쓰는 TDD로 한다.
+
+Superpowers 기본 흐름 — 스킬이 단계마다 스스로 깨어난다 1 무엇을 왜 만드나 brainstorming 2 격리된 작업 공간 using-git-worktrees 3 2~5분 단위 계획 writing-plans 4 작업마다 새 서브에이전트 subagent-driven-development 5 실패하는 테스트 먼저 test-driven-development 6 작업 사이 리뷰 requesting-code-review 7 머지·PR·보관·폐기 선택 finishing-a-development-branch
+
+/plugin install superpowers@claude-plugins-official
+
+"할 일 앱에 반복 일정 기능을 넣고 싶어"
+→ brainstorming이 먼저 깨어나 목적을 묻고 설계를 짧게 끊어 보여 줌
+→ 승인하면 작업 공간·계획·구현·리뷰가 차례로 진행
+어디서 쓸모 있나. 에이전트에게 몇 시간짜리 일을 맡길 때다. 원본 설명에 따르면 계획을 승인하면 에이전트가 두어 시간 동안 계획에서 벗어나지 않고 혼자 일하는 경우가 흔하다. 공식 디렉터리 설치 2위(1,009,371)이고, Claude Code 외에 Codex·Cursor·Gemini CLI 등 여러 하네스용 설치법을 함께 낸다. 반대로 짧은 질문에도 브레인스토밍부터 시작하므로, 가벼운 작업이 많은 사람에게는 무겁게 느껴질 수 있다.
+
+7. vercel-react-best-practices — 70개 규칙을 우선순위로
+
+vercel-react-best-practices의 SKILL.md 머리말과 설치 명령 — 출처: vercel-labs/agent-skills (MIT), 이 위키가 원문을 카드로 렌더
+
+무엇을 하나. Vercel 엔지니어링이 정리한 React·Next.js 성능 규칙 70개를 8개 범주로 나누고 영향도 순으로 매겼다. 가장 위가 요청이 차례로 기다리는 폭포(waterfall) 없애기와 번들 크기 줄이기(둘 다 CRITICAL)이고, 서버 쪽 성능, 클라이언트 데이터 요청, 리렌더 순으로 내려간다. 에이전트는 React 코드를 쓰거나 리뷰할 때 이 순서대로 본다. 같은 저장소의 web-design-guidelines(종합 9위)는 리뷰할 때마다 최신 지침을 URL에서 새로 받아 와 파일:줄 형식으로 위반을 적는다.
+
+npx skills add vercel-labs/agent-skills --skill vercel-react-best-practices
+npx skills add vercel-labs/agent-skills --skill web-design-guidelines -a claude-code
+
+"이 페이지 왜 느려?" ← React·Next.js 작업이면 스스로 깨어남
+"내 UI 리뷰해 줘" ← web-design-guidelines
+어디서 쓸모 있나. 팀의 코드 규칙을 문서 대신 에이전트에게 직접 심는 방식의 본보기다. 규칙이 우선순위와 접두어(async-, bundle-)로 정리돼 있어, 사내 규칙 스킬을 만들 때 그대로 따라 할 만하다.
+
+고를 때 볼 것
+
+설치 수는 인기의 숫자다. 같은 계수기 안에서만 비교하고, 저장소 단위로 함께 세는 효과를 감안한다. 종합 점수도 공식 출처 여부를 신뢰 점수로 쓸 뿐, 아직 보안 검사는 하지 않는다고 데이터 제공자가 밝혔다.
+
+스킬은 에이전트의 권한으로 돈다. 설치 전에 SKILL.md와 딸린 스크립트를 읽는다. 무엇을 실행하고 어디에 접속하는지 확인하는 방법은 스킬 설치·보안·제작에 정리했다.
+
+자동 발동 여부를 본다. frontend-design·Superpowers처럼 스스로 깨어나는 스킬은 편하지만 원치 않는 때도 끼어든다. grill-me처럼 disable-model-invocation으로 직접 부를 때만 쓰게 한 스킬도 있다.
+
+플러그인 순위는 따로 있다. 공식 디렉터리 상위 플러그인과 그 구성은 2026년 하반기 인기 플러그인에 정리했다.
+
+사실검증 노트
+
+skills.sh 설치 수와 종합 점수(Worth-Installing Score)·최근 7일 성장률·소셜 언급 순위는 LinklyAI의 오픈 데이터 best-skills(CC BY 4.0)의 2026-10-22(UTC) 스냅숏 CSV를 직접 받아 옮겼다. 저장소 단위 집계 한계와 점수 구성(인기 0.30·성장 0.15·평판 0.20·유지보수 0.15·신뢰 0.20, 보안 검사 없음)은 같은 저장소의 방법론 문서에 따른 것이다. skills.sh 사이트는 이 글을 쓴 환경에서 열리지 않아 원 사이트 수치와 직접 대조하지는 못했다. 공식 Claude 플러그인 디렉터리 설치 수(frontend-design 1,134,112·Superpowers 1,009,371)는 2026-10-23(KST) claude.com/plugins 페이지 데이터에서 읽었다. 각 스킬의 동작·명령·규칙은 해당 GitHub 저장소(vercel-labs/skills, mattpocock/skills, vercel-labs/agent-browser, heygen-com/hyperframes, anthropics/skills, obra/superpowers, vercel-labs/agent-skills)를 내려받아 SKILL.md와 README 원문을 직접 읽어 정리했다. “200~400토큰”과 “두어 시간 혼자 일한다”는 각 원본 문서의 자체 설명이다. 카드 이미지는 원문 머리말을 바꾸지 않고 이 위키가 렌더한 것이며(긴 설명은 …로 줄임), 로고·아이콘과 녹화 예시는 각 저장소에 커밋된 파일을 라이선스에 따라 실었다. 저장소 작성자 개인의 이름은 적지 않고 저장소 이름으로 가리켰다.
 
 ---
 

@@ -1,0 +1,339 @@
+<h2>2026년 하반기 인기 플러그인 — 공식 디렉터리 상위권과 쓰는 법</h2>
+
+<h3>세 줄 요약</h3>
+<ul>
+    <li>2026년 10월 23일 기준 공식 Claude 플러그인 디렉터리(271개)의 설치 1·2위는 <strong>Frontend Design</strong>(약 113만)과 <strong>Superpowers</strong>(약 101만)다. 3위 이하는 Code Review·Context7·Code Simplifier·Playwright·GitHub 순이다.</li>
+    <li>상위 15개 중 10개는 Anthropic이 만들었다. 나머지 다섯은 Superpowers와 외부 서비스를 붙이는 MCP 플러그인(Context7·Playwright·GitHub·Vercel)이다.</li>
+    <li>플러그인은 스킬·명령·에이전트·훅·MCP 서버를 한 번에 설치하는 묶음이다. 상위권은 어느 부품을 쓰느냐에 따라 쓰는 법이 크게 다르다.</li>
+</ul>
+
+<p>플러그인은 Claude Code에 기능 묶음을 한 번에 설치하는 단위다. 한 플러그인에 스킬(필요할 때 읽는 지침), 슬래시 명령, 서브에이전트, 훅(정해진 시점에 자동으로 도는 스크립트), MCP 서버(외부 서비스를 도구로 붙이는 연결)가 섞여 들어간다. 각 부품이 무엇인지는 <a href="#!skills">확장 기능 — Skills · MCP · Hooks</a>에, 설치 화면은 <a href="#!ccb-skills">확장 — 스킬·플러그인·에이전트</a>에 정리했다. 이 글은 공식 디렉터리의 설치 수 상위 플러그인을 골라, 각 플러그인의 원본 파일을 직접 읽고 쓰는 법을 정리한다.</p>
+
+<h3>플러그인은 무엇을 담나</h3>
+<p>같은 "플러그인"이라도 속은 다르다. 상위권의 구성을 원본 저장소의 파일 구조로 확인하면 아래와 같다. 어느 칸에 점이 찍혔는지가 쓰는 법을 정한다. 명령이 있으면 직접 부르고, 스킬이나 훅만 있으면 알아서 돌며, MCP만 있으면 새 도구가 생긴다.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 384" role="img" aria-label="상위 플러그인의 구성: Frontend Design은 스킬, Superpowers는 스킬 15개, Code Review는 명령, Context7은 MCP, Code Simplifier는 에이전트, Playwright는 MCP, GitHub은 MCP, CLAUDE.md Management는 스킬과 명령, Feature Dev는 명령과 에이전트 3개, Security Guidance는 훅, Ralph Loop는 명령과 훅">
+    <text class="d-label" x="360" y="24" text-anchor="middle">상위 플러그인은 무엇으로 만들어졌나</text>
+    <text class="d-label sm" x="370" y="56" text-anchor="middle">스킬</text>
+    <text class="d-label sm" x="450" y="56" text-anchor="middle">명령</text>
+    <text class="d-label sm" x="530" y="56" text-anchor="middle">에이전트</text>
+    <text class="d-label sm" x="610" y="56" text-anchor="middle">훅</text>
+    <text class="d-label sm" x="680" y="56" text-anchor="middle">MCP</text>
+    <line class="d-edge dash" x1="20" y1="66" x2="704" y2="66"/>
+    <text class="d-label sm" x="24" y="90">1 Frontend Design</text>
+    <circle class="d-node" cx="370" cy="86" r="6"/>
+    <text class="d-label sm" x="24" y="118">2 Superpowers</text>
+    <circle class="d-node" cx="370" cy="114" r="6"/>
+    <text class="d-sub" x="390" y="118">×15</text>
+    <text class="d-label sm" x="24" y="146">3 Code Review</text>
+    <circle class="d-node b" cx="450" cy="142" r="6"/>
+    <text class="d-label sm" x="24" y="174">4 Context7</text>
+    <circle class="d-node d" cx="680" cy="170" r="6"/>
+    <text class="d-label sm" x="24" y="202">5 Code Simplifier</text>
+    <circle class="d-node c" cx="530" cy="198" r="6"/>
+    <text class="d-label sm" x="24" y="230">6 Playwright</text>
+    <circle class="d-node d" cx="680" cy="226" r="6"/>
+    <text class="d-label sm" x="24" y="258">7 GitHub</text>
+    <circle class="d-node d" cx="680" cy="254" r="6"/>
+    <text class="d-label sm" x="24" y="286">8 CLAUDE.md Management</text>
+    <circle class="d-node" cx="370" cy="282" r="6"/>
+    <circle class="d-node b" cx="450" cy="282" r="6"/>
+    <text class="d-label sm" x="24" y="314">9 Feature Dev</text>
+    <circle class="d-node b" cx="450" cy="310" r="6"/>
+    <circle class="d-node c" cx="530" cy="310" r="6"/>
+    <text class="d-sub" x="548" y="314">×3</text>
+    <text class="d-label sm" x="24" y="342">10 Security Guidance</text>
+    <circle class="d-node b" cx="610" cy="338" r="6"/>
+    <text class="d-label sm" x="24" y="370">13 Ralph Loop</text>
+    <circle class="d-node b" cx="450" cy="366" r="6"/>
+    <circle class="d-node b" cx="610" cy="366" r="6"/>
+</svg>
+</div>
+
+<h3>설치 순위</h3>
+<p>공식 디렉터리 페이지가 보여 주는 플러그인별 누적 설치 수다(2026-10-23 KST 기준). 막대는 1위 대비 비율이다.</p>
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>플러그인</th><th>만든 곳</th><th>설치 수</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Frontend Design</strong></td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>1,134,112</strong></td></tr>
+        <tr><td><strong>Superpowers</strong></td><td>obra/superpowers</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:89%"></span></span><strong>1,009,371</strong></td></tr>
+        <tr><td>Code Review</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:39%"></span></span>438,525</td></tr>
+        <tr><td>Context7</td><td>Upstash</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:37%"></span></span>417,801</td></tr>
+        <tr><td>Code Simplifier</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:31%"></span></span>346,763</td></tr>
+        <tr><td>Playwright</td><td>Microsoft</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:28%"></span></span>319,887</td></tr>
+        <tr><td>GitHub</td><td>GitHub</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:28%"></span></span>319,381</td></tr>
+        <tr><td>CLAUDE.md Management</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:25%"></span></span>287,247</td></tr>
+        <tr><td>Feature Dev</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:23%"></span></span>256,017</td></tr>
+        <tr><td>Security Guidance</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:21%"></span></span>241,800</td></tr>
+        <tr><td>Vercel</td><td>Vercel</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:20%"></span></span>227,688</td></tr>
+        <tr><td>TypeScript LSP</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:19%"></span></span>212,522</td></tr>
+        <tr><td>Ralph Loop</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:17%"></span></span>196,527</td></tr>
+        <tr><td>Claude Code Setup</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:17%"></span></span>195,067</td></tr>
+        <tr><td>Commit Commands</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:15%"></span></span>171,244</td></tr>
+    </tbody>
+</table>
+</div>
+<p>1·2위는 플러그인이지만 속은 스킬이라 <a href="#!sks-popular-2026h2">2026년 하반기 인기 스킬</a>에서 자세히 다뤘다. 여기서는 3위부터 살핀다. 13위 Ralph Loop는 이 위키가 <a href="#!omc-modes">OMC의 ralph 모드</a>로 다룬 기법을 플러그인 하나로 만든 것이라 함께 넣었다.</p>
+
+<h3>3. Code Review — 네 에이전트가 따로 보고, 확신 80 이상만 남긴다</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/code-review.webp" width="1440" height="624"
+         alt="anthropics/claude-plugins-official 저장소 plugins/code-review의 plugin.json(name: code-review, description: Automated code review for pull requests using multiple specialized agents with confidence-based scoring)과 설치 명령을 적은 카드">
+    <figcaption>Code Review의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official (Apache-2.0), 이 위키가 원문을 카드로 렌더</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> 풀 리퀘스트(PR) 브랜치에서 <code>/code-review</code>를 부르면, 먼저 리뷰할 필요가 있는지 본다. 닫혔거나 초안이거나 사소하거나 이미 리뷰한 PR은 건너뛴다. 그다음 저장소의 <code>CLAUDE.md</code> 지침을 모으고 변경을 요약한 뒤, 에이전트 넷을 동시에 띄운다. 둘은 <code>CLAUDE.md</code> 준수를, 하나는 바뀐 코드 속 버그를, 하나는 git 이력(blame)으로 맥락상 문제를 본다. 찾은 문제마다 0~100의 신뢰도를 매기고 80 미만은 버린다.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 312" role="img" aria-label="Code Review 흐름: PR 브랜치에서 /code-review 실행, 리뷰할 PR인지 판단(닫힘·초안·사소함 제외), CLAUDE.md 수집과 변경 요약, 에이전트 넷이 동시에 검토(CLAUDE.md 준수 둘, 변경 속 버그, git 이력), 문제마다 신뢰도 0~100 채점, 80 미만 버림, PR에 코멘트">
+    <text class="d-label" x="360" y="22" text-anchor="middle">/code-review — 넓게 찾고, 좁게 남긴다</text>
+    <rect class="d-box soft" x="12" y="40" width="190" height="56" rx="10"/>
+    <text class="d-label sm" x="107" y="63" text-anchor="middle">/code-review</text>
+    <text class="d-sub" x="107" y="83" text-anchor="middle">PR 브랜치에서 실행</text>
+    <line class="d-edge" x1="107" y1="96" x2="107" y2="110"/>
+    <polygon class="d-arrow" points="103,108 107,115 111,108"/>
+    <rect class="d-box" x="12" y="116" width="190" height="56" rx="10"/>
+    <text class="d-label sm" x="107" y="139" text-anchor="middle">리뷰할 PR인가</text>
+    <text class="d-sub" x="107" y="159" text-anchor="middle">닫힘·초안·사소함 제외</text>
+    <line class="d-edge" x1="107" y1="172" x2="107" y2="186"/>
+    <polygon class="d-arrow" points="103,184 107,191 111,184"/>
+    <rect class="d-box" x="12" y="192" width="190" height="56" rx="10"/>
+    <text class="d-label sm" x="107" y="215" text-anchor="middle">CLAUDE.md 수집</text>
+    <text class="d-sub" x="107" y="235" text-anchor="middle">변경 내용 요약</text>
+    <line class="d-edge" x1="202" y1="220" x2="244" y2="62"/>
+    <line class="d-edge" x1="202" y1="220" x2="244" y2="120"/>
+    <line class="d-edge" x1="202" y1="220" x2="244" y2="178"/>
+    <line class="d-edge" x1="202" y1="220" x2="244" y2="236"/>
+    <rect class="d-box accent" x="244" y="40" width="200" height="44" rx="10"/>
+    <text class="d-label sm" x="344" y="66" text-anchor="middle">① CLAUDE.md 준수</text>
+    <rect class="d-box accent" x="244" y="98" width="200" height="44" rx="10"/>
+    <text class="d-label sm" x="344" y="124" text-anchor="middle">② CLAUDE.md 준수</text>
+    <rect class="d-box accent" x="244" y="156" width="200" height="44" rx="10"/>
+    <text class="d-label sm" x="344" y="182" text-anchor="middle">③ 변경 속 버그</text>
+    <rect class="d-box accent" x="244" y="214" width="200" height="44" rx="10"/>
+    <text class="d-label sm" x="344" y="240" text-anchor="middle">④ git 이력·blame</text>
+    <line class="d-edge" x1="444" y1="62" x2="490" y2="98"/>
+    <line class="d-edge" x1="444" y1="120" x2="490" y2="98"/>
+    <line class="d-edge" x1="444" y1="178" x2="490" y2="98"/>
+    <line class="d-edge" x1="444" y1="236" x2="490" y2="98"/>
+    <rect class="d-box" x="490" y="70" width="218" height="56" rx="10"/>
+    <text class="d-label sm" x="599" y="93" text-anchor="middle">신뢰도 0~100 채점</text>
+    <text class="d-sub" x="599" y="113" text-anchor="middle">찾은 문제마다</text>
+    <line class="d-edge" x1="599" y1="126" x2="599" y2="140"/>
+    <polygon class="d-arrow" points="595,138 599,145 603,138"/>
+    <rect class="d-box accent" x="490" y="146" width="218" height="56" rx="10"/>
+    <text class="d-label sm" x="599" y="169" text-anchor="middle">80 미만은 버림</text>
+    <text class="d-sub" x="599" y="189" text-anchor="middle">오탐을 걸러 냄</text>
+    <line class="d-edge" x1="599" y1="202" x2="599" y2="216"/>
+    <polygon class="d-arrow" points="595,214 599,221 603,214"/>
+    <rect class="d-box soft" x="490" y="222" width="218" height="56" rx="10"/>
+    <text class="d-label sm" x="599" y="245" text-anchor="middle">PR에 코멘트</text>
+    <text class="d-sub" x="599" y="265" text-anchor="middle">전체 SHA·줄 범위 링크</text>
+    <text class="d-sub" x="360" y="302" text-anchor="middle">남길 문제가 없으면 코멘트도 남기지 않는다</text>
+</svg>
+</div>
+<pre><code>/plugin install code-review@claude-plugins-official
+
+# PR 브랜치에서
+/code-review
+## Code review
+Found 3 issues:
+1. Missing error handling for OAuth callback (CLAUDE.md says "Always handle OAuth errors")
+   https://github.com/owner/repo/blob/abc123…/src/auth.ts#L67-L72</code></pre>
+<p><strong>어디서 쓸모 있나.</strong> 리뷰 봇이 귀찮은 이유는 대개 오탐이다. 이 플러그인은 일부러 여러 시각으로 넓게 찾은 뒤, 확신이 낮은 것을 버려서 사람이 읽을 코멘트만 남긴다. 팀의 <code>CLAUDE.md</code>를 기준으로 삼으므로, 규칙을 잘 적어 둔 저장소일수록 리뷰가 날카로워진다.</p>
+
+<h3>4. Context7 — 최신 문서를 컨텍스트에 끌어온다</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/context7-cover.webp" width="1440" height="480"
+         alt="연두색 배경에 'Up-to-date docs for AI agents — Get the latest docs into Claude, Codex, Cursor and other agents'라고 적힌 Context7 표지 이미지">
+    <figcaption>Context7 표지 이미지 — 출처: upstash/context7 저장소 (MIT)</figcaption>
+</figure>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/context7.webp" width="1440" height="658"
+         alt="anthropics/claude-plugins-official 저장소 external_plugins/context7의 plugin.json(Upstash Context7 MCP server for up-to-date documentation lookup…)과 설치 명령을 적은 카드">
+    <figcaption>Context7의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official external_plugins/context7, 이 위키가 원문을 카드로 렌더</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> Upstash가 운영하는 원격 MCP 서버를 붙인다. 플러그인 안에는 서버 주소(<code>https://mcp.context7.com/mcp</code>) 한 줄만 있어 로컬에 Node.js를 깔 필요가 없다. 도구는 둘이다. <code>resolve-library-id</code>가 "next.js" 같은 이름을 Context7의 라이브러리 ID로 바꾸고, <code>query-docs</code>가 그 라이브러리의 해당 버전 문서와 코드 예시를 원본 저장소에서 가져온다.</p>
+<pre><code>/plugin install context7@claude-plugins-official
+
+"Next.js 16에서 proxy 설정은 어떻게 해? use context7"
+→ resolve-library-id("next.js") → query-docs(…, "proxy")
+→ 지금 버전 문서를 읽고 답함</code></pre>
+<p><strong>어디서 쓸모 있나.</strong> 모델은 학습 시점 이후 바뀐 API를 모른다. 빠르게 바뀌는 프레임워크를 쓸 때 옛 문법으로 코드를 짜는 일을 막는다. 질문 끝에 <code>use context7</code>을 붙이는 것이 원본 문서가 권하는 사용법이다.</p>
+
+<h3>5. Code Simplifier — 방금 고친 코드를 다듬는 에이전트</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/code-simplifier.webp" width="1440" height="624"
+         alt="anthropics/claude-plugins-official 저장소 plugins/code-simplifier의 plugin.json(Agent that simplifies and refines code for clarity, consistency, and maintainability while preserving functionality)과 설치 명령을 적은 카드">
+    <figcaption>Code Simplifier의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official (Apache-2.0), 이 위키가 원문을 카드로 렌더</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> 서브에이전트 하나(<code>code-simplifier</code>, Opus 지정)로 된 플러그인이다. 따로 지시하지 않으면 최근에 바뀐 코드만 본다. 첫 원칙은 동작을 바꾸지 않는 것이고, 그 안에서 중첩을 줄이고, 겹치는 코드와 쓸데없는 추상화를 걷어 내고, 이름을 분명히 한다. 짧은 코드보다 읽히는 코드를 고르라고 적혀 있고, 중첩 삼항 연산자는 금지한다. 기준은 프로젝트의 <code>CLAUDE.md</code>다.</p>
+<pre><code>/plugin install code-simplifier@claude-plugins-official
+
+"방금 작업한 파일들 정리해 줘"   ← code-simplifier 에이전트에 위임</code></pre>
+<p><strong>어디서 쓸모 있나.</strong> 에이전트가 기능을 빨리 붙이고 나면 코드가 덕지덕지해지기 쉽다. 커밋 전에 한 번 돌려 정리하는 용도다. 범위를 최근 변경으로 묶어 두어서 오래된 코드를 함부로 뒤집지 않는다.</p>
+
+<h3>6. Playwright — Microsoft의 브라우저 자동화 MCP</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/playwright.webp" width="1440" height="624"
+         alt="anthropics/claude-plugins-official 저장소 external_plugins/playwright의 plugin.json(Browser automation and end-to-end testing MCP server by Microsoft…)과 설치 명령을 적은 카드">
+    <figcaption>Playwright의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official external_plugins/playwright, 이 위키가 원문을 카드로 렌더</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> <code>npx @playwright/mcp@latest</code>로 로컬 MCP 서버를 띄워 Claude가 웹페이지를 열고, 누르고, 입력하고, 화면을 찍게 한다. 픽셀이 아니라 접근성 트리로 페이지를 읽어서, 화면을 보는 모델이 없어도 움직인다.</p>
+<pre><code>/plugin install playwright@claude-plugins-official
+
+"로그인 페이지에서 잘못된 비밀번호를 넣으면 어떤 오류가 뜨는지 확인해 줘"</code></pre>
+<p><strong>어디서 쓸모 있나.</strong> 끝에서 끝까지(E2E) 테스트와 화면 확인이다. 스킬 순위의 agent-browser와 하는 일이 겹친다. Microsoft 문서도 코딩 에이전트에게는 큰 도구 스키마와 긴 접근성 트리를 싣는 MCP보다 CLI와 스킬 조합이 토큰을 덜 쓴다고 적고, 별도의 Playwright CLI를 안내한다. 대화형으로 페이지를 살펴볼 때는 MCP가, 긴 코딩 세션 안에서는 CLI 쪽이 맞다.</p>
+
+<h3>7. GitHub — 저장소를 대화로 다룬다</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/github.webp" width="1440" height="624"
+         alt="anthropics/claude-plugins-official 저장소 external_plugins/github의 plugin.json(Official GitHub MCP server for repository management…)과 설치 명령을 적은 카드">
+    <figcaption>GitHub의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official external_plugins/github, 이 위키가 원문을 카드로 렌더</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> GitHub이 운영하는 원격 MCP 서버(<code>api.githubcopilot.com/mcp/</code>)를 붙인다. 이슈 만들기, PR 관리, 코드 리뷰, 저장소 검색처럼 GitHub API가 하는 일을 도구로 쓴다. 인증은 환경 변수 <code>GITHUB_PERSONAL_ACCESS_TOKEN</code>의 개인 접근 토큰으로 한다.</p>
+<pre><code>export GITHUB_PERSONAL_ACCESS_TOKEN=…   # 필요한 권한만 준 토큰
+/plugin install github@claude-plugins-official
+
+"지난주에 닫힌 이슈 중 버그 라벨 붙은 것만 정리해 줘"</code></pre>
+<p><strong>어디서 쓸모 있나.</strong> 터미널과 브라우저를 오가지 않고 이슈·PR 작업을 처리한다. 토큰의 권한이 곧 에이전트의 권한이므로, 쓰기 권한은 필요한 저장소에만 준다.</p>
+
+<h3>8. CLAUDE.md Management — 프로젝트 기억을 최신으로</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/claude-md-improver.webp" width="1440" height="797"
+         alt="CLAUDE.md Improver 실행 화면: 'check my claude md files to see if theyre up-to-date' 요청에 스킬이 발동해 CLAUDE.md 품질 보고서를 내고, 항목별 점수(명령·워크플로 18/20, 구조 명확성 17/20, 비자명한 패턴 12/15, 간결성 14/15, 최신성 8/15, 실행 가능성 9/15)와 최근 추가된 revenue 테이블이 빠졌다는 지적, 추천 추가 사항을 보여 준다">
+    <figcaption>claude-md-improver가 데이터베이스 변경으로 낡은 CLAUDE.md를 잡아내는 실행 화면 — 출처: anthropics/claude-plugins-official plugins/claude-md-management (Apache-2.0)</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> 두 도구가 들어 있다. 스킬 <code>claude-md-improver</code>는 저장소의 모든 <code>CLAUDE.md</code>를 찾아 지금 코드와 맞는지 채점한다. 위 화면처럼 명령·워크플로, 구조 설명, 비자명한 패턴, 간결성, 최신성, 실행 가능성을 따로 매기고 고칠 곳을 제안한다. 명령 <code>/revise-claude-md</code>는 세션을 마칠 때 이번 작업에서 배운 것을 <code>CLAUDE.md</code>에 적는다.</p>
+<pre><code>/plugin install claude-md-management@claude-plugins-official
+
+"내 CLAUDE.md가 최신인지 점검해 줘"   ← claude-md-improver 스킬 발동
+/revise-claude-md                     ← 세션에서 배운 것 기록</code></pre>
+<p><strong>어디서 쓸모 있나.</strong> <code>CLAUDE.md</code>는 코드가 바뀌면 조용히 낡는다. 이 위키도 같은 문제를 규칙과 검증기로 다룬다(<a href="#!claude-md-commandments">CLAUDE.md의 10계명</a>). 정기 점검은 스킬로, 세션 끝의 기록은 명령으로 나눈 설계가 실용적이다.</p>
+
+<h3>9. Feature Dev — 7단계로 기능을 만든다</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/feature-dev.webp" width="1440" height="624"
+         alt="anthropics/claude-plugins-official 저장소 plugins/feature-dev의 plugin.json(Comprehensive feature development workflow with specialized agents for codebase exploration, architecture design, and quality review)과 설치 명령을 적은 카드">
+    <figcaption>Feature Dev의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official (Apache-2.0), 이 위키가 원문을 카드로 렌더</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> <code>/feature-dev</code> 명령 하나가 일곱 단계를 이끈다. 에이전트 셋(<code>code-explorer</code>·<code>code-architect</code>·<code>code-reviewer</code>)이 단계마다 나뉘어 일한다.</p>
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>단계</th><th>하는 일</th></tr></thead>
+    <tbody>
+        <tr><td><strong>1 Discovery</strong></td><td>무엇을 왜 만드는지, 제약은 무엇인지 확인</td></tr>
+        <tr><td><strong>2 Codebase Exploration</strong></td><td>code-explorer 2~3개를 동시에 띄워 비슷한 기능·구조·UI 패턴 조사</td></tr>
+        <tr><td><strong>3 Clarifying Questions</strong></td><td>조사 뒤에 남은 모호한 점을 질문</td></tr>
+        <tr><td><strong>4 Architecture Design</strong></td><td>code-architect가 설계안 제시</td></tr>
+        <tr><td><strong>5 Implementation</strong></td><td>승인된 설계대로 구현</td></tr>
+        <tr><td><strong>6 Quality Review</strong></td><td>code-reviewer가 품질 검토</td></tr>
+        <tr><td><strong>7 Summary</strong></td><td>한 일과 남은 일 정리</td></tr>
+    </tbody>
+</table>
+</div>
+<pre><code>/plugin install feature-dev@claude-plugins-official
+/feature-dev OAuth로 사용자 인증 추가</code></pre>
+<p><strong>어디서 쓸모 있나.</strong> 낯선 코드베이스에 기능을 붙일 때 바로 코드부터 쓰는 실수를 막는다. 질문 단계가 탐색 <em>뒤</em>에 있다는 점이 핵심이다. 코드를 먼저 읽었기 때문에 쓸데없는 질문이 줄어든다.</p>
+
+<h3>10. Security Guidance — 세 번 거르는 보안 검사</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/security-guidance.webp" width="1440" height="658"
+         alt="anthropics/claude-plugins-official 저장소 plugins/security-guidance의 plugin.json(Security review for Claude-generated code. Pattern-based warnings on edits, LLM-powered diff review on Stop, and an agentic commit reviewer…)과 설치 명령을 적은 카드">
+    <figcaption>Security Guidance의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official (Apache-2.0), 이 위키가 원문을 카드로 렌더</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> 훅으로 도는 보안 검사다. Claude가 만든 코드를 세 시점에서 거른다. 가벼운 검사는 자주, 무거운 검사는 드물게 도는 구조다.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 246" role="img" aria-label="Security Guidance의 세 겹 검사: 파일을 고칠 때 정규식 패턴 경고(약 25종, yaml.load·innerHTML·비밀키), 턴이 끝날 때 최신 Opus가 diff를 검토해 심각한 것만 Claude에 되돌림, 커밋할 때 에이전트가 관련 파일을 따라 데이터 흐름을 추적(IDOR·인증 우회·SSRF)">
+    <text class="d-label" x="360" y="22" text-anchor="middle">가벼운 검사는 자주, 무거운 검사는 드물게</text>
+    <line class="d-edge accent" x1="40" y1="52" x2="672" y2="52"/>
+    <polygon class="d-arrow accent" points="670,47 680,52 670,57"/>
+    <text class="d-label sm" x="120" y="76" text-anchor="middle">파일을 고칠 때</text>
+    <text class="d-label sm" x="360" y="76" text-anchor="middle">턴이 끝날 때</text>
+    <text class="d-label sm" x="600" y="76" text-anchor="middle">커밋할 때</text>
+    <rect class="d-box soft" x="12" y="90" width="216" height="100" rx="12"/>
+    <text class="d-label" x="120" y="118" text-anchor="middle">① 패턴 경고</text>
+    <text class="d-sub" x="120" y="142" text-anchor="middle">정규식 약 25종</text>
+    <text class="d-sub" x="120" y="162" text-anchor="middle">yaml.load·innerHTML·비밀키</text>
+    <rect class="d-box" x="252" y="90" width="216" height="100" rx="12"/>
+    <text class="d-label" x="360" y="118" text-anchor="middle">② LLM 차이 리뷰</text>
+    <text class="d-sub" x="360" y="142" text-anchor="middle">최신 Opus가 diff를 검토</text>
+    <text class="d-sub" x="360" y="162" text-anchor="middle">심각한 것만 Claude에 되돌림</text>
+    <rect class="d-box accent" x="492" y="90" width="216" height="100" rx="12"/>
+    <text class="d-label" x="600" y="118" text-anchor="middle">③ 에이전트 커밋 리뷰</text>
+    <text class="d-sub" x="600" y="142" text-anchor="middle">관련 파일을 따라 데이터 흐름</text>
+    <text class="d-sub" x="600" y="162" text-anchor="middle">IDOR·인증 우회·SSRF</text>
+    <text class="d-sub" x="360" y="222" text-anchor="middle">패턴 매칭이 놓치는 여러 파일에 걸친 취약점은 커밋 리뷰가 잡는다</text>
+</svg>
+</div>
+<pre><code>/plugin install security-guidance@claude-plugins-official
+# 필요: Claude Code 2.1.144 이상, Python 3.8 이상
+# 설정은 모두 환경 변수(선택). 기본값으로 바로 동작</code></pre>
+<p><strong>어디서 쓸모 있나.</strong> 사람이 리뷰하기 전에 Claude가 스스로 고치게 만드는 데 있다. 두 번째 층은 턴이 끝날 때 diff를 검토해 심각한 문제를 Claude에게 돌려주므로, 사용자가 답을 보기 전에 수정이 끝난다. 명령이 없으니 설치만 해 두면 된다.</p>
+
+<h3>13. Ralph Loop — 끝날 때까지 같은 프롬프트를 다시</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/ralph-loop.webp" width="1440" height="624"
+         alt="anthropics/claude-plugins-official 저장소 plugins/ralph-loop의 plugin.json(Continuous self-referential AI loops for interactive iterative development, implementing the Ralph Wiggum technique…)과 설치 명령을 적은 카드">
+    <figcaption>Ralph Loop의 plugin.json과 설치 명령 — 출처: anthropics/claude-plugins-official (Apache-2.0), 이 위키가 원문을 카드로 렌더</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> 개발자 Geoffrey Huntley가 &ldquo;Ralph는 Bash 루프다&rdquo;라고 설명한 기법을 Claude Code 세션 안에서 구현했다. 바깥에 셸 루프를 두는 대신 <strong>Stop 훅</strong>이 Claude의 종료 시도를 막고 같은 프롬프트를 다시 넣는다. 프롬프트는 그대로지만 이전 작업은 파일과 git 이력에 남으므로, Claude는 매번 자기가 남긴 결과를 읽고 이어 간다.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 224" role="img" aria-label="Ralph Loop 구조: /ralph-loop로 작업과 완료 문구를 지정하면 Claude가 작업하고(파일·git에 흔적이 남음), 끝내려 할 때 Stop 훅이 막고 같은 프롬프트를 다시 넣어 작업으로 돌아간다. 완료 문구를 출력하거나 최대 반복에 닿으면 끝난다">
+    <text class="d-label" x="360" y="22" text-anchor="middle">Stop 훅이 문을 막고 같은 프롬프트를 다시 넣는다</text>
+    <rect class="d-box soft" x="14" y="44" width="160" height="62" rx="10"/>
+    <text class="d-label sm" x="94" y="70" text-anchor="middle">/ralph-loop</text>
+    <text class="d-sub" x="94" y="90" text-anchor="middle">작업·완료 문구 지정</text>
+    <line class="d-edge" x1="174" y1="75" x2="194" y2="75"/>
+    <polygon class="d-arrow" points="192,71 200,75 192,79"/>
+    <rect class="d-box accent" x="200" y="44" width="160" height="62" rx="10"/>
+    <text class="d-label sm" x="280" y="70" text-anchor="middle">작업</text>
+    <text class="d-sub" x="280" y="90" text-anchor="middle">파일·git에 흔적이 남음</text>
+    <line class="d-edge" x1="360" y1="75" x2="380" y2="75"/>
+    <polygon class="d-arrow" points="378,71 386,75 378,79"/>
+    <rect class="d-box" x="386" y="44" width="150" height="62" rx="10"/>
+    <text class="d-label sm" x="461" y="70" text-anchor="middle">끝내려 함</text>
+    <text class="d-sub" x="461" y="90" text-anchor="middle">턴 종료 시도</text>
+    <line class="d-edge" x1="536" y1="75" x2="556" y2="75"/>
+    <polygon class="d-arrow" points="554,71 562,75 554,79"/>
+    <rect class="d-box" x="562" y="44" width="146" height="62" rx="10"/>
+    <text class="d-label sm" x="635" y="70" text-anchor="middle">Stop 훅</text>
+    <text class="d-sub" x="635" y="90" text-anchor="middle">같은 프롬프트를 다시</text>
+    <path class="d-edge dash" d="M635,106 L635,134 L280,134 L280,112"/>
+    <polygon class="d-arrow" points="276,114 280,107 284,114"/>
+    <rect class="d-box accent" x="386" y="156" width="322" height="50" rx="10"/>
+    <text class="d-label sm" x="547" y="178" text-anchor="middle">완료 문구 출력 · 최대 반복 도달</text>
+    <text class="d-sub" x="547" y="196" text-anchor="middle">이때만 루프가 끝난다</text>
+    <line class="d-edge dash" x1="461" y1="106" x2="461" y2="156"/>
+</svg>
+</div>
+<pre><code>/plugin install ralph-loop@claude-plugins-official
+
+/ralph-loop "할 일 REST API를 만들어라. CRUD·입력 검증·테스트 포함.
+끝나면 &lt;promise&gt;COMPLETE&lt;/promise&gt;를 출력" --completion-promise "COMPLETE" --max-iterations 50
+/cancel-ralph   # 중간에 멈추기</code></pre>
+<p><strong>어디서 쓸모 있나.</strong> 테스트 통과처럼 끝이 분명한 일을 밤새 맡길 때다. 반대로 끝 조건이 흐린 일은 반복만 늘린다. <code>--max-iterations</code>로 상한을 꼭 둔다.</p>
+
+<h3>고를 때 볼 것</h3>
+<ul>
+    <li><strong>부품을 먼저 본다.</strong> 훅이 든 플러그인(Security Guidance·Ralph Loop)은 설치만 해도 매 턴 동작한다. 명령만 든 플러그인은 부를 때만 돈다.</li>
+    <li><strong>MCP 플러그인은 권한이 바깥으로 이어진다.</strong> GitHub처럼 토큰을 쓰는 플러그인은 토큰의 권한이 곧 에이전트의 권한이다.</li>
+    <li><strong>같은 일을 하는 스킬과 비교한다.</strong> 브라우저 자동화는 Playwright 플러그인과 agent-browser 스킬이 겹친다. 1·2위가 사실상 스킬이고, Microsoft 문서도 코딩 에이전트에게는 CLI와 스킬이 토큰을 덜 쓴다고 적었다. 긴 작업 세션이라면 가벼운 쪽부터 본다.</li>
+</ul>
+
+<h3>사실검증 노트</h3>
+<p class="scn-sub">설치 수와 만든 곳, 디렉터리의 플러그인 수(271개)는 2026-10-23(KST) <a href="https://claude.com/plugins" target="_blank" rel="noopener">claude.com/plugins</a> 페이지에 실린 데이터를 직접 읽었다. 숫자는 매일 바뀌는 누적값이다. 각 플러그인의 구성(스킬·명령·에이전트·훅·MCP)과 동작·명령은 Anthropic의 공식 마켓플레이스 저장소 <code>anthropics/claude-plugins-official</code>을 내려받아 <code>plugin.json</code>·README·명령·에이전트·훅 파일을 직접 읽어 정리했고, Context7은 <code>upstash/context7</code>, Playwright는 <code>microsoft/playwright-mcp</code>의 README를 함께 읽었다. Code Review의 에이전트 넷과 신뢰도 80 기준, Security Guidance의 세 층과 요구 버전, Feature Dev의 일곱 단계, Ralph Loop의 Stop 훅 구조는 해당 README의 설명이다. 카드 이미지는 원본 <code>plugin.json</code>의 이름과 설명을 바꾸지 않고 이 위키가 렌더한 것이며(긴 설명은 &hellip;로 줄임), Context7 표지와 CLAUDE.md Improver 실행 화면은 각 저장소에 커밋된 파일을 라이선스에 따라 실었다. Ralph 기법의 이름을 붙인 개발자는 플러그인 README가 인용한 개념 제안자라 이름을 적었고, 그 밖의 저장소 작성자 개인의 이름은 적지 않았다.</p>

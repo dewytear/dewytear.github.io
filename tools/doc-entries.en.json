@@ -403,6 +403,21 @@
   "summary": "A feel for token and model-rate costs and parallelization, closing the series with the full command table and quick-reference card"
  },
  {
+  "name": "plc-popular-2026h2",
+  "title": "Popular Plugins of H2 2026 — The Top of the Official Directory, and How to Use Them",
+  "summary": "The most-installed plugins in the official Claude plugin directory (271 plugins) on October 23, 2026, checked against the plugin.json, README, command, agent and hook files in their source repositories such as anthropics/claude-plugins-official, and laid out with source cards, a real run screen, four diagrams and three tables. Ten of the top fifteen were made by Anthropic; the rest are Superpowers and MCP plugins (Context7, Playwright, GitHub, Vercel). A plugin bundles skills, commands, agents, hooks and MCP, so which parts it uses decides how you use it (a composition map). Covered: Code Review (four agents check CLAUDE.md compliance, bugs and git history separately, and findings under confidence 80 are dropped), Context7 (current-version docs through a remote MCP's resolve-library-id and query-docs; 'use context7'), Code Simplifier (an Opus agent that tidies only recent changes while preserving behavior), Playwright (an accessibility-tree MCP; Microsoft says CLI plus skills uses fewer tokens for coding agents), GitHub (a remote MCP whose token permissions are the agent's permissions), CLAUDE.md Management (claude-md-improver scoring and /revise-claude-md), Feature Dev (seven phases with questions after exploration, three agents), Security Guidance (three layers: pattern warnings on edit, LLM diff review at turn end, agentic review on commit) and Ralph Loop (a Stop hook that feeds the same prompt back until a completion phrase or max iterations); the top two are handed to the skills article",
+  "relations": [
+   {
+    "target": "sks-popular-2026h2",
+    "evidenceRef": "The ranking section hands the top two (Frontend Design, Superpowers), which are skills inside, to that article and starts from third place"
+   },
+   {
+    "target": "skills",
+    "evidenceRef": "The introduction glosses skills, commands, subagents, hooks and MCP servers in one line each, leaves their definitions to that document, and moves on to which parts the top plugins are made of"
+   }
+  ]
+ },
+ {
   "name": "dzp-overview",
   "title": "Proposal Overview — Why Now, What",
   "summary": "The overview and problem statement of the GitLab-based AI dev-knowledge platform proposal — why scattered, vanishing dev knowledge needs capturing now",
@@ -715,6 +730,25 @@
     "type": "prerequisite",
     "evidenceRef": "The article skips what a skill physically is and how it triggers, covering only folder merging and invocation — it delegates the question of what a skill is to that document",
     "source": "human"
+   }
+  ]
+ },
+ {
+  "name": "sks-popular-2026h2",
+  "title": "Popular Skills of H2 2026 — The Top Seven by Installs, and How to Use Them",
+  "summary": "Seven top skills picked from skills.sh all-time installs on October 22, 2026 (open dataset LinklyAI best-skills) and official Claude plugin directory installs on October 23, each summarized from its repository's original SKILL.md with source cards, four diagrams and three tables. The three counters (skills.sh, the official directory, ClawHub/SkillHub) use different units, so frontend-design reads 1.02M on one and 1.13M on the other, and skills.sh counts per repository, letting mattpocock/skills fill five of the top ten. Covered: find-skills (3.98M; search, vet by installs, source and stars, install), grill-me (1.41M; a seven-line skill that calls grilling, asking the decision tree's frontier each round with recommended answers while subagents look up facts; grill-with-docs adds a glossary and ADRs), agent-browser (top composite score; a Rust CLI that reads 200–400 tokens of @eN refs from accessibility-tree snapshots), hyperframes (video rendered frame by frame from HTML; top seven-day growth), frontend-design (first in the official directory; bans the common tells of generic AI design), Superpowers (second; a 15-skill, seven-stage self-triggering development method) and vercel-react-best-practices (70 rules ranked by impact), grouped into five kinds (finding, asking, hands, taste/rules, method), with notes that installs measure popularity, not security, and that self-triggering is worth checking",
+  "relations": [
+   {
+    "target": "skl-overview",
+    "evidenceRef": "The grill-me section points to a seven-line SKILL.md that calls another skill (grilling) as an example of that document's description of a skill as 'a reusable unit made of one markdown file'"
+   },
+   {
+    "target": "skl-context",
+    "evidenceRef": "The introduction states in one line that the frontmatter description decides when a skill is pulled in, leaves the mechanics to that document, and moves on to rankings and usage"
+   },
+   {
+    "target": "skl-install",
+    "evidenceRef": "The 'What to check' section only notes that skills run with the agent's permissions and leaves how to check what a skill runs and where it connects to that document"
    }
   ]
  },

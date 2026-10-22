@@ -888,6 +888,36 @@
   ]
  },
  {
+  "name": "plc-popular-2026h2",
+  "title": "2026년 하반기 인기 플러그인 — 공식 디렉터리 상위권과 쓰는 법",
+  "summary": "2026년 10월 23일 공식 Claude 플러그인 디렉터리(271개)의 설치 수 상위권을 anthropics/claude-plugins-official 등 원본 저장소의 plugin.json·README·명령·에이전트·훅 파일로 확인해 원문 카드 이미지·실행 화면·도식 4개·표 3개로 정리 — 상위 15개 중 10개가 Anthropic 제작이고 나머지는 Superpowers와 MCP 플러그인(Context7·Playwright·GitHub·Vercel). 플러그인은 스킬·명령·에이전트·훅·MCP의 묶음이라 어느 부품이냐가 쓰는 법을 정한다(구성 지도). Code Review(에이전트 넷이 CLAUDE.md 준수·버그·git 이력을 따로 보고 신뢰도 80 미만은 버림), Context7(원격 MCP의 resolve-library-id·query-docs로 현재 버전 문서, use context7), Code Simplifier(최근 변경만 동작 보존하며 다듬는 Opus 에이전트), Playwright(접근성 트리 기반 MCP, Microsoft도 코딩 에이전트엔 CLI+스킬이 토큰을 덜 쓴다고 함), GitHub(원격 MCP, 토큰 권한이 곧 에이전트 권한), CLAUDE.md Management(claude-md-improver 채점과 /revise-claude-md), Feature Dev(탐색 뒤 질문하는 7단계·에이전트 셋), Security Guidance(편집 시 패턴 경고·턴 끝 LLM diff 리뷰·커밋 시 에이전트 리뷰의 세 층), Ralph Loop(Stop 훅이 같은 프롬프트를 다시 넣는 루프, 완료 문구·최대 반복)를 다루고, 1·2위는 스킬 문서로 넘긴다",
+  "concepts": [
+   "플러그인",
+   "마켓플레이스",
+   "MCP",
+   "서브에이전트",
+   "훅",
+   "슬래시명령어",
+   "코드리뷰",
+   "CLAUDE.md",
+   "랄프"
+  ],
+  "relations": [
+   {
+    "target": "sks-popular-2026h2",
+    "type": "prerequisite",
+    "evidenceRef": "순위 절이 1·2위(Frontend Design·Superpowers)는 속이 스킬이라 그 문서에서 자세히 다뤘다고 넘기고 3위부터 살핀다",
+    "source": "human"
+   },
+   {
+    "target": "skills",
+    "type": "prerequisite",
+    "evidenceRef": "도입부가 스킬·명령·서브에이전트·훅·MCP 서버를 한 줄씩만 풀이하고 각 부품의 정의는 그 문서에 맡긴 채, 상위 플러그인이 어느 부품으로 만들어졌는지로 넘어간다",
+    "source": "human"
+   }
+  ]
+ },
+ {
   "name": "dzp-overview",
   "title": "제안 개요 — 왜 지금, 무엇을",
   "summary": "GitLab 기반 AI 개발 지식 플랫폼 제안의 개요와 문제의식 — 흩어지고 사라지는 개발 지식을 왜 지금 지식화해야 하는가",
@@ -1543,6 +1573,42 @@
     "target": "skl-overview",
     "type": "prerequisite",
     "evidenceRef": "본문이 스킬의 실체·발동 원리 설명을 생략하고 폴더 병합·호출만 다룬다 — 스킬이 무엇인지는 그 문서에 위임한다",
+    "source": "human"
+   }
+  ]
+ },
+ {
+  "name": "sks-popular-2026h2",
+  "title": "2026년 하반기 인기 스킬 — 설치 순위 상위 7개와 쓰는 법",
+  "summary": "2026년 10월 22일 skills.sh 누적 설치(오픈 데이터 LinklyAI best-skills)와 10월 23일 공식 Claude 플러그인 디렉터리 설치 수를 근거로 상위 스킬 일곱을 골라, 각 저장소의 SKILL.md 원문을 직접 읽고 원문 카드 이미지·도식 4개·표 3개로 정리 — 세 계수기(skills.sh·공식 디렉터리·ClawHub/SkillHub)는 단위가 달라 같은 frontend-design도 101만·113만으로 다르고, skills.sh는 저장소 단위로 세서 mattpocock/skills가 상위 10에 다섯 칸을 차지한다. find-skills(398만, 검색→설치 수·출처·별로 검증→설치), grill-me(141만, 7줄짜리가 grilling을 부르는 구성·결정 나무의 프런티어를 라운드마다 추천 답과 함께 묻고 사실은 서브에이전트가 찾음, grill-with-docs는 용어집·ADR), agent-browser(종합 점수 1위, 접근성 트리 스냅숏의 @eN 참조로 200~400토큰만 읽는 Rust CLI), hyperframes(HTML을 프레임 단위로 렌더하는 영상, 7일 성장 1위), frontend-design(공식 디렉터리 1위, 뻔한 AI 디자인의 흔한 티를 금지), Superpowers(공식 2위, 스킬 15개·7단계 자동 발동 개발 방법론), vercel-react-best-practices(규칙 70개를 영향도 순으로)를 다섯 유형(찾기·묻기·손발·취향/규칙·방법론)으로 나누고, 설치 수는 인기일 뿐 보안 검사가 아니라는 점과 자동 발동 여부를 고를 때 볼 것으로 짚는다",
+  "concepts": [
+   "스킬",
+   "마켓플레이스",
+   "스킬설치",
+   "자동발동",
+   "디스크립션",
+   "딥인터뷰",
+   "서브에이전트",
+   "테스트",
+   "코드리뷰"
+  ],
+  "relations": [
+   {
+    "target": "skl-overview",
+    "type": "example-of",
+    "evidenceRef": "grill-me 절이 일곱 줄짜리 SKILL.md가 다른 스킬(grilling)을 부르는 구성을 들어, 스킬이 '마크다운 한 장으로 된 재사용 단위'라는 그 문서의 설명이 실제로 어떻게 쓰이는지 보여 주는 사례로 놓는다",
+    "source": "human"
+   },
+   {
+    "target": "skl-context",
+    "type": "prerequisite",
+    "evidenceRef": "도입부가 머리말의 description이 스킬을 언제 꺼낼지 정한다는 원리만 한 줄로 말하고 자세한 동작은 그 문서에 맡긴 채 순위와 쓰는 법으로 넘어간다",
+    "source": "human"
+   },
+   {
+    "target": "skl-install",
+    "type": "prerequisite",
+    "evidenceRef": "'고를 때 볼 것' 절이 스킬은 에이전트의 권한으로 돈다는 점만 짚고, 무엇을 실행하고 어디에 접속하는지 확인하는 방법은 그 문서에 맡긴다",
     "source": "human"
    }
   ]

@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 
-이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 75개 문서 · 319개 개념.
+이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 77개 문서 · 319개 개념.
 
 License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 밝히면 자유롭게 인용·재사용할 수 있다.
 
@@ -12,8 +12,8 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - 정적 스냅샷 `https://dewytear.github.io/p/<name>/`(English는 `https://dewytear.github.io/p/en/<name>/`, 日本語는 `https://dewytear.github.io/p/ja/<name>/`): JS 없이 읽히는 문서 페이지 — 그래프 노드의 `page` 필드가 같은 주소를 가리킨다.
 - [AI 순회 가이드](https://dewytear.github.io/docs/ko/ai/map/ai-guide): 그래프를 어떻게 질의·순회·분석하는지의 계약(노드·엣지·개념 조인·계층).
 - [지식 인덱스](https://dewytear.github.io/data/knowledge-index.ko.json) · [내비 트리](https://dewytear.github.io/list) · [문서 날짜](https://dewytear.github.io/data/doc-dates.json) · [Atom 피드](https://dewytear.github.io/feed.xml)
-- English: 75/75개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
-- 日本語: 75/75개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
+- English: 77/77개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
+- 日本語: 77/77개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
 
 ## 지식 체계 (AI · Wiki · 지식 체계)
 - [지식은 어떻게 쌓이는가](https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-overview): World→Domain→System→Document 4계층과 문서 등재 파이프라인 — 불변 ID·물리 경로·결정론적 인덱스 빌드 · [EN](https://dewytear.github.io/docs/en/ai/wiki/knowledge-system/kgs-overview) · [JA](https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-overview)
@@ -77,9 +77,13 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [고급 활용 — 도구·워크플로우·Windows](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-tools): LSP·AST 그렙·파이썬 REPL 같은 고급 도구, 시나리오별 워크플로우, 그리고 Windows(WSL2·psmux) 주의점 · [EN](https://dewytear.github.io/docs/en/ai/claude/plugin/omc/omc-tools) · [JA](https://dewytear.github.io/docs/ja/ai/claude/plugin/omc/omc-tools)
 - [비용·성능과 명령어 참조](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-cost): 토큰·모델 단가와 병렬화의 비용 감각, 그리고 전체 명령어 표와 빠른 참조 카드로 시리즈 마무리 · [EN](https://dewytear.github.io/docs/en/ai/claude/plugin/omc/omc-cost) · [JA](https://dewytear.github.io/docs/ja/ai/claude/plugin/omc/omc-cost)
 
+## 플러그인 카탈로그 (AI · Claude · PlugIn · 플러그인 카탈로그)
+- [2026년 하반기 인기 플러그인 — 공식 디렉터리 상위권과 쓰는 법](https://dewytear.github.io/docs/ko/ai/claude/plugin/catalog/plc-popular-2026h2): 2026년 10월 23일 공식 Claude 플러그인 디렉터리(271개)의 설치 수 상위권을 anthropics/claude-plugins-official 등 원본 저장소의 plugin.json·README·명령·에이전트·훅 파일로 확인해 원문 카드 이미지·실행 화면·도식 4개·표 3개로 정리 — 상위 15개 중 10개가 Anthropic 제작이고 나머지는 Superpowers와 MCP 플러그인(Context7·Playwright·GitHub·Vercel). 플러그인은 스킬·명령·에이전트·훅·MCP의 묶음이라 어느 부품이냐가 쓰는 법을 정한다(구성 지도). Code Review(에이전트 넷이 CLAUDE.md 준수·버그·git 이력을 따로 보고 신뢰도 80 미만은 버림), Context7(원격 MCP의 resolve-library-id·query-docs로 현재 버전 문서, use context7), Code Simplifier(최근 변경만 동작 보존하며 다듬는 Opus 에이전트), Playwright(접근성 트리 기반 MCP, Microsoft도 코딩 에이전트엔 CLI+스킬이 토큰을 덜 쓴다고 함), GitHub(원격 MCP, 토큰 권한이 곧 에이전트 권한), CLAUDE.md Management(claude-md-improver 채점과 /revise-claude-md), Feature Dev(탐색 뒤 질문하는 7단계·에이전트 셋), Security Guidance(편집 시 패턴 경고·턴 끝 LLM diff 리뷰·커밋 시 에이전트 리뷰의 세 층), Ralph Loop(Stop 훅이 같은 프롬프트를 다시 넣는 루프, 완료 문구·최대 반복)를 다루고, 1·2위는 스킬 문서로 넘긴다 · [EN](https://dewytear.github.io/docs/en/ai/claude/plugin/catalog/plc-popular-2026h2) · [JA](https://dewytear.github.io/docs/ja/ai/claude/plugin/catalog/plc-popular-2026h2)
+
 ## 스킬 카탈로그 (AI · Claude · 스킬 카탈로그)
 - [im-not-ai(Humanize KR) — AI 티를 지우는 편집 스킬](https://dewytear.github.io/docs/ko/ai/claude/skills/sks-im-not-ai): AI가 쓴 글의 티는 문법이 아니라 버릇에서 난다 — 의의 부풀리기·아포리즘 공식·시그널포스팅·가짜 솔직 어투·기계적 3항·막연 귀속 같은 흔적 33종을 찾아 지우는 편집 스킬 im-not-ai의 소개. 본체는 blader의 humanizer(MIT) 원문 그대로이고 뿌리는 위키백과 "Signs of AI writing"이다. 목록만큼 중요한 오탐 방지 반쪽(티의 군집으로 판단·사람 글 신호 보존·저자 표본 우선·사실 불변·장르 존중), 초안→두 질문 감사→최종본의 동작 원리, 설치·호출 방법, 그리고 이 위키가 인덱스 문서 121편×3언어를 전부 통과시킨 실전 기록 — 수정은 22문장에 그쳤고 문체 감사가 사실 오류(7→9 뷰, 표 합산 등)까지 잡았다 — 를 담았다 · [EN](https://dewytear.github.io/docs/en/ai/claude/skills/sks-im-not-ai) · [JA](https://dewytear.github.io/docs/ja/ai/claude/skills/sks-im-not-ai)
 - [dews-sourcegraph — 사내 코드 검색을 Claude에게 넘기는 스킬](https://dewytear.github.io/docs/ko/ai/claude/skills/sks-dews-sourcegraph): 사내 SourceGraph 인스턴스를 Claude Code가 직접 질의하게 만드는 스킬. 비공개 인스턴스는 익명 접근이 401로 막혀 일반 웹 조회 도구로는 아무것도 못 읽는데, 이 스킬은 설치된 Edge·Chrome으로 폼 로그인을 1회 자동 수행하고 세션을 캐시해 재사용한다 — 개발자도구로 쿠키를 복사하는 절차가 없다. 캐시 브라우저를 쓰지 않는 이유(보안 에이전트가 ms-playwright 실행 파일을 차단하는 사내 PC에서 멈춤), 프로젝트 루트에 .claude 병합 + SourceGraph.md 세 줄 + npm install 로 끝나는 설치, Sourcegraph 표준 쿼리 문법, 그리고 로컬 우선 원칙과 [SG repo/파일:라인] 인용 규약을 담았다. 자격증명·세션 캐시 커밋 금지와 로그인 실패 시 재시도 금지(계정 잠금)를 함께 못 박았고, 조직 정보를 제거한 일반화 zip을 받을 수 있다 · [EN](https://dewytear.github.io/docs/en/ai/claude/skills/sks-dews-sourcegraph) · [JA](https://dewytear.github.io/docs/ja/ai/claude/skills/sks-dews-sourcegraph)
+- [2026년 하반기 인기 스킬 — 설치 순위 상위 7개와 쓰는 법](https://dewytear.github.io/docs/ko/ai/claude/skills/sks-popular-2026h2): 2026년 10월 22일 skills.sh 누적 설치(오픈 데이터 LinklyAI best-skills)와 10월 23일 공식 Claude 플러그인 디렉터리 설치 수를 근거로 상위 스킬 일곱을 골라, 각 저장소의 SKILL.md 원문을 직접 읽고 원문 카드 이미지·도식 4개·표 3개로 정리 — 세 계수기(skills.sh·공식 디렉터리·ClawHub/SkillHub)는 단위가 달라 같은 frontend-design도 101만·113만으로 다르고, skills.sh는 저장소 단위로 세서 mattpocock/skills가 상위 10에 다섯 칸을 차지한다. find-skills(398만, 검색→설치 수·출처·별로 검증→설치), grill-me(141만, 7줄짜리가 grilling을 부르는 구성·결정 나무의 프런티어를 라운드마다 추천 답과 함께 묻고 사실은 서브에이전트가 찾음, grill-with-docs는 용어집·ADR), agent-browser(종합 점수 1위, 접근성 트리 스냅숏의 @eN 참조로 200~400토큰만 읽는 Rust CLI), hyperframes(HTML을 프레임 단위로 렌더하는 영상, 7일 성장 1위), frontend-design(공식 디렉터리 1위, 뻔한 AI 디자인의 흔한 티를 금지), Superpowers(공식 2위, 스킬 15개·7단계 자동 발동 개발 방법론), vercel-react-best-practices(규칙 70개를 영향도 순으로)를 다섯 유형(찾기·묻기·손발·취향/규칙·방법론)으로 나누고, 설치 수는 인기일 뿐 보안 검사가 아니라는 점과 자동 발동 여부를 고를 때 볼 것으로 짚는다 · [EN](https://dewytear.github.io/docs/en/ai/claude/skills/sks-popular-2026h2) · [JA](https://dewytear.github.io/docs/ja/ai/claude/skills/sks-popular-2026h2)
 
 ## Tip (AI · Claude · Tip)
 - [초급 — 컨텍스트를 아끼는 습관 9가지](https://dewytear.github.io/docs/ko/ai/claude/tip/tip-beginner): Claude Code 입문 팁 9가지를 공식 문서와 대조해 정리 — /init으로 CLAUDE.md 생성, 스테이터스 라인, 컨텍스트 작게 유지, /context로 토큰 하마 찾기, /compact vs /clear, 플랜 모드(auto 기본값 시대의 의미), 문제로 묻기, 95% 되묻기 프롬프트, 투두 자가 점검 · [EN](https://dewytear.github.io/docs/en/ai/claude/tip/tip-beginner) · [JA](https://dewytear.github.io/docs/ja/ai/claude/tip/tip-beginner)
@@ -130,6 +134,7 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260901-whose-usage): 피참조 9회
 - [Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260724-claude-opus-5): 피참조 8회
 - [부를 수 있는 목록 — 하네스 167종 순위표를 받아서 뜯어봤다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260922-harness-catalog): 피참조 7회
+- [2026년 하반기 인기 플러그인 — 공식 디렉터리 상위권과 쓰는 법](https://dewytear.github.io/docs/ko/ai/claude/plugin/catalog/plc-popular-2026h2): 피참조 7회
 - [첫 실행과 동작 구조](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-first-run): 피참조 6회
 - [하네스란 — 개요·정의·구성](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-overview): 피참조 6회
 - [판정을 누구에게 맡길 것인가 — 8월의 네 장면](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260820-who-makes-the-call): 피참조 6회
