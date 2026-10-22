@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Duet を一望する — 先に話しかけるエージェントと三段の承認ゲート</title>
+<meta name="description" content="Anthropic が10月21日にリサーチプレビューとして公開した先回り型エージェントアプリ Claude Duet を、公式発表とヘルプ記事をもとに図3点・表4点で整理 — 朝のブリーフと数時間ごとの確認で先に話しかけ、自分の VM のブラウザで端末が切れていても動き(Opus 5.5 固定)、行動は三つの枠に分かれる:読む・下書きは自分で、送信・支払い・署名・削除は見せてから承認(待つ間に残りを進める)、証券取引・口座間の送金・他人のアカウント利用は承認されても不可。認証情報は Managed Agents と同じプロキシ設計でモデルに見えず、送るメッセージごとに機微情報の分類器(カード・身分証番号を遮断、健康・金融は明示指示時のみ)、行動ごとに auto mode 分類器、支払いは Link の使い捨て仮想カード。6,000 以上のコネクタでできる仕事と人が押す場面、Microsoft 365 未対応・Slack の制限、米国 Pro・Max のウェイトリスト、バックグラウンド確認まで5時間・週間上限から差し引く点(招待時に一回リセット)も扱う。Meta Muse(9/8)・OpenAI Dots(9/29)との比較では違いは承認の扉の位置(固定リスト対ユーザーのルール)とバックグラウンド費用の計算にあり、Claude Tag の「いつ出ていくか」の判定を一日全体に広げ、判定を分類器・スマートフォンの承認・禁止リストの三か所に分けて置いた例として読む">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/news-20261022-claude-duet/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20261022-claude-duet/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20261022-claude-duet/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/news-20261022-claude-duet/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20261022-claude-duet/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Claude Duet を一望する — 先に話しかけるエージェントと三段の承認ゲート">
+<meta property="og:description" content="Anthropic が10月21日にリサーチプレビューとして公開した先回り型エージェントアプリ Claude Duet を、公式発表とヘルプ記事をもとに図3点・表4点で整理 — 朝のブリーフと数時間ごとの確認で先に話しかけ、自分の VM のブラウザで端末が切れていても動き(Opus 5.5 固定)、行動は三つの枠に分かれる:読む・下書きは自分で、送信・支払い・署名・削除は見せてから承認(待つ間に残りを進める)、証券取引・口座間の送金・他人のアカウント利用は承認されても不可。認証情報は Managed Agents と同じプロキシ設計でモデルに見えず、送るメッセージごとに機微情報の分類器(カード・身分証番号を遮断、健康・金融は明示指示時のみ)、行動ごとに auto mode 分類器、支払いは Link の使い捨て仮想カード。6,000 以上のコネクタでできる仕事と人が押す場面、Microsoft 365 未対応・Slack の制限、米国 Pro・Max のウェイトリスト、バックグラウンド確認まで5時間・週間上限から差し引く点(招待時に一回リセット)も扱う。Meta Muse(9/8)・OpenAI Dots(9/29)との比較では違いは承認の扉の位置(固定リスト対ユーザーのルール)とバックグラウンド費用の計算にあり、Claude Tag の「いつ出ていくか」の判定を一日全体に広げ、判定を分類器・スマートフォンの承認・禁止リストの三か所に分けて置いた例として読む">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/news-20261022-claude-duet/">
+<meta property="og:image" content="https://dewytear.github.io/assets/ai/news/2026/news-20261022-claude-duet/hero.webp">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Claude Duet を一望する — 先に話しかけるエージェントと三段の承認ゲート">
+<meta name="twitter:description" content="Anthropic が10月21日にリサーチプレビューとして公開した先回り型エージェントアプリ Claude Duet を、公式発表とヘルプ記事をもとに図3点・表4点で整理 — 朝のブリーフと数時間ごとの確認で先に話しかけ、自分の VM のブラウザで端末が切れていても動き(Opus 5.5 固定)、行動は三つの枠に分かれる:読む・下書きは自分で、送信・支払い・署名・削除は見せてから承認(待つ間に残りを進める)、証券取引・口座間の送金・他人のアカウント利用は承認されても不可。認証情報は Managed Agents と同じプロキシ設計でモデルに見えず、送るメッセージごとに機微情報の分類器(カード・身分証番号を遮断、健康・金融は明示指示時のみ)、行動ごとに auto mode 分類器、支払いは Link の使い捨て仮想カード。6,000 以上のコネクタでできる仕事と人が押す場面、Microsoft 365 未対応・Slack の制限、米国 Pro・Max のウェイトリスト、バックグラウンド確認まで5時間・週間上限から差し引く点(招待時に一回リセット)も扱う。Meta Muse(9/8)・OpenAI Dots(9/29)との比較では違いは承認の扉の位置(固定リスト対ユーザーのルール)とバックグラウンド費用の計算にあり、Claude Tag の「いつ出ていくか」の判定を一日全体に広げ、判定を分類器・スマートフォンの承認・禁止リストの三か所に分けて置いた例として読む">
+<meta name="twitter:image" content="https://dewytear.github.io/assets/ai/news/2026/news-20261022-claude-duet/hero.webp">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Claude Duet を一望する — 先に話しかけるエージェントと三段の承認ゲート",
+ "description": "Anthropic が10月21日にリサーチプレビューとして公開した先回り型エージェントアプリ Claude Duet を、公式発表とヘルプ記事をもとに図3点・表4点で整理 — 朝のブリーフと数時間ごとの確認で先に話しかけ、自分の VM のブラウザで端末が切れていても動き(Opus 5.5 固定)、行動は三つの枠に分かれる:読む・下書きは自分で、送信・支払い・署名・削除は見せてから承認(待つ間に残りを進める)、証券取引・口座間の送金・他人のアカウント利用は承認されても不可。認証情報は Managed Agents と同じプロキシ設計でモデルに見えず、送るメッセージごとに機微情報の分類器(カード・身分証番号を遮断、健康・金融は明示指示時のみ)、行動ごとに auto mode 分類器、支払いは Link の使い捨て仮想カード。6,000 以上のコネクタでできる仕事と人が押す場面、Microsoft 365 未対応・Slack の制限、米国 Pro・Max のウェイトリスト、バックグラウンド確認まで5時間・週間上限から差し引く点(招待時に一回リセット)も扱う。Meta Muse(9/8)・OpenAI Dots(9/29)との比較では違いは承認の扉の位置(固定リスト対ユーザーのルール)とバックグラウンド費用の計算にあり、Claude Tag の「いつ出ていくか」の判定を一日全体に広げ、判定を分類器・スマートフォンの承認・禁止リストの三か所に分けて置いた例として読む",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/news-20261022-claude-duet/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20261022-claude-duet",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-10-22T18:48:24+09:00",
+ "dateModified": "2026-10-22T18:48:24+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20261022-claude-duet">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/news-20261022-claude-duet/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/news-20261022-claude-duet/" hreflang="en">English</a>
+</p>
+<article>
+<h2>Claude Duet を一望する — 先に話しかけるエージェントと三段の承認ゲート</h2>
+
+<figure class="doc-img">
+    <img src="assets/ai/news/2026/news-20261022-claude-duet/hero.webp" width="1440" height="756"
+         alt="薄紫の背景の中央に白い角丸の四角形があり、その中のオレンジ色の円を黒い手書きの輪が二つ横切る Claude Duet のアプリアイコン">
+    <figcaption>Claude Duet のアプリアイコン(画像: Anthropic)</figcaption>
+</figure>
+
+<h3>三行まとめ</h3>
+<ul>
+    <li>Anthropic は10月21日(米国時間)、<strong>Claude Duet</strong> のリサーチプレビューを始めた。聞かれる前に用件を持ってきて、ユーザーが席を外してもクラウド上の自分のコンピューターで仕事を続ける独立アプリだ。米国の Pro・Max 加入者がウェイトリストから入る。</li>
+    <li>行動は<strong>三つの枠</strong>に分かれる。読む・下書きする・準備するは自分で進め、送信・支払い・署名・削除は中身を見せて承認を待ち、証券取引と口座間の送金は<strong>承認されてもやらない</strong>。モデルはパスワードやログイントークンを直接見ない。</li>
+    <li>Meta Muse(9月8日)、OpenAI Dots(9月29日)に続き、6週間で三つ目の常時稼働型パーソナルエージェントだ。三者の違いは機能よりも、<strong>承認の扉をどこに置くか</strong>と<strong>バックグラウンドの仕事を誰が負担するか</strong>にある。</li>
+</ul>
+
+<p>これまでの Claude は聞かれてから答えた。Duet は順番を逆にする。毎朝、連携したメールとカレンダーに目を通して短いブリーフを送り、数時間ごとに見直して、注意が必要なことが起きたときだけ話しかける。このようにユーザーが尋ねる前に自分から用件を見つけて知らせるエージェントを<strong>プロアクティブ(先回り型)エージェント</strong>と呼ぶ。Anthropic は Duet を専門職と小規模事業者向けとして紹介し、Claude Opus 5.5 に合わせて設計したと述べた。本記事は公式発表、ヘルプ記事、公開初週の報道をまとめ、Duet が一日をどう過ごすか、何を自分でして何を尋ねるか、競合と何が違うかを図で整理する。</p>
+
+<h3>一日の流れ:朝のブリーフから承認の通知まで</h3>
+<p>Duet とのやり取りは一本のスレッドで続く。文字か音声で仕事を任せると、Duet は自分の仮想マシン(VM、クラウド上の独立したコンピューター)のブラウザで作業を進める。そのためスマートフォンやノートパソコンの電源が切れていても仕事は止まらない。仕事が終わるか、人の判断が必要になると通知が届く。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 244" role="img" aria-label="Claude Duet の一日:朝のブリーフ、数時間ごとの確認、仕事を任せる、クラウドで続行、承認・完了の通知と進み、承認か完了の後はまた確認の周期に戻る">
+    <text class="d-label" x="360" y="28" text-anchor="middle">Duet の一日 — 先に来て、続けて、聞いてから動く</text>
+    <rect class="d-box accent" x="18" y="62" width="124" height="62" rx="10"/>
+    <text class="d-label sm" x="80" y="88" text-anchor="middle">朝のブリーフ</text>
+    <text class="d-sub" x="80" y="108" text-anchor="middle">メールと予定を確認</text>
+    <line class="d-edge" x1="142" y1="93" x2="152" y2="93"/>
+    <polygon class="d-arrow" points="150,89 157,93 150,97"/>
+    <rect class="d-box" x="158" y="62" width="124" height="62" rx="10"/>
+    <text class="d-label sm" x="220" y="88" text-anchor="middle">数時間ごとに確認</text>
+    <text class="d-sub" x="220" y="108" text-anchor="middle">用がある時だけ通知</text>
+    <line class="d-edge" x1="282" y1="93" x2="292" y2="93"/>
+    <polygon class="d-arrow" points="290,89 297,93 290,97"/>
+    <rect class="d-box" x="298" y="62" width="124" height="62" rx="10"/>
+    <text class="d-label sm" x="360" y="88" text-anchor="middle">仕事を任せる</text>
+    <text class="d-sub" x="360" y="108" text-anchor="middle">文字か音声で</text>
+    <line class="d-edge" x1="422" y1="93" x2="432" y2="93"/>
+    <polygon class="d-arrow" points="430,89 437,93 430,97"/>
+    <rect class="d-box" x="438" y="62" width="124" height="62" rx="10"/>
+    <text class="d-label sm" x="500" y="88" text-anchor="middle">クラウドで続行</text>
+    <text class="d-sub" x="500" y="108" text-anchor="middle">端末が切れても動く</text>
+    <line class="d-edge" x1="562" y1="93" x2="572" y2="93"/>
+    <polygon class="d-arrow" points="570,89 577,93 570,97"/>
+    <rect class="d-box accent" x="578" y="62" width="124" height="62" rx="10"/>
+    <text class="d-label sm" x="640" y="88" text-anchor="middle">承認・完了の通知</text>
+    <text class="d-sub" x="640" y="108" text-anchor="middle">Tasks・Make タブ</text>
+    <path class="d-edge dash" d="M640,124 L640,160 L220,160 L220,130"/>
+    <polygon class="d-arrow" points="216,132 220,125 224,132"/>
+    <text class="d-sub" x="430" y="182" text-anchor="middle">承認か完了の後、また確認の周期へ</text>
+    <text class="d-sub" x="360" y="226" text-anchor="middle">確認は数時間おき。急ぎの件も次の確認まで待つことがある</text>
+</svg>
+</div>
+<p>確認の間隔を数時間にしたのには理由がある。Anthropic によれば、常に見張らせるとプランの使用上限がすぐに尽きる。Duet のバックグラウンド確認と朝のブリーフは、通常のチャットと同じ割合で5時間上限と週間上限から差し引かれる。財務モデルや発表資料のような大きな仕事はモデルの呼び出しとバックグラウンド作業が多く、上限をより多く使う。成果物は編集できるファイルとして <strong>Make</strong> タブにたまり、進行中の仕事と返事が必要な件は <strong>Tasks</strong> タブに集まる。仕事を完了にできるのはユーザーだけだ。</p>
+<p>Duet は Claude アカウントのメモリ・スキル・連携アプリを最初のメッセージから引き継ぐ。設定をやり直す必要がほとんどない。Duet の会話とプロジェクト外の通常の Claude の会話も検索して参照し、この機能は設定のメモリ項目でオフにできる。</p>
+
+<h3>何を自分でして、何を尋ねるか</h3>
+<p>Duet の設計で最もはっきりしているのは、取り消しやすさで行動を分けた三つの枠だ。公式発表の言葉では、メッセージを送る、支払う、文書に署名する、何かを削除する前には「何をしようとしているかを正確に見せ、承認を待つ」。そして「いくつかのことは承認されてもできない」。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 306" role="img" aria-label="Duet の三つの枠:自分でやる(メール・メッセージを読む、返信の下書き、資料を集めてファイル化、未収金の確認と督促の下書き)、見せてから承認を待つ(メッセージ送信、支払い、文書への署名、あらゆる削除)、承認されてもやらない(証券取引、口座間の送金、他人のアカウント利用)。取り消しにくいほど扉は高い">
+    <text class="d-label" x="360" y="26" text-anchor="middle">行動の三つの枠 — 取り消しにくいほど扉は高い</text>
+    <rect class="d-box soft" x="12" y="44" width="216" height="206" rx="12"/>
+    <text class="d-label" x="120" y="72" text-anchor="middle">自分でやる</text>
+    <line class="d-edge dash" x1="32" y1="86" x2="208" y2="86"/>
+    <text class="d-label sm" x="120" y="112" text-anchor="middle">メール・メッセージを読む</text>
+    <text class="d-label sm" x="120" y="138" text-anchor="middle">返信の下書き</text>
+    <text class="d-label sm" x="120" y="164" text-anchor="middle">資料を集めてファイル化</text>
+    <text class="d-label sm" x="120" y="190" text-anchor="middle">未収金の確認と督促の下書き</text>
+    <text class="d-sub" x="120" y="232" text-anchor="middle">auto mode 分類器が監視</text>
+    <rect class="d-box accent" x="252" y="44" width="216" height="206" rx="12"/>
+    <text class="d-label" x="360" y="72" text-anchor="middle">見せてから承認を待つ</text>
+    <line class="d-edge dash" x1="272" y1="86" x2="448" y2="86"/>
+    <text class="d-label sm" x="360" y="112" text-anchor="middle">メッセージ送信</text>
+    <text class="d-label sm" x="360" y="138" text-anchor="middle">支払い</text>
+    <text class="d-label sm" x="360" y="164" text-anchor="middle">文書への署名</text>
+    <text class="d-label sm" x="360" y="190" text-anchor="middle">あらゆる削除</text>
+    <text class="d-sub" x="360" y="232" text-anchor="middle">待つ間に残りの仕事を進める</text>
+    <rect class="d-box" x="492" y="44" width="216" height="206" rx="12"/>
+    <text class="d-label" x="600" y="72" text-anchor="middle">承認されてもやらない</text>
+    <line class="d-edge dash" x1="512" y1="86" x2="688" y2="86"/>
+    <text class="d-label sm" x="600" y="112" text-anchor="middle">証券取引</text>
+    <text class="d-label sm" x="600" y="138" text-anchor="middle">口座間の送金</text>
+    <text class="d-label sm" x="600" y="164" text-anchor="middle">他人のアカウント利用</text>
+    <text class="d-sub" x="600" y="232" text-anchor="middle">ルールで閉じた枠</text>
+    <line class="d-edge accent" x1="40" y1="272" x2="672" y2="272"/>
+    <polygon class="d-arrow accent" points="670,267 680,272 670,277"/>
+    <text class="d-sub" x="360" y="294" text-anchor="middle">取り消せない行動ほど右の枠へ</text>
+</svg>
+</div>
+<p>真ん中の枠ですぐに承認できなくても、Duet は止まらない。承認のいらない残りの仕事を先に片づけ、承認の依頼は後でもう一度持ってくる。結果には根拠になったメール・ファイル・スプレッドシートを添える。一つひとつの行動は、Anthropic の <strong>auto mode 分類器</strong>がもう一度ふるいにかける。Claude Code でユーザーが頼んでいない行動を止めるのと同じ仕組みだ。この分類器が既定値になった経緯は、このウィキの<a href="/p/ja/news-20260814-auto-mode-stateless-mcp/">尋ねない既定値</a>にまとめた。</p>
+<p>右の枠が大事なのは、承認ボタンが最後の防衛線ではないからだ。人は疲れていたり忙しかったりすると、習慣で承認を押す。証券取引と口座間の送金は、その習慣が最も高くつく行動なので、Duet は承認画面そのものを出さない。</p>
+
+<h3>モデルはパスワードを知らない</h3>
+<p>パーソナルエージェントがメール・支払い・署名まで扱うと、最初に出てくる問いは「パスワードは誰が持つのか」だ。Anthropic の答えは、モデルの外側に三重のフィルターを置くことだ。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 292" role="img" aria-label="Duet の三重のフィルター:Claude Duet(Opus 5.5、クラウド VM)からの要求は、認証情報プロキシ(パスワードとトークンを代わりに保持)を経て連携アプリ・サイトへ、機微情報の分類器(カード・ID番号は送らない)を経て送るメッセージへ、auto mode 分類器(頼まれていない行動を止める)を経て Link 使い捨てカードでの支払いへ進む">
+    <text class="d-label" x="360" y="24" text-anchor="middle">モデルはパスワードを知らない — 三重のフィルター</text>
+    <rect class="d-box accent" x="16" y="111" width="160" height="60" rx="12"/>
+    <text class="d-label" x="96" y="137" text-anchor="middle">Claude Duet</text>
+    <text class="d-sub" x="96" y="157" text-anchor="middle">Opus 5.5 · クラウド VM</text>
+    <line class="d-edge" x1="176" y1="141" x2="240" y2="69"/>
+    <line class="d-edge" x1="176" y1="141" x2="240" y2="141"/>
+    <line class="d-edge" x1="176" y1="141" x2="240" y2="213"/>
+    <rect class="d-box" x="240" y="40" width="230" height="58" rx="10"/>
+    <text class="d-label sm" x="355" y="64" text-anchor="middle">認証情報プロキシ</text>
+    <text class="d-sub" x="355" y="84" text-anchor="middle">パスワードとトークンを代わりに保持</text>
+    <rect class="d-box" x="240" y="112" width="230" height="58" rx="10"/>
+    <text class="d-label sm" x="355" y="136" text-anchor="middle">機微情報の分類器</text>
+    <text class="d-sub" x="355" y="156" text-anchor="middle">カード・ID番号は送らない</text>
+    <rect class="d-box" x="240" y="184" width="230" height="58" rx="10"/>
+    <text class="d-label sm" x="355" y="208" text-anchor="middle">auto mode 分類器</text>
+    <text class="d-sub" x="355" y="228" text-anchor="middle">頼まれていない行動を止める</text>
+    <line class="d-edge accent" x1="470" y1="69" x2="522" y2="69"/>
+    <polygon class="d-arrow accent" points="520,65 528,69 520,73"/>
+    <line class="d-edge accent" x1="470" y1="141" x2="522" y2="141"/>
+    <polygon class="d-arrow accent" points="520,137 528,141 520,145"/>
+    <line class="d-edge accent" x1="470" y1="213" x2="522" y2="213"/>
+    <polygon class="d-arrow accent" points="520,209 528,213 520,217"/>
+    <rect class="d-box soft" x="530" y="40" width="174" height="58" rx="10"/>
+    <text class="d-label sm" x="617" y="64" text-anchor="middle">連携アプリ・サイト</text>
+    <text class="d-sub" x="617" y="84" text-anchor="middle">API 呼び出しはプロキシ</text>
+    <rect class="d-box soft" x="530" y="112" width="174" height="58" rx="10"/>
+    <text class="d-label sm" x="617" y="136" text-anchor="middle">送るメッセージ</text>
+    <text class="d-sub" x="617" y="156" text-anchor="middle">健康・金融は指示時のみ</text>
+    <rect class="d-box soft" x="530" y="184" width="174" height="58" rx="10"/>
+    <text class="d-label sm" x="617" y="208" text-anchor="middle">Link 使い捨てカード</text>
+    <text class="d-sub" x="617" y="228" text-anchor="middle">毎回新しい仮想カード</text>
+    <text class="d-sub" x="360" y="276" text-anchor="middle">インジェクション対策はブラウザ利用研究から · 外部ペンテストとバグバウンティ</text>
+</svg>
+</div>
+<ul>
+    <li><strong>認証情報はプロキシが持つ。</strong> Duet の認証情報の扱いは Claude Managed Agents と同じ設計に従う。モデルがコードを動かす環境とログイン情報を切り離し、別のプロキシが必要な認証情報を取り出して API を代わりに呼ぶ。パスワードを入力するときは、チャット欄ではなく別の入力フォームに入れる。</li>
+    <li><strong>送るメッセージはすべて分類器が見る。</strong> 新しく作った専用の分類器と安全用のシステムプロンプトがメッセージを一通ずつ調べる。クレジットカード番号や政府発行の身分証番号のような最上位の情報は、頼まれても送らない。健康と個人の金融情報は、ユーザーが明示的に送るよう指示したときだけ出ていく。</li>
+    <li><strong>支払いは使い捨てカードで行う。</strong> 購入には Stripe のデジタルウォレット Link を使う。Duet が品目を確認し、Link が改めて承認を取り、その支払いだけに使える仮想カードを作る。本物のカード番号は店に渡らない。Shopify の店では Shop Pay も使える。</li>
+</ul>
+<p>ウェブページに隠した指示でエージェントを操ろうとする攻撃、つまり<strong>プロンプトインジェクション</strong>への防御は、Anthropic のブラウザ利用研究から持ってきた。社内のレッドチームと外部のセキュリティ企業が侵入テストを行い、公開のバグバウンティの対象にも入れた。Anthropic は安全設計の詳細を数日以内に別途公開するとしている。</p>
+
+<h3>6,000 を超えるコネクタでできること</h3>
+<p>Duet は Claude Marketplace のコネクタとプラグイン 6,000 以上を使える。コネクタのないサイトは自分のクラウドブラウザで直接開く。公式発表が挙げた例を、人が関わる場面と並べると次のとおりだ。</p>
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>任せる仕事</th><th>使うツール</th><th>人が押す場面</th></tr></thead>
+    <tbody>
+        <tr><td>見落としたメッセージを探して返信</td><td>Gmail · Slack</td><td>返信を送る</td></tr>
+        <tr><td>未収金の確認と督促</td><td>QuickBooks · Stripe</td><td>督促メールを送る</td></tr>
+        <tr><td>給与計算の準備</td><td>Gusto</td><td>最終確定</td></tr>
+        <tr><td>求人票の作成</td><td>LinkedIn</td><td>手直しして掲載</td></tr>
+        <tr><td>契約書の署名依頼</td><td>Docusign</td><td>送付</td></tr>
+        <tr><td>営業フォローの下書き</td><td>HubSpot の履歴</td><td>送信</td></tr>
+        <tr><td>SNS キャンペーンの制作</td><td>Canva</td><td>公開</td></tr>
+        <tr><td>オンラインストアの開設・運営</td><td>Shopify</td><td>支払い・公開</td></tr>
+    </tbody>
+</table>
+</div>
+<p>空白もある。Microsoft 365 はまだつながらず、Slack には制限がある。1Password に保存したログインでサイトに入る機能は「近日」提供予定だ。公開初週の外部レビューでは、予約実行の間はカスタムコネクタを使えない点が指摘された。</p>
+<p>公式発表に載った利用場面の多くは「先に気づいた」瞬間だ。ある不動産仲介業者は、カレンダーに日付を間違えて入れた物件案内の予定を、頼んでもいないのに Duet が指摘したと語った。あるブランドストラテジストは、顧客との通話のブリーフと一緒に、その通話が飛行機の出発直前なので動かそうという提案を受け取った。従業員110人ほどの事業を営む経営者は、会計・顧客対応・マーケティングを任せ、複数店舗の請求書を整理させた。Anthropic 社内では、Claude Code を作ったボリス・チャーニーが散歩しながら ToDo リストを声で Duet に渡しているという。</p>
+
+<h3>誰が、いくらで使えるか</h3>
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>項目</th><th>内容</th></tr></thead>
+    <tbody>
+        <tr><td><strong>対象</strong></td><td>米国アカウントの Pro・Max 加入者。ウェイトリストから順に招待。Team・Enterprise は「今後」</td></tr>
+        <tr><td><strong>アプリ</strong></td><td>Claude アプリとは別の独立アプリ。iOS・Android(発表文は claude.ai にも言及)</td></tr>
+        <tr><td><strong>モデル</strong></td><td>Claude Opus 5.5 で固定。ユーザーはモデルを選べず、仕事ごとに推論の強さを自分で決める</td></tr>
+        <tr><td><strong>料金</strong></td><td>プレビュー中は追加料金なし。Pro・Max に含まれる</td></tr>
+        <tr><td><strong>使用上限</strong></td><td>5時間・週間の上限をチャットと同じ割合で共有。ブリーフや確認などのバックグラウンド作業も計上</td></tr>
+        <tr><td><strong>入場特典</strong></td><td>招待時に5時間・週間の上限を一度だけ全リセット。2026年11月30日まで利用可</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>6週間で三つ目の常時稼働エージェント</h3>
+<p>Duet は単独で出てきた製品ではない。Meta が9月8日にパーソナルエージェント Muse を、OpenAI が9月29日の DevDay で ChatGPT 内の常時稼働エージェント Dots を出した。三つともクラウドで休まず動き、自分から仕事を探し、重要な行動の前には人を呼ぶ。違うのは細部だ。</p>
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th></th><th>Claude Duet</th><th>OpenAI Dots</th><th>Meta Muse</th></tr></thead>
+    <tbody>
+        <tr><td><strong>公開</strong></td><td>10月21日 · リサーチプレビュー</td><td>9月29日 · DevDay</td><td>9月8日 · 米国で公開</td></tr>
+        <tr><td><strong>モデル</strong></td><td>Claude Opus 5.5</td><td>GPT-6 Astra</td><td>Muse Spark 系</td></tr>
+        <tr><td><strong>作業場所</strong></td><td>自分の VM とブラウザ</td><td>Dot ごとのクラウドコンピューターとブラウザ</td><td>バックグラウンドで実行</td></tr>
+        <tr><td><strong>先回りする内容</strong></td><td>朝のブリーフ、数時間ごとの確認</td><td>任された仕事がないときの「プロアクティブ調査」(この間アプリ連携は読み取り専用)</td><td>目標を決めるとマイルストーンごとに報告</td></tr>
+        <tr><td><strong>承認の扉</strong></td><td>行動の種類で固定:送信・支払い・署名・削除は承認、証券・送金は禁止</td><td>ユーザーが書く Custom Rules:許可・承認必須・ブロック</td><td>確認が必要なときにユーザーへ戻る</td></tr>
+        <tr><td><strong>連携</strong></td><td>コネクタ・プラグイン 6,000 以上</td><td>アプリ 4,000 以上</td><td>メール・カレンダー・決済など</td></tr>
+        <tr><td><strong>料金と上限</strong></td><td>Pro・Max に含む。バックグラウンド作業も上限から差し引く</td><td>Pro・Business Premium に最初の Dot を含む。Dot との会話は上限に計上しない</td><td>無料で開始、Power $20・Maximum $100(月額)</td></tr>
+    </tbody>
+</table>
+</div>
+<p>最も大きく分かれるのは承認の扉の置き方だ。Dots は何を許可し何を尋ねるかをユーザーがルールとして書く。自由度が高い反面、書き間違えたルールはそのまま実行される。Duet はその線を Anthropic が行動の種類ごとに先に引いた。柔軟性は低いが、ユーザーがうっかり送金を許可しておく方法はない。使用量の計算も逆だ。Dots は Dot との会話を上限から外すが、Duet はバックグラウンドで一人でした仕事まで上限から引く。確認が数時間おきなのも、この計算方式のためだ。</p>
+
+<h3>まだ苦手なところ</h3>
+<ul>
+    <li><strong>急ぎの度合いを見誤ることがある。</strong> Anthropic 自身が「スレッドを読み違えたり、何が急ぎかを測り違えたりすることがある」と書いている。確認が数時間おきなので、本当に急ぎの件も次の確認まで待つことがある。</li>
+    <li><strong>ブラウザを見られない。</strong> プレビュー中は Duet のクラウドブラウザを見守ったり、引き継いだりできない。</li>
+    <li><strong>個人の用事は弱い。</strong> チケットの予約のような個人的な用件は仕事ほど得意ではないと Anthropic は述べた。</li>
+    <li><strong>電話とショートメッセージはできない。</strong> 連携したアカウントからメールは送るが(承認後)、電話をかけたりショートメッセージを送ったりはしない。ユーザーのパソコンにあるプロジェクトとファイルをすべて見るわけでもない。Claude での作業は読めるが、変更はできない。</li>
+    <li><strong>持ち帰ってこなかった仕事。</strong> 公開初週の外部レビューには、チェックリストに載った仕事を Duet が改めて持ち出さず、ユーザーが戻ったときには関心がもう別のところへ移っていたという例もあった。先に話しかけるエージェントにとっては、何を言わなかったかも性能のうちだ。</li>
+</ul>
+
+<h3>このウィキの読み方</h3>
+<p>このウィキは<a href="/p/ja/news-20260820-who-makes-the-call/">判定を誰に任せるのか</a>で、Claude Tag が「いつ出ていくか」をモデルが選ぶようになった場面を扱った。Duet はその判定を Slack のチャンネルの外、ユーザーの一日全体に広げた製品だ。何が急ぎか、いつ話しかけるかをモデルが決める。違いはコストに表れる。Claude Tag は文脈を多く読む費用を上限に入れなかったが、Duet は一人で見て回った時間まで上限に入れる。だから Duet の「数時間ごと」は技術上の制約というより料金設計だ。</p>
+<p>承認の面では、その記事の結論、つまり判定は消えずに場所を移すという観察を改めて確かめさせる。Duet では判定が三か所に分かれて座る。行動ごとにふるいにかける分類器、スマートフォンに届く承認依頼、そして誰も開けられない禁止リストだ。最後の場所は、<a href="/p/ja/news-20261014-ledger-write-mcp/">帳簿に書くエージェント</a>が会計ソフトの締め期間ロックに見たものと似ている。ある種の書き込みは承認ボタンに任せず、その上の層で閉じる。</p>
+<p>このウィキのニュース候補も、毎朝予約実行される Claude セッションが選んでいる。セッションは候補を読んでまとめ、通知だけを送り、登録は番号付きの返信を受けてから行う。自分でやる枠と承認を待つ枠を分けた、同じ構図の小さな版だ。</p>
+
+<h3>事実確認ノート</h3>
+<p class="scn-sub">ヒーロー画像は Anthropic が公開した Claude Duet 紹介記事の共有用画像(アプリアイコン)で、リポジトリに webp で保存して掲載した。機能・承認ルール・禁止リスト・認証情報の扱い(Claude Managed Agents と同じ設計)・機微情報の分類器・auto mode 分類器・Link 決済・6,000 以上のコネクタと仕事の例・上限の共有・限界・利用場面は Anthropic の <a href="https://claude.com/resources/articles/claude-duet" target="_blank" rel="noopener">Introducing Claude Duet</a> に従った。タブ構成(Make・Tasks)・承認待ちの間に残りの仕事を進めること・根拠の引用・別のパスワード入力フォーム・チャット検索とそのオフの場所・Microsoft 365 未対応と Slack の制限・電話とショートメッセージ不可・モデル選択不可・他人のアカウント利用の禁止・招待時の上限一回リセット(11月30日まで)は Claude ヘルプ記事 <a href="https://support.claude.com/en/articles/17631495-get-started-with-claude-duet" target="_blank" rel="noopener">「Get started with Claude Duet」</a> による。<strong>対応端末は二つの公式資料で食い違う。</strong> 発表文は iOS・Android と claude.ai を挙げ、ヘルプは iPhone と Android の設定手順だけを書いているため、本文には両方の表現を残した。公開日(10月21日)は <a href="https://x.com/claudeai/status/2112984664256241837" target="_blank" rel="noopener">Claude 公式 X アカウント</a>の発表と複数の報道が一致する。プロキシが認証情報を取り出して API を代わりに呼ぶという具体的な説明は、発表文の「Managed Agents と同じ設計」をかみ砕いた報道(<a href="https://www.implicator.ai/anthropic-claude-duet-business-tasks/" target="_blank" rel="noopener">Implicator</a> ほか)による。OpenAI Dots(9月29日、GPT-6 Astra、クラウドコンピューター、読み取り専用のプロアクティブ調査、Custom Rules、アプリ 4,000 以上、会話は上限に計上しない)は <a href="https://siliconangle.com/2026/09/29/openai-launches-dots-always-on-ai-agents-in-chatgpt-with-their-own-cloud-computers/" target="_blank" rel="noopener">SiliconANGLE</a>・<a href="https://betanews.com/article/openai-dots-agents-chatgpt/" target="_blank" rel="noopener">BetaNews</a>、Meta Muse(9月8日、米国、無料で開始、Power $20・Maximum $100)は <a href="https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/" target="_blank" rel="noopener">Meta の発表</a>と <a href="https://techcrunch.com/2026/09/08/meta-debuts-its-muse-ai-agent-will-consumers-trust-it/" target="_blank" rel="noopener">TechCrunch</a> による。Muse の基盤モデルのバージョンは資料によって異なるため「Muse Spark 系」とだけ書いた。<strong>予約実行中にカスタムコネクタを使えない点と「持ち帰ってこなかった仕事」の例は、外部レビューを要約した報道によるもので、レビューの原文は確認できていない。</strong> 公式発表に登場する顧客と Anthropic 社員は、公人であるボリス・チャーニーを除き名前を書いていない。本記事を書いた環境はネットワークポリシーのため一部の報道ページを直接開けず、公式資料二件を直接読み、残りは検索要約が一致する範囲だけを移した。</p>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">作成日</span> 2026-10-22 &middot; <span class="pr-k">更新日</span> 2026-10-22</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/news-20260820-who-makes-the-call/">判定を誰に任せるのか — 8月の四つの場面</a></li><li><a href="/p/ja/claude-md-constitution/">Claude 憲章 — モデルに自分を何と伝えるのか</a></li><li><a href="/p/ja/news-20260901-whose-usage/">私の上限を使っているのは誰か — Claude の使用量をめぐる三つの場面</a></li><li><a href="/p/ja/news-20260814-auto-mode-stateless-mcp/">尋ねない既定値 — 承認ボタンとセッションが同じ週に消えた</a></li></ul>
+</nav>
+</body>
+</html>

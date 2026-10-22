@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Duet at a Glance — An Agent That Speaks First, and a Three-Tier Approval Gate</title>
+<meta name="description" content="Claude Duet, the proactive agent app Anthropic opened as a research preview on October 21, laid out from the official announcement and help article in three diagrams and four tables. It speaks first with a morning brief and checks every few hours, works in its own VM&#x27;s browser even when your devices are off (Opus 5.5, fixed), and sorts actions into three tiers: reading and drafting on its own; sending, paying, signing and deleting shown first and approved (other work continues while it waits); trading securities, moving money between accounts and using someone else&#x27;s account barred even with approval. Credentials sit behind a proxy (same design as Managed Agents) so the model never sees them; a sensitive-data classifier checks every outgoing message (card and ID numbers blocked, health and finance only on explicit request), the auto mode classifier screens every action, and payments use one-time Link virtual cards. Also covered: what the 6,000-plus connectors are used for and where a human clicks, no Microsoft 365 and limited Slack, the US Pro/Max waitlist, and background checks counted against the five-hour and weekly limits (one reset on admission). Against Meta Muse (Sep 8) and OpenAI Dots (Sep 29) the difference is where the approval gate sits (a fixed list vs user-written rules) and who pays for background work; the article reads Duet as Claude Tag&#x27;s &#x27;when to step in&#x27; judgment widened to a whole day, with judgment split across a classifier, phone approvals and a deny list">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/news-20261022-claude-duet/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/news-20261022-claude-duet/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/news-20261022-claude-duet/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/news-20261022-claude-duet/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/news-20261022-claude-duet/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Claude Duet at a Glance — An Agent That Speaks First, and a Three-Tier Approval Gate">
+<meta property="og:description" content="Claude Duet, the proactive agent app Anthropic opened as a research preview on October 21, laid out from the official announcement and help article in three diagrams and four tables. It speaks first with a morning brief and checks every few hours, works in its own VM&#x27;s browser even when your devices are off (Opus 5.5, fixed), and sorts actions into three tiers: reading and drafting on its own; sending, paying, signing and deleting shown first and approved (other work continues while it waits); trading securities, moving money between accounts and using someone else&#x27;s account barred even with approval. Credentials sit behind a proxy (same design as Managed Agents) so the model never sees them; a sensitive-data classifier checks every outgoing message (card and ID numbers blocked, health and finance only on explicit request), the auto mode classifier screens every action, and payments use one-time Link virtual cards. Also covered: what the 6,000-plus connectors are used for and where a human clicks, no Microsoft 365 and limited Slack, the US Pro/Max waitlist, and background checks counted against the five-hour and weekly limits (one reset on admission). Against Meta Muse (Sep 8) and OpenAI Dots (Sep 29) the difference is where the approval gate sits (a fixed list vs user-written rules) and who pays for background work; the article reads Duet as Claude Tag&#x27;s &#x27;when to step in&#x27; judgment widened to a whole day, with judgment split across a classifier, phone approvals and a deny list">
+<meta property="og:url" content="https://dewytear.github.io/p/en/news-20261022-claude-duet/">
+<meta property="og:image" content="https://dewytear.github.io/assets/ai/news/2026/news-20261022-claude-duet/hero.webp">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Claude Duet at a Glance — An Agent That Speaks First, and a Three-Tier Approval Gate">
+<meta name="twitter:description" content="Claude Duet, the proactive agent app Anthropic opened as a research preview on October 21, laid out from the official announcement and help article in three diagrams and four tables. It speaks first with a morning brief and checks every few hours, works in its own VM&#x27;s browser even when your devices are off (Opus 5.5, fixed), and sorts actions into three tiers: reading and drafting on its own; sending, paying, signing and deleting shown first and approved (other work continues while it waits); trading securities, moving money between accounts and using someone else&#x27;s account barred even with approval. Credentials sit behind a proxy (same design as Managed Agents) so the model never sees them; a sensitive-data classifier checks every outgoing message (card and ID numbers blocked, health and finance only on explicit request), the auto mode classifier screens every action, and payments use one-time Link virtual cards. Also covered: what the 6,000-plus connectors are used for and where a human clicks, no Microsoft 365 and limited Slack, the US Pro/Max waitlist, and background checks counted against the five-hour and weekly limits (one reset on admission). Against Meta Muse (Sep 8) and OpenAI Dots (Sep 29) the difference is where the approval gate sits (a fixed list vs user-written rules) and who pays for background work; the article reads Duet as Claude Tag&#x27;s &#x27;when to step in&#x27; judgment widened to a whole day, with judgment split across a classifier, phone approvals and a deny list">
+<meta name="twitter:image" content="https://dewytear.github.io/assets/ai/news/2026/news-20261022-claude-duet/hero.webp">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Claude Duet at a Glance — An Agent That Speaks First, and a Three-Tier Approval Gate",
+ "description": "Claude Duet, the proactive agent app Anthropic opened as a research preview on October 21, laid out from the official announcement and help article in three diagrams and four tables. It speaks first with a morning brief and checks every few hours, works in its own VM's browser even when your devices are off (Opus 5.5, fixed), and sorts actions into three tiers: reading and drafting on its own; sending, paying, signing and deleting shown first and approved (other work continues while it waits); trading securities, moving money between accounts and using someone else's account barred even with approval. Credentials sit behind a proxy (same design as Managed Agents) so the model never sees them; a sensitive-data classifier checks every outgoing message (card and ID numbers blocked, health and finance only on explicit request), the auto mode classifier screens every action, and payments use one-time Link virtual cards. Also covered: what the 6,000-plus connectors are used for and where a human clicks, no Microsoft 365 and limited Slack, the US Pro/Max waitlist, and background checks counted against the five-hour and weekly limits (one reset on admission). Against Meta Muse (Sep 8) and OpenAI Dots (Sep 29) the difference is where the approval gate sits (a fixed list vs user-written rules) and who pays for background work; the article reads Duet as Claude Tag's 'when to step in' judgment widened to a whole day, with judgment split across a classifier, phone approvals and a deny list",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/news-20261022-claude-duet/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!news-20261022-claude-duet",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-10-22T18:48:24+09:00",
+ "dateModified": "2026-10-22T18:48:24+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!news-20261022-claude-duet">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/news-20261022-claude-duet/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/ja/news-20261022-claude-duet/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>Claude Duet at a Glance — An Agent That Speaks First, and a Three-Tier Approval Gate</h2>
+
+<figure class="doc-img">
+    <img src="assets/ai/news/2026/news-20261022-claude-duet/hero.webp" width="1440" height="756"
+         alt="Claude Duet app icon: a white rounded square on a lavender background, holding an orange circle crossed by two black hand-drawn loops">
+    <figcaption>Claude Duet app icon (image: Anthropic)</figcaption>
+</figure>
+
+<h3>In three lines</h3>
+<ul>
+    <li>On October 21 (US time) Anthropic opened a research preview of <strong>Claude Duet</strong>, a separate app that brings you work before you ask and keeps going on its own cloud computer while you are away. US Pro and Max subscribers get in through a waitlist.</li>
+    <li>Actions fall into <strong>three tiers</strong>. Reading, drafting and preparing happen on their own. Sending, paying, signing and deleting are shown to you first and wait for approval. Trading securities and moving money between accounts <strong>do not happen even if you approve</strong>. The model never directly sees your passwords or sign-in tokens.</li>
+    <li>Duet is the third always-on personal agent in six weeks, after Meta Muse (September 8) and OpenAI Dots (September 29). The three differ less in features than in <strong>where the approval gate sits</strong> and <strong>who pays for background work</strong>.</li>
+</ul>
+
+<p>Until now Claude answered when asked. Duet reverses the order. Each morning it skims your connected mail and calendar and sends a short brief, then checks again every few hours and messages you only when something needs attention. An agent that finds work and raises it before the user asks is called a <strong>proactive agent</strong>. Anthropic pitches Duet at professionals and small business owners and says it was designed around Claude Opus 5.5. This article pulls together the official announcement, the help center guide and launch-week coverage to diagram how Duet spends a day, what it does alone and what it asks about, and how it differs from its rivals.</p>
+
+<h3>A day with Duet: from morning brief to approval ping</h3>
+<p>You talk to Duet in a single ongoing thread. Hand it a task by text or voice and it carries on in the browser of its own virtual machine (VM, a separate computer in the cloud). Your phone or laptop can be off and the work keeps going. You get a notification when a task finishes or needs a human decision.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 244" role="img" aria-label="A day with Claude Duet: morning brief, checks every few hours, you hand off a task, it keeps working in the cloud, then pings you for approval or completion, and returns to the check cycle">
+    <text class="d-label" x="360" y="28" text-anchor="middle">A day with Duet — comes first, keeps going, asks before acting</text>
+    <rect class="d-box accent" x="18" y="62" width="124" height="62" rx="10"/>
+    <text class="d-label sm" x="80" y="88" text-anchor="middle">Morning brief</text>
+    <text class="d-sub" x="80" y="108" text-anchor="middle">mail, calendar</text>
+    <line class="d-edge" x1="142" y1="93" x2="152" y2="93"/>
+    <polygon class="d-arrow" points="150,89 157,93 150,97"/>
+    <rect class="d-box" x="158" y="62" width="124" height="62" rx="10"/>
+    <text class="d-label sm" x="220" y="88" text-anchor="middle">Every few hours</text>
+    <text class="d-sub" x="220" y="108" text-anchor="middle">pings only if needed</text>
+    <line class="d-edge" x1="282" y1="93" x2="292" y2="93"/>
+    <polygon class="d-arrow" points="290,89 297,93 290,97"/>
+    <rect class="d-box" x="298" y="62" width="124" height="62" rx="10"/>
+    <text class="d-label sm" x="360" y="88" text-anchor="middle">You hand off</text>
+    <text class="d-sub" x="360" y="108" text-anchor="middle">text or voice</text>
+    <line class="d-edge" x1="422" y1="93" x2="432" y2="93"/>
+    <polygon class="d-arrow" points="430,89 437,93 430,97"/>
+    <rect class="d-box" x="438" y="62" width="124" height="62" rx="10"/>
+    <text class="d-label sm" x="500" y="88" text-anchor="middle">Works in cloud</text>
+    <text class="d-sub" x="500" y="108" text-anchor="middle">devices can be off</text>
+    <line class="d-edge" x1="562" y1="93" x2="572" y2="93"/>
+    <polygon class="d-arrow" points="570,89 577,93 570,97"/>
+    <rect class="d-box accent" x="578" y="62" width="124" height="62" rx="10"/>
+    <text class="d-label sm" x="640" y="88" text-anchor="middle">Approve / done</text>
+    <text class="d-sub" x="640" y="108" text-anchor="middle">Tasks, Make tabs</text>
+    <path class="d-edge dash" d="M640,124 L640,160 L220,160 L220,130"/>
+    <polygon class="d-arrow" points="216,132 220,125 224,132"/>
+    <text class="d-sub" x="430" y="182" text-anchor="middle">after approval or completion, back to the check cycle</text>
+    <text class="d-sub" x="360" y="226" text-anchor="middle">Checks run every few hours, so even urgent items can wait for the next one</text>
+</svg>
+</div>
+<p>The interval of a few hours is deliberate. Anthropic says constant monitoring would use up plan limits too fast. Duet's background checks and morning brief come out of the five-hour and weekly limits at the same rate as chat. Bigger jobs such as a financial model or a deck take more model turns and more background work, so they cost more. Finished work lands as editable files in the <strong>Make</strong> tab. Active work and anything that needs your input sit in the <strong>Tasks</strong> tab, and only you can mark a task completed.</p>
+<p>Duet inherits the memory, skills and connected apps of your Claude account from the first message, so there is little to set up. It can also search your Duet chats and your Claude chats outside projects, and you can turn that off under Memory in settings.</p>
+
+<h3>What it does alone, and what it asks about</h3>
+<p>The clearest part of Duet's design is the three tiers, sorted by how reversible an action is. In the announcement's words, before it sends a message, makes a payment, signs a document or deletes anything, it "shows you exactly what it's about to do and waits for your approval." And "a few things are off-limits even with your approval."</p>
+<div class="diagram">
+<svg viewBox="0 0 720 306" role="img" aria-label="Duet's three tiers: does on its own (read mail and messages, draft replies, build files from sources, check unpaid invoices and draft reminders); shows you and waits (send messages, make payments, sign documents, delete anything); off-limits even with approval (trade securities, move money between accounts, access someone else's account). The harder to undo, the higher the gate">
+    <text class="d-label" x="360" y="26" text-anchor="middle">Three tiers — the harder to undo, the higher the gate</text>
+    <rect class="d-box soft" x="12" y="44" width="216" height="206" rx="12"/>
+    <text class="d-label" x="120" y="72" text-anchor="middle">Does on its own</text>
+    <line class="d-edge dash" x1="32" y1="86" x2="208" y2="86"/>
+    <text class="d-label sm" x="120" y="112" text-anchor="middle">Read mail, messages</text>
+    <text class="d-label sm" x="120" y="138" text-anchor="middle">Draft replies</text>
+    <text class="d-label sm" x="120" y="164" text-anchor="middle">Build files from sources</text>
+    <text class="d-label sm" x="120" y="190" text-anchor="middle">Chase unpaid invoices</text>
+    <text class="d-sub" x="120" y="232" text-anchor="middle">watched by auto mode classifier</text>
+    <rect class="d-box accent" x="252" y="44" width="216" height="206" rx="12"/>
+    <text class="d-label" x="360" y="72" text-anchor="middle">Shows you, then waits</text>
+    <line class="d-edge dash" x1="272" y1="86" x2="448" y2="86"/>
+    <text class="d-label sm" x="360" y="112" text-anchor="middle">Send a message</text>
+    <text class="d-label sm" x="360" y="138" text-anchor="middle">Make a payment</text>
+    <text class="d-label sm" x="360" y="164" text-anchor="middle">Sign a document</text>
+    <text class="d-label sm" x="360" y="190" text-anchor="middle">Delete anything</text>
+    <text class="d-sub" x="360" y="232" text-anchor="middle">finishes the rest while waiting</text>
+    <rect class="d-box" x="492" y="44" width="216" height="206" rx="12"/>
+    <text class="d-label" x="600" y="72" text-anchor="middle">Off-limits</text>
+    <line class="d-edge dash" x1="512" y1="86" x2="688" y2="86"/>
+    <text class="d-label sm" x="600" y="112" text-anchor="middle">Trade securities</text>
+    <text class="d-label sm" x="600" y="138" text-anchor="middle">Move money between accounts</text>
+    <text class="d-label sm" x="600" y="164" text-anchor="middle">Use someone else's account</text>
+    <text class="d-sub" x="600" y="232" text-anchor="middle">closed by rule, even if approved</text>
+    <line class="d-edge accent" x1="40" y1="272" x2="672" y2="272"/>
+    <polygon class="d-arrow accent" points="670,267 680,272 670,277"/>
+    <text class="d-sub" x="360" y="294" text-anchor="middle">The less reversible the action, the further right it goes</text>
+</svg>
+</div>
+<p>If you cannot approve right away, Duet does not stall. It finishes the parts that need no approval and brings the request back later. Results cite the email, file or spreadsheet they came from. Every action also passes Anthropic's <strong>auto mode classifier</strong>, the same safeguard that stops Claude Code from taking steps you did not ask for. How that classifier became the default is covered in this wiki's <a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking</a>.</p>
+<p>The right-hand tier matters because an approval button is not the last line of defense. Tired or busy people approve out of habit. Trading securities and moving money between accounts are where that habit ends most expensively, so Duet never puts up an approval screen for them at all.</p>
+
+<h3>The model never sees your password</h3>
+<p>Once a personal agent touches mail, payments and signatures, the first question is who holds the passwords. Anthropic's answer is three filters outside the model.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 292" role="img" aria-label="Duet's three filters: requests from Claude Duet (Opus 5.5, cloud VM) go through a credential proxy (holds passwords and tokens for the model) to connected apps and sites, through a sensitive-data classifier (blocks card and ID numbers) to outgoing messages, and through the auto mode classifier (filters unrequested actions) to one-time Link card payments">
+    <text class="d-label" x="360" y="24" text-anchor="middle">The model never sees your password — three filters</text>
+    <rect class="d-box accent" x="16" y="111" width="160" height="60" rx="12"/>
+    <text class="d-label" x="96" y="137" text-anchor="middle">Claude Duet</text>
+    <text class="d-sub" x="96" y="157" text-anchor="middle">Opus 5.5 · cloud VM</text>
+    <line class="d-edge" x1="176" y1="141" x2="240" y2="69"/>
+    <line class="d-edge" x1="176" y1="141" x2="240" y2="141"/>
+    <line class="d-edge" x1="176" y1="141" x2="240" y2="213"/>
+    <rect class="d-box" x="240" y="40" width="230" height="58" rx="10"/>
+    <text class="d-label sm" x="355" y="64" text-anchor="middle">Credential proxy</text>
+    <text class="d-sub" x="355" y="84" text-anchor="middle">holds passwords, tokens</text>
+    <rect class="d-box" x="240" y="112" width="230" height="58" rx="10"/>
+    <text class="d-label sm" x="355" y="136" text-anchor="middle">Sensitive-data classifier</text>
+    <text class="d-sub" x="355" y="156" text-anchor="middle">never sends card or ID numbers</text>
+    <rect class="d-box" x="240" y="184" width="230" height="58" rx="10"/>
+    <text class="d-label sm" x="355" y="208" text-anchor="middle">auto mode classifier</text>
+    <text class="d-sub" x="355" y="228" text-anchor="middle">filters unrequested actions</text>
+    <line class="d-edge accent" x1="470" y1="69" x2="522" y2="69"/>
+    <polygon class="d-arrow accent" points="520,65 528,69 520,73"/>
+    <line class="d-edge accent" x1="470" y1="141" x2="522" y2="141"/>
+    <polygon class="d-arrow accent" points="520,137 528,141 520,145"/>
+    <line class="d-edge accent" x1="470" y1="213" x2="522" y2="213"/>
+    <polygon class="d-arrow accent" points="520,209 528,213 520,217"/>
+    <rect class="d-box soft" x="530" y="40" width="174" height="58" rx="10"/>
+    <text class="d-label sm" x="617" y="64" text-anchor="middle">Apps and websites</text>
+    <text class="d-sub" x="617" y="84" text-anchor="middle">proxy makes API calls</text>
+    <rect class="d-box soft" x="530" y="112" width="174" height="58" rx="10"/>
+    <text class="d-label sm" x="617" y="136" text-anchor="middle">Outgoing messages</text>
+    <text class="d-sub" x="617" y="156" text-anchor="middle">health, money on request</text>
+    <rect class="d-box soft" x="530" y="184" width="174" height="58" rx="10"/>
+    <text class="d-label sm" x="617" y="208" text-anchor="middle">One-time Link card</text>
+    <text class="d-sub" x="617" y="228" text-anchor="middle">new virtual card each time</text>
+    <text class="d-sub" x="360" y="276" text-anchor="middle">Injection defenses from browser-use research · external pen test and bug bounty</text>
+</svg>
+</div>
+<ul>
+    <li><strong>A proxy holds the credentials.</strong> Duet handles credentials the way Claude Managed Agents do. Sign-in data is kept apart from the environment where the model runs code, and a separate proxy fetches the credentials and makes the API calls. When a password has to be typed, it goes into a separate form, not the chat.</li>
+    <li><strong>A classifier reads every outgoing message.</strong> A new dedicated classifier and a safety system prompt check each message. The strictest tier, such as credit card numbers and government ID numbers, is refused even on request. Health and personal finance details go out only when you explicitly tell Duet to send them.</li>
+    <li><strong>Payments use a one-time card.</strong> Purchases go through Link, Stripe's digital wallet. Duet confirms the item, Link asks for your approval again, and then a virtual card valid for that one purchase is created. Your real card number never reaches the store. Shop Pay works at Shopify stores.</li>
+</ul>
+<p>Defenses against <strong>prompt injection</strong>, instructions hidden in a web page to steer an agent, come from Anthropic's browser-use research. Internal red teams and an outside firm penetration-tested Duet, and it is covered by the public bug bounty. Anthropic says it will publish more safety design detail in the coming days.</p>
+
+<h3>What 6,000-plus connectors are for</h3>
+<p>Duet can use more than 6,000 connectors and plugins from the Claude Marketplace. For sites without a connector, it opens them in its own cloud browser. Here are the announcement's examples, with the moment a human steps in.</p>
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>Task</th><th>Tools</th><th>Where you click</th></tr></thead>
+    <tbody>
+        <tr><td>Find missed messages and reply</td><td>Gmail · Slack</td><td>Send the reply</td></tr>
+        <tr><td>Check unpaid invoices and chase them</td><td>QuickBooks · Stripe</td><td>Send the reminder</td></tr>
+        <tr><td>Prepare payroll</td><td>Gusto</td><td>Final sign-off</td></tr>
+        <tr><td>Draft a job posting</td><td>LinkedIn</td><td>Post after editing</td></tr>
+        <tr><td>Send agreements for signature</td><td>Docusign</td><td>Send</td></tr>
+        <tr><td>Draft sales follow-ups</td><td>HubSpot history</td><td>Send</td></tr>
+        <tr><td>Build a social campaign</td><td>Canva</td><td>Publish</td></tr>
+        <tr><td>Set up and run an online store</td><td>Shopify</td><td>Pay, go live</td></tr>
+    </tbody>
+</table>
+</div>
+<p>There are gaps. Microsoft 365 is not supported yet and Slack has limits. Signing in to sites with logins saved in 1Password is "coming soon." A launch-week outside review noted that scheduled runs cannot use custom connectors.</p>
+<p>Most of the use cases in the announcement are moments where Duet noticed something first. A real estate broker said Duet flagged, unprompted, a property showing booked on the wrong day. A brand strategist got a call brief along with an offer to move the call, because it sat right before her flight. The owner of a business with about 110 employees handed it accounting, support and marketing and had it work through invoices across stores. Inside Anthropic, Boris Cherny, who created Claude Code, talks through his to-do list with Duet on walks.</p>
+
+<h3>Who gets it, and at what cost</h3>
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>Item</th><th>Details</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Who</strong></td><td>Pro and Max subscribers with a US account, invited in waves from a waitlist. Team and Enterprise "later"</td></tr>
+        <tr><td><strong>App</strong></td><td>A standalone app separate from the Claude app. iOS and Android (the announcement also mentions claude.ai)</td></tr>
+        <tr><td><strong>Model</strong></td><td>Claude Opus 5.5, fixed. You cannot pick a model, and it sets effort per job</td></tr>
+        <tr><td><strong>Price</strong></td><td>No extra charge during the preview. Included in Pro and Max</td></tr>
+        <tr><td><strong>Usage limits</strong></td><td>Shares the five-hour and weekly limits at the chat rate. Background work such as briefs and checks counts too</td></tr>
+        <tr><td><strong>Welcome gift</strong></td><td>One full reset of the five-hour and weekly limits on admission, usable until November 30, 2026</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>The third always-on agent in six weeks</h3>
+<p>Duet did not arrive alone. Meta launched its personal agent Muse on September 8, and OpenAI launched Dots, always-on agents inside ChatGPT, at DevDay on September 29. All three run continuously in the cloud, look for work on their own and call a human before important actions. The details differ.</p>
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th></th><th>Claude Duet</th><th>OpenAI Dots</th><th>Meta Muse</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Launch</strong></td><td>Oct 21 · research preview</td><td>Sep 29 · DevDay</td><td>Sep 8 · US launch</td></tr>
+        <tr><td><strong>Model</strong></td><td>Claude Opus 5.5</td><td>GPT-6 Astra</td><td>Muse Spark family</td></tr>
+        <tr><td><strong>Where it works</strong></td><td>Its own VM and browser</td><td>A cloud computer and browser per dot</td><td>Runs in the background</td></tr>
+        <tr><td><strong>Proactive part</strong></td><td>Morning brief, checks every few hours</td><td>"Proactive research" when idle (app access read-only then)</td><td>Reports at milestones toward a goal</td></tr>
+        <tr><td><strong>Approval gate</strong></td><td>Fixed by action type: approve send, pay, sign, delete; trading and transfers barred</td><td>User-written Custom Rules: allow, require approval, block</td><td>Comes back when confirmation is needed</td></tr>
+        <tr><td><strong>Connections</strong></td><td>6,000+ connectors and plugins</td><td>4,000+ apps</td><td>Mail, calendar, payments and more</td></tr>
+        <tr><td><strong>Price and limits</strong></td><td>In Pro and Max; background work counts against limits</td><td>First dot included in Pro and Business Premium; chats with a dot don't count against limits</td><td>Free to start; Power $20, Maximum $100 per month</td></tr>
+    </tbody>
+</table>
+</div>
+<p>The biggest split is where the approval gate goes. Dots lets users write rules for what to allow and what to ask about. That is flexible, and a badly written rule runs exactly as written. Duet's lines were drawn in advance by Anthropic, by action type. It is less flexible, and there is no way for a user to accidentally allow a transfer. Usage accounting runs the opposite way too. Dots leaves conversations with a dot out of the limits, while Duet charges even the work it does alone in the background. That accounting is why its checks come only every few hours.</p>
+
+<h3>Where it still stumbles</h3>
+<ul>
+    <li><strong>It can misjudge urgency.</strong> Anthropic itself writes that it "might misread a thread or miscalibrate what's urgent." Checks are hours apart, so a truly urgent item can wait for the next one.</li>
+    <li><strong>You cannot see its browser.</strong> During the preview you cannot watch or take over Duet's cloud browser.</li>
+    <li><strong>Personal errands are weaker.</strong> Anthropic says tasks like booking tickets are not as strong as work tasks.</li>
+    <li><strong>No calls or texts.</strong> It sends email from connected accounts (after approval) but does not make calls or send texts. It does not see all the projects and files on your computer, and it can read your Claude work but not change it.</li>
+    <li><strong>Work it never brought back.</strong> A launch-week outside review described a task that sat in Duet's checklist without Duet raising it again, so by the time the user came back their attention had moved on. For an agent that speaks first, what it leaves unsaid is part of its performance.</li>
+</ul>
+
+<h3>How this wiki reads it</h3>
+<p>In <a href="/p/en/news-20260820-who-makes-the-call/">Who Gets to Make the Call</a>, this wiki covered Claude Tag letting the model decide when to step in. Duet takes that judgment out of a Slack channel and spreads it over a user's whole day. The model decides what is urgent and when to speak. The difference shows in the bill. Claude Tag kept the cost of reading extra context out of the limits, while Duet counts even the time it spends looking around on its own. Duet's "every few hours" is less a technical limit than a pricing design.</p>
+<p>On approvals, Duet confirms that article's conclusion: judgment does not disappear, it moves. In Duet it sits in three places: a classifier that screens every action, an approval request on your phone, and a deny list nobody can open. The last one resembles what <a href="/p/en/news-20261014-ledger-write-mcp/">Agents That Write to the Ledger</a> found in accounting software's period lock. Some writes are not left to an approval button at all and are closed one layer above it.</p>
+<p>This wiki's news candidates are also picked each morning by a scheduled Claude session. The session reads and summarizes, sends a notification, and registers an article only after a reply with item numbers. It is a small version of the same split between what an agent does alone and what waits for approval.</p>
+
+<h3>Fact-check notes</h3>
+<p class="scn-sub">The hero image is the share image (the app icon) from Anthropic's Claude Duet announcement, saved to the repository as webp. Features, approval rules, the deny list, credential handling (same design as Claude Managed Agents), the sensitive-data classifier, the auto mode classifier, Link payments, the 6,000-plus connectors and example tasks, shared limits, limitations and use cases follow Anthropic's <a href="https://claude.com/resources/articles/claude-duet" target="_blank" rel="noopener">Introducing Claude Duet</a>. The tab layout (Make, Tasks), finishing other work while an approval waits, source citations, the separate password form, chat search and where to turn it off, no Microsoft 365 and limited Slack, no calls or texts, no model choice, the ban on accessing someone else's account and the one-time limit reset on admission (until November 30) follow the Claude help article <a href="https://support.claude.com/en/articles/17631495-get-started-with-claude-duet" target="_blank" rel="noopener">"Get started with Claude Duet"</a>. <strong>The two official sources differ on platforms.</strong> The announcement lists iOS, Android and claude.ai, while the help article only gives iPhone and Android setup steps, so the body keeps both. The launch date (October 21) matches the <a href="https://x.com/claudeai/status/2112984664256241837" target="_blank" rel="noopener">official Claude account on X</a> and multiple reports. The specific description of a proxy fetching credentials and making API calls comes from coverage that unpacks the announcement's "same design as Managed Agents" (<a href="https://www.implicator.ai/anthropic-claude-duet-business-tasks/" target="_blank" rel="noopener">Implicator</a> and others). OpenAI Dots (September 29, GPT-6 Astra, cloud computer, read-only proactive research, Custom Rules, 4,000-plus apps, chats not counted against limits) follows <a href="https://siliconangle.com/2026/09/29/openai-launches-dots-always-on-ai-agents-in-chatgpt-with-their-own-cloud-computers/" target="_blank" rel="noopener">SiliconANGLE</a> and <a href="https://betanews.com/article/openai-dots-agents-chatgpt/" target="_blank" rel="noopener">BetaNews</a>. Meta Muse (September 8, US, free to start, Power $20 and Maximum $100) follows <a href="https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/" target="_blank" rel="noopener">Meta's announcement</a> and <a href="https://techcrunch.com/2026/09/08/meta-debuts-its-muse-ai-agent-will-consumers-trust-it/" target="_blank" rel="noopener">TechCrunch</a>. Sources disagree on the version of Muse's underlying model, so the table says only "Muse Spark family." <strong>The note that scheduled runs cannot use custom connectors and the "never brought back" case come from coverage summarizing outside reviews; the reviews themselves were not read.</strong> Customers and Anthropic staff quoted in the announcement are not named, except Boris Cherny, who is a public figure. The environment used to write this article could not open some news pages because of its network policy, so the two official sources were read directly and the rest is carried over only where search summaries agree.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · News &amp; Articles · 2026 &middot; <span class="pr-k">Created</span> 2026-10-22 &middot; <span class="pr-k">Updated</span> 2026-10-22</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/news-20260820-who-makes-the-call/">Who Gets to Make the Call — Four Scenes from August</a></li><li><a href="/p/en/claude-md-constitution/">Claude&#x27;s Constitution — What the Model Is Told About Itself</a></li><li><a href="/p/en/news-20260901-whose-usage/">Who Is Spending My Limit — Three Scenes from Claude Usage</a></li><li><a href="/p/en/news-20260814-auto-mode-stateless-mcp/">Defaults That Stop Asking — The Approval Button and the Session Vanished in the Same Week</a></li></ul>
+</nav>
+</body>
+</html>
