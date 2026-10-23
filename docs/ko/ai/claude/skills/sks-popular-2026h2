@@ -1,0 +1,300 @@
+<h2>2026년 하반기 인기 스킬 — 설치 순위 상위 7개와 쓰는 법</h2>
+
+<h3>세 줄 요약</h3>
+<ul>
+    <li>2026년 10월 22일 기준 skills.sh 누적 설치 1위는 <strong>find-skills</strong>(약 398만)다. 공식 Claude 플러그인 디렉터리에서는 <strong>frontend-design</strong>(약 113만)과 <strong>Superpowers</strong>(약 101만)가 1·2위다.</li>
+    <li>상위권은 크게 다섯 종류다. 스킬을 찾아 주는 스킬, 계획을 캐묻는 스킬, 브라우저·영상 같은 손발을 주는 스킬, 취향과 규칙을 심는 스킬, 개발 방법론 전체를 묶은 스킬이다.</li>
+    <li>설치 수는 품질 점수가 아니다. 계수기마다 세는 단위가 다르고, skills.sh는 저장소 단위로 세서 스킬이 많은 저장소가 여러 칸을 한꺼번에 차지한다.</li>
+</ul>
+
+<p>스킬은 에이전트가 필요할 때 읽어 들이는 마크다운 한 장(<code>SKILL.md</code>)과 그 폴더다. 맨 위 머리말(frontmatter)의 <code>description</code>이 언제 이 스킬을 꺼낼지 정한다. 자세한 원리는 <a href="#!skl-overview">스킬이란</a>과 <a href="#!skl-context">스킬의 구조와 동작 원리</a>에 있다. 이 글은 2026년 하반기에 가장 많이 설치된 스킬을 고르고, 각 스킬의 원본 <code>SKILL.md</code>를 직접 읽어 무엇을 하는지, 어떻게 쓰는지, 어디서 쓸모 있는지를 정리한다.</p>
+
+<h3>순위는 어디서 세나</h3>
+<p>"가장 인기 있는 스킬"을 한 숫자로 말하기는 어렵다. 스킬을 세는 곳이 여럿이고 단위가 제각각이기 때문이다. 같은 frontend-design도 어디서 세느냐에 따라 숫자가 다르다.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 262" role="img" aria-label="스킬 설치 수를 세는 세 곳: skills.sh(npx skills CLI 설치, 저장소 단위로 함께 셈), Claude 공식 디렉터리(플러그인 설치 수, 스킬 묶음도 플러그인으로), ClawHub·SkillHub(OpenClaw·중국 설치 수). 같은 frontend-design이 skills.sh 1,016,129, 공식 디렉터리 1,134,112로 다르다">
+    <text class="d-label" x="360" y="24" text-anchor="middle">같은 스킬, 세 개의 계수기</text>
+    <rect class="d-box" x="12" y="42" width="216" height="92" rx="12"/>
+    <text class="d-label" x="120" y="70" text-anchor="middle">skills.sh</text>
+    <text class="d-sub" x="120" y="94" text-anchor="middle">npx skills CLI 설치 수</text>
+    <text class="d-sub" x="120" y="114" text-anchor="middle">저장소 단위로 함께 셈</text>
+    <rect class="d-box" x="252" y="42" width="216" height="92" rx="12"/>
+    <text class="d-label" x="360" y="70" text-anchor="middle">Claude 공식 디렉터리</text>
+    <text class="d-sub" x="360" y="94" text-anchor="middle">플러그인 설치 수</text>
+    <text class="d-sub" x="360" y="114" text-anchor="middle">스킬 묶음도 플러그인으로</text>
+    <rect class="d-box soft" x="492" y="42" width="216" height="92" rx="12"/>
+    <text class="d-label" x="600" y="70" text-anchor="middle">ClawHub · SkillHub</text>
+    <text class="d-sub" x="600" y="94" text-anchor="middle">OpenClaw·중국 설치 수</text>
+    <text class="d-sub" x="600" y="114" text-anchor="middle">다른 생태계, 다른 단위</text>
+    <line class="d-edge" x1="120" y1="134" x2="250" y2="170"/>
+    <line class="d-edge" x1="360" y1="134" x2="360" y2="170"/>
+    <rect class="d-box accent" x="90" y="170" width="540" height="62" rx="12"/>
+    <text class="d-label" x="360" y="196" text-anchor="middle">frontend-design 한 스킬의 숫자</text>
+    <text class="d-sub" x="360" y="217" text-anchor="middle">skills.sh 1,016,129 · 공식 디렉터리 1,134,112 (10월 22~23일)</text>
+    <text class="d-sub" x="360" y="252" text-anchor="middle">숫자를 더하지 말고, 같은 계수기 안에서만 비교한다</text>
+</svg>
+</div>
+<p>skills.sh는 Vercel이 운영하는 스킬 디렉터리로, <code>npx skills</code> 명령으로 설치된 횟수를 센다. 여기서 주의할 점이 있다. 설치를 저장소 단위로 세기 때문에, 한 저장소에 스킬이 여러 개면 함께 설치된 스킬들이 나란히 상위에 오른다. 아래 상위 10개 가운데 다섯 칸이 <code>mattpocock/skills</code>, 두 칸이 <code>heygen-com/hyperframes</code>에서 나온 것도 그래서다. 여러 순위를 모아 매일 공개하는 오픈 데이터(LinklyAI best-skills, CC BY 4.0)가 이 한계를 직접 적어 두었다.</p>
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>skills.sh 누적 설치 (2026-10-22)</th><th>저장소</th><th>설치 수</th></tr></thead>
+    <tbody>
+        <tr><td><strong>find-skills</strong></td><td>vercel-labs/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>3,977,808</strong></td></tr>
+        <tr><td><strong>grill-me</strong></td><td>mattpocock/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:35%"></span></span>1,408,491</td></tr>
+        <tr><td><strong>agent-browser</strong></td><td>vercel-labs/agent-browser</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:30%"></span></span>1,206,479</td></tr>
+        <tr><td>grill-with-docs</td><td>mattpocock/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:30%"></span></span>1,206,243</td></tr>
+        <tr><td>hyperframes-cli</td><td>heygen-com/hyperframes</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:29%"></span></span>1,169,530</td></tr>
+        <tr><td>improve-codebase-architecture</td><td>mattpocock/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:29%"></span></span>1,150,698</td></tr>
+        <tr><td><strong>hyperframes</strong></td><td>heygen-com/hyperframes</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:28%"></span></span>1,130,394</td></tr>
+        <tr><td>tdd</td><td>mattpocock/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:28%"></span></span>1,127,010</td></tr>
+        <tr><td>media-use</td><td>heygen-com/hyperframes</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:26%"></span></span>1,040,244</td></tr>
+        <tr><td>setup-matt-pocock-skills</td><td>mattpocock/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:26%"></span></span>1,040,124</td></tr>
+    </tbody>
+</table>
+</div>
+<p>그래서 이 글은 <strong>같은 저장소를 한 칸으로 접어</strong> 고른다. skills.sh 상위 저장소 넷(find-skills·grill-me·agent-browser·hyperframes)에, 공식 디렉터리 1·2위인 frontend-design과 Superpowers, 그리고 같은 오픈 데이터의 종합 점수(설치·성장·언급·신뢰를 섞은 &ldquo;설치할 만한 정도&rdquo;) 상위 10위 안에 든 Vercel의 React 규칙 스킬을 더해 일곱이다. 종합 점수 1위는 agent-browser(77.3)였다.</p>
+
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>스킬</th><th>종류</th><th>한 줄 용도</th></tr></thead>
+    <tbody>
+        <tr><td><strong>find-skills</strong></td><td>찾기</td><td>필요한 스킬을 검색·검증해 설치까지</td></tr>
+        <tr><td><strong>grill-me</strong></td><td>묻기</td><td>계획을 라운드마다 캐물어 빈틈을 없앰</td></tr>
+        <tr><td><strong>agent-browser</strong></td><td>손발</td><td>에이전트가 브라우저를 직접 조작</td></tr>
+        <tr><td><strong>hyperframes</strong></td><td>손발</td><td>HTML로 영상을 만들고 렌더</td></tr>
+        <tr><td><strong>frontend-design</strong></td><td>취향</td><td>뻔한 AI 디자인을 피하는 시각 판단</td></tr>
+        <tr><td><strong>Superpowers</strong></td><td>방법론</td><td>설계부터 머지까지 개발 절차 전체</td></tr>
+        <tr><td><strong>vercel-react-best-practices</strong></td><td>규칙</td><td>React·Next.js 성능 규칙 70개</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>1. find-skills — 스킬을 찾아 주는 스킬</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/find-skills.webp" width="1440" height="624"
+         alt="vercel-labs/skills 저장소의 find-skills SKILL.md 머리말(name·description)과 설치 명령 npx skills add vercel-labs/skills --skill find-skills, skills.sh 설치 3,977,808을 적은 카드">
+    <figcaption>find-skills의 SKILL.md 머리말과 설치 명령 — 출처: vercel-labs/skills (MIT), 이 위키가 원문을 카드로 렌더</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> 사용자가 "X는 어떻게 해?", "X 하는 스킬 있어?"처럼 물으면 이 스킬이 깨어난다. 에이전트는 먼저 skills.sh 순위표에서 이미 검증된 스킬이 있는지 보고, 없으면 <code>npx skills find</code>로 검색한다. 그다음 바로 추천하지 않고 세 가지를 확인한다. 설치 수가 1천 이상인지, 출처가 믿을 만한지(vercel-labs·anthropics·microsoft 같은 공식 출처), 원본 저장소의 GitHub 별이 100개를 넘는지다. 통과한 것만 이름·용도·설치 수·설치 명령과 함께 보여 주고, 사용자가 원하면 설치까지 한다.</p>
+<pre><code>npx skills add vercel-labs/skills --skill find-skills   # 설치
+# 이후 대화에서
+"PR 리뷰를 도와주는 스킬 있어?"   → npx skills find pr review
+                                  → 후보 검증 → 설치 명령 제시
+npx skills add &lt;owner/repo@skill&gt; -g -y                 # 사용자 수준 설치</code></pre>
+<p><strong>어디서 쓸모 있나.</strong> 스킬 생태계의 입구 역할이다. 1위인 이유도 여기 있다. 처음 스킬을 들이는 사람이 가장 먼저 설치하고, 이후 다른 스킬은 이 스킬을 거쳐 들어온다. 검증 기준을 스킬 안에 적어 둔 점도 눈여겨볼 만하다. 다만 그 기준 역시 설치 수와 별 수라, 이 글의 결론처럼 숫자 이상의 판단은 사람이 해야 한다.</p>
+
+<h3>2. grill-me — 계획을 끝까지 캐묻는 인터뷰</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/grill-me.webp" width="1440" height="624"
+         alt="mattpocock/skills 저장소의 grill-me SKILL.md 머리말(name: grill-me, disable-model-invocation: true, description: A relentless interview to sharpen a plan or design.)과 설치 명령을 적은 카드">
+    <figcaption>grill-me의 SKILL.md는 이 머리말과 한 줄 본문이 전부다 — 출처: mattpocock/skills (MIT), 이 위키가 원문을 카드로 렌더</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> grill-me의 <code>SKILL.md</code>는 일곱 줄이다. 본문은 "grilling 스킬을 불러라" 한 줄뿐이고, 실제 규칙은 같은 저장소의 <code>grilling</code> 스킬에 있다. 머리말의 <code>disable-model-invocation: true</code>는 모델이 알아서 꺼내지 말고 사용자가 <code>/grill-me</code>로 부를 때만 쓰라는 뜻이다. 작은 스킬이 다른 스킬을 부르는 구성이라, 스킬이 "마크다운 한 장으로 된 재사용 단위"라는 말이 실제로 어떻게 쓰이는지 잘 보여 준다.</p>
+<p>grilling은 계획을 <strong>결정 나무</strong>로 본다. 하나의 결정에는 그 결정에 달린 다음 결정들이 가지처럼 붙는다. 에이전트는 선행 결정이 이미 정해져서 <em>지금</em> 물을 수 있는 질문(프런티어)을 한 라운드에 모두 묻는다. 질문마다 번호를 달고 추천 답을 함께 적으며, "yes"라고만 답하면 추천을 받아들이도록 문장을 짠다.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 268" role="img" aria-label="grill-me의 라운드: 계획을 /grill-me로 넘기면, 지금 물을 수 있는 질문 전부를 번호와 추천 답으로 묻는 라운드가 돌고, 사용자가 답하면(yes는 추천 수락) 프런티어가 갱신되어 다음 라운드로 간다. 사실 확인은 서브에이전트가 사용자에게 묻지 않고 찾는다. 프런티어가 비면 끝나고, 합의를 확인한 뒤에야 실행한다">
+    <text class="d-label" x="360" y="24" text-anchor="middle">grill-me 한 판 — 프런티어가 빌 때까지 라운드를 돈다</text>
+    <rect class="d-box soft" x="14" y="52" width="140" height="62" rx="10"/>
+    <text class="d-label sm" x="84" y="78" text-anchor="middle">계획·설계안</text>
+    <text class="d-sub" x="84" y="98" text-anchor="middle">/grill-me로 시작</text>
+    <line class="d-edge" x1="154" y1="83" x2="174" y2="83"/>
+    <polygon class="d-arrow" points="172,79 180,83 172,87"/>
+    <rect class="d-box accent" x="180" y="52" width="210" height="62" rx="10"/>
+    <text class="d-label sm" x="285" y="78" text-anchor="middle">한 라운드</text>
+    <text class="d-sub" x="285" y="98" text-anchor="middle">지금 물을 수 있는 질문 전부</text>
+    <line class="d-edge" x1="390" y1="83" x2="410" y2="83"/>
+    <polygon class="d-arrow" points="408,79 416,83 408,87"/>
+    <rect class="d-box" x="416" y="52" width="140" height="62" rx="10"/>
+    <text class="d-label sm" x="486" y="78" text-anchor="middle">사용자 답</text>
+    <text class="d-sub" x="486" y="98" text-anchor="middle">yes = 추천 수락</text>
+    <line class="d-edge" x1="556" y1="83" x2="576" y2="83"/>
+    <polygon class="d-arrow" points="574,79 582,83 574,87"/>
+    <rect class="d-box" x="582" y="52" width="124" height="62" rx="10"/>
+    <text class="d-label sm" x="644" y="78" text-anchor="middle">프런티어 갱신</text>
+    <text class="d-sub" x="644" y="98" text-anchor="middle">다음 라운드로</text>
+    <path class="d-edge dash" d="M644,114 L644,140 L285,140 L285,120"/>
+    <polygon class="d-arrow" points="281,122 285,115 289,122"/>
+    <rect class="d-box soft" x="180" y="168" width="210" height="62" rx="10"/>
+    <text class="d-label sm" x="285" y="194" text-anchor="middle">사실은 서브에이전트가</text>
+    <text class="d-sub" x="285" y="214" text-anchor="middle">사용자에게 묻지 않고 찾음</text>
+    <line class="d-edge dash" x1="230" y1="114" x2="230" y2="168"/>
+    <rect class="d-box accent" x="416" y="168" width="290" height="62" rx="10"/>
+    <text class="d-label sm" x="561" y="194" text-anchor="middle">프런티어가 비면 끝</text>
+    <text class="d-sub" x="561" y="214" text-anchor="middle">합의를 확인한 뒤에야 실행한다</text>
+    <text class="d-sub" x="360" y="256" text-anchor="middle">사실은 에이전트가 찾고, 결정은 사람에게 묻는다</text>
+</svg>
+</div>
+<pre><code>npx skills add mattpocock/skills --skill grill-me
+# 또는 Claude Code 플러그인으로 저장소 전체를
+claude plugin install mattpocock-skills@claude-plugins-official
+
+/grill-me   ← 계획이나 설계를 붙여 넣고 호출
+❓ Q1 - 저장 위치: …   ➡️ 추천 답
+❓ Q2 - 실패 시 동작: … ➡️ 추천 답
+(답하면 다음 라운드)</code></pre>
+<p><strong>어디서 쓸모 있나.</strong> 코드를 짜기 전, 계획에 숨은 가정을 드러내는 데 쓴다. 사실 확인은 에이전트가 서브에이전트로 직접 찾고, 사용자에게는 결정만 묻는다. 질문이 쓸데없이 늘지 않는 이유다. 함께 상위권인 <strong>grill-with-docs</strong>(약 121만)는 같은 인터뷰를 하면서 <code>domain-modeling</code> 스킬로 용어집(<code>GLOSSARY.md</code>)과 결정 기록(ADR)을 그 자리에서 쓴다. ADR은 세 조건이 모두 맞을 때만 제안한다. 되돌리기 어렵고, 맥락 없이 보면 놀랍고, 실제 대안 사이에서 고른 결정일 때다. 소셜 언급량 1위(최근 7일)도 grill-me였다.</p>
+
+<h3>3. agent-browser — 에이전트에게 브라우저를</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/agent-browser.webp" width="1440" height="624"
+         alt="vercel-labs/agent-browser 저장소의 agent-browser SKILL.md 머리말(Browser automation CLI for AI agents…)과 설치 명령 npm i -g agent-browser && agent-browser install을 적은 카드">
+    <figcaption>agent-browser의 SKILL.md 머리말과 설치 명령 — 출처: vercel-labs/agent-browser (Apache-2.0), 이 위키가 원문을 카드로 렌더</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> Rust로 만든 브라우저 자동화 CLI다. Chrome DevTools 프로토콜로 Chrome을 직접 움직이며, Playwright나 Puppeteer에 기대지 않는다. 핵심은 페이지를 HTML 그대로 읽지 않는 데 있다. 접근성 트리를 찍은 <strong>스냅숏</strong>에서 버튼·입력칸마다 <code>@e1</code>, <code>@e2</code> 같은 짧은 참조를 붙여 주고, 에이전트는 그 참조로 클릭하고 입력한다. 원본 문서는 이렇게 하면 HTML 대신 200~400토큰만 읽으면 된다고 설명한다. <code>SKILL.md</code> 자체는 안내판이라, 실제 사용법은 설치된 버전에서 <code>agent-browser skills get core</code>로 불러온다. 그래서 설명서가 낡지 않는다.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 220" role="img" aria-label="agent-browser 작업 루프: open으로 페이지를 열고, snapshot -i로 접근성 트리와 @eN 참조를 얻고, click @e3·fill @e1로 참조를 눌러 행동하고, 페이지가 바뀌면 다시 snapshot을 찍는다. HTML 대신 200~400토큰의 참조 목록을 읽는다">
+    <text class="d-label" x="360" y="24" text-anchor="middle">찍고, 참조로 누르고, 다시 찍는다</text>
+    <rect class="d-box soft" x="18" y="52" width="156" height="66" rx="10"/>
+    <text class="d-label sm" x="96" y="78" text-anchor="middle">open &lt;url&gt;</text>
+    <text class="d-sub" x="96" y="100" text-anchor="middle">페이지 열기</text>
+    <line class="d-edge" x1="174" y1="85" x2="194" y2="85"/>
+    <polygon class="d-arrow" points="192,81 200,85 192,89"/>
+    <rect class="d-box accent" x="200" y="52" width="156" height="66" rx="10"/>
+    <text class="d-label sm" x="278" y="78" text-anchor="middle">snapshot -i</text>
+    <text class="d-sub" x="278" y="100" text-anchor="middle">요소마다 @eN 참조</text>
+    <line class="d-edge" x1="356" y1="85" x2="376" y2="85"/>
+    <polygon class="d-arrow" points="374,81 382,85 374,89"/>
+    <rect class="d-box" x="382" y="52" width="156" height="66" rx="10"/>
+    <text class="d-label sm" x="460" y="78" text-anchor="middle">click @e3</text>
+    <text class="d-sub" x="460" y="100" text-anchor="middle">fill @e1 "검색어"</text>
+    <line class="d-edge" x1="538" y1="85" x2="558" y2="85"/>
+    <polygon class="d-arrow" points="556,81 564,85 556,89"/>
+    <rect class="d-box" x="564" y="52" width="140" height="66" rx="10"/>
+    <text class="d-label sm" x="634" y="78" text-anchor="middle">바뀌면 다시</text>
+    <text class="d-sub" x="634" y="100" text-anchor="middle">snapshot -i</text>
+    <path class="d-edge dash" d="M634,118 L634,148 L278,148 L278,124"/>
+    <polygon class="d-arrow" points="274,126 278,119 282,126"/>
+    <text class="d-sub" x="456" y="168" text-anchor="middle">참조는 다음 스냅숏에서도 재사용</text>
+    <text class="d-sub" x="360" y="204" text-anchor="middle">HTML 대신 200~400토큰의 참조 목록을 읽는다 (원본 문서 설명)</text>
+</svg>
+</div>
+<pre><code>npm i -g agent-browser &amp;&amp; agent-browser install   # CLI와 Chrome 설치
+npx skills add vercel-labs/agent-browser           # 스킬 설치
+
+agent-browser open https://example.com
+agent-browser snapshot -i          # 상호작용 요소만
+agent-browser click @e3
+agent-browser skills get electron  # Slack·VS Code 같은 Electron 앱용 하위 스킬</code></pre>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/agent-browser-contact-sheet.webp" width="1440" height="438"
+         alt="agent-browser 녹화 기능으로 만든 접촉 인화(contact sheet): 대시보드 화면을 시간 순으로 찍은 여섯 칸이 타임스탬프와 함께 나열되고, 일부 칸에는 강조 표시가 있다">
+    <figcaption>agent-browser가 브라우저 작업을 녹화해 만든 접촉 인화 예시 — 출처: vercel-labs/agent-browser 문서 (Apache-2.0)</figcaption>
+</figure>
+<p><strong>어디서 쓸모 있나.</strong> 웹앱 테스트, 폼 입력, 화면 캡처, 데이터 추출처럼 에이전트가 실제 웹페이지를 다뤄야 하는 일이다. 하위 스킬로 Electron 앱(VS Code·Slack·Figma), 탐색형 QA, 사이트의 요청을 녹화해 API 클라이언트를 만드는 일, 클라우드 브라우저까지 넓어진다. 공식 디렉터리 6위인 Playwright MCP와 하는 일이 겹친다. 차이는 MCP 도구 대신 짧은 CLI 명령으로 움직인다는 데 있다. Playwright 쪽 문서도 코딩 에이전트에게는 CLI와 스킬 조합이 토큰을 덜 쓴다고 적었다.</p>
+
+<h3>4. hyperframes — HTML로 영상을 만든다</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/hyperframes.webp" width="1440" height="624"
+         alt="heygen-com/hyperframes 저장소의 로고(초록·청록 삼각형 두 개)와 hyperframes SKILL.md 머리말(HTML rendered to video…), 설치 명령 npx skills add heygen-com/hyperframes를 적은 카드">
+    <figcaption>hyperframes의 SKILL.md 머리말과 설치 명령, 로고 — 출처: heygen-com/hyperframes (Apache-2.0), 이 위키가 원문을 카드로 렌더</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> HeyGen이 공개한 오픈소스 프레임워크로, HTML·CSS로 짠 장면을 영상으로 렌더한다. 멈춰 둔 타임라인을 한 프레임씩 넘기며 찍기 때문에 같은 파일은 언제 렌더해도 같은 영상이 나온다. <code>index.html</code>이 영상 전체를, <code>compositions/</code> 아래 파일이 장면 하나씩을 맡는다. 스킬은 이 렌더 규칙과 작업 순서, 영상 종류별로 필요한 것(소리·자막·화면비)을 담고 있다. 웹사이트를 주제로 할 때는 사이트를 그대로 캡처해 재료로 쓴다.</p>
+<pre><code>npx hyperframes skills update        # 핵심 스킬 묶음 설치(에이전트용 권장)
+npx skills add heygen-com/hyperframes   # 또는 선택 설치
+
+npx hyperframes init my-video
+npx hyperframes capture https://example.com --json   # 사이트를 재료로
+npx hyperframes check --json                         # 규칙 위반 검사
+npx hyperframes render --quality looks --output out.mp4</code></pre>
+<p><strong>어디서 쓸모 있나.</strong> 제품 소개 영상, 설명 영상, 차트 애니메이션, 세로 클립처럼 반복해서 고쳐야 하는 영상이다. 영상 편집기 대신 코드라서 에이전트가 고치고 다시 렌더하기 쉽다. 최근 7일 성장률 1위(+13.3%)였고, 저장소의 스킬 일곱 개가 함께 상위 40위 안에 들었다.</p>
+
+<h3>5. frontend-design — 뻔한 AI 디자인을 피하는 법</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/frontend-design.webp" width="1440" height="624"
+         alt="anthropics/skills 저장소의 frontend-design SKILL.md 머리말(Guidance for distinctive, intentional visual design…)과 설치 명령 /plugin install frontend-design@claude-plugins-official을 적은 카드">
+    <figcaption>frontend-design의 SKILL.md 머리말과 설치 명령 — 출처: anthropics/skills (Apache-2.0), 이 위키가 원문을 카드로 렌더</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> Anthropic이 만든 디자인 판단 스킬이다. 에이전트에게 "모든 고객에게 남과 헷갈리지 않는 정체성을 주는 디자인 스튜디오의 책임자"라는 역할을 준다. 먼저 이 화면이 무엇에 관한 것인지, 누가 보는지, 무엇을 해야 하는지를 정하고, 그 주제의 세계(업종·재료·쓰는 말)에서 색과 글꼴을 고르게 한다. 그리고 생성된 페이지의 흔한 티를 구체적으로 금지한다. 제목에서 한 단어만 강조하기, 라벨 전부 대문자, 순서가 없는 내용에 01·02·03 번호 붙이기, 모든 구역에 같은 페이드인 넣기 같은 것들이다. 작업 순서는 계획, 요청과 대조, 제작, 자기 비평이다.</p>
+<pre><code>/plugin install frontend-design@claude-plugins-official
+# 또는
+npx skills add anthropics/skills --skill frontend-design
+
+"우리 동네 빵집 예약 페이지를 만들어 줘"   ← UI 작업이면 스스로 깨어남</code></pre>
+<p><strong>어디서 쓸모 있나.</strong> 랜딩 페이지, 대시보드, 앱 화면처럼 처음부터 UI를 만드는 일이다. 공식 디렉터리 설치 1위(1,134,112)이고, 종합 점수에서도 3위였다. 같은 오픈 데이터의 최근 7일 성장 순위에 UI 취향을 다루는 다른 스킬(ui-taste)이 2위로 올라 있는 것을 보면, "AI가 만든 티가 나는 화면"은 지금 많은 사람이 겪는 문제다.</p>
+
+<h3>6. Superpowers — 개발 방법론을 통째로</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/superpowers.webp" width="1440" height="624"
+         alt="obra/superpowers 저장소의 아이콘(검은 고리 모양)과 using-superpowers SKILL.md 머리말(Use when starting any conversation…), 설치 명령 /plugin install superpowers@claude-plugins-official을 적은 카드">
+    <figcaption>Superpowers의 진입 스킬 using-superpowers 머리말과 설치 명령, 아이콘 — 출처: obra/superpowers (MIT), 이 위키가 원문을 카드로 렌더</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> 스킬 15개를 묶은 개발 방법론이다. 진입점인 <code>using-superpowers</code>가 대화를 시작할 때마다 깨어나 "스킬이 맞을 가능성이 1%라도 있으면 반드시 먼저 부르라"고 못 박는다. 그 뒤 아래 일곱 단계 스킬이 차례로 자동 발동한다. 계획은 열정적이지만 맥락이 없는 신입 개발자도 따라 할 수 있을 만큼 잘게 쪼개고(작업당 2~5분), 구현은 실패하는 테스트를 먼저 쓰는 TDD로 한다.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 268" role="img" aria-label="Superpowers 기본 흐름 일곱 단계: brainstorming(무엇을 왜 만드는지), using-git-worktrees(격리된 작업 공간), writing-plans(2~5분 단위 작업), subagent-driven-development(작업마다 새 서브에이전트), test-driven-development(실패하는 테스트 먼저), requesting-code-review(작업 사이 리뷰), finishing-a-development-branch(머지·PR·폐기 선택)">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Superpowers 기본 흐름 — 스킬이 단계마다 스스로 깨어난다</text>
+    <rect class="d-box accent" x="12" y="44" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="124" y="68" text-anchor="middle">1 무엇을 왜 만드나</text>
+    <text class="d-sub" x="124" y="88" text-anchor="middle">brainstorming</text>
+    <line class="d-edge" x1="236" y1="73" x2="242" y2="73"/>
+    <polygon class="d-arrow" points="240,69 247,73 240,77"/>
+    <rect class="d-box" x="248" y="44" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="360" y="68" text-anchor="middle">2 격리된 작업 공간</text>
+    <text class="d-sub" x="360" y="88" text-anchor="middle">using-git-worktrees</text>
+    <line class="d-edge" x1="472" y1="73" x2="478" y2="73"/>
+    <polygon class="d-arrow" points="476,69 483,73 476,77"/>
+    <rect class="d-box" x="484" y="44" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="596" y="68" text-anchor="middle">3 2~5분 단위 계획</text>
+    <text class="d-sub" x="596" y="88" text-anchor="middle">writing-plans</text>
+    <path class="d-edge dash" d="M596,102 L596,112 L124,112 L124,122"/>
+    <polygon class="d-arrow" points="120,120 124,127 128,120"/>
+    <rect class="d-box" x="12" y="128" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="124" y="152" text-anchor="middle">4 작업마다 새 서브에이전트</text>
+    <text class="d-sub" x="124" y="172" text-anchor="middle">subagent-driven-development</text>
+    <line class="d-edge" x1="236" y1="157" x2="242" y2="157"/>
+    <polygon class="d-arrow" points="240,153 247,157 240,161"/>
+    <rect class="d-box" x="248" y="128" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="360" y="152" text-anchor="middle">5 실패하는 테스트 먼저</text>
+    <text class="d-sub" x="360" y="172" text-anchor="middle">test-driven-development</text>
+    <line class="d-edge" x1="472" y1="157" x2="478" y2="157"/>
+    <polygon class="d-arrow" points="476,153 483,157 476,161"/>
+    <rect class="d-box" x="484" y="128" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="596" y="152" text-anchor="middle">6 작업 사이 리뷰</text>
+    <text class="d-sub" x="596" y="172" text-anchor="middle">requesting-code-review</text>
+    <path class="d-edge dash" d="M596,186 L596,196 L360,196 L360,206"/>
+    <polygon class="d-arrow" points="356,204 360,211 364,204"/>
+    <rect class="d-box accent" x="248" y="212" width="224" height="50" rx="10"/>
+    <text class="d-label sm" x="360" y="234" text-anchor="middle">7 머지·PR·보관·폐기 선택</text>
+    <text class="d-sub" x="360" y="252" text-anchor="middle">finishing-a-development-branch</text>
+</svg>
+</div>
+<pre><code>/plugin install superpowers@claude-plugins-official
+
+"할 일 앱에 반복 일정 기능을 넣고 싶어"
+→ brainstorming이 먼저 깨어나 목적을 묻고 설계를 짧게 끊어 보여 줌
+→ 승인하면 작업 공간·계획·구현·리뷰가 차례로 진행</code></pre>
+<p><strong>어디서 쓸모 있나.</strong> 에이전트에게 몇 시간짜리 일을 맡길 때다. 원본 설명에 따르면 계획을 승인하면 에이전트가 두어 시간 동안 계획에서 벗어나지 않고 혼자 일하는 경우가 흔하다. 공식 디렉터리 설치 2위(1,009,371)이고, Claude Code 외에 Codex·Cursor·Gemini CLI 등 여러 하네스용 설치법을 함께 낸다. 반대로 짧은 질문에도 브레인스토밍부터 시작하므로, 가벼운 작업이 많은 사람에게는 무겁게 느껴질 수 있다.</p>
+
+<h3>7. vercel-react-best-practices — 70개 규칙을 우선순위로</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/vercel-react.webp" width="1440" height="624"
+         alt="vercel-labs/agent-skills 저장소의 vercel-react-best-practices SKILL.md 머리말(React and Next.js performance optimization guidelines from Vercel Engineering…)과 설치 명령을 적은 카드">
+    <figcaption>vercel-react-best-practices의 SKILL.md 머리말과 설치 명령 — 출처: vercel-labs/agent-skills (MIT), 이 위키가 원문을 카드로 렌더</figcaption>
+</figure>
+<p><strong>무엇을 하나.</strong> Vercel 엔지니어링이 정리한 React·Next.js 성능 규칙 70개를 8개 범주로 나누고 영향도 순으로 매겼다. 가장 위가 요청이 차례로 기다리는 폭포(waterfall) 없애기와 번들 크기 줄이기(둘 다 CRITICAL)이고, 서버 쪽 성능, 클라이언트 데이터 요청, 리렌더 순으로 내려간다. 에이전트는 React 코드를 쓰거나 리뷰할 때 이 순서대로 본다. 같은 저장소의 <strong>web-design-guidelines</strong>(종합 9위)는 리뷰할 때마다 최신 지침을 URL에서 새로 받아 와 <code>파일:줄</code> 형식으로 위반을 적는다.</p>
+<pre><code>npx skills add vercel-labs/agent-skills --skill vercel-react-best-practices
+npx skills add vercel-labs/agent-skills --skill web-design-guidelines -a claude-code
+
+"이 페이지 왜 느려?"   ← React·Next.js 작업이면 스스로 깨어남
+"내 UI 리뷰해 줘"     ← web-design-guidelines</code></pre>
+<p><strong>어디서 쓸모 있나.</strong> 팀의 코드 규칙을 문서 대신 에이전트에게 직접 심는 방식의 본보기다. 규칙이 우선순위와 접두어(<code>async-</code>, <code>bundle-</code>)로 정리돼 있어, 사내 규칙 스킬을 만들 때 그대로 따라 할 만하다.</p>
+
+<h3>고를 때 볼 것</h3>
+<ul>
+    <li><strong>설치 수는 인기의 숫자다.</strong> 같은 계수기 안에서만 비교하고, 저장소 단위로 함께 세는 효과를 감안한다. 종합 점수도 공식 출처 여부를 신뢰 점수로 쓸 뿐, 아직 보안 검사는 하지 않는다고 데이터 제공자가 밝혔다.</li>
+    <li><strong>스킬은 에이전트의 권한으로 돈다.</strong> 설치 전에 <code>SKILL.md</code>와 딸린 스크립트를 읽는다. 무엇을 실행하고 어디에 접속하는지 확인하는 방법은 <a href="#!skl-install">스킬 설치·보안·제작</a>에 정리했다.</li>
+    <li><strong>자동 발동 여부를 본다.</strong> frontend-design·Superpowers처럼 스스로 깨어나는 스킬은 편하지만 원치 않는 때도 끼어든다. grill-me처럼 <code>disable-model-invocation</code>으로 직접 부를 때만 쓰게 한 스킬도 있다.</li>
+    <li><strong>플러그인 순위는 따로 있다.</strong> 공식 디렉터리 상위 플러그인과 그 구성은 <a href="#!plc-popular-2026h2">2026년 하반기 인기 플러그인</a>에 정리했다.</li>
+</ul>
+
+<h3>사실검증 노트</h3>
+<p class="scn-sub">skills.sh 설치 수와 종합 점수(Worth-Installing Score)·최근 7일 성장률·소셜 언급 순위는 LinklyAI의 오픈 데이터 <a href="https://github.com/LinklyAI/best-skills" target="_blank" rel="noopener">best-skills</a>(CC BY 4.0)의 2026-10-22(UTC) 스냅숏 CSV를 직접 받아 옮겼다. 저장소 단위 집계 한계와 점수 구성(인기 0.30·성장 0.15·평판 0.20·유지보수 0.15·신뢰 0.20, 보안 검사 없음)은 같은 저장소의 방법론 문서에 따른 것이다. skills.sh 사이트는 이 글을 쓴 환경에서 열리지 않아 원 사이트 수치와 직접 대조하지는 못했다. 공식 Claude 플러그인 디렉터리 설치 수(frontend-design 1,134,112·Superpowers 1,009,371)는 2026-10-23(KST) <a href="https://claude.com/plugins" target="_blank" rel="noopener">claude.com/plugins</a> 페이지 데이터에서 읽었다. 각 스킬의 동작·명령·규칙은 해당 GitHub 저장소(vercel-labs/skills, mattpocock/skills, vercel-labs/agent-browser, heygen-com/hyperframes, anthropics/skills, obra/superpowers, vercel-labs/agent-skills)를 내려받아 <code>SKILL.md</code>와 README 원문을 직접 읽어 정리했다. &ldquo;200~400토큰&rdquo;과 &ldquo;두어 시간 혼자 일한다&rdquo;는 각 원본 문서의 자체 설명이다. 카드 이미지는 원문 머리말을 바꾸지 않고 이 위키가 렌더한 것이며(긴 설명은 &hellip;로 줄임), 로고·아이콘과 녹화 예시는 각 저장소에 커밋된 파일을 라이선스에 따라 실었다. 저장소 작성자 개인의 이름은 적지 않고 저장소 이름으로 가리켰다.</p>

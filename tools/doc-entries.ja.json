@@ -292,6 +292,21 @@
   "summary": "トークン・モデル単価と並列化のコスト感覚、全コマンド表とクイックリファレンスカードでシリーズを締める"
  },
  {
+  "name": "plc-popular-2026h2",
+  "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
+  "summary": "2026年10月23日の公式 Claude プラグインディレクトリ(271個)のインストール数上位を、anthropics/claude-plugins-official などの元のリポジトリの plugin.json・README・コマンド・エージェント・フックのファイルで確かめ、原文カードの画像・実行画面・図4点・表3点で整理 — 上位15個のうち10個が Anthropic 製で、残りは Superpowers と MCP プラグイン(Context7・Playwright・GitHub・Vercel)。プラグインはスキル・コマンド・エージェント・フック・MCP の束なので、どの部品かが使い方を決める(構成マップ)。Code Review(四つのエージェントが CLAUDE.md 準拠・バグ・git 履歴を別々に見て信頼度80未満は捨てる)、Context7(リモート MCP の resolve-library-id・query-docs で今のバージョンの文書、use context7)、Code Simplifier(最近の変更だけを動作を保って整える Opus のエージェント)、Playwright(アクセシビリティツリーの MCP、Microsoft もコーディングエージェントには CLI+スキルのほうがトークンが少ないとする)、GitHub(リモート MCP、トークンの権限がそのままエージェントの権限)、CLAUDE.md Management(claude-md-improver の採点と /revise-claude-md)、Feature Dev(調査のあとに質問する七段階・エージェント三つ)、Security Guidance(編集時のパターン警告・ターン終わりの LLM 差分レビュー・コミット時のエージェントレビューの三層)、Ralph Loop(Stop フックが同じプロンプトを入れ直すループ、完了の文句・最大反復)を扱い、1・2位はスキルの記事に渡す",
+  "relations": [
+   {
+    "target": "sks-popular-2026h2",
+    "evidenceRef": "順位の節が、中身がスキルである1・2位(Frontend Design・Superpowers)はその記事で詳しく扱ったと渡し、3位から見る"
+   },
+   {
+    "target": "skills",
+    "evidenceRef": "冒頭がスキル・コマンド・サブエージェント・フック・MCP サーバーを一行ずつだけ説明し、各部品の定義はその文書に任せて、上位プラグインがどの部品でできているかへ進む"
+   }
+  ]
+ },
+ {
   "name": "llmw-overview",
   "title": "LLM Wiki — 体系とキャプチャ",
   "summary": "Obsidian のボルトで AI が読める知識の保管庫を建てる — メインボルトとウィキボルトの 2 ボルト構造、そして何をキャプチャするか",
@@ -715,6 +730,25 @@
     "type": "prerequisite",
     "evidenceRef": "本文はスキルの実体や発動の仕組みを説明せず、フォルダの統合と呼び出しだけを扱う — スキルとは何かはその文書に委ねている",
     "source": "human"
+   }
+  ]
+ },
+ {
+  "name": "sks-popular-2026h2",
+  "title": "2026年下半期の人気スキル — インストール数上位7つと使い方",
+  "summary": "2026年10月22日の skills.sh 累計インストール(オープンデータ LinklyAI best-skills)と10月23日の公式 Claude プラグインディレクトリのインストール数をもとに上位スキル七つを選び、各リポジトリの SKILL.md の原文を直接読んで、原文カードの画像・図4点・表3点で整理 — 三つの計数器(skills.sh・公式ディレクトリ・ClawHub/SkillHub)は単位が違い、同じ frontend-design も101万・113万と異なり、skills.sh はリポジトリ単位で数えるので mattpocock/skills が上位10のうち5行を占める。find-skills(398万、検索→インストール数・出どころ・スターで検証→インストール)、grill-me(141万、7行が grilling を呼ぶ構成・決定の木のフロンティアをラウンドごとに推奨の答えつきで聞き、事実はサブエージェントが調べる、grill-with-docs は用語集・ADR)、agent-browser(総合点1位、アクセシビリティツリーのスナップショットの @eN 参照で200〜400トークンだけ読む Rust の CLI)、hyperframes(HTML をフレーム単位でレンダーする動画、7日成長1位)、frontend-design(公式ディレクトリ1位、ありきたりな AI デザインのよくある跡を禁止)、Superpowers(公式2位、スキル15個・七段階が自動発動する開発方法論)、vercel-react-best-practices(ルール70個を影響度順に)を五つの種類(探す・問う・手足・好み/ルール・方法論)に分け、インストール数は人気でありセキュリティ検査ではないこと、自動発動の有無を選ぶときの注意として挙げる",
+  "relations": [
+   {
+    "target": "skl-overview",
+    "evidenceRef": "grill-me の節が、7行の SKILL.md が別のスキル(grilling)を呼ぶ構成を挙げ、スキルが「マークダウン一枚でできた再利用の単位」というその文書の説明が実際にどう使われるかを示す例とする"
+   },
+   {
+    "target": "skl-context",
+    "evidenceRef": "冒頭がフロントマターの description がいつスキルを取り出すかを決めるという原理だけを一行で述べ、詳しい動作はその文書に任せて順位と使い方へ進む"
+   },
+   {
+    "target": "skl-install",
+    "evidenceRef": "「選ぶときに見ること」の節がスキルはエージェントの権限で動くという点だけを指摘し、何を実行しどこへつなぐかを確かめる方法はその文書に任せる"
    }
   ]
  },

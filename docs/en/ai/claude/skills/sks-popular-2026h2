@@ -1,0 +1,300 @@
+<h2>Popular Skills of H2 2026 — The Top Seven by Installs, and How to Use Them</h2>
+
+<h3>In three lines</h3>
+<ul>
+    <li>As of October 22, 2026, the most-installed skill on skills.sh is <strong>find-skills</strong> (about 3.98 million). In the official Claude plugin directory, <strong>frontend-design</strong> (about 1.13 million) and <strong>Superpowers</strong> (about 1.01 million) are first and second.</li>
+    <li>The top of the list falls into five kinds: a skill that finds skills, a skill that interrogates your plan, skills that give the agent hands (a browser, video), skills that plant taste and rules, and a skill that bundles a whole development method.</li>
+    <li>Install counts are not quality scores. Each counter uses a different unit, and skills.sh counts per repository, so a repo with many skills fills several rows at once.</li>
+</ul>
+
+<p>A skill is a single markdown file (<code>SKILL.md</code>) plus its folder that an agent reads when it needs it. The <code>description</code> in the frontmatter at the top decides when the skill is pulled in. The mechanics are covered in <a href="#!skl-overview">What Skills Are</a> and <a href="#!skl-context">Structure &amp; Mechanics</a>. This article picks the most-installed skills of the second half of 2026, reads each skill's original <code>SKILL.md</code> directly, and sets out what it does, how to use it, and where it pays off.</p>
+
+<h3>Where the rankings come from</h3>
+<p>"The most popular skill" is hard to state as one number. Several places count skills, and each uses its own unit. Even frontend-design gets a different number depending on who counts.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 262" role="img" aria-label="Three places that count skill installs: skills.sh (npx skills CLI installs, counted per repository), the Claude plugin directory (plugin installs, skill bundles ship as plugins), ClawHub and SkillHub (OpenClaw and China installs). The same frontend-design reads 1,016,129 on skills.sh and 1,134,112 in the official directory">
+    <text class="d-label" x="360" y="24" text-anchor="middle">One skill, three counters</text>
+    <rect class="d-box" x="12" y="42" width="216" height="92" rx="12"/>
+    <text class="d-label" x="120" y="70" text-anchor="middle">skills.sh</text>
+    <text class="d-sub" x="120" y="94" text-anchor="middle">npx skills CLI installs</text>
+    <text class="d-sub" x="120" y="114" text-anchor="middle">counted per repository</text>
+    <rect class="d-box" x="252" y="42" width="216" height="92" rx="12"/>
+    <text class="d-label" x="360" y="70" text-anchor="middle">Claude plugin directory</text>
+    <text class="d-sub" x="360" y="94" text-anchor="middle">plugin installs</text>
+    <text class="d-sub" x="360" y="114" text-anchor="middle">skill bundles ship as plugins</text>
+    <rect class="d-box soft" x="492" y="42" width="216" height="92" rx="12"/>
+    <text class="d-label" x="600" y="70" text-anchor="middle">ClawHub · SkillHub</text>
+    <text class="d-sub" x="600" y="94" text-anchor="middle">OpenClaw and China installs</text>
+    <text class="d-sub" x="600" y="114" text-anchor="middle">another ecosystem, another unit</text>
+    <line class="d-edge" x1="120" y1="134" x2="250" y2="170"/>
+    <line class="d-edge" x1="360" y1="134" x2="360" y2="170"/>
+    <rect class="d-box accent" x="90" y="170" width="540" height="62" rx="12"/>
+    <text class="d-label" x="360" y="196" text-anchor="middle">The numbers for one skill, frontend-design</text>
+    <text class="d-sub" x="360" y="217" text-anchor="middle">skills.sh 1,016,129 · official directory 1,134,112 (Oct 22–23)</text>
+    <text class="d-sub" x="360" y="252" text-anchor="middle">Never add them up; compare only within one counter</text>
+</svg>
+</div>
+<p>skills.sh is the skill directory run by Vercel, and it counts installs made with the <code>npx skills</code> command. There is a catch. Installs are counted per repository, so when one repo holds several skills, the skills installed together rise side by side. That is why five of the top ten below come from <code>mattpocock/skills</code> and two from <code>heygen-com/hyperframes</code>. An open dataset that merges several rankings and publishes them daily (LinklyAI best-skills, CC BY 4.0) states this limitation itself.</p>
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>skills.sh all-time installs (2026-10-22)</th><th>Repository</th><th>Installs</th></tr></thead>
+    <tbody>
+        <tr><td><strong>find-skills</strong></td><td>vercel-labs/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>3,977,808</strong></td></tr>
+        <tr><td><strong>grill-me</strong></td><td>mattpocock/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:35%"></span></span>1,408,491</td></tr>
+        <tr><td><strong>agent-browser</strong></td><td>vercel-labs/agent-browser</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:30%"></span></span>1,206,479</td></tr>
+        <tr><td>grill-with-docs</td><td>mattpocock/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:30%"></span></span>1,206,243</td></tr>
+        <tr><td>hyperframes-cli</td><td>heygen-com/hyperframes</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:29%"></span></span>1,169,530</td></tr>
+        <tr><td>improve-codebase-architecture</td><td>mattpocock/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:29%"></span></span>1,150,698</td></tr>
+        <tr><td><strong>hyperframes</strong></td><td>heygen-com/hyperframes</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:28%"></span></span>1,130,394</td></tr>
+        <tr><td>tdd</td><td>mattpocock/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:28%"></span></span>1,127,010</td></tr>
+        <tr><td>media-use</td><td>heygen-com/hyperframes</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:26%"></span></span>1,040,244</td></tr>
+        <tr><td>setup-matt-pocock-skills</td><td>mattpocock/skills</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:26%"></span></span>1,040,124</td></tr>
+    </tbody>
+</table>
+</div>
+<p>So this article <strong>folds each repository into one row</strong> when picking. The four top repositories on skills.sh (find-skills, grill-me, agent-browser, hyperframes), plus frontend-design and Superpowers from the top of the official directory, plus Vercel's React rules skill, which sits in the top ten of the same dataset's composite score (a "worth installing" figure blending installs, growth, mentions and trust), make seven. agent-browser led the composite score at 77.3.</p>
+
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>Skill</th><th>Kind</th><th>Use in one line</th></tr></thead>
+    <tbody>
+        <tr><td><strong>find-skills</strong></td><td>Finding</td><td>Searches, vets and installs the skill you need</td></tr>
+        <tr><td><strong>grill-me</strong></td><td>Asking</td><td>Interrogates a plan round by round until no gaps remain</td></tr>
+        <tr><td><strong>agent-browser</strong></td><td>Hands</td><td>Lets the agent drive a browser itself</td></tr>
+        <tr><td><strong>hyperframes</strong></td><td>Hands</td><td>Builds and renders video from HTML</td></tr>
+        <tr><td><strong>frontend-design</strong></td><td>Taste</td><td>Visual judgment that avoids generic AI design</td></tr>
+        <tr><td><strong>Superpowers</strong></td><td>Method</td><td>The whole development process from design to merge</td></tr>
+        <tr><td><strong>vercel-react-best-practices</strong></td><td>Rules</td><td>70 React and Next.js performance rules</td></tr>
+    </tbody>
+</table>
+</div>
+
+<h3>1. find-skills — the skill that finds skills</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/find-skills.webp" width="1440" height="624"
+         alt="Card showing the find-skills SKILL.md frontmatter (name, description) from the vercel-labs/skills repository, the install command npx skills add vercel-labs/skills --skill find-skills, and 3,977,808 skills.sh installs">
+    <figcaption>find-skills SKILL.md frontmatter and install command — source: vercel-labs/skills (MIT), original text rendered as a card by this wiki</figcaption>
+</figure>
+<p><strong>What it does.</strong> The skill wakes up when a user asks things like "how do I do X?" or "is there a skill for X?". The agent first checks the skills.sh leaderboard for an established skill, and if there is none it searches with <code>npx skills find</code>. It does not recommend right away. It checks three things: whether installs are above 1,000, whether the source is reputable (official sources such as vercel-labs, anthropics, microsoft), and whether the source repository has more than 100 GitHub stars. Only what passes is shown, with name, purpose, install count and install command, and it installs the skill if the user wants.</p>
+<pre><code>npx skills add vercel-labs/skills --skill find-skills   # install
+# later, in conversation
+"Is there a skill that helps with PR reviews?"  → npx skills find pr review
+                                               → vet candidates → show install command
+npx skills add &lt;owner/repo@skill&gt; -g -y                 # user-level install</code></pre>
+<p><strong>Where it pays off.</strong> It is the front door to the skills ecosystem, which is also why it is first. People bringing in skills for the first time install it before anything else, and later skills arrive through it. It is worth noting that the vetting criteria are written into the skill itself. Those criteria are still installs and stars, though, so as this article concludes, judgment beyond the numbers stays with a human.</p>
+
+<h3>2. grill-me — an interview that interrogates your plan to the end</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/grill-me.webp" width="1440" height="624"
+         alt="Card showing the grill-me SKILL.md frontmatter from the mattpocock/skills repository (name: grill-me, disable-model-invocation: true, description: A relentless interview to sharpen a plan or design.) and the install command">
+    <figcaption>grill-me's SKILL.md is this frontmatter and a one-line body — source: mattpocock/skills (MIT), original text rendered as a card by this wiki</figcaption>
+</figure>
+<p><strong>What it does.</strong> grill-me's <code>SKILL.md</code> is seven lines. The body is a single line, "call the grilling skill", and the actual rules live in the repo's <code>grilling</code> skill. The frontmatter's <code>disable-model-invocation: true</code> means the model should not pull it in on its own; it runs only when the user calls <code>/grill-me</code>. A small skill calling another skill shows well how "a reusable unit made of one markdown file" works in practice.</p>
+<p>grilling treats a plan as a <strong>decision tree</strong>. Each decision has the decisions that hang off it attached like branches. In each round the agent asks every question whose prerequisites are already settled, so it can be asked <em>now</em> (the frontier). Each question is numbered and comes with a recommended answer, worded so that answering "yes" accepts the recommendation.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 268" role="img" aria-label="A grill-me session: hand a plan to /grill-me, a round asks every question that can be asked now with numbers and recommended answers, the user answers (yes takes the pick), the frontier is updated and the next round starts. Facts are looked up by a subagent rather than asked. When the frontier is empty the session ends, and the agent acts only after you confirm">
+    <text class="d-label" x="360" y="24" text-anchor="middle">One grill-me session — rounds until the frontier is empty</text>
+    <rect class="d-box soft" x="14" y="52" width="140" height="62" rx="10"/>
+    <text class="d-label sm" x="84" y="78" text-anchor="middle">Plan or design</text>
+    <text class="d-sub" x="84" y="98" text-anchor="middle">start with /grill-me</text>
+    <line class="d-edge" x1="154" y1="83" x2="174" y2="83"/>
+    <polygon class="d-arrow" points="172,79 180,83 172,87"/>
+    <rect class="d-box accent" x="180" y="52" width="210" height="62" rx="10"/>
+    <text class="d-label sm" x="285" y="78" text-anchor="middle">One round</text>
+    <text class="d-sub" x="285" y="98" text-anchor="middle">every question askable now</text>
+    <line class="d-edge" x1="390" y1="83" x2="410" y2="83"/>
+    <polygon class="d-arrow" points="408,79 416,83 408,87"/>
+    <rect class="d-box" x="416" y="52" width="140" height="62" rx="10"/>
+    <text class="d-label sm" x="486" y="78" text-anchor="middle">Your answers</text>
+    <text class="d-sub" x="486" y="98" text-anchor="middle">yes = take the pick</text>
+    <line class="d-edge" x1="556" y1="83" x2="576" y2="83"/>
+    <polygon class="d-arrow" points="574,79 582,83 574,87"/>
+    <rect class="d-box" x="582" y="52" width="124" height="62" rx="10"/>
+    <text class="d-label sm" x="644" y="78" text-anchor="middle">Update frontier</text>
+    <text class="d-sub" x="644" y="98" text-anchor="middle">next round</text>
+    <path class="d-edge dash" d="M644,114 L644,140 L285,140 L285,120"/>
+    <polygon class="d-arrow" points="281,122 285,115 289,122"/>
+    <rect class="d-box soft" x="180" y="168" width="210" height="62" rx="10"/>
+    <text class="d-label sm" x="285" y="194" text-anchor="middle">Facts via subagent</text>
+    <text class="d-sub" x="285" y="214" text-anchor="middle">looked up, not asked</text>
+    <line class="d-edge dash" x1="230" y1="114" x2="230" y2="168"/>
+    <rect class="d-box accent" x="416" y="168" width="290" height="62" rx="10"/>
+    <text class="d-label sm" x="561" y="194" text-anchor="middle">Done when the frontier is empty</text>
+    <text class="d-sub" x="561" y="214" text-anchor="middle">acts only after you confirm</text>
+    <text class="d-sub" x="360" y="256" text-anchor="middle">The agent finds the facts; the human makes the decisions</text>
+</svg>
+</div>
+<pre><code>npx skills add mattpocock/skills --skill grill-me
+# or the whole repo as a Claude Code plugin
+claude plugin install mattpocock-skills@claude-plugins-official
+
+/grill-me   ← paste a plan or design and call it
+❓ Q1 - Storage location: …   ➡️ recommended answer
+❓ Q2 - Behavior on failure: … ➡️ recommended answer
+(answer, and the next round follows)</code></pre>
+<p><strong>Where it pays off.</strong> Before any code is written, it surfaces the assumptions hiding in a plan. The agent looks up facts itself through subagents and asks the user only for decisions, which keeps the questions from piling up. <strong>grill-with-docs</strong> (about 1.21 million), also near the top, runs the same interview while using the <code>domain-modeling</code> skill to write a glossary (<code>GLOSSARY.md</code>) and decision records (ADRs) on the spot. It proposes an ADR only when three conditions all hold: the decision is hard to reverse, surprising without context, and the result of a real trade-off. grill-me also topped social mentions over the last seven days.</p>
+
+<h3>3. agent-browser — a browser for the agent</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/agent-browser.webp" width="1440" height="624"
+         alt="Card showing the agent-browser SKILL.md frontmatter from the vercel-labs/agent-browser repository (Browser automation CLI for AI agents…) and the install command npm i -g agent-browser && agent-browser install">
+    <figcaption>agent-browser SKILL.md frontmatter and install command — source: vercel-labs/agent-browser (Apache-2.0), original text rendered as a card by this wiki</figcaption>
+</figure>
+<p><strong>What it does.</strong> A browser automation CLI written in Rust. It drives Chrome directly over the Chrome DevTools Protocol and does not depend on Playwright or Puppeteer. The key is that it does not read pages as raw HTML. It takes a <strong>snapshot</strong> of the accessibility tree, gives each button and input a short reference such as <code>@e1</code> or <code>@e2</code>, and the agent clicks and types through those references. The original docs say this lets the agent read 200–400 tokens instead of HTML. The <code>SKILL.md</code> itself is a signpost; the real usage guide is loaded from the installed version with <code>agent-browser skills get core</code>, so the instructions never go stale.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 220" role="img" aria-label="agent-browser work loop: open a page, run snapshot -i to get the accessibility tree with @eN references, act through references with click @e3 or fill @e1, and take a fresh snapshot when the page changes. It reads 200 to 400 tokens of references instead of HTML">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Snapshot, act by reference, snapshot again</text>
+    <rect class="d-box soft" x="18" y="52" width="156" height="66" rx="10"/>
+    <text class="d-label sm" x="96" y="78" text-anchor="middle">open &lt;url&gt;</text>
+    <text class="d-sub" x="96" y="100" text-anchor="middle">open the page</text>
+    <line class="d-edge" x1="174" y1="85" x2="194" y2="85"/>
+    <polygon class="d-arrow" points="192,81 200,85 192,89"/>
+    <rect class="d-box accent" x="200" y="52" width="156" height="66" rx="10"/>
+    <text class="d-label sm" x="278" y="78" text-anchor="middle">snapshot -i</text>
+    <text class="d-sub" x="278" y="100" text-anchor="middle">@eN ref per element</text>
+    <line class="d-edge" x1="356" y1="85" x2="376" y2="85"/>
+    <polygon class="d-arrow" points="374,81 382,85 374,89"/>
+    <rect class="d-box" x="382" y="52" width="156" height="66" rx="10"/>
+    <text class="d-label sm" x="460" y="78" text-anchor="middle">click @e3</text>
+    <text class="d-sub" x="460" y="100" text-anchor="middle">fill @e1 "query"</text>
+    <line class="d-edge" x1="538" y1="85" x2="558" y2="85"/>
+    <polygon class="d-arrow" points="556,81 564,85 556,89"/>
+    <rect class="d-box" x="564" y="52" width="140" height="66" rx="10"/>
+    <text class="d-label sm" x="634" y="78" text-anchor="middle">On change</text>
+    <text class="d-sub" x="634" y="100" text-anchor="middle">snapshot -i again</text>
+    <path class="d-edge dash" d="M634,118 L634,148 L278,148 L278,124"/>
+    <polygon class="d-arrow" points="274,126 278,119 282,126"/>
+    <text class="d-sub" x="456" y="168" text-anchor="middle">refs survive into the next snapshot</text>
+    <text class="d-sub" x="360" y="204" text-anchor="middle">Reads 200–400 tokens of refs instead of HTML (per the original docs)</text>
+</svg>
+</div>
+<pre><code>npm i -g agent-browser &amp;&amp; agent-browser install   # CLI and Chrome
+npx skills add vercel-labs/agent-browser           # the skill
+
+agent-browser open https://example.com
+agent-browser snapshot -i          # interactive elements only
+agent-browser click @e3
+agent-browser skills get electron  # sub-skill for Electron apps such as Slack, VS Code</code></pre>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/agent-browser-contact-sheet.webp" width="1440" height="438"
+         alt="Contact sheet made with agent-browser's recording feature: six frames of a dashboard captured in time order with timestamps, some with highlighted regions">
+    <figcaption>Example contact sheet made by agent-browser from a recorded browser session — source: vercel-labs/agent-browser docs (Apache-2.0)</figcaption>
+</figure>
+<p><strong>Where it pays off.</strong> Anything where the agent has to handle real web pages: testing web apps, filling forms, capturing screens, extracting data. Sub-skills extend it to Electron apps (VS Code, Slack, Figma), exploratory QA, recording a site's requests to derive an API client, and cloud browsers. It overlaps with the Playwright MCP, sixth in the official directory. The difference is that it moves through short CLI commands instead of MCP tools, and Playwright's own docs note that CLI plus skills uses fewer tokens for coding agents.</p>
+
+<h3>4. hyperframes — video made from HTML</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/hyperframes.webp" width="1440" height="624"
+         alt="Card showing the heygen-com/hyperframes logo (two green and cyan triangles), the hyperframes SKILL.md frontmatter (HTML rendered to video…), and the install command npx skills add heygen-com/hyperframes">
+    <figcaption>hyperframes SKILL.md frontmatter, install command and logo — source: heygen-com/hyperframes (Apache-2.0), original text rendered as a card by this wiki</figcaption>
+</figure>
+<p><strong>What it does.</strong> An open-source framework published by HeyGen that renders scenes written in HTML and CSS into video. It seeks a paused timeline one frame at a time, so the same files render the same video every time. <code>index.html</code> holds the whole video and each file under <code>compositions/</code> holds one scene. The skill carries the render contract, the work loop and what each kind of video needs (sound, captions, aspect ratio). When a website is the subject, the site is captured directly as material.</p>
+<pre><code>npx hyperframes skills update        # core skill set (recommended for agents)
+npx skills add heygen-com/hyperframes   # or pick interactively
+
+npx hyperframes init my-video
+npx hyperframes capture https://example.com --json   # a site as material
+npx hyperframes check --json                         # contract violations
+npx hyperframes render --quality looks --output out.mp4</code></pre>
+<p><strong>Where it pays off.</strong> Product launch films, explainers, chart animations, vertical clips: videos you revise again and again. Because it is code rather than a video editor, the agent can change and re-render easily. It had the highest seven-day growth (+13.3%), and seven of the repo's skills sit in the top 40 together.</p>
+
+<h3>5. frontend-design — how to avoid generic AI design</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/frontend-design.webp" width="1440" height="624"
+         alt="Card showing the frontend-design SKILL.md frontmatter from the anthropics/skills repository (Guidance for distinctive, intentional visual design…) and the install command /plugin install frontend-design@claude-plugins-official">
+    <figcaption>frontend-design SKILL.md frontmatter and install command — source: anthropics/skills (Apache-2.0), original text rendered as a card by this wiki</figcaption>
+</figure>
+<p><strong>What it does.</strong> A design-judgment skill made by Anthropic. It gives the agent the role of "the design lead at a studio known for giving every client a distinct identity that is not mistaken for anyone else's". First it settles what the screen is about, who sees it and what it has to do, then picks color and type from that subject's world (its industry, materials and vocabulary). It also bans the common tells of a generated page by name: accenting a single word in a headline, all-caps labels, 01·02·03 numbering on content that is not a sequence, the same fade-in on every section. The process is plan, check against the brief, build, critique.</p>
+<pre><code>/plugin install frontend-design@claude-plugins-official
+# or
+npx skills add anthropics/skills --skill frontend-design
+
+"Build a booking page for my neighborhood bakery"   ← wakes up on its own for UI work</code></pre>
+<p><strong>Where it pays off.</strong> Building UI from scratch: landing pages, dashboards, app screens. It is first by installs in the official directory (1,134,112) and third in the composite score. In the same dataset's seven-day growth ranking, another UI-taste skill (ui-taste) sits second, so "a screen that looks AI-made" is a problem many people are running into right now.</p>
+
+<h3>6. Superpowers — a development method, bundled</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/superpowers.webp" width="1440" height="624"
+         alt="Card showing the obra/superpowers icon (a black ring shape), the using-superpowers SKILL.md frontmatter (Use when starting any conversation…), and the install command /plugin install superpowers@claude-plugins-official">
+    <figcaption>Frontmatter of Superpowers' entry skill using-superpowers, install command and icon — source: obra/superpowers (MIT), original text rendered as a card by this wiki</figcaption>
+</figure>
+<p><strong>What it does.</strong> A development method built from 15 skills. Its entry point, <code>using-superpowers</code>, wakes up at the start of every conversation and insists: if there is even a 1% chance a skill applies, invoke it first. The seven-stage skills below then fire in order on their own. Plans are cut fine enough (2–5 minutes per task) that an enthusiastic junior engineer with no context could follow them, and implementation is TDD, writing the failing test first.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 268" role="img" aria-label="Superpowers basic workflow in seven stages: brainstorming (what and why), using-git-worktrees (an isolated workspace), writing-plans (tasks of 2 to 5 minutes), subagent-driven-development (a fresh subagent per task), test-driven-development (failing test first), requesting-code-review (review between tasks), finishing-a-development-branch (merge, PR, keep or discard)">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Superpowers workflow — a skill wakes up at each stage</text>
+    <rect class="d-box accent" x="12" y="44" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="124" y="68" text-anchor="middle">1 What and why</text>
+    <text class="d-sub" x="124" y="88" text-anchor="middle">brainstorming</text>
+    <line class="d-edge" x1="236" y1="73" x2="242" y2="73"/>
+    <polygon class="d-arrow" points="240,69 247,73 240,77"/>
+    <rect class="d-box" x="248" y="44" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="360" y="68" text-anchor="middle">2 Isolated workspace</text>
+    <text class="d-sub" x="360" y="88" text-anchor="middle">using-git-worktrees</text>
+    <line class="d-edge" x1="472" y1="73" x2="478" y2="73"/>
+    <polygon class="d-arrow" points="476,69 483,73 476,77"/>
+    <rect class="d-box" x="484" y="44" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="596" y="68" text-anchor="middle">3 Plan in 2–5 min tasks</text>
+    <text class="d-sub" x="596" y="88" text-anchor="middle">writing-plans</text>
+    <path class="d-edge dash" d="M596,102 L596,112 L124,112 L124,122"/>
+    <polygon class="d-arrow" points="120,120 124,127 128,120"/>
+    <rect class="d-box" x="12" y="128" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="124" y="152" text-anchor="middle">4 Fresh subagent per task</text>
+    <text class="d-sub" x="124" y="172" text-anchor="middle">subagent-driven-development</text>
+    <line class="d-edge" x1="236" y1="157" x2="242" y2="157"/>
+    <polygon class="d-arrow" points="240,153 247,157 240,161"/>
+    <rect class="d-box" x="248" y="128" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="360" y="152" text-anchor="middle">5 Failing test first</text>
+    <text class="d-sub" x="360" y="172" text-anchor="middle">test-driven-development</text>
+    <line class="d-edge" x1="472" y1="157" x2="478" y2="157"/>
+    <polygon class="d-arrow" points="476,153 483,157 476,161"/>
+    <rect class="d-box" x="484" y="128" width="224" height="58" rx="10"/>
+    <text class="d-label sm" x="596" y="152" text-anchor="middle">6 Review between tasks</text>
+    <text class="d-sub" x="596" y="172" text-anchor="middle">requesting-code-review</text>
+    <path class="d-edge dash" d="M596,186 L596,196 L360,196 L360,206"/>
+    <polygon class="d-arrow" points="356,204 360,211 364,204"/>
+    <rect class="d-box accent" x="248" y="212" width="224" height="50" rx="10"/>
+    <text class="d-label sm" x="360" y="234" text-anchor="middle">7 Merge, PR, keep or discard</text>
+    <text class="d-sub" x="360" y="252" text-anchor="middle">finishing-a-development-branch</text>
+</svg>
+</div>
+<pre><code>/plugin install superpowers@claude-plugins-official
+
+"I want to add recurring events to my to-do app"
+→ brainstorming wakes first, asks the purpose, shows the design in short chunks
+→ once approved: workspace, plan, implementation and review follow in turn</code></pre>
+<p><strong>Where it pays off.</strong> Handing an agent hours of work. According to the original description, once the plan is approved it is common for the agent to work alone for a couple of hours without drifting from it. It is second by installs in the official directory (1,009,371) and ships install instructions for many harnesses beyond Claude Code, including Codex, Cursor and Gemini CLI. On the other hand it starts with brainstorming even for short questions, so it can feel heavy for people who mostly do light tasks.</p>
+
+<h3>7. vercel-react-best-practices — 70 rules in priority order</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-popular-2026h2/vercel-react.webp" width="1440" height="624"
+         alt="Card showing the vercel-react-best-practices SKILL.md frontmatter from the vercel-labs/agent-skills repository (React and Next.js performance optimization guidelines from Vercel Engineering…) and the install command">
+    <figcaption>vercel-react-best-practices SKILL.md frontmatter and install command — source: vercel-labs/agent-skills (MIT), original text rendered as a card by this wiki</figcaption>
+</figure>
+<p><strong>What it does.</strong> Vercel Engineering's 70 React and Next.js performance rules, sorted into 8 categories and ranked by impact. At the top are eliminating waterfalls (requests waiting on each other in sequence) and cutting bundle size, both CRITICAL, followed by server-side performance, client-side data fetching and re-renders. The agent applies them in that order when writing or reviewing React code. <strong>web-design-guidelines</strong> from the same repo (ninth in the composite score) fetches the latest guidelines from a URL at every review and reports violations in <code>file:line</code> form.</p>
+<pre><code>npx skills add vercel-labs/agent-skills --skill vercel-react-best-practices
+npx skills add vercel-labs/agent-skills --skill web-design-guidelines -a claude-code
+
+"Why is this page slow?"   ← wakes up on its own for React or Next.js work
+"Review my UI"             ← web-design-guidelines</code></pre>
+<p><strong>Where it pays off.</strong> It is a model for planting a team's code rules directly in the agent instead of in a document. The rules are organized by priority and prefix (<code>async-</code>, <code>bundle-</code>), so it is worth copying when you write an in-house rules skill.</p>
+
+<h3>What to check when choosing</h3>
+<ul>
+    <li><strong>Install counts measure popularity.</strong> Compare only within one counter and allow for the per-repository counting effect. The composite score uses official-publisher status as its trust signal, and the data provider says it does no security scanning yet.</li>
+    <li><strong>Skills run with the agent's permissions.</strong> Read the <code>SKILL.md</code> and its scripts before installing. How to check what it runs and where it connects is covered in <a href="#!skl-install">Install · Security · Creating</a>.</li>
+    <li><strong>Check whether it fires on its own.</strong> Self-triggering skills like frontend-design and Superpowers are convenient but also step in when you do not want them. Some, like grill-me, use <code>disable-model-invocation</code> so they run only when called.</li>
+    <li><strong>Plugins have their own ranking.</strong> The top plugins in the official directory and what they are made of are in <a href="#!plc-popular-2026h2">Popular Plugins of H2 2026</a>.</li>
+</ul>
+
+<h3>Fact-check notes</h3>
+<p class="scn-sub">skills.sh installs, the composite score (Worth-Installing Score), seven-day growth and social-mention rankings were taken directly from the 2026-10-22 (UTC) snapshot CSVs of LinklyAI's open dataset <a href="https://github.com/LinklyAI/best-skills" target="_blank" rel="noopener">best-skills</a> (CC BY 4.0). The per-repository counting limitation and the score's make-up (popularity 0.30, momentum 0.15, reputation 0.20, maintenance 0.15, trust 0.20, no security scanning) follow the methodology document in the same repo. The skills.sh site did not open from the environment used to write this, so its own figures could not be compared directly. Official Claude plugin directory installs (frontend-design 1,134,112, Superpowers 1,009,371) were read from the data on the <a href="https://claude.com/plugins" target="_blank" rel="noopener">claude.com/plugins</a> page on 2026-10-23 (KST). Each skill's behavior, commands and rules were summarized after downloading the GitHub repositories (vercel-labs/skills, mattpocock/skills, vercel-labs/agent-browser, heygen-com/hyperframes, anthropics/skills, obra/superpowers, vercel-labs/agent-skills) and reading their <code>SKILL.md</code> and README files directly. "200–400 tokens" and "works alone for a couple of hours" are each original document's own description. The card images are renders by this wiki of the original frontmatter, unchanged (long descriptions shortened with &hellip;); logos, icons and the recording example are files committed to each repository, included under their licenses. Repository authors are referred to by repository name, not personal name.</p>

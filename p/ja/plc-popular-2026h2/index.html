@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方</title>
+<meta name="description" content="2026年10月23日の公式 Claude プラグインディレクトリ(271個)のインストール数上位を、anthropics/claude-plugins-official などの元のリポジトリの plugin.json・README・コマンド・エージェント・フックのファイルで確かめ、原文カードの画像・実行画面・図4点・表3点で整理 — 上位15個のうち10個が Anthropic 製で、残りは Superpowers と MCP プラグイン(Context7・Playwright・GitHub・Vercel)。プラグインはスキル・コマンド・エージェント・フック・MCP の束なので、どの部品かが使い方を決める(構成マップ)。Code Review(四つのエージェントが CLAUDE.md 準拠・バグ・git 履歴を別々に見て信頼度80未満は捨てる)、Context7(リモート MCP の resolve-library-id・query-docs で今のバージョンの文書、use context7)、Code Simplifier(最近の変更だけを動作を保って整える Opus のエージェント)、Playwright(アクセシビリティツリーの MCP、Microsoft もコーディングエージェントには CLI+スキルのほうがトークンが少ないとする)、GitHub(リモート MCP、トークンの権限がそのままエージェントの権限)、CLAUDE.md Management(claude-md-improver の採点と /revise-claude-md)、Feature Dev(調査のあとに質問する七段階・エージェント三つ)、Security Guidance(編集時のパターン警告・ターン終わりの LLM 差分レビュー・コミット時のエージェントレビューの三層)、Ralph Loop(Stop フックが同じプロンプトを入れ直すループ、完了の文句・最大反復)を扱い、1・2位はスキルの記事に渡す">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/plc-popular-2026h2/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/plc-popular-2026h2/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/plc-popular-2026h2/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/plc-popular-2026h2/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/plc-popular-2026h2/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方">
+<meta property="og:description" content="2026年10月23日の公式 Claude プラグインディレクトリ(271個)のインストール数上位を、anthropics/claude-plugins-official などの元のリポジトリの plugin.json・README・コマンド・エージェント・フックのファイルで確かめ、原文カードの画像・実行画面・図4点・表3点で整理 — 上位15個のうち10個が Anthropic 製で、残りは Superpowers と MCP プラグイン(Context7・Playwright・GitHub・Vercel)。プラグインはスキル・コマンド・エージェント・フック・MCP の束なので、どの部品かが使い方を決める(構成マップ)。Code Review(四つのエージェントが CLAUDE.md 準拠・バグ・git 履歴を別々に見て信頼度80未満は捨てる)、Context7(リモート MCP の resolve-library-id・query-docs で今のバージョンの文書、use context7)、Code Simplifier(最近の変更だけを動作を保って整える Opus のエージェント)、Playwright(アクセシビリティツリーの MCP、Microsoft もコーディングエージェントには CLI+スキルのほうがトークンが少ないとする)、GitHub(リモート MCP、トークンの権限がそのままエージェントの権限)、CLAUDE.md Management(claude-md-improver の採点と /revise-claude-md)、Feature Dev(調査のあとに質問する七段階・エージェント三つ)、Security Guidance(編集時のパターン警告・ターン終わりの LLM 差分レビュー・コミット時のエージェントレビューの三層)、Ralph Loop(Stop フックが同じプロンプトを入れ直すループ、完了の文句・最大反復)を扱い、1・2位はスキルの記事に渡す">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/plc-popular-2026h2/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方">
+<meta name="twitter:description" content="2026年10月23日の公式 Claude プラグインディレクトリ(271個)のインストール数上位を、anthropics/claude-plugins-official などの元のリポジトリの plugin.json・README・コマンド・エージェント・フックのファイルで確かめ、原文カードの画像・実行画面・図4点・表3点で整理 — 上位15個のうち10個が Anthropic 製で、残りは Superpowers と MCP プラグイン(Context7・Playwright・GitHub・Vercel)。プラグインはスキル・コマンド・エージェント・フック・MCP の束なので、どの部品かが使い方を決める(構成マップ)。Code Review(四つのエージェントが CLAUDE.md 準拠・バグ・git 履歴を別々に見て信頼度80未満は捨てる)、Context7(リモート MCP の resolve-library-id・query-docs で今のバージョンの文書、use context7)、Code Simplifier(最近の変更だけを動作を保って整える Opus のエージェント)、Playwright(アクセシビリティツリーの MCP、Microsoft もコーディングエージェントには CLI+スキルのほうがトークンが少ないとする)、GitHub(リモート MCP、トークンの権限がそのままエージェントの権限)、CLAUDE.md Management(claude-md-improver の採点と /revise-claude-md)、Feature Dev(調査のあとに質問する七段階・エージェント三つ)、Security Guidance(編集時のパターン警告・ターン終わりの LLM 差分レビュー・コミット時のエージェントレビューの三層)、Ralph Loop(Stop フックが同じプロンプトを入れ直すループ、完了の文句・最大反復)を扱い、1・2位はスキルの記事に渡す">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
+ "description": "2026年10月23日の公式 Claude プラグインディレクトリ(271個)のインストール数上位を、anthropics/claude-plugins-official などの元のリポジトリの plugin.json・README・コマンド・エージェント・フックのファイルで確かめ、原文カードの画像・実行画面・図4点・表3点で整理 — 上位15個のうち10個が Anthropic 製で、残りは Superpowers と MCP プラグイン(Context7・Playwright・GitHub・Vercel)。プラグインはスキル・コマンド・エージェント・フック・MCP の束なので、どの部品かが使い方を決める(構成マップ)。Code Review(四つのエージェントが CLAUDE.md 準拠・バグ・git 履歴を別々に見て信頼度80未満は捨てる)、Context7(リモート MCP の resolve-library-id・query-docs で今のバージョンの文書、use context7)、Code Simplifier(最近の変更だけを動作を保って整える Opus のエージェント)、Playwright(アクセシビリティツリーの MCP、Microsoft もコーディングエージェントには CLI+スキルのほうがトークンが少ないとする)、GitHub(リモート MCP、トークンの権限がそのままエージェントの権限)、CLAUDE.md Management(claude-md-improver の採点と /revise-claude-md)、Feature Dev(調査のあとに質問する七段階・エージェント三つ)、Security Guidance(編集時のパターン警告・ターン終わりの LLM 差分レビュー・コミット時のエージェントレビューの三層)、Ralph Loop(Stop フックが同じプロンプトを入れ直すループ、完了の文句・最大反復)を扱い、1・2位はスキルの記事に渡す",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/plc-popular-2026h2/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!plc-popular-2026h2",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-10-23T08:48:01+09:00",
+ "dateModified": "2026-10-23T08:48:01+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!plc-popular-2026h2">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/plc-popular-2026h2/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/plc-popular-2026h2/" hreflang="en">English</a>
+</p>
+<article>
+<h2>2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方</h2>
+
+<h3>三行まとめ</h3>
+<ul>
+    <li>2026年10月23日時点で、公式の Claude プラグインディレクトリ(271個)のインストール1・2位は <strong>Frontend Design</strong>(約113万)と <strong>Superpowers</strong>(約101万)だ。3位以下は Code Review・Context7・Code Simplifier・Playwright・GitHub の順だ。</li>
+    <li>上位15個のうち10個は Anthropic が作った。残りの五つは Superpowers と、外部サービスをつなぐ MCP プラグイン(Context7・Playwright・GitHub・Vercel)だ。</li>
+    <li>プラグインはスキル・コマンド・エージェント・フック・MCP サーバーを一度にインストールする束だ。上位のプラグインは、どの部品を使うかで使い方が大きく違う。</li>
+</ul>
+
+<p>プラグインは Claude Code に機能の束を一度にインストールする単位だ。一つのプラグインに、スキル(必要なときに読む指示)、スラッシュコマンド、サブエージェント、フック(決まった時点で自動的に動くスクリプト)、MCP サーバー(外部サービスをツールとしてつなぐ接続)が混ざって入る。各部品が何かは<a href="/p/ja/skills/">拡張 — Skills · MCP · Hooks</a>に、インストールの画面は<a href="/p/ja/ccb-skills/">拡張 — スキル・プラグイン・エージェント</a>にまとめた。本記事は公式ディレクトリのインストール数上位のプラグインを選び、それぞれの元のファイルを直接読んで使い方を整理する。</p>
+
+<h3>プラグインは何を収めているか</h3>
+<p>同じ「プラグイン」でも中身は違う。上位の構成を元のリポジトリのファイル構造で確かめると下のとおりだ。どの欄に点があるかが使い方を決める。コマンドがあれば自分で呼び、スキルやフックだけなら勝手に動き、MCP だけなら新しいツールが増える。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 384" role="img" aria-label="上位プラグインの構成:Frontend Design はスキル、Superpowers はスキル15個、Code Review はコマンド、Context7 は MCP、Code Simplifier はエージェント、Playwright は MCP、GitHub は MCP、CLAUDE.md Management はスキルとコマンド、Feature Dev はコマンドとエージェント3個、Security Guidance はフック、Ralph Loop はコマンドとフック">
+    <text class="d-label" x="360" y="24" text-anchor="middle">上位プラグインは何でできているか</text>
+    <text class="d-label sm" x="370" y="56" text-anchor="middle">スキル</text>
+    <text class="d-label sm" x="450" y="56" text-anchor="middle">コマンド</text>
+    <text class="d-label sm" x="530" y="56" text-anchor="middle">エージェント</text>
+    <text class="d-label sm" x="610" y="56" text-anchor="middle">フック</text>
+    <text class="d-label sm" x="680" y="56" text-anchor="middle">MCP</text>
+    <line class="d-edge dash" x1="20" y1="66" x2="704" y2="66"/>
+    <text class="d-label sm" x="24" y="90">1 Frontend Design</text>
+    <circle class="d-node" cx="370" cy="86" r="6"/>
+    <text class="d-label sm" x="24" y="118">2 Superpowers</text>
+    <circle class="d-node" cx="370" cy="114" r="6"/>
+    <text class="d-sub" x="390" y="118">×15</text>
+    <text class="d-label sm" x="24" y="146">3 Code Review</text>
+    <circle class="d-node b" cx="450" cy="142" r="6"/>
+    <text class="d-label sm" x="24" y="174">4 Context7</text>
+    <circle class="d-node d" cx="680" cy="170" r="6"/>
+    <text class="d-label sm" x="24" y="202">5 Code Simplifier</text>
+    <circle class="d-node c" cx="530" cy="198" r="6"/>
+    <text class="d-label sm" x="24" y="230">6 Playwright</text>
+    <circle class="d-node d" cx="680" cy="226" r="6"/>
+    <text class="d-label sm" x="24" y="258">7 GitHub</text>
+    <circle class="d-node d" cx="680" cy="254" r="6"/>
+    <text class="d-label sm" x="24" y="286">8 CLAUDE.md Management</text>
+    <circle class="d-node" cx="370" cy="282" r="6"/>
+    <circle class="d-node b" cx="450" cy="282" r="6"/>
+    <text class="d-label sm" x="24" y="314">9 Feature Dev</text>
+    <circle class="d-node b" cx="450" cy="310" r="6"/>
+    <circle class="d-node c" cx="530" cy="310" r="6"/>
+    <text class="d-sub" x="548" y="314">×3</text>
+    <text class="d-label sm" x="24" y="342">10 Security Guidance</text>
+    <circle class="d-node b" cx="610" cy="338" r="6"/>
+    <text class="d-label sm" x="24" y="370">13 Ralph Loop</text>
+    <circle class="d-node b" cx="450" cy="366" r="6"/>
+    <circle class="d-node b" cx="610" cy="366" r="6"/>
+</svg>
+</div>
+
+<h3>インストール順位</h3>
+<p>公式ディレクトリのページが示すプラグインごとの累計インストール数だ(2026-10-23 KST 時点)。棒は1位に対する比率だ。</p>
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>プラグイン</th><th>作り手</th><th>インストール数</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Frontend Design</strong></td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:100%"></span></span><strong>1,134,112</strong></td></tr>
+        <tr><td><strong>Superpowers</strong></td><td>obra/superpowers</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill accent" style="--w:89%"></span></span><strong>1,009,371</strong></td></tr>
+        <tr><td>Code Review</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:39%"></span></span>438,525</td></tr>
+        <tr><td>Context7</td><td>Upstash</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:37%"></span></span>417,801</td></tr>
+        <tr><td>Code Simplifier</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:31%"></span></span>346,763</td></tr>
+        <tr><td>Playwright</td><td>Microsoft</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:28%"></span></span>319,887</td></tr>
+        <tr><td>GitHub</td><td>GitHub</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:28%"></span></span>319,381</td></tr>
+        <tr><td>CLAUDE.md Management</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:25%"></span></span>287,247</td></tr>
+        <tr><td>Feature Dev</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:23%"></span></span>256,017</td></tr>
+        <tr><td>Security Guidance</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:21%"></span></span>241,800</td></tr>
+        <tr><td>Vercel</td><td>Vercel</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:20%"></span></span>227,688</td></tr>
+        <tr><td>TypeScript LSP</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:19%"></span></span>212,522</td></tr>
+        <tr><td>Ralph Loop</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:17%"></span></span>196,527</td></tr>
+        <tr><td>Claude Code Setup</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:17%"></span></span>195,067</td></tr>
+        <tr><td>Commit Commands</td><td>Anthropic</td>
+            <td><span class="cmp-bar sm"><span class="cmp-fill" style="--w:15%"></span></span>171,244</td></tr>
+    </tbody>
+</table>
+</div>
+<p>1・2位はプラグインだが中身はスキルなので、<a href="/p/ja/sks-popular-2026h2/">2026年下半期の人気スキル</a>で詳しく扱った。ここでは3位から見る。13位の Ralph Loop は、このウィキが <a href="/p/ja/omc-modes/">OMC の ralph モード</a>として扱った手法を一つのプラグインにしたものなので、一緒に入れた。</p>
+
+<h3>3. Code Review — 四つのエージェントが別々に見て、確信80以上だけを残す</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/code-review.webp" width="1440" height="624"
+         alt="anthropics/claude-plugins-official リポジトリ plugins/code-review の plugin.json(name: code-review、description: Automated code review for pull requests using multiple specialized agents with confidence-based scoring)とインストールコマンドを記したカード">
+    <figcaption>Code Review の plugin.json とインストールコマンド — 出典:anthropics/claude-plugins-official(Apache-2.0)、原文をこのウィキがカードにレンダー</figcaption>
+</figure>
+<p><strong>何をするか。</strong>プルリクエスト(PR)のブランチで <code>/code-review</code> を呼ぶと、まずレビューが必要かを見る。クローズ済み、下書き、些細、レビュー済みの PR は飛ばす。次にリポジトリの <code>CLAUDE.md</code> の指針を集めて変更を要約し、エージェントを四つ同時に立ち上げる。二つは <code>CLAUDE.md</code> への準拠を、一つは変わったコードの中のバグを、一つは git の履歴(blame)から文脈上の問題を見る。見つけた問題ごとに0〜100の信頼度をつけ、80未満は捨てる。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 312" role="img" aria-label="Code Review の流れ:PR ブランチで /code-review を実行し、レビューすべき PR かを判断(クローズ・下書き・些細は除外)、CLAUDE.md の収集と変更の要約、四つのエージェントが同時に確認(CLAUDE.md 準拠を二つ、変更の中のバグ、git 履歴)、問題ごとに信頼度0〜100で採点、80未満を捨て、PR にコメント">
+    <text class="d-label" x="360" y="22" text-anchor="middle">/code-review — 広く探して、狭く残す</text>
+    <rect class="d-box soft" x="12" y="40" width="190" height="56" rx="10"/>
+    <text class="d-label sm" x="107" y="63" text-anchor="middle">/code-review</text>
+    <text class="d-sub" x="107" y="83" text-anchor="middle">PR ブランチで実行</text>
+    <line class="d-edge" x1="107" y1="96" x2="107" y2="110"/>
+    <polygon class="d-arrow" points="103,108 107,115 111,108"/>
+    <rect class="d-box" x="12" y="116" width="190" height="56" rx="10"/>
+    <text class="d-label sm" x="107" y="139" text-anchor="middle">レビューすべき PR か</text>
+    <text class="d-sub" x="107" y="159" text-anchor="middle">クローズ・下書き・些細は除外</text>
+    <line class="d-edge" x1="107" y1="172" x2="107" y2="186"/>
+    <polygon class="d-arrow" points="103,184 107,191 111,184"/>
+    <rect class="d-box" x="12" y="192" width="190" height="56" rx="10"/>
+    <text class="d-label sm" x="107" y="215" text-anchor="middle">CLAUDE.md を収集</text>
+    <text class="d-sub" x="107" y="235" text-anchor="middle">変更内容の要約</text>
+    <line class="d-edge" x1="202" y1="220" x2="244" y2="62"/>
+    <line class="d-edge" x1="202" y1="220" x2="244" y2="120"/>
+    <line class="d-edge" x1="202" y1="220" x2="244" y2="178"/>
+    <line class="d-edge" x1="202" y1="220" x2="244" y2="236"/>
+    <rect class="d-box accent" x="244" y="40" width="200" height="44" rx="10"/>
+    <text class="d-label sm" x="344" y="66" text-anchor="middle">① CLAUDE.md 準拠</text>
+    <rect class="d-box accent" x="244" y="98" width="200" height="44" rx="10"/>
+    <text class="d-label sm" x="344" y="124" text-anchor="middle">② CLAUDE.md 準拠</text>
+    <rect class="d-box accent" x="244" y="156" width="200" height="44" rx="10"/>
+    <text class="d-label sm" x="344" y="182" text-anchor="middle">③ 変更の中のバグ</text>
+    <rect class="d-box accent" x="244" y="214" width="200" height="44" rx="10"/>
+    <text class="d-label sm" x="344" y="240" text-anchor="middle">④ git 履歴・blame</text>
+    <line class="d-edge" x1="444" y1="62" x2="490" y2="98"/>
+    <line class="d-edge" x1="444" y1="120" x2="490" y2="98"/>
+    <line class="d-edge" x1="444" y1="178" x2="490" y2="98"/>
+    <line class="d-edge" x1="444" y1="236" x2="490" y2="98"/>
+    <rect class="d-box" x="490" y="70" width="218" height="56" rx="10"/>
+    <text class="d-label sm" x="599" y="93" text-anchor="middle">信頼度0〜100で採点</text>
+    <text class="d-sub" x="599" y="113" text-anchor="middle">見つけた問題ごと</text>
+    <line class="d-edge" x1="599" y1="126" x2="599" y2="140"/>
+    <polygon class="d-arrow" points="595,138 599,145 603,138"/>
+    <rect class="d-box accent" x="490" y="146" width="218" height="56" rx="10"/>
+    <text class="d-label sm" x="599" y="169" text-anchor="middle">80未満は捨てる</text>
+    <text class="d-sub" x="599" y="189" text-anchor="middle">誤検出をふるい落とす</text>
+    <line class="d-edge" x1="599" y1="202" x2="599" y2="216"/>
+    <polygon class="d-arrow" points="595,214 599,221 603,214"/>
+    <rect class="d-box soft" x="490" y="222" width="218" height="56" rx="10"/>
+    <text class="d-label sm" x="599" y="245" text-anchor="middle">PR にコメント</text>
+    <text class="d-sub" x="599" y="265" text-anchor="middle">完全な SHA・行範囲のリンク</text>
+    <text class="d-sub" x="360" y="302" text-anchor="middle">残す問題がなければコメントも残さない</text>
+</svg>
+</div>
+<pre><code>/plugin install code-review@claude-plugins-official
+
+# PR ブランチで
+/code-review
+## Code review
+Found 3 issues:
+1. Missing error handling for OAuth callback (CLAUDE.md says "Always handle OAuth errors")
+   https://github.com/owner/repo/blob/abc123…/src/auth.ts#L67-L72</code></pre>
+<p><strong>どこで役に立つか。</strong>レビューボットが煩わしいのはたいてい誤検出のせいだ。このプラグインはわざと複数の視点で広く探したあと、確信の低いものを捨てて、人が読むべきコメントだけを残す。チームの <code>CLAUDE.md</code> を基準にするので、ルールをよく書いたリポジトリほどレビューが鋭くなる。</p>
+
+<h3>4. Context7 — 最新の文書をコンテキストに引き込む</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/context7-cover.webp" width="1440" height="480"
+         alt="薄い黄緑の背景に「Up-to-date docs for AI agents — Get the latest docs into Claude, Codex, Cursor and other agents」と書かれた Context7 の表紙画像">
+    <figcaption>Context7 の表紙画像 — 出典:upstash/context7 リポジトリ(MIT)</figcaption>
+</figure>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/context7.webp" width="1440" height="658"
+         alt="anthropics/claude-plugins-official リポジトリ external_plugins/context7 の plugin.json(Upstash Context7 MCP server for up-to-date documentation lookup…)とインストールコマンドを記したカード">
+    <figcaption>Context7 の plugin.json とインストールコマンド — 出典:anthropics/claude-plugins-official external_plugins/context7、原文をこのウィキがカードにレンダー</figcaption>
+</figure>
+<p><strong>何をするか。</strong>Upstash が運営するリモート MCP サーバーをつなぐ。プラグインの中にはサーバーのアドレス(<code>https://mcp.context7.com/mcp</code>)が一行あるだけで、ローカルに Node.js を入れる必要がない。ツールは二つだ。<code>resolve-library-id</code> が「next.js」のような名前を Context7 のライブラリ ID に変え、<code>query-docs</code> がそのライブラリの該当バージョンの文書とコード例を元のリポジトリから持ってくる。</p>
+<pre><code>/plugin install context7@claude-plugins-official
+
+「Next.js 16 で proxy はどう設定する? use context7」
+→ resolve-library-id("next.js") → query-docs(…, "proxy")
+→ 今のバージョンの文書を読んで答える</code></pre>
+<p><strong>どこで役に立つか。</strong>モデルは学習時点より後に変わった API を知らない。速く変わるフレームワークを使うとき、古い書き方でコードを書くのを防ぐ。質問の最後に <code>use context7</code> をつけるのが、元の文書が勧める使い方だ。</p>
+
+<h3>5. Code Simplifier — 直したばかりのコードを整えるエージェント</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/code-simplifier.webp" width="1440" height="624"
+         alt="anthropics/claude-plugins-official リポジトリ plugins/code-simplifier の plugin.json(Agent that simplifies and refines code for clarity, consistency, and maintainability while preserving functionality)とインストールコマンドを記したカード">
+    <figcaption>Code Simplifier の plugin.json とインストールコマンド — 出典:anthropics/claude-plugins-official(Apache-2.0)、原文をこのウィキがカードにレンダー</figcaption>
+</figure>
+<p><strong>何をするか。</strong>サブエージェント一つ(<code>code-simplifier</code>、Opus 指定)でできたプラグインだ。特に指示しなければ、最近変わったコードだけを見る。第一の原則は動作を変えないことで、その範囲で入れ子を減らし、重複したコードと不要な抽象化を取り除き、名前をはっきりさせる。短いコードより読めるコードを選べと書かれていて、入れ子の三項演算子は禁止だ。基準はプロジェクトの <code>CLAUDE.md</code> だ。</p>
+<pre><code>/plugin install code-simplifier@claude-plugins-official
+
+「さっき作業したファイルを整理して」   ← code-simplifier エージェントに委任</code></pre>
+<p><strong>どこで役に立つか。</strong>エージェントが機能を手早く付け足すと、コードがごちゃつきやすい。コミット前に一度回して整える用途だ。範囲を最近の変更に絞ってあるので、古いコードをむやみにひっくり返さない。</p>
+
+<h3>6. Playwright — Microsoft のブラウザ自動化 MCP</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/playwright.webp" width="1440" height="624"
+         alt="anthropics/claude-plugins-official リポジトリ external_plugins/playwright の plugin.json(Browser automation and end-to-end testing MCP server by Microsoft…)とインストールコマンドを記したカード">
+    <figcaption>Playwright の plugin.json とインストールコマンド — 出典:anthropics/claude-plugins-official external_plugins/playwright、原文をこのウィキがカードにレンダー</figcaption>
+</figure>
+<p><strong>何をするか。</strong><code>npx @playwright/mcp@latest</code> でローカルの MCP サーバーを立ち上げ、Claude が Web ページを開き、押し、入力し、画面を撮れるようにする。ピクセルではなくアクセシビリティツリーでページを読むので、画像を見るモデルがなくても動く。</p>
+<pre><code>/plugin install playwright@claude-plugins-official
+
+「ログインページで間違ったパスワードを入れるとどんなエラーが出るか確かめて」</code></pre>
+<p><strong>どこで役に立つか。</strong>端から端まで(E2E)のテストと画面の確認だ。スキルの順位の agent-browser と仕事が重なる。Microsoft の文書も、コーディングエージェントには大きなツールのスキーマと長いアクセシビリティツリーを載せる MCP より、CLI とスキルの組み合わせのほうがトークンが少なくて済むと書き、別の Playwright CLI を案内している。対話的にページを調べるなら MCP、長いコーディングのセッションの中なら CLI が合う。</p>
+
+<h3>7. GitHub — リポジトリを会話で扱う</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/github.webp" width="1440" height="624"
+         alt="anthropics/claude-plugins-official リポジトリ external_plugins/github の plugin.json(Official GitHub MCP server for repository management…)とインストールコマンドを記したカード">
+    <figcaption>GitHub の plugin.json とインストールコマンド — 出典:anthropics/claude-plugins-official external_plugins/github、原文をこのウィキがカードにレンダー</figcaption>
+</figure>
+<p><strong>何をするか。</strong>GitHub が運営するリモート MCP サーバー(<code>api.githubcopilot.com/mcp/</code>)をつなぐ。Issue の作成、PR の管理、コードレビュー、リポジトリの検索のように、GitHub API ができることをツールとして使う。認証は環境変数 <code>GITHUB_PERSONAL_ACCESS_TOKEN</code> の個人アクセストークンで行う。</p>
+<pre><code>export GITHUB_PERSONAL_ACCESS_TOKEN=…   # 必要な権限だけを与えたトークン
+/plugin install github@claude-plugins-official
+
+「先週クローズされた Issue のうち bug ラベルのものだけまとめて」</code></pre>
+<p><strong>どこで役に立つか。</strong>ターミナルとブラウザを行き来せずに Issue・PR の作業を片づける。トークンの権限がそのままエージェントの権限になるので、書き込み権限は必要なリポジトリにだけ与える。</p>
+
+<h3>8. CLAUDE.md Management — プロジェクトの記憶を最新に</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/claude-md-improver.webp" width="1440" height="797"
+         alt="CLAUDE.md Improver の実行画面:「check my claude md files to see if theyre up-to-date」という依頼でスキルが発動し、CLAUDE.md の品質レポートを出し、項目別の点数(コマンド・ワークフロー 18/20、構造の明確さ 17/20、自明でないパターン 12/15、簡潔さ 14/15、最新性 8/15、実行可能性 9/15)と最近追加された revenue テーブルが抜けているという指摘、推奨の追加事項を示している">
+    <figcaption>claude-md-improver がデータベースの変更で古くなった CLAUDE.md を見つける実行画面 — 出典:anthropics/claude-plugins-official plugins/claude-md-management(Apache-2.0)</figcaption>
+</figure>
+<p><strong>何をするか。</strong>道具が二つ入っている。スキル <code>claude-md-improver</code> はリポジトリのすべての <code>CLAUDE.md</code> を探し、今のコードと合っているかを採点する。上の画面のように、コマンド・ワークフロー、構造の説明、自明でないパターン、簡潔さ、最新性、実行可能性を別々に評価して直す箇所を提案する。コマンド <code>/revise-claude-md</code> は、セッションを終えるときに今回の作業で学んだことを <code>CLAUDE.md</code> に書く。</p>
+<pre><code>/plugin install claude-md-management@claude-plugins-official
+
+「CLAUDE.md が最新か点検して」   ← claude-md-improver スキルが発動
+/revise-claude-md               ← セッションで学んだことを記録</code></pre>
+<p><strong>どこで役に立つか。</strong><code>CLAUDE.md</code> はコードが変わると静かに古びる。このウィキも同じ問題をルールと検証器で扱っている(<a href="/p/ja/claude-md-commandments/">CLAUDE.md の十戒</a>)。定期点検はスキルに、セッション終わりの記録はコマンドに分けた設計は実用的だ。</p>
+
+<h3>9. Feature Dev — 7段階で機能を作る</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/feature-dev.webp" width="1440" height="624"
+         alt="anthropics/claude-plugins-official リポジトリ plugins/feature-dev の plugin.json(Comprehensive feature development workflow with specialized agents for codebase exploration, architecture design, and quality review)とインストールコマンドを記したカード">
+    <figcaption>Feature Dev の plugin.json とインストールコマンド — 出典:anthropics/claude-plugins-official(Apache-2.0)、原文をこのウィキがカードにレンダー</figcaption>
+</figure>
+<p><strong>何をするか。</strong><code>/feature-dev</code> コマンド一つが七つの段階を導く。エージェント三つ(<code>code-explorer</code>・<code>code-architect</code>・<code>code-reviewer</code>)が段階ごとに分かれて働く。</p>
+<div class="tbl-wrap cmp">
+<table>
+    <thead><tr><th>段階</th><th>すること</th></tr></thead>
+    <tbody>
+        <tr><td><strong>1 Discovery</strong></td><td>何を、なぜ作るのか、制約は何かを確かめる</td></tr>
+        <tr><td><strong>2 Codebase Exploration</strong></td><td>code-explorer を2〜3個同時に立ち上げ、似た機能・構造・UI のパターンを調べる</td></tr>
+        <tr><td><strong>3 Clarifying Questions</strong></td><td>調査のあとに残った曖昧な点を質問する</td></tr>
+        <tr><td><strong>4 Architecture Design</strong></td><td>code-architect が設計案を示す</td></tr>
+        <tr><td><strong>5 Implementation</strong></td><td>承認された設計どおりに実装する</td></tr>
+        <tr><td><strong>6 Quality Review</strong></td><td>code-reviewer が品質を確認する</td></tr>
+        <tr><td><strong>7 Summary</strong></td><td>したことと残ったことをまとめる</td></tr>
+    </tbody>
+</table>
+</div>
+<pre><code>/plugin install feature-dev@claude-plugins-official
+/feature-dev OAuth でユーザー認証を追加</code></pre>
+<p><strong>どこで役に立つか。</strong>見慣れないコードベースに機能を加えるとき、いきなりコードから書く失敗を防ぐ。質問の段階が調査の<em>あと</em>にあるのが肝だ。先にコードを読んだので、無駄な質問が減る。</p>
+
+<h3>10. Security Guidance — 三度ふるいにかけるセキュリティ検査</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/security-guidance.webp" width="1440" height="658"
+         alt="anthropics/claude-plugins-official リポジトリ plugins/security-guidance の plugin.json(Security review for Claude-generated code. Pattern-based warnings on edits, LLM-powered diff review on Stop, and an agentic commit reviewer…)とインストールコマンドを記したカード">
+    <figcaption>Security Guidance の plugin.json とインストールコマンド — 出典:anthropics/claude-plugins-official(Apache-2.0)、原文をこのウィキがカードにレンダー</figcaption>
+</figure>
+<p><strong>何をするか。</strong>フックで動くセキュリティ検査だ。Claude が作ったコードを三つの時点でふるいにかける。軽い検査は頻繁に、重い検査はまれに回る作りだ。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 246" role="img" aria-label="Security Guidance の三重の検査:ファイルを直すとき正規表現のパターン警告(約25種、yaml.load・innerHTML・秘密鍵)、ターンが終わるとき最新の Opus が diff を確認して重大なものだけ Claude に戻す、コミットするときエージェントが関連ファイルをたどってデータの流れを追う(IDOR・認証回避・SSRF)">
+    <text class="d-label" x="360" y="22" text-anchor="middle">軽い検査は頻繁に、重い検査はまれに</text>
+    <line class="d-edge accent" x1="40" y1="52" x2="672" y2="52"/>
+    <polygon class="d-arrow accent" points="670,47 680,52 670,57"/>
+    <text class="d-label sm" x="120" y="76" text-anchor="middle">ファイルを直すとき</text>
+    <text class="d-label sm" x="360" y="76" text-anchor="middle">ターンが終わるとき</text>
+    <text class="d-label sm" x="600" y="76" text-anchor="middle">コミットするとき</text>
+    <rect class="d-box soft" x="12" y="90" width="216" height="100" rx="12"/>
+    <text class="d-label" x="120" y="118" text-anchor="middle">① パターン警告</text>
+    <text class="d-sub" x="120" y="142" text-anchor="middle">正規表現 約25種</text>
+    <text class="d-sub" x="120" y="162" text-anchor="middle">yaml.load・innerHTML・秘密鍵</text>
+    <rect class="d-box" x="252" y="90" width="216" height="100" rx="12"/>
+    <text class="d-label" x="360" y="118" text-anchor="middle">② LLM の差分レビュー</text>
+    <text class="d-sub" x="360" y="142" text-anchor="middle">最新の Opus が diff を確認</text>
+    <text class="d-sub" x="360" y="162" text-anchor="middle">重大なものだけ Claude に戻す</text>
+    <rect class="d-box accent" x="492" y="90" width="216" height="100" rx="12"/>
+    <text class="d-label" x="600" y="118" text-anchor="middle">③ コミットのレビュー</text>
+    <text class="d-sub" x="600" y="142" text-anchor="middle">関連ファイルでデータの流れを追う</text>
+    <text class="d-sub" x="600" y="162" text-anchor="middle">IDOR・認証回避・SSRF</text>
+    <text class="d-sub" x="360" y="222" text-anchor="middle">パターン照合が見逃す複数ファイルの脆弱性はコミット時に捕まえる</text>
+</svg>
+</div>
+<pre><code>/plugin install security-guidance@claude-plugins-official
+# 必要:Claude Code 2.1.144 以上、Python 3.8 以上
+# 設定はすべて環境変数(任意)。既定値ですぐ動く</code></pre>
+<p><strong>どこで役に立つか。</strong>人がレビューする前に Claude 自身に直させる点にある。二層目はターンが終わるときに diff を確認して重大な問題を Claude に戻すので、ユーザーが答えを見る前に修正が済む。コマンドはないので、インストールしておくだけでよい。</p>
+
+<h3>13. Ralph Loop — 終わるまで同じプロンプトをもう一度</h3>
+<figure class="doc-img">
+    <img src="assets/ai/claude/plugin/catalog/plc-popular-2026h2/ralph-loop.webp" width="1440" height="624"
+         alt="anthropics/claude-plugins-official リポジトリ plugins/ralph-loop の plugin.json(Continuous self-referential AI loops for interactive iterative development, implementing the Ralph Wiggum technique…)とインストールコマンドを記したカード">
+    <figcaption>Ralph Loop の plugin.json とインストールコマンド — 出典:anthropics/claude-plugins-official(Apache-2.0)、原文をこのウィキがカードにレンダー</figcaption>
+</figure>
+<p><strong>何をするか。</strong>開発者 Geoffrey Huntley が「Ralph は Bash のループだ」と説明した手法を、Claude Code のセッションの中で実装した。外側にシェルのループを置く代わりに、<strong>Stop フック</strong>が Claude の終了の試みを止めて同じプロンプトを入れ直す。プロンプトはそのままだが、前の作業はファイルと git の履歴に残るので、Claude は毎回自分が残した結果を読んで続ける。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 224" role="img" aria-label="Ralph Loop の構造:/ralph-loop で作業と完了の文句を指定すると Claude が作業し(ファイル・git に跡が残る)、終えようとすると Stop フックが止めて同じプロンプトを入れ直し、作業に戻る。完了の文句を出力するか最大反復に達したときだけ終わる">
+    <text class="d-label" x="360" y="22" text-anchor="middle">Stop フックが出口をふさぎ、同じプロンプトを入れ直す</text>
+    <rect class="d-box soft" x="14" y="44" width="160" height="62" rx="10"/>
+    <text class="d-label sm" x="94" y="70" text-anchor="middle">/ralph-loop</text>
+    <text class="d-sub" x="94" y="90" text-anchor="middle">作業と完了の文句を指定</text>
+    <line class="d-edge" x1="174" y1="75" x2="194" y2="75"/>
+    <polygon class="d-arrow" points="192,71 200,75 192,79"/>
+    <rect class="d-box accent" x="200" y="44" width="160" height="62" rx="10"/>
+    <text class="d-label sm" x="280" y="70" text-anchor="middle">作業</text>
+    <text class="d-sub" x="280" y="90" text-anchor="middle">ファイル・git に跡が残る</text>
+    <line class="d-edge" x1="360" y1="75" x2="380" y2="75"/>
+    <polygon class="d-arrow" points="378,71 386,75 378,79"/>
+    <rect class="d-box" x="386" y="44" width="150" height="62" rx="10"/>
+    <text class="d-label sm" x="461" y="70" text-anchor="middle">終えようとする</text>
+    <text class="d-sub" x="461" y="90" text-anchor="middle">ターンの終了を試みる</text>
+    <line class="d-edge" x1="536" y1="75" x2="556" y2="75"/>
+    <polygon class="d-arrow" points="554,71 562,75 554,79"/>
+    <rect class="d-box" x="562" y="44" width="146" height="62" rx="10"/>
+    <text class="d-label sm" x="635" y="70" text-anchor="middle">Stop フック</text>
+    <text class="d-sub" x="635" y="90" text-anchor="middle">同じプロンプトを再び</text>
+    <path class="d-edge dash" d="M635,106 L635,134 L280,134 L280,112"/>
+    <polygon class="d-arrow" points="276,114 280,107 284,114"/>
+    <rect class="d-box accent" x="386" y="156" width="322" height="50" rx="10"/>
+    <text class="d-label sm" x="547" y="178" text-anchor="middle">完了の文句を出力 · 最大反復に到達</text>
+    <text class="d-sub" x="547" y="196" text-anchor="middle">このときだけループが終わる</text>
+    <line class="d-edge dash" x1="461" y1="106" x2="461" y2="156"/>
+</svg>
+</div>
+<pre><code>/plugin install ralph-loop@claude-plugins-official
+
+/ralph-loop "ToDo の REST API を作れ。CRUD・入力検証・テストを含む。
+終わったら &lt;promise&gt;COMPLETE&lt;/promise&gt; を出力" --completion-promise "COMPLETE" --max-iterations 50
+/cancel-ralph   # 途中で止める</code></pre>
+<p><strong>どこで役に立つか。</strong>テストが通るといった終わりのはっきりした仕事を一晩任せるときだ。逆に終わりの条件がぼやけた仕事は反復が増えるだけなので、<code>--max-iterations</code> で上限を必ず置く。</p>
+
+<h3>選ぶときに見ること</h3>
+<ul>
+    <li><strong>まず部品を見る。</strong>フックの入ったプラグイン(Security Guidance・Ralph Loop)はインストールしただけで毎ターン動く。コマンドだけのプラグインは呼んだときだけ動く。</li>
+    <li><strong>MCP プラグインは権限が外へ伸びる。</strong>GitHub のようにトークンを使うプラグインでは、トークンの権限がそのままエージェントの権限だ。</li>
+    <li><strong>同じ仕事をするスキルと比べる。</strong>ブラウザ自動化は Playwright プラグインと agent-browser スキルが重なる。1・2位が実質スキルで、Microsoft の文書もコーディングエージェントには CLI とスキルのほうがトークンが少なくて済むと書いている。長い作業セッションなら軽いほうから見る。</li>
+</ul>
+
+<h3>事実確認ノート</h3>
+<p class="scn-sub">インストール数と作り手、ディレクトリのプラグイン数(271個)は 2026-10-23(KST)の <a href="https://claude.com/plugins" target="_blank" rel="noopener">claude.com/plugins</a> ページに載ったデータを直接読んだ。数字は毎日変わる累計値だ。各プラグインの構成(スキル・コマンド・エージェント・フック・MCP)と動作・コマンドは、Anthropic の公式マーケットプレイスのリポジトリ <code>anthropics/claude-plugins-official</code> を取得し、<code>plugin.json</code>・README・コマンド・エージェント・フックのファイルを直接読んで整理した。Context7 は <code>upstash/context7</code>、Playwright は <code>microsoft/playwright-mcp</code> の README もあわせて読んだ。Code Review の四つのエージェントと信頼度80の基準、Security Guidance の三層と必要なバージョン、Feature Dev の七段階、Ralph Loop の Stop フックの構造は、それぞれの README の説明だ。カード画像は元の <code>plugin.json</code> の名前と説明を変えずにこのウィキがレンダーしたもので(長い説明は&hellip;で省略)、Context7 の表紙と CLAUDE.md Improver の実行画面は各リポジトリにコミットされたファイルをライセンスに従って載せた。Ralph の手法に名前をつけた開発者は、プラグインの README が引用する概念の提案者なので名前を書いた。それ以外のリポジトリ作者の個人名は書いていない。</p>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · PlugIn · プラグインカタログ &middot; <span class="pr-k">作成日</span> 2026-10-23 &middot; <span class="pr-k">更新日</span> 2026-10-23</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/omc-intro/">OMC — 紹介とインストール</a></li><li><a href="/p/ja/claude-md-intent/">intent.md — コードより先に残す意図と、AI ネイティブ SDLC</a></li><li><a href="/p/ja/skills/">拡張機能 — Skills · MCP · Hooks</a></li><li><a href="/p/ja/sks-popular-2026h2/">2026年下半期の人気スキル — インストール数上位7つと使い方</a></li></ul>
+</nav>
+</body>
+</html>
