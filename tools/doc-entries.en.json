@@ -883,5 +883,16 @@
     "evidenceRef": "The 'How this wiki reads it' section cites Duet's off-limits tier (securities trading, transfers between accounts) as another instance of the design that article saw in period locks: some writes are closed one layer above the approval button"
    }
   ]
+ },
+ {
+  "name": "news-20261030-ai-training-optout",
+  "title": "Opting Out of AI Training in One robots.txt Line — The Shared Token Four Companies Back, and This Wiki's Choice",
+  "summary": "An individual IETF draft (Machine-Readable Training Preference Signal) submitted on October 30 by an Anthropic engineer proposes a shared token, __usage_ai-training, for stating AI-training preferences in a single robots.txt group, and Google, Microsoft and OpenAI said the same day they would honor it. It replaces blocking each company's crawler name (GPTBot, Google-Extended, ClaudeBot, meta-externalagent) with one named use; it adds no new directive, but User-agent: * does not match it and a file without the group reads as 'no preference'. It is a preference, not a crawl ban, is not retroactive, and company-specific rules come first (Google treats a shared-token refusal as a Google-Extended block). Covered: a diagram of how crawlers read it, a support-timeline chart by company (Anthropic implementing from 10/30, OpenAI 'in the coming months', Google early 2027, Microsoft honoring it from 2027-02-01 with a 3/1 grounding deadline, no announcement from Meta) with a comparison table, Microsoft's separate grounding setting, and the IETF AIPREF working group's vocabulary and Content-Usage work alongside the draft's status. This wiki used the same signal the other way: on November 2 it added __usage_ai-training Allow: / to robots.txt to say AI training is welcome too, not just crawling, with the lines written by the build_ai_export.py generator",
+  "relations": [
+   {
+    "target": "kgs-ai-layer",
+    "evidenceRef": "The 'This wiki's case' section leaves the background that robots.txt is generated from the knowledge index to that document and explains only the change that added the token group to the generator"
+   }
+  ]
  }
 ]

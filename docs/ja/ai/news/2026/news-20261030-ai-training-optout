@@ -1,0 +1,171 @@
+<h2>AI 学習の拒否を robots.txt の一行で — 4社が受け入れた共有トークンとこのウィキの選択</h2>
+
+<h3>三行まとめ</h3>
+<ul>
+    <li>10月30日、Anthropic 所属のエンジニアが IETF に個人ドラフトを提出した。ドラフトは <code>__usage_ai-training</code> というトークン一つで「このサイトの文章を AI 学習に使ってよいか」を書こうと提案する。同じ日に Google、Microsoft、OpenAI がこの信号に従うと表明した。</li>
+    <li>これまでは会社ごとに違う名前(GPTBot、Google-Extended、ClaudeBot など)を一つずつ拒否する必要があった。新しいトークンはクローラーの名前ではなく<strong>用途</strong>を指す。ただし <code>User-agent: *</code> はこのトークンに当てはまらず、トークンのグループがなければ「意思表示なし」と読まれる。</li>
+    <li>このウィキは同じ日の反対側の選択をした。11月2日、<code>robots.txt</code> にこのトークンで <code>Allow: /</code> を書き、収集だけでなく <strong>AI 学習も歓迎する</strong>という意思を別に示した。</li>
+</ul>
+
+<p><code>robots.txt</code> はウェブサイトの最上位のパスに置く小さなテキストファイルだ。検索エンジンや AI 企業の自動収集プログラム(クローラー)がサイトに来ると、まずこのファイルを読み、どのパスを取得してよいかを確かめる。1994年から使われてきた慣習で、2022年に IETF(インターネットの技術標準をつくる国際組織)が RFC 9309 として文法を整理した。問題は、このファイルがもともと「入ってよいか」しか語らない点にある。「取得した文章で AI を学習させてよいか」は別の問いで、これまでは各社が決めたクローラー名を拒否するという遠回りで答えてきた。今回のドラフトは、その二つ目の問いに共通の置き場所をつくる。</p>
+
+<h3>名札の代わりに用途を一つ</h3>
+<p>これまで AI 学習を拒否したいサイトは、会社ごとの名前を知っておく必要があった。OpenAI は GPTBot、Google は検索クローラーと切り離した Google-Extended というトークン、Anthropic は ClaudeBot、Meta は meta-externalagent を使う。Microsoft はページに NoArchive・NoCache タグを付ける方式を AI 利用制限の信号として使ってきた。会社が増えるたびに行が一つ増え、知らないクローラー名は拒否のしようがなかった。</p>
+<p>新しいトークンは特定のクローラーではなく「AI 学習」という<strong>使い道</strong>を名前にしている。文法は普通の robots.txt のグループそのままで、新しい指示語はない。今のパーサーもそのまま読める。たとえばサイト全体を学習から外し、報道資料のフォルダだけ開けておくなら、次のように書く。</p>
+<pre><code>User-agent: __usage_ai-training
+Disallow: /
+Allow: /press-kit/</code></pre>
+<p>反対に、すべて学習に使ってよいと示すなら <code>Allow: /</code> の一行で足りる。このウィキが今回入れたのがこの形だ。</p>
+<pre><code>User-agent: __usage_ai-training
+Allow: /</code></pre>
+
+<h3>クローラーがトークンを読む順序</h3>
+<p>ドラフトの規則は短いが、従来の robots.txt の習慣とずれる点が二つある。一つは、すべてのクローラーを指す <code>User-agent: *</code> のグループがこのトークンには適用されないことだ。もう一つは、トークンのグループがまったくなければ、許可でも拒否でもない<strong>「意思表示なし」</strong>と見なすことだ。ドラフトが出た日の時点では、世界中の robots.txt がすべてこの状態にある。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 356" role="img" aria-label="クローラーが学習の意思表示トークンを読む順序:運営者が robots.txt にグループを書き、クローラーがファイルを読んで __usage_ai-training のグループがあるかを見る。なければ学習の意思表示なしとして扱い、あればパスを照合して Disallow のパスは学習から除外し、Allow のパスは学習を許可する">
+    <text class="d-label" x="360" y="26" text-anchor="middle">クローラーが学習の意思表示を読む順序</text>
+    <rect class="d-box" x="20" y="50" width="150" height="60" rx="10"/>
+    <text class="d-label sm" x="95" y="75" text-anchor="middle">サイト運営者</text>
+    <text class="d-sub" x="95" y="95" text-anchor="middle">グループを書く</text>
+    <line class="d-edge" x1="170" y1="80" x2="194" y2="80"/>
+    <polygon class="d-arrow" points="193,76 200,80 193,84"/>
+    <rect class="d-box" x="200" y="50" width="150" height="60" rx="10"/>
+    <text class="d-label sm" x="275" y="75" text-anchor="middle">AI 企業のクローラー</text>
+    <text class="d-sub" x="275" y="95" text-anchor="middle">robots.txt を先に読む</text>
+    <line class="d-edge" x1="350" y1="80" x2="374" y2="80"/>
+    <polygon class="d-arrow" points="373,76 380,80 373,84"/>
+    <rect class="d-box accent" x="380" y="50" width="160" height="60" rx="10"/>
+    <text class="d-label sm" x="460" y="75" text-anchor="middle">トークンのグループは?</text>
+    <text class="d-sub" x="460" y="95" text-anchor="middle">* は当てはまらない</text>
+    <line class="d-edge" x1="540" y1="80" x2="564" y2="80"/>
+    <polygon class="d-arrow" points="563,76 570,80 563,84"/>
+    <rect class="d-box soft" x="570" y="50" width="130" height="60" rx="10"/>
+    <text class="d-label sm" x="635" y="75" text-anchor="middle">グループなし</text>
+    <text class="d-sub" x="635" y="95" text-anchor="middle">意思表示なし</text>
+    <line class="d-edge" x1="460" y1="110" x2="460" y2="144"/>
+    <polygon class="d-arrow" points="456,143 460,150 464,143"/>
+    <text class="d-sub" x="470" y="134">あり</text>
+    <rect class="d-box" x="380" y="150" width="160" height="60" rx="10"/>
+    <text class="d-label sm" x="460" y="175" text-anchor="middle">パスを照合</text>
+    <text class="d-sub" x="460" y="195" text-anchor="middle">Allow・Disallow の行</text>
+    <path class="d-edge" d="M460,210 L460,222 M365,222 L555,222 M365,222 L365,234 M555,222 L555,234"/>
+    <polygon class="d-arrow" points="361,233 365,240 369,233"/>
+    <polygon class="d-arrow" points="551,233 555,240 559,233"/>
+    <rect class="d-box" x="290" y="240" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="365" y="263" text-anchor="middle">Disallow のパス</text>
+    <text class="d-sub" x="365" y="282" text-anchor="middle">学習から除外</text>
+    <rect class="d-box accent" x="480" y="240" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="555" y="263" text-anchor="middle">Allow のパス</text>
+    <text class="d-sub" x="555" y="282" text-anchor="middle">学習を許可</text>
+    <text class="d-sub" x="360" y="324" text-anchor="middle">収集と検索への掲載は従来の規則が決める · すでに学習済みのデータはそのまま</text>
+    <text class="d-sub" x="360" y="344" text-anchor="middle">会社ごとの規則(例: Google-Extended)が別にあればそちらが優先</text>
+</svg>
+</div>
+<p>この信号は<strong>意思表示</strong>だ。クローラーがページを取得すること自体を止める命令ではないので、検索インデックスのための収集は続きうる。遡っての効果もない。このファイルが掲げられている間に取得した文章にだけ適用され、すでにできた学習データやモデルから文章を抜いてくれるわけではない。個別の契約があればそちらがこの信号より優先しうる点も、各報道が指摘している。</p>
+<p>会社ごとの規則と重なったときの順序は、ドラフトは決めず各社に任せた。Google は、サイトが共有トークンで拒否し、Google-Extended を別に書いていなければ Google-Extended を拒否したものとして扱うとした。逆に Google-Extended の規則が別にあればそちらに従う。そのため「おおむね拒否、ただし Google だけ許可」のような組み合わせもできる。</p>
+
+<h3>誰が、いつから従うか</h3>
+<p>発表に加わった会社は四つだ。ただし四社とも「従う」と言っただけで、実際の適用時期はそれぞれ違う。日付を決めたのは Microsoft だけだ。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 344" role="img" aria-label="会社別の共有トークン対応日程(2026年10月から2027年3月):Anthropic は10月30日に実装に着手、OpenAI は数か月以内の予定で日付なし、Google は2027年初めを目標、Microsoft は2027年2月1日から収集に反映し3月1日をグラウンディング設定の締め切りとした。Meta は対応を発表していない">
+    <text class="d-label" x="360" y="24" text-anchor="middle">誰がいつから従うか:会社別の対応日程</text>
+    <text class="d-sub" x="290" y="46" text-anchor="middle">2026</text>
+    <text class="d-sub" x="530" y="46" text-anchor="middle">2027</text>
+    <text class="d-sub" x="210" y="64" text-anchor="middle">10月</text>
+    <text class="d-sub" x="290" y="64" text-anchor="middle">11月</text>
+    <text class="d-sub" x="370" y="64" text-anchor="middle">12月</text>
+    <text class="d-sub" x="450" y="64" text-anchor="middle">1月</text>
+    <text class="d-sub" x="530" y="64" text-anchor="middle">2月</text>
+    <text class="d-sub" x="610" y="64" text-anchor="middle">3月</text>
+    <line class="d-edge dash" x1="410" y1="34" x2="410" y2="74"/>
+    <text class="d-label sm" x="158" y="108" text-anchor="end">Anthropic</text>
+    <rect class="d-node" x="245" y="94" width="405" height="20" rx="5"/>
+    <text class="d-node-label" x="255" y="108">10/30 実装に着手 · 全サービス対応には時間</text>
+    <text class="d-label sm" x="158" y="152" text-anchor="end">OpenAI</text>
+    <rect class="d-box soft" x="245" y="138" width="405" height="20" rx="5"/>
+    <text class="d-sub" x="255" y="152">「数か月以内」に対応 · 日付未定</text>
+    <text class="d-label sm" x="158" y="196" text-anchor="end">Google</text>
+    <rect class="d-box soft" x="245" y="182" width="405" height="20" rx="5"/>
+    <text class="d-sub" x="255" y="196">2027年初め目標 · 拒否は Google-Extended 拒否扱い</text>
+    <text class="d-label sm" x="158" y="240" text-anchor="end">Microsoft</text>
+    <rect class="d-box soft" x="245" y="226" width="245" height="20" rx="5"/>
+    <text class="d-sub" x="482" y="240" text-anchor="end">2/1から収集に反映</text>
+    <rect class="d-node d" x="490" y="226" width="160" height="20" rx="5"/>
+    <text class="d-node-label" x="500" y="240">3/1 根拠設定の締切</text>
+    <text class="d-label sm" x="158" y="284" text-anchor="end">Meta</text>
+    <text class="d-sub" x="255" y="284">対応の発表なし · 従来の meta-externalagent 規則のみ</text>
+    <line class="d-edge accent dash" x1="245" y1="72" x2="245" y2="298"/>
+    <text class="d-sub" x="245" y="314" text-anchor="middle">10/30 ドラフトと発表</text>
+    <rect class="d-node" x="176" y="326" width="14" height="10" rx="2"/>
+    <text class="d-sub" x="196" y="335">適用中・確定日以降</text>
+    <rect class="d-box soft" x="376" y="326" width="14" height="10" rx="2"/>
+    <text class="d-sub" x="396" y="335">約束したが日付未定</text>
+</svg>
+</div>
+<table>
+    <thead>
+        <tr><th>会社</th><th>これまでの学習拒否の方法</th><th>新トークン</th><th>時期</th><th>追加の点</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>Anthropic</td><td>ClaudeBot を拒否</td><td>ドラフト作成者の所属、実装開始</td><td>10月30日着手</td><td>「全サービスに入れるまで時間がかかる」</td></tr>
+        <tr><td>OpenAI</td><td>GPTBot を拒否</td><td>対応予定</td><td>「数か月以内」</td><td>それまでは GPTBot の規則がそのまま適用</td></tr>
+        <tr><td>Google</td><td>Google-Extended を拒否</td><td>対応予定</td><td>2027年(初め)</td><td>共有トークンの拒否を Google-Extended の拒否として扱い、会社別の規則が優先</td></tr>
+        <tr><td>Microsoft</td><td>NoArchive・NoCache タグ</td><td>対応予定</td><td>2027年2月1日</td><td>学習とは別の「グラウンディング」設定を新設、旧タグを置き換え</td></tr>
+        <tr><td>Meta</td><td>meta-externalagent を拒否</td><td>発表なし</td><td>なし</td><td>四社の発表に含まれない</td></tr>
+    </tbody>
+</table>
+
+<h3>Microsoft はもう一段分けた:学習とグラウンディング</h3>
+<p>Microsoft の発表には、ほかの三社にない設定がもう一つある。<strong>グラウンディング(AI Grounding)</strong>は、AI が答えをつくるときにウェブページをその場で取得して根拠として使うことを指す。モデルを前もって学習させるのとは別の使い道だ。Microsoft は学習の意思表示を共有トークンで受け、グラウンディングの意思表示はページ単位の別の設定で受ける。Copilot や Bing の AI 回答に引用されることは許しつつ、学習だけを拒否するという組み合わせが可能になる。</p>
+<p>二つの設定は、これまでの NoArchive・NoCache タグを置き換える。Microsoft は2027年2月1日から、収集時に二つの設定を反映する。旧タグでグラウンディングを止めてきたサイトは、3月1日までに新しい設定をページに書き、Bing Webmaster Tools に一時設定を残す必要がある。そうしなければ、再収集されるまでグラウンディングは許可に変わる。ページごとに robots.txt の設定を上書きするメタタグと HTTP ヘッダーも用意される。</p>
+<p>Google は、AI による概要(AI Overviews)や AI モードがこの信号の影響を受けるかを明らかにしていない。検索への掲載と学習を分けて扱うこの区別は、ニュースサイトのように「検索には出たいが学習には使われたくない」側にとって特に重要だ。</p>
+
+<h3>標準になるまでの距離</h3>
+<p>今回の文書は IETF の<strong>個人ドラフト(individual draft)</strong>だ。誰でも出せる段階で、ワーキンググループが採択して合意を経るまでは正式な標準の地位はない。IETF の文書管理ページでも「IETF が承認していない文書」と表示され、2027年5月3日に失効する。失効前に改訂版が出るかワーキンググループに採択されれば、寿命は延びる。</p>
+<p>背景には IETF の AI 意思表示ワーキンググループ(AIPREF)がある。このグループは「AI 学習」「AI 利用」「検索」といった用途を呼ぶ共通の語彙と、その意思表示を robots.txt や HTTP ヘッダーに載せる <code>Content-Usage</code> という新しいフィールドを別々に練ってきた。2026年8月としていた完了目標は過ぎた。今回のドラフトは「AI 学習」の意味をその語彙ドラフトから借りつつ、新しいフィールドの代わりに既存の robots.txt のグループを使って、すぐに使えるようにした迂回路に近い。大手四社が先に従うと言ったことが、この迂回路を事実上の標準にするかどうかが見どころだ。</p>
+
+<h3>このウィキの場合:学習も歓迎すると書く</h3>
+<p>このウィキは最初から、AI が読み、引用しやすいようにつくった公開発行型のウィキだ。<code>robots.txt</code> はすべてのクローラーを許可し、主要な AI クローラー15種を名前で呼んで別に歓迎してきた。コンテンツのライセンスは、出典を示せば自由に再利用できる CC BY 4.0 だ。</p>
+<p>ところが新しいドラフトの規則で読むと、このファイルは学習について<strong>何も言っていない</strong>状態だった。<code>User-agent: *</code> はトークンに当てはまらず、クローラー名を挙げたグループもトークンのグループではないからだ。意図は歓迎なのに、機械が読む信号は「意思表示なし」だった。そこで11月2日、このウィキはトークンのグループを一つ加えた。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 268" role="img" aria-label="このウィキの robots.txt の四層:すべてのクローラーの許可は誰でも収集できることを、AI クローラー15種の名前での許可は AI クローラーを名指しで歓迎することを、11月に加えた __usage_ai-training の許可は AI 学習も歓迎することを、CC BY 4.0 のライセンス行は出典を示せば再利用できることを意味する">
+    <text class="d-label" x="360" y="26" text-anchor="middle">このウィキの robots.txt が語る四つのこと</text>
+    <rect class="d-box" x="40" y="48" width="330" height="40" rx="8"/>
+    <text class="d-label sm" x="205" y="72" text-anchor="middle">User-agent: *   Allow: /</text>
+    <line class="d-edge" x1="370" y1="68" x2="414" y2="68"/>
+    <polygon class="d-arrow" points="413,64 420,68 413,72"/>
+    <rect class="d-box soft" x="420" y="48" width="260" height="40" rx="8"/>
+    <text class="d-sub" x="550" y="72" text-anchor="middle">誰でも収集できる</text>
+    <rect class="d-box" x="40" y="100" width="330" height="40" rx="8"/>
+    <text class="d-label sm" x="205" y="124" text-anchor="middle">AI クローラー15種の名前 + Allow: /</text>
+    <line class="d-edge" x1="370" y1="120" x2="414" y2="120"/>
+    <polygon class="d-arrow" points="413,116 420,120 413,124"/>
+    <rect class="d-box soft" x="420" y="100" width="260" height="40" rx="8"/>
+    <text class="d-sub" x="550" y="124" text-anchor="middle">AI クローラーを名指しで歓迎</text>
+    <rect class="d-box accent" x="40" y="152" width="330" height="40" rx="8"/>
+    <text class="d-label sm" x="205" y="176" text-anchor="middle">__usage_ai-training + Allow: /</text>
+    <line class="d-edge accent" x1="370" y1="172" x2="414" y2="172"/>
+    <polygon class="d-arrow accent" points="413,168 420,172 413,176"/>
+    <rect class="d-box accent" x="420" y="152" width="260" height="40" rx="8"/>
+    <text class="d-sub" x="550" y="176" text-anchor="middle">AI 学習も歓迎(11月2日追加)</text>
+    <rect class="d-box" x="40" y="204" width="330" height="40" rx="8"/>
+    <text class="d-label sm" x="205" y="228" text-anchor="middle"># License: CC BY 4.0</text>
+    <line class="d-edge" x1="370" y1="224" x2="414" y2="224"/>
+    <polygon class="d-arrow" points="413,220 420,224 413,228"/>
+    <rect class="d-box soft" x="420" y="204" width="260" height="40" rx="8"/>
+    <text class="d-sub" x="550" y="228" text-anchor="middle">出典を示せば再利用できる</text>
+</svg>
+</div>
+<p>実際に加えた行は次のとおりだ。コメントの二行は人が読むために残したものだ。</p>
+<pre><code># AI training preference: this wiki welcomes AI training on all of its content.
+# (shared token, IETF draft-kelley-aipref-training-preference-signal)
+User-agent: __usage_ai-training
+Allow: /</code></pre>
+<p>このファイルは手で直さない。このウィキの <code>robots.txt</code> は知識インデックスから生成されるファイルなので(<a href="#!kgs-ai-layer">AI がこのウィキを読む方法</a>を参照)、生成ツール <code>tools/build_ai_export.py</code> にトークンを定数として置き、グループをつくらせた。CI が生成結果とリポジトリのファイルを比べるので、ファイルだけ、あるいはツールだけを直すとマージが止まる。</p>
+<p>すぐに変わることは大きくない。四社が実際にトークンを読むまでは従来のクローラー別の規則が適用され、このウィキはその規則でもすでに全員を許可している。変わるのは信号の正確さだ。各社がトークンを読み始める日から、このウィキは「意思表示なし」ではなく「学習を許可」と読まれる。学習を許可しても、再利用の条件はライセンスが決める点もそのままだ。</p>
+
+<h3>このウィキの読み方</h3>
+<p>このトークンが分けるのは「読んでよい」と「学んでよい」の違いだ。ニュースサイトにとって二つは別の答えになる。検索や AI 回答の引用で読者を連れてきてほしいが、学習データとしてただで渡したくはない。Microsoft が学習とグラウンディングをもう一段分けたのも、この要求のためだ。公開発行型のウィキにとって二つの答えは同じだ。より多くの AI が読み、学び、出典とともに引用するほど、このウィキの目的に近づく。同じ信号の仕組みが、一方には拒否の手段となり、このウィキには歓迎をはっきり書く場所になった。</p>
+
+<h3>ファクトチェックノート</h3>
+<p class="scn-sub">ドラフトの題名(Machine-Readable Training Preference Signal)・識別子・作成日(10月30日)・失効日(2027年5月3日)・個人ドラフトという地位、トークンの文法と <code>/press-kit/</code> の例、ワイルドカード不一致と「グループなしは意思表示なし」の規則、AIPREF の語彙ドラフトから定義を借りる点は、<a href="https://www.ietf.org/archive/id/draft-kelley-aipref-training-preference-signal-00.html" target="_blank" rel="noopener">IETF ドラフト原文</a>を引用した <a href="https://www.searchenginejournal.com/google-microsoft-openai-shared-ai-training-opt-out/595387/" target="_blank" rel="noopener">Search Engine Journal</a>・<a href="https://ppc.land/google-microsoft-openai-and-anthropic-back-one-ai-training-opt-out/" target="_blank" rel="noopener">PPC Land</a>・<a href="https://thenextweb.com/news/ai-training-opt-out-robots-txt-google-openai-microsoft-anthropic" target="_blank" rel="noopener">The Next Web</a>・<a href="https://engadget.com/2303225/google-openai-anthropic-ai-crawling-controls" target="_blank" rel="noopener">Engadget</a> の内容が一致する範囲だけを移した。この文章を書いた環境はネットワークポリシーのため IETF と Bing のサイトを直接開けなかった。Microsoft の日程(2027年2月1日反映、3月1日締め切り、NoArchive・NoCache の置き換え、グラウンディング設定)は <a href="https://blogs.bing.com/search/2026/10/your-content-your-choice-clearer-preferences-for-training-and-grounding/" target="_blank" rel="noopener">Bing ブログの告知</a>と <a href="https://www.bing.com/webmasters/help/new-ai-preferences-2t1cc16d" target="_blank" rel="noopener">Bing Webmaster ヘルプ</a>を引用した報道に基づく。Google の扱いは <a href="https://www.relevantaudience.com/geo/google-shared-ai-training-robots-txt-signal-2027/" target="_blank" rel="noopener">Relevant Audience</a> などが引用した Google のクローラー文書に基づき、<strong>対応時期は「2027年」と「2027年初め」で報道が分かれる</strong>ため、チャートに日付を固定しなかった。OpenAI の「数か月以内」は <a href="https://www.unite.ai/openai-to-honor-shared-robots-txt-signal-for-ai-training-preferences/" target="_blank" rel="noopener">Unite.AI</a> など複数の報道が同じ表現を伝えている。<strong>Anthropic の参加は会社の公式発表ではなく、ドラフト作成者が IETF のメーリングリストに投稿した文(「すでに実装を始めた」)に基づくという指摘がある</strong>ため、表には「ドラフト作成者の所属、実装開始」とだけ書いた。Meta は四社の発表になく、対応の有無を示した資料は見つからなかった。AIPREF ワーキンググループの語彙ドラフト(train-ai・ai-use・search)と <code>Content-Usage</code> フィールド、8月の完了目標が過ぎた点は、<a href="https://datatracker.ietf.org/wg/aipref/about/" target="_blank" rel="noopener">IETF AIPREF ワーキンググループのページ</a>を引用した整理記事に基づく。ドラフト作成者は公人ではないため名前を書かず、文書の識別子は原文を探すのに必要なのでそのまま残した。このウィキの変更内容は、リポジトリの <code>robots.txt</code> と <code>tools/build_ai_export.py</code> で直接確かめられる。</p>

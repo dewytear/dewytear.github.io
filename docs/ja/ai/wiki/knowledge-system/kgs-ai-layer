@@ -8,7 +8,7 @@
     <li><strong><a href="#!ai-guide">AI 巡回ガイド</a>（契約）</strong> — 「ノードとは何で、エッジをどう解釈し、どの順で fetch するか」を明文化した文書。スキーマとルールがここに固定されているので、どのエージェントも同じやり方で読みます。</li>
 </ul>
 
-<p>ここに<strong>三つの扉を補助する入り口</strong>もいっしょに生成されます。<strong><code>llms-full.txt</code></strong> はすべての文書の本文プレーンテキストを 1 ファイルにまとめた全コーパスのダンプなので、fetch 一度でウィキ全体をコンテキストに載せられます。<strong><code>feed.xml</code>（Atom フィード）</strong>は最新の文書 30 編を時系列で知らせ、人の RSS リーダーやクローラーが新しい記事を購読できるようにします。<strong><code>robots.txt</code></strong> は主要な AI クローラー（GPTBot・ClaudeBot・PerplexityBot など）を名指しで明示的に歓迎し、上の入り口を広告します。コンテンツのライセンスは <strong>CC BY 4.0</strong> — 「出典を示せば自由に引用・再利用してよい」という法的な合図を robots.txt・llms.txt・フィード・サイトのフッターが一貫して宣言し、AI システムが安心してこのウィキを引用できるようにしています。</p>
+<p>ここに<strong>三つの扉を補助する入り口</strong>もいっしょに生成されます。<strong><code>llms-full.txt</code></strong> はすべての文書の本文プレーンテキストを 1 ファイルにまとめた全コーパスのダンプなので、fetch 一度でウィキ全体をコンテキストに載せられます。<strong><code>feed.xml</code>（Atom フィード）</strong>は最新の文書 30 編を時系列で知らせ、人の RSS リーダーやクローラーが新しい記事を購読できるようにします。<strong><code>robots.txt</code></strong> は主要な AI クローラー（GPTBot・ClaudeBot・PerplexityBot など）を名指しで明示的に歓迎し、上の入り口を広告します。2026 年 11 月からは AI 学習の意思表示を示す共有トークン <code>__usage_ai-training</code> にも <code>Allow: /</code> を書き、収集だけでなく <strong>AI 学習も歓迎する</strong>という意思を別に示しています(背景は <a href="#!news-20261030-ai-training-optout">AI 学習の拒否を robots.txt の一行で</a>)。コンテンツのライセンスは <strong>CC BY 4.0</strong> — 「出典を示せば自由に引用・再利用してよい」という法的な合図を robots.txt・llms.txt・フィード・サイトのフッターが一貫して宣言し、AI システムが安心してこのウィキを引用できるようにしています。</p>
 
 <h3>JS を実行しない客のための扉 — 静的スナップショット</h3>
 <p>ここまでの入り口は<strong>機械にデータを渡す</strong>道でした。ところが一般の検索エンジンはデータではなく<strong>ページ</strong>を索引します。このウィキはハッシュルーティングの SPA なので、JS を実行しないクローラーが <code>#!welcome</code> に来ると<strong>空の抜け殻</strong>を見ます。文書断片（<code>docs/ko/…</code>）は本文ではあるものの、タイトル・説明・正規アドレスのない HTML の破片なので、ページとするには足りません。</p>

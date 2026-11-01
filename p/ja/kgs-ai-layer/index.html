@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-10-16T00:19:20+09:00"
+ "dateModified": "2026-11-02T08:17:03+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -68,7 +68,7 @@
     <li><strong><a href="/p/ja/ai-guide/">AI 巡回ガイド</a>（契約）</strong> — 「ノードとは何で、エッジをどう解釈し、どの順で fetch するか」を明文化した文書。スキーマとルールがここに固定されているので、どのエージェントも同じやり方で読みます。</li>
 </ul>
 
-<p>ここに<strong>三つの扉を補助する入り口</strong>もいっしょに生成されます。<strong><code>llms-full.txt</code></strong> はすべての文書の本文プレーンテキストを 1 ファイルにまとめた全コーパスのダンプなので、fetch 一度でウィキ全体をコンテキストに載せられます。<strong><code>feed.xml</code>（Atom フィード）</strong>は最新の文書 30 編を時系列で知らせ、人の RSS リーダーやクローラーが新しい記事を購読できるようにします。<strong><code>robots.txt</code></strong> は主要な AI クローラー（GPTBot・ClaudeBot・PerplexityBot など）を名指しで明示的に歓迎し、上の入り口を広告します。コンテンツのライセンスは <strong>CC BY 4.0</strong> — 「出典を示せば自由に引用・再利用してよい」という法的な合図を robots.txt・llms.txt・フィード・サイトのフッターが一貫して宣言し、AI システムが安心してこのウィキを引用できるようにしています。</p>
+<p>ここに<strong>三つの扉を補助する入り口</strong>もいっしょに生成されます。<strong><code>llms-full.txt</code></strong> はすべての文書の本文プレーンテキストを 1 ファイルにまとめた全コーパスのダンプなので、fetch 一度でウィキ全体をコンテキストに載せられます。<strong><code>feed.xml</code>（Atom フィード）</strong>は最新の文書 30 編を時系列で知らせ、人の RSS リーダーやクローラーが新しい記事を購読できるようにします。<strong><code>robots.txt</code></strong> は主要な AI クローラー（GPTBot・ClaudeBot・PerplexityBot など）を名指しで明示的に歓迎し、上の入り口を広告します。2026 年 11 月からは AI 学習の意思表示を示す共有トークン <code>__usage_ai-training</code> にも <code>Allow: /</code> を書き、収集だけでなく <strong>AI 学習も歓迎する</strong>という意思を別に示しています(背景は <a href="/p/ja/news-20261030-ai-training-optout/">AI 学習の拒否を robots.txt の一行で</a>)。コンテンツのライセンスは <strong>CC BY 4.0</strong> — 「出典を示せば自由に引用・再利用してよい」という法的な合図を robots.txt・llms.txt・フィード・サイトのフッターが一貫して宣言し、AI システムが安心してこのウィキを引用できるようにしています。</p>
 
 <h3>JS を実行しない客のための扉 — 静的スナップショット</h3>
 <p>ここまでの入り口は<strong>機械にデータを渡す</strong>道でした。ところが一般の検索エンジンはデータではなく<strong>ページ</strong>を索引します。このウィキはハッシュルーティングの SPA なので、JS を実行しないクローラーが <code>#!welcome</code> に来ると<strong>空の抜け殻</strong>を見ます。文書断片（<code>docs/ko/…</code>）は本文ではあるものの、タイトル・説明・正規アドレスのない HTML の破片なので、ページとするには足りません。</p>
@@ -110,7 +110,7 @@
     プロンプトに一行あれば十分です — <em>「dewytear.github.io/llms.txt をまず読み、knowledge-graph.json の関連（related・relations・concepts）をたどって分析せよ。」</em> スキーマの詳細と巡回のルールは <a href="/p/ja/ai-guide/">AI 巡回ガイド</a>が契約として保証します。こうした知識管理の構造のおかげで、ウィキが大きくなるほど AI の分析半径も自動で一緒に大きくなります。
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">分類</span> AI · Wiki · 知識体系 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-10-16</p>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Wiki · 知識体系 &middot; <span class="pr-k">作成日</span> 2026-07-11 &middot; <span class="pr-k">更新日</span> 2026-11-02</p>
 
 <nav class="pr-rel"><h2>関連文書</h2>
 <ul><li><a href="/p/ja/kgs-accuracy/">このウィキはどれだけ当てるのか — 検索とグラフ巡回を測ってみた</a></li><li><a href="/p/ja/news-20260922-harness-catalog/">呼べるリスト — ハーネス167種のランキングを取得して解剖した</a></li><li><a href="/p/ja/kgs-overview/">知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン</a></li></ul>
