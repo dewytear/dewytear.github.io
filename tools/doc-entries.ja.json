@@ -883,5 +883,16 @@
     "evidenceRef": "「このウィキの読み方」節が Duet の「承認されてもやらない」枠(証券取引・口座間の送金)を、その記事が締め期間ロックに見た「ある種の書き込みは承認ボタンではなくその上の層で閉じる」設計の別の実例に挙げる"
    }
   ]
+ },
+ {
+  "name": "news-20261030-ai-training-optout",
+  "title": "AI 学習の拒否を robots.txt の一行で — 4社が受け入れた共有トークンとこのウィキの選択",
+  "summary": "10月30日に Anthropic 所属のエンジニアが IETF に出した個人ドラフト(Machine-Readable Training Preference Signal)は、robots.txt のグループ一つで AI 学習の意思表示を書く共有トークン __usage_ai-training を提案し、同じ日に Google・Microsoft・OpenAI が従うと表明した。会社別のクローラー名(GPTBot・Google-Extended・ClaudeBot・meta-externalagent)を一つずつ拒否していた方式を用途一つに置き換える信号で、新しい指示語はないが User-agent: * は当てはまらず、グループがなければ「意思表示なし」と読まれる。収集の禁止ではなく意思表示で、遡らず、会社別の規則が優先する(Google は共有トークンの拒否を Google-Extended の拒否として扱う)。クローラーが読む順序の図、会社別の対応日程チャート(Anthropic 10/30 実装着手、OpenAI「数か月以内」、Google 2027年初め、Microsoft 2027-02-01 反映・3/1 グラウンディング設定締め切り、Meta 発表なし)と比較表、Microsoft が学習とグラウンディングを分けた設定、IETF AIPREF ワーキンググループの語彙・Content-Usage の作業と個人ドラフトの地位を整理する。このウィキは同じ信号を逆に使い、11月2日に robots.txt へ __usage_ai-training Allow: / を加えて収集だけでなく AI 学習も歓迎すると示し、その行は生成ツール build_ai_export.py がつくる",
+  "relations": [
+   {
+    "target": "kgs-ai-layer",
+    "evidenceRef": "「このウィキの場合」節が、robots.txt が知識インデックスから生成されるファイルだという背景をその文書に任せ、生成ツールにトークンのグループを加えた変更だけを説明する"
+   }
+  ]
  }
 ]

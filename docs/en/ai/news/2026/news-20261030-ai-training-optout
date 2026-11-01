@@ -1,0 +1,171 @@
+<h2>Opting Out of AI Training in One robots.txt Line — The Shared Token Four Companies Back, and This Wiki's Choice</h2>
+
+<h3>Three-line summary</h3>
+<ul>
+    <li>On October 30 an Anthropic engineer submitted an individual draft to the IETF. It proposes a single token, <code>__usage_ai-training</code>, for stating whether a site's content may be used to train AI. The same day Google, Microsoft and OpenAI said they would honor the signal.</li>
+    <li>Until now a site had to block each company's own name (GPTBot, Google-Extended, ClaudeBot and so on). The new token names a <strong>use</strong>, not a crawler. But <code>User-agent: *</code> does not match it, and a file without a token group is read as &ldquo;no preference stated&rdquo;.</li>
+    <li>This wiki made the opposite choice. On November 2 it added <code>Allow: /</code> under the token in its <code>robots.txt</code>, so it now says separately that <strong>AI training is welcome</strong>, not just crawling.</li>
+</ul>
+
+<p><code>robots.txt</code> is a small text file at the top path of a website. When an automated collector (a crawler) from a search engine or an AI company arrives, it reads this file first to see which paths it may fetch. The convention dates from 1994, and in 2022 the IETF (the international body that writes internet technical standards) wrote its syntax down as RFC 9309. The trouble is that the file was only ever meant to say &ldquo;may you come in.&rdquo; &ldquo;May you train AI on what you take&rdquo; is a different question, and so far sites have answered it indirectly by blocking crawler names each company chose for itself. The new draft gives that second question a shared place to live.</p>
+
+<h3>One use instead of many name tags</h3>
+<p>A site that wanted to keep its content out of AI training had to know each company's name. OpenAI uses GPTBot; Google uses Google-Extended, a token kept separate from its search crawler; Anthropic uses ClaudeBot; Meta uses meta-externalagent. Microsoft has treated the NoArchive and NoCache page tags as its signal for limiting AI use. Every new company meant another line, and a crawler you had never heard of could not be blocked.</p>
+<p>The new token is named after a <strong>purpose</strong>, AI training, rather than a particular crawler. The syntax is an ordinary robots.txt group with no new directive, so existing parsers read it as is. To keep the whole site out of training but leave a press folder open, a site writes:</p>
+<pre><code>User-agent: __usage_ai-training
+Disallow: /
+Allow: /press-kit/</code></pre>
+<p>To say the opposite, that everything may be used for training, one <code>Allow: /</code> line is enough. That is the form this wiki added.</p>
+<pre><code>User-agent: __usage_ai-training
+Allow: /</code></pre>
+
+<h3>How a crawler reads the token</h3>
+<p>The draft's rules are short, but two of them cut against old robots.txt habits. First, the <code>User-agent: *</code> group, which addresses every crawler, does not apply to this token. Second, if the token group is missing, the file is treated as neither allowing nor refusing but as <strong>&ldquo;no preference stated&rdquo;</strong>. On the day the draft appeared, that described every robots.txt in the world.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 356" role="img" aria-label="How a crawler reads the training-preference token: the site operator writes a group in robots.txt, the crawler reads the file and checks for a __usage_ai-training group. With no group there is no training preference; with a group, paths are matched, Disallow paths are excluded from training and Allow paths are permitted">
+    <text class="d-label" x="360" y="26" text-anchor="middle">How a crawler reads the training preference</text>
+    <rect class="d-box" x="20" y="50" width="150" height="60" rx="10"/>
+    <text class="d-label sm" x="95" y="75" text-anchor="middle">Site operator</text>
+    <text class="d-sub" x="95" y="95" text-anchor="middle">Writes a group</text>
+    <line class="d-edge" x1="170" y1="80" x2="194" y2="80"/>
+    <polygon class="d-arrow" points="193,76 200,80 193,84"/>
+    <rect class="d-box" x="200" y="50" width="150" height="60" rx="10"/>
+    <text class="d-label sm" x="275" y="75" text-anchor="middle">AI crawler</text>
+    <text class="d-sub" x="275" y="95" text-anchor="middle">Reads robots.txt first</text>
+    <line class="d-edge" x1="350" y1="80" x2="374" y2="80"/>
+    <polygon class="d-arrow" points="373,76 380,80 373,84"/>
+    <rect class="d-box accent" x="380" y="50" width="160" height="60" rx="10"/>
+    <text class="d-label sm" x="460" y="75" text-anchor="middle">Token group?</text>
+    <text class="d-sub" x="460" y="95" text-anchor="middle">* does not count</text>
+    <line class="d-edge" x1="540" y1="80" x2="564" y2="80"/>
+    <polygon class="d-arrow" points="563,76 570,80 563,84"/>
+    <rect class="d-box soft" x="570" y="50" width="130" height="60" rx="10"/>
+    <text class="d-label sm" x="635" y="75" text-anchor="middle">No group</text>
+    <text class="d-sub" x="635" y="95" text-anchor="middle">No preference</text>
+    <line class="d-edge" x1="460" y1="110" x2="460" y2="144"/>
+    <polygon class="d-arrow" points="456,143 460,150 464,143"/>
+    <text class="d-sub" x="470" y="134">Yes</text>
+    <rect class="d-box" x="380" y="150" width="160" height="60" rx="10"/>
+    <text class="d-label sm" x="460" y="175" text-anchor="middle">Match the path</text>
+    <text class="d-sub" x="460" y="195" text-anchor="middle">Allow / Disallow lines</text>
+    <path class="d-edge" d="M460,210 L460,222 M365,222 L555,222 M365,222 L365,234 M555,222 L555,234"/>
+    <polygon class="d-arrow" points="361,233 365,240 369,233"/>
+    <polygon class="d-arrow" points="551,233 555,240 559,233"/>
+    <rect class="d-box" x="290" y="240" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="365" y="263" text-anchor="middle">Disallow path</text>
+    <text class="d-sub" x="365" y="282" text-anchor="middle">Kept out of training</text>
+    <rect class="d-box accent" x="480" y="240" width="150" height="56" rx="10"/>
+    <text class="d-label sm" x="555" y="263" text-anchor="middle">Allow path</text>
+    <text class="d-sub" x="555" y="282" text-anchor="middle">Training permitted</text>
+    <text class="d-sub" x="360" y="324" text-anchor="middle">Crawling and search visibility follow the existing rules · data already trained on stays</text>
+    <text class="d-sub" x="360" y="344" text-anchor="middle">A company-specific rule (e.g. Google-Extended), if present, comes first</text>
+</svg>
+</div>
+<p>The signal is a <strong>preference</strong>. It is not an order that stops a crawler from fetching pages, so crawling for search indexes can continue. Nor is it retroactive: it covers content fetched while the file is in place and does not pull anything out of training sets or models that already exist. Several reports also note that a private agreement can take precedence over the signal.</p>
+<p>The draft leaves the order between the shared token and company-specific rules to each company. Google says that if a site refuses training with the shared token and does not name Google-Extended, it will treat that as a Google-Extended disallow. If a separate Google-Extended rule exists, that rule wins. So a combination such as &ldquo;refuse in general, but allow Google&rdquo; is possible.</p>
+
+<h3>Who honors it, and from when</h3>
+<p>Four companies joined the announcement. All four said they would honor the signal, but their start dates differ, and only Microsoft has named a date.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 344" role="img" aria-label="Support timeline for the shared token by company, October 2026 to March 2027: Anthropic began implementing on October 30; OpenAI plans support within months with no date; Google targets early 2027; Microsoft applies it to crawling from February 1, 2027 with March 1 as the grounding-setting deadline. Meta has not announced support">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Who honors it, and from when</text>
+    <text class="d-sub" x="290" y="46" text-anchor="middle">2026</text>
+    <text class="d-sub" x="530" y="46" text-anchor="middle">2027</text>
+    <text class="d-sub" x="210" y="64" text-anchor="middle">Oct</text>
+    <text class="d-sub" x="290" y="64" text-anchor="middle">Nov</text>
+    <text class="d-sub" x="370" y="64" text-anchor="middle">Dec</text>
+    <text class="d-sub" x="450" y="64" text-anchor="middle">Jan</text>
+    <text class="d-sub" x="530" y="64" text-anchor="middle">Feb</text>
+    <text class="d-sub" x="610" y="64" text-anchor="middle">Mar</text>
+    <line class="d-edge dash" x1="410" y1="34" x2="410" y2="74"/>
+    <text class="d-label sm" x="158" y="108" text-anchor="end">Anthropic</text>
+    <rect class="d-node" x="245" y="94" width="405" height="20" rx="5"/>
+    <text class="d-node-label" x="255" y="108">Implementing from 10/30 · full rollout takes time</text>
+    <text class="d-label sm" x="158" y="152" text-anchor="end">OpenAI</text>
+    <rect class="d-box soft" x="245" y="138" width="405" height="20" rx="5"/>
+    <text class="d-sub" x="255" y="152">&ldquo;In the coming months&rdquo; · no date</text>
+    <text class="d-label sm" x="158" y="196" text-anchor="end">Google</text>
+    <rect class="d-box soft" x="245" y="182" width="405" height="20" rx="5"/>
+    <text class="d-sub" x="255" y="196">Early 2027 target · refusal = Google-Extended block</text>
+    <text class="d-label sm" x="158" y="240" text-anchor="end">Microsoft</text>
+    <rect class="d-box soft" x="245" y="226" width="245" height="20" rx="5"/>
+    <text class="d-sub" x="482" y="240" text-anchor="end">Crawling honors it from 2/1</text>
+    <rect class="d-node d" x="490" y="226" width="160" height="20" rx="5"/>
+    <text class="d-node-label" x="500" y="240">3/1 grounding deadline</text>
+    <text class="d-label sm" x="158" y="284" text-anchor="end">Meta</text>
+    <text class="d-sub" x="255" y="284">No announcement · meta-externalagent rules only</text>
+    <line class="d-edge accent dash" x1="245" y1="72" x2="245" y2="298"/>
+    <text class="d-sub" x="245" y="314" text-anchor="middle">10/30 draft and announcement</text>
+    <rect class="d-node" x="176" y="326" width="14" height="10" rx="2"/>
+    <text class="d-sub" x="196" y="335">In effect or past a fixed date</text>
+    <rect class="d-box soft" x="406" y="326" width="14" height="10" rx="2"/>
+    <text class="d-sub" x="426" y="335">Promised, no date</text>
+</svg>
+</div>
+<table>
+    <thead>
+        <tr><th>Company</th><th>Training opt-out until now</th><th>New token</th><th>Timing</th><th>What else</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>Anthropic</td><td>Block ClaudeBot</td><td>Draft author's employer; implementation started</td><td>From October 30</td><td>&ldquo;It'll take us some time to add support across our services&rdquo;</td></tr>
+        <tr><td>OpenAI</td><td>Block GPTBot</td><td>Will support</td><td>&ldquo;In the coming months&rdquo;</td><td>GPTBot rules keep applying until then</td></tr>
+        <tr><td>Google</td><td>Block Google-Extended</td><td>Will support</td><td>2027 (early)</td><td>Shared-token refusal treated as a Google-Extended block; company rule wins</td></tr>
+        <tr><td>Microsoft</td><td>NoArchive / NoCache tags</td><td>Will support</td><td>February 1, 2027</td><td>Adds a separate &lsquo;grounding&rsquo; setting, replaces the old tags</td></tr>
+        <tr><td>Meta</td><td>Block meta-externalagent</td><td>No announcement</td><td>None</td><td>Not part of the four-company announcement</td></tr>
+    </tbody>
+</table>
+
+<h3>Microsoft splits one step further: training and grounding</h3>
+<p>Microsoft's announcement has a setting the other three lack. <strong>Grounding (AI Grounding)</strong> means an AI fetching a web page on the spot and using it as a source while composing an answer. That is a different use from training a model in advance. Microsoft takes the training preference through the shared token and the grounding preference through a separate page-level setting. A site can then let Copilot or Bing's AI answers cite it while still refusing training.</p>
+<p>The two settings replace the NoArchive and NoCache tags. Microsoft will honor both while crawling from February 1, 2027. A site that has used the old tags to block grounding must publish the new setting on its pages and record a temporary preference in Bing Webmaster Tools by March 1; otherwise grounding defaults to allowed until the page is recrawled. Meta tags and HTTP headers that override the robots.txt setting for a single page are also provided.</p>
+<p>Google has not said whether AI Overviews or AI Mode are affected by the signal. Keeping search visibility and training apart matters most to sites such as news publishers that want to appear in search but not to be used for training.</p>
+
+<h3>The distance left to a standard</h3>
+<p>The document is an IETF <strong>individual draft</strong>. Anyone can submit one, and it has no standing as a standard until a working group adopts it and reaches consensus. The IETF's document tracker marks it as not endorsed by the IETF, and it expires on May 3, 2027. A revision or working-group adoption before then would keep it alive.</p>
+<p>Behind it sits the IETF's AI Preferences working group (AIPREF). That group has been working on a shared vocabulary for uses such as &ldquo;AI training,&rdquo; &ldquo;AI use&rdquo; and &ldquo;search,&rdquo; and on a new <code>Content-Usage</code> field to carry those preferences in robots.txt or HTTP headers. Its August 2026 target date has passed. The new draft takes the meaning of &ldquo;AI training&rdquo; from that vocabulary draft but borrows an ordinary robots.txt group instead of the new field, so it is usable today. It is closer to a detour. Whether four large companies honoring it first will make the detour the de facto standard is the thing to watch.</p>
+
+<h3>This wiki's case: saying that training is welcome too</h3>
+<p>This wiki was built from the start as a public, published wiki that AI can read and cite easily. Its <code>robots.txt</code> allows every crawler and also names 15 major AI crawlers to welcome them explicitly. The content license is CC BY 4.0, which permits free reuse with attribution.</p>
+<p>Read under the new draft's rules, though, the file said <strong>nothing</strong> about training. <code>User-agent: *</code> does not match the token, and a group naming crawlers is not a token group. The intent was a welcome, but the machine-readable signal was &ldquo;no preference.&rdquo; So on November 2 this wiki added one more group.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 268" role="img" aria-label="Four layers in this wiki's robots.txt: allowing all crawlers means anyone may crawl; allowing 15 named AI crawlers means AI crawlers are welcomed by name; the __usage_ai-training allow added in November means AI training is welcome; the CC BY 4.0 license line means reuse with attribution is allowed">
+    <text class="d-label" x="360" y="26" text-anchor="middle">Four things this wiki's robots.txt says</text>
+    <rect class="d-box" x="40" y="48" width="330" height="40" rx="8"/>
+    <text class="d-label sm" x="205" y="72" text-anchor="middle">User-agent: *   Allow: /</text>
+    <line class="d-edge" x1="370" y1="68" x2="414" y2="68"/>
+    <polygon class="d-arrow" points="413,64 420,68 413,72"/>
+    <rect class="d-box soft" x="420" y="48" width="260" height="40" rx="8"/>
+    <text class="d-sub" x="550" y="72" text-anchor="middle">Anyone may crawl</text>
+    <rect class="d-box" x="40" y="100" width="330" height="40" rx="8"/>
+    <text class="d-label sm" x="205" y="124" text-anchor="middle">15 named AI crawlers + Allow: /</text>
+    <line class="d-edge" x1="370" y1="120" x2="414" y2="120"/>
+    <polygon class="d-arrow" points="413,116 420,120 413,124"/>
+    <rect class="d-box soft" x="420" y="100" width="260" height="40" rx="8"/>
+    <text class="d-sub" x="550" y="124" text-anchor="middle">AI crawlers welcomed by name</text>
+    <rect class="d-box accent" x="40" y="152" width="330" height="40" rx="8"/>
+    <text class="d-label sm" x="205" y="176" text-anchor="middle">__usage_ai-training + Allow: /</text>
+    <line class="d-edge accent" x1="370" y1="172" x2="414" y2="172"/>
+    <polygon class="d-arrow accent" points="413,168 420,172 413,176"/>
+    <rect class="d-box accent" x="420" y="152" width="260" height="40" rx="8"/>
+    <text class="d-sub" x="550" y="176" text-anchor="middle">AI training welcome too (added 11/2)</text>
+    <rect class="d-box" x="40" y="204" width="330" height="40" rx="8"/>
+    <text class="d-label sm" x="205" y="228" text-anchor="middle"># License: CC BY 4.0</text>
+    <line class="d-edge" x1="370" y1="224" x2="414" y2="224"/>
+    <polygon class="d-arrow" points="413,220 420,224 413,228"/>
+    <rect class="d-box soft" x="420" y="204" width="260" height="40" rx="8"/>
+    <text class="d-sub" x="550" y="228" text-anchor="middle">Reuse allowed with attribution</text>
+</svg>
+</div>
+<p>These are the lines actually added. The two comment lines are there for human readers.</p>
+<pre><code># AI training preference: this wiki welcomes AI training on all of its content.
+# (shared token, IETF draft-kelley-aipref-training-preference-signal)
+User-agent: __usage_ai-training
+Allow: /</code></pre>
+<p>Nobody edits this file by hand. This wiki's <code>robots.txt</code> is generated from the knowledge index (see <a href="#!kgs-ai-layer">How AI Reads This Wiki</a>), so the token was added as a constant in the generator, <code>tools/build_ai_export.py</code>, which writes the group. CI compares the generated output with the file in the repository, so editing only the file or only the tool blocks the merge.</p>
+<p>Little changes right away. Until the four companies actually read the token, the existing per-crawler rules apply, and this wiki already allows everyone under those rules. What changes is the accuracy of the signal. From the day the companies start reading the token, this wiki will be read as &ldquo;training allowed&rdquo; rather than &ldquo;no preference.&rdquo; Allowing training also leaves the reuse terms to the license, as before.</p>
+
+<h3>How this wiki reads it</h3>
+<p>The token separates &ldquo;you may read this&rdquo; from &ldquo;you may learn from this.&rdquo; For a news site the two have different answers: it wants readers to arrive through search and cited AI answers, but not to hand its work over as free training data. Microsoft's extra split between training and grounding answers that need. For a public, published wiki the two answers are the same. The more AI systems read it, learn from it and cite it with a source, the closer it comes to its purpose. The same signalling scheme is a refusal tool for one side and, for this wiki, a place to write its welcome down plainly.</p>
+
+<h3>Fact-check notes</h3>
+<p class="scn-sub">The draft's title (Machine-Readable Training Preference Signal), identifier, date (October 30), expiry (May 3, 2027) and individual-draft status, the token syntax and the <code>/press-kit/</code> example, the wildcard non-match and &ldquo;no group means no preference&rdquo; rules, and the borrowing of the definition from the AIPREF vocabulary draft are carried over only where reports quoting the <a href="https://www.ietf.org/archive/id/draft-kelley-aipref-training-preference-signal-00.html" target="_blank" rel="noopener">IETF draft text</a> agree: <a href="https://www.searchenginejournal.com/google-microsoft-openai-shared-ai-training-opt-out/595387/" target="_blank" rel="noopener">Search Engine Journal</a>, <a href="https://ppc.land/google-microsoft-openai-and-anthropic-back-one-ai-training-opt-out/" target="_blank" rel="noopener">PPC Land</a>, <a href="https://thenextweb.com/news/ai-training-opt-out-robots-txt-google-openai-microsoft-anthropic" target="_blank" rel="noopener">The Next Web</a> and <a href="https://engadget.com/2303225/google-openai-anthropic-ai-crawling-controls" target="_blank" rel="noopener">Engadget</a>. The environment this was written in could not open the IETF or Bing sites directly because of its network policy. Microsoft's schedule (honored from February 1, 2027, March 1 deadline, replacing NoArchive and NoCache, the grounding setting) follows reports citing the <a href="https://blogs.bing.com/search/2026/10/your-content-your-choice-clearer-preferences-for-training-and-grounding/" target="_blank" rel="noopener">Bing blog post</a> and <a href="https://www.bing.com/webmasters/help/new-ai-preferences-2t1cc16d" target="_blank" rel="noopener">Bing Webmaster help page</a>. Google's handling follows its crawler documentation as quoted by <a href="https://www.relevantaudience.com/geo/google-shared-ai-training-robots-txt-signal-2027/" target="_blank" rel="noopener">Relevant Audience</a> and others; <strong>reports split between &ldquo;2027&rdquo; and &ldquo;early 2027&rdquo; for its start</strong>, so the chart pins no date. OpenAI's &ldquo;in the coming months&rdquo; is the same wording across several reports, including <a href="https://www.unite.ai/openai-to-honor-shared-robots-txt-signal-for-ai-training-preferences/" target="_blank" rel="noopener">Unite.AI</a>. <strong>One report points out that Anthropic's participation rests not on a company announcement but on the draft author's IETF mailing-list post (&ldquo;has already started implementing support&rdquo;)</strong>, so the table says only &ldquo;draft author's employer; implementation started.&rdquo; Meta was not in the four-company announcement, and no source stating its position on support was found. The AIPREF vocabulary draft (train-ai, ai-use, search), the <code>Content-Usage</code> field and the missed August target follow summaries citing the <a href="https://datatracker.ietf.org/wg/aipref/about/" target="_blank" rel="noopener">IETF AIPREF working group page</a>. The draft author is not a public figure and is not named; the document identifier is kept because readers need it to find the original. This wiki's change can be checked directly in the repository's <code>robots.txt</code> and <code>tools/build_ai_export.py</code>.</p>

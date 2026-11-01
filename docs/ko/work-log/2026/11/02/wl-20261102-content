@@ -1,0 +1,14 @@
+            <h2>2026-11-02 — 콘텐츠</h2>
+
+            <h3>AI 학습 거부 공유 토큰 등재 (3언어)와 이 위키의 학습 환영 표시</h3>
+            <p>
+                11월 1일(일) 아침 브리핑 1번(AI 학습 거부 신호를 robots.txt 토큰 하나로 통일)에 대해 Claude 분류 중 어디에 둘지 질문을 받았다. Claude 제품 기능이 아니라 웹 발행 규약이라 Claude 분류가 아닌 뉴스 자리와, 이 위키의 AI 레이어 문서 반영을 함께 제안했다. 이어 "먼저 위키에는 AI 학습을 환영한다는 의미로 남기고, 그 뒤 내 위키의 경우와 기사를 상세 검색해 함께 등재, 프로세스 도식과 참여 기업 차트 포함"이라는 지시를 받아 진행했다. 변경 유형은 CONTENT + TOOL.
+            </p>
+            <ul>
+                <li><strong>먼저 robots.txt.</strong> 이 위키의 <code>robots.txt</code>는 생성물이라 <code>tools/build_ai_export.py</code>에 <code>AI_TRAINING_TOKEN = '__usage_ai-training'</code> 상수를 두고, AI 크롤러 그룹 뒤에 <code>User-agent: __usage_ai-training</code> / <code>Allow: /</code> 그룹과 주석 두 줄을 쓰게 했다. 초안 규칙상 <code>User-agent: *</code>는 토큰에 해당하지 않고 그룹이 없으면 "선호 없음"이라, 지금까지 이 위키는 학습에 대해 아무 의사도 표시하지 않은 상태였다. 생성 도구가 바뀌어 플러그인 번들을 재동기화했다.</li>
+                <li><strong>자기기술 문서.</strong> <a href="#!kgs-ai-layer">AI가 이 위키를 읽는 법</a>의 robots.txt 서술과 <code>ai-guide</code>의 크롤러 정책 한 줄을 3언어로 고쳐 토큰 그룹을 반영했다.</li>
+                <li><strong>기사.</strong> <a href="#!news-20261030-ai-training-optout">AI 학습 거부를 robots.txt 한 줄로</a>를 ko·en·ja로 실었다. 도식 3개(크롤러가 토큰을 읽는 순서, 회사별 지원 일정 차트, 이 위키 robots.txt의 네 겹)와 비교표 1개. 일정 차트는 날짜를 밝힌 곳(Anthropic 착수, Microsoft 2/1·3/1)만 채운 막대로, 약속만 한 곳(OpenAI, Google)은 옅은 막대로 그려 확정과 미정을 모양으로 구분했다.</li>
+                <li><strong>확인 범위.</strong> IETF·Bing·검색 매체 사이트는 이 세션 네트워크에서 직접 열리지 않았다(프록시 거부). 그래서 초안 원문과 Bing·Google 문서를 인용한 보도 여러 곳이 일치하는 범위만 옮기고, 사실검증 노트에 그 사실을 적었다. Google 시점은 "2027년"과 "2027년 초"로 갈려 차트에 날짜를 박지 않았다. Anthropic의 참여는 회사 공식 발표가 아니라 초안 작성자의 메일링 리스트 글에 근거한다는 지적이 있어 "초안 작성자 소속, 구현 시작"으로만 적었다. 초안 작성자는 공인이 아니라 이름을 쓰지 않았다.</li>
+                <li><strong>관계와 개념.</strong> 다섯 타입을 본문과 대조해 <code>prerequisite</code> → kgs-ai-layer 하나만 달았다('이 위키의 경우' 절이 robots.txt 생성 배경을 그 문서에 맡김). 구현·사례·근거·대체는 본문에 근거가 없어 달지 않았다. 새 개념 <code>AI크롤러</code>·<code>학습데이터</code>(+ <code>robots.txt</code>, <code>Microsoft</code>)를 만들고 en·ja 표시명을 넣었다.</li>
+                <li><strong>지도·카드.</strong> 지식지도 3언어의 News &amp; Articles 수를 19→20으로, 목록 문단에 새 기사 링크를 더했다. og 카드를 78편으로 고쳐 다시 찍었다.</li>
+            </ul>

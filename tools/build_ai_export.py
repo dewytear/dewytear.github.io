@@ -64,6 +64,13 @@ AI_CRAWLERS = [
     'CCBot', 'meta-externalagent', 'Bytespider', 'Amazonbot',
 ]
 
+# Shared AI-training preference token (IETF individual draft
+# draft-kelley-aipref-training-preference-signal, 2026-10-30). Unlike a crawler
+# name, it states whether content may be used for AI training. `User-agent: *`
+# never matches it and a file without its group expresses *no* preference, so
+# the wiki's welcome has to be written out as its own group.
+AI_TRAINING_TOKEN = '__usage_ai-training'
+
 
 def _config():
     try:
@@ -437,7 +444,8 @@ def build_robots():
     """robots.txt — generated so BASE lives in config.json only.
 
     Everyone is allowed; the named AI crawlers are an explicit, machine-visible
-    welcome, and the license line tells them reuse-with-attribution is fine."""
+    welcome, the training-token group says AI training is welcome too, and the
+    license line tells them reuse-with-attribution is fine."""
     lines = []
     lines.append('# All crawlers welcome — including AI/LLM crawlers (explicitly below).')
     lines.append('# License: %s (%s) — quote and reuse with attribution.' % (LICENSE_NAME, LICENSE_URL))
@@ -446,6 +454,11 @@ def build_robots():
     lines.append('')
     for ua in AI_CRAWLERS:
         lines.append('User-agent: %s' % ua)
+    lines.append('Allow: /')
+    lines.append('')
+    lines.append('# AI training preference: this wiki welcomes AI training on all of its content.')
+    lines.append('# (shared token, IETF draft-kelley-aipref-training-preference-signal)')
+    lines.append('User-agent: %s' % AI_TRAINING_TOKEN)
     lines.append('Allow: /')
     lines.append('')
     lines.append('Sitemap: %ssitemap.xml' % BASE)

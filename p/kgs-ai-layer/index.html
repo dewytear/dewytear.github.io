@@ -47,7 +47,7 @@
  },
  "isAccessibleForFree": true,
  "datePublished": "2026-07-11T19:47:53+09:00",
- "dateModified": "2026-10-16T00:19:20+09:00"
+ "dateModified": "2026-11-02T08:17:03+09:00"
 }
 </script>
 <style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
@@ -68,7 +68,7 @@
     <li><strong><a href="/p/ai-guide/">AI 순회 가이드</a> (계약)</strong> — "노드는 무엇이고 엣지는 어떻게 해석하며 어떤 순서로 fetch하라"를 명문화한 문서. 스키마와 규칙이 여기 고정돼 있어, 어떤 에이전트든 같은 방식으로 읽습니다.</li>
 </ul>
 
-<p>여기에 <strong>세 개의 문을 보조하는 진입로</strong>가 함께 생성됩니다. <strong><code>llms-full.txt</code></strong>는 모든 문서의 본문 평문을 한 파일에 담은 전체 코퍼스 덤프라 fetch 한 번으로 위키 전체를 컨텍스트에 적재할 수 있고, <strong><code>feed.xml</code>(Atom 피드)</strong>은 최신 문서 30편을 시간순으로 알려 사람의 RSS 리더와 크롤러가 새 글을 구독하게 하며, <strong><code>robots.txt</code></strong>는 주요 AI 크롤러(GPTBot·ClaudeBot·PerplexityBot 등)를 이름 붙여 명시적으로 환영하고 위 진입점들을 광고합니다. 콘텐츠 라이선스는 <strong>CC BY 4.0</strong> — "출처를 밝히면 자유롭게 인용·재사용해도 된다"는 법적 신호를 robots.txt·llms.txt·피드·사이트 푸터가 일관되게 선언해, AI 시스템이 안심하고 이 위키를 인용하게 합니다.</p>
+<p>여기에 <strong>세 개의 문을 보조하는 진입로</strong>가 함께 생성됩니다. <strong><code>llms-full.txt</code></strong>는 모든 문서의 본문 평문을 한 파일에 담은 전체 코퍼스 덤프라 fetch 한 번으로 위키 전체를 컨텍스트에 적재할 수 있고, <strong><code>feed.xml</code>(Atom 피드)</strong>은 최신 문서 30편을 시간순으로 알려 사람의 RSS 리더와 크롤러가 새 글을 구독하게 하며, <strong><code>robots.txt</code></strong>는 주요 AI 크롤러(GPTBot·ClaudeBot·PerplexityBot 등)를 이름 붙여 명시적으로 환영하고 위 진입점들을 광고합니다. 2026년 11월부터는 AI 학습 선호를 밝히는 공유 토큰 <code>__usage_ai-training</code>에도 <code>Allow: /</code>를 적어, 수집만이 아니라 <strong>AI 학습도 환영한다</strong>는 뜻을 따로 밝힙니다(배경은 <a href="/p/news-20261030-ai-training-optout/">AI 학습 거부를 robots.txt 한 줄로</a>). 콘텐츠 라이선스는 <strong>CC BY 4.0</strong> — "출처를 밝히면 자유롭게 인용·재사용해도 된다"는 법적 신호를 robots.txt·llms.txt·피드·사이트 푸터가 일관되게 선언해, AI 시스템이 안심하고 이 위키를 인용하게 합니다.</p>
 
 <h3>JS를 실행하지 않는 손님을 위한 문 — 정적 스냅샷</h3>
 <p>지금까지의 진입로는 <strong>기계에게 데이터를 주는</strong> 길이었습니다. 그런데 일반 검색엔진은 데이터가 아니라 <strong>페이지</strong>를 색인합니다. 이 위키는 해시 라우팅 SPA라, JS를 실행하지 않는 크롤러가 <code>#!welcome</code>에 오면 <strong>빈 껍데기</strong>를 봅니다. 문서 조각(<code>docs/ko/…</code>)은 본문이지만 제목·설명·정규주소가 없는 HTML 파편이라 페이지로 삼기엔 부족합니다.</p>
@@ -110,7 +110,7 @@
     프롬프트에 한 줄이면 충분합니다 — <em>"dewytear.github.io/llms.txt를 먼저 읽고, knowledge-graph.json의 연관 관계(related·relations·concepts)를 따라 분석하라."</em> 스키마 상세와 순회 규칙은 <a href="/p/ai-guide/">AI 순회 가이드</a>가 계약으로 보증합니다. 이런 지식관리 구조 덕에, 위키가 커질수록 AI의 분석 반경도 자동으로 함께 커집니다.
 </div>
 </article>
-<p class="pr-meta"><span class="pr-k">분류</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">생성일자</span> 2026-07-11 &middot; <span class="pr-k">수정일자</span> 2026-10-16</p>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Wiki · 지식 체계 &middot; <span class="pr-k">생성일자</span> 2026-07-11 &middot; <span class="pr-k">수정일자</span> 2026-11-02</p>
 
 <nav class="pr-rel"><h2>연관 문서</h2>
 <ul><li><a href="/p/kgs-accuracy/">이 위키는 얼마나 맞히는가 — 검색과 그래프 순회를 재 봤다</a></li><li><a href="/p/news-20260922-harness-catalog/">부를 수 있는 목록 — 하네스 167종 순위표를 받아서 뜯어봤다</a></li><li><a href="/p/kgs-overview/">지식은 어떻게 쌓이는가</a></li></ul>
