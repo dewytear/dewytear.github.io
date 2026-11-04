@@ -15,6 +15,13 @@
     · Official original: <a href="https://www.kimi.com/blog/kimi-k3" target="_blank" rel="noopener">Kimi K3 Tech Blog (kimi.com/blog/kimi-k3)</a> · a source list by category appears at the end of the document
 </div>
 
+<div class="note">
+    <span class="nh">Updated 2026-11-05</span>
+    · Added the follow-up model <strong>Kimi K3.1 Pro</strong> (launched October 23, weights released November 4) as the &ldquo;Follow-up — K3.1 Pro&rdquo; section near the end.<br>
+    · Corrected K3&rsquo;s active parameters from <strong>about 50 billion (50B) to 104 billion (104B)</strong>, the figure in the official model card and technical report (see the fact-check notes).<br>
+    · K3&rsquo;s weights shipped at the end of July as promised, so the &ldquo;scheduled for release&rdquo; wording in &ldquo;What happened&rdquo; has been updated.
+</div>
+
 <h3>Three-line summary</h3>
 <ul>
     <li>Kimi K3 is the <strong>largest open (open-weight) model ever</strong> — a brain size (parameter count) of 2.8 trillion.</li>
@@ -42,16 +49,16 @@
     <li><strong>Launch</strong>: 2026-07-16, Moonshot AI (Beijing). Usable right away through the app and the API (the paid access channel for developers).</li>
     <li><strong>Size</strong>: <strong>2.8 trillion</strong> parameters — the largest in the history of open models.</li>
     <li><strong>Memory</strong>: a <strong>1 million token</strong> context window, multimodality that also understands drawings and photos, and a three-level reasoning mode that dials thinking deeper or shallower.</li>
-    <li><strong>Caution</strong>: although announced as &ldquo;open weights,&rdquo; the brain file itself is <strong>scheduled for release on 2026-07-27</strong>. As of this writing it is still usable only through the app and API.</li>
+    <li><strong>Weights</strong>: at launch the model was usable only through the app and API; the brain file followed as promised and was <strong>published on Hugging Face on July 26–27</strong> (the evening of the 26th, US time). The license is not MIT but a custom <strong>Kimi K3 License</strong>: businesses that sell the model as a service (MaaS) at large scale need a separate agreement with Moonshot.</li>
 </ul>
 
 <h3>Secret ① — Calling only 16 of 896 experts (MoE)</h3>
 <p>&ldquo;Wouldn&rsquo;t running 2.8 trillion parameters cost a fortune?&rdquo; — it would. That is why K3 uses a structure called <strong>MoE (Mixture of Experts)</strong>. Picture a large general hospital. There are 896 specialists, but not all 896 examine a single patient. The front desk looks at the symptoms and calls in <strong>only the 16 who are actually needed</strong>.</p>
-<p>K3 works exactly like that. Every time one piece of text (a token) comes in, the <strong>router</strong> (the front desk) picks <strong>only 16</strong> of the 896 expert neural networks and puts them to work. So while the whole knowledge warehouse is a huge 2.8 trillion, the part actually working at any moment is only <strong>about 50 billion (50B)</strong> — an elephant&rsquo;s knowledge with a cheetah&rsquo;s stride.</p>
+<p>K3 works exactly like that. Every time one piece of text (a token) comes in, the <strong>router</strong> (the front desk) picks <strong>only 16</strong> of the 896 expert neural networks and puts them to work. Two always-on shared experts and common parts such as attention are added on top. So while the whole knowledge warehouse is a huge 2.8 trillion, the part actually working at any moment is <strong>about 104 billion (104B)</strong>, a little over 4% of the total — an elephant&rsquo;s knowledge with a cheetah&rsquo;s stride.</p>
 
 <div class="diagram">
 <svg viewBox="0 0 720 320" role="img" aria-label="Kimi K3 block structure: input tokens pass through KDA attention and the router, only 16 of the 896-expert pool activate and lead to the output, and AttnRes selectively recovers residuals across layers">
-    <text class="d-label" x="360" y="26" text-anchor="middle">Kimi K3 block — 2.8T total · ~50B active</text>
+    <text class="d-label" x="360" y="26" text-anchor="middle">Kimi K3 block — 2.8T total · 104B active</text>
     <rect class="d-box soft" x="14" y="126" width="92" height="44" rx="9"/><text class="d-label sm" x="60" y="152" text-anchor="middle">Input token</text>
     <line class="d-edge" x1="106" y1="148" x2="132" y2="148"/><polygon class="d-arrow" points="132,143 140,148 132,153"/>
     <rect class="d-box" x="140" y="118" width="130" height="60" rx="9"/><text class="d-label sm" x="205" y="142" text-anchor="middle">KDA attention</text><text class="d-sub" x="205" y="162" text-anchor="middle">linear · 6.3× decode</text>
@@ -74,7 +81,7 @@
     <path class="d-edge accent dash" d="M205 178 C205 296, 679 296, 679 174"/><polygon class="d-arrow accent" points="674,180 679,170 684,180"/>
     <text class="d-sub" x="360" y="312" text-anchor="middle">AttnRes — selective residual recovery across layers</text>
 </svg>
-<div class="d-cap">In hospital terms: the front desk (router) calls in <strong>only 16</strong> of 896 specialists. The knowledge warehouse is 2.8 trillion, but only ~50B works at any moment.</div>
+<div class="d-cap">In hospital terms: the front desk (router) calls in <strong>only 16</strong> of 896 specialists. The knowledge warehouse is 2.8 trillion, but only 104B works at any moment (shared experts and common parts included).</div>
 </div>
 
 <h3>Secret ② — Reads long, and does not forget as it deepens (KDA · AttnRes)</h3>
@@ -112,7 +119,7 @@
     <text class="d-sub" x="190" y="194">0</text>
     <text class="d-sub" x="360" y="216" text-anchor="middle">Artificial Analysis Intelligence Index v4.1 · bars scaled from 0</text>
 </svg>
-<div class="d-cap">The two above are <strong>closed and paid</strong>, K3 is an <strong>open (soon-to-be-released) model</strong> — this narrow gap is the heart of this launch.</div>
+<div class="d-cap">The two above are <strong>closed and paid</strong>, K3 is an <strong>open model</strong> (weights released at the end of July) — this narrow gap is the heart of this launch.</div>
 </div>
 
 <h4>Coding tests: first place in some</h4>
@@ -245,12 +252,103 @@
     It is hard to declare &ldquo;who is cheaper&rdquo; from price tables alone. Each tier differs in <strong>usage limits, concurrent-request caps, and extra features</strong> (video generation, agents, coding CLIs and so on), Sonnet 5 is on a limited-time price, and subscriptions are billed separately from the API. The direction is clear, though — Kimi&rsquo;s lineup, which <strong>includes the latest flagship (K3) in the free tier</strong>, is the most aggressive of the three companies, and this completes this launch&rsquo;s narrative of &ldquo;price destruction for frontier-class intelligence.&rdquo;
 </div>
 
+<h3>Follow-up — K3.1 Pro: more reinforcement learning on the same body</h3>
+<p>Three months after K3, on October 23, Moonshot released <strong>Kimi K3.1 Pro</strong>, the first model in its K3.1 series, through the app and API. Then, on the promised date of November 4, it put the weights on Hugging Face (<code>moonshotai/Kimi-K3.1-Pro</code>). It is the same order as with K3: API first, weights after.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 236" role="img" aria-label="Kimi K3 and K3.1 Pro timeline: July 16 K3 launch (app and API), July 27 K3 weights released (Kimi K3 License), October 23 K3.1 Pro launch (app and API, 2 and 10 dollars per million tokens), November 4 K3.1 Pro weights released (MXFP4, about 1.56 TB)">
+    <text class="d-label" x="360" y="24" text-anchor="middle">API first, weights after: the same order, twice</text>
+    <line class="d-edge" x1="40" y1="96" x2="680" y2="96"/>
+    <line class="d-edge accent" x1="100" y1="96" x2="273" y2="96"/>
+    <line class="d-edge accent" x1="446" y1="96" x2="619" y2="96"/>
+    <circle class="d-node" cx="100" cy="96" r="8"/>
+    <text class="d-label" x="100" y="70" text-anchor="middle">7/16</text>
+    <line class="d-edge dash" x1="100" y1="104" x2="100" y2="128"/>
+    <rect class="d-box" x="22" y="128" width="156" height="62" rx="10"/>
+    <text class="d-label sm" x="100" y="154" text-anchor="middle">K3 launch</text>
+    <text class="d-sub" x="100" y="175" text-anchor="middle">App and API only</text>
+    <circle class="d-node" cx="273" cy="96" r="8"/>
+    <text class="d-label" x="273" y="70" text-anchor="middle">7/27</text>
+    <line class="d-edge dash" x1="273" y1="104" x2="273" y2="128"/>
+    <rect class="d-box accent" x="195" y="128" width="156" height="62" rx="10"/>
+    <text class="d-label sm" x="273" y="154" text-anchor="middle">K3 weights out</text>
+    <text class="d-sub" x="273" y="175" text-anchor="middle">Kimi K3 License</text>
+    <circle class="d-node b" cx="446" cy="96" r="8"/>
+    <text class="d-label" x="446" y="70" text-anchor="middle">10/23</text>
+    <line class="d-edge dash" x1="446" y1="104" x2="446" y2="128"/>
+    <rect class="d-box" x="368" y="128" width="156" height="62" rx="10"/>
+    <text class="d-label sm" x="446" y="154" text-anchor="middle">K3.1 Pro launch</text>
+    <text class="d-sub" x="446" y="175" text-anchor="middle">App and API, $2 / $10</text>
+    <circle class="d-node b" cx="619" cy="96" r="8"/>
+    <text class="d-label" x="619" y="70" text-anchor="middle">11/4</text>
+    <line class="d-edge dash" x1="619" y1="104" x2="619" y2="128"/>
+    <rect class="d-box accent" x="541" y="128" width="156" height="62" rx="10"/>
+    <text class="d-label sm" x="619" y="154" text-anchor="middle">K3.1 Pro weights</text>
+    <text class="d-sub" x="619" y="175" text-anchor="middle">MXFP4 · about 1.56 TB</text>
+    <text class="d-sub" x="186.5" y="88" text-anchor="middle">11 days</text>
+    <text class="d-sub" x="359.5" y="88" text-anchor="middle">88 days</text>
+    <text class="d-sub" x="532.5" y="88" text-anchor="middle">12 days</text>
+    <text class="d-sub" x="360" y="220" text-anchor="middle">Prices are input/output per million tokens · 1.56 TB is a press sum of the file sizes</text>
+</svg>
+</div>
+
+<h4>What changed</h4>
+<p>K3.1 Pro is not a new model but <strong>K3 trained further</strong>. Its size (2.8 trillion total, 104 billion active) and 1-million-token context are unchanged. Moonshot credits the gains to a much larger post-training compute budget. It ran <strong>reinforcement learning</strong> (training that shapes a model by rewarding good behavior) across hundreds of task domains at once, rather than fine-tuning separately for each, it says.</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>Item</th><th>Kimi K3</th><th>Kimi K3.1 Pro</th></tr></thead>
+    <tbody>
+        <tr><td>Launch · weights</td><td>7/16 · 7/27</td><td>10/23 · 11/4</td></tr>
+        <tr><td>Size · context</td><td>2.8T (104B active) · 1M tokens</td><td>Same (post-trained K3)</td></tr>
+        <tr><td>API price (input/output, cached input)</td><td>$3 / $15, $0.30</td><td><strong>$2 / $10, $0.20</strong> · Highspeed $4 / $20</td></tr>
+        <tr><td>Long-horizon coding (Kimi Code Bench 3.0, self-reported)</td><td>55.95%</td><td>61.2%</td></tr>
+        <tr><td>Hallucination rate (Kimi Hallu Bench Hard, self-reported)</td><td>23.4%</td><td>8.3%</td></tr>
+        <tr><td>Cyber-related training data</td><td>Included</td><td><strong>Removed</strong> (see below)</td></tr>
+        <tr><td>Weight format</td><td>MXFP4</td><td>MXFP4 weights · MXFP8 activations (quantization-aware training)</td></tr>
+    </tbody>
+</table>
+</div>
+<p>The price cut stands out. K3 was called &ldquo;Opus-class at Sonnet prices,&rdquo; and K3.1 Pro takes another third off that. The weights ship in a 4-bit format (MXFP4), about 1.56 TB to download, and estimates say running them yourself takes a server on the order of eight B300 GPUs. The model card lists vLLM, SGLang and TokenSpeed as recommended inference engines.</p>
+
+<h4>Scores: one step behind Opus 5.5</h4>
+<p>The number Moonshot led with is a terminal-task test. By its own figures it is 0.7 points behind Claude Opus 5.5.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 232" role="img" aria-label="Terminal-Bench 4.0 self-reported scores: Claude Opus 5.5 66.4, Kimi K3.1 Pro 65.7, GPT-6 Astra 58.2">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Terminal-Bench 4.0 (figures published by Moonshot)</text>
+    <line class="d-edge" x1="190" y1="40" x2="190" y2="178"/>
+    <text class="d-label sm" x="178" y="65" text-anchor="end">Claude Opus 5.5</text>
+    <rect class="d-box" x="190" y="48" width="398" height="26" rx="5"/>
+    <text class="d-sub" x="596" y="65">66.4</text>
+    <text class="d-label sm" x="178" y="110" text-anchor="end">Kimi K3.1 Pro</text>
+    <rect class="d-box accent" x="190" y="93" width="394" height="26" rx="5"/>
+    <text class="d-label sm" x="592" y="110">65.7</text>
+    <text class="d-label sm" x="178" y="155" text-anchor="end">GPT-6 Astra</text>
+    <rect class="d-box" x="190" y="138" width="349" height="26" rx="5"/>
+    <text class="d-sub" x="547" y="155">58.2</text>
+    <text class="d-sub" x="190" y="194">0</text>
+    <text class="d-sub" x="360" y="216" text-anchor="middle">Bars scale from 0 · in other runs the order can change with the harness</text>
+</svg>
+</div>
+<p>Independent evaluation is a little more sober. On the Artificial Analysis index (v5.0), K3.1 Pro scored <strong>55, fourth of 215 models</strong>, while Opus 5.5 scored 58 on the same version. On that version it is 11 points above K3. The 57.1 for K3 shown earlier comes from the previous version (v4.1), so the two numbers cannot be compared directly. In the same evaluation K3.1 Pro used 150 million output tokens to complete the index, well above the median of 87 million, and produced roughly 77 output tokens per second.</p>
+<p>Strengths and weaknesses split as well. By Moonshot&rsquo;s figures it leads on long-horizon coding (SWE-Marathon 51.7 vs Opus 5.5&rsquo;s 46.3) and on Humanity&rsquo;s Last Exam with tools (70.0 vs 67.7). On science-style terminal tasks (Terminal-Bench Science) it scores 38.1, far behind GPT-6 Astra (68.1) and Opus 5.5 (63.3). One head-to-head over 13 tasks concluded that Opus is more reliable on strict math, physics and exact specifications, while Kimi is competitive or better on visual and compositional work. In the same test, Kimi&rsquo;s own completion summaries sometimes overstated its success. The lesson from K3, &ldquo;who measured it, under what conditions,&rdquo; carries straight over.</p>
+
+<h4>Cyber capability was turned down on purpose</h4>
+<p>The biggest worry at K3&rsquo;s launch was how much hacking ability such a strong open model had, and critics noted that its scorecard left out a cyber test. With K3.1 Pro, Moonshot gave an answer. Ahead of the weight release it says it <strong>found and removed cyberattack-related data</strong> from both the mid-training corpus and the reinforcement-learning environments, while keeping general coding tasks.</p>
+<p>It showed the effect with an internal test. A checkpoint without these measures solved 90.5% of the problems in its internal xdev-bench-hard test; the final model solved 81.0%. The company states its principle as not releasing open weights that push the absolute frontier of cyber capability, and says it will raise the cyber capability of its open weights over time.</p>
+<p>Pushback came quickly. The internal test is unpublished, so outsiders cannot check it. Critics noted that on Moonshot&rsquo;s own chart, another open model that is already public scores higher than K3.1 Pro. Whether fine-tuning the released weights could bring the reduced ability partly back also remains an open question; one outside account announced, right after release, that it would post a variant with the safeguards stripped. The concern raised with K3, that open weights cannot be recalled once out, still holds.</p>
+
+<h4>License and a launch-marketing controversy</h4>
+<p>The weights come under the <strong>Kimi K3.1-Pro License</strong>. It opens with MIT-style permission language, but reports say that, as with K3, model-API businesses with large revenue (a $20 million annual threshold) must sign a separate agreement. This article could not check the license text directly, so anyone planning commercial use should read the LICENSE file in the repository first.</p>
+<p>The marketing around the launch also drew criticism. A creator published screenshots of what they said was a Moonshot promotion brief containing the line &ldquo;do not put on the paid partnership label.&rdquo; The authenticity and provenance of the screenshots have not been established, and no response from Moonshot had been found at the time of writing.</p>
+
 <h3>Fact-check notes — what was corrected or excluded</h3>
 <div class="note warn">
     <span class="nh">Claims spread in early reviews and the community that were corrected or excluded</span>
     · <strong>&ldquo;3 trillion parameters&rdquo;</strong> → the figure on which official and press sources agree is <strong>2.8 trillion (2.8T)</strong> (reflected in the body)<br>
     · <strong>&ldquo;the weights are already public on the web&rdquo;</strong> → release is <strong>scheduled</strong> (2026-07-27); at the time of writing, API only<br>
     · <strong>&ldquo;GDPval is a benchmark OpenAI built&rdquo;</strong> → what this article cites is the variant operated by Artificial Analysis (<strong>GDPval-AA v2</strong>)<br>
+    · <strong>&ldquo;About 50B active parameters&rdquo;</strong> (first-edition body and diagram) → the official model card and technical report (arXiv 2607.24653) give <strong>104B</strong>. The 50B figure came from a secondary source that estimated from the 16/896 expert ratio, leaving out the two always-on shared experts and common parts such as attention (corrected 2026-11-05)<br>
+    · <strong>K3.1 Pro&rsquo;s launch date</strong> is reported as either October 23 or 24; most sources say the 23rd, so the body uses that. Some reports give its size as &ldquo;3 trillion,&rdquo; but the official figure is 2.8 trillion. The 1.56 TB figure is an outlet&rsquo;s sum of the file sizes, not a number from the model card<br>
+    · <strong>K3.1 Pro&rsquo;s license</strong> is reported both as &ldquo;MIT-style&rdquo; and as requiring a separate agreement above a revenue threshold. The Hugging Face and kimi.ai originals could not be opened from the environment this was written in because of its network policy, so the body gives both readings and recommends checking the original<br>
     · <strong>Excluded (failed cross-check)</strong>: one user&rsquo;s &ldquo;CSGO clone for $324&rdquo; case, the &ldquo;$0.94 per unit of intelligence vs Opus $1.80&rdquo; cost metric, the mention of Meta&rsquo;s &ldquo;Muse Spark,&rdquo; the 58% win-rate figure for competing models, and individual tweets about debugging failures — these were not confirmed by multiple independent sources, so they are not included.
 </div>
 
@@ -277,6 +375,16 @@
     <li>Simon Willison — <a href="https://simonwillison.net/2026/Jul/16/kimi-k3/" target="_blank" rel="noopener">Kimi K3 notes</a></li>
     <li>Ken Huang — <a href="https://kenhuangus.substack.com/p/demystifying-kimi-k3-how-chinas-28t" target="_blank" rel="noopener">Demystifying Kimi K3 (details of the kernel optimization experiment)</a></li>
     <li>WCCFTech — <a href="https://wccftech.com/kimi-k3-built-a-chip-in-48-hours-over-8700-tokens-s-as-china-delivers-2-8-trillion-ai-model/" target="_blank" rel="noopener">the 48-hour chip design demo</a></li>
+</ul>
+<p class="scn-sub"><strong>Follow-up — K3.1 Pro (added 2026-11-05)</strong></p>
+<ul>
+    <li>Moonshot AI, &ldquo;Kimi K3.1 Pro Tech Blog: Advancing Open Intelligence&rdquo; — <a href="https://www.kimi.ai/blog/kimi-k3-1-pro" target="_blank" rel="noopener">kimi.ai/blog/kimi-k3-1-pro</a> · weights on <a href="https://huggingface.co/moonshotai/Kimi-K3.1-Pro" target="_blank" rel="noopener">Hugging Face (moonshotai/Kimi-K3.1-Pro)</a> · <a href="https://x.com/Kimi_Moonshot/status/2118010528123773297" target="_blank" rel="noopener">release announcement (X)</a></li>
+    <li>K3 active parameters (104B) — <a href="https://arxiv.org/abs/2607.24653" target="_blank" rel="noopener">arXiv 2607.24653 (Kimi K3 technical report)</a> · <a href="https://huggingface.co/moonshotai/Kimi-K3" target="_blank" rel="noopener">Hugging Face model card</a></li>
+    <li>K3 weights and license — <a href="https://simonwillison.net/2026/Jul/27/kimi-k3/" target="_blank" rel="noopener">Simon Willison (7/27)</a> · <a href="https://www.unite.ai/moonshot-opens-kimi-k3-weights-under-a-revenue-tiered-license/" target="_blank" rel="noopener">Unite.AI</a></li>
+    <li>Inference engines and quantization — <a href="https://docs.sglang.io/cookbook/autoregressive/Moonshotai/Kimi-K3.1-Pro" target="_blank" rel="noopener">SGLang docs</a></li>
+    <li>Scores and pricing — <a href="https://the-decoder.com/chinese-ai-model-kimi-k3-1-pro-is-closing-in-on-anthropics-claude-opus-5-5/" target="_blank" rel="noopener">The Decoder</a> · <a href="https://www.datacamp.com/blog/kimi-k3-1-pro" target="_blank" rel="noopener">DataCamp</a> · <a href="https://www.eesel.ai/blog/kimi-k3-1-pro-review" target="_blank" rel="noopener">eesel (AA index and speed)</a> · <a href="https://www.mindstudio.ai/blog/kimi-k31-pro-vs-opus-55-agentic-coding" target="_blank" rel="noopener">MindStudio (13-task comparison)</a></li>
+    <li>Cyber capability reduction — <a href="https://www.technology.org/2026/10/26/moonshot-kimi-k3-1-pro-cyber-capabilities/" target="_blank" rel="noopener">Technology.org</a> · <a href="https://www.implicator.ai/kimi-k3-1-pro-hacking-cut-unpublished-test/" target="_blank" rel="noopener">Implicator (unpublished-test critique)</a> · <a href="https://www.notebookcheck.net/Kimi-K3-1-Pro-Free-to-try-hacking-skills-deliberately-weakened.1433507.0.html" target="_blank" rel="noopener">Notebookcheck</a></li>
+    <li>Weight-release coverage — <a href="https://phemex.com/news/article/moonshot-ai-opensources-kimi-k31-pro-weights-on-hugging-face-102388" target="_blank" rel="noopener">Phemex</a> · marketing controversy — <a href="https://www.implicator.ai/kimi-k3-1-pro-launch-hit-by-unverified-brief-telling-creators-to-skip-ad-labels/" target="_blank" rel="noopener">Implicator</a></li>
 </ul>
 <p class="scn-sub"><strong>Pricing (appendix comparison tables)</strong></p>
 <ul>
