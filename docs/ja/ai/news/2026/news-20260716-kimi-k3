@@ -15,6 +15,13 @@
     · 公式の原文: <a href="https://www.kimi.com/blog/kimi-k3" target="_blank" rel="noopener">Kimi K3 Tech Blog (kimi.com/blog/kimi-k3)</a> · 文書の末尾に分類別の出典の一覧
 </div>
 
+<div class="note">
+    <span class="nh">2026-11-05 更新</span>
+    · 後継モデル <strong>Kimi K3.1 Pro</strong>（10月23日公開、11月4日ウェイト公開）を、文書後半の「後継 — K3.1 Pro」節として加えました。<br>
+    · K3 の活性パラメータを<strong>およそ 500 億（50B）→ 1,040 億（104B）</strong>に訂正しました。公式のモデルカードと技術報告の数値です（訂正の経緯は事実検証のノート）。<br>
+    · K3 のウェイトは予告どおり7月末に公開されたので、「何が起きたか」の公開予定の文言を直しました。
+</div>
+
 <h3>三行の要約</h3>
 <ul>
     <li>Kimi K3 は<strong>歴代でいちばん大きい公開（オープンウェイト）のモデル</strong>です — 頭脳の大きさ（パラメータ）が 2.8 兆個。</li>
@@ -42,16 +49,16 @@
     <li><strong>公開</strong>: 2026-07-16、Moonshot AI（北京）。アプリと API（開発者向けの有料の接続窓口）ですぐ使えます。</li>
     <li><strong>大きさ</strong>: パラメータ <strong>2.8 兆個</strong> — 公開のモデルの歴史で最大です。</li>
     <li><strong>記憶力</strong>: コンテキストウィンドウ <strong>100 万トークン</strong>、絵や写真も理解するマルチモーダル、考えを深く／浅く調節する 3 段階の推論のモード。</li>
-    <li><strong>注意</strong>: &ldquo;オープンウェイト&rdquo;と発表しましたが、頭脳のファイルそのものは <strong>2026-07-27 に公開の予定</strong>です。この記事を書く時点ではまだアプリと API でしか使えません。</li>
+    <li><strong>ウェイト</strong>: 発表時はアプリと API でしか使えず、頭脳のファイルは予告どおり <strong>7月26〜27日に Hugging Face で公開</strong>されました（米国時間26日夜）。ライセンスは MIT ではなく独自の <strong>Kimi K3 License</strong> で、大規模にモデルをサービスとして売る事業（MaaS）は Moonshot と別途の契約が必要です。</li>
 </ul>
 
 <h3>秘訣 ① — 専門家 896 人のうち 16 人だけを呼ぶ（MoE）</h3>
 <p>&ldquo;2.8 兆パラメータなら、動かすのにとんでもないお金がかかるのでは？&rdquo; — そのとおりです。だから K3 は <strong>MoE（Mixture of Experts, 専門家の混合）</strong>という構造を使います。大きな総合病院を思い浮かべてください。専門医が 896 人いても、患者ひとりを 896 人全員が診るわけではありません。受付が症状を見て<strong>本当に必要な 16 人だけ</strong>を呼びます。</p>
-<p>K3 はまさにこう働きます。文の断片（トークン）がひとつ入ってくるたびに<strong>ルーター</strong>（受付）が 896 個の専門家のニューラルネットのうち <strong>16 個だけを選んで</strong>仕事をさせます。だから知識の倉庫の全体は 2.8 兆と巨大なのに、その瞬間に実際に働いている部分は<strong>およそ 500 億（50B）</strong>だけです — 知識はゾウなのに足取りはチーターというわけです。</p>
+<p>K3 はまさにこう働きます。文の断片（トークン）がひとつ入ってくるたびに<strong>ルーター</strong>（受付）が 896 個の専門家のニューラルネットのうち <strong>16 個だけを選んで</strong>仕事をさせます。そこに常時オンの共有エキスパート 2 個とアテンションなどの共通部品が加わります。だから知識の倉庫の全体は 2.8 兆と巨大なのに、その瞬間に実際に働いている部分は<strong>およそ 1,040 億（104B）</strong>、全体の 4% あまりです — 知識はゾウなのに足取りはチーターというわけです。</p>
 
 <div class="diagram">
 <svg viewBox="0 0 720 320" role="img" aria-label="Kimi K3 のブロックの構造: 入力トークンが KDA アテンションとルーターを通り、896 個の expert のプールのうち 16 個だけが活性化して出力につながり、AttnRes が層をまたいで選択的に残差を回収する">
-    <text class="d-label" x="360" y="26" text-anchor="middle">Kimi K3 ブロック — 総 2.8T · 活性 ~50B</text>
+    <text class="d-label" x="360" y="26" text-anchor="middle">Kimi K3 ブロック — 総 2.8T · 活性 104B</text>
     <rect class="d-box soft" x="14" y="126" width="92" height="44" rx="9"/><text class="d-label sm" x="60" y="152" text-anchor="middle">入力トークン</text>
     <line class="d-edge" x1="106" y1="148" x2="132" y2="148"/><polygon class="d-arrow" points="132,143 140,148 132,153"/>
     <rect class="d-box" x="140" y="118" width="130" height="60" rx="9"/><text class="d-label sm" x="205" y="142" text-anchor="middle">KDA アテンション</text><text class="d-sub" x="205" y="162" text-anchor="middle">線形 · 6.3× デコード</text>
@@ -74,7 +81,7 @@
     <path class="d-edge accent dash" d="M205 178 C205 296, 679 296, 679 174"/><polygon class="d-arrow accent" points="674,180 679,170 684,180"/>
     <text class="d-sub" x="360" y="312" text-anchor="middle">AttnRes — 層をまたいで選択的に残差を回収</text>
 </svg>
-<div class="d-cap">病院のたとえで見る: 受付（ルーター）が専門医 896 人のうち<strong>16 人だけを呼ぶ</strong>。知識の倉庫は 2.8 兆でも、その瞬間に働くのは ~50B。</div>
+<div class="d-cap">病院のたとえで見る: 受付（ルーター）が専門医 896 人のうち<strong>16 人だけを呼ぶ</strong>。知識の倉庫は 2.8 兆でも、その瞬間に働くのは 104B（共有エキスパート・共通部品を含む）。</div>
 </div>
 
 <h3>秘訣 ② — 長く読み、深くなっても忘れない（KDA · AttnRes）</h3>
@@ -112,7 +119,7 @@
     <text class="d-sub" x="190" y="194">0</text>
     <text class="d-sub" x="360" y="216" text-anchor="middle">Artificial Analysis Intelligence Index v4.1 · 棒は 0 から比例</text>
 </svg>
-<div class="d-cap">上のふたつは<strong>閉じた形の有料</strong>、K3 は<strong>公開（予定）のモデル</strong>だ — このわずかな差が今回の公開の要。</div>
+<div class="d-cap">上のふたつは<strong>閉じた形の有料</strong>、K3 は<strong>公開モデル</strong>（7月末にウェイト公開）だ — このわずかな差が今回の公開の要。</div>
 </div>
 
 <h4>コーディングの試験: 一部は 1 位</h4>
@@ -245,12 +252,103 @@
     価格表だけで&ldquo;どちらが安いか&rdquo;を断ずるのは難しいのです。ティアごとに<strong>使用量の上限・同時の要求の制限・付加の機能</strong>（映像の生成、エージェント、コーディングの CLI など）が違い、Sonnet 5 は期間限定の価格で、購読料は API とは別の課金です。ただ方向ははっきりしています — <strong>無料ティアに最新のフラッグシップ（K3）を含めた</strong> Kimi の構成は 3 社のなかでいちばん攻撃的で、これが&ldquo;フロンティア級の知能の価格破壊&rdquo;という今回の公開の物語を完成させます。
 </div>
 
+<h3>後継 — K3.1 Pro: 同じ体に強化学習を重ねる</h3>
+<p>K3 の公開から3か月後の10月23日、Moonshot は K3.1 シリーズ最初のモデル <strong>Kimi K3.1 Pro</strong> をアプリと API で出しました。そして約束した11月4日に、ウェイトを Hugging Face（<code>moonshotai/Kimi-K3.1-Pro</code>）に載せました。K3 のときと同じ「まず API、次にウェイト」の順序です。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 236" role="img" aria-label="Kimi K3 と K3.1 Pro の日程:7月16日 K3 公開(アプリ・API)、7月27日 K3 ウェイト公開(Kimi K3 License)、10月23日 K3.1 Pro 公開(アプリ・API、100万トークンあたり2ドル・10ドル)、11月4日 K3.1 Pro ウェイト公開(MXFP4、約1.56TB)">
+    <text class="d-label" x="360" y="24" text-anchor="middle">まず API、次にウェイト:二度くり返された順序</text>
+    <line class="d-edge" x1="40" y1="96" x2="680" y2="96"/>
+    <line class="d-edge accent" x1="100" y1="96" x2="273" y2="96"/>
+    <line class="d-edge accent" x1="446" y1="96" x2="619" y2="96"/>
+    <circle class="d-node" cx="100" cy="96" r="8"/>
+    <text class="d-label" x="100" y="70" text-anchor="middle">7/16</text>
+    <line class="d-edge dash" x1="100" y1="104" x2="100" y2="128"/>
+    <rect class="d-box" x="22" y="128" width="156" height="62" rx="10"/>
+    <text class="d-label sm" x="100" y="154" text-anchor="middle">K3 公開</text>
+    <text class="d-sub" x="100" y="175" text-anchor="middle">アプリ・API のみ</text>
+    <circle class="d-node" cx="273" cy="96" r="8"/>
+    <text class="d-label" x="273" y="70" text-anchor="middle">7/27</text>
+    <line class="d-edge dash" x1="273" y1="104" x2="273" y2="128"/>
+    <rect class="d-box accent" x="195" y="128" width="156" height="62" rx="10"/>
+    <text class="d-label sm" x="273" y="154" text-anchor="middle">K3 ウェイト公開</text>
+    <text class="d-sub" x="273" y="175" text-anchor="middle">Kimi K3 License</text>
+    <circle class="d-node b" cx="446" cy="96" r="8"/>
+    <text class="d-label" x="446" y="70" text-anchor="middle">10/23</text>
+    <line class="d-edge dash" x1="446" y1="104" x2="446" y2="128"/>
+    <rect class="d-box" x="368" y="128" width="156" height="62" rx="10"/>
+    <text class="d-label sm" x="446" y="154" text-anchor="middle">K3.1 Pro 公開</text>
+    <text class="d-sub" x="446" y="175" text-anchor="middle">アプリ・API、$2 / $10</text>
+    <circle class="d-node b" cx="619" cy="96" r="8"/>
+    <text class="d-label" x="619" y="70" text-anchor="middle">11/4</text>
+    <line class="d-edge dash" x1="619" y1="104" x2="619" y2="128"/>
+    <rect class="d-box accent" x="541" y="128" width="156" height="62" rx="10"/>
+    <text class="d-label sm" x="619" y="154" text-anchor="middle">K3.1 Pro ウェイト</text>
+    <text class="d-sub" x="619" y="175" text-anchor="middle">MXFP4 · 約 1.56TB</text>
+    <text class="d-sub" x="186.5" y="88" text-anchor="middle">11日</text>
+    <text class="d-sub" x="359.5" y="88" text-anchor="middle">88日</text>
+    <text class="d-sub" x="532.5" y="88" text-anchor="middle">12日</text>
+    <text class="d-sub" x="360" y="220" text-anchor="middle">価格は100万トークンあたり入力/出力 · 1.56TB は報道がファイルの大きさを合算した値</text>
+</svg>
+</div>
+
+<h4>何が変わったか</h4>
+<p>K3.1 Pro は新しくつくったモデルではなく、<strong>K3 をさらに学習させた版</strong>です。大きさ（総 2.8 兆、活性 1,040 億）と100万トークンのコンテキストはそのままです。Moonshot は性能が上がった理由として、事後学習（post-training）にかけた計算量を大きく増やしたことを挙げます。数百の業務分野をまとめて<strong>強化学習</strong>（よい振る舞いに報酬を与えてモデルを磨く学習）を回し、分野ごとに別々の微調整はしなかったと説明しています。</p>
+<div class="tbl-wrap">
+<table>
+    <thead><tr><th>項目</th><th>Kimi K3</th><th>Kimi K3.1 Pro</th></tr></thead>
+    <tbody>
+        <tr><td>公開・ウェイト</td><td>7/16 · 7/27</td><td>10/23 · 11/4</td></tr>
+        <tr><td>大きさ・コンテキスト</td><td>2.8T（活性 104B）· 100万トークン</td><td>同じ（K3 を事後学習）</td></tr>
+        <tr><td>API 価格（入力/出力、キャッシュ入力）</td><td>$3 / $15、$0.30</td><td><strong>$2 / $10、$0.20</strong> · 高速版 $4 / $20</td></tr>
+        <tr><td>長時間のコーディング（Kimi Code Bench 3.0、自社）</td><td>55.95%</td><td>61.2%</td></tr>
+        <tr><td>ハルシネーション率（Kimi Hallu Bench Hard、自社）</td><td>23.4%</td><td>8.3%</td></tr>
+        <tr><td>サイバー関連の学習データ</td><td>含む</td><td><strong>除去</strong>（下で説明）</td></tr>
+        <tr><td>ウェイトの形式</td><td>MXFP4</td><td>MXFP4 ウェイト · MXFP8 活性値（量子化を意識した学習）</td></tr>
+    </tbody>
+</table>
+</div>
+<p>値下げが目を引きます。K3 は「Sonnet の値段で Opus 級」と評されましたが、K3.1 Pro はそこからさらに3分の1を削りました。ウェイトは4ビット形式（MXFP4）で、ダウンロードするファイルは約 1.56TB、自分で動かすには B300 GPU 8枚級のサーバーが要るという見積もりが出ています。モデルカードは vLLM・SGLang・TokenSpeed を推奨の推論エンジンとして挙げています。</p>
+
+<h4>成績: Opus 5.5 の一歩後ろ</h4>
+<p>Moonshot がいちばん前面に出した数字はターミナル作業の試験です。自社発表では Claude Opus 5.5 と 0.7 点差です。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 232" role="img" aria-label="Terminal-Bench 4.0 の自社発表スコア: Claude Opus 5.5 66.4、Kimi K3.1 Pro 65.7、GPT-6 Astra 58.2">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Terminal-Bench 4.0（Moonshot 発表の数値）</text>
+    <line class="d-edge" x1="190" y1="40" x2="190" y2="178"/>
+    <text class="d-label sm" x="178" y="65" text-anchor="end">Claude Opus 5.5</text>
+    <rect class="d-box" x="190" y="48" width="398" height="26" rx="5"/>
+    <text class="d-sub" x="596" y="65">66.4</text>
+    <text class="d-label sm" x="178" y="110" text-anchor="end">Kimi K3.1 Pro</text>
+    <rect class="d-box accent" x="190" y="93" width="394" height="26" rx="5"/>
+    <text class="d-label sm" x="592" y="110">65.7</text>
+    <text class="d-label sm" x="178" y="155" text-anchor="end">GPT-6 Astra</text>
+    <rect class="d-box" x="190" y="138" width="349" height="26" rx="5"/>
+    <text class="d-sub" x="547" y="155">58.2</text>
+    <text class="d-sub" x="190" y="194">0</text>
+    <text class="d-sub" x="360" y="216" text-anchor="middle">棒は0から比例 · 別の測定ではハーネスによって順位が入れ替わることも</text>
+</svg>
+</div>
+<p>独立した評価はもう少し落ち着いています。Artificial Analysis の指数（v5.0）で K3.1 Pro は<strong>55点、215モデル中4位</strong>で、同じ版で Opus 5.5 は58点でした。同じ版で比べると K3 より11点上がっています。前に見た K3 の57.1点は以前の版（v4.1）の点数なので、この数字とそのまま比べることはできません。同じ評価で K3.1 Pro は指数をこなすのに出力トークンを1億5千万個使い、中央値（8,700万個）より口数が多く、出力速度は毎秒77トークン前後でした。</p>
+<p>得意と不得意も分かれます。自社発表では長時間のコーディング（SWE-Marathon 51.7 対 Opus 5.5 の 46.3）と、ツールを使う「人類最後の試験」（70.0 対 67.7）で上回りました。一方、科学計算型のターミナル課題（Terminal-Bench Science）は 38.1 で、GPT-6 Astra（68.1）と Opus 5.5（63.3）に大きく遅れました。13の課題で二つのモデルを対戦させたある実験は、厳密な数学・物理・仕様の順守は Opus のほうが信頼でき、視覚的・構成的な作業では Kimi も互角かそれ以上だとまとめました。同じ実験で、Kimi が自分で書いた作業完了の要約は、実際より成功を大きく見せることがありました。K3 のときの教訓「誰がどんな条件で測ったか」がそのまま続きます。</p>
+
+<h4>サイバー能力をわざと下げた</h4>
+<p>K3 の公開時にいちばん大きかった心配は「これほど強い公開モデルのハッキング能力はどの程度か」でした。成績表にサイバー試験の点数が抜けているという指摘もありました。K3.1 Pro で Moonshot はこの問いに答えを出しました。ウェイト公開を前に、中間学習のデータと強化学習の環境の両方から<strong>サイバー攻撃関連のデータを探して除き</strong>、一般的なコーディングの課題は残したと明かしています。</p>
+<p>効果は自社の試験で示しました。この措置をしていない途中のチェックポイントは内部試験 xdev-bench-hard の問題の 90.5% を解き、最終モデルは 81.0% を解きました。同社は「サイバー能力の絶対的な最前線を押し上げるウェイトは公開しない」を原則に掲げ、公開ウェイトのサイバー能力は時間をかけて上げていくとしています。</p>
+<p>反論もすぐに出ました。その内部試験は公開されておらず、外から確かめられません。Moonshot 自身のチャートでも、すでに公開されている別のオープンモデルが K3.1 Pro より高い点を出しているという指摘があります。公開されたウェイトを微調整し直せば、下げた能力が一部戻りうるという点も未解決の問題として残りました。実際、ある外部のアカウントは公開直後に安全装置を外した派生版を載せると予告しました。オープンウェイトは一度出たら回収できないという K3 のときの懸念は、今回もそのままです。</p>
+
+<h4>ライセンスと公開時の宣伝をめぐる論争</h4>
+<p>ウェイトには <strong>Kimi K3.1-Pro License</strong> が付きました。冒頭は MIT 風の許諾文ですが、K3 と同じく売上の大きいモデル API 事業者に別途の契約を求めるという報道があります（年間売上2,000万ドルが基準）。この文章はライセンスの原文を直接確かめられなかったので、商用で使うならリポジトリの LICENSE ファイルを先に読む必要があります。</p>
+<p>公開の前後には宣伝のやり方も問題になりました。あるクリエイターが Moonshot の宣伝依頼書だとして、「有料広告の表示を付けないで」という文言のある画面を公開しました。画面の真偽と出所は確かめられておらず、この文章を書いた時点で Moonshot の説明も見つけられませんでした。</p>
+
 <h3>事実検証のノート — 訂正・除外したもの</h3>
 <div class="note warn">
     <span class="nh">初期のレビューやコミュニティに広がった記述のうち訂正・除外したもの</span>
     · <strong>&ldquo;3 兆パラメータ&rdquo;</strong> → 公式と報道が一致する数値は <strong>2.8 兆（2.8T）</strong>（本文に反映）<br>
     · <strong>&ldquo;重みはすでにウェブで公開されている&rdquo;</strong> → 公開の<strong>予定</strong>（2026-07-27）、執筆の時点では API のみ<br>
     · <strong>&ldquo;GDPval は OpenAI が作ったベンチマーク&rdquo;</strong> → 本文が引いたのは Artificial Analysis が運営する変種（<strong>GDPval-AA v2</strong>）<br>
+    · <strong>&ldquo;活性パラメータ約 50B&rdquo;</strong>（初版の本文・図）→ 公式のモデルカードと技術報告（arXiv 2607.24653）の数値は <strong>104B</strong>。50B はエキスパート 16/896 の比率から見積もった二次資料の値で、常時オンの共有エキスパート 2 個やアテンションなどの共通部品を落とした計算だった（2026-11-05 訂正）<br>
+    · <strong>K3.1 Pro の公開日</strong>は10月23日と24日で報道が分かれる。多数の資料が23日なので本文は23日とした。大きさを「3 兆」と書いた報道もあるが公式の数値は 2.8 兆だ。1.56TB はモデルカードではなく報道がファイルの大きさを合算した値だ<br>
+    · <strong>K3.1 Pro のライセンス</strong>は「MIT 風」と「売上基準で別途契約」とで報道が分かれる。Hugging Face と kimi.ai の原文はこの文章を書いた環境のネットワークポリシーのため開けず、本文には両方の報道を併記して原文の確認を勧めた<br>
     · <strong>除外（突き合わせ検証に失敗）</strong>: ある利用者の&ldquo;CSGO クローン $324&rdquo;の事例、&ldquo;知能の単位あたり $0.94 vs Opus $1.80&rdquo;という費用の指標、Meta の&ldquo;Muse Spark&rdquo;への言及、競合のモデルの勝率 58% という数値、個別のデバッグの失敗のツイート — 複数の独立した出典で確認できず、載せませんでした。
 </div>
 
@@ -277,6 +375,16 @@
     <li>Simon Willison — <a href="https://simonwillison.net/2026/Jul/16/kimi-k3/" target="_blank" rel="noopener">Kimi K3 のノート</a></li>
     <li>Ken Huang — <a href="https://kenhuangus.substack.com/p/demystifying-kimi-k3-how-chinas-28t" target="_blank" rel="noopener">Demystifying Kimi K3（カーネルの最適化の実験の詳細）</a></li>
     <li>WCCFTech — <a href="https://wccftech.com/kimi-k3-built-a-chip-in-48-hours-over-8700-tokens-s-as-china-delivers-2-8-trillion-ai-model/" target="_blank" rel="noopener">48 時間のチップ設計のデモ</a></li>
+</ul>
+<p class="scn-sub"><strong>後継 — K3.1 Pro（2026-11-05 追加）</strong></p>
+<ul>
+    <li>Moonshot AI、&ldquo;Kimi K3.1 Pro Tech Blog: Advancing Open Intelligence&rdquo; — <a href="https://www.kimi.ai/blog/kimi-k3-1-pro" target="_blank" rel="noopener">kimi.ai/blog/kimi-k3-1-pro</a> · ウェイト <a href="https://huggingface.co/moonshotai/Kimi-K3.1-Pro" target="_blank" rel="noopener">Hugging Face (moonshotai/Kimi-K3.1-Pro)</a> · <a href="https://x.com/Kimi_Moonshot/status/2118010528123773297" target="_blank" rel="noopener">公開の告知（X）</a></li>
+    <li>K3 の活性パラメータ（104B） — <a href="https://arxiv.org/abs/2607.24653" target="_blank" rel="noopener">arXiv 2607.24653（Kimi K3 技術報告）</a> · <a href="https://huggingface.co/moonshotai/Kimi-K3" target="_blank" rel="noopener">Hugging Face モデルカード</a></li>
+    <li>K3 のウェイトとライセンス — <a href="https://simonwillison.net/2026/Jul/27/kimi-k3/" target="_blank" rel="noopener">Simon Willison（7/27）</a> · <a href="https://www.unite.ai/moonshot-opens-kimi-k3-weights-under-a-revenue-tiered-license/" target="_blank" rel="noopener">Unite.AI</a></li>
+    <li>推論エンジンと量子化 — <a href="https://docs.sglang.io/cookbook/autoregressive/Moonshotai/Kimi-K3.1-Pro" target="_blank" rel="noopener">SGLang ドキュメント</a></li>
+    <li>成績と価格 — <a href="https://the-decoder.com/chinese-ai-model-kimi-k3-1-pro-is-closing-in-on-anthropics-claude-opus-5-5/" target="_blank" rel="noopener">The Decoder</a> · <a href="https://www.datacamp.com/blog/kimi-k3-1-pro" target="_blank" rel="noopener">DataCamp</a> · <a href="https://www.eesel.ai/blog/kimi-k3-1-pro-review" target="_blank" rel="noopener">eesel（AA 指数・速度）</a> · <a href="https://www.mindstudio.ai/blog/kimi-k31-pro-vs-opus-55-agentic-coding" target="_blank" rel="noopener">MindStudio（13課題の比較）</a></li>
+    <li>サイバー能力の引き下げ — <a href="https://www.technology.org/2026/10/26/moonshot-kimi-k3-1-pro-cyber-capabilities/" target="_blank" rel="noopener">Technology.org</a> · <a href="https://www.implicator.ai/kimi-k3-1-pro-hacking-cut-unpublished-test/" target="_blank" rel="noopener">Implicator（非公開の試験への指摘）</a> · <a href="https://www.notebookcheck.net/Kimi-K3-1-Pro-Free-to-try-hacking-skills-deliberately-weakened.1433507.0.html" target="_blank" rel="noopener">Notebookcheck</a></li>
+    <li>ウェイト公開の報道 — <a href="https://phemex.com/news/article/moonshot-ai-opensources-kimi-k31-pro-weights-on-hugging-face-102388" target="_blank" rel="noopener">Phemex</a> · 宣伝の論争 — <a href="https://www.implicator.ai/kimi-k3-1-pro-launch-hit-by-unverified-brief-telling-creators-to-skip-ad-labels/" target="_blank" rel="noopener">Implicator</a></li>
 </ul>
 <p class="scn-sub"><strong>価格（付録の比較表）</strong></p>
 <ul>
