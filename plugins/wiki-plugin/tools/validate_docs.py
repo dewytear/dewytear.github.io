@@ -585,6 +585,15 @@ def check_og_card_drift(root):
                 'message': f"카드의 {label} {m.group(1)} ≠ 인덱스 {want} — "
                            f"tools/og-card.html 수정 후 og-image.png 재생성"})
 
+    # The rendered PNG itself: a real card is ~550KB+, while a failed capture
+    # (Chrome's "This site can't be reached" page — shipped by mistake in #399)
+    # is ~25KB. The size floor catches that whole class without reading pixels.
+    ppath = os.path.join(root, 'og-image.png')
+    if os.path.isfile(ppath) and os.path.getsize(ppath) < 200_000:
+        findings.append({'level': 'WARN', 'check': 'og-image-size', 'name': 'og-image.png',
+            'message': f"og-image.png이 {os.path.getsize(ppath)//1024}KB — 정상 카드는 ~550KB, "
+                       f"렌더 실패(에러 화면) 의심. 로컬 서버를 띄운 뒤 재캡처"})
+
     # Language chip (e.g. KO·EN·JA) vs i18n.js's LANGS_READY.
     m = re.search(r'<b>([A-Z]{2}(?:[^<A-Za-z]+[A-Z]{2})*)</b>', card)
     try:
