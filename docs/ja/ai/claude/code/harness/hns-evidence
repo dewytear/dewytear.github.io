@@ -1,0 +1,224 @@
+<h2>ハーネスがスコアを動かす証拠 — Microsoft の白書と RHO・HarnessPro 研究を重ねて読む</h2>
+
+<h3>3行要約</h3>
+<ul>
+    <li>Microsoft は2026年11月9日の白書で、同じモデル・同じタスクのままハーネスだけを入れ替えて測定した。通過率は GPT-5.5 Chat で10.8ポイント、Claude Opus 4.8 で22.1ポイント上がり、モデルを替えた側はほとんど動かなかった。</li>
+    <li>学界は同じ結論に別の道でたどり着いた。RHO（香港城市大学・Microsoft Research Asia、EMNLP 2026）は正解ラベルなしに過去の実行記録だけでハーネスを直し、SWE-Bench Pro の通過率を59%から78%へ上げた。後続の HarnessPro はそのループを再帰的に回し、性能と費用を同時に最適化してライト・ミディアム・ヘビーの三つのハーネスを出す。</li>
+    <li>三つの資料に共通する結論は一つだ。<strong>モデルを固定したとき、結果を二桁ポイント動かす変数はハーネス</strong>であり、費用は呼び出しが増えてもキャッシュと出力圧縮でむしろ減らせる。この記事はその三資料を数値・構造・限界まで一か所に並べる。</li>
+</ul>
+
+<p>ハーネス（harness）はモデルを取り囲む実行環境だ。モデルに渡す指示文、使えるツール、ツールが失敗したときの規則、出力をどこまで切って戻すかといった運用方針がすべてハーネスに属する。定義と構成は<a href="#!hns-overview">ハーネスとは</a>で扱ったので、ここでは繰り返さない。この記事の関心は別のところにある。2026年後半、「ハーネスはモデルと同じくらい、あるいはそれ以上に結果を左右する」という主張が、産業界の白書と学術論文の両方から数値付きで出た。ニュースとして一度消費するには惜しい資料なので、三編を重ねて読む形で書き留めておく。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 200" role="img" aria-label="2026年のハーネス研究年表: 6月 RHO 論文、7月 Scaffold Effect 論文、8月 GitHub Copilot ハーネス正式提供、10月 HarnessPro と HarnessMM 論文、10月28日 Microsoft Copilot ハーネスへ改名、11月9日 Microsoft 白書公開">
+    <text class="d-label" x="360" y="24" text-anchor="middle">2026年、ハーネスを測定した資料</text>
+    <line class="d-edge" x1="40" y1="110" x2="690" y2="110"/>
+    <circle class="d-node" cx="100" cy="110" r="6"/>
+    <text class="d-sub" x="100" y="98" text-anchor="middle">6月</text>
+    <text class="d-label sm" x="100" y="136" text-anchor="middle">RHO 論文 (arXiv)</text>
+    <text class="d-sub" x="100" y="152" text-anchor="middle">ラベル不要の最適化</text>
+    <circle class="d-node dim" cx="210" cy="110" r="6"/>
+    <text class="d-sub" x="210" y="128" text-anchor="middle">7月</text>
+    <text class="d-label sm" x="210" y="72" text-anchor="middle">Scaffold Effect 論文</text>
+    <text class="d-sub" x="210" y="88" text-anchor="middle">ハーネスは隠れた変数</text>
+    <circle class="d-node b" cx="320" cy="110" r="6"/>
+    <text class="d-sub" x="320" y="98" text-anchor="middle">8月</text>
+    <text class="d-label sm" x="320" y="136" text-anchor="middle">GitHub Copilot ハーネス GA</text>
+    <text class="d-sub" x="320" y="152" text-anchor="middle">Copilot Studio</text>
+    <circle class="d-node" cx="450" cy="110" r="6"/>
+    <text class="d-sub" x="450" y="128" text-anchor="middle">10月</text>
+    <text class="d-label sm" x="450" y="72" text-anchor="middle">HarnessPro · HarnessMM</text>
+    <text class="d-sub" x="450" y="88" text-anchor="middle">再帰自己改善・パレート</text>
+    <circle class="d-node b" cx="560" cy="110" r="6"/>
+    <text class="d-sub" x="560" y="98" text-anchor="middle">10/28</text>
+    <text class="d-label sm" x="560" y="136" text-anchor="middle">Microsoft Copilot ハーネスへ改名</text>
+    <circle class="d-node b" cx="660" cy="110" r="6"/>
+    <text class="d-sub" x="660" y="128" text-anchor="middle">11/9</text>
+    <text class="d-label sm" x="660" y="72" text-anchor="middle">Microsoft 白書</text>
+    <text class="d-sub" x="660" y="88" text-anchor="middle">+10.8 · +22.1pt</text>
+    <circle class="d-node" cx="110" cy="182" r="5"/>
+    <text class="d-sub" x="122" y="186">学界（ラベル不要の自己改善）</text>
+    <circle class="d-node b" cx="330" cy="182" r="5"/>
+    <text class="d-sub" x="342" y="186">Microsoft 製品ハーネス</text>
+    <circle class="d-node dim" cx="520" cy="182" r="5"/>
+    <text class="d-sub" x="532" y="186">評価方法論</text>
+</svg>
+<div class="d-cap">三つの流れが同じ年に集まった。学界はハーネスが自らを直す方法を、Microsoft はハーネスを入れ替えたときの効果を、評価研究はハーネスがベンチマークスコアの隠れた変数であることを、それぞれ数値で示した。</div>
+</div>
+
+<h3>1. Microsoft の白書 — 同じモデル、別のハーネス</h3>
+<p>Microsoft Copilot Studio にはハーネスが二つある。トピック・変数・ツールを作成者が一つずつ配線する Standard ハーネスと、モデルが計画を立ててツールを選び、失敗したら再試行するエージェントループ型のハーネスだ。後者は GitHub Copilot のコーディングエージェントから持ち込まれたため GitHub Copilot ハーネスと呼ばれていたが、10月28日に Microsoft 全体の共通基盤にするとして Microsoft Copilot ハーネスへ改名された。改名の告知は機能や課金に変更はないとしている。</p>
+<p>11月9日のブログとともに公開された白書は、二つのハーネスを同じタスク・同じモデルで回した社内評価（2026年10月）の結果だ。主要な数値は次のとおり。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="Microsoft 社内評価の結果: Standard ハーネスに対する Microsoft Copilot ハーネスの通過率上昇幅は GPT-5.5 Chat で10.8ポイント、Claude Opus 4.8 で22.1ポイント。ツール呼び出しが失敗したあとに再試行した割合は Standard ハーネスが7%未満、Microsoft Copilot ハーネスが84から91%">
+    <text class="d-label" x="360" y="24" text-anchor="middle">ハーネスだけ替えると: Standard → Microsoft Copilot ハーネス</text>
+    <text class="d-label sm" x="180" y="62" text-anchor="middle">タスク通過率の上昇幅（ポイント）</text>
+    <line class="d-edge dash" x1="160" y1="74" x2="160" y2="196"/>
+    <text class="d-sub" x="152" y="110" text-anchor="end">GPT-5.5 Chat</text>
+    <rect class="d-node d" x="160" y="96" width="74" height="20" rx="4"/>
+    <text class="d-label sm" x="242" y="110">+10.8</text>
+    <text class="d-sub" x="152" y="154" text-anchor="end">Claude Opus 4.8</text>
+    <rect class="d-node" x="160" y="140" width="150" height="20" rx="4"/>
+    <text class="d-label sm" x="318" y="154">+22.1</text>
+    <text class="d-sub" x="160" y="190">0</text>
+    <text class="d-sub" x="330" y="190" text-anchor="end">25pt</text>
+    <text class="d-label sm" x="540" y="62" text-anchor="middle">ツール失敗後に再試行した割合</text>
+    <line class="d-edge dash" x1="500" y1="74" x2="500" y2="196"/>
+    <text class="d-sub" x="492" y="110" text-anchor="end">Standard</text>
+    <rect class="d-node dim" x="500" y="96" width="12" height="20" rx="4"/>
+    <text class="d-label sm" x="520" y="110">7%未満</text>
+    <text class="d-sub" x="492" y="154" text-anchor="end">Copilot ハーネス</text>
+    <rect class="d-node" x="500" y="140" width="150" height="20" rx="4"/>
+    <text class="d-label sm" x="658" y="154">84~91%</text>
+    <text class="d-sub" x="500" y="190">0</text>
+    <text class="d-sub" x="670" y="190" text-anchor="end">100%</text>
+    <rect class="d-box soft" x="40" y="212" width="640" height="68" rx="8"/>
+    <text class="d-sub" x="60" y="236">モデル呼び出し約2倍 · 入力処理費用（費用加重）15~21%減 · 入力の83~88%をキャッシュから処理</text>
+    <text class="d-sub" x="60" y="258">呼び出しあたりの遅延10~36%減 · 業務プロセスベンチマーク65%（競合製品36%）</text>
+    <text class="d-sub" x="60" y="276">社内評価、2026年10月 · 結果はビルド・モデル・構成で変わりうると白書が明記</text>
+</svg>
+<div class="d-cap">Microsoft のブログと白書（2026年11月9日）の数値を写した。モデルを替えた効果は「ほとんどなかった」としか書かれていないため棒にしていない。</div>
+</div>
+
+<p>この数値で読むべきは上昇幅そのものより、その非対称性だ。同じハーネス交換が Claude Opus 4.8 では二倍近く大きく効いた。白書は理由を長く説明しないが、公開されている構造だけで説明がつく。新しいハーネスはツール呼び出しが失敗したとき84~91%のケースで再試行し、Standard ハーネスは7%未満にとどまった。長いタスクで一度のツール失敗がそのままタスク失敗につながっていた損失が消えたわけだ。モデルがツールを上手に扱うほど「もう一度試す機会」の価値は大きいので、上昇幅がモデルごとに違って出るのは自然だ。</p>
+<p>費用の項目も直感とは逆だ。モデル呼び出しは約二倍に増えたのに、入力処理の費用は15~21%減った。白書が挙げる理由はキャッシュである。長い会話で入力の83~88%がキャッシュから処理されれば、呼び出しが増えても新しく読むトークンは少ない。呼び出しあたりの遅延も10~36%減った。つまり「エージェントループは高い」という通念は、キャッシュを前提にしない計算だった。</p>
+
+<table>
+    <thead><tr><th>項目</th><th>Standard ハーネス</th><th>Microsoft Copilot ハーネス</th></tr></thead>
+    <tbody>
+        <tr><td>制御方式</td><td>トピック・変数・ツールを作成者が配線</td><td>モデルが計画しツールを選ぶエージェントループ</td></tr>
+        <tr><td>実行環境</td><td>なし</td><td>Bash コンテナ（製品外のツール・ライブラリを使用）</td></tr>
+        <tr><td>サブエージェント</td><td>調査役のみ（応答者ではない）</td><td>計画の中から呼び出す</td></tr>
+        <tr><td>ツール失敗後の再試行</td><td>7%未満</td><td>84~91%</td></tr>
+        <tr><td>向く場面</td><td>ルール型エージェント・単純な流れ</td><td>複数ソース・複数成果物の長い業務プロセス</td></tr>
+        <tr><td>注意</td><td>長いタスクでは一度の失敗が即中断</td><td>単純なタスクに使うと推論・遅延・クレジットだけ増えうる</td></tr>
+    </tbody>
+</table>
+<p>Microsoft 自身の選択ガイドも、新しいハーネスを万能とは言っていない。コネクタや MCP サーバーを使うというだけではエージェントループ型は必要なく、単純なシナリオに使うと結果は同じまま推論と遅延、クレジット消費だけが増えうると書いている。実務例としては、Microsoft のカスタマーサポート部門がこのハーネスで作った解決エージェントが2026年8月に人の介入なしで処理した割合35%を超えたという数値がある。</p>
+
+<h3>2. RHO — 正解なしにハーネスを直す方法</h3>
+<p>Microsoft の実験は人が設計した二つのハーネスを比べた。学界の問いはもう一歩先に進む。ハーネスを<strong>エージェント自身が</strong>直せるか、それも正解ラベルなしで。従来の方法（プロンプト最適化、スキル・ツール合成、エージェント探索）はラベル付きの検証セットに対して繰り返し採点する必要があったが、実際の運用環境にそんなセットはない。代わりにエージェントが毎日吐き出す<em>ラベルのない実行記録（軌跡）</em>がある。</p>
+<p>RHO（Retrospective Harness Optimization、回顧的ハーネス最適化）は香港城市大学と Microsoft Research Asia の研究者が2026年6月に arXiv へ投稿し、EMNLP 2026 Findings に掲載した論文だ。方法は三段階からなる。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 270" role="img" aria-label="RHO パイプライン: ラベルのない過去の軌跡を入力に、第1段階のコアセット選択は行列式点過程で難しく多様な過去タスクを少数選び、第2段階のグループロールアウトは各タスクを G 回並列に解き直して自己検証と自己一貫性の信号を得て、第3段階のハーネス提案は候補 N 個を作り、ペアごとの自己選好で一つを選ぶ。得られたハーネスで次のラウンドを回す。1ラウンドで SWE-Bench Pro 59%から78%">
+    <text class="d-label" x="360" y="24" text-anchor="middle">RHO: 過去の軌跡 → 新しいハーネス、正解ラベルなしで</text>
+    <text class="d-sub" x="360" y="50" text-anchor="middle">入力: エージェントがすでに残した実行記録（検証セット・外部採点なし）</text>
+    <rect class="d-box" x="20" y="80" width="200" height="110" rx="8"/>
+    <text class="d-label" x="120" y="108" text-anchor="middle">① コアセット選択</text>
+    <text class="d-sub" x="120" y="134" text-anchor="middle">難しく互いに異なる過去タスク</text>
+    <text class="d-sub" x="120" y="152" text-anchor="middle">を少数だけ選ぶ (DPP)</text>
+    <text class="d-sub" x="120" y="174" text-anchor="middle">論文の既定値 10個</text>
+    <path class="d-edge accent" d="M222 135 L254 135"/>
+    <path class="d-arrow accent" d="M254 129 L264 135 L254 141 Z"/>
+    <rect class="d-box" x="266" y="80" width="200" height="110" rx="8"/>
+    <text class="d-label" x="366" y="108" text-anchor="middle">② グループロールアウト</text>
+    <text class="d-sub" x="366" y="134" text-anchor="middle">タスクごとに G 回並列で解き直す</text>
+    <text class="d-sub" x="366" y="152" text-anchor="middle">自己検証（1軌跡の中）</text>
+    <text class="d-sub" x="366" y="170" text-anchor="middle">自己一貫性（軌跡の間）</text>
+    <path class="d-edge accent" d="M468 135 L500 135"/>
+    <path class="d-arrow accent" d="M500 129 L510 135 L500 141 Z"/>
+    <rect class="d-box accent" x="512" y="80" width="190" height="110" rx="8"/>
+    <text class="d-label" x="607" y="108" text-anchor="middle">③ ハーネス提案</text>
+    <text class="d-sub" x="607" y="134" text-anchor="middle">候補の修正案を N 個生成</text>
+    <text class="d-sub" x="607" y="152" text-anchor="middle">ペアの自己選好で1個選ぶ</text>
+    <text class="d-sub" x="607" y="174" text-anchor="middle">論文の既定値 3個</text>
+    <path class="d-edge dash" d="M607 192 L607 222 L120 222 L120 196"/>
+    <path class="d-arrow" d="M114 196 L120 186 L126 196 Z"/>
+    <text class="d-sub" x="364" y="238" text-anchor="middle">次のラウンド: 新しいハーネスで再実行し、もう一度振り返る</text>
+    <text class="d-label sm" x="360" y="262" text-anchor="middle">1ラウンドの結果: SWE-Bench Pro 59% → 78% (Codex + GPT-5.5)</text>
+</svg>
+<div class="d-cap">DPP（行列式点過程）は「難しい」と「互いに異なる」を同時に満たす部分集合を選ぶ確率的手法。自己選好は、エージェントが二つの実行結果を並べて見て、どちらが良いかを自分で選ぶことを指す。</div>
+</div>
+
+<p>第1段階で過去タスクのうち難しく互いに異なるものだけを少数選ぶ理由は費用だ。すべてのタスクを解き直すことはできないので、失敗が集まる場所を代表する標本を抜く。第2段階はそのタスクを何度も並列で解き直して二種類の信号を得る。一つの実行の中で「テストが通ったか」のような自己検証の信号、複数の実行の間で「同じ答えになるか」のような自己一貫性の信号だ。第3段階でエージェントはこの診断を見てハーネスの修正案を複数書き、各修正案で解き直した結果を元の結果とペアで比べ、自分でより良いと判断したものだけを採用する。どこにも人の採点や正解は入らない。</p>
+<p>結果は1ラウンド基準だ。比較対象は同じ呼び出し予算を使うラベル不要の方法である。</p>
+<table>
+    <thead><tr><th>方法</th><th>直す面</th><th>SWE-Bench Pro</th><th>Terminal-Bench 2</th><th>GAIA-2</th></tr></thead>
+    <tbody>
+        <tr><td>Codex 標準</td><td>なし</td><td>0.59</td><td>0.71</td><td>0.29</td></tr>
+        <tr><td>Dynamic Cheatsheet</td><td>スキル</td><td>0.62</td><td>0.73</td><td>0.30</td></tr>
+        <tr><td>ReasoningBank</td><td>メモリ</td><td>0.61</td><td>0.73</td><td>0.28</td></tr>
+        <tr><td>Sleep-time Compute</td><td>メモリ</td><td>0.64</td><td>0.73</td><td>0.32</td></tr>
+        <tr><td><strong>RHO</strong></td><td>スキル + ツール</td><td><strong>0.78</strong></td><td><strong>0.76</strong></td><td><strong>0.37</strong></td></tr>
+    </tbody>
+</table>
+<p>ラベルを使う方法とも比べている。検証セットに対して採点する Meta-Harness を同じ1ラウンド予算で回すと SWE-Bench Pro で0.62、RHO はラベルなしで0.78だった。RHO がハーネスに書き込むものは三種類ある。タスクに依存しない一般指示、過去の失敗の背後にある環境の癖を記したスキル、そして実行可能なツールだ。それぞれが元の軌跡で観察された失敗類型の一つを狙う。</p>
+<p>限界も論文自身が書いている。自己選好は保守的な選択器であって完璧な順位付けではない。SWE-Bench Pro では選好度の低かった候補の一つが実際には0.85で、採用されたもの（0.78）より高かった。ただし採用されたハーネスが基準値より悪化したベンチマークはなかった。また、コーディングエージェントでこの方法がうまく効く理由の一つは「テストが通ったか」が信頼できる自己信号であることなので、実行で確かめられない領域では自己選好が揺らぎうる。このウィキが<a href="#!tip-advanced">上級ティップ</a>で扱った自己承認バイアス（モデルが自分の成果物を甘く評価する傾向）と同じ根だ。</p>
+<p>コードは公開されており、Claude Code 用の動的ワークフロー（<code>retrospection.js</code>）としても束ねられている。そのワークフローはプロジェクトの <code>CLAUDE.md</code>、自動メモリ、補助スクリプトをハーネスとみなし、過去のセッション記録だけで1ラウンドを回す。論文の言うハーネスは Claude Code 利用者にとってすでに手元にあるファイル群だ、ということになる。</p>
+
+<h3>3. HarnessPro — 再帰で回し、費用まで軸に入れる</h3>
+<p>HarnessPro は2026年10月に arXiv へ投稿された後続研究だ。公開リポジトリのパッケージ名が <code>src/rho/</code> で、環境変数も <code>RHO_</code> で始まることから、RHO のコードの上に築かれた研究で間違いない。報道は清華大学の研究として紹介したが、arXiv 側の著者情報では所属を確認できず、論文自体も「査読中」の表記を付けている。この記事では所属を断定せず「RHO の後続研究」と呼ぶ。</p>
+<p>RHO と違う点は二つ。第一に、一度振り返って終わりにせず、診断・進化・選択を<strong>再帰的に</strong>繰り返す。第二に、目的関数に<strong>費用</strong>を入れる。性能だけを見るとハーネスは「もっと考え、もっと呼び出せ」の方向にしか育たない。費用を第二の軸に置いてパレート選択（一方の軸を犠牲にしなければ他方を良くできない候補だけを残すこと）をすれば、フロンティア上に複数の運用点が残る。HarnessPro はそのうち三つを選び、ライト（費用優先）、ミディアム（均衡）、ヘビー（性能優先）として出す。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 312" role="img" aria-label="HarnessPro の構造: 左は軌跡診断、ハーネス進化、二軸選択の三段階が再帰的に回るループ。右は横軸に費用、縦軸に性能をとったパレートフロンティア上にライト、ミディアム、ヘビーの三つのハーネスが置かれ、基準である RHO ハーネスはヘビーより費用が高く性能が低い位置にある">
+    <text class="d-label" x="360" y="24" text-anchor="middle">HarnessPro: 再帰ループと性能・費用フロンティア</text>
+    <rect class="d-box" x="40" y="52" width="230" height="52" rx="8"/>
+    <text class="d-label sm" x="155" y="72" text-anchor="middle">① 軌跡の診断</text>
+    <text class="d-sub" x="155" y="92" text-anchor="middle">失敗類型・重複呼び出し・無駄の検出</text>
+    <path class="d-edge accent" d="M155 106 L155 128"/>
+    <path class="d-arrow accent" d="M149 128 L155 138 L161 128 Z"/>
+    <rect class="d-box" x="40" y="140" width="230" height="52" rx="8"/>
+    <text class="d-label sm" x="155" y="160" text-anchor="middle">② ハーネスの進化</text>
+    <text class="d-sub" x="155" y="180" text-anchor="middle">指示・実行プロファイル・ツール方針を修正</text>
+    <path class="d-edge accent" d="M155 194 L155 216"/>
+    <path class="d-arrow accent" d="M149 216 L155 226 L161 216 Z"/>
+    <rect class="d-box accent" x="40" y="228" width="230" height="52" rx="8"/>
+    <text class="d-label sm" x="155" y="248" text-anchor="middle">③ 二軸で選択</text>
+    <text class="d-sub" x="155" y="268" text-anchor="middle">合成テストで評価・パレート集合を保存</text>
+    <path class="d-edge dash" d="M272 254 L300 254 L300 78 L272 78"/>
+    <path class="d-arrow" d="M272 72 L262 78 L272 84 Z"/>
+    <text class="d-sub" x="308" y="170">再帰</text>
+    <line class="d-edge" x1="400" y1="262" x2="690" y2="262"/>
+    <path class="d-arrow" d="M690 256 L700 262 L690 268 Z"/>
+    <line class="d-edge" x1="400" y1="262" x2="400" y2="60"/>
+    <path class="d-arrow" d="M394 60 L400 50 L406 60 Z"/>
+    <text class="d-sub" x="690" y="286" text-anchor="end">費用（トークン・呼び出し）</text>
+    <text class="d-sub" x="412" y="58">性能（通過率）</text>
+    <path class="d-edge accent dash" d="M440 200 C 490 130, 560 104, 620 96"/>
+    <circle class="d-node d" cx="440" cy="200" r="7"/>
+    <text class="d-label sm" x="454" y="212">ライト</text>
+    <circle class="d-node" cx="520" cy="124" r="7"/>
+    <text class="d-label sm" x="534" y="140">ミディアム</text>
+    <circle class="d-node b" cx="620" cy="96" r="7"/>
+    <text class="d-label sm" x="634" y="92">ヘビー</text>
+    <circle class="d-node dim" cx="672" cy="112" r="7"/>
+    <text class="d-sub" x="672" y="134" text-anchor="middle">RHO（基準）</text>
+    <text class="d-sub" x="545" y="240" text-anchor="middle">同じ性能なら左が、同じ費用なら上が良い</text>
+</svg>
+<div class="d-cap">右側の点の位置は論文が報告した相対値を図式化したもの。ヘビーは RHO よりわずかに通過率が高く費用が4分の1ほど低い。ミディアムは通過率を1ポイント譲る代わりに費用を半分以上減らす。</div>
+</div>
+
+<p>数値は Codex + GPT-5.5 基準で、比較基準は RHO ハーネスだ。ヘビーは通過率 +2.0ポイントで費用26.1%減、ミディアムは通過率 -1ポイントで費用53%減。ベンチマーク別では Terminal-Bench 2 でヘビーが3回平均80.8%と RHO より4.5ポイント高く、費用は31.7%低かった（論文の版によって33.9%とも書かれている）。SWE-Bench Pro ではヘビー80.7%対 RHO 80.0%で費用26.5%減だ。実験は GPT-5.5 + Codex と GLM-5.2 + Claude Code の二つの組み合わせ、ベンチマークは Terminal-Bench 2、SWE-Bench Pro、ProgramBench の三つである。</p>
+<p>進化したハーネスが実際に何を含むかはリポジトリで読める。Terminal-Bench 2 用のハーネスを開くと次のものが入っている。</p>
+<ul>
+    <li><strong>プロファイル選択器</strong>: タスク説明だけを見て compact・lean・standard・deep・research の五つのプロファイルから一つを選ぶ規則文書。プロファイルごとに推論強度（low・medium・high）と「何回目のツール呼び出しから節約モード、何回目から仕上げ」という呼び出し予算が付く。ライトは compact タスクに小さいモデル（GPT-5.4-mini）を割り当て、ヘビーは standard タスクを high 推論に上げて仕上げ検証の余裕を増やす。</li>
+    <li><strong>出力圧縮</strong>: ツール出力を4,000文字、先頭2,400文字・末尾900文字だけ残し、履歴トークンに上限を置く方針。費用削減のかなりの部分はここから出る。</li>
+    <li><strong>機能の無効化リスト</strong>: ブラウザ利用、マルチエージェント、プラグイン、画像生成など、タスクに不要な機能を切っておくリスト。</li>
+    <li><strong>セッション指示文</strong>: 「要求された実装をモックやプロキシに置き換えないこと」「仕上げ前にタスクを読み直し、成果物を独立した根拠と照合すること」のような一般規則。タスク ID や過去のスコアといったタスク固有の情報は入れていないと明記している。</li>
+    <li><strong>検証補助ツール</strong>: SWE-Bench Pro 用ハーネスには、要件台帳を書いてスモークテストを回す <code>repair-verify</code> スクリプトと契約検証チェックリストが含まれる。</li>
+</ul>
+<p>つまりエージェントが自分で書いたハーネスの実体は長いプロンプト一枚ではなく、推論強度の割当表と呼び出し予算、出力の切り詰め規則、切る機能のリスト、検証スクリプトの束だ。このウィキが<a href="#!hns-kitchen">動作原理</a>でハーネスの3要素として整理したのと同じ場所に、数値付きで収まっている。</p>
+
+<h3>4. 三つの資料を重ねて読むと</h3>
+<table>
+    <thead><tr><th></th><th>Microsoft 白書</th><th>RHO</th><th>HarnessPro</th></tr></thead>
+    <tbody>
+        <tr><td>誰がハーネスを直すか</td><td>人（製品チーム）</td><td>エージェント自身、1ラウンド</td><td>エージェント自身、再帰</td></tr>
+        <tr><td>正解ラベル</td><td>社内評価セット</td><td>なし</td><td>なし（合成テスト）</td></tr>
+        <tr><td>最適化の軸</td><td>通過率・費用・遅延を測定</td><td>通過率</td><td>通過率 + 費用（パレート）</td></tr>
+        <tr><td>代表的な数値</td><td>+10.8 / +22.1pt</td><td>59% → 78%</td><td>RHO 比 +2pt で費用 -26%</td></tr>
+        <tr><td>費用が減った理由</td><td>キャッシュ（入力の83~88%）</td><td>測定軸ではない</td><td>出力圧縮・プロファイル別の推論強度</td></tr>
+        <tr><td>限界</td><td>自社測定・競合製品は非公開</td><td>自己選好は保守的な選択器</td><td>査読中・所属未確認</td></tr>
+    </tbody>
+</table>
+<p>三つの資料が異なる方法で同じ方向を指しているというのが、この記事を書いた理由だ。モデルを固定したままハーネスだけ替えても通過率は二桁ポイント動き、その利得のかなりの部分は「失敗したら再試行」「必要なだけ推論」「出力を切って戻す」のような、モデル能力とは無関係の運用規則から出ている。費用は呼び出し回数ではなくキャッシュと圧縮が決める。</p>
+<p>反対方向の証拠も並べておくべきだ。7月の Scaffold Effect 論文は公開ハーネス三つ（Goose、OpenCode、OpenHands）にモデル二つを入れて Terminal-Bench Pro 50問を回したところ、解けた問題あたりのトークン消費がハーネスによって最大40倍違った一方、通過率の差は0~8ポイントにとどまった。モデルを上げてもトークン費用は1.0~1.3倍しか動かなかった。この論文の結論は、評価の単位を「モデル」ではなく「ハーネス・モデルの組」として書き、費用を併記せよというものだ。同じ月の「ハーネスが買うのは、おおむねトークンだ」という題の論文も、同じモデル・同じタスクでハーネスによりタスクあたり費用が最大3倍開くと報告した。ハーネスがスコアを上げるという主張と、ハーネスは主に費用を分けるという主張は矛盾しない。どのハーネス同士を比べるかによって差がスコアに出ることも費用に出ることもある、という意味であり、だからこそ二軸を併せて報告する HarnessPro 方式の報告が基準になりうる。</p>
+
+<h3>5. Claude Code 利用者に残るもの</h3>
+<p>これらの資料を Claude Code 側に移して読むと三つが残る。第一に、<code>CLAUDE.md</code>・スキル・フック・自動メモリはそれ自体がハーネスであり、RHO のリポジトリはこれらのファイルを過去のセッション記録だけで直すワークフローを実際に出した。第二に、HarnessPro が進化させた項目（推論強度の割当、ツール出力の切り詰め、不要機能の無効化、仕上げ検証の規則）はすべて Claude Code の設定とフックで表現できるものだ。第三に、効果を主張するには Scaffold Effect 論文の言うとおり通過率とトークンを同時に測らねばならない。このウィキの<a href="#!hns-usecases">活用と拡張</a>が扱った性能測定の項目がまさにその場所だ。</p>
+
+<h3>事実検証ノート</h3>
+<p class="scn-sub">Microsoft の数値のうち通過率上昇幅（10.8・22.1ポイント）、ツール失敗後の再試行率（84~91%対7%未満、7倍以上）、呼び出し約2倍と入力処理費用15~21%減、サポートエージェントの自律解決率35%、改名告知の「機能・課金に変更なし」は<a href="https://www.microsoft.com/en-us/copilot/blog/copilot-studio/the-github-copilot-harness-in-copilot-studio-is-now-the-microsoft-copilot-harness/" target="_blank" rel="noopener">10月28日の改名告知</a>と<a href="https://www.microsoft.com/en-us/copilot/blog/copilot-studio/how-the-microsoft-copilot-harness-in-copilot-studio-helps-agents-finish-the-job/" target="_blank" rel="noopener">11月9日のブログ</a>を直接読んで写した。キャッシュ処理率83~88%、呼び出しあたり遅延10~36%減、業務プロセスベンチマーク65%対36%は<a href="https://techcommunity.microsoft.com/blog/copilot-studio-blog/paper-how-utilizing-the-microsoft-copilot-harness-in-copilot-studio-enabled-comp/4571157" target="_blank" rel="noopener">白書紹介記事</a>の検索抜粋に基づき、この記事を書いた環境はネットワーク方針のため白書 PDF（aka.ms/MCSQuality/Whitepaper）と Microsoft Learn のハーネス比較文書を直接開けなかった。白書は競合製品名とタスクセットの規模を明かしておらず、すべての数値は Microsoft の自社測定である。二つのハーネスの構造比較（配線方式・Bash コンテナ・サブエージェントの役割・単純タスクへの警告）は Microsoft の公式ガイドを引用した整理記事の一致する範囲のみ記した。8月の正式提供時期は一つの報道に基づく。RHO の著者・所属・学会（Findings of EMNLP 2026、ブダペスト）・三段階構造・結果表・Meta-Harness 比較は<a href="https://github.com/wbopan/retro-harness" target="_blank" rel="noopener">公開リポジトリ</a>を取得して README・引用ファイル・プロジェクトページで確認し、「選好度の低い候補が0.85」の分析は論文本文の抜粋に基づく。HarnessPro の三モード・ベンチマーク・モデルの組み合わせ・Terminal-Bench 2 の数値（80.8%、+4.5ポイント、31.7%または33.9%）は<a href="https://arxiv.org/abs/2610.26770" target="_blank" rel="noopener">arXiv 要旨</a>と検索抜粋、ハーネスの中身は<a href="https://github.com/pzs19/HarnessPro" target="_blank" rel="noopener">公開リポジトリ</a>の README と方針ファイルを直接読んで記した。RHO 比 +2.0/-26.1%、-1/-53% と SWE-Bench Pro 80.7対80.0は報道と要旨抜粋が一致する範囲である。<strong>清華大学の所属は報道にのみあり、論文のメタデータで確認できなかったため本文では断定していない。</strong>arXiv 本文は直接開けなかった。Scaffold Effect 論文（arXiv 2607.22585、40倍・0~8ポイント・1.0~1.3倍）と「What Does a Harness Buy? Tokens, Mostly.」（arXiv 2610.04433、最大3倍）は要旨抜粋に基づき、前者の著者所属 Sentient Labs は二次的な整理記事に基づくため本文には記していない。</p>

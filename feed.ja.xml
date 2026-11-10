@@ -5,9 +5,18 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.ja.xml"/>
   <id>https://dewytear.github.io/feed.ja.xml</id>
-  <updated>2026-11-02T08:17:03+09:00</updated>
+  <updated>2026-11-11T07:59:47+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>ハーネスがスコアを動かす証拠 — Microsoft の白書と RHO・HarnessPro 研究を重ねて読む</title>
+    <link href="https://dewytear.github.io/p/ja/hns-evidence/"/>
+    <id>https://dewytear.github.io/docs/ja/ai/claude/code/harness/hns-evidence</id>
+    <published>2026-11-11T07:59:47+09:00</published>
+    <updated>2026-11-11T07:59:47+09:00</updated>
+    <summary>2026年後半に「ハーネスが結果を左右する」という主張が数値付きで出た三つの資料を一か所に並べる。Microsoft の11月9日の白書は同じモデル・同じタスクのままハーネスだけを替え、通過率が GPT-5.5 Chat で10.8ポイント、Claude Opus 4.8 で22.1ポイント上がり、モデル交換はほとんど効かなかったと報告する — ツール失敗後の再試行84~91%対7%未満、呼び出し約2倍なのにキャッシュ（入力の83~88%）で入力費用15~21%減。学界の RHO（香港城市大学・Microsoft Research Asia、EMNLP 2026 Findings）は正解ラベルなしに過去の軌跡だけでコアセット選択・グループロールアウト・自己選好選択の三段階を回し SWE-Bench Pro 59%→78% を出し、後続の HarnessPro はそのループを再帰で回して費用を第二の軸に入れ、パレートフロンティアからライト・ミディアム・ヘビーの三ハーネスを選ぶ（RHO 比ヘビー +2.0pt・費用 -26%、ミディアム -1pt・費用 -53%）。リポジトリを取得して進化したハーネスの実体（プロファイル選択器・呼び出し予算・出力圧縮・機能無効化・検証スクリプト）を確認し、清華大学の所属は報道にしかないため断定しなかった。反対の証拠である Scaffold Effect（トークン40倍差、通過率0~8pt）と並べ、通過率とトークンを併せて報告すべきだという結論を記す</summary>
+    <category term="AI · Claude · Code · Harness"/>
+  </entry>
   <entry>
     <title>AI 学習の拒否を robots.txt の一行で — 4社が受け入れた共有トークンとこのウィキの選択</title>
     <link href="https://dewytear.github.io/p/ja/news-20261030-ai-training-optout/"/>
@@ -268,14 +277,5 @@
     <updated>2026-08-15T15:03:36+09:00</updated>
     <summary>Anthropic の 2026-07-24 の Claude Opus 5 の公開を、公式の発表と複数の報道から突き合わせて検証した記事 — $5/$25 で CursorBench 3.2 の max のピークの Fable 5 に 0.5% 以内、タスクあたりの費用は半分。Frontier-Bench 43.3%、OSWorld 2.0 を ⅓ の予算で、ARC-AGI 3 で 3 倍。図面を見られないと知るや自分で CV パイプラインを書いて FreeCAD 3D を再構成した長期のエージェンティックなデモ、加えて Fable 5 のセーフガードの誤検知の論争の文脈と、未確認の主張の切り分け</summary>
     <category term="AI · News &amp; Articles · 2026"/>
-  </entry>
-  <entry>
-    <title>CLAUDE.md の十戒 — AI ペアプログラマーを飼いならす十の約束</title>
-    <link href="https://dewytear.github.io/p/ja/claude-md-commandments/"/>
-    <id>https://dewytear.github.io/docs/ja/ai/claude/code/claude-md/claude-md-commandments</id>
-    <published>2026-07-24T20:19:18+09:00</published>
-    <updated>2026-08-15T14:40:05+09:00</updated>
-    <summary>LLM がやりがちなコーディングの失敗 10 個を狙った汎用の CLAUDE.md 方針を、インフォグラフィックと英語原文・日本語訳・使い方とともに紹介する — 慎重な出だし（まず考える、三つのアーティファクト）、コーディングの原則（単純さ、外科的な変更、韓国語ヘッダー、コロン禁止、完了前のテスト）、検証と締めくくり（目標優先、意味の単位でコミット、エラーの熟読）、そしてプロジェクトのルートへの導入のしかたと効いている合図</summary>
-    <category term="AI · Claude · Code · CLAUDE.md"/>
   </entry>
 </feed>

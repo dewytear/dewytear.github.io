@@ -2,18 +2,18 @@
  "schemaVersion": 2,
  "note": "자기완결 지식 그래프 — 노드=문서(name), 엣지=related (via:concept 희소성 가중 개념 중복 / via:folder 같은 폴더 보완), concepts=조인 키, url=원문(HTML 조각) fetch 주소. 계층은 section(\"World · Domain · System · Document\")과 stats.clusters. 순회 가이드: https://dewytear.github.io/docs/ko/ai/map/ai-guide",
  "base": "https://dewytear.github.io/",
- "docCount": 78,
+ "docCount": 79,
  "stats": {
-  "docCount": 78,
-  "conceptCount": 323,
+  "docCount": 79,
+  "conceptCount": 325,
   "clusters": [
    {
     "label": "지식 체계",
     "section": "AI · Wiki · 지식 체계",
     "count": 7,
     "hub": {
-     "name": "kgs-edges",
-     "title": "문서는 어떻게 이어지는가",
+     "name": "kgs-accuracy",
+     "title": "이 위키는 얼마나 맞히는가 — 검색과 그래프 순회를 재 봤다",
      "refs": 5
     }
    },
@@ -90,11 +90,11 @@
    {
     "label": "Harness 엔지니어링",
     "section": "AI · Claude · Code · Harness",
-    "count": 4,
+    "count": 5,
     "hub": {
-     "name": "hns-overview",
-     "title": "하네스란 — 개요·정의·구성",
-     "refs": 6
+     "name": "hns-evidence",
+     "title": "하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기",
+     "refs": 8
     }
    },
    {
@@ -172,8 +172,8 @@
     "section": "AI · News & Articles · 2026",
     "count": 20,
     "hub": {
-     "name": "news-20260901-whose-usage",
-     "title": "내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면",
+     "name": "news-20260724-claude-opus-5",
+     "title": "Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다",
      "refs": 9
     }
    },
@@ -200,13 +200,18 @@
   ],
   "hubs": [
    {
-    "name": "news-20260901-whose-usage",
-    "title": "내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면",
+    "name": "news-20260724-claude-opus-5",
+    "title": "Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다",
     "refs": 9
    },
    {
-    "name": "news-20260724-claude-opus-5",
-    "title": "Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다",
+    "name": "hns-evidence",
+    "title": "하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기",
+    "refs": 8
+   },
+   {
+    "name": "news-20260901-whose-usage",
+    "title": "내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면",
     "refs": 8
    },
    {
@@ -222,11 +227,6 @@
    {
     "name": "hnp-first-run",
     "title": "첫 실행과 동작 구조",
-    "refs": 6
-   },
-   {
-    "name": "hns-overview",
-    "title": "하네스란 — 개요·정의·구성",
     "refs": 6
    },
    {
@@ -252,28 +252,28 @@
   ],
   "topConcepts": [
    {
+    "c": "검증",
+    "n": 14
+   },
+   {
     "c": "스킬",
     "n": 14
    },
    {
-    "c": "검증",
+    "c": "에이전트",
+    "n": 14
+   },
+   {
+    "c": "CLAUDE.md",
     "n": 13
    },
    {
-    "c": "에이전트",
+    "c": "Claude Code",
     "n": 13
    },
    {
     "c": "지식그래프",
     "n": 13
-   },
-   {
-    "c": "CLAUDE.md",
-    "n": 12
-   },
-   {
-    "c": "Claude Code",
-    "n": 12
    },
    {
     "c": "Anthropic",
@@ -288,7 +288,15 @@
     "n": 10
    },
    {
+    "c": "하네스",
+    "n": 9
+   },
+   {
     "c": "마켓플레이스",
+    "n": 8
+   },
+   {
+    "c": "벤치마크",
     "n": 8
    },
    {
@@ -296,23 +304,15 @@
     "n": 8
    },
    {
+    "c": "코딩에이전트",
+    "n": 8
+   },
+   {
     "c": "플러그인",
     "n": 8
    },
    {
-    "c": "하네스",
-    "n": 8
-   },
-   {
     "c": "MCP",
-    "n": 7
-   },
-   {
-    "c": "벤치마크",
-    "n": 7
-   },
-   {
-    "c": "지식관리",
     "n": 7
    }
   ],
@@ -336,9 +336,10 @@
    },
    {
     "c": "CLAUDE.md",
-    "n": 12,
+    "n": 13,
     "clusters": [
      "CLAUDE.md",
+     "Harness 엔지니어링",
      "Introduction",
      "LLM Wiki",
      "News & Articles",
@@ -365,7 +366,7 @@
    },
    {
     "c": "검증",
-    "n": 13,
+    "n": 14,
     "clusters": [
      "CLAUDE.md",
      "Harness 엔지니어링",
@@ -404,7 +405,7 @@
    },
    {
     "c": "Claude Code",
-    "n": 12,
+    "n": 13,
     "clusters": [
      "CLAUDE.md",
      "Harness 엔지니어링",
@@ -429,16 +430,16 @@
   ],
   "galaxies": {
    "AI": {
-    "docCount": 73,
-    "conceptCount": 294,
+    "docCount": 74,
+    "conceptCount": 296,
     "clusters": [
      {
       "label": "지식 체계",
       "section": "AI · Wiki · 지식 체계",
       "count": 7,
       "hub": {
-       "name": "kgs-edges",
-       "title": "문서는 어떻게 이어지는가",
+       "name": "kgs-accuracy",
+       "title": "이 위키는 얼마나 맞히는가 — 검색과 그래프 순회를 재 봤다",
        "refs": 5
       }
      },
@@ -515,11 +516,11 @@
      {
       "label": "Harness 엔지니어링",
       "section": "AI · Claude · Code · Harness",
-      "count": 4,
+      "count": 5,
       "hub": {
-       "name": "hns-overview",
-       "title": "하네스란 — 개요·정의·구성",
-       "refs": 6
+       "name": "hns-evidence",
+       "title": "하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기",
+       "refs": 8
       }
      },
      {
@@ -597,21 +598,26 @@
       "section": "AI · News & Articles · 2026",
       "count": 20,
       "hub": {
-       "name": "news-20260901-whose-usage",
-       "title": "내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면",
+       "name": "news-20260724-claude-opus-5",
+       "title": "Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다",
        "refs": 9
       }
      }
     ],
     "hubs": [
      {
-      "name": "news-20260901-whose-usage",
-      "title": "내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면",
+      "name": "news-20260724-claude-opus-5",
+      "title": "Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다",
       "refs": 9
      },
      {
-      "name": "news-20260724-claude-opus-5",
-      "title": "Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다",
+      "name": "hns-evidence",
+      "title": "하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기",
+      "refs": 8
+     },
+     {
+      "name": "news-20260901-whose-usage",
+      "title": "내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면",
       "refs": 8
      },
      {
@@ -627,11 +633,6 @@
      {
       "name": "hnp-first-run",
       "title": "첫 실행과 동작 구조",
-      "refs": 6
-     },
-     {
-      "name": "hns-overview",
-      "title": "하네스란 — 개요·정의·구성",
       "refs": 6
      },
      {
@@ -657,28 +658,28 @@
     ],
     "topConcepts": [
      {
+      "c": "검증",
+      "n": 14
+     },
+     {
       "c": "스킬",
       "n": 14
      },
      {
-      "c": "검증",
+      "c": "에이전트",
+      "n": 14
+     },
+     {
+      "c": "CLAUDE.md",
       "n": 13
      },
      {
-      "c": "에이전트",
+      "c": "Claude Code",
       "n": 13
      },
      {
       "c": "지식그래프",
       "n": 13
-     },
-     {
-      "c": "CLAUDE.md",
-      "n": 12
-     },
-     {
-      "c": "Claude Code",
-      "n": 12
      },
      {
       "c": "Anthropic",
@@ -693,7 +694,15 @@
       "n": 10
      },
      {
+      "c": "하네스",
+      "n": 9
+     },
+     {
       "c": "마켓플레이스",
+      "n": 8
+     },
+     {
+      "c": "벤치마크",
       "n": 8
      },
      {
@@ -701,7 +710,7 @@
       "n": 8
      },
      {
-      "c": "하네스",
+      "c": "코딩에이전트",
       "n": 8
      },
      {
@@ -709,15 +718,7 @@
       "n": 7
      },
      {
-      "c": "벤치마크",
-      "n": 7
-     },
-     {
-      "c": "코딩에이전트",
-      "n": 7
-     },
-     {
-      "c": "플러그인",
+      "c": "토큰비용",
       "n": 7
      }
     ],
@@ -741,9 +742,10 @@
      },
      {
       "c": "CLAUDE.md",
-      "n": 12,
+      "n": 13,
       "clusters": [
        "CLAUDE.md",
+       "Harness 엔지니어링",
        "Introduction",
        "LLM Wiki",
        "News & Articles",
@@ -770,7 +772,7 @@
      },
      {
       "c": "검증",
-      "n": 13,
+      "n": 14,
       "clusters": [
        "CLAUDE.md",
        "Harness 엔지니어링",
@@ -809,7 +811,7 @@
      },
      {
       "c": "Claude Code",
-      "n": 12,
+      "n": 13,
       "clusters": [
        "CLAUDE.md",
        "Harness 엔지니어링",
@@ -1322,8 +1324,8 @@
      "title": "부를 수 있는 목록 — 하네스 167종 순위표를 받아서 뜯어봤다",
      "shared": [
       "벤치마크",
-      "검증",
-      "지식그래프"
+      "지식그래프",
+      "검증"
      ],
      "via": "concept"
     },
@@ -1406,6 +1408,16 @@
      "title": "기초 — 개요·터미널·CLAUDE.md",
      "shared": [
       "터미널",
+      "CLAUDE.md",
+      "Claude Code"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "hns-evidence",
+     "title": "하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기",
+     "shared": [
+      "코딩에이전트",
       "CLAUDE.md",
       "Claude Code"
      ],
@@ -2298,6 +2310,7 @@
     "kgs-accuracy",
     "skl-overview",
     "skl-install",
+    "hns-evidence",
     "tip-advanced",
     "news-20260724-claude-opus-5",
     "news-20260728-software-factories-fail",
@@ -2358,12 +2371,12 @@
      "via": "concept"
     },
     {
-     "name": "hns-overview",
-     "title": "하네스란 — 개요·정의·구성",
+     "name": "omc-intro",
+     "title": "OMC — 소개와 설치",
      "shared": [
-      "병렬실행",
-      "의도전달",
-      "검증"
+      "설치",
+      "마켓플레이스",
+      "슬래시명령어"
      ],
      "via": "concept"
     }
@@ -2432,7 +2445,8 @@
     }
    ],
    "citedBy": [
-    "hns-install"
+    "hns-install",
+    "hns-evidence"
    ]
   },
   {
@@ -2475,14 +2489,120 @@
       "환각"
      ],
      "via": "concept"
+    },
+    {
+     "name": "hns-evidence",
+     "title": "하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기",
+     "shared": [
+      "Codex CLI",
+      "하네스"
+     ],
+     "via": "concept"
     }
    ],
    "relations": [],
    "citedBy": [
     "hns-kitchen",
+    "hns-evidence",
     "news-20260814-auto-mode-stateless-mcp",
     "news-20260816-claude-code-selfhosted"
    ]
+  },
+  {
+   "name": "hns-evidence",
+   "title": "하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기",
+   "summary": "2026년 하반기에 '하네스가 결과를 좌우한다'는 주장이 수치로 나온 세 자료를 한 자리에 놓는다. Microsoft의 11월 9일 백서는 같은 모델·같은 과제에 하네스만 바꿔 통과율이 GPT-5.5 Chat에서 10.8포인트, Claude Opus 4.8에서 22.1포인트 올랐고 모델 교체는 거의 효과가 없었다고 보고한다 — 도구 실패 뒤 재시도 84~91% 대 7% 미만, 호출 약 2배인데 캐싱(입력 83~88%)으로 입력 비용 15~21% 감소. 학계의 RHO(홍콩성시대·Microsoft Research Asia, EMNLP 2026 Findings)는 정답 라벨 없이 과거 궤적만으로 코어셋 선택·그룹 롤아웃·자기선호 선택의 세 단계를 돌려 SWE-Bench Pro 59%→78%를 냈고, 후속 HarnessPro는 그 루프를 재귀로 돌리며 비용을 두 번째 축에 넣어 파레토 프런티어에서 라이트·미디엄·헤비 세 하네스를 고른다(RHO 대비 헤비 +2.0pt·비용 -26%, 미디엄 -1pt·비용 -53%). 저장소를 받아 진화한 하네스의 실체(프로필 선택기·호출 예산·출력 압축·기능 차단·검증 스크립트)를 확인했고, 칭화대 소속은 보도에만 있어 단정하지 않았다. 반대 증거인 Scaffold Effect(토큰 40배 차이, 통과율 0~8pt)와 나란히 놓아 통과율과 토큰을 함께 보고해야 한다는 결론을 적는다",
+   "section": "AI · Claude · Code · Harness",
+   "concepts": [
+    "하네스",
+    "벤치마크",
+    "에이전트",
+    "검증",
+    "코딩에이전트",
+    "캐싱",
+    "토큰비용",
+    "SWE-bench",
+    "재시도",
+    "자기개선",
+    "파레토",
+    "Codex CLI",
+    "Claude Code",
+    "CLAUDE.md",
+    "Microsoft",
+    "자기승인편향"
+   ],
+   "url": "https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-evidence",
+   "route": "https://dewytear.github.io/#!hns-evidence",
+   "page": "https://dewytear.github.io/p/hns-evidence/",
+   "related": [
+    {
+     "name": "news-20260728-software-factories-fail",
+     "title": "하네스로는 부족하다 — 소프트웨어 공장이 실패하는 이유",
+     "shared": [
+      "SWE-bench",
+      "벤치마크",
+      "코딩에이전트"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "news-20260803-cherny-karpathy",
+     "title": "지운 사람과 띄운 사람 — 체르니의 “하네스 80% 삭제”, 카파시의 “반지의 제왕 무비”",
+     "shared": [
+      "벤치마크",
+      "코딩에이전트",
+      "하네스"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "news-20260724-claude-opus-5",
+     "title": "Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다",
+     "shared": [
+      "토큰비용",
+      "벤치마크",
+      "코딩에이전트"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "news-20260922-harness-catalog",
+     "title": "부를 수 있는 목록 — 하네스 167종 순위표를 받아서 뜯어봤다",
+     "shared": [
+      "벤치마크",
+      "하네스",
+      "검증"
+     ],
+     "via": "concept"
+    }
+   ],
+   "relations": [
+    {
+     "target": "hns-overview",
+     "type": "prerequisite",
+     "evidenceRef": "도입부가 하네스의 정의·구성을 '하네스란'에 위임한다고 명시하고 곧바로 세 자료의 수치로 들어간다",
+     "source": "human"
+    },
+    {
+     "target": "hns-kitchen",
+     "type": "evidence-for",
+     "evidenceRef": "3절 끝에서 HarnessPro가 진화시킨 하네스의 내용물(추론 강도 배정·호출 예산·출력 자르기·검증 스크립트)이 '동작 원리'가 정리한 하네스 3요소와 같은 자리에 수치가 붙은 형태로 들어 있다고 대조한다 — 그 문서의 구성 주장에 대한 외부 측정 근거",
+     "source": "human"
+    },
+    {
+     "target": "hns-usecases",
+     "type": "evidence-for",
+     "evidenceRef": "5절이 Scaffold Effect의 결론(통과율과 토큰을 함께 측정)을 '활용과 확장'의 성능 측정 항목이 들어갈 자리로 지목한다",
+     "source": "human"
+    },
+    {
+     "target": "tip-advanced",
+     "type": "example-of",
+     "evidenceRef": "2절에서 RHO의 자기선호가 보수적 선택기라는 한계(덜 선호된 후보가 0.85)를 '고급 팁'이 다룬 자기승인편향과 같은 뿌리로 연결한다 — 그 편향의 학술 측정 사례",
+     "source": "human"
+    }
+   ],
+   "citedBy": []
   },
   {
    "name": "hnp-intro",
@@ -2532,7 +2652,7 @@
      "shared": [
       "ERP커스터마이징",
       "_workspace",
-      "에이전트"
+      "스킬"
      ],
      "via": "concept"
     },
@@ -2673,17 +2793,7 @@
      "shared": [
       "ERP커스터마이징",
       "_workspace",
-      "에이전트"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "hns-install",
-     "title": "실행하기 — 설치·실행·리뷰",
-     "shared": [
-      "_workspace",
-      "환각",
-      "검증"
+      "스킬"
      ],
      "via": "concept"
     },
@@ -2694,6 +2804,16 @@
       "회귀검증",
       "ERP커스터마이징",
       "_workspace"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "hns-install",
+     "title": "실행하기 — 설치·실행·리뷰",
+     "shared": [
+      "_workspace",
+      "환각",
+      "검증"
      ],
      "via": "concept"
     },
@@ -3994,6 +4114,16 @@
    "page": "https://dewytear.github.io/p/news-20260728-software-factories-fail/",
    "related": [
     {
+     "name": "hns-evidence",
+     "title": "하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기",
+     "shared": [
+      "SWE-bench",
+      "벤치마크",
+      "코딩에이전트"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "news-20260803-cherny-karpathy",
      "title": "지운 사람과 띄운 사람 — 체르니의 “하네스 80% 삭제”, 카파시의 “반지의 제왕 무비”",
      "shared": [
@@ -4018,15 +4148,6 @@
      "shared": [
       "벤치마크",
       "코딩에이전트"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "news-20260922-harness-catalog",
-     "title": "부를 수 있는 목록 — 하네스 167종 순위표를 받아서 뜯어봤다",
-     "shared": [
-      "벤치마크",
-      "하네스"
      ],
      "via": "concept"
     }
@@ -4136,20 +4257,21 @@
      "via": "concept"
     },
     {
+     "name": "hns-evidence",
+     "title": "하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기",
+     "shared": [
+      "토큰비용",
+      "벤치마크",
+      "코딩에이전트"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "news-20260709-thariq-fable5-unknowns",
      "title": "Fable 5 시대의 병목은 모델이 아니라 인간인가 — Thariq Shihipar의 “지도와 영토” 프레임",
      "shared": [
       "Fable 5",
       "장기작업"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "news-20261015-gemini-4-argon",
-     "title": "Gemini 4 Argon 한눈에 — 먼저 열린 문, 반값 입문가, 덜 지어내는 모델",
-     "shared": [
-      "세이프가드",
-      "벤치마크"
      ],
      "via": "concept"
     }
@@ -4254,6 +4376,16 @@
    "page": "https://dewytear.github.io/p/news-20260803-cherny-karpathy/",
    "related": [
     {
+     "name": "hns-evidence",
+     "title": "하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기",
+     "shared": [
+      "벤치마크",
+      "코딩에이전트",
+      "하네스"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "news-20260724-claude-opus-5",
      "title": "Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다",
      "shared": [
@@ -4279,16 +4411,6 @@
      "shared": [
       "벤치마크",
       "하네스",
-      "검증"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "hns-overview",
-     "title": "하네스란 — 개요·정의·구성",
-     "shared": [
-      "하네스",
-      "Claude Code",
       "검증"
      ],
      "via": "concept"
@@ -4845,8 +4967,8 @@
      "name": "news-20260901-whose-usage",
      "title": "내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면",
      "shared": [
-      "토큰비용",
       "훅",
+      "토큰비용",
       "Claude Code"
      ],
      "via": "concept"
@@ -4926,6 +5048,16 @@
      "via": "concept"
     },
     {
+     "name": "hns-evidence",
+     "title": "하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기",
+     "shared": [
+      "자기승인편향",
+      "Claude Code",
+      "검증"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "hns-overview",
      "title": "하네스란 — 개요·정의·구성",
      "shared": [
@@ -4934,19 +5066,11 @@
       "검증"
      ],
      "via": "concept"
-    },
-    {
-     "name": "omc-intro",
-     "title": "OMC — 소개와 설치",
-     "shared": [
-      "OMC",
-      "서브에이전트"
-     ],
-     "via": "concept"
     }
    ],
    "relations": [],
    "citedBy": [
+    "hns-evidence",
     "tip-intermediate",
     "news-20260816-claude-code-selfhosted",
     "news-20260820-who-makes-the-call"
@@ -5195,8 +5319,8 @@
      "name": "tip-intermediate",
      "title": "중급 — 세션을 시스템으로 만드는 11가지",
      "shared": [
-      "토큰비용",
       "훅",
+      "토큰비용",
       "Claude Code"
      ],
      "via": "concept"
@@ -5371,12 +5495,12 @@
      "via": "concept"
     },
     {
-     "name": "news-20260901-whose-usage",
-     "title": "내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면",
+     "name": "hns-evidence",
+     "title": "하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기",
      "shared": [
-      "훅",
-      "Anthropic",
-      "Claude Code"
+      "CLAUDE.md",
+      "Claude Code",
+      "검증"
      ],
      "via": "concept"
     }
@@ -5497,6 +5621,16 @@
    "page": "https://dewytear.github.io/p/news-20260922-harness-catalog/",
    "related": [
     {
+     "name": "hns-evidence",
+     "title": "하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기",
+     "shared": [
+      "벤치마크",
+      "하네스",
+      "검증"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "news-20260803-cherny-karpathy",
      "title": "지운 사람과 띄운 사람 — 체르니의 “하네스 80% 삭제”, 카파시의 “반지의 제왕 무비”",
      "shared": [
@@ -5511,8 +5645,8 @@
      "title": "이 위키는 얼마나 맞히는가 — 검색과 그래프 순회를 재 봤다",
      "shared": [
       "벤치마크",
-      "검증",
-      "지식그래프"
+      "지식그래프",
+      "검증"
      ],
      "via": "concept"
     },
@@ -5521,15 +5655,6 @@
      "title": "AI가 이 위키를 읽는 법",
      "shared": [
       "기계판독",
-      "지식그래프"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "kgs-edges",
-     "title": "문서는 어떻게 이어지는가",
-     "shared": [
-      "큐레이션",
       "지식그래프"
      ],
      "via": "concept"

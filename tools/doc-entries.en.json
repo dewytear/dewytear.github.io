@@ -277,6 +277,29 @@
   "summary": "Novel, webtoon, and research cases; Harness 100, practice ideas, and performance measurement; tool extensions like Codex CLI double-checking"
  },
  {
+  "name": "hns-evidence",
+  "title": "Evidence That the Harness Moves the Score — Reading Microsoft's White Paper Alongside RHO and HarnessPro",
+  "summary": "Three sources from the second half of 2026 that put numbers on the claim that the harness decides results, read side by side. Microsoft's November 9 white paper swapped only the harness, keeping model and tasks fixed, and reports pass-rate gains of 10.8 points on GPT-5.5 Chat and 22.1 on Claude Opus 4.8 while swapping the model barely moved anything: retries after a failed tool call in 84–91% of cases versus under 7%, about twice the calls yet 15–21% lower input cost thanks to caching (83–88% of input). In academia, RHO (City University of Hong Kong and Microsoft Research Asia, Findings of EMNLP 2026) ran coreset selection, group rollout and self-preference selection on past traces alone, with no ground-truth labels, taking SWE-Bench Pro from 59% to 78%; its successor HarnessPro runs that loop recursively, puts cost on the second axis and picks Lite, Medium and Heavy harnesses from the Pareto frontier (Heavy +2.0 points at −26% cost over RHO, Medium −1 point at −53%). The repositories were cloned to see what an evolved harness actually contains (profile selector, call budgets, output compaction, disabled features, verification scripts); the reported Tsinghua affiliation appears only in press and is not asserted. The counter-evidence of the Scaffold Effect paper (40× token spread, 0–8 point pass-rate spread) sits alongside, with the conclusion that pass rate and tokens must be reported together",
+  "relations": [
+   {
+    "target": "hns-overview",
+    "evidenceRef": "The introduction explicitly leaves the definition and anatomy of a harness to that page and goes straight to the three sources' numbers"
+   },
+   {
+    "target": "hns-kitchen",
+    "evidenceRef": "The end of section 3 sets the contents of HarnessPro's evolved harness (reasoning-effort table, call budgets, output trimming, verification scripts) against the three harness elements that page lays out, as the same slots with numbers attached — outside measurement backing that page's structural claim"
+   },
+   {
+    "target": "hns-usecases",
+    "evidenceRef": "Section 5 points to that page's performance-measurement section as the place for the Scaffold Effect conclusion of measuring pass rate and tokens together"
+   },
+   {
+    "target": "tip-advanced",
+    "evidenceRef": "Section 2 links RHO's limit that self-preference is a conservative selector (a less-preferred candidate scored 0.85) to the self-approval bias that page discusses, as an academic measurement of the same bias"
+   }
+  ]
+ },
+ {
   "name": "hnp-intro",
   "title": "The Harness Plugin — Intro, Concepts, Install",
   "summary": "What the ERP-customization harness plugin is, its key concepts (agents, skills, orchestrator, _workspace), and installation in one chapter",
