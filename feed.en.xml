@@ -5,9 +5,18 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.en.xml"/>
   <id>https://dewytear.github.io/feed.en.xml</id>
-  <updated>2026-11-02T08:17:03+09:00</updated>
+  <updated>2026-11-11T07:59:47+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>Evidence That the Harness Moves the Score — Reading Microsoft's White Paper Alongside RHO and HarnessPro</title>
+    <link href="https://dewytear.github.io/p/en/hns-evidence/"/>
+    <id>https://dewytear.github.io/docs/en/ai/claude/code/harness/hns-evidence</id>
+    <published>2026-11-11T07:59:47+09:00</published>
+    <updated>2026-11-11T07:59:47+09:00</updated>
+    <summary>Three sources from the second half of 2026 that put numbers on the claim that the harness decides results, read side by side. Microsoft's November 9 white paper swapped only the harness, keeping model and tasks fixed, and reports pass-rate gains of 10.8 points on GPT-5.5 Chat and 22.1 on Claude Opus 4.8 while swapping the model barely moved anything: retries after a failed tool call in 84–91% of cases versus under 7%, about twice the calls yet 15–21% lower input cost thanks to caching (83–88% of input). In academia, RHO (City University of Hong Kong and Microsoft Research Asia, Findings of EMNLP 2026) ran coreset selection, group rollout and self-preference selection on past traces alone, with no ground-truth labels, taking SWE-Bench Pro from 59% to 78%; its successor HarnessPro runs that loop recursively, puts cost on the second axis and picks Lite, Medium and Heavy harnesses from the Pareto frontier (Heavy +2.0 points at −26% cost over RHO, Medium −1 point at −53%). The repositories were cloned to see what an evolved harness actually contains (profile selector, call budgets, output compaction, disabled features, verification scripts); the reported Tsinghua affiliation appears only in press and is not asserted. The counter-evidence of the Scaffold Effect paper (40× token spread, 0–8 point pass-rate spread) sits alongside, with the conclusion that pass rate and tokens must be reported together</summary>
+    <category term="AI · Claude · Code · Harness"/>
+  </entry>
   <entry>
     <title>Opting Out of AI Training in One robots.txt Line — The Shared Token Four Companies Back, and This Wiki's Choice</title>
     <link href="https://dewytear.github.io/p/en/news-20261030-ai-training-optout/"/>
@@ -268,14 +277,5 @@
     <updated>2026-08-15T15:03:36+09:00</updated>
     <summary>A cross-verified account of Anthropic's 2026-07-24 Claude Opus 5 launch from the official announcement and multiple press reports — at $5/$25 it lands within 0.5% of Fable 5's CursorBench 3.2 max peak at half the cost per task, with Frontier-Bench 43.3%, OSWorld 2.0 on ⅓ the budget and 3× on ARC-AGI 3, a long-horizon agentic demo that wrote its own CV pipeline to rebuild FreeCAD 3D when it could not view the drawing, plus the context of the Fable 5 safeguard false-positive controversy and a separation of unconfirmed claims</summary>
     <category term="AI · News &amp; Articles · 2026"/>
-  </entry>
-  <entry>
-    <title>The Ten Commandments of CLAUDE.md — Ten Promises for Taming Your AI Pair Programmer</title>
-    <link href="https://dewytear.github.io/p/en/claude-md-commandments/"/>
-    <id>https://dewytear.github.io/docs/en/ai/claude/code/claude-md/claude-md-commandments</id>
-    <published>2026-07-24T20:19:18+09:00</published>
-    <updated>2026-08-15T14:40:05+09:00</updated>
-    <summary>A general-purpose CLAUDE.md guideline aimed at ten habitual LLM coding mistakes, presented as an infographic with the English original, a Korean translation, and usage notes — a careful start (think first, the three artifacts), coding principles (simplicity, surgical changes, Korean headers, no colons, test before done), and verification and wrap-up (goal-first, semantic commits, read errors closely), plus how to install it at the project root and the signals that show it works</summary>
-    <category term="AI · Claude · Code · CLAUDE.md"/>
   </entry>
 </feed>

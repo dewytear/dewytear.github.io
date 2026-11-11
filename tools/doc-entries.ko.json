@@ -594,6 +594,55 @@
   ]
  },
  {
+  "name": "hns-evidence",
+  "title": "하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기",
+  "summary": "2026년 하반기에 '하네스가 결과를 좌우한다'는 주장이 수치로 나온 세 자료를 한 자리에 놓는다. Microsoft의 11월 9일 백서는 같은 모델·같은 과제에 하네스만 바꿔 통과율이 GPT-5.5 Chat에서 10.8포인트, Claude Opus 4.8에서 22.1포인트 올랐고 모델 교체는 거의 효과가 없었다고 보고한다 — 도구 실패 뒤 재시도 84~91% 대 7% 미만, 호출 약 2배인데 캐싱(입력 83~88%)으로 입력 비용 15~21% 감소. 학계의 RHO(홍콩성시대·Microsoft Research Asia, EMNLP 2026 Findings)는 정답 라벨 없이 과거 궤적만으로 코어셋 선택·그룹 롤아웃·자기선호 선택의 세 단계를 돌려 SWE-Bench Pro 59%→78%를 냈고, 후속 HarnessPro는 그 루프를 재귀로 돌리며 비용을 두 번째 축에 넣어 파레토 프런티어에서 라이트·미디엄·헤비 세 하네스를 고른다(RHO 대비 헤비 +2.0pt·비용 -26%, 미디엄 -1pt·비용 -53%). 저장소를 받아 진화한 하네스의 실체(프로필 선택기·호출 예산·출력 압축·기능 차단·검증 스크립트)를 확인했고, 칭화대 소속은 보도에만 있어 단정하지 않았다. 반대 증거인 Scaffold Effect(토큰 40배 차이, 통과율 0~8pt)와 나란히 놓아 통과율과 토큰을 함께 보고해야 한다는 결론을 적는다",
+  "concepts": [
+   "하네스",
+   "벤치마크",
+   "에이전트",
+   "검증",
+   "코딩에이전트",
+   "캐싱",
+   "토큰비용",
+   "SWE-bench",
+   "재시도",
+   "자기개선",
+   "파레토",
+   "Codex CLI",
+   "Claude Code",
+   "CLAUDE.md",
+   "Microsoft",
+   "자기승인편향"
+  ],
+  "relations": [
+   {
+    "target": "hns-overview",
+    "type": "prerequisite",
+    "evidenceRef": "도입부가 하네스의 정의·구성을 '하네스란'에 위임한다고 명시하고 곧바로 세 자료의 수치로 들어간다",
+    "source": "human"
+   },
+   {
+    "target": "hns-kitchen",
+    "type": "evidence-for",
+    "evidenceRef": "3절 끝에서 HarnessPro가 진화시킨 하네스의 내용물(추론 강도 배정·호출 예산·출력 자르기·검증 스크립트)이 '동작 원리'가 정리한 하네스 3요소와 같은 자리에 수치가 붙은 형태로 들어 있다고 대조한다 — 그 문서의 구성 주장에 대한 외부 측정 근거",
+    "source": "human"
+   },
+   {
+    "target": "hns-usecases",
+    "type": "evidence-for",
+    "evidenceRef": "5절이 Scaffold Effect의 결론(통과율과 토큰을 함께 측정)을 '활용과 확장'의 성능 측정 항목이 들어갈 자리로 지목한다",
+    "source": "human"
+   },
+   {
+    "target": "tip-advanced",
+    "type": "example-of",
+    "evidenceRef": "2절에서 RHO의 자기선호가 보수적 선택기라는 한계(덜 선호된 후보가 0.85)를 '고급 팁'이 다룬 자기승인편향과 같은 뿌리로 연결한다 — 그 편향의 학술 측정 사례",
+    "source": "human"
+   }
+  ]
+ },
+ {
   "name": "hnp-intro",
   "title": "Harness 플러그인 — 소개·개념·설치",
   "summary": "ERP 커스터마이징용 하네스 플러그인이 무엇인지, 핵심 개념(에이전트·스킬·오케스트레이터·_workspace)과 설치까지 한 편에",

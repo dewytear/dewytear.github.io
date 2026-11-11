@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evidence That the Harness Moves the Score — Reading Microsoft&#x27;s White Paper Alongside RHO and HarnessPro</title>
+<meta name="description" content="Three sources from the second half of 2026 that put numbers on the claim that the harness decides results, read side by side. Microsoft&#x27;s November 9 white paper swapped only the harness, keeping model and tasks fixed, and reports pass-rate gains of 10.8 points on GPT-5.5 Chat and 22.1 on Claude Opus 4.8 while swapping the model barely moved anything: retries after a failed tool call in 84–91% of cases versus under 7%, about twice the calls yet 15–21% lower input cost thanks to caching (83–88% of input). In academia, RHO (City University of Hong Kong and Microsoft Research Asia, Findings of EMNLP 2026) ran coreset selection, group rollout and self-preference selection on past traces alone, with no ground-truth labels, taking SWE-Bench Pro from 59% to 78%; its successor HarnessPro runs that loop recursively, puts cost on the second axis and picks Lite, Medium and Heavy harnesses from the Pareto frontier (Heavy +2.0 points at −26% cost over RHO, Medium −1 point at −53%). The repositories were cloned to see what an evolved harness actually contains (profile selector, call budgets, output compaction, disabled features, verification scripts); the reported Tsinghua affiliation appears only in press and is not asserted. The counter-evidence of the Scaffold Effect paper (40× token spread, 0–8 point pass-rate spread) sits alongside, with the conclusion that pass rate and tokens must be reported together">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/hns-evidence/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/hns-evidence/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/hns-evidence/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/hns-evidence/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/hns-evidence/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Evidence That the Harness Moves the Score — Reading Microsoft&#x27;s White Paper Alongside RHO and HarnessPro">
+<meta property="og:description" content="Three sources from the second half of 2026 that put numbers on the claim that the harness decides results, read side by side. Microsoft&#x27;s November 9 white paper swapped only the harness, keeping model and tasks fixed, and reports pass-rate gains of 10.8 points on GPT-5.5 Chat and 22.1 on Claude Opus 4.8 while swapping the model barely moved anything: retries after a failed tool call in 84–91% of cases versus under 7%, about twice the calls yet 15–21% lower input cost thanks to caching (83–88% of input). In academia, RHO (City University of Hong Kong and Microsoft Research Asia, Findings of EMNLP 2026) ran coreset selection, group rollout and self-preference selection on past traces alone, with no ground-truth labels, taking SWE-Bench Pro from 59% to 78%; its successor HarnessPro runs that loop recursively, puts cost on the second axis and picks Lite, Medium and Heavy harnesses from the Pareto frontier (Heavy +2.0 points at −26% cost over RHO, Medium −1 point at −53%). The repositories were cloned to see what an evolved harness actually contains (profile selector, call budgets, output compaction, disabled features, verification scripts); the reported Tsinghua affiliation appears only in press and is not asserted. The counter-evidence of the Scaffold Effect paper (40× token spread, 0–8 point pass-rate spread) sits alongside, with the conclusion that pass rate and tokens must be reported together">
+<meta property="og:url" content="https://dewytear.github.io/p/en/hns-evidence/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Evidence That the Harness Moves the Score — Reading Microsoft&#x27;s White Paper Alongside RHO and HarnessPro">
+<meta name="twitter:description" content="Three sources from the second half of 2026 that put numbers on the claim that the harness decides results, read side by side. Microsoft&#x27;s November 9 white paper swapped only the harness, keeping model and tasks fixed, and reports pass-rate gains of 10.8 points on GPT-5.5 Chat and 22.1 on Claude Opus 4.8 while swapping the model barely moved anything: retries after a failed tool call in 84–91% of cases versus under 7%, about twice the calls yet 15–21% lower input cost thanks to caching (83–88% of input). In academia, RHO (City University of Hong Kong and Microsoft Research Asia, Findings of EMNLP 2026) ran coreset selection, group rollout and self-preference selection on past traces alone, with no ground-truth labels, taking SWE-Bench Pro from 59% to 78%; its successor HarnessPro runs that loop recursively, puts cost on the second axis and picks Lite, Medium and Heavy harnesses from the Pareto frontier (Heavy +2.0 points at −26% cost over RHO, Medium −1 point at −53%). The repositories were cloned to see what an evolved harness actually contains (profile selector, call budgets, output compaction, disabled features, verification scripts); the reported Tsinghua affiliation appears only in press and is not asserted. The counter-evidence of the Scaffold Effect paper (40× token spread, 0–8 point pass-rate spread) sits alongside, with the conclusion that pass rate and tokens must be reported together">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Evidence That the Harness Moves the Score — Reading Microsoft's White Paper Alongside RHO and HarnessPro",
+ "description": "Three sources from the second half of 2026 that put numbers on the claim that the harness decides results, read side by side. Microsoft's November 9 white paper swapped only the harness, keeping model and tasks fixed, and reports pass-rate gains of 10.8 points on GPT-5.5 Chat and 22.1 on Claude Opus 4.8 while swapping the model barely moved anything: retries after a failed tool call in 84–91% of cases versus under 7%, about twice the calls yet 15–21% lower input cost thanks to caching (83–88% of input). In academia, RHO (City University of Hong Kong and Microsoft Research Asia, Findings of EMNLP 2026) ran coreset selection, group rollout and self-preference selection on past traces alone, with no ground-truth labels, taking SWE-Bench Pro from 59% to 78%; its successor HarnessPro runs that loop recursively, puts cost on the second axis and picks Lite, Medium and Heavy harnesses from the Pareto frontier (Heavy +2.0 points at −26% cost over RHO, Medium −1 point at −53%). The repositories were cloned to see what an evolved harness actually contains (profile selector, call budgets, output compaction, disabled features, verification scripts); the reported Tsinghua affiliation appears only in press and is not asserted. The counter-evidence of the Scaffold Effect paper (40× token spread, 0–8 point pass-rate spread) sits alongside, with the conclusion that pass rate and tokens must be reported together",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/hns-evidence/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!hns-evidence",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-11-11T07:59:47+09:00",
+ "dateModified": "2026-11-11T07:59:47+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!hns-evidence">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/hns-evidence/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/ja/hns-evidence/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>Evidence That the Harness Moves the Score — Reading Microsoft's White Paper Alongside RHO and HarnessPro</h2>
+
+<h3>Three-line summary</h3>
+<ul>
+    <li>On November 9, 2026 Microsoft published a white paper that swapped only the harness, keeping model and tasks fixed. Pass rates rose 10.8 points on GPT-5.5 Chat and 22.1 points on Claude Opus 4.8, while swapping the model barely moved them.</li>
+    <li>Academia reached the same conclusion by a different road. RHO (City University of Hong Kong and Microsoft Research Asia, EMNLP 2026) rewrote a harness from past execution traces alone, with no ground-truth labels, lifting SWE-Bench Pro from 59% to 78%. Its successor HarnessPro runs that loop recursively, optimizes performance and cost together, and ships three harnesses: Lite, Medium and Heavy.</li>
+    <li>All three sources agree on one thing. <strong>With the model held fixed, the variable that moves results by double-digit points is the harness</strong>, and cost can fall even as calls rise, through caching and output compaction. This page puts the three side by side: numbers, structure and limits.</li>
+</ul>
+
+<p>A harness is the runtime that surrounds a model: the instructions it receives, the tools it may use, the rule for what happens when a tool fails, and how much of each output is cut before being fed back. <a href="/p/en/hns-overview/">What a harness is</a> covers the definition and anatomy, so this page does not repeat them. The interest here is different. In the second half of 2026 the claim that "the harness matters as much as the model, or more" arrived with numbers from both an industry white paper and academic papers. That is too much material to spend on a single news item, so it is written up here as three sources read together.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 200" role="img" aria-label="2026 harness research timeline: June RHO paper, July Scaffold Effect paper, August GitHub Copilot harness general availability, October HarnessPro and HarnessMM papers, October 28 renamed to Microsoft Copilot harness, November 9 Microsoft white paper">
+    <text class="d-label" x="360" y="24" text-anchor="middle">2026: the sources that measured harnesses</text>
+    <line class="d-edge" x1="40" y1="110" x2="690" y2="110"/>
+    <circle class="d-node" cx="100" cy="110" r="6"/>
+    <text class="d-sub" x="100" y="98" text-anchor="middle">June</text>
+    <text class="d-label sm" x="100" y="136" text-anchor="middle">RHO paper (arXiv)</text>
+    <text class="d-sub" x="100" y="152" text-anchor="middle">label-free optimization</text>
+    <circle class="d-node dim" cx="210" cy="110" r="6"/>
+    <text class="d-sub" x="210" y="128" text-anchor="middle">July</text>
+    <text class="d-label sm" x="210" y="72" text-anchor="middle">Scaffold Effect paper</text>
+    <text class="d-sub" x="210" y="88" text-anchor="middle">harness as hidden variable</text>
+    <circle class="d-node b" cx="320" cy="110" r="6"/>
+    <text class="d-sub" x="320" y="98" text-anchor="middle">Aug</text>
+    <text class="d-label sm" x="320" y="136" text-anchor="middle">GitHub Copilot harness GA</text>
+    <text class="d-sub" x="320" y="152" text-anchor="middle">Copilot Studio</text>
+    <circle class="d-node" cx="450" cy="110" r="6"/>
+    <text class="d-sub" x="450" y="128" text-anchor="middle">Oct</text>
+    <text class="d-label sm" x="450" y="72" text-anchor="middle">HarnessPro · HarnessMM</text>
+    <text class="d-sub" x="450" y="88" text-anchor="middle">recursive · Pareto</text>
+    <circle class="d-node b" cx="560" cy="110" r="6"/>
+    <text class="d-sub" x="560" y="98" text-anchor="middle">Oct 28</text>
+    <text class="d-label sm" x="560" y="136" text-anchor="middle">renamed Microsoft Copilot harness</text>
+    <circle class="d-node b" cx="660" cy="110" r="6"/>
+    <text class="d-sub" x="660" y="128" text-anchor="middle">Nov 9</text>
+    <text class="d-label sm" x="660" y="72" text-anchor="middle">Microsoft paper</text>
+    <text class="d-sub" x="660" y="88" text-anchor="middle">+10.8 · +22.1pt</text>
+    <circle class="d-node" cx="110" cy="182" r="5"/>
+    <text class="d-sub" x="122" y="186">academia (label-free self-improvement)</text>
+    <circle class="d-node b" cx="360" cy="182" r="5"/>
+    <text class="d-sub" x="372" y="186">Microsoft product harness</text>
+    <circle class="d-node dim" cx="560" cy="182" r="5"/>
+    <text class="d-sub" x="572" y="186">evaluation method</text>
+</svg>
+<div class="d-cap">Three strands met in the same year. Academia measured how a harness can fix itself, Microsoft measured what changes when you swap one, and evaluation research showed the harness is a hidden variable behind benchmark scores.</div>
+</div>
+
+<h3>1. The Microsoft white paper: same model, different harness</h3>
+<p>Microsoft Copilot Studio has two harnesses. The Standard harness is one where the maker wires topics, variables and tools one by one. The other is an agent loop: the model plans, picks tools and retries on failure. The loop was taken from GitHub Copilot's coding agent and was called the GitHub Copilot harness until October 28, when Microsoft renamed it the Microsoft Copilot harness and said it would become a shared foundation across its Copilot products. The rename notice said nothing changed in capabilities or billing.</p>
+<p>The white paper released with the November 9 blog post reports an internal evaluation (October 2026) that ran both harnesses on the same tasks with the same models. The headline numbers are below.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="Microsoft internal evaluation: pass-rate gain of the Microsoft Copilot harness over the Standard harness is 10.8 points on GPT-5.5 Chat and 22.1 points on Claude Opus 4.8. After a failed tool call the Standard harness retried in under 7% of cases, the Microsoft Copilot harness in 84 to 91%">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Swapping only the harness: Standard → Microsoft Copilot harness</text>
+    <text class="d-label sm" x="180" y="62" text-anchor="middle">Pass-rate gain (points)</text>
+    <line class="d-edge dash" x1="160" y1="74" x2="160" y2="196"/>
+    <text class="d-sub" x="152" y="110" text-anchor="end">GPT-5.5 Chat</text>
+    <rect class="d-node d" x="160" y="96" width="74" height="20" rx="4"/>
+    <text class="d-label sm" x="242" y="110">+10.8</text>
+    <text class="d-sub" x="152" y="154" text-anchor="end">Claude Opus 4.8</text>
+    <rect class="d-node" x="160" y="140" width="150" height="20" rx="4"/>
+    <text class="d-label sm" x="318" y="154">+22.1</text>
+    <text class="d-sub" x="160" y="190">0</text>
+    <text class="d-sub" x="330" y="190" text-anchor="end">25pt</text>
+    <text class="d-label sm" x="540" y="62" text-anchor="middle">Retried after a failed tool call</text>
+    <line class="d-edge dash" x1="500" y1="74" x2="500" y2="196"/>
+    <text class="d-sub" x="492" y="110" text-anchor="end">Standard</text>
+    <rect class="d-node dim" x="500" y="96" width="12" height="20" rx="4"/>
+    <text class="d-label sm" x="520" y="110">under 7%</text>
+    <text class="d-sub" x="492" y="154" text-anchor="end">Copilot harness</text>
+    <rect class="d-node" x="500" y="140" width="150" height="20" rx="4"/>
+    <text class="d-label sm" x="658" y="154">84–91%</text>
+    <text class="d-sub" x="500" y="190">0</text>
+    <text class="d-sub" x="670" y="190" text-anchor="end">100%</text>
+    <rect class="d-box soft" x="40" y="212" width="640" height="68" rx="8"/>
+    <text class="d-sub" x="60" y="236">About 2× model calls  ·  cost-weighted input tokens down 15–21%  ·  83–88% of input served from cache</text>
+    <text class="d-sub" x="60" y="258">Per-call latency down 10–36%  ·  business-process benchmark 65% (competing product 36%)</text>
+    <text class="d-sub" x="60" y="276">Internal evaluation, October 2026 · the paper notes results vary by build, model and configuration</text>
+</svg>
+<div class="d-cap">Figures from Microsoft's blog post and white paper (November 9, 2026). The effect of swapping models is described only as "little impact", so it is not drawn as a bar.</div>
+</div>
+
+<p>The thing to read in these numbers is not the gain itself but its asymmetry. The same harness swap worked nearly twice as hard on Claude Opus 4.8. The paper does not explain this at length, but the published structure is enough. The new harness retried in 84 to 91% of cases after a tool call failed; the Standard harness did so in under 7%. In a long task, one failed tool call used to mean a failed task, and that loss is gone. The better a model handles tools, the more a second chance is worth, so a gain that varies by model is what you would expect.</p>
+<p>The cost line also runs against intuition. Model calls roughly doubled, yet the cost of processing input fell 15 to 21%. The paper credits caching. When 83 to 88% of the input in a long conversation is served from cache, more calls add few freshly read tokens. Per-call latency fell 10 to 36% as well. The common belief that "an agent loop is expensive" was a calculation that assumed no cache.</p>
+
+<table>
+    <thead><tr><th>Item</th><th>Standard harness</th><th>Microsoft Copilot harness</th></tr></thead>
+    <tbody>
+        <tr><td>Control</td><td>Maker wires topics, variables and tools</td><td>Agent loop: the model plans and picks tools</td></tr>
+        <tr><td>Execution environment</td><td>None</td><td>Bash container (tools and libraries outside the product)</td></tr>
+        <tr><td>Subagents</td><td>Researchers only, never responders</td><td>Called from within the plan</td></tr>
+        <tr><td>Retry after tool failure</td><td>Under 7%</td><td>84–91%</td></tr>
+        <tr><td>Best fit</td><td>Rule-based agents, simple flows</td><td>Long business processes across many sources and outputs</td></tr>
+        <tr><td>Caveat</td><td>One failure in a long task ends it</td><td>On simple tasks adds reasoning, latency and credits for no gain</td></tr>
+    </tbody>
+</table>
+<p>Microsoft's own selection guide does not present the new harness as universal. Using connectors or MCP servers does not by itself call for the agent loop, and on simple scenarios it can add reasoning, latency and credit consumption without changing the result. As a field example, a resolution agent built on this harness by Microsoft's customer support organization passed a 35% fully autonomous resolution rate in August 2026.</p>
+
+<h3>2. RHO: fixing a harness without answers</h3>
+<p>Microsoft's experiment compared two harnesses designed by people. The academic question goes one step further: can the <strong>agent itself</strong> fix the harness, and without ground-truth labels? Earlier methods (prompt optimization, skill and tool synthesis, agent search) all had to score repeatedly against a labeled validation set, which a real deployment does not have. What it does have is the stream of <em>unlabeled execution traces</em> the agent produces every day.</p>
+<p>RHO (Retrospective Harness Optimization) is a paper by researchers at City University of Hong Kong and Microsoft Research Asia, posted to arXiv in June 2026 and published in Findings of EMNLP 2026. The method has three stages.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 270" role="img" aria-label="RHO pipeline: unlabeled past trajectories as input. Stage 1 coreset selection picks a few hard and diverse past tasks with a determinantal point process. Stage 2 group rollout re-solves each task G times in parallel and extracts self-validation and self-consistency signals. Stage 3 harness proposal generates N candidate edits and picks one by pairwise self-preference. The new harness runs the next round. One round lifts SWE-Bench Pro from 59% to 78%">
+    <text class="d-label" x="360" y="24" text-anchor="middle">RHO: past trajectories → new harness, no ground truth</text>
+    <text class="d-sub" x="360" y="50" text-anchor="middle">Input: traces the agent has already left (no validation set, no external grading)</text>
+    <rect class="d-box" x="20" y="80" width="200" height="110" rx="8"/>
+    <text class="d-label" x="120" y="108" text-anchor="middle">① Coreset selection</text>
+    <text class="d-sub" x="120" y="134" text-anchor="middle">a few hard, diverse</text>
+    <text class="d-sub" x="120" y="152" text-anchor="middle">past tasks (DPP)</text>
+    <text class="d-sub" x="120" y="174" text-anchor="middle">paper default: 10</text>
+    <path class="d-edge accent" d="M222 135 L254 135"/>
+    <path class="d-arrow accent" d="M254 129 L264 135 L254 141 Z"/>
+    <rect class="d-box" x="266" y="80" width="200" height="110" rx="8"/>
+    <text class="d-label" x="366" y="108" text-anchor="middle">② Group rollout</text>
+    <text class="d-sub" x="366" y="134" text-anchor="middle">re-solve each task G times</text>
+    <text class="d-sub" x="366" y="152" text-anchor="middle">self-validation (within a run)</text>
+    <text class="d-sub" x="366" y="170" text-anchor="middle">self-consistency (across runs)</text>
+    <path class="d-edge accent" d="M468 135 L500 135"/>
+    <path class="d-arrow accent" d="M500 129 L510 135 L500 141 Z"/>
+    <rect class="d-box accent" x="512" y="80" width="190" height="110" rx="8"/>
+    <text class="d-label" x="607" y="108" text-anchor="middle">③ Harness proposal</text>
+    <text class="d-sub" x="607" y="134" text-anchor="middle">N candidate edits</text>
+    <text class="d-sub" x="607" y="152" text-anchor="middle">pick one by self-preference</text>
+    <text class="d-sub" x="607" y="174" text-anchor="middle">paper default: 3</text>
+    <path class="d-edge dash" d="M607 192 L607 222 L120 222 L120 196"/>
+    <path class="d-arrow" d="M114 196 L120 186 L126 196 Z"/>
+    <text class="d-sub" x="364" y="238" text-anchor="middle">Next round: run with the new harness, then look back again</text>
+    <text class="d-label sm" x="360" y="262" text-anchor="middle">One round: SWE-Bench Pro 59% → 78% (Codex + GPT-5.5)</text>
+</svg>
+<div class="d-cap">A DPP (determinantal point process) is a probabilistic way to pick a subset that is both hard and diverse at once. Self-preference means the agent looks at two runs side by side and decides for itself which is better.</div>
+</div>
+
+<p>The first stage picks only a few hard and varied past tasks because of cost: you cannot re-solve everything, so you sample the places where failures cluster. The second stage re-solves those tasks several times in parallel to extract two signals. Within one run, a self-validation signal such as "did the tests pass"; across runs, a self-consistency signal such as "do the answers agree". In the third stage the agent reads that diagnosis, writes several harness edits, re-solves with each, compares each result against the original as a pair, and keeps only the one it judges better. No human grading and no answer key enter anywhere.</p>
+<p>The results are for a single round. The comparison set is other label-free methods under the same call budget.</p>
+<table>
+    <thead><tr><th>Method</th><th>What it edits</th><th>SWE-Bench Pro</th><th>Terminal-Bench 2</th><th>GAIA-2</th></tr></thead>
+    <tbody>
+        <tr><td>Vanilla Codex</td><td>nothing</td><td>0.59</td><td>0.71</td><td>0.29</td></tr>
+        <tr><td>Dynamic Cheatsheet</td><td>skills</td><td>0.62</td><td>0.73</td><td>0.30</td></tr>
+        <tr><td>ReasoningBank</td><td>memory</td><td>0.61</td><td>0.73</td><td>0.28</td></tr>
+        <tr><td>Sleep-time Compute</td><td>memory</td><td>0.64</td><td>0.73</td><td>0.32</td></tr>
+        <tr><td><strong>RHO</strong></td><td>skills + tools</td><td><strong>0.78</strong></td><td><strong>0.76</strong></td><td><strong>0.37</strong></td></tr>
+    </tbody>
+</table>
+<p>It was also compared with a method that uses labels. Meta-Harness, which scores against a validation set, reached 0.62 on SWE-Bench Pro at the same single-round budget; RHO reached 0.78 without labels. What RHO writes into the harness is of three kinds: task-agnostic instructions, skills that record environment quirks behind past failures, and executable tools. Each targets one failure mode seen in the original traces.</p>
+<p>The paper states its limits. Self-preference is a conservative selector, not a perfect ranker. On SWE-Bench Pro a less-preferred candidate actually scored 0.85, above the 0.78 that was chosen. On no benchmark, though, did the adopted harness fall below the baseline. Part of why the method works on coding agents is that "did the tests pass" is a credible self-signal, so in domains where nothing can be executed, self-preference may wobble. That is the same root as the self-approval bias this wiki discusses in <a href="/p/en/tip-advanced/">advanced tips</a>, the tendency of a model to grade its own output generously.</p>
+<p>The code is public and is also packaged as a dynamic workflow for Claude Code (<code>retrospection.js</code>). That workflow treats a project's <code>CLAUDE.md</code>, auto-memory and helper scripts as the harness and runs one round from past session transcripts alone. The harness the paper talks about is, for a Claude Code user, a set of files already in hand.</p>
+
+<h3>3. HarnessPro: run it recursively and put cost on the axis</h3>
+<p>HarnessPro is a follow-up posted to arXiv in October 2026. Its public repository names the package <code>src/rho/</code> and prefixes environment variables with <code>RHO_</code>, so it is built on RHO's code. Press coverage introduced it as Tsinghua University research, but the arXiv author metadata did not let that affiliation be confirmed, and the paper itself is marked as under review. This page does not assert the affiliation and calls it the RHO follow-up.</p>
+<p>Two things differ from RHO. First, it does not stop after one retrospective: diagnose, evolve and select repeat <strong>recursively</strong>. Second, <strong>cost</strong> enters the objective. Optimizing performance alone only ever pushes a harness toward "think more, call more". With cost as the second axis and Pareto selection (keeping only candidates where no axis can improve without the other getting worse), several operating points survive on the frontier. HarnessPro picks three: Lite (cost first), Medium (balanced) and Heavy (performance first).</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 312" role="img" aria-label="HarnessPro structure: on the left, three stages trajectory diagnosis, harness evolution and two-axis selection form a recursive loop. On the right, a Pareto frontier with cost on the horizontal axis and performance on the vertical axis holds the Lite, Medium and Heavy harnesses, and the RHO baseline sits at higher cost and lower performance than Heavy">
+    <text class="d-label" x="360" y="24" text-anchor="middle">HarnessPro: recursive loop and the performance–cost frontier</text>
+    <rect class="d-box" x="40" y="52" width="230" height="52" rx="8"/>
+    <text class="d-label sm" x="155" y="72" text-anchor="middle">① Diagnose trajectories</text>
+    <text class="d-sub" x="155" y="92" text-anchor="middle">failure modes · redundant calls · waste</text>
+    <path class="d-edge accent" d="M155 106 L155 128"/>
+    <path class="d-arrow accent" d="M149 128 L155 138 L161 128 Z"/>
+    <rect class="d-box" x="40" y="140" width="230" height="52" rx="8"/>
+    <text class="d-label sm" x="155" y="160" text-anchor="middle">② Evolve the harness</text>
+    <text class="d-sub" x="155" y="180" text-anchor="middle">instructions · profiles · tool policies</text>
+    <path class="d-edge accent" d="M155 194 L155 216"/>
+    <path class="d-arrow accent" d="M149 216 L155 226 L161 216 Z"/>
+    <rect class="d-box accent" x="40" y="228" width="230" height="52" rx="8"/>
+    <text class="d-label sm" x="155" y="248" text-anchor="middle">③ Select on both axes</text>
+    <text class="d-sub" x="155" y="268" text-anchor="middle">synthesized tests · keep the Pareto set</text>
+    <path class="d-edge dash" d="M272 254 L300 254 L300 78 L272 78"/>
+    <path class="d-arrow" d="M272 72 L262 78 L272 84 Z"/>
+    <text class="d-sub" x="308" y="170">recurse</text>
+    <line class="d-edge" x1="400" y1="262" x2="690" y2="262"/>
+    <path class="d-arrow" d="M690 256 L700 262 L690 268 Z"/>
+    <line class="d-edge" x1="400" y1="262" x2="400" y2="60"/>
+    <path class="d-arrow" d="M394 60 L400 50 L406 60 Z"/>
+    <text class="d-sub" x="690" y="286" text-anchor="end">cost (tokens · calls)</text>
+    <text class="d-sub" x="412" y="58">performance (pass rate)</text>
+    <path class="d-edge accent dash" d="M440 200 C 490 130, 560 104, 620 96"/>
+    <circle class="d-node d" cx="440" cy="200" r="7"/>
+    <text class="d-label sm" x="454" y="212">Lite</text>
+    <circle class="d-node" cx="520" cy="124" r="7"/>
+    <text class="d-label sm" x="534" y="140">Medium</text>
+    <circle class="d-node b" cx="620" cy="96" r="7"/>
+    <text class="d-label sm" x="634" y="92">Heavy</text>
+    <circle class="d-node dim" cx="672" cy="112" r="7"/>
+    <text class="d-sub" x="672" y="134" text-anchor="middle">RHO (baseline)</text>
+    <text class="d-sub" x="545" y="240" text-anchor="middle">same performance: left is better · same cost: up is better</text>
+</svg>
+<div class="d-cap">The points on the right sketch the relative figures the paper reports. Heavy passes slightly more than RHO at about a quarter less cost; Medium gives up one point of pass rate and cuts cost by more than half.</div>
+</div>
+
+<p>The figures are for Codex + GPT-5.5 with the RHO harness as baseline. Heavy: pass rate +2.0 points, cost down 26.1%. Medium: pass rate −1 point, cost down 53%. By benchmark, Heavy averaged 80.8% over three runs on Terminal-Bench 2, 4.5 points above RHO, at 31.7% lower cost (one version of the paper says 33.9%). On SWE-Bench Pro, Heavy scored 80.7% against RHO's 80.0% at 26.5% lower cost. The experiments used two pairings, GPT-5.5 + Codex and GLM-5.2 + Claude Code, on three benchmarks: Terminal-Bench 2, SWE-Bench Pro and ProgramBench.</p>
+<p>What an evolved harness actually contains can be read in the repository. Opening the Terminal-Bench 2 harness shows the following.</p>
+<ul>
+    <li><strong>A profile selector</strong>: a rubric that reads only the task description and picks one of five profiles, compact, lean, standard, deep or research. Each profile carries a reasoning effort (low, medium, high) and a call budget of the form "economize from the Nth tool call, finalize by the Mth". Lite assigns compact tasks to a small model (GPT-5.4-mini); Heavy promotes standard tasks to high reasoning and leaves room for a final check.</li>
+    <li><strong>Output compaction</strong>: a policy that keeps 4,000 characters of each tool output, the first 2,400 and last 900, under a history token cap. A large share of the cost savings comes from here.</li>
+    <li><strong>A disabled-feature list</strong>: browser use, multi-agent, plugins, image generation and other features the task does not need are switched off.</li>
+    <li><strong>Session instructions</strong>: general rules such as "do not replace a requested implementation with a mock or proxy" and "before finishing, reread the task and check the artifact against independent evidence". The files state that no task IDs or past scores are included.</li>
+    <li><strong>Verification helpers</strong>: the SWE-Bench Pro harness ships a <code>repair-verify</code> script that keeps a requirement ledger and runs smoke tests, plus a contract-verification checklist.</li>
+</ul>
+<p>So a harness the agent wrote for itself is not one long prompt. It is a bundle: a reasoning-effort table, call budgets, output-trimming rules, a list of features to turn off and verification scripts. These sit in the same slots this wiki lays out as the three elements of a harness in <a href="/p/en/hns-kitchen/">How it works</a>, now with numbers attached.</p>
+
+<h3>4. Reading the three together</h3>
+<table>
+    <thead><tr><th></th><th>Microsoft white paper</th><th>RHO</th><th>HarnessPro</th></tr></thead>
+    <tbody>
+        <tr><td>Who edits the harness</td><td>People (product team)</td><td>The agent, one round</td><td>The agent, recursively</td></tr>
+        <tr><td>Ground-truth labels</td><td>Internal eval set</td><td>None</td><td>None (synthesized tests)</td></tr>
+        <tr><td>Optimized axes</td><td>Pass rate, cost, latency measured</td><td>Pass rate</td><td>Pass rate + cost (Pareto)</td></tr>
+        <tr><td>Headline figure</td><td>+10.8 / +22.1pt</td><td>59% → 78%</td><td>+2pt over RHO at −26% cost</td></tr>
+        <tr><td>Why cost fell</td><td>Caching (83–88% of input)</td><td>Not measured</td><td>Output compaction, per-profile reasoning</td></tr>
+        <tr><td>Limits</td><td>Self-measured, competitor unnamed</td><td>Self-preference is conservative</td><td>Under review, affiliation unconfirmed</td></tr>
+    </tbody>
+</table>
+<p>The reason for writing this page is that three sources point the same way by different methods. With the model fixed, changing only the harness moves pass rates by double-digit points, and much of the gain comes from operating rules that have nothing to do with model ability: retry after failure, reason only as much as needed, trim outputs before feeding them back. Cost is decided by cache and compaction, not by call count.</p>
+<p>Evidence in the other direction belongs next to it. The July Scaffold Effect paper ran two models through three open harnesses (Goose, OpenCode, OpenHands) on 50 Terminal-Bench Pro tasks. Tokens spent per solved task differed by up to 40× across harnesses, while pass-rate differences stayed within 0 to 8 points. Upgrading the model moved token cost only 1.0 to 1.3×. Its conclusion is to report the unit of evaluation as a harness-model pair, with cost alongside. A paper from the same month titled "What Does a Harness Buy? Tokens, Mostly." found that per-task cost differed by up to 3× across harnesses on the same model and tasks. The claim that a harness raises scores and the claim that a harness mostly changes cost do not contradict each other. Depending on which harnesses you compare, the difference shows up as score or as cost, which is why reporting both axes, as HarnessPro does, is a reasonable standard.</p>
+
+<h3>5. What remains for a Claude Code user</h3>
+<p>Carried over to Claude Code, these sources leave three things. First, <code>CLAUDE.md</code>, skills, hooks and auto-memory are themselves the harness, and the RHO repository actually ships a workflow that edits those files from past session transcripts. Second, everything HarnessPro evolved (reasoning-effort assignment, tool-output trimming, switching off unneeded features, final verification rules) can be expressed through Claude Code settings and hooks. Third, to claim an effect you have to measure pass rate and tokens together, as the Scaffold Effect paper says. The performance-measurement section of this wiki's <a href="/p/en/hns-usecases/">Uses and extensions</a> is where that belongs.</p>
+
+<h3>Fact-check notes</h3>
+<p class="scn-sub">Among the Microsoft figures, the pass-rate gains (10.8 and 22.1 points), retry rates after tool failure (84–91% versus under 7%, more than 7×), roughly 2× calls with 15–21% lower input-processing cost, the support agent's 35% autonomous resolution rate and the rename notice's "no change to capabilities or billing" were taken directly from the <a href="https://www.microsoft.com/en-us/copilot/blog/copilot-studio/the-github-copilot-harness-in-copilot-studio-is-now-the-microsoft-copilot-harness/" target="_blank" rel="noopener">October 28 rename post</a> and the <a href="https://www.microsoft.com/en-us/copilot/blog/copilot-studio/how-the-microsoft-copilot-harness-in-copilot-studio-helps-agents-finish-the-job/" target="_blank" rel="noopener">November 9 post</a>. The 83–88% cache share, 10–36% lower per-call latency and the 65% versus 36% business-process benchmark come from search excerpts of the <a href="https://techcommunity.microsoft.com/blog/copilot-studio-blog/paper-how-utilizing-the-microsoft-copilot-harness-in-copilot-studio-enabled-comp/4571157" target="_blank" rel="noopener">white-paper announcement</a>; the environment this page was written in could not open the white-paper PDF (aka.ms/MCSQuality/Whitepaper) or the Microsoft Learn harness comparison page because of its network policy. The paper names neither the competitor nor the task-set size, and every figure is Microsoft's own measurement. The structural comparison of the two harnesses (wiring, Bash container, subagent role, the warning about simple tasks) uses only what summaries citing Microsoft's official guidance agree on. The August general-availability date rests on one report. RHO's authors, affiliations, venue (Findings of EMNLP 2026, Budapest), three-stage design, results table and Meta-Harness comparison were checked in the cloned <a href="https://github.com/wbopan/retro-harness" target="_blank" rel="noopener">public repository</a> (README, citation file, project page); the "less-preferred candidate reached 0.85" analysis comes from paper excerpts. HarnessPro's three modes, benchmarks, model pairings and Terminal-Bench 2 figures (80.8%, +4.5 points, 31.7% or 33.9%) come from the <a href="https://arxiv.org/abs/2610.26770" target="_blank" rel="noopener">arXiv abstract</a> and search excerpts; the harness contents were read directly from the README and policy files of the <a href="https://github.com/pzs19/HarnessPro" target="_blank" rel="noopener">public repository</a>. The +2.0/−26.1%, −1/−53% and SWE-Bench Pro 80.7 versus 80.0 figures are where press coverage and abstract excerpts agree. <strong>The Tsinghua affiliation appears only in press coverage and could not be confirmed from the paper's metadata, so the body does not assert it.</strong> The arXiv full text could not be opened. The Scaffold Effect paper (arXiv 2607.22585; 40×, 0–8 points, 1.0–1.3×) and "What Does a Harness Buy? Tokens, Mostly." (arXiv 2610.04433; up to 3×) are cited from abstract excerpts; the former's reported affiliation, Sentient Labs, rests on a secondary write-up and is not stated in the body.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Code · Harness &middot; <span class="pr-k">Created</span> 2026-11-11 &middot; <span class="pr-k">Updated</span> 2026-11-11</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/news-20260728-software-factories-fail/">The Harness Is Not Enough — Why Software Factories Fail</a></li><li><a href="/p/en/news-20260803-cherny-karpathy/">The One Who Deleted and the One Who Rendered — Cherny&#x27;s “80% of the Harness” and Karpathy&#x27;s “LOTR Movie”</a></li><li><a href="/p/en/news-20260724-claude-opus-5/">Claude Opus 5 — A Near-Fable at Half the Price Has Arrived</a></li><li><a href="/p/en/news-20260922-harness-catalog/">A List You Can Call — Taking Apart a Ranked Catalog of 167 Agent Harnesses</a></li></ul>
+</nav>
+</body>
+</html>
