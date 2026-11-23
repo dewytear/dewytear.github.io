@@ -5,15 +5,33 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.ja.xml"/>
   <id>https://dewytear.github.io/feed.ja.xml</id>
-  <updated>2026-11-11T07:59:47+09:00</updated>
+  <updated>2026-11-24T08:11:38+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>Claude Ship — PR をマージまで連れて行く三つのエージェント、使い方と利点</title>
+    <link href="https://dewytear.github.io/p/ja/claude-ship/"/>
+    <id>https://dewytear.github.io/docs/ja/ai/claude/code/introduction/claude-ship</id>
+    <published>2026-11-24T08:11:38+09:00</published>
+    <updated>2026-11-24T08:11:38+09:00</updated>
+    <summary>Anthropic が2026年11月23日に公開した Claude Ship を公式文書に基づいて解説する。プルリクエスト（PR）が開かれたあと、マージまで三つのエージェントが引き継ぐ。Code Review は発見・検証・順位付け・投稿の四段階でレビューを付け（重要・些細・既存欠陥の三等級、Quick・Standard・Deep）、PR Steward は失敗した検査・競合・レビューコメントを直して再プッシュするが承認・マージはできず、Claude Approvals は .claude/approvals.yml の規則で「誰が何人承認すべきか」を判定する（observe で始めて enforce へ）。開発者側では Claude Code の /ship 一行がコミット・プッシュ・PR 作成・Steward の監視まで束ね、組織側では Code Review → Steward（手動）→ Approvals observe → enforce の順に有効化する導入順序と、CODEOWNERS に代わるポリシーファイル二種の出発例を載せた。利点（レビュー待ちの短縮、修正ループの自動化、ポリシーのコード化、人の承認の定量配置）と注意点（Team・Enterprise 限定ベータ、ZDR・HIPAA 除外、ボットの承認権限の範囲、月次上限とリポジトリ別支出上限、自社測定の数値）を分け、このウィキの PR の流れと比べた。</summary>
+    <category term="AI · Claude · Code · Introduction"/>
+  </entry>
+  <entry>
+    <title>graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル</title>
+    <link href="https://dewytear.github.io/p/ja/sks-graphify/"/>
+    <id>https://dewytear.github.io/docs/ja/ai/claude/skills/sks-graphify</id>
+    <published>2026-11-24T08:11:38+09:00</published>
+    <updated>2026-11-24T08:11:38+09:00</updated>
+    <summary>フォルダ内のコード・文書・PDF・画像・映像を /graphify . 一行で一つの知識グラフにし、以後エージェントがファイルを丸ごと読む代わりに graphify query・path・explain で必要な部分グラフだけ受け取るようにするスキルを、公式リポジトリ（README・ARCHITECTURE・BENCHMARKS・skill.md）と外部の検証記事で分析した。コードは tree-sitter でローカルに LLM なしで解析し（約40言語）、すべてのエッジに EXTRACTED・INFERRED（0.95〜0.55 の五段階）・AMBIGUOUS の信頼タグを付け、Leiden コミュニティ検出でサブシステムを見つける。導入（uv tool install graphifyy、graphify install）とコマンド表、Claude Code の PreToolUse フックが Read・Grep・cat の直前に割り込んでグラフを先に見させる仕掛け（strict モード）、git フックと MCP サーバー、書き出し形式を整理した。ベンチマークは自社測定（LOCOMO recall@10 0.497、mem0 0.048）と広まった「トークン71.5倍削減」（52ファイルのコーパスで質問あたりの値）を独立測定（セッション単位で7〜8%削減、品質 44 対 45）と並べ、どこで利得が出てどこで出ないか（大きなリポジトリの道案内・影響分析に強く、小さなプロジェクト・集中編集に弱い）を見分けた。2026-11-21 の Windows SMB 強制認証の脆弱性修正とプライバシー項目を記し、このウィキの文書グラフと原則・用途を比較した。</summary>
+    <category term="AI · Claude · 스킬 카탈로그"/>
+  </entry>
   <entry>
     <title>ハーネスがスコアを動かす証拠 — Microsoft の白書と RHO・HarnessPro 研究を重ねて読む</title>
     <link href="https://dewytear.github.io/p/ja/hns-evidence/"/>
     <id>https://dewytear.github.io/docs/ja/ai/claude/code/harness/hns-evidence</id>
     <published>2026-11-11T07:59:47+09:00</published>
-    <updated>2026-11-11T07:59:47+09:00</updated>
+    <updated>2026-11-12T08:28:36+09:00</updated>
     <summary>2026年後半に「ハーネスが結果を左右する」という主張が数値付きで出た三つの資料を一か所に並べる。Microsoft の11月9日の白書は同じモデル・同じタスクのままハーネスだけを替え、通過率が GPT-5.5 Chat で10.8ポイント、Claude Opus 4.8 で22.1ポイント上がり、モデル交換はほとんど効かなかったと報告する — ツール失敗後の再試行84~91%対7%未満、呼び出し約2倍なのにキャッシュ（入力の83~88%）で入力費用15~21%減。学界の RHO（香港城市大学・Microsoft Research Asia、EMNLP 2026 Findings）は正解ラベルなしに過去の軌跡だけでコアセット選択・グループロールアウト・自己選好選択の三段階を回し SWE-Bench Pro 59%→78% を出し、後続の HarnessPro はそのループを再帰で回して費用を第二の軸に入れ、パレートフロンティアからライト・ミディアム・ヘビーの三ハーネスを選ぶ（RHO 比ヘビー +2.0pt・費用 -26%、ミディアム -1pt・費用 -53%）。リポジトリを取得して進化したハーネスの実体（プロファイル選択器・呼び出し予算・出力圧縮・機能無効化・検証スクリプト）を確認し、清華大学の所属は報道にしかないため断定しなかった。反対の証拠である Scaffold Effect（トークン40倍差、通過率0~8pt）と並べ、通過率とトークンを併せて報告すべきだという結論を記す</summary>
     <category term="AI · Claude · Code · Harness"/>
   </entry>
@@ -258,24 +276,6 @@
     <published>2026-08-03T08:29:44+09:00</published>
     <updated>2026-08-10T16:29:39+09:00</updated>
     <summary>OpenAI が 2026-08-01、次期モデル Astra の内部版で 10 年以上未解決の問題 10 件（27 年未解決の非 sofic 群の初構成・Connes 剛性の反証・1978 年以来の球充填上界の初改善など）を解決したという発表を複数報道でクロス検証 — 全件の Lean 機械検証証明書と実名の専門家読解（Popa ほか）という検証体制、それでも査読前という限界、Tao の「証明の豊富」フレームと Bloom の反応、2025-10 の GPT-5 エルデシュ騒動との対比まで</summary>
-    <category term="AI · News &amp; Articles · 2026"/>
-  </entry>
-  <entry>
-    <title>ハーネスだけでは足りない — ソフトウェア工場が失敗する理由</title>
-    <link href="https://dewytear.github.io/p/ja/news-20260728-software-factories-fail/"/>
-    <id>https://dewytear.github.io/docs/ja/ai/news/2026/news-20260728-software-factories-fail</id>
-    <published>2026-07-28T09:22:35+09:00</published>
-    <updated>2026-08-15T15:03:36+09:00</updated>
-    <summary>Dex Horthy（HumanLayer）の AI Engineer World's Fair 2026 の発表 — モデルはテスト通過だけで報酬を得て設計の品質を学ばないため、ハーネスでは埋められないという主張。Faros の計測（バグ +54%・インシデント 3 倍）、4 か月の lights-out 実験の失敗、FrontierCode の保守性の採点、実装前 30 分の四段階の擦り合わせ</summary>
-    <category term="AI · News &amp; Articles · 2026"/>
-  </entry>
-  <entry>
-    <title>Claude Opus 5 — 半額の準 Fable がやってきた</title>
-    <link href="https://dewytear.github.io/p/ja/news-20260724-claude-opus-5/"/>
-    <id>https://dewytear.github.io/docs/ja/ai/news/2026/news-20260724-claude-opus-5</id>
-    <published>2026-07-25T13:36:03+09:00</published>
-    <updated>2026-08-15T15:03:36+09:00</updated>
-    <summary>Anthropic の 2026-07-24 の Claude Opus 5 の公開を、公式の発表と複数の報道から突き合わせて検証した記事 — $5/$25 で CursorBench 3.2 の max のピークの Fable 5 に 0.5% 以内、タスクあたりの費用は半分。Frontier-Bench 43.3%、OSWorld 2.0 を ⅓ の予算で、ARC-AGI 3 で 3 倍。図面を見られないと知るや自分で CV パイプラインを書いて FreeCAD 3D を再構成した長期のエージェンティックなデモ、加えて Fable 5 のセーフガードの誤検知の論争の文脈と、未確認の主張の切り分け</summary>
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
 </feed>

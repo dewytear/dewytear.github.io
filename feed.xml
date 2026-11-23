@@ -5,15 +5,33 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.xml"/>
   <id>https://dewytear.github.io/</id>
-  <updated>2026-11-11T07:59:47+09:00</updated>
+  <updated>2026-11-24T08:11:38+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>Claude Ship — PR을 머지까지 데려가는 세 에이전트, 쓰는 법과 장점</title>
+    <link href="https://dewytear.github.io/p/claude-ship/"/>
+    <id>https://dewytear.github.io/docs/ko/ai/claude/code/introduction/claude-ship</id>
+    <published>2026-11-24T08:11:38+09:00</published>
+    <updated>2026-11-24T08:11:38+09:00</updated>
+    <summary>Anthropic이 2026년 11월 23일 공개한 Claude Ship을 공식 문서 기준으로 해설한다. 풀 리퀘스트(PR)가 열린 뒤 머지까지 세 에이전트가 이어받는다 — Code Review는 찾기·검증·순위·게시의 네 단계로 리뷰를 달고(중요·사소·기존 결함 세 등급, Quick·Standard·Deep), PR Steward는 실패한 검사·충돌·리뷰 코멘트를 고쳐 다시 올리되 승인·머지는 못 하며, Claude Approvals는 .claude/approvals.yml의 규칙으로 '누가 몇 명 승인해야 하는가'를 판정한다(observe로 시작해 enforce로). 개발자 쪽에서는 Claude Code의 /ship 한 줄이 커밋·푸시·PR 생성·Steward 감시까지 묶고, 조직 쪽에서는 Code Review → Steward(수동) → Approvals observe → enforce 순으로 켜는 도입 순서와 CODEOWNERS를 대신하는 정책 파일 두 종의 시작 예시를 적었다. 장점(리뷰 대기 감소, 반복 수정의 자동화, 정책의 코드화, 사람 승인의 정량 배치)과 조심할 것(Team·Enterprise 한정 베타, ZDR·HIPAA 제외, 봇 승인 권한의 범위, 월 한도·저장소별 지출 상한, 자체 수치의 자사 측정)을 나누고, 이 위키의 PR 흐름과 견주었다</summary>
+    <category term="AI · Claude · Code · Introduction"/>
+  </entry>
+  <entry>
+    <title>graphify — 코드베이스를 지식 그래프로 바꿔 grep 대신 질의하게 하는 스킬</title>
+    <link href="https://dewytear.github.io/p/sks-graphify/"/>
+    <id>https://dewytear.github.io/docs/ko/ai/claude/skills/sks-graphify</id>
+    <published>2026-11-24T08:11:38+09:00</published>
+    <updated>2026-11-24T08:11:38+09:00</updated>
+    <summary>폴더 안의 코드·문서·PDF·이미지·영상을 /graphify . 한 줄로 하나의 지식 그래프로 만들고, 이후 에이전트가 파일을 통째로 읽는 대신 graphify query·path·explain으로 필요한 부분 그래프만 받게 하는 스킬을 공식 저장소(README·ARCHITECTURE·BENCHMARKS·skill.md)와 외부 검증 글로 분석했다. 코드는 tree-sitter로 로컬에서 LLM 없이 파싱하고(약 40개 언어), 모든 간선에 EXTRACTED·INFERRED(0.95~0.55 다섯 단계)·AMBIGUOUS 신뢰 태그를 붙이며, Leiden 커뮤니티 검출로 하위 시스템을 찾는다. 설치(uv tool install graphifyy, graphify install)와 명령 표, Claude Code의 PreToolUse 훅이 Read·Grep·cat 직전에 끼어들어 그래프를 먼저 보게 하는 장치(strict 모드), git 훅과 MCP 서버, 내보내기 형식을 정리했다. 벤치마크는 자사 측정(LOCOMO recall@10 0.497, mem0 0.048)과 널리 퍼진 '토큰 71.5배 절감'(52개 파일 코퍼스의 질의당 값)을 독립 측정(세션 단위 7~8% 절감, 품질 44 대 45)과 나란히 놓아 어디서 이득이 나고 어디서 안 나는지(큰 저장소의 길잡이·영향 분석에 강하고 작은 프로젝트·집중 편집엔 약함) 가렸다. 2026-11-21의 Windows SMB 강제 인증 취약점 수정과 프라이버시 항목을 적고, 이 위키의 문서 그래프와 원칙·용도를 비교했다</summary>
+    <category term="AI · Claude · 스킬 카탈로그"/>
+  </entry>
   <entry>
     <title>하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기</title>
     <link href="https://dewytear.github.io/p/hns-evidence/"/>
     <id>https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-evidence</id>
     <published>2026-11-11T07:59:47+09:00</published>
-    <updated>2026-11-11T07:59:47+09:00</updated>
+    <updated>2026-11-12T08:28:36+09:00</updated>
     <summary>2026년 하반기에 '하네스가 결과를 좌우한다'는 주장이 수치로 나온 세 자료를 한 자리에 놓는다. Microsoft의 11월 9일 백서는 같은 모델·같은 과제에 하네스만 바꿔 통과율이 GPT-5.5 Chat에서 10.8포인트, Claude Opus 4.8에서 22.1포인트 올랐고 모델 교체는 거의 효과가 없었다고 보고한다 — 도구 실패 뒤 재시도 84~91% 대 7% 미만, 호출 약 2배인데 캐싱(입력 83~88%)으로 입력 비용 15~21% 감소. 학계의 RHO(홍콩성시대·Microsoft Research Asia, EMNLP 2026 Findings)는 정답 라벨 없이 과거 궤적만으로 코어셋 선택·그룹 롤아웃·자기선호 선택의 세 단계를 돌려 SWE-Bench Pro 59%→78%를 냈고, 후속 HarnessPro는 그 루프를 재귀로 돌리며 비용을 두 번째 축에 넣어 파레토 프런티어에서 라이트·미디엄·헤비 세 하네스를 고른다(RHO 대비 헤비 +2.0pt·비용 -26%, 미디엄 -1pt·비용 -53%). 저장소를 받아 진화한 하네스의 실체(프로필 선택기·호출 예산·출력 압축·기능 차단·검증 스크립트)를 확인했고, 칭화대 소속은 보도에만 있어 단정하지 않았다. 반대 증거인 Scaffold Effect(토큰 40배 차이, 통과율 0~8pt)와 나란히 놓아 통과율과 토큰을 함께 보고해야 한다는 결론을 적는다</summary>
     <category term="AI · Claude · Code · Harness"/>
   </entry>
@@ -258,24 +276,6 @@
     <published>2026-08-03T08:29:44+09:00</published>
     <updated>2026-08-10T16:29:39+09:00</updated>
     <summary>2026-08-01 OpenAI가 차기 모델 Astra 내부 버전으로 10년 이상 묵은 미해결 문제 10건(27년 미해결 비-sofic 군 최초 구성·Connes 강성 반증·1978년 이후 첫 구 채우기 상한 개선 등)을 해결했다는 발표를 복수 보도로 교차검증 — 전 결과 Lean 기계검증 인증서와 실명 전문가 독해(Popa 등)라는 검증 체계, 그럼에도 동료평가 이전이라는 한계, Tao의 '증명 풍요' 프레임과 Bloom의 반응, 2025-10 GPT-5 에르되시 소동과의 대비까지</summary>
-    <category term="AI · News &amp; Articles · 2026"/>
-  </entry>
-  <entry>
-    <title>하네스로는 부족하다 — 소프트웨어 공장이 실패하는 이유</title>
-    <link href="https://dewytear.github.io/p/news-20260728-software-factories-fail/"/>
-    <id>https://dewytear.github.io/docs/ko/ai/news/2026/news-20260728-software-factories-fail</id>
-    <published>2026-07-28T09:22:35+09:00</published>
-    <updated>2026-08-15T15:03:36+09:00</updated>
-    <summary>Dex Horthy(HumanLayer)의 AI Engineer World's Fair 2026 발표 정리 — 모델은 테스트 통과로만 보상받아 설계 품질을 학습하지 못하므로 하네스로는 메울 수 없다는 주장, Faros 계측(버그 +54%·인시던트 3배)과 4개월 lights-out 실험 실패, FrontierCode의 유지보수성 채점, 구현 전 30분 4단계 정렬</summary>
-    <category term="AI · News &amp; Articles · 2026"/>
-  </entry>
-  <entry>
-    <title>Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다</title>
-    <link href="https://dewytear.github.io/p/news-20260724-claude-opus-5/"/>
-    <id>https://dewytear.github.io/docs/ko/ai/news/2026/news-20260724-claude-opus-5</id>
-    <published>2026-07-25T13:36:03+09:00</published>
-    <updated>2026-08-15T15:03:36+09:00</updated>
-    <summary>2026-07-24 Anthropic Claude Opus 5 공개를 공식 발표·복수 언론 보도 교차검증으로 정리 — $5/$25에 CursorBench 3.2 max에서 Fable 5 피크 0.5% 이내·태스크당 절반 비용, Frontier-Bench 43.3%·OSWorld 2.0 ⅓ 예산·ARC-AGI 3 3배, 도면을 볼 수 없자 CV 파이프라인을 자작해 FreeCAD 3D를 재구성한 장기 에이전틱 데모, Fable 5 세이프가드 오탐 논란의 맥락과 미확인 주장 구분</summary>
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
 </feed>

@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Ship — PR을 머지까지 데려가는 세 에이전트, 쓰는 법과 장점</title>
+<meta name="description" content="Anthropic이 2026년 11월 23일 공개한 Claude Ship을 공식 문서 기준으로 해설한다. 풀 리퀘스트(PR)가 열린 뒤 머지까지 세 에이전트가 이어받는다 — Code Review는 찾기·검증·순위·게시의 네 단계로 리뷰를 달고(중요·사소·기존 결함 세 등급, Quick·Standard·Deep), PR Steward는 실패한 검사·충돌·리뷰 코멘트를 고쳐 다시 올리되 승인·머지는 못 하며, Claude Approvals는 .claude/approvals.yml의 규칙으로 &#x27;누가 몇 명 승인해야 하는가&#x27;를 판정한다(observe로 시작해 enforce로). 개발자 쪽에서는 Claude Code의 /ship 한 줄이 커밋·푸시·PR 생성·Steward 감시까지 묶고, 조직 쪽에서는 Code Review → Steward(수동) → Approvals observe → enforce 순으로 켜는 도입 순서와 CODEOWNERS를 대신하는 정책 파일 두 종의 시작 예시를 적었다. 장점(리뷰 대기 감소, 반복 수정의 자동화, 정책의 코드화, 사람 승인의 정량 배치)과 조심할 것(Team·Enterprise 한정 베타, ZDR·HIPAA 제외, 봇 승인 권한의 범위, 월 한도·저장소별 지출 상한, 자체 수치의 자사 측정)을 나누고, 이 위키의 PR 흐름과 견주었다">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/claude-ship/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/claude-ship/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/claude-ship/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/claude-ship/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/claude-ship/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Claude Ship — PR을 머지까지 데려가는 세 에이전트, 쓰는 법과 장점">
+<meta property="og:description" content="Anthropic이 2026년 11월 23일 공개한 Claude Ship을 공식 문서 기준으로 해설한다. 풀 리퀘스트(PR)가 열린 뒤 머지까지 세 에이전트가 이어받는다 — Code Review는 찾기·검증·순위·게시의 네 단계로 리뷰를 달고(중요·사소·기존 결함 세 등급, Quick·Standard·Deep), PR Steward는 실패한 검사·충돌·리뷰 코멘트를 고쳐 다시 올리되 승인·머지는 못 하며, Claude Approvals는 .claude/approvals.yml의 규칙으로 &#x27;누가 몇 명 승인해야 하는가&#x27;를 판정한다(observe로 시작해 enforce로). 개발자 쪽에서는 Claude Code의 /ship 한 줄이 커밋·푸시·PR 생성·Steward 감시까지 묶고, 조직 쪽에서는 Code Review → Steward(수동) → Approvals observe → enforce 순으로 켜는 도입 순서와 CODEOWNERS를 대신하는 정책 파일 두 종의 시작 예시를 적었다. 장점(리뷰 대기 감소, 반복 수정의 자동화, 정책의 코드화, 사람 승인의 정량 배치)과 조심할 것(Team·Enterprise 한정 베타, ZDR·HIPAA 제외, 봇 승인 권한의 범위, 월 한도·저장소별 지출 상한, 자체 수치의 자사 측정)을 나누고, 이 위키의 PR 흐름과 견주었다">
+<meta property="og:url" content="https://dewytear.github.io/p/claude-ship/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Claude Ship — PR을 머지까지 데려가는 세 에이전트, 쓰는 법과 장점">
+<meta name="twitter:description" content="Anthropic이 2026년 11월 23일 공개한 Claude Ship을 공식 문서 기준으로 해설한다. 풀 리퀘스트(PR)가 열린 뒤 머지까지 세 에이전트가 이어받는다 — Code Review는 찾기·검증·순위·게시의 네 단계로 리뷰를 달고(중요·사소·기존 결함 세 등급, Quick·Standard·Deep), PR Steward는 실패한 검사·충돌·리뷰 코멘트를 고쳐 다시 올리되 승인·머지는 못 하며, Claude Approvals는 .claude/approvals.yml의 규칙으로 &#x27;누가 몇 명 승인해야 하는가&#x27;를 판정한다(observe로 시작해 enforce로). 개발자 쪽에서는 Claude Code의 /ship 한 줄이 커밋·푸시·PR 생성·Steward 감시까지 묶고, 조직 쪽에서는 Code Review → Steward(수동) → Approvals observe → enforce 순으로 켜는 도입 순서와 CODEOWNERS를 대신하는 정책 파일 두 종의 시작 예시를 적었다. 장점(리뷰 대기 감소, 반복 수정의 자동화, 정책의 코드화, 사람 승인의 정량 배치)과 조심할 것(Team·Enterprise 한정 베타, ZDR·HIPAA 제외, 봇 승인 권한의 범위, 월 한도·저장소별 지출 상한, 자체 수치의 자사 측정)을 나누고, 이 위키의 PR 흐름과 견주었다">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Claude Ship — PR을 머지까지 데려가는 세 에이전트, 쓰는 법과 장점",
+ "description": "Anthropic이 2026년 11월 23일 공개한 Claude Ship을 공식 문서 기준으로 해설한다. 풀 리퀘스트(PR)가 열린 뒤 머지까지 세 에이전트가 이어받는다 — Code Review는 찾기·검증·순위·게시의 네 단계로 리뷰를 달고(중요·사소·기존 결함 세 등급, Quick·Standard·Deep), PR Steward는 실패한 검사·충돌·리뷰 코멘트를 고쳐 다시 올리되 승인·머지는 못 하며, Claude Approvals는 .claude/approvals.yml의 규칙으로 '누가 몇 명 승인해야 하는가'를 판정한다(observe로 시작해 enforce로). 개발자 쪽에서는 Claude Code의 /ship 한 줄이 커밋·푸시·PR 생성·Steward 감시까지 묶고, 조직 쪽에서는 Code Review → Steward(수동) → Approvals observe → enforce 순으로 켜는 도입 순서와 CODEOWNERS를 대신하는 정책 파일 두 종의 시작 예시를 적었다. 장점(리뷰 대기 감소, 반복 수정의 자동화, 정책의 코드화, 사람 승인의 정량 배치)과 조심할 것(Team·Enterprise 한정 베타, ZDR·HIPAA 제외, 봇 승인 권한의 범위, 월 한도·저장소별 지출 상한, 자체 수치의 자사 측정)을 나누고, 이 위키의 PR 흐름과 견주었다",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/claude-ship/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!claude-ship",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-11-24T08:11:38+09:00",
+ "dateModified": "2026-11-24T08:11:38+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!claude-ship">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/claude-ship/" hreflang="en">English</a>
+  &middot; <a href="/p/ja/claude-ship/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>Claude Ship — PR을 머지까지 데려가는 세 에이전트, 쓰는 법과 장점</h2>
+
+<h3>세 줄 요약</h3>
+<ul>
+    <li>Claude Ship은 풀 리퀘스트(PR)가 열린 뒤의 일을 맡는 에이전트 묶음이다. Code Review가 문제를 찾고, PR Steward가 실패한 검사·충돌·리뷰 코멘트를 고쳐 커밋하고, Claude Approvals가 팀이 파일로 적은 정책대로 "누가 더 승인해야 하는가"를 판정한다. 2026년 11월 23일 Team·Enterprise 플랜 베타로 나왔다.</li>
+    <li>개인 개발자는 Claude Code에서 <code>/ship</code> 한 줄로 커밋·푸시·PR 생성·리뷰까지 하고, 그 뒤 "지켜보기(watch)"가 시작돼 검사 실패와 리뷰 답변을 Claude가 처리한다. 머지는 사람이 누른다.</li>
+    <li>장점은 리뷰가 코드를 쓰는 속도를 따라오게 만드는 데 있다. Anthropic은 자사 Claude Code 팀에서 6~9월 머지 PR이 두 배 넘게 늘고 되돌린 비율이 40% 넘게 줄었다고 밝혔다. 대신 정책 파일 한 줄이 사람 없는 머지를 허용할 수 있으니, 관찰 모드와 브랜치 규칙을 먼저 두는 순서가 중요하다.</li>
+</ul>
+
+<p>코딩 에이전트가 코드를 쓰는 속도는 빨라졌는데, 그 코드를 리뷰하고 승인하는 쪽은 여전히 사람의 시간에 묶여 있다. PR을 열고 다른 일로 넘어갔다가, 며칠 뒤 리뷰가 오면 옛 코드로 돌아가 고치고, 검사를 다시 기다리고, 승인해 줄 사람을 찾는다. Anthropic이 Claude Ship을 소개하며 든 문제가 이것이다. 이 글은 공식 문서와 발표를 바탕으로 세 에이전트의 역할, 개인과 조직 각각의 사용법, 실제로 어떤 이득이 있는지와 어디서 조심해야 하는지를 정리한다. 이 위키는 Claude Code로 문서를 쓰고 PR로 머지하는 저장소라, 마지막에 이 위키의 흐름에 비춰 본 판단도 적었다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="Claude Ship의 세 에이전트가 PR 수명 주기에서 맡는 자리: PR이 열리면 Code Review가 찾기·검증·순위·게시의 네 단계로 문제를 올리고, PR Steward가 실패한 검사·머지 충돌·리뷰 코멘트를 고쳐 커밋을 푸시하며, Claude Approvals가 정책 파일을 읽어 누가 더 승인해야 하는지 검사 결과로 보고한다. 머지는 사람과 GitHub 브랜치 규칙이 결정한다">
+    <text class="d-label" x="360" y="24" text-anchor="middle">PR이 열린 뒤: 세 에이전트가 맡는 자리</text>
+    <rect class="d-box soft" x="20" y="56" width="110" height="60" rx="8"/>
+    <text class="d-label sm" x="75" y="82" text-anchor="middle">PR 열림</text>
+    <text class="d-sub" x="75" y="102" text-anchor="middle">사람 또는 에이전트</text>
+    <path class="d-edge accent" d="M132 86 L160 86"/>
+    <path class="d-arrow accent" d="M160 80 L170 86 L160 92 Z"/>
+    <rect class="d-box" x="172" y="48" width="160" height="76" rx="8"/>
+    <text class="d-label sm" x="252" y="70" text-anchor="middle">Code Review (GA)</text>
+    <text class="d-sub" x="252" y="90" text-anchor="middle">찾기 → 검증 → 순위 → 게시</text>
+    <text class="d-sub" x="252" y="108" text-anchor="middle">Important · Nit · Pre-existing</text>
+    <path class="d-edge accent" d="M334 86 L362 86"/>
+    <path class="d-arrow accent" d="M362 80 L372 86 L362 92 Z"/>
+    <rect class="d-box" x="374" y="48" width="160" height="76" rx="8"/>
+    <text class="d-label sm" x="454" y="70" text-anchor="middle">PR Steward (베타)</text>
+    <text class="d-sub" x="454" y="90" text-anchor="middle">실패한 검사 · 머지 충돌</text>
+    <text class="d-sub" x="454" y="108" text-anchor="middle">리뷰 코멘트 → 수정 커밋</text>
+    <path class="d-edge accent" d="M536 86 L564 86"/>
+    <path class="d-arrow accent" d="M564 80 L574 86 L564 92 Z"/>
+    <rect class="d-box accent" x="576" y="48" width="130" height="76" rx="8"/>
+    <text class="d-label sm" x="641" y="70" text-anchor="middle">Claude Approvals</text>
+    <text class="d-sub" x="641" y="90" text-anchor="middle">정책 파일 판정</text>
+    <text class="d-sub" x="641" y="108" text-anchor="middle">(베타)</text>
+    <path class="d-edge dash" d="M454 126 L454 150 L252 150 L252 126"/>
+    <path class="d-arrow" d="M246 136 L252 126 L258 136 Z"/>
+    <text class="d-sub" x="353" y="166" text-anchor="middle">푸시하면 다시 리뷰 (설정에 따라)</text>
+    <rect class="d-box soft" x="100" y="196" width="606" height="40" rx="8"/>
+    <text class="d-sub" x="403" y="221" text-anchor="middle">검사 결과 예: "Waiting on human review from any person (1/2)"  ·  정책이 허용하면 Claude가 승인 리뷰 게시</text>
+    <rect class="d-node" x="100" y="254" width="606" height="30" rx="6"/>
+    <text class="d-node-label" x="403" y="273" text-anchor="middle">머지 결정: 사람 + GitHub 브랜치 규칙 (Steward는 승인·머지 못 함, Approvals는 필수 검사로 걸어야 막음)</text>
+</svg>
+<div class="d-cap">Code Review는 2026년 10월 15일 정식 출시된 기존 제품이고, PR Steward와 Claude Approvals가 이번에 베타로 더해졌다. 셋은 따로따로 켤 수 있고 저장소 단위로 켠다.</div>
+</div>
+
+<h3>1. 세 에이전트가 각각 하는 일</h3>
+<table>
+    <thead><tr><th></th><th>Code Review</th><th>PR Steward</th><th>Claude Approvals</th></tr></thead>
+    <tbody>
+        <tr><td>상태</td><td>정식(GA)</td><td>공개 베타</td><td>공개 베타</td></tr>
+        <tr><td>하는 일</td><td>diff와 주변 코드를 읽어 논리 오류·보안 취약점·깨진 경계 조건을 찾고, 검증한 뒤 심각도 순으로 인라인 코멘트</td><td>실패한 검사, 머지 충돌, 사람·봇의 리뷰 코멘트를 처리해 수정 커밋을 푸시. 푸시마다 무엇을 바꿨고 어떻게 되돌리는지 코멘트</td><td>저장소의 정책 파일을 읽어 "누가 더 승인해야 하는가"를 검사(check) 제목으로 보고. 정책이 허용하면 승인 리뷰를 직접 게시</td></tr>
+        <tr><td>못 하는 일</td><td>승인·차단·코드 실행·커밋 푸시 없음. 검사는 실패로 끝나지 않음</td><td>설계상 승인·머지 안 함. Anthropic 서비스가 승인·브랜치 보호 변경·브랜치 삭제·태그 푸시 요청을 거부</td><td>GitHub에서 필수 검사로 걸지 않으면 머지를 막지 못함. CI 결과는 읽지 못하므로 CI는 별도 필수 검사로</td></tr>
+        <tr><td>실행 주체</td><td>Anthropic 인프라, 저장소 읽기 전용</td><td>Claude GitHub App으로 클라우드 세션, 오토 모드로 시작(권한 요청은 거부됨)</td><td>정책 평가 + 분류기 실행(클라우드 세션, GitHub 읽기 전용)</td></tr>
+        <tr><td>과금</td><td>토큰 기준, 조직 사용량 크레딧. 리뷰 수준 Quick·Standard·Deep</td><td>토큰 기준. 월 한도 + 저장소별 지출 상한을 따로 둠</td><td>기본료 없음. 정책이 부른 Code Review와 분류기 실행만 토큰 과금. 관찰 모드도 과금</td></tr>
+        <tr><td>조정 파일</td><td><code>REVIEW.md</code>(리뷰 전용 규칙), <code>CLAUDE.md</code>(프로젝트 맥락)</td><td><code>.claude/skills/steward/SKILL.md</code>(저장소 규칙)</td><td><code>.claude/approvals.yml</code>(정책), <code>.claude/classifiers/&lt;이름&gt;/def.yml</code>(분류기)</td></tr>
+    </tbody>
+</table>
+<p>Code Review의 네 단계는 눈여겨볼 만하다. 여러 에이전트가 병렬로 후보를 찾고(Find), 후보를 코드에 대조해 오탐을 거르고(Verify), 중복을 합쳐 심각도로 줄 세운 뒤(Rank), 인라인 코멘트와 검사 결과로 올린다(Post). 찾은 것을 그대로 쏟지 않고 한 번 더 검증하는 단계가 들어 있어서, 리뷰 봇의 흔한 불만인 "소음"을 줄이는 쪽으로 설계됐다. 심각도는 🔴 Important(머지 전에 고칠 것), 🟡 Nit(사소), 🟣 Pre-existing(이 PR이 만든 문제가 아님) 셋이고, 다시 리뷰할 때는 지난 리뷰 이후 바뀐 부분만 보며 Nit과 Pre-existing은 덜 올린다.</p>
+
+<h3>2. 개인 사용법 — <code>/ship</code> 한 줄</h3>
+<p>조직 관리자가 아무것도 켜지 않아도 개인 개발자는 터미널의 Claude Code에서 <code>/ship</code>을 쓸 수 있다. 사용량은 본인의 일반 Claude Code 사용량으로 잡힌다. 전제는 Claude Code 2.1.330 이상, GitHub CLI 2.63 이상(<code>gh auth login</code> 완료), git 2.38 이상이다.</p>
+<ol>
+    <li>변경을 만든 그 세션에서 <code>/ship</code>을 친다. 커밋 메시지를 대화에서 뽑기 때문이다(다른 세션에서 치면 "Update greet.py and 1 more" 같은 제목이 나온다).</li>
+    <li>확인 창은 없다. 커밋 직전과 푸시 직전에 "Esc to cancel"로 끝나는 줄이 몇 초 떠 있다가 진행된다. 기본 브랜치에 있으면 새 브랜치를 만들어 옮기고, 이미 다른 브랜치에 커밋돼 있으면 그 브랜치를 푸시해 PR을 연다.</li>
+    <li><code>/code-review</code>로 리뷰한다. 노력 수준은 <code>/ship low</code>처럼 앞에 붙인다(기본 <code>high</code>).</li>
+    <li>"지켜보기"가 시작된다. 오토 모드에서 Claude는 묻지 않고 리뷰 지적을 고치고, 기본 브랜치를 머지해 충돌을 풀고, 실패한 검사를 손보고 재실행하며, 리뷰 코멘트에 답하고 스레드를 해결하고 재리뷰를 요청한다. GitHub에는 사용자 본인의 이름으로 올라간다.</li>
+    <li>검사가 통과하고 코멘트가 정리되면 Claude가 알린다. 머지는 사용자가 한다.</li>
+</ol>
+<table>
+    <thead><tr><th>인수</th><th>효과</th></tr></thead>
+    <tbody>
+        <tr><td><code>low · medium · high · xhigh · max</code></td><td>리뷰 노력 수준(<code>/ship</code>만). 기본 <code>high</code></td></tr>
+        <tr><td><code>41</code> 또는 PR URL</td><td>그 PR을 대상으로. 지켜보기는 본인 PR이고 브랜치를 체크아웃한 상태여야 함</td></tr>
+        <tr><td><code>+봇이름</code></td><td>그 봇의 코멘트도 읽음(예: <code>/steward +my-lint-bot</code>). 재시작 때 다시 붙여야 함</td></tr>
+        <tr><td><code>stop</code> · <code>terms</code></td><td>지켜보기 종료 · 지켜보기 중 Claude가 할 수 있는 일과 한계 표시</td></tr>
+    </tbody>
+</table>
+<p>이미 PR이 열려 있으면 <code>/steward</code>가 커밋·푸시·리뷰를 건너뛰고 지켜보기만 시작한다. 지켜보는 동안 Claude Code는 사용자의 메시지 없이 움직일 때 PR 머지·승인·자동 머지 켜기·강제 푸시를 하는 <code>gh</code>·<code>git</code> 명령을 막고, 커넥터·<code>WebFetch</code>·<code>WebSearch</code>도 거부한다. <code>git stash</code>·<code>git reset</code>·<code>git checkout</code>·<code>git add -A</code>·<code>git commit -a</code>도 거부 목록에 있다. 지켜보기는 PR이 머지·닫힘, 7일 경과, Esc 한 번, 브랜치 전환, <code>/clear</code>·<code>/resume</code>·<code>/branch</code>, 세션 종료 가운데 하나로 끝난다. 저장소에 <code>.claude/skills/steward/SKILL.md</code>를 두면 지켜보기와 PR Steward가 같은 규칙을 읽는다.</p>
+<p>자동으로 안 하는 것도 분명하다. PR이 이미 열린 브랜치의 미커밋 변경, 공개 저장소의 미커밋 변경, 이름이 비밀처럼 보이는 파일(<code>.env</code> 등)은 커밋하지 않는다. <code>.gitignore</code>·<code>CLAUDE.md</code>·<code>.github/</code> 아래를 고쳤으면 직접 커밋하라고 한다. GitHub Enterprise와 포크에서는 PR을 열지 않으니 먼저 열고 <code>/ship</code>을 친다. 네이티브 Windows와 <code>bypassPermissions</code> 모드에서는 지켜보기가 시작되지 않는다.</p>
+
+<h3>3. 조직 사용법 — 하나씩, 한 저장소부터</h3>
+<p>관리자(Claude 조직 Owner)는 <strong>Organization settings › Claude Ship</strong>에서 켠다. 공식 문서가 권하는 순서는 에이전트 하나씩, 저장소 하나부터다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 230" role="img" aria-label="조직 도입 순서 네 단계: 1단계 Code Review를 한 저장소에 켜고 월 지출 한도를 설정, 2단계 PR Steward를 수동 모드로 켜고 저장소별 지출 상한 설정, 3단계 approvals.yml 정책 파일을 관찰 모드로 머지해 검사가 무엇을 판정할지 확인, 4단계 observe 줄을 지워 강제로 바꾸고 GitHub 브랜치 규칙에 Claude Approvals를 필수 검사로 추가. 끄는 순서는 역순">
+    <text class="d-label" x="360" y="24" text-anchor="middle">조직 도입 순서 (끄는 순서는 역순)</text>
+    <rect class="d-box" x="20" y="52" width="160" height="96" rx="8"/>
+    <text class="d-label sm" x="100" y="76" text-anchor="middle">① Code Review</text>
+    <text class="d-sub" x="100" y="98" text-anchor="middle">저장소 하나에 켠다</text>
+    <text class="d-sub" x="100" y="116" text-anchor="middle">월 지출 한도 설정</text>
+    <text class="d-sub" x="100" y="134" text-anchor="middle">리뷰당 평균 비용 확인</text>
+    <path class="d-edge accent" d="M182 100 L198 100"/>
+    <path class="d-arrow accent" d="M198 94 L208 100 L198 106 Z"/>
+    <rect class="d-box" x="210" y="52" width="160" height="96" rx="8"/>
+    <text class="d-label sm" x="290" y="76" text-anchor="middle">② PR Steward</text>
+    <text class="d-sub" x="290" y="98" text-anchor="middle">Manual 모드로 시작</text>
+    <text class="d-sub" x="290" y="116" text-anchor="middle">@claude steward로 호출</text>
+    <text class="d-sub" x="290" y="134" text-anchor="middle">저장소별 지출 상한</text>
+    <path class="d-edge accent" d="M372 100 L388 100"/>
+    <path class="d-arrow accent" d="M388 94 L398 100 L388 106 Z"/>
+    <rect class="d-box" x="400" y="52" width="150" height="96" rx="8"/>
+    <text class="d-label sm" x="475" y="76" text-anchor="middle">③ Approvals 관찰</text>
+    <text class="d-sub" x="475" y="98" text-anchor="middle">approvals.yml 머지</text>
+    <text class="d-sub" x="475" y="116" text-anchor="middle">mode: observe</text>
+    <text class="d-sub" x="475" y="134" text-anchor="middle">판정만 보여 줌</text>
+    <path class="d-edge accent" d="M552 100 L568 100"/>
+    <path class="d-arrow accent" d="M568 94 L578 100 L568 106 Z"/>
+    <rect class="d-box accent" x="580" y="52" width="120" height="96" rx="8"/>
+    <text class="d-label sm" x="640" y="76" text-anchor="middle">④ 강제</text>
+    <text class="d-sub" x="640" y="98" text-anchor="middle">observe 줄 삭제</text>
+    <text class="d-sub" x="640" y="116" text-anchor="middle">브랜치 규칙에</text>
+    <text class="d-sub" x="640" y="134" text-anchor="middle">필수 검사로 추가</text>
+    <rect class="d-box soft" x="20" y="170" width="680" height="44" rx="8"/>
+    <text class="d-sub" x="360" y="188" text-anchor="middle">모든 단계가 토큰 과금. 관찰 모드도, 정책이 부른 Code Review도 과금된다.</text>
+    <text class="d-sub" x="360" y="206" text-anchor="middle">제외: Zero Data Retention · HIPAA 구성 · 고객 관리 키(CMEK) 조직. 강제 전에 쓰기 권한자 두 명 이상 필요.</text>
+</svg>
+<div class="d-cap">공식 설정 문서의 순서를 그대로 옮겼다. 끌 때는 Approvals → PR Steward → Code Review 순이어야 한다. 정책 파일이 꺼진 Code Review를 다시 부를 수 있기 때문이다.</div>
+</div>
+
+<h4>정책 파일은 "더 똑똑한 CODEOWNERS"</h4>
+<p>Claude Approvals의 핵심은 저장소 루트의 <code>.claude/approvals.yml</code>이다. 규칙마다 경로 패턴, 조건, 그리고 판정(verdict)을 적는다. 판정은 Claude가 어디까지 하는가(<code>comments</code>·<code>approves</code>·<code>blocks</code>)와 사람 몇 자리(<code>seats</code>)가 필요한가로 이뤄진다. 공식 문서의 시작 예시 둘을 그대로 옮긴다.</p>
+<pre><code># .claude/approvals.yml — A안: 리뷰가 통과하면 한 사람이면 되고 Claude가 승인
+version: 1
+mode: observe
+rules:
+  - purpose: "A change takes two people. When Claude's review passes, one is enough and Claude approves."
+    paths: ["**"]
+    verdict: { claude: comments, seats: 2 }
+    override:
+      - { if: "claude/code_review = pass", verdict: { claude: approves, seats: 1 } }
+  - purpose: "A change to the review rules takes two people."
+    paths: ["**/.claude/**"]
+    nested: inherit
+    verdict: { claude: comments, seats: 2 }</code></pre>
+<pre><code># .claude/approvals.yml — B안: 모든 변경에 사람 둘, Claude는 조언만
+version: 1
+mode: observe
+rules:
+  - purpose: "A change takes two people."
+    paths: ["**"]
+    verdict: { claude: comments, seats: 2 }
+    advisory: [claude/code_review]
+  - purpose: "A change to the review rules takes two people."
+    paths: ["**/.claude/**"]
+    nested: inherit
+    verdict: { claude: comments, seats: 2 }</code></pre>
+<p>읽는 법은 이렇다. <code>seats: 2</code>는 사람 두 자리인데 작성자가 한 자리를 채울 수 있으니 "작성자 + 한 명"이다. 작성자를 빼려면 <code>seats: [{ count: 1, from: [humans, "!pr/authors"] }]</code>처럼 쓴다. <code>override</code>는 조건이 맞을 때 판정을 바꾸는 자리이고, 분류기가 답을 못 내면 규칙 본래의 엄격한 판정으로 돌아간다. 여러 규칙이 겹치면 가장 엄격한 쪽이 이긴다(<code>blocks</code> &gt; <code>comments</code> &gt; <code>approves</code>). 조건에는 <code>pr/files_changed &gt; 50</code> 같은 PR 사실과 분류기 답을 쓸 수 있다. 분류기는 Anthropic이 주는 둘(<code>claude/code_review</code>는 Important 지적이 남았는지로 <code>pass</code>/<code>fail</code>, <code>claude/diff</code>는 푸시 뒤 변화가 <code>trivial</code>·<code>same_intent</code>·<code>different</code> 중 무엇인지)에 더해, <code>.claude/classifiers/&lt;이름&gt;/def.yml</code>에 자연어 프롬프트와 출력 값을 적어 직접 만든다. 예컨대 "로그인·결제·마이그레이션을 건드리면 high"라는 위험도 분류기를 만들고 <code>repo/change_risk = low</code>일 때만 한 사람으로 줄이는 식이다.</p>
+<p>정책 파일·분류기 폴더·<code>REVIEW.md</code>·<code>CODEOWNERS</code>·<code>.gitmodules</code> 같은 파일은 보호 파일이라 Claude가 승인하지 않고, 개발자는 PR 댓글로 <code>@claude approve</code>(본인 승인 등록), <code>@claude approvals rerun</code>(재평가), <code>@claude approvals resolve f-…</code>(정책이 허용한 사람이 지적 닫기)를 쓴다. 검사 제목이 곧 상태다. "Waiting on human review from any person (1/2)", "Held by Code Review's findings", "Passed; no approval from Claude"처럼 읽힌다.</p>
+
+<h3>4. 장점 — 무엇이 실제로 좋아지나</h3>
+<ul>
+    <li><strong>리뷰가 코드 속도를 따라온다.</strong> Anthropic은 Claude Code 팀에서 2026년 6월부터 9월 사이 머지된 PR이 두 배 넘게 늘고 되돌린(revert) 비율은 40% 넘게 줄었다고 밝혔다. 같은 글이 그 팀에서는 Code Review가 더 넓은 절차의 한 층이라고 덧붙였으니, 수치를 에이전트 셋만의 효과로 읽지는 말아야 한다.</li>
+    <li><strong>오탐을 거르는 단계가 설계에 들어 있다.</strong> 찾은 후보를 코드에 대조해 검증한 뒤에만 올리고, 재리뷰는 바뀐 부분만 본다. 리뷰 봇을 꺼 버리게 만드는 소음 문제를 제품 구조로 다룬다.</li>
+    <li><strong>승인권이 분리돼 있다.</strong> 고치는 에이전트(PR Steward)는 승인·머지를 못 하고, Anthropic 서비스가 그 요청 자체를 거부한다. 판정하는 에이전트(Approvals)는 팀이 쓴 파일대로만 움직이고, 머지를 막을 권한은 GitHub 필수 검사 설정에서 온다. "AI가 AI 코드를 승인한다"는 걱정에 대한 답이 이 분리다.</li>
+    <li><strong>정책이 코드로 남는다.</strong> 누가 몇 명, 어떤 경로에, 어떤 조건에서 승인해야 하는지가 <code>approvals.yml</code>에 적히고, 그 파일 자체가 보호 파일이라 바꾸려면 다시 사람 둘이 필요하다. 관찰 모드로 먼저 돌려 보고 강제로 넘어가는 길이 기본 절차다.</li>
+    <li><strong>비용에 천장이 있다.</strong> Code Review 월 한도, PR Steward 월 한도와 저장소별 상한, 분류기 실행 한도를 따로 둔다. 한도에 닿으면 리뷰를 건너뛰고 PR에 그 사실을 적는다.</li>
+    <li><strong>기존 규칙 위에 얹힌다.</strong> 브랜치 보호, 필수 검사, CODEOWNERS, 자동 머지와 함께 동작한다. 사용자가 올린 고객 사례에서 TELUS 엔지니어링 디렉터는 "사람을 루프에 두되 사람의 시간은 판단이 필요한 변경에만 쓰게 됐다"고 했고, Carvana 엔지니어링·분석 SVP는 파일럿에서 리뷰 피드백 처리 시간이 줄었다고 했다.</li>
+    <li><strong>Claude Code 없이도 쓴다.</strong> Code Review·Steward·Approvals는 GitHub App으로 돌므로 다른 도구로 쓴 코드에도 붙는다. Claude Code는 PR 전, Claude Ship은 PR 후를 맡는다는 것이 Anthropic의 구분이다.</li>
+</ul>
+
+<h3>5. 조심할 것</h3>
+<ul>
+    <li><strong>정책 한 줄이 사람 없는 머지를 허용한다.</strong> <code>seats: 0</code>이면 봇이 쓴 PR이 아무도 안 본 채 머지될 수 있고, <code>seats: 1</code>은 작성자가 채울 수 있다. GitHub 브랜치 규칙이 승인 한 개를 요구할 때 Claude의 승인 리뷰가 그 하나가 될 수 있다. 자동 머지나 머지 큐를 켜 둔 저장소에서는 Claude의 수정 푸시가 머지를 촉발한다. 공식 문서가 모두 경고하는 항목이다.</li>
+    <li><strong>분류기는 PR 작성자가 쓴 글을 읽는다.</strong> 제목·설명·코멘트가 분류기 답을 흔들 수 있다고 문서가 명시한다. 분류기에 라벨·리뷰어 쓰기 권한을 줄 때는 라벨이 배포를 여는 저장소를 피하라고 한다.</li>
+    <li><strong>지켜보기는 내 자격증명으로 내 컴퓨터에서 코드를 돌린다.</strong> 기본 브랜치를 머지해 들어오는 스크립트, 다른 사람이 내 브랜치에 푸시한 것, 훅, <code>SKILL.md</code>가 모두 실행될 수 있다. 머지 권한자와 브랜치 푸시 권한자를 모두 믿을 수 있는 저장소에서만 켜라는 것이 공식 권고다.</li>
+    <li><strong>셀프호스트 환경에서는 승인 거부가 안 된다.</strong> PR Steward를 자체 러너에서 돌리면 Anthropic 서비스가 승인 요청을 막지 못하고, GitHub는 그 승인을 필수 승인으로 셀 수 있다. <code>CLAUDE.md</code>도 읽지 않는다.</li>
+    <li><strong>관찰 모드도 돈이 든다.</strong> 정책이 <code>claude/code_review</code>를 조건으로 쓰면 푸시마다 리뷰가 돌고, 분류기는 답이 없어도 과금된다. 분류기 실행당 예산(<code>budget: { cost: 5 }</code>, 기본 10달러, 상한 10달러)과 월 한도를 먼저 둔다.</li>
+    <li><strong>경쟁 제품과의 차이는 "승인"에 있다.</strong> 정리 글들은 GitHub Copilot 코드 리뷰, Cursor Bugbot, Codex 리뷰가 조언형이라 스스로 머지를 막거나 승인하지 않는다고 분류한다. Claude Ship은 정책이 허용하면 승인까지 간다. 그래서 더 편한 만큼 정책 파일의 책임이 무겁다.</li>
+</ul>
+
+<h3>6. 이 위키의 PR 흐름에 비추어</h3>
+<p>이 위키는 Claude Code 세션이 문서를 쓰고 PR을 열면 운영자가 "머지해"라고 답해야 스쿼시 머지가 된다. CI는 검증 게이트 네 개(파이썬 9단계·도식 경계·다국어 렌더·빌드)를 돌린다. Claude Ship에 옮겨 적으면 B안에 가깝다. 모든 경로에 사람 한 자리, CI는 별도 필수 검사, Code Review는 <code>advisory</code>로 두어 문서 PR에 코드 리뷰가 과금되지 않게 하는 구성이다. 콘텐츠 저장소라 Code Review의 "논리 오류" 기준이 맞지 않으니 <code>REVIEW.md</code>로 범위를 좁혀야 하고, PR Steward가 처리할 "실패한 검사"는 대부분 도식 글자 넘침이나 번역 누락이라 수정 커밋보다 사람 판단이 맞다. 지금은 <code>/ship</code>의 지켜보기가 Claude Code 세션 쪽 CI 실패를 재실행·수정해 주는 부분만 바로 쓸 만하다.</p>
+
+<h3>사실검증 노트</h3>
+<p class="scn-sub">세 에이전트의 역할·한계·과금·제외 조건, <code>/ship</code>과 <code>/steward</code>의 전제·단계·인수·지켜보기 중 허용·차단 목록·종료 조건, 도입 순서와 끄는 순서, 정책 파일 예시 둘과 키 설명, 분류기 정의 예시와 예산 기본값, 댓글 명령, 검사 제목 문구, 보호 파일 목록, 셀프호스트 한계는 <a href="https://code.claude.com/docs/en/claude-ship" target="_blank" rel="noopener">Claude Ship 개요</a>·<a href="https://code.claude.com/docs/en/ship-command" target="_blank" rel="noopener">/ship 문서</a>·<a href="https://code.claude.com/docs/en/ship-command-troubleshooting" target="_blank" rel="noopener">문제 해결</a>·<a href="https://code.claude.com/docs/en/approvals-policy" target="_blank" rel="noopener">정책 파일 레퍼런스</a>·<a href="https://code.claude.com/docs/en/approvals-setup" target="_blank" rel="noopener">Approvals 설정</a>·<a href="https://code.claude.com/docs/en/approvals-classifiers" target="_blank" rel="noopener">분류기</a>·<a href="https://code.claude.com/docs/en/pr-steward" target="_blank" rel="noopener">PR Steward</a>·<a href="https://code.claude.com/docs/en/pr-steward-security" target="_blank" rel="noopener">PR Steward 보안</a>·<a href="https://code.claude.com/docs/en/code-review" target="_blank" rel="noopener">Code Review</a>·<a href="https://code.claude.com/docs/en/code-review-customize" target="_blank" rel="noopener">REVIEW.md</a> 등 공식 문서를 2026년 11월 24일에 직접 읽어 옮겼다. 출시일(11월 23일), 문제 의식, 머지 PR 두 배·되돌림 40% 감소 수치, 고객 인용(TELUS·Carvana, 역할만 표기), Enterprise 크레딧(최소 1만 달러, 2027년 1월 15일까지 신청)은 <a href="https://claude.com/resources/articles/introducing-claude-ship" target="_blank" rel="noopener">Anthropic 발표 글</a>과 <a href="https://claude.com/product/claude-ship" target="_blank" rel="noopener">제품 페이지</a> 기준이며 모두 Anthropic 자체 서술이다. 수치의 근거 글(claude.dev의 "Solving code review at Anthropic")과 TechCrunch·The New Stack·XDA 등 보도는 이 글을 쓴 환경의 네트워크 정책 때문에 직접 열지 못해, 검색 발췌가 일치하는 범위(개인 개발자용 <code>/ship</code>이 11월 23일부터 Claude Code와 데스크톱 앱에 배포, Code Review 10월 15일 정식 출시)만 썼다. <code>/ship</code>을 Pro·Max 플랜 개인이 쓸 수 있는지는 공식 페이지가 명시하지 않아 "일반 Claude Code 사용량으로 과금"이라는 문장만 옮겼다. 경쟁 제품이 "조언형"이라는 분류는 2026년 비교 정리 글들의 서술이고 각 제품의 최신 기능은 바뀔 수 있다. 이 글은 기능 소개이지 보안 평가가 아니며, 공식 문서 자체가 "AI를 쓰므로 버그·취약점을 놓칠 수 있다"고 적는다.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · Code · Introduction &middot; <span class="pr-k">생성일자</span> 2026-11-24 &middot; <span class="pr-k">수정일자</span> 2026-11-24</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/claude-md-intent/">intent.md — 코드보다 먼저 남기는 의도, 그리고 AI 네이티브 SDLC</a></li><li><a href="/p/hns-evidence/">하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기</a></li><li><a href="/p/claude-md-constitution/">Claude 헌장 — 모델에게 자신을 무엇이라 말해 주는가</a></li><li><a href="/p/news-20260814-auto-mode-stateless-mcp/">묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다</a></li></ul>
+</nav>
+</body>
+</html>

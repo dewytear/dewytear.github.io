@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>graphify — A Skill That Turns a Codebase into a Knowledge Graph So Agents Query Instead of Grep</title>
+<meta name="description" content="An analysis, from the official repository (README, ARCHITECTURE, BENCHMARKS, skill.md) and outside verification, of a skill that turns the code, docs, PDFs, images and video in a folder into one knowledge graph with a single /graphify . and then has the agent fetch only the relevant subgraph through graphify query, path and explain instead of reading whole files. Code is parsed locally with tree-sitter and no LLM (about 40 languages), every edge carries an EXTRACTED, INFERRED (five levels from 0.95 to 0.55) or AMBIGUOUS confidence tag, and Leiden community detection finds subsystems. The page covers installation (uv tool install graphifyy, graphify install), a command table, the PreToolUse hook that steps in before Read, Grep and cat so the agent looks at the graph first (with a strict mode), git hooks, the MCP server and export formats. Benchmarks are read in two columns: the vendor&#x27;s own (LOCOMO recall@10 0.497 against mem0 0.048) and the widely quoted 71.5x token saving (one query on a 52-file corpus) next to independent session-level measurements (7 to 8% saved, quality 44 vs 45), to show where the gain is (orientation and impact analysis in large repositories) and where it is not (small projects, focused edits). It notes the Windows forced-SMB-authentication fix of 2026-11-21 and the privacy items, and compares the tool&#x27;s graph with this wiki&#x27;s document graph in principle and in use.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/sks-graphify/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/sks-graphify/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/sks-graphify/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/sks-graphify/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/sks-graphify/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="graphify — A Skill That Turns a Codebase into a Knowledge Graph So Agents Query Instead of Grep">
+<meta property="og:description" content="An analysis, from the official repository (README, ARCHITECTURE, BENCHMARKS, skill.md) and outside verification, of a skill that turns the code, docs, PDFs, images and video in a folder into one knowledge graph with a single /graphify . and then has the agent fetch only the relevant subgraph through graphify query, path and explain instead of reading whole files. Code is parsed locally with tree-sitter and no LLM (about 40 languages), every edge carries an EXTRACTED, INFERRED (five levels from 0.95 to 0.55) or AMBIGUOUS confidence tag, and Leiden community detection finds subsystems. The page covers installation (uv tool install graphifyy, graphify install), a command table, the PreToolUse hook that steps in before Read, Grep and cat so the agent looks at the graph first (with a strict mode), git hooks, the MCP server and export formats. Benchmarks are read in two columns: the vendor&#x27;s own (LOCOMO recall@10 0.497 against mem0 0.048) and the widely quoted 71.5x token saving (one query on a 52-file corpus) next to independent session-level measurements (7 to 8% saved, quality 44 vs 45), to show where the gain is (orientation and impact analysis in large repositories) and where it is not (small projects, focused edits). It notes the Windows forced-SMB-authentication fix of 2026-11-21 and the privacy items, and compares the tool&#x27;s graph with this wiki&#x27;s document graph in principle and in use.">
+<meta property="og:url" content="https://dewytear.github.io/p/en/sks-graphify/">
+<meta property="og:image" content="https://dewytear.github.io/assets/ai/claude/skills/sks-graphify/hero.webp">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="graphify — A Skill That Turns a Codebase into a Knowledge Graph So Agents Query Instead of Grep">
+<meta name="twitter:description" content="An analysis, from the official repository (README, ARCHITECTURE, BENCHMARKS, skill.md) and outside verification, of a skill that turns the code, docs, PDFs, images and video in a folder into one knowledge graph with a single /graphify . and then has the agent fetch only the relevant subgraph through graphify query, path and explain instead of reading whole files. Code is parsed locally with tree-sitter and no LLM (about 40 languages), every edge carries an EXTRACTED, INFERRED (five levels from 0.95 to 0.55) or AMBIGUOUS confidence tag, and Leiden community detection finds subsystems. The page covers installation (uv tool install graphifyy, graphify install), a command table, the PreToolUse hook that steps in before Read, Grep and cat so the agent looks at the graph first (with a strict mode), git hooks, the MCP server and export formats. Benchmarks are read in two columns: the vendor&#x27;s own (LOCOMO recall@10 0.497 against mem0 0.048) and the widely quoted 71.5x token saving (one query on a 52-file corpus) next to independent session-level measurements (7 to 8% saved, quality 44 vs 45), to show where the gain is (orientation and impact analysis in large repositories) and where it is not (small projects, focused edits). It notes the Windows forced-SMB-authentication fix of 2026-11-21 and the privacy items, and compares the tool&#x27;s graph with this wiki&#x27;s document graph in principle and in use.">
+<meta name="twitter:image" content="https://dewytear.github.io/assets/ai/claude/skills/sks-graphify/hero.webp">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "graphify — A Skill That Turns a Codebase into a Knowledge Graph So Agents Query Instead of Grep",
+ "description": "An analysis, from the official repository (README, ARCHITECTURE, BENCHMARKS, skill.md) and outside verification, of a skill that turns the code, docs, PDFs, images and video in a folder into one knowledge graph with a single /graphify . and then has the agent fetch only the relevant subgraph through graphify query, path and explain instead of reading whole files. Code is parsed locally with tree-sitter and no LLM (about 40 languages), every edge carries an EXTRACTED, INFERRED (five levels from 0.95 to 0.55) or AMBIGUOUS confidence tag, and Leiden community detection finds subsystems. The page covers installation (uv tool install graphifyy, graphify install), a command table, the PreToolUse hook that steps in before Read, Grep and cat so the agent looks at the graph first (with a strict mode), git hooks, the MCP server and export formats. Benchmarks are read in two columns: the vendor's own (LOCOMO recall@10 0.497 against mem0 0.048) and the widely quoted 71.5x token saving (one query on a 52-file corpus) next to independent session-level measurements (7 to 8% saved, quality 44 vs 45), to show where the gain is (orientation and impact analysis in large repositories) and where it is not (small projects, focused edits). It notes the Windows forced-SMB-authentication fix of 2026-11-21 and the privacy items, and compares the tool's graph with this wiki's document graph in principle and in use.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/sks-graphify/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!sks-graphify",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-11-24T08:11:38+09:00",
+ "dateModified": "2026-11-24T08:11:38+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!sks-graphify">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/sks-graphify/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/ja/sks-graphify/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>graphify — A Skill That Turns a Codebase into a Knowledge Graph So Agents Query Instead of Grep</h2>
+
+<h3>Three-line summary</h3>
+<ul>
+    <li>graphify turns the code, docs, PDFs, images and video in a folder into one knowledge graph with a single <code>/graphify .</code>, and from then on the agent asks <code>graphify query</code>, <code>path</code> and <code>explain</code> for the relevant subgraph instead of reading whole files. Code is parsed locally with tree-sitter (a syntax-tree parser) and no LLM, and every edge carries an EXTRACTED, INFERRED or AMBIGUOUS confidence tag.</li>
+    <li>First published on PyPI on April 4, 2026, it reached 0.9.118 on November 23 after 284 releases and supports some 20 assistants including Claude Code, Cursor, Codex and Gemini CLI. Star counts differ by aggregator, from 76k to 152k, so this page says only "around 100k". The company is Graphify Labs (Y Combinator S26); the license is Apache-2.0 and MIT, dual.</li>
+    <li>Its official benchmark claims recall@10 of 0.497 on LOCOMO memory retrieval (mem0 0.048) and zero LLM credits to build the graph. The widely quoted "71.5x fewer tokens" is one query on a 52-file corpus; independent session-level tests found 7 to 8% savings or a quality tie (44 vs 45 points). It is strong for orientation and impact analysis in large repositories and offers little on small projects and focused edits.</li>
+</ul>
+
+<p>The first thing a coding agent does in an unfamiliar repository is <code>grep</code> and read files. When the question is structural, such as "where does this endpoint reach storage", reading files one by one into context costs tokens and misses the big picture. graphify puts a graph in that spot. Built once, it survives across sessions, and each question returns a few dozen relevant nodes. This page draws on the official repository (README, ARCHITECTURE, BENCHMARKS, skill.md) and outside verification to set out how it works, how to install and use it, what the benchmarks actually mean, and its limits and security notes. This wiki itself runs on a document graph, so the end sets the two graphs side by side.</p>
+
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-graphify/hero.webp" width="1400" height="692"
+         alt="graphify's force-directed knowledge graph of the FastAPI codebase. On the left, community nodes in distinct colors cluster around central hubs; on the right, a list of community names and node counts such as APIRouter 96, SecurityBase 71, v2 56">
+    <figcaption>graph.html for the FastAPI codebase as built by graphify — colors are the subsystems (communities) found by the Leiden algorithm, the list on the right gives each community's name and node count (image: Graphify-Labs/graphify repository, Apache-2.0)</figcaption>
+</figure>
+
+<h3>1. How it is built: three passes</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 320" role="img" aria-label="graphify pipeline: code in the input folder is parsed locally with tree-sitter in pass 1 (no LLM, about 40 languages), video and audio are transcribed locally with faster-whisper in pass 2, documents, PDFs and images get semantic extraction by LLM subagents in pass 3 (costs tokens). The three results merge into a NetworkX graph, go through Leiden community detection and hub and surprising-connection analysis, and come out as graph.html, GRAPH_REPORT.md and graph.json">
+    <text class="d-label" x="360" y="24" text-anchor="middle">What /graphify . does: three passes → graph → three files</text>
+    <rect class="d-box soft" x="20" y="60" width="110" height="180" rx="8"/>
+    <text class="d-label sm" x="75" y="84" text-anchor="middle">Input folder</text>
+    <text class="d-sub" x="75" y="112" text-anchor="middle">code</text>
+    <text class="d-sub" x="75" y="160" text-anchor="middle">video · audio</text>
+    <text class="d-sub" x="75" y="208" text-anchor="middle">docs · PDFs · images</text>
+    <path class="d-edge" d="M132 108 L160 108"/>
+    <path class="d-arrow" d="M160 102 L170 108 L160 114 Z"/>
+    <path class="d-edge" d="M132 156 L160 156"/>
+    <path class="d-arrow" d="M160 150 L170 156 L160 162 Z"/>
+    <path class="d-edge" d="M132 204 L160 204"/>
+    <path class="d-arrow" d="M160 198 L170 204 L160 210 Z"/>
+    <rect class="d-box accent" x="172" y="88" width="200" height="40" rx="8"/>
+    <text class="d-label sm" x="272" y="105" text-anchor="middle">Pass 1 · tree-sitter AST</text>
+    <text class="d-sub" x="272" y="121" text-anchor="middle">local · no LLM · ~40 languages</text>
+    <rect class="d-box accent" x="172" y="136" width="200" height="40" rx="8"/>
+    <text class="d-label sm" x="272" y="153" text-anchor="middle">Pass 2 · faster-whisper</text>
+    <text class="d-sub" x="272" y="169" text-anchor="middle">local · hub-seeded prompt</text>
+    <rect class="d-box" x="172" y="184" width="200" height="40" rx="8"/>
+    <text class="d-label sm" x="272" y="201" text-anchor="middle">Pass 3 · LLM subagents</text>
+    <text class="d-sub" x="272" y="217" text-anchor="middle">session model or API key · tokens</text>
+    <path class="d-edge accent" d="M374 108 L402 150"/>
+    <path class="d-edge accent" d="M374 156 L402 156"/>
+    <path class="d-edge accent" d="M374 204 L402 162"/>
+    <path class="d-arrow accent" d="M402 150 L412 156 L402 162 Z"/>
+    <rect class="d-box" x="414" y="88" width="140" height="136" rx="8"/>
+    <text class="d-label sm" x="484" y="110" text-anchor="middle">build → cluster</text>
+    <text class="d-sub" x="484" y="132" text-anchor="middle">NetworkX graph</text>
+    <text class="d-sub" x="484" y="150" text-anchor="middle">Leiden communities</text>
+    <text class="d-sub" x="484" y="168" text-anchor="middle">hubs (god nodes)</text>
+    <text class="d-sub" x="484" y="186" text-anchor="middle">surprising links</text>
+    <text class="d-sub" x="484" y="204" text-anchor="middle">cohesion · questions</text>
+    <path class="d-edge accent" d="M556 156 L584 156"/>
+    <path class="d-arrow accent" d="M584 150 L594 156 L584 162 Z"/>
+    <rect class="d-box soft" x="596" y="88" width="110" height="136" rx="8"/>
+    <text class="d-label sm" x="651" y="110" text-anchor="middle">graphify-out/</text>
+    <text class="d-sub" x="651" y="138" text-anchor="middle">graph.html</text>
+    <text class="d-sub" x="651" y="162" text-anchor="middle">GRAPH_REPORT.md</text>
+    <text class="d-sub" x="651" y="186" text-anchor="middle">graph.json</text>
+    <text class="d-sub" x="651" y="208" text-anchor="middle">cache/ (SHA256)</text>
+    <text class="d-sub" x="360" y="268" text-anchor="middle">A code-only repo skips pass 3 entirely and needs no API key. Re-runs skip files whose content hash is unchanged.</text>
+    <text class="d-sub" x="360" y="290" text-anchor="middle">Module order: detect → extract → build → cluster → analyze → report → export (ARCHITECTURE.md)</text>
+</svg>
+<div class="d-cap">Taken from the official how-it-works page and ARCHITECTURE.md. Pass 1 handles 33 languages with tree-sitter grammars and seven more (Dart, Apex, COBOL, Razor, Blade, Pascal, Robot Framework) with built-in extractors.</div>
+</div>
+<p>The core principle is "code never goes to the LLM". Functions, classes, imports and call relations come deterministically out of the syntax tree, so the same input gives the same graph, it costs nothing, and nothing leaves the machine. Only documents and images pass through a model for semantic extraction. Inside Claude Code, the session's own model dispatches parallel subagents for that; from a terminal, <code>graphify extract</code> uses a configured API key (auto-detected in the order Gemini, Kimi, Claude, OpenAI, DeepSeek, Azure, Bedrock, Ollama). Community detection is the Leiden algorithm (graph clustering that groups nodes by edge density), with no embeddings and no vector store. The <code>semantically_similar_to</code> edges the model extracts are already in the graph, so, the docs say, the structure itself is the similarity signal. Community names are derived from hub nodes without an LLM.</p>
+
+<h3>2. A tag on every edge: the confidence scheme</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 236" role="img" aria-label="graphify edge confidence scheme: EXTRACTED is a relation explicit in the source, score 1.0; INFERRED is an inferred relation with five levels, 0.95 near certain, 0.85 strong evidence, 0.75 reasonable, 0.65 weak (name similarity), 0.55 guess; AMBIGUOUS is uncertain and flagged for review in the report. A path's confidence is its weakest hop">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Edge tags and the scoring rubric</text>
+    <text class="d-sub" x="120" y="60" text-anchor="end">EXTRACTED</text>
+    <rect class="d-node" x="130" y="48" width="440" height="16" rx="4"/>
+    <text class="d-label sm" x="578" y="60">1.0 · in source</text>
+    <text class="d-sub" x="120" y="92" text-anchor="end">INFERRED 0.95</text>
+    <rect class="d-node d" x="130" y="80" width="418" height="16" rx="4"/>
+    <text class="d-sub" x="558" y="92">near-certain · one target</text>
+    <text class="d-sub" x="120" y="116" text-anchor="end">INFERRED 0.85</text>
+    <rect class="d-node d" x="130" y="104" width="374" height="16" rx="4"/>
+    <text class="d-sub" x="514" y="116">strong · name + context</text>
+    <text class="d-sub" x="120" y="140" text-anchor="end">INFERRED 0.75</text>
+    <rect class="d-node d" x="130" y="128" width="330" height="16" rx="4"/>
+    <text class="d-sub" x="470" y="140">reasonable · context only</text>
+    <text class="d-sub" x="120" y="164" text-anchor="end">INFERRED 0.65</text>
+    <rect class="d-node d" x="130" y="152" width="286" height="16" rx="4"/>
+    <text class="d-sub" x="426" y="164">weak · name similarity only</text>
+    <text class="d-sub" x="120" y="188" text-anchor="end">INFERRED 0.55</text>
+    <rect class="d-node d" x="130" y="176" width="242" height="16" rx="4"/>
+    <text class="d-sub" x="382" y="188">speculative</text>
+    <text class="d-sub" x="120" y="216" text-anchor="end">AMBIGUOUS</text>
+    <rect class="d-node dim" x="130" y="204" width="120" height="16" rx="4"/>
+    <text class="d-sub" x="260" y="216">uncertain · flagged for review · a path's confidence is its weakest hop</text>
+</svg>
+<div class="d-cap">The rubric from the how-it-works page. The skill file's "honesty rules" say never invent an edge and use AMBIGUOUS when unsure. When the same relation appears in several places, the highest-tagged copy is kept and the others are recorded under <code>also_seen</code>.</div>
+</div>
+<p>These tags are what separate graphify from "one more search index". <code>graphify explain "APIRouter"</code> returns the source location, community and degree together with its 47 connections tagged like <code>[uses] [INFERRED]</code> and <code>[imports] [EXTRACTED]</code>, and <code>graphify path "FastAPI" "ModelField"</code> returns a three-hop path with the path's overall confidence, its weakest hop. The repository's BENCHMARKS.md reports a manual audit of all 12 INFERRED cross-file edges inside FastAPI's production package, all correct, while noting that it is a dated one-off spot check rather than a continuous metric. The resolver prefers no edge over a wrong one.</p>
+
+<h3>3. Install and use</h3>
+<p>With Python 3.11.5 to 3.14 and uv (or pipx) it is two lines. The one thing to watch is the PyPI name <code>graphifyy</code> with two y's; other <code>graphify*</code> packages are unrelated.</p>
+<pre><code>uv tool install graphifyy      # install the CLI (pipx install graphifyy also works)
+graphify install               # Claude Code by default: skill + CLAUDE.md block + PreToolUse hooks
+graphify install --project     # into the repo's .claude/skills/graphify/ (prints a git add hint)
+graphify cursor install        # Cursor
+graphify install --platform codex    # Codex (invoke with $graphify)</code></pre>
+<p>Then type <code>/graphify .</code> inside the assistant. The skill first checks whether <code>graphify-out/graph.json</code> exists; if it does, it skips the build and goes to querying (the fast path). Otherwise it runs detection, extraction, graph build, clustering, labeling and export, reporting corpus size and token cost. The skill file itself says never to ask for an API key and to proceed without one, so a code repository needs no configuration at all.</p>
+<table>
+    <thead><tr><th>Task</th><th>Command</th><th>Notes</th></tr></thead>
+    <tbody>
+        <tr><td>Build the graph</td><td><code>/graphify .</code></td><td>HTML, report and JSON. <code>--no-viz</code> skips HTML; above 5,000 nodes an aggregated view is drawn</td></tr>
+        <tr><td>Go deeper</td><td><code>/graphify . --mode deep</code></td><td>More aggressive INFERRED edges</td></tr>
+        <tr><td>Only what changed</td><td><code>/graphify . --update</code></td><td>Files whose hash changed. Refuses a shrinking graph (<code>--force</code> allows it)</td></tr>
+        <tr><td>Ask</td><td><code>graphify query "how does auth reach the DB"</code></td><td>BFS by default, <code>--dfs</code> traces one path, default budget 2,000 tokens, depth 2</td></tr>
+        <tr><td>Path</td><td><code>graphify path "UserService" "DatabasePool"</code></td><td>Shortest path plus the weakest hop's confidence</td></tr>
+        <tr><td>Explain</td><td><code>graphify explain "RateLimiter"</code></td><td>One node's location, community and every connection</td></tr>
+        <tr><td>Re-cluster only</td><td><code>/graphify . --cluster-only --resolution 1.5</code></td><td>Finer subsystems. <code>--exclude-hubs 99</code> drops utility super-hubs</td></tr>
+        <tr><td>Add material</td><td><code>/graphify add &lt;arXiv or YouTube URL&gt;</code></td><td>Fetches a paper or transcribes a video into <code>./raw</code> and merges it</td></tr>
+        <tr><td>Export</td><td><code>--obsidian · --wiki · --svg · --graphml · --neo4j</code></td><td>Obsidian vault, one markdown article per community, Gephi, Cypher (Neo4j, FalkorDB)</td></tr>
+        <tr><td>Keep fresh</td><td><code>graphify hook install</code></td><td>post-commit and post-checkout hooks plus a union merge driver for <code>graph.json</code>. After a pull, <code>graphify update .</code></td></tr>
+        <tr><td>PRs</td><td><code>graphify prs 42</code> · <code>--triage</code> · <code>--conflicts</code></td><td>A PR's graph impact, a ranked review queue, PR pairs touching the same subsystem</td></tr>
+        <tr><td>MCP</td><td><code>graphify-mcp graphify-out/graph.json</code></td><td>Ten tools including query_graph, shortest_path, get_neighbors, god_nodes</td></tr>
+    </tbody>
+</table>
+<p>Exit codes are fixed for scripting: 0 is an answer, 3 is a name that matches several nodes (candidates are listed), 4 is no matching node. An ambiguous name is refused rather than guessed. Project settings live in <code>.graphifyrc</code> at the scan root. Ambiguous extensions (is <code>.inc</code> PHP or Pascal, is <code>.h</code> C or C++) must be pinned, as in <code>language.inc=php</code>, or the graph comes out thin.</p>
+
+<h3>4. The machinery that makes the agent actually use the graph</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 262" role="img" aria-label="graphify query loop: when the agent gets a codebase question, Claude Code's PreToolUse hook steps in just before raw reads such as Read, Glob, Grep and cat, recommends graphify query, path and explain first (a nudge by default; strict mode denies the session's first raw read once), and a graph query returns a subgraph within a budget of about 2,000 tokens. Comparison below: reading whole raw files uses far more context">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Where the hook steps in: graph before raw files</text>
+    <rect class="d-box soft" x="20" y="60" width="130" height="56" rx="8"/>
+    <text class="d-label sm" x="85" y="84" text-anchor="middle">Codebase question</text>
+    <text class="d-sub" x="85" y="104" text-anchor="middle">"who calls X?"</text>
+    <path class="d-edge" d="M152 88 L180 88"/>
+    <path class="d-arrow" d="M180 82 L190 88 L180 94 Z"/>
+    <rect class="d-box" x="192" y="48" width="170" height="80" rx="8"/>
+    <text class="d-label sm" x="277" y="72" text-anchor="middle">Agent tries Read/Grep</text>
+    <text class="d-sub" x="277" y="94" text-anchor="middle">PreToolUse hook fires</text>
+    <text class="d-sub" x="277" y="112" text-anchor="middle">hook-guard read · search</text>
+    <path class="d-edge accent" d="M364 76 L392 76"/>
+    <path class="d-arrow accent" d="M392 70 L402 76 L392 82 Z"/>
+    <rect class="d-box accent" x="404" y="48" width="160" height="80" rx="8"/>
+    <text class="d-label sm" x="484" y="72" text-anchor="middle">graphify query / path</text>
+    <text class="d-sub" x="484" y="94" text-anchor="middle">subgraph · 2,000-token budget</text>
+    <text class="d-sub" x="484" y="112" text-anchor="middle">file:line citations · tags</text>
+    <path class="d-edge accent" d="M566 88 L594 88"/>
+    <path class="d-arrow accent" d="M594 82 L604 88 L594 94 Z"/>
+    <rect class="d-box soft" x="598" y="60" width="108" height="56" rx="8"/>
+    <text class="d-label sm" x="652" y="84" text-anchor="middle">Answer + evidence</text>
+    <text class="d-sub" x="652" y="104" text-anchor="middle">raw files if needed</text>
+    <path class="d-edge dash" d="M277 130 L277 170 L484 170 L484 130"/>
+    <text class="d-sub" x="380" y="190" text-anchor="middle">Default: soft nudge · strict: denies the session's first raw read once; passes if a graph query ran within 30 minutes</text>
+    <rect class="d-box soft" x="20" y="208" width="686" height="40" rx="8"/>
+    <text class="d-sub" x="363" y="226" text-anchor="middle">Platforms without hooks (Codex, Cursor...) get the same "graph first" guidance via AGENTS.md or .cursor/rules.</text>
+    <text class="d-sub" x="363" y="242" text-anchor="middle">Instructions are only instructions: an agent can ignore them and go straight to rg (Codex issue #860).</text>
+</svg>
+<div class="d-cap">From the README section "Make your assistant always use the graph" and the hook definitions in install.py. The hook command embeds the absolute executable path at install time, so after an upgrade run <code>graphify install</code> and <code>graphify hook install</code> again.</div>
+</div>
+<p>A graph nobody consults is useless, and how graphify handles that is what sets it apart from other code indexes. <code>graphify install</code> does not only drop a skill file. It writes a guidance block into <code>CLAUDE.md</code> and registers Claude Code PreToolUse hooks (hooks that run just before a tool call) in <code>.claude/settings.json</code>. The hook fires before <code>Read</code>, <code>Glob</code> and <code>Grep</code>, and also before Bash readers such as <code>cat</code>, <code>head</code>, <code>tail</code> and <code>sed -n</code>, nudging the agent to look at the graph first. Installed with <code>--strict</code> (or <code>GRAPHIFY_HOOK_STRICT=1</code>), it denies the session's first raw read once and redirects it to the graph, but lets it through if a graph query ran in the last 30 minutes. The denial happens once per session, so the agent is never stranded. If the graph is stale (changed since the last commit) the hook says so as well.</p>
+
+<h3>5. Benchmarks: official numbers and outside measurements</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="LOCOMO conversational memory benchmark (n=300) recall@10 horizontal bars: graphify 0.497, hybrid RRF 0.493, dense RAG 0.439, BM25 0.362, supermemory 0.149, mem0 0.048. On the right, QA accuracy: supermemory 49.7%, graphify 45.3%, hybrid 43.3%, dense 41.3%, BM25 31.3%, mem0 27.3%. Ingest cost graphify about $1.40, mem0 $3.48, supermemory $15.67">
+    <text class="d-label" x="360" y="24" text-anchor="middle">LOCOMO (n=300): retrieval recall and QA accuracy, graphify's own harness</text>
+    <text class="d-label sm" x="190" y="52" text-anchor="middle">recall@10</text>
+    <text class="d-sub" x="112" y="78" text-anchor="end">graphify</text>
+    <rect class="d-node" x="120" y="66" width="199" height="14" rx="3"/>
+    <text class="d-label sm" x="326" y="78">0.497</text>
+    <text class="d-sub" x="112" y="104" text-anchor="end">hybrid RRF</text>
+    <rect class="d-node dim" x="120" y="92" width="197" height="14" rx="3"/>
+    <text class="d-sub" x="324" y="104">0.493</text>
+    <text class="d-sub" x="112" y="130" text-anchor="end">dense RAG</text>
+    <rect class="d-node dim" x="120" y="118" width="176" height="14" rx="3"/>
+    <text class="d-sub" x="303" y="130">0.439</text>
+    <text class="d-sub" x="112" y="156" text-anchor="end">BM25</text>
+    <rect class="d-node dim" x="120" y="144" width="145" height="14" rx="3"/>
+    <text class="d-sub" x="272" y="156">0.362</text>
+    <text class="d-sub" x="112" y="182" text-anchor="end">supermemory</text>
+    <rect class="d-node dim" x="120" y="170" width="60" height="14" rx="3"/>
+    <text class="d-sub" x="187" y="182">0.149 *own embedder</text>
+    <text class="d-sub" x="112" y="208" text-anchor="end">mem0</text>
+    <rect class="d-node dim" x="120" y="196" width="19" height="14" rx="3"/>
+    <text class="d-sub" x="146" y="208">0.048</text>
+    <text class="d-label sm" x="540" y="52" text-anchor="middle">QA accuracy</text>
+    <text class="d-sub" x="462" y="78" text-anchor="end">supermemory</text>
+    <rect class="d-node b" x="470" y="66" width="149" height="14" rx="3"/>
+    <text class="d-sub" x="626" y="78">49.7%</text>
+    <text class="d-sub" x="462" y="104" text-anchor="end">graphify</text>
+    <rect class="d-node" x="470" y="92" width="136" height="14" rx="3"/>
+    <text class="d-label sm" x="613" y="104">45.3%</text>
+    <text class="d-sub" x="462" y="130" text-anchor="end">hybrid RRF</text>
+    <rect class="d-node dim" x="470" y="118" width="130" height="14" rx="3"/>
+    <text class="d-sub" x="607" y="130">43.3%</text>
+    <text class="d-sub" x="462" y="156" text-anchor="end">dense RAG</text>
+    <rect class="d-node dim" x="470" y="144" width="124" height="14" rx="3"/>
+    <text class="d-sub" x="601" y="156">41.3%</text>
+    <text class="d-sub" x="462" y="182" text-anchor="end">BM25</text>
+    <rect class="d-node dim" x="470" y="170" width="94" height="14" rx="3"/>
+    <text class="d-sub" x="571" y="182">31.3%</text>
+    <text class="d-sub" x="462" y="208" text-anchor="end">mem0</text>
+    <rect class="d-node dim" x="470" y="196" width="82" height="14" rx="3"/>
+    <text class="d-sub" x="559" y="208">27.3%</text>
+    <rect class="d-box soft" x="20" y="232" width="680" height="56" rx="8"/>
+    <text class="d-sub" x="360" y="252" text-anchor="middle">Ingest cost: graphify ~$1.40 · mem0 $3.48 · supermemory $15.67  ·  graph build LLM credits $0</text>
+    <text class="d-sub" x="360" y="272" text-anchor="middle">LongMemEval-S (n=50) 76%, tied with dense RAG · ERPNext (1M LOC) key-fact coverage 82.0% vs grep 70.8% (n=6)</text>
+</svg>
+<div class="d-cap">The table from BENCHMARKS.md (updated 2026-07-05). It states that every system ran on the same harness with the same model (Kimi K2.6) and budgets, with the judge validated against a second judge (90.6% agreement, kappa 0.81). A footnote says supermemory's recall is hard to compare because its self-hosted build locks in its own embedder. The code-intelligence row has n=6, a small sample.</div>
+</div>
+<p>Two things have to be kept apart when reading the benchmarks. First, the table above comes from graphify's own harness. Publishing fairness rules (one model, a shared embedder, spend ledgers) and reproduction commands counts for something, but it is still self-measurement. Second, the most widely circulated figure, "71.5x fewer tokens", comes not from the benchmark table but from the token comparison on the how-it-works page. That corpus is three Karpathy repositories plus five papers and four images (52 files), at about 1,700 tokens per query against about 123,000 for the raw files. The same page gives 5.4x on four files and about 1x on a six-file library: a small corpus fits in context anyway, so the value there is structure, not compression.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="Token-saving claims versus independent measurements: the official page says 71.5x per query on a 52-file corpus, 5.4x on 4 files, about 1x on 6 files. Independent: Exchangepedia 7.3x per query, Medium 7 to 8% saved over a 10-question session, KubeBlogs blind-scored production task graphify 44 vs 45 without (out of 50), frontend repository 15 vs 23">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Where "71.5x" comes from, and what outside tests found</text>
+    <text class="d-label sm" x="170" y="54" text-anchor="middle">official how-it-works · per query</text>
+    <text class="d-sub" x="112" y="84" text-anchor="end">52 files</text>
+    <rect class="d-node" x="120" y="72" width="200" height="14" rx="3"/>
+    <text class="d-label sm" x="328" y="84">71.5x</text>
+    <text class="d-sub" x="112" y="112" text-anchor="end">4 files</text>
+    <rect class="d-node" x="120" y="100" width="15" height="14" rx="3"/>
+    <text class="d-sub" x="143" y="112">5.4x</text>
+    <text class="d-sub" x="112" y="140" text-anchor="end">6 files</text>
+    <rect class="d-node" x="120" y="128" width="3" height="14" rx="1"/>
+    <text class="d-sub" x="131" y="140">~1x</text>
+    <text class="d-label sm" x="540" y="54" text-anchor="middle">independent · per session or task</text>
+    <text class="d-sub" x="462" y="84" text-anchor="end">per query (Exchangepedia)</text>
+    <rect class="d-node d" x="470" y="72" width="21" height="14" rx="3"/>
+    <text class="d-sub" x="499" y="84">7.3x</text>
+    <text class="d-sub" x="462" y="112" text-anchor="end">10-question session (Medium)</text>
+    <rect class="d-node d" x="470" y="100" width="3" height="14" rx="1"/>
+    <text class="d-sub" x="481" y="112">7–8% saved (113k vs 120k)</text>
+    <text class="d-sub" x="462" y="140" text-anchor="end">blind quality (KubeBlogs)</text>
+    <rect class="d-node d" x="470" y="128" width="176" height="14" rx="3"/>
+    <text class="d-sub" x="654" y="140">44 / 50</text>
+    <text class="d-sub" x="462" y="166" text-anchor="end">same work, no graphify</text>
+    <rect class="d-node dim" x="470" y="154" width="180" height="14" rx="3"/>
+    <text class="d-sub" x="658" y="166">45 / 50</text>
+    <rect class="d-box soft" x="20" y="190" width="680" height="48" rx="8"/>
+    <text class="d-sub" x="360" y="210" text-anchor="middle">Left bars are linear, 71.5x = 200px, not a log scale. Critics note the token counts were estimated from character counts.</text>
+    <text class="d-sub" x="360" y="228" text-anchor="middle">On one frontend repo graphify lost 15 to 23. Net: strong for orientation and impact analysis, little effect on focused edits.</text>
+</svg>
+<div class="d-cap">Official figures from the how-it-works page; independent measurements are the values cited in write-ups found by search (the Exchangepedia, Medium and KubeBlogs figures as quoted by the Zero-to-Hero guide). Most originals could not be opened from the environment this page was written in, so the guide's citations are carried over as given.</div>
+</div>
+
+<h3>6. Strengths and limits</h3>
+<table>
+    <thead><tr><th>Strong</th><th>Weak</th></tr></thead>
+    <tbody>
+        <tr><td>Entering a large repository. Hubs and communities give the structure first, and "from this endpoint to storage" becomes a path</td><td>Small projects. When the files fit in context anyway, query overhead can raise token use</td></tr>
+        <tr><td>Impact analysis and onboarding. A shared component's callers and dependencies in one list, with <code># WHY:</code> comments and ADRs linked to the code as nodes</td><td>Focused edits. Fixing a few files is faster with plain <code>rg</code>, and agents do exactly that</td></tr>
+        <tr><td>Doc-heavy repositories. PDFs, papers and video enter the same graph, so the link between code and design docs shows</td><td>Stale graphs. Hooks do not cover pull or merge, so forgetting <code>graphify update .</code> means carrying a wrong map (new directories not discovered, #1837, and others)</td></tr>
+        <tr><td>Verifiability. Every edge has a tag and a file:line, so an answer can be checked against the source</td><td>Graph answers are "context, not verified answers". INFERRED edges can be wrong, and same-named helpers in test code add noise</td></tr>
+        <tr><td>Cost. The code graph is free and offline, and re-runs skip by hash</td><td>The semantic pass sends docs and images to the configured model. Choosing Kimi sends them to Moonshot's servers. A log at <code>~/.cache/graphify-queries.log</code> keeps your questions (can be turned off)</td></tr>
+    </tbody>
+</table>
+<p>On security, version 0.9.115 of November 21, 2026 fixed a Windows issue where a path inside the repository (such as <code>source \\host\share\x</code> in a <code>.sh</code> file, a UNC path) was stat'ed outside the scan root and could force SMB authentication (GHSA-g6c9-j4vm-mwq4). A tool that graphs unfamiliar repositories can hit this class of input-handling problem, and staying current is the answer. The skill file itself passes the scan path through a quoted heredoc rather than substituting it into the shell, so shell code hidden in a path does not execute. For a shared HTTP MCP server set <code>--api-key</code>, and gitignore <code>graphify-out/cache/</code>, <code>manifest.json</code> and <code>cost.json</code>.</p>
+
+<h3>7. Side by side with this wiki's graph</h3>
+<p>This wiki has its own knowledge graph linking 79 documents through three layers: shared concepts, citation backlinks and declared typed relations (<a href="/p/en/kgs-edges/">the three layers of connection</a>). The raw material differs. This wiki builds edges from human-curated concepts and body links; graphify extracts calls, imports and inheritance from syntax trees by machine. The operating principles are alike, though. This wiki's "only relations that exist in the text" sits where graphify's "never invent an edge, use AMBIGUOUS when unsure" sits, and both find neighbors from structure alone, without embeddings. What differs is the use. This wiki's graph is a map for people and AI moving between documents; graphify's graph is an index an agent visits before reading code. Running graphify over this repository's <code>app.js</code> and <code>tools/*.py</code> would put a code graph next to the document graph. Only the document graph exists today, so that stays a next experiment.</p>
+
+<h3>Fact-check notes</h3>
+<p class="scn-sub">The pipeline, the three passes, the language count (33 + 7), the confidence rubric, edge tags, <code>also_seen</code>, output files, commands and flags, exit codes, <code>.graphifyrc</code>, hook behavior (PreToolUse, strict, 30 minutes), git hooks, the ten MCP tools, export formats, the privacy items and the honesty rules were taken from the <a href="https://github.com/Graphify-Labs/graphify" target="_blank" rel="noopener">official repository</a> cloned on November 24, 2026 and read directly in README, <code>docs/how-it-works.md</code>, ARCHITECTURE.md, <code>graphify/skill.md</code>, <code>graphify/install.py</code> and CHANGELOG (commit of 2026-11-23, version 0.9.118). The benchmark table (LOCOMO, LongMemEval-S, ERPNext, costs) and judge validation figures come from BENCHMARKS.md (updated 2026-07-05) and are Graphify Labs' own measurements. The first release date (2026-04-04, 0.1.1) and release count (284) were confirmed against the PyPI API. The GitHub API did not respond from this environment and aggregators disagree on stars (76,348; 114,794; 129,000; 152,271), so no firm number appears in the body. The 71.5x figure is from the official how-it-works page; the independent measurements (7.3x, 7 to 8%, 44 vs 45, 15 vs 23) and criticisms (character-based token estimates, small-corpus backfire, agents skipping the graph, stale-graph issue numbers) rest on the <a href="https://gist.github.com/YourAKShaw/46c01330c7edfd1e82a4b0339b6846de" target="_blank" rel="noopener">Zero-to-Hero guide</a> (2026-10-20) and search excerpts, because the KubeBlogs, Medium and Exchangepedia originals could not be opened under this environment's network policy. The license is written as dual because LICENSE (Apache-2.0) and LICENSE-MIT sit side by side. Company facts (Graphify Labs, YC S26, ROSS Index Q3 2026 #2 badge) are from README badges. The author is not a public figure, so no handle or name is given beyond the copyright line in NOTICE. The hero image is the repository's <code>docs/graph-hero.png</code>, resized to 1400px under Apache-2.0.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Skill Catalog &middot; <span class="pr-k">Created</span> 2026-11-24 &middot; <span class="pr-k">Updated</span> 2026-11-24</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/hns-evidence/">Evidence That the Harness Moves the Score — Reading Microsoft&#x27;s White Paper Alongside RHO and HarnessPro</a></li><li><a href="/p/en/tip-intermediate/">Intermediate — 11 Ways to Turn Sessions into a System</a></li><li><a href="/p/en/kgs-edges/">How Documents Connect — Concept Curation and idf-Weighted Edges</a></li><li><a href="/p/en/welcome/">Getting Started</a></li></ul>
+</nav>
+</body>
+</html>

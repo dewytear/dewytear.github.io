@@ -117,6 +117,31 @@
   ]
  },
  {
+  "name": "claude-ship",
+  "title": "Claude Ship — PR をマージまで連れて行く三つのエージェント、使い方と利点",
+  "summary": "Anthropic が2026年11月23日に公開した Claude Ship を公式文書に基づいて解説する。プルリクエスト（PR）が開かれたあと、マージまで三つのエージェントが引き継ぐ。Code Review は発見・検証・順位付け・投稿の四段階でレビューを付け（重要・些細・既存欠陥の三等級、Quick・Standard・Deep）、PR Steward は失敗した検査・競合・レビューコメントを直して再プッシュするが承認・マージはできず、Claude Approvals は .claude/approvals.yml の規則で「誰が何人承認すべきか」を判定する（observe で始めて enforce へ）。開発者側では Claude Code の /ship 一行がコミット・プッシュ・PR 作成・Steward の監視まで束ね、組織側では Code Review → Steward（手動）→ Approvals observe → enforce の順に有効化する導入順序と、CODEOWNERS に代わるポリシーファイル二種の出発例を載せた。利点（レビュー待ちの短縮、修正ループの自動化、ポリシーのコード化、人の承認の定量配置）と注意点（Team・Enterprise 限定ベータ、ZDR・HIPAA 除外、ボットの承認権限の範囲、月次上限とリポジトリ別支出上限、自社測定の数値）を分け、このウィキの PR の流れと比べた。",
+  "relations": [
+   {
+    "target": "welcome",
+    "type": "prerequisite",
+    "evidenceRef": "/ship の節は Claude Code のインストール・認証とスラッシュコマンドの使用を前提にすぐ引数の説明に入る。基本は「はじめに」に委ねている",
+    "source": "human"
+   },
+   {
+    "target": "news-20260820-who-makes-the-call",
+    "type": "example-of",
+    "evidenceRef": "Approvals の「規則ファイルが承認席数を判定する」設計は、その記事の「判定は会話から規則へ移る」という論旨が製品になった事例で、本文6節がその記事を指す",
+    "source": "human"
+   },
+   {
+    "target": "skills",
+    "type": "prerequisite",
+    "evidenceRef": "Steward の動作を .claude/skills/steward/SKILL.md で変え、skillOverrides で止める箇所がスキル・フックの概念を前提にする",
+    "source": "human"
+   }
+  ]
+ },
+ {
   "name": "ccb-overview",
   "title": "基礎 — 概要・ターミナル・CLAUDE.md",
   "summary": "Claude Code とは何かから、ターミナルの四つのコマンド、CLAUDE.md の作業指針まで — フォルダを作って実行する関門を越える",
@@ -772,6 +797,31 @@
    {
     "target": "skl-install",
     "evidenceRef": "「選ぶときに見ること」の節がスキルはエージェントの権限で動くという点だけを指摘し、何を実行しどこへつなぐかを確かめる方法はその文書に任せる"
+   }
+  ]
+ },
+ {
+  "name": "sks-graphify",
+  "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+  "summary": "フォルダ内のコード・文書・PDF・画像・映像を /graphify . 一行で一つの知識グラフにし、以後エージェントがファイルを丸ごと読む代わりに graphify query・path・explain で必要な部分グラフだけ受け取るようにするスキルを、公式リポジトリ（README・ARCHITECTURE・BENCHMARKS・skill.md）と外部の検証記事で分析した。コードは tree-sitter でローカルに LLM なしで解析し（約40言語）、すべてのエッジに EXTRACTED・INFERRED（0.95〜0.55 の五段階）・AMBIGUOUS の信頼タグを付け、Leiden コミュニティ検出でサブシステムを見つける。導入（uv tool install graphifyy、graphify install）とコマンド表、Claude Code の PreToolUse フックが Read・Grep・cat の直前に割り込んでグラフを先に見させる仕掛け（strict モード）、git フックと MCP サーバー、書き出し形式を整理した。ベンチマークは自社測定（LOCOMO recall@10 0.497、mem0 0.048）と広まった「トークン71.5倍削減」（52ファイルのコーパスで質問あたりの値）を独立測定（セッション単位で7〜8%削減、品質 44 対 45）と並べ、どこで利得が出てどこで出ないか（大きなリポジトリの道案内・影響分析に強く、小さなプロジェクト・集中編集に弱い）を見分けた。2026-11-21 の Windows SMB 強制認証の脆弱性修正とプライバシー項目を記し、このウィキの文書グラフと原則・用途を比較した。",
+  "relations": [
+   {
+    "target": "skl-overview",
+    "type": "prerequisite",
+    "evidenceRef": "本文はスキル自体の実体・発動の仕組みを扱わず、graphify install が置く SKILL.md と呼び出しだけを扱う。スキルとは何かはその文書に委ねている",
+    "source": "human"
+   },
+   {
+    "target": "skills",
+    "type": "prerequisite",
+    "evidenceRef": "4節の PreToolUse フックと MCP サーバー（graphify-mcp）の説明がフック・MCP の概念を前提にすぐ動作に入る",
+    "source": "human"
+   },
+   {
+    "target": "kgs-edges",
+    "type": "prerequisite",
+    "evidenceRef": "7節はこのウィキのグラフの三層（概念共有・引用バックリンク・型付き関係）を知る読者を前提に graphify のエッジ原則と比べる",
+    "source": "human"
    }
   ]
  },

@@ -117,6 +117,31 @@
   ]
  },
  {
+  "name": "claude-ship",
+  "title": "Claude Ship — Three Agents That Carry a PR to Merge: How to Use It and Why",
+  "summary": "Explains Claude Ship, released by Anthropic on November 23, 2026, from the official docs. Once a pull request is open, three agents take it to merge. Code Review posts findings in four steps (find, verify, rank, post) with three severities (important, nit, pre-existing) and three depths (Quick, Standard, Deep). PR Steward fixes failing checks, conflicts and review comments and pushes again, but cannot approve or merge. Claude Approvals decides from rules in .claude/approvals.yml who must approve and how many, starting in observe mode and moving to enforce. On the developer side, one /ship line in Claude Code bundles commit, push, PR creation and Steward watching; on the organization side the page gives the rollout order (Code Review, then Steward in manual mode, then Approvals observe, then enforce) and two starter policy files that replace CODEOWNERS. Advantages (shorter review queues, automated fix loops, policy as code, measured placement of human approvals) are set against cautions (Team and Enterprise beta only, no ZDR or HIPAA, the scope of a bot's approval rights, monthly limits and per-repo spend caps, vendor-measured numbers), and the flow is compared with this wiki's own PR process.",
+  "relations": [
+   {
+    "target": "welcome",
+    "type": "prerequisite",
+    "evidenceRef": "The /ship section assumes Claude Code is installed and authenticated and goes straight to the command's arguments; the basics are delegated to Getting Started",
+    "source": "human"
+   },
+   {
+    "target": "news-20260820-who-makes-the-call",
+    "type": "example-of",
+    "evidenceRef": "Approvals' design, where a rules file decides how many approval seats are needed, is the productized case of that article's thesis that judgment moves from conversation to rules, and section 6 points to it",
+    "source": "human"
+   },
+   {
+    "target": "skills",
+    "type": "prerequisite",
+    "evidenceRef": "Changing Steward's behavior through .claude/skills/steward/SKILL.md and turning it off with skillOverrides presuppose the skill and hook concepts",
+    "source": "human"
+   }
+  ]
+ },
+ {
   "name": "ccb-overview",
   "title": "Basics — Overview, Terminal, CLAUDE.md",
   "summary": "From what Claude Code is to the four terminal commands and CLAUDE.md instructions — crossing the make-a-folder-and-run gate",
@@ -772,6 +797,31 @@
    {
     "target": "skl-install",
     "evidenceRef": "The 'What to check' section only notes that skills run with the agent's permissions and leaves how to check what a skill runs and where it connects to that document"
+   }
+  ]
+ },
+ {
+  "name": "sks-graphify",
+  "title": "graphify — A Skill That Turns a Codebase into a Knowledge Graph So Agents Query Instead of Grep",
+  "summary": "An analysis, from the official repository (README, ARCHITECTURE, BENCHMARKS, skill.md) and outside verification, of a skill that turns the code, docs, PDFs, images and video in a folder into one knowledge graph with a single /graphify . and then has the agent fetch only the relevant subgraph through graphify query, path and explain instead of reading whole files. Code is parsed locally with tree-sitter and no LLM (about 40 languages), every edge carries an EXTRACTED, INFERRED (five levels from 0.95 to 0.55) or AMBIGUOUS confidence tag, and Leiden community detection finds subsystems. The page covers installation (uv tool install graphifyy, graphify install), a command table, the PreToolUse hook that steps in before Read, Grep and cat so the agent looks at the graph first (with a strict mode), git hooks, the MCP server and export formats. Benchmarks are read in two columns: the vendor's own (LOCOMO recall@10 0.497 against mem0 0.048) and the widely quoted 71.5x token saving (one query on a 52-file corpus) next to independent session-level measurements (7 to 8% saved, quality 44 vs 45), to show where the gain is (orientation and impact analysis in large repositories) and where it is not (small projects, focused edits). It notes the Windows forced-SMB-authentication fix of 2026-11-21 and the privacy items, and compares the tool's graph with this wiki's document graph in principle and in use.",
+  "relations": [
+   {
+    "target": "skl-overview",
+    "type": "prerequisite",
+    "evidenceRef": "The article does not cover what a skill is or how it triggers, only the SKILL.md that graphify install places and how it is invoked; what a skill is is delegated to that document",
+    "source": "human"
+   },
+   {
+    "target": "skills",
+    "type": "prerequisite",
+    "evidenceRef": "Section 4's PreToolUse hook and MCP server (graphify-mcp) go straight into behavior, assuming the hook and MCP concepts",
+    "source": "human"
+   },
+   {
+    "target": "kgs-edges",
+    "type": "prerequisite",
+    "evidenceRef": "Section 7 compares graphify's edge principles with this wiki's three layers (shared concepts, citation backlinks, typed relations), assuming a reader who knows them",
+    "source": "human"
    }
   ]
  },

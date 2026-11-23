@@ -1,0 +1,23 @@
+            <h2>2026-11-24 — 콘텐츠</h2>
+
+            <h3>Claude Ship 소개 문서 등재 (3언어) — PR을 머지까지 데려가는 세 에이전트</h3>
+            <p>
+                11월 24일 아침 브리핑 1번(Claude Ship 공개)을 자세히 조사해 Claude 섹션에 등재하되 사용법과 장점을 중심으로 쓰라는 지시를 받았다. AI › Claude › Code › Introduction의 세 번째 문서 <a href="#!claude-ship">Claude Ship — PR을 머지까지 데려가는 세 에이전트, 쓰는 법과 장점</a>으로 넣었다. 변경 유형은 CONTENT + PLUGIN(번들 동기).
+            </p>
+            <ul>
+                <li><strong>구성.</strong> 세 줄 요약 → PR 흐름 도식(PR 열림 → Code Review → PR Steward → Approvals → 머지 판정) → 세 에이전트 비교표 → /ship 사용법과 인자 표 → 조직 도입 4단계 도식 + 정책 파일 시작 예시 2종(approvals.yml) → 장점 7가지 → 조심할 것 6가지 → 이 위키의 PR 흐름과 대조 → 사실검증 노트. 도식 2개·표 2개.</li>
+                <li><strong>조사 범위.</strong> code.claude.com의 Code Review·PR Steward·Approvals·/ship 공식 문서와 claude.com 발표문을 직접 읽었다. 보도(TechCrunch 등)는 이 세션 네트워크에서 열리지 않아 검색 발췌가 공식 문서와 일치하는 범위만 썼다. 머지 PR 2배·되돌림 40% 감소는 Anthropic 자체 수치임을 본문과 노트에 밝혔다.</li>
+                <li><strong>단정하지 않은 것.</strong> 고객 사례의 발언자는 직함만 적었다. Enterprise 크레딧은 조건(2027-01-15까지 신청)을 함께 적었다. ZDR·HIPAA·CMEK 제외와 Team·Enterprise 한정 베타를 조심할 것에 넣었다.</li>
+            </ul>
+
+            <h3>graphify 스킬 문서 등재 (3언어) — 코드베이스를 지식 그래프로 바꾸는 스킬</h3>
+            <p>
+                같은 요청의 후속으로 graphify 스킬을 검색을 많이 하고 도식·그래프 이미지를 모두 써서 아주 자세히 분석해 스킬 카탈로그에 등재하라는 지시를 받았다. AI › Claude › 스킬 카탈로그의 네 번째 문서 <a href="#!sks-graphify">graphify — 코드베이스를 지식 그래프로 바꿔 grep 대신 질의하게 하는 스킬</a>로 넣었다.
+            </p>
+            <ul>
+                <li><strong>구성.</strong> 세 줄 요약 → 공식 저장소의 FastAPI 그래프 히어로 이미지(<code>assets/ai/claude/skills/sks-graphify/hero.webp</code>, Apache-2.0) → 세 패스 파이프라인 도식 → 간선 신뢰도 체계 도식 → 설치·명령 표 → PreToolUse 훅 질의 루프 도식 → LOCOMO 벤치마크 막대 도식 + 토큰 절감 주장 대 독립 측정 도식 → 장점·한계 표와 보안 수정 → 이 위키 그래프와 비교 → 사실검증 노트. 도식 5개·사진 1장·표 2개.</li>
+                <li><strong>조사 범위.</strong> 공식 저장소(Graphify-Labs/graphify)를 받아 README·how-it-works·ARCHITECTURE·BENCHMARKS·skill.md·install.py·CHANGELOG를 직접 읽었고, PyPI API로 초공개일(2026-04-04)과 릴리스 수(284)를 확인했다. 독립 측정(7.3배·7~8%·44 대 45)은 Zero-to-Hero 가이드(gist)의 인용과 검색 발췌에 의존했다 — KubeBlogs·Medium·Exchangepedia 원문은 네트워크 정책으로 열리지 않았다. GitHub API가 응답하지 않아 스타 수는 "10만 전후"로만 적었다.</li>
+                <li><strong>버린 것.</strong> 저장소의 경로 탐색 데모 SVG는 애니메이션이라 스크린샷이 빈 화면으로 나와 싣지 않았다. 작성자는 공인이 아니라 실명·핸들을 쓰지 않았다.</li>
+                <li><strong>메타데이터.</strong> list 노드 2개(tags 3언어, model Claude Fable 5.1), doc-entries 3언어(claude-ship 개념 11개·관계 3개 — prerequisite→welcome·skills, example-of→news-20260820-who-makes-the-call; sks-graphify 개념 17개·관계 3개 — prerequisite→skl-overview·skills·kgs-edges), 새 개념 <code>풀리퀘스트</code>·<code>승인정책</code>·<code>코드베이스</code>·<code>커뮤니티검출</code>의 en·ja 라벨, ai-map 3언어의 Introduction(2편→3편)·스킬 카탈로그(3편→4편) 절과 data-topics 갱신.</li>
+                <li><strong>검증.</strong> validate_design(도식 경계)·check_diagram_bounds(실제 렌더)·check_i18n_render를 돌리고 ko·en·ja 도식 스크린샷으로 확인했다. 플러그인 번들 동기 후 version 0.30.8로 상향.</li>
+            </ul>
