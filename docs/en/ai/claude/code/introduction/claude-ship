@@ -1,0 +1,176 @@
+<h2>Claude Ship — Three Agents That Carry a PR to Merge: How to Use It and What You Gain</h2>
+
+<h3>Three-line summary</h3>
+<ul>
+    <li>Claude Ship is a bundle of agents for the work that starts after a pull request (PR) opens. Code Review finds problems, PR Steward pushes commits that fix failing checks, merge conflicts and review comments, and Claude Approvals reports "who still has to approve" according to a policy the team writes as a file. It launched on November 23, 2026 in beta for Team and Enterprise plans.</li>
+    <li>An individual developer types <code>/ship</code> in Claude Code and gets commit, push, PR creation and review in one go, followed by a "watch" in which Claude handles failing checks and review replies. A person still clicks merge.</li>
+    <li>The gain is review that keeps pace with how fast code is written. Anthropic says merged PRs on its own Claude Code team more than doubled from June to September while the share reverted fell by more than 40%. The flip side is that one line in the policy file can allow a merge no person looked at, so starting in observe mode and under branch rules is the order that matters.</li>
+</ul>
+
+<p>Coding agents write code faster than before, but reviewing and approving that code is still tied to people's time. You open a PR and move on, a review arrives days later, you return to old code, push a fix, wait for checks again and look for someone to approve. That is the problem Anthropic names when it introduces Claude Ship. This page draws on the official docs and the announcement to set out what each of the three agents does, how an individual and an organization each use it, what the benefits are and where to be careful. This wiki is itself a repository where Claude Code writes documents and merges through PRs, so the end of the page reads the product against that flow.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="Where the three Claude Ship agents sit in a PR's life: once a PR opens, Code Review raises findings through four stages, find, verify, rank and post; PR Steward fixes failing checks, merge conflicts and review comments and pushes commits; Claude Approvals reads the policy file and reports who still has to approve as a check result. People and GitHub branch rules decide the merge">
+    <text class="d-label" x="360" y="24" text-anchor="middle">After the PR opens: where each agent sits</text>
+    <rect class="d-box soft" x="20" y="56" width="110" height="60" rx="8"/>
+    <text class="d-label sm" x="75" y="82" text-anchor="middle">PR opens</text>
+    <text class="d-sub" x="75" y="102" text-anchor="middle">person or agent</text>
+    <path class="d-edge accent" d="M132 86 L160 86"/>
+    <path class="d-arrow accent" d="M160 80 L170 86 L160 92 Z"/>
+    <rect class="d-box" x="172" y="48" width="160" height="76" rx="8"/>
+    <text class="d-label sm" x="252" y="70" text-anchor="middle">Code Review (GA)</text>
+    <text class="d-sub" x="252" y="90" text-anchor="middle">find → verify → rank → post</text>
+    <text class="d-sub" x="252" y="108" text-anchor="middle">Important · Nit · Pre-existing</text>
+    <path class="d-edge accent" d="M334 86 L362 86"/>
+    <path class="d-arrow accent" d="M362 80 L372 86 L362 92 Z"/>
+    <rect class="d-box" x="374" y="48" width="160" height="76" rx="8"/>
+    <text class="d-label sm" x="454" y="70" text-anchor="middle">PR Steward (beta)</text>
+    <text class="d-sub" x="454" y="90" text-anchor="middle">failing checks · conflicts</text>
+    <text class="d-sub" x="454" y="108" text-anchor="middle">review comments → fixes</text>
+    <path class="d-edge accent" d="M536 86 L564 86"/>
+    <path class="d-arrow accent" d="M564 80 L574 86 L564 92 Z"/>
+    <rect class="d-box accent" x="576" y="48" width="130" height="76" rx="8"/>
+    <text class="d-label sm" x="641" y="70" text-anchor="middle">Claude Approvals</text>
+    <text class="d-sub" x="641" y="90" text-anchor="middle">policy file verdict</text>
+    <text class="d-sub" x="641" y="108" text-anchor="middle">(beta)</text>
+    <path class="d-edge dash" d="M454 126 L454 150 L252 150 L252 126"/>
+    <path class="d-arrow" d="M246 136 L252 126 L258 136 Z"/>
+    <text class="d-sub" x="353" y="166" text-anchor="middle">a push can trigger another review (per settings)</text>
+    <rect class="d-box soft" x="100" y="196" width="606" height="40" rx="8"/>
+    <text class="d-sub" x="403" y="221" text-anchor="middle">Check title, e.g. "Waiting on human review from any person (1/2)" · Claude approves where policy allows</text>
+    <rect class="d-node" x="100" y="254" width="606" height="30" rx="6"/>
+    <text class="d-node-label" x="403" y="273" text-anchor="middle">Merge: people + branch rules (Steward cannot approve or merge; Approvals blocks only as a required check)</text>
+</svg>
+<div class="d-cap">Code Review is the existing product that reached general availability on October 15, 2026; PR Steward and Claude Approvals are the new beta agents. The three are switched on separately, repository by repository.</div>
+</div>
+
+<h3>1. What each agent does</h3>
+<table>
+    <thead><tr><th></th><th>Code Review</th><th>PR Steward</th><th>Claude Approvals</th></tr></thead>
+    <tbody>
+        <tr><td>Status</td><td>General availability</td><td>Public beta</td><td>Public beta</td></tr>
+        <tr><td>Does</td><td>Reads the diff with surrounding code, finds logic errors, security vulnerabilities and broken edge cases, verifies them, then posts inline comments ranked by severity</td><td>Works on failing checks, merge conflicts and review comments from people and bots, pushing fix commits. After each push it comments what changed and how to undo it</td><td>Reads the repo's policy file and reports "who still has to approve" as a check title. Posts an approving review itself where the policy allows</td></tr>
+        <tr><td>Cannot</td><td>Approve, block, run code or push commits. Its check never concludes as a failure</td><td>Approve or merge, by design. Anthropic's service refuses requests to approve, change branch protection, delete branches or push tags</td><td>Block a merge unless it is a required check in GitHub. It cannot read CI results, so CI stays a separate required check</td></tr>
+        <tr><td>Runs as</td><td>Anthropic infrastructure, read-only on the repo</td><td>The Claude GitHub App in a cloud session, started in auto mode (permission requests are denied)</td><td>Policy evaluation plus classifier runs (cloud sessions with read-only GitHub access)</td></tr>
+        <tr><td>Billing</td><td>Tokens against the organization's usage credits. Levels Quick, Standard, Deep</td><td>Tokens. A monthly limit plus a per-repository spend cap</td><td>No base charge. Only the Code Reviews and classifier runs a policy triggers are billed. Observe mode is billed too</td></tr>
+        <tr><td>Tuning files</td><td><code>REVIEW.md</code> (review-only rules), <code>CLAUDE.md</code> (project context)</td><td><code>.claude/skills/steward/SKILL.md</code> (house rules)</td><td><code>.claude/approvals.yml</code> (policy), <code>.claude/classifiers/&lt;name&gt;/def.yml</code> (classifiers)</td></tr>
+    </tbody>
+</table>
+<p>Code Review's four stages deserve a look. Several agents search for candidates in parallel (Find), candidates are checked against the code to drop false positives (Verify), duplicates are merged and ranked by severity (Rank), and the result goes up as inline comments and a check run (Post). Because a verification step sits between finding and posting, the design targets the usual complaint about review bots, noise. Severities are 🔴 Important (fix before merging), 🟡 Nit (minor) and 🟣 Pre-existing (not introduced by this PR). A re-review looks only at what changed since the last one and posts fewer Nits and Pre-existing findings.</p>
+
+<h3>2. For one developer: the <code>/ship</code> line</h3>
+<p>Even with nothing switched on by an administrator, a developer can use <code>/ship</code> in a terminal Claude Code session. It counts as ordinary Claude Code usage. Prerequisites: Claude Code 2.1.330 or later, GitHub CLI 2.63 or later signed in with <code>gh auth login</code>, and git 2.38 or later.</p>
+<ol>
+    <li>Type <code>/ship</code> in the session where you made the change. The commit message is written from the conversation, so a different session yields a title like "Update greet.py and 1 more".</li>
+    <li>There is no confirmation prompt. Before the commit and again before the push a line ending "Esc to cancel" shows for a few seconds, then it proceeds. On the default branch it creates a new branch and switches to it; work already committed on another branch is pushed as that branch and a PR opened.</li>
+    <li>It reviews with <code>/code-review</code>. Put the effort level first, as in <code>/ship low</code> (default <code>high</code>).</li>
+    <li>A watch starts. In auto mode Claude fixes review findings without asking, merges the base branch to resolve conflicts, works on failing checks and re-runs them, answers review comments, resolves threads and re-requests reviews. Everything appears on GitHub under your own name.</li>
+    <li>When checks pass and comments are answered, Claude says so. You merge.</li>
+</ol>
+<table>
+    <thead><tr><th>Argument</th><th>Effect</th></tr></thead>
+    <tbody>
+        <tr><td><code>low · medium · high · xhigh · max</code></td><td>Review effort level (<code>/ship</code> only). Default <code>high</code></td></tr>
+        <tr><td><code>41</code> or a PR URL</td><td>Work on that PR. A watch needs your own PR with its branch checked out</td></tr>
+        <tr><td><code>+botname</code></td><td>Also read that bot's comments (e.g. <code>/steward +my-lint-bot</code>). Repeat when restarting</td></tr>
+        <tr><td><code>stop</code> · <code>terms</code></td><td>End the watch · show what Claude may do during a watch and what limits it</td></tr>
+    </tbody>
+</table>
+<p>If a PR is already open, <code>/steward</code> skips commit, push and review and only starts the watch. While watching and acting without a message from you, Claude Code blocks <code>gh</code> and <code>git</code> commands that merge, approve, turn on auto-merge or force-push, and refuses connectors, <code>WebFetch</code> and <code>WebSearch</code>. <code>git stash</code>, <code>git reset</code>, <code>git checkout</code>, <code>git add -A</code> and <code>git commit -a</code> are refused as well. A watch ends when the PR merges or closes, after seven days, on one press of Esc, on a branch switch, on <code>/clear</code>, <code>/resume</code> or <code>/branch</code>, or when the session ends. A <code>.claude/skills/steward/SKILL.md</code> in the repo gives the watch and PR Steward the same house rules.</p>
+<p>What it will not do automatically is equally clear. It does not commit uncommitted changes on a branch that already has a PR, in a public repository, or when a file's name looks like a secret (<code>.env</code> and the like). If you changed <code>.gitignore</code>, <code>CLAUDE.md</code> or anything under <code>.github/</code>, it asks you to commit yourself. It does not open PRs on GitHub Enterprise or from forks, so open the PR first and then run <code>/ship</code>. No watch starts on native Windows or in <code>bypassPermissions</code> mode.</p>
+
+<h3>3. For an organization: one agent at a time, one repository first</h3>
+<p>An Owner of the Claude organization switches it on at <strong>Organization settings › Claude Ship</strong>. The order the official docs recommend is one agent at a time, starting with one repository.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 230" role="img" aria-label="Four-step organization rollout: step 1 turn on Code Review in one repository and set a monthly spend limit, step 2 turn on PR Steward in manual mode and set a per-repository spend cap, step 3 merge the approvals.yml policy file in observe mode to see what the check would decide, step 4 delete the observe line to enforce and add Claude Approvals as a required check in GitHub branch rules. Turning off runs in reverse">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Organization rollout (turn off in reverse order)</text>
+    <rect class="d-box" x="20" y="52" width="160" height="96" rx="8"/>
+    <text class="d-label sm" x="100" y="76" text-anchor="middle">① Code Review</text>
+    <text class="d-sub" x="100" y="98" text-anchor="middle">one repository</text>
+    <text class="d-sub" x="100" y="116" text-anchor="middle">monthly spend limit</text>
+    <text class="d-sub" x="100" y="134" text-anchor="middle">check avg cost per review</text>
+    <path class="d-edge accent" d="M182 100 L198 100"/>
+    <path class="d-arrow accent" d="M198 94 L208 100 L198 106 Z"/>
+    <rect class="d-box" x="210" y="52" width="160" height="96" rx="8"/>
+    <text class="d-label sm" x="290" y="76" text-anchor="middle">② PR Steward</text>
+    <text class="d-sub" x="290" y="98" text-anchor="middle">start in Manual mode</text>
+    <text class="d-sub" x="290" y="116" text-anchor="middle">invoke: @claude steward</text>
+    <text class="d-sub" x="290" y="134" text-anchor="middle">per-repo spend cap</text>
+    <path class="d-edge accent" d="M372 100 L388 100"/>
+    <path class="d-arrow accent" d="M388 94 L398 100 L388 106 Z"/>
+    <rect class="d-box" x="400" y="52" width="150" height="96" rx="8"/>
+    <text class="d-label sm" x="475" y="76" text-anchor="middle">③ Approvals observe</text>
+    <text class="d-sub" x="475" y="98" text-anchor="middle">merge approvals.yml</text>
+    <text class="d-sub" x="475" y="116" text-anchor="middle">mode: observe</text>
+    <text class="d-sub" x="475" y="134" text-anchor="middle">shows the verdict only</text>
+    <path class="d-edge accent" d="M552 100 L568 100"/>
+    <path class="d-arrow accent" d="M568 94 L578 100 L568 106 Z"/>
+    <rect class="d-box accent" x="580" y="52" width="120" height="96" rx="8"/>
+    <text class="d-label sm" x="640" y="76" text-anchor="middle">④ Enforce</text>
+    <text class="d-sub" x="640" y="98" text-anchor="middle">delete observe line</text>
+    <text class="d-sub" x="640" y="116" text-anchor="middle">add as required</text>
+    <text class="d-sub" x="640" y="134" text-anchor="middle">check in branch rules</text>
+    <rect class="d-box soft" x="20" y="170" width="680" height="44" rx="8"/>
+    <text class="d-sub" x="360" y="188" text-anchor="middle">Every step bills tokens. Observe mode and the Code Reviews a policy triggers are billed too.</text>
+    <text class="d-sub" x="360" y="206" text-anchor="middle">Excluded: Zero Data Retention · HIPAA configuration · customer-managed keys. Two people with write access before enforcing.</text>
+</svg>
+<div class="d-cap">The order is taken from the official setup docs. Turning off must run Approvals → PR Steward → Code Review, because a policy file can start billed reviews on a repository where Code Review is off.</div>
+</div>
+
+<h4>The policy file is "a smarter CODEOWNERS"</h4>
+<p>The heart of Claude Approvals is <code>.claude/approvals.yml</code> at the repo root. Each rule has path patterns, a condition and a verdict. The verdict says how far Claude goes (<code>comments</code>, <code>approves</code> or <code>blocks</code>) and how many people's seats (<code>seats</code>) are needed. The two starter examples from the official docs, verbatim.</p>
+<pre><code># .claude/approvals.yml — A: one person is enough when the review passes, and Claude approves
+version: 1
+mode: observe
+rules:
+  - purpose: "A change takes two people. When Claude's review passes, one is enough and Claude approves."
+    paths: ["**"]
+    verdict: { claude: comments, seats: 2 }
+    override:
+      - { if: "claude/code_review = pass", verdict: { claude: approves, seats: 1 } }
+  - purpose: "A change to the review rules takes two people."
+    paths: ["**/.claude/**"]
+    nested: inherit
+    verdict: { claude: comments, seats: 2 }</code></pre>
+<pre><code># .claude/approvals.yml — B: two people on every change, Claude only advises
+version: 1
+mode: observe
+rules:
+  - purpose: "A change takes two people."
+    paths: ["**"]
+    verdict: { claude: comments, seats: 2 }
+    advisory: [claude/code_review]
+  - purpose: "A change to the review rules takes two people."
+    paths: ["**/.claude/**"]
+    nested: inherit
+    verdict: { claude: comments, seats: 2 }</code></pre>
+<p>How to read it: <code>seats: 2</code> means two human seats, and the author can fill one, so it is "author plus one". To exclude authors, write <code>seats: [{ count: 1, from: [humans, "!pr/authors"] }]</code>. <code>override</code> changes the verdict when its condition holds, and if a classifier gives no answer the rule's own stricter verdict stands. When several rules overlap, the strictest wins (<code>blocks</code> &gt; <code>comments</code> &gt; <code>approves</code>). Conditions can use PR facts such as <code>pr/files_changed &gt; 50</code> and classifier answers. Two classifiers come from Anthropic: <code>claude/code_review</code> answers <code>pass</code> or <code>fail</code> depending on whether an Important finding is still open, and <code>claude/diff</code> says whether a push changed the PR <code>trivial</code>, <code>same_intent</code> or <code>different</code>. You write your own in <code>.claude/classifiers/&lt;name&gt;/def.yml</code> as a natural-language prompt with declared outputs, for instance a risk rating that says "high if it touches sign-in, billing or a migration", and then let <code>repo/change_risk = low</code> drop the requirement to one person.</p>
+<p>Policy files, the classifier folder, <code>REVIEW.md</code>, <code>CODEOWNERS</code> and <code>.gitmodules</code> are protected files that Claude never approves. On a PR, developers use comments: <code>@claude approve</code> to register their own approval, <code>@claude approvals rerun</code> to re-evaluate, and <code>@claude approvals resolve f-…</code> to close findings when the policy's list names them. The check title is the status, read as "Waiting on human review from any person (1/2)", "Held by Code Review's findings" or "Passed; no approval from Claude".</p>
+
+<h3>4. What actually gets better</h3>
+<ul>
+    <li><strong>Review keeps up with code.</strong> Anthropic reports that on its Claude Code team merged PRs more than doubled between June and September 2026 while the reverted share fell by more than 40%. The same post adds that Code Review is one layer of a broader process on that team, so the numbers are not the three agents alone.</li>
+    <li><strong>A false-positive filter is built in.</strong> Candidates are verified against the code before posting, and re-reviews look only at what changed. The noise that makes teams switch review bots off is handled in the product's structure.</li>
+    <li><strong>The power to approve is separated.</strong> The fixing agent (PR Steward) cannot approve or merge, and Anthropic's service refuses the request itself. The judging agent (Approvals) follows only the file the team wrote, and its power to block comes from GitHub's required-check setting. That separation is the answer to "AI approving AI code".</li>
+    <li><strong>Policy becomes code.</strong> Who, how many, on which paths and under what conditions is written in <code>approvals.yml</code>, and that file is itself protected, so changing it takes two people again. Observe first, enforce later is the default path.</li>
+    <li><strong>Cost has ceilings.</strong> A monthly limit for Code Review, a monthly limit and per-repo cap for PR Steward, and a classifier limit are set separately. At the limit, reviews are skipped and the PR says so.</li>
+    <li><strong>It sits on existing rules.</strong> It works with branch protection, required checks, CODEOWNERS and auto-merge. In the customer quotes Anthropic published, TELUS's director of engineering said they keep a human in the loop and the human's time now goes to the changes that need it, and Carvana's SVP of engineering and analytics said teams in their pilot spend less time working through review feedback.</li>
+    <li><strong>No Claude Code required.</strong> Code Review, Steward and Approvals run as a GitHub App, so they attach to code written with any tool. Anthropic's split is that Claude Code works before the PR and Claude Ship after it.</li>
+</ul>
+
+<h3>5. Where to be careful</h3>
+<ul>
+    <li><strong>One policy line can allow a merge no one looked at.</strong> With <code>seats: 0</code> a bot-written PR can merge unseen, and <code>seats: 1</code> can be filled by the author. Where a GitHub branch rule requires one approval, Claude's approving review can be that one. In a repository with auto-merge or a merge queue, Claude's fix pushes can trigger the merge. The official docs warn about every one of these.</li>
+    <li><strong>Classifiers read what the PR author wrote.</strong> The docs state that titles, descriptions and comments can steer a classifier's answer, and that classifiers should not get label or reviewer write access where a label gates a deploy.</li>
+    <li><strong>A watch runs code on your machine with your credentials.</strong> Scripts that arrive when the base branch is merged in, other people's pushes to your branch, hooks and <code>SKILL.md</code> can all execute. The official advice is to run a watch only where you trust everyone who can merge to the base branch or push to yours.</li>
+    <li><strong>Self-hosted runners cannot refuse approvals.</strong> If PR Steward runs on your own runner, Anthropic's service cannot block an approval request, and GitHub may count it toward required approvals. It also does not read <code>CLAUDE.md</code> there.</li>
+    <li><strong>Observe mode costs money.</strong> A policy that uses <code>claude/code_review</code> as a condition starts a review on every push, and classifiers are billed even when they give no answer. Set per-run budgets (<code>budget: { cost: 5 }</code>, default and maximum 10 dollars) and monthly limits first.</li>
+    <li><strong>The difference from rivals is approval.</strong> Comparison write-ups classify GitHub Copilot code review, Cursor Bugbot and Codex review as advisory tools that neither block nor approve on their own. Claude Ship goes as far as approval where the policy allows, so the convenience comes with a heavier policy file.</li>
+</ul>
+
+<h3>6. Read against this wiki's PR flow</h3>
+<p>In this wiki a Claude Code session writes documents and opens a PR, and the operator has to answer "merge" before a squash merge happens. CI runs four gates (nine Python checks, diagram bounds, multilingual render, build). Translated into Claude Ship, that is close to starter B: one human seat on every path, CI as a separate required check, and Code Review in <code>advisory</code> so document PRs do not bill code reviews. As a content repository, Code Review's "logic error" lens does not fit, so <code>REVIEW.md</code> would have to narrow its scope, and the "failing checks" PR Steward would handle are mostly diagram text overflow or missing translations, where a human judgment beats a fix commit. What is usable right away is the part of the <code>/ship</code> watch that re-runs and fixes CI failures on the Claude Code session's side.</p>
+
+<h3>Fact-check notes</h3>
+<p class="scn-sub">The roles, limits, billing and exclusions of the three agents; the prerequisites, steps, arguments, allowed and blocked lists and end conditions of <code>/ship</code> and <code>/steward</code>; the rollout and shutdown order; the two policy examples and key meanings; the classifier example and budget defaults; comment commands; check titles; the protected-file list; and the self-hosted limits were taken directly from the official docs read on November 24, 2026: <a href="https://code.claude.com/docs/en/claude-ship" target="_blank" rel="noopener">Claude Ship overview</a>, <a href="https://code.claude.com/docs/en/ship-command" target="_blank" rel="noopener">/ship</a>, <a href="https://code.claude.com/docs/en/ship-command-troubleshooting" target="_blank" rel="noopener">troubleshooting</a>, <a href="https://code.claude.com/docs/en/approvals-policy" target="_blank" rel="noopener">policy file reference</a>, <a href="https://code.claude.com/docs/en/approvals-setup" target="_blank" rel="noopener">Approvals setup</a>, <a href="https://code.claude.com/docs/en/approvals-classifiers" target="_blank" rel="noopener">classifiers</a>, <a href="https://code.claude.com/docs/en/pr-steward" target="_blank" rel="noopener">PR Steward</a>, <a href="https://code.claude.com/docs/en/pr-steward-security" target="_blank" rel="noopener">PR Steward security</a>, <a href="https://code.claude.com/docs/en/code-review" target="_blank" rel="noopener">Code Review</a> and <a href="https://code.claude.com/docs/en/code-review-customize" target="_blank" rel="noopener">REVIEW.md</a>. The launch date (November 23), the problem statement, the doubled merged PRs and 40% fewer reverts, the customer quotes (TELUS, Carvana, roles only) and the Enterprise credits (at least $10,000, claim by January 15, 2027) come from <a href="https://claude.com/resources/articles/introducing-claude-ship" target="_blank" rel="noopener">Anthropic's announcement</a> and <a href="https://claude.com/product/claude-ship" target="_blank" rel="noopener">product page</a>, all Anthropic's own statements. The post behind the numbers (claude.dev, "Solving code review at Anthropic") and the TechCrunch, The New Stack and XDA coverage could not be opened from the environment this page was written in because of its network policy, so only what search excerpts agree on was used (the individual <code>/ship</code> rolling out in Claude Code and the desktop app from November 23; Code Review generally available on October 15). Whether Pro or Max individuals can use <code>/ship</code> is not stated on the official pages, so only the sentence "counts as regular Claude Code usage" was carried over. The "advisory" classification of rival products comes from 2026 comparison write-ups and each product's current features may differ. This page is a feature introduction, not a security assessment, and the official docs themselves say the product uses AI and may miss bugs and vulnerabilities.</p>

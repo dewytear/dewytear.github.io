@@ -1,0 +1,176 @@
+<h2>Claude Ship — PR をマージまで連れていく三つのエージェント、使い方と利点</h2>
+
+<h3>3行要約</h3>
+<ul>
+    <li>Claude Ship はプルリクエスト（PR）が開いた後の仕事を引き受けるエージェントの束だ。Code Review が問題を見つけ、PR Steward が失敗したチェック・コンフリクト・レビューコメントを直してコミットし、Claude Approvals がチームがファイルに書いた方針どおり「あと誰が承認すべきか」を判定する。2026年11月23日に Team・Enterprise プラン向けベータとして出た。</li>
+    <li>個人開発者は Claude Code で <code>/ship</code> 一行を打てばコミット・プッシュ・PR 作成・レビューまで進み、その後「見守り（watch）」が始まってチェック失敗やレビュー返信を Claude が処理する。マージは人が押す。</li>
+    <li>利点はレビューがコードを書く速度に追いつくことにある。Anthropic は自社の Claude Code チームで6〜9月にマージ PR が2倍超に増え、差し戻し率が40%超減ったと述べた。代わりに方針ファイルの一行が人のいないマージを許しうるので、観察モードとブランチ規則を先に置く順序が重要だ。</li>
+</ul>
+
+<p>コーディングエージェントがコードを書く速度は上がったのに、そのコードをレビューし承認する側はまだ人の時間に縛られている。PR を開いて別の仕事に移り、数日後にレビューが来たら古いコードに戻って直し、チェックを待ち直し、承認してくれる人を探す。Anthropic が Claude Ship を紹介する際に挙げた問題がこれだ。この記事は公式文書と発表をもとに、三つのエージェントの役割、個人と組織それぞれの使い方、実際にどんな利得があるか、どこに気をつけるべきかを整理する。このウィキは Claude Code で文書を書き PR でマージするリポジトリなので、最後にこのウィキの流れに照らした判断も記した。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="Claude Ship の三つのエージェントが PR のライフサイクルで受け持つ位置: PR が開くと Code Review が発見・検証・順位付け・投稿の四段階で問題を挙げ、PR Steward が失敗したチェック・マージコンフリクト・レビューコメントを直してコミットをプッシュし、Claude Approvals が方針ファイルを読んであと誰が承認すべきかをチェック結果として報告する。マージは人と GitHub ブランチ規則が決める">
+    <text class="d-label" x="360" y="24" text-anchor="middle">PR が開いた後: 三つのエージェントの持ち場</text>
+    <rect class="d-box soft" x="20" y="56" width="110" height="60" rx="8"/>
+    <text class="d-label sm" x="75" y="82" text-anchor="middle">PR が開く</text>
+    <text class="d-sub" x="75" y="102" text-anchor="middle">人またはエージェント</text>
+    <path class="d-edge accent" d="M132 86 L160 86"/>
+    <path class="d-arrow accent" d="M160 80 L170 86 L160 92 Z"/>
+    <rect class="d-box" x="172" y="48" width="160" height="76" rx="8"/>
+    <text class="d-label sm" x="252" y="70" text-anchor="middle">Code Review (GA)</text>
+    <text class="d-sub" x="252" y="90" text-anchor="middle">発見 → 検証 → 順位 → 投稿</text>
+    <text class="d-sub" x="252" y="108" text-anchor="middle">Important · Nit · Pre-existing</text>
+    <path class="d-edge accent" d="M334 86 L362 86"/>
+    <path class="d-arrow accent" d="M362 80 L372 86 L362 92 Z"/>
+    <rect class="d-box" x="374" y="48" width="160" height="76" rx="8"/>
+    <text class="d-label sm" x="454" y="70" text-anchor="middle">PR Steward (ベータ)</text>
+    <text class="d-sub" x="454" y="90" text-anchor="middle">失敗チェック · コンフリクト</text>
+    <text class="d-sub" x="454" y="108" text-anchor="middle">レビューコメント → 修正</text>
+    <path class="d-edge accent" d="M536 86 L564 86"/>
+    <path class="d-arrow accent" d="M564 80 L574 86 L564 92 Z"/>
+    <rect class="d-box accent" x="576" y="48" width="130" height="76" rx="8"/>
+    <text class="d-label sm" x="641" y="70" text-anchor="middle">Claude Approvals</text>
+    <text class="d-sub" x="641" y="90" text-anchor="middle">方針ファイルで判定</text>
+    <text class="d-sub" x="641" y="108" text-anchor="middle">(ベータ)</text>
+    <path class="d-edge dash" d="M454 126 L454 150 L252 150 L252 126"/>
+    <path class="d-arrow" d="M246 136 L252 126 L258 136 Z"/>
+    <text class="d-sub" x="353" y="166" text-anchor="middle">プッシュすると再レビュー（設定による）</text>
+    <rect class="d-box soft" x="100" y="196" width="606" height="40" rx="8"/>
+    <text class="d-sub" x="403" y="221" text-anchor="middle">チェック結果の例: "Waiting on human review from any person (1/2)"  ·  方針が許せば Claude が承認レビューを投稿</text>
+    <rect class="d-node" x="100" y="254" width="606" height="30" rx="6"/>
+    <text class="d-node-label" x="403" y="273" text-anchor="middle">マージの決定: 人 + ブランチ規則（Steward は承認・マージ不可、Approvals は必須チェックにして初めて止める）</text>
+</svg>
+<div class="d-cap">Code Review は2026年10月15日に正式提供された既存製品で、PR Steward と Claude Approvals が今回ベータとして加わった。三つは別々に、リポジトリ単位で有効化できる。</div>
+</div>
+
+<h3>1. 三つのエージェントがそれぞれすること</h3>
+<table>
+    <thead><tr><th></th><th>Code Review</th><th>PR Steward</th><th>Claude Approvals</th></tr></thead>
+    <tbody>
+        <tr><td>状態</td><td>正式（GA）</td><td>公開ベータ</td><td>公開ベータ</td></tr>
+        <tr><td>すること</td><td>diff と周辺コードを読んで論理エラー・セキュリティ脆弱性・壊れた境界条件を見つけ、検証したうえで重大度順にインラインコメント</td><td>失敗したチェック、マージコンフリクト、人・ボットのレビューコメントを処理して修正コミットをプッシュ。プッシュごとに何を変えどう戻すかをコメント</td><td>リポジトリの方針ファイルを読み「あと誰が承認すべきか」をチェック（check）のタイトルで報告。方針が許せば承認レビューを自ら投稿</td></tr>
+        <tr><td>できないこと</td><td>承認・ブロック・コード実行・コミットのプッシュはしない。チェックが失敗で終わることはない</td><td>設計上、承認・マージはしない。Anthropic のサービスが承認・ブランチ保護変更・ブランチ削除・タグプッシュの要求を拒否</td><td>GitHub で必須チェックにしなければマージを止められない。CI 結果は読めないので CI は別の必須チェックに</td></tr>
+        <tr><td>実行主体</td><td>Anthropic のインフラ、リポジトリは読み取り専用</td><td>Claude GitHub App としてクラウドセッション、オートモードで開始（権限要求は拒否される）</td><td>方針評価 + 分類器の実行（クラウドセッション、GitHub は読み取り専用）</td></tr>
+        <tr><td>課金</td><td>トークン基準、組織の利用クレジット。レビュー水準 Quick・Standard・Deep</td><td>トークン基準。月の上限 + リポジトリ別の支出上限を別に置く</td><td>基本料なし。方針が呼んだ Code Review と分類器の実行だけトークン課金。観察モードも課金</td></tr>
+        <tr><td>調整ファイル</td><td><code>REVIEW.md</code>（レビュー専用規則）、<code>CLAUDE.md</code>（プロジェクト文脈）</td><td><code>.claude/skills/steward/SKILL.md</code>（リポジトリ規則）</td><td><code>.claude/approvals.yml</code>（方針）、<code>.claude/classifiers/&lt;名前&gt;/def.yml</code>（分類器）</td></tr>
+    </tbody>
+</table>
+<p>Code Review の四段階は注目に値する。複数のエージェントが並列で候補を探し（Find）、候補をコードと照合して誤検出を除き（Verify）、重複をまとめて重大度で並べ（Rank）、インラインコメントとチェック結果として挙げる（Post）。見つけたものをそのまま流さずもう一度検証する段階が入っているので、レビューボットの定番の不満である「ノイズ」を減らす方向に設計されている。重大度は 🔴 Important（マージ前に直すべき）、🟡 Nit（些細）、🟣 Pre-existing（この PR が作った問題ではない）の三つで、再レビューでは前回以降に変わった部分だけを見て Nit と Pre-existing は控えめに挙げる。</p>
+
+<h3>2. 個人の使い方 — <code>/ship</code> 一行</h3>
+<p>組織の管理者が何も有効化していなくても、個人開発者はターミナルの Claude Code で <code>/ship</code> を使える。利用量は本人の通常の Claude Code 利用量として計上される。前提は Claude Code 2.1.330 以上、GitHub CLI 2.63 以上（<code>gh auth login</code> 済み）、git 2.38 以上。</p>
+<ol>
+    <li>変更を作ったそのセッションで <code>/ship</code> を打つ。コミットメッセージを会話から取り出すためだ（別のセッションで打つと "Update greet.py and 1 more" のようなタイトルになる）。</li>
+    <li>確認画面はない。コミット直前とプッシュ直前に "Esc to cancel" で終わる行が数秒表示されてから進む。デフォルトブランチにいれば新しいブランチを作って移り、すでに別ブランチにコミット済みならそのブランチをプッシュして PR を開く。</li>
+    <li><code>/code-review</code> でレビューする。努力水準は <code>/ship low</code> のように先頭に付ける（既定は <code>high</code>）。</li>
+    <li>「見守り」が始まる。オートモードでは Claude は尋ねずにレビュー指摘を直し、ベースブランチをマージしてコンフリクトを解き、失敗したチェックを直して再実行し、レビューコメントに答えてスレッドを解決し、再レビューを依頼する。GitHub には利用者本人の名前で載る。</li>
+    <li>チェックが通りコメントが片付くと Claude が知らせる。マージは利用者が行う。</li>
+</ol>
+<table>
+    <thead><tr><th>引数</th><th>効果</th></tr></thead>
+    <tbody>
+        <tr><td><code>low · medium · high · xhigh · max</code></td><td>レビューの努力水準（<code>/ship</code> のみ）。既定 <code>high</code></td></tr>
+        <tr><td><code>41</code> または PR の URL</td><td>その PR を対象に。見守りは本人の PR でブランチをチェックアウトした状態が必要</td></tr>
+        <tr><td><code>+ボット名</code></td><td>そのボットのコメントも読む（例: <code>/steward +my-lint-bot</code>）。再開時は付け直す</td></tr>
+        <tr><td><code>stop</code> · <code>terms</code></td><td>見守りの終了 · 見守り中に Claude ができることと制限の表示</td></tr>
+    </tbody>
+</table>
+<p>すでに PR が開いていれば <code>/steward</code> がコミット・プッシュ・レビューを飛ばして見守りだけ始める。見守り中、利用者のメッセージなしに動くとき Claude Code は PR のマージ・承認・自動マージの有効化・強制プッシュを行う <code>gh</code>・<code>git</code> コマンドを止め、コネクタ・<code>WebFetch</code>・<code>WebSearch</code> も拒否する。<code>git stash</code>・<code>git reset</code>・<code>git checkout</code>・<code>git add -A</code>・<code>git commit -a</code> も拒否リストにある。見守りは PR のマージ・クローズ、7日経過、Esc 一回、ブランチ切替、<code>/clear</code>・<code>/resume</code>・<code>/branch</code>、セッション終了のいずれかで終わる。リポジトリに <code>.claude/skills/steward/SKILL.md</code> を置けば見守りと PR Steward が同じ規則を読む。</p>
+<p>自動でやらないことも明確だ。PR がすでに開いたブランチの未コミット変更、公開リポジトリの未コミット変更、名前が秘密情報に見えるファイル（<code>.env</code> など）はコミットしない。<code>.gitignore</code>・<code>CLAUDE.md</code>・<code>.github/</code> 以下を直したなら自分でコミットするよう求める。GitHub Enterprise とフォークでは PR を開かないので、先に開いてから <code>/ship</code> を打つ。ネイティブ Windows と <code>bypassPermissions</code> モードでは見守りが始まらない。</p>
+
+<h3>3. 組織の使い方 — 一つずつ、一つのリポジトリから</h3>
+<p>管理者（Claude 組織の Owner）は <strong>Organization settings › Claude Ship</strong> で有効化する。公式文書が勧める順序は、エージェントを一つずつ、リポジトリ一つからだ。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 230" role="img" aria-label="組織導入の四段階: 第1段階 Code Review を一つのリポジトリで有効化し月の支出上限を設定、第2段階 PR Steward を手動モードで有効化しリポジトリ別の支出上限を設定、第3段階 approvals.yml 方針ファイルを観察モードでマージしチェックが何を判定するか確認、第4段階 observe の行を消して強制に切り替え GitHub ブランチ規則に Claude Approvals を必須チェックとして追加。無効化は逆順">
+    <text class="d-label" x="360" y="24" text-anchor="middle">組織導入の順序（無効化は逆順）</text>
+    <rect class="d-box" x="20" y="52" width="160" height="96" rx="8"/>
+    <text class="d-label sm" x="100" y="76" text-anchor="middle">① Code Review</text>
+    <text class="d-sub" x="100" y="98" text-anchor="middle">リポジトリ一つで有効化</text>
+    <text class="d-sub" x="100" y="116" text-anchor="middle">月の支出上限を設定</text>
+    <text class="d-sub" x="100" y="134" text-anchor="middle">レビュー平均費用を確認</text>
+    <path class="d-edge accent" d="M182 100 L198 100"/>
+    <path class="d-arrow accent" d="M198 94 L208 100 L198 106 Z"/>
+    <rect class="d-box" x="210" y="52" width="160" height="96" rx="8"/>
+    <text class="d-label sm" x="290" y="76" text-anchor="middle">② PR Steward</text>
+    <text class="d-sub" x="290" y="98" text-anchor="middle">Manual モードで開始</text>
+    <text class="d-sub" x="290" y="116" text-anchor="middle">@claude steward で呼ぶ</text>
+    <text class="d-sub" x="290" y="134" text-anchor="middle">リポジトリ別の支出上限</text>
+    <path class="d-edge accent" d="M372 100 L388 100"/>
+    <path class="d-arrow accent" d="M388 94 L398 100 L388 106 Z"/>
+    <rect class="d-box" x="400" y="52" width="150" height="96" rx="8"/>
+    <text class="d-label sm" x="475" y="76" text-anchor="middle">③ Approvals 観察</text>
+    <text class="d-sub" x="475" y="98" text-anchor="middle">approvals.yml をマージ</text>
+    <text class="d-sub" x="475" y="116" text-anchor="middle">mode: observe</text>
+    <text class="d-sub" x="475" y="134" text-anchor="middle">判定を見せるだけ</text>
+    <path class="d-edge accent" d="M552 100 L568 100"/>
+    <path class="d-arrow accent" d="M568 94 L578 100 L568 106 Z"/>
+    <rect class="d-box accent" x="580" y="52" width="120" height="96" rx="8"/>
+    <text class="d-label sm" x="640" y="76" text-anchor="middle">④ 強制</text>
+    <text class="d-sub" x="640" y="98" text-anchor="middle">observe 行を削除</text>
+    <text class="d-sub" x="640" y="116" text-anchor="middle">ブランチ規則に</text>
+    <text class="d-sub" x="640" y="134" text-anchor="middle">必須チェックで追加</text>
+    <rect class="d-box soft" x="20" y="170" width="680" height="44" rx="8"/>
+    <text class="d-sub" x="360" y="188" text-anchor="middle">全段階がトークン課金。観察モードも、方針が呼んだ Code Review も課金される。</text>
+    <text class="d-sub" x="360" y="206" text-anchor="middle">除外: Zero Data Retention · HIPAA 構成 · 顧客管理キー（CMEK）。強制前に書き込み権限者が二人以上必要。</text>
+</svg>
+<div class="d-cap">公式セットアップ文書の順序をそのまま写した。無効化は Approvals → PR Steward → Code Review の順でなければならない。方針ファイルが無効化済みの Code Review を再び呼びうるためだ。</div>
+</div>
+
+<h4>方針ファイルは「賢い CODEOWNERS」</h4>
+<p>Claude Approvals の核心はリポジトリ直下の <code>.claude/approvals.yml</code> だ。規則ごとにパスのパターン、条件、そして判定（verdict）を書く。判定は Claude がどこまでやるか（<code>comments</code>・<code>approves</code>・<code>blocks</code>）と人の席（<code>seats</code>）が何つ必要かで構成される。公式文書の開始例を二つそのまま写す。</p>
+<pre><code># .claude/approvals.yml — A案: レビューが通れば一人で足り、Claude が承認する
+version: 1
+mode: observe
+rules:
+  - purpose: "A change takes two people. When Claude's review passes, one is enough and Claude approves."
+    paths: ["**"]
+    verdict: { claude: comments, seats: 2 }
+    override:
+      - { if: "claude/code_review = pass", verdict: { claude: approves, seats: 1 } }
+  - purpose: "A change to the review rules takes two people."
+    paths: ["**/.claude/**"]
+    nested: inherit
+    verdict: { claude: comments, seats: 2 }</code></pre>
+<pre><code># .claude/approvals.yml — B案: すべての変更に人二人、Claude は助言のみ
+version: 1
+mode: observe
+rules:
+  - purpose: "A change takes two people."
+    paths: ["**"]
+    verdict: { claude: comments, seats: 2 }
+    advisory: [claude/code_review]
+  - purpose: "A change to the review rules takes two people."
+    paths: ["**/.claude/**"]
+    nested: inherit
+    verdict: { claude: comments, seats: 2 }</code></pre>
+<p>読み方はこうだ。<code>seats: 2</code> は人の席二つだが作成者が一席を埋められるので「作成者 + 一人」になる。作成者を除くには <code>seats: [{ count: 1, from: [humans, "!pr/authors"] }]</code> のように書く。<code>override</code> は条件が合うときに判定を変える場所で、分類器が答えを出せなければ規則本来の厳しい判定に戻る。複数の規則が重なれば最も厳しい側が勝つ（<code>blocks</code> &gt; <code>comments</code> &gt; <code>approves</code>）。条件には <code>pr/files_changed &gt; 50</code> のような PR の事実と分類器の答えを使える。分類器は Anthropic 提供の二つ（<code>claude/code_review</code> は Important の指摘が残っているかで <code>pass</code>/<code>fail</code>、<code>claude/diff</code> はプッシュ後の変化が <code>trivial</code>・<code>same_intent</code>・<code>different</code> のどれか）に加え、<code>.claude/classifiers/&lt;名前&gt;/def.yml</code> に自然言語のプロンプトと出力値を書いて自作する。例えば「ログイン・決済・マイグレーションに触れれば high」というリスク分類器を作り、<code>repo/change_risk = low</code> のときだけ一人に減らす、といった具合だ。</p>
+<p>方針ファイル・分類器フォルダ・<code>REVIEW.md</code>・<code>CODEOWNERS</code>・<code>.gitmodules</code> のようなファイルは保護ファイルで Claude は承認せず、開発者は PR コメントで <code>@claude approve</code>（本人の承認を登録）、<code>@claude approvals rerun</code>（再評価）、<code>@claude approvals resolve f-…</code>（方針が許した人が指摘を閉じる）を使う。チェックのタイトルがそのまま状態だ。"Waiting on human review from any person (1/2)"、"Held by Code Review's findings"、"Passed; no approval from Claude" のように読める。</p>
+
+<h3>4. 利点 — 何が実際に良くなるか</h3>
+<ul>
+    <li><strong>レビューがコードの速度に追いつく。</strong> Anthropic は Claude Code チームで2026年6月から9月の間にマージされた PR が2倍超に増え、差し戻し（revert）率は40%超減ったと述べた。同じ記事がそのチームでは Code Review がより広い手続きの一層だと付け加えているので、数値をエージェント三つだけの効果として読むべきではない。</li>
+    <li><strong>誤検出を除く段階が設計に入っている。</strong> 見つけた候補をコードと照合して検証したうえでだけ挙げ、再レビューは変わった部分だけを見る。レビューボットを切らせるノイズ問題を製品構造で扱っている。</li>
+    <li><strong>承認権が分離されている。</strong> 直すエージェント（PR Steward）は承認・マージができず、Anthropic のサービスがその要求自体を拒否する。判定するエージェント（Approvals）はチームが書いたファイルどおりにしか動かず、マージを止める権限は GitHub の必須チェック設定から来る。「AI が AI のコードを承認する」という懸念への答えがこの分離だ。</li>
+    <li><strong>方針がコードとして残る。</strong> 誰が何人、どのパスに、どの条件で承認すべきかが <code>approvals.yml</code> に書かれ、そのファイル自体が保護ファイルなので変えるにはまた人二人が要る。観察モードで先に回してから強制へ移る道が基本手順だ。</li>
+    <li><strong>費用に天井がある。</strong> Code Review の月上限、PR Steward の月上限とリポジトリ別上限、分類器実行の上限を別々に置く。上限に達するとレビューを飛ばし、PR にその旨を記す。</li>
+    <li><strong>既存の規則の上に載る。</strong> ブランチ保護、必須チェック、CODEOWNERS、自動マージと共に動く。Anthropic が公開した顧客の言葉では、TELUS のエンジニアリングディレクターは「人をループに置きつつ、人の時間は判断が必要な変更にだけ使うようになった」と述べ、Carvana のエンジニアリング・分析 SVP はパイロットでレビューフィードバックの処理時間が減ったと述べた。</li>
+    <li><strong>Claude Code なしでも使える。</strong> Code Review・Steward・Approvals は GitHub App として動くので、他のツールで書いたコードにも付く。Claude Code は PR の前、Claude Ship は PR の後を受け持つというのが Anthropic の区分だ。</li>
+</ul>
+
+<h3>5. 気をつけること</h3>
+<ul>
+    <li><strong>方針の一行が人のいないマージを許す。</strong> <code>seats: 0</code> ならボットが書いた PR が誰にも見られずマージされうるし、<code>seats: 1</code> は作成者が埋められる。GitHub ブランチ規則が承認一つを要求するとき Claude の承認レビューがその一つになりうる。自動マージやマージキューを有効にしたリポジトリでは Claude の修正プッシュがマージを引き起こす。公式文書がすべて警告している項目だ。</li>
+    <li><strong>分類器は PR 作成者が書いた文を読む。</strong> タイトル・説明・コメントが分類器の答えを揺らしうると文書が明記する。分類器にラベル・レビュアーの書き込み権限を与えるときは、ラベルがデプロイを開くリポジトリを避けるようにとある。</li>
+    <li><strong>見守りは自分の資格情報で自分のコンピュータ上でコードを動かす。</strong> ベースブランチをマージして入ってくるスクリプト、他人が自分のブランチにプッシュしたもの、フック、<code>SKILL.md</code> がすべて実行されうる。マージ権限者とブランチへのプッシュ権限者を全員信頼できるリポジトリでだけ有効にせよ、というのが公式の勧告だ。</li>
+    <li><strong>セルフホスト環境では承認拒否ができない。</strong> PR Steward を自前のランナーで動かすと Anthropic のサービスが承認要求を止められず、GitHub はその承認を必須承認として数えうる。<code>CLAUDE.md</code> も読まない。</li>
+    <li><strong>観察モードにも費用がかかる。</strong> 方針が <code>claude/code_review</code> を条件に使えばプッシュごとにレビューが回り、分類器は答えがなくても課金される。分類器実行あたりの予算（<code>budget: { cost: 5 }</code>、既定10ドル、上限10ドル）と月上限を先に置く。</li>
+    <li><strong>競合製品との違いは「承認」にある。</strong> 比較記事は GitHub Copilot のコードレビュー、Cursor Bugbot、Codex レビューを助言型と分類し、自らマージを止めたり承認したりしないとする。Claude Ship は方針が許せば承認まで行く。だから便利な分、方針ファイルの責任が重い。</li>
+</ul>
+
+<h3>6. このウィキの PR の流れに照らして</h3>
+<p>このウィキは Claude Code セッションが文書を書いて PR を開くと、運営者が「マージして」と答えて初めてスカッシュマージされる。CI は検証ゲート四つ（Python 9段階・図の境界・多言語レンダー・ビルド）を回す。Claude Ship に写し取ると B案に近い。すべてのパスに人一席、CI は別の必須チェック、Code Review は <code>advisory</code> に置いて文書 PR にコードレビューが課金されないようにする構成だ。コンテンツのリポジトリなので Code Review の「論理エラー」の基準は合わず、<code>REVIEW.md</code> で範囲を絞る必要があり、PR Steward が処理する「失敗したチェック」は大半が図の文字はみ出しや翻訳の欠落なので、修正コミットより人の判断が合う。今すぐ使えるのは、<code>/ship</code> の見守りが Claude Code セッション側の CI 失敗を再実行・修正してくれる部分だけだ。</p>
+
+<h3>事実検証ノート</h3>
+<p class="scn-sub">三つのエージェントの役割・制限・課金・除外条件、<code>/ship</code> と <code>/steward</code> の前提・手順・引数・見守り中の許可・遮断リスト・終了条件、導入順序と無効化順序、方針ファイルの例二つとキーの説明、分類器の定義例と予算既定値、コメントコマンド、チェックタイトルの文言、保護ファイルの一覧、セルフホストの制限は、2026年11月24日に直接読んだ公式文書に基づく: <a href="https://code.claude.com/docs/en/claude-ship" target="_blank" rel="noopener">Claude Ship 概要</a>・<a href="https://code.claude.com/docs/en/ship-command" target="_blank" rel="noopener">/ship 文書</a>・<a href="https://code.claude.com/docs/en/ship-command-troubleshooting" target="_blank" rel="noopener">トラブルシューティング</a>・<a href="https://code.claude.com/docs/en/approvals-policy" target="_blank" rel="noopener">方針ファイルのリファレンス</a>・<a href="https://code.claude.com/docs/en/approvals-setup" target="_blank" rel="noopener">Approvals 設定</a>・<a href="https://code.claude.com/docs/en/approvals-classifiers" target="_blank" rel="noopener">分類器</a>・<a href="https://code.claude.com/docs/en/pr-steward" target="_blank" rel="noopener">PR Steward</a>・<a href="https://code.claude.com/docs/en/pr-steward-security" target="_blank" rel="noopener">PR Steward セキュリティ</a>・<a href="https://code.claude.com/docs/en/code-review" target="_blank" rel="noopener">Code Review</a>・<a href="https://code.claude.com/docs/en/code-review-customize" target="_blank" rel="noopener">REVIEW.md</a>。公開日（11月23日）、問題意識、マージ PR 2倍・差し戻し40%減の数値、顧客の引用（TELUS・Carvana、役職のみ表記）、Enterprise クレジット（最低1万ドル、2027年1月15日まで申請）は <a href="https://claude.com/resources/articles/introducing-claude-ship" target="_blank" rel="noopener">Anthropic の発表記事</a>と<a href="https://claude.com/product/claude-ship" target="_blank" rel="noopener">製品ページ</a>に基づき、いずれも Anthropic 自身の記述である。数値の根拠記事（claude.dev の "Solving code review at Anthropic"）と TechCrunch・The New Stack・XDA などの報道は、この記事を書いた環境のネットワーク方針のため直接開けず、検索抜粋が一致する範囲（個人向け <code>/ship</code> が11月23日から Claude Code とデスクトップアプリに配布、Code Review は10月15日に正式提供）だけを使った。<code>/ship</code> を Pro・Max プランの個人が使えるかは公式ページが明記しておらず、「通常の Claude Code 利用量として課金」という文だけを写した。競合製品が「助言型」という分類は2026年の比較記事の記述であり、各製品の最新機能は変わりうる。この記事は機能紹介であってセキュリティ評価ではなく、公式文書自体が「AI を使うためバグ・脆弱性を見落としうる」と記している。</p>

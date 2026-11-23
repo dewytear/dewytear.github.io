@@ -1,0 +1,258 @@
+<h2>graphify — 코드베이스를 지식 그래프로 바꿔 grep 대신 질의하게 하는 스킬</h2>
+
+<h3>세 줄 요약</h3>
+<ul>
+    <li>graphify는 <code>/graphify .</code> 한 줄로 폴더 안의 코드·문서·PDF·이미지·영상을 하나의 지식 그래프로 만들고, 그 뒤부터 에이전트가 파일을 통째로 읽는 대신 <code>graphify query</code>·<code>path</code>·<code>explain</code>으로 필요한 부분 그래프만 받아 보게 하는 스킬이다. 코드는 tree-sitter(구문 트리 파서)로 로컬에서 LLM 없이 파싱하고, 모든 연결선에 EXTRACTED·INFERRED·AMBIGUOUS 신뢰 꼬리표를 단다.</li>
+    <li>2026년 4월 4일 PyPI 첫 공개 뒤 11월 23일 0.9.118까지 284번 릴리스됐고, Claude Code·Cursor·Codex·Gemini CLI 등 20여 어시스턴트를 지원한다. 저장소 스타는 집계 사이트마다 7.6만에서 15만으로 갈려 이 글은 "10만 전후"로만 적는다. 만든 회사는 Graphify Labs(Y Combinator S26), 라이선스는 Apache-2.0과 MIT 이중.</li>
+    <li>공식 벤치마크는 LOCOMO 기억 검색에서 recall@10 0.497(mem0 0.048), 그래프 구축에 LLM 비용 0을 내세운다. 자주 인용되는 "토큰 71.5배 절감"은 52개 파일 코퍼스의 질의 한 번 기준이고, 실제 세션 단위 독립 측정에서는 7~8% 절감이나 품질 동률(44 대 45점)이 나왔다. 큰 저장소의 길 찾기·영향 분석에서 강하고, 작은 프로젝트와 집중 편집에서는 득이 적다.</li>
+</ul>
+
+<p>코딩 에이전트가 낯선 저장소에서 하는 첫 일은 <code>grep</code>과 파일 읽기다. 질문이 "이 엔드포인트는 어디서 저장소까지 닿나"처럼 구조를 묻는 것이면, 파일을 하나씩 읽어 컨텍스트에 쌓는 방식은 토큰을 많이 쓰고 큰 그림을 놓친다. graphify는 그 자리에 그래프를 둔다. 한 번 만들어 두면 세션이 바뀌어도 남고, 질문마다 관련 노드 몇십 개만 돌려준다. 이 글은 공식 저장소(README·ARCHITECTURE·BENCHMARKS·skill.md)와 외부 검증 글을 바탕으로 동작 원리, 설치와 사용법, 벤치마크의 실제 의미, 한계와 보안을 정리한다. 이 위키도 문서 그래프 위에서 돌아가는 저장소라 마지막에 두 그래프를 나란히 놓았다.</p>
+
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-graphify/hero.webp" width="1400" height="692"
+         alt="graphify가 FastAPI 코드베이스를 그린 force-directed 지식 그래프. 왼쪽은 색으로 구분된 커뮤니티 노드들이 중앙 허브 주위에 모여 있고, 오른쪽은 APIRouter 96, SecurityBase 71, v2 56 등 커뮤니티 이름과 노드 수 목록">
+    <figcaption>graphify가 만든 FastAPI 코드베이스의 graph.html — 색은 Leiden 알고리즘이 찾은 하위 시스템(커뮤니티), 오른쪽 목록은 각 커뮤니티의 이름과 노드 수 (이미지: Graphify-Labs/graphify 저장소, Apache-2.0)</figcaption>
+</figure>
+
+<h3>1. 어떻게 만들어지나 — 세 번의 패스</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 320" role="img" aria-label="graphify 파이프라인: 입력 폴더의 코드는 1패스에서 tree-sitter로 로컬 파싱(LLM 없음, 약 40개 언어), 영상·음성은 2패스에서 faster-whisper로 로컬 전사, 문서·PDF·이미지는 3패스에서 LLM 서브에이전트가 의미 추출(토큰 비용 발생). 세 결과를 NetworkX 그래프로 합치고 Leiden 커뮤니티 검출과 허브·의외의 연결 분석을 거쳐 graph.html, GRAPH_REPORT.md, graph.json을 낸다">
+    <text class="d-label" x="360" y="24" text-anchor="middle">/graphify . 가 하는 일: 세 패스 → 그래프 → 세 파일</text>
+    <rect class="d-box soft" x="20" y="60" width="110" height="180" rx="8"/>
+    <text class="d-label sm" x="75" y="84" text-anchor="middle">입력 폴더</text>
+    <text class="d-sub" x="75" y="112" text-anchor="middle">코드</text>
+    <text class="d-sub" x="75" y="160" text-anchor="middle">영상·음성</text>
+    <text class="d-sub" x="75" y="208" text-anchor="middle">문서·PDF·이미지</text>
+    <path class="d-edge" d="M132 108 L160 108"/>
+    <path class="d-arrow" d="M160 102 L170 108 L160 114 Z"/>
+    <path class="d-edge" d="M132 156 L160 156"/>
+    <path class="d-arrow" d="M160 150 L170 156 L160 162 Z"/>
+    <path class="d-edge" d="M132 204 L160 204"/>
+    <path class="d-arrow" d="M160 198 L170 204 L160 210 Z"/>
+    <rect class="d-box accent" x="172" y="88" width="200" height="40" rx="8"/>
+    <text class="d-label sm" x="272" y="105" text-anchor="middle">1패스 · tree-sitter AST</text>
+    <text class="d-sub" x="272" y="121" text-anchor="middle">로컬 · LLM 없음 · 약 40개 언어</text>
+    <rect class="d-box accent" x="172" y="136" width="200" height="40" rx="8"/>
+    <text class="d-label sm" x="272" y="153" text-anchor="middle">2패스 · faster-whisper</text>
+    <text class="d-sub" x="272" y="169" text-anchor="middle">로컬 전사 · 허브 이름으로 프롬프트</text>
+    <rect class="d-box" x="172" y="184" width="200" height="40" rx="8"/>
+    <text class="d-label sm" x="272" y="201" text-anchor="middle">3패스 · LLM 서브에이전트</text>
+    <text class="d-sub" x="272" y="217" text-anchor="middle">세션 모델 또는 API 키 · 토큰 비용</text>
+    <path class="d-edge accent" d="M374 108 L402 150"/>
+    <path class="d-edge accent" d="M374 156 L402 156"/>
+    <path class="d-edge accent" d="M374 204 L402 162"/>
+    <path class="d-arrow accent" d="M402 150 L412 156 L402 162 Z"/>
+    <rect class="d-box" x="414" y="88" width="140" height="136" rx="8"/>
+    <text class="d-label sm" x="484" y="110" text-anchor="middle">build → cluster</text>
+    <text class="d-sub" x="484" y="132" text-anchor="middle">NetworkX 그래프</text>
+    <text class="d-sub" x="484" y="150" text-anchor="middle">Leiden 커뮤니티</text>
+    <text class="d-sub" x="484" y="168" text-anchor="middle">허브(god nodes)</text>
+    <text class="d-sub" x="484" y="186" text-anchor="middle">의외의 연결</text>
+    <text class="d-sub" x="484" y="204" text-anchor="middle">응집도 · 추천 질문</text>
+    <path class="d-edge accent" d="M556 156 L584 156"/>
+    <path class="d-arrow accent" d="M584 150 L594 156 L584 162 Z"/>
+    <rect class="d-box soft" x="596" y="88" width="110" height="136" rx="8"/>
+    <text class="d-label sm" x="651" y="110" text-anchor="middle">graphify-out/</text>
+    <text class="d-sub" x="651" y="138" text-anchor="middle">graph.html</text>
+    <text class="d-sub" x="651" y="162" text-anchor="middle">GRAPH_REPORT.md</text>
+    <text class="d-sub" x="651" y="186" text-anchor="middle">graph.json</text>
+    <text class="d-sub" x="651" y="208" text-anchor="middle">cache/ (SHA256)</text>
+    <text class="d-sub" x="360" y="268" text-anchor="middle">코드만 있는 저장소는 3패스를 통째로 건너뛰어 API 키 없이 끝난다. 재실행은 내용 해시가 같은 파일을 건너뛴다.</text>
+    <text class="d-sub" x="360" y="290" text-anchor="middle">모듈 순서: detect → extract → build → cluster → analyze → report → export (ARCHITECTURE.md)</text>
+</svg>
+<div class="d-cap">공식 how-it-works 문서와 ARCHITECTURE.md의 파이프라인을 옮겼다. 1패스는 33개 언어를 tree-sitter 문법으로, 7개(Dart·Apex·COBOL·Razor·Blade·Pascal·Robot Framework)는 자체 추출기로 처리한다.</div>
+</div>
+<p>핵심은 "코드는 LLM에 보내지 않는다"는 원칙이다. 함수·클래스·import·호출 관계는 구문 트리에서 결정적으로 뽑히므로 같은 입력에 같은 그래프가 나오고, 비용이 0이며, 아무것도 밖으로 나가지 않는다. 문서와 이미지만 의미 추출을 위해 모델을 거치는데, Claude Code 안에서는 그 세션의 모델이 서브에이전트를 병렬로 띄워 처리하고, 터미널에서 <code>graphify extract</code>로 돌릴 때는 설정된 API 키(Gemini·Kimi·Claude·OpenAI·DeepSeek·Azure·Bedrock·Ollama 순으로 자동 감지)를 쓴다. 커뮤니티 검출은 Leiden 알고리즘(간선 밀도로 노드를 묶는 그래프 군집화)이고, 임베딩이나 벡터 저장소는 쓰지 않는다. 모델이 뽑은 <code>semantically_similar_to</code> 간선이 이미 그래프 안에 있어 그 구조 자체가 유사도 신호 노릇을 한다는 설명이다. 커뮤니티 이름은 LLM 없이 허브 노드 이름에서 짓는다.</p>
+
+<h3>2. 모든 선에 꼬리표 — 신뢰도 체계</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 236" role="img" aria-label="graphify 간선 신뢰도 체계: EXTRACTED는 소스에 명시된 관계로 점수 1.0, INFERRED는 추론된 관계로 0.95 거의 확실, 0.85 강한 근거, 0.75 합리적, 0.65 약함(이름 유사), 0.55 추측의 다섯 단계, AMBIGUOUS는 불확실해 보고서에서 검토 대상으로 표시. 경로의 신뢰도는 가장 약한 홉이 결정한다">
+    <text class="d-label" x="360" y="24" text-anchor="middle">간선 꼬리표와 점수 규칙</text>
+    <text class="d-sub" x="120" y="60" text-anchor="end">EXTRACTED</text>
+    <rect class="d-node" x="130" y="48" width="440" height="16" rx="4"/>
+    <text class="d-label sm" x="578" y="60">1.0 · 소스에 명시</text>
+    <text class="d-sub" x="120" y="92" text-anchor="end">INFERRED 0.95</text>
+    <rect class="d-node d" x="130" y="80" width="418" height="16" rx="4"/>
+    <text class="d-sub" x="558" y="92">거의 확실 · 대상 하나</text>
+    <text class="d-sub" x="120" y="116" text-anchor="end">INFERRED 0.85</text>
+    <rect class="d-node d" x="130" y="104" width="374" height="16" rx="4"/>
+    <text class="d-sub" x="514" y="116">강한 근거 · 이름+맥락</text>
+    <text class="d-sub" x="120" y="140" text-anchor="end">INFERRED 0.75</text>
+    <rect class="d-node d" x="130" y="128" width="330" height="16" rx="4"/>
+    <text class="d-sub" x="470" y="140">합리적 · 맥락만</text>
+    <text class="d-sub" x="120" y="164" text-anchor="end">INFERRED 0.65</text>
+    <rect class="d-node d" x="130" y="152" width="286" height="16" rx="4"/>
+    <text class="d-sub" x="426" y="164">약함 · 이름 유사만</text>
+    <text class="d-sub" x="120" y="188" text-anchor="end">INFERRED 0.55</text>
+    <rect class="d-node d" x="130" y="176" width="242" height="16" rx="4"/>
+    <text class="d-sub" x="382" y="188">추측</text>
+    <text class="d-sub" x="120" y="216" text-anchor="end">AMBIGUOUS</text>
+    <rect class="d-node dim" x="130" y="204" width="120" height="16" rx="4"/>
+    <text class="d-sub" x="260" y="216">불확실 · 보고서에서 검토 대상 · 경로 신뢰도는 가장 약한 홉이 정한다</text>
+</svg>
+<div class="d-cap">how-it-works 문서의 규칙표. 스킬 파일의 "정직 규칙"은 간선을 지어내지 말고 모르면 AMBIGUOUS로 두라고 못 박는다. 같은 관계가 여러 곳에서 보이면 가장 높은 꼬리표 하나만 남기고 나머지는 <code>also_seen</code>에 기록한다.</div>
+</div>
+<p>이 꼬리표가 graphify를 "또 하나의 검색 인덱스"와 가르는 지점이다. <code>graphify explain "APIRouter"</code>를 치면 소스 위치, 커뮤니티, 차수와 함께 연결 47개가 <code>[uses] [INFERRED]</code>, <code>[imports] [EXTRACTED]</code>처럼 꼬리표를 달고 나오고, <code>graphify path "FastAPI" "ModelField"</code>는 3홉 경로와 그 경로의 전체 신뢰도(가장 약한 홉)를 돌려준다. 저장소 BENCHMARKS.md는 FastAPI 프로덕션 패키지 안의 INFERRED 교차 파일 간선 12개를 손으로 전수 검사해 전부 맞았다고 적되, 날짜 박힌 1회 점검이지 상시 지표는 아니라고 밝힌다. 해결기는 "틀린 간선보다 없는 간선"을 택한다.</p>
+
+<h3>3. 설치와 사용법</h3>
+<p>Python 3.11.5~3.14와 uv(또는 pipx)가 있으면 두 줄이다. PyPI 패키지 이름이 <code>graphifyy</code>(y 두 개)인 점만 조심한다. 다른 <code>graphify*</code> 패키지는 무관하다.</p>
+<pre><code>uv tool install graphifyy      # CLI 설치 (pipx install graphifyy 도 가능)
+graphify install               # Claude Code 기본. 스킬 + CLAUDE.md 블록 + PreToolUse 훅
+graphify install --project     # 저장소 안 .claude/skills/graphify/ 에 설치 (git add 안내 출력)
+graphify cursor install        # Cursor
+graphify install --platform codex    # Codex ($graphify 로 호출)</code></pre>
+<p>그다음 어시스턴트 안에서 <code>/graphify .</code>를 친다. 스킬은 먼저 <code>graphify-out/graph.json</code>이 있는지 보고, 있으면 다시 만들지 않고 질의로 넘어간다(빠른 길). 없으면 파일 감지 → 추출 → 그래프 → 군집 → 이름 짓기 → 출력 순으로 진행하며 코퍼스 크기와 토큰 비용을 보고한다. 스킬 파일 자체가 "API 키를 절대 묻지 말고 키 없이 진행하라"고 적어 두어, 코드 저장소에서는 아무 설정 없이 끝난다.</p>
+<table>
+    <thead><tr><th>할 일</th><th>명령</th><th>비고</th></tr></thead>
+    <tbody>
+        <tr><td>그래프 만들기</td><td><code>/graphify .</code></td><td>HTML·보고서·JSON. <code>--no-viz</code>로 HTML 생략, 5,000노드 넘으면 집계 뷰</td></tr>
+        <tr><td>더 깊게</td><td><code>/graphify . --mode deep</code></td><td>INFERRED 간선을 더 적극적으로 추론</td></tr>
+        <tr><td>바뀐 것만</td><td><code>/graphify . --update</code></td><td>해시가 바뀐 파일만. 그래프가 줄어들면 거부(<code>--force</code>로 허용)</td></tr>
+        <tr><td>질문</td><td><code>graphify query "auth와 DB는 어떻게 연결되나"</code></td><td>BFS 기본, <code>--dfs</code>는 한 경로 추적, 예산 기본 2,000토큰·깊이 2</td></tr>
+        <tr><td>경로</td><td><code>graphify path "UserService" "DatabasePool"</code></td><td>최단 경로 + 가장 약한 홉의 신뢰도</td></tr>
+        <tr><td>설명</td><td><code>graphify explain "RateLimiter"</code></td><td>노드 한 개의 위치·커뮤니티·연결 전부</td></tr>
+        <tr><td>군집만 다시</td><td><code>/graphify . --cluster-only --resolution 1.5</code></td><td>더 잘게. <code>--exclude-hubs 99</code>로 유틸리티 슈퍼허브 제외</td></tr>
+        <tr><td>자료 추가</td><td><code>/graphify add &lt;arxiv URL 또는 유튜브 URL&gt;</code></td><td>논문·영상을 <code>./raw</code>에 받아 그래프에 합침</td></tr>
+        <tr><td>내보내기</td><td><code>--obsidian · --wiki · --svg · --graphml · --neo4j</code></td><td>옵시디언 볼트, 커뮤니티별 마크다운 위키, Gephi, Cypher(Neo4j·FalkorDB)</td></tr>
+        <tr><td>최신 유지</td><td><code>graphify hook install</code></td><td>post-commit·post-checkout 훅 + <code>graph.json</code> 합집합 머지 드라이버. pull 뒤엔 <code>graphify update .</code></td></tr>
+        <tr><td>PR 보기</td><td><code>graphify prs 42</code> · <code>--triage</code> · <code>--conflicts</code></td><td>PR의 그래프 영향, 리뷰 큐 순위, 같은 하위 시스템을 건드리는 PR 쌍</td></tr>
+        <tr><td>MCP</td><td><code>graphify-mcp graphify-out/graph.json</code></td><td>query_graph·shortest_path·get_neighbors·god_nodes 등 10개 도구</td></tr>
+    </tbody>
+</table>
+<p>스크립트에서 쓰기 좋게 종료 코드가 정해져 있다. 0은 답, 3은 이름이 여러 노드에 걸려 후보를 나열한 경우, 4는 노드 없음이다. 이름이 겹치면 추측하지 않고 거부하는 쪽이다. 프로젝트 설정은 스캔 루트의 <code>.graphifyrc</code>에 둔다. 확장자가 애매한 파일(<code>.inc</code>가 PHP인지 Pascal인지, <code>.h</code>가 C인지 C++인지)은 <code>language.inc=php</code>처럼 못 박아야 그래프가 엉성해지지 않는다.</p>
+
+<h3>4. 에이전트가 정말 그래프를 쓰게 만드는 장치</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 262" role="img" aria-label="graphify의 질의 루프: 에이전트가 코드베이스 질문을 받으면 Claude Code의 PreToolUse 훅이 Read·Glob·Grep·cat 같은 원본 읽기 직전에 끼어들어 graphify query·path·explain을 먼저 쓰라고 권하고(기본은 권고, strict 모드는 세션의 첫 원본 읽기를 한 번 거부), 그래프 질의는 약 2,000토큰 예산의 부분 그래프를 돌려준다. 아래 비교: 원본 파일을 통째로 읽는 길은 컨텍스트를 크게 쓴다">
+    <text class="d-label" x="360" y="24" text-anchor="middle">훅이 끼어드는 자리: 원본을 읽기 전에 그래프부터</text>
+    <rect class="d-box soft" x="20" y="60" width="130" height="56" rx="8"/>
+    <text class="d-label sm" x="85" y="84" text-anchor="middle">코드베이스 질문</text>
+    <text class="d-sub" x="85" y="104" text-anchor="middle">"X는 누가 부르나"</text>
+    <path class="d-edge" d="M152 88 L180 88"/>
+    <path class="d-arrow" d="M180 82 L190 88 L180 94 Z"/>
+    <rect class="d-box" x="192" y="48" width="170" height="80" rx="8"/>
+    <text class="d-label sm" x="277" y="72" text-anchor="middle">에이전트, Read/Grep 시도</text>
+    <text class="d-sub" x="277" y="94" text-anchor="middle">PreToolUse 훅 발동</text>
+    <text class="d-sub" x="277" y="112" text-anchor="middle">hook-guard read · search</text>
+    <path class="d-edge accent" d="M364 76 L392 76"/>
+    <path class="d-arrow accent" d="M392 70 L402 76 L392 82 Z"/>
+    <rect class="d-box accent" x="404" y="48" width="160" height="80" rx="8"/>
+    <text class="d-label sm" x="484" y="72" text-anchor="middle">graphify query / path</text>
+    <text class="d-sub" x="484" y="94" text-anchor="middle">부분 그래프 · 예산 2,000토큰</text>
+    <text class="d-sub" x="484" y="112" text-anchor="middle">file:line 인용 · 꼬리표</text>
+    <path class="d-edge accent" d="M566 88 L594 88"/>
+    <path class="d-arrow accent" d="M594 82 L604 88 L594 94 Z"/>
+    <rect class="d-box soft" x="606" y="60" width="100" height="56" rx="8"/>
+    <text class="d-label sm" x="656" y="84" text-anchor="middle">답 + 근거</text>
+    <text class="d-sub" x="656" y="104" text-anchor="middle">필요하면 원본 열람</text>
+    <path class="d-edge dash" d="M277 130 L277 170 L484 170 L484 130"/>
+    <text class="d-sub" x="380" y="190" text-anchor="middle">기본: 권고(soft nudge) · strict: 세션 첫 원본 읽기를 한 번 거부, 30분 안에 그래프 질의가 있었으면 통과</text>
+    <rect class="d-box soft" x="20" y="208" width="686" height="40" rx="8"/>
+    <text class="d-sub" x="363" y="226" text-anchor="middle">훅 없는 플랫폼(Codex·Cursor 등)은 AGENTS.md·.cursor/rules 같은 지시 파일로 같은 "그래프 먼저" 안내를 넣는다.</text>
+    <text class="d-sub" x="363" y="242" text-anchor="middle">지시는 지시일 뿐이라 에이전트가 무시하고 바로 rg로 갈 수 있다(Codex 이슈 #860).</text>
+</svg>
+<div class="d-cap">README의 "Make your assistant always use the graph" 절과 install.py의 훅 정의를 옮겼다. 훅 명령은 설치 시점의 절대 실행 경로를 박아 넣으므로 업그레이드 뒤엔 <code>graphify install</code>과 <code>graphify hook install</code>을 다시 돌린다.</div>
+</div>
+<p>그래프가 있어도 에이전트가 안 쓰면 소용없다. graphify가 이 문제를 다루는 방식이 다른 코드 인덱스 도구와 다른 점이다. <code>graphify install</code>은 스킬 파일만 두는 게 아니라 <code>CLAUDE.md</code>에 안내 블록을 쓰고, Claude Code의 PreToolUse 훅(도구 호출 직전에 끼어드는 훅)을 <code>.claude/settings.json</code>에 등록한다. 훅은 <code>Read</code>·<code>Glob</code>·<code>Grep</code>은 물론 Bash의 <code>cat</code>·<code>head</code>·<code>tail</code>·<code>sed -n</code> 같은 읽기 명령 앞에서도 발동해 "그래프를 먼저 보라"고 권한다. <code>--strict</code>(또는 <code>GRAPHIFY_HOOK_STRICT=1</code>)로 설치하면 세션의 첫 원본 읽기를 한 번 거부해 그래프로 돌려보내고, 최근 30분 안에 그래프 질의가 있었으면 그냥 통과시킨다. 거부는 세션당 한 번이라 에이전트가 영영 막히지는 않는다. 그래프가 오래됐으면(마지막 커밋 뒤 바뀜) 훅이 그 사실도 알린다.</p>
+
+<h3>5. 벤치마크 — 공식 수치와 바깥 측정</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="LOCOMO 대화 기억 벤치마크(n=300) recall@10 가로 막대: graphify 0.497, hybrid RRF 0.493, dense RAG 0.439, BM25 0.362, supermemory 0.149, mem0 0.048. 오른쪽에 QA 정확도: supermemory 49.7%, graphify 45.3%, hybrid 43.3%, dense 41.3%, BM25 31.3%, mem0 27.3%. 인제스트 비용 graphify 약 1.40달러, mem0 3.48달러, supermemory 15.67달러">
+    <text class="d-label" x="360" y="24" text-anchor="middle">LOCOMO (n=300): 검색 재현율과 QA 정확도, graphify 자체 하네스</text>
+    <text class="d-label sm" x="190" y="52" text-anchor="middle">recall@10</text>
+    <text class="d-sub" x="112" y="78" text-anchor="end">graphify</text>
+    <rect class="d-node" x="120" y="66" width="199" height="14" rx="3"/>
+    <text class="d-label sm" x="326" y="78">0.497</text>
+    <text class="d-sub" x="112" y="104" text-anchor="end">hybrid RRF</text>
+    <rect class="d-node dim" x="120" y="92" width="197" height="14" rx="3"/>
+    <text class="d-sub" x="324" y="104">0.493</text>
+    <text class="d-sub" x="112" y="130" text-anchor="end">dense RAG</text>
+    <rect class="d-node dim" x="120" y="118" width="176" height="14" rx="3"/>
+    <text class="d-sub" x="303" y="130">0.439</text>
+    <text class="d-sub" x="112" y="156" text-anchor="end">BM25</text>
+    <rect class="d-node dim" x="120" y="144" width="145" height="14" rx="3"/>
+    <text class="d-sub" x="272" y="156">0.362</text>
+    <text class="d-sub" x="112" y="182" text-anchor="end">supermemory</text>
+    <rect class="d-node dim" x="120" y="170" width="60" height="14" rx="3"/>
+    <text class="d-sub" x="187" y="182">0.149 *임베더 다름</text>
+    <text class="d-sub" x="112" y="208" text-anchor="end">mem0</text>
+    <rect class="d-node dim" x="120" y="196" width="19" height="14" rx="3"/>
+    <text class="d-sub" x="146" y="208">0.048</text>
+    <text class="d-label sm" x="540" y="52" text-anchor="middle">QA 정확도</text>
+    <text class="d-sub" x="462" y="78" text-anchor="end">supermemory</text>
+    <rect class="d-node b" x="470" y="66" width="149" height="14" rx="3"/>
+    <text class="d-sub" x="626" y="78">49.7%</text>
+    <text class="d-sub" x="462" y="104" text-anchor="end">graphify</text>
+    <rect class="d-node" x="470" y="92" width="136" height="14" rx="3"/>
+    <text class="d-label sm" x="613" y="104">45.3%</text>
+    <text class="d-sub" x="462" y="130" text-anchor="end">hybrid RRF</text>
+    <rect class="d-node dim" x="470" y="118" width="130" height="14" rx="3"/>
+    <text class="d-sub" x="607" y="130">43.3%</text>
+    <text class="d-sub" x="462" y="156" text-anchor="end">dense RAG</text>
+    <rect class="d-node dim" x="470" y="144" width="124" height="14" rx="3"/>
+    <text class="d-sub" x="601" y="156">41.3%</text>
+    <text class="d-sub" x="462" y="182" text-anchor="end">BM25</text>
+    <rect class="d-node dim" x="470" y="170" width="94" height="14" rx="3"/>
+    <text class="d-sub" x="571" y="182">31.3%</text>
+    <text class="d-sub" x="462" y="208" text-anchor="end">mem0</text>
+    <rect class="d-node dim" x="470" y="196" width="82" height="14" rx="3"/>
+    <text class="d-sub" x="559" y="208">27.3%</text>
+    <rect class="d-box soft" x="20" y="232" width="680" height="56" rx="8"/>
+    <text class="d-sub" x="360" y="252" text-anchor="middle">인제스트 비용: graphify 약 $1.40 · mem0 $3.48 · supermemory $15.67  ·  그래프 구축 LLM 비용 $0</text>
+    <text class="d-sub" x="360" y="272" text-anchor="middle">LongMemEval-S(n=50) 76%로 dense RAG와 동률 · ERPNext(100만 LOC) 핵심 사실 커버리지 82.0% 대 grep 70.8% (n=6)</text>
+</svg>
+<div class="d-cap">BENCHMARKS.md(2026-07-05 갱신)의 표. 모든 시스템을 같은 하네스에서 같은 모델(Kimi K2.6)·같은 예산으로 돌리고 심판을 2차 심판과 대조(일치 90.6%, 카파 0.81)했다고 밝힌다. supermemory의 recall은 자체 임베더를 쓰라는 제약 때문에 직접 비교가 어렵다는 각주가 붙어 있다. 코드 지능 항목은 n=6이라 표본이 작다.</div>
+</div>
+<p>벤치마크를 읽을 때 두 가지를 분리해야 한다. 첫째, 위 표는 graphify 자체 하네스의 결과다. 공정성 규칙(단일 모델, 공유 임베더, 지출 장부)을 공개하고 재현 명령을 적어 둔 점은 평가할 만하지만, 자사 측정이라는 사실은 남는다. 둘째, 가장 널리 퍼진 수치인 "토큰 71.5배 절감"은 벤치마크 표가 아니라 how-it-works 문서의 토큰 비교에서 왔다. 그 비교의 코퍼스는 Karpathy의 저장소 셋 + 논문 5편 + 이미지 4장(52개 파일)이고, 질의 한 번에 약 1,700토큰 대 원본 전체 약 123,000토큰이다. 같은 문서가 4개 파일에선 5.4배, 6개 파일 라이브러리에선 약 1배라고 적는다. 작은 코퍼스는 어차피 컨텍스트에 들어가니 압축이 아니라 구조 파악이 값어치라는 뜻이다.</p>
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="토큰 절감 주장과 독립 측정 비교: 공식 문서는 52개 파일 코퍼스에서 질의당 71.5배, 4개 파일 5.4배, 6개 파일 약 1배. 독립 측정은 Exchangepedia 질의당 7.3배, Medium 10개 질문 세션에서 7에서 8% 절감, KubeBlogs 프로덕션 작업 블라인드 채점 graphify 44점 대 미사용 45점(50점 만점), 프런트엔드 저장소 15 대 23">
+    <text class="d-label" x="360" y="24" text-anchor="middle">"71.5배"는 어디서 왔고, 바깥에서는 얼마나 나왔나</text>
+    <text class="d-label sm" x="170" y="54" text-anchor="middle">공식 how-it-works · 질의 1회 기준</text>
+    <text class="d-sub" x="112" y="84" text-anchor="end">52개 파일</text>
+    <rect class="d-node" x="120" y="72" width="200" height="14" rx="3"/>
+    <text class="d-label sm" x="328" y="84">71.5배</text>
+    <text class="d-sub" x="112" y="112" text-anchor="end">4개 파일</text>
+    <rect class="d-node" x="120" y="100" width="15" height="14" rx="3"/>
+    <text class="d-sub" x="143" y="112">5.4배</text>
+    <text class="d-sub" x="112" y="140" text-anchor="end">6개 파일</text>
+    <rect class="d-node" x="120" y="128" width="3" height="14" rx="1"/>
+    <text class="d-sub" x="131" y="140">약 1배</text>
+    <text class="d-label sm" x="540" y="54" text-anchor="middle">독립 측정 · 세션·작업 기준</text>
+    <text class="d-sub" x="462" y="84" text-anchor="end">질의당 (Exchangepedia)</text>
+    <rect class="d-node d" x="470" y="72" width="21" height="14" rx="3"/>
+    <text class="d-sub" x="499" y="84">7.3배</text>
+    <text class="d-sub" x="462" y="112" text-anchor="end">10문항 세션 (Medium)</text>
+    <rect class="d-node d" x="470" y="100" width="3" height="14" rx="1"/>
+    <text class="d-sub" x="481" y="112">7~8% 절감 (113k 대 120k)</text>
+    <text class="d-sub" x="462" y="140" text-anchor="end">블라인드 품질 (KubeBlogs)</text>
+    <rect class="d-node d" x="470" y="128" width="176" height="14" rx="3"/>
+    <text class="d-sub" x="654" y="140">44 / 50</text>
+    <text class="d-sub" x="462" y="166" text-anchor="end">같은 작업, graphify 없이</text>
+    <rect class="d-node dim" x="470" y="154" width="180" height="14" rx="3"/>
+    <text class="d-sub" x="658" y="166">45 / 50</text>
+    <rect class="d-box soft" x="20" y="190" width="680" height="48" rx="8"/>
+    <text class="d-sub" x="360" y="210" text-anchor="middle">왼쪽 막대는 로그 눈금이 아니라 71.5배를 200px로 둔 선형 비례. 토큰 수는 글자 수로 어림한 값이라는 지적도 있다.</text>
+    <text class="d-sub" x="360" y="228" text-anchor="middle">프런트엔드 저장소 한 곳에서는 graphify 쪽이 15 대 23으로 뒤졌다. 결론: 길 찾기·영향 분석에 강하고 집중 편집엔 효과 작음.</text>
+</svg>
+<div class="d-cap">공식 수치는 how-it-works 문서, 독립 측정은 검색으로 확인한 정리 글들(Zero-to-Hero 가이드가 인용한 Exchangepedia·Medium·KubeBlogs 값) 기준이다. 원문 다수가 이 글을 쓴 환경에서 열리지 않아 가이드의 인용을 그대로 옮겼다.</div>
+</div>
+
+<h3>6. 장점과 한계</h3>
+<table>
+    <thead><tr><th>강한 곳</th><th>약한 곳</th></tr></thead>
+    <tbody>
+        <tr><td>큰 저장소에 처음 들어갈 때. 허브와 커뮤니티로 구조를 먼저 잡고, "이 엔드포인트에서 저장소까지"를 경로로 본다</td><td>작은 프로젝트. 파일이 컨텍스트에 다 들어가면 질의 오버헤드가 오히려 토큰을 늘린다</td></tr>
+        <tr><td>영향 분석과 온보딩. 공유 컴포넌트의 호출자·의존을 한 번에 나열하고, <code># WHY:</code> 주석과 ADR이 노드로 코드에 연결된다</td><td>집중 편집. 파일 몇 개를 고치는 작업에서는 에이전트가 그냥 <code>rg</code>로 가는 편이 빠르고, 실제로 그렇게 한다</td></tr>
+        <tr><td>문서 많은 저장소. PDF·논문·영상까지 같은 그래프에 들어가 "코드와 설계 문서의 연결"이 보인다</td><td>오래된 그래프. pull·merge는 훅이 안 잡아 <code>graphify update .</code>를 잊으면 틀린 지도를 들고 다닌다(새 디렉터리 미발견 #1837 등)</td></tr>
+        <tr><td>검증 가능성. 간선마다 꼬리표와 file:line이 붙어 답을 원본에 대조할 수 있다</td><td>그래프 답은 "맥락이지 검증된 답이 아니다". INFERRED 간선은 틀릴 수 있고 테스트 코드의 동명 헬퍼가 소음을 만든다</td></tr>
+        <tr><td>비용. 코드 그래프는 무료·오프라인이고, 재실행은 해시로 건너뛴다</td><td>의미 패스는 문서·이미지를 설정한 모델로 보낸다. Kimi를 고르면 Moonshot 서버로 간다. 로그 파일 <code>~/.cache/graphify-queries.log</code>가 질문을 남긴다(끄기 가능)</td></tr>
+    </tbody>
+</table>
+<p>보안 쪽에서는 2026년 11월 21일 0.9.115가 Windows에서 저장소 안 경로(<code>.sh</code>의 <code>source \\host\share\x</code> 같은 UNC 경로)가 스캔 루트 밖을 건드려 SMB 인증을 유발하던 문제를 고쳤다(GHSA-g6c9-j4vm-mwq4). 낯선 저장소를 그래프로 만드는 도구라 이런 종류의 입력 처리 문제가 생길 수 있다는 뜻이고, 최신판 유지가 답이다. 스킬 파일 자체도 스캔 경로를 셸에 치환하지 않고 따옴표 heredoc으로 넘겨 경로에 섞인 셸 코드가 실행되지 않게 짜여 있다. 공유 HTTP MCP 서버를 띄울 때는 <code>--api-key</code>를 두고, <code>graphify-out/cache/</code>·<code>manifest.json</code>·<code>cost.json</code>은 gitignore에 넣는다.</p>
+
+<h3>7. 이 위키의 그래프와 나란히 놓으면</h3>
+<p>이 위키는 문서 79편을 개념 공유·인용 역링크·선언된 타입 관계의 세 층으로 잇는 자체 지식 그래프를 갖고 있다(<a href="#!kgs-edges">연결의 세 층</a>). 재료가 다르다. 이 위키는 사람이 큐레이션한 개념과 본문 링크에서 간선을 만들고, graphify는 구문 트리에서 호출·import·상속을 기계로 뽑는다. 그런데 운영 원칙은 닮았다. 이 위키의 "본문에 실재하는 관계만"은 graphify의 "간선을 지어내지 말고 모르면 AMBIGUOUS"와 같은 자리에 있고, 둘 다 임베딩 없이 구조 자체로 이웃을 찾는다. 다른 점은 쓰임이다. 이 위키의 그래프는 사람과 AI가 문서를 돌아다니는 지도이고, graphify의 그래프는 에이전트가 코드를 읽기 전에 들르는 색인이다. 이 저장소의 <code>app.js</code>·<code>tools/*.py</code>에 graphify를 돌려 보면 문서 그래프 옆에 코드 그래프가 하나 더 생기는 셈인데, 지금은 문서 쪽 그래프만 있으니 다음 실험으로 남겨 둔다.</p>
+
+<h3>사실검증 노트</h3>
+<p class="scn-sub">파이프라인·세 패스·언어 수(33+7)·신뢰도 규칙표·간선 꼬리표·<code>also_seen</code>·출력 파일·명령과 플래그·종료 코드·<code>.graphifyrc</code>·훅 동작(PreToolUse, strict, 30분)·git 훅·MCP 도구 10개·내보내기 형식·개인정보 항목·정직 규칙은 <a href="https://github.com/Graphify-Labs/graphify" target="_blank" rel="noopener">공식 저장소</a>를 2026년 11월 24일에 받아 README·<code>docs/how-it-works.md</code>·ARCHITECTURE.md·<code>graphify/skill.md</code>·<code>graphify/install.py</code>·CHANGELOG를 직접 읽어 옮겼다(기준 커밋 2026-11-23, 0.9.118). 벤치마크 표(LOCOMO·LongMemEval-S·ERPNext·비용)와 심판 검증 수치는 BENCHMARKS.md(2026-07-05 갱신) 기준이며 모두 Graphify Labs 자체 측정이다. 첫 공개일(2026-04-04, 0.1.1)과 릴리스 수(284)는 PyPI API에서 확인했다. 스타 수는 GitHub API가 이 환경에서 응답하지 않았고 집계 사이트가 76,348·114,794·129,000·152,271로 갈려 본문에 확정 수치를 적지 않았다. 토큰 71.5배는 공식 how-it-works 문서, 독립 측정(7.3배·7~8%·44 대 45·15 대 23)과 비판(글자 수 어림, 작은 코퍼스 역효과, 에이전트가 그래프를 건너뜀, 그래프 노후화 이슈 번호)은 <a href="https://gist.github.com/YourAKShaw/46c01330c7edfd1e82a4b0339b6846de" target="_blank" rel="noopener">Zero-to-Hero 가이드</a>(2026-10-20)의 인용과 검색 발췌 기준이고, KubeBlogs·Medium·Exchangepedia 원문은 이 글을 쓴 환경의 네트워크 정책 때문에 직접 열지 못했다. 라이선스는 LICENSE(Apache-2.0)와 LICENSE-MIT가 함께 있어 이중으로 적었다. 회사 정보(Graphify Labs, YC S26, ROSS Index Q3 2026 2위 배지)는 README의 배지 기준이다. 작성자는 공인이 아니라 핸들·이름을 적지 않았고 NOTICE의 저작권 표기만 저장소에서 확인할 수 있다. 히어로 이미지는 저장소의 <code>docs/graph-hero.png</code>를 Apache-2.0 조건 아래 1400px로 줄여 실었다.</p>

@@ -1,18 +1,18 @@
 {
  "schemaVersion": 2,
  "note": "Structured knowledge index built by AI from every doc (summary, key concepts, related docs). related = idf-weighted concept overlap (via:concept) topped up with same-folder neighbours (via:folder).",
- "docCount": 79,
+ "docCount": 81,
  "stats": {
-  "docCount": 79,
-  "conceptCount": 325,
+  "docCount": 81,
+  "conceptCount": 330,
   "clusters": [
    {
     "label": "知識体系",
     "section": "AI · Wiki · 지식 체계",
     "count": 7,
     "hub": {
-     "name": "kgs-accuracy",
-     "title": "このウィキはどれだけ当てるのか — 検索とグラフ巡回を測ってみた",
+     "name": "kgs-edges",
+     "title": "文書はどうつながるのか — 概念キュレーションと idf 重みつきエッジ",
      "refs": 5
     }
    },
@@ -33,13 +33,13 @@
     "hub": {
      "name": "claude-md-constitution",
      "title": "Claude 憲章 — モデルに自分を何と伝えるのか",
-     "refs": 5
+     "refs": 6
     }
    },
    {
     "label": "Introduction",
     "section": "AI · Claude · Code · Introduction",
-    "count": 2,
+    "count": 3,
     "hub": {
      "name": "skills",
      "title": "拡張機能 — Skills · MCP · Hooks",
@@ -61,8 +61,8 @@
     "section": "AI · Claude · Code · Skill",
     "count": 3,
     "hub": {
-     "name": "skl-overview",
-     "title": "スキルとは — 背景と強み",
+     "name": "skl-install",
+     "title": "スキルの導入・セキュリティ・作成",
      "refs": 3
     }
    },
@@ -93,7 +93,7 @@
     "hub": {
      "name": "hns-evidence",
      "title": "ハーネスがスコアを動かす証拠 — Microsoft の白書と RHO・HarnessPro 研究を重ねて読む",
-     "refs": 8
+     "refs": 9
     }
    },
    {
@@ -113,7 +113,7 @@
     "hub": {
      "name": "omc-intro",
      "title": "OMC — 紹介とインストール",
-     "refs": 6
+     "refs": 5
     }
    },
    {
@@ -123,17 +123,17 @@
     "hub": {
      "name": "plc-popular-2026h2",
      "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
-     "refs": 7
+     "refs": 5
     }
    },
    {
     "label": "スキルカタログ",
     "section": "AI · Claude · 스킬 카탈로그",
-    "count": 3,
+    "count": 4,
     "hub": {
-     "name": "sks-popular-2026h2",
-     "title": "2026年下半期の人気スキル — インストール数上位7つと使い方",
-     "refs": 4
+     "name": "sks-graphify",
+     "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+     "refs": 13
     }
    },
    {
@@ -199,14 +199,19 @@
   ],
   "hubs": [
    {
-    "name": "news-20260724-claude-opus-5",
-    "title": "Claude Opus 5 — 半額の準 Fable がやってきた",
-    "refs": 9
+    "name": "sks-graphify",
+    "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+    "refs": 13
    },
    {
     "name": "hns-evidence",
     "title": "ハーネスがスコアを動かす証拠 — Microsoft の白書と RHO・HarnessPro 研究を重ねて読む",
-    "refs": 8
+    "refs": 9
+   },
+   {
+    "name": "news-20260724-claude-opus-5",
+    "title": "Claude Opus 5 — 半額の準 Fable がやってきた",
+    "refs": 9
    },
    {
     "name": "news-20260901-whose-usage",
@@ -214,18 +219,18 @@
     "refs": 8
    },
    {
-    "name": "news-20260922-harness-catalog",
-    "title": "呼べるリスト — ハーネス167種のランキングを取得して解剖した",
-    "refs": 8
-   },
-   {
-    "name": "plc-popular-2026h2",
-    "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
-    "refs": 7
+    "name": "claude-md-constitution",
+    "title": "Claude 憲章 — モデルに自分を何と伝えるのか",
+    "refs": 6
    },
    {
     "name": "hnp-first-run",
     "title": "最初の実行と動作構造",
+    "refs": 6
+   },
+   {
+    "name": "news-20260814-auto-mode-stateless-mcp",
+    "title": "尋ねない既定値 — 承認ボタンとセッションが同じ週に消えた",
     "refs": 6
    },
    {
@@ -234,13 +239,13 @@
     "refs": 6
    },
    {
-    "name": "news-20261022-claude-duet",
-    "title": "Claude Duet を一望する — 先に話しかけるエージェントと三段の承認ゲート",
+    "name": "news-20260922-harness-catalog",
+    "title": "呼べるリスト — ハーネス167種のランキングを取得して解剖した",
     "refs": 6
    },
    {
-    "name": "omc-intro",
-    "title": "OMC — 紹介とインストール",
+    "name": "news-20261022-claude-duet",
+    "title": "Claude Duet を一望する — 先に話しかけるエージェントと三段の承認ゲート",
     "refs": 6
    },
    {
@@ -251,32 +256,32 @@
   ],
   "topConcepts": [
    {
-    "c": "검증",
-    "n": 14
-   },
-   {
-    "c": "스킬",
-    "n": 14
-   },
-   {
-    "c": "에이전트",
-    "n": 14
-   },
-   {
     "c": "CLAUDE.md",
-    "n": 13
+    "n": 15
    },
    {
     "c": "Claude Code",
-    "n": 13
+    "n": 15
+   },
+   {
+    "c": "검증",
+    "n": 15
+   },
+   {
+    "c": "스킬",
+    "n": 15
+   },
+   {
+    "c": "에이전트",
+    "n": 15
    },
    {
     "c": "지식그래프",
-    "n": 13
+    "n": 14
    },
    {
     "c": "Anthropic",
-    "n": 11
+    "n": 12
    },
    {
     "c": "서브에이전트",
@@ -287,15 +292,23 @@
     "n": 10
    },
    {
+    "c": "벤치마크",
+    "n": 9
+   },
+   {
+    "c": "코딩에이전트",
+    "n": 9
+   },
+   {
     "c": "하네스",
     "n": 9
    },
    {
-    "c": "마켓플레이스",
+    "c": "MCP",
     "n": 8
    },
    {
-    "c": "벤치마크",
+    "c": "마켓플레이스",
     "n": 8
    },
    {
@@ -303,22 +316,14 @@
     "n": 8
    },
    {
-    "c": "코딩에이전트",
+    "c": "토큰비용",
     "n": 8
-   },
-   {
-    "c": "플러그인",
-    "n": 8
-   },
-   {
-    "c": "MCP",
-    "n": 7
    }
   ],
   "bridges": [
    {
     "c": "스킬",
-    "n": 14,
+    "n": 15,
     "clusters": [
      "CLAUDE.md",
      "Harness エンジニアリング",
@@ -335,7 +340,7 @@
    },
    {
     "c": "CLAUDE.md",
-    "n": 13,
+    "n": 15,
     "clusters": [
      "CLAUDE.md",
      "Harness エンジニアリング",
@@ -347,6 +352,20 @@
      "Tutorial（入門）",
      "スキルカタログ",
      "プラグインカタログ"
+    ]
+   },
+   {
+    "c": "검증",
+    "n": 15,
+    "clusters": [
+     "CLAUDE.md",
+     "Harness エンジニアリング",
+     "Harness プラグイン",
+     "Introduction",
+     "News & Articles",
+     "Ontology",
+     "Tip",
+     "知識体系"
     ]
    },
    {
@@ -364,16 +383,16 @@
     ]
    },
    {
-    "c": "검증",
-    "n": 14,
+    "c": "Claude Code",
+    "n": 15,
     "clusters": [
      "CLAUDE.md",
      "Harness エンジニアリング",
-     "Harness プラグイン",
+     "Introduction",
      "News & Articles",
-     "Ontology",
      "Tip",
-     "知識体系"
+     "Tutorial（入門）",
+     "スキルカタログ"
     ]
    },
    {
@@ -403,42 +422,31 @@
     ]
    },
    {
-    "c": "Claude Code",
-    "n": 13,
+    "c": "훅",
+    "n": 7,
     "clusters": [
      "CLAUDE.md",
-     "Harness エンジニアリング",
      "Introduction",
      "News & Articles",
-     "Tip",
-     "Tutorial（入門）"
-    ]
-   },
-   {
-    "c": "플러그인",
-    "n": 8,
-    "clusters": [
-     "AI開発ナレッジプラットフォーム",
-     "Introduction",
      "OMC プラグイン",
-     "Tutorial（入門）",
-     "プラグインカタログ",
-     "知識体系"
+     "Tip",
+     "スキルカタログ",
+     "プラグインカタログ"
     ]
    }
   ],
   "galaxies": {
    "AI": {
-    "docCount": 74,
-    "conceptCount": 296,
+    "docCount": 76,
+    "conceptCount": 301,
     "clusters": [
      {
       "label": "知識体系",
       "section": "AI · Wiki · 지식 체계",
       "count": 7,
       "hub": {
-       "name": "kgs-accuracy",
-       "title": "このウィキはどれだけ当てるのか — 検索とグラフ巡回を測ってみた",
+       "name": "kgs-edges",
+       "title": "文書はどうつながるのか — 概念キュレーションと idf 重みつきエッジ",
        "refs": 5
       }
      },
@@ -459,16 +467,16 @@
       "hub": {
        "name": "claude-md-constitution",
        "title": "Claude 憲章 — モデルに自分を何と伝えるのか",
-       "refs": 5
+       "refs": 6
       }
      },
      {
       "label": "Introduction",
       "section": "AI · Claude · Code · Introduction",
-      "count": 2,
+      "count": 3,
       "hub": {
-       "name": "skills",
-       "title": "拡張機能 — Skills · MCP · Hooks",
+       "name": "welcome",
+       "title": "はじめに",
        "refs": 3
       }
      },
@@ -487,8 +495,8 @@
       "section": "AI · Claude · Code · Skill",
       "count": 3,
       "hub": {
-       "name": "skl-overview",
-       "title": "スキルとは — 背景と強み",
+       "name": "skl-install",
+       "title": "スキルの導入・セキュリティ・作成",
        "refs": 3
       }
      },
@@ -519,7 +527,7 @@
       "hub": {
        "name": "hns-evidence",
        "title": "ハーネスがスコアを動かす証拠 — Microsoft の白書と RHO・HarnessPro 研究を重ねて読む",
-       "refs": 8
+       "refs": 9
       }
      },
      {
@@ -539,7 +547,7 @@
       "hub": {
        "name": "omc-intro",
        "title": "OMC — 紹介とインストール",
-       "refs": 6
+       "refs": 5
       }
      },
      {
@@ -549,17 +557,17 @@
       "hub": {
        "name": "plc-popular-2026h2",
        "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
-       "refs": 7
+       "refs": 5
       }
      },
      {
       "label": "スキルカタログ",
       "section": "AI · Claude · 스킬 카탈로그",
-      "count": 3,
+      "count": 4,
       "hub": {
-       "name": "sks-popular-2026h2",
-       "title": "2026年下半期の人気スキル — インストール数上位7つと使い方",
-       "refs": 4
+       "name": "sks-graphify",
+       "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+       "refs": 13
       }
      },
      {
@@ -605,14 +613,19 @@
     ],
     "hubs": [
      {
-      "name": "news-20260724-claude-opus-5",
-      "title": "Claude Opus 5 — 半額の準 Fable がやってきた",
-      "refs": 9
+      "name": "sks-graphify",
+      "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+      "refs": 13
      },
      {
       "name": "hns-evidence",
       "title": "ハーネスがスコアを動かす証拠 — Microsoft の白書と RHO・HarnessPro 研究を重ねて読む",
-      "refs": 8
+      "refs": 9
+     },
+     {
+      "name": "news-20260724-claude-opus-5",
+      "title": "Claude Opus 5 — 半額の準 Fable がやってきた",
+      "refs": 9
      },
      {
       "name": "news-20260901-whose-usage",
@@ -620,18 +633,18 @@
       "refs": 8
      },
      {
-      "name": "news-20260922-harness-catalog",
-      "title": "呼べるリスト — ハーネス167種のランキングを取得して解剖した",
-      "refs": 8
-     },
-     {
-      "name": "plc-popular-2026h2",
-      "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
-      "refs": 7
+      "name": "claude-md-constitution",
+      "title": "Claude 憲章 — モデルに自分を何と伝えるのか",
+      "refs": 6
      },
      {
       "name": "hnp-first-run",
       "title": "最初の実行と動作構造",
+      "refs": 6
+     },
+     {
+      "name": "news-20260814-auto-mode-stateless-mcp",
+      "title": "尋ねない既定値 — 承認ボタンとセッションが同じ週に消えた",
       "refs": 6
      },
      {
@@ -640,13 +653,13 @@
       "refs": 6
      },
      {
-      "name": "news-20261022-claude-duet",
-      "title": "Claude Duet を一望する — 先に話しかけるエージェントと三段の承認ゲート",
+      "name": "news-20260922-harness-catalog",
+      "title": "呼べるリスト — ハーネス167種のランキングを取得して解剖した",
       "refs": 6
      },
      {
-      "name": "omc-intro",
-      "title": "OMC — 紹介とインストール",
+      "name": "news-20261022-claude-duet",
+      "title": "Claude Duet を一望する — 先に話しかけるエージェントと三段の承認ゲート",
       "refs": 6
      },
      {
@@ -657,32 +670,32 @@
     ],
     "topConcepts": [
      {
-      "c": "검증",
-      "n": 14
-     },
-     {
-      "c": "스킬",
-      "n": 14
-     },
-     {
-      "c": "에이전트",
-      "n": 14
-     },
-     {
       "c": "CLAUDE.md",
-      "n": 13
+      "n": 15
      },
      {
       "c": "Claude Code",
-      "n": 13
+      "n": 15
+     },
+     {
+      "c": "검증",
+      "n": 15
+     },
+     {
+      "c": "스킬",
+      "n": 15
+     },
+     {
+      "c": "에이전트",
+      "n": 15
      },
      {
       "c": "지식그래프",
-      "n": 13
+      "n": 14
      },
      {
       "c": "Anthropic",
-      "n": 11
+      "n": 12
      },
      {
       "c": "서브에이전트",
@@ -693,15 +706,23 @@
       "n": 10
      },
      {
+      "c": "벤치마크",
+      "n": 9
+     },
+     {
+      "c": "코딩에이전트",
+      "n": 9
+     },
+     {
       "c": "하네스",
       "n": 9
      },
      {
-      "c": "마켓플레이스",
+      "c": "MCP",
       "n": 8
      },
      {
-      "c": "벤치마크",
+      "c": "마켓플레이스",
       "n": 8
      },
      {
@@ -709,22 +730,14 @@
       "n": 8
      },
      {
-      "c": "코딩에이전트",
-      "n": 8
-     },
-     {
-      "c": "MCP",
-      "n": 7
-     },
-     {
       "c": "토큰비용",
-      "n": 7
+      "n": 8
      }
     ],
     "bridges": [
      {
       "c": "스킬",
-      "n": 14,
+      "n": 15,
       "clusters": [
        "CLAUDE.md",
        "Harness エンジニアリング",
@@ -741,7 +754,7 @@
      },
      {
       "c": "CLAUDE.md",
-      "n": 13,
+      "n": 15,
       "clusters": [
        "CLAUDE.md",
        "Harness エンジニアリング",
@@ -753,6 +766,20 @@
        "Tutorial（入門）",
        "スキルカタログ",
        "プラグインカタログ"
+      ]
+     },
+     {
+      "c": "검증",
+      "n": 15,
+      "clusters": [
+       "CLAUDE.md",
+       "Harness エンジニアリング",
+       "Harness プラグイン",
+       "Introduction",
+       "News & Articles",
+       "Ontology",
+       "Tip",
+       "知識体系"
       ]
      },
      {
@@ -770,16 +797,16 @@
       ]
      },
      {
-      "c": "검증",
-      "n": 14,
+      "c": "Claude Code",
+      "n": 15,
       "clusters": [
        "CLAUDE.md",
        "Harness エンジニアリング",
-       "Harness プラグイン",
+       "Introduction",
        "News & Articles",
-       "Ontology",
        "Tip",
-       "知識体系"
+       "Tutorial（入門）",
+       "スキルカタログ"
       ]
      },
      {
@@ -809,26 +836,15 @@
       ]
      },
      {
-      "c": "Claude Code",
-      "n": 13,
-      "clusters": [
-       "CLAUDE.md",
-       "Harness エンジニアリング",
-       "Introduction",
-       "News & Articles",
-       "Tip",
-       "Tutorial（入門）"
-      ]
-     },
-     {
       "c": "훅",
-      "n": 6,
+      "n": 7,
       "clusters": [
        "CLAUDE.md",
        "Introduction",
        "News & Articles",
        "OMC プラグイン",
        "Tip",
+       "スキルカタログ",
        "プラグインカタログ"
       ]
      }
@@ -1016,19 +1032,20 @@
    "sectionL": "AI · Wiki · 知識体系",
    "related": [
     {
-     "name": "kgs-accuracy",
-     "title": "このウィキはどれだけ当てるのか — 検索とグラフ巡回を測ってみた",
+     "name": "sks-graphify",
+     "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
      "shared": [
-      "희소성",
+      "정직성",
+      "허브",
       "지식그래프"
      ],
      "via": "concept"
     },
     {
-     "name": "kgs-views",
-     "title": "グラフを読む 9 つの眼 — ビューごとに違う問いに答える",
+     "name": "kgs-accuracy",
+     "title": "このウィキはどれだけ当てるのか — 検索とグラフ巡回を測ってみた",
      "shared": [
-      "허브",
+      "희소성",
       "지식그래프"
      ],
      "via": "concept"
@@ -1043,10 +1060,10 @@
      "via": "concept"
     },
     {
-     "name": "news-20260922-harness-catalog",
-     "title": "呼べるリスト — ハーネス167種のランキングを取得して解剖した",
+     "name": "kgs-views",
+     "title": "グラフを読む 9 つの眼 — ビューごとに違う問いに答える",
      "shared": [
-      "큐레이션",
+      "허브",
       "지식그래프"
      ],
      "via": "concept"
@@ -1058,6 +1075,7 @@
     "kgs-plugin",
     "kgs-gates",
     "kgs-accuracy",
+    "sks-graphify",
     "gdb-graphrag",
     "dzp-knowledge"
    ]
@@ -1094,16 +1112,13 @@
      "via": "concept"
     },
     {
-     "name": "kgs-overview",
-     "title": "知識はどう積み上がるのか — 4 階層の知識階層と登録パイプライン",
-     "shared": [],
-     "via": "folder"
-    },
-    {
-     "name": "kgs-ai-layer",
-     "title": "AI がこのウィキを読む方法 — 機械可読レイヤーとグラフ巡回",
-     "shared": [],
-     "via": "folder"
+     "name": "sks-graphify",
+     "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+     "shared": [
+      "허브",
+      "지식그래프"
+     ],
+     "via": "concept"
     }
    ],
    "citedBy": [
@@ -1405,6 +1420,16 @@
      "via": "concept"
     },
     {
+     "name": "sks-graphify",
+     "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+     "shared": [
+      "설치",
+      "코딩에이전트",
+      "CLAUDE.md"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "ccb-overview",
      "title": "基礎 — 概要・ターミナル・CLAUDE.md",
      "shared": [
@@ -1474,6 +1499,16 @@
      "via": "concept"
     },
     {
+     "name": "sks-graphify",
+     "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+     "shared": [
+      "훅",
+      "MCP",
+      "스킬"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "ccb-skills",
      "title": "拡張 — スキル・プラグイン・エージェント",
      "shared": [
@@ -1491,15 +1526,6 @@
       "플러그인"
      ],
      "via": "concept"
-    },
-    {
-     "name": "skl-overview",
-     "title": "スキルとは — 背景と強み",
-     "shared": [
-      "재사용",
-      "스킬"
-     ],
-     "via": "concept"
     }
    ],
    "citedBy": [
@@ -1509,6 +1535,87 @@
     "tip-intermediate",
     "tip-advanced",
     "news-20260814-auto-mode-stateless-mcp"
+   ]
+  },
+  {
+   "name": "claude-ship",
+   "title": "Claude Ship — PR をマージまで連れて行く三つのエージェント、使い方と利点",
+   "summary": "Anthropic が2026年11月23日に公開した Claude Ship を公式文書に基づいて解説する。プルリクエスト（PR）が開かれたあと、マージまで三つのエージェントが引き継ぐ。Code Review は発見・検証・順位付け・投稿の四段階でレビューを付け（重要・些細・既存欠陥の三等級、Quick・Standard・Deep）、PR Steward は失敗した検査・競合・レビューコメントを直して再プッシュするが承認・マージはできず、Claude Approvals は .claude/approvals.yml の規則で「誰が何人承認すべきか」を判定する（observe で始めて enforce へ）。開発者側では Claude Code の /ship 一行がコミット・プッシュ・PR 作成・Steward の監視まで束ね、組織側では Code Review → Steward（手動）→ Approvals observe → enforce の順に有効化する導入順序と、CODEOWNERS に代わるポリシーファイル二種の出発例を載せた。利点（レビュー待ちの短縮、修正ループの自動化、ポリシーのコード化、人の承認の定量配置）と注意点（Team・Enterprise 限定ベータ、ZDR・HIPAA 除外、ボットの承認権限の範囲、月次上限とリポジトリ別支出上限、自社測定の数値）を分け、このウィキの PR の流れと比べた。",
+   "concepts": [
+    "Claude Code",
+    "코드리뷰",
+    "풀리퀘스트",
+    "승인정책",
+    "자동화",
+    "에이전트",
+    "검증",
+    "거버넌스",
+    "CLAUDE.md",
+    "GitHub",
+    "Anthropic"
+   ],
+   "relations": [
+    {
+     "target": "welcome",
+     "type": "prerequisite",
+     "evidenceRef": "/ship の節は Claude Code のインストール・認証とスラッシュコマンドの使用を前提にすぐ引数の説明に入る。基本は「はじめに」に委ねている",
+     "source": "human"
+    },
+    {
+     "target": "news-20260820-who-makes-the-call",
+     "type": "example-of",
+     "evidenceRef": "Approvals の「規則ファイルが承認席数を判定する」設計は、その記事の「判定は会話から規則へ移る」という論旨が製品になった事例で、本文6節がその記事を指す",
+     "source": "human"
+    },
+    {
+     "target": "skills",
+     "type": "prerequisite",
+     "evidenceRef": "Steward の動作を .claude/skills/steward/SKILL.md で変え、skillOverrides で止める箇所がスキル・フックの概念を前提にする",
+     "source": "human"
+    }
+   ],
+   "section": "AI · Claude · Code · Introduction",
+   "related": [
+    {
+     "name": "claude-md-intent",
+     "title": "intent.md — コードより先に残す意図と、AI ネイティブ SDLC",
+     "shared": [
+      "코드리뷰",
+      "Anthropic",
+      "CLAUDE.md"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "hns-evidence",
+     "title": "ハーネスがスコアを動かす証拠 — Microsoft の白書と RHO・HarnessPro 研究を重ねて読む",
+     "shared": [
+      "CLAUDE.md",
+      "Claude Code",
+      "검증"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "claude-md-constitution",
+     "title": "Claude 憲章 — モデルに自分を何と伝えるのか",
+     "shared": [
+      "Anthropic",
+      "CLAUDE.md",
+      "에이전트"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "news-20260814-auto-mode-stateless-mcp",
+     "title": "尋ねない既定値 — 承認ボタンとセッションが同じ週に消えた",
+     "shared": [
+      "Anthropic",
+      "CLAUDE.md",
+      "Claude Code"
+     ],
+     "via": "concept"
+    }
    ]
   },
   {
@@ -1592,6 +1699,16 @@
    ],
    "section": "AI · Claude · Code · CLAUDE.md",
    "related": [
+    {
+     "name": "sks-graphify",
+     "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+     "shared": [
+      "온보딩",
+      "코딩에이전트",
+      "CLAUDE.md"
+     ],
+     "via": "concept"
+    },
     {
      "name": "news-20260724-snucatch-ai-coding",
      "title": "手でコーディングする時代の終わり？ — ソウル大 イ・ジェウク教授が見る開発者の未来",
@@ -1812,15 +1929,6 @@
    ],
    "section": "AI · Claude · Code · Skill",
    "related": [
-    {
-     "name": "news-20260710-llm-wiki-knowledge-context",
-     "title": "LLM Wiki とナレッジコンテキスト — 書き込みの時点でコンパイルするチームの知識",
-     "shared": [
-      "거버넌스",
-      "스킬"
-     ],
-     "via": "concept"
-    },
     {
      "name": "skills",
      "title": "拡張機能 — Skills · MCP · Hooks",
@@ -2312,12 +2420,12 @@
      "via": "concept"
     },
     {
-     "name": "omc-intro",
-     "title": "OMC — 紹介とインストール",
+     "name": "hns-overview",
+     "title": "ハーネスとは — 概要・定義・構成",
      "shared": [
-      "설치",
-      "마켓플레이스",
-      "슬래시명령어"
+      "병렬실행",
+      "의도전달",
+      "검증"
      ],
      "via": "concept"
     }
@@ -2495,6 +2603,16 @@
      "via": "concept"
     },
     {
+     "name": "sks-graphify",
+     "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+     "shared": [
+      "토큰비용",
+      "벤치마크",
+      "코딩에이전트"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "news-20260803-cherny-karpathy",
      "title": "消した人と、生やした人 — チェルニーの「ハーネス 80% 削除」とカパシーの「指輪物語ムービー」",
      "shared": [
@@ -2511,16 +2629,6 @@
       "토큰비용",
       "벤치마크",
       "코딩에이전트"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "news-20260922-harness-catalog",
-     "title": "呼べるリスト — ハーネス167種のランキングを取得して解剖した",
-     "shared": [
-      "벤치마크",
-      "하네스",
-      "검증"
      ],
      "via": "concept"
     }
@@ -3284,12 +3392,12 @@
      "via": "concept"
     },
     {
-     "name": "claude-md-intent",
-     "title": "intent.md — コードより先に残す意図と、AI ネイティブ SDLC",
+     "name": "sks-popular-2026h2",
+     "title": "2026年下半期の人気スキル — インストール数上位7つと使い方",
      "shared": [
       "코드리뷰",
-      "훅",
-      "CLAUDE.md"
+      "마켓플레이스",
+      "서브에이전트"
      ],
      "via": "concept"
     },
@@ -3304,12 +3412,12 @@
      "via": "concept"
     },
     {
-     "name": "sks-popular-2026h2",
-     "title": "2026年下半期の人気スキル — インストール数上位7つと使い方",
+     "name": "claude-md-intent",
+     "title": "intent.md — コードより先に残す意図と、AI ネイティブ SDLC",
      "shared": [
       "코드리뷰",
-      "마켓플레이스",
-      "서브에이전트"
+      "훅",
+      "CLAUDE.md"
      ],
      "via": "concept"
     }
@@ -3802,6 +3910,15 @@
      "via": "concept"
     },
     {
+     "name": "sks-graphify",
+     "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+     "shared": [
+      "그래프알고리즘",
+      "지식그래프"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "sb-level3",
      "title": "レベル 3~5 — 意味・関係・ブレイン OS",
      "shared": [
@@ -4105,11 +4222,12 @@
      "via": "concept"
     },
     {
-     "name": "news-20260709-thariq-fable5-unknowns",
-     "title": "Fable 5 の時代のボトルネックはモデルではなく人間か — Thariq Shihipar の「地図と領土」のフレーム",
+     "name": "sks-graphify",
+     "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
      "shared": [
-      "Fable 5",
-      "장기작업"
+      "토큰비용",
+      "벤치마크",
+      "코딩에이전트"
      ],
      "via": "concept"
     }
@@ -4295,22 +4413,22 @@
      "via": "concept"
     },
     {
-     "name": "tip-advanced",
-     "title": "上級 — 並列・自律・予約の8つ",
-     "shared": [
-      "오토모드",
-      "MCP",
-      "권한"
-     ],
-     "via": "concept"
-    },
-    {
      "name": "news-20260901-whose-usage",
      "title": "私の上限を使っているのは誰か — Claude の使用量をめぐる三つの場面",
      "shared": [
       "세션",
       "권한",
       "Anthropic"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "tip-advanced",
+     "title": "上級 — 並列・自律・予約の8つ",
+     "shared": [
+      "오토모드",
+      "MCP",
+      "권한"
      ],
      "via": "concept"
     }
@@ -4676,6 +4794,15 @@
    "sectionL": "AI · Claude · スキルカタログ",
    "related": [
     {
+     "name": "sks-graphify",
+     "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+     "shared": [
+      "CLAUDE.md",
+      "스킬"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "sks-dews-sourcegraph",
      "title": "dews-sourcegraph — 社内コード検索を Claude に任せるスキル",
      "shared": [],
@@ -4759,6 +4886,16 @@
    "section": "AI · Claude · Tip",
    "related": [
     {
+     "name": "sks-graphify",
+     "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+     "shared": [
+      "훅",
+      "토큰비용",
+      "CLAUDE.md"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "claude-md-intent",
      "title": "intent.md — コードより先に残す意図と、AI ネイティブ SDLC",
      "shared": [
@@ -4775,16 +4912,6 @@
       "훅",
       "토큰비용",
       "Claude Code"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "plc-popular-2026h2",
-     "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
-     "shared": [
-      "훅",
-      "서브에이전트",
-      "CLAUDE.md"
      ],
      "via": "concept"
     },
@@ -4962,6 +5089,15 @@
    "sectionL": "AI · Claude · スキルカタログ",
    "related": [
     {
+     "name": "sks-graphify",
+     "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+     "shared": [
+      "설치",
+      "스킬"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "sks-im-not-ai",
      "title": "im-not-ai（Humanize KR）— AIっぽさを消す編集スキル",
      "shared": [],
@@ -5048,6 +5184,94 @@
    ]
   },
   {
+   "name": "sks-graphify",
+   "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+   "summary": "フォルダ内のコード・文書・PDF・画像・映像を /graphify . 一行で一つの知識グラフにし、以後エージェントがファイルを丸ごと読む代わりに graphify query・path・explain で必要な部分グラフだけ受け取るようにするスキルを、公式リポジトリ（README・ARCHITECTURE・BENCHMARKS・skill.md）と外部の検証記事で分析した。コードは tree-sitter でローカルに LLM なしで解析し（約40言語）、すべてのエッジに EXTRACTED・INFERRED（0.95〜0.55 の五段階）・AMBIGUOUS の信頼タグを付け、Leiden コミュニティ検出でサブシステムを見つける。導入（uv tool install graphifyy、graphify install）とコマンド表、Claude Code の PreToolUse フックが Read・Grep・cat の直前に割り込んでグラフを先に見させる仕掛け（strict モード）、git フックと MCP サーバー、書き出し形式を整理した。ベンチマークは自社測定（LOCOMO recall@10 0.497、mem0 0.048）と広まった「トークン71.5倍削減」（52ファイルのコーパスで質問あたりの値）を独立測定（セッション単位で7〜8%削減、品質 44 対 45）と並べ、どこで利得が出てどこで出ないか（大きなリポジトリの道案内・影響分析に強く、小さなプロジェクト・集中編集に弱い）を見分けた。2026-11-21 の Windows SMB 強制認証の脆弱性修正とプライバシー項目を記し、このウィキの文書グラフと原則・用途を比較した。",
+   "concepts": [
+    "스킬",
+    "지식그래프",
+    "코드베이스",
+    "Claude Code",
+    "훅",
+    "MCP",
+    "벤치마크",
+    "토큰비용",
+    "코딩에이전트",
+    "CLAUDE.md",
+    "컨텍스트",
+    "설치",
+    "허브",
+    "정직성",
+    "그래프알고리즘",
+    "커뮤니티검출",
+    "온보딩"
+   ],
+   "relations": [
+    {
+     "target": "skl-overview",
+     "type": "prerequisite",
+     "evidenceRef": "本文はスキル自体の実体・発動の仕組みを扱わず、graphify install が置く SKILL.md と呼び出しだけを扱う。スキルとは何かはその文書に委ねている",
+     "source": "human"
+    },
+    {
+     "target": "skills",
+     "type": "prerequisite",
+     "evidenceRef": "4節の PreToolUse フックと MCP サーバー（graphify-mcp）の説明がフック・MCP の概念を前提にすぐ動作に入る",
+     "source": "human"
+    },
+    {
+     "target": "kgs-edges",
+     "type": "prerequisite",
+     "evidenceRef": "7節はこのウィキのグラフの三層（概念共有・引用バックリンク・型付き関係）を知る読者を前提に graphify のエッジ原則と比べる",
+     "source": "human"
+    }
+   ],
+   "section": "AI · Claude · 스킬 카탈로그",
+   "sectionL": "AI · Claude · スキルカタログ",
+   "related": [
+    {
+     "name": "hns-evidence",
+     "title": "ハーネスがスコアを動かす証拠 — Microsoft の白書と RHO・HarnessPro 研究を重ねて読む",
+     "shared": [
+      "토큰비용",
+      "벤치마크",
+      "코딩에이전트"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "tip-intermediate",
+     "title": "中級 — セッションを仕組みに変える11の方法",
+     "shared": [
+      "훅",
+      "토큰비용",
+      "CLAUDE.md"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "kgs-edges",
+     "title": "文書はどうつながるのか — 概念キュレーションと idf 重みつきエッジ",
+     "shared": [
+      "정직성",
+      "허브",
+      "지식그래프"
+     ],
+     "via": "concept"
+    },
+    {
+     "name": "welcome",
+     "title": "はじめに",
+     "shared": [
+      "설치",
+      "코딩에이전트",
+      "CLAUDE.md"
+     ],
+     "via": "concept"
+    }
+   ]
+  },
+  {
    "name": "news-20260901-whose-usage",
    "title": "私の上限を使っているのは誰か — Claude の使用量をめぐる三つの場面",
    "summary": "Claude の使用量をめぐる9月初めの三つの知らせをひとつのフレームで束ねた。インフォスティーラーがログインセッションのクッキーを盗み、他人のアカウントで上限を消費した（二要素認証が守るのはログインの瞬間だけ。Anthropic は強制ログアウト・保存された支払い方法の削除・不正と確認された請求の返金で対応。名指しされたのは Vidar・LummaC2・StealC・RedLine・Acreed と少数の Mac の Atomic Stealer。ログアウトはマルウェアを消さない）。9月14日には Claude Code の週次上限で一時 50% 増量が恒久 25% 増量に置き換わり、いまの上限を基準にすると実質およそ 17% 減で、同じ変更が +25% とも -17% とも書かれるのは基準線の違いによる。Claude Code 2.1.251 は /usage に支出上限のバーとセッション別プロンプトキャッシュ行、さらに PreModelSwitch・PostModelSwitch フックを加えた。誰が使うか・どれだけ残るか・何が見せるかという同じメーターの三つの面",
@@ -5115,11 +5339,11 @@
      "via": "concept"
     },
     {
-     "name": "tip-intermediate",
-     "title": "中級 — セッションを仕組みに変える11の方法",
+     "name": "news-20260816-claude-code-selfhosted",
+     "title": "自分のサーバーで動く Claude Code — セルフホスティング公開ベータと8月のリリース",
      "shared": [
-      "훅",
-      "토큰비용",
+      "세션",
+      "Anthropic",
       "Claude Code"
      ],
      "via": "concept"
@@ -5258,6 +5482,16 @@
    "section": "AI · Claude · Code · CLAUDE.md",
    "related": [
     {
+     "name": "claude-ship",
+     "title": "Claude Ship — PR をマージまで連れて行く三つのエージェント、使い方と利点",
+     "shared": [
+      "코드리뷰",
+      "Anthropic",
+      "CLAUDE.md"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "claude-md-constitution",
      "title": "Claude 憲章 — モデルに自分を何と伝えるのか",
      "shared": [
@@ -5268,8 +5502,8 @@
      "via": "concept"
     },
     {
-     "name": "tip-intermediate",
-     "title": "中級 — セッションを仕組みに変える11の方法",
+     "name": "sks-graphify",
+     "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
      "shared": [
       "훅",
       "CLAUDE.md",
@@ -5278,22 +5512,12 @@
      "via": "concept"
     },
     {
-     "name": "plc-popular-2026h2",
-     "title": "2026年下半期の人気プラグイン — 公式ディレクトリの上位と使い方",
+     "name": "tip-intermediate",
+     "title": "中級 — セッションを仕組みに変える11の方法",
      "shared": [
-      "코드리뷰",
       "훅",
-      "CLAUDE.md"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "hns-evidence",
-     "title": "ハーネスがスコアを動かす証拠 — Microsoft の白書と RHO・HarnessPro 研究を重ねて読む",
-     "shared": [
       "CLAUDE.md",
-      "Claude Code",
-      "검증"
+      "Claude Code"
      ],
      "via": "concept"
     }
@@ -5411,6 +5635,16 @@
      "via": "concept"
     },
     {
+     "name": "sks-graphify",
+     "title": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+     "shared": [
+      "MCP",
+      "벤치마크",
+      "지식그래프"
+     ],
+     "via": "concept"
+    },
+    {
      "name": "news-20260803-cherny-karpathy",
      "title": "消した人と、生やした人 — チェルニーの「ハーネス 80% 削除」とカパシーの「指輪物語ムービー」",
      "shared": [
@@ -5427,15 +5661,6 @@
       "벤치마크",
       "지식그래프",
       "검증"
-     ],
-     "via": "concept"
-    },
-    {
-     "name": "kgs-ai-layer",
-     "title": "AI がこのウィキを読む方法 — 機械可読レイヤーとグラフ巡回",
-     "shared": [
-      "기계판독",
-      "지식그래프"
      ],
      "via": "concept"
     }

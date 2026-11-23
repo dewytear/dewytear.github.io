@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル</title>
+<meta name="description" content="フォルダ内のコード・文書・PDF・画像・映像を /graphify . 一行で一つの知識グラフにし、以後エージェントがファイルを丸ごと読む代わりに graphify query・path・explain で必要な部分グラフだけ受け取るようにするスキルを、公式リポジトリ（README・ARCHITECTURE・BENCHMARKS・skill.md）と外部の検証記事で分析した。コードは tree-sitter でローカルに LLM なしで解析し（約40言語）、すべてのエッジに EXTRACTED・INFERRED（0.95〜0.55 の五段階）・AMBIGUOUS の信頼タグを付け、Leiden コミュニティ検出でサブシステムを見つける。導入（uv tool install graphifyy、graphify install）とコマンド表、Claude Code の PreToolUse フックが Read・Grep・cat の直前に割り込んでグラフを先に見させる仕掛け（strict モード）、git フックと MCP サーバー、書き出し形式を整理した。ベンチマークは自社測定（LOCOMO recall@10 0.497、mem0 0.048）と広まった「トークン71.5倍削減」（52ファイルのコーパスで質問あたりの値）を独立測定（セッション単位で7〜8%削減、品質 44 対 45）と並べ、どこで利得が出てどこで出ないか（大きなリポジトリの道案内・影響分析に強く、小さなプロジェクト・集中編集に弱い）を見分けた。2026-11-21 の Windows SMB 強制認証の脆弱性修正とプライバシー項目を記し、このウィキの文書グラフと原則・用途を比較した。">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/ja/sks-graphify/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/sks-graphify/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/sks-graphify/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/sks-graphify/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/sks-graphify/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル">
+<meta property="og:description" content="フォルダ内のコード・文書・PDF・画像・映像を /graphify . 一行で一つの知識グラフにし、以後エージェントがファイルを丸ごと読む代わりに graphify query・path・explain で必要な部分グラフだけ受け取るようにするスキルを、公式リポジトリ（README・ARCHITECTURE・BENCHMARKS・skill.md）と外部の検証記事で分析した。コードは tree-sitter でローカルに LLM なしで解析し（約40言語）、すべてのエッジに EXTRACTED・INFERRED（0.95〜0.55 の五段階）・AMBIGUOUS の信頼タグを付け、Leiden コミュニティ検出でサブシステムを見つける。導入（uv tool install graphifyy、graphify install）とコマンド表、Claude Code の PreToolUse フックが Read・Grep・cat の直前に割り込んでグラフを先に見させる仕掛け（strict モード）、git フックと MCP サーバー、書き出し形式を整理した。ベンチマークは自社測定（LOCOMO recall@10 0.497、mem0 0.048）と広まった「トークン71.5倍削減」（52ファイルのコーパスで質問あたりの値）を独立測定（セッション単位で7〜8%削減、品質 44 対 45）と並べ、どこで利得が出てどこで出ないか（大きなリポジトリの道案内・影響分析に強く、小さなプロジェクト・集中編集に弱い）を見分けた。2026-11-21 の Windows SMB 強制認証の脆弱性修正とプライバシー項目を記し、このウィキの文書グラフと原則・用途を比較した。">
+<meta property="og:url" content="https://dewytear.github.io/p/ja/sks-graphify/">
+<meta property="og:image" content="https://dewytear.github.io/assets/ai/claude/skills/sks-graphify/hero.webp">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル">
+<meta name="twitter:description" content="フォルダ内のコード・文書・PDF・画像・映像を /graphify . 一行で一つの知識グラフにし、以後エージェントがファイルを丸ごと読む代わりに graphify query・path・explain で必要な部分グラフだけ受け取るようにするスキルを、公式リポジトリ（README・ARCHITECTURE・BENCHMARKS・skill.md）と外部の検証記事で分析した。コードは tree-sitter でローカルに LLM なしで解析し（約40言語）、すべてのエッジに EXTRACTED・INFERRED（0.95〜0.55 の五段階）・AMBIGUOUS の信頼タグを付け、Leiden コミュニティ検出でサブシステムを見つける。導入（uv tool install graphifyy、graphify install）とコマンド表、Claude Code の PreToolUse フックが Read・Grep・cat の直前に割り込んでグラフを先に見させる仕掛け（strict モード）、git フックと MCP サーバー、書き出し形式を整理した。ベンチマークは自社測定（LOCOMO recall@10 0.497、mem0 0.048）と広まった「トークン71.5倍削減」（52ファイルのコーパスで質問あたりの値）を独立測定（セッション単位で7〜8%削減、品質 44 対 45）と並べ、どこで利得が出てどこで出ないか（大きなリポジトリの道案内・影響分析に強く、小さなプロジェクト・集中編集に弱い）を見分けた。2026-11-21 の Windows SMB 強制認証の脆弱性修正とプライバシー項目を記し、このウィキの文書グラフと原則・用途を比較した。">
+<meta name="twitter:image" content="https://dewytear.github.io/assets/ai/claude/skills/sks-graphify/hero.webp">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル",
+ "description": "フォルダ内のコード・文書・PDF・画像・映像を /graphify . 一行で一つの知識グラフにし、以後エージェントがファイルを丸ごと読む代わりに graphify query・path・explain で必要な部分グラフだけ受け取るようにするスキルを、公式リポジトリ（README・ARCHITECTURE・BENCHMARKS・skill.md）と外部の検証記事で分析した。コードは tree-sitter でローカルに LLM なしで解析し（約40言語）、すべてのエッジに EXTRACTED・INFERRED（0.95〜0.55 の五段階）・AMBIGUOUS の信頼タグを付け、Leiden コミュニティ検出でサブシステムを見つける。導入（uv tool install graphifyy、graphify install）とコマンド表、Claude Code の PreToolUse フックが Read・Grep・cat の直前に割り込んでグラフを先に見させる仕掛け（strict モード）、git フックと MCP サーバー、書き出し形式を整理した。ベンチマークは自社測定（LOCOMO recall@10 0.497、mem0 0.048）と広まった「トークン71.5倍削減」（52ファイルのコーパスで質問あたりの値）を独立測定（セッション単位で7〜8%削減、品質 44 対 45）と並べ、どこで利得が出てどこで出ないか（大きなリポジトリの道案内・影響分析に強く、小さなプロジェクト・集中編集に弱い）を見分けた。2026-11-21 の Windows SMB 強制認証の脆弱性修正とプライバシー項目を記し、このウィキの文書グラフと原則・用途を比較した。",
+ "inLanguage": "ja",
+ "url": "https://dewytear.github.io/p/ja/sks-graphify/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!sks-graphify",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-11-24T08:11:38+09:00",
+ "dateModified": "2026-11-24T08:11:38+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!sks-graphify">これは静的スナップショットです — ウィキで開く &#8599;</a>
+  &middot; <a href="/p/sks-graphify/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/en/sks-graphify/" hreflang="en">English</a>
+</p>
+<article>
+<h2>graphify — コードベースを知識グラフに変え、grep の代わりに問い合わせさせるスキル</h2>
+
+<h3>3行要約</h3>
+<ul>
+    <li>graphify は <code>/graphify .</code> 一行でフォルダ内のコード・文書・PDF・画像・映像を一つの知識グラフにし、以後エージェントがファイルを丸ごと読む代わりに <code>graphify query</code>・<code>path</code>・<code>explain</code> で必要な部分グラフだけ受け取るようにするスキルだ。コードは tree-sitter（構文木パーサー）でローカルに LLM なしで解析し、すべてのエッジに EXTRACTED・INFERRED・AMBIGUOUS の信頼タグを付ける。</li>
+    <li>2026年4月4日の PyPI 初公開から11月23日の 0.9.118 まで284回リリースされ、Claude Code・Cursor・Codex・Gemini CLI など20余りのアシスタントに対応する。リポジトリのスター数は集計サイトごとに7.6万から15万まで割れており、この記事は「10万前後」とだけ記す。開発元は Graphify Labs（Y Combinator S26）、ライセンスは Apache-2.0 と MIT の二重。</li>
+    <li>公式ベンチマークは LOCOMO 記憶検索で recall@10 0.497（mem0 0.048）、グラフ構築の LLM 費用0を掲げる。よく引用される「トークン71.5倍削減」は52ファイルのコーパスで質問1回あたりの値で、実際のセッション単位の独立測定では7〜8%の削減や品質同率（44対45点）だった。大きなリポジトリの道案内・影響分析に強く、小さなプロジェクトと集中編集では利得が少ない。</li>
+</ul>
+
+<p>コーディングエージェントが見知らぬリポジトリで最初にするのは <code>grep</code> とファイル読みだ。質問が「このエンドポイントはどこでストレージに届くか」のように構造を問うものなら、ファイルを一つずつ読んでコンテキストに積む方式はトークンを多く使い、全体像を取りこぼす。graphify はその場所にグラフを置く。一度作ればセッションが変わっても残り、質問ごとに関連ノード数十個だけを返す。この記事は公式リポジトリ（README・ARCHITECTURE・BENCHMARKS・skill.md）と外部の検証記事をもとに、動作原理、導入と使い方、ベンチマークの実際の意味、限界とセキュリティを整理する。このウィキも文書グラフの上で動くリポジトリなので、最後に二つのグラフを並べた。</p>
+
+<figure class="doc-img">
+    <img src="assets/ai/claude/skills/sks-graphify/hero.webp" width="1400" height="692"
+         alt="graphify が FastAPI コードベースを描いた force-directed 知識グラフ。左は色分けされたコミュニティのノードが中央のハブの周りに集まり、右は APIRouter 96、SecurityBase 71、v2 56 などコミュニティ名とノード数の一覧">
+    <figcaption>graphify が作った FastAPI コードベースの graph.html — 色は Leiden アルゴリズムが見つけたサブシステム（コミュニティ）、右の一覧は各コミュニティの名前とノード数（画像: Graphify-Labs/graphify リポジトリ、Apache-2.0）</figcaption>
+</figure>
+
+<h3>1. どう作られるか — 三つのパス</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 320" role="img" aria-label="graphify パイプライン: 入力フォルダのコードは第1パスで tree-sitter によりローカル解析（LLM なし、約40言語）、映像・音声は第2パスで faster-whisper によりローカル文字起こし、文書・PDF・画像は第3パスで LLM サブエージェントが意味抽出（トークン費用が発生）。三つの結果を NetworkX グラフに統合し、Leiden コミュニティ検出とハブ・意外な接続の分析を経て graph.html、GRAPH_REPORT.md、graph.json を出力する">
+    <text class="d-label" x="360" y="24" text-anchor="middle">/graphify . がすること: 三つのパス → グラフ → 三つのファイル</text>
+    <rect class="d-box soft" x="20" y="60" width="110" height="180" rx="8"/>
+    <text class="d-label sm" x="75" y="84" text-anchor="middle">入力フォルダ</text>
+    <text class="d-sub" x="75" y="112" text-anchor="middle">コード</text>
+    <text class="d-sub" x="75" y="160" text-anchor="middle">映像・音声</text>
+    <text class="d-sub" x="75" y="208" text-anchor="middle">文書・PDF・画像</text>
+    <path class="d-edge" d="M132 108 L160 108"/>
+    <path class="d-arrow" d="M160 102 L170 108 L160 114 Z"/>
+    <path class="d-edge" d="M132 156 L160 156"/>
+    <path class="d-arrow" d="M160 150 L170 156 L160 162 Z"/>
+    <path class="d-edge" d="M132 204 L160 204"/>
+    <path class="d-arrow" d="M160 198 L170 204 L160 210 Z"/>
+    <rect class="d-box accent" x="172" y="88" width="200" height="40" rx="8"/>
+    <text class="d-label sm" x="272" y="105" text-anchor="middle">第1パス · tree-sitter AST</text>
+    <text class="d-sub" x="272" y="121" text-anchor="middle">ローカル · LLM なし · 約40言語</text>
+    <rect class="d-box accent" x="172" y="136" width="200" height="40" rx="8"/>
+    <text class="d-label sm" x="272" y="153" text-anchor="middle">第2パス · faster-whisper</text>
+    <text class="d-sub" x="272" y="169" text-anchor="middle">ローカル書き起こし · ハブ名で誘導</text>
+    <rect class="d-box" x="172" y="184" width="200" height="40" rx="8"/>
+    <text class="d-label sm" x="272" y="201" text-anchor="middle">第3パス · LLM サブエージェント</text>
+    <text class="d-sub" x="272" y="217" text-anchor="middle">セッションのモデルか API キー · 費用</text>
+    <path class="d-edge accent" d="M374 108 L402 150"/>
+    <path class="d-edge accent" d="M374 156 L402 156"/>
+    <path class="d-edge accent" d="M374 204 L402 162"/>
+    <path class="d-arrow accent" d="M402 150 L412 156 L402 162 Z"/>
+    <rect class="d-box" x="414" y="88" width="140" height="136" rx="8"/>
+    <text class="d-label sm" x="484" y="110" text-anchor="middle">build → cluster</text>
+    <text class="d-sub" x="484" y="132" text-anchor="middle">NetworkX グラフ</text>
+    <text class="d-sub" x="484" y="150" text-anchor="middle">Leiden コミュニティ</text>
+    <text class="d-sub" x="484" y="168" text-anchor="middle">ハブ (god nodes)</text>
+    <text class="d-sub" x="484" y="186" text-anchor="middle">意外な接続</text>
+    <text class="d-sub" x="484" y="204" text-anchor="middle">凝集度 · 推奨質問</text>
+    <path class="d-edge accent" d="M556 156 L584 156"/>
+    <path class="d-arrow accent" d="M584 150 L594 156 L584 162 Z"/>
+    <rect class="d-box soft" x="596" y="88" width="110" height="136" rx="8"/>
+    <text class="d-label sm" x="651" y="110" text-anchor="middle">graphify-out/</text>
+    <text class="d-sub" x="651" y="138" text-anchor="middle">graph.html</text>
+    <text class="d-sub" x="651" y="162" text-anchor="middle">GRAPH_REPORT.md</text>
+    <text class="d-sub" x="651" y="186" text-anchor="middle">graph.json</text>
+    <text class="d-sub" x="651" y="208" text-anchor="middle">cache/ (SHA256)</text>
+    <text class="d-sub" x="360" y="268" text-anchor="middle">コードだけのリポジトリは第3パスを丸ごと飛ばし API キーなしで終わる。再実行は内容ハッシュが同じファイルを飛ばす。</text>
+    <text class="d-sub" x="360" y="290" text-anchor="middle">モジュール順: detect → extract → build → cluster → analyze → report → export (ARCHITECTURE.md)</text>
+</svg>
+<div class="d-cap">公式の how-it-works 文書と ARCHITECTURE.md のパイプラインを写した。第1パスは33言語を tree-sitter 文法で、7言語（Dart・Apex・COBOL・Razor・Blade・Pascal・Robot Framework）は独自の抽出器で処理する。</div>
+</div>
+<p>核心は「コードは LLM に送らない」という原則だ。関数・クラス・import・呼び出し関係は構文木から決定的に取り出されるので、同じ入力に同じグラフが出て、費用は0で、何も外に出ない。文書と画像だけが意味抽出のためにモデルを通り、Claude Code の中ではそのセッションのモデルがサブエージェントを並列に立てて処理し、ターミナルで <code>graphify extract</code> を回すときは設定した API キー（Gemini・Kimi・Claude・OpenAI・DeepSeek・Azure・Bedrock・Ollama の順に自動検出）を使う。コミュニティ検出は Leiden アルゴリズム（エッジ密度でノードをまとめるグラフクラスタリング）で、埋め込みもベクトルストアも使わない。モデルが抽出した <code>semantically_similar_to</code> エッジがすでにグラフ内にあり、その構造自体が類似度の信号になるという説明だ。コミュニティ名は LLM なしでハブノードの名前から付ける。</p>
+
+<h3>2. すべての線にタグ — 信頼度の体系</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 236" role="img" aria-label="graphify エッジ信頼度の体系: EXTRACTED はソースに明示された関係でスコア 1.0、INFERRED は推論された関係で 0.95 ほぼ確実、0.85 強い根拠、0.75 妥当、0.65 弱い（名前の類似）、0.55 推測の五段階、AMBIGUOUS は不確実でレポートの検討対象として表示。経路の信頼度は最も弱いホップが決める">
+    <text class="d-label" x="360" y="24" text-anchor="middle">エッジのタグと点数の規則</text>
+    <text class="d-sub" x="120" y="60" text-anchor="end">EXTRACTED</text>
+    <rect class="d-node" x="130" y="48" width="440" height="16" rx="4"/>
+    <text class="d-label sm" x="578" y="60">1.0 · ソースに明示</text>
+    <text class="d-sub" x="120" y="92" text-anchor="end">INFERRED 0.95</text>
+    <rect class="d-node d" x="130" y="80" width="418" height="16" rx="4"/>
+    <text class="d-sub" x="558" y="92">ほぼ確実 · 対象が一つ</text>
+    <text class="d-sub" x="120" y="116" text-anchor="end">INFERRED 0.85</text>
+    <rect class="d-node d" x="130" y="104" width="374" height="16" rx="4"/>
+    <text class="d-sub" x="514" y="116">強い根拠 · 名前+文脈</text>
+    <text class="d-sub" x="120" y="140" text-anchor="end">INFERRED 0.75</text>
+    <rect class="d-node d" x="130" y="128" width="330" height="16" rx="4"/>
+    <text class="d-sub" x="470" y="140">妥当 · 文脈のみ</text>
+    <text class="d-sub" x="120" y="164" text-anchor="end">INFERRED 0.65</text>
+    <rect class="d-node d" x="130" y="152" width="286" height="16" rx="4"/>
+    <text class="d-sub" x="426" y="164">弱い · 名前の類似のみ</text>
+    <text class="d-sub" x="120" y="188" text-anchor="end">INFERRED 0.55</text>
+    <rect class="d-node d" x="130" y="176" width="242" height="16" rx="4"/>
+    <text class="d-sub" x="382" y="188">推測</text>
+    <text class="d-sub" x="120" y="216" text-anchor="end">AMBIGUOUS</text>
+    <rect class="d-node dim" x="130" y="204" width="120" height="16" rx="4"/>
+    <text class="d-sub" x="260" y="216">不確実 · レポートで要確認 · 経路の信頼度は最も弱いホップが決める</text>
+</svg>
+<div class="d-cap">how-it-works 文書の規則表。スキルファイルの「正直ルール」はエッジをでっち上げず、分からなければ AMBIGUOUS にせよと釘を刺す。同じ関係が複数箇所で見えれば最も高いタグ一つだけを残し、残りは <code>also_seen</code> に記録する。</div>
+</div>
+<p>このタグが graphify を「もう一つの検索インデックス」と分ける点だ。<code>graphify explain "APIRouter"</code> を打つとソース位置、コミュニティ、次数とともに接続47本が <code>[uses] [INFERRED]</code>、<code>[imports] [EXTRACTED]</code> のようにタグ付きで出て、<code>graphify path "FastAPI" "ModelField"</code> は3ホップの経路とその経路全体の信頼度（最も弱いホップ）を返す。リポジトリの BENCHMARKS.md は FastAPI の本番パッケージ内の INFERRED クロスファイルエッジ12本を手で全数検査してすべて正しかったと記しつつ、日付付きの一回限りの点検であり常時指標ではないと断る。解決器は「間違ったエッジより無いエッジ」を選ぶ。</p>
+
+<h3>3. 導入と使い方</h3>
+<p>Python 3.11.5〜3.14 と uv（または pipx）があれば二行だ。PyPI のパッケージ名が <code>graphifyy</code>（y が二つ）である点だけ注意する。他の <code>graphify*</code> パッケージは無関係だ。</p>
+<pre><code>uv tool install graphifyy      # CLI の導入 (pipx install graphifyy でも可)
+graphify install               # Claude Code が既定。スキル + CLAUDE.md ブロック + PreToolUse フック
+graphify install --project     # リポジトリ内 .claude/skills/graphify/ に導入 (git add の案内を表示)
+graphify cursor install        # Cursor
+graphify install --platform codex    # Codex ($graphify で呼ぶ)</code></pre>
+<p>そのあとアシスタントの中で <code>/graphify .</code> を打つ。スキルはまず <code>graphify-out/graph.json</code> があるか見て、あれば作り直さず問い合わせに移る（速い道）。なければファイル検出 → 抽出 → グラフ → クラスタリング → 命名 → 出力の順に進み、コーパスの大きさとトークン費用を報告する。スキルファイル自体が「API キーを決して尋ねず、キーなしで進めよ」と書いてあるので、コードのリポジトリでは何も設定せずに終わる。</p>
+<table>
+    <thead><tr><th>やること</th><th>コマンド</th><th>備考</th></tr></thead>
+    <tbody>
+        <tr><td>グラフを作る</td><td><code>/graphify .</code></td><td>HTML・レポート・JSON。<code>--no-viz</code> で HTML 省略、5,000ノード超は集約ビュー</td></tr>
+        <tr><td>より深く</td><td><code>/graphify . --mode deep</code></td><td>INFERRED エッジをより積極的に推論</td></tr>
+        <tr><td>変わった分だけ</td><td><code>/graphify . --update</code></td><td>ハッシュが変わったファイルのみ。グラフが縮むと拒否（<code>--force</code> で許可）</td></tr>
+        <tr><td>質問</td><td><code>graphify query "auth と DB はどうつながるか"</code></td><td>BFS が既定、<code>--dfs</code> は一本の経路を追跡、予算既定 2,000 トークン・深さ 2</td></tr>
+        <tr><td>経路</td><td><code>graphify path "UserService" "DatabasePool"</code></td><td>最短経路 + 最も弱いホップの信頼度</td></tr>
+        <tr><td>説明</td><td><code>graphify explain "RateLimiter"</code></td><td>ノード一つの位置・コミュニティ・接続すべて</td></tr>
+        <tr><td>クラスタだけ再実行</td><td><code>/graphify . --cluster-only --resolution 1.5</code></td><td>より細かく。<code>--exclude-hubs 99</code> でユーティリティのスーパーハブを除外</td></tr>
+        <tr><td>資料を追加</td><td><code>/graphify add &lt;arXiv または YouTube の URL&gt;</code></td><td>論文・動画を <code>./raw</code> に取り込みグラフに統合</td></tr>
+        <tr><td>書き出し</td><td><code>--obsidian · --wiki · --svg · --graphml · --neo4j</code></td><td>Obsidian ボールト、コミュニティ別 Markdown ウィキ、Gephi、Cypher（Neo4j・FalkorDB）</td></tr>
+        <tr><td>最新を保つ</td><td><code>graphify hook install</code></td><td>post-commit・post-checkout フック + <code>graph.json</code> の和集合マージドライバ。pull 後は <code>graphify update .</code></td></tr>
+        <tr><td>PR を見る</td><td><code>graphify prs 42</code> · <code>--triage</code> · <code>--conflicts</code></td><td>PR のグラフ影響、レビューキューの順位、同じサブシステムに触れる PR の組</td></tr>
+        <tr><td>MCP</td><td><code>graphify-mcp graphify-out/graph.json</code></td><td>query_graph・shortest_path・get_neighbors・god_nodes など10ツール</td></tr>
+    </tbody>
+</table>
+<p>スクリプトで使いやすいよう終了コードが決まっている。0 は回答、3 は名前が複数ノードに当たって候補を列挙した場合、4 はノードなし。名前が重なれば推測せず拒否する側だ。プロジェクト設定はスキャンルートの <code>.graphifyrc</code> に置く。拡張子が曖昧なファイル（<code>.inc</code> が PHP か Pascal か、<code>.h</code> が C か C++ か）は <code>language.inc=php</code> のように固定しないとグラフが粗くなる。</p>
+
+<h3>4. エージェントに本当にグラフを使わせる仕掛け</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 262" role="img" aria-label="graphify の問い合わせループ: エージェントがコードベースの質問を受けると、Claude Code の PreToolUse フックが Read・Glob・Grep・cat のような原本読みの直前に割り込み、graphify query・path・explain を先に使うよう勧め（既定は推奨、strict モードはセッション最初の原本読みを一度拒否）、グラフ問い合わせは約2,000トークン予算の部分グラフを返す。下の比較: 原本ファイルを丸ごと読む道はコンテキストを大きく使う">
+    <text class="d-label" x="360" y="24" text-anchor="middle">フックが割り込む場所: 原本を読む前にグラフから</text>
+    <rect class="d-box soft" x="20" y="60" width="130" height="56" rx="8"/>
+    <text class="d-label sm" x="85" y="84" text-anchor="middle">コードベースの質問</text>
+    <text class="d-sub" x="85" y="104" text-anchor="middle">「X は誰が呼ぶか」</text>
+    <path class="d-edge" d="M152 88 L180 88"/>
+    <path class="d-arrow" d="M180 82 L190 88 L180 94 Z"/>
+    <rect class="d-box" x="192" y="48" width="170" height="80" rx="8"/>
+    <text class="d-label sm" x="277" y="72" text-anchor="middle">エージェントが Read を試す</text>
+    <text class="d-sub" x="277" y="94" text-anchor="middle">PreToolUse フック発動</text>
+    <text class="d-sub" x="277" y="112" text-anchor="middle">hook-guard read · search</text>
+    <path class="d-edge accent" d="M364 76 L392 76"/>
+    <path class="d-arrow accent" d="M392 70 L402 76 L392 82 Z"/>
+    <rect class="d-box accent" x="404" y="48" width="160" height="80" rx="8"/>
+    <text class="d-label sm" x="484" y="72" text-anchor="middle">graphify query / path</text>
+    <text class="d-sub" x="484" y="94" text-anchor="middle">部分グラフ · 予算 2,000</text>
+    <text class="d-sub" x="484" y="112" text-anchor="middle">file:line の引用 · タグ</text>
+    <path class="d-edge accent" d="M566 88 L594 88"/>
+    <path class="d-arrow accent" d="M594 82 L604 88 L594 94 Z"/>
+    <rect class="d-box soft" x="606" y="60" width="100" height="56" rx="8"/>
+    <text class="d-label sm" x="656" y="84" text-anchor="middle">答え + 根拠</text>
+    <text class="d-sub" x="656" y="104" text-anchor="middle">必要なら原本を閲覧</text>
+    <path class="d-edge dash" d="M277 130 L277 170 L484 170 L484 130"/>
+    <text class="d-sub" x="380" y="190" text-anchor="middle">既定: 勧告 (soft nudge) · strict: セッション最初の原本読みを一度拒否、30分以内にグラフ質問があれば通過</text>
+    <rect class="d-box soft" x="20" y="208" width="686" height="40" rx="8"/>
+    <text class="d-sub" x="363" y="226" text-anchor="middle">フックのないプラットフォーム (Codex・Cursor など) は AGENTS.md や .cursor/rules で同じ「グラフ優先」の案内を入れる。</text>
+    <text class="d-sub" x="363" y="242" text-anchor="middle">指示は指示にすぎず、エージェントが無視して rg に直行することがある (Codex issue #860)。</text>
+</svg>
+<div class="d-cap">README の「Make your assistant always use the graph」節と install.py のフック定義を写した。フックのコマンドは導入時点の絶対実行パスを埋め込むので、アップグレード後は <code>graphify install</code> と <code>graphify hook install</code> を再実行する。</div>
+</div>
+<p>グラフがあってもエージェントが使わなければ意味がない。graphify がこの問題を扱う方法が、他のコードインデックス系ツールと違う点だ。<code>graphify install</code> はスキルファイルを置くだけでなく、<code>CLAUDE.md</code> に案内ブロックを書き、Claude Code の PreToolUse フック（ツール呼び出し直前に割り込むフック）を <code>.claude/settings.json</code> に登録する。フックは <code>Read</code>・<code>Glob</code>・<code>Grep</code> はもちろん Bash の <code>cat</code>・<code>head</code>・<code>tail</code>・<code>sed -n</code> のような読み取りコマンドの前でも発動し、「先にグラフを見よ」と勧める。<code>--strict</code>（または <code>GRAPHIFY_HOOK_STRICT=1</code>）で導入するとセッション最初の原本読みを一度拒否してグラフへ送り返し、直近30分以内にグラフ質問があればそのまま通す。拒否はセッションあたり一度なので、エージェントが永久に塞がれることはない。グラフが古ければ（最後のコミット後に変化）フックがそれも知らせる。</p>
+
+<h3>5. ベンチマーク — 公式数値と外部の測定</h3>
+<div class="diagram">
+<svg viewBox="0 0 720 300" role="img" aria-label="LOCOMO 対話記憶ベンチマーク（n=300）recall@10 横棒: graphify 0.497、hybrid RRF 0.493、dense RAG 0.439、BM25 0.362、supermemory 0.149、mem0 0.048。右に QA 正確度: supermemory 49.7%、graphify 45.3%、hybrid 43.3%、dense 41.3%、BM25 31.3%、mem0 27.3%。取り込み費用 graphify 約1.40ドル、mem0 3.48ドル、supermemory 15.67ドル">
+    <text class="d-label" x="360" y="24" text-anchor="middle">LOCOMO (n=300): 検索再現率と QA 正確度、graphify 自身のハーネス</text>
+    <text class="d-label sm" x="190" y="52" text-anchor="middle">recall@10</text>
+    <text class="d-sub" x="112" y="78" text-anchor="end">graphify</text>
+    <rect class="d-node" x="120" y="66" width="199" height="14" rx="3"/>
+    <text class="d-label sm" x="326" y="78">0.497</text>
+    <text class="d-sub" x="112" y="104" text-anchor="end">hybrid RRF</text>
+    <rect class="d-node dim" x="120" y="92" width="197" height="14" rx="3"/>
+    <text class="d-sub" x="324" y="104">0.493</text>
+    <text class="d-sub" x="112" y="130" text-anchor="end">dense RAG</text>
+    <rect class="d-node dim" x="120" y="118" width="176" height="14" rx="3"/>
+    <text class="d-sub" x="303" y="130">0.439</text>
+    <text class="d-sub" x="112" y="156" text-anchor="end">BM25</text>
+    <rect class="d-node dim" x="120" y="144" width="145" height="14" rx="3"/>
+    <text class="d-sub" x="272" y="156">0.362</text>
+    <text class="d-sub" x="112" y="182" text-anchor="end">supermemory</text>
+    <rect class="d-node dim" x="120" y="170" width="60" height="14" rx="3"/>
+    <text class="d-sub" x="187" y="182">0.149 *埋め込み器が別</text>
+    <text class="d-sub" x="112" y="208" text-anchor="end">mem0</text>
+    <rect class="d-node dim" x="120" y="196" width="19" height="14" rx="3"/>
+    <text class="d-sub" x="146" y="208">0.048</text>
+    <text class="d-label sm" x="540" y="52" text-anchor="middle">QA 正確度</text>
+    <text class="d-sub" x="462" y="78" text-anchor="end">supermemory</text>
+    <rect class="d-node b" x="470" y="66" width="149" height="14" rx="3"/>
+    <text class="d-sub" x="626" y="78">49.7%</text>
+    <text class="d-sub" x="462" y="104" text-anchor="end">graphify</text>
+    <rect class="d-node" x="470" y="92" width="136" height="14" rx="3"/>
+    <text class="d-label sm" x="613" y="104">45.3%</text>
+    <text class="d-sub" x="462" y="130" text-anchor="end">hybrid RRF</text>
+    <rect class="d-node dim" x="470" y="118" width="130" height="14" rx="3"/>
+    <text class="d-sub" x="607" y="130">43.3%</text>
+    <text class="d-sub" x="462" y="156" text-anchor="end">dense RAG</text>
+    <rect class="d-node dim" x="470" y="144" width="124" height="14" rx="3"/>
+    <text class="d-sub" x="601" y="156">41.3%</text>
+    <text class="d-sub" x="462" y="182" text-anchor="end">BM25</text>
+    <rect class="d-node dim" x="470" y="170" width="94" height="14" rx="3"/>
+    <text class="d-sub" x="571" y="182">31.3%</text>
+    <text class="d-sub" x="462" y="208" text-anchor="end">mem0</text>
+    <rect class="d-node dim" x="470" y="196" width="82" height="14" rx="3"/>
+    <text class="d-sub" x="559" y="208">27.3%</text>
+    <rect class="d-box soft" x="20" y="232" width="680" height="56" rx="8"/>
+    <text class="d-sub" x="360" y="252" text-anchor="middle">取り込み費用: graphify 約 $1.40 · mem0 $3.48 · supermemory $15.67  ·  グラフ構築の LLM 費用 $0</text>
+    <text class="d-sub" x="360" y="272" text-anchor="middle">LongMemEval-S (n=50) 76% で dense RAG と同率 · ERPNext (100万 LOC) 核心事実カバレッジ 82.0% 対 grep 70.8% (n=6)</text>
+</svg>
+<div class="d-cap">BENCHMARKS.md（2026-07-05 更新）の表。すべてのシステムを同じハーネスで同じモデル（Kimi K2.6）・同じ予算で回し、審判を第二審判と照合（一致 90.6%、カッパ 0.81）したと述べる。supermemory の recall は独自の埋め込み器を使う制約のため直接比較が難しいと脚注にある。コード知能の項目は n=6 で標本が小さい。</div>
+</div>
+<p>ベンチマークを読むときは二つを分けなければならない。第一に、上の表は graphify 自身のハーネスの結果だ。公平性ルール（単一モデル、共有埋め込み器、支出台帳）を公開し再現コマンドを記している点は評価できるが、自社測定という事実は残る。第二に、最も広まった数値「トークン71.5倍削減」はベンチマーク表ではなく how-it-works 文書のトークン比較から来ている。そのコーパスは Karpathy のリポジトリ三つ + 論文5本 + 画像4枚（52ファイル）で、質問1回あたり約1,700トークン対原本全体約123,000トークンだ。同じ文書が4ファイルでは5.4倍、6ファイルのライブラリでは約1倍と記す。小さなコーパスはどのみちコンテキストに入るので、圧縮ではなく構造把握が価値だという意味だ。</p>
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="トークン削減の主張と独立測定の比較: 公式文書は52ファイルのコーパスで質問あたり71.5倍、4ファイルで5.4倍、6ファイルで約1倍。独立測定は Exchangepedia 質問あたり7.3倍、Medium 10問セッションで7〜8%削減、KubeBlogs 本番タスクのブラインド採点 graphify 44点対未使用45点（50点満点）、フロントエンドのリポジトリ 15対23">
+    <text class="d-label" x="360" y="24" text-anchor="middle">「71.5倍」はどこから来て、外部ではどれだけ出たか</text>
+    <text class="d-label sm" x="170" y="54" text-anchor="middle">公式 how-it-works · 質問1回あたり</text>
+    <text class="d-sub" x="112" y="84" text-anchor="end">52 ファイル</text>
+    <rect class="d-node" x="120" y="72" width="200" height="14" rx="3"/>
+    <text class="d-label sm" x="328" y="84">71.5倍</text>
+    <text class="d-sub" x="112" y="112" text-anchor="end">4 ファイル</text>
+    <rect class="d-node" x="120" y="100" width="15" height="14" rx="3"/>
+    <text class="d-sub" x="143" y="112">5.4倍</text>
+    <text class="d-sub" x="112" y="140" text-anchor="end">6 ファイル</text>
+    <rect class="d-node" x="120" y="128" width="3" height="14" rx="1"/>
+    <text class="d-sub" x="131" y="140">約1倍</text>
+    <text class="d-label sm" x="540" y="54" text-anchor="middle">独立測定 · セッション・作業あたり</text>
+    <text class="d-sub" x="462" y="84" text-anchor="end">質問あたり (Exchangepedia)</text>
+    <rect class="d-node d" x="470" y="72" width="21" height="14" rx="3"/>
+    <text class="d-sub" x="499" y="84">7.3倍</text>
+    <text class="d-sub" x="462" y="112" text-anchor="end">10問セッション (Medium)</text>
+    <rect class="d-node d" x="470" y="100" width="3" height="14" rx="1"/>
+    <text class="d-sub" x="481" y="112">7〜8% 削減 (113k 対 120k)</text>
+    <text class="d-sub" x="462" y="140" text-anchor="end">ブラインド品質 (KubeBlogs)</text>
+    <rect class="d-node d" x="470" y="128" width="176" height="14" rx="3"/>
+    <text class="d-sub" x="654" y="140">44 / 50</text>
+    <text class="d-sub" x="462" y="166" text-anchor="end">同じ作業、graphify なし</text>
+    <rect class="d-node dim" x="470" y="154" width="180" height="14" rx="3"/>
+    <text class="d-sub" x="658" y="166">45 / 50</text>
+    <rect class="d-box soft" x="20" y="190" width="680" height="48" rx="8"/>
+    <text class="d-sub" x="360" y="210" text-anchor="middle">左の棒は対数ではなく 71.5倍を 200px とした線形比例。トークン数は文字数からの概算だという指摘もある。</text>
+    <text class="d-sub" x="360" y="228" text-anchor="middle">フロントエンドのリポジトリ一つでは graphify 側が 15 対 23 で負けた。結論: 道案内・影響分析に強く、集中編集には効果が小さい。</text>
+</svg>
+<div class="d-cap">公式数値は how-it-works 文書、独立測定は検索で確認した整理記事（Zero-to-Hero ガイドが引用した Exchangepedia・Medium・KubeBlogs の値）に基づく。原文の多くはこの記事を書いた環境で開けず、ガイドの引用をそのまま写した。</div>
+</div>
+
+<h3>6. 利点と限界</h3>
+<table>
+    <thead><tr><th>強いところ</th><th>弱いところ</th></tr></thead>
+    <tbody>
+        <tr><td>大きなリポジトリに初めて入るとき。ハブとコミュニティで構造を先に掴み、「このエンドポイントからストレージまで」を経路で見る</td><td>小さなプロジェクト。ファイルがコンテキストに全部入るなら質問のオーバーヘッドがむしろトークンを増やす</td></tr>
+        <tr><td>影響分析とオンボーディング。共有コンポーネントの呼び出し元・依存を一度に列挙し、<code># WHY:</code> コメントや ADR がノードとしてコードにつながる</td><td>集中編集。数ファイルを直す作業ではエージェントがそのまま <code>rg</code> に行く方が速く、実際にそうする</td></tr>
+        <tr><td>文書の多いリポジトリ。PDF・論文・映像まで同じグラフに入り「コードと設計文書のつながり」が見える</td><td>古いグラフ。pull・merge はフックが拾わず、<code>graphify update .</code> を忘れると誤った地図を持ち歩く（新ディレクトリ未検出 #1837 など）</td></tr>
+        <tr><td>検証可能性。エッジごとにタグと file:line が付き、答えを原本と照合できる</td><td>グラフの答えは「文脈であって検証済みの答えではない」。INFERRED エッジは誤りうるし、テストコードの同名ヘルパーがノイズを作る</td></tr>
+        <tr><td>費用。コードグラフは無料・オフラインで、再実行はハッシュで飛ばす</td><td>意味パスは文書・画像を設定したモデルに送る。Kimi を選べば Moonshot のサーバーへ行く。ログ <code>~/.cache/graphify-queries.log</code> が質問を残す（無効化可能）</td></tr>
+    </tbody>
+</table>
+<p>セキュリティ面では、2026年11月21日の 0.9.115 が、Windows でリポジトリ内のパス（<code>.sh</code> の <code>source \\host\share\x</code> のような UNC パス）がスキャンルート外に触れて SMB 認証を誘発していた問題を修正した（GHSA-g6c9-j4vm-mwq4）。見知らぬリポジトリをグラフにするツールなのでこの種の入力処理問題が起こりうるということで、最新版の維持が答えだ。スキルファイル自体もスキャンパスをシェルに置換せず引用 heredoc で渡し、パスに混ざったシェルコードが実行されないよう組まれている。共有 HTTP MCP サーバーを立てるときは <code>--api-key</code> を置き、<code>graphify-out/cache/</code>・<code>manifest.json</code>・<code>cost.json</code> は gitignore に入れる。</p>
+
+<h3>7. このウィキのグラフと並べると</h3>
+<p>このウィキは文書79編を概念共有・引用バックリンク・宣言された型付き関係の三層でつなぐ独自の知識グラフを持つ（<a href="/p/ja/kgs-edges/">接続の三層</a>）。材料が違う。このウィキは人がキュレーションした概念と本文リンクからエッジを作り、graphify は構文木から呼び出し・import・継承を機械で取り出す。だが運用原則は似ている。このウィキの「本文に実在する関係だけ」は graphify の「エッジをでっち上げず、分からなければ AMBIGUOUS」と同じ場所にあり、どちらも埋め込みなしで構造そのものから隣人を見つける。違うのは用途だ。このウィキのグラフは人と AI が文書を行き来する地図で、graphify のグラフはエージェントがコードを読む前に立ち寄る索引だ。このリポジトリの <code>app.js</code>・<code>tools/*.py</code> に graphify を回せば文書グラフの隣にコードグラフがもう一つできるわけだが、今は文書側のグラフしかないので次の実験として残しておく。</p>
+
+<h3>事実検証ノート</h3>
+<p class="scn-sub">パイプライン・三つのパス・言語数（33+7）・信頼度の規則表・エッジのタグ・<code>also_seen</code>・出力ファイル・コマンドとフラグ・終了コード・<code>.graphifyrc</code>・フックの動作（PreToolUse、strict、30分）・git フック・MCP ツール10個・書き出し形式・プライバシー項目・正直ルールは、2026年11月24日に <a href="https://github.com/Graphify-Labs/graphify" target="_blank" rel="noopener">公式リポジトリ</a>を取得して README・<code>docs/how-it-works.md</code>・ARCHITECTURE.md・<code>graphify/skill.md</code>・<code>graphify/install.py</code>・CHANGELOG を直接読んで写した（基準コミット 2026-11-23、0.9.118）。ベンチマーク表（LOCOMO・LongMemEval-S・ERPNext・費用）と審判検証の数値は BENCHMARKS.md（2026-07-05 更新）に基づき、いずれも Graphify Labs の自社測定である。初公開日（2026-04-04、0.1.1）とリリース数（284）は PyPI API で確認した。スター数は GitHub API がこの環境で応答せず、集計サイトが 76,348・114,794・129,000・152,271 に割れたため本文に確定値を書かなかった。トークン71.5倍は公式 how-it-works 文書、独立測定（7.3倍・7〜8%・44対45・15対23）と批判（文字数からの概算、小コーパスでの逆効果、エージェントがグラフを飛ばす、グラフ陳腐化のイシュー番号）は <a href="https://gist.github.com/YourAKShaw/46c01330c7edfd1e82a4b0339b6846de" target="_blank" rel="noopener">Zero-to-Hero ガイド</a>（2026-10-20）の引用と検索抜粋に基づき、KubeBlogs・Medium・Exchangepedia の原文はこの記事を書いた環境のネットワーク方針のため直接開けなかった。ライセンスは LICENSE（Apache-2.0）と LICENSE-MIT が併存するため二重と記した。会社情報（Graphify Labs、YC S26、ROSS Index Q3 2026 2位のバッジ）は README のバッジに基づく。作者は公人ではないためハンドル・氏名を記さず、NOTICE の著作権表記のみリポジトリで確認できる。ヒーロー画像はリポジトリの <code>docs/graph-hero.png</code> を Apache-2.0 の条件下で 1400px に縮小して掲載した。</p>
+</article>
+<p class="pr-meta"><span class="pr-k">分類</span> AI · Claude · スキルカタログ &middot; <span class="pr-k">作成日</span> 2026-11-24 &middot; <span class="pr-k">更新日</span> 2026-11-24</p>
+
+<nav class="pr-rel"><h2>関連文書</h2>
+<ul><li><a href="/p/ja/hns-evidence/">ハーネスがスコアを動かす証拠 — Microsoft の白書と RHO・HarnessPro 研究を重ねて読む</a></li><li><a href="/p/ja/tip-intermediate/">中級 — セッションを仕組みに変える11の方法</a></li><li><a href="/p/ja/kgs-edges/">文書はどうつながるのか — 概念キュレーションと idf 重みつきエッジ</a></li><li><a href="/p/ja/welcome/">はじめに</a></li></ul>
+</nav>
+</body>
+</html>

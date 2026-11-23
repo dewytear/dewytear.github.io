@@ -5,15 +5,33 @@
   <link href="https://dewytear.github.io/"/>
   <link rel="self" href="https://dewytear.github.io/feed.en.xml"/>
   <id>https://dewytear.github.io/feed.en.xml</id>
-  <updated>2026-11-11T07:59:47+09:00</updated>
+  <updated>2026-11-24T08:11:38+09:00</updated>
   <rights>CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/</rights>
   <author><name>dewytear</name></author>
+  <entry>
+    <title>Claude Ship — Three Agents That Carry a PR to Merge: How to Use It and Why</title>
+    <link href="https://dewytear.github.io/p/en/claude-ship/"/>
+    <id>https://dewytear.github.io/docs/en/ai/claude/code/introduction/claude-ship</id>
+    <published>2026-11-24T08:11:38+09:00</published>
+    <updated>2026-11-24T08:11:38+09:00</updated>
+    <summary>Explains Claude Ship, released by Anthropic on November 23, 2026, from the official docs. Once a pull request is open, three agents take it to merge. Code Review posts findings in four steps (find, verify, rank, post) with three severities (important, nit, pre-existing) and three depths (Quick, Standard, Deep). PR Steward fixes failing checks, conflicts and review comments and pushes again, but cannot approve or merge. Claude Approvals decides from rules in .claude/approvals.yml who must approve and how many, starting in observe mode and moving to enforce. On the developer side, one /ship line in Claude Code bundles commit, push, PR creation and Steward watching; on the organization side the page gives the rollout order (Code Review, then Steward in manual mode, then Approvals observe, then enforce) and two starter policy files that replace CODEOWNERS. Advantages (shorter review queues, automated fix loops, policy as code, measured placement of human approvals) are set against cautions (Team and Enterprise beta only, no ZDR or HIPAA, the scope of a bot's approval rights, monthly limits and per-repo spend caps, vendor-measured numbers), and the flow is compared with this wiki's own PR process.</summary>
+    <category term="AI · Claude · Code · Introduction"/>
+  </entry>
+  <entry>
+    <title>graphify — A Skill That Turns a Codebase into a Knowledge Graph So Agents Query Instead of Grep</title>
+    <link href="https://dewytear.github.io/p/en/sks-graphify/"/>
+    <id>https://dewytear.github.io/docs/en/ai/claude/skills/sks-graphify</id>
+    <published>2026-11-24T08:11:38+09:00</published>
+    <updated>2026-11-24T08:11:38+09:00</updated>
+    <summary>An analysis, from the official repository (README, ARCHITECTURE, BENCHMARKS, skill.md) and outside verification, of a skill that turns the code, docs, PDFs, images and video in a folder into one knowledge graph with a single /graphify . and then has the agent fetch only the relevant subgraph through graphify query, path and explain instead of reading whole files. Code is parsed locally with tree-sitter and no LLM (about 40 languages), every edge carries an EXTRACTED, INFERRED (five levels from 0.95 to 0.55) or AMBIGUOUS confidence tag, and Leiden community detection finds subsystems. The page covers installation (uv tool install graphifyy, graphify install), a command table, the PreToolUse hook that steps in before Read, Grep and cat so the agent looks at the graph first (with a strict mode), git hooks, the MCP server and export formats. Benchmarks are read in two columns: the vendor's own (LOCOMO recall@10 0.497 against mem0 0.048) and the widely quoted 71.5x token saving (one query on a 52-file corpus) next to independent session-level measurements (7 to 8% saved, quality 44 vs 45), to show where the gain is (orientation and impact analysis in large repositories) and where it is not (small projects, focused edits). It notes the Windows forced-SMB-authentication fix of 2026-11-21 and the privacy items, and compares the tool's graph with this wiki's document graph in principle and in use.</summary>
+    <category term="AI · Claude · 스킬 카탈로그"/>
+  </entry>
   <entry>
     <title>Evidence That the Harness Moves the Score — Reading Microsoft's White Paper Alongside RHO and HarnessPro</title>
     <link href="https://dewytear.github.io/p/en/hns-evidence/"/>
     <id>https://dewytear.github.io/docs/en/ai/claude/code/harness/hns-evidence</id>
     <published>2026-11-11T07:59:47+09:00</published>
-    <updated>2026-11-11T07:59:47+09:00</updated>
+    <updated>2026-11-12T08:28:36+09:00</updated>
     <summary>Three sources from the second half of 2026 that put numbers on the claim that the harness decides results, read side by side. Microsoft's November 9 white paper swapped only the harness, keeping model and tasks fixed, and reports pass-rate gains of 10.8 points on GPT-5.5 Chat and 22.1 on Claude Opus 4.8 while swapping the model barely moved anything: retries after a failed tool call in 84–91% of cases versus under 7%, about twice the calls yet 15–21% lower input cost thanks to caching (83–88% of input). In academia, RHO (City University of Hong Kong and Microsoft Research Asia, Findings of EMNLP 2026) ran coreset selection, group rollout and self-preference selection on past traces alone, with no ground-truth labels, taking SWE-Bench Pro from 59% to 78%; its successor HarnessPro runs that loop recursively, puts cost on the second axis and picks Lite, Medium and Heavy harnesses from the Pareto frontier (Heavy +2.0 points at −26% cost over RHO, Medium −1 point at −53%). The repositories were cloned to see what an evolved harness actually contains (profile selector, call budgets, output compaction, disabled features, verification scripts); the reported Tsinghua affiliation appears only in press and is not asserted. The counter-evidence of the Scaffold Effect paper (40× token spread, 0–8 point pass-rate spread) sits alongside, with the conclusion that pass rate and tokens must be reported together</summary>
     <category term="AI · Claude · Code · Harness"/>
   </entry>
@@ -258,24 +276,6 @@
     <published>2026-08-03T08:29:44+09:00</published>
     <updated>2026-08-10T16:29:39+09:00</updated>
     <summary>A cross-verified account of OpenAI's 2026-08-01 claim that an internal Astra solved ten decade-old open problems (first non-sofic group after 27 years, a disproof of Connes rigidity, the first sphere-packing bound improvement since 1978, and more) — the verification system of Lean machine-checked certificates plus named expert readers (Popa et al.), the pre-peer-review caveat, Tao's 'proof abundance' frame and Bloom's reaction, contrasted with the October 2025 GPT-5 Erdős fiasco</summary>
-    <category term="AI · News &amp; Articles · 2026"/>
-  </entry>
-  <entry>
-    <title>The Harness Is Not Enough — Why Software Factories Fail</title>
-    <link href="https://dewytear.github.io/p/en/news-20260728-software-factories-fail/"/>
-    <id>https://dewytear.github.io/docs/en/ai/news/2026/news-20260728-software-factories-fail</id>
-    <published>2026-07-28T09:22:35+09:00</published>
-    <updated>2026-08-15T15:03:36+09:00</updated>
-    <summary>Dex Horthy (HumanLayer) at AI Engineer World's Fair 2026 — models are rewarded only for passing tests, never for design quality, so no harness can close the gap; Faros telemetry (bugs +54%, incidents tripled), a failed four-month lights-out experiment, FrontierCode scoring maintainability, and 30 minutes of four-step alignment before any code</summary>
-    <category term="AI · News &amp; Articles · 2026"/>
-  </entry>
-  <entry>
-    <title>Claude Opus 5 — A Near-Fable at Half the Price Has Arrived</title>
-    <link href="https://dewytear.github.io/p/en/news-20260724-claude-opus-5/"/>
-    <id>https://dewytear.github.io/docs/en/ai/news/2026/news-20260724-claude-opus-5</id>
-    <published>2026-07-25T13:36:03+09:00</published>
-    <updated>2026-08-15T15:03:36+09:00</updated>
-    <summary>A cross-verified account of Anthropic's 2026-07-24 Claude Opus 5 launch from the official announcement and multiple press reports — at $5/$25 it lands within 0.5% of Fable 5's CursorBench 3.2 max peak at half the cost per task, with Frontier-Bench 43.3%, OSWorld 2.0 on ⅓ the budget and 3× on ARC-AGI 3, a long-horizon agentic demo that wrote its own CV pipeline to rebuild FreeCAD 3D when it could not view the drawing, plus the context of the Fable 5 safeguard false-positive controversy and a separation of unconfirmed claims</summary>
     <category term="AI · News &amp; Articles · 2026"/>
   </entry>
 </feed>

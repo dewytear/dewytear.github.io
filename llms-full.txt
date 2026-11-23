@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 > License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — cite the source when quoting.
-> 79 documents · 325 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
+> 81 documents · 330 concepts. Summary/index version: https://dewytear.github.io/llms.txt · Knowledge graph: https://dewytear.github.io/data/knowledge-graph.json
 
 ---
 
@@ -1274,6 +1274,151 @@ Stop — Claude가 응답을 마쳤을 때 (예: 알림 발송)
 
 대표적인 쓰임새는 수정할 때마다 포매터 실행, 커밋 전 테스트 스위트 실행, 민감한 경로 보호, 긴 작업이 끝나면 데스크톱 알림 보내기 등입니다. 훅은 결국 그냥 셸 명령이므로, 프로젝트가 이미 쓰는 어떤 도구와도 Claude Code를 이어 붙일 수 있습니다.
 스킬이 아는 법을, MCP가 닿는 곳을 늘린다면, 훅은 지켜지는 규칙을 만듭니다. 셋을 어떻게 조합하는지는 Claude Code 튜토리얼에서 손으로 익힐 수 있습니다.
+
+---
+
+# Claude Ship — PR을 머지까지 데려가는 세 에이전트, 쓰는 법과 장점
+Section: AI · Claude · Code · Introduction
+URL: https://dewytear.github.io/docs/ko/ai/claude/code/introduction/claude-ship
+
+Claude Ship — PR을 머지까지 데려가는 세 에이전트, 쓰는 법과 장점
+
+세 줄 요약
+
+Claude Ship은 풀 리퀘스트(PR)가 열린 뒤의 일을 맡는 에이전트 묶음이다. Code Review가 문제를 찾고, PR Steward가 실패한 검사·충돌·리뷰 코멘트를 고쳐 커밋하고, Claude Approvals가 팀이 파일로 적은 정책대로 "누가 더 승인해야 하는가"를 판정한다. 2026년 11월 23일 Team·Enterprise 플랜 베타로 나왔다.
+
+개인 개발자는 Claude Code에서 /ship 한 줄로 커밋·푸시·PR 생성·리뷰까지 하고, 그 뒤 "지켜보기(watch)"가 시작돼 검사 실패와 리뷰 답변을 Claude가 처리한다. 머지는 사람이 누른다.
+
+장점은 리뷰가 코드를 쓰는 속도를 따라오게 만드는 데 있다. Anthropic은 자사 Claude Code 팀에서 6~9월 머지 PR이 두 배 넘게 늘고 되돌린 비율이 40% 넘게 줄었다고 밝혔다. 대신 정책 파일 한 줄이 사람 없는 머지를 허용할 수 있으니, 관찰 모드와 브랜치 규칙을 먼저 두는 순서가 중요하다.
+
+코딩 에이전트가 코드를 쓰는 속도는 빨라졌는데, 그 코드를 리뷰하고 승인하는 쪽은 여전히 사람의 시간에 묶여 있다. PR을 열고 다른 일로 넘어갔다가, 며칠 뒤 리뷰가 오면 옛 코드로 돌아가 고치고, 검사를 다시 기다리고, 승인해 줄 사람을 찾는다. Anthropic이 Claude Ship을 소개하며 든 문제가 이것이다. 이 글은 공식 문서와 발표를 바탕으로 세 에이전트의 역할, 개인과 조직 각각의 사용법, 실제로 어떤 이득이 있는지와 어디서 조심해야 하는지를 정리한다. 이 위키는 Claude Code로 문서를 쓰고 PR로 머지하는 저장소라, 마지막에 이 위키의 흐름에 비춰 본 판단도 적었다.
+
+PR이 열린 뒤: 세 에이전트가 맡는 자리 PR 열림 사람 또는 에이전트 Code Review (GA) 찾기 → 검증 → 순위 → 게시 Important · Nit · Pre-existing PR Steward (베타) 실패한 검사 · 머지 충돌 리뷰 코멘트 → 수정 커밋 Claude Approvals 정책 파일 판정 (베타) 푸시하면 다시 리뷰 (설정에 따라) 검사 결과 예: "Waiting on human review from any person (1/2)" · 정책이 허용하면 Claude가 승인 리뷰 게시 머지 결정: 사람 + GitHub 브랜치 규칙 (Steward는 승인·머지 못 함, Approvals는 필수 검사로 걸어야 막음)
+Code Review는 2026년 10월 15일 정식 출시된 기존 제품이고, PR Steward와 Claude Approvals가 이번에 베타로 더해졌다. 셋은 따로따로 켤 수 있고 저장소 단위로 켠다.
+
+1. 세 에이전트가 각각 하는 일
+
+Code ReviewPR StewardClaude Approvals
+
+상태정식(GA)공개 베타공개 베타
+
+하는 일diff와 주변 코드를 읽어 논리 오류·보안 취약점·깨진 경계 조건을 찾고, 검증한 뒤 심각도 순으로 인라인 코멘트실패한 검사, 머지 충돌, 사람·봇의 리뷰 코멘트를 처리해 수정 커밋을 푸시. 푸시마다 무엇을 바꿨고 어떻게 되돌리는지 코멘트저장소의 정책 파일을 읽어 "누가 더 승인해야 하는가"를 검사(check) 제목으로 보고. 정책이 허용하면 승인 리뷰를 직접 게시
+
+못 하는 일승인·차단·코드 실행·커밋 푸시 없음. 검사는 실패로 끝나지 않음설계상 승인·머지 안 함. Anthropic 서비스가 승인·브랜치 보호 변경·브랜치 삭제·태그 푸시 요청을 거부GitHub에서 필수 검사로 걸지 않으면 머지를 막지 못함. CI 결과는 읽지 못하므로 CI는 별도 필수 검사로
+
+실행 주체Anthropic 인프라, 저장소 읽기 전용Claude GitHub App으로 클라우드 세션, 오토 모드로 시작(권한 요청은 거부됨)정책 평가 + 분류기 실행(클라우드 세션, GitHub 읽기 전용)
+
+과금토큰 기준, 조직 사용량 크레딧. 리뷰 수준 Quick·Standard·Deep토큰 기준. 월 한도 + 저장소별 지출 상한을 따로 둠기본료 없음. 정책이 부른 Code Review와 분류기 실행만 토큰 과금. 관찰 모드도 과금
+
+조정 파일REVIEW.md(리뷰 전용 규칙), CLAUDE.md(프로젝트 맥락).claude/skills/steward/SKILL.md(저장소 규칙).claude/approvals.yml(정책), .claude/classifiers/<이름>/def.yml(분류기)
+
+Code Review의 네 단계는 눈여겨볼 만하다. 여러 에이전트가 병렬로 후보를 찾고(Find), 후보를 코드에 대조해 오탐을 거르고(Verify), 중복을 합쳐 심각도로 줄 세운 뒤(Rank), 인라인 코멘트와 검사 결과로 올린다(Post). 찾은 것을 그대로 쏟지 않고 한 번 더 검증하는 단계가 들어 있어서, 리뷰 봇의 흔한 불만인 "소음"을 줄이는 쪽으로 설계됐다. 심각도는 🔴 Important(머지 전에 고칠 것), 🟡 Nit(사소), 🟣 Pre-existing(이 PR이 만든 문제가 아님) 셋이고, 다시 리뷰할 때는 지난 리뷰 이후 바뀐 부분만 보며 Nit과 Pre-existing은 덜 올린다.
+
+2. 개인 사용법 — /ship 한 줄
+
+조직 관리자가 아무것도 켜지 않아도 개인 개발자는 터미널의 Claude Code에서 /ship을 쓸 수 있다. 사용량은 본인의 일반 Claude Code 사용량으로 잡힌다. 전제는 Claude Code 2.1.330 이상, GitHub CLI 2.63 이상(gh auth login 완료), git 2.38 이상이다.
+
+변경을 만든 그 세션에서 /ship을 친다. 커밋 메시지를 대화에서 뽑기 때문이다(다른 세션에서 치면 "Update greet.py and 1 more" 같은 제목이 나온다).
+
+확인 창은 없다. 커밋 직전과 푸시 직전에 "Esc to cancel"로 끝나는 줄이 몇 초 떠 있다가 진행된다. 기본 브랜치에 있으면 새 브랜치를 만들어 옮기고, 이미 다른 브랜치에 커밋돼 있으면 그 브랜치를 푸시해 PR을 연다.
+
+/code-review로 리뷰한다. 노력 수준은 /ship low처럼 앞에 붙인다(기본 high).
+
+"지켜보기"가 시작된다. 오토 모드에서 Claude는 묻지 않고 리뷰 지적을 고치고, 기본 브랜치를 머지해 충돌을 풀고, 실패한 검사를 손보고 재실행하며, 리뷰 코멘트에 답하고 스레드를 해결하고 재리뷰를 요청한다. GitHub에는 사용자 본인의 이름으로 올라간다.
+
+검사가 통과하고 코멘트가 정리되면 Claude가 알린다. 머지는 사용자가 한다.
+
+인수효과
+
+low · medium · high · xhigh · max리뷰 노력 수준(/ship만). 기본 high
+
+41 또는 PR URL그 PR을 대상으로. 지켜보기는 본인 PR이고 브랜치를 체크아웃한 상태여야 함
+
++봇이름그 봇의 코멘트도 읽음(예: /steward +my-lint-bot). 재시작 때 다시 붙여야 함
+
+stop · terms지켜보기 종료 · 지켜보기 중 Claude가 할 수 있는 일과 한계 표시
+
+이미 PR이 열려 있으면 /steward가 커밋·푸시·리뷰를 건너뛰고 지켜보기만 시작한다. 지켜보는 동안 Claude Code는 사용자의 메시지 없이 움직일 때 PR 머지·승인·자동 머지 켜기·강제 푸시를 하는 gh·git 명령을 막고, 커넥터·WebFetch·WebSearch도 거부한다. git stash·git reset·git checkout·git add -A·git commit -a도 거부 목록에 있다. 지켜보기는 PR이 머지·닫힘, 7일 경과, Esc 한 번, 브랜치 전환, /clear·/resume·/branch, 세션 종료 가운데 하나로 끝난다. 저장소에 .claude/skills/steward/SKILL.md를 두면 지켜보기와 PR Steward가 같은 규칙을 읽는다.
+
+자동으로 안 하는 것도 분명하다. PR이 이미 열린 브랜치의 미커밋 변경, 공개 저장소의 미커밋 변경, 이름이 비밀처럼 보이는 파일(.env 등)은 커밋하지 않는다. .gitignore·CLAUDE.md·.github/ 아래를 고쳤으면 직접 커밋하라고 한다. GitHub Enterprise와 포크에서는 PR을 열지 않으니 먼저 열고 /ship을 친다. 네이티브 Windows와 bypassPermissions 모드에서는 지켜보기가 시작되지 않는다.
+
+3. 조직 사용법 — 하나씩, 한 저장소부터
+
+관리자(Claude 조직 Owner)는 Organization settings › Claude Ship에서 켠다. 공식 문서가 권하는 순서는 에이전트 하나씩, 저장소 하나부터다.
+
+조직 도입 순서 (끄는 순서는 역순) ① Code Review 저장소 하나에 켠다 월 지출 한도 설정 리뷰당 평균 비용 확인 ② PR Steward Manual 모드로 시작 @claude steward로 호출 저장소별 지출 상한 ③ Approvals 관찰 approvals.yml 머지 mode: observe 판정만 보여 줌 ④ 강제 observe 줄 삭제 브랜치 규칙에 필수 검사로 추가 모든 단계가 토큰 과금. 관찰 모드도, 정책이 부른 Code Review도 과금된다. 제외: Zero Data Retention · HIPAA 구성 · 고객 관리 키(CMEK) 조직. 강제 전에 쓰기 권한자 두 명 이상 필요.
+공식 설정 문서의 순서를 그대로 옮겼다. 끌 때는 Approvals → PR Steward → Code Review 순이어야 한다. 정책 파일이 꺼진 Code Review를 다시 부를 수 있기 때문이다.
+
+정책 파일은 "더 똑똑한 CODEOWNERS"
+
+Claude Approvals의 핵심은 저장소 루트의 .claude/approvals.yml이다. 규칙마다 경로 패턴, 조건, 그리고 판정(verdict)을 적는다. 판정은 Claude가 어디까지 하는가(comments·approves·blocks)와 사람 몇 자리(seats)가 필요한가로 이뤄진다. 공식 문서의 시작 예시 둘을 그대로 옮긴다.
+
+# .claude/approvals.yml — A안: 리뷰가 통과하면 한 사람이면 되고 Claude가 승인
+version: 1
+mode: observe
+rules:
+- purpose: "A change takes two people. When Claude's review passes, one is enough and Claude approves."
+paths: ["**"]
+verdict: { claude: comments, seats: 2 }
+override:
+- { if: "claude/code_review = pass", verdict: { claude: approves, seats: 1 } }
+- purpose: "A change to the review rules takes two people."
+paths: ["**/.claude/**"]
+nested: inherit
+verdict: { claude: comments, seats: 2 }
+# .claude/approvals.yml — B안: 모든 변경에 사람 둘, Claude는 조언만
+version: 1
+mode: observe
+rules:
+- purpose: "A change takes two people."
+paths: ["**"]
+verdict: { claude: comments, seats: 2 }
+advisory: [claude/code_review]
+- purpose: "A change to the review rules takes two people."
+paths: ["**/.claude/**"]
+nested: inherit
+verdict: { claude: comments, seats: 2 }
+읽는 법은 이렇다. seats: 2는 사람 두 자리인데 작성자가 한 자리를 채울 수 있으니 "작성자 + 한 명"이다. 작성자를 빼려면 seats: [{ count: 1, from: [humans, "!pr/authors"] }]처럼 쓴다. override는 조건이 맞을 때 판정을 바꾸는 자리이고, 분류기가 답을 못 내면 규칙 본래의 엄격한 판정으로 돌아간다. 여러 규칙이 겹치면 가장 엄격한 쪽이 이긴다(blocks > comments > approves). 조건에는 pr/files_changed > 50 같은 PR 사실과 분류기 답을 쓸 수 있다. 분류기는 Anthropic이 주는 둘(claude/code_review는 Important 지적이 남았는지로 pass/fail, claude/diff는 푸시 뒤 변화가 trivial·same_intent·different 중 무엇인지)에 더해, .claude/classifiers/<이름>/def.yml에 자연어 프롬프트와 출력 값을 적어 직접 만든다. 예컨대 "로그인·결제·마이그레이션을 건드리면 high"라는 위험도 분류기를 만들고 repo/change_risk = low일 때만 한 사람으로 줄이는 식이다.
+
+정책 파일·분류기 폴더·REVIEW.md·CODEOWNERS·.gitmodules 같은 파일은 보호 파일이라 Claude가 승인하지 않고, 개발자는 PR 댓글로 @claude approve(본인 승인 등록), @claude approvals rerun(재평가), @claude approvals resolve f-…(정책이 허용한 사람이 지적 닫기)를 쓴다. 검사 제목이 곧 상태다. "Waiting on human review from any person (1/2)", "Held by Code Review's findings", "Passed; no approval from Claude"처럼 읽힌다.
+
+4. 장점 — 무엇이 실제로 좋아지나
+
+리뷰가 코드 속도를 따라온다. Anthropic은 Claude Code 팀에서 2026년 6월부터 9월 사이 머지된 PR이 두 배 넘게 늘고 되돌린(revert) 비율은 40% 넘게 줄었다고 밝혔다. 같은 글이 그 팀에서는 Code Review가 더 넓은 절차의 한 층이라고 덧붙였으니, 수치를 에이전트 셋만의 효과로 읽지는 말아야 한다.
+
+오탐을 거르는 단계가 설계에 들어 있다. 찾은 후보를 코드에 대조해 검증한 뒤에만 올리고, 재리뷰는 바뀐 부분만 본다. 리뷰 봇을 꺼 버리게 만드는 소음 문제를 제품 구조로 다룬다.
+
+승인권이 분리돼 있다. 고치는 에이전트(PR Steward)는 승인·머지를 못 하고, Anthropic 서비스가 그 요청 자체를 거부한다. 판정하는 에이전트(Approvals)는 팀이 쓴 파일대로만 움직이고, 머지를 막을 권한은 GitHub 필수 검사 설정에서 온다. "AI가 AI 코드를 승인한다"는 걱정에 대한 답이 이 분리다.
+
+정책이 코드로 남는다. 누가 몇 명, 어떤 경로에, 어떤 조건에서 승인해야 하는지가 approvals.yml에 적히고, 그 파일 자체가 보호 파일이라 바꾸려면 다시 사람 둘이 필요하다. 관찰 모드로 먼저 돌려 보고 강제로 넘어가는 길이 기본 절차다.
+
+비용에 천장이 있다. Code Review 월 한도, PR Steward 월 한도와 저장소별 상한, 분류기 실행 한도를 따로 둔다. 한도에 닿으면 리뷰를 건너뛰고 PR에 그 사실을 적는다.
+
+기존 규칙 위에 얹힌다. 브랜치 보호, 필수 검사, CODEOWNERS, 자동 머지와 함께 동작한다. 사용자가 올린 고객 사례에서 TELUS 엔지니어링 디렉터는 "사람을 루프에 두되 사람의 시간은 판단이 필요한 변경에만 쓰게 됐다"고 했고, Carvana 엔지니어링·분석 SVP는 파일럿에서 리뷰 피드백 처리 시간이 줄었다고 했다.
+
+Claude Code 없이도 쓴다. Code Review·Steward·Approvals는 GitHub App으로 돌므로 다른 도구로 쓴 코드에도 붙는다. Claude Code는 PR 전, Claude Ship은 PR 후를 맡는다는 것이 Anthropic의 구분이다.
+
+5. 조심할 것
+
+정책 한 줄이 사람 없는 머지를 허용한다. seats: 0이면 봇이 쓴 PR이 아무도 안 본 채 머지될 수 있고, seats: 1은 작성자가 채울 수 있다. GitHub 브랜치 규칙이 승인 한 개를 요구할 때 Claude의 승인 리뷰가 그 하나가 될 수 있다. 자동 머지나 머지 큐를 켜 둔 저장소에서는 Claude의 수정 푸시가 머지를 촉발한다. 공식 문서가 모두 경고하는 항목이다.
+
+분류기는 PR 작성자가 쓴 글을 읽는다. 제목·설명·코멘트가 분류기 답을 흔들 수 있다고 문서가 명시한다. 분류기에 라벨·리뷰어 쓰기 권한을 줄 때는 라벨이 배포를 여는 저장소를 피하라고 한다.
+
+지켜보기는 내 자격증명으로 내 컴퓨터에서 코드를 돌린다. 기본 브랜치를 머지해 들어오는 스크립트, 다른 사람이 내 브랜치에 푸시한 것, 훅, SKILL.md가 모두 실행될 수 있다. 머지 권한자와 브랜치 푸시 권한자를 모두 믿을 수 있는 저장소에서만 켜라는 것이 공식 권고다.
+
+셀프호스트 환경에서는 승인 거부가 안 된다. PR Steward를 자체 러너에서 돌리면 Anthropic 서비스가 승인 요청을 막지 못하고, GitHub는 그 승인을 필수 승인으로 셀 수 있다. CLAUDE.md도 읽지 않는다.
+
+관찰 모드도 돈이 든다. 정책이 claude/code_review를 조건으로 쓰면 푸시마다 리뷰가 돌고, 분류기는 답이 없어도 과금된다. 분류기 실행당 예산(budget: { cost: 5 }, 기본 10달러, 상한 10달러)과 월 한도를 먼저 둔다.
+
+경쟁 제품과의 차이는 "승인"에 있다. 정리 글들은 GitHub Copilot 코드 리뷰, Cursor Bugbot, Codex 리뷰가 조언형이라 스스로 머지를 막거나 승인하지 않는다고 분류한다. Claude Ship은 정책이 허용하면 승인까지 간다. 그래서 더 편한 만큼 정책 파일의 책임이 무겁다.
+
+6. 이 위키의 PR 흐름에 비추어
+
+이 위키는 Claude Code 세션이 문서를 쓰고 PR을 열면 운영자가 "머지해"라고 답해야 스쿼시 머지가 된다. CI는 검증 게이트 네 개(파이썬 9단계·도식 경계·다국어 렌더·빌드)를 돌린다. Claude Ship에 옮겨 적으면 B안에 가깝다. 모든 경로에 사람 한 자리, CI는 별도 필수 검사, Code Review는 advisory로 두어 문서 PR에 코드 리뷰가 과금되지 않게 하는 구성이다. 콘텐츠 저장소라 Code Review의 "논리 오류" 기준이 맞지 않으니 REVIEW.md로 범위를 좁혀야 하고, PR Steward가 처리할 "실패한 검사"는 대부분 도식 글자 넘침이나 번역 누락이라 수정 커밋보다 사람 판단이 맞다. 지금은 /ship의 지켜보기가 Claude Code 세션 쪽 CI 실패를 재실행·수정해 주는 부분만 바로 쓸 만하다.
+
+사실검증 노트
+
+세 에이전트의 역할·한계·과금·제외 조건, /ship과 /steward의 전제·단계·인수·지켜보기 중 허용·차단 목록·종료 조건, 도입 순서와 끄는 순서, 정책 파일 예시 둘과 키 설명, 분류기 정의 예시와 예산 기본값, 댓글 명령, 검사 제목 문구, 보호 파일 목록, 셀프호스트 한계는 Claude Ship 개요·/ship 문서·문제 해결·정책 파일 레퍼런스·Approvals 설정·분류기·PR Steward·PR Steward 보안·Code Review·REVIEW.md 등 공식 문서를 2026년 11월 24일에 직접 읽어 옮겼다. 출시일(11월 23일), 문제 의식, 머지 PR 두 배·되돌림 40% 감소 수치, 고객 인용(TELUS·Carvana, 역할만 표기), Enterprise 크레딧(최소 1만 달러, 2027년 1월 15일까지 신청)은 Anthropic 발표 글과 제품 페이지 기준이며 모두 Anthropic 자체 서술이다. 수치의 근거 글(claude.dev의 "Solving code review at Anthropic")과 TechCrunch·The New Stack·XDA 등 보도는 이 글을 쓴 환경의 네트워크 정책 때문에 직접 열지 못해, 검색 발췌가 일치하는 범위(개인 개발자용 /ship이 11월 23일부터 Claude Code와 데스크톱 앱에 배포, Code Review 10월 15일 정식 출시)만 썼다. /ship을 Pro·Max 플랜 개인이 쓸 수 있는지는 공식 페이지가 명시하지 않아 "일반 Claude Code 사용량으로 과금"이라는 문장만 옮겼다. 경쟁 제품이 "조언형"이라는 분류는 2026년 비교 정리 글들의 서술이고 각 제품의 최신 기능은 바뀔 수 있다. 이 글은 기능 소개이지 보안 평가가 아니며, 공식 문서 자체가 "AI를 쓰므로 버그·취약점을 놓칠 수 있다"고 적는다.
 
 ---
 
@@ -5402,6 +5547,120 @@ npx skills add vercel-labs/agent-skills --skill web-design-guidelines -a claude-
 사실검증 노트
 
 skills.sh 설치 수와 종합 점수(Worth-Installing Score)·최근 7일 성장률·소셜 언급 순위는 LinklyAI의 오픈 데이터 best-skills(CC BY 4.0)의 2026-10-22(UTC) 스냅숏 CSV를 직접 받아 옮겼다. 저장소 단위 집계 한계와 점수 구성(인기 0.30·성장 0.15·평판 0.20·유지보수 0.15·신뢰 0.20, 보안 검사 없음)은 같은 저장소의 방법론 문서에 따른 것이다. skills.sh 사이트는 이 글을 쓴 환경에서 열리지 않아 원 사이트 수치와 직접 대조하지는 못했다. 공식 Claude 플러그인 디렉터리 설치 수(frontend-design 1,134,112·Superpowers 1,009,371)는 2026-10-23(KST) claude.com/plugins 페이지 데이터에서 읽었다. 각 스킬의 동작·명령·규칙은 해당 GitHub 저장소(vercel-labs/skills, mattpocock/skills, vercel-labs/agent-browser, heygen-com/hyperframes, anthropics/skills, obra/superpowers, vercel-labs/agent-skills)를 내려받아 SKILL.md와 README 원문을 직접 읽어 정리했다. “200~400토큰”과 “두어 시간 혼자 일한다”는 각 원본 문서의 자체 설명이다. 카드 이미지는 원문 머리말을 바꾸지 않고 이 위키가 렌더한 것이며(긴 설명은 …로 줄임), 로고·아이콘과 녹화 예시는 각 저장소에 커밋된 파일을 라이선스에 따라 실었다. 저장소 작성자 개인의 이름은 적지 않고 저장소 이름으로 가리켰다.
+
+---
+
+# graphify — 코드베이스를 지식 그래프로 바꿔 grep 대신 질의하게 하는 스킬
+Section: AI · Claude · 스킬 카탈로그
+URL: https://dewytear.github.io/docs/ko/ai/claude/skills/sks-graphify
+
+graphify — 코드베이스를 지식 그래프로 바꿔 grep 대신 질의하게 하는 스킬
+
+세 줄 요약
+
+graphify는 /graphify . 한 줄로 폴더 안의 코드·문서·PDF·이미지·영상을 하나의 지식 그래프로 만들고, 그 뒤부터 에이전트가 파일을 통째로 읽는 대신 graphify query·path·explain으로 필요한 부분 그래프만 받아 보게 하는 스킬이다. 코드는 tree-sitter(구문 트리 파서)로 로컬에서 LLM 없이 파싱하고, 모든 연결선에 EXTRACTED·INFERRED·AMBIGUOUS 신뢰 꼬리표를 단다.
+
+2026년 4월 4일 PyPI 첫 공개 뒤 11월 23일 0.9.118까지 284번 릴리스됐고, Claude Code·Cursor·Codex·Gemini CLI 등 20여 어시스턴트를 지원한다. 저장소 스타는 집계 사이트마다 7.6만에서 15만으로 갈려 이 글은 "10만 전후"로만 적는다. 만든 회사는 Graphify Labs(Y Combinator S26), 라이선스는 Apache-2.0과 MIT 이중.
+
+공식 벤치마크는 LOCOMO 기억 검색에서 recall@10 0.497(mem0 0.048), 그래프 구축에 LLM 비용 0을 내세운다. 자주 인용되는 "토큰 71.5배 절감"은 52개 파일 코퍼스의 질의 한 번 기준이고, 실제 세션 단위 독립 측정에서는 7~8% 절감이나 품질 동률(44 대 45점)이 나왔다. 큰 저장소의 길 찾기·영향 분석에서 강하고, 작은 프로젝트와 집중 편집에서는 득이 적다.
+
+코딩 에이전트가 낯선 저장소에서 하는 첫 일은 grep과 파일 읽기다. 질문이 "이 엔드포인트는 어디서 저장소까지 닿나"처럼 구조를 묻는 것이면, 파일을 하나씩 읽어 컨텍스트에 쌓는 방식은 토큰을 많이 쓰고 큰 그림을 놓친다. graphify는 그 자리에 그래프를 둔다. 한 번 만들어 두면 세션이 바뀌어도 남고, 질문마다 관련 노드 몇십 개만 돌려준다. 이 글은 공식 저장소(README·ARCHITECTURE·BENCHMARKS·skill.md)와 외부 검증 글을 바탕으로 동작 원리, 설치와 사용법, 벤치마크의 실제 의미, 한계와 보안을 정리한다. 이 위키도 문서 그래프 위에서 돌아가는 저장소라 마지막에 두 그래프를 나란히 놓았다.
+
+graphify가 만든 FastAPI 코드베이스의 graph.html — 색은 Leiden 알고리즘이 찾은 하위 시스템(커뮤니티), 오른쪽 목록은 각 커뮤니티의 이름과 노드 수 (이미지: Graphify-Labs/graphify 저장소, Apache-2.0)
+
+1. 어떻게 만들어지나 — 세 번의 패스
+
+/graphify . 가 하는 일: 세 패스 → 그래프 → 세 파일 입력 폴더 코드 영상·음성 문서·PDF·이미지 1패스 · tree-sitter AST 로컬 · LLM 없음 · 약 40개 언어 2패스 · faster-whisper 로컬 전사 · 허브 이름으로 프롬프트 3패스 · LLM 서브에이전트 세션 모델 또는 API 키 · 토큰 비용 build → cluster NetworkX 그래프 Leiden 커뮤니티 허브(god nodes) 의외의 연결 응집도 · 추천 질문 graphify-out/ graph.html GRAPH_REPORT.md graph.json cache/ (SHA256) 코드만 있는 저장소는 3패스를 통째로 건너뛰어 API 키 없이 끝난다. 재실행은 내용 해시가 같은 파일을 건너뛴다. 모듈 순서: detect → extract → build → cluster → analyze → report → export (ARCHITECTURE.md)
+공식 how-it-works 문서와 ARCHITECTURE.md의 파이프라인을 옮겼다. 1패스는 33개 언어를 tree-sitter 문법으로, 7개(Dart·Apex·COBOL·Razor·Blade·Pascal·Robot Framework)는 자체 추출기로 처리한다.
+
+핵심은 "코드는 LLM에 보내지 않는다"는 원칙이다. 함수·클래스·import·호출 관계는 구문 트리에서 결정적으로 뽑히므로 같은 입력에 같은 그래프가 나오고, 비용이 0이며, 아무것도 밖으로 나가지 않는다. 문서와 이미지만 의미 추출을 위해 모델을 거치는데, Claude Code 안에서는 그 세션의 모델이 서브에이전트를 병렬로 띄워 처리하고, 터미널에서 graphify extract로 돌릴 때는 설정된 API 키(Gemini·Kimi·Claude·OpenAI·DeepSeek·Azure·Bedrock·Ollama 순으로 자동 감지)를 쓴다. 커뮤니티 검출은 Leiden 알고리즘(간선 밀도로 노드를 묶는 그래프 군집화)이고, 임베딩이나 벡터 저장소는 쓰지 않는다. 모델이 뽑은 semantically_similar_to 간선이 이미 그래프 안에 있어 그 구조 자체가 유사도 신호 노릇을 한다는 설명이다. 커뮤니티 이름은 LLM 없이 허브 노드 이름에서 짓는다.
+
+2. 모든 선에 꼬리표 — 신뢰도 체계
+
+간선 꼬리표와 점수 규칙 EXTRACTED 1.0 · 소스에 명시 INFERRED 0.95 거의 확실 · 대상 하나 INFERRED 0.85 강한 근거 · 이름+맥락 INFERRED 0.75 합리적 · 맥락만 INFERRED 0.65 약함 · 이름 유사만 INFERRED 0.55 추측 AMBIGUOUS 불확실 · 보고서에서 검토 대상 · 경로 신뢰도는 가장 약한 홉이 정한다
+how-it-works 문서의 규칙표. 스킬 파일의 "정직 규칙"은 간선을 지어내지 말고 모르면 AMBIGUOUS로 두라고 못 박는다. 같은 관계가 여러 곳에서 보이면 가장 높은 꼬리표 하나만 남기고 나머지는 also_seen에 기록한다.
+
+이 꼬리표가 graphify를 "또 하나의 검색 인덱스"와 가르는 지점이다. graphify explain "APIRouter"를 치면 소스 위치, 커뮤니티, 차수와 함께 연결 47개가 [uses] [INFERRED], [imports] [EXTRACTED]처럼 꼬리표를 달고 나오고, graphify path "FastAPI" "ModelField"는 3홉 경로와 그 경로의 전체 신뢰도(가장 약한 홉)를 돌려준다. 저장소 BENCHMARKS.md는 FastAPI 프로덕션 패키지 안의 INFERRED 교차 파일 간선 12개를 손으로 전수 검사해 전부 맞았다고 적되, 날짜 박힌 1회 점검이지 상시 지표는 아니라고 밝힌다. 해결기는 "틀린 간선보다 없는 간선"을 택한다.
+
+3. 설치와 사용법
+
+Python 3.11.5~3.14와 uv(또는 pipx)가 있으면 두 줄이다. PyPI 패키지 이름이 graphifyy(y 두 개)인 점만 조심한다. 다른 graphify* 패키지는 무관하다.
+
+uv tool install graphifyy # CLI 설치 (pipx install graphifyy 도 가능)
+graphify install # Claude Code 기본. 스킬 + CLAUDE.md 블록 + PreToolUse 훅
+graphify install --project # 저장소 안 .claude/skills/graphify/ 에 설치 (git add 안내 출력)
+graphify cursor install # Cursor
+graphify install --platform codex # Codex ($graphify 로 호출)
+그다음 어시스턴트 안에서 /graphify .를 친다. 스킬은 먼저 graphify-out/graph.json이 있는지 보고, 있으면 다시 만들지 않고 질의로 넘어간다(빠른 길). 없으면 파일 감지 → 추출 → 그래프 → 군집 → 이름 짓기 → 출력 순으로 진행하며 코퍼스 크기와 토큰 비용을 보고한다. 스킬 파일 자체가 "API 키를 절대 묻지 말고 키 없이 진행하라"고 적어 두어, 코드 저장소에서는 아무 설정 없이 끝난다.
+
+할 일명령비고
+
+그래프 만들기/graphify .HTML·보고서·JSON. --no-viz로 HTML 생략, 5,000노드 넘으면 집계 뷰
+
+더 깊게/graphify . --mode deepINFERRED 간선을 더 적극적으로 추론
+
+바뀐 것만/graphify . --update해시가 바뀐 파일만. 그래프가 줄어들면 거부(--force로 허용)
+
+질문graphify query "auth와 DB는 어떻게 연결되나"BFS 기본, --dfs는 한 경로 추적, 예산 기본 2,000토큰·깊이 2
+
+경로graphify path "UserService" "DatabasePool"최단 경로 + 가장 약한 홉의 신뢰도
+
+설명graphify explain "RateLimiter"노드 한 개의 위치·커뮤니티·연결 전부
+
+군집만 다시/graphify . --cluster-only --resolution 1.5더 잘게. --exclude-hubs 99로 유틸리티 슈퍼허브 제외
+
+자료 추가/graphify add <arxiv URL 또는 유튜브 URL>논문·영상을 ./raw에 받아 그래프에 합침
+
+내보내기--obsidian · --wiki · --svg · --graphml · --neo4j옵시디언 볼트, 커뮤니티별 마크다운 위키, Gephi, Cypher(Neo4j·FalkorDB)
+
+최신 유지graphify hook installpost-commit·post-checkout 훅 + graph.json 합집합 머지 드라이버. pull 뒤엔 graphify update .
+
+PR 보기graphify prs 42 · --triage · --conflictsPR의 그래프 영향, 리뷰 큐 순위, 같은 하위 시스템을 건드리는 PR 쌍
+
+MCPgraphify-mcp graphify-out/graph.jsonquery_graph·shortest_path·get_neighbors·god_nodes 등 10개 도구
+
+스크립트에서 쓰기 좋게 종료 코드가 정해져 있다. 0은 답, 3은 이름이 여러 노드에 걸려 후보를 나열한 경우, 4는 노드 없음이다. 이름이 겹치면 추측하지 않고 거부하는 쪽이다. 프로젝트 설정은 스캔 루트의 .graphifyrc에 둔다. 확장자가 애매한 파일(.inc가 PHP인지 Pascal인지, .h가 C인지 C++인지)은 language.inc=php처럼 못 박아야 그래프가 엉성해지지 않는다.
+
+4. 에이전트가 정말 그래프를 쓰게 만드는 장치
+
+훅이 끼어드는 자리: 원본을 읽기 전에 그래프부터 코드베이스 질문 "X는 누가 부르나" 에이전트, Read/Grep 시도 PreToolUse 훅 발동 hook-guard read · search graphify query / path 부분 그래프 · 예산 2,000토큰 file:line 인용 · 꼬리표 답 + 근거 필요하면 원본 열람 기본: 권고(soft nudge) · strict: 세션 첫 원본 읽기를 한 번 거부, 30분 안에 그래프 질의가 있었으면 통과 훅 없는 플랫폼(Codex·Cursor 등)은 AGENTS.md·.cursor/rules 같은 지시 파일로 같은 "그래프 먼저" 안내를 넣는다. 지시는 지시일 뿐이라 에이전트가 무시하고 바로 rg로 갈 수 있다(Codex 이슈 #860).
+README의 "Make your assistant always use the graph" 절과 install.py의 훅 정의를 옮겼다. 훅 명령은 설치 시점의 절대 실행 경로를 박아 넣으므로 업그레이드 뒤엔 graphify install과 graphify hook install을 다시 돌린다.
+
+그래프가 있어도 에이전트가 안 쓰면 소용없다. graphify가 이 문제를 다루는 방식이 다른 코드 인덱스 도구와 다른 점이다. graphify install은 스킬 파일만 두는 게 아니라 CLAUDE.md에 안내 블록을 쓰고, Claude Code의 PreToolUse 훅(도구 호출 직전에 끼어드는 훅)을 .claude/settings.json에 등록한다. 훅은 Read·Glob·Grep은 물론 Bash의 cat·head·tail·sed -n 같은 읽기 명령 앞에서도 발동해 "그래프를 먼저 보라"고 권한다. --strict(또는 GRAPHIFY_HOOK_STRICT=1)로 설치하면 세션의 첫 원본 읽기를 한 번 거부해 그래프로 돌려보내고, 최근 30분 안에 그래프 질의가 있었으면 그냥 통과시킨다. 거부는 세션당 한 번이라 에이전트가 영영 막히지는 않는다. 그래프가 오래됐으면(마지막 커밋 뒤 바뀜) 훅이 그 사실도 알린다.
+
+5. 벤치마크 — 공식 수치와 바깥 측정
+
+LOCOMO (n=300): 검색 재현율과 QA 정확도, graphify 자체 하네스 recall@10 graphify 0.497 hybrid RRF 0.493 dense RAG 0.439 BM25 0.362 supermemory 0.149 *임베더 다름 mem0 0.048 QA 정확도 supermemory 49.7% graphify 45.3% hybrid RRF 43.3% dense RAG 41.3% BM25 31.3% mem0 27.3% 인제스트 비용: graphify 약 $1.40 · mem0 $3.48 · supermemory $15.67 · 그래프 구축 LLM 비용 $0 LongMemEval-S(n=50) 76%로 dense RAG와 동률 · ERPNext(100만 LOC) 핵심 사실 커버리지 82.0% 대 grep 70.8% (n=6)
+BENCHMARKS.md(2026-07-05 갱신)의 표. 모든 시스템을 같은 하네스에서 같은 모델(Kimi K2.6)·같은 예산으로 돌리고 심판을 2차 심판과 대조(일치 90.6%, 카파 0.81)했다고 밝힌다. supermemory의 recall은 자체 임베더를 쓰라는 제약 때문에 직접 비교가 어렵다는 각주가 붙어 있다. 코드 지능 항목은 n=6이라 표본이 작다.
+
+벤치마크를 읽을 때 두 가지를 분리해야 한다. 첫째, 위 표는 graphify 자체 하네스의 결과다. 공정성 규칙(단일 모델, 공유 임베더, 지출 장부)을 공개하고 재현 명령을 적어 둔 점은 평가할 만하지만, 자사 측정이라는 사실은 남는다. 둘째, 가장 널리 퍼진 수치인 "토큰 71.5배 절감"은 벤치마크 표가 아니라 how-it-works 문서의 토큰 비교에서 왔다. 그 비교의 코퍼스는 Karpathy의 저장소 셋 + 논문 5편 + 이미지 4장(52개 파일)이고, 질의 한 번에 약 1,700토큰 대 원본 전체 약 123,000토큰이다. 같은 문서가 4개 파일에선 5.4배, 6개 파일 라이브러리에선 약 1배라고 적는다. 작은 코퍼스는 어차피 컨텍스트에 들어가니 압축이 아니라 구조 파악이 값어치라는 뜻이다.
+
+"71.5배"는 어디서 왔고, 바깥에서는 얼마나 나왔나 공식 how-it-works · 질의 1회 기준 52개 파일 71.5배 4개 파일 5.4배 6개 파일 약 1배 독립 측정 · 세션·작업 기준 질의당 (Exchangepedia) 7.3배 10문항 세션 (Medium) 7~8% 절감 (113k 대 120k) 블라인드 품질 (KubeBlogs) 44 / 50 같은 작업, graphify 없이 45 / 50 왼쪽 막대는 로그 눈금이 아니라 71.5배를 200px로 둔 선형 비례. 토큰 수는 글자 수로 어림한 값이라는 지적도 있다. 프런트엔드 저장소 한 곳에서는 graphify 쪽이 15 대 23으로 뒤졌다. 결론: 길 찾기·영향 분석에 강하고 집중 편집엔 효과 작음.
+공식 수치는 how-it-works 문서, 독립 측정은 검색으로 확인한 정리 글들(Zero-to-Hero 가이드가 인용한 Exchangepedia·Medium·KubeBlogs 값) 기준이다. 원문 다수가 이 글을 쓴 환경에서 열리지 않아 가이드의 인용을 그대로 옮겼다.
+
+6. 장점과 한계
+
+강한 곳약한 곳
+
+큰 저장소에 처음 들어갈 때. 허브와 커뮤니티로 구조를 먼저 잡고, "이 엔드포인트에서 저장소까지"를 경로로 본다작은 프로젝트. 파일이 컨텍스트에 다 들어가면 질의 오버헤드가 오히려 토큰을 늘린다
+
+영향 분석과 온보딩. 공유 컴포넌트의 호출자·의존을 한 번에 나열하고, # WHY: 주석과 ADR이 노드로 코드에 연결된다집중 편집. 파일 몇 개를 고치는 작업에서는 에이전트가 그냥 rg로 가는 편이 빠르고, 실제로 그렇게 한다
+
+문서 많은 저장소. PDF·논문·영상까지 같은 그래프에 들어가 "코드와 설계 문서의 연결"이 보인다오래된 그래프. pull·merge는 훅이 안 잡아 graphify update .를 잊으면 틀린 지도를 들고 다닌다(새 디렉터리 미발견 #1837 등)
+
+검증 가능성. 간선마다 꼬리표와 file:line이 붙어 답을 원본에 대조할 수 있다그래프 답은 "맥락이지 검증된 답이 아니다". INFERRED 간선은 틀릴 수 있고 테스트 코드의 동명 헬퍼가 소음을 만든다
+
+비용. 코드 그래프는 무료·오프라인이고, 재실행은 해시로 건너뛴다의미 패스는 문서·이미지를 설정한 모델로 보낸다. Kimi를 고르면 Moonshot 서버로 간다. 로그 파일 ~/.cache/graphify-queries.log가 질문을 남긴다(끄기 가능)
+
+보안 쪽에서는 2026년 11월 21일 0.9.115가 Windows에서 저장소 안 경로(.sh의 source \\host\share\x 같은 UNC 경로)가 스캔 루트 밖을 건드려 SMB 인증을 유발하던 문제를 고쳤다(GHSA-g6c9-j4vm-mwq4). 낯선 저장소를 그래프로 만드는 도구라 이런 종류의 입력 처리 문제가 생길 수 있다는 뜻이고, 최신판 유지가 답이다. 스킬 파일 자체도 스캔 경로를 셸에 치환하지 않고 따옴표 heredoc으로 넘겨 경로에 섞인 셸 코드가 실행되지 않게 짜여 있다. 공유 HTTP MCP 서버를 띄울 때는 --api-key를 두고, graphify-out/cache/·manifest.json·cost.json은 gitignore에 넣는다.
+
+7. 이 위키의 그래프와 나란히 놓으면
+
+이 위키는 문서 79편을 개념 공유·인용 역링크·선언된 타입 관계의 세 층으로 잇는 자체 지식 그래프를 갖고 있다(연결의 세 층). 재료가 다르다. 이 위키는 사람이 큐레이션한 개념과 본문 링크에서 간선을 만들고, graphify는 구문 트리에서 호출·import·상속을 기계로 뽑는다. 그런데 운영 원칙은 닮았다. 이 위키의 "본문에 실재하는 관계만"은 graphify의 "간선을 지어내지 말고 모르면 AMBIGUOUS"와 같은 자리에 있고, 둘 다 임베딩 없이 구조 자체로 이웃을 찾는다. 다른 점은 쓰임이다. 이 위키의 그래프는 사람과 AI가 문서를 돌아다니는 지도이고, graphify의 그래프는 에이전트가 코드를 읽기 전에 들르는 색인이다. 이 저장소의 app.js·tools/*.py에 graphify를 돌려 보면 문서 그래프 옆에 코드 그래프가 하나 더 생기는 셈인데, 지금은 문서 쪽 그래프만 있으니 다음 실험으로 남겨 둔다.
+
+사실검증 노트
+
+파이프라인·세 패스·언어 수(33+7)·신뢰도 규칙표·간선 꼬리표·also_seen·출력 파일·명령과 플래그·종료 코드·.graphifyrc·훅 동작(PreToolUse, strict, 30분)·git 훅·MCP 도구 10개·내보내기 형식·개인정보 항목·정직 규칙은 공식 저장소를 2026년 11월 24일에 받아 README·docs/how-it-works.md·ARCHITECTURE.md·graphify/skill.md·graphify/install.py·CHANGELOG를 직접 읽어 옮겼다(기준 커밋 2026-11-23, 0.9.118). 벤치마크 표(LOCOMO·LongMemEval-S·ERPNext·비용)와 심판 검증 수치는 BENCHMARKS.md(2026-07-05 갱신) 기준이며 모두 Graphify Labs 자체 측정이다. 첫 공개일(2026-04-04, 0.1.1)과 릴리스 수(284)는 PyPI API에서 확인했다. 스타 수는 GitHub API가 이 환경에서 응답하지 않았고 집계 사이트가 76,348·114,794·129,000·152,271로 갈려 본문에 확정 수치를 적지 않았다. 토큰 71.5배는 공식 how-it-works 문서, 독립 측정(7.3배·7~8%·44 대 45·15 대 23)과 비판(글자 수 어림, 작은 코퍼스 역효과, 에이전트가 그래프를 건너뜀, 그래프 노후화 이슈 번호)은 Zero-to-Hero 가이드(2026-10-20)의 인용과 검색 발췌 기준이고, KubeBlogs·Medium·Exchangepedia 원문은 이 글을 쓴 환경의 네트워크 정책 때문에 직접 열지 못했다. 라이선스는 LICENSE(Apache-2.0)와 LICENSE-MIT가 함께 있어 이중으로 적었다. 회사 정보(Graphify Labs, YC S26, ROSS Index Q3 2026 2위 배지)는 README의 배지 기준이다. 작성자는 공인이 아니라 핸들·이름을 적지 않았고 NOTICE의 저작권 표기만 저장소에서 확인할 수 있다. 히어로 이미지는 저장소의 docs/graph-hero.png를 Apache-2.0 조건 아래 1400px로 줄여 실었다.
 
 ---
 
