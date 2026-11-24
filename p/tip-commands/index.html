@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>명령어 20선 — 시작·작업·리뷰·실행 순서로 익히는 슬래시 명령어</title>
+<meta name="description" content="Claude Code의 슬래시 명령어 20개를 쓰는 순서대로 네 묶음(시작·작업 중·리뷰·실행과 검증)으로 나눠, 각각 무엇을 하는지와 그대로 따라 칠 수 있는 예제를 붙인 실용 정리. 시작 묶음은 /init(CLAUDE.md 생성, 200줄 이하 권장)·/model(줄임 이름과 opusplan)·/effort(다섯 단계, 최신 모델 기본값 medium, 버그 수정엔 high)·/advisor(더 강한 모델의 조언, 실험 기능)·/context(/compact와 /clear의 구분)를, 작업 중 묶음은 /btw(이력에 남지 않는 곁가지 질문, 도구 없음)·/background·/fork(워크트리 격리)·/tasks·/resume을, 리뷰 묶음은 /diff·/code-review(--fix·--comment·ultra)·/security-review·/autofix-pr·/insights(작업 습관 보고서)를, 실행 묶음은 /run·/verify(/run-skill-generator로 실행 절차 기록)·/claude-in-chrome·/debug(/doctor와 구분)·/claude-api를 다룬다. 처음 쓰는 사람을 위한 네 개(/init → /run → /code-review → /verify)와, 백그라운드 세션 열 개가 한도를 약 열 배 빨리 쓴다는 주의를 덧붙였다. 모든 동작은 2026-11-24 공식 문서로 확인했다">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/tip-commands/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/tip-commands/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/tip-commands/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/tip-commands/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/tip-commands/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="명령어 20선 — 시작·작업·리뷰·실행 순서로 익히는 슬래시 명령어">
+<meta property="og:description" content="Claude Code의 슬래시 명령어 20개를 쓰는 순서대로 네 묶음(시작·작업 중·리뷰·실행과 검증)으로 나눠, 각각 무엇을 하는지와 그대로 따라 칠 수 있는 예제를 붙인 실용 정리. 시작 묶음은 /init(CLAUDE.md 생성, 200줄 이하 권장)·/model(줄임 이름과 opusplan)·/effort(다섯 단계, 최신 모델 기본값 medium, 버그 수정엔 high)·/advisor(더 강한 모델의 조언, 실험 기능)·/context(/compact와 /clear의 구분)를, 작업 중 묶음은 /btw(이력에 남지 않는 곁가지 질문, 도구 없음)·/background·/fork(워크트리 격리)·/tasks·/resume을, 리뷰 묶음은 /diff·/code-review(--fix·--comment·ultra)·/security-review·/autofix-pr·/insights(작업 습관 보고서)를, 실행 묶음은 /run·/verify(/run-skill-generator로 실행 절차 기록)·/claude-in-chrome·/debug(/doctor와 구분)·/claude-api를 다룬다. 처음 쓰는 사람을 위한 네 개(/init → /run → /code-review → /verify)와, 백그라운드 세션 열 개가 한도를 약 열 배 빨리 쓴다는 주의를 덧붙였다. 모든 동작은 2026-11-24 공식 문서로 확인했다">
+<meta property="og:url" content="https://dewytear.github.io/p/tip-commands/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="명령어 20선 — 시작·작업·리뷰·실행 순서로 익히는 슬래시 명령어">
+<meta name="twitter:description" content="Claude Code의 슬래시 명령어 20개를 쓰는 순서대로 네 묶음(시작·작업 중·리뷰·실행과 검증)으로 나눠, 각각 무엇을 하는지와 그대로 따라 칠 수 있는 예제를 붙인 실용 정리. 시작 묶음은 /init(CLAUDE.md 생성, 200줄 이하 권장)·/model(줄임 이름과 opusplan)·/effort(다섯 단계, 최신 모델 기본값 medium, 버그 수정엔 high)·/advisor(더 강한 모델의 조언, 실험 기능)·/context(/compact와 /clear의 구분)를, 작업 중 묶음은 /btw(이력에 남지 않는 곁가지 질문, 도구 없음)·/background·/fork(워크트리 격리)·/tasks·/resume을, 리뷰 묶음은 /diff·/code-review(--fix·--comment·ultra)·/security-review·/autofix-pr·/insights(작업 습관 보고서)를, 실행 묶음은 /run·/verify(/run-skill-generator로 실행 절차 기록)·/claude-in-chrome·/debug(/doctor와 구분)·/claude-api를 다룬다. 처음 쓰는 사람을 위한 네 개(/init → /run → /code-review → /verify)와, 백그라운드 세션 열 개가 한도를 약 열 배 빨리 쓴다는 주의를 덧붙였다. 모든 동작은 2026-11-24 공식 문서로 확인했다">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "명령어 20선 — 시작·작업·리뷰·실행 순서로 익히는 슬래시 명령어",
+ "description": "Claude Code의 슬래시 명령어 20개를 쓰는 순서대로 네 묶음(시작·작업 중·리뷰·실행과 검증)으로 나눠, 각각 무엇을 하는지와 그대로 따라 칠 수 있는 예제를 붙인 실용 정리. 시작 묶음은 /init(CLAUDE.md 생성, 200줄 이하 권장)·/model(줄임 이름과 opusplan)·/effort(다섯 단계, 최신 모델 기본값 medium, 버그 수정엔 high)·/advisor(더 강한 모델의 조언, 실험 기능)·/context(/compact와 /clear의 구분)를, 작업 중 묶음은 /btw(이력에 남지 않는 곁가지 질문, 도구 없음)·/background·/fork(워크트리 격리)·/tasks·/resume을, 리뷰 묶음은 /diff·/code-review(--fix·--comment·ultra)·/security-review·/autofix-pr·/insights(작업 습관 보고서)를, 실행 묶음은 /run·/verify(/run-skill-generator로 실행 절차 기록)·/claude-in-chrome·/debug(/doctor와 구분)·/claude-api를 다룬다. 처음 쓰는 사람을 위한 네 개(/init → /run → /code-review → /verify)와, 백그라운드 세션 열 개가 한도를 약 열 배 빨리 쓴다는 주의를 덧붙였다. 모든 동작은 2026-11-24 공식 문서로 확인했다",
+ "inLanguage": "ko",
+ "url": "https://dewytear.github.io/p/tip-commands/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!tip-commands",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-11-24T20:17:33+09:00",
+ "dateModified": "2026-11-24T20:17:33+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!tip-commands">이 페이지는 정적 스냅샷입니다 — 위키에서 열기 &#8599;</a>
+  &middot; <a href="/p/en/tip-commands/" hreflang="en">English</a>
+  &middot; <a href="/p/ja/tip-commands/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>명령어 20선 — 시작·작업·리뷰·실행 순서로 익히는 슬래시 명령어</h2>
+
+<p>Claude Code가 요즘 답답하게 느껴진다면 모델을 탓하기 전에 확인할 게 있어요. 입력창에 <code>/</code>를 치면 나오는 <strong>슬래시 명령어</strong>입니다. 같은 모델이라도 이 명령어를 아느냐 모르느냐에 따라 일하는 방식이 꽤 달라져요. 예를 들어 Opus 5.5의 기본 노력 수준은 다섯 단계 중 가운데인 <code>medium</code>인데, 공식 문서는 버그 수정처럼 검증이 중요한 일에는 <code>high</code>를 권합니다. 이걸 모르면 어려운 일을 계속 <code>medium</code>에 맡기게 돼요.</p>
+
+<p>막히는 지점은 대개 비슷합니다. 대화가 길어지면 답이 흐려지고, 창 하나에서 한 가지 일만 기다리고, 다 됐다는데 막상 돌려 보면 안 돌아가요. 이 문서는 그 세 가지를 푸는 명령어 20개를 <strong>쓰는 순서대로 네 묶음</strong>으로 나눠, 각각 무엇을 하는지와 바로 따라 칠 수 있는 예제를 붙였습니다.</p>
+
+<div class="note">
+    <span class="nh">문서 정보 (출처)</span>
+    · 근거: <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">Claude Code 공식 문서</a> (2026-11-24 기준) — 명령어는 버전·요금제·환경에 따라 목록에 안 보일 수 있습니다
+</div>
+
+<h3>먼저, 명령어를 치는 법</h3>
+<ul>
+    <li>입력창에 <code>/</code>를 치면 쓸 수 있는 명령어 목록이 뜨고, 글자를 더 치면 목록이 좁혀져요.</li>
+    <li>명령어는 <strong>메시지 맨 앞</strong>에 있어야 인식됩니다. 뒤에 쓴 글은 그 명령어의 인수로 그대로 넘어가요.</li>
+    <li>Claude가 답하는 중에 명령어를 보내면 대기열에 들어갔다가 그 턴이 끝난 뒤 실행돼요. <code>/tasks</code>처럼 기다리지 않고 바로 열리는 것도 있습니다.</li>
+</ul>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="명령어 20개를 쓰는 순서대로 나눈 네 묶음. 시작: /init, /model, /effort, /advisor, /context. 작업 중: /btw, /background, /fork, /tasks, /resume. 리뷰: /diff, /code-review, /security-review, /autofix-pr, /insights. 실행·검증: /run, /verify, /claude-in-chrome, /debug, /claude-api">
+    <text class="d-label" x="360" y="24" text-anchor="middle">쓰는 순서대로 네 묶음, 다섯 개씩</text>
+    <rect class="d-box accent" x="20" y="44" width="150" height="180" rx="8"/>
+    <text class="d-label sm" x="95" y="68" text-anchor="middle">① 시작</text>
+    <text class="d-sub" x="95" y="96" text-anchor="middle">/init</text>
+    <text class="d-sub" x="95" y="120" text-anchor="middle">/model</text>
+    <text class="d-sub" x="95" y="144" text-anchor="middle">/effort</text>
+    <text class="d-sub" x="95" y="168" text-anchor="middle">/advisor</text>
+    <text class="d-sub" x="95" y="192" text-anchor="middle">/context</text>
+    <path class="d-edge" d="M170 134 L188 134"/>
+    <path class="d-arrow" d="M186 128 L196 134 L186 140 Z"/>
+    <rect class="d-box" x="197" y="44" width="150" height="180" rx="8"/>
+    <text class="d-label sm" x="272" y="68" text-anchor="middle">② 작업 중</text>
+    <text class="d-sub" x="272" y="96" text-anchor="middle">/btw</text>
+    <text class="d-sub" x="272" y="120" text-anchor="middle">/background</text>
+    <text class="d-sub" x="272" y="144" text-anchor="middle">/fork</text>
+    <text class="d-sub" x="272" y="168" text-anchor="middle">/tasks</text>
+    <text class="d-sub" x="272" y="192" text-anchor="middle">/resume</text>
+    <path class="d-edge" d="M347 134 L365 134"/>
+    <path class="d-arrow" d="M363 128 L373 134 L363 140 Z"/>
+    <rect class="d-box" x="374" y="44" width="150" height="180" rx="8"/>
+    <text class="d-label sm" x="449" y="68" text-anchor="middle">③ 리뷰</text>
+    <text class="d-sub" x="449" y="96" text-anchor="middle">/diff</text>
+    <text class="d-sub" x="449" y="120" text-anchor="middle">/code-review</text>
+    <text class="d-sub" x="449" y="144" text-anchor="middle">/security-review</text>
+    <text class="d-sub" x="449" y="168" text-anchor="middle">/autofix-pr</text>
+    <text class="d-sub" x="449" y="192" text-anchor="middle">/insights</text>
+    <path class="d-edge" d="M524 134 L542 134"/>
+    <path class="d-arrow" d="M540 128 L550 134 L540 140 Z"/>
+    <rect class="d-box accent" x="551" y="44" width="150" height="180" rx="8"/>
+    <text class="d-label sm" x="626" y="68" text-anchor="middle">④ 실행·검증</text>
+    <text class="d-sub" x="626" y="96" text-anchor="middle">/run</text>
+    <text class="d-sub" x="626" y="120" text-anchor="middle">/verify</text>
+    <text class="d-sub" x="626" y="144" text-anchor="middle">/claude-in-chrome</text>
+    <text class="d-sub" x="626" y="168" text-anchor="middle">/debug</text>
+    <text class="d-sub" x="626" y="192" text-anchor="middle">/claude-api</text>
+</svg>
+<div class="d-cap">묶음은 외우기 쉽게 나눈 것이고 순서를 꼭 지킬 필요는 없어요. 처음이라면 문서 끝의 네 개(<code>/init</code>·<code>/run</code>·<code>/code-review</code>·<code>/verify</code>)부터 써 보세요.</div>
+</div>
+
+<h3>한눈에 보는 20개</h3>
+<table>
+    <thead><tr><th>묶음</th><th>명령어</th><th>하는 일</th></tr></thead>
+    <tbody>
+        <tr><td rowspan="5">① 시작</td><td><code>/init</code></td><td>프로젝트 안내서 <code>CLAUDE.md</code>를 만든다</td></tr>
+        <tr><td><code>/model</code></td><td>쓰는 모델을 바꾼다</td></tr>
+        <tr><td><code>/effort</code></td><td>얼마나 깊이 생각할지 정한다</td></tr>
+        <tr><td><code>/advisor</code></td><td>더 강한 두 번째 모델에게 조언을 받는다</td></tr>
+        <tr><td><code>/context</code></td><td>대화가 공간을 얼마나 차지하는지 본다</td></tr>
+        <tr><td rowspan="5">② 작업 중</td><td><code>/btw</code></td><td>작업을 멈추지 않고 곁가지 질문을 한다</td></tr>
+        <tr><td><code>/background</code></td><td>지금 대화를 뒤로 보내고 터미널을 비운다</td></tr>
+        <tr><td><code>/fork</code></td><td>대화를 복사해 새 작업을 따로 돌린다</td></tr>
+        <tr><td><code>/tasks</code></td><td>이 대화의 백그라운드 작업 목록을 본다</td></tr>
+        <tr><td><code>/resume</code></td><td>예전 대화로 돌아간다</td></tr>
+        <tr><td rowspan="5">③ 리뷰</td><td><code>/diff</code></td><td>지금까지 바뀐 내용을 본다</td></tr>
+        <tr><td><code>/code-review</code></td><td>바뀐 코드에서 버그를 찾는다</td></tr>
+        <tr><td><code>/security-review</code></td><td>보안 문제만 골라 본다</td></tr>
+        <tr><td><code>/autofix-pr</code></td><td>PR을 지켜보다 실패·지적을 자동으로 고친다</td></tr>
+        <tr><td><code>/insights</code></td><td>내 작업 습관을 보고서로 받는다</td></tr>
+        <tr><td rowspan="5">④ 실행·검증</td><td><code>/run</code></td><td>앱을 실제로 띄워 돌려 본다</td></tr>
+        <tr><td><code>/verify</code></td><td>고친 것이 의도대로 동작하는지 확인한다</td></tr>
+        <tr><td><code>/claude-in-chrome</code></td><td>실제 Chrome 브라우저에서 일하게 한다</td></tr>
+        <tr><td><code>/debug</code></td><td>이 세션에서 생긴 문제를 진단한다</td></tr>
+        <tr><td><code>/claude-api</code></td><td>앱에 Claude를 붙일 때 참고 자료를 불러온다</td></tr>
+    </tbody>
+</table>
+
+<h3>① 시작 — 안내서, 모델, 노력 수준, 조언자, 공간</h3>
+
+<h4>1. <code>/init</code> — 프로젝트 안내서 만들기</h4>
+<p>새 폴더에서 치면 Claude가 코드를 훑어보고 <code>CLAUDE.md</code>를 만들어요. 무슨 프로젝트인지, 어떻게 실행하는지, 지킬 규칙이 무엇인지가 담깁니다. Claude Code는 대화를 시작할 때마다 이 파일을 읽기 때문에 "이건 Next.js 프로젝트야"를 매번 설명할 필요가 없어져요.</p>
+<pre><code>/init          # CLAUDE.md 초안 생성
+/memory        # 만들어진 CLAUDE.md를 열어 다듬기</code></pre>
+<p>공식 문서는 <code>CLAUDE.md</code>를 파일당 200줄 아래로 짧게 유지하라고 권해요. 길수록 컨텍스트를 더 쓰고 지시도 덜 지켜집니다. 자세한 작성법은 <a href="/p/claude-md-commandments/">CLAUDE.md 십계명</a>에 있어요.</p>
+
+<h4>2. <code>/model</code> — 모델 바꾸기</h4>
+<p>혼자 치면 선택 메뉴가 열리고, 이름을 붙이면 바로 바뀝니다. 고른 모델은 이후 새 대화의 기본값으로 저장돼요. 이번 대화에서만 바꾸고 싶으면 목록에서 <code>s</code>를 누릅니다.</p>
+<pre><code>/model             # 선택 메뉴 열기 (좌우 화살표로 노력 수준도 조절)
+/model opus        # Opus로 즉시 전환
+/model opusplan    # 계획은 Opus, 실제 수정은 Sonnet</code></pre>
+<table>
+    <thead><tr><th>줄임 이름</th><th>어울리는 일</th></tr></thead>
+    <tbody>
+        <tr><td><code>fable</code></td><td>가장 어렵고 오래 걸리는 작업 (접근 권한 필요)</td></tr>
+        <tr><td><code>opus</code></td><td>복잡한 추론이 필요한 작업</td></tr>
+        <tr><td><code>sonnet</code></td><td>일상적인 코딩</td></tr>
+        <tr><td><code>haiku</code></td><td>빠르고 단순한 작업</td></tr>
+        <tr><td><code>opusplan</code></td><td>플랜 모드에서는 Opus, 실행으로 넘어가면 Sonnet</td></tr>
+    </tbody>
+</table>
+
+<h4>3. <code>/effort</code> — 얼마나 깊이 생각할지</h4>
+<p>노력 수준(effort)은 모델이 답하기 전에 추론에 토큰을 얼마나 쓸지 정하는 값이에요. <code>low</code>·<code>medium</code>·<code>high</code>·<code>xhigh</code>·<code>max</code> 다섯 단계이고, Fable 5.2·Opus 5.5·Sonnet 5.5·Haiku 5.5의 기본값은 <code>medium</code>입니다.</p>
+<pre><code>/effort high       # 버그 수정처럼 검증이 중요한 일
+/effort max        # 보안 취약점 찾기 같은 정말 어려운 문제 (이번 대화에만 적용)
+/effort status     # 지금 수준 확인</code></pre>
+<table>
+    <thead><tr><th>수준</th><th>공식 문서가 권하는 쓰임</th></tr></thead>
+    <tbody>
+        <tr><td><code>low</code></td><td>결과를 하나씩 확인하는 빠른 주고받기. 브레인스토밍, 이름 바꾸기 같은 작은 수정</td></tr>
+        <tr><td><code>medium</code></td><td>범위가 분명한 일상 개발. 새 기능 구현</td></tr>
+        <tr><td><code>high</code></td><td>검증이 중요하거나 예외 상황이 많은 일. 기존 코드의 버그 수정</td></tr>
+        <tr><td><code>xhigh</code></td><td>토큰을 더 쓰는 깊은 추론</td></tr>
+        <tr><td><code>max</code></td><td>혼자 끝까지 풀게 맡기는 어려운 문제. 효과가 줄어들거나 지나치게 오래 생각할 수 있으니 넓게 쓰기 전에 시험해 볼 것</td></tr>
+    </tbody>
+</table>
+
+<h4>4. <code>/advisor</code> — 두 번째 모델에게 조언 받기</h4>
+<p>평소 작업은 지금 모델이 하고, 방향을 정할 때나 같은 오류가 반복될 때, 마무리 직전처럼 중요한 순간에만 더 강한 모델이 대화 전체를 읽고 조언하는 기능이에요. 언제 물어볼지는 Claude가 정합니다.</p>
+<pre><code>/advisor opus      # Opus를 조언자로 켜기 (예: Sonnet으로 일하고 Opus에게 조언)
+/advisor           # 조언자 고르는 메뉴
+/advisor off       # 끄기</code></pre>
+<p>조언 모델은 지금 모델과 같거나 더 높은 등급이어야 해요. Opus 5.5로 일한다면 조언자는 Opus나 Fable만 됩니다. 아직 실험 기능이고, 조언 모델이 대화를 통째로 읽으니 사용량이 더 듭니다. 대부분의 턴은 평범하지만 계획의 질이 결과를 가르는 긴 작업(큰 리팩터링, 오류가 되풀이되는 디버깅)에 어울리고, 짧은 작업에는 얻는 게 적어요.</p>
+
+<h4>5. <code>/context</code> — 공간 확인</h4>
+<p>컨텍스트는 Claude가 한 번에 들고 있는 대화와 파일 전부를 말해요. <code>/context</code>를 치면 무엇이 공간을 차지하는지 색 블록으로 보여 주고 줄이는 방법도 제안합니다. 대화가 길어져 답이 흐려지기 시작했다면 여기부터 보세요.</p>
+<pre><code>/context                               # 무엇이 공간을 먹는지 확인
+/compact 인증 모듈 수정 내용 위주로 요약    # 대화를 요약해 공간 확보 (요약 초점 지정 가능)
+/clear                                 # 완전히 새 대화로 시작</code></pre>
+<p>같은 일을 이어 갈 거면 <code>/compact</code>, 다른 일로 넘어갈 거면 <code>/clear</code>예요. 컨텍스트를 아끼는 습관은 <a href="/p/tip-beginner/">초급 팁</a>에서 더 다룹니다.</p>
+
+<h3>② 작업 중 — 곁가지 질문과 병렬 작업</h3>
+
+<h4>6. <code>/btw</code> — 멈추지 않고 물어보기</h4>
+<p>"그런데(by the way)"의 줄임이에요. Claude가 한창 일하는 중에 문득 궁금한 게 생기면 작업을 끊지 않고 물을 수 있습니다. 지금까지의 대화를 보고 바로 답하고, 그 질문과 답은 대화 이력에 남지 않아요.</p>
+<pre><code>/btw 아까 그 설정 파일 이름이 뭐였지?</code></pre>
+<p>다만 도구를 쓰지 못해요. 새 파일을 읽거나 명령을 실행할 수 없고, 이미 대화에 있는 내용으로만 답합니다. 답은 한 번으로 끝나니 이어서 묻고 싶으면 <code>/btw</code>를 다시 치면 돼요.</p>
+
+<h4>7. <code>/background</code> (<code>/bg</code>) — 지금 대화를 뒤로 보내기</h4>
+<p>현재 대화를 백그라운드로 옮기고 터미널을 비워 줘요. 뒤에 마지막 지시를 붙일 수 있습니다. 백그라운드로 간 작업은 터미널을 닫아도 계속 돌아가요.</p>
+<pre><code>/bg 테스트 돌리고 실패하는 것 고쳐 줘</code></pre>
+<p>상태는 터미널에서 <code>claude agents</code>로 확인합니다. 내 답을 기다리는 것, 진행 중인 것, 끝난 것으로 나뉘어 한 화면에 모여요.</p>
+
+<h4>8. <code>/fork</code> — 대화를 복사해 따로 돌리기</h4>
+<p>지금 대화를 복사해 새 백그라운드 세션을 엽니다. 원래 대화는 여기서 계속하고 복사본은 뒤에서 따로 일해요. 복사본은 모델, 권한, 노력 수준을 그대로 이어받습니다.</p>
+<pre><code>/fork 같은 방식으로 결제 모듈도 리팩터링해 줘</code></pre>
+<p>Git으로 관리하는 프로젝트라면 복사본은 코드를 고치기 전에 워크트리(같은 저장소를 별도 폴더에 펼친 작업 공간)를 따로 만들어서, 원래 폴더의 파일과 섞이지 않아요. <code>/background</code>가 지금 대화를 뒤로 보내는 것이라면 <code>/fork</code>는 새 대화를 하나 더 만드는 겁니다.</p>
+
+<h4>9. <code>/tasks</code> — 백그라운드 작업 목록</h4>
+<p>Claude는 큰 일을 쪼개 서브에이전트(일을 나눠 맡는 또 다른 Claude)에게 넘기곤 해요. <code>/tasks</code>는 이 대화에서 넘긴 작업과 백그라운드 명령을 끝난 것까지 포함해 보여 줍니다. Claude가 답을 쓰는 중에도 바로 열려요.</p>
+<pre><code>/tasks                    # 목록 열기. 돌고 있는 작업을 고르면 그 작업으로 들어감
+/rename 결제-리팩터링       # 세션에 이름을 붙여 두면 나중에 찾기 쉬움</code></pre>
+
+<h4>10. <code>/resume</code> — 예전 대화로 돌아가기</h4>
+<p>닫았던 대화를 이름이나 ID로 다시 열어요. 인수 없이 치면 세션 목록이 뜹니다. 백그라운드 세션은 목록에 <code>bg</code> 표시가 붙고, 아직 돌고 있는 세션을 고르면 지금 대화가 뒤로 가고 터미널이 그 세션에 붙어요.</p>
+<pre><code>/resume                   # 세션 목록에서 고르기
+/resume 결제-리팩터링       # 이름으로 바로 열기</code></pre>
+<p><code>/clear</code>로 새 대화를 시작했어도 이전 대화는 사라지지 않고 <code>/resume</code>으로 돌아갈 수 있어요.</p>
+
+<h3>③ 리뷰 — 바뀐 것, 버그, 보안, PR, 습관</h3>
+
+<h4>11. <code>/diff</code> — 바뀐 내용 보기</h4>
+<p>Claude가 고친 것과 아직 커밋하지 않은 내 수정을 합쳐서 파일별로 보여 줘요. 추가·삭제된 줄 수와 실제 바뀐 줄이 나옵니다. Claude가 파일을 고친 뒤에는 턴마다 무엇을 바꿨는지 따로 볼 수도 있어요.</p>
+<pre><code>/diff</code></pre>
+
+<h4>12. <code>/code-review</code> (<code>/review</code>) — 버그 찾기</h4>
+<p>바뀐 코드에서 정확성 버그를 찾아요. 혼자 치면 현재 변경분을, PR 번호를 붙이면 그 PR을 봅니다. PR(풀 리퀘스트)은 GitHub에서 내 변경을 합쳐 달라고 올리는 요청이에요.</p>
+<pre><code>/code-review                # 현재 변경분 리뷰
+/code-review high 1234      # 1234번 PR을 high 깊이로 리뷰
+/code-review --fix          # 찾은 문제를 바로 고치기
+/code-review --comment      # 찾은 내용을 PR에 댓글로 달기
+/code-review ultra          # 클라우드에서 여러 에이전트가 깊이 리뷰</code></pre>
+<p>깊이는 <code>low</code>부터 <code>max</code>까지 고를 수 있고, 깊이를 안 적으면 마지막에 쓴 깊이를 다시 써요. PR이 열린 뒤의 리뷰·수정·승인을 통째로 맡기는 흐름은 <a href="/p/claude-ship/">Claude Ship</a>에서 다룹니다.</p>
+
+<h4>13. <code>/security-review</code> — 보안만 보기</h4>
+<p>현재 브랜치를 원격 기본 브랜치와 비교해 인젝션(입력값에 명령을 끼워 넣는 공격), 인증·권한 문제, 데이터 노출 같은 위험을 찾아요. 원격 저장소가 <code>origin</code>이라는 이름으로 연결돼 있어야 합니다.</p>
+<pre><code>/security-review</code></pre>
+
+<h4>14. <code>/autofix-pr</code> — PR 지켜보다 고치기</h4>
+<p>현재 브랜치의 PR을 찾아 클라우드 세션을 띄웁니다. 자동 검사(CI)가 실패하거나 리뷰 댓글이 달리면 고쳐서 다시 푸시해요. 기본은 모든 실패와 댓글을 고치는 것이고, 지시를 붙여 범위를 좁힐 수 있습니다.</p>
+<pre><code>/autofix-pr
+/autofix-pr 린트와 타입 오류만 고쳐 줘</code></pre>
+<p>GitHub 명령줄 도구 <code>gh</code>와 클라우드 세션 사용 권한이 필요해요. 다른 PR을 지켜보게 하려면 먼저 그 브랜치로 체크아웃합니다.</p>
+
+<h4>15. <code>/insights</code> — 내 작업 습관 돌아보기</h4>
+<p>이번에는 코드가 아니라 사람을 리뷰해요. 이 컴퓨터의 최근 대화를 분석해 HTML 보고서를 만듭니다. 어떤 프로젝트에서 일하는지, Claude Code를 어떻게 쓰는지, 요청이 잘못 이해됐거나 버그가 난 지점이 어디인지, 써 볼 만한 기능이 무엇인지가 담겨요.</p>
+<pre><code>/insights      # 보고서는 ~/.claude/usage-data/report.html 에 저장</code></pre>
+<p>한 번에 아직 분석하지 않은 대화 200개까지 보고, 분석에 쓰인 토큰은 평소 사용량에 포함됩니다. 다른 기기나 claude.ai의 대화는 들어가지 않고 클라우드 세션에서는 쓸 수 없어요. 코드 리뷰보다 뜨끔할 때가 있습니다.</p>
+
+<h3>④ 실행·검증 — 띄우고, 확인하고, 진단하기</h3>
+
+<h4>16. <code>/run</code> — 앱을 실제로 띄워 보기</h4>
+<p>"테스트가 통과했다"에서 멈추지 않고 앱을 실제로 실행해 바뀐 부분이 동작하는 모습을 보여 줘요. 따로 설정하지 않아도 README, <code>package.json</code>, <code>Makefile</code> 같은 파일을 보고 실행 방법을 알아냅니다.</p>
+<pre><code>/run</code></pre>
+
+<h4>17. <code>/verify</code> — 의도대로 고쳐졌는지 확인</h4>
+<p>앱을 빌드하고 실행한 뒤 결과를 직접 보고 판단해요. 테스트나 타입 검사가 통과했다는 것만으로 끝내지 않습니다.</p>
+<pre><code>/verify
+/run-skill-generator      # 실행 절차가 복잡한 프로젝트라면 한 번 실행해 절차를 기록</code></pre>
+<p>데이터베이스나 환경 변수 파일이 필요한 프로젝트는 실행 방법을 추측하기 어려워요. <code>/run-skill-generator</code>를 프로젝트당 한 번 돌리면 성공한 설치 명령·환경 변수·실행 스크립트가 <code>.claude/skills/</code> 아래 스킬로 기록되고, 이후 <code>/run</code>과 <code>/verify</code>가 그 절차를 따릅니다. 스킬이 무엇인지는 <a href="/p/skl-overview/">스킬이란</a>을 보세요.</p>
+
+<h4>18. <code>/claude-in-chrome</code> — 실제 브라우저에서 일하기</h4>
+<p>내 Chrome에서 페이지를 테스트하고, 입력란을 채우고, 콘솔 로그를 읽어요. 시작할 때 Chrome 연동을 켰거나(<code>claude --chrome</code>) 확장 프로그램 설치가 허용된 환경에서 쓸 수 있습니다.</p>
+<pre><code>/claude-in-chrome 로그인 페이지에서 잘못된 비밀번호를 넣었을 때 오류 문구가 뜨는지 확인해 줘
+/chrome        # Chrome 연동 설정</code></pre>
+
+<h4>19. <code>/debug</code> — 세션 문제 진단</h4>
+<p>디버그 로그는 평소 꺼져 있다가 <code>/debug</code>를 치는 순간부터 기록되고, Claude가 그 로그를 읽어 원인을 찾아요. 증상을 뒤에 적으면 그 문제에 집중합니다.</p>
+<pre><code>/debug MCP 서버가 연결됐다가 바로 끊겨
+/doctor        # 설치·설정·확장·CLAUDE.md 문제는 이쪽</code></pre>
+
+<h4>20. <code>/claude-api</code> — 앱에 Claude 붙이기</h4>
+<p>내 앱에서 Claude API를 호출하는 코드를 쓸 때 쓰는 명령이에요. 프로젝트 언어에 맞는 Claude API와 Managed Agents 안내서를 불러옵니다. 코드에서 <code>anthropic</code>이나 <code>@anthropic-ai/sdk</code>를 import하면 자동으로 켜지기도 해요.</p>
+<pre><code>/claude-api migrate          # 기존 코드를 새 모델로 옮기기
+/claude-api cost-optimize    # API 비용이 어디서 나가는지 보고 줄일 방법 제안
+/claude-api build-eval       # 평가 세트 만들기</code></pre>
+
+<h3>처음이라면 이 네 개부터</h3>
+<p>스무 개가 많다면 네 개만 순서대로 써 보세요.</p>
+<pre><code>/init            # 1. 안내서를 만든다
+/run             # 2. 고친 뒤 실제로 띄워 본다
+/code-review     # 3. 버그를 잡는다
+/verify          # 4. 의도대로 동작하는지 확인한다</code></pre>
+<p>여기에 익숙해지면 어려운 작업 앞에서 <code>/effort high</code>를, 답이 흐려질 때 <code>/context</code>를 더하면 됩니다.</p>
+
+<h3>병렬로 돌리기 전에 알아 둘 것</h3>
+<p><code>/background</code>와 <code>/fork</code>로 여러 작업을 동시에 돌리면 편하지만 한도도 그만큼 빨리 닳아요. 공식 문서는 백그라운드 세션이 일반 세션과 같은 구독 사용량을 쓰기 때문에 <strong>열 개를 동시에 돌리면 한도가 약 열 배 빨리 줄어든다</strong>고 적고 있습니다. 백그라운드 세션은 내 컴퓨터에서 돌기 때문에 절전은 견디지만 컴퓨터를 끄면 멈춘다는 점도 기억해 두세요.</p>
+
+<h3>사실검증 노트</h3>
+<p class="scn-sub">20개 명령어의 동작·인수·별칭·필요 조건은 2026년 11월 24일에 공식 문서 <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">Commands</a>·<a href="https://code.claude.com/docs/en/model-config" target="_blank" rel="noopener">Model configuration</a>·<a href="https://code.claude.com/docs/en/advisor" target="_blank" rel="noopener">Advisor</a>·<a href="https://code.claude.com/docs/en/interactive-mode" target="_blank" rel="noopener">Interactive mode</a>·<a href="https://code.claude.com/docs/en/agent-view" target="_blank" rel="noopener">Agent view</a>·<a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Skills</a>·<a href="https://code.claude.com/docs/en/costs" target="_blank" rel="noopener">Costs</a>·<a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Memory</a>를 직접 읽어 확인했다. 기본 노력 수준(<code>medium</code>)과 수준별 권장 쓰임, <code>max</code>의 세션 한정 적용, 조언 모델의 등급 조건, <code>/insights</code>의 200개 한도와 저장 위치, 백그라운드 세션의 사용량 문구는 해당 문서의 서술을 옮긴 것이다. 조언자(advisor)와 에이전트 뷰(백그라운드 세션)는 각각 실험 기능·리서치 프리뷰로 표기돼 있어 동작이 바뀔 수 있다. 일부 인수는 최소 버전이 따로 있고(<code>/advisor</code>의 인수 형식은 v2.1.260 이상 등), 명령어는 요금제와 환경에 따라 보이지 않을 수 있다. 네 묶음 분류와 "처음이라면 네 개" 추천은 이 문서의 정리 방식이지 공식 분류가 아니다.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">분류</span> AI · Claude · Tip &middot; <span class="pr-k">생성일자</span> 2026-11-24 &middot; <span class="pr-k">수정일자</span> 2026-11-24</p>
+
+<nav class="pr-rel"><h2>연관 문서</h2>
+<ul><li><a href="/p/tip-beginner/">초급 — 컨텍스트를 아끼는 습관 9가지</a></li><li><a href="/p/claude-ship/">Claude Ship — PR을 머지까지 데려가는 세 에이전트, 쓰는 법과 장점</a></li><li><a href="/p/tip-advanced/">고급 — 병렬·자율·예약의 8가지</a></li><li><a href="/p/plc-popular-2026h2/">2026년 하반기 인기 플러그인 — 공식 디렉터리 상위권과 쓰는 법</a></li></ul>
+</nav>
+</body>
+</html>

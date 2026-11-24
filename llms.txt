@@ -2,7 +2,7 @@
 
 > Claude Code·플러그인·하네스·LLM Wiki·세컨드 브레인을 다루는 dewytear의 위키 — 한국어·영어·일본어 병행. AI(Claude)가 쓰고 사람이 큐레이션하는 공개 발행형 LLM Wiki이자 세컨드 브레인으로, 사람에게는 개념·관계로 이어진 지식 그래프와 Graph Studio를, AI에게는 llms.txt·knowledge-graph.json 기계 인터페이스를 함께 제공하는 RAG-ready 지식 정본.
 
-이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 81개 문서 · 330개 개념.
+이 위키는 문서를 **개념(concepts)** 과 **연관 문서(related)** 로 잇는 지식 그래프다. AI에게 업무를 줄 때 이곳을 먼저 참고하고 연관관계로 분석하도록, 아래 기계 판독용 파일과 순회 규칙을 제공한다. 계층: World → Domain → System → Document. 현재 82개 문서 · 331개 개념.
 
 License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 밝히면 자유롭게 인용·재사용할 수 있다.
 
@@ -12,8 +12,8 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - 정적 스냅샷 `https://dewytear.github.io/p/<name>/`(English는 `https://dewytear.github.io/p/en/<name>/`, 日本語는 `https://dewytear.github.io/p/ja/<name>/`): JS 없이 읽히는 문서 페이지 — 그래프 노드의 `page` 필드가 같은 주소를 가리킨다.
 - [AI 순회 가이드](https://dewytear.github.io/docs/ko/ai/map/ai-guide): 그래프를 어떻게 질의·순회·분석하는지의 계약(노드·엣지·개념 조인·계층).
 - [지식 인덱스](https://dewytear.github.io/data/knowledge-index.ko.json) · [내비 트리](https://dewytear.github.io/list) · [문서 날짜](https://dewytear.github.io/data/doc-dates.json) · [Atom 피드](https://dewytear.github.io/feed.xml)
-- English: 81/81개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
-- 日本語: 81/81개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
+- English: 82/82개 문서에 English 본문이 있다 — 아래 목록의 [EN] 링크, 경로는 docs/en/<같은 상대 경로>.
+- 日本語: 82/82개 문서에 日本語 본문이 있다 — 아래 목록의 [JA] 링크, 경로는 docs/ja/<같은 상대 경로>.
 
 ## 지식 체계 (AI · Wiki · 지식 체계)
 - [지식은 어떻게 쌓이는가](https://dewytear.github.io/docs/ko/ai/wiki/knowledge-system/kgs-overview): World→Domain→System→Document 4계층과 문서 등재 파이프라인 — 불변 ID·물리 경로·결정론적 인덱스 빌드 · [EN](https://dewytear.github.io/docs/en/ai/wiki/knowledge-system/kgs-overview) · [JA](https://dewytear.github.io/docs/ja/ai/wiki/knowledge-system/kgs-overview)
@@ -92,6 +92,7 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [초급 — 컨텍스트를 아끼는 습관 9가지](https://dewytear.github.io/docs/ko/ai/claude/tip/tip-beginner): Claude Code 입문 팁 9가지를 공식 문서와 대조해 정리 — /init으로 CLAUDE.md 생성, 스테이터스 라인, 컨텍스트 작게 유지, /context로 토큰 하마 찾기, /compact vs /clear, 플랜 모드(auto 기본값 시대의 의미), 문제로 묻기, 95% 되묻기 프롬프트, 투두 자가 점검 · [EN](https://dewytear.github.io/docs/en/ai/claude/tip/tip-beginner) · [JA](https://dewytear.github.io/docs/ja/ai/claude/tip/tip-beginner)
 - [중급 — 세션을 시스템으로 만드는 11가지](https://dewytear.github.io/docs/ko/ai/claude/tip/tip-intermediate): 반복을 시스템에 옮기는 중급 팁 11가지 — 서브에이전트 병렬(독립 컨텍스트·요약 보고), 나만의 스킬 만들기, 서브에이전트에 Haiku 분업, CLAUDE.md 150~200줄 상한 갱신 습관, CLAUDE.md 라우터, 중간에 끊기(Esc), 닦달 후 기록, /rewind 체크포인트, 훅 알림, 이미지 입력, 스크린샷 템플릿 · [EN](https://dewytear.github.io/docs/en/ai/claude/tip/tip-intermediate) · [JA](https://dewytear.github.io/docs/ja/ai/claude/tip/tip-intermediate)
 - [고급 — 병렬·자율·예약의 8가지](https://dewytear.github.io/docs/ko/ai/claude/tip/tip-advanced): 병렬·자율·예약 고급 팁 8가지 + 자기승인 편향 — claude --worktree로 충돌 없는 병렬 세션, MCP 대신 API 직접 호출(컨텍스트 비용), /loop·데스크톱 예약 작업·클라우드 루틴의 3계층 예약, claude remote-control 폰 원격 조종, DB 자연어 질의, ultrathink와 OMC ralplan(합의 기반 계획), settings.json 권한 편집(auto 모드의 hard deny), 서브에이전트 vs 에이전트 팀(+OMC team 모드). 역할을 나누는 이유로 자기승인(self-preference) 편향을 다룬다 — 자기 출력을 알아보는 능력과 자기 선호가 선형 상관하고, 한 에이전트의 계획→실행→검증은 그 편향이 루프가 된다. 모델을 바꿔도 동조·에코 챔버가 남으므로 계획자→설계자→검증자 반려 경로 + 검증자에게 반박을 맡기는 두 겹 대응이 필요하다 · [EN](https://dewytear.github.io/docs/en/ai/claude/tip/tip-advanced) · [JA](https://dewytear.github.io/docs/ja/ai/claude/tip/tip-advanced)
+- [명령어 20선 — 시작·작업·리뷰·실행 순서로 익히는 슬래시 명령어](https://dewytear.github.io/docs/ko/ai/claude/tip/tip-commands): Claude Code의 슬래시 명령어 20개를 쓰는 순서대로 네 묶음(시작·작업 중·리뷰·실행과 검증)으로 나눠, 각각 무엇을 하는지와 그대로 따라 칠 수 있는 예제를 붙인 실용 정리. 시작 묶음은 /init(CLAUDE.md 생성, 200줄 이하 권장)·/model(줄임 이름과 opusplan)·/effort(다섯 단계, 최신 모델 기본값 medium, 버그 수정엔 high)·/advisor(더 강한 모델의 조언, 실험 기능)·/context(/compact와 /clear의 구분)를, 작업 중 묶음은 /btw(이력에 남지 않는 곁가지 질문, 도구 없음)·/background·/fork(워크트리 격리)·/tasks·/resume을, 리뷰 묶음은 /diff·/code-review(--fix·--comment·ultra)·/security-review·/autofix-pr·/insights(작업 습관 보고서)를, 실행 묶음은 /run·/verify(/run-skill-generator로 실행 절차 기록)·/claude-in-chrome·/debug(/doctor와 구분)·/claude-api를 다룬다. 처음 쓰는 사람을 위한 네 개(/init → /run → /code-review → /verify)와, 백그라운드 세션 열 개가 한도를 약 열 배 빨리 쓴다는 주의를 덧붙였다. 모든 동작은 2026-11-24 공식 문서로 확인했다 · [EN](https://dewytear.github.io/docs/en/ai/claude/tip/tip-commands) · [JA](https://dewytear.github.io/docs/ja/ai/claude/tip/tip-commands)
 
 ## GraphDB (AI · GraphDB)
 - [오라클 온톨로지와 프로퍼티 그래프 — 테이블을 지식의 지도로](https://dewytear.github.io/docs/ko/ai/graphdb/news-20260710-oracle-ontology-property-graph): 오라클의 온톨로지·프로퍼티 그래프 접근을 정리 — RDF vs 프로퍼티 그래프, 메타데이터 뷰 그래프 생성, PGQL·SQL/PGQ 멀티홉·순환 질의, 그래프 알고리즘, Select AI 자연어 질의를 공식 문서 확인과 도식·용어 사전으로 설명 · [EN](https://dewytear.github.io/docs/en/ai/graphdb/news-20260710-oracle-ontology-property-graph) · [JA](https://dewytear.github.io/docs/ja/ai/graphdb/news-20260710-oracle-ontology-property-graph)
@@ -135,14 +136,15 @@ License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) — 출처를 
 - [발송엔진 구현 요청 — 개요·요청 사항·인터페이스](https://dewytear.github.io/docs/ko/douzone/dev-center/proposal/ai-noti-send-engine/sne-overview): 발송엔진의 책임 경계와 개요, 멱등·재시도·DLQ 등 구현 요청 사항, 인터페이스 선확정과 기대효과까지 한 편에 · [EN](https://dewytear.github.io/docs/en/douzone/dev-center/proposal/ai-noti-send-engine/sne-overview) · [JA](https://dewytear.github.io/docs/ja/douzone/dev-center/proposal/ai-noti-send-engine/sne-overview)
 
 ## 허브 문서 (가장 많이 참조됨 — 분석 진입점)
-- [graphify — 코드베이스를 지식 그래프로 바꿔 grep 대신 질의하게 하는 스킬](https://dewytear.github.io/docs/ko/ai/claude/skills/sks-graphify): 피참조 13회
+- [graphify — 코드베이스를 지식 그래프로 바꿔 grep 대신 질의하게 하는 스킬](https://dewytear.github.io/docs/ko/ai/claude/skills/sks-graphify): 피참조 14회
 - [하네스가 점수를 바꾼다는 증거 — Microsoft 백서와 RHO·HarnessPro 연구를 겹쳐 읽기](https://dewytear.github.io/docs/ko/ai/claude/code/harness/hns-evidence): 피참조 9회
 - [Claude Opus 5 — 절반 가격의 준(準)-Fable이 왔다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260724-claude-opus-5): 피참조 9회
 - [내 한도를 누가 쓰고 있나 — Claude 사용량의 세 장면](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260901-whose-usage): 피참조 8회
+- [명령어 20선 — 시작·작업·리뷰·실행 순서로 익히는 슬래시 명령어](https://dewytear.github.io/docs/ko/ai/claude/tip/tip-commands): 피참조 7회
 - [Claude 헌장 — 모델에게 자신을 무엇이라 말해 주는가](https://dewytear.github.io/docs/ko/ai/claude/code/claude-md/claude-md-constitution): 피참조 6회
 - [첫 실행과 동작 구조](https://dewytear.github.io/docs/ko/ai/claude/plugin/harness/hnp-first-run): 피참조 6회
-- [묻지 않는 기본값 — 승인 버튼과 세션이 같은 주에 사라졌다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260814-auto-mode-stateless-mcp): 피참조 6회
-- [판정을 누구에게 맡길 것인가 — 8월의 네 장면](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260820-who-makes-the-call): 피참조 6회
 - [부를 수 있는 목록 — 하네스 167종 순위표를 받아서 뜯어봤다](https://dewytear.github.io/docs/ko/ai/news/2026/news-20260922-harness-catalog): 피참조 6회
 - [Claude Duet 한눈에 — 먼저 말을 거는 에이전트와 세 칸짜리 승인 문](https://dewytear.github.io/docs/ko/ai/news/2026/news-20261022-claude-duet): 피참조 6회
+- [OMC — 소개와 설치](https://dewytear.github.io/docs/ko/ai/claude/plugin/omc/omc-intro): 피참조 6회
+- [2026년 하반기 인기 플러그인 — 공식 디렉터리 상위권과 쓰는 법](https://dewytear.github.io/docs/ko/ai/claude/plugin/catalog/plc-popular-2026h2): 피참조 6회
 - [레벨 3~5 — 의미·관계·브레인 OS](https://dewytear.github.io/docs/ko/ai/claude/code/second-brain/sb-level3): 피참조 6회

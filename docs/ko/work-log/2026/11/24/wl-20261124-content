@@ -21,3 +21,14 @@
                 <li><strong>메타데이터.</strong> list 노드 2개(tags 3언어, model Claude Fable 5.1), doc-entries 3언어(claude-ship 개념 11개·관계 3개 — prerequisite→welcome·skills, example-of→news-20260820-who-makes-the-call; sks-graphify 개념 17개·관계 3개 — prerequisite→skl-overview·skills·kgs-edges), 새 개념 <code>풀리퀘스트</code>·<code>승인정책</code>·<code>코드베이스</code>·<code>커뮤니티검출</code>의 en·ja 라벨, ai-map 3언어의 Introduction(2편→3편)·스킬 카탈로그(3편→4편) 절과 data-topics 갱신.</li>
                 <li><strong>검증.</strong> validate_design(도식 경계)·check_diagram_bounds(실제 렌더)·check_i18n_render를 돌리고 ko·en·ja 도식 스크린샷으로 확인했다. 플러그인 번들 동기 후 version 0.30.8로 상향.</li>
             </ul>
+
+            <h3>명령어 20선 문서 등재 (3언어) — 슬래시 명령어를 쓰는 순서대로</h3>
+            <p>
+                Claude Code에서 알아야 할 명령어 20개를 정리한 글을 받아, 잘 정리·보완해 Claude 섹션에 등재하되 알기 쉽게 설명하고 예제를 달라는 지시를 받았다. AI › Claude › Tip의 네 번째 문서 <a href="#!tip-commands">명령어 20선 — 시작·작업·리뷰·실행 순서로 익히는 슬래시 명령어</a>로 넣었다. 변경 유형은 CONTENT + PLUGIN(번들 동기).
+            </p>
+            <ul>
+                <li><strong>구성.</strong> 명령어 치는 법 → 네 묶음 도식 → 20개 한눈 표 → 묶음별로 명령어마다 설명 + 예제 코드 블록 + 알아둘 점(모델 줄임 이름 표, 노력 수준 권장 쓰임 표 포함) → 처음이라면 네 개 → 병렬 실행 전 한도 주의 → 사실검증 노트. 도식 1개·표 3개·예제 블록 21개.</li>
+                <li><strong>바로잡은 것.</strong> 받은 글은 음성 전사라 오기가 섞여 있었다. 공식 Commands 문서와 대조해 <code>clauderc.md</code>→<code>CLAUDE.md</code>, Opus 3.5→5.5, <code>/insight</code>→<code>/insights</code>, <code>/auto-fix-pr</code>→<code>/autofix-pr</code>, <code>/cloud-in-chrome</code>→<code>/claude-in-chrome</code>, <code>/cloud-api</code>→<code>/claude-api</code>, <code>claude agent</code>→<code>claude agents</code>로 고쳤고, 본문에서 빠진 10번은 요약 목록의 <code>/resume</code>으로 채웠다. 요약 목록의 <code>/export</code>는 <code>/effort</code>의 오기로 판단했다.</li>
+                <li><strong>보완한 것.</strong> 노력 수준별 공식 권장 쓰임, 조언 모델 등급 조건과 어울리는 작업, <code>/btw</code>의 도구 제한, <code>/code-review --comment</code>, <code>/run-skill-generator</code>가 기록하는 내용, <code>/insights</code> 저장 경로, 백그라운드 세션이 컴퓨터를 끄면 멈춘다는 점을 공식 문서에서 더했다. 원 글의 채널명과 화자는 본문에 쓰지 않았다.</li>
+                <li><strong>메타데이터.</strong> list 노드(model Claude Fable 5.2), doc-entries 3언어(개념 13개, 관계 prerequisite→claude-ship), 새 개념 <code>노력수준</code>의 en·ja 라벨, ai-map 3언어 Tip 절(3편→4편)과 data-topics 갱신, 플러그인 version 0.30.9.</li>
+            </ul>

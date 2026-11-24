@@ -743,6 +743,19 @@
   "summary": "Eight tips for parallel, autonomous, scheduled work, plus self-approval bias — collision-free parallel sessions with claude --worktree, calling APIs directly instead of MCP (context cost), the three tiers of scheduling (/loop, desktop tasks, cloud Routines), phone remote control, natural-language database queries, ultrathink and OMC's consensus-based ralplan, editing permissions in settings.json (auto mode's hard denies), and subagents vs agent teams (plus OMC's team mode). The rationale for splitting roles is self-preference bias — the ability to recognize one's own output correlates linearly with favoring it, and a single agent running plan→execute→verify turns that bias into a loop. Swapping models leaves conformity and echo chambers, so the answer has two layers: a planner→designer→verifier return path, and assigning the verifier to refute"
  },
  {
+  "name": "tip-commands",
+  "title": "Twenty Commands — Slash Commands in the Order You Use Them",
+  "summary": "A practical guide to 20 Claude Code slash commands, split into four groups in the order you use them (start, while working, review, run and verify), each with a plain explanation and an example you can type as is. The start group covers /init (generates CLAUDE.md, keep it under 200 lines), /model (aliases and opusplan), /effort (five levels, medium by default on the latest models, high for bug fixes), /advisor (advice from a stronger model, experimental) and /context (when to use /compact versus /clear). The working group covers /btw (a side question kept out of the history, no tools), /background, /fork (worktree isolation), /tasks and /resume. The review group covers /diff, /code-review (--fix, --comment, ultra), /security-review, /autofix-pr and /insights (a report on your working habits). The run group covers /run, /verify (with /run-skill-generator to record the launch recipe), /claude-in-chrome, /debug (versus /doctor) and /claude-api. It ends with four commands for newcomers (/init, /run, /code-review, /verify) and the caution that ten background sessions use quota about ten times as fast. Every behavior was checked against the official docs on 2026-11-24.",
+  "relations": [
+   {
+    "target": "claude-ship",
+    "type": "prerequisite",
+    "evidenceRef": "Section 12 explains the local /code-review command and then hands review, fixes and approval after a PR opens to the Claude Ship page; knowing these commands is what that page builds on",
+    "source": "human"
+   }
+  ]
+ },
+ {
   "name": "gdb-onto-concepts",
   "title": "What Is an Ontology — Not a Warehouse of Data but a Map of Meaning",
   "summary": "The concept questions enterprise practitioners ask most, organized as an FAQ — a database is a warehouse storing values while an ontology is a map defining meaning, relations, and rules (Gruber's 'explicit specification of a conceptualization', W3C OWL 2); the four essential components (core concepts, relations, data, rules); the semantic layer as an interpreter between legacy (ERP·CRM·MES) and generative AI (not a migration; Palantir's 'digital twin of an organization' as precedent); why better LLMs still need ontologies (hallucination — OG-RAG's +55% fact recall, a clinical QA study cutting hallucination 63%→1.7%, an ontology query language constraining the LLM's degrees of freedom); and the graph DB as just one of three stores (RDB·vector·graph) an ontology orchestrates",
