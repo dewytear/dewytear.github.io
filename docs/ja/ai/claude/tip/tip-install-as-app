@@ -1,0 +1,189 @@
+<h2>アーティファクトをアプリとしてインストールする — Install as app の使い方と三段階の権限</h2>
+
+<figure class="doc-img">
+    <img src="assets/ai/claude/tip/tip-install-as-app/hero.webp" width="1440" height="756"
+         alt="杏色の背景に手描き風の黒い線で描いたウィンドウが二つ重なり、手前の白いウィンドウの中央にマウスの矢印が置かれた絵">
+    <figcaption>Install as app 紹介記事の代表画像(画像: Anthropic)</figcaption>
+</figure>
+
+<p>Claude に「会議の準備ページを作って」と頼むと、会話の横に小さな Web 画面ができます。このように Claude が作ってくれる実行できる成果物を<strong>アーティファクト(artifact)</strong>と呼びます。これまでアーティファクトは Claude のウィンドウの中でしか開けませんでした。毎日使う道具なのに、使うたびに Claude を開いてその会話を探す必要がありました。</p>
+
+<p>2026年11月24日にベータで出た <strong>Install as app</strong> は、このアーティファクトを Mac と Windows にアプリとしてインストールできるようにします。インストールしたアプリは自分のアイコンと自分のウィンドウを持ち、許可すれば通知を送ったり、メニューバーに常駐したり、ファイルを扱ったりします。このページでは、作るところからインストール、権限の設定、組織の管理者設定までを使う順に整理しました。</p>
+
+<div class="note">
+    <span class="nh">このページについて(出典)</span>
+    · 根拠: Anthropic の発表記事 <a href="https://claude.com/resources/articles/install-as-app" target="_blank" rel="noopener">Turn artifacts into Mac and Windows apps</a>、Claude ヘルプ <a href="https://support.claude.com/en/articles/18516354-install-an-artifact-as-an-app" target="_blank" rel="noopener">Install an artifact as an app</a>・<a href="https://support.claude.com/en/articles/16994751-artifacts-admin-guide-for-team-and-enterprise-plans" target="_blank" rel="noopener">Artifacts admin guide</a>(2026-11-25 時点)。ベータなのでメニュー名や既定値は変わることがあります
+</div>
+
+<h3>ひと目で: 言葉で作り、押してインストールする</h3>
+<p>パッケージ化もコード署名も要りません。アプリは自分の Claude アカウントで動くので、API キーも別のログインもありません。流れは四段階です。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 196" role="img" aria-label="Install as app の流れ四段階。言葉で説明する(チャットで)、アーティファクトで試す(Claude の中で)、Install as app を選ぶ(タイトルメニューか共有)、アプリとして開く(自分のアイコンと窓)。アーティファクトを直すとインストールしたアプリも変わる">
+    <text class="d-label" x="360" y="24" text-anchor="middle">作ってから開くまでの四段階</text>
+    <rect class="d-box" x="20" y="48" width="150" height="62" rx="10"/>
+    <text class="d-label sm" x="95" y="74" text-anchor="middle">① 言葉で説明</text>
+    <text class="d-sub" x="95" y="94" text-anchor="middle">チャットで伝える</text>
+    <line class="d-edge" x1="170" y1="79" x2="189" y2="79"/>
+    <polygon class="d-arrow" points="187,75 195,79 187,83"/>
+    <rect class="d-box" x="197" y="48" width="150" height="62" rx="10"/>
+    <text class="d-label sm" x="272" y="74" text-anchor="middle">② まず試す</text>
+    <text class="d-sub" x="272" y="94" text-anchor="middle">Claude の中で確認</text>
+    <line class="d-edge" x1="347" y1="79" x2="366" y2="79"/>
+    <polygon class="d-arrow" points="364,75 372,79 364,83"/>
+    <rect class="d-box accent" x="374" y="48" width="150" height="62" rx="10"/>
+    <text class="d-label sm" x="449" y="74" text-anchor="middle">③ Install as app</text>
+    <text class="d-sub" x="449" y="94" text-anchor="middle">タイトルか共有から</text>
+    <line class="d-edge" x1="524" y1="79" x2="543" y2="79"/>
+    <polygon class="d-arrow" points="541,75 549,79 541,83"/>
+    <rect class="d-box accent" x="551" y="48" width="150" height="62" rx="10"/>
+    <text class="d-label sm" x="626" y="74" text-anchor="middle">④ アプリで開く</text>
+    <text class="d-sub" x="626" y="94" text-anchor="middle">専用アイコンと窓</text>
+    <path class="d-edge dash" d="M272,110 L272,142 L626,142 L626,116"/>
+    <polygon class="d-arrow" points="622,118 626,111 630,118"/>
+    <text class="d-sub" x="449" y="162" text-anchor="middle">同じアーティファクトなので、直せばアプリも変わる</text>
+    <text class="d-sub" x="360" y="186" text-anchor="middle">開くにはオンラインで Claude Desktop にログインしている必要がある</text>
+</svg>
+</div>
+
+<p>インストールしたアプリはアーティファクトの複製ではありません。同じアーティファクトを別のウィンドウで見せているので、自分やほかの編集者がアーティファクトを直すとアプリも変わります。アーティファクトと同じように Claude を呼び、自分のコネクタ(Claude につないだメールやカレンダーなどの外部サービス)も使います。</p>
+
+<h3>① 作る — 欲しいアプリを言葉で説明する</h3>
+<p>チャットに作りたいアプリを書きます。ヘルプが挙げる例はこういうものです。</p>
+<pre><code>メニューバーに常駐するポモドーロタイマーを作って
+1時間ごとにストレッチを促す小さな Mac アプリを作って
+フォルダ内の写真の名前を日付順に変える Windows アプリを作って</code></pre>
+<p>三つの例は必要な権限が違います。タイマーはメニューバー項目と通知を、ストレッチのリマインダーは通知を使い、写真の名前変更は自分のファイルに触れるので、いちばん高い段階であるフルアクセスが要ります。それぞれの意味は下の「三段階の権限」の節で扱います。</p>
+<p>Anthropic は社員がこの機能で作ったアプリも公開しました。レイヤー対応の画像エディタ、映画の小道具のように仕立てたファイルマネージャ、フォルダのルールを決めておくと Claude がファイルを整理するアプリ、Claude が横で説明してくれるターミナル、コンピュータの性能をメニューバーで見るアプリです。発表記事は日々の仕事の例として、カレンダーとメールを定期的に読み込む会議準備ページと、その日に出荷する注文のトラッカーを挙げています。</p>
+
+<h3>② インストールする</h3>
+<ol>
+    <li>Claude Desktop のメインウィンドウでアーティファクトを開きます。</li>
+    <li>アーティファクトのタイトルメニューを開くか、アーティファクトを右クリックします。</li>
+    <li><strong>Install as app</strong> を選びます。共有(Share)メニューにも同じ項目があります。</li>
+    <li><strong>Install</strong> を押して確定します。</li>
+</ol>
+<p>アーティファクトの中にインストールボタンを付けてほしいと Claude に頼むこともできます。どの道から入っても、Claude はインストールの前に確認を求めます。</p>
+<p>メニューに Install as app が見えないときは、まず Claude Desktop を更新してください。6.28899.0 以降が必要です。macOS は <code>Claude &gt; Check for Updates</code>、Windows はメニューボタン(☰)の下の <code>Help &gt; Check for Updates</code> です。Team・Enterprise プランなら、組織のオーナーが機能を有効にしているか確認します。</p>
+<p>ブラウザの「Dock に追加」「ショートカットを追加」「ホーム画面に追加」は別の機能です。ショートカットを作るだけで、ここで説明する通知やファイルへのアクセスはできません。</p>
+
+<h3>③ 開く・終了する</h3>
+<table>
+    <thead><tr><th>場所</th><th>開き方</th></tr></thead>
+    <tbody>
+        <tr><td><strong>macOS</strong></td><td>ホームフォルダのアプリケーションフォルダにある <strong>Claude Apps</strong> フォルダ。Spotlight やアプリランチャーからも見つかり、Dock アイコンを右クリックして <code>オプション &gt; Dock に追加</code>を選ぶと固定できる</td></tr>
+        <tr><td><strong>Windows</strong></td><td>スタートメニューの <strong>Claude Apps</strong> フォルダ、またはデスクトップのショートカット</td></tr>
+        <tr><td><strong>Claude Desktop</strong></td><td>アーティファクトの「Open installed app」、または <code>File &gt; Apps</code> でアプリを選んで「Open」</td></tr>
+    </tbody>
+</table>
+<p>メニューバー項目やシステムトレイのアイコンを持つアプリは、<strong>ウィンドウを閉じても動き続けます</strong>。完全に止めるには、macOS では Dock から終了するか、アプリがアクティブなときに Cmd+Q を押します。Windows ではトレイアイコンのメニューで「Exit」を選びます。</p>
+
+<h3>三段階の権限 — 何を許すかでアプリが変わる</h3>
+<p>この機能でいちばん丁寧に見ておきたい部分です。インストールしただけでは、アプリは自分のコンピュータに手を出せません。できることは、自分が許した分だけ増えます。</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 286" role="img" aria-label="三段階の権限。既定: ブラウザのタブと同じ範囲だけ、Claude を呼ぶ、コネクタを使う、尋ねずにできる。アプリ権限: 通知を送る、グローバルショートカット、ほかの窓の上に出る、メニューバー・トレイ項目、機能ごとに許可を尋ねる。フルアクセス: プログラムの実行、ファイルの読み取り・変更・削除、毎回は尋ねない、自分で作ったアプリだけ。右へ行くほどできることも危険も大きくなる">
+    <text class="d-label" x="360" y="26" text-anchor="middle">三段階の権限 — 許した分だけ動く</text>
+    <rect class="d-box soft" x="12" y="44" width="216" height="186" rx="12"/>
+    <text class="d-label" x="120" y="72" text-anchor="middle">既定</text>
+    <line class="d-edge dash" x1="32" y1="86" x2="208" y2="86"/>
+    <text class="d-label sm" x="120" y="112" text-anchor="middle">ブラウザのタブと同じ範囲</text>
+    <text class="d-label sm" x="120" y="138" text-anchor="middle">Claude を呼ぶ</text>
+    <text class="d-label sm" x="120" y="164" text-anchor="middle">コネクタを使う</text>
+    <text class="d-sub" x="120" y="220" text-anchor="middle">尋ねずにできる</text>
+    <rect class="d-box" x="252" y="44" width="216" height="186" rx="12"/>
+    <text class="d-label" x="360" y="72" text-anchor="middle">アプリ権限</text>
+    <line class="d-edge dash" x1="272" y1="86" x2="448" y2="86"/>
+    <text class="d-label sm" x="360" y="112" text-anchor="middle">通知を送る</text>
+    <text class="d-label sm" x="360" y="138" text-anchor="middle">全体ショートカット</text>
+    <text class="d-label sm" x="360" y="164" text-anchor="middle">ほかの窓の上に出る</text>
+    <text class="d-label sm" x="360" y="190" text-anchor="middle">メニューバー・トレイ</text>
+    <text class="d-sub" x="360" y="220" text-anchor="middle">機能ごとに許可を尋ねる</text>
+    <rect class="d-box accent" x="492" y="44" width="216" height="186" rx="12"/>
+    <text class="d-label" x="600" y="72" text-anchor="middle">フルアクセス</text>
+    <line class="d-edge dash" x1="512" y1="86" x2="688" y2="86"/>
+    <text class="d-label sm" x="600" y="112" text-anchor="middle">プログラムの実行</text>
+    <text class="d-label sm" x="600" y="138" text-anchor="middle">ファイルの読取・変更・削除</text>
+    <text class="d-label sm" x="600" y="164" text-anchor="middle">毎回は尋ねない</text>
+    <text class="d-sub" x="600" y="220" text-anchor="middle">自分で作ったアプリだけ</text>
+    <line class="d-edge accent" x1="40" y1="252" x2="672" y2="252"/>
+    <polygon class="d-arrow accent" points="670,247 680,252 670,257"/>
+    <text class="d-sub" x="360" y="274" text-anchor="middle">右へ行くほど、できることも、失敗したときの被害も大きくなる</text>
+</svg>
+</div>
+
+<p>アプリは下の機能を使う前に必ず尋ねなければならず、依頼ごとに「Allow」か「Don't allow」で答えます。</p>
+<table>
+    <thead><tr><th>権限</th><th>アプリにできること</th></tr></thead>
+    <tbody>
+        <tr><td><strong>通知</strong></td><td>ほかのアプリを使っている間も通知を出す</td></tr>
+        <tr><td><strong>キーボードショートカット</strong></td><td>ほかのアプリを使っている間も、決めたキーの組み合わせに反応する</td></tr>
+        <tr><td><strong>ほかのウィンドウの上に表示</strong></td><td>ほかのウィンドウの上に内容を描き、画面上のマウスカーソルの位置を読む</td></tr>
+        <tr><td><strong>メニューバー項目(macOS)・システムトレイのアイコン(Windows)</strong></td><td>アプリが開いている間、そこに項目を表示する</td></tr>
+        <tr><td><strong>このコンピュータへのフルアクセス</strong></td><td>プログラムを実行し、ファイルを読み、変更し、削除する。毎回は尋ねない。上の権限も含む</td></tr>
+    </tbody>
+</table>
+
+<p>許可にはいくつか決まりが付いています。</p>
+<ul>
+    <li><strong>許可はアプリの一つのバージョンにだけ有効です。</strong>アプリが更新されると Claude がもう一度尋ねます。自分で直した場合も同じです。逆に「Don't allow」は自分で変えるまで残ります。</li>
+    <li><strong>外から読み込むコードは、尋ねられないまま変わることがあります。</strong>アプリがほかのサイトのコードを読み込んでいる場合、その部分は新しい依頼なしに変わりえます。フルアクセスを与えたアプリでは特に気をつけたい点です。</li>
+    <li><strong>出どころがはっきりしないと警告が付きます。</strong>組織の外から来たアプリや、誰が作ったか Claude に分からないアプリは、権限の依頼画面に警告が出ます。</li>
+    <li><strong>フルアクセスは信頼できる作者にだけ開きます。</strong>組織外の人が一部でも書いたアプリ、作者を確認できないアプリは、基本的にフルアクセスを求めることもできません。個人プラン(Free・Pro・Max・Ultra)では「組織外」は自分以外のすべてのユーザーを指します。つまり個人ユーザーは、実質的に自分で作ったアプリにしかフルアクセスを与えられません。</li>
+</ul>
+<p>Anthropic はインストール前のアプリを審査しません。フルアクセスを持つアプリはどんなプログラムでも実行でき、ファイルを消すこともできるので、そのアプリを書いた全員を信頼できるときだけ許可してください。</p>
+<p>行動を危険の度合いで枠に分け、いちばん危険な枠は誰でも開けられないようにする作りは、このウィキが <a href="#!news-20261022-claude-duet">Claude Duet を一望する</a>で見た三段の承認ゲートと同じ設計です。Duet はその枠をエージェントの行動に引き、Install as app はアプリの権限に引きました。</p>
+
+<h3>権限の変更とアプリの削除</h3>
+<p>与えた権限はいつでも取り消せます。</p>
+<ul>
+    <li><strong>macOS</strong>: アプリを開いた状態でメニューバーのアプリ名をクリックし、「Permissions」を選びます。</li>
+    <li><strong>Windows</strong>: アプリのタイトルバーを右クリックするか Alt+Space を押し、「Permissions」を選びます。</li>
+    <li><strong>Claude Desktop</strong>: アプリが開いている間に <code>File &gt; Apps</code> でアプリを選び、「Permissions」を押します。</li>
+</ul>
+<p>フルアクセスを切るとアプリが再読み込みされたり閉じたりすることがあるので、先に作業を保存してください。アプリが起動したプログラムは止まりますが、アプリから自分で切り離れたプログラムは残ることがあります。アプリがすでに変えたファイルは元に戻りません。</p>
+<p>アプリを消すには <code>File &gt; Apps</code> でアプリを選び、「Uninstall」を押します。macOS ではアプリがゴミ箱に移り、Windows ではショートカットが消えます。消すと許可した権限もなくなりますが、<strong>アーティファクト自体は残ります</strong>。</p>
+
+<h3>プランと組織の設定</h3>
+<p>ベータはすべてのプランに順次開かれています。ただし既定値はプランごとに違います。</p>
+<table>
+    <thead><tr><th>対象</th><th>アプリのインストール</th><th>アプリ権限</th><th>フルアクセス</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Free・Pro・Max・Ultra</strong></td><td>利用可</td><td>利用可</td><td>自分で作ったアプリだけ</td></tr>
+        <tr><td><strong>Team</strong></td><td>既定でオン</td><td>既定でオン</td><td>既定でオフ(管理者がオンにする)</td></tr>
+        <tr><td><strong>Enterprise</strong></td><td>既定でオフ</td><td>既定でオフ</td><td>既定でオフ</td></tr>
+        <tr><td><strong>顧客管理の暗号鍵(CMEK)・組織全体の ZDR</strong></td><td colspan="3">三つともオフの状態で始まる</td></tr>
+        <tr><td><strong>HIPAA 対応構成・ハイブリッド展開</strong></td><td colspan="3">オンにできない</td></tr>
+        <tr><td><strong>K-12 の教育組織</strong></td><td colspan="2">組織によってはオフの状態で始まる</td><td>オンにできない</td></tr>
+    </tbody>
+</table>
+<p>ZDR はゼロデータ保持(zero data retention)の略で、サービス側に会話の内容を残さないという契約条件です。<strong>インストールしたアプリは ZDR の対象になりません</strong>。管理者はこの点を押さえておく必要があります。</p>
+<p>Team・Enterprise の管理者は <code>Organization settings &gt; Artifacts</code> で三つの設定(Install as app、App permissions、Full access to the computer)を別々に切り替えます。変更が行き渡るまで1時間ほどかかります。設定を切ると開いていたアプリは閉じ、アプリが起動したプログラムも止まります。インストール済みのアプリとユーザーが与えた権限は残り、設定を戻すとまた動きます。</p>
+<p>会社のコンピュータで個人アカウントまで止めたいときは、デバイスポリシー(MDM、会社が社員の端末設定を遠隔で管理する仕組み)を使います。キーは三つあり、機能を切ることしかできません。組織の設定とデバイスポリシーが食い違うときは、厳しいほうが適用されます。</p>
+<pre><code>isArtifactAppsEnabled             # false でインストールしたアプリ全体を切る
+isArtifactAppPermissionsEnabled   # false でアプリ権限とフルアクセスを切る
+isArtifactAppFullAccessEnabled    # false でフルアクセスだけを切る
+
+# macOS: com.anthropic.claudefordesktop ドメインのコンピュータレベルのプロファイル
+# Windows: HKLM\SOFTWARE\Policies\Claude に DWORD 0</code></pre>
+<p>監査の記録には穴があります。アプリを開いたこととアクセス確認は Compliance API にアーティファクトの閲覧として残りますが、<strong>インストール、権限の依頼への答え、アプリがコンピュータ上でしたこと、三つの設定の変更は記録されません</strong>。フルアクセスを組織に開く前に検討しておきたい点です。</p>
+
+<h3>使う前に知っておくこと</h3>
+<ul>
+    <li><strong>Mac と Windows だけです。</strong>Linux、Web、モバイルではアプリを使えません。</li>
+    <li><strong>オフラインでは開けません。</strong>オンラインで Claude Desktop にログインしている必要があります。</li>
+    <li><strong>利用上限を使います。</strong>アプリを作ることも、アプリが Claude に送るリクエストも、自分のプランの上限から引かれます。定期的に Claude を呼ぶアプリをいくつも動かせば、その分だけ上限が減ります。</li>
+    <li><strong>インストールできないアーティファクトがあります。</strong>Docs・Slides・Sheets のようにテンプレートから作ったアーティファクト、旧形式のアーティファクト、Claude Cowork のライブアーティファクトは対象外です。</li>
+    <li><strong>共有が切れるとアプリも止まります。</strong>オーナーが共有をやめると、アプリが起動したプログラムも止まります。これには20分ほどかかることがあり、オフラインやログアウト中はもっとかかります。</li>
+    <li><strong>コンピュータ操作機能とは半分だけかみ合います。</strong>macOS で Claude がコンピュータを操作するとき、インストールしたアプリを見ることはできますが、クリックや入力はできません。</li>
+</ul>
+
+<h3>はじめてなら、この順で</h3>
+<ol>
+    <li>すでに毎日開いているアーティファクトを一つ選んでインストールします。権限を何も与えない既定の状態で数日使ってみてください。</li>
+    <li>通知が欲しくなったら、そのとき通知だけを許可します。アプリ権限は機能ごとに尋ねられるので、必要なものだけ開ければ足ります。</li>
+    <li>フルアクセスは、自分で作ったアプリで、ファイルを扱うことがそのアプリの目的であるときだけ与えます。与える前に、アプリが外部サイトのコードを読み込んでいないか Claude に聞いてみてください。</li>
+</ol>
+
+<h3>ファクトチェックのメモ</h3>
+<p class="scn-sub">代表画像は Anthropic の発表記事の共有用画像で、リポジトリに webp として保存して掲載した。公開日(2026年11月24日)、ベータ表記、専用のアイコンとウィンドウ、Claude とコネクタの利用、自動更新、パッケージ化と API キーが不要な点、社員が作った五つのアプリ、会議準備ページと注文トラッカーの例は Anthropic の発表記事 <a href="https://claude.com/resources/articles/install-as-app" target="_blank" rel="noopener">Turn artifacts into Mac and Windows apps</a> に従った。インストール・起動・終了の手順、五つの権限とバージョンごとの再確認、外部コードと警告表示、フルアクセスの作者条件、権限の変更と削除、必要バージョン(6.28899.0)、利用上限、現在の制限は Claude ヘルプ <a href="https://support.claude.com/en/articles/18516354-install-an-artifact-as-an-app" target="_blank" rel="noopener">Install an artifact as an app</a> による。プラン別の既定値、CMEK と ZDR、HIPAA とハイブリッド、K-12、デバイスポリシーの三つのキー、設定の反映時間、Compliance API の記録範囲は <a href="https://support.claude.com/en/articles/16994751-artifacts-admin-guide-for-team-and-enterprise-plans" target="_blank" rel="noopener">Artifacts admin guide for Team and Enterprise plans</a> による。三つとも2026年11月25日(KST)に直接読んだ。<strong>権限を「三段階」にまとめるのは発表記事の分け方(既定・アプリ権限・フルアクセス)で、ヘルプは同じ内容を五つの権限として書いている。</strong>本文は両方を図と表で載せた。発表記事は対象を「すべてのプラン」、ヘルプは Free・Pro・Max・Ultra・Team・Enterprise と書いており、食い違いはない。三つの例文に必要な権限を対応させた部分と「はじめてなら、この順で」の順序はこのページの整理であり、公式の推奨ではない。社員が作ったアプリの名前とリンクは載せていない。ベータ機能なので、メニュー名・既定値・制限は変わることがある。</p>

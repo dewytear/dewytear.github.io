@@ -756,6 +756,19 @@
   ]
  },
  {
+  "name": "tip-install-as-app",
+  "title": "Installing an Artifact as an App — How to Use Install as app, and Its Three Permission Levels",
+  "summary": "A practical guide to Install as app, released in beta on November 24, 2026, in the order you would use it. Installing a Claude artifact as a Mac or Windows app gives it its own icon and window; it is the same artifact, so edits change the app too, and it keeps using Claude and your connectors (no packaging or API key, Claude Desktop 6.28899.0 or later, online and signed in). The page covers three example prompts, the four install steps, how to open apps on macOS, Windows and from Claude Desktop, and how to quit them fully. Permissions come in three levels (default: what a browser tab can do / app permissions: notifications, global shortcuts, floating over other windows, a menu bar or tray item / full access: running programs and reading, changing or deleting files). An Allow is re-asked for every version while a Don't allow stays, code loaded from elsewhere can change without a new request, and on individual plans full access is in practice limited to apps you made. It also lays out plan defaults (Team on with full access off, Enterprise all off, CMEK and organization-wide ZDR starting off, HIPAA-ready and hybrid unable to turn it on), the three organization settings and three device policy (MDM) keys, the fact that installed apps are not covered by ZDR, the audit gap where installs, permission answers and app actions are not logged in the Compliance API, no Linux, web or mobile, template artifacts that can't be installed, and usage limits, and ends with a three-step order for newcomers",
+  "relations": [
+   {
+    "target": "news-20261022-claude-duet",
+    "type": "example-of",
+    "evidenceRef": "The 'Three permission levels' section presents this feature's structure, with actions sorted into tiers by risk and the riskiest tier closed to most callers, as another instance of the three-tier approval gate in that article: Duet draws the tiers around an agent's actions, Install as app around an app's permissions",
+    "source": "human"
+   }
+  ]
+ },
+ {
   "name": "gdb-onto-concepts",
   "title": "What Is an Ontology — Not a Warehouse of Data but a Map of Meaning",
   "summary": "The concept questions enterprise practitioners ask most, organized as an FAQ — a database is a warehouse storing values while an ontology is a map defining meaning, relations, and rules (Gruber's 'explicit specification of a conceptualization', W3C OWL 2); the four essential components (core concepts, relations, data, rules); the semantic layer as an interpreter between legacy (ERP·CRM·MES) and generative AI (not a migration; Palantir's 'digital twin of an organization' as precedent); why better LLMs still need ontologies (hallucination — OG-RAG's +55% fact recall, a clinical QA study cutting hallucination 63%→1.7%, an ontology query language constraining the LLM's degrees of freedom); and the graph DB as just one of three stores (RDB·vector·graph) an ontology orchestrates",

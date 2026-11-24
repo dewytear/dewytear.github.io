@@ -1,0 +1,189 @@
+<h2>아티팩트를 앱으로 설치하기 — Install as app 쓰는 법과 권한 세 단계</h2>
+
+<figure class="doc-img">
+    <img src="assets/ai/claude/tip/tip-install-as-app/hero.webp" width="1440" height="756"
+         alt="살구색 배경 위에 손으로 그린 듯한 검은 선의 창 두 개가 겹쳐 있고, 앞쪽 흰 창 한가운데에 마우스 화살표가 놓인 그림">
+    <figcaption>Install as app 소개 글의 대표 이미지 (이미지: Anthropic)</figcaption>
+</figure>
+
+<p>Claude에게 "회의 준비 페이지 만들어 줘"라고 하면 대화 옆에 작은 웹 화면이 생겨요. 이렇게 Claude가 만들어 주는 실행 가능한 결과물을 <strong>아티팩트(artifact)</strong>라고 부릅니다. 지금까지 아티팩트는 Claude 창 안에서만 열렸어요. 매일 쓰는 도구인데도 쓸 때마다 Claude를 열고 그 대화를 찾아가야 했습니다.</p>
+
+<p>2026년 11월 24일 베타로 나온 <strong>Install as app</strong>은 이 아티팩트를 Mac과 Windows에 앱으로 설치하게 해 줍니다. 설치한 앱은 자기 아이콘과 자기 창을 갖고, 허락을 받으면 알림을 보내거나 메뉴 막대에 올라가거나 내 파일을 다룹니다. 이 문서는 만들기부터 설치, 권한 설정, 조직 관리자 설정까지 쓰는 순서대로 정리했어요.</p>
+
+<div class="note">
+    <span class="nh">문서 정보 (출처)</span>
+    · 근거: Anthropic 발표문 <a href="https://claude.com/resources/articles/install-as-app" target="_blank" rel="noopener">Turn artifacts into Mac and Windows apps</a>, Claude 도움말 <a href="https://support.claude.com/en/articles/18516354-install-an-artifact-as-an-app" target="_blank" rel="noopener">Install an artifact as an app</a>·<a href="https://support.claude.com/en/articles/16994751-artifacts-admin-guide-for-team-and-enterprise-plans" target="_blank" rel="noopener">Artifacts admin guide</a> (2026-11-25 기준) — 베타라서 메뉴 이름과 기본값이 바뀔 수 있습니다
+</div>
+
+<h3>한눈에: 말로 만들고, 눌러서 설치한다</h3>
+<p>패키징도 코드 서명도 필요 없어요. 앱은 내 Claude 계정으로 돌기 때문에 API 키나 별도 로그인도 없습니다. 흐름은 네 단계예요.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 196" role="img" aria-label="Install as app의 흐름 네 단계. 말로 설명한다(채팅에서 앱을 묘사), 아티팩트로 써 본다(Claude 창 안에서 확인), Install as app을 누른다(제목 메뉴 또는 공유 메뉴), 앱으로 연다(자기 아이콘과 자기 창). 아티팩트를 고치면 설치한 앱도 함께 바뀐다">
+    <text class="d-label" x="360" y="24" text-anchor="middle">만들기에서 열기까지 네 단계</text>
+    <rect class="d-box" x="20" y="48" width="150" height="62" rx="10"/>
+    <text class="d-label sm" x="95" y="74" text-anchor="middle">① 말로 설명</text>
+    <text class="d-sub" x="95" y="94" text-anchor="middle">채팅에서 앱을 묘사</text>
+    <line class="d-edge" x1="170" y1="79" x2="189" y2="79"/>
+    <polygon class="d-arrow" points="187,75 195,79 187,83"/>
+    <rect class="d-box" x="197" y="48" width="150" height="62" rx="10"/>
+    <text class="d-label sm" x="272" y="74" text-anchor="middle">② 아티팩트로 써 보기</text>
+    <text class="d-sub" x="272" y="94" text-anchor="middle">Claude 창 안에서 확인</text>
+    <line class="d-edge" x1="347" y1="79" x2="366" y2="79"/>
+    <polygon class="d-arrow" points="364,75 372,79 364,83"/>
+    <rect class="d-box accent" x="374" y="48" width="150" height="62" rx="10"/>
+    <text class="d-label sm" x="449" y="74" text-anchor="middle">③ Install as app</text>
+    <text class="d-sub" x="449" y="94" text-anchor="middle">제목 메뉴 또는 공유</text>
+    <line class="d-edge" x1="524" y1="79" x2="543" y2="79"/>
+    <polygon class="d-arrow" points="541,75 549,79 541,83"/>
+    <rect class="d-box accent" x="551" y="48" width="150" height="62" rx="10"/>
+    <text class="d-label sm" x="626" y="74" text-anchor="middle">④ 앱으로 열기</text>
+    <text class="d-sub" x="626" y="94" text-anchor="middle">자기 아이콘, 자기 창</text>
+    <path class="d-edge dash" d="M272,110 L272,142 L626,142 L626,116"/>
+    <polygon class="d-arrow" points="622,118 626,111 630,118"/>
+    <text class="d-sub" x="449" y="162" text-anchor="middle">같은 아티팩트라서, 고치면 설치한 앱도 함께 바뀐다</text>
+    <text class="d-sub" x="360" y="186" text-anchor="middle">앱을 열려면 온라인 상태로 Claude Desktop에 로그인해 있어야 한다</text>
+</svg>
+</div>
+
+<p>설치한 앱은 아티팩트의 복사본이 아니에요. 같은 아티팩트를 다른 창으로 보여 주는 것이라, 나나 다른 편집자가 아티팩트를 고치면 앱도 바뀝니다. 아티팩트가 하던 대로 Claude를 부르고 내 커넥터(Claude에 연결해 둔 메일·캘린더 같은 외부 서비스)도 씁니다.</p>
+
+<h3>① 만들기 — 원하는 앱을 말로 설명한다</h3>
+<p>채팅에 만들고 싶은 앱을 적으면 됩니다. 도움말이 든 예시는 이런 식이에요.</p>
+<pre><code>메뉴 막대에 사는 뽀모도로 타이머를 만들어 줘
+한 시간마다 스트레칭하라고 알려 주는 작은 Mac 앱을 만들어 줘
+폴더 안의 사진 이름을 날짜순으로 바꿔 주는 Windows 앱을 만들어 줘</code></pre>
+<p>세 예시는 필요한 권한이 서로 달라요. 타이머는 메뉴 막대 항목과 알림을, 스트레칭 알리미는 알림을 쓰고, 사진 이름 바꾸기는 내 파일을 건드리니 가장 높은 단계인 전체 접근이 있어야 합니다. 어떤 권한이 있는지는 아래 "권한 세 단계" 절에서 다뤄요.</p>
+<p>Anthropic은 직원들이 이 기능으로 만든 앱도 공개했습니다. 레이어를 지원하는 이미지 편집기, 영화 소품처럼 꾸민 파일 관리자, 폴더 규칙을 정해 두면 Claude가 파일을 정리하는 앱, Claude가 옆에서 설명해 주는 터미널, 컴퓨터 성능을 메뉴 막대에서 보는 앱입니다. 발표문은 일상 업무 쪽 예로 캘린더와 메일을 주기적으로 읽어 오는 회의 준비 페이지와 오늘 출고할 주문 추적기를 들었어요.</p>
+
+<h3>② 설치하기</h3>
+<ol>
+    <li>Claude Desktop의 메인 창에서 아티팩트를 엽니다.</li>
+    <li>아티팩트의 제목 메뉴를 열거나 아티팩트를 오른쪽 클릭합니다.</li>
+    <li><strong>Install as app</strong>을 고릅니다. 공유(Share) 메뉴에도 같은 항목이 있어요.</li>
+    <li><strong>Install</strong>을 눌러 확인합니다.</li>
+</ol>
+<p>아티팩트 안에 설치 버튼을 넣어 달라고 Claude에게 부탁할 수도 있습니다. 어느 길로 가든 Claude는 설치 전에 확인을 받아요.</p>
+<p>메뉴에 Install as app이 안 보이면 먼저 Claude Desktop을 업데이트하세요. 6.28899.0 이상이어야 합니다. macOS는 <code>Claude &gt; Check for Updates</code>, Windows는 메뉴 버튼(☰) 아래 <code>Help &gt; Check for Updates</code>예요. Team·Enterprise 요금제라면 조직 소유자가 기능을 켰는지 물어봐야 합니다.</p>
+<p>브라우저의 "Dock에 추가", "바로 가기 추가", "홈 화면에 추가"는 다른 기능이에요. 바로 가기만 만들 뿐이라 여기서 설명하는 알림이나 파일 접근은 되지 않습니다.</p>
+
+<h3>③ 열기와 끄기</h3>
+<table>
+    <thead><tr><th>어디서</th><th>여는 법</th></tr></thead>
+    <tbody>
+        <tr><td><strong>macOS</strong></td><td>홈 폴더의 응용 프로그램 폴더 안 <strong>Claude Apps</strong> 폴더. Spotlight와 앱 런처에서도 찾을 수 있고, Dock 아이콘을 오른쪽 클릭해 <code>옵션 &gt; Dock에 유지</code>를 고르면 고정된다</td></tr>
+        <tr><td><strong>Windows</strong></td><td>시작 메뉴의 <strong>Claude Apps</strong> 폴더 또는 바탕 화면 바로 가기</td></tr>
+        <tr><td><strong>Claude Desktop</strong></td><td>아티팩트의 "Open installed app" 또는 <code>File &gt; Apps</code>에서 앱을 골라 "Open"</td></tr>
+    </tbody>
+</table>
+<p>메뉴 막대 항목이나 시스템 트레이 아이콘이 있는 앱은 <strong>창을 닫아도 계속 돕니다</strong>. 완전히 끄려면 macOS에서는 Dock에서 종료하거나 앱이 활성 상태일 때 Cmd+Q를 누르고, Windows에서는 트레이 아이콘 메뉴에서 "Exit"를 고르세요.</p>
+
+<h3>권한 세 단계 — 무엇을 허락하느냐에 따라 앱이 달라진다</h3>
+<p>이 기능에서 가장 신경 써서 볼 부분이에요. 설치만 해서는 앱이 내 컴퓨터에 손을 대지 못합니다. 무엇을 할 수 있는지는 내가 허락한 만큼만 늘어나요.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 286" role="img" aria-label="권한 세 단계. 기본: 브라우저 탭이 하는 만큼만, Claude 부르기, 커넥터 쓰기, 묻지 않고 된다. 앱 권한: 알림 보내기, 전역 단축키 듣기, 다른 창 위에 뜨기, 메뉴 막대·트레이 항목, 기능마다 허용을 묻는다. 전체 접근: 프로그램 실행, 파일 읽기·변경·삭제, 매번 묻지 않음, 내가 만든 앱에만 줄 수 있다. 오른쪽으로 갈수록 할 수 있는 일도 위험도 커진다">
+    <text class="d-label" x="360" y="26" text-anchor="middle">권한 세 단계 — 허락한 만큼만 한다</text>
+    <rect class="d-box soft" x="12" y="44" width="216" height="186" rx="12"/>
+    <text class="d-label" x="120" y="72" text-anchor="middle">기본</text>
+    <line class="d-edge dash" x1="32" y1="86" x2="208" y2="86"/>
+    <text class="d-label sm" x="120" y="112" text-anchor="middle">브라우저 탭이 하는 만큼만</text>
+    <text class="d-label sm" x="120" y="138" text-anchor="middle">Claude 부르기</text>
+    <text class="d-label sm" x="120" y="164" text-anchor="middle">커넥터 쓰기</text>
+    <text class="d-sub" x="120" y="220" text-anchor="middle">묻지 않고 된다</text>
+    <rect class="d-box" x="252" y="44" width="216" height="186" rx="12"/>
+    <text class="d-label" x="360" y="72" text-anchor="middle">앱 권한</text>
+    <line class="d-edge dash" x1="272" y1="86" x2="448" y2="86"/>
+    <text class="d-label sm" x="360" y="112" text-anchor="middle">알림 보내기</text>
+    <text class="d-label sm" x="360" y="138" text-anchor="middle">전역 단축키 듣기</text>
+    <text class="d-label sm" x="360" y="164" text-anchor="middle">다른 창 위에 뜨기</text>
+    <text class="d-label sm" x="360" y="190" text-anchor="middle">메뉴 막대·트레이 항목</text>
+    <text class="d-sub" x="360" y="220" text-anchor="middle">기능마다 허용을 묻는다</text>
+    <rect class="d-box accent" x="492" y="44" width="216" height="186" rx="12"/>
+    <text class="d-label" x="600" y="72" text-anchor="middle">전체 접근</text>
+    <line class="d-edge dash" x1="512" y1="86" x2="688" y2="86"/>
+    <text class="d-label sm" x="600" y="112" text-anchor="middle">프로그램 실행</text>
+    <text class="d-label sm" x="600" y="138" text-anchor="middle">파일 읽기·변경·삭제</text>
+    <text class="d-label sm" x="600" y="164" text-anchor="middle">매번 묻지 않음</text>
+    <text class="d-sub" x="600" y="220" text-anchor="middle">내가 만든 앱에만 줄 수 있다</text>
+    <line class="d-edge accent" x1="40" y1="252" x2="672" y2="252"/>
+    <polygon class="d-arrow accent" points="670,247 680,252 670,257"/>
+    <text class="d-sub" x="360" y="274" text-anchor="middle">오른쪽으로 갈수록 할 수 있는 일도, 잘못됐을 때의 피해도 커진다</text>
+</svg>
+</div>
+
+<p>앱은 아래 기능을 쓰기 전에 반드시 물어야 하고, 나는 요청마다 "Allow" 또는 "Don't allow"로 답합니다.</p>
+<table>
+    <thead><tr><th>권한</th><th>앱이 할 수 있는 일</th></tr></thead>
+    <tbody>
+        <tr><td><strong>알림</strong></td><td>다른 앱을 쓰는 중에도 알림을 띄운다</td></tr>
+        <tr><td><strong>키보드 단축키</strong></td><td>다른 앱을 쓰는 중에도 지정한 키 조합에 반응한다</td></tr>
+        <tr><td><strong>다른 창 위에 뜨기</strong></td><td>다른 창 위에 내용을 그리고, 화면에서 마우스 커서가 어디 있는지 읽는다</td></tr>
+        <tr><td><strong>메뉴 막대 항목(macOS)·시스템 트레이 아이콘(Windows)</strong></td><td>앱이 열려 있는 동안 그 자리에 항목을 보인다</td></tr>
+        <tr><td><strong>이 컴퓨터 전체 접근</strong></td><td>프로그램을 실행하고 내 파일을 읽고 바꾸고 지운다. 매번 묻지 않는다. 위 권한들도 함께 포함한다</td></tr>
+    </tbody>
+</table>
+
+<p>허락에는 규칙이 몇 가지 붙어 있어요.</p>
+<ul>
+    <li><strong>허용은 앱의 한 버전에만 유효합니다.</strong> 앱이 갱신되면 Claude가 다시 물어요. 내가 직접 고친 경우도 마찬가지입니다. 반대로 "Don't allow"는 내가 바꿀 때까지 그대로 남습니다.</li>
+    <li><strong>밖에서 불러오는 코드는 다시 묻지 않고 바뀔 수 있어요.</strong> 앱이 다른 사이트의 코드를 불러온다면 그 부분은 새 요청 없이 달라질 수 있습니다. 전체 접근을 준 앱이라면 특히 살펴야 할 지점이에요.</li>
+    <li><strong>출처가 불분명하면 경고가 붙습니다.</strong> 조직 밖에서 온 앱이거나 누가 만들었는지 Claude가 알 수 없으면 권한 요청 화면에 경고가 나와요.</li>
+    <li><strong>전체 접근은 믿을 수 있는 작성자에게만 열립니다.</strong> 조직 밖 사람이 일부라도 쓴 앱, 작성자를 확인할 수 없는 앱은 대체로 전체 접근을 요청조차 못 해요. 개인 요금제(Free·Pro·Max·Ultra)에서는 "조직 밖"이 나를 뺀 모든 사용자를 뜻합니다. 그러니 개인 사용자는 사실상 내가 만든 앱에만 전체 접근을 줄 수 있어요.</li>
+</ul>
+<p>Anthropic은 설치 전에 앱을 심사하지 않습니다. 전체 접근을 가진 앱은 어떤 프로그램이든 실행하고 내 파일을 지울 수 있으니, 그 앱을 쓴 사람을 모두 믿을 때만 허락하세요.</p>
+<p>행동을 위험한 정도에 따라 칸으로 나누고, 가장 위험한 칸은 아무나 열지 못하게 한 구조는 이 위키가 <a href="#!news-20261022-claude-duet">Claude Duet 한눈에</a>에서 본 세 칸짜리 승인 문과 같은 설계예요. Duet은 그 칸을 에이전트의 행동에 그었고, Install as app은 앱의 권한에 그었습니다.</p>
+
+<h3>권한 바꾸기와 앱 지우기</h3>
+<p>준 권한은 언제든 거둘 수 있어요.</p>
+<ul>
+    <li><strong>macOS</strong>: 앱을 연 상태에서 메뉴 막대의 앱 이름을 누르고 "Permissions"를 고릅니다.</li>
+    <li><strong>Windows</strong>: 앱의 제목 표시줄을 오른쪽 클릭하거나 Alt+Space를 누르고 "Permissions"를 고릅니다.</li>
+    <li><strong>Claude Desktop</strong>: 앱이 열려 있을 때 <code>File &gt; Apps</code>에서 앱을 고르고 "Permissions"를 누릅니다.</li>
+</ul>
+<p>전체 접근을 끄면 앱이 다시 로드되거나 닫힐 수 있으니 하던 일을 먼저 저장하세요. 앱이 띄운 프로그램은 멈추지만, 앱에서 스스로 떨어져 나간 프로그램은 남을 수 있어요. 앱이 이미 바꿔 놓은 파일은 되돌아오지 않습니다.</p>
+<p>앱을 지우려면 <code>File &gt; Apps</code>에서 앱을 고르고 "Uninstall"을 누릅니다. macOS에서는 앱이 휴지통으로 가고 Windows에서는 바로 가기가 지워져요. 지우면 허용했던 권한도 사라지지만 <strong>아티팩트 자체는 남습니다</strong>.</p>
+
+<h3>요금제와 조직 설정</h3>
+<p>베타는 모든 요금제에 차례로 열리고 있어요. 다만 기본값이 요금제마다 다릅니다.</p>
+<table>
+    <thead><tr><th>대상</th><th>앱 설치</th><th>앱 권한</th><th>전체 접근</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Free·Pro·Max·Ultra</strong></td><td>사용 가능</td><td>사용 가능</td><td>내가 만든 앱에만</td></tr>
+        <tr><td><strong>Team</strong></td><td>기본 켜짐</td><td>기본 켜짐</td><td>기본 꺼짐 (관리자가 켬)</td></tr>
+        <tr><td><strong>Enterprise</strong></td><td>기본 꺼짐</td><td>기본 꺼짐</td><td>기본 꺼짐</td></tr>
+        <tr><td><strong>고객 관리 암호화 키(CMEK)·조직 전체 ZDR</strong></td><td colspan="3">셋 다 꺼진 상태로 시작</td></tr>
+        <tr><td><strong>HIPAA 대응 구성·하이브리드 배포</strong></td><td colspan="3">켤 수 없음</td></tr>
+        <tr><td><strong>K-12 교육 조직</strong></td><td colspan="2">조직에 따라 꺼진 상태로 시작</td><td>켤 수 없음</td></tr>
+    </tbody>
+</table>
+<p>ZDR은 제로 데이터 보존(zero data retention)의 줄임말로, 서비스 쪽에 대화 내용을 남기지 않기로 한 계약 조건이에요. <strong>설치한 앱은 ZDR의 적용을 받지 않는다</strong>는 점을 관리자는 알아 둬야 합니다.</p>
+<p>Team·Enterprise 관리자는 <code>Organization settings &gt; Artifacts</code>에서 세 설정(Install as app, App permissions, Full access to the computer)을 따로 켜고 끕니다. 바꾼 설정이 퍼지는 데 한 시간쯤 걸려요. 설정을 끄면 열려 있던 앱이 닫히고 앱이 띄운 프로그램도 멈춥니다. 설치된 앱과 사용자가 준 권한은 남아 있다가 설정을 다시 켜면 살아나요.</p>
+<p>회사 컴퓨터에서 개인 계정까지 막으려면 기기 정책(MDM, 회사가 직원 기기 설정을 원격으로 관리하는 체계)을 씁니다. 키 세 개가 있고, 끄는 것만 됩니다. 조직 설정과 기기 정책이 다르면 더 엄격한 쪽이 적용돼요.</p>
+<pre><code>isArtifactAppsEnabled             # false면 설치한 앱 전체를 끈다
+isArtifactAppPermissionsEnabled   # false면 앱 권한과 전체 접근을 끈다
+isArtifactAppFullAccessEnabled    # false면 전체 접근만 끈다
+
+# macOS: com.anthropic.claudefordesktop 도메인의 컴퓨터 수준 프로파일
+# Windows: HKLM\SOFTWARE\Policies\Claude 에 DWORD 0</code></pre>
+<p>감사 기록에는 빈 곳이 있어요. 앱을 연 것과 접근 확인은 Compliance API에 아티팩트 조회로 남지만, <strong>설치, 권한 요청에 대한 답, 앱이 컴퓨터에서 한 일, 세 설정의 변경은 기록되지 않습니다</strong>. 전체 접근을 조직에 열기 전에 따져 볼 대목이에요.</p>
+
+<h3>쓰기 전에 알아 둘 것</h3>
+<ul>
+    <li><strong>Mac과 Windows만 됩니다.</strong> Linux, 웹, 모바일에서는 앱을 쓸 수 없어요.</li>
+    <li><strong>오프라인에서는 안 열립니다.</strong> 온라인 상태로 Claude Desktop에 로그인해 있어야 해요.</li>
+    <li><strong>사용 한도를 씁니다.</strong> 앱을 만드는 일도, 앱이 Claude에 보내는 요청도 내 요금제 한도에서 빠져요. 주기적으로 Claude를 부르는 앱을 여러 개 띄워 두면 그만큼 한도가 닳습니다.</li>
+    <li><strong>설치할 수 없는 아티팩트가 있어요.</strong> Docs·Slides·Sheets처럼 템플릿으로 만든 아티팩트, 옛 형식 아티팩트, Claude Cowork의 라이브 아티팩트는 설치되지 않습니다.</li>
+    <li><strong>공유가 끊기면 앱도 멈춥니다.</strong> 소유자가 공유를 거두면 앱이 띄운 프로그램도 멈추는데, 여기에 20분쯤 걸릴 수 있어요. 오프라인이거나 로그아웃 상태면 더 걸립니다.</li>
+    <li><strong>컴퓨터 사용 기능과는 반쪽만 맞물려요.</strong> macOS에서 Claude가 내 컴퓨터를 조작할 때 설치한 앱을 볼 수는 있지만 클릭하거나 입력하지는 못합니다.</li>
+</ul>
+
+<h3>처음이라면 이렇게</h3>
+<ol>
+    <li>이미 매일 여는 아티팩트 하나를 골라 설치합니다. 권한은 아무것도 주지 않은 기본 상태로 며칠 써 보세요.</li>
+    <li>알림이 필요해지면 그때 알림만 허용합니다. 앱 권한은 기능 하나씩 따로 물으니 필요한 것만 열면 돼요.</li>
+    <li>전체 접근은 내가 직접 만든 앱이고, 파일을 다루는 일이 그 앱의 목적일 때만 줍니다. 주기 전에 앱이 바깥 사이트의 코드를 불러오는지 Claude에게 물어보세요.</li>
+</ol>
+
+<h3>사실검증 노트</h3>
+<p class="scn-sub">대표 이미지는 Anthropic 발표문의 공유용 이미지이며 저장소에 webp로 저장해 실었다. 출시일(2026년 11월 24일)·베타 표기·자기 아이콘과 창·Claude와 커넥터 사용·자동 갱신·패키징과 API 키 불필요·직원이 만든 앱 다섯 가지·회의 준비 페이지와 주문 추적기 예시는 Anthropic 발표문 <a href="https://claude.com/resources/articles/install-as-app" target="_blank" rel="noopener">Turn artifacts into Mac and Windows apps</a>를 따랐다. 설치·열기·종료 절차, 권한 다섯 가지와 버전별 재확인, 외부 코드와 경고 표시, 전체 접근의 작성자 조건, 권한 변경과 삭제, 필요 버전(6.28899.0), 사용 한도, 현재 제한은 Claude 도움말 <a href="https://support.claude.com/en/articles/18516354-install-an-artifact-as-an-app" target="_blank" rel="noopener">Install an artifact as an app</a> 기준이다. 요금제별 기본값·CMEK와 ZDR·HIPAA와 하이브리드·K-12·기기 정책 키 세 개·설정 반영 시간·Compliance API 기록 범위는 <a href="https://support.claude.com/en/articles/16994751-artifacts-admin-guide-for-team-and-enterprise-plans" target="_blank" rel="noopener">Artifacts admin guide for Team and Enterprise plans</a> 기준이다. 세 문서 모두 2026년 11월 25일(KST)에 직접 읽었다. <strong>권한을 "세 단계"로 묶은 것은 발표문의 분류(기본·앱 권한·전체 접근)이고, 도움말은 같은 내용을 권한 다섯 가지로 나눠 적는다.</strong> 본문은 두 표현을 도식과 표로 함께 실었다. 발표문은 대상을 "모든 요금제"로, 도움말은 Free·Pro·Max·Ultra·Team·Enterprise로 적어 서로 맞는다. 세 예시 프롬프트에 필요한 권한을 짝지은 것과 "처음이라면 이렇게"의 순서는 이 문서의 정리이며 공식 권고가 아니다. 직원이 만든 앱의 이름과 링크는 싣지 않았다. 베타 기능이라 메뉴 이름·기본값·제한이 바뀔 수 있다.</p>

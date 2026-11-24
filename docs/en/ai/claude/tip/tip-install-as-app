@@ -1,0 +1,189 @@
+<h2>Installing an Artifact as an App — How to Use Install as app, and Its Three Permission Levels</h2>
+
+<figure class="doc-img">
+    <img src="assets/ai/claude/tip/tip-install-as-app/hero.webp" width="1440" height="756"
+         alt="Two overlapping windows drawn in rough black lines on an apricot background, with a mouse pointer in the middle of the white front window">
+    <figcaption>Lead image of the Install as app announcement (image: Anthropic)</figcaption>
+</figure>
+
+<p>Ask Claude to "make me a meeting prep page" and a small web screen appears next to the chat. A runnable result like this is called an <strong>artifact</strong>. Until now an artifact only opened inside Claude. Even for a tool you used every day, you had to open Claude and find that conversation each time.</p>
+
+<p><strong>Install as app</strong>, released in beta on November 24, 2026, lets you install an artifact as an app on Mac and Windows. An installed app gets its own icon and its own window. With your permission it can send notifications, sit in the menu bar, or work with your files. This page walks through it in the order you would use it: building, installing, setting permissions, and the settings an organization admin controls.</p>
+
+<div class="note">
+    <span class="nh">About this page (sources)</span>
+    · Based on Anthropic's announcement <a href="https://claude.com/resources/articles/install-as-app" target="_blank" rel="noopener">Turn artifacts into Mac and Windows apps</a> and the Claude Help Center articles <a href="https://support.claude.com/en/articles/18516354-install-an-artifact-as-an-app" target="_blank" rel="noopener">Install an artifact as an app</a> and <a href="https://support.claude.com/en/articles/16994751-artifacts-admin-guide-for-team-and-enterprise-plans" target="_blank" rel="noopener">Artifacts admin guide</a> (as of 2026-11-25). It is a beta, so menu names and defaults may change
+</div>
+
+<h3>At a glance: describe it, then click to install</h3>
+<p>You don't package or sign anything. The app runs on your Claude account, so there is no API key and no separate login. The flow has four steps.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 196" role="img" aria-label="The four steps of Install as app. Describe it (in a chat), try the artifact (inside Claude), choose Install as app (title menu or Share), open it as an app (own icon and window). Editing the artifact changes the installed app too">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Four steps from building to opening</text>
+    <rect class="d-box" x="20" y="48" width="150" height="62" rx="10"/>
+    <text class="d-label sm" x="95" y="74" text-anchor="middle">1. Describe it</text>
+    <text class="d-sub" x="95" y="94" text-anchor="middle">in a chat</text>
+    <line class="d-edge" x1="170" y1="79" x2="189" y2="79"/>
+    <polygon class="d-arrow" points="187,75 195,79 187,83"/>
+    <rect class="d-box" x="197" y="48" width="150" height="62" rx="10"/>
+    <text class="d-label sm" x="272" y="74" text-anchor="middle">2. Try the artifact</text>
+    <text class="d-sub" x="272" y="94" text-anchor="middle">inside Claude</text>
+    <line class="d-edge" x1="347" y1="79" x2="366" y2="79"/>
+    <polygon class="d-arrow" points="364,75 372,79 364,83"/>
+    <rect class="d-box accent" x="374" y="48" width="150" height="62" rx="10"/>
+    <text class="d-label sm" x="449" y="74" text-anchor="middle">3. Install as app</text>
+    <text class="d-sub" x="449" y="94" text-anchor="middle">title menu or Share</text>
+    <line class="d-edge" x1="524" y1="79" x2="543" y2="79"/>
+    <polygon class="d-arrow" points="541,75 549,79 541,83"/>
+    <rect class="d-box accent" x="551" y="48" width="150" height="62" rx="10"/>
+    <text class="d-label sm" x="626" y="74" text-anchor="middle">4. Open as an app</text>
+    <text class="d-sub" x="626" y="94" text-anchor="middle">own icon, own window</text>
+    <path class="d-edge dash" d="M272,110 L272,142 L626,142 L626,116"/>
+    <polygon class="d-arrow" points="622,118 626,111 630,118"/>
+    <text class="d-sub" x="449" y="162" text-anchor="middle">Same artifact: edit it and the installed app changes too</text>
+    <text class="d-sub" x="360" y="186" text-anchor="middle">To open an app you must be online and signed in to Claude Desktop</text>
+</svg>
+</div>
+
+<p>An installed app is not a copy of the artifact. It shows the same artifact in another window, so when you or another editor changes the artifact, the app changes too. It calls Claude and uses your connectors (outside services such as mail and calendar that you have linked to Claude) the same way the artifact does.</p>
+
+<h3>1. Build — describe the app you want</h3>
+<p>Write what you want in a chat. The Help Center gives examples like these.</p>
+<pre><code>Make a Pomodoro timer that lives in my menu bar.
+Make a small Mac app that reminds me to stretch every hour.
+Make a Windows app that renames the photos in a folder by date.</code></pre>
+<p>The three examples need different permissions. The timer uses a menu bar item and notifications, the stretch reminder uses notifications, and the photo renamer touches your files, so it needs the highest level, full access. The section "Three permission levels" below covers what each one means.</p>
+<p>Anthropic also showed apps its own staff built with the feature: a layered image editor, a file manager styled like a movie prop, an app that lets Claude tidy your files by folder rules, a terminal with Claude explaining alongside, and a menu bar app for watching your computer's performance. For everyday work, the announcement mentions a meeting prep page that regularly pulls from calendar and email, and a tracker for the orders that need to ship that day.</p>
+
+<h3>2. Install</h3>
+<ol>
+    <li>Open the artifact in the main Claude Desktop window.</li>
+    <li>Open the artifact's title menu, or right-click the artifact.</li>
+    <li>Select <strong>Install as app</strong>. The same item is under Share.</li>
+    <li>Select <strong>Install</strong> to confirm.</li>
+</ol>
+<p>You can also ask Claude to put an install button inside the artifact. Whichever path you take, Claude asks you to confirm before installing.</p>
+<p>If you don't see Install as app, update Claude Desktop first. You need version 6.28899.0 or later. On macOS go to <code>Claude &gt; Check for Updates</code>; on Windows it is <code>Help &gt; Check for Updates</code> under the menu button (☰). On Team and Enterprise plans, ask an owner whether the feature is turned on.</p>
+<p>"Add to Dock," "Add browser shortcut" and "Add to Home Screen" in your browser are something else. They only add a shortcut, without the notifications or file access described here.</p>
+
+<h3>3. Open and quit</h3>
+<table>
+    <thead><tr><th>Where</th><th>How to open</th></tr></thead>
+    <tbody>
+        <tr><td><strong>macOS</strong></td><td>The <strong>Claude Apps</strong> folder inside the Applications folder in your home folder. Apps also show up in Spotlight and the Apps launcher, and <code>Options &gt; Keep in Dock</code> on the Dock icon pins one</td></tr>
+        <tr><td><strong>Windows</strong></td><td>The <strong>Claude Apps</strong> folder in the Start menu, or the desktop shortcut</td></tr>
+        <tr><td><strong>Claude Desktop</strong></td><td>"Open installed app" on the artifact, or <code>File &gt; Apps</code>, select the app, then "Open"</td></tr>
+    </tbody>
+</table>
+<p>An app with a menu bar item or system tray icon <strong>keeps running after you close its window</strong>. To stop it on macOS, quit it from the Dock or press Cmd+Q while it is the active app. On Windows, select "Exit" in the tray icon's menu.</p>
+
+<h3>Three permission levels — what you allow decides what the app is</h3>
+<p>This is the part to read most carefully. Installing an app does not let it touch your computer. What it can do grows only as far as you allow.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 720 286" role="img" aria-label="Three permission levels. Default: only what a browser tab can do, call Claude, use connectors, no prompt needed. App permissions: send notifications, hear global shortcuts, float over other windows, menu bar or tray item, asked per feature. Full access: run programs, read, change or delete files, no prompt each time, only for apps you made. Further right means more capability and more risk">
+    <text class="d-label" x="360" y="26" text-anchor="middle">Three permission levels — only as far as you allow</text>
+    <rect class="d-box soft" x="12" y="44" width="216" height="186" rx="12"/>
+    <text class="d-label" x="120" y="72" text-anchor="middle">Default</text>
+    <line class="d-edge dash" x1="32" y1="86" x2="208" y2="86"/>
+    <text class="d-label sm" x="120" y="112" text-anchor="middle">What a browser tab can do</text>
+    <text class="d-label sm" x="120" y="138" text-anchor="middle">Call Claude</text>
+    <text class="d-label sm" x="120" y="164" text-anchor="middle">Use your connectors</text>
+    <text class="d-sub" x="120" y="220" text-anchor="middle">No prompt needed</text>
+    <rect class="d-box" x="252" y="44" width="216" height="186" rx="12"/>
+    <text class="d-label" x="360" y="72" text-anchor="middle">App permissions</text>
+    <line class="d-edge dash" x1="272" y1="86" x2="448" y2="86"/>
+    <text class="d-label sm" x="360" y="112" text-anchor="middle">Send notifications</text>
+    <text class="d-label sm" x="360" y="138" text-anchor="middle">Hear global shortcuts</text>
+    <text class="d-label sm" x="360" y="164" text-anchor="middle">Float over other windows</text>
+    <text class="d-label sm" x="360" y="190" text-anchor="middle">Menu bar or tray item</text>
+    <text class="d-sub" x="360" y="220" text-anchor="middle">Asked feature by feature</text>
+    <rect class="d-box accent" x="492" y="44" width="216" height="186" rx="12"/>
+    <text class="d-label" x="600" y="72" text-anchor="middle">Full access</text>
+    <line class="d-edge dash" x1="512" y1="86" x2="688" y2="86"/>
+    <text class="d-label sm" x="600" y="112" text-anchor="middle">Run programs</text>
+    <text class="d-label sm" x="600" y="138" text-anchor="middle">Read, change, delete files</text>
+    <text class="d-label sm" x="600" y="164" text-anchor="middle">No prompt each time</text>
+    <text class="d-sub" x="600" y="220" text-anchor="middle">Only for apps you made</text>
+    <line class="d-edge accent" x1="40" y1="252" x2="672" y2="252"/>
+    <polygon class="d-arrow accent" points="670,247 680,252 670,257"/>
+    <text class="d-sub" x="360" y="274" text-anchor="middle">Further right: more the app can do, and more damage if it goes wrong</text>
+</svg>
+</div>
+
+<p>An app has to ask before it uses any of the features below, and you answer each request with "Allow" or "Don't allow."</p>
+<table>
+    <thead><tr><th>Permission</th><th>What the app can do</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Notifications</strong></td><td>Show notifications while you use other apps</td></tr>
+        <tr><td><strong>Keyboard shortcuts</strong></td><td>Respond to key combinations while you use other apps</td></tr>
+        <tr><td><strong>Float over other windows</strong></td><td>Draw content above other windows, and read where the mouse cursor is on your screens</td></tr>
+        <tr><td><strong>Menu bar item (macOS) or system tray icon (Windows)</strong></td><td>Show an item there while the app is open</td></tr>
+        <tr><td><strong>Full access to this computer</strong></td><td>Run programs and read, change or delete your files, without asking each time. Also covers the permissions above</td></tr>
+    </tbody>
+</table>
+
+<p>A few rules come with these answers.</p>
+<ul>
+    <li><strong>An "Allow" covers one version of the app.</strong> After any update Claude asks again, including after your own edits. A "Don't allow" stays until you change it.</li>
+    <li><strong>Code loaded from elsewhere can change without a new request.</strong> If an app loads code from another site, that part can change without Claude asking you again. This matters most for an app you gave full access.</li>
+    <li><strong>Unclear origin brings a warning.</strong> If an app comes from outside your organization, or Claude can't tell who made it, the permission request shows a warning.</li>
+    <li><strong>Full access is open only to authors you can trust.</strong> An app partly written by someone outside your organization, or one whose author Claude can't confirm, generally can't even request full access. On individual plans (Free, Pro, Max, Ultra), "outside your organization" means every user other than you. In practice an individual user can give full access only to apps they made.</li>
+</ul>
+<p>Anthropic doesn't review apps before you install them. An app with full access can run any program and delete your files, so allow it only if you trust everyone who wrote the app.</p>
+<p>Sorting actions into tiers by how risky they are, and keeping the riskiest tier closed to most callers, is the same design this wiki looked at in <a href="#!news-20261022-claude-duet">Claude Duet at a Glance</a>, with its three-tier approval gate. Duet draws the tiers around an agent's actions. Install as app draws them around an app's permissions.</p>
+
+<h3>Changing permissions and removing an app</h3>
+<p>You can take a permission back at any time.</p>
+<ul>
+    <li><strong>macOS</strong>: with the app open, click the app's name in the menu bar and select "Permissions."</li>
+    <li><strong>Windows</strong>: right-click the app's title bar, or press Alt+Space, and select "Permissions."</li>
+    <li><strong>Claude Desktop</strong>: while the app is open, go to <code>File &gt; Apps</code>, select the app, and select "Permissions."</li>
+</ul>
+<p>Turning off full access can reload or close the app, so save your work first. The programs the app started stop, except any that separated themselves from the app. Changes the app already made to your files are not undone.</p>
+<p>To remove an app, go to <code>File &gt; Apps</code>, select it, and select "Uninstall." On macOS the app moves to the Trash; on Windows its shortcuts are removed. Uninstalling also removes the permissions you allowed, but <strong>the artifact itself stays</strong>.</p>
+
+<h3>Plans and organization settings</h3>
+<p>The beta is rolling out on every plan. The defaults differ by plan.</p>
+<table>
+    <thead><tr><th>Who</th><th>Install apps</th><th>App permissions</th><th>Full access</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Free, Pro, Max, Ultra</strong></td><td>Available</td><td>Available</td><td>Only for apps you made</td></tr>
+        <tr><td><strong>Team</strong></td><td>On by default</td><td>On by default</td><td>Off by default (an admin turns it on)</td></tr>
+        <tr><td><strong>Enterprise</strong></td><td>Off by default</td><td>Off by default</td><td>Off by default</td></tr>
+        <tr><td><strong>Customer-managed encryption keys (CMEK), organization-wide ZDR</strong></td><td colspan="3">Start with all three off</td></tr>
+        <tr><td><strong>HIPAA-ready configurations, hybrid deployments</strong></td><td colspan="3">Can't be turned on</td></tr>
+        <tr><td><strong>K-12 organizations</strong></td><td colspan="2">Some start with these off</td><td>Can't be turned on</td></tr>
+    </tbody>
+</table>
+<p>ZDR stands for zero data retention, a contract term under which the service keeps no record of your conversations. Admins should know that <strong>installed apps are not covered by ZDR</strong>.</p>
+<p>Team and Enterprise admins control three separate settings in <code>Organization settings &gt; Artifacts</code>: Install as app, App permissions, and Full access to the computer. A change takes up to about an hour to apply. Turning a setting off closes open apps and stops the programs they started. Installed apps and the permissions people gave stay in place and work again if the setting is turned back on.</p>
+<p>To cover personal accounts on company computers too, use device policy (MDM, the system a company uses to manage settings on employee devices remotely). There are three keys, and they can only turn features off. Where organization settings and device policy differ, the stricter one applies.</p>
+<pre><code>isArtifactAppsEnabled             # false turns off installed apps entirely
+isArtifactAppPermissionsEnabled   # false turns off app permissions and full access
+isArtifactAppFullAccessEnabled    # false turns off full access only
+
+# macOS: a computer-level profile in the com.anthropic.claudefordesktop domain
+# Windows: DWORD 0 under HKLM\SOFTWARE\Policies\Claude</code></pre>
+<p>The audit trail has gaps. Opening an app and access checks are logged in the Compliance API as artifact views, but <strong>installs, permission answers, what an app does on the computer, and changes to the three settings are not logged</strong>. Weigh that before opening full access to an organization.</p>
+
+<h3>Know before you use it</h3>
+<ul>
+    <li><strong>Mac and Windows only.</strong> Apps aren't available on Linux, web or mobile.</li>
+    <li><strong>No offline use.</strong> You need to be online and signed in to Claude Desktop.</li>
+    <li><strong>It uses your limits.</strong> Building an app, and any request an app makes to Claude, counts toward your plan's usage limits. Several apps that call Claude on a schedule will use up that much more.</li>
+    <li><strong>Some artifacts can't be installed.</strong> Artifacts made from a template such as Docs, Slides or Sheets, legacy artifacts, and live artifacts from Claude Cowork are excluded.</li>
+    <li><strong>Losing access stops the app.</strong> If the owner stops sharing it with you, the programs it started stop too. This can take up to about 20 minutes, and longer while Claude is offline or signed out.</li>
+    <li><strong>Computer use only half fits.</strong> On macOS, Claude can see an installed app when it uses your computer, but can't click or type in it.</li>
+</ul>
+
+<h3>If you're starting out</h3>
+<ol>
+    <li>Pick one artifact you already open every day and install it. Use it for a few days at the default level, with no permissions given.</li>
+    <li>When you want notifications, allow notifications and nothing else. App permissions are asked one feature at a time, so open only what you need.</li>
+    <li>Give full access only to an app you built yourself, and only when working with files is what the app is for. Before you do, ask Claude whether the app loads code from an outside site.</li>
+</ol>
+
+<h3>Fact-check notes</h3>
+<p class="scn-sub">The lead image is the share image of Anthropic's announcement, saved to the repository as webp. The release date (November 24, 2026), the beta label, the app's own icon and window, use of Claude and connectors, automatic updates, no packaging or API key, the five staff-built apps, and the meeting prep and order tracker examples follow Anthropic's announcement <a href="https://claude.com/resources/articles/install-as-app" target="_blank" rel="noopener">Turn artifacts into Mac and Windows apps</a>. The install, open and quit steps, the five permissions and per-version re-asking, outside code and warnings, the author condition for full access, changing permissions and uninstalling, the required version (6.28899.0), usage limits and current limitations follow the Claude Help Center article <a href="https://support.claude.com/en/articles/18516354-install-an-artifact-as-an-app" target="_blank" rel="noopener">Install an artifact as an app</a>. Plan defaults, CMEK and ZDR, HIPAA and hybrid, K-12, the three device policy keys, how long settings take to apply, and what the Compliance API logs follow the <a href="https://support.claude.com/en/articles/16994751-artifacts-admin-guide-for-team-and-enterprise-plans" target="_blank" rel="noopener">Artifacts admin guide for Team and Enterprise plans</a>. All three were read directly on November 25, 2026 (KST). <strong>Grouping permissions into "three levels" is the announcement's framing (default, app permissions, full access); the Help Center lists the same thing as five permissions.</strong> This page shows both, as a diagram and a table. The announcement says "all plans" and the Help Center lists Free, Pro, Max, Ultra, Team and Enterprise, which agree. Matching the three example prompts to the permissions they need, and the order under "If you're starting out," are this page's own reading, not official guidance. The names and links of the staff-built apps are left out. This is a beta, so menu names, defaults and limits may change.</p>
