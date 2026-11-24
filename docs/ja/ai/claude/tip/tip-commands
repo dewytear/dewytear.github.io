@@ -1,0 +1,239 @@
+<h2>コマンド20選 — 開始・作業・レビュー・実行の順に覚えるスラッシュコマンド</h2>
+
+<p>Claude Code が最近もたつくと感じたら、モデルのせいにする前に確かめることがあります。入力欄に <code>/</code> を打つと出てくる<strong>スラッシュコマンド</strong>です。同じモデルでも、このコマンドを知っているかどうかで働き方がかなり変わります。たとえば Opus 5.5 の既定の努力レベルは五段階の真ん中の <code>medium</code> ですが、公式ドキュメントはバグ修正のように検証が大事な作業には <code>high</code> を勧めています。これを知らないと、難しい仕事をずっと <code>medium</code> に任せることになります。</p>
+
+<p>詰まるところはだいたい同じです。会話が長くなると答えがぼやけ、一つのウィンドウで一つの作業を待ち、終わったと言われて動かしてみると動きません。このページはその三つを解くコマンド20個を<strong>使う順に四つのまとまり</strong>に分け、それぞれ何をするのかと、そのまま打てる例を付けました。</p>
+
+<div class="note">
+    <span class="nh">このページについて（出典）</span>
+    · 根拠: <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">Claude Code 公式ドキュメント</a>（2026-11-24 時点）。コマンドはバージョン・プラン・環境によって一覧に出ないことがあります
+</div>
+
+<h3>まず、コマンドの打ち方</h3>
+<ul>
+    <li>入力欄に <code>/</code> を打つと使えるコマンドの一覧が出て、文字を足すと絞り込まれます。</li>
+    <li>コマンドは<strong>メッセージの先頭</strong>にあるときだけ認識されます。後ろに書いた文はそのコマンドの引数として渡ります。</li>
+    <li>Claude が答えている最中にコマンドを送ると待ち行列に入り、そのターンが終わってから実行されます。<code>/tasks</code> のように待たずにすぐ開くものもあります。</li>
+</ul>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="コマンド20個を使う順に分けた四つのまとまり。開始: /init, /model, /effort, /advisor, /context。作業中: /btw, /background, /fork, /tasks, /resume。レビュー: /diff, /code-review, /security-review, /autofix-pr, /insights。実行・検証: /run, /verify, /claude-in-chrome, /debug, /claude-api">
+    <text class="d-label" x="360" y="24" text-anchor="middle">使う順に四つのまとまり、五つずつ</text>
+    <rect class="d-box accent" x="20" y="44" width="150" height="180" rx="8"/>
+    <text class="d-label sm" x="95" y="68" text-anchor="middle">① 開始</text>
+    <text class="d-sub" x="95" y="96" text-anchor="middle">/init</text>
+    <text class="d-sub" x="95" y="120" text-anchor="middle">/model</text>
+    <text class="d-sub" x="95" y="144" text-anchor="middle">/effort</text>
+    <text class="d-sub" x="95" y="168" text-anchor="middle">/advisor</text>
+    <text class="d-sub" x="95" y="192" text-anchor="middle">/context</text>
+    <path class="d-edge" d="M170 134 L188 134"/>
+    <path class="d-arrow" d="M186 128 L196 134 L186 140 Z"/>
+    <rect class="d-box" x="197" y="44" width="150" height="180" rx="8"/>
+    <text class="d-label sm" x="272" y="68" text-anchor="middle">② 作業中</text>
+    <text class="d-sub" x="272" y="96" text-anchor="middle">/btw</text>
+    <text class="d-sub" x="272" y="120" text-anchor="middle">/background</text>
+    <text class="d-sub" x="272" y="144" text-anchor="middle">/fork</text>
+    <text class="d-sub" x="272" y="168" text-anchor="middle">/tasks</text>
+    <text class="d-sub" x="272" y="192" text-anchor="middle">/resume</text>
+    <path class="d-edge" d="M347 134 L365 134"/>
+    <path class="d-arrow" d="M363 128 L373 134 L363 140 Z"/>
+    <rect class="d-box" x="374" y="44" width="150" height="180" rx="8"/>
+    <text class="d-label sm" x="449" y="68" text-anchor="middle">③ レビュー</text>
+    <text class="d-sub" x="449" y="96" text-anchor="middle">/diff</text>
+    <text class="d-sub" x="449" y="120" text-anchor="middle">/code-review</text>
+    <text class="d-sub" x="449" y="144" text-anchor="middle">/security-review</text>
+    <text class="d-sub" x="449" y="168" text-anchor="middle">/autofix-pr</text>
+    <text class="d-sub" x="449" y="192" text-anchor="middle">/insights</text>
+    <path class="d-edge" d="M524 134 L542 134"/>
+    <path class="d-arrow" d="M540 128 L550 134 L540 140 Z"/>
+    <rect class="d-box accent" x="551" y="44" width="150" height="180" rx="8"/>
+    <text class="d-label sm" x="626" y="68" text-anchor="middle">④ 実行・検証</text>
+    <text class="d-sub" x="626" y="96" text-anchor="middle">/run</text>
+    <text class="d-sub" x="626" y="120" text-anchor="middle">/verify</text>
+    <text class="d-sub" x="626" y="144" text-anchor="middle">/claude-in-chrome</text>
+    <text class="d-sub" x="626" y="168" text-anchor="middle">/debug</text>
+    <text class="d-sub" x="626" y="192" text-anchor="middle">/claude-api</text>
+</svg>
+<div class="d-cap">まとまりは覚えやすくするための分け方で、順番を守る必要はありません。初めてなら、ページ末尾の四つ（<code>/init</code>・<code>/run</code>・<code>/code-review</code>・<code>/verify</code>）から使ってみてください。</div>
+</div>
+
+<h3>20個の早見表</h3>
+<table>
+    <thead><tr><th>まとまり</th><th>コマンド</th><th>すること</th></tr></thead>
+    <tbody>
+        <tr><td rowspan="5">① 開始</td><td><code>/init</code></td><td>プロジェクトの案内書 <code>CLAUDE.md</code> を作る</td></tr>
+        <tr><td><code>/model</code></td><td>使うモデルを切り替える</td></tr>
+        <tr><td><code>/effort</code></td><td>どこまで深く考えるかを決める</td></tr>
+        <tr><td><code>/advisor</code></td><td>より強い二つ目のモデルから助言をもらう</td></tr>
+        <tr><td><code>/context</code></td><td>会話がどれだけ場所を取っているかを見る</td></tr>
+        <tr><td rowspan="5">② 作業中</td><td><code>/btw</code></td><td>作業を止めずに横道の質問をする</td></tr>
+        <tr><td><code>/background</code></td><td>今の会話を後ろへ送り、ターミナルを空ける</td></tr>
+        <tr><td><code>/fork</code></td><td>会話を複製して別の作業を走らせる</td></tr>
+        <tr><td><code>/tasks</code></td><td>この会話のバックグラウンド作業の一覧を見る</td></tr>
+        <tr><td><code>/resume</code></td><td>以前の会話に戻る</td></tr>
+        <tr><td rowspan="5">③ レビュー</td><td><code>/diff</code></td><td>これまでに変わった内容を見る</td></tr>
+        <tr><td><code>/code-review</code></td><td>変えたコードからバグを探す</td></tr>
+        <tr><td><code>/security-review</code></td><td>セキュリティの問題だけを見る</td></tr>
+        <tr><td><code>/autofix-pr</code></td><td>PR を見張り、失敗や指摘を自動で直す</td></tr>
+        <tr><td><code>/insights</code></td><td>自分の作業の癖をレポートで受け取る</td></tr>
+        <tr><td rowspan="5">④ 実行・検証</td><td><code>/run</code></td><td>アプリを実際に起動して動かす</td></tr>
+        <tr><td><code>/verify</code></td><td>直したものが意図どおり動くか確かめる</td></tr>
+        <tr><td><code>/claude-in-chrome</code></td><td>実際の Chrome ブラウザで作業させる</td></tr>
+        <tr><td><code>/debug</code></td><td>このセッションで起きた問題を診断する</td></tr>
+        <tr><td><code>/claude-api</code></td><td>アプリに Claude を組み込むときの資料を読み込む</td></tr>
+    </tbody>
+</table>
+
+<h3>① 開始 — 案内書、モデル、努力レベル、助言者、空き</h3>
+
+<h4>1. <code>/init</code> — プロジェクトの案内書を作る</h4>
+<p>新しいフォルダで打つと、Claude がコードを見渡して <code>CLAUDE.md</code> を作ります。何のプロジェクトか、どう実行するか、守る決まりは何かが入ります。Claude Code は会話を始めるたびにこのファイルを読むので、「これは Next.js のプロジェクトだ」と毎回説明しなくて済みます。</p>
+<pre><code>/init          # CLAUDE.md の下書きを生成
+/memory        # できた CLAUDE.md を開いて整える</code></pre>
+<p>公式ドキュメントは <code>CLAUDE.md</code> を1ファイル200行未満に短く保つよう勧めています。長いほどコンテキストを使い、指示も守られにくくなります。書き方は <a href="#!claude-md-commandments">CLAUDE.md の十戒</a>にあります。</p>
+
+<h4>2. <code>/model</code> — モデルを切り替える</h4>
+<p>単独で打つと選択メニューが開き、名前を付けるとすぐ切り替わります。選んだモデルは以後の新しい会話の既定として保存されます。今の会話だけ変えたいときは一覧で <code>s</code> を押します。</p>
+<pre><code>/model             # 選択メニューを開く（左右の矢印で努力レベルも調整）
+/model opus        # すぐ Opus に切り替え
+/model opusplan    # 計画は Opus、実際の修正は Sonnet</code></pre>
+<table>
+    <thead><tr><th>短い名前</th><th>向いている作業</th></tr></thead>
+    <tbody>
+        <tr><td><code>fable</code></td><td>最も難しく長くかかる作業（アクセス権が必要）</td></tr>
+        <tr><td><code>opus</code></td><td>複雑な推論が要る作業</td></tr>
+        <tr><td><code>sonnet</code></td><td>日々のコーディング</td></tr>
+        <tr><td><code>haiku</code></td><td>速くて単純な作業</td></tr>
+        <tr><td><code>opusplan</code></td><td>プランモードでは Opus、実行に移ると Sonnet</td></tr>
+    </tbody>
+</table>
+
+<h4>3. <code>/effort</code> — どこまで深く考えるか</h4>
+<p>努力レベル（effort）は、モデルが答える前に推論へどれだけトークンを使うかを決める値です。<code>low</code>・<code>medium</code>・<code>high</code>・<code>xhigh</code>・<code>max</code> の五段階で、Fable 5.2・Opus 5.5・Sonnet 5.5・Haiku 5.5 の既定は <code>medium</code> です。</p>
+<pre><code>/effort high       # バグ修正のように検証が大事な作業
+/effort max        # 脆弱性探しのような本当に難しい問題（今の会話にだけ適用）
+/effort status     # 今のレベルを確認</code></pre>
+<table>
+    <thead><tr><th>レベル</th><th>公式ドキュメントが勧める使いどころ</th></tr></thead>
+    <tbody>
+        <tr><td><code>low</code></td><td>結果を一つずつ確かめる速いやり取り。ブレインストーミング、名前の変更のような小さな修正</td></tr>
+        <tr><td><code>medium</code></td><td>範囲がはっきりした日々の開発。新機能の実装</td></tr>
+        <tr><td><code>high</code></td><td>検証が大事な作業や例外が多そうな作業。既存コードのバグ修正</td></tr>
+        <tr><td><code>xhigh</code></td><td>トークンを多く使う深い推論</td></tr>
+        <tr><td><code>max</code></td><td>一人で最後まで解かせたい難問。効果が頭打ちになったり考えすぎたりするので、広く使う前に試すこと</td></tr>
+    </tbody>
+</table>
+
+<h4>4. <code>/advisor</code> — 二つ目のモデルから助言をもらう</h4>
+<p>ふだんの作業は今のモデルが行い、方針を決めるとき、同じエラーが繰り返されるとき、仕上げの直前のような大事な場面でだけ、より強いモデルが会話全体を読んで助言する機能です。いつ相談するかは Claude が決めます。</p>
+<pre><code>/advisor opus      # Opus を助言者にする（例: Sonnet で作業し Opus に相談）
+/advisor           # 助言者を選ぶメニュー
+/advisor off       # 切る</code></pre>
+<p>助言モデルは今のモデルと同じか上の等級でなければなりません。Opus 5.5 で作業しているなら、助言者は Opus か Fable だけです。まだ実験的な機能で、助言モデルが会話を丸ごと読むぶん使用量が増えます。ほとんどのターンは平凡でも計画の質が結果を分ける長い作業（大きなリファクタリング、エラーが繰り返されるデバッグ）に向き、短い作業では得るものが少なめです。</p>
+
+<h4>5. <code>/context</code> — 空きを確かめる</h4>
+<p>コンテキストとは、Claude が一度に抱えている会話とファイルの全部のことです。<code>/context</code> を打つと、何が場所を取っているかを色付きのブロックで示し、減らす方法も提案します。会話が長くなって答えがぼやけてきたら、まずここを見てください。</p>
+<pre><code>/context                             # 何が場所を取っているか確認
+/compact 認証モジュールの修正を中心に要約   # 会話を要約して空きを作る（要約の焦点を指定可）
+/clear                               # まっさらな会話で始める</code></pre>
+<p>同じ作業を続けるなら <code>/compact</code>、別の作業に移るなら <code>/clear</code> です。コンテキストを節約する習慣は<a href="#!tip-beginner">初級のコツ</a>で詳しく扱います。</p>
+
+<h3>② 作業中 — 横道の質問と並列作業</h3>
+
+<h4>6. <code>/btw</code> — 止めずに聞く</h4>
+<p>「ところで（by the way）」の略です。Claude が作業している最中にふと気になったことを、作業を切らずに聞けます。これまでの会話を見てすぐ答え、その質問と答えは会話の履歴に残りません。</p>
+<pre><code>/btw さっきの設定ファイルの名前は何だった？</code></pre>
+<p>ただしツールは使えません。新しいファイルを読んだりコマンドを実行したりはできず、すでに会話にある内容だけで答えます。答えは一回きりなので、続けて聞きたいときはもう一度 <code>/btw</code> を打ちます。</p>
+
+<h4>7. <code>/background</code>（<code>/bg</code>）— 今の会話を後ろへ送る</h4>
+<p>今の会話をバックグラウンドへ移し、ターミナルを空けます。後ろに最後の指示を付けられます。バックグラウンドへ行った作業はターミナルを閉じても動き続けます。</p>
+<pre><code>/bg テストを回して、落ちるものを直して</code></pre>
+<p>状態はターミナルで <code>claude agents</code> と打って確かめます。返事を待っているもの、進行中のもの、終わったものに分かれて一画面に並びます。</p>
+
+<h4>8. <code>/fork</code> — 会話を複製して別に走らせる</h4>
+<p>今の会話を複製して新しいバックグラウンドセッションを開きます。元の会話はここで続け、複製は裏で別に働きます。複製はモデル、権限、努力レベルをそのまま引き継ぎます。</p>
+<pre><code>/fork 同じやり方で決済モジュールもリファクタリングして</code></pre>
+<p>Git で管理しているプロジェクトなら、複製はコードを直す前に専用のワークツリー（同じリポジトリを別フォルダに展開した作業場所）を作るので、元のフォルダのファイルと混ざりません。<code>/background</code> が今の会話を後ろへ送るのに対し、<code>/fork</code> は会話をもう一つ作ります。</p>
+
+<h4>9. <code>/tasks</code> — バックグラウンド作業の一覧</h4>
+<p>Claude は大きな仕事を分けて、サブエージェント（作業の一部を受け持つ別の Claude）に渡すことがあります。<code>/tasks</code> はこの会話で渡した作業とバックグラウンドのコマンドを、終わったものも含めて見せます。Claude が答えを書いている最中でもすぐ開きます。</p>
+<pre><code>/tasks                      # 一覧を開く。動いている作業を選ぶとその作業に入る
+/rename 決済リファクタリング    # セッションに名前を付けておくと後で探しやすい</code></pre>
+
+<h4>10. <code>/resume</code> — 以前の会話に戻る</h4>
+<p>閉じた会話を名前か ID で開き直します。引数なしで打つとセッションの一覧が出ます。バックグラウンドのセッションには <code>bg</code> の印が付き、まだ動いているものを選ぶと、今の会話が後ろへ回ってターミナルがそのセッションにつながります。</p>
+<pre><code>/resume                     # セッション一覧から選ぶ
+/resume 決済リファクタリング    # 名前で直接開く</code></pre>
+<p><code>/clear</code> で新しい会話を始めても前の会話は消えず、<code>/resume</code> で戻れます。</p>
+
+<h3>③ レビュー — 変更、バグ、セキュリティ、PR、癖</h3>
+
+<h4>11. <code>/diff</code> — 変わった内容を見る</h4>
+<p>Claude が直した分と、まだコミットしていない自分の修正を合わせて、ファイルごとに見せます。追加・削除の行数と実際に変わった行が出ます。Claude がファイルを直したあとは、ターンごとに何を変えたかを別々に見ることもできます。</p>
+<pre><code>/diff</code></pre>
+
+<h4>12. <code>/code-review</code>（<code>/review</code>）— バグを探す</h4>
+<p>変えたコードから正しさに関わるバグを探します。単独で打つと現在の変更を、PR 番号を付けるとその PR を見ます。PR（プルリクエスト）は、GitHub で自分の変更を取り込んでほしいと出す依頼のことです。</p>
+<pre><code>/code-review                # 現在の変更をレビュー
+/code-review high 1234      # PR 1234 を high の深さでレビュー
+/code-review --fix          # 見つけた問題をその場で直す
+/code-review --comment      # 見つけた内容を PR にコメントする
+/code-review ultra          # クラウドで複数のエージェントが深くレビュー</code></pre>
+<p>深さは <code>low</code> から <code>max</code> まで選べ、指定しなければ最後に使った深さを使います。PR が開いたあとのレビュー・修正・承認を丸ごと任せる流れは <a href="#!claude-ship">Claude Ship</a> で扱います。</p>
+
+<h4>13. <code>/security-review</code> — セキュリティだけを見る</h4>
+<p>現在のブランチをリモートの既定ブランチと比べ、インジェクション（入力に命令を紛れ込ませる攻撃）、認証・権限の問題、データの露出といった危険を探します。リモートリポジトリが <code>origin</code> という名前でつながっている必要があります。</p>
+<pre><code>/security-review</code></pre>
+
+<h4>14. <code>/autofix-pr</code> — PR を見張って直す</h4>
+<p>現在のブランチの PR を見つけてクラウドセッションを立ち上げます。自動チェック（CI）が失敗したりレビューコメントが付いたりすると、直してもう一度プッシュします。既定ではすべての失敗とコメントを直し、指示を付ければ範囲を絞れます。</p>
+<pre><code>/autofix-pr
+/autofix-pr lint と型エラーだけ直して</code></pre>
+<p>GitHub のコマンドラインツール <code>gh</code> と、クラウドセッションを使う権限が必要です。別の PR を見張らせるには、先にそのブランチをチェックアウトします。</p>
+
+<h4>15. <code>/insights</code> — 自分の作業の癖を振り返る</h4>
+<p>今度はコードではなく人をレビューします。このコンピューターの最近の会話を分析して HTML のレポートを作ります。どのプロジェクトで作業しているか、Claude Code をどう使っているか、依頼が誤解されたりバグが出たりした箇所はどこか、試す価値のある機能は何かが入ります。</p>
+<pre><code>/insights      # レポートは ~/.claude/usage-data/report.html に保存</code></pre>
+<p>一度にまだ分析していない会話を200件まで見て、分析に使ったトークンはふだんの使用量に含まれます。ほかの端末や claude.ai の会話は含まれず、クラウドセッションでは使えません。コードレビューより耳が痛いことがあります。</p>
+
+<h3>④ 実行・検証 — 起動し、確かめ、診断する</h3>
+
+<h4>16. <code>/run</code> — アプリを実際に起動する</h4>
+<p>「テストが通った」で止まらず、アプリを実際に動かして、変えた部分が働く様子を見せます。特に設定しなくても、README、<code>package.json</code>、<code>Makefile</code> といったファイルを見て起動方法を割り出します。</p>
+<pre><code>/run</code></pre>
+
+<h4>17. <code>/verify</code> — 意図どおり直ったか確かめる</h4>
+<p>アプリをビルドして実行し、結果を直接見て判断します。テストや型チェックが通ったというだけでは終わりにしません。</p>
+<pre><code>/verify
+/run-skill-generator      # 起動手順が複雑なプロジェクトなら一度実行して手順を記録</code></pre>
+<p>データベースや環境変数ファイルが要るプロジェクトは、起動方法を推測しにくいものです。<code>/run-skill-generator</code> をプロジェクトごとに一度回すと、うまくいったインストールコマンド・環境変数・起動スクリプトが <code>.claude/skills/</code> の下にスキルとして記録され、以後 <code>/run</code> と <code>/verify</code> がその手順に従います。スキルとは何かは<a href="#!skl-overview">スキルとは</a>を見てください。</p>
+
+<h4>18. <code>/claude-in-chrome</code> — 実際のブラウザで作業する</h4>
+<p>自分の Chrome でページをテストし、入力欄を埋め、コンソールログを読みます。起動時に Chrome 連携を有効にした場合（<code>claude --chrome</code>）や、拡張機能のインストールが許されている環境で使えます。</p>
+<pre><code>/claude-in-chrome ログインページで間違ったパスワードを入れたときにエラー文が出るか確かめて
+/chrome        # Chrome 連携の設定</code></pre>
+
+<h4>19. <code>/debug</code> — セッションの問題を診断する</h4>
+<p>デバッグログはふだん切れていて、<code>/debug</code> を打った瞬間から記録が始まり、Claude がそのログを読んで原因を探します。症状を後ろに書くとその問題に集中します。</p>
+<pre><code>/debug MCP サーバーがつながってすぐ切れる
+/doctor        # インストール・設定・拡張・CLAUDE.md の問題はこちら</code></pre>
+
+<h4>20. <code>/claude-api</code> — アプリに Claude を組み込む</h4>
+<p>自分のアプリから Claude API を呼ぶコードを書くときに使うコマンドです。プロジェクトの言語に合った Claude API と Managed Agents の手引きを読み込みます。コードで <code>anthropic</code> や <code>@anthropic-ai/sdk</code> を import すると自動で有効になることもあります。</p>
+<pre><code>/claude-api migrate          # 既存のコードを新しいモデルへ移す
+/claude-api cost-optimize    # API 費用がどこで出ているかを見て節約案を出す
+/claude-api build-eval       # 評価セットを作る</code></pre>
+
+<h3>初めてならこの四つから</h3>
+<p>20個が多ければ、四つだけ順に使ってみてください。</p>
+<pre><code>/init            # 1. 案内書を作る
+/run             # 2. 直したら実際に起動する
+/code-review     # 3. バグを見つける
+/verify          # 4. 意図どおり動くか確かめる</code></pre>
+<p>これに慣れたら、難しい作業の前に <code>/effort high</code> を、答えがぼやけてきたら <code>/context</code> を足せば十分です。</p>
+
+<h3>並列で動かす前に知っておくこと</h3>
+<p><code>/background</code> と <code>/fork</code> でいくつもの作業を同時に動かすと便利ですが、上限もそのぶん速く減ります。公式ドキュメントは、バックグラウンドセッションが通常のセッションと同じサブスクリプションの使用量を使うため、<strong>10個を同時に動かすと上限がおよそ10倍の速さで減る</strong>と書いています。バックグラウンドセッションは自分のコンピューターで動くので、スリープには耐えますが電源を切ると止まる点も覚えておいてください。</p>
+
+<h3>事実検証ノート</h3>
+<p class="scn-sub">20個のコマンドの動作・引数・別名・必要条件は、2026年11月24日に公式ドキュメントの <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">Commands</a>・<a href="https://code.claude.com/docs/en/model-config" target="_blank" rel="noopener">Model configuration</a>・<a href="https://code.claude.com/docs/en/advisor" target="_blank" rel="noopener">Advisor</a>・<a href="https://code.claude.com/docs/en/interactive-mode" target="_blank" rel="noopener">Interactive mode</a>・<a href="https://code.claude.com/docs/en/agent-view" target="_blank" rel="noopener">Agent view</a>・<a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Skills</a>・<a href="https://code.claude.com/docs/en/costs" target="_blank" rel="noopener">Costs</a>・<a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Memory</a> を直接読んで確かめた。既定の努力レベル（<code>medium</code>）とレベル別の推奨、<code>max</code> がセッション限りであること、助言モデルの等級の条件、<code>/insights</code> の200件の上限と保存場所、バックグラウンドセッションの使用量の記述は、それらのページの文をそのまま移したものである。助言者（advisor）とエージェントビュー（バックグラウンドセッション）はそれぞれ実験的機能・リサーチプレビューと記されており、動作が変わることがある。一部の引数には個別の最低バージョンがあり（<code>/advisor</code> の引数形式は v2.1.260 以降など）、コマンドはプランや環境によって表示されないことがある。四つのまとまりと「初めてなら四つ」の勧めはこのページの整理の仕方で、公式の分類ではない。</p>

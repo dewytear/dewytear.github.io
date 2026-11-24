@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Twenty Commands — Slash Commands in the Order You Use Them: Start, Work, Review, Run</title>
+<meta name="description" content="A practical guide to 20 Claude Code slash commands, split into four groups in the order you use them (start, while working, review, run and verify), each with a plain explanation and an example you can type as is. The start group covers /init (generates CLAUDE.md, keep it under 200 lines), /model (aliases and opusplan), /effort (five levels, medium by default on the latest models, high for bug fixes), /advisor (advice from a stronger model, experimental) and /context (when to use /compact versus /clear). The working group covers /btw (a side question kept out of the history, no tools), /background, /fork (worktree isolation), /tasks and /resume. The review group covers /diff, /code-review (--fix, --comment, ultra), /security-review, /autofix-pr and /insights (a report on your working habits). The run group covers /run, /verify (with /run-skill-generator to record the launch recipe), /claude-in-chrome, /debug (versus /doctor) and /claude-api. It ends with four commands for newcomers (/init, /run, /code-review, /verify) and the caution that ten background sessions use quota about ten times as fast. Every behavior was checked against the official docs on 2026-11-24.">
+<meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://dewytear.github.io/p/en/tip-commands/">
+    <link rel="alternate" hreflang="ko" href="https://dewytear.github.io/p/tip-commands/">
+    <link rel="alternate" hreflang="en" href="https://dewytear.github.io/p/en/tip-commands/">
+    <link rel="alternate" hreflang="ja" href="https://dewytear.github.io/p/ja/tip-commands/">
+    <link rel="alternate" hreflang="x-default" href="https://dewytear.github.io/p/tip-commands/">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Twenty Commands — Slash Commands in the Order You Use Them: Start, Work, Review, Run">
+<meta property="og:description" content="A practical guide to 20 Claude Code slash commands, split into four groups in the order you use them (start, while working, review, run and verify), each with a plain explanation and an example you can type as is. The start group covers /init (generates CLAUDE.md, keep it under 200 lines), /model (aliases and opusplan), /effort (five levels, medium by default on the latest models, high for bug fixes), /advisor (advice from a stronger model, experimental) and /context (when to use /compact versus /clear). The working group covers /btw (a side question kept out of the history, no tools), /background, /fork (worktree isolation), /tasks and /resume. The review group covers /diff, /code-review (--fix, --comment, ultra), /security-review, /autofix-pr and /insights (a report on your working habits). The run group covers /run, /verify (with /run-skill-generator to record the launch recipe), /claude-in-chrome, /debug (versus /doctor) and /claude-api. It ends with four commands for newcomers (/init, /run, /code-review, /verify) and the caution that ten background sessions use quota about ten times as fast. Every behavior was checked against the official docs on 2026-11-24.">
+<meta property="og:url" content="https://dewytear.github.io/p/en/tip-commands/">
+<meta property="og:image" content="https://dewytear.github.io/og-image.png">
+<meta property="og:site_name" content="Aaron&#x27;s Claude Wiki">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Twenty Commands — Slash Commands in the Order You Use Them: Start, Work, Review, Run">
+<meta name="twitter:description" content="A practical guide to 20 Claude Code slash commands, split into four groups in the order you use them (start, while working, review, run and verify), each with a plain explanation and an example you can type as is. The start group covers /init (generates CLAUDE.md, keep it under 200 lines), /model (aliases and opusplan), /effort (five levels, medium by default on the latest models, high for bug fixes), /advisor (advice from a stronger model, experimental) and /context (when to use /compact versus /clear). The working group covers /btw (a side question kept out of the history, no tools), /background, /fork (worktree isolation), /tasks and /resume. The review group covers /diff, /code-review (--fix, --comment, ultra), /security-review, /autofix-pr and /insights (a report on your working habits). The run group covers /run, /verify (with /run-skill-generator to record the launch recipe), /claude-in-chrome, /debug (versus /doctor) and /claude-api. It ends with four commands for newcomers (/init, /run, /code-review, /verify) and the caution that ten background sessions use quota about ten times as fast. Every behavior was checked against the official docs on 2026-11-24.">
+<meta name="twitter:image" content="https://dewytear.github.io/og-image.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Article",
+ "headline": "Twenty Commands — Slash Commands in the Order You Use Them: Start, Work, Review, Run",
+ "description": "A practical guide to 20 Claude Code slash commands, split into four groups in the order you use them (start, while working, review, run and verify), each with a plain explanation and an example you can type as is. The start group covers /init (generates CLAUDE.md, keep it under 200 lines), /model (aliases and opusplan), /effort (five levels, medium by default on the latest models, high for bug fixes), /advisor (advice from a stronger model, experimental) and /context (when to use /compact versus /clear). The working group covers /btw (a side question kept out of the history, no tools), /background, /fork (worktree isolation), /tasks and /resume. The review group covers /diff, /code-review (--fix, --comment, ultra), /security-review, /autofix-pr and /insights (a report on your working habits). The run group covers /run, /verify (with /run-skill-generator to record the launch recipe), /claude-in-chrome, /debug (versus /doctor) and /claude-api. It ends with four commands for newcomers (/init, /run, /code-review, /verify) and the caution that ten background sessions use quota about ten times as fast. Every behavior was checked against the official docs on 2026-11-24.",
+ "inLanguage": "en",
+ "url": "https://dewytear.github.io/p/en/tip-commands/",
+ "mainEntityOfPage": "https://dewytear.github.io/#!tip-commands",
+ "license": "https://creativecommons.org/licenses/by/4.0/",
+ "author": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "publisher": {
+  "@type": "Person",
+  "name": "dewytear"
+ },
+ "isAccessibleForFree": true,
+ "datePublished": "2026-11-24T20:17:33+09:00",
+ "dateModified": "2026-11-24T20:17:33+09:00"
+}
+</script>
+<style>body{max-width:760px;margin:0 auto;padding:24px 18px 64px;font-family:Pretendard,system-ui,sans-serif;line-height:1.7}.pr-live{font-size:13px;margin:0 0 18px}.pr-meta{font-size:12.5px;color:#666;margin:0 0 24px}.pr-k{color:#999;margin-right:4px}.pr-rel{margin-top:40px;font-size:14px}.pr-hub h3{margin:28px 0 6px;font-size:15px}.pr-hub ul{margin:0;padding-left:20px;font-size:14px}</style>
+</head>
+<body class="day prerender">
+<p class="pr-live"><a href="/#!tip-commands">This is a static snapshot — open it in the wiki &#8599;</a>
+  &middot; <a href="/p/tip-commands/" hreflang="ko">한국어</a>
+  &middot; <a href="/p/ja/tip-commands/" hreflang="ja">日本語</a>
+</p>
+<article>
+<h2>Twenty Commands — Slash Commands in the Order You Use Them: Start, Work, Review, Run</h2>
+
+<p>If Claude Code has felt sluggish lately, there is something to check before blaming the model: the <strong>slash commands</strong> that appear when you type <code>/</code> in the prompt. The same model works quite differently depending on whether you know them. Opus 5.5, for example, defaults to <code>medium</code> effort, the middle of five levels, while the official docs recommend <code>high</code> for work where verification matters, such as fixing a bug. If you don't know that, you keep handing hard tasks to <code>medium</code>.</p>
+
+<p>The sticking points are usually the same. Answers get vague as the conversation grows, you wait on one task in one window, and something reported as done doesn't run. This page takes the 20 commands that address those three problems, splits them into <strong>four groups in the order you use them</strong>, and gives each one a plain explanation and an example you can type as is.</p>
+
+<div class="note">
+    <span class="nh">About this page (sources)</span>
+    · Based on the <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">official Claude Code docs</a> (as of 2026-11-24). Some commands may not appear depending on your version, plan or environment
+</div>
+
+<h3>First, how to type a command</h3>
+<ul>
+    <li>Type <code>/</code> in the prompt to see the commands available to you. Typing more letters filters the list.</li>
+    <li>A command is recognized only at the <strong>start of the message</strong>. Whatever follows is passed to it as arguments.</li>
+    <li>If you send a command while Claude is responding, it is queued and runs after that turn. A few, such as <code>/tasks</code>, open right away.</li>
+</ul>
+
+<div class="diagram">
+<svg viewBox="0 0 720 250" role="img" aria-label="Twenty commands in four groups by order of use. Start: /init, /model, /effort, /advisor, /context. While working: /btw, /background, /fork, /tasks, /resume. Review: /diff, /code-review, /security-review, /autofix-pr, /insights. Run and verify: /run, /verify, /claude-in-chrome, /debug, /claude-api">
+    <text class="d-label" x="360" y="24" text-anchor="middle">Four groups in order of use, five each</text>
+    <rect class="d-box accent" x="20" y="44" width="150" height="180" rx="8"/>
+    <text class="d-label sm" x="95" y="68" text-anchor="middle">① Start</text>
+    <text class="d-sub" x="95" y="96" text-anchor="middle">/init</text>
+    <text class="d-sub" x="95" y="120" text-anchor="middle">/model</text>
+    <text class="d-sub" x="95" y="144" text-anchor="middle">/effort</text>
+    <text class="d-sub" x="95" y="168" text-anchor="middle">/advisor</text>
+    <text class="d-sub" x="95" y="192" text-anchor="middle">/context</text>
+    <path class="d-edge" d="M170 134 L188 134"/>
+    <path class="d-arrow" d="M186 128 L196 134 L186 140 Z"/>
+    <rect class="d-box" x="197" y="44" width="150" height="180" rx="8"/>
+    <text class="d-label sm" x="272" y="68" text-anchor="middle">② While working</text>
+    <text class="d-sub" x="272" y="96" text-anchor="middle">/btw</text>
+    <text class="d-sub" x="272" y="120" text-anchor="middle">/background</text>
+    <text class="d-sub" x="272" y="144" text-anchor="middle">/fork</text>
+    <text class="d-sub" x="272" y="168" text-anchor="middle">/tasks</text>
+    <text class="d-sub" x="272" y="192" text-anchor="middle">/resume</text>
+    <path class="d-edge" d="M347 134 L365 134"/>
+    <path class="d-arrow" d="M363 128 L373 134 L363 140 Z"/>
+    <rect class="d-box" x="374" y="44" width="150" height="180" rx="8"/>
+    <text class="d-label sm" x="449" y="68" text-anchor="middle">③ Review</text>
+    <text class="d-sub" x="449" y="96" text-anchor="middle">/diff</text>
+    <text class="d-sub" x="449" y="120" text-anchor="middle">/code-review</text>
+    <text class="d-sub" x="449" y="144" text-anchor="middle">/security-review</text>
+    <text class="d-sub" x="449" y="168" text-anchor="middle">/autofix-pr</text>
+    <text class="d-sub" x="449" y="192" text-anchor="middle">/insights</text>
+    <path class="d-edge" d="M524 134 L542 134"/>
+    <path class="d-arrow" d="M540 128 L550 134 L540 140 Z"/>
+    <rect class="d-box accent" x="551" y="44" width="150" height="180" rx="8"/>
+    <text class="d-label sm" x="626" y="68" text-anchor="middle">④ Run and verify</text>
+    <text class="d-sub" x="626" y="96" text-anchor="middle">/run</text>
+    <text class="d-sub" x="626" y="120" text-anchor="middle">/verify</text>
+    <text class="d-sub" x="626" y="144" text-anchor="middle">/claude-in-chrome</text>
+    <text class="d-sub" x="626" y="168" text-anchor="middle">/debug</text>
+    <text class="d-sub" x="626" y="192" text-anchor="middle">/claude-api</text>
+</svg>
+<div class="d-cap">The groups are a memory aid, not a required order. If you are new, start with the four at the end of this page: <code>/init</code>, <code>/run</code>, <code>/code-review</code>, <code>/verify</code>.</div>
+</div>
+
+<h3>All twenty at a glance</h3>
+<table>
+    <thead><tr><th>Group</th><th>Command</th><th>What it does</th></tr></thead>
+    <tbody>
+        <tr><td rowspan="5">① Start</td><td><code>/init</code></td><td>Creates the project guide <code>CLAUDE.md</code></td></tr>
+        <tr><td><code>/model</code></td><td>Switches the model</td></tr>
+        <tr><td><code>/effort</code></td><td>Sets how deeply the model reasons</td></tr>
+        <tr><td><code>/advisor</code></td><td>Gets advice from a stronger second model</td></tr>
+        <tr><td><code>/context</code></td><td>Shows how much room the conversation takes</td></tr>
+        <tr><td rowspan="5">② While working</td><td><code>/btw</code></td><td>Asks a side question without stopping the work</td></tr>
+        <tr><td><code>/background</code></td><td>Sends this conversation to the background and frees the terminal</td></tr>
+        <tr><td><code>/fork</code></td><td>Copies the conversation and runs new work separately</td></tr>
+        <tr><td><code>/tasks</code></td><td>Lists this conversation's background work</td></tr>
+        <tr><td><code>/resume</code></td><td>Goes back to an earlier conversation</td></tr>
+        <tr><td rowspan="5">③ Review</td><td><code>/diff</code></td><td>Shows what has changed so far</td></tr>
+        <tr><td><code>/code-review</code></td><td>Looks for bugs in the changed code</td></tr>
+        <tr><td><code>/security-review</code></td><td>Looks at security issues only</td></tr>
+        <tr><td><code>/autofix-pr</code></td><td>Watches a PR and fixes failures and comments</td></tr>
+        <tr><td><code>/insights</code></td><td>Reports on your own working habits</td></tr>
+        <tr><td rowspan="5">④ Run and verify</td><td><code>/run</code></td><td>Launches the app for real</td></tr>
+        <tr><td><code>/verify</code></td><td>Confirms the fix does what was intended</td></tr>
+        <tr><td><code>/claude-in-chrome</code></td><td>Works inside your actual Chrome browser</td></tr>
+        <tr><td><code>/debug</code></td><td>Diagnoses a problem in this session</td></tr>
+        <tr><td><code>/claude-api</code></td><td>Loads reference material for adding Claude to your app</td></tr>
+    </tbody>
+</table>
+
+<h3>① Start: guide, model, effort, advisor, room</h3>
+
+<h4>1. <code>/init</code> creates the project guide</h4>
+<p>Typed in a new folder, it has Claude scan the code and write <code>CLAUDE.md</code>: what the project is, how to run it, and the rules to follow. Claude Code reads this file at the start of every conversation, so you no longer explain "this is a Next.js project" each time.</p>
+<pre><code>/init          # generate a starter CLAUDE.md
+/memory        # open the CLAUDE.md and refine it</code></pre>
+<p>The official docs recommend keeping each <code>CLAUDE.md</code> under 200 lines. Longer files use more context and are followed less closely. For how to write one, see <a href="/p/en/claude-md-commandments/">the CLAUDE.md ten commandments</a>.</p>
+
+<h4>2. <code>/model</code> switches the model</h4>
+<p>On its own it opens a picker; with a name it switches immediately. The model you choose is saved as the default for new conversations. To change it for the current conversation only, press <code>s</code> in the list.</p>
+<pre><code>/model             # open the picker (left/right arrows also adjust effort)
+/model opus        # switch to Opus right away
+/model opusplan    # plan with Opus, edit with Sonnet</code></pre>
+<table>
+    <thead><tr><th>Alias</th><th>Suited to</th></tr></thead>
+    <tbody>
+        <tr><td><code>fable</code></td><td>The hardest and longest-running tasks (requires access)</td></tr>
+        <tr><td><code>opus</code></td><td>Complex reasoning</td></tr>
+        <tr><td><code>sonnet</code></td><td>Daily coding</td></tr>
+        <tr><td><code>haiku</code></td><td>Fast, simple tasks</td></tr>
+        <tr><td><code>opusplan</code></td><td>Opus during plan mode, Sonnet once execution starts</td></tr>
+    </tbody>
+</table>
+
+<h4>3. <code>/effort</code> sets how deeply to think</h4>
+<p>Effort decides how many tokens the model spends on reasoning before it answers. There are five levels, <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code> and <code>max</code>, and Fable 5.2, Opus 5.5, Sonnet 5.5 and Haiku 5.5 default to <code>medium</code>.</p>
+<pre><code>/effort high       # work where verification matters, such as a bug fix
+/effort max        # really hard problems such as finding vulnerabilities (this conversation only)
+/effort status     # print the current level</code></pre>
+<table>
+    <thead><tr><th>Level</th><th>What the docs recommend it for</th></tr></thead>
+    <tbody>
+        <tr><td><code>low</code></td><td>Quick exchanges where you review each result: brainstorming, a small change like a rename</td></tr>
+        <tr><td><code>medium</code></td><td>Day-to-day engineering with a clear scope, such as a new feature</td></tr>
+        <tr><td><code>high</code></td><td>Work where verification matters or edge cases are likely, such as fixing a bug in existing code</td></tr>
+        <tr><td><code>xhigh</code></td><td>Deeper reasoning at higher token spend</td></tr>
+        <tr><td><code>max</code></td><td>Hard problems you want Claude to work through alone. It can show diminishing returns and overthink, so test before adopting it broadly</td></tr>
+    </tbody>
+</table>
+
+<h4>4. <code>/advisor</code> brings in a second model</h4>
+<p>The current model does the routine work, and a stronger model reads the whole conversation and advises only at key moments: before committing to an approach, when the same error keeps recurring, before declaring the task done. Claude decides when to consult it.</p>
+<pre><code>/advisor opus      # turn on Opus as advisor (for example, work on Sonnet, consult Opus)
+/advisor           # open the advisor picker
+/advisor off       # turn it off</code></pre>
+<p>The advisor must rank at or above the current model. If you work on Opus 5.5, only Opus or Fable can advise. The feature is still experimental, and it uses more of your quota because the advisor reads the full conversation. It suits long tasks where most turns are routine but the plan decides the outcome (large refactors, debugging with a recurring error) and adds little on short ones.</p>
+
+<h4>5. <code>/context</code> checks the room left</h4>
+<p>Context is everything Claude is holding at once: the conversation and the files. <code>/context</code> shows what is taking the space as colored blocks and suggests ways to reduce it. When a long conversation starts producing vague answers, look here first.</p>
+<pre><code>/context                                   # see what is filling the window
+/compact focus on the auth module changes   # summarize to free space (focus is optional)
+/clear                                     # start a fresh conversation</code></pre>
+<p>Use <code>/compact</code> to keep going on the same task and <code>/clear</code> when moving to a different one. The <a href="/p/en/tip-beginner/">beginner tips</a> cover context-saving habits in more depth.</p>
+
+<h3>② While working: side questions and parallel work</h3>
+
+<h4>6. <code>/btw</code> asks without stopping</h4>
+<p>Short for "by the way". When a question comes to mind while Claude is busy, you can ask it without interrupting the work. It answers from the conversation so far, and the question and answer are not added to the history.</p>
+<pre><code>/btw what was the name of that config file again?</code></pre>
+<p>It has no tools, though. It cannot read new files or run commands and answers only from what is already in the conversation. Each answer is a single reply, so to follow up, type <code>/btw</code> again.</p>
+
+<h4>7. <code>/background</code> (<code>/bg</code>) sends this conversation to the back</h4>
+<p>It moves the current conversation to the background and frees your terminal. You can attach one last instruction. Background work keeps running even after you close the terminal.</p>
+<pre><code>/bg run the tests and fix what fails</code></pre>
+<p>Check on it with <code>claude agents</code> in the terminal. Sessions are gathered on one screen, grouped into those waiting for your reply, those in progress and those completed.</p>
+
+<h4>8. <code>/fork</code> copies the conversation and runs it separately</h4>
+<p>It copies the current conversation into a new background session. You continue the original here while the copy works on its own. The copy inherits the model, permissions and effort level.</p>
+<pre><code>/fork refactor the payments module the same way</code></pre>
+<p>In a Git project the copy creates its own worktree (a separate folder holding another checkout of the same repository) before editing code, so its files don't mix with yours. <code>/background</code> sends the current conversation to the back; <code>/fork</code> makes one more.</p>
+
+<h4>9. <code>/tasks</code> lists background work</h4>
+<p>Claude often breaks a large job down and hands pieces to subagents, other Claude instances that take part of the work. <code>/tasks</code> shows the work delegated in this conversation and its background commands, including finished ones. It opens immediately, even while Claude is still writing.</p>
+<pre><code>/tasks                       # open the list; select a running task to jump into it
+/rename payments-refactor    # name the session so it is easy to find later</code></pre>
+
+<h4>10. <code>/resume</code> returns to an earlier conversation</h4>
+<p>It reopens a closed conversation by name or ID. With no argument it shows the session picker. Background sessions are marked <code>bg</code>, and if you pick one that is still running, your current conversation moves to the background and the terminal attaches to that one.</p>
+<pre><code>/resume                      # pick from the session list
+/resume payments-refactor    # open by name</code></pre>
+<p>Starting over with <code>/clear</code> does not delete the previous conversation; <code>/resume</code> brings it back.</p>
+
+<h3>③ Review: changes, bugs, security, PRs, habits</h3>
+
+<h4>11. <code>/diff</code> shows what changed</h4>
+<p>It lists Claude's edits together with your own uncommitted changes, file by file, with added and removed line counts and the changed lines. Once Claude has edited files you can also view each turn's edits separately.</p>
+<pre><code>/diff</code></pre>
+
+<h4>12. <code>/code-review</code> (<code>/review</code>) finds bugs</h4>
+<p>It looks for correctness bugs in changed code. On its own it reviews the current changes; with a PR number it reviews that PR. A PR (pull request) is a request on GitHub to merge your changes.</p>
+<pre><code>/code-review                # review the current changes
+/code-review high 1234      # review PR 1234 at high depth
+/code-review --fix          # apply the findings
+/code-review --comment      # post the findings on the PR
+/code-review ultra          # deep multi-agent review in the cloud</code></pre>
+<p>Depth runs from <code>low</code> to <code>max</code>, and with no level given it reuses the last one you typed. For handing off review, fixes and approval after a PR opens, see <a href="/p/en/claude-ship/">Claude Ship</a>.</p>
+
+<h4>13. <code>/security-review</code> looks at security only</h4>
+<p>It compares your current branch with the remote default branch and looks for risks such as injection (commands smuggled in through input), authentication and permission problems, and data exposure. The remote must be connected under the name <code>origin</code>.</p>
+<pre><code>/security-review</code></pre>
+
+<h4>14. <code>/autofix-pr</code> watches a PR and fixes it</h4>
+<p>It finds the PR for your current branch and starts a cloud session. When an automated check (CI) fails or a review comment arrives, it fixes the issue and pushes again. By default it fixes every failure and comment; add instructions to narrow the scope.</p>
+<pre><code>/autofix-pr
+/autofix-pr only fix lint and type errors</code></pre>
+<p>It needs the GitHub command-line tool <code>gh</code> and access to cloud sessions. To watch a different PR, check out its branch first.</p>
+
+<h4>15. <code>/insights</code> reviews your habits</h4>
+<p>This one reviews the person, not the code. It analyzes recent conversations on this machine and writes an HTML report: which projects you work in, how you use Claude Code, where requests were misunderstood or bugs appeared, and features worth trying.</p>
+<pre><code>/insights      # the report is saved to ~/.claude/usage-data/report.html</code></pre>
+<p>One run analyzes up to 200 conversations it has not seen before, and the tokens count against your normal usage. Conversations from other devices and claude.ai are not included, and it is not available in cloud sessions. It can sting more than a code review.</p>
+
+<h3>④ Run and verify: launch, confirm, diagnose</h3>
+
+<h4>16. <code>/run</code> launches the app for real</h4>
+<p>It doesn't stop at "the tests pass". It runs the app and shows the change working. With no setup it works out how to launch from files such as the README, <code>package.json</code> or a <code>Makefile</code>.</p>
+<pre><code>/run</code></pre>
+
+<h4>17. <code>/verify</code> confirms the fix does what was intended</h4>
+<p>It builds and runs the app, then judges by observing the result. Passing tests or type checks alone does not count as done.</p>
+<pre><code>/verify
+/run-skill-generator      # for projects with a complicated launch, run once to record the steps</code></pre>
+<p>Projects that need a database or an env file are hard to launch by guesswork. Run <code>/run-skill-generator</code> once per project and the install commands, environment variables and launch script that worked are recorded as a skill under <code>.claude/skills/</code>; from then on <code>/run</code> and <code>/verify</code> follow that recipe. For what a skill is, see <a href="/p/en/skl-overview/">What Skills Are</a>.</p>
+
+<h4>18. <code>/claude-in-chrome</code> works in your real browser</h4>
+<p>It tests pages, fills in forms and reads console logs in your own Chrome. It is available when Chrome integration was enabled at startup (<code>claude --chrome</code>) or when installing the extension is allowed.</p>
+<pre><code>/claude-in-chrome check that the login page shows an error message for a wrong password
+/chrome        # Chrome integration settings</code></pre>
+
+<h4>19. <code>/debug</code> diagnoses a session problem</h4>
+<p>Debug logging is normally off. It starts recording the moment you type <code>/debug</code>, and Claude reads the log to find the cause. Describe the symptom after the command to focus the analysis.</p>
+<pre><code>/debug the MCP server connects and then drops right away
+/doctor        # for installation, settings, extension and CLAUDE.md problems</code></pre>
+
+<h4>20. <code>/claude-api</code> adds Claude to your app</h4>
+<p>Use it when writing code that calls the Claude API from your own app. It loads the Claude API and Managed Agents guides for your project's language, and it also activates on its own when your code imports <code>anthropic</code> or <code>@anthropic-ai/sdk</code>.</p>
+<pre><code>/claude-api migrate          # move existing code to a newer model
+/claude-api cost-optimize    # see where API spend goes and get savings proposals
+/claude-api build-eval       # build an evaluation set</code></pre>
+
+<h3>If you are new, start with these four</h3>
+<p>If twenty is too many, use four in order.</p>
+<pre><code>/init            # 1. create the guide
+/run             # 2. after a change, launch it for real
+/code-review     # 3. catch bugs
+/verify          # 4. confirm it works as intended</code></pre>
+<p>Once those are familiar, add <code>/effort high</code> before hard tasks and <code>/context</code> when answers get vague.</p>
+
+<h3>Before you run things in parallel</h3>
+<p><code>/background</code> and <code>/fork</code> make it easy to run several tasks at once, and they use up your limit just as fast. The official docs say background sessions consume subscription usage the same as interactive ones, so <strong>running ten in parallel uses quota roughly ten times as fast</strong>. Background sessions also run on your own machine: they survive sleep but stop if the machine shuts down.</p>
+
+<h3>Fact-check notes</h3>
+<p class="scn-sub">The behavior, arguments, aliases and requirements of the 20 commands were checked on November 24, 2026 by reading the official docs directly: <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener">Commands</a>, <a href="https://code.claude.com/docs/en/model-config" target="_blank" rel="noopener">Model configuration</a>, <a href="https://code.claude.com/docs/en/advisor" target="_blank" rel="noopener">Advisor</a>, <a href="https://code.claude.com/docs/en/interactive-mode" target="_blank" rel="noopener">Interactive mode</a>, <a href="https://code.claude.com/docs/en/agent-view" target="_blank" rel="noopener">Agent view</a>, <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener">Skills</a>, <a href="https://code.claude.com/docs/en/costs" target="_blank" rel="noopener">Costs</a> and <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener">Memory</a>. The default effort level (<code>medium</code>) and the per-level recommendations, <code>max</code> applying to the current session only, the advisor ranking rule, the 200-conversation limit and report location for <code>/insights</code>, and the wording on background-session usage are carried over from those pages. The advisor and agent view (background sessions) are labeled experimental and research preview respectively, so their behavior may change. Some arguments have their own minimum version (the argument forms of <code>/advisor</code> need v2.1.260 or later, for example), and commands may be hidden depending on plan and environment. The four groups and the "start with these four" recommendation are this page's own arrangement, not an official classification.</p>
+</article>
+<p class="pr-meta"><span class="pr-k">Section</span> AI · Claude · Tip &middot; <span class="pr-k">Created</span> 2026-11-24 &middot; <span class="pr-k">Updated</span> 2026-11-24</p>
+
+<nav class="pr-rel"><h2>Related documents</h2>
+<ul><li><a href="/p/en/tip-beginner/">Beginner — 9 Habits That Save Context</a></li><li><a href="/p/en/claude-ship/">Claude Ship — Three Agents That Carry a PR to Merge: How to Use It and Why</a></li><li><a href="/p/en/tip-advanced/">Advanced — 8 Tips for Parallel, Autonomous, Scheduled Work</a></li><li><a href="/p/en/plc-popular-2026h2/">Popular Plugins of H2 2026 — The Top of the Official Directory, and How to Use Them</a></li></ul>
+</nav>
+</body>
+</html>
